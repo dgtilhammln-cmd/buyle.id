@@ -205,9 +205,9 @@
                 </h1>
                 <div class="sf-rating">
                     <span class="sf-star">★</span>
-                    <span>{{ number_format($seller->products()->avg('rating') ?: 5.0, 1) }}</span>
+                    <span>{{ number_format($avgRating, 1) }}</span>
                     <span>·</span>
-                    <span>{{ number_format($seller->products()->sum('sold_count')) }} terjual</span>
+                    <span>{{ number_format($totalSold) }} terjual</span>
                 </div>
                 @if($profile->store_description)
                     <p class="sf-desc">{{ $profile->store_description }}</p>
@@ -217,13 +217,14 @@
     </div>
 
     {{-- ── Banner ── --}}
-    @if($profile->store_banner ?? null)
+    @php
+        $bannerImg = isset($profile->store_banner) && $profile->store_banner
+            ? asset('storage/' . $profile->store_banner)
+            : ($products->count() > 0 && $products->first()->image ? $products->first()->image_url : null);
+    @endphp
+    @if($bannerImg)
     <div class="sf-banner">
-        <img src="{{ asset('storage/' . $profile->store_banner) }}" alt="Banner {{ $profile->store_name }}">
-    </div>
-    @elseif($products->count() > 0 && $products->first()->image)
-    <div class="sf-banner">
-        <img src="{{ $products->first()->image_url }}" alt="Banner {{ $profile->store_name }}">
+        <img src="{{ $bannerImg }}" alt="Banner {{ $profile->store_name }}">
     </div>
     @endif
 
