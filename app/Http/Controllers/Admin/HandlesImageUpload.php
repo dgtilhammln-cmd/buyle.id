@@ -17,6 +17,10 @@ trait HandlesImageUpload
      */
     private function gdLoad(UploadedFile $file)
     {
+        // Increase memory and time limits for processing large images
+        @ini_set('memory_limit', '512M');
+        @set_time_limit(120);
+
         $path = $file->getRealPath();
         $mime = $file->getMimeType() ?: mime_content_type($path);
 

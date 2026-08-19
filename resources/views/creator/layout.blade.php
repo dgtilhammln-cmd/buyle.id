@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Creator Dashboard') – buyle.id</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap"
         rel="stylesheet">
     <style>
         *,
@@ -20,10 +20,13 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
             background: #f1f5f1;
             color: #1a1a1a;
             min-height: 100vh;
         }
+
+        h1, h2, h3, h4, h5, h6, strong, b { font-weight: 500 !important; }
 
         /* ── SIDEBAR ── */
         .cr-sidebar {

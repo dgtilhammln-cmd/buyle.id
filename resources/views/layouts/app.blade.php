@@ -43,8 +43,8 @@
     {{-- Google Fonts: Montserrat — Non-blocking (reduced weights for speed) --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 
     {{-- AOS Animate on Scroll — Non-blocking --}}
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" media="print" onload="this.media='all'">
@@ -76,7 +76,18 @@
         }
         body, html, button, input, textarea, select, .cv-promo-card-name {
             font-family: 'Montserrat', sans-serif !important;
+            font-weight: 400;
         }
+
+        /* Thin fonts globally — user preference */
+        h1, h2, h3, h4, h5, h6 { font-weight: 500 !important; }
+        .sp-topbar-left h1, .article-hero-title, .sv-hero-title,
+        .pd-title, .sp-title, .cv-catalog-title, .sp-card-title,
+        .cv-profile-name, .sp-sidebar-head, .sp-card-price-main,
+        .sp-card-name { font-weight: 500 !important; }
+        .sp-card-badge, .sp-cat-badge, .sp-apply-btn, .sp-btn-main,
+        .sp-mobile-filter-btn { font-weight: 500 !important; }
+        strong, b { font-weight: 600 !important; }
         
     @if($tAccent || $tMain || $tText)
         :root {
@@ -117,6 +128,15 @@
         .page-hero .article-hero-inner {
             position: relative;
             z-index: 2;
+        }
+
+        /* User request: thin fonts everywhere (no bold/fat fonts) */
+        h1, h2, h3, h4, h5, h6,
+        .pd-title, .sp-title, .cv-catalog-title,
+        .sp-card-title, .cv-profile-name, .sp-sidebar-head,
+        .sp-topbar-left h1, .article-hero-title, .sv-hero-title,
+        strong, b, .font-bold, .font-semibold, .font-extrabold {
+            font-weight: 500 !important;
         }
     </style>
     @endif
