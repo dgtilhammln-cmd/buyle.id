@@ -24,7 +24,7 @@ class StoreProductRequest extends FormRequest
             'creator_group_id'    => ['nullable', 'exists:creator_product_groups,id'],
             'file_type'           => ['nullable', 'string', 'max:50'],
             'image'               => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'gallery'             => ['nullable', 'array', 'max:7'],
+            'gallery'             => ['required', 'array', 'min:1', 'max:7'],
             'gallery.*'           => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'tiktok_video_url'    => ['nullable', 'url', 'max:255'],
 
@@ -47,6 +47,9 @@ class StoreProductRequest extends FormRequest
             'sale_price.lt'            => 'Harga diskon harus lebih kecil dari harga normal.',
             'digital_resource.required'=> 'Link produk digital wajib diisi.',
             'image.max'                => 'Ukuran thumbnail maksimal 2MB.',
+            'gallery.required'         => 'Wajib mengunggah minimal 1 gambar produk.',
+            'gallery.*.max'            => 'Ukuran masing-masing gambar maksimal 2MB.',
+            'gallery.*.mimes'          => 'Format gambar harus berupa JPG, JPEG, PNG, atau WEBP.',
         ];
     }
 

@@ -56,20 +56,20 @@ class SellerProductController extends Controller
     {
         $data = $request->validated();
 
-        // Handle thumbnail upload
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            if ($file->isValid()) {
-                $data['image'] = $this->storeWebP($file, 'products', 1200, 1200, 85);
-            }
-        }
-
-        // Handle gallery upload
+        // Handle thumbnail and gallery upload from the same input
         if ($request->hasFile('gallery')) {
+            $galleryFiles = $request->file('gallery');
             $galleryPaths = [];
-            foreach ($request->file('gallery') as $gFile) {
+            
+            foreach ($galleryFiles as $index => $gFile) {
                 if ($gFile->isValid()) {
-                    $galleryPaths[] = $this->storeWebP($gFile, 'products/gallery', 1200, 1200, 85);
+                    if ($index === 0) {
+                        // First image becomes the main thumbnail
+                        $data['image'] = $this->storeWebP($gFile, 'products', 1200, 1200, 85);
+                    } else {
+                        // Rest goes to gallery
+                        $galleryPaths[] = $this->storeWebP($gFile, 'products/gallery', 1200, 1200, 85);
+                    }
                 }
             }
             $data['gallery'] = $galleryPaths;
@@ -120,30 +120,28 @@ class SellerProductController extends Controller
     {
         $data = $request->validated();
 
-        if ($request->hasFile('image')) {
-            // Hapus gambar lama
+        // Handle thumbnail and gallery upload from the same input
+        if ($request->hasFile('gallery')) {
+            $galleryFiles = $request->file('gallery');
+            
+            // Delete old images since we are replacing them
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
-            $file = $request->file('image');
-            if ($file->isValid()) {
-                $data['image'] = $this->storeWebP($file, 'products', 1200, 1200, 85);
-            }
-        }
-
-        // Handle gallery upload
-        if ($request->hasFile('gallery')) {
-            // Hapus gambar gallery lama jika ingin replace, atau biarkan kalau ingin tambah.
-            // Sesuai UI, jika ada input file baru, kita replace gallery lama.
             if (is_array($product->gallery)) {
                 foreach ($product->gallery as $oldImg) {
                     Storage::disk('public')->delete($oldImg);
                 }
             }
+            
             $galleryPaths = [];
-            foreach ($request->file('gallery') as $gFile) {
+            foreach ($galleryFiles as $index => $gFile) {
                 if ($gFile->isValid()) {
-                    $galleryPaths[] = $this->storeWebP($gFile, 'products/gallery', 1200, 1200, 85);
+                    if ($index === 0) {
+                        $data['image'] = $this->storeWebP($gFile, 'products', 1200, 1200, 85);
+                    } else {
+                        $galleryPaths[] = $this->storeWebP($gFile, 'products/gallery', 1200, 1200, 85);
+                    }
                 }
             }
             $data['gallery'] = $galleryPaths;

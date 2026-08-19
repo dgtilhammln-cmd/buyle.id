@@ -82,9 +82,20 @@
 
 @section('content')
 <div class="form-card">
-    <form action="{{ route('creator.products.update', $product) }}" method="POST" enctype="multipart/form-data" id="productForm">
+    <form action="{{ route('creator.products.update', $product->id) }}" method="POST" enctype="multipart/form-data" id="productForm">
         @csrf
         @method('PUT')
+
+        @if($errors->any())
+        <div style="background-color: #fee2e2; color: #b91c1c; padding: 1rem 1.5rem; border-bottom: 1px solid #fca5a5; font-size: 0.85rem; font-weight: 600;">
+            Terdapat beberapa kesalahan. Mohon periksa kembali isian Anda:
+            <ul style="margin-top: 0.5rem; margin-bottom: 0; padding-left: 1.5rem;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
 
         {{-- Info Dasar --}}
         <div class="form-section-title">

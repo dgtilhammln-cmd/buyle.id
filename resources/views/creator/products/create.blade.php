@@ -85,6 +85,17 @@
     <form action="{{ route('creator.products.store') }}" method="POST" enctype="multipart/form-data" id="productForm">
         @csrf
 
+        @if($errors->any())
+        <div style="background-color: #fee2e2; color: #b91c1c; padding: 1rem 1.5rem; border-bottom: 1px solid #fca5a5; font-size: 0.85rem; font-weight: 600;">
+            Terdapat beberapa kesalahan. Mohon periksa kembali isian Anda:
+            <ul style="margin-top: 0.5rem; margin-bottom: 0; padding-left: 1.5rem;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
         {{-- Info Dasar --}}
         <div class="form-section-title">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
@@ -190,7 +201,7 @@
         </div>
         <div class="form-body">
             <div class="form-group">
-                <label class="form-label">Thumbnail Utama & Galeri (Maks 7 Gambar)</label>
+                <label class="form-label">Thumbnail Utama & Galeri (Maks 7 Gambar) <span>*</span></label>
                 <div class="img-upload-area" onclick="document.getElementById('img-input').click()" style="margin-bottom:0.75rem;">
                     <div id="imgPlaceholder">
                         <svg width="32" height="32" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -199,7 +210,7 @@
                     </div>
                 </div>
                 <div id="galleryPreview" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;"></div>
-                <input type="file" name="gallery[]" id="img-input" accept="image/*" multiple max="7" onchange="previewGallery(event)" style="display:none;">
+                <input type="file" name="gallery[]" id="img-input" accept="image/*" multiple max="7" onchange="previewGallery(event)" style="display:none;" required>
                 @error('gallery')<span class="form-error">{{ $message }}</span>@enderror
             </div>
         </div>
