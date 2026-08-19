@@ -1,5 +1,13 @@
 <IfModule mod_rewrite.c>
-    RewriteEngine on
-    RewriteCond %{REQUEST_URI} !^public_html
+    RewriteEngine On
+
+    # If the request is for an existing real file or directory, serve it directly
+    RewriteCond %{REQUEST_URI} !^/public_html/
+    RewriteCond %{DOCUMENT_ROOT}/public_html%{REQUEST_URI} -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}/public_html%{REQUEST_URI} -d
     RewriteRule ^(.*)$ public_html/$1 [L]
+
+    # All other requests -> route through Laravel's index.php
+    RewriteCond %{REQUEST_URI} !^/public_html/
+    RewriteRule ^(.*)$ public_html/index.php [L]
 </IfModule>
