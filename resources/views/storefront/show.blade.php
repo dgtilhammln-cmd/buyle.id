@@ -200,15 +200,7 @@
             <div class="sf-profile-text">
                 <h1 class="sf-store-name">
                     {{ $profile->store_name ?: $seller->name }}
-                    <span class="sf-badge" title="Verified">🏅</span>
-                    <span class="sf-badge" title="Trusted">🛡️</span>
                 </h1>
-                <div class="sf-rating">
-                    <span class="sf-star">★</span>
-                    <span>{{ number_format($avgRating, 1) }}</span>
-                    <span>·</span>
-                    <span>{{ number_format($totalSold) }} terjual</span>
-                </div>
                 @if($profile->store_description)
                     <p class="sf-desc">{{ $profile->store_description }}</p>
                 @endif

@@ -53,11 +53,6 @@ class CreatorStoreController extends Controller
 
         $products = $query->paginate(12)->withQueryString();
 
-        // Stats
-        $allProducts = Product::where('seller_id', $seller->id)->where('is_active', true);
-        $avgRating   = $allProducts->avg('rating') ?: 5.0;
-        $totalSold   = Product::where('seller_id', $seller->id)->sum('sold_count');
-
         $seo = [
             'title'       => $profile->meta_title ?: ($profile->store_name . ' | buyle.id'),
             'description' => $profile->meta_desc ?: $profile->store_description,
@@ -66,6 +61,6 @@ class CreatorStoreController extends Controller
             'canonical'   => route('store.show', ['slug' => $slug]),
         ];
 
-        return view('storefront.show', compact('profile', 'seller', 'groups', 'products', 'seo', 'sort', 'avgRating', 'totalSold'));
+        return view('storefront.show', compact('profile', 'seller', 'groups', 'products', 'seo', 'sort'));
     }
 }
