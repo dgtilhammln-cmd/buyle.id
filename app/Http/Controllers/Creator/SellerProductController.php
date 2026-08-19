@@ -15,6 +15,8 @@ use Illuminate\Support\Str;
 
 class SellerProductController extends Controller
 {
+    use \App\Http\Controllers\Admin\HandlesImageUpload;
+
     public function __construct(private readonly DigitalLinkValidator $linkValidator) {}
 
     /**
@@ -28,7 +30,7 @@ class SellerProductController extends Controller
             ->with('category:id,name')
             ->when($request->q, fn($q, $search) => $q->where('name', 'like', "%{$search}%"))
             ->when($request->status, fn($q, $s) => $q->where('is_active', $s === 'active'))
-            ->latestFirst()
+            ->latest()
             ->simplePaginate(15)
             ->withQueryString();
 
@@ -56,7 +58,10 @@ class SellerProductController extends Controller
 
         // Handle thumbnail upload
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products', 'public');
+            $file = $request->file('image');
+            if ($file->isValid()) {
+                $data['image'] = $this->storeWebP($file, 'products', 1200, 1200, 85);
+            }
         }
 
         // Produk digital buyle.id selalu external_link
@@ -109,7 +114,10 @@ class SellerProductController extends Controller
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
-            $data['image'] = $request->file('image')->store('products', 'public');
+            $file = $request->file('image');
+            if ($file->isValid()) {
+                $data['image'] = $this->storeWebP($file, 'products', 1200, 1200, 85);
+            }
         }
 
         $data['product_type'] = 'external_link'; // Selalu link

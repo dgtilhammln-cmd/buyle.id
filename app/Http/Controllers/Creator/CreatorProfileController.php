@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 class CreatorProfileController extends Controller
 {
+    use \App\Http\Controllers\Admin\HandlesImageUpload;
+
     public function edit()
     {
         $user = auth()->user();
@@ -31,6 +33,7 @@ class CreatorProfileController extends Controller
             'meta_title' => 'nullable|string|max:70',
             'meta_desc' => 'nullable|string|max:160',
             'meta_keywords' => 'nullable|string|max:255',
+            'avatar' => 'nullable|image|max:2048',
         ]);
 
         CreatorProfile::updateOrCreate(
@@ -41,6 +44,17 @@ class CreatorProfileController extends Controller
                 'meta_title', 'meta_desc', 'meta_keywords'
             ])
         );
+
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            if ($file->isValid()) {
+                if ($user->avatar) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+                }
+                $user->avatar = $this->storeWebP($file, 'avatars', 800, 800, 85);
+                $user->save();
+            }
+        }
 
         return redirect()->route('creator.profile.edit')->with('success', 'Profil toko & SEO berhasil diperbarui!');
     }

@@ -55,7 +55,7 @@
 
 @section('content')
 <div class="form-card">
-    <form action="{{ route('creator.profile.update') }}" method="POST">
+    <form action="{{ route('creator.profile.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -66,6 +66,21 @@
         </div>
         <div class="form-body">
             <div class="form-grid">
+                <div class="form-group full" style="display:flex; align-items:center; gap:1rem;">
+                    @if(auth()->user()->avatar)
+                        <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="Avatar" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid #e7f0e7;">
+                    @else
+                        <div style="width:64px;height:64px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94A3B8;font-weight:700;font-size:1.2rem;border:2px solid #e7f0e7;">
+                            {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                        </div>
+                    @endif
+                    <div style="flex:1;">
+                        <label class="form-label">Foto Profil Toko</label>
+                        <input type="file" name="avatar" class="form-input" style="padding:10px;" accept="image/*">
+                        <span class="form-hint">Maksimal 2MB. Akan dikonversi otomatis ke WebP.</span>
+                        @error('avatar')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+                </div>
                 <div class="form-group full">
                     <label class="form-label">Nama Toko / Creator</label>
                     <input type="text" name="store_name" value="{{ old('store_name', $profile->store_name) }}" class="form-input" placeholder="Misal: HVM Digital Studio">

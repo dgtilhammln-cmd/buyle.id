@@ -23,3 +23,5 @@ class CreatorProductGroup extends Model
     {
         return $this->hasMany(Product::class, 'creator_group_id');
     }
+
+}
