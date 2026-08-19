@@ -268,14 +268,14 @@
         font-size: 0.85rem;
         font-weight: 700;
         color: #fff;
-        background: linear-gradient(135deg, #0EA5E9, #0369A1);
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
         text-decoration: none;
         padding: 0.5rem 1.25rem;
         border-radius: 999px;
         transition: transform 0.2s, box-shadow 0.2s;
-        box-shadow: 0 4px 14px rgba(14,165,233,0.35);
+        box-shadow: 0 4px 14px rgba(30,179,73,0.35);
     }
-    .auth-solid-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(14,165,233,0.45); }
+    .auth-solid-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(30,179,73,0.45); }
 
     .auth-divider {
         width: 1px;

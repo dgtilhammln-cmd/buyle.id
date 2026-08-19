@@ -210,7 +210,7 @@
         border-radius: 0 0 50% 50% / 0 0 30% 30%;
         z-index: 0;
         transition: background 0.5s ease;
-        background: linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%); /* Default */
+        background: linear-gradient(180deg, #1eb349 0%, #a5cf37 100%);
     }
     @media (max-width: 991px) {
         .cv-hero-oval-bg {
