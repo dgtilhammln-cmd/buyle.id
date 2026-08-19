@@ -28,6 +28,9 @@ class UpdateProductRequest extends FormRequest
             'creator_group_id'    => ['nullable', 'exists:creator_product_groups,id'],
             'file_type'           => ['nullable', 'string', 'max:50'],
             'image'               => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'gallery'             => ['nullable', 'array', 'max:7'],
+            'gallery.*'           => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'tiktok_video_url'    => ['nullable', 'url', 'max:255'],
 
             // URL produk digital — divalidasi oleh SafeDigitalUrl
             'digital_resource'    => ['required', 'string', 'max:2000', new SafeDigitalUrl()],

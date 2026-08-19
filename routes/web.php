@@ -372,6 +372,7 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
 // 2. Seller Dashboard (Creator)
 Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Creator\SellerController::class, 'dashboard'])->name('dashboard');
+    Route::post('/upload-image', [\App\Http\Controllers\Admin\AdminUploadController::class, 'uploadImage'])->name('upload.image');
 
     // CRUD Produk
     Route::resource('products', \App\Http\Controllers\Creator\SellerProductController::class);

@@ -89,7 +89,7 @@
                 <div class="form-group full">
                     <label class="form-label">Slug URL Toko</label>
                     <div style="display:flex; align-items:center; border:1.5px solid #e7f0e7; border-radius:10px; background:#f9fefb; overflow:hidden;" class="slug-wrapper">
-                        <span style="padding:0 0.75rem; font-size:0.8rem; color:#94A3B8; background:#f1f5f9; border-right:1px solid #e7f0e7; height:44px; display:flex; align-items:center;">buyle.id/creator/</span>
+                        <span style="padding:0 0.75rem; font-size:0.8rem; color:#94A3B8; background:#f1f5f9; border-right:1px solid #e7f0e7; height:44px; display:flex; align-items:center;">buyle.id/toko/</span>
                         <input type="text" name="store_slug" value="{{ old('store_slug', $profile->store_slug) }}" style="border:none; background:transparent; height:100%; padding:0 0.75rem; flex:1; outline:none; font-family:'Montserrat',sans-serif; font-size:0.875rem;" placeholder="hvm-digital-studio">
                     </div>
                     <span class="form-hint">Hanya huruf kecil, angka, dan strip (-). Kosongkan untuk nama otomatis.</span>

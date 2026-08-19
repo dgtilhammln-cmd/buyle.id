@@ -40,6 +40,14 @@ class CreatorStoreController extends Controller
 
         $products = $query->latest()->paginate(12)->withQueryString();
 
-        return view('storefront.show', compact('profile', 'seller', 'groups', 'products'));
+        $seo = [
+            'title'       => $profile->meta_title ?: ($profile->store_name . ' | buyle.id'),
+            'description' => $profile->meta_desc ?: $profile->store_description,
+            'keywords'    => $profile->meta_keywords,
+            'og_image'    => $seller->avatar ? asset('storage/'.$seller->avatar) : asset('images/og-default.jpg'),
+            'canonical'   => route('store.show', ['slug' => $slug]),
+        ];
+
+        return view('storefront.show', compact('profile', 'seller', 'groups', 'products', 'seo'));
     }
 }

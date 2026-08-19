@@ -140,8 +140,8 @@
                 </div>
 
                 <div class="form-group full">
-                    <label class="form-label">Deskripsi Lengkap</label>
-                    <textarea name="description" class="form-input" rows="5" placeholder="Jelaskan produk secara detail — apa yang didapat pembeli, cara akses, dsb.">{{ old('description') }}</textarea>
+                    <label class="form-label">Deskripsi Lengkap <span>*</span></label>
+                    @include('creator.partials.rich-editor', ['name'=>'description', 'value'=>old('description'), 'height'=>'300px'])
                 </div>
             </div>
         </div>
@@ -173,6 +173,12 @@
                         Domain yang diizinkan: {{ implode(', ', array_slice($allowedDomains, 0, 6)) }}{{ count($allowedDomains) > 6 ? ', dan lainnya' : '' }}
                     </span>
                     @error('digital_resource')<span class="form-error">{{ $message }}</span>@enderror
+                <div class="form-group full">
+                    <label class="form-label">Link Video TikTok (Opsional)</label>
+                    <input type="url" name="tiktok_video_url" value="{{ old('tiktok_video_url') }}"
+                        class="form-input" placeholder="https://www.tiktok.com/@username/video/123456789" autocomplete="off">
+                    <span class="form-hint">Tautan langsung ke video TikTok yang relevan dengan produk.</span>
+                    @error('tiktok_video_url')<span class="form-error">{{ $message }}</span>@enderror
                 </div>
             </div>
         </div>
@@ -184,16 +190,17 @@
         </div>
         <div class="form-body">
             <div class="form-group">
-                <label class="form-label">Thumbnail Produk</label>
-                <div class="img-upload-area" onclick="document.getElementById('img-input').click()">
-                    <img id="imgPreview" class="img-preview" src="" alt="Preview">
+                <label class="form-label">Thumbnail Utama & Galeri (Maks 7 Gambar)</label>
+                <div class="img-upload-area" onclick="document.getElementById('img-input').click()" style="margin-bottom:0.75rem;">
                     <div id="imgPlaceholder">
                         <svg width="32" height="32" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                        <p style="font-size:0.8rem; color:#94A3B8; margin-top:0.5rem; font-weight:600;">Klik untuk pilih gambar</p>
-                        <p style="font-size:0.7rem; color:#cbd5e1; margin-top:0.2rem;">JPG, PNG, WEBP — maks 2MB</p>
+                        <p style="font-size:0.8rem; color:#94A3B8; margin-top:0.5rem; font-weight:600;">Klik untuk pilih hingga 7 gambar</p>
+                        <p style="font-size:0.7rem; color:#cbd5e1; margin-top:0.2rem;">JPG, PNG, WEBP — maks 2MB/file</p>
                     </div>
                 </div>
-                <input type="file" name="image" id="img-input" accept="image/*" onchange="previewImg(event)">
+                <div id="galleryPreview" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;"></div>
+                <input type="file" name="gallery[]" id="img-input" accept="image/*" multiple max="7" onchange="previewGallery(event)" style="display:none;">
+                @error('gallery')<span class="form-error">{{ $message }}</span>@enderror
             </div>
         </div>
 
@@ -249,14 +256,87 @@
 
 @section('scripts')
 <script>
-function previewImg(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const preview = document.getElementById('imgPreview');
+let galleryFiles = new DataTransfer();
+
+function previewGallery(event) {
+    const input = event.target;
+    const files = input.files;
+    const preview = document.getElementById('galleryPreview');
     const placeholder = document.getElementById('imgPlaceholder');
-    preview.src = URL.createObjectURL(file);
-    preview.style.display = 'block';
-    placeholder.style.display = 'none';
+    
+    // Append new files to our DataTransfer object
+    Array.from(files).forEach(file => {
+        if (galleryFiles.items.length < 7) {
+            galleryFiles.items.add(file);
+        }
+    });
+    
+    // Sync the input
+    input.files = galleryFiles.files;
+    renderGalleryPreview();
+}
+
+function removeGalleryImage(index) {
+    const input = document.getElementById('img-input');
+    const newFiles = new DataTransfer();
+    
+    Array.from(galleryFiles.files).forEach((file, i) => {
+        if (i !== index) {
+            newFiles.items.add(file);
+        }
+    });
+    
+    galleryFiles = newFiles;
+    input.files = galleryFiles.files;
+    renderGalleryPreview();
+}
+
+function renderGalleryPreview() {
+    const preview = document.getElementById('galleryPreview');
+    const placeholder = document.getElementById('imgPlaceholder');
+    
+    preview.innerHTML = '';
+    if (galleryFiles.files.length > 0) {
+        if(placeholder) placeholder.style.display = 'none';
+        Array.from(galleryFiles.files).forEach((file, index) => {
+            const container = document.createElement('div');
+            container.style.position = 'relative';
+            container.style.display = 'inline-block';
+            
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.style.width = '80px';
+            img.style.height = '80px';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '10px';
+            
+            const btn = document.createElement('button');
+            btn.innerHTML = '&times;';
+            btn.type = 'button';
+            btn.style.position = 'absolute';
+            btn.style.top = '-5px';
+            btn.style.right = '-5px';
+            btn.style.background = '#ef4444';
+            btn.style.color = '#fff';
+            btn.style.border = 'none';
+            btn.style.borderRadius = '50%';
+            btn.style.width = '20px';
+            btn.style.height = '20px';
+            btn.style.cursor = 'pointer';
+            btn.style.fontSize = '14px';
+            btn.style.lineHeight = '1';
+            btn.style.display = 'flex';
+            btn.style.alignItems = 'center';
+            btn.style.justifyContent = 'center';
+            btn.onclick = () => removeGalleryImage(index);
+            
+            container.appendChild(img);
+            container.appendChild(btn);
+            preview.appendChild(container);
+        });
+    } else {
+        if(placeholder) placeholder.style.display = 'block';
+    }
 }
 
 // Real-time link validator

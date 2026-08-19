@@ -22,6 +22,10 @@ class CreatorProfileController extends Controller
     {
         $user = auth()->user();
 
+        if (empty($request->store_slug) && !empty($request->store_name)) {
+            $request->merge(['store_slug' => \Illuminate\Support\Str::slug($request->store_name)]);
+        }
+
         $request->validate([
             'store_name' => 'nullable|string|max:100',
             'store_slug' => 'nullable|string|max:100|regex:/^[a-z0-9\-]+$/|unique:creator_profiles,store_slug,' . ($user->creatorProfile->id ?? 'NULL'),

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Service;
+use App\Models\Product;
 use App\Models\Setting;
 use App\Models\WaSetting;
 use App\Models\Testimonial;
@@ -11,7 +11,7 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        $query = Service::active()->ordered();
+        $query = Product::active()->ordered();
         
         // Keyword search
         if (request()->filled('q')) {
@@ -91,7 +91,7 @@ class ServiceController extends Controller
             });
 
         // Price range for slider
-        $maxPrice = Service::active()->where('price', '>', 0)->max('price') ?? 5000000;
+        $maxPrice = Product::active()->where('price', '>', 0)->max('price') ?? 5000000;
 
         $hasFilters = request()->hasAny(['q', 'category', 'kategori', 'price_min', 'price_max', 'type', 'sort']);
         $seo = [
@@ -123,11 +123,11 @@ class ServiceController extends Controller
 
     public function show(string $slug)
     {
-        $service      = Service::where('slug', $slug)->where('is_active', true)->firstOrFail();
+        $service      = Product::where('slug', $slug)->where('is_active', true)->firstOrFail();
         $service->increment('views_count');
         $settings     = Setting::getAllAsArray();
         $wa           = WaSetting::primary();
-        $related      = Service::active()->ordered()->where('id', '!=', $service->id)->limit(4)->get();
+        $related      = Product::active()->ordered()->where('id', '!=', $service->id)->limit(4)->get();
         $testimonials = Testimonial::active()->ordered()->get()->unique('name');
         $siteName     = $settings['site_name'] ?? 'buyle.id';
 
@@ -135,7 +135,7 @@ class ServiceController extends Controller
             'title'       => $service->meta_title ?: ($service->name . ' | ' . $siteName),
             'description' => $service->meta_desc  ?: $service->short_desc,
             'keywords'    => $service->meta_keywords,
-            'og_image'    => !empty($service->og_image) ? asset('storage/'.$service->og_image) : (!empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : asset('images/og-default.jpg')),
+            'og_image'    => !empty($service->image) ? asset('storage/'.$service->image) : (!empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : asset('images/og-default.jpg')),
             'canonical'   => route('products.show', ['slug' => $slug]),
         ];
 

@@ -64,6 +64,17 @@ class SellerProductController extends Controller
             }
         }
 
+        // Handle gallery upload
+        if ($request->hasFile('gallery')) {
+            $galleryPaths = [];
+            foreach ($request->file('gallery') as $gFile) {
+                if ($gFile->isValid()) {
+                    $galleryPaths[] = $this->storeWebP($gFile, 'products/gallery', 1200, 1200, 85);
+                }
+            }
+            $data['gallery'] = $galleryPaths;
+        }
+
         // Produk digital buyle.id selalu external_link
         $data['seller_id']    = auth()->id();
         $data['product_type'] = 'external_link';
@@ -118,6 +129,24 @@ class SellerProductController extends Controller
             if ($file->isValid()) {
                 $data['image'] = $this->storeWebP($file, 'products', 1200, 1200, 85);
             }
+        }
+
+        // Handle gallery upload
+        if ($request->hasFile('gallery')) {
+            // Hapus gambar gallery lama jika ingin replace, atau biarkan kalau ingin tambah.
+            // Sesuai UI, jika ada input file baru, kita replace gallery lama.
+            if (is_array($product->gallery)) {
+                foreach ($product->gallery as $oldImg) {
+                    Storage::disk('public')->delete($oldImg);
+                }
+            }
+            $galleryPaths = [];
+            foreach ($request->file('gallery') as $gFile) {
+                if ($gFile->isValid()) {
+                    $galleryPaths[] = $this->storeWebP($gFile, 'products/gallery', 1200, 1200, 85);
+                }
+            }
+            $data['gallery'] = $galleryPaths;
         }
 
         $data['product_type'] = 'external_link'; // Selalu link

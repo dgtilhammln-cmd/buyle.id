@@ -341,6 +341,18 @@
             </div>
         </div>
         @endif
+
+        @if($service->tiktok_video_url)
+        <div style="margin-top: 1.5rem;">
+            <div class="pd-section-title" style="font-size:1.1rem; margin-bottom:0.75rem;">Video Produk</div>
+            <blockquote class="tiktok-embed" cite="{{ $service->tiktok_video_url }}" data-video-id="{{ Str::afterLast(rtrim($service->tiktok_video_url, '/'), '/') }}" style="max-width: 100%; border-radius: 12px; overflow: hidden; margin:0;">
+                <section>
+                    <a target="_blank" title="TikTok Video" href="{{ $service->tiktok_video_url }}">Tonton di TikTok</a>
+                </section>
+            </blockquote>
+            <script async src="https://www.tiktok.com/embed.js"></script>
+        </div>
+        @endif
     </div>
 
     {{-- Right: Product Info --}}
