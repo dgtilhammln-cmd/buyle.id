@@ -25,6 +25,9 @@
     },
     "extra": {"laravel": {"dont-discover": []}},
     "config": {
+        "platform": {
+            "php": "8.2.30"
+        },
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "audit": {"block-insecure": false},
