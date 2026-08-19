@@ -15,6 +15,9 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (Auth::check()) {
+            $role = Auth::user()->role;
+            if ($role === 'super_admin' || $role === 'admin') return redirect()->route('admin.dashboard');
+            if ($role === 'seller') return redirect()->route('creator.dashboard');
             return redirect()->route('account.overview');
         }
         return view('auth.login');
@@ -67,6 +70,9 @@ class AuthController extends Controller
     public function showRegister()
     {
         if (Auth::check()) {
+            $role = Auth::user()->role;
+            if ($role === 'super_admin' || $role === 'admin') return redirect()->route('admin.dashboard');
+            if ($role === 'seller') return redirect()->route('creator.dashboard');
             return redirect()->route('account.overview');
         }
         return view('auth.register');

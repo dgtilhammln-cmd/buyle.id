@@ -117,10 +117,10 @@ Route::post('/request-order', [LeadController::class, 'store'])->name('lead.stor
 |--------------------------------------------------------------------------
 */
 Route::middleware(['guest'])->group(function () {
-    Route::get('/masuk',    [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/masuk',   [AuthController::class, 'login'])->name('login.submit');
-    Route::get('/daftar',   [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/daftar',  [AuthController::class, 'register'])->name('register.submit');
+    Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login',   [AuthController::class, 'login'])->name('login.submit');
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register',[AuthController::class, 'register'])->name('register.submit');
 
     // Google OAuth
     Route::get('/auth/google',          [AuthController::class, 'googleRedirect'])->name('auth.google');
