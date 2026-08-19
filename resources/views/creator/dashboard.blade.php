@@ -178,7 +178,7 @@
     {{-- Balance Card --}}
     <div>
         <div class="balance-card">
-            <div class="balance-label">💰 Saldo Tersedia</div>
+            <div class="balance-label" style="display:flex;align-items:center;gap:0.4rem;"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Saldo Tersedia</div>
             <div class="balance-amount">Rp {{ number_format($availableBalance, 0, ',', '.') }}</div>
             <div class="balance-meta">Sudah dicairkan: Rp {{ number_format($totalPayout, 0, ',', '.') }}</div>
             <a href="{{ route('creator.payout.settings') }}" class="btn-withdraw">
@@ -192,17 +192,17 @@
             <div class="section-header">
                 <div>
                     <h2>Status Akun</h2>
-                    <p>Informasi seller Anda</p>
+                    <p>Informasi creator Anda</p>
                 </div>
             </div>
             <div class="section-body" style="display:flex; flex-direction:column; gap:0.75rem;">
                 <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.82rem;">
                     <span style="color:#64748B;">Status</span>
-                    <span class="badge badge-green">✅ Aktif</span>
+                    <span class="badge badge-green" style="display:inline-flex;align-items:center;gap:0.3rem;"><svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Aktif</span>
                 </div>
                 <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.82rem;">
                     <span style="color:#64748B;">Bergabung</span>
-                    <span style="font-weight:600; color:#374151;">{{ $seller->created_at->format('d M Y') }}</span>
+                    <span style="font-weight:600; color:#374151;">{{ $seller->created_at ? $seller->created_at->format('d M Y') : '-' }}</span>
                 </div>
                 <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.82rem;">
                     <span style="color:#64748B;">Email</span>
@@ -233,7 +233,7 @@
                     </div>
                     <div>
                         <div class="product-mini-name">{{ Str::limit($p->name, 30) }}</div>
-                        <div class="product-mini-cat">{{ $p->category->name ?? 'Tanpa Kategori' }} • {{ $p->is_active ? '✅ Aktif' : '⏸ Non-aktif' }}</div>
+                        <div class="product-mini-cat">{{ $p->category->name ?? 'Tanpa Kategori' }} &bull; @if($p->is_active)<span style="color:#16a34a;font-weight:700;">Aktif</span>@else<span style="color:#94A3B8;">Non-aktif</span>@endif</div>
                     </div>
                     <div class="product-mini-price">Rp {{ number_format($p->price, 0, ',', '.') }}</div>
                 </div>
