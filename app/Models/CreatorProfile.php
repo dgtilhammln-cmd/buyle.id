@@ -18,6 +18,8 @@ class CreatorProfile extends Model
         'meta_title',
         'meta_desc',
         'meta_keywords',
+        'store_banner_1',
+        'store_banner_2',
     ];
 
     public function user()

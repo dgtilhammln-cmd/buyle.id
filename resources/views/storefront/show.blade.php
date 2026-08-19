@@ -20,7 +20,8 @@
 .sf-sort-btn, .sf-search, .sf-card-price-strike { font-weight: 400 !important; }
 
 /* ── Wrapper ── */
-.sf-page { max-width: 760px; margin: 0 auto; background: #fff; min-height: 100vh; }
+.sf-page { max-width: 760px; margin: 0 auto; background: #fff; min-height: 100vh; overflow-x: hidden; box-sizing: border-box; }
+.sf-page * { box-sizing: border-box; }
 
 /* ── Profile Card ── */
 .sf-profile {
@@ -63,11 +64,16 @@
 }
 
 /* ── Banner ── */
+.sf-banner-slider {
+    display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+    gap: 0.5rem; padding: 0.75rem 0.75rem 0; scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+.sf-banner-slider::-webkit-scrollbar { display: none; }
 .sf-banner {
-    margin: 0.75rem 0.75rem 0;
+    flex: 0 0 100%; scroll-snap-align: center;
     border-radius: 14px; overflow: hidden;
     aspect-ratio: 16/6; background: #f1f5f9;
-    position: relative;
 }
 .sf-banner img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .sf-banner-placeholder {
@@ -95,7 +101,7 @@
 }
 .sf-tab:hover { border-color: #1eb349; color: #1eb349; }
 .sf-tab.active {
-    background: #0F172A; border-color: #0F172A; color: #fff;
+    background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); border-color: transparent; color: #fff;
 }
 
 /* ── Sort + Search Bar ── */
@@ -110,7 +116,7 @@
     cursor: pointer; transition: all 0.2s; text-decoration: none;
 }
 .sf-sort-btn.active {
-    background: #0F172A; border-color: #0F172A; color: #fff;
+    background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); border-color: transparent; color: #fff;
 }
 .sf-sort-btn:hover:not(.active) { border-color: #1eb349; color: #1eb349; }
 .sf-search-wrap {
@@ -209,15 +215,33 @@
     </div>
 
     {{-- ── Banner ── --}}
-    @php
-        $bannerImg = isset($profile->store_banner) && $profile->store_banner
-            ? asset('storage/' . $profile->store_banner)
-            : ($products->count() > 0 && $products->first()->image ? $products->first()->image_url : null);
-    @endphp
-    @if($bannerImg)
-    <div class="sf-banner">
-        <img src="{{ $bannerImg }}" alt="Banner {{ $profile->store_name }}">
-    </div>
+    @if($profile->store_banner_1 || $profile->store_banner_2)
+        <div class="sf-banner-slider">
+            @if($profile->store_banner_1)
+            <div class="sf-banner">
+                <img src="{{ asset('storage/' . $profile->store_banner_1) }}" alt="Banner 1">
+            </div>
+            @endif
+            @if($profile->store_banner_2)
+            <div class="sf-banner">
+                <img src="{{ asset('storage/' . $profile->store_banner_2) }}" alt="Banner 2">
+            </div>
+            @endif
+        </div>
+    @else
+        @php
+            // Fallback for old 'store_banner' or first product image
+            $bannerImg = isset($profile->store_banner) && $profile->store_banner
+                ? asset('storage/' . $profile->store_banner)
+                : ($products->count() > 0 && $products->first()->image ? $products->first()->image_url : null);
+        @endphp
+        @if($bannerImg)
+        <div class="sf-banner-slider">
+            <div class="sf-banner">
+                <img src="{{ $bannerImg }}" alt="Banner {{ $profile->store_name }}">
+            </div>
+        </div>
+        @endif
     @endif
 
     {{-- ── Group Tabs ── --}}

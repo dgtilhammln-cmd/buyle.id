@@ -37,7 +37,9 @@ class CreatorProfileController extends Controller
             'meta_title' => 'nullable|string|max:70',
             'meta_desc' => 'nullable|string|max:160',
             'meta_keywords' => 'nullable|string|max:255',
-            'avatar' => 'nullable|image|max:2048',
+            'avatar' => 'nullable|image|max:10240',
+            'store_banner_1' => 'nullable|image|max:10240',
+            'store_banner_2' => 'nullable|image|max:10240',
         ]);
 
         CreatorProfile::updateOrCreate(
@@ -48,6 +50,23 @@ class CreatorProfileController extends Controller
                 'meta_title', 'meta_desc', 'meta_keywords'
             ])
         );
+
+        if ($request->hasFile('store_banner_1')) {
+            $b1 = $request->file('store_banner_1');
+            if ($b1->isValid()) {
+                if ($profile->store_banner_1) \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->store_banner_1);
+                $profile->store_banner_1 = $this->storeWebP($b1, 'banners', 1200, 600, 85);
+            }
+        }
+
+        if ($request->hasFile('store_banner_2')) {
+            $b2 = $request->file('store_banner_2');
+            if ($b2->isValid()) {
+                if ($profile->store_banner_2) \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->store_banner_2);
+                $profile->store_banner_2 = $this->storeWebP($b2, 'banners', 1200, 600, 85);
+            }
+        }
+        $profile->save();
 
         if ($request->hasFile('avatar')) {
             $file = $request->file('avatar');
