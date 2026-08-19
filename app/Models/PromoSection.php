@@ -38,11 +38,11 @@ class PromoSection extends Model
 
         switch ($this->selection_type) {
             case 'category':
-                return Service::active()->where('product_category_id', $this->category_id)->orderBy('order')->limit($limit)->get();
+                return Product::active()->where('product_category_id', $this->category_id)->limit($limit)->get();
             case 'discount':
-                return Service::active()->whereNotNull('sale_price')->whereColumn('sale_price', '<', 'price')->where('sale_price', '>', 0)->orderBy('order')->limit($limit)->get();
+                return Product::active()->whereNotNull('sale_price')->whereColumn('sale_price', '<', 'price')->where('sale_price', '>', 0)->limit($limit)->get();
             case 'all':
-                return Service::active()->orderBy('order')->limit($limit)->get();
+                return Product::active()->limit($limit)->get();
             case 'manual':
             default:
                 return $this->services()->limit($limit)->get();
