@@ -61,7 +61,7 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/en', function () { return redirect('/', 301); });
 
     Route::get('/',               [HomeController::class,    'index'])->name('home');
-    Route::get('/creator/{slug}', [\App\Http\Controllers\CreatorStoreController::class, 'show'])->name('store.show');
+    Route::get('/toko/{slug}', [\App\Http\Controllers\CreatorStoreController::class, 'show'])->name('store.show');
     Route::get('/tentang-kami',   [AboutController::class,  'index'])->name('about');
     Route::get('/kontak',         [ContactController::class,'index'])->name('contact');
     Route::post('/kontak',        [ContactController::class,'send'])->name('contact.send');

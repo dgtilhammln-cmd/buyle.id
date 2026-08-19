@@ -128,7 +128,7 @@
     <div class="store-nav">
         <a href="{{ route('store.show', $profile->store_slug) }}" class="nav-pill {{ !request()->has('group') ? 'active' : '' }}">Semua Produk</a>
         @foreach($groups as $group)
-            <a href="{{ route('store.show', ['slug' => $profile->store_slug, 'group' => $group->slug]) }}" class="nav-pill {{ request('group') === $group->slug ? 'active' : '' }}">
+            <a href="{{ route('store.show', $profile->store_slug) . '?group=' . $group->slug }}" class="nav-pill {{ request('group') === $group->slug ? 'active' : '' }}">
                 {{ $group->name }}
             </a>
         @endforeach
