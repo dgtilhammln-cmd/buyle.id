@@ -725,28 +725,28 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
         <div style="grid-column:span 2; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
           <div>
             <label class="form-label">Provinsi</label>
-            <select name="province_id" id="province-select" class="form-input" data-selected="{{ $settings['province_id'] ?? '' }}" required>
+            <select name="province_id" id="province-select" class="form-input" data-selected="{{ $settings['province_id'] ?? '' }}">
                 <option value="">Pilih Provinsi</option>
             </select>
             <input type="hidden" name="province_name" id="province-name" value="{{ $settings['province_name'] ?? '' }}">
           </div>
           <div>
             <label class="form-label">Kota/Kabupaten</label>
-            <select name="city_id" id="city-select" class="form-input" data-selected="{{ $settings['city_id'] ?? '' }}" required disabled>
+            <select name="city_id" id="city-select" class="form-input" data-selected="{{ $settings['city_id'] ?? '' }}" disabled>
                 <option value="">Pilih Kota/Kabupaten</option>
             </select>
             <input type="hidden" name="city_name" id="city-name" value="{{ $settings['city_name'] ?? '' }}">
           </div>
           <div>
             <label class="form-label">Kecamatan</label>
-            <select name="district_id" id="district-select" class="form-input" data-selected="{{ $settings['district_id'] ?? '' }}" required disabled>
+            <select name="district_id" id="district-select" class="form-input" data-selected="{{ $settings['district_id'] ?? '' }}" disabled>
                 <option value="">Pilih Kecamatan</option>
             </select>
             <input type="hidden" name="district_name" id="district-name" value="{{ $settings['district_name'] ?? '' }}">
           </div>
           <div>
             <label class="form-label">Kelurahan / Desa</label>
-            <select name="village_id" id="village-select" class="form-input" data-selected="{{ $settings['village_id'] ?? '' }}" required disabled>
+            <select name="village_id" id="village-select" class="form-input" data-selected="{{ $settings['village_id'] ?? '' }}" disabled>
                 <option value="">Pilih Kelurahan</option>
             </select>
             <input type="hidden" name="village_name" id="village-name" value="{{ $settings['village_name'] ?? '' }}">
