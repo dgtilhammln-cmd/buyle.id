@@ -31,23 +31,36 @@ class CreatorStoreController extends Controller
             ->where('is_active', true);
 
         if ($request->filled('group')) {
-            $groupSlug = $request->group;
-            $group = $groups->firstWhere('slug', $groupSlug);
-            if ($group) {
-                $query->where('creator_group_id', $group->id);
-            }
+            $group = $groups->firstWhere('slug', $request->group);
+            if ($group) $query->where('creator_group_id', $group->id);
         }
 
-        $products = $query->latest()->paginate(12)->withQueryString();
+        // 4. Search keyword
+        if ($request->filled('q')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->q . '%')
+                  ->orWhere('short_desc', 'like', '%' . $request->q . '%');
+            });
+        }
+
+        // 5. Sort
+        $sort = $request->get('sort', 'terbaru');
+        if ($sort === 'terlaris') {
+            $query->orderByDesc('sold_count');
+        } else {
+            $query->latest();
+        }
+
+        $products = $query->paginate(12)->withQueryString();
 
         $seo = [
             'title'       => $profile->meta_title ?: ($profile->store_name . ' | buyle.id'),
             'description' => $profile->meta_desc ?: $profile->store_description,
             'keywords'    => $profile->meta_keywords,
-            'og_image'    => $seller->avatar ? asset('storage/'.$seller->avatar) : asset('images/og-default.jpg'),
+            'og_image'    => $seller->avatar ? asset('storage/' . $seller->avatar) : asset('images/og-default.jpg'),
             'canonical'   => route('store.show', ['slug' => $slug]),
         ];
 
-        return view('storefront.show', compact('profile', 'seller', 'groups', 'products', 'seo'));
+        return view('storefront.show', compact('profile', 'seller', 'groups', 'products', 'seo', 'sort'));
     }
 }
