@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Cart;
-use App\Models\Service as Product;
+use App\Models\Product;
 use App\Models\ProductVariantValue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Session;

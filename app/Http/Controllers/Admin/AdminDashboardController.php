@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AnalyticsEvent;
-use App\Models\Service;
+use App\Models\Product;
 use App\Models\Article;
 use App\Models\GalleryProject;
 use App\Models\Client;
@@ -97,7 +97,7 @@ class AdminDashboardController extends Controller
 
         // Content counts
         $counts = [
-            'services' => Service::count(),
+            'services' => Product::count(),
             'articles' => Article::count(),
             'gallery'  => GalleryProject::count(),
             'clients'  => Client::count(),
