@@ -269,92 +269,106 @@
 <script>
 let galleryFiles = new DataTransfer();
 
-function previewGallery(event) {
-    const input = event.target;
-    const files = input.files;
-    const preview = document.getElementById('galleryPreview');
-    const placeholder = document.getElementById('imgPlaceholder');
-    
-    // Append new files to our DataTransfer object
-    Array.from(files).forEach(file => {
-        if (galleryFiles.items.length < 7) {
-            galleryFiles.items.add(file);
-        }
+/**
+ * Compress a single File using canvas to max 1200px, WebP quality 0.82
+ * Returns a Promise<File>
+ */
+function compressImage(file, maxW = 1200, maxH = 1200, quality = 0.82) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                let { width, height } = img;
+                if (width > maxW || height > maxH) {
+                    const ratio = Math.min(maxW / width, maxH / height);
+                    width  = Math.round(width  * ratio);
+                    height = Math.round(height * ratio);
+                }
+                const canvas  = document.createElement('canvas');
+                canvas.width  = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                canvas.toBlob((blob) => {
+                    const compressed = new File([blob], file.name.replace(/\.[^.]+$/, '.webp'), { type: 'image/webp' });
+                    resolve(compressed);
+                }, 'image/webp', quality);
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
     });
-    
-    // Sync the input
+}
+
+async function previewGallery(event) {
+    const input   = event.target;
+    const files   = Array.from(input.files);
+    const preview = document.getElementById('galleryPreview');
+
+    // Show "processing" indicator
+    preview.innerHTML = '<p style="font-size:0.75rem;color:#94A3B8;margin:0.5rem 0;">⏳ Mengompres gambar…</p>';
+
+    for (const file of files) {
+        if (galleryFiles.items.length >= 7) break;
+        const compressed = await compressImage(file);
+        galleryFiles.items.add(compressed);
+    }
+
+    // Sync input
     input.files = galleryFiles.files;
     renderGalleryPreview();
 }
 
 function removeGalleryImage(index) {
-    const input = document.getElementById('img-input');
+    const input    = document.getElementById('img-input');
     const newFiles = new DataTransfer();
-    
-    Array.from(galleryFiles.files).forEach((file, i) => {
-        if (i !== index) {
-            newFiles.items.add(file);
-        }
-    });
-    
-    galleryFiles = newFiles;
-    input.files = galleryFiles.files;
+    Array.from(galleryFiles.files).forEach((f, i) => { if (i !== index) newFiles.items.add(f); });
+    galleryFiles   = newFiles;
+    input.files    = galleryFiles.files;
     renderGalleryPreview();
 }
 
 function renderGalleryPreview() {
-    const preview = document.getElementById('galleryPreview');
+    const preview     = document.getElementById('galleryPreview');
     const placeholder = document.getElementById('imgPlaceholder');
-    
     preview.innerHTML = '';
+
     if (galleryFiles.files.length > 0) {
-        if(placeholder) placeholder.style.display = 'none';
+        if (placeholder) placeholder.style.display = 'none';
         Array.from(galleryFiles.files).forEach((file, index) => {
-            const container = document.createElement('div');
-            container.style.position = 'relative';
-            container.style.display = 'inline-block';
-            
+            const wrap = document.createElement('div');
+            wrap.style.cssText = 'position:relative;display:inline-block;';
+
             const img = document.createElement('img');
-            img.src = URL.createObjectURL(file);
-            img.style.width = '80px';
-            img.style.height = '80px';
-            img.style.objectFit = 'cover';
-            img.style.borderRadius = '10px';
-            
+            img.src   = URL.createObjectURL(file);
+            img.style.cssText = 'width:80px;height:80px;object-fit:cover;border-radius:10px;display:block;';
+
+            const badge = document.createElement('div');
+            badge.textContent = (index === 0 ? '🖼 Thumbnail' : `#${index+1}`);
+            badge.style.cssText = 'position:absolute;bottom:2px;left:2px;right:2px;background:rgba(0,0,0,0.55);color:#fff;font-size:9px;border-radius:0 0 8px 8px;text-align:center;padding:2px 0;';
+
             const btn = document.createElement('button');
             btn.innerHTML = '&times;';
-            btn.type = 'button';
-            btn.style.position = 'absolute';
-            btn.style.top = '-5px';
-            btn.style.right = '-5px';
-            btn.style.background = '#ef4444';
-            btn.style.color = '#fff';
-            btn.style.border = 'none';
-            btn.style.borderRadius = '50%';
-            btn.style.width = '20px';
-            btn.style.height = '20px';
-            btn.style.cursor = 'pointer';
-            btn.style.fontSize = '14px';
-            btn.style.lineHeight = '1';
-            btn.style.display = 'flex';
-            btn.style.alignItems = 'center';
-            btn.style.justifyContent = 'center';
+            btn.type      = 'button';
+            btn.style.cssText = 'position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;';
             btn.onclick = () => removeGalleryImage(index);
-            
-            container.appendChild(img);
-            container.appendChild(btn);
-            preview.appendChild(container);
+
+            wrap.appendChild(img);
+            wrap.appendChild(badge);
+            wrap.appendChild(btn);
+            preview.appendChild(wrap);
         });
     } else {
-        if(placeholder) placeholder.style.display = 'block';
+        if (placeholder) placeholder.style.display = 'block';
     }
 }
 
 // Real-time link validator
 let linkTimer;
-const linkInput = document.getElementById('externalLink');
+const linkInput  = document.getElementById('externalLink');
 const linkStatus = document.getElementById('linkStatus');
-const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+const csrfToken  = document.querySelector('meta[name="csrf-token"]').content;
 
 linkInput.addEventListener('input', function() {
     clearTimeout(linkTimer);
@@ -365,16 +379,17 @@ linkInput.addEventListener('input', function() {
 
 async function validateLink(url) {
     try {
-        const res = await fetch('{{ route("creator.products.validate-link") }}', {
+        const res  = await fetch('{{ route("creator.products.validate-link") }}', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
             body: JSON.stringify({ url })
         });
         const data = await res.json();
-        linkStatus.textContent = data.message;
-        linkStatus.className = 'link-status ' + (data.valid ? 'valid' : 'invalid');
+        linkStatus.textContent  = data.message;
+        linkStatus.className    = 'link-status ' + (data.valid ? 'valid' : 'invalid');
         linkStatus.style.display = 'block';
     } catch(e) {}
 }
 </script>
 @endsection
+
