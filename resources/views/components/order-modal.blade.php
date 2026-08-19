@@ -1,5 +1,5 @@
 {{-- Request Order Modal (Redesigned) --}}
-@php $services = \App\Models\Service::active()->ordered()->pluck('name')->toArray(); @endphp
+@php $services = \App\Models\Product::active()->pluck('name')->toArray(); @endphp
 
 {{-- Overlay --}}
 <style>

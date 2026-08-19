@@ -5,7 +5,7 @@ www.buyle.id
 ══════════════════════════════════ --}}
 @php
     $s = \App\Models\Setting::getAllAsArray();
-    $svc = \App\Models\Service::where('is_active', true)->orderBy('order')->take(5)->get();
+    $svc = \App\Models\Product::where('is_active', true)->take(5)->get();
     $wa = \App\Models\WaSetting::where('is_active', true)->first();
 @endphp
 

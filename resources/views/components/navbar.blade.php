@@ -411,12 +411,9 @@
             {{-- Search Dropdown (History & Dynamic Recommendations based on views/popularity) --}}
             @php
                 $popularProducts = \Illuminate\Support\Facades\Cache::remember('popular_search_products', 600, function() {
-                    return \App\Models\Service::where('is_active', true)
-                        ->orderByDesc('views_count')
-                        ->orderByDesc('sold_count')
-                        ->orderBy('order')
+                    return \App\Models\Product::where('is_active', true)
                         ->take(5)
-                        ->get(['id', 'name', 'slug', 'views_count']);
+                        ->get(['id', 'name', 'slug']);
                 });
             @endphp
             <div class="search-dropdown">
