@@ -42,7 +42,7 @@ class CreatorProfileController extends Controller
             'store_banner_2' => 'nullable|image|max:10240',
         ]);
 
-        CreatorProfile::updateOrCreate(
+        $profile = CreatorProfile::updateOrCreate(
             ['user_id' => $user->id],
             $request->only([
                 'store_name', 'store_slug', 'store_description',
