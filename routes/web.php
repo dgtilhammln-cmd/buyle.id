@@ -372,14 +372,18 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
 Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Creator\SellerController::class, 'dashboard'])->name('dashboard');
 
-    // CRUD Produk Digital
+    // CRUD Produk
     Route::resource('products', \App\Http\Controllers\Creator\SellerProductController::class);
 
-    // AJAX: Validasi URL produk secara real-time (sebelum form submit)
+    // AJAX: Validasi URL produk
     Route::post('/validate-link', [\App\Http\Controllers\Creator\SellerProductController::class, 'validateLink'])->name('products.validate-link');
 
-    // Kategori Internal Toko
-    Route::resource('categories', \App\Http\Controllers\Creator\SellerCategoryController::class);
+    // CRUD Kelompok Produk
+    Route::resource('groups', \App\Http\Controllers\Creator\CreatorGroupController::class);
+
+    // Pengaturan Profil & Toko
+    Route::get('/profile', [\App\Http\Controllers\Creator\CreatorProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [\App\Http\Controllers\Creator\CreatorProfileController::class, 'update'])->name('profile.update');
 
     // Modul Pengaturan Bank Account & Penarikan
     Route::get('/payout-settings', [\App\Http\Controllers\Creator\SellerPayoutController::class, 'settings'])->name('payout.settings');

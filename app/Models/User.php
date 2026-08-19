@@ -48,6 +48,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Profil creator (store info, SEO, dsb).
+     */
+    public function creatorProfile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(CreatorProfile::class);
+    }
+
+    /**
      * Alamat pengiriman utama (default).
      */
     public function defaultAddress(): \Illuminate\Database\Eloquent\Relations\HasOne

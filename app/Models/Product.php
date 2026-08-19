@@ -21,7 +21,7 @@ class Product extends Model
         // Kolom e-commerce (new)
         'price', 'sale_price', 'stock', 'weight', 'sku',
         'product_category_id', 'is_featured',
-        'type', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating',
+        'product_type', 'file_type', 'digital_resource', 'seller_id', 'creator_group_id', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating',
     ];
 
     protected $casts = [
@@ -64,6 +64,14 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class, 'product_category_id');
+    }
+
+    /**
+     * Grup produk (custom creator).
+     */
+    public function creatorGroup(): BelongsTo
+    {
+        return $this->belongsTo(CreatorProductGroup::class, 'creator_group_id');
     }
 
     /**
