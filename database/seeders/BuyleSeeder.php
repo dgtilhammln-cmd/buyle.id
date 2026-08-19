@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 
-class buyle.idSeeder extends Seeder
+class BuyleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
