@@ -16,7 +16,7 @@ return new class extends Migration
 
         // Tambahkan file_path & snap_token ke payments (untuk digital delivery)
         Schema::table('payments', function (Blueprint $table) {
-            $table->string('snap_token', 512)->nullable()->change();
+            $table->string('snap_token', 512)->nullable();
         });
     }
 
