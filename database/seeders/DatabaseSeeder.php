@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(['email' => 'creator@buyle.id'], [
             'name'     => 'Digital Creator',
             'password' => Hash::make('Creator123!'),
-            'role'     => 'creator',
+            'role'     => 'seller',
             'is_active'=> true,
         ]);
 

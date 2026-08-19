@@ -37,7 +37,24 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('account.overview'))
+            
+            $role = Auth::user()->role;
+            $redirectRoute = route('account.overview'); // default (buyer)
+            
+            if ($role === 'super_admin' || $role === 'admin') {
+                // Set legacy session for admin panel backward compatibility
+                session([
+                    'admin_logged_in' => true,
+                    'admin_id'        => Auth::id(),
+                    'admin_name'      => Auth::user()->name,
+                    'admin_email'     => Auth::user()->email,
+                ]);
+                $redirectRoute = route('admin.dashboard');
+            } elseif ($role === 'seller') {
+                $redirectRoute = route('creator.dashboard');
+            }
+            
+            return redirect()->intended($redirectRoute)
                 ->with('success', 'Selamat datang kembali, ' . Auth::user()->name . '!');
         }
 

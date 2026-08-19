@@ -28,17 +28,22 @@ class AdminAuthController extends Controller
         ]);
 
         $user = User::where('email', $request->email)
-            ->where('role', 'admin')
+            ->whereIn('role', ['admin', 'super_admin'])
             ->where('is_active', true)
             ->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
+            // Set legacy session for old admin routes
             session([
                 'admin_logged_in' => true,
                 'admin_id'        => $user->id,
                 'admin_name'      => $user->name,
                 'admin_email'     => $user->email,
             ]);
+            
+            // Login standard untuk route modern
+            \Illuminate\Support\Facades\Auth::login($user);
+            
             return redirect()->route('admin.dashboard')->with('success', 'Selamat datang, ' . $user->name . '!');
         }
 
