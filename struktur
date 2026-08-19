@@ -1,0 +1,26 @@
+~/domains/karya-perdana-teknik.hvmdigital.id/
+│
+├── public_html/          ← upload isi folder PUBLIC lokal
+│   ├── index.php         ← edit pathnya
+│   ├── .htaccess
+│   ├── favicon.ico
+│   ├── robots.txt
+│   └── build/            ← hasil npm run build
+│
+├── app/
+├── bootstrap/
+├── config/
+├── database/
+├── node_modules/
+├── resources/
+├── routes/
+├── storage/
+├── tests/
+├── vendor/
+├── artisan
+├── composer.json
+├── composer.lock
+├── package.json
+├── package-lock.json
+├── generate-sitemap.php
+└── .env

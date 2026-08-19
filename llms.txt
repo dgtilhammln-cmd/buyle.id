@@ -1,0 +1,29 @@
+﻿# ?? buyle.id � E-Commerce & Platform Bisnis
+**PT. Hiranatha Makmur Sukses** | [buyle.id](https://buyle.id)
+
+Platform e-commerce komprehensif dibangun dengan Laravel 13.
+Repository ini mengelola frontend dan backend (CMS Admin).
+
+## Fitur Utama:
+- Manajemen Produk & Jasa (Stok, Varian, Kategori)
+- Promosi dinamis (Flash Sale dengan timer, Harga Coret)
+- Keranjang Belanja & Checkout order ke WhatsApp otomatis
+- Manajemen Pesanan lengkap (Tracking status, List/Grid View, PDF/Excel Export)
+- Panel Admin UI/UX interaktif (Micro-interactions, localStorage state)
+- Artikel, Testimoni, Galeri & Hero Slides (Otomatis WebP format)
+- SEO Friendly (JSON-LD otomatis, sitemap)
+- Analytics kunjungan bawaan
+
+## Tech Stack:
+- Backend: Laravel 13 (PHP 8.3+)
+- Database: MySQL
+- Frontend Admin & Public: Blade, Vanilla CSS (Design System kustom), AOS, SwiperJS, GLightbox
+- Server: Hostinger VPS
+
+## Struktur Repository:
+- pp/Http/Controllers: Logika backend (termasuk modul admin).
+- pp/Models: Model Eloquent untuk Produk, Orders, Promosi, Artikel, dll.
+- esources/views: Tampilan Blade frontend dan admin (mendukung Grid/List interaktif).
+- public_html: Root document untuk hosting.
+
+Untuk info lebih rinci terkait instalasi dan pengembangan, lihat README.md.

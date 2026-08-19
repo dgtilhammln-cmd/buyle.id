@@ -1,0 +1,28 @@
+﻿# buyle.id
+
+> buyle.id adalah toko online buyle.id tangga terlengkap di Surabaya, Indonesia. Menyediakan berbagai produk berkualitas untuk kebutuhan dapur, kebersihan, dan perlengkapan rumah tangga dengan harga terbaik, pengiriman cepat ke seluruh Indonesia, dan garansi 100% original.
+
+buyle.id menyediakan sistem belanja online yang mudah dengan fitur keranjang belanja, checkout, pelacakan resi, dan customer service via WhatsApp.
+
+## Halaman Utama
+
+- [Beranda](https://buyle.id/): Halaman utama dengan promo, flash sale, dan kategori produk
+- [Daftar Produk](https://buyle.id/produk): Semua produk buyle.id tangga yang tersedia
+- [Tentang Kami](https://buyle.id/tentang-kami): Informasi tentang buyle.id dan HVM Digital
+- [Kontak](https://buyle.id/kontak): Formulir kontak dan informasi customer service
+
+## Kategori Produk
+
+- [Semua Produk](https://buyle.id/produk): Peralatan dapur, kebersihan, furnitur, dan elektronik rumah tangga
+
+## Informasi Tambahan
+
+- [Galeri](https://buyle.id/galeri): Foto produk dan dokumentasi
+- [Artikel & Blog](https://buyle.id/artikel): Tips dan informasi seputar perawatan rumah tangga
+- [Lacak Pesanan](https://buyle.id/cek-resi): Cek status pengiriman pesanan
+
+## Optional
+
+- [Login Akun](https://buyle.id/login): Masuk ke akun pelanggan
+- [Daftar Akun](https://buyle.id/register): Buat akun baru untuk belanja
+- [Keranjang Belanja](https://buyle.id/cart): Lihat dan kelola keranjang belanja
