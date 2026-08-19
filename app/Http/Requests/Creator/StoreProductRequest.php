@@ -23,9 +23,9 @@ class StoreProductRequest extends FormRequest
             'product_category_id' => ['nullable', 'exists:product_categories,id'],
             'creator_group_id'    => ['nullable', 'exists:creator_product_groups,id'],
             'file_type'           => ['nullable', 'string', 'max:50'],
-            'image'               => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image'               => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'gallery'             => ['required', 'array', 'min:1', 'max:7'],
-            'gallery.*'           => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'gallery.*'           => ['image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'tiktok_video_url'    => ['nullable', 'url', 'max:255'],
 
             // URL produk digital — divalidasi oleh SafeDigitalUrl
@@ -46,9 +46,9 @@ class StoreProductRequest extends FormRequest
             'price.min'                => 'Harga tidak boleh negatif.',
             'sale_price.lt'            => 'Harga diskon harus lebih kecil dari harga normal.',
             'digital_resource.required'=> 'Link produk digital wajib diisi.',
-            'image.max'                => 'Ukuran thumbnail maksimal 2MB.',
+            'image.max'                => 'Ukuran thumbnail maksimal 10MB.',
             'gallery.required'         => 'Wajib mengunggah minimal 1 gambar produk.',
-            'gallery.*.max'            => 'Ukuran masing-masing gambar maksimal 2MB.',
+            'gallery.*.max'            => 'Ukuran masing-masing gambar maksimal 10MB.',
             'gallery.*.mimes'          => 'Format gambar harus berupa JPG, JPEG, PNG, atau WEBP.',
         ];
     }

@@ -27,9 +27,9 @@ class UpdateProductRequest extends FormRequest
             'product_category_id' => ['nullable', 'exists:product_categories,id'],
             'creator_group_id'    => ['nullable', 'exists:creator_product_groups,id'],
             'file_type'           => ['nullable', 'string', 'max:50'],
-            'image'               => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image'               => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'gallery'             => ['nullable', 'array', 'max:7'],
-            'gallery.*'           => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'gallery.*'           => ['image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'tiktok_video_url'    => ['nullable', 'url', 'max:255'],
 
             // URL produk digital — divalidasi oleh SafeDigitalUrl
@@ -48,6 +48,9 @@ class UpdateProductRequest extends FormRequest
             'name.required'            => 'Nama produk wajib diisi.',
             'price.required'           => 'Harga produk wajib diisi.',
             'sale_price.lt'            => 'Harga diskon harus lebih kecil dari harga normal.',
+            'image.max'                => 'Ukuran thumbnail maksimal 10MB.',
+            'gallery.*.max'            => 'Ukuran masing-masing gambar maksimal 10MB.',
+            'gallery.*.mimes'          => 'Format gambar harus berupa JPG, JPEG, PNG, atau WEBP.',
             'digital_resource.required'=> 'Link produk digital wajib diisi.',
         ];
     }

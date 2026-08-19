@@ -206,7 +206,7 @@
                     <div id="imgPlaceholder">
                         <svg width="32" height="32" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                         <p style="font-size:0.8rem; color:#94A3B8; margin-top:0.5rem; font-weight:600;">Klik untuk pilih hingga 7 gambar</p>
-                        <p style="font-size:0.7rem; color:#cbd5e1; margin-top:0.2rem;">JPG, PNG, WEBP — maks 2MB/file</p>
+                        <p style="font-size:0.7rem; color:#cbd5e1; margin-top:0.2rem;">JPG, PNG, WEBP — maks 10MB/file</p>
                     </div>
                 </div>
                 <div id="galleryPreview" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;"></div>
