@@ -20,7 +20,7 @@
 .sf-sort-btn, .sf-search, .sf-card-price-strike { font-weight: 400 !important; }
 
 /* ── Wrapper ── */
-.sf-page { max-width: 760px; margin: 0 auto; background: #fff; min-height: 100vh; overflow-x: hidden; box-sizing: border-box; }
+.sf-page { max-width: 1200px; margin: 0 auto; background: #fff; min-height: 100vh; overflow-x: hidden; box-sizing: border-box; padding-top: 85px; }
 .sf-page * { box-sizing: border-box; }
 
 /* ── Profile Card ── */
@@ -144,14 +144,12 @@
     padding: 0.875rem 0.75rem 2rem;
 }
 @media (min-width: 640px) {
-    .sf-page { border-radius: 0; }
     .sf-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
     .sf-avatar { width: 72px; height: 72px; }
     .sf-store-name { font-size: 1.25rem; }
 }
 @media (min-width: 1024px) {
-    .sf-page { max-width: 900px; }
-    .sf-grid { grid-template-columns: repeat(4, 1fr); }
+    .sf-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
 }
 
 /* ── Product Card ── */
