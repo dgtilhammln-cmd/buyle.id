@@ -54,8 +54,8 @@
 @endsection
 
 @section('content')
-<div class="form-card">
-    <form action="{{ route('creator.profile.update') }}" method="POST" enctype="multipart/form-data">
+<div class="creator-content">
+    <form action="{{ route('creator.profile.update') }}" method="POST" enctype="multipart/form-data" id="profileForm">
         @csrf
         @method('PUT')
 
@@ -269,9 +269,80 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (d.id == selectedId) option.selected = true;
                     distSelect.add(option);
                 });
-                distSelect.disabled = false;
             });
     }
+
+    // ── Client-Side Image Compression (Fix 500 Error) ──
+    const form = document.getElementById('profileForm');
+    const submitBtn = document.querySelector('.btn-submit');
+    const originalBtnText = submitBtn.innerHTML;
+
+    async function compressImage(file, maxWidth = 1200, maxHeight = 1200) {
+        if (!file.type.match(/image.*/) || file.type === 'image/webp') return file;
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    let w = img.width, h = img.height;
+                    const ratio = Math.min(maxWidth / w, maxHeight / h);
+                    if (ratio < 1) { w *= ratio; h *= ratio; }
+                    
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w; canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    
+                    canvas.toBlob((blob) => {
+                        const newFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
+                            type: 'image/webp', lastModified: Date.now()
+                        });
+                        resolve(newFile);
+                    }, 'image/webp', 0.85);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner" style="display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-right:0.5rem;"></span> Mengompresi & Menyimpan...';
+        
+        try {
+            const dtAvatar = new DataTransfer();
+            const avatarInput = document.querySelector('input[name="avatar"]');
+            if (avatarInput.files[0]) {
+                const compressed = await compressImage(avatarInput.files[0], 800, 800);
+                dtAvatar.items.add(compressed);
+                avatarInput.files = dtAvatar.files;
+            }
+
+            const dtBanner1 = new DataTransfer();
+            const banner1Input = document.querySelector('input[name="store_banner_1"]');
+            if (banner1Input.files[0]) {
+                const compressed = await compressImage(banner1Input.files[0], 1200, 600);
+                dtBanner1.items.add(compressed);
+                banner1Input.files = dtBanner1.files;
+            }
+
+            const dtBanner2 = new DataTransfer();
+            const banner2Input = document.querySelector('input[name="store_banner_2"]');
+            if (banner2Input.files[0]) {
+                const compressed = await compressImage(banner2Input.files[0], 1200, 600);
+                dtBanner2.items.add(compressed);
+                banner2Input.files = dtBanner2.files;
+            }
+
+            form.submit();
+        } catch (err) {
+            console.error('Compression error:', err);
+            form.submit(); // fallback submit directly
+        }
+    });
 });
 </script>
+<style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 @endsection

@@ -55,7 +55,7 @@ class CreatorProfileController extends Controller
             $b1 = $request->file('store_banner_1');
             if ($b1->isValid()) {
                 if ($profile->store_banner_1) \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->store_banner_1);
-                $profile->store_banner_1 = $this->storeWebP($b1, 'banners', 1200, 600, 85);
+                $profile->store_banner_1 = $b1->store('banners', 'public');
             }
         }
 
@@ -63,7 +63,7 @@ class CreatorProfileController extends Controller
             $b2 = $request->file('store_banner_2');
             if ($b2->isValid()) {
                 if ($profile->store_banner_2) \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->store_banner_2);
-                $profile->store_banner_2 = $this->storeWebP($b2, 'banners', 1200, 600, 85);
+                $profile->store_banner_2 = $b2->store('banners', 'public');
             }
         }
         $profile->save();
@@ -74,7 +74,7 @@ class CreatorProfileController extends Controller
                 if ($user->avatar) {
                     \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
                 }
-                $user->avatar = $this->storeWebP($file, 'avatars', 800, 800, 85);
+                $user->avatar = $file->store('avatars', 'public');
                 $user->save();
             }
         }
