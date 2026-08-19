@@ -53,7 +53,7 @@ class SellerController extends Controller
                 ->whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
                 ->whereHas('payment', fn($q) => $q->where('status', \App\Enums\PaymentStatus::Success))
                 ->where('created_at', '>=', now()->subDays(30))
-                ->latestFirst()
+                ->latest()
                 ->limit(10)
                 ->get();
         } catch (\Exception $e) {
