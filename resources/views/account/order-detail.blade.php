@@ -8,7 +8,7 @@
     --c-surface: #F8FAFC;
     --c-text: #0F172A;
     --c-muted: #64748B;
-    --c-accent: #0EA5E9;
+    --c-accent: #1eb349;
 }
 .od-card { background: #fff; border: 1px solid var(--c-border); border-radius: 12px; margin-bottom: 1.5rem; overflow: hidden; }
 .od-header { background: var(--c-surface); padding: 1rem 1.5rem; border-bottom: 1px solid var(--c-border); display: flex; justify-content: space-between; align-items: center; }
@@ -59,7 +59,7 @@
 .tr-tl-desc.active { color: #10B981; font-weight: 600; }
 .tr-tl-city { font-size: 0.8rem; color: var(--c-muted); margin-top: 0.2rem; }
 
-.tr-tl-more { display: inline-block; margin-top: 1rem; color: #0284C7; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-decoration: none; }
+.tr-tl-more { display: inline-block; margin-top: 1rem; color: #16a34a; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-decoration: none; }
 
 </style>
 
@@ -75,7 +75,7 @@
             <h2 class="od-title">No. Pesanan: #{{ $order->order_number }}</h2>
             <div class="od-meta">{{ $order->created_at->format('d M Y, H:i') }} WIB</div>
         </div>
-        <div class="od-status" style="background-color: {{ $order->status->color() === 'yellow' ? '#FEF3C7' : ($order->status->color() === 'green' ? '#D1FAE5' : ($order->status->color() === 'blue' ? '#DBEAFE' : '#F1F5F9')) }}; color: {{ $order->status->color() === 'yellow' ? '#D97706' : ($order->status->color() === 'green' ? '#059669' : ($order->status->color() === 'blue' ? '#2563EB' : '#475569')) }}; border: 1px solid currentColor;">
+        <div class="od-status" style="background-color: {{ $order->status->color() === 'yellow' ? '#FEF3C7' : ($order->status->color() === 'green' ? '#D1FAE5' : ($order->status->color() === 'blue' ? '#dcfce7' : '#F1F5F9')) }}; color: {{ $order->status->color() === 'yellow' ? '#D97706' : ($order->status->color() === 'green' ? '#059669' : ($order->status->color() === 'blue' ? '#2563EB' : '#475569')) }}; border: 1px solid currentColor;">
             {{ $order->status->label() }}
         </div>
     </div>

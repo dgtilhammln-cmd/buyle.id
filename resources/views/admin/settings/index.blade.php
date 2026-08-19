@@ -141,13 +141,13 @@ button[id^="tab-btn-"] {
     font-size: .85rem !important;
 }
 button.tab-btn-active {
-    background: #E0F2FE !important;
-    color: #0284C7 !important;
+    background: #dcfce7 !important;
+    color: #16a34a !important;
     font-weight: 700 !important;
-    box-shadow: 0 2px 10px rgba(14, 165, 233, 0.1) !important;
+    box-shadow: 0 2px 10px rgba(30, 179, 73, 0.1) !important;
 }
 /* 9. Premium Buttons */
-button[type="submit"][style*="background:#0EA5E9"] {
+button[type="submit"][style*="background:#1eb349"] {
     background: #3B82F6 !important;
     color: #fff !important;
     font-size: .875rem !important;
@@ -158,7 +158,7 @@ button[type="submit"][style*="background:#0EA5E9"] {
     box-shadow: 0 4px 14px rgba(59,130,246,0.3) !important;
     transition: all .2s !important;
 }
-button[type="submit"][style*="background:#0EA5E9"]:hover {
+button[type="submit"][style*="background:#1eb349"]:hover {
     transform: translateY(-1px) !important;
     box-shadow: 0 6px 20px rgba(59,130,246,0.4) !important;
 }
@@ -219,7 +219,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       Preview Website
     </a>
-    <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:#0EA5E9;color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;" onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0EA5E9'">
+    <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:#1eb349;color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;" onmouseover="this.style.background='#16a34a'" onmouseout="this.style.background='#1eb349'">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
       Simpan Semua
     </button>
@@ -253,8 +253,8 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     {{-- Logo --}}
     <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-        <svg width="14" height="14" fill="none" stroke="#0EA5E9" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0EA5E9;">Logo Perusahaan</div>
+        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Logo Perusahaan</div>
       </div>
       @if(!empty($settings['logo']))
       <div style="margin-bottom:1rem;padding:1rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:6px;display:flex;align-items:center;gap:1rem;">
@@ -269,8 +269,8 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     {{-- Favicon --}}
     <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-        <svg width="14" height="14" fill="none" stroke="#0EA5E9" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0EA5E9;">Favicon Browser</div>
+        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Favicon Browser</div>
       </div>
       @if(!empty($settings['favicon']))
       <div style="margin-bottom:1rem;padding:1rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:6px;display:flex;align-items:center;gap:1rem;">
@@ -286,8 +286,8 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     {{-- Company Profile --}}
     <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;grid-column:1/-1;">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-        <svg width="14" height="14" fill="none" stroke="#0EA5E9" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0EA5E9;">Company Profile (PDF)</div>
+        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Company Profile (PDF)</div>
       </div>
       @if(!empty($settings['compro']))
       <div style="margin-bottom:1rem;padding:1rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:6px;display:flex;align-items:center;justify-content:space-between;">
@@ -295,7 +295,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span style="font-size:.8rem;color:#0F172A;">{{ basename($settings['compro']) }}</span>
         </div>
-        <a href="{{ asset('storage/'.$settings['compro']) }}" target="_blank" style="font-size:.7rem;color:#0EA5E9;text-decoration:none;">Buka File</a>
+        <a href="{{ asset('storage/'.$settings['compro']) }}" target="_blank" style="font-size:.7rem;color:#1eb349;text-decoration:none;">Buka File</a>
       </div>
       @endif
       <label style="font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:.5rem;">Upload Compro Baru</label>
@@ -306,8 +306,8 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     {{-- Coverage Map --}}
     <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;grid-column:1/-1;">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-        <svg width="14" height="14" fill="none" stroke="#0EA5E9" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0EA5E9;">Peta Jangkauan (Coverage Map)</div>
+        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Peta Jangkauan (Coverage Map)</div>
       </div>
       @if(!empty($settings['coverage_map']))
       <div style="margin-bottom:1rem;padding:1rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:6px;">
@@ -323,8 +323,8 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
 
   <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
     <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-      <svg width="14" height="14" fill="none" stroke="#0EA5E9" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0EA5E9;">Teks Umum</div>
+      <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Teks Umum</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
       <div>
@@ -373,10 +373,10 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
         <div style="display:flex;align-items:center;gap:.5rem;">
-          <svg width="13" height="13" fill="none" stroke="#0EA5E9" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0EA5E9;">{{ $page['label'] }}</div>
+          <svg width="13" height="13" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">{{ $page['label'] }}</div>
         </div>
-        <a href="{{ url($page['route']) }}" target="_blank" style="display:flex;align-items:center;gap:.25rem;font-size:.7rem;color:#94A3B8;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#0EA5E9'" onmouseout="this.style.color='rgba(255,255,255,.3)'">
+        <a href="{{ url($page['route']) }}" target="_blank" style="display:flex;align-items:center;gap:.25rem;font-size:.7rem;color:#94A3B8;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#1eb349'" onmouseout="this.style.color='rgba(255,255,255,.3)'">
           {{ $page['route'] }}
           <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         </a>
@@ -425,8 +425,8 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     {{-- Custom Scripts --}}
     <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
     <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-      <svg width="14" height="14" fill="none" stroke="#0EA5E9" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
-      <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0EA5E9;">Custom Scripts / Tags</div>
+      <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+      <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Custom Scripts / Tags</div>
     </div>
     <p style="font-size:.75rem;color:#94A3B8;margin-bottom:1.25rem;line-height:1.6;">Gunakan area ini untuk memasukkan kode pelacakan seperti Google Analytics, Meta Pixel, atau custom CSS/JS. Pastikan Anda memasukkan tag lengkap (contoh: <code>&lt;script&gt;...&lt;/script&gt;</code>).</p>
     
@@ -457,8 +457,8 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     {{-- Hero Text --}}
     <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-        <svg width="14" height="14" fill="none" stroke="#0EA5E9" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0EA5E9;">Teks Hero Section</div>
+        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Teks Hero Section</div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
         @foreach(['hero_headline'=>'Headline Utama (Judul Besar)','hero_subheadline'=>'Sub-headline (Kalimat Pendukung)','hero_cta_primary'=>'Teks Tombol Utama','hero_cta_secondary'=>'Teks Tombol Sekunder'] as $key=>$label)
@@ -473,8 +473,8 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     {{-- Images --}}
     <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-        <svg width="14" height="14" fill="none" stroke="#0EA5E9" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0EA5E9;">Gambar Background</div>
+        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Gambar Background</div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;">
         @foreach([
@@ -501,8 +501,8 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     {{-- About / Visi Misi --}}
     <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-        <svg width="14" height="14" fill="none" stroke="#0EA5E9" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0EA5E9;">Visi & Misi</div>
+        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Visi & Misi</div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
         @foreach(['visi'=>'Visi Perusahaan','misi'=>'Misi Perusahaan'] as $key=>$label)
@@ -517,8 +517,8 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     {{-- Stats --}}
     <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-        <svg width="14" height="14" fill="none" stroke="#0EA5E9" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0EA5E9;">Angka Statistik (Hero Section)</div>
+        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Angka Statistik (Hero Section)</div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;">
         @foreach(['stat_years'=>'Tahun Pengalaman','stat_clients'=>'Jumlah Klien','stat_products'=>'Jenis Produk','stat_coverage'=>'Jangkauan/Kota'] as $key=>$label)
@@ -589,8 +589,8 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
         </div>
         
         {{-- Card 2 --}}
-        <div style="background:rgba(56,189,248,.05);padding:1rem;border-radius:8px;border:1px solid rgba(56,189,248,.15);">
-          <div style="font-size:.75rem;color:#38bdf8;margin-bottom:.75rem;font-weight:600;">Card 2 (Biru Accent, Kiri Bawah)</div>
+        <div style="background:rgba(165,207,55,.05);padding:1rem;border-radius:8px;border:1px solid rgba(165,207,55,.15);">
+          <div style="font-size:.75rem;color:#a5cf37;margin-bottom:.75rem;font-weight:600;">Card 2 (Biru Accent, Kiri Bawah)</div>
           <div style="margin-bottom:.5rem;">
             <label class="form-label" style="font-size:.65rem;">Title / Label</label>
             <input type="text" name="about_c2_title" class="form-input" value="{{ $settings['about_c2_title'] ?? '' }}" placeholder="Komitmen Kualitas">
@@ -649,14 +649,14 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     </div>
 
     {{-- ── Hero Slides Manager ── --}}
-    <div style="background:#FFFFFF;border:1px solid rgba(56,189,248,.15);border-radius:10px;padding:1.5rem;">
+    <div style="background:#FFFFFF;border:1px solid rgba(165,207,55,.15);border-radius:10px;padding:1.5rem;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
         <div style="display:flex;align-items:center;gap:.5rem;">
-          <svg width="14" height="14" fill="none" stroke="#38BDF8" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-          <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#38BDF8;">Hero Slides (Maks. 5 Slide)</div>
+          <svg width="14" height="14" fill="none" stroke="#a5cf37" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#a5cf37;">Hero Slides (Maks. 5 Slide)</div>
         </div>
         @php $slideCount = \App\Models\HeroSlide::count(); @endphp
-        <span style="font-size:.7rem;color:#38BDF8;background:rgba(56,189,248,.1);padding:.25rem .75rem;border-radius:20px;">{{ $slideCount }} / 5 slide</span>
+        <span style="font-size:.7rem;color:#a5cf37;background:rgba(165,207,55,.1);padding:.25rem .75rem;border-radius:20px;">{{ $slideCount }} / 5 slide</span>
       </div>
 
       @php $allSlides = \App\Models\HeroSlide::orderBy('order')->get(); @endphp
@@ -679,7 +679,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
             {{ $hs->is_active ? 'Aktif' : 'Off' }}
           </span>
           <div style="display:flex;gap:.375rem;flex-shrink:0;">
-            <a href="{{ route('admin.hero_slides.edit', $hs) }}" style="font-size:.72rem;background:rgba(56,189,248,.1);color:#38BDF8;padding:.35rem .7rem;border-radius:5px;text-decoration:none;transition:background .2s;">Edit</a>
+            <a href="{{ route('admin.hero_slides.edit', $hs) }}" style="font-size:.72rem;background:rgba(165,207,55,.1);color:#a5cf37;padding:.35rem .7rem;border-radius:5px;text-decoration:none;transition:background .2s;">Edit</a>
             <button type="button" onclick="if(confirm('Hapus slide ini?')) document.getElementById('del-slide-{{ $hs->id }}').submit();" style="font-size:.72rem;background:rgba(239,68,68,.1);color:#f87171;padding:.35rem .7rem;border-radius:5px;border:none;cursor:pointer;">Hapus</button>
           </div>
         </div>
@@ -690,7 +690,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       @endif
 
       @if($slideCount < 5)
-      <a href="{{ route('admin.hero_slides.create') }}" style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(56,189,248,.1);color:#38BDF8;border:1px solid rgba(56,189,248,.2);padding:.6rem 1.25rem;border-radius:8px;font-size:.8rem;font-weight:600;text-decoration:none;">
+      <a href="{{ route('admin.hero_slides.create') }}" style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(165,207,55,.1);color:#a5cf37;border:1px solid rgba(165,207,55,.2);padding:.6rem 1.25rem;border-radius:8px;font-size:.8rem;font-weight:600;text-decoration:none;">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
         Tambah Slide Baru ({{ 5 - $slideCount }} slot tersisa)
       </a>
@@ -707,8 +707,8 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
   <div style="display:flex;flex-direction:column;gap:1.25rem;">
     <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-        <svg width="14" height="14" fill="none" stroke="#0EA5E9" stroke-width="2" viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0EA5E9;">Informasi Kontak</div>
+        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Informasi Kontak</div>
       </div>
       <p style="font-size:.75rem;color:#94A3B8;margin-bottom:1.25rem;line-height:1.6;">Data di bawah ini akan tampil di <strong style="color:#475569;">Footer</strong>, halaman <strong style="color:#475569;">Kontak</strong>, dan <strong style="color:#475569;">Navbar</strong> website.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
@@ -777,8 +777,8 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     {{-- Footer Logos (Payment & Expedition) --}}
     <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-        <svg width="14" height="14" fill="none" stroke="#0EA5E9" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0EA5E9;">Logo Pembayaran & Ekspedisi (Footer)</div>
+        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Logo Pembayaran & Ekspedisi (Footer)</div>
       </div>
       <p style="font-size:.75rem;color:#94A3B8;margin-bottom:1.25rem;line-height:1.6;">Upload gambar berlatar transparan (PNG) untuk ditampilkan di bagian footer bawah.</p>
       
@@ -840,7 +840,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
             </div>
             <div style="display:flex;flex-direction:column;gap:.375rem;align-items:center;">
               <label class="form-label" style="text-align:center;">Utama</label>
-              <input type="radio" name="primary" value="{{ $wa->id }}" {{ $wa->is_primary ? 'checked' : '' }} style="width:18px;height:18px;accent-color:#0EA5E9;cursor:pointer;">
+              <input type="radio" name="primary" value="{{ $wa->id }}" {{ $wa->is_primary ? 'checked' : '' }} style="width:18px;height:18px;accent-color:#1eb349;cursor:pointer;">
             </div>
             <div>
               <label class="form-label" style="display:block;margin-bottom:.375rem;">Hapus</label>
@@ -953,7 +953,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
         </div>
 
         <div style="margin-top:1.5rem;text-align:right;">
-          <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:#0EA5E9;color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;">Simpan API</button>
+          <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:#1eb349;color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;">Simpan API</button>
         </div>
       </div>
     </div>
@@ -979,7 +979,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
 @endforeach
 
 <style>
-.tab-btn-active { border-bottom-color:#0EA5E9 !important; color:#0EA5E9 !important; }
+.tab-btn-active { border-bottom-color:#1eb349 !important; color:#1eb349 !important; }
 </style>
 <script>
 function switchTab(name) {

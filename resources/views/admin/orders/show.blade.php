@@ -97,7 +97,7 @@
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Kembali ke Daftar Pesanan
         </a>
-        <div class="od-status-pill" style="background:{{ $order->status->color() === 'red' ? '#FEF2F2' : ($order->status->color() === 'green' ? '#F0FDF4' : ($order->status->color() === 'yellow' ? '#FFFBEB' : '#EFF6FF')) }};color:{{ $order->status->color() === 'red' ? '#DC2626' : ($order->status->color() === 'green' ? '#16A34A' : ($order->status->color() === 'yellow' ? '#D97706' : '#2563EB')) }}; border: 1px solid currentColor;">
+        <div class="od-status-pill" style="background:{{ $order->status->color() === 'red' ? '#FEF2F2' : ($order->status->color() === 'green' ? '#F0FDF4' : ($order->status->color() === 'yellow' ? '#FFFBEB' : '#f0fdf4')) }};color:{{ $order->status->color() === 'red' ? '#DC2626' : ($order->status->color() === 'green' ? '#16A34A' : ($order->status->color() === 'yellow' ? '#D97706' : '#2563EB')) }}; border: 1px solid currentColor;">
             <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8"/></svg>
             Status: {{ $order->status->label() }}
         </div>
@@ -216,10 +216,10 @@
             @if($order->status === \App\Enums\OrderStatus::Pending)
             <div class="od-card">
                 <div class="od-card-title">
-                    <svg width="24" height="24" fill="none" stroke="#0EA5E9" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <svg width="24" height="24" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                     Kalkulasi Ongkos Kirim
                 </div>
-                <div style="background:#EFF6FF; padding:1rem; border-radius:10px; font-size:.8rem; color:#1E3A8A; margin-bottom:1.25rem;">
+                <div style="background:#f0fdf4; padding:1rem; border-radius:10px; font-size:.8rem; color:#1E3A8A; margin-bottom:1.25rem;">
                     Pesanan ini belum dibayar dan ongkos kirim saat ini adalah Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}. Update ongkir di sini sebelum pembeli menyelesaikan pembayaran.
                 </div>
                 <form action="{{ route('admin.orders.shipping_cost', $order) }}" method="POST">
@@ -228,7 +228,7 @@
                         <label class="od-label">Nominal Ongkos Kirim (Rp)</label>
                         <input type="number" name="shipping_cost" class="od-input" placeholder="Contoh: 15000" value="{{ $order->shipping_cost > 0 ? $order->shipping_cost : '' }}" required min="0">
                     </div>
-                    <button type="submit" class="od-btn" style="background:#0EA5E9;box-shadow:0 4px 12px rgba(14,165,233,0.2);">Simpan Ongkir Baru</button>
+                    <button type="submit" class="od-btn" style="background:#1eb349;box-shadow:0 4px 12px rgba(30,179,73,0.2);">Simpan Ongkir Baru</button>
                 </form>
             </div>
             @endif

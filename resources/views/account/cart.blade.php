@@ -17,18 +17,18 @@
 .cart-product-variant { font-size:0.75rem; color:#94A3B8; margin-top:0.15rem; }
 .qty-control { display:flex; align-items:center; gap:0.5rem; }
 .qty-btn { width:28px; height:28px; border-radius:6px; border:1px solid #E2E8F0; background:#F8FAFC; color:#334155; font-size:1rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; line-height:1; }
-.qty-btn:hover { border-color:#38BDF8; background:#F0F9FF; color:#0EA5E9; }
+.qty-btn:hover { border-color:#a5cf37; background:#F0F9FF; color:#1eb349; }
 .qty-input { width:44px; text-align:center; border:1px solid #E2E8F0; border-radius:6px; padding:0.25rem; font-size:0.875rem; font-family:"Montserrat",sans-serif; font-weight:600; outline:none; }
-.qty-input:focus { border-color:#38BDF8; }
+.qty-input:focus { border-color:#a5cf37; }
 .btn-remove { background:none; border:none; color:#94A3B8; cursor:pointer; padding:0.35rem; border-radius:6px; transition:all 0.15s; }
 .btn-remove:hover { background:#FEF2F2; color:#EF4444; }
 .cart-summary-box { background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:1.5rem; }
 .cart-summary-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; font-size:0.875rem; color:#64748B; }
 .cart-summary-row.total { border-top:2px solid #E2E8F0; margin-top:0.5rem; padding-top:1rem; font-size:1rem; font-weight:800; color:#0f172a; }
-.btn-checkout { display:flex; align-items:center; justify-content:center; gap:0.5rem; width:100%; padding:0.875rem; background:linear-gradient(135deg,#0EA5E9,#38BDF8); color:#fff; border:none; border-radius:12px; font-family:"Montserrat",sans-serif; font-size:0.9rem; font-weight:700; cursor:pointer; text-decoration:none; transition:all 0.25s; margin-top:1.25rem; }
-.btn-checkout:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(14,165,233,0.35); }
-.btn-continue { display:flex; align-items:center; justify-content:center; gap:0.5rem; width:100%; padding:0.625rem; background:#fff; color:#0EA5E9; border:1.5px solid #BAE6FD; border-radius:12px; font-family:"Montserrat",sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; text-decoration:none; transition:all 0.2s; margin-top:0.625rem; }
-.btn-continue:hover { background:#F0F9FF; border-color:#38BDF8; }
+.btn-checkout { display:flex; align-items:center; justify-content:center; gap:0.5rem; width:100%; padding:0.875rem; background:linear-gradient(135deg,#1eb349,#a5cf37); color:#fff; border:none; border-radius:12px; font-family:"Montserrat",sans-serif; font-size:0.9rem; font-weight:700; cursor:pointer; text-decoration:none; transition:all 0.25s; margin-top:1.25rem; }
+.btn-checkout:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(30,179,73,0.35); }
+.btn-continue { display:flex; align-items:center; justify-content:center; gap:0.5rem; width:100%; padding:0.625rem; background:#fff; color:#1eb349; border:1.5px solid #bbf7d0; border-radius:12px; font-family:"Montserrat",sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; text-decoration:none; transition:all 0.2s; margin-top:0.625rem; }
+.btn-continue:hover { background:#F0F9FF; border-color:#a5cf37; }
 .cart-layout { display:grid; grid-template-columns:1fr 320px; gap:1.5rem; align-items:start; }
 @media(max-width:768px) { .cart-layout { grid-template-columns:1fr; } }
 </style>
@@ -50,7 +50,7 @@
             <svg width="72" height="72" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
             <h3>Keranjang Masih Kosong</h3>
             <p>Temukan produk pilihan terbaik dan tambahkan ke keranjang.</p>
-            <a href="{{ route("products") }}" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.75rem 1.75rem; background:linear-gradient(135deg,#0EA5E9,#38BDF8); color:#fff; border-radius:12px; font-weight:700; text-decoration:none; font-size:0.875rem;">Mulai Belanja</a>
+            <a href="{{ route("products") }}" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.75rem 1.75rem; background:linear-gradient(135deg,#1eb349,#a5cf37); color:#fff; border-radius:12px; font-weight:700; text-decoration:none; font-size:0.875rem;">Mulai Belanja</a>
         </div>
     </div>
 @else
@@ -97,7 +97,7 @@
                                         <button type="submit" style="display:none;" class="qty-submit"></button>
                                     </form>
                                 </td>
-                                <td style="white-space:nowrap; font-weight:700; color:#0EA5E9;">Rp {{ number_format($item->subtotal, 0, ",", ".") }}</td>
+                                <td style="white-space:nowrap; font-weight:700; color:#1eb349;">Rp {{ number_format($item->subtotal, 0, ",", ".") }}</td>
                                 <td>
                                     <form action="{{ route("cart.remove") }}" method="POST" onsubmit="return confirm('Hapus produk ini?')">
                                         @csrf

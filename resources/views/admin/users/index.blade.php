@@ -40,7 +40,7 @@
     cursor: pointer; color: #94A3B8; transition: all .2s; display: flex; align-items: center;
 }
 .utoggle-btn + .utoggle-btn { border-left: 1.5px solid #E2E8F0; }
-.utoggle-btn.active { background: #EFF6FF; color: #1D4ED8; }
+.utoggle-btn.active { background: #f0fdf4; color: #1D4ED8; }
 .utoggle-btn:hover { background: #F8FAFC; color: #475569; }
 
 /* ──────────────── GRID VIEW ──────────────── */
@@ -107,8 +107,8 @@
 }
 .u-btn-danger { background: #FEF2F2; color: #DC2626; }
 .u-btn-danger:hover { background: #FEE2E2; }
-.u-btn-primary { background: #EFF6FF; color: #1D4ED8; }
-.u-btn-primary:hover { background: #DBEAFE; }
+.u-btn-primary { background: #f0fdf4; color: #1D4ED8; }
+.u-btn-primary:hover { background: #dcfce7; }
 .u-btn-success { background: #F0FDF4; color: #16A34A; }
 .u-btn-success:hover { background: #DCFCE7; }
 
@@ -218,7 +218,7 @@
             {{ ($u->is_active ?? true) ? 'Aktif' : 'Nonaktif' }}
           </span>
           @if($u->orders_count > 0)
-          <span class="u-pill" style="background:#EFF6FF;color:#1D4ED8;">
+          <span class="u-pill" style="background:#f0fdf4;color:#1D4ED8;">
             <svg width="9" height="9" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg>
             {{ $u->orders_count }}x Order
           </span>

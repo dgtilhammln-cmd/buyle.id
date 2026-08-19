@@ -70,7 +70,7 @@
                 <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                 <h3>Belum ada pesanan</h3>
                 <p>Temukan produk terbaik untuk kebutuhan rumah Anda.</p>
-                <a href="{{ route('products') }}" style="display:inline-flex;align-items:center;gap:0.5rem;margin-top:1rem;background:#0EA5E9;color:#fff;padding:0.6rem 1.25rem;border-radius:10px;font-size:0.85rem;font-weight:700;text-decoration:none;">
+                <a href="{{ route('products') }}" style="display:inline-flex;align-items:center;gap:0.5rem;margin-top:1rem;background:#1eb349;color:#fff;padding:0.6rem 1.25rem;border-radius:10px;font-size:0.85rem;font-weight:700;text-decoration:none;">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg>
                     Mulai Belanja
                 </a>

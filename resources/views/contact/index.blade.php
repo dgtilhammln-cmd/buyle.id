@@ -12,8 +12,8 @@
     --c-border:  #E2E8F0;
     --c-text:    #0F172A;
     --c-muted:   #64748B;
-    --c-accent:  #0EA5E9;
-    --c-accent-hover: #0284C7;
+    --c-accent:  #1eb349;
+    --c-accent-hover: #16a34a;
     --font:      'Montserrat', sans-serif;
     --ease:      cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -29,13 +29,13 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
 .sv-hero-premium::before {
     content:''; position:absolute; top:-150px; right:-100px;
     width:500px; height:500px; border-radius:50%;
-    background:radial-gradient(circle,rgba(14,165,233,0.06) 0%,transparent 70%);
+    background:radial-gradient(circle,rgba(30,179,73,0.06) 0%,transparent 70%);
     pointer-events:none;
 }
 .sv-hero-premium::after {
     content:''; position:absolute; bottom:-150px; left:-100px;
     width:600px; height:600px; border-radius:50%;
-    background:radial-gradient(circle,rgba(14,165,233,0.04) 0%,transparent 70%);
+    background:radial-gradient(circle,rgba(30,179,73,0.04) 0%,transparent 70%);
     pointer-events:none;
 }
 .sv-hero-inner {
@@ -131,7 +131,7 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
 .ct-input::placeholder, .ct-textarea::placeholder { color:#94A3B8; }
 .ct-input:focus, .ct-select:focus, .ct-textarea:focus {
     border-color:var(--c-accent);
-    box-shadow:0 0 0 3px rgba(14,165,233,0.12);
+    box-shadow:0 0 0 3px rgba(30,179,73,0.12);
 }
 .ct-textarea { resize:vertical; min-height:130px; }
 .ct-select { appearance:none; cursor:pointer; }
@@ -142,7 +142,7 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
     background:var(--c-accent); color:#fff;
     font-family:var(--font); font-size:1rem; font-weight:600;
     padding:1rem 2rem; border-radius:50px; border:none; cursor:pointer;
-    transition:all 0.3s; box-shadow:0 8px 20px rgba(14,165,233,0.25);
+    transition:all 0.3s; box-shadow:0 8px 20px rgba(30,179,73,0.25);
     text-decoration:none; align-self:flex-start;
 }
 .ct-submit:hover { background:var(--c-accent-hover); transform:translateY(-2px); }
@@ -155,13 +155,13 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
     display:flex; gap:1rem; align-items:flex-start;
     transition:all 0.3s var(--ease);
 }
-.ct-info-card:hover { border-color:rgba(14,165,233,0.3); transform:translateY(-3px); box-shadow:0 12px 30px rgba(14,165,233,0.08); }
+.ct-info-card:hover { border-color:rgba(30,179,73,0.3); transform:translateY(-3px); box-shadow:0 12px 30px rgba(30,179,73,0.08); }
 .ct-info-icon {
     width:48px; height:48px; border-radius:14px;
     display:flex; align-items:center; justify-content:center;
     flex-shrink:0;
 }
-.ct-info-icon.blue { background:#E0F2FE; color:var(--c-accent); }
+.ct-info-icon.blue { background:#dcfce7; color:var(--c-accent); }
 .ct-info-icon.green { background:rgba(37,211,102,0.1); color:#25D366; }
 .ct-info-icon.purple { background:rgba(139,92,246,0.1); color:#7C3AED; }
 .ct-info-icon.orange { background:rgba(249,115,22,0.1); color:#EA580C; }
@@ -243,7 +243,7 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
     background:var(--c-card); border:1.5px solid var(--c-border);
     border-radius:16px; overflow:hidden; transition:border-color 0.3s;
 }
-.ct-faq-item:hover { border-color:rgba(14,165,233,0.3); }
+.ct-faq-item:hover { border-color:rgba(30,179,73,0.3); }
 .ct-faq-item[open] { border-color:var(--c-accent); }
 .ct-faq-item summary {
     padding:1.125rem 1.5rem; font-size:0.9375rem; font-weight:600;

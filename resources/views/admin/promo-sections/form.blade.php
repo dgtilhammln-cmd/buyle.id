@@ -221,7 +221,7 @@
         @foreach($services as $svc)
           @php $checked = in_array($svc->id, $selectedIds ?? []); @endphp
           <label class="product-item" data-name="{{ strtolower($svc->name) }}"
-            style="display:flex;align-items:center;gap:.625rem;padding:.5rem;border:1.5px solid {{ $checked ? '#3B82F6' : '#E4E7F0' }};border-radius:12px;cursor:pointer;transition:all .2s;background:{{ $checked ? '#EFF6FF' : '#fff' }};"
+            style="display:flex;align-items:center;gap:.625rem;padding:.5rem;border:1.5px solid {{ $checked ? '#3B82F6' : '#E4E7F0' }};border-radius:12px;cursor:pointer;transition:all .2s;background:{{ $checked ? '#f0fdf4' : '#fff' }};"
             onmouseover="this.style.borderColor='#3B82F6'" onmouseout="syncLabel(this)">
             <div style="padding-left:.35rem; display:flex; align-items:center;">
               <input type="checkbox" name="service_ids[]" value="{{ $svc->id }}" {{ $checked ? 'checked' : '' }}
@@ -318,7 +318,7 @@
   @endif
 
   {{-- Tips --}}
-  <div class="pf-card" style="background:linear-gradient(135deg,#EFF6FF,#F0FDF4);border:1.5px solid #BFDBFE;">
+  <div class="pf-card" style="background:linear-gradient(135deg,#f0fdf4,#F0FDF4);border:1.5px solid #BFDBFE;">
     <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#2563EB;margin-bottom:.875rem;">💡 Tips Penggunaan</div>
     <ul style="margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:.5rem;">
       <li style="font-size:.775rem;color:#374151;line-height:1.5;">Pilih <strong>5–8 produk</strong> agar swiper terlihat proporsional.</li>
@@ -352,7 +352,7 @@ function syncLabel(label) {
   const cb = label.querySelector('input[type=checkbox]');
   if (!cb) return;
   label.style.borderColor = cb.checked ? '#3B82F6' : '#E4E7F0';
-  label.style.background   = cb.checked ? '#EFF6FF' : '#fff';
+  label.style.background   = cb.checked ? '#f0fdf4' : '#fff';
 }
 
 function filterProducts(q) {

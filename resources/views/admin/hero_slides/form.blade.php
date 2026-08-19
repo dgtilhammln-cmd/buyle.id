@@ -15,7 +15,7 @@
 
         {{-- Main Info --}}
         <div class="admin-card">
-            <h3 style="font-size:.7rem;font-weight:700;color:#38BDF8;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Konten Banner</h3>
+            <h3 style="font-size:.7rem;font-weight:700;color:#a5cf37;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Konten Banner</h3>
             <div style="display:flex;flex-direction:column;gap:1rem;">
                 <div>
                     <label class="form-label">Posisi Banner <span style="color:#f87171;">*</span></label>
@@ -44,7 +44,7 @@
 
         {{-- Image --}}
         <div class="admin-card">
-            <h3 style="font-size:.7rem;font-weight:700;color:#38BDF8;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Gambar Banner</h3>
+            <h3 style="font-size:.7rem;font-weight:700;color:#a5cf37;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Gambar Banner</h3>
             
             @if(isset($slide) && $slide->image)
                 <div id="currentImageContainer">
@@ -57,7 +57,7 @@
             <input type="hidden" name="image_base64" id="imageBase64">
             
             <div id="previewContainer" style="display:none; margin-top:1rem;">
-                <p style="font-size:0.8rem; color:#38BDF8; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;"><svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Preview Gambar (Siap Diupload):</p>
+                <p style="font-size:0.8rem; color:#a5cf37; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;"><svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Preview Gambar (Siap Diupload):</p>
                 <img id="imagePreview" style="max-height:200px; border-radius:10px; object-fit:cover; display:block;">
                 <button type="button" id="btnRemoveImage" style="margin-top:0.5rem; display:inline-flex; align-items:center; gap:0.3rem; background:none; border:none; color:#f87171; font-size:0.75rem; cursor:pointer; text-decoration:underline;"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path></svg>Hapus & Ganti Gambar</button>
             </div>
@@ -67,7 +67,7 @@
 
         {{-- Button --}}
         <div class="admin-card">
-            <h3 style="font-size:.7rem;font-weight:700;color:#38BDF8;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Tombol (Opsional)</h3>
+            <h3 style="font-size:.7rem;font-weight:700;color:#a5cf37;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Tombol (Opsional)</h3>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
                 <div>
                     <label class="form-label">Teks Tombol</label>
@@ -82,7 +82,7 @@
 
         {{-- Meta --}}
         <div class="admin-card">
-            <h3 style="font-size:.7rem;font-weight:700;color:#38BDF8;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Pengaturan</h3>
+            <h3 style="font-size:.7rem;font-weight:700;color:#a5cf37;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Pengaturan</h3>
             <div style="display:flex;gap:1.5rem;align-items:center;">
                 <div>
                     <label class="form-label">Urutan Tampil</label>
@@ -90,7 +90,7 @@
                 </div>
                 <div style="display:flex;align-items:flex-end;gap:.5rem;padding-bottom:.5rem;">
                     <input type="hidden" name="is_active" value="0">
-                    <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $slide->is_active ?? true) ? 'checked' : '' }} style="accent-color:#38BDF8;width:16px;height:16px;">
+                    <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $slide->is_active ?? true) ? 'checked' : '' }} style="accent-color:#a5cf37;width:16px;height:16px;">
                     <label for="is_active" style="font-size:.875rem;color:#D4D4D8;">Tampilkan di homepage</label>
                 </div>
             </div>

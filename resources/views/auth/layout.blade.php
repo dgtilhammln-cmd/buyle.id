@@ -33,7 +33,7 @@
             overflow-x: hidden;
             background-image: 
                 radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.2) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.15) 0px, transparent 50%);
+                radial-gradient(at 100% 100%, rgba(30, 179, 73, 0.15) 0px, transparent 50%);
         }
         
         /* Ornamental Blobs */
@@ -41,7 +41,7 @@
             position: absolute;
             top: -100px; left: -100px;
             width: 400px; height: 400px;
-            background: rgba(14, 165, 233, 0.2);
+            background: rgba(30, 179, 73, 0.2);
             filter: blur(80px);
             border-radius: 50%;
             z-index: -1;
@@ -72,7 +72,7 @@
             padding: 1rem;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            box-shadow: 0 24px 50px rgba(14, 165, 233, 0.08), 0 4px 15px rgba(0,0,0,0.03);
+            box-shadow: 0 24px 50px rgba(30, 179, 73, 0.08), 0 4px 15px rgba(0,0,0,0.03);
             border: 1px solid rgba(255, 255, 255, 0.5);
             min-height: 500px;
         }
@@ -96,11 +96,11 @@
 
         .logo-placeholder {
             width: 50px; height: 50px;
-            background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
             display: flex; align-items: center; justify-content: center;
             font-weight: 800; color: #fff; font-size: 1.125rem;
             border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.25);
+            box-shadow: 0 8px 20px rgba(30, 179, 73, 0.25);
             margin-bottom: 2rem;
         }
 
@@ -132,7 +132,7 @@
             margin-top: auto;
         }
         .back-link:hover {
-            color: #0EA5E9;
+            color: #1eb349;
         }
 
         .auth-title {
@@ -148,7 +148,7 @@
             margin: 0 0 2rem;
             font-weight: 500;
         }
-        .auth-subtitle a { color: #0EA5E9; text-decoration: none; font-weight: 600; }
+        .auth-subtitle a { color: #1eb349; text-decoration: none; font-weight: 600; }
         .auth-subtitle a:hover { text-decoration: underline; }
 
         .form-group {
@@ -182,8 +182,8 @@
             font-weight: 400;
         }
         .form-input:focus {
-            border-color: #0EA5E9;
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+            border-color: #1eb349;
+            box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.1);
         }
         .form-input.is-invalid { border-color: #EF4444; }
 
@@ -212,10 +212,10 @@
             justify-content: center;
             transition: color 0.2s;
         }
-        .input-icon:hover { color: #0EA5E9; }
+        .input-icon:hover { color: #1eb349; }
 
         .btn-primary {
-            background: #0EA5E9;
+            background: #1eb349;
             color: #fff;
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
@@ -227,16 +227,16 @@
             border-radius: 10px;
             transition: all 0.3s;
             margin-top: 1rem;
-            box-shadow: 0 8px 16px rgba(14, 165, 233, 0.2);
+            box-shadow: 0 8px 16px rgba(30, 179, 73, 0.2);
             text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .btn-primary:hover {
-            background: #0284C7;
+            background: #16a34a;
             transform: translateY(-2px);
-            box-shadow: 0 12px 20px rgba(14, 165, 233, 0.3);
+            box-shadow: 0 12px 20px rgba(30, 179, 73, 0.3);
         }
         .btn-primary:active {
             transform: translateY(0);
@@ -271,8 +271,8 @@
             cursor: pointer;
             font-weight: 500;
         }
-        .remember-label input[type="checkbox"] { width: 16px; height: 16px; accent-color: #0EA5E9; }
-        .forgot-link { font-size: 0.8rem; color: #0EA5E9; text-decoration: none; font-weight: 600; }
+        .remember-label input[type="checkbox"] { width: 16px; height: 16px; accent-color: #1eb349; }
+        .forgot-link { font-size: 0.8rem; color: #1eb349; text-decoration: none; font-weight: 600; }
         .forgot-link:hover { text-decoration: underline; }
 
         .divider {
@@ -337,7 +337,7 @@
                 border-radius: 0 0 24px 24px;
                 padding: 2rem;
                 box-shadow: none;
-                border-top: 1px solid rgba(14, 165, 233, 0.1);
+                border-top: 1px solid rgba(30, 179, 73, 0.1);
             }
         }
     </style>

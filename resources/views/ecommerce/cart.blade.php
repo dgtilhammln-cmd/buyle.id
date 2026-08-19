@@ -6,8 +6,8 @@
 @section('content')
 <style>
 :root {
-    --c-accent: #0EA5E9;
-    --c-accent-dark: #0369A1;
+    --c-accent: #1eb349;
+    --c-accent-dark: #15803d;
     --c-text: #0F172A;
     --c-muted: #64748B;
     --c-border: #E2E8F0;
@@ -92,7 +92,7 @@ body { background: var(--c-bg); font-family: var(--font); }
     @if($summary['items']->isEmpty())
         <div class="empty-state" style="grid-column:1/-1;">
             <div class="empty-icon-wrap">
-                <svg width="48" height="48" fill="none" stroke="#0EA5E9" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                <svg width="48" height="48" fill="none" stroke="#1eb349" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
             </div>
             <h2>Keranjang Masih Kosong</h2>
             <p>Yuk cari produk perlengkapan rumah impianmu dan tambahkan ke keranjang!</p>

@@ -14,7 +14,7 @@
     @foreach([['h2','H2'],['h3','H3'],['p','¶']] as $b)
     <button type="button" onclick="edBlock('{{$edId}}','{{$b[0]}}')"
       style="padding:.3rem .5rem;background:#fff;border:1.5px solid #E4E7F0;color:#3B82F6;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:700;min-width:30px;transition:all .15s;"
-      onmouseover="this.style.background='#EFF6FF'" onmouseout="this.style.background='#fff'">{{$b[1]}}</button>
+      onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='#fff'">{{$b[1]}}</button>
     @endforeach
     <div style="width:1px;height:20px;background:#E4E7F0;margin:0 .25rem;"></div>
     <button type="button" onclick="edFmt('{{$edId}}','insertUnorderedList')"

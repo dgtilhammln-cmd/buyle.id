@@ -85,7 +85,7 @@
             ];
           @endphp
           @foreach($icons as $iconKey => $iconSvg)
-            <div class="icon-option {{ old('icon_value', $item->icon_value ?? '') == $iconKey ? 'selected' : '' }}" data-key="{{ $iconKey }}" onclick="selectIcon('{{ $iconKey }}', this)" style="width:48px;height:48px;border-radius:12px;border:2px solid {{ old('icon_value', $item->icon_value ?? '') == $iconKey ? '#3B82F6' : '#E2E8F0' }};display:flex;align-items:center;justify-content:center;cursor:pointer;color:{{ old('icon_value', $item->icon_value ?? '') == $iconKey ? '#3B82F6' : '#64748B' }};background:{{ old('icon_value', $item->icon_value ?? '') == $iconKey ? '#EFF6FF' : '#fff' }};transition:all .2s;" title="{{ ucfirst(str_replace('-',' ',$iconKey)) }}">
+            <div class="icon-option {{ old('icon_value', $item->icon_value ?? '') == $iconKey ? 'selected' : '' }}" data-key="{{ $iconKey }}" onclick="selectIcon('{{ $iconKey }}', this)" style="width:48px;height:48px;border-radius:12px;border:2px solid {{ old('icon_value', $item->icon_value ?? '') == $iconKey ? '#3B82F6' : '#E2E8F0' }};display:flex;align-items:center;justify-content:center;cursor:pointer;color:{{ old('icon_value', $item->icon_value ?? '') == $iconKey ? '#3B82F6' : '#64748B' }};background:{{ old('icon_value', $item->icon_value ?? '') == $iconKey ? '#f0fdf4' : '#fff' }};transition:all .2s;" title="{{ ucfirst(str_replace('-',' ',$iconKey)) }}">
               <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">{!! $iconSvg !!}</svg>
             </div>
           @endforeach
@@ -166,7 +166,7 @@ function selectIcon(key, el) {
   });
   el.style.borderColor = '#3B82F6';
   el.style.color = '#3B82F6';
-  el.style.background = '#EFF6FF';
+  el.style.background = '#f0fdf4';
 }
 </script>
 @endsection

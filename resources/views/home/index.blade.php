@@ -46,7 +46,7 @@
         @if($logo)
             <img src="{{ asset('storage/'.$logo) }}" alt="Loading" class="preloader-logo-capsule">
         @else
-            <span style="font-weight:700;color:#0EA5E9;font-size:1.5rem;font-family:'Montserrat',sans-serif;animation:preloaderPulse 1.5s infinite;">buyle.id</span>
+            <span style="font-weight:700;color:#1eb349;font-size:1.5rem;font-family:'Montserrat',sans-serif;animation:preloaderPulse 1.5s infinite;">buyle.id</span>
         @endif
     </div>
     
@@ -258,8 +258,8 @@
     /* ── MARQUEE CLIENTS BAR ──────────── */
     .cv-clients-bar {
         background: #F8FAFF;
-        border-top: 1px solid rgba(56,189,248,0.1);
-        border-bottom: 1px solid rgba(56,189,248,0.1);
+        border-top: 1px solid rgba(165,207,55,0.1);
+        border-bottom: 1px solid rgba(165,207,55,0.1);
         padding: 1.5rem 0;
         overflow: hidden;
     }
@@ -278,7 +278,7 @@
         align-items: center;
         gap: 0.5rem;
         background: #fff;
-        border: 1px solid rgba(56,189,248,0.15);
+        border: 1px solid rgba(165,207,55,0.15);
         border-radius: 6px;
         padding: 0.5rem 1.125rem;
         font-size: 0.8rem;
@@ -292,7 +292,7 @@
         width: 6px;
         height: 6px;
         border-radius: 50%;
-        background: #38BDF8;
+        background: #a5cf37;
         flex-shrink: 0;
     }
 
@@ -317,7 +317,7 @@
     }
     .cv-step-num {
         width: 40px; height: 40px;
-        background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -346,13 +346,13 @@
         justify-content: center;
     }
     .cv-explainer-card {
-        background: linear-gradient(135deg, #38BDF8, #0EA5E9);
+        background: linear-gradient(135deg, #a5cf37, #1eb349);
         border-radius: 20px;
         padding: 2.5rem;
         text-align: center;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 24px 80px rgba(14,165,233,0.25);
+        box-shadow: 0 24px 80px rgba(30,179,73,0.25);
     }
     .cv-explainer-card::before {
         content: '';
@@ -379,22 +379,22 @@
         transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 2px 16px rgba(56,189,248,0.05);
+        box-shadow: 0 2px 16px rgba(165,207,55,0.05);
     }
     .cv-product-card::after {
         content: '';
         position: absolute;
         top: 0; left: 0; right: 0;
         height: 3px;
-        background: linear-gradient(90deg, #0EA5E9, #38BDF8, #7DD3FC);
+        background: linear-gradient(90deg, #1eb349, #a5cf37, #7DD3FC);
         transform: scaleX(0);
         transform-origin: left;
         transition: transform 0.4s ease;
     }
     .cv-product-card:hover {
-        border-color: #38BDF8;
+        border-color: #a5cf37;
         transform: translateY(-8px);
-        box-shadow: 0 32px 80px rgba(56,189,248,0.15), 0 0 0 1px rgba(56,189,248,0.1);
+        box-shadow: 0 32px 80px rgba(165,207,55,0.15), 0 0 0 1px rgba(165,207,55,0.1);
     }
     .cv-product-card:hover::after { transform: scaleX(1); }
     .cv-product-type {
@@ -402,7 +402,7 @@
         font-weight: 700;
         letter-spacing: 0.15em;
         text-transform: uppercase;
-        color: #0EA5E9;
+        color: #1eb349;
         margin-bottom: 0.375rem;
     }
     .cv-product-name {
@@ -440,7 +440,7 @@
         font-weight: 700;
         color: var(--text-1);
     }
-    .cv-spec-val.highlight { color: #0284C7; }
+    .cv-spec-val.highlight { color: #16a34a; }
     .cv-product-cta {
         margin-top: 1.5rem;
         display: flex;
@@ -448,7 +448,7 @@
         gap: 0.375rem;
         font-size: 0.8125rem;
         font-weight: 600;
-        color: #0EA5E9;
+        color: #1eb349;
         transition: gap 0.2s;
     }
     .cv-product-card:hover .cv-product-cta { gap: 0.625rem; }
@@ -516,7 +516,7 @@
     .cv-app-card:hover {
         border-color: var(--accent);
         transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(56,189,248,0.12);
+        box-shadow: 0 12px 40px rgba(165,207,55,0.12);
     }
     .cv-app-emoji {
         font-size: 2.25rem;
@@ -580,7 +580,7 @@
     }
     .cv-testi-quote {
         font-size: 2.5rem;
-        color: #38BDF8;
+        color: #a5cf37;
         opacity: 0.3;
         line-height: 1;
         margin-bottom: 0.5rem;
@@ -602,7 +602,7 @@
     .cv-testi-avatar {
         width: 44px; height: 44px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -657,13 +657,13 @@
         content: '';
         width: 5px; height: 5px;
         border-radius: 50%;
-        background: #38BDF8;
+        background: #a5cf37;
         flex-shrink: 0;
     }
 
     /* ── CTA SECTION ──────────────────── */
     .cv-cta {
-        background: linear-gradient(135deg, #38BDF8 0%, #0EA5E9 50%, #0284C7 100%);
+        background: linear-gradient(135deg, #a5cf37 0%, #1eb349 50%, #16a34a 100%);
         position: relative;
         overflow: hidden;
     }
@@ -702,7 +702,7 @@
     .cv-article-card:hover {
         border-color: var(--accent);
         transform: translateY(-6px);
-        box-shadow: 0 20px 56px rgba(56,189,248,0.12);
+        box-shadow: 0 20px 56px rgba(165,207,55,0.12);
     }
     .cv-article-thumb {
         height: 180px;
@@ -727,7 +727,7 @@
         font-weight: 700;
         letter-spacing: 0.15em;
         text-transform: uppercase;
-        color: #0EA5E9;
+        color: #1eb349;
         margin-bottom: 0.5rem;
     }
     .cv-article-title {
@@ -760,8 +760,8 @@
     .cv-clients-section {
         background: #ffffff;
         padding: 3.5rem 0;
-        border-top: 1px solid rgba(14,165,233,0.08);
-        border-bottom: 1px solid rgba(14,165,233,0.08);
+        border-top: 1px solid rgba(30,179,73,0.08);
+        border-bottom: 1px solid rgba(30,179,73,0.08);
         overflow: hidden;
         position: relative;
     }
@@ -785,11 +785,11 @@
     .cv-clients-count {
         font-size: 0.7rem;
         font-weight: 600;
-        color: #0EA5E9;
+        color: #1eb349;
         background: #F0F9FF;
         padding: 0.35rem 1rem;
         border-radius: 20px;
-        border: 1px solid rgba(14,165,233,0.15);
+        border: 1px solid rgba(30,179,73,0.15);
     }
 
     /* Marquee Container */
@@ -853,10 +853,10 @@
         box-shadow: 0 4px 12px rgba(0,0,0,0.02);
     }
     .cv-client-logo-card:hover {
-        border-color: #38BDF8;
+        border-color: #a5cf37;
         background: #ffffff;
         transform: translateY(-4px) scale(1.02);
-        box-shadow: 0 12px 30px rgba(14,165,233,0.12);
+        box-shadow: 0 12px 30px rgba(30,179,73,0.12);
     }
     .cv-client-logo-img {
         max-height: 52px;
@@ -901,14 +901,14 @@
         content: '';
         width: 6px; height: 6px;
         border-radius: 50%;
-        background: #38BDF8;
+        background: #a5cf37;
         flex-shrink: 0;
     }
     .cv-client-chip-v2:hover {
-        border-color: #38BDF8;
+        border-color: #a5cf37;
         background: #ffffff;
         transform: translateY(-4px) scale(1.02);
-        box-shadow: 0 12px 30px rgba(14,165,233,0.12);
+        box-shadow: 0 12px 30px rgba(30,179,73,0.12);
     }
 
     /* RESPONSIVE */
@@ -960,7 +960,7 @@
         width: 36px; height: 36px;
         background: #F0F9FF;
         border-radius: 50%;
-        color: #0EA5E9;
+        color: #1eb349;
     }
     .cv-usp-icon img { width: 20px; height: 20px; object-fit: contain; }
     .cv-usp-icon svg { width: 16px; height: 16px; }
@@ -1018,11 +1018,11 @@
         align-items: center;
         justify-content: center;
         position: relative;
-        box-shadow: 0 10px 25px rgba(14,165,233,0.08), 0 4px 10px rgba(14,165,233,0.03);
+        box-shadow: 0 10px 25px rgba(30,179,73,0.08), 0 4px 10px rgba(30,179,73,0.03);
         transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .cv-cat-slide:hover .cv-cat-icon-wrap {
-        box-shadow: 0 14px 35px rgba(14,165,233,0.18), 0 6px 15px rgba(14,165,233,0.08);
+        box-shadow: 0 14px 35px rgba(30,179,73,0.18), 0 6px 15px rgba(30,179,73,0.08);
         transform: translateY(-3px);
     }
     .cv-cat-icon-wrap img {
@@ -1051,7 +1051,7 @@
         line-height: 1.3;
         transition: color 0.2s;
     }
-    .cv-cat-slide:hover .cv-cat-name { color: #0EA5E9; }
+    .cv-cat-slide:hover .cv-cat-name { color: #1eb349; }
     
     .cv-cats-nav {
         position: absolute;
@@ -1067,7 +1067,7 @@
         transition: all 0.2s;
         z-index: 10;
     }
-    .cv-cats-nav:hover { background: #0EA5E9; color: #fff; border-color: #0EA5E9; box-shadow: 0 6px 16px rgba(14,165,233,0.25); }
+    .cv-cats-nav:hover { background: #1eb349; color: #fff; border-color: #1eb349; box-shadow: 0 6px 16px rgba(30,179,73,0.25); }
     .cv-cats-prev { left: 0; }
     .cv-cats-next { right: 0; }
 
@@ -1367,7 +1367,7 @@
     .cv-promo-view-all {
         font-size: .825rem;
         font-weight: 600;
-        color: var(--accent, #0EA5E9);
+        color: var(--accent, #1eb349);
         text-decoration: none;
         white-space: nowrap;
         flex-shrink: 0;
@@ -1492,8 +1492,8 @@
         transition: border-color .25s, box-shadow .25s, transform .25s;
     }
     .cv-promo-card:hover {
-        border-color: var(--accent, #0EA5E9);
-        box-shadow: 0 8px 24px rgba(14,165,233,.1);
+        border-color: var(--accent, #1eb349);
+        box-shadow: 0 8px 24px rgba(30,179,73,.1);
         transform: translateY(-3px);
     }
     .cv-promo-card-img {
@@ -1597,7 +1597,7 @@
         color: #1E293B;
         transition: all .2s;
     }
-    .cv-promo-nav:hover { background: var(--accent, #0EA5E9); border-color: var(--accent, #0EA5E9); color: #fff; }
+    .cv-promo-nav:hover { background: var(--accent, #1eb349); border-color: var(--accent, #1eb349); color: #fff; }
     .cv-promo-nav-prev { right: auto; left: -16px; }
     .cv-promo-nav-next { left: auto; right: -16px; }
 
@@ -1769,7 +1769,7 @@
                 <h2 class="cv-rekomendasi-title" style="font-family:'Montserrat',sans-serif; font-size:1.125rem; font-weight:800; color:#1E293B; letter-spacing:-0.02em; margin:0 0 0.2rem;">Rekomendasi Untukmu</h2>
                 <div class="cv-rekomendasi-subtitle" style="font-size:0.8rem; color:#64748B;">Temukan berbagai produk pilihan terbaik dari buyle.id</div>
             </div>
-            <a href="{{ route('products') }}" style="font-size:0.75rem; font-weight:600; color:#0EA5E9; text-decoration:none; white-space:nowrap;">Lihat Semua &rarr;</a>
+            <a href="{{ route('products') }}" style="font-size:0.75rem; font-weight:600; color:#1eb349; text-decoration:none; white-space:nowrap;">Lihat Semua &rarr;</a>
         </div>
         
         <div class="catalog-grid" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.875rem;">
@@ -1844,8 +1844,8 @@
             transition: border-color .25s, box-shadow .25s, transform .25s;
         }
         .catalog-card:hover {
-            border-color: #0EA5E9;
-            box-shadow: 0 8px 24px rgba(14,165,233,.12);
+            border-color: #1eb349;
+            box-shadow: 0 8px 24px rgba(30,179,73,.12);
             transform: translateY(-3px);
         }
         .catalog-card-img-wrap {
@@ -1919,7 +1919,7 @@
             align-items: center;
             gap: 0.35rem;
             padding: 0.75rem 2.5rem;
-            background: linear-gradient(135deg, #0EA5E9, #0369a1);
+            background: linear-gradient(135deg, #1eb349, #15803d);
             color: #fff;
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
@@ -1927,7 +1927,7 @@
             border-radius: 999px;
             text-decoration: none;
             transition: opacity 0.2s, transform 0.2s;
-            box-shadow: 0 4px 16px rgba(14,165,233,0.3);
+            box-shadow: 0 4px 16px rgba(30,179,73,0.3);
         }
         .catalog-btn-more:hover { opacity: 0.9; transform: translateY(-1px); }
         @media (max-width: 1024px) {

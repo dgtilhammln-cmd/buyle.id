@@ -16,9 +16,9 @@
     transition: all 0.2s;
 }
 .label-chip.active {
-    background: #0EA5E9;
+    background: #1eb349;
     color: #fff;
-    border-color: #0EA5E9;
+    border-color: #1eb349;
 }
 </style>
 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; flex-wrap:wrap; gap:0.75rem;">
@@ -27,7 +27,7 @@
         <p style="font-size:0.8rem; color:#64748B;">Kelola alamat pengiriman Anda</p>
     </div>
     <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-        <button type="button" class="btn-add-addr" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem; background:#F8FAFC; color:#0EA5E9; border:1px solid #0EA5E9; cursor:pointer;" onclick="document.getElementById('addAddrModal').classList.add('active')">
+        <button type="button" class="btn-add-addr" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem; background:#F8FAFC; color:#1eb349; border:1px solid #1eb349; cursor:pointer;" onclick="document.getElementById('addAddrModal').classList.add('active')">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Tambah Alamat
         </button>

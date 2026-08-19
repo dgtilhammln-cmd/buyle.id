@@ -89,7 +89,7 @@
 </a>
 
 <p style="text-align:center; font-size:0.75rem; color:#94A3B8; margin-top:1.5rem; line-height:1.6;">
-    Dengan mendaftar, Anda menyetujui <a href="#" style="color:#0EA5E9;">Syarat & Ketentuan</a><br>dan <a href="#" style="color:#0EA5E9;">Kebijakan Privasi</a> kami.
+    Dengan mendaftar, Anda menyetujui <a href="#" style="color:#1eb349;">Syarat & Ketentuan</a><br>dan <a href="#" style="color:#1eb349;">Kebijakan Privasi</a> kami.
 </p>
 
 <script>

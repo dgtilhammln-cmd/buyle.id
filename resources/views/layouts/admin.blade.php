@@ -529,7 +529,7 @@ function toggleNotif(e) {
       dropdown.style.opacity = '1';
       dropdown.style.transform = 'translateY(0)';
     });
-    btn.style.background = '#EFF6FF';
+    btn.style.background = '#f0fdf4';
     btn.style.borderColor = '#BFDBFE';
   } else {
     dropdown.style.opacity = '0';

@@ -71,8 +71,8 @@
             background: #ffffff;
             border-radius: 999px;
             padding: 0.25rem 0.75rem;
-            box-shadow: 0 10px 40px rgba(14, 165, 233, 0.12), 0 2px 10px rgba(0,0,0,0.05);
-            border: 1px solid rgba(14, 165, 233, 0.1);
+            box-shadow: 0 10px 40px rgba(30, 179, 73, 0.12), 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid rgba(30, 179, 73, 0.1);
             gap: 0.5rem;
         }
         .pill-navbar-inner.navbar-scrolled .nav-pill-box {
@@ -123,8 +123,8 @@
         border-radius: 999px; transition: color 0.2s, background 0.2s;
         white-space: nowrap;
     }
-    .pill-link:hover { color: #0EA5E9; background: rgba(14,165,233,0.07); }
-    .pill-link.active { background: #0369a1; color: #fff; font-weight: 600; }
+    .pill-link:hover { color: #1eb349; background: rgba(30,179,73,0.07); }
+    .pill-link.active { background: #15803d; color: #fff; font-weight: 600; }
 
     .cart-dropdown-wrap:hover .cart-dropdown-content {
         opacity: 1 !important;
@@ -161,8 +161,8 @@
     }
     .search-form:focus-within {
         background: #fff;
-        border-color: #0EA5E9;
-        box-shadow: 0 0 0 3px rgba(14,165,233,0.1);
+        border-color: #1eb349;
+        box-shadow: 0 0 0 3px rgba(30,179,73,0.1);
         border-radius: 999px;
     }
     .search-input {
@@ -188,7 +188,7 @@
         cursor: pointer;
         transition: background 0.2s, color 0.2s;
     }
-    .search-btn:hover { background: #0EA5E9; color: #fff; }
+    .search-btn:hover { background: #1eb349; color: #fff; }
     
     /* Search Dropdown */
     .search-dropdown {
@@ -231,7 +231,7 @@
         text-decoration: none;
         transition: background 0.2s;
     }
-    .search-hist-item:hover { background: #F1F5F9; color: #0EA5E9; }
+    .search-hist-item:hover { background: #F1F5F9; color: #1eb349; }
 
     /* ── Action Buttons Pill ── */
     .nav-pill-actions {
@@ -250,7 +250,7 @@
         text-decoration: none;
     }
     .pill-icon-btn:hover {
-        color: #0EA5E9;
+        color: #1eb349;
     }
     .auth-text-btn {
         font-family: 'Montserrat', sans-serif;
@@ -261,7 +261,7 @@
         padding: 0.4rem 0.5rem;
         transition: color 0.2s;
     }
-    .auth-text-btn:hover { color: #0EA5E9; }
+    .auth-text-btn:hover { color: #1eb349; }
     
     .auth-solid-btn {
         font-family: 'Montserrat', sans-serif;
@@ -291,7 +291,7 @@
         width: 46px; height: 46px;
         align-items: center; justify-content: center;
         cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-        color: #0EA5E9; pointer-events: auto;
+        color: #1eb349; pointer-events: auto;
         animation: navDropIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
         animation-delay: 0.05s;
     }
@@ -350,8 +350,8 @@
         
         /* Actions pill */
         .nav-pill-actions { grid-area: actions; padding: 0 !important; height: 32px !important; justify-content: flex-end; }
-        .auth-solid-btn { padding: 0 0.85rem; font-size: 0.75rem; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 999px; margin: 0; line-height: 1; flex-shrink: 0; background: #fff; color: #0EA5E9; border: 1.5px solid #0EA5E9; box-shadow: none; font-weight: 700; }
-        .auth-solid-btn:hover { background: #0EA5E9; color: #fff; box-shadow: 0 4px 12px rgba(14,165,233,0.2); }
+        .auth-solid-btn { padding: 0 0.85rem; font-size: 0.75rem; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 999px; margin: 0; line-height: 1; flex-shrink: 0; background: #fff; color: #1eb349; border: 1.5px solid #1eb349; box-shadow: none; font-weight: 700; }
+        .auth-solid-btn:hover { background: #1eb349; color: #fff; box-shadow: 0 4px 12px rgba(30,179,73,0.2); }
         
         /* Search pill — Huge and modern */
         .nav-pill-search { grid-area: search; max-width: none; width: 100%; padding: 0 !important; min-width: 0; height: auto !important; }
@@ -373,7 +373,7 @@
         .search-btn svg { width: 18px; height: 18px; stroke-width: 2.5; }
         
         /* Make search icon blue to match theme */
-        .search-btn { background: #F0F9FF; color: #0EA5E9; }
+        .search-btn { background: #F0F9FF; color: #1eb349; }
 
         /* Hide all icons except Daftar */
         .pill-icon-btn { display: flex !important; width: 32px; height: 32px; background: #fff; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center; justify-content: center; }
@@ -395,7 +395,7 @@
                 @if($logo)
                     <img src="{{ asset('storage/'.$logo) }}" alt="Logo">
                 @else
-                    <span style="font-weight:900;color:#0EA5E9;font-size:1rem;font-family:'Montserrat',sans-serif;">buyle.id</span>
+                    <span style="font-weight:900;color:#1eb349;font-size:1rem;font-family:'Montserrat',sans-serif;">buyle.id</span>
                 @endif
             </div>
         </a>
@@ -494,7 +494,7 @@
                     @else
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #F1F5F9;">
                             <span style="font-size:0.875rem; font-weight:700; color:#0f172a;">Keranjang ({{ $cartCount }})</span>
-                            <a href="{{ route('cart.index') }}" style="font-size:0.8rem; color:#0EA5E9; text-decoration:none; font-weight:600;">Lihat Semua</a>
+                            <a href="{{ route('cart.index') }}" style="font-size:0.8rem; color:#1eb349; text-decoration:none; font-weight:600;">Lihat Semua</a>
                         </div>
                         <div style="max-height:240px; overflow-y:auto; margin-bottom:1rem; display:flex; flex-direction:column; gap:0.75rem;">
                             @php $dropdownTotal = 0; @endphp
@@ -514,7 +514,7 @@
                                         <div style="font-size:0.825rem; font-weight:600; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $cartItem->product->name ?? 'Produk Dihapus' }}</div>
                                         <div style="font-size:0.75rem; color:#64748B; margin-top:0.2rem;">{{ $cartItem->qty }} x Rp {{ number_format($cartItem->unit_price, 0, ',', '.') }}</div>
                                     </div>
-                                    <div style="font-size:0.825rem; font-weight:700; color:#0EA5E9;">
+                                    <div style="font-size:0.825rem; font-weight:700; color:#1eb349;">
                                         Rp {{ number_format($cartItem->subtotal, 0, ',', '.') }}
                                     </div>
                                 </div>
@@ -585,7 +585,7 @@
                         @elseif(Auth::user()->avatar)
                             <img src="{{ asset('storage/'.Auth::user()->avatar) }}" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">
                         @else
-                            <span style="width:28px;height:28px;border-radius:50%;background:#0EA5E9;color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;">{{ strtoupper(substr(Auth::user()->name,0,1)) }}</span>
+                            <span style="width:28px;height:28px;border-radius:50%;background:#1eb349;color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;">{{ strtoupper(substr(Auth::user()->name,0,1)) }}</span>
                         @endif
                         {{ explode(' ', Auth::user()->name)[0] }}
                         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -652,7 +652,7 @@
         @if($logo)
             <img src="{{ asset('storage/'.$logo) }}" alt="Logo" style="height:38px; width:38px; object-fit:cover; border-radius:50%;">
         @else
-            <span style="font-weight:900;color:#0EA5E9;font-size:1.4rem;">{{ $siteName }}</span>
+            <span style="font-weight:900;color:#1eb349;font-size:1.4rem;">{{ $siteName }}</span>
         @endif
     </div>
     <nav style="display:flex;flex-direction:column;gap:1.25rem;">
@@ -667,7 +667,7 @@
         </div>
 
         @foreach($navLinks as $link)
-            <a href="{{ $link['url'] }}" style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:600;color:{{ $currentUrl == $link['url'] ? '#0EA5E9' : '#1e293b' }};text-decoration:none;transition:color .2s;">
+            <a href="{{ $link['url'] }}" style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:600;color:{{ $currentUrl == $link['url'] ? '#1eb349' : '#1e293b' }};text-decoration:none;transition:color .2s;">
                 {{ $link['label'] }}
             </a>
         @endforeach
@@ -679,7 +679,7 @@
         {{-- Mobile Auth --}}
         <div style="display:flex; gap:0.75rem;">
             @auth
-                <a href="{{ route('account.overview') }}" style="flex:1; text-align:center; padding:0.875rem; border-radius:999px; font-family:'Montserrat',sans-serif; font-weight:600; text-decoration:none; color:#0EA5E9; background:#F0F9FF; border:1px solid #BAE6FD;">
+                <a href="{{ route('account.overview') }}" style="flex:1; text-align:center; padding:0.875rem; border-radius:999px; font-family:'Montserrat',sans-serif; font-weight:600; text-decoration:none; color:#1eb349; background:#F0F9FF; border:1px solid #bbf7d0;">
                     Akun Saya
                 </a>
                 <form method="POST" action="{{ route('logout') }}" style="flex:1;">
@@ -689,10 +689,10 @@
                     </button>
                 </form>
             @else
-                <a href="{{ route('login') }}" style="flex:1; text-align:center; padding:0.875rem; border-radius:999px; font-family:'Montserrat',sans-serif; font-weight:600; text-decoration:none; color:#0EA5E9; background:#F0F9FF; border:1px solid #BAE6FD;">
+                <a href="{{ route('login') }}" style="flex:1; text-align:center; padding:0.875rem; border-radius:999px; font-family:'Montserrat',sans-serif; font-weight:600; text-decoration:none; color:#1eb349; background:#F0F9FF; border:1px solid #bbf7d0;">
                     Masuk
                 </a>
-                <a href="{{ route('register') }}" style="flex:1; text-align:center; padding:0.875rem; border-radius:999px; font-family:'Montserrat',sans-serif; font-weight:600; text-decoration:none; color:#fff; background:#0EA5E9; box-shadow:0 4px 14px rgba(14,165,233,.3);">
+                <a href="{{ route('register') }}" style="flex:1; text-align:center; padding:0.875rem; border-radius:999px; font-family:'Montserrat',sans-serif; font-weight:600; text-decoration:none; color:#fff; background:#1eb349; box-shadow:0 4px 14px rgba(30,179,73,.3);">
                     Daftar
                 </a>
             @endauth

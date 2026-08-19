@@ -109,7 +109,7 @@
     color: #64748B;
     font-weight: 700;
 }
-.lang-tab.active .lang-badge { background: #DBEAFE; color: #3B82F6; }
+.lang-tab.active .lang-badge { background: #dcfce7; color: #3B82F6; }
 
 /* Language panel */
 .lang-panel { display: none; }

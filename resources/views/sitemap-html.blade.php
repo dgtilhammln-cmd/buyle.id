@@ -16,8 +16,8 @@
         --border:   #E2E8F0;
         --text:     #0F172A;
         --muted:    #64748B;
-        --accent:   #0EA5E9;
-        --accent2:  #0284C7;
+        --accent:   #1eb349;
+        --accent2:  #16a34a;
         --dark:     #0F172A;
         --yellow:   #F5A623;
         --font:     'Montserrat', sans-serif;
@@ -47,7 +47,7 @@
         position: absolute;
         top: -120px; right: -80px;
         width: 400px; height: 400px;
-        background: radial-gradient(circle, rgba(14,165,233,.08) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(30,179,73,.08) 0%, transparent 70%);
         border-radius: 50%;
         pointer-events: none;
     }
@@ -63,7 +63,7 @@
     .sm-hero-inner { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; }
     .sm-hero-badge {
         display: inline-flex; align-items: center; gap: .5rem;
-        background: rgba(14,165,233,.1); border: 1px solid rgba(14,165,233,.2);
+        background: rgba(30,179,73,.1); border: 1px solid rgba(30,179,73,.2);
         color: var(--accent); font-size: .7rem; font-weight: 700;
         letter-spacing: .12em; text-transform: uppercase;
         padding: .4rem 1rem; border-radius: 50px; margin-bottom: 1.5rem;
@@ -153,7 +153,7 @@
         display: flex; align-items: center; justify-content: center;
         flex-shrink: 0;
     }
-    .sm-group-icon.blue { background: #EFF6FF; color: var(--accent); }
+    .sm-group-icon.blue { background: #f0fdf4; color: var(--accent); }
     .sm-group-icon.green { background: #F0FDF4; color: #16A34A; }
     .sm-group-icon.orange { background: #FFF7ED; color: #EA580C; }
     .sm-group-title {
@@ -200,7 +200,7 @@
         flex-shrink: 0;
         width: 36px; height: 36px;
         border-radius: 8px;
-        background: rgba(14,165,233,.1);
+        background: rgba(30,179,73,.1);
         color: var(--accent);
         display: flex; align-items: center; justify-content: center;
         font-size: .7rem;
@@ -274,9 +274,9 @@
     .sm-xml-code {
         font-family: 'Courier New', monospace;
         font-size: .75rem;
-        background: rgba(14,165,233,.15);
-        border: 1px solid rgba(14,165,233,.3);
-        color: #38BDF8;
+        background: rgba(30,179,73,.15);
+        border: 1px solid rgba(30,179,73,.3);
+        color: #a5cf37;
         padding: .5rem 1rem;
         border-radius: 8px;
         word-break: break-all;

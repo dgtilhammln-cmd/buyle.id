@@ -67,7 +67,7 @@
           @endif
         </button>
       </form>
-      <button onclick="document.getElementById('pw-modal').style.display='flex'" style="width:100%;padding:.75rem;background:#EFF6FF;color:#1D4ED8;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.875rem;display:flex;align-items:center;justify-content:center;gap:.5rem;">
+      <button onclick="document.getElementById('pw-modal').style.display='flex'" style="width:100%;padding:.75rem;background:#f0fdf4;color:#1D4ED8;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.875rem;display:flex;align-items:center;justify-content:center;gap:.5rem;">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
         Ganti Password
       </button>
@@ -94,7 +94,7 @@
                   {{ $shipping['full_address'] }}
                   @if(!empty($shipping['latitude']) && !empty($shipping['longitude']))
                       <div style="margin-top:.25rem;">
-                          <a href="https://maps.google.com/?q={{ $shipping['latitude'] }},{{ $shipping['longitude'] }}" target="_blank" style="color:#0EA5E9;text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:.25rem;">
+                          <a href="https://maps.google.com/?q={{ $shipping['latitude'] }},{{ $shipping['longitude'] }}" target="_blank" style="color:#1eb349;text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:.25rem;">
                               📍 Buka di Google Maps
                           </a>
                       </div>

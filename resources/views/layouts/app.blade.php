@@ -186,12 +186,12 @@
     <style>
     .fc-widget { position: fixed; bottom: 30px; right: 30px; z-index: 9999; font-family: 'Montserrat', sans-serif !important; }
     .fc-btn {
-        background: linear-gradient(135deg, #0EA5E9, #0369A1); color: #fff; border-radius: 99px; padding: .75rem 1.25rem;
-        display: flex; align-items: center; gap: .75rem; box-shadow: 0 4px 14px rgba(14,165,233,0.35);
+        background: linear-gradient(135deg, #1eb349, #15803d); color: #fff; border-radius: 99px; padding: .75rem 1.25rem;
+        display: flex; align-items: center; gap: .75rem; box-shadow: 0 4px 14px rgba(30,179,73,0.35);
         cursor: pointer; transition: all .3s cubic-bezier(0.4, 0, 0.2, 1); border: none; font-weight: 700; font-size: 1rem;
         font-family: 'Montserrat', sans-serif !important;
     }
-    .fc-btn:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(14,165,233,0.45); }
+    .fc-btn:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(30,179,73,0.45); }
     .fc-btn svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
     
     .fc-panel {
@@ -202,7 +202,7 @@
     }
     .fc-widget.open .fc-panel { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
     
-    .fc-head { background: linear-gradient(135deg, #0EA5E9, #0369A1); padding: 1.5rem; color: #fff; position: relative; }
+    .fc-head { background: linear-gradient(135deg, #1eb349, #15803d); padding: 1.5rem; color: #fff; position: relative; }
     .fc-head h3 { margin: 0 0 .25rem; font-size: 1.1rem; font-weight: 800; }
     .fc-head p { margin: 0; font-size: .8rem; opacity: 0.9; font-weight: 500; line-height: 1.4; }
     .fc-close { position: absolute; top: 1rem; right: 1rem; background: transparent; border: none; color: #fff; cursor: pointer; opacity: 0.7; transition: opacity .2s; }
@@ -216,7 +216,7 @@
         font-family: 'Montserrat', sans-serif; font-size: .85rem; outline: none; transition: all .2s; background: #F8FAFC; color: #0F172A;
     }
     .fc-textarea { resize: vertical; min-height: 80px; }
-    .fc-input:focus, .fc-textarea:focus { border-color: #0EA5E9; background: #fff; box-shadow: 0 0 0 3px rgba(14,165,233,0.1); }
+    .fc-input:focus, .fc-textarea:focus { border-color: #1eb349; background: #fff; box-shadow: 0 0 0 3px rgba(30,179,73,0.1); }
     .fc-submit {
         width: 100%; padding: .85rem; background: #0F172A; color: #fff; font-family: 'Montserrat', sans-serif;
         font-weight: 800; font-size: .9rem; border: none; border-radius: 12px; cursor: pointer; transition: all .2s;
@@ -283,7 +283,7 @@
             padding: 0.25rem 0.5rem; transition: all 0.3s ease; position: relative;
             font-family: 'Montserrat', sans-serif;
         }
-        .nav-item.active { color: #0EA5E9; }
+        .nav-item.active { color: #1eb349; }
         .nav-item svg { width: 22px; height: 22px; stroke-width: 2; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .nav-item.active svg { transform: translateY(-3px); stroke-width: 2.5; }
         .nav-badge {

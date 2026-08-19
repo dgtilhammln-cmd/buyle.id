@@ -6,9 +6,9 @@
 @section('content')
     <style>
         :root {
-            --tr-blue: #0EA5E9;
-            --tr-blue-d: #0369A1;
-            --tr-blue-l: #E0F2FE;
+            --tr-blue: #1eb349;
+            --tr-blue-d: #15803d;
+            --tr-blue-l: #dcfce7;
             --tr-slate: #64748B;
             --tr-text: #0F172A;
             --tr-bg: #F8FAFC;
@@ -22,7 +22,7 @@
             --tr-red-l: #FEE2E2;
             --tr-font: 'Montserrat', sans-serif;
             --tr-r: 16px;
-            --tr-shadow: 0 8px 32px rgba(14, 165, 233, .06);
+            --tr-shadow: 0 8px 32px rgba(30, 179, 73, .06);
         }
 
         .tr-page {
@@ -56,7 +56,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(14, 165, 233, .08);
+            box-shadow: 0 4px 12px rgba(30, 179, 73, .08);
         }
 
         .tr-page-title h1 {
@@ -136,7 +136,7 @@
         .tr-field select:focus {
             border-color: var(--tr-blue);
             background: var(--tr-white);
-            box-shadow: 0 0 0 4px rgba(14, 165, 233, .12);
+            box-shadow: 0 0 0 4px rgba(30, 179, 73, .12);
         }
 
         .tr-field-err {
@@ -160,14 +160,14 @@
             font-weight: 700;
             font-family: var(--tr-font);
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(14, 165, 233, .25);
+            box-shadow: 0 6px 20px rgba(30, 179, 73, .25);
             transition: transform .2s, box-shadow .2s;
             width: 100%;
         }
 
         .tr-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(14, 165, 233, .35);
+            box-shadow: 0 8px 25px rgba(30, 179, 73, .35);
         }
 
         .tr-btn:disabled {
@@ -471,7 +471,7 @@
 
         .tr-tl-dot.active {
             background: var(--tr-blue);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, .2);
+            box-shadow: 0 0 0 3px rgba(30, 179, 73, .2);
             width: 16px;
             height: 16px;
             left: calc(-2.25rem - 1px);

@@ -2,7 +2,7 @@
 
 @section('content')
 <style>
-:root { --accent: #0EA5E9; --accent-dark: #0369A1; --text: #0F172A; --muted: #64748B; --border: #E2E8F0; --bg: #F8FAFC; }
+:root { --accent: #1eb349; --accent-dark: #15803d; --text: #0F172A; --muted: #64748B; --border: #E2E8F0; --bg: #F8FAFC; }
 body { background-color: #F8FAFC !important; }
 
 .fin-wrap {
@@ -16,7 +16,7 @@ body { background-color: #F8FAFC !important; }
     background: #fff;
     border: 1px solid var(--border);
     border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(14,165,233,0.08), 0 4px 20px rgba(0,0,0,0.04);
+    box-shadow: 0 20px 60px rgba(30,179,73,0.08), 0 4px 20px rgba(0,0,0,0.04);
     overflow: hidden;
 }
 
@@ -44,7 +44,7 @@ body { background-color: #F8FAFC !important; }
 
 .fin-icon-wrap {
     width: 80px; height: 80px;
-    background: linear-gradient(135deg, #E0F2FE, #BAE6FD); /* Blue primary gradient */
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0); /* Blue primary gradient */
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     margin: 0 auto 1.5rem;
@@ -101,10 +101,10 @@ body { background-color: #F8FAFC !important; }
     cursor: pointer; transition: all 0.2s;
     font-family: 'Montserrat', sans-serif;
     text-decoration: none; text-align: center;
-    box-shadow: 0 8px 24px rgba(14,165,233,0.3);
+    box-shadow: 0 8px 24px rgba(30,179,73,0.3);
     margin: 0 auto;
 }
-.btn-pay:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(14,165,233,0.4); color: #fff; }
+.btn-pay:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(30,179,73,0.4); color: #fff; }
 .btn-pay:active { transform: translateY(0); }
 
 .btn-secondary-link {
@@ -123,7 +123,7 @@ body { background-color: #F8FAFC !important; }
     margin-bottom: 1.5rem;
 }
 .badge-success { background: #D1FAE5; color: #065F46; }
-.badge-pending { background: #E0F2FE; color: #0369A1; } /* Blue badge instead of yellow */
+.badge-pending { background: #dcfce7; color: #15803d; } /* Blue badge instead of yellow */
 
 .security-note {
     display: flex; align-items: center; justify-content: center;
@@ -188,7 +188,7 @@ body { background-color: #F8FAFC !important; }
                 @else
                     {{-- PENDING PAYMENT STATE --}}
                     <div class="fin-icon-wrap">
-                        <svg width="40" height="40" fill="none" stroke="#0284C7" stroke-width="2.5" viewBox="0 0 24 24">
+                        <svg width="40" height="40" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" d="M12 8v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
                         </svg>
                     </div>

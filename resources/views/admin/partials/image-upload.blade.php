@@ -53,7 +53,7 @@
        style="display:{{ $currentSrc ? 'none' : 'flex' }};flex-direction:column;align-items:center;gap:.5rem;padding:1.25rem;border:2px dashed #E4E7F0;border-radius:12px;cursor:pointer;transition:all .2s;text-align:center;"
        onmouseover="this.style.borderColor='#3B82F6';this.style.background='#F0F6FF'"
        onmouseout="this.style.borderColor='#E4E7F0';this.style.background='transparent'">
-    <div style="width:40px;height:40px;background:#EFF6FF;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+    <div style="width:40px;height:40px;background:#f0fdf4;border-radius:10px;display:flex;align-items:center;justify-content:center;">
       <svg width="20" height="20" fill="none" stroke="#3B82F6" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
     </div>
     <div style="font-size:.8rem;font-weight:700;color:#1E293B;">Klik untuk upload</div>

@@ -12,8 +12,8 @@
     --c-border:  #E2E8F0;
     --c-text:    #0F172A;
     --c-muted:   #64748B;
-    --c-accent:  #0EA5E9;
-    --c-accent-hover: #0284C7;
+    --c-accent:  #1eb349;
+    --c-accent-hover: #16a34a;
     --c-white:   #ffffff;
     --font:      'Montserrat', sans-serif;
     --ease:      cubic-bezier(0.22, 1, 0.36, 1);
@@ -34,13 +34,13 @@ a { text-decoration: none; color: inherit; }
 .sv-hero-premium::before {
     content:''; position:absolute; top:-150px; right:-100px;
     width:500px; height:500px; border-radius:50%;
-    background:radial-gradient(circle,rgba(14,165,233,0.06) 0%,transparent 70%);
+    background:radial-gradient(circle,rgba(30,179,73,0.06) 0%,transparent 70%);
     pointer-events:none;
 }
 .sv-hero-premium::after {
     content:''; position:absolute; bottom:-150px; left:-100px;
     width:600px; height:600px; border-radius:50%;
-    background:radial-gradient(circle,rgba(14,165,233,0.04) 0%,transparent 70%);
+    background:radial-gradient(circle,rgba(30,179,73,0.04) 0%,transparent 70%);
     pointer-events:none;
 }
 .sv-hero-inner {
@@ -66,9 +66,9 @@ a { text-decoration: none; color: inherit; }
 .ar-cat-badge {
     display:inline-flex; align-items:center; gap:0.375rem;
     font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
-    background:rgba(14,165,233,0.08); color:var(--c-accent);
+    background:rgba(30,179,73,0.08); color:var(--c-accent);
     padding:0.3rem 0.875rem; border-radius:50px;
-    border:1px solid rgba(14,165,233,0.15);
+    border:1px solid rgba(30,179,73,0.15);
     font-family:var(--font); margin-bottom:1.25rem;
 }
 
@@ -157,7 +157,7 @@ a { text-decoration: none; color: inherit; }
     overflow: hidden;
     transition: border-color 0.3s;
 }
-.ar-toc:hover { border-color: rgba(14,165,233,0.3); }
+.ar-toc:hover { border-color: rgba(30,179,73,0.3); }
 .ar-toc-header {
     display: flex; align-items: center; justify-content: space-between;
     padding: 1.125rem 1.5rem;
@@ -209,13 +209,13 @@ a { text-decoration: none; color: inherit; }
 .ar-content blockquote {
     border-left:3px solid var(--c-accent);
     padding:1rem 1.375rem;
-    background:rgba(14,165,233,0.04);
+    background:rgba(30,179,73,0.04);
     margin:2rem 0; border-radius:0 12px 12px 0;
     color:var(--c-muted); font-style:italic;
 }
 .ar-content code {
-    background:rgba(14,165,233,0.06);
-    border:1px solid rgba(14,165,233,0.15);
+    background:rgba(30,179,73,0.06);
+    border:1px solid rgba(30,179,73,0.15);
     padding:0.125rem 0.4rem; border-radius:4px;
     font-size:0.85em; color:var(--c-accent);
     font-family:'Fira Code', monospace;
@@ -240,7 +240,7 @@ a { text-decoration: none; color: inherit; }
     border-radius:12px; overflow:hidden;
     transition:border-color 0.3s;
 }
-.ar-faq-item:hover { border-color:rgba(14,165,233,0.3); }
+.ar-faq-item:hover { border-color:rgba(30,179,73,0.3); }
 .ar-faq-item[open] { border-color:var(--c-accent); }
 .ar-faq-item summary {
     padding:1rem 1.25rem;
@@ -262,7 +262,7 @@ a { text-decoration: none; color: inherit; }
 /* ════ CTA INLINE ════ */
 .ar-cta-box {
     margin-top:3rem;
-    background:linear-gradient(135deg,#0EA5E9,#0284C7);
+    background:linear-gradient(135deg,#1eb349,#16a34a);
     padding:2.5rem 2rem; border-radius:20px;
     text-align:center; position:relative; overflow:hidden;
 }
@@ -371,7 +371,7 @@ a { text-decoration: none; color: inherit; }
 .ar-related-card:hover {
     border-color:var(--c-accent);
     transform:translateY(-5px);
-    box-shadow:0 16px 40px rgba(14,165,233,0.09);
+    box-shadow:0 16px 40px rgba(30,179,73,0.09);
 }
 .ar-related-card-img { aspect-ratio:16/10; overflow:hidden; background:var(--c-surface); }
 .ar-related-card-img img {
@@ -437,7 +437,7 @@ a { text-decoration: none; color: inherit; }
         <p class="ar-hero-excerpt">{{ $trans?->excerpt }}</p>
 
         @if(isset($article->authorRel) && $article->authorRel->slug)
-        <a href="{{ url("/{$locale}/author/" . $article->authorRel->slug) }}" class="ar-author-row" style="text-decoration:none; display:inline-flex; transition:all .2s; padding-right:1rem; border-radius:12px; margin-left:-0.5rem; padding-left:0.5rem; border-top:none; margin-top:1.5rem; padding-top:0.5rem; border:1px solid transparent;" onmouseover="this.style.background='rgba(14,165,233,0.05)';this.style.borderColor='rgba(14,165,233,0.1)'" onmouseout="this.style.background='transparent';this.style.borderColor='transparent'">
+        <a href="{{ url("/{$locale}/author/" . $article->authorRel->slug) }}" class="ar-author-row" style="text-decoration:none; display:inline-flex; transition:all .2s; padding-right:1rem; border-radius:12px; margin-left:-0.5rem; padding-left:0.5rem; border-top:none; margin-top:1.5rem; padding-top:0.5rem; border:1px solid transparent;" onmouseover="this.style.background='rgba(30,179,73,0.05)';this.style.borderColor='rgba(30,179,73,0.1)'" onmouseout="this.style.background='transparent';this.style.borderColor='transparent'">
         @else
         <div class="ar-author-row" style="border-top:none; margin-top:1.5rem; padding-top:0.5rem;">
         @endif
@@ -558,11 +558,11 @@ a { text-decoration: none; color: inherit; }
 
     {{-- Internal Link CTA to Products --}}
     <div style="position:relative; overflow:hidden; background:linear-gradient(135deg, #ffffff 0%, #F8FAFC 100%); border:1px solid #E2E8F0; padding:2rem 2.5rem; margin:2.5rem 0; border-radius:16px; box-shadow:0 12px 32px rgba(15,23,42,0.04); display:flex; flex-direction:column; gap:1.25rem;">
-        <div style="position:absolute; top:-50px; right:-50px; width:150px; height:150px; background:radial-gradient(circle, rgba(14,165,233,0.1) 0%, transparent 70%); border-radius:50%; pointer-events:none;"></div>
-        <div style="position:absolute; bottom:-30px; right:10%; width:100px; height:100px; background:radial-gradient(circle, rgba(14,165,233,0.05) 0%, transparent 70%); border-radius:50%; pointer-events:none;"></div>
+        <div style="position:absolute; top:-50px; right:-50px; width:150px; height:150px; background:radial-gradient(circle, rgba(30,179,73,0.1) 0%, transparent 70%); border-radius:50%; pointer-events:none;"></div>
+        <div style="position:absolute; bottom:-30px; right:10%; width:100px; height:100px; background:radial-gradient(circle, rgba(30,179,73,0.05) 0%, transparent 70%); border-radius:50%; pointer-events:none;"></div>
         
         <div style="display:flex; align-items:center; gap:1rem;">
-            <div style="width:42px; height:42px; border-radius:12px; background:rgba(14,165,233,0.08); color:#0EA5E9; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <div style="width:42px; height:42px; border-radius:12px; background:rgba(30,179,73,0.08); color:#1eb349; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </div>
             <div style="margin:0; font-size:1.15rem; color:#0F172A; font-weight:700; letter-spacing:-0.01em;">Lengkapi Kebutuhan Rumah Anda</div>
@@ -570,7 +570,7 @@ a { text-decoration: none; color: inherit; }
         
         <p style="margin:0; color:#475569; font-size:0.95rem; line-height:1.65; max-width:95%;">Tingkatkan kenyamanan rumah dengan produk dari buyle.id. Kualitas terjamin, harga bersahabat, dan bergaransi resmi.</p>
         
-        <a href="{{ url('/products') }}" style="align-self:flex-start; margin-top:0.25rem; display:inline-flex; align-items:center; gap:0.5rem; background:#0EA5E9; color:#fff; padding:0.75rem 1.75rem; border-radius:50px; font-weight:600; text-decoration:none; font-size:0.925rem; transition:all 0.3s; box-shadow:0 4px 12px rgba(14,165,233,0.2);" onmouseover="this.style.background='#0284C7'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(14,165,233,0.3)';" onmouseout="this.style.background='#0EA5E9'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(14,165,233,0.2)';">
+        <a href="{{ url('/products') }}" style="align-self:flex-start; margin-top:0.25rem; display:inline-flex; align-items:center; gap:0.5rem; background:#1eb349; color:#fff; padding:0.75rem 1.75rem; border-radius:50px; font-weight:600; text-decoration:none; font-size:0.925rem; transition:all 0.3s; box-shadow:0 4px 12px rgba(30,179,73,0.2);" onmouseover="this.style.background='#16a34a'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(30,179,73,0.3)';" onmouseout="this.style.background='#1eb349'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(30,179,73,0.2)';">
             Lihat Spesifikasi Produk
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
@@ -684,12 +684,12 @@ a { text-decoration: none; color: inherit; }
 .ar-why { background:#fff; padding:5rem 0; }
 .ar-why-inner { max-width:1200px; margin:0 auto; padding:0 1.5rem; }
 .ar-why-header { text-align:center; margin-bottom:3rem; }
-.ar-why-label { font-size:0.72rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:#0EA5E9; display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-bottom:0.75rem; }
+.ar-why-label { font-size:0.72rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:#1eb349; display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-bottom:0.75rem; }
 .ar-why-title { font-size:clamp(1.75rem,3.5vw,2.75rem); font-weight:600; color:#0F172A; line-height:1.2; letter-spacing:-0.025em; }
 .ar-why-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.25rem; }
 .ar-why-card { background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:20px; padding:1.75rem; display:flex; flex-direction:column; gap:0.75rem; transition:all 0.3s; }
-.ar-why-card:hover { border-color:#0EA5E9; transform:translateY(-5px); box-shadow:0 16px 40px rgba(14,165,233,0.09); }
-.ar-why-icon { width:46px; height:46px; background:#EFF6FF; border-radius:13px; display:flex; align-items:center; justify-content:center; color:#0EA5E9; }
+.ar-why-card:hover { border-color:#1eb349; transform:translateY(-5px); box-shadow:0 16px 40px rgba(30,179,73,0.09); }
+.ar-why-icon { width:46px; height:46px; background:#f0fdf4; border-radius:13px; display:flex; align-items:center; justify-content:center; color:#1eb349; }
 .ar-why-card-title { font-size:0.9375rem; font-weight:700; color:#0F172A; }
 .ar-why-card-desc { font-size:0.8125rem; color:#64748B; line-height:1.65; }
 .ar-why-cta { text-align:center; margin-top:2.5rem; }
@@ -725,7 +725,7 @@ a { text-decoration: none; color: inherit; }
             </div>
         </div>
         <div class="ar-why-cta">
-            <a href="{{ route_locale('products') }}" style="display:inline-flex;align-items:center;gap:0.5rem;background:#0EA5E9;color:#fff;padding:0.8rem 2rem;border-radius:50px;font-weight:700;font-size:0.9rem;text-decoration:none;box-shadow:0 4px 12px rgba(14,165,233,0.2);transition:all 0.3s;" onmouseover="this.style.background='#0284C7';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#0EA5E9';this.style.transform='translateY(0)'">
+            <a href="{{ route_locale('products') }}" style="display:inline-flex;align-items:center;gap:0.5rem;background:#1eb349;color:#fff;padding:0.8rem 2rem;border-radius:50px;font-weight:700;font-size:0.9rem;text-decoration:none;box-shadow:0 4px 12px rgba(30,179,73,0.2);transition:all 0.3s;" onmouseover="this.style.background='#16a34a';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#1eb349';this.style.transform='translateY(0)'">
                 Belanja Sekarang
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>

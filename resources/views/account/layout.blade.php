@@ -60,10 +60,10 @@
             transition: all 0.2s;
             white-space: nowrap;
         }
-        .acc-tab:hover { color: #0EA5E9; }
+        .acc-tab:hover { color: #1eb349; }
         .acc-tab.active {
-            color: #0EA5E9;
-            border-bottom-color: #0EA5E9;
+            color: #1eb349;
+            border-bottom-color: #1eb349;
         }
         .acc-tab svg { opacity: 0.7; }
         .acc-tab.active svg { opacity: 1; }
@@ -97,7 +97,7 @@
             color: #0f172a;
             letter-spacing: -0.03em;
         }
-        .acc-stat-value.blue { color: #0EA5E9; }
+        .acc-stat-value.blue { color: #1eb349; }
 
         /* ─── CONTENT CARD ─── */
         .acc-card {
@@ -146,9 +146,9 @@
             outline: none;
         }
         .form-input:focus {
-            border-color: #0EA5E9;
+            border-color: #1eb349;
             background: #fff;
-            box-shadow: 0 0 0 3px rgba(14,165,233,0.1);
+            box-shadow: 0 0 0 3px rgba(30,179,73,0.1);
         }
         textarea.form-input {
             height: auto;
@@ -212,7 +212,7 @@
             border-radius: 50%;
             transition: 0.3s;
         }
-        .toggle-switch input:checked + .toggle-slider { background: #0EA5E9; }
+        .toggle-switch input:checked + .toggle-slider { background: #1eb349; }
         .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
         .toggle-label { font-size: 0.875rem; font-weight: 600; color: #374151; }
 
@@ -236,7 +236,7 @@
             justify-content: center;
             font-size: 1.75rem;
             font-weight: 800;
-            color: #0EA5E9;
+            color: #1eb349;
             flex-shrink: 0;
         }
         .btn-upload {
@@ -254,7 +254,7 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-upload:hover { border-color: #0EA5E9; color: #0EA5E9; background: #EFF6FF; }
+        .btn-upload:hover { border-color: #1eb349; color: #1eb349; background: #f0fdf4; }
 
         /* ─── ADDRESSES ─── */
         .addr-grid {
@@ -270,12 +270,12 @@
             transition: all 0.2s;
             position: relative;
         }
-        .addr-card.is-default { border-color: #0EA5E9; background: #EFF6FF; }
+        .addr-card.is-default { border-color: #1eb349; background: #f0fdf4; }
         .addr-default-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.3rem;
-            background: #0EA5E9;
+            background: #1eb349;
             color: #fff;
             border-radius: 999px;
             padding: 0.2rem 0.6rem;
@@ -316,19 +316,19 @@
             border-radius: 8px;
             border: 1.5px solid #E2E8F0;
             background: #FFF;
-            color: #0EA5E9;
+            color: #1eb349;
             font-family: 'Montserrat', sans-serif;
             font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-addr-default:hover { background: #EFF6FF; }
+        .btn-addr-default:hover { background: #f0fdf4; }
         .btn-add-addr {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: #0EA5E9;
+            background: #1eb349;
             color: #fff;
             border-radius: 10px;
             padding: 0.6rem 1.25rem;
@@ -340,7 +340,7 @@
             transition: all 0.2s;
             text-decoration: none;
         }
-        .btn-add-addr:hover { background: #0284C7; box-shadow: 0 4px 12px rgba(14,165,233,0.3); }
+        .btn-add-addr:hover { background: #16a34a; box-shadow: 0 4px 12px rgba(30,179,73,0.3); }
 
         /* ─── MODAL ─── */
         .modal-overlay {
@@ -436,7 +436,7 @@
             font-weight: 700;
         }
         .badge-pending { background: #FEF9C3; color: #854D0E; }
-        .badge-processing { background: #DBEAFE; color: #1D4ED8; }
+        .badge-processing { background: #dcfce7; color: #1D4ED8; }
         .badge-shipped { background: #F0FDF4; color: #15803D; }
         .badge-completed { background: #ECFDF5; color: #059669; }
         .badge-cancelled { background: #FEF2F2; color: #B91C1C; }
@@ -494,13 +494,13 @@
         .modal-overlay.open {
             display: flex !important;
         }
-        .form-input:focus { outline: none; border-color: #0EA5E9; box-shadow: 0 0 0 3px rgba(14,165,233,0.1); background: #fff; }
+        .form-input:focus { outline: none; border-color: #1eb349; box-shadow: 0 0 0 3px rgba(30,179,73,0.1); background: #fff; }
         .btn-save-row { display: flex; align-items: center; justify-content: flex-end; padding-top: 0.5rem; }
         .btn-save {
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
-            background: #0EA5E9;
+            background: #1eb349;
             color: #fff;
             border: none;
             border-radius: 10px;
@@ -511,7 +511,7 @@
             font-family: 'Montserrat', sans-serif;
             transition: all 0.2s;
         }
-        .btn-save:hover { background: #0284C7; }
+        .btn-save:hover { background: #16a34a; }
 
         /* ─── RESPONSIVE ─── */
         @media (max-width: 768px) {

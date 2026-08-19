@@ -83,7 +83,7 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
           <label style="cursor:pointer;" id="lbl-active">
             <input type="radio" name="status" value="active" {{ $status === 'active' ? 'checked' : '' }} style="display:none;" onchange="updateStatusUI()">
-            <div id="card-active" style="padding:1rem;border:2px solid {{ $status === 'active' ? '#3B82F6' : '#E4E7F0' }};border-radius:12px;text-align:center;transition:all .2s;background:{{ $status === 'active' ? '#EFF6FF' : '#fff' }};">
+            <div id="card-active" style="padding:1rem;border:2px solid {{ $status === 'active' ? '#3B82F6' : '#E4E7F0' }};border-radius:12px;text-align:center;transition:all .2s;background:{{ $status === 'active' ? '#f0fdf4' : '#fff' }};">
               <svg width="24" height="24" fill="none" stroke="{{ $status === 'active' ? '#3B82F6' : '#94A3B8' }}" stroke-width="2" viewBox="0 0 24 24" style="margin-bottom:.5rem;"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
               <div style="font-size:.8rem;font-weight:800;color:{{ $status === 'active' ? '#3B82F6' : '#64748B' }};">Aktifkan</div>
               <div style="font-size:.7rem;color:#94A3B8;margin-top:.2rem;">Website berjalan normal</div>
@@ -141,7 +141,7 @@ function updateStatusUI() {
 
   if (isActive) {
     cardActive.style.borderColor = '#3B82F6';
-    cardActive.style.background = '#EFF6FF';
+    cardActive.style.background = '#f0fdf4';
     cardSuspended.style.borderColor = '#E4E7F0';
     cardSuspended.style.background = '#fff';
     btn.className = 'lic-btn-suspend';

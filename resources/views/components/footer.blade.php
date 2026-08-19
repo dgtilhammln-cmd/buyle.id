@@ -100,7 +100,7 @@ www.buyle.id
     }
 
     .cv-footer-v2-badge:hover svg {
-        color: #0EA5E9;
+        color: #1eb349;
     }
 
     /* Social */
@@ -124,11 +124,11 @@ www.buyle.id
     }
 
     .cv-footer-v2-social-btn:hover {
-        background: #0EA5E9;
-        border-color: #0EA5E9;
+        background: #1eb349;
+        border-color: #1eb349;
         color: #ffffff;
         transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(14, 165, 233, 0.25);
+        box-shadow: 0 8px 20px rgba(30, 179, 73, 0.25);
     }
 
     /* ── COLUMN HEADINGS ───────────── */
@@ -191,10 +191,10 @@ www.buyle.id
     }
 
     .cv-footer-v2-contact-item:hover .cv-footer-v2-contact-icon {
-        background: #0EA5E9;
-        border-color: #0EA5E9;
+        background: #1eb349;
+        border-color: #1eb349;
         color: #ffffff;
-        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
+        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.25);
         transform: scale(1.05);
     }
 
@@ -381,7 +381,7 @@ www.buyle.id
                         <img src="{{ asset('storage/' . $logo) }}" alt="Logo">
                     @else
                         <span
-                            style="font-weight:900;color:#0EA5E9;font-size:1rem;font-family:'Montserrat',sans-serif;">buyle.id</span>
+                            style="font-weight:900;color:#1eb349;font-size:1rem;font-family:'Montserrat',sans-serif;">buyle.id</span>
                     @endif
                 </div>
             </a>

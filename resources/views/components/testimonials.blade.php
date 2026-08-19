@@ -12,7 +12,7 @@
         position: absolute;
         bottom: -200px; left: -200px;
         width: 600px; height: 600px;
-        background: radial-gradient(circle, rgba(14,165,233,0.04) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(30,179,73,0.04) 0%, transparent 70%);
         pointer-events: none;
     }
     .cv-testi-inner {
@@ -36,8 +36,8 @@
     }
     .cv-testi-card-v2:hover {
         transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(14,165,233,0.08);
-        border-color: rgba(14,165,233,0.2);
+        box-shadow: 0 20px 40px rgba(30,179,73,0.08);
+        border-color: rgba(30,179,73,0.2);
     }
     .cv-testi-quote-icon {
         position: absolute;
@@ -47,7 +47,7 @@
         transition: color 0.3s;
     }
     .cv-testi-card-v2:hover .cv-testi-quote-icon {
-        color: #E0F2FE;
+        color: #dcfce7;
     }
     .cv-testi-stars-v2 {
         color: #F59E0B;

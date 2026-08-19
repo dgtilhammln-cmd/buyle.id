@@ -46,8 +46,8 @@
     --c-border:  #E2E8F0;
     --c-text:    #0F172A;
     --c-muted:   #64748B;
-    --c-accent:  #0EA5E9;
-    --c-accent-hover: #0284C7;
+    --c-accent:  #1eb349;
+    --c-accent-hover: #16a34a;
     --font:      'Montserrat', sans-serif;
     --ease:      cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -62,13 +62,13 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
 .sv-hero-premium::before {
     content:''; position:absolute; top:-150px; right:-100px;
     width:500px; height:500px; border-radius:50%;
-    background:radial-gradient(circle,rgba(14,165,233,0.06) 0%,transparent 70%);
+    background:radial-gradient(circle,rgba(30,179,73,0.06) 0%,transparent 70%);
     pointer-events:none;
 }
 .sv-hero-premium::after {
     content:''; position:absolute; bottom:-150px; left:-100px;
     width:600px; height:600px; border-radius:50%;
-    background:radial-gradient(circle,rgba(14,165,233,0.04) 0%,transparent 70%);
+    background:radial-gradient(circle,rgba(30,179,73,0.04) 0%,transparent 70%);
     pointer-events:none;
 }
 .sv-hero-inner {
@@ -122,7 +122,7 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
 }
 .author-social-link:hover {
     background: var(--c-accent); color: #fff; border-color: var(--c-accent);
-    transform: translateY(-3px); box-shadow: 0 10px 20px rgba(14,165,233,0.2);
+    transform: translateY(-3px); box-shadow: 0 10px 20px rgba(30,179,73,0.2);
 }
 
 /* ════ ARTICLES LISTING ════ */

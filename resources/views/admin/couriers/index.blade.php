@@ -40,7 +40,7 @@
           <code style="background:#F1F5F9;padding:.2rem .6rem;border-radius:6px;font-size:.8rem;color:#475569;">{{ $c->code }}</code>
         </td>
         <td style="padding:1.25rem 1.5rem;">
-          <span style="font-size:.8rem;padding:.25rem .75rem;border-radius:50px;background:{{ $c->type==='expedition' ? '#EFF6FF' : '#F0FDF4' }};color:{{ $c->type==='expedition' ? '#1D4ED8' : '#15803D' }};font-weight:600;">
+          <span style="font-size:.8rem;padding:.25rem .75rem;border-radius:50px;background:{{ $c->type==='expedition' ? '#f0fdf4' : '#F0FDF4' }};color:{{ $c->type==='expedition' ? '#1D4ED8' : '#15803D' }};font-weight:600;">
             {{ $c->type==='expedition' ? 'Ekspedisi' : 'Kurir Toko' }}
           </span>
         </td>
@@ -57,7 +57,7 @@
         </td>
         <td style="padding:1.25rem 1.5rem;text-align:center;">
           <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;">
-            <button onclick="openEdit({{ $c->id }}, '{{ addslashes($c->name) }}', {{ $c->is_active ? 'true' : 'false' }})" style="background:#EFF6FF;color:#1D4ED8;border:none;border-radius:8px;padding:.4rem .8rem;font-size:.8rem;font-weight:600;cursor:pointer;">Edit</button>
+            <button onclick="openEdit({{ $c->id }}, '{{ addslashes($c->name) }}', {{ $c->is_active ? 'true' : 'false' }})" style="background:#f0fdf4;color:#1D4ED8;border:none;border-radius:8px;padding:.4rem .8rem;font-size:.8rem;font-weight:600;cursor:pointer;">Edit</button>
             <form action="{{ route('admin.couriers.destroy', $c) }}" method="POST" onsubmit="return confirm('Hapus kurir ini?')">
               @csrf @method('DELETE')
               <button type="submit" style="background:#FEE2E2;color:#DC2626;border:none;border-radius:8px;padding:.4rem .8rem;font-size:.8rem;font-weight:600;cursor:pointer;">Hapus</button>

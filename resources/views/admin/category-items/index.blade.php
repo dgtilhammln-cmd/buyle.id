@@ -93,7 +93,7 @@
           </span>
         </td>
         <td style="padding:1rem 1.5rem;text-align:right;">
-          <a href="{{ route('admin.category-items.edit', $cat) }}" style="display:inline-flex;align-items:center;padding:.4rem .875rem;border-radius:8px;background:#EFF6FF;color:#2563EB;font-size:.8rem;font-weight:600;text-decoration:none;margin-right:.5rem;">Edit</a>
+          <a href="{{ route('admin.category-items.edit', $cat) }}" style="display:inline-flex;align-items:center;padding:.4rem .875rem;border-radius:8px;background:#f0fdf4;color:#2563EB;font-size:.8rem;font-weight:600;text-decoration:none;margin-right:.5rem;">Edit</a>
           <form action="{{ route('admin.category-items.destroy', $cat) }}" method="POST" style="display:inline;" onsubmit="return confirm('Hapus kategori ini?')">
             @csrf @method('DELETE')
             <button type="submit" style="padding:.4rem .875rem;border-radius:8px;background:#FEF2F2;color:#DC2626;font-size:.8rem;font-weight:600;border:none;cursor:pointer;">Hapus</button>

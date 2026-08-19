@@ -41,7 +41,7 @@
               <div style="font-size:1rem;font-weight:800;color:#1E293B;font-family:monospace;letter-spacing:1px;margin-bottom:0.25rem;">{{ $c->code }}</div>
               <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.75rem;">
                 @if($c->badge)
-                <span style="background:#E0F2FE;color:#0284C7;padding:2px 6px;border-radius:4px;font-weight:600;">{{ $c->badge }}</span>
+                <span style="background:#dcfce7;color:#16a34a;padding:2px 6px;border-radius:4px;font-weight:600;">{{ $c->badge }}</span>
                 @endif
                 <span style="color:#64748B;">{{ ucfirst($c->category) }}</span>
               </div>
@@ -73,7 +73,7 @@
                 @endif
                 
                 <div style="display:flex;gap:.5rem;">
-                  <a href="{{ route('admin.coupons.edit', $c->id) }}" style="color:#3B82F6;background:#EFF6FF;border-radius:8px;padding:6px 10px;text-decoration:none;transition:background .2s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='#DBEAFE'" onmouseout="this.style.background='#EFF6FF'" title="Edit">
+                  <a href="{{ route('admin.coupons.edit', $c->id) }}" style="color:#3B82F6;background:#f0fdf4;border-radius:8px;padding:6px 10px;text-decoration:none;transition:background .2s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'" title="Edit">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                   </a>
                   <form action="{{ route('admin.coupons.destroy', $c->id) }}" method="POST" onsubmit="return confirm('Yakin hapus?');" style="margin:0;">

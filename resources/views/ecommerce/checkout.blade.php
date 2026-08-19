@@ -2,7 +2,7 @@
 
 @section('content')
 <style>
-:root{--c-bg:#ffffff;--c-surface:#F8FAFC;--c-card:#ffffff;--c-border:#E2E8F0;--c-text:#0F172A;--c-muted:#64748B;--c-accent:#0EA5E9;--font:'Montserrat',sans-serif;}
+:root{--c-bg:#ffffff;--c-surface:#F8FAFC;--c-card:#ffffff;--c-border:#E2E8F0;--c-text:#0F172A;--c-muted:#64748B;--c-accent:#1eb349;--font:'Montserrat',sans-serif;}
 body{background:var(--c-bg);}
 
 .co-wrap{max-width:1200px;margin:100px auto 4rem;padding:0 1.5rem;font-family:var(--font);}
@@ -14,7 +14,7 @@ body{background:var(--c-bg);}
 .form-group{margin-bottom:1.25rem;}
 .form-label{display:block;font-size:0.85rem;font-weight:600;color:var(--c-text);margin-bottom:0.5rem;}
 .form-input{width:100%;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:0.75rem 1rem;font-size:0.9rem;color:#0F172A;transition:border-color 0.2s;}
-.form-input:focus{outline:none;border-color:#0EA5E9;background:#fff;}
+.form-input:focus{outline:none;border-color:#1eb349;background:#fff;}
 select.form-input{appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right 1rem center;background-size:1em;}
 
 .summary-item{display:flex;gap:1rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px dashed #E2E8F0;}
@@ -26,17 +26,17 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
 .summary-row{display:flex;justify-content:space-between;font-size:0.9rem;color:var(--c-muted);margin-bottom:0.5rem;}
 .summary-total{display:flex;justify-content:space-between;font-size:1.1rem;font-weight:800;color:var(--c-text);margin-top:1rem;padding-top:1rem;border-top:1px solid var(--c-border);}
 
-.btn-pay{display:block;width:100%;background:linear-gradient(135deg, #0EA5E9, #0369A1);color:#fff;border:none;border-radius:999px;padding:1rem;font-size:1rem;font-weight:700;cursor:pointer;transition:transform 0.2s, box-shadow 0.2s;text-align:center;margin-top:1.5rem;box-shadow:0 6px 20px rgba(14,165,233,.25);}
-.btn-pay:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(14,165,233,.35);}
+.btn-pay{display:block;width:100%;background:linear-gradient(135deg, #1eb349, #15803d);color:#fff;border:none;border-radius:999px;padding:1rem;font-size:1rem;font-weight:700;cursor:pointer;transition:transform 0.2s, box-shadow 0.2s;text-align:center;margin-top:1.5rem;box-shadow:0 6px 20px rgba(30,179,73,.25);}
+.btn-pay:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(30,179,73,.35);}
 
 /* Scrollbar biru — hapus kuning */
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:#F1F5F9;}
-::-webkit-scrollbar-thumb{background:#0EA5E9;border-radius:4px;}
+::-webkit-scrollbar-thumb{background:#1eb349;border-radius:4px;}
 
 /* Hapus semua outline/highlight kuning browser */
 *:focus{outline:none !important;}
-*:focus-visible{outline:2px solid #0EA5E9 !important;outline-offset:2px !important;}
+*:focus-visible{outline:2px solid #1eb349 !important;outline-offset:2px !important;}
 input[type="radio"]:focus,input[type="radio"]:focus-visible{outline:none !important;box-shadow:none !important;}
 label:focus{outline:none !important;box-shadow:none !important;}
 .service-card{outline:none !important;box-shadow:none !important;}
@@ -210,10 +210,10 @@ label:focus{outline:none !important;box-shadow:none !important;}
 
                     <div id="new_address_form" style="{{ (auth()->check() && $addresses->count() > 0) ? 'display:none;margin-top:1.5rem;padding-top:1.5rem;border-top:1px dashed #E2E8F0;' : '' }}">
                         
-                        <div style="margin-bottom:1.5rem;background:#F0F9FF;border:1px dashed #BAE6FD;padding:1.25rem;border-radius:12px;display:flex;flex-direction:column;gap:0.75rem;align-items:flex-start;">
-                            <div style="font-size:0.9rem;font-weight:600;color:#0369A1;">Opsi Otomatis (Rekomendasi)</div>
+                        <div style="margin-bottom:1.5rem;background:#F0F9FF;border:1px dashed #bbf7d0;padding:1.25rem;border-radius:12px;display:flex;flex-direction:column;gap:0.75rem;align-items:flex-start;">
+                            <div style="font-size:0.9rem;font-weight:600;color:#15803d;">Opsi Otomatis (Rekomendasi)</div>
                             <div style="font-size:0.8rem;color:#0C4A6E;margin-top:-0.5rem;">Izinkan akses GPS untuk mengisi alamat lengkap Anda secara otomatis (Akurat & Realtime).</div>
-                            <button type="button" id="btn_get_location" onclick="getLocation()" style="background:#0EA5E9;color:#fff;border:none;border-radius:8px;padding:0.6rem 1rem;font-size:0.85rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:0.5rem;transition:background 0.2s;">
+                            <button type="button" id="btn_get_location" onclick="getLocation()" style="background:#1eb349;color:#fff;border:none;border-radius:8px;padding:0.6rem 1rem;font-size:0.85rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:0.5rem;transition:background 0.2s;">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
                                 Gunakan Lokasi Saat Ini (GPS)
                             </button>
@@ -314,7 +314,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
                             @endforelse
                         </select>
 
-                        <div id="ongkir_loading" style="display:none; align-items:center; gap:0.5rem; font-size:0.85rem; color:#0EA5E9; margin-top:1rem; font-weight:600;">
+                        <div id="ongkir_loading" style="display:none; align-items:center; gap:0.5rem; font-size:0.85rem; color:#1eb349; margin-top:1rem; font-weight:600;">
                             <svg style="animation: spin 1s linear infinite;" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
                             Menghitung ongkir...
                         </div>
@@ -378,7 +378,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
                     @if($summary['has_physical_product'])
                     <div class="summary-row" id="ongkir-row">
                         <span>Ongkos Kirim</span>
-                        <span id="ongkir-row-val" style="color:#0EA5E9; font-weight:600; font-size:0.8rem;">Pilih Lokasi & Kurir</span>
+                        <span id="ongkir-row-val" style="color:#1eb349; font-weight:600; font-size:0.8rem;">Pilih Lokasi & Kurir</span>
                     </div>
                     @endif
 
@@ -399,9 +399,9 @@ label:focus{outline:none !important;box-shadow:none !important;}
                         </div>
 
                         {{-- Picker Button --}}
-                        <button type="button" id="voucher-picker-btn" onclick="openVoucherModal()" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:0.875rem 1.25rem;background:#fff;border:1.5px dashed #CBD5E1;border-radius:12px;cursor:pointer;font-family:var(--font);transition:all 0.2s;" onmouseover="this.style.borderColor='#0EA5E9'" onmouseout="this.style.borderColor='#CBD5E1'">
+                        <button type="button" id="voucher-picker-btn" onclick="openVoucherModal()" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:0.875rem 1.25rem;background:#fff;border:1.5px dashed #CBD5E1;border-radius:12px;cursor:pointer;font-family:var(--font);transition:all 0.2s;" onmouseover="this.style.borderColor='#1eb349'" onmouseout="this.style.borderColor='#CBD5E1'">
                             <div style="display:flex;align-items:center;gap:0.75rem;">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0EA5E9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
                                 <span style="font-size:0.9rem;font-weight:600;color:#334155;">Pilih atau Masukkan Voucher</span>
                             </div>
                             <svg width="16" height="16" fill="none" stroke="#94A3B8" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
@@ -414,7 +414,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
                         {{-- Header --}}
                         <div style="padding:1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F1F5F9;background:#F8FAFC;">
                             <div style="display:flex;align-items:center;gap:0.5rem;font-size:1.1rem;font-weight:800;color:#0F172A;">
-                                <svg width="20" height="20" fill="none" stroke="#0EA5E9" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                                <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
                                 Pilih Voucher
                             </div>
                             <button type="button" onclick="closeVoucherModal()" style="background:#E2E8F0;border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:#475569;transition:background 0.2s;" onmouseover="this.style.background='#CBD5E1'" onmouseout="this.style.background='#E2E8F0'">✕</button>
@@ -423,7 +423,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
                         <div style="padding:1rem 1.25rem;border-bottom:1px solid #F1F5F9;">
                             <div style="display:flex;gap:0.5rem;">
                                 <input type="text" id="voucher-manual-input" placeholder="Masukkan kode voucher..." style="flex:1;border:1.5px solid #E2E8F0;border-radius:10px;padding:0.65rem 1rem;font-size:0.9rem;font-family:var(--font);outline:none;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
-                                <button type="button" onclick="applyManualVoucher()" style="background:linear-gradient(135deg,#0EA5E9,#0284C7);color:#fff;border:none;border-radius:10px;padding:0.65rem 1.25rem;font-weight:700;font-size:0.875rem;cursor:pointer;white-space:nowrap;">Pakai</button>
+                                <button type="button" onclick="applyManualVoucher()" style="background:linear-gradient(135deg,#1eb349,#16a34a);color:#fff;border:none;border-radius:10px;padding:0.65rem 1.25rem;font-weight:700;font-size:0.875rem;cursor:pointer;white-space:nowrap;">Pakai</button>
                             </div>
                             <div id="voucher-manual-msg" style="font-size:0.78rem;margin-top:0.4rem;display:none;"></div>
                         </div>
@@ -639,7 +639,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
 
         if (loadingEl) loadingEl.style.display = 'flex';
         serviceContainer.innerHTML = `
-            <div style="padding: 1rem; border: 1px dashed #CBD5E1; border-radius: 10px; background: #F8FAFC; color: #0EA5E9; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; font-weight:600;">
+            <div style="padding: 1rem; border: 1px dashed #CBD5E1; border-radius: 10px; background: #F8FAFC; color: #1eb349; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; font-weight:600;">
                 <svg style="animation: spin 1s linear infinite;" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
                 Menghitung ongkir...
             </div>
@@ -674,13 +674,13 @@ label:focus{outline:none !important;box-shadow:none !important;}
             if (data.manual) {
                 console.warn('[ONGKIR] Fallback manual. Debug:', data.debug_error);
                 serviceContainer.innerHTML = `
-                    <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #0EA5E9; border-radius:10px; background:#F0F9FF;">
-                        <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#0EA5E9; width:1.2rem; height:1.2rem;">
+                    <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
+                        <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
                         <div style="flex:1;">
                             <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
                             <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
                         </div>
-                        <div style="font-weight:700; color:#0EA5E9; font-size:1rem;">Rp 0</div>
+                        <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
                     </label>
                 `;
                 hiddenInput.value = 'manual';
@@ -709,13 +709,13 @@ label:focus{outline:none !important;box-shadow:none !important;}
             if (!Array.isArray(data) || data.length === 0) {
                 console.warn('[ONGKIR] Data kosong atau bukan array:', data);
                 serviceContainer.innerHTML = `
-                    <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #0EA5E9; border-radius:10px; background:#F0F9FF;">
-                        <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#0EA5E9; width:1.2rem; height:1.2rem;">
+                    <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
+                        <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
                         <div style="flex:1;">
                             <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
                             <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
                         </div>
-                        <div style="font-weight:700; color:#0EA5E9; font-size:1rem;">Rp 0</div>
+                        <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
                     </label>
                 `;
                 hiddenInput.value = 'manual';
@@ -744,19 +744,19 @@ label:focus{outline:none !important;box-shadow:none !important;}
                 
                 html += `
                     <label class="service-card" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #E2E8F0; border-radius:10px; background:#fff;">
-                        <input type="radio" name="courier_service_radio" value="${service.service}" data-cost="${cost}" style="accent-color:#0EA5E9; width:1.2rem; height:1.2rem;">
+                        <input type="radio" name="courier_service_radio" value="${service.service}" data-cost="${cost}" style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
                         <div style="flex:1;">
                             <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">${service.service}</div>
                             <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem; display:flex; align-items:center; gap:0.3rem;">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                                 ${desc}
                             </div>
-                            <div style="font-size:0.8rem; color:#0369A1; font-weight:600; margin-top:0.3rem; display:flex; align-items:center; gap:0.3rem;">
+                            <div style="font-size:0.8rem; color:#15803d; font-weight:600; margin-top:0.3rem; display:flex; align-items:center; gap:0.3rem;">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
                                 ${etd}
                             </div>
                         </div>
-                        <div style="font-weight:800; color:#0EA5E9; font-size:1.1rem;">Rp ${fmt}</div>
+                        <div style="font-weight:800; color:#1eb349; font-size:1.1rem;">Rp ${fmt}</div>
                     </label>
                 `;
             });
@@ -769,13 +769,13 @@ label:focus{outline:none !important;box-shadow:none !important;}
             if (loadingEl) loadingEl.style.display = 'none';
             console.error('[ONGKIR] Fetch/jaringan error:', err);
             serviceContainer.innerHTML = `
-                <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #0EA5E9; border-radius:10px; background:#F0F9FF;">
-                    <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#0EA5E9; width:1.2rem; height:1.2rem;">
+                <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #1eb349; border-radius:10px; background:#F0F9FF;">
+                    <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
                     <div style="flex:1;">
                         <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
                         <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
                     </div>
-                    <div style="font-weight:700; color:#0EA5E9; font-size:1rem;">Rp 0</div>
+                    <div style="font-weight:700; color:#1eb349; font-size:1rem;">Rp 0</div>
                 </label>
             `;
             hiddenInput.value = 'manual';
@@ -800,7 +800,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
                 
                 // Tambahkan styling di card yang dipilih
                 if (this.checked) {
-                    this.closest('.service-card').style.borderColor = '#0EA5E9';
+                    this.closest('.service-card').style.borderColor = '#1eb349';
                     this.closest('.service-card').style.background = '#F0F9FF';
                     
                     hiddenInput.value = this.value;
@@ -830,7 +830,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
                 ongkirRowVal.innerText = selectedCost > 0
                     ? `Rp ${new Intl.NumberFormat('id-ID').format(selectedCost)}`
                     : 'Pilih kurir & layanan';
-                ongkirRowVal.style.color = selectedCost > 0 ? '#1E293B' : '#0EA5E9';
+                ongkirRowVal.style.color = selectedCost > 0 ? '#1E293B' : '#1eb349';
             }
         }
 
@@ -1084,7 +1084,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
                     <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Catatan</strong>
                     <div style="font-style:italic;">"${notesText}"</div>
                 </div>
-                <div style="margin-top:1rem; padding-top:1rem; border-top:1px dashed #CBD5E1; color:#0EA5E9; font-weight:700; font-size:1.1rem; text-align:right;">
+                <div style="margin-top:1rem; padding-top:1rem; border-top:1px dashed #CBD5E1; color:#1eb349; font-weight:700; font-size:1.1rem; text-align:right;">
                     ${totalCost}
                 </div>
             </div>
@@ -1250,7 +1250,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
             html += `
             <div onclick="${v.eligible ? `selectVoucher('${v.code}', '${v.estimated_discount_fmt || ''}', ${v.estimated_discount})` : ''}"
                  style="position:relative;border:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};border-radius:12px;padding:0.875rem 1rem;margin-bottom:0.75rem;cursor:${cursor};background:${bgCard};opacity:${opacity};transition:all 0.2s;"
-                 ${v.eligible ? 'onmouseover="this.style.borderColor=\'#0EA5E9\';this.style.boxShadow=\'0 4px 12px rgba(14,165,233,0.1)\'"' : ''}
+                 ${v.eligible ? 'onmouseover="this.style.borderColor=\'#1eb349\';this.style.boxShadow=\'0 4px 12px rgba(30,179,73,0.1)\'"' : ''}
                  ${v.eligible ? 'onmouseout="this.style.borderColor=\'#E2E8F0\';this.style.boxShadow=\'none\'"' : ''}>
                 
                 <!-- Ticket cutouts left & right -->
@@ -1259,11 +1259,11 @@ label:focus{outline:none !important;box-shadow:none !important;}
 
                 <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.25rem;">
                     <div>
-                        <span style="display:inline-block;background:#F0F9FF;color:#0EA5E9;font-size:0.65rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:99px;margin-bottom:0.15rem;">${v.badge || categoryLabel[v.category] || v.category}</span>
+                        <span style="display:inline-block;background:#F0F9FF;color:#1eb349;font-size:0.65rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:99px;margin-bottom:0.15rem;">${v.badge || categoryLabel[v.category] || v.category}</span>
                         <div style="font-size:0.9rem;font-weight:800;color:#0F172A;font-family:monospace;letter-spacing:0.5px;">${v.code}</div>
                     </div>
                     <div style="text-align:right;flex-shrink:0;">
-                        <div style="font-size:1rem;font-weight:900;color:#0EA5E9;">${v.value}</div>
+                        <div style="font-size:1rem;font-weight:900;color:#1eb349;">${v.value}</div>
                         ${v.estimated_discount_fmt ? `<div style="font-size:0.65rem;color:#059669;font-weight:700;">${v.estimated_discount_fmt}</div>` : ''}
                     </div>
                 </div>

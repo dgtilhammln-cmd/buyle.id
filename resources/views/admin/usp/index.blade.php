@@ -49,7 +49,7 @@
           </span>
         </td>
         <td style="padding:1rem 1.5rem;text-align:right;">
-          <a href="{{ route('admin.usp.edit', $item) }}" style="display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .875rem;border-radius:8px;background:#EFF6FF;color:#2563EB;font-size:.8rem;font-weight:600;text-decoration:none;margin-right:.5rem;">Edit</a>
+          <a href="{{ route('admin.usp.edit', $item) }}" style="display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .875rem;border-radius:8px;background:#f0fdf4;color:#2563EB;font-size:.8rem;font-weight:600;text-decoration:none;margin-right:.5rem;">Edit</a>
           <form action="{{ route('admin.usp.destroy', $item) }}" method="POST" style="display:inline;" onsubmit="return confirm('Hapus USP ini?')">
             @csrf @method('DELETE')
             <button type="submit" style="display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .875rem;border-radius:8px;background:#FEF2F2;color:#DC2626;font-size:.8rem;font-weight:600;border:none;cursor:pointer;">Hapus</button>

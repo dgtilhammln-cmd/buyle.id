@@ -85,7 +85,7 @@
             text-transform: uppercase;
         }
         .status-new { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
-        .status-contacted { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+        .status-contacted { background: #dcfce7; color: #1e40af; border: 1px solid #93c5fd; }
         .status-closed { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
 
         .footer {

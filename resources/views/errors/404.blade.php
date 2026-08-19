@@ -12,8 +12,8 @@
     --c-border: #E2E8F0;
     --c-text:   #0F172A;
     --c-muted:  #64748B;
-    --c-accent: #0EA5E9;
-    --c-accent-hover: #0284C7;
+    --c-accent: #1eb349;
+    --c-accent-hover: #16a34a;
     --font:     'Montserrat', sans-serif;
 }
 body { background: var(--c-bg); font-family: var(--font); }
@@ -35,7 +35,7 @@ body { background: var(--c-bg); font-family: var(--font); }
     position: absolute;
     top: -150px; right: -100px;
     width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(14,165,233,0.06) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(30,179,73,0.06) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -44,7 +44,7 @@ body { background: var(--c-bg); font-family: var(--font); }
     position: absolute;
     bottom: -150px; left: -100px;
     width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(14,165,233,0.04) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(30,179,73,0.04) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -67,7 +67,7 @@ body { background: var(--c-bg); font-family: var(--font); }
     font-weight: 800;
     letter-spacing: -0.05em;
     line-height: 1;
-    background: linear-gradient(135deg, #0EA5E9, #0284C7);
+    background: linear-gradient(135deg, #1eb349, #16a34a);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -102,7 +102,7 @@ body { background: var(--c-bg); font-family: var(--font); }
     background: var(--c-accent); color: #fff; font-family: var(--font);
     font-size: 0.9375rem; font-weight: 600; padding: 0.875rem 2rem;
     border-radius: 50px; text-decoration: none !important;
-    transition: all 0.3s; box-shadow: 0 8px 20px rgba(14,165,233,0.25);
+    transition: all 0.3s; box-shadow: 0 8px 20px rgba(30,179,73,0.25);
 }
 .err-btn-primary:hover { background: var(--c-accent-hover); transform: translateY(-2px); color: #fff !important; }
 .err-btn-outline {
@@ -132,9 +132,9 @@ body { background: var(--c-bg); font-family: var(--font); }
         </nav>
 
         {{-- Icon --}}
-        <svg class="err-illustration" width="120" height="120" fill="none" stroke="#0EA5E9" stroke-width="1" viewBox="0 0 24 24">
+        <svg class="err-illustration" width="120" height="120" fill="none" stroke="#1eb349" stroke-width="1" viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            <line x1="11" y1="8" x2="11" y2="12"/><circle cx="11" cy="15" r=".5" fill="#0EA5E9"/>
+            <line x1="11" y1="8" x2="11" y2="12"/><circle cx="11" cy="15" r=".5" fill="#1eb349"/>
         </svg>
 
         <div class="err-code">404</div>

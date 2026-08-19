@@ -73,7 +73,7 @@
         }
 
         .o-tab.active {
-            background: #EFF6FF;
+            background: #f0fdf4;
             border-color: #93C5FD;
             color: #1D4ED8;
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
@@ -479,7 +479,7 @@
             font-size: .75rem;
             font-weight: 700;
             color: #3B82F6;
-            background: #EFF6FF;
+            background: #f0fdf4;
             border: 1px solid #BFDBFE;
             border-radius: 8px;
             cursor: pointer;
@@ -487,7 +487,7 @@
         }
 
         .rm-preset-btn:hover {
-            background: #DBEAFE;
+            background: #dcfce7;
         }
 
         .rm-preset-btn.active {

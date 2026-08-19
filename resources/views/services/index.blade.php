@@ -2,7 +2,7 @@
 @section('content')
 
 <style>
-:root{--c-bg:#ffffff;--c-surface:#F8FAFC;--c-card:#ffffff;--c-border:#E2E8F0;--c-text:#0F172A;--c-muted:#64748B;--c-muted2:#94A3B8;--c-accent:#0EA5E9;--c-accent-h:#0284C7;--c-wa:#25D366;--font:'Montserrat',sans-serif;--ease:cubic-bezier(0.22,1,0.36,1);}
+:root{--c-bg:#ffffff;--c-surface:#F8FAFC;--c-card:#ffffff;--c-border:#E2E8F0;--c-text:#0F172A;--c-muted:#64748B;--c-muted2:#94A3B8;--c-accent:#1eb349;--c-accent-h:#16a34a;--c-wa:#25D366;--font:'Montserrat',sans-serif;--ease:cubic-bezier(0.22,1,0.36,1);}
 body{background:var(--c-bg);}
 
 /* TOP BAR */
@@ -20,7 +20,7 @@ body{background:var(--c-bg);}
 .sp-sort-select:focus{border-color:var(--c-accent);}
 .sp-view-btns{display:flex;gap:0.375rem;}
 .sp-view-btn{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--c-border);border-radius:8px;background:var(--c-card);color:var(--c-muted);cursor:pointer;transition:all 0.2s;}
-.sp-view-btn.active,.sp-view-btn:hover{border-color:var(--c-accent);color:var(--c-accent);background:rgba(14,165,233,0.05);}
+.sp-view-btn.active,.sp-view-btn:hover{border-color:var(--c-accent);color:var(--c-accent);background:rgba(30,179,73,0.05);}
 .sp-result-count{font-size:0.8125rem;color:var(--c-muted);font-family:var(--font);white-space:nowrap;}
 
 /* LAYOUT */
@@ -39,7 +39,7 @@ body{background:var(--c-bg);}
 .sp-type-options{display:flex;flex-direction:column;gap:0.5rem;}
 .sp-type-opt{display:flex;align-items:center;gap:0.625rem;padding:0.625rem 0.875rem;border-radius:10px;cursor:pointer;border:1.5px solid var(--c-border);background:var(--c-surface);font-size:0.875rem;font-family:var(--font);color:var(--c-text);font-weight:600;text-decoration:none;transition:all 0.2s;}
 .sp-type-opt:hover{border-color:var(--c-accent);color:var(--c-accent);}
-.sp-type-opt.active{border-color:var(--c-accent);background:rgba(14,165,233,0.07);color:var(--c-accent);}
+.sp-type-opt.active{border-color:var(--c-accent);background:rgba(30,179,73,0.07);color:var(--c-accent);}
 .sp-type-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .sp-type-dot.produk{background:var(--c-accent);}
 .sp-type-dot.jasa{background:var(--c-wa);}
@@ -60,13 +60,13 @@ body{background:var(--c-bg);}
 .sp-cat-name{font-size:0.8125rem;font-family:var(--font);color:var(--c-text);flex:1;font-weight:500;transition:color 0.2s;}
 .sp-cat-item.active .sp-cat-name,.sp-cat-item:hover .sp-cat-name{color:var(--c-accent);font-weight:600;}
 .sp-cat-badge{font-size:0.7rem;font-weight:700;background:var(--c-surface);border:1px solid var(--c-border);color:var(--c-muted);padding:0.125rem 0.5rem;border-radius:20px;font-family:var(--font);transition:all 0.2s;}
-.sp-cat-item.active .sp-cat-badge,.sp-cat-item:hover .sp-cat-badge{background:rgba(14,165,233,0.1);border-color:rgba(14,165,233,0.3);color:var(--c-accent);}
+.sp-cat-item.active .sp-cat-badge,.sp-cat-item:hover .sp-cat-badge{background:rgba(30,179,73,0.1);border-color:rgba(30,179,73,0.3);color:var(--c-accent);}
 .sp-reset-link{display:inline-flex;align-items:center;gap:0.375rem;font-size:0.8rem;color:var(--c-muted);font-family:var(--font);text-decoration:none;margin-top:0.5rem;transition:color 0.2s;}
 .sp-reset-link:hover{color:#EF4444;}
 
 /* ACTIVE CHIPS */
 .sp-active-filters{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;}
-.sp-filter-chip{display:inline-flex;align-items:center;gap:0.375rem;background:rgba(14,165,233,0.08);border:1px solid rgba(14,165,233,0.2);color:var(--c-accent);font-size:0.8rem;font-weight:600;font-family:var(--font);padding:0.35rem 0.75rem;border-radius:20px;text-decoration:none;transition:all 0.2s;}
+.sp-filter-chip{display:inline-flex;align-items:center;gap:0.375rem;background:rgba(30,179,73,0.08);border:1px solid rgba(30,179,73,0.2);color:var(--c-accent);font-size:0.8rem;font-weight:600;font-family:var(--font);padding:0.35rem 0.75rem;border-radius:20px;text-decoration:none;transition:all 0.2s;}
 .sp-filter-chip:hover{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2);color:#EF4444;}
 .sp-filter-chip svg{width:12px;height:12px;}
 
@@ -76,9 +76,9 @@ body{background:var(--c-bg);}
 
 /* CARD */
 .sp-card{background:var(--c-card);border:1.5px solid var(--c-border);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:all 0.35s var(--ease);position:relative;}
-.sp-card:hover{border-color:var(--c-accent);transform:translateY(-5px);box-shadow:0 16px 40px rgba(14,165,233,0.08);}
+.sp-card:hover{border-color:var(--c-accent);transform:translateY(-5px);box-shadow:0 16px 40px rgba(30,179,73,0.08);}
 .sp-card-badge{position:absolute;top:0.75rem;left:0.75rem;z-index:2;font-size:0.65rem;font-weight:800;font-family:var(--font);letter-spacing:0.02em;text-transform:uppercase;padding:0.25rem 0.5rem;border-radius:6px;display:flex;align-items:center;gap:0.25rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
-.sp-card-badge.produk{background:rgba(255,255,255,0.95);color:var(--c-accent);border:1px solid rgba(14,165,233,0.2);}
+.sp-card-badge.produk{background:rgba(255,255,255,0.95);color:var(--c-accent);border:1px solid rgba(30,179,73,0.2);}
 .sp-card-badge.jasa{background:rgba(255,255,255,0.95);color:var(--c-wa);border:1px solid rgba(37,211,102,0.2);}
 .sp-card-badge.diskon{background:rgba(255,255,255,0.95);color:#EF4444;border:1px solid rgba(239,68,68,0.2);}
 .sp-card-img{width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--c-surface);position:relative;display:block;text-decoration:none;}
@@ -106,7 +106,7 @@ body{background:var(--c-bg);}
 .sp-btn-main.wa{background:var(--c-wa);}
 .sp-btn-main.wa:hover{background:#1EBE5D;}
 .sp-btn-icon{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;border:1.5px solid var(--c-border);background:#fff;color:var(--c-text);cursor:pointer;transition:all 0.25s;text-decoration:none;flex-shrink:0;}
-.sp-btn-icon:hover{border-color:var(--c-accent);color:var(--c-accent);background:rgba(14,165,233,0.05);}
+.sp-btn-icon:hover{border-color:var(--c-accent);color:var(--c-accent);background:rgba(30,179,73,0.05);}
 .sp-btn-icon.icon-wa{border-color:rgba(37,211,102,0.3);color:var(--c-wa);background:rgba(37,211,102,0.06);}
 .sp-btn-icon.icon-wa:hover{background:rgba(37,211,102,0.12);}
 /* LIST VIEW */
@@ -277,16 +277,16 @@ body{background:var(--c-bg);}
                     {{-- Semua --}}
                     <a href="{{ route_locale('products') }}?{{ http_build_query($baseP) }}"
                        title="Semua"
-                       style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;padding:0.625rem 0.5rem;border-radius:10px;border:1.5px solid {{ !request('type') ? 'var(--c-accent)' : 'var(--c-border)' }};background:{{ !request('type') ? 'rgba(14,165,233,0.07)' : 'var(--c-surface)' }};text-decoration:none;transition:all 0.2s;">
-                        <svg width="18" height="18" fill="none" stroke="{{ !request('type') ? '#0EA5E9' : '#94A3B8' }}" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                        <span style="font-size:0.65rem;font-weight:700;color:{{ !request('type') ? '#0EA5E9' : '#94A3B8' }};font-family:var(--font);">Semua</span>
+                       style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;padding:0.625rem 0.5rem;border-radius:10px;border:1.5px solid {{ !request('type') ? 'var(--c-accent)' : 'var(--c-border)' }};background:{{ !request('type') ? 'rgba(30,179,73,0.07)' : 'var(--c-surface)' }};text-decoration:none;transition:all 0.2s;">
+                        <svg width="18" height="18" fill="none" stroke="{{ !request('type') ? '#1eb349' : '#94A3B8' }}" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                        <span style="font-size:0.65rem;font-weight:700;color:{{ !request('type') ? '#1eb349' : '#94A3B8' }};font-family:var(--font);">Semua</span>
                     </a>
                     {{-- Produk --}}
                     <a href="{{ route_locale('products') }}?{{ http_build_query(array_merge($baseP, ['type'=>'produk'])) }}"
                        title="Produk"
-                       style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;padding:0.625rem 0.5rem;border-radius:10px;border:1.5px solid {{ request('type')==='produk' ? 'var(--c-accent)' : 'var(--c-border)' }};background:{{ request('type')==='produk' ? 'rgba(14,165,233,0.07)' : 'var(--c-surface)' }};text-decoration:none;transition:all 0.2s;">
-                        <svg width="18" height="18" fill="none" stroke="{{ request('type')==='produk' ? '#0EA5E9' : '#94A3B8' }}" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                        <span style="font-size:0.65rem;font-weight:700;color:{{ request('type')==='produk' ? '#0EA5E9' : '#94A3B8' }};font-family:var(--font);">Produk</span>
+                       style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;padding:0.625rem 0.5rem;border-radius:10px;border:1.5px solid {{ request('type')==='produk' ? 'var(--c-accent)' : 'var(--c-border)' }};background:{{ request('type')==='produk' ? 'rgba(30,179,73,0.07)' : 'var(--c-surface)' }};text-decoration:none;transition:all 0.2s;">
+                        <svg width="18" height="18" fill="none" stroke="{{ request('type')==='produk' ? '#1eb349' : '#94A3B8' }}" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                        <span style="font-size:0.65rem;font-weight:700;color:{{ request('type')==='produk' ? '#1eb349' : '#94A3B8' }};font-family:var(--font);">Produk</span>
                     </a>
                     {{-- Jasa --}}
                     <a href="{{ route_locale('products') }}?{{ http_build_query(array_merge($baseP, ['type'=>'jasa'])) }}"

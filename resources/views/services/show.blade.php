@@ -12,8 +12,8 @@
     --border-1: #E2E8F0;
     --text-main: #0F172A;
     --text-muted: #64748B;
-    --accent: #0EA5E9;
-    --accent-dark: #0284C7;
+    --accent: #1eb349;
+    --accent-dark: #16a34a;
 }
 
 .pd-layout {
@@ -31,14 +31,14 @@
     border: 1px solid var(--border-1);
     border-radius: 20px;
     padding: 1.75rem;
-    box-shadow: 0 16px 40px rgba(14,165,233,0.03);
+    box-shadow: 0 16px 40px rgba(30,179,73,0.03);
     transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 
 .pd-card-hover:hover {
     border-color: var(--accent);
     transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(14,165,233,0.1);
+    box-shadow: 0 16px 40px rgba(30,179,73,0.1);
 }
 
 /* ── BREADCRUMB ── */
@@ -125,7 +125,7 @@
 /* Price Box */
 .pd-price-box {
     background: linear-gradient(135deg, #F0F9FF, #ffffff);
-    border: 1px solid rgba(14,165,233,0.15);
+    border: 1px solid rgba(30,179,73,0.15);
     border-radius: 20px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
@@ -171,7 +171,7 @@
 }
 .pd-v-icon {
     width: 32px; height: 32px;
-    background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+    background: linear-gradient(135deg, #1eb349, #a5cf37);
     color: #fff;
     border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
@@ -219,18 +219,18 @@
     transition: all 0.3s cubic-bezier(0.4,0,0.2,1); text-decoration: none; border: none;
 }
 .pd-btn-outline {
-    background: #F0F9FF; color: var(--accent-dark); border: 1.5px solid rgba(14,165,233,0.3);
+    background: #F0F9FF; color: var(--accent-dark); border: 1.5px solid rgba(30,179,73,0.3);
 }
 .pd-btn-outline:hover {
-    background: #E0F2FE; border-color: var(--accent); transform: translateY(-2px);
+    background: #dcfce7; border-color: var(--accent); transform: translateY(-2px);
 }
 .pd-btn-primary {
-    background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+    background: linear-gradient(135deg, #1eb349, #a5cf37);
     color: #fff;
-    box-shadow: 0 8px 24px rgba(14,165,233,0.25);
+    box-shadow: 0 8px 24px rgba(30,179,73,0.25);
 }
 .pd-btn-primary:hover {
-    transform: translateY(-2px); box-shadow: 0 12px 32px rgba(14,165,233,0.35);
+    transform: translateY(-2px); box-shadow: 0 12px 32px rgba(30,179,73,0.35);
 }
 .pd-btn:disabled {
     opacity: 0.6; cursor: not-allowed; transform: none !important; box-shadow: none !important;
@@ -445,7 +445,7 @@
             </form>
         @else
             {{-- Non-ecommerce / Custom Service --}}
-            <div class="pd-price-box" style="background: linear-gradient(135deg, #EFF6FF, #ffffff); border-color: #BFDBFE;">
+            <div class="pd-price-box" style="background: linear-gradient(135deg, #f0fdf4, #ffffff); border-color: #BFDBFE;">
                 <div class="pd-price-current" style="color: #2563EB; font-size:2rem;">Konsultasi Gratis</div>
                 <div style="font-size:1rem; color:#1E3A8A; width:100%;">Tim ahli kami siap memberikan penawaran terbaik untuk Anda.</div>
             </div>

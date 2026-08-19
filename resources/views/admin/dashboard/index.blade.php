@@ -75,7 +75,7 @@ $adminName = str_ireplace('Cyclevent', 'buyle.id', session('admin_name', 'Admin 
         Dashboard Admin — {{ now()->timezone('Asia/Jakarta')->translatedFormat('l, d F Y') }}
       </div>
       <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-        <span style="display: inline-flex; align-items: center; gap: 0.375rem; background: #EFF6FF; border: 1px solid #BFDBFE; color: #2563EB; font-size: 0.75rem; font-weight: 700; padding: 0.375rem 0.875rem; border-radius: 100px;">
+        <span style="display: inline-flex; align-items: center; gap: 0.375rem; background: #f0fdf4; border: 1px solid #BFDBFE; color: #2563EB; font-size: 0.75rem; font-weight: 700; padding: 0.375rem 0.875rem; border-radius: 100px;">
           <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
           HVM Digital
         </span>

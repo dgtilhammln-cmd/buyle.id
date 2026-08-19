@@ -13,7 +13,7 @@
     
     .modal-box-light {
         background: #ffffff; width: 100%; max-width: 580px; max-height: 90vh;
-        border-radius: 24px; box-shadow: 0 24px 50px rgba(14, 165, 233, 0.15);
+        border-radius: 24px; box-shadow: 0 24px 50px rgba(30, 179, 73, 0.15);
         display: flex; flex-direction: column; position: relative; overflow: hidden;
         transform: translateY(20px) scale(0.95); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         font-family: 'Montserrat', sans-serif;
@@ -22,7 +22,7 @@
 
     .order-modal-header { 
         padding: 2rem 2.5rem 1.5rem; 
-        background: linear-gradient(135deg, #0064D2 0%, #0EA5E9 100%); 
+        background: linear-gradient(135deg, #0064D2 0%, #1eb349 100%); 
         border-bottom: none; 
         display: flex; 
         align-items: flex-start; 
@@ -46,16 +46,16 @@
         font-size: 0.9375rem; border-radius: 12px; outline: none; padding: 0.875rem 1rem;
         transition: all 0.2s; font-family: 'Montserrat', sans-serif;
     }
-    .light-input:focus { border-color: #0EA5E9; box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1); }
+    .light-input:focus { border-color: #1eb349; box-shadow: 0 0 0 4px rgba(30, 179, 73, 0.1); }
     .light-label { font-size: 0.8125rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem; display: block; }
     
     .order-submit-btn-light {
-        background: #0EA5E9; color: #fff; width: 100%; padding: 1.125rem; border: none;
+        background: #1eb349; color: #fff; width: 100%; padding: 1.125rem; border: none;
         font-size: 0.95rem; font-weight: 700; border-radius: 14px; cursor: pointer;
         display: flex; align-items: center; justify-content: center; gap: 0.75rem;
-        transition: all 0.3s; box-shadow: 0 8px 20px rgba(14, 165, 233, 0.25);
+        transition: all 0.3s; box-shadow: 0 8px 20px rgba(30, 179, 73, 0.25);
     }
-    .order-submit-btn-light:hover { background: #0284C7; transform: translateY(-2px); box-shadow: 0 12px 25px rgba(14, 165, 233, 0.35); }
+    .order-submit-btn-light:hover { background: #16a34a; transform: translateY(-2px); box-shadow: 0 12px 25px rgba(30, 179, 73, 0.35); }
     
     @media(max-width: 600px) {
         .modal-box-light { border-radius: 20px 20px 0 0; max-height: 95vh; transform: translateY(100%); }
