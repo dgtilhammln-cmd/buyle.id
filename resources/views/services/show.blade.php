@@ -286,7 +286,7 @@
     .pd-actions { display: none; }
     .pd-sticky-bar {
         display: flex; align-items: center; gap: 0.5rem;
-        position: fixed; bottom: 65px; left: 0; right: 0;
+        position: fixed; bottom: 0; left: 0; right: 0;
         background: #fff; padding: 0.75rem 1rem; border-top: 1px solid var(--border);
         box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 40;
     }

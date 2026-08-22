@@ -591,7 +591,7 @@
         }
     </style>
 
-    @if(!request()->routeIs('checkout.*'))
+    @if(!request()->routeIs('checkout.*') && !request()->routeIs('products.show'))
         <div class="mobile-bottom-nav">
             <a href="{{ route('home') }}" class="nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
