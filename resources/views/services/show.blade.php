@@ -151,15 +151,30 @@
 /* Actions */
 .pd-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 3rem; }
 .pd-btn {
-    padding: 1rem; border-radius: 8px; font-size: 0.95rem; font-weight: 500; font-family: inherit;
+    padding: 0.875rem 1.5rem; border-radius: 99px; font-size: 0.95rem; font-weight: 600; font-family: inherit;
     cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
     transition: 0.2s; border: none; text-decoration: none;
 }
 .pd-btn-outline { background: #fff; color: var(--primary); border: 1px solid var(--primary); }
 .pd-btn-outline:hover { background: rgba(30,179,73,0.05); }
-.pd-btn-primary { background: var(--primary); color: #fff; }
-.pd-btn-primary:hover { background: var(--primary-hover); }
+.pd-btn-primary { 
+    background: linear-gradient(135deg, #1eb349, #a5cf37); 
+    color: #fff; border: 1px solid transparent; 
+}
+.pd-btn-primary:hover { opacity: 0.9; box-shadow: 0 4px 12px rgba(30,179,73,0.2); }
 .pd-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* TikTok Embed inside gallery */
+.pd-tiktok-slide { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #000; }
+.pd-tiktok-slide iframe { width: 100%; height: 100%; border: none; }
+
+/* Guarantee Row */
+.pd-guarantee-row {
+    display: flex; flex-direction: column; gap: 1rem; margin-bottom: 3rem;
+    background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;
+}
+.pd-guarantee-item { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; color: var(--text-main); font-weight: 500; }
+.pd-guarantee-item svg { color: var(--primary); flex-shrink: 0; }
 
 /* Description */
 .pd-desc-title { font-size: 1.15rem; font-weight: 500; color: var(--text-main); margin-bottom: 1.25rem; }
@@ -253,14 +268,27 @@
                         </a>
                     </div>
                     @endforeach
+                    @if($service->tiktok_video_url)
+                    <div class="swiper-slide pd-tiktok-slide">
+                        <blockquote class="tiktok-embed"
+                            cite="{{ $service->tiktok_video_url }}"
+                            data-video-id="{{ Str::afterLast(rtrim($service->tiktok_video_url, '/'), '/') }}"
+                            style="max-width:100%; margin:0; border:none;">
+                            <section>
+                                <a target="_blank" href="{{ $service->tiktok_video_url }}">Tonton di TikTok</a>
+                            </section>
+                        </blockquote>
+                        <script async src="https://www.tiktok.com/embed.js"></script>
+                    </div>
+                    @endif
                 </div>
-                @if(count($imgs) > 1)
+                @if(count($imgs) > 1 || $service->tiktok_video_url)
                     <div class="swiper-button-next"></div>
                     <div class="swiper-button-prev"></div>
                 @endif
             </div>
 
-            @if(count($imgs) > 1)
+            @if(count($imgs) > 1 || $service->tiktok_video_url)
             <div class="swiper pd-thumbs" id="pd-swiper-thumbs">
                 <div class="swiper-wrapper">
                     @foreach($imgs as $img)
@@ -268,6 +296,11 @@
                         <img src="{{ $img }}" alt="thumb" loading="lazy">
                     </div>
                     @endforeach
+                    @if($service->tiktok_video_url)
+                    <div class="swiper-slide pd-thumb-item" style="background:#000; display:flex; align-items:center; justify-content:center; color:#fff;">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                    @endif
                 </div>
             </div>
             @endif
@@ -291,17 +324,21 @@
                 @endif
             </div>
 
+            @if($service->short_desc)
+            <p style="font-size:0.95rem; color:var(--text-muted); line-height:1.6; margin:-1rem 0 2rem; border-left: 2px solid var(--primary); padding-left:1rem;">{{ $service->short_desc }}</p>
+            @endif
+
             {{-- SELLER INFO BLOCK --}}
-            @if(isset($service->creator) && $service->creator)
-            @php $creator = $service->creator; $cp = $creator->creatorProfile; @endphp
+            @if(isset($service->seller) && $service->seller)
+            @php $seller = $service->seller; $cp = $seller->creatorProfile; @endphp
             <a href="{{ route('store.show', optional($cp)->store_slug ?? '#') }}" class="pd-seller-block">
-                @if($creator->avatar)
-                    <img src="{{ asset('storage/'.$creator->avatar) }}" class="pd-seller-ava" alt="{{ $creator->name }}">
+                @if($seller->avatar)
+                    <img src="{{ asset('storage/'.$seller->avatar) }}" class="pd-seller-ava" alt="{{ $seller->name }}">
                 @else
-                    <div class="pd-seller-ava">{{ strtoupper(substr($creator->name,0,2)) }}</div>
+                    <div class="pd-seller-ava">{{ strtoupper(substr($seller->name,0,2)) }}</div>
                 @endif
                 <div class="pd-seller-text">
-                    <div class="pd-seller-name">{{ optional($cp)->store_name ?: $creator->name }}</div>
+                    <div class="pd-seller-name">{{ optional($cp)->store_name ?: $seller->name }}</div>
                     <div class="pd-seller-sub">
                         <span class="pd-seller-badge">Seller</span>
                         {{ optional($cp)->city_id ? 'Toko Terverifikasi' : 'Mitra buyle.id' }}
@@ -376,6 +413,22 @@
             </a>
             @endif
 
+
+            {{-- Guarantee Row --}}
+            <div class="pd-guarantee-row">
+                <div class="pd-guarantee-item">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span>100% Aman & Terpercaya</span>
+                </div>
+                <div class="pd-guarantee-item">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    <span>Refund & Garansi Mudah</span>
+                </div>
+                <div class="pd-guarantee-item">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>Layanan Dukungan 24/7</span>
+                </div>
+            </div>
 
             {{-- SPECS --}}
             @if(is_array($service->specifications) && count($service->specifications) > 0)

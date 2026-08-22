@@ -59,6 +59,14 @@ class Product extends Model
     // =========================================================================
 
     /**
+     * Penjual / Creator dari produk ini.
+     */
+    public function seller(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'seller_id');
+    }
+
+    /**
      * Kategori produk yang menaungi produk ini.
      */
     public function category(): BelongsTo
