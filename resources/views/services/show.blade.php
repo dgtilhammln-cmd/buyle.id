@@ -221,8 +221,62 @@
 .pd-specs td:first-child { width: 150px; color: var(--text-muted); }
 .pd-specs td:last-child { color: var(--text-main); }
 
-/* Description Content */
-.pd-desc-content { font-size: 0.95rem; color: var(--text-main); line-height: 1.8; white-space: pre-wrap; }
+/* Description Content — Prose Typography */
+.pd-desc-content {
+    font-size: 0.95rem;
+    color: var(--text-main);
+    line-height: 1.9;
+}
+
+/* Headings inside description */
+.pd-desc-content h1,
+.pd-desc-content h2,
+.pd-desc-content h3,
+.pd-desc-content h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 1.75rem 0 0.6rem;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+}
+.pd-desc-content h1 { font-size: 1.2rem; }
+.pd-desc-content h2 { font-size: 1.1rem; }
+.pd-desc-content h3 { font-size: 1rem; }
+
+/* Paragraphs */
+.pd-desc-content p {
+    margin: 0 0 1rem;
+    color: #334155;
+    line-height: 1.85;
+}
+
+/* Lists */
+.pd-desc-content ul,
+.pd-desc-content ol {
+    margin: 0.5rem 0 1.25rem 1.5rem;
+    padding: 0;
+}
+.pd-desc-content li {
+    margin-bottom: 0.4rem;
+    line-height: 1.7;
+    color: #334155;
+}
+
+/* Strong */
+.pd-desc-content strong { color: var(--text-main); font-weight: 700; }
+
+/* Links inside description */
+.pd-desc-content a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-decoration-color: rgba(30,179,73,0.3);
+}
+
+/* First heading no top margin */
+.pd-desc-content h1:first-child,
+.pd-desc-content h2:first-child,
+.pd-desc-content h3:first-child { margin-top: 0; }
 
 
 /* ─── MOBILE STICKY BAR ─── */
