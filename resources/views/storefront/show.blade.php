@@ -207,27 +207,22 @@
 
 /* ── Smart Search Notice ── */
 .sf-search-notice {
-    margin: 1rem 1rem 0;
-    padding: 0.875rem 1.25rem;
-    border-radius: 14px;
-    display: flex; align-items: center; gap: 0.75rem;
-    font-size: 0.85rem; line-height: 1.5;
-    animation: sf-fade-in 0.3s ease;
+    margin: 0.75rem 1rem 0;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    background: rgba(30,179,73,0.08);
+    border-left: 3px solid #1eb349;
+    font-size: 0.82rem;
+    color: #0F172A;
+    display: flex; align-items: center; gap: 0.5rem;
+    animation: sf-fade-in 0.25s ease;
 }
-.sf-search-notice.suggestion {
-    background: linear-gradient(135deg, #f0fdf4, #f7fee7);
-    border: 1px solid rgba(30,179,73,0.25);
-    color: #166534;
+.sf-search-notice a {
+    color: #1eb349; font-weight: 600;
+    text-decoration: none; border-bottom: 1px solid rgba(30,179,73,0.4);
 }
-.sf-search-notice.fuzzy {
-    background: #fffbeb;
-    border: 1px solid #fcd34d;
-    color: #92400e;
-}
-.sf-search-notice-icon { font-size: 1.25rem; flex-shrink: 0; }
-.sf-search-notice a { color: #1eb349; font-weight: 600; text-decoration: underline; cursor: pointer; }
-.sf-search-notice a:hover { color: #166534; }
-@keyframes sf-fade-in { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
+.sf-search-notice a:hover { border-bottom-color: #1eb349; }
+@keyframes sf-fade-in { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:none; } }
 </style>
 
 <div class="sf-page">
@@ -335,33 +330,24 @@
                 </div>
             </div>
 
-            {{-- ── Smart Search Notices ── --}}
-            @if(request('q'))
-                @if(isset($suggestion) && $suggestion && !($suggestionApplied ?? false))
-                {{-- Ini saran saja, hasil sudah muncul dari LIKE biasa --}}
-                @elseif(isset($suggestion) && $suggestion && ($suggestionApplied ?? false) && $products->count() > 0)
-                <div class="sf-search-notice fuzzy">
-                    <span class="sf-search-notice-icon">🔍</span>
-                    <div>
-                        Tidak ditemukan hasil untuk <b>"{{ request('q') }}"</b>. Menampilkan hasil untuk:
-                        <a href="{{ route('store.show', $profile->store_slug) }}?q={{ urlencode($suggestion) }}{{ request('group') ? '&group='.request('group') : '' }}{{ request('sort') ? '&sort='.request('sort') : '' }}">
-                            "{{ $suggestion }}"
-                        </a>
-                    </div>
-                </div>
-                @endif
-
-                @if(isset($suggestion) && $suggestion)
-                <div class="sf-search-notice suggestion">
-                    <span class="sf-search-notice-icon">💡</span>
-                    <div>
+            {{-- ── Smart Search Notice (1 baris compact) ── --}}
+            @if(request('q') && isset($suggestion) && $suggestion)
+                <div class="sf-search-notice">
+                    {{-- SVG icon: search / sparkle --}}
+                    @if($suggestionApplied ?? false)
+                        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="flex-shrink:0;opacity:.8;">
+                            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        Tidak ada hasil untuk <b style="margin:0 3px;">&ldquo;{{ request('q') }}&rdquo;</b> &mdash; Menampilkan hasil untuk:
+                        <a href="{{ route('store.show', $profile->store_slug) }}?q={{ urlencode($suggestion) }}{{ request('group') ? '&group='.request('group') : '' }}{{ request('sort') ? '&sort='.request('sort') : '' }}">&ldquo;{{ $suggestion }}&rdquo;</a>
+                    @else
+                        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="flex-shrink:0;opacity:.8;">
+                            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
                         Mungkin Maksud Anda:
-                        <a href="{{ route('store.show', $profile->store_slug) }}?q={{ urlencode($suggestion) }}{{ request('group') ? '&group='.request('group') : '' }}{{ request('sort') ? '&sort='.request('sort') : '' }}">
-                            {{ $suggestion }}
-                        </a>?
-                    </div>
+                        <a href="{{ route('store.show', $profile->store_slug) }}?q={{ urlencode($suggestion) }}{{ request('group') ? '&group='.request('group') : '' }}{{ request('sort') ? '&sort='.request('sort') : '' }}">{{ $suggestion }}</a>?
+                    @endif
                 </div>
-                @endif
             @endif
 
             {{-- ── Products Grid ── --}}

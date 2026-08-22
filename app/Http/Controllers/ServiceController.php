@@ -13,14 +13,45 @@ class ServiceController extends Controller
     {
         $query = Product::active()->ordered();
         
-        // Keyword search
+        // Smart Keyword Search
+        $suggestion        = null;
+        $suggestionApplied = false;
+
         if (request()->filled('q')) {
-            $searchTerm = request('q');
-            $query->where(function($q) use ($searchTerm) {
-                $q->where('name', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('description', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('short_desc', 'like', '%' . $searchTerm . '%');
+            $rawQ = trim(request('q'));
+
+            // Pass 1: Exact LIKE
+            $exactQuery = (clone $query)->where(function($q) use ($rawQ) {
+                $q->where('name', 'like', '%' . $rawQ . '%')
+                  ->orWhere('description', 'like', '%' . $rawQ . '%')
+                  ->orWhere('short_desc', 'like', '%' . $rawQ . '%');
             });
+
+            if ($exactQuery->count() > 0) {
+                $query = $exactQuery;
+            } else {
+                // Pass 2: Fuzzy fallback
+                $allNames = Product::active()->pluck('name');
+                [$bestKeyword, $bestScore] = $this->findBestMatch($rawQ, $allNames->toArray());
+
+                if ($bestScore >= 40 && $bestKeyword) {
+                    $suggestion = $bestKeyword;
+                    $tokens     = $this->tokenize($bestKeyword);
+                    $query->where(function ($q) use ($tokens, $rawQ) {
+                        foreach ($tokens as $t) {
+                            $q->orWhere('name',       'like', '%' . $t . '%')
+                              ->orWhere('short_desc', 'like', '%' . $t . '%');
+                        }
+                        foreach ($this->tokenize($rawQ) as $t) {
+                            $q->orWhere('name',       'like', '%' . $t . '%')
+                              ->orWhere('short_desc', 'like', '%' . $t . '%');
+                        }
+                    });
+                    $suggestionApplied = true;
+                } else {
+                    $query->whereRaw('0 = 1');
+                }
+            }
         }
 
         // Category filter (multiple) - support both 'category' and 'kategori' params
@@ -118,7 +149,58 @@ class ServiceController extends Controller
             })->toArray(),
         ]);
 
-        return view('services.index', compact('services', 'settings', 'seo', 'schema', 'categories', 'wa', 'maxPrice'));
+        return view('services.index', compact(
+            'services', 'settings', 'seo', 'schema', 'categories', 'wa', 'maxPrice',
+            'suggestion', 'suggestionApplied'
+        ));
+    }
+
+    // ── Fuzzy Search Helpers ────────────────────────────────────────
+    private function findBestMatch(string $query, array $names): array
+    {
+        $queryLower = mb_strtolower($query);
+        $bestName   = null;
+        $bestScore  = 0;
+        foreach ($names as $name) {
+            $nameLower = mb_strtolower($name);
+            similar_text($queryLower, $nameLower, $pct1);
+            $pct2  = $this->tokenOverlapScore($queryLower, $nameLower);
+            $pct3  = $this->soundexScore($queryLower, $nameLower);
+            $score = max($pct1, $pct2 * 100, $pct3 * 100);
+            if ($score > $bestScore) { $bestScore = $score; $bestName = $name; }
+        }
+        return [$bestName, $bestScore];
+    }
+
+    private function tokenOverlapScore(string $a, string $b): float
+    {
+        $tokA = $this->tokenize($a); $tokB = $this->tokenize($b);
+        if (empty($tokA) || empty($tokB)) return 0.0;
+        $matched = 0;
+        foreach ($tokA as $ta) {
+            foreach ($tokB as $tb) {
+                similar_text($ta, $tb, $pct);
+                if ($pct >= 65) { $matched++; break; }
+            }
+        }
+        return $matched / max(count($tokA), count($tokB));
+    }
+
+    private function soundexScore(string $a, string $b): float
+    {
+        $tokA = $this->tokenize($a); $tokB = $this->tokenize($b);
+        if (empty($tokA) || empty($tokB)) return 0.0;
+        $soundexB = array_map('soundex', $tokB); $matched = 0;
+        foreach ($tokA as $ta) { if (in_array(soundex($ta), $soundexB, true)) $matched++; }
+        return $matched / max(count($tokA), count($tokB));
+    }
+
+    private function tokenize(string $str): array
+    {
+        $str = mb_strtolower(preg_replace('/[^a-zA-Z0-9\s]/', ' ', $str));
+        $tokens = preg_split('/\s+/', trim($str), -1, PREG_SPLIT_NO_EMPTY);
+        return array_values(array_filter($tokens, fn($t) => mb_strlen($t) >= 2));
+    }
     }
 
     public function show(string $slug)
