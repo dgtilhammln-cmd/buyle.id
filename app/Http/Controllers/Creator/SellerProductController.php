@@ -57,19 +57,16 @@ class SellerProductController extends Controller
         $data = $request->validated();
 
         // Handle thumbnail and gallery upload from the same input
-        if ($request->hasFile('gallery')) {
-            $galleryFiles = $request->file('gallery');
+        // Filter out null/empty file inputs (browsers send empty elements when no file selected)
+        unset($data['gallery']);
+        $galleryFiles = collect($request->file('gallery', []))->filter(fn($f) => $f && $f->isValid());
+        if ($galleryFiles->isNotEmpty()) {
             $galleryPaths = [];
-            
             foreach ($galleryFiles as $index => $gFile) {
-                if ($gFile->isValid()) {
-                    if ($index === 0) {
-                        // First image becomes the main thumbnail
-                        $data['image'] = $gFile->store('products', 'public');
-                    } else {
-                        // Rest goes to gallery
-                        $galleryPaths[] = $gFile->store('products/gallery', 'public');
-                    }
+                if ($index === 0) {
+                    $data['image'] = $gFile->store('products', 'public');
+                } else {
+                    $galleryPaths[] = $gFile->store('products/gallery', 'public');
                 }
             }
             $data['gallery'] = $galleryPaths;
@@ -121,9 +118,10 @@ class SellerProductController extends Controller
         $data = $request->validated();
 
         // Handle thumbnail and gallery upload from the same input
-        if ($request->hasFile('gallery')) {
-            $galleryFiles = $request->file('gallery');
-            
+        // Filter out null/empty file inputs (browsers send empty elements when no file selected)
+        unset($data['gallery']);
+        $galleryFiles = collect($request->file('gallery', []))->filter(fn($f) => $f && $f->isValid());
+        if ($galleryFiles->isNotEmpty()) {
             // Delete old images since we are replacing them
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
@@ -133,15 +131,13 @@ class SellerProductController extends Controller
                     Storage::disk('public')->delete($oldImg);
                 }
             }
-            
+
             $galleryPaths = [];
             foreach ($galleryFiles as $index => $gFile) {
-                if ($gFile->isValid()) {
-                    if ($index === 0) {
-                        $data['image'] = $gFile->store('products', 'public');
-                    } else {
-                        $galleryPaths[] = $gFile->store('products/gallery', 'public');
-                    }
+                if ($index === 0) {
+                    $data['image'] = $gFile->store('products', 'public');
+                } else {
+                    $galleryPaths[] = $gFile->store('products/gallery', 'public');
                 }
             }
             $data['gallery'] = $galleryPaths;

@@ -32,7 +32,7 @@ class UpdateProductRequest extends FormRequest
             'file_type'           => ['nullable', 'string', 'max:50'],
             'image'               => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'gallery'             => ['nullable', 'array', 'max:7'],
-            'gallery.*'           => ['image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
+            'gallery.*'           => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'tiktok_video_url'    => ['nullable', 'url', 'max:255'],
 
             // URL produk digital — divalidasi oleh SafeDigitalUrl
