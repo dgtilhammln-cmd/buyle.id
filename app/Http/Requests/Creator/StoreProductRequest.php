@@ -20,6 +20,7 @@ class StoreProductRequest extends FormRequest
             'description'         => ['nullable', 'string'],
             'price'               => ['required', 'numeric', 'min:0'],
             'sale_price'          => ['nullable', 'numeric', 'min:0', 'lt:price'],
+            'stock'               => ['nullable', 'integer', 'min:0'],
             'product_category_id' => ['nullable', 'exists:product_categories,id'],
             'creator_group_id'    => ['nullable', 'exists:creator_product_groups,id'],
             'file_type'           => ['nullable', 'string', 'max:50'],

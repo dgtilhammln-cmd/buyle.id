@@ -145,6 +145,12 @@
                     <span class="form-hint">Kosongkan jika tidak ada diskon</span>
                 </div>
 
+                <div class="form-group">
+                    <label class="form-label">Stok / Kuota</label>
+                    <input type="number" name="stock" value="{{ old('stock', (int)$product->stock) }}" class="form-input" placeholder="Opsional" min="0">
+                    <span class="form-hint">Kosongkan jika stok unlimited (digital)</span>
+                </div>
+
                 <div class="form-group full">
                     <label class="form-label">Deskripsi Singkat</label>
                     <textarea name="short_desc" class="form-input" rows="2" placeholder="Deskripsi singkat produk (maks 160 karakter)" maxlength="160">{{ old('short_desc', $product->short_desc) }}</textarea>

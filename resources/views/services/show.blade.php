@@ -363,16 +363,16 @@
                 @endif
             </div>
 
-            {{-- Pengiriman / Garansi Placeholder --}}
+            {{-- Pengiriman Digital --}}
             <div class="pd-attr-row">
                 <div class="pd-attr-label">Pengiriman</div>
                 <div class="pd-attr-content">
                     <div>
                         <div style="display:flex; align-items:center; gap:4px; color:var(--text-main);">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 10h14l-1.5 10h-11z"/><path d="M9 10V5a3 3 0 0 1 6 0v5"/></svg>
-                            <b>Garansi Tepat Waktu</b>
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            <b>Akses Instan & Otomatis</b>
                         </div>
-                        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Dapatkan voucher s/d Rp10.000 jika pesanan terlambat.</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Produk ini dapat langsung diakses/diunduh setelah pembayaran berhasil.</div>
                     </div>
                 </div>
             </div>

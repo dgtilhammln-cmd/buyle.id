@@ -65,10 +65,10 @@ class SellerProductController extends Controller
                 if ($gFile->isValid()) {
                     if ($index === 0) {
                         // First image becomes the main thumbnail
-                        $data['image'] = $this->storeWebP($gFile, 'products', 1200, 1200, 85);
+                        $data['image'] = $gFile->store('products', 'public');
                     } else {
                         // Rest goes to gallery
-                        $galleryPaths[] = $this->storeWebP($gFile, 'products/gallery', 1200, 1200, 85);
+                        $galleryPaths[] = $gFile->store('products/gallery', 'public');
                     }
                 }
             }
@@ -138,9 +138,9 @@ class SellerProductController extends Controller
             foreach ($galleryFiles as $index => $gFile) {
                 if ($gFile->isValid()) {
                     if ($index === 0) {
-                        $data['image'] = $this->storeWebP($gFile, 'products', 1200, 1200, 85);
+                        $data['image'] = $gFile->store('products', 'public');
                     } else {
-                        $galleryPaths[] = $this->storeWebP($gFile, 'products/gallery', 1200, 1200, 85);
+                        $galleryPaths[] = $gFile->store('products/gallery', 'public');
                     }
                 }
             }
