@@ -19,7 +19,7 @@ class AccountController extends Controller
         $user           = Auth::user();
         $totalOrders    = $user->orders()->count();
         $activeOrders   = $user->orders()->whereIn('status', ['pending', 'processing', 'shipped'])->count();
-        $totalSpent     = $user->orders()->where('status', '!=', 'cancelled')->sum('grand_total');
+        $totalSpent     = $user->orders()->where('status', '!=', 'cancelled')->sum('total');
         $totalAddresses = $user->addresses()->count();
         $recentOrders   = $user->orders()->latest()->limit(5)->get();
 

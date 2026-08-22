@@ -46,7 +46,7 @@
                         <tr>
                             <td style="font-weight:600; color:#0f172a;">#{{ $order->order_number ?? $order->id }}</td>
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d M Y') }}</td>
-                            <td style="font-weight:700;">Rp {{ number_format($order->grand_total, 0, ',', '.') }}</td>
+                            <td style="font-weight:700;">Rp {{ number_format($order->total, 0, ',', '.') }}</td>
                             <td>
                                 @php $s = $order->status->value ?? $order->status; @endphp
                                 <span class="order-badge badge-{{ $s }}">
