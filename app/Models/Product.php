@@ -211,7 +211,7 @@ class Product extends Model
     }
     public function getMetaTitleAttribute($v): string
     {
-        return $v ?: $this->name . ' | buyle.id - Digital Creator Marketplace';
+        return $v ?: $this->name . ' | buyle.id';
     }
     public function getMetaDescAttribute($v): string
     {

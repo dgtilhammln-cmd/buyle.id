@@ -305,7 +305,7 @@ class ServiceController extends Controller
             'offers'      => [
                 '@type'           => 'Offer',
                 'priceCurrency'   => 'IDR',
-                'price'           => (string) ($finalPrice ?? 0),
+                'price'           => number_format($finalPrice ?? 0, 0, '', ''),
                 'priceValidUntil' => now()->addYear()->format('Y-m-d'),
                 'availability'    => ($service->is_available ?? true)
                                         ? 'https://schema.org/InStock'

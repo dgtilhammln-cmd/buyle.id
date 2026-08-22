@@ -43,7 +43,7 @@ class SellerProductController extends Controller
     public function create()
     {
         $groups         = \App\Models\CreatorProductGroup::where('seller_id', auth()->id())->where('is_active', true)->orderBy('order')->get(['id', 'name']);
-        $categories     = ProductCategory::orderBy('name')->get(['id', 'name']);
+        $categories     = ProductCategory::with('subCategories:id,product_category_id,name')->orderBy('name')->get(['id', 'name']);
         $allowedDomains = DigitalLinkValidator::getAllowedDomains();
 
         return view('creator.products.create', compact('groups', 'categories', 'allowedDomains'));
@@ -104,7 +104,7 @@ class SellerProductController extends Controller
     {
         $this->authorizeProduct($product);
         $groups         = \App\Models\CreatorProductGroup::where('seller_id', auth()->id())->where('is_active', true)->orderBy('order')->get(['id', 'name']);
-        $categories     = ProductCategory::orderBy('name')->get(['id', 'name']);
+        $categories     = ProductCategory::with('subCategories:id,product_category_id,name')->orderBy('name')->get(['id', 'name']);
         $allowedDomains = DigitalLinkValidator::getAllowedDomains();
 
         return view('creator.products.edit', compact('product', 'groups', 'categories', 'allowedDomains'));

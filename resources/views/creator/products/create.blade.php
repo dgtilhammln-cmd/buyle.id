@@ -111,13 +111,21 @@
 
                 <div class="form-group">
                     <label class="form-label">Kategori Platform</label>
-                    <select name="product_category_id" class="form-input">
-                        <option value="">— Kategori Global —</option>
+                    <select name="product_category_id" id="catSelect" class="form-input" onchange="loadSubCat(this.value)">
+                        <option value="">— Pilih Kategori —</option>
                         @foreach($categories as $cat)
                             <option value="{{ $cat->id }}" {{ old('product_category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                         @endforeach
                     </select>
                     @error('product_category_id')<span class="form-error">{{ $message }}</span>@enderror
+                </div>
+
+                <div class="form-group" id="subCatWrap" style="display:none;">
+                    <label class="form-label">Sub-Kategori</label>
+                    <select name="product_sub_category_id" id="subCatSelect" class="form-input">
+                        <option value="">— Pilih Sub-Kategori —</option>
+                    </select>
+                    @error('product_sub_category_id')<span class="form-error">{{ $message }}</span>@enderror
                 </div>
 
                 <div class="form-group">
@@ -361,6 +369,21 @@ async function validateLink(url) {
         linkStatus.style.display = 'block';
     } catch(e) {}
 }
+// Sub-kategori dinamis
+const subData = @json($categories->map(fn($c) => ['id'=>$c->id,'subs'=>$c->subCategories->map(fn($s)=>['id'=>$s->id,'name'=>$s->name])]));
+function loadSubCat(catId) {
+    const wrap = document.getElementById('subCatWrap');
+    const sel  = document.getElementById('subCatSelect');
+    if (!catId) { wrap.style.display='none'; return; }
+    const found = subData.find(c => c.id == catId);
+    if (!found || !found.subs.length) { wrap.style.display='none'; return; }
+    sel.innerHTML = '<option value="">— Pilih Sub-Kategori —</option>';
+    found.subs.forEach(s => { const o=document.createElement('option'); o.value=s.id; o.textContent=s.name; sel.appendChild(o); });
+    wrap.style.display = 'block';
+}
+// Trigger on load if old value exists
+const initCat = document.getElementById('catSelect').value;
+if (initCat) loadSubCat(initCat);
 </script>
 @endsection
 

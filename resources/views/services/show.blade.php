@@ -37,10 +37,11 @@
     padding: 1.5rem 1.5rem 1rem;
     display: flex; align-items: center; gap: 0.5rem;
     font-size: 0.8rem; font-weight: 400; color: var(--text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.pd-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: 0.2s; }
+.pd-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: 0.2s; white-space: nowrap; }
 .pd-breadcrumb a:hover { color: var(--primary); }
-.pd-breadcrumb span.cur { color: var(--text-main); font-weight: 500; }
+.pd-breadcrumb span.cur { color: var(--text-main); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ─── CONTAINERS ─── */
 .pd-container {
@@ -162,7 +163,7 @@
     display: flex; align-items: center; padding: 1.5rem;
 }
 @media (max-width: 768px) {
-    .pd-seller-block { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+    .pd-seller-block { flex-direction: column; align-items: flex-start; gap: 1rem; }
 }
 .pd-seller-left {
     display: flex; align-items: center; gap: 1rem;
@@ -181,7 +182,7 @@
 .pd-seller-info { flex: 1; }
 .pd-seller-name { font-size: 1rem; font-weight: 500; color: var(--text-main); margin-bottom: 0.25rem; }
 .pd-seller-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; }
-.pd-seller-actions { display: flex; gap: 0.5rem; }
+.pd-seller-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .pd-seller-btn {
     padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.85rem; font-weight: 500;
     cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;
@@ -200,8 +201,8 @@
 @media (max-width: 768px) {
     .pd-seller-right { padding-left: 0; grid-template-columns: repeat(2, 1fr); width: 100%; }
 }
-.pd-seller-stat { display: flex; align-items: center; gap: 0.5rem; }
-.pd-seller-stat span { color: var(--primary); font-weight: 500; }
+.pd-seller-stat { display: flex; flex-direction: column; gap: 0.25rem; }
+.pd-seller-stat span { color: var(--primary); font-weight: 600; font-size: 0.95rem; }
 
 
 /* ─── DETAILS BLOCK ─── */
@@ -285,11 +286,12 @@
     .pd-actions { display: none; }
     .pd-sticky-bar {
         display: flex; align-items: center; gap: 0.5rem;
-        position: fixed; bottom: 0; left: 0; right: 0;
+        position: fixed; bottom: 65px; left: 0; right: 0;
         background: #fff; padding: 0.75rem 1rem; border-top: 1px solid var(--border);
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 50;
+        box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 40;
     }
     .pd-sticky-bar .pd-btn { flex: 1; height: 42px; font-size: 0.9rem; }
+    .pd-breadcrumb { padding: 1rem 1rem 0.5rem; }
 }
 
 /* ─── RELATED ─── */
