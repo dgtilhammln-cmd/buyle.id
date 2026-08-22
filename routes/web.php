@@ -153,6 +153,11 @@ Route::middleware(['auth'])->prefix('akun')->name('account.')->group(function ()
     Route::get('/cart',      [AccountController::class, 'cart'])->name('cart');
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/creator/onboarding', [\App\Http\Controllers\CreatorOnboardingController::class, 'index'])->name('creator.onboarding');
+    Route::post('/creator/onboarding', [\App\Http\Controllers\CreatorOnboardingController::class, 'store'])->name('creator.onboarding.store');
+});
+
 
 // Tracking endpoint
 Route::post('/track/{type}', [TrackingController::class, 'track'])->name('track');

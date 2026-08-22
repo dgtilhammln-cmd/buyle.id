@@ -391,6 +391,34 @@ body{background:var(--c-bg);}
         </div>
         @endif
 
+        {{-- Toko / Creator Terkait --}}
+        @if(request()->filled('q') && isset($foundCreators) && $foundCreators->count() > 0)
+        <div style="margin-bottom: 2rem;">
+            <div style="font-size: 0.9rem; font-weight: 700; color: var(--c-text); margin-bottom: 0.75rem; font-family: var(--font);">Toko Terkait</div>
+            <div style="display: flex; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; gap: 1rem; padding-bottom: 0.5rem; margin-right: -1.5rem; padding-right: 1.5rem;">
+                @foreach($foundCreators as $creator)
+                    <a href="{{ route('store.show', $creator->store_slug) }}" style="flex: 0 0 280px; text-decoration: none; background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); border-radius: 20px; padding: 1.25rem; color: #fff; box-shadow: 0 10px 25px -5px rgba(30,179,73,0.15); display: flex; align-items: center; gap: 1rem; transition: transform 0.2s;">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.9); object-fit: cover; flex-shrink: 0; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 600; overflow: hidden;">
+                            @if($creator->user && $creator->user->avatar)
+                                <img src="{{ asset('storage/' . $creator->user->avatar) }}" alt="{{ $creator->store_name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            @else
+                                {{ strtoupper(substr($creator->store_name, 0, 1)) }}
+                            @endif
+                        </div>
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="font-size: 1.05rem; font-weight: 600; margin-bottom: 0.2rem; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--font);">{{ $creator->store_name }}</div>
+                            <div style="font-size: 0.75rem; color: rgba(255,255,255,0.9); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; font-family: var(--font);">{{ $creator->store_description ?: 'Kreator Digital' }}</div>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+            <style>
+                /* Hide scrollbar for webkit */
+                div[style*="overflow-x: auto"]::-webkit-scrollbar { display: none; }
+            </style>
+        </div>
+        @endif
+
         {{-- Grid --}}
         <div class="sp-grid" id="spGrid">
             @forelse($services as $i => $service)

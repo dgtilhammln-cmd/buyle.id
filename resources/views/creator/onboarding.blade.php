@@ -143,9 +143,9 @@
 
 @section('content')
     <div class="creator-content">
-        <form action="{{ route('creator.profile.update') }}" method="POST" enctype="multipart/form-data" id="profileForm">
+        <form action="{{ route('creator.onboarding.store') }}" method="POST" enctype="multipart/form-data" id="profileForm">
             @csrf
-            @method('PUT')
+
 
             {{-- Identitas Toko --}}
             <div class="form-section-title">
@@ -173,38 +173,11 @@
                         </div>
                     </div>
 
-                    {{-- Banner Uploads --}}
-                    <div class="form-group full">
-                        <label class="form-label">Banner Toko (Maks 2 Slide)</label>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:0.5rem;">
-                            <div style="border:1px dashed #cbd5e1; padding:1rem; border-radius:10px; background:#f8fafc;">
-                                <div style="font-size:0.8rem; font-weight:600; margin-bottom:0.5rem; color:#475569;">Slide 1
-                                    (Wajib jika pakai banner)</div>
-                                @if($profile->store_banner_1)
-                                    <img src="{{ asset('storage/' . $profile->store_banner_1) }}"
-                                        style="width:100%; height:80px; object-fit:cover; border-radius:6px; margin-bottom:0.5rem;">
-                                @endif
-                                <input type="file" name="store_banner_1" class="form-input"
-                                    style="font-size:0.75rem; padding:0.4rem;" accept="image/*">
-                            </div>
-                            <div style="border:1px dashed #cbd5e1; padding:1rem; border-radius:10px; background:#f8fafc;">
-                                <div style="font-size:0.8rem; font-weight:600; margin-bottom:0.5rem; color:#475569;">Slide 2
-                                    (Opsional)</div>
-                                @if($profile->store_banner_2)
-                                    <img src="{{ asset('storage/' . $profile->store_banner_2) }}"
-                                        style="width:100%; height:80px; object-fit:cover; border-radius:6px; margin-bottom:0.5rem;">
-                                @endif
-                                <input type="file" name="store_banner_2" class="form-input"
-                                    style="font-size:0.75rem; padding:0.4rem;" accept="image/*">
-                            </div>
-                        </div>
-                        <span class="form-hint">Rekomendasi ukuran: 1200x600 px (Aspek rasio 2:1). Maks 10MB/slide.</span>
-                    </div>
-
                     <div class="form-group full">
                         <label class="form-label">Nama Toko / Creator</label>
                         <input type="text" name="store_name" value="{{ old('store_name', $profile->store_name) }}"
-                            class="form-input" placeholder="Misal: HVM Digital Studio">
+                            class="form-input" placeholder="Misal: HVM Digital Studio" maxlength="30" required>
+                        <span class="form-hint">Maksimal 30 karakter.</span>
                         @error('store_name')<span class="form-error">{{ $message }}</span>@enderror
                     </div>
                     <div class="form-group full">
@@ -215,7 +188,7 @@
                                 style="padding:0 0.75rem; font-size:0.8rem; color:#94A3B8; background:#f1f5f9; border-right:1px solid #e7f0e7; height:44px; display:flex; align-items:center;">buyle.id/c/</span>
                             <input type="text" name="store_slug" value="{{ old('store_slug', $profile->store_slug) }}"
                                 style="border:none; background:transparent; height:100%; padding:0 0.75rem; flex:1; outline:none; font-family:'Montserrat',sans-serif; font-size:0.875rem;"
-                                placeholder="hvm-digital-studio">
+                                placeholder="hvm-digital-studio" maxlength="30" required>
                         </div>
                         <span class="form-hint">Hanya huruf kecil, angka, dan strip (-). Kosongkan untuk nama
                             otomatis.</span>
@@ -224,7 +197,8 @@
                     <div class="form-group full">
                         <label class="form-label">Deskripsi Toko</label>
                         <textarea name="store_description" class="form-input" rows="4"
-                            placeholder="Ceritakan tentang toko Anda, spesialisasi Anda, dll.">{{ old('store_description', $profile->store_description) }}</textarea>
+                            placeholder="Ceritakan tentang toko Anda, spesialisasi Anda, dll." maxlength="60" required>{{ old('store_description', $profile->store_description) }}</textarea>
+                        <span class="form-hint">Maksimal 60 karakter.</span>
                         @error('store_description')<span class="form-error">{{ $message }}</span>@enderror
                     </div>
                 </div>
@@ -272,44 +246,13 @@
                 </div>
             </div>
 
-            {{-- SEO Pengaturan --}}
-            <div class="form-section-title">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                Metadata SEO
-            </div>
-            <div class="form-body">
-                <div class="form-grid">
-                    <div class="form-group full">
-                        <label class="form-label">Meta Title</label>
-                        <input type="text" name="meta_title" value="{{ old('meta_title', $profile->meta_title) }}"
-                            class="form-input" placeholder="Optimal 60 karakter">
-                        <span class="form-hint">Kosongkan untuk menggunakan nama toko sebagai fallback.</span>
-                    </div>
-                    <div class="form-group full">
-                        <label class="form-label">Meta Description</label>
-                        <textarea name="meta_desc" class="form-input" rows="2"
-                            placeholder="Optimal 150-160 karakter untuk snippet Google">{{ old('meta_desc', $profile->meta_desc) }}</textarea>
-                        <span class="form-hint">Kosongkan untuk menggunakan deskripsi toko sebagai fallback.</span>
-                    </div>
-                    <div class="form-group full">
-                        <label class="form-label">Meta Keywords</label>
-                        <input type="text" name="meta_keywords" value="{{ old('meta_keywords', $profile->meta_keywords) }}"
-                            class="form-input" placeholder="Misal: template canva, desain grafis, jasa cv">
-                        <span class="form-hint">Pisahkan dengan koma.</span>
-                    </div>
-                </div>
-            </div>
-
             <div class="form-footer">
                 <button type="submit" class="btn-submit">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
                         <polyline points="17 21 17 13 7 13 7 21" />
                     </svg>
-                    Simpan Profil & Pengaturan
+                    Buka Toko Sekarang
                 </button>
             </div>
         </form>
@@ -434,26 +377,10 @@
                 try {
                     const dtAvatar = new DataTransfer();
                     const avatarInput = document.querySelector('input[name="avatar"]');
-                    if (avatarInput.files[0]) {
+                    if (avatarInput && avatarInput.files[0]) {
                         const compressed = await compressImage(avatarInput.files[0], 800, 800);
                         dtAvatar.items.add(compressed);
                         avatarInput.files = dtAvatar.files;
-                    }
-
-                    const dtBanner1 = new DataTransfer();
-                    const banner1Input = document.querySelector('input[name="store_banner_1"]');
-                    if (banner1Input.files[0]) {
-                        const compressed = await compressImage(banner1Input.files[0], 1200, 600);
-                        dtBanner1.items.add(compressed);
-                        banner1Input.files = dtBanner1.files;
-                    }
-
-                    const dtBanner2 = new DataTransfer();
-                    const banner2Input = document.querySelector('input[name="store_banner_2"]');
-                    if (banner2Input.files[0]) {
-                        const compressed = await compressImage(banner2Input.files[0], 1200, 600);
-                        dtBanner2.items.add(compressed);
-                        banner2Input.files = dtBanner2.files;
                     }
 
                     form.submit();

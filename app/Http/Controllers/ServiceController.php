@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Setting;
 use App\Models\WaSetting;
 use App\Models\Testimonial;
+use App\Models\CreatorProfile;
 
 class ServiceController extends Controller
 {
@@ -16,9 +17,21 @@ class ServiceController extends Controller
         // Smart Keyword Search
         $suggestion        = null;
         $suggestionApplied = false;
+        $foundCreators     = collect();
 
         if (request()->filled('q')) {
             $rawQ = trim(request('q'));
+
+            // Search for Creators
+            $foundCreators = CreatorProfile::where('store_name', 'like', '%' . $rawQ . '%')
+                                ->orWhere('store_slug', 'like', '%' . $rawQ . '%')
+                                ->with('user')
+                                ->get()
+                                ->sortByDesc(function ($creator) use ($rawQ) {
+                                    // Hitung kemiripan untuk mengurutkan yang paling relevan di atas
+                                    similar_text(mb_strtolower($rawQ), mb_strtolower($creator->store_name), $pct);
+                                    return $pct;
+                                })->values();
 
             // Pass 1: Exact LIKE
             $exactQuery = (clone $query)->where(function($q) use ($rawQ) {
@@ -151,7 +164,7 @@ class ServiceController extends Controller
 
         return view('services.index', compact(
             'services', 'settings', 'seo', 'schema', 'categories', 'wa', 'maxPrice',
-            'suggestion', 'suggestionApplied'
+            'suggestion', 'suggestionApplied', 'foundCreators'
         ));
     }
 
