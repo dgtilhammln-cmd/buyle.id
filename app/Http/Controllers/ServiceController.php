@@ -201,7 +201,6 @@ class ServiceController extends Controller
         $tokens = preg_split('/\s+/', trim($str), -1, PREG_SPLIT_NO_EMPTY);
         return array_values(array_filter($tokens, fn($t) => mb_strlen($t) >= 2));
     }
-    }
 
     public function show(string $slug)
     {
