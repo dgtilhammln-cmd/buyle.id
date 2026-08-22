@@ -45,8 +45,9 @@
 /* ─── CONTAINERS ─── */
 .pd-container {
     max-width: 1200px; margin: 0 auto 1.5rem;
-    background: #fff; border-radius: 4px;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+    background: #fff; border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    overflow: hidden;
 }
 
 /* ─── PRODUCT BLOCK ─── */
@@ -101,18 +102,21 @@
     display: flex; align-items: center; gap: 1rem;
     font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;
 }
-.pd-stars { display: flex; align-items: center; gap: 4px; color: #EE4D2D; font-weight: 500; border-bottom: 1px solid #EE4D2D; cursor: pointer; }
+.pd-stars { display: flex; align-items: center; gap: 4px; color: var(--primary); font-weight: 500; border-bottom: 1px solid var(--primary); cursor: pointer; }
 .pd-stat-sep { width: 1px; height: 14px; background: var(--border); }
 .pd-stat-val { color: var(--text-main); font-weight: 500; border-bottom: 1px solid var(--text-main); cursor: pointer; }
 
 /* Price Box */
 .pd-price-box {
-    background: #FAFAFA; padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, rgba(30,179,73,0.04), rgba(165,207,55,0.04));
+    border-left: 3px solid var(--primary);
+    padding: 1rem 1.25rem;
     display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
+    border-radius: 0 8px 8px 0;
 }
 .pd-price-old { font-size: 1rem; color: var(--text-muted); text-decoration: line-through; }
-.pd-price-main { font-size: 1.8rem; font-weight: 500; color: #EE4D2D; }
-.pd-discount { background: #EE4D2D; color: #fff; font-size: 0.7rem; font-weight: 600; padding: 0.1rem 0.3rem; border-radius: 2px; text-transform: uppercase; }
+.pd-price-main { font-size: 1.8rem; font-weight: 600; background: linear-gradient(135deg, #1eb349, #a5cf37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.pd-discount { background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.03em; }
 
 /* Shipping & Attributes Row */
 .pd-attr-row { display: flex; align-items: flex-start; margin-bottom: 1.5rem; font-size: 0.9rem; }
@@ -204,8 +208,11 @@
 .pd-details-block { padding: 2rem; }
 @media (max-width: 768px) { .pd-details-block { padding: 1.5rem 1rem; } }
 .pd-section-title {
-    background: #FAFAFA; padding: 0.875rem 1rem; font-size: 1.1rem;
-    font-weight: 400; color: var(--text-main); margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, rgba(30,179,73,0.06), rgba(165,207,55,0.04));
+    border-left: 3px solid var(--primary);
+    padding: 0.75rem 1rem; font-size: 0.85rem;
+    font-weight: 700; color: var(--text-main); margin-bottom: 1.5rem;
+    text-transform: uppercase; letter-spacing: 0.05em; border-radius: 0 8px 8px 0;
 }
 
 /* Specs Table */
@@ -238,14 +245,14 @@
 @media (max-width: 768px) { .pd-related-grid { grid-template-columns: repeat(2, 1fr); } }
 .pd-related-card {
     background: #fff; text-decoration: none; color: inherit;
-    border-radius: 2px; overflow: hidden; border: 1px solid var(--border); transition: 0.2s;
+    border-radius: 0 0 16px 16px; overflow: hidden; border: 1px solid var(--border); transition: 0.2s;
 }
-.pd-related-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.pd-related-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(30,179,73,0.1); }
 .pd-related-img { width: 100%; aspect-ratio: 1/1; background: var(--bg-light); }
 .pd-related-img img { width: 100%; height: 100%; object-fit: cover; }
 .pd-related-body { padding: 0.75rem; }
 .pd-related-name { font-size: 0.85rem; font-weight: 400; color: var(--text-main); margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
-.pd-related-price { font-size: 1rem; font-weight: 500; color: #EE4D2D; }
+.pd-related-price { font-size: 1rem; font-weight: 600; background: linear-gradient(135deg, #1eb349, #a5cf37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
 </style>
 
@@ -328,7 +335,7 @@
             <div class="pd-stats">
                 @if($service->rating > 0)
                 <div class="pd-stars">
-                    <span class="pd-stat-val" style="color:#EE4D2D; border-color:#EE4D2D;">{{ number_format($service->rating, 1) }}</span>
+                    <span class="pd-stat-val" style="color:var(--primary); border-color:var(--primary);">{{ number_format($service->rating, 1) }}</span>
                     <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                 </div>
                 <div class="pd-stat-sep"></div>

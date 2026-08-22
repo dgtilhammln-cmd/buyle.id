@@ -204,74 +204,136 @@ class ServiceController extends Controller
 
     public function show(string $slug)
     {
-        $service      = Product::where('slug', $slug)->where('is_active', true)->firstOrFail();
+        $service      = Product::where('slug', $slug)->where('is_active', true)->with('seller.creatorProfile')->firstOrFail();
         $service->increment('views_count');
         $settings     = Setting::getAllAsArray();
         $wa           = WaSetting::primary();
         $related      = Product::active()->ordered()->where('id', '!=', $service->id)->limit(4)->get();
         $testimonials = Testimonial::active()->ordered()->get()->unique('name');
         $siteName     = $settings['site_name'] ?? 'buyle.id';
+        $appUrl       = rtrim(config('app.url'), '/');
+
+        // ── Seller / Creator info (multi-tenant) ──
+        $seller         = $service->seller;
+        $sellerName     = $seller?->creatorProfile?->store_name ?? $seller?->name ?? $siteName;
+        $sellerUrl      = $seller?->creatorProfile?->slug
+                            ? $appUrl . '/c/' . $seller->creatorProfile->slug
+                            : $appUrl;
+        $sellerAvatar   = $seller?->creatorProfile?->avatar
+                            ? $appUrl . '/storage/' . $seller->creatorProfile->avatar
+                            : null;
+
+        // ── Product images (all gallery for rich snippet) ──
+        $productUrl    = route('products.show', ['slug' => $slug]);
+        $productImages = [];
+        if (!empty($service->image)) {
+            $productImages[] = $appUrl . '/storage/' . ltrim($service->image, '/');
+        }
+        if (is_array($service->gallery)) {
+            foreach ($service->gallery as $g) {
+                $productImages[] = $appUrl . '/storage/' . ltrim($g, '/');
+            }
+        }
+        if (empty($productImages)) {
+            $productImages[] = !empty($settings['og_image_default'])
+                ? $appUrl . '/storage/' . $settings['og_image_default']
+                : $appUrl . '/images/og-default.jpg';
+        }
+        $ogImage = $productImages[0];
+
+        // ── SEO meta (canonical per-product, og:type=product) ──
+        $finalPrice = $service->sale_price > 0 && $service->sale_price < $service->price
+                        ? $service->sale_price
+                        : $service->price;
 
         $seo = [
-            'title'       => $service->meta_title ?: ($service->name . ' | ' . $siteName),
-            'description' => $service->meta_desc  ?: $service->short_desc,
-            'keywords'    => $service->meta_keywords,
-            'og_image'    => !empty($service->image) ? asset('storage/'.$service->image) : (!empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : asset('images/og-default.jpg')),
-            'canonical'   => route('products.show', ['slug' => $slug]),
+            'title'       => $service->meta_title ?: ($service->name . ' — ' . $sellerName . ' | ' . $siteName),
+            'description' => $service->meta_desc  ?: ($service->short_desc ?: strip_tags($service->description ?? '')),
+            'keywords'    => $service->meta_keywords ?: ($service->name . ', ' . $sellerName . ', ' . $siteName),
+            'og_image'    => $ogImage,
+            'og_type'     => 'product',
+            'canonical'   => $productUrl,
+            'robots'      => 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
         ];
 
+        // ── FAQ ──
         $faq = is_array($service->faqs) ? $service->faqs : [];
-
-        // Fallback FAQs jika kosong
         if (empty($faq)) {
             $faq = [
-                ['q' => 'Bagaimana cara memesan produk ini?', 'a' => 'Anda dapat memesan melalui tombol "Tambah ke Keranjang" atau menghubungi tim kami melalui WhatsApp untuk konsultasi lebih lanjut.'],
-                ['q' => 'Apakah tersedia layanan pengiriman ke seluruh Indonesia?', 'a' => 'Ya, kami melayani pengiriman ke seluruh wilayah Indonesia.'],
-                ['q' => 'Apakah tersedia garansi produk?', 'a' => 'Setiap produk dilengkapi dengan garansi sesuai ketentuan yang berlaku. Hubungi kami untuk informasi lebih lanjut.'],
+                ['q' => 'Bagaimana cara memesan produk ini?',         'a' => 'Klik tombol "Beli Sekarang" atau "Masukkan Keranjang", lalu ikuti langkah checkout. Anda juga bisa chat langsung dengan creator via WhatsApp.'],
+                ['q' => 'Apakah produk ini asli dari creator ' . $sellerName . '?', 'a' => 'Ya, produk ini dijual langsung oleh ' . $sellerName . ' melalui platform buyle.id.'],
+                ['q' => 'Apakah tersedia garansi produk?',            'a' => 'Setiap produk dilengkapi garansi sesuai kebijakan seller. Hubungi ' . $sellerName . ' untuk detail lebih lanjut.'],
             ];
         }
 
-        $serviceImage = !empty($service->og_image)
-            ? rtrim(config('app.url'), '/') . '/storage/' . $service->og_image
-            : (!empty($service->image)
-                ? rtrim(config('app.url'), '/') . '/storage/' . $service->image
-                : rtrim(config('app.url'), '/') . '/images/og-default.jpg');
-
-        $schema = json_encode([
-            [
-                '@context'    => 'https://schema.org',
-                '@type'       => 'Product',
-                'name'        => $service->name,
-                'image'       => [$serviceImage],
-                'description' => strip_tags($service->short_desc ?: $service->name),
-                'sku'         => $service->sku ?? 'SKU-' . str_pad($service->id, 4, '0', STR_PAD_LEFT),
-                'url'         => route('products.show', ['slug' => $slug]),
-                'brand'       => ['@type' => 'Brand', 'name' => $siteName],
-                'offers'      => [
-                    '@type'         => 'Offer',
-                    'priceCurrency' => 'IDR',
-                    'price'         => (string) ($service->final_price ?? 0),
-                    'availability'  => $service->is_available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-                    'url'           => route('products.show', ['slug' => $slug]),
+        // ── JSON-LD: Product (unique @id = product URL, dynamic per product) ──
+        $productSchema = [
+            '@context'    => 'https://schema.org',
+            '@type'       => 'Product',
+            '@id'         => $productUrl . '#product',
+            'name'        => $service->name,
+            'image'       => $productImages,
+            'description' => strip_tags($service->short_desc ?: ($service->description ?? $service->name)),
+            'sku'         => $service->sku ?? ('SKU-' . str_pad($service->id, 4, '0', STR_PAD_LEFT)),
+            'url'         => $productUrl,
+            'brand'       => [
+                '@type' => 'Brand',
+                'name'  => $sellerName,
+            ],
+            'seller'      => [
+                '@type'  => 'Organization',
+                '@id'    => $sellerUrl . '#seller',
+                'name'   => $sellerName,
+                'url'    => $sellerUrl,
+                'logo'   => $sellerAvatar,
+            ],
+            'offers'      => [
+                '@type'           => 'Offer',
+                'priceCurrency'   => 'IDR',
+                'price'           => (string) ($finalPrice ?? 0),
+                'priceValidUntil' => now()->addYear()->format('Y-m-d'),
+                'availability'    => ($service->is_available ?? true)
+                                        ? 'https://schema.org/InStock'
+                                        : 'https://schema.org/OutOfStock',
+                'url'             => $productUrl,
+                'seller'          => [
+                    '@type' => 'Organization',
+                    'name'  => $sellerName,
+                    'url'   => $sellerUrl,
                 ],
             ],
-            [
-                '@context'   => 'https://schema.org',
-                '@type'      => 'FAQPage',
-                'mainEntity' => collect($faq)->map(fn($item) => [
-                    '@type'          => 'Question',
-                    'name'           => $item['q'] ?? '',
-                    'acceptedAnswer' => ['@type' => 'Answer', 'text' => $item['a'] ?? ''],
-                ])->toArray(),
-            ],
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        ];
+
+        // Tambahkan aggregateRating jika ada data rating
+        if (!empty($service->rating) && $service->rating > 0) {
+            $productSchema['aggregateRating'] = [
+                '@type'       => 'AggregateRating',
+                'ratingValue' => (string) round($service->rating, 1),
+                'bestRating'  => '5',
+                'worstRating' => '1',
+                'ratingCount' => (string) ($service->review_count ?? 1),
+            ];
+        }
+
+        // JSON-LD: FAQPage
+        $faqSchema = [
+            '@context'   => 'https://schema.org',
+            '@type'      => 'FAQPage',
+            'mainEntity' => collect($faq)->map(fn($item) => [
+                '@type'          => 'Question',
+                'name'           => $item['q'] ?? '',
+                'acceptedAnswer' => ['@type' => 'Answer', 'text' => $item['a'] ?? ''],
+            ])->toArray(),
+        ];
+
+        $schema = json_encode([$productSchema, $faqSchema], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         $breadcrumbs = [
             ['name' => 'Beranda',          'url' => route('home')],
             ['name' => 'Produk & Layanan', 'url' => route('products')],
-            ['name' => $service->name,     'url' => route('products.show', ['slug' => $slug])],
+            ['name' => $service->name,     'url' => $productUrl],
         ];
 
-        return view('services.show', compact('service', 'settings', 'related', 'wa', 'seo', 'schema', 'faq', 'breadcrumbs', 'testimonials'));
+        return view('services.show', compact('service', 'settings', 'related', 'wa', 'seo', 'schema', 'faq', 'breadcrumbs', 'testimonials', 'sellerName', 'sellerUrl'));
     }
 }
