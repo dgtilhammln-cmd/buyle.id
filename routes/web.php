@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\AdminLeadController;
 use App\Http\Controllers\Admin\AdminHeroSlideController;
 use App\Http\Controllers\Admin\AdminUspController;
 use App\Http\Controllers\Admin\AdminCategoryItemController;
+use App\Http\Controllers\Admin\AdminProductCategoryController;
 use App\Http\Controllers\Admin\AdminCourierController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminApiKeyController;
@@ -262,6 +263,20 @@ Route::prefix('admin')->group(function () {
             'store'   => 'admin.services.store',    'show'    => 'admin.services.show',
             'edit'    => 'admin.services.edit',     'update'  => 'admin.services.update',
             'destroy' => 'admin.services.destroy',
+        ]);
+
+        // Kategori Marketplace
+        Route::post('product-categories/update-order', [AdminProductCategoryController::class, 'updateOrder'])->name('admin.product-categories.updateOrder');
+        Route::post('product-categories/{product_category}/sub', [AdminProductCategoryController::class, 'storeSub'])->name('admin.product-categories.sub.store');
+        Route::put('product-categories/sub/{sub}', [AdminProductCategoryController::class, 'updateSub'])->name('admin.product-categories.sub.update');
+        Route::delete('product-categories/sub/{sub}', [AdminProductCategoryController::class, 'destroySub'])->name('admin.product-categories.sub.destroy');
+        Route::resource('product-categories', AdminProductCategoryController::class)->names([
+            'index'   => 'admin.product-categories.index',
+            'create'  => 'admin.product-categories.create',
+            'store'   => 'admin.product-categories.store',
+            'edit'    => 'admin.product-categories.edit',
+            'update'  => 'admin.product-categories.update',
+            'destroy' => 'admin.product-categories.destroy',
         ]);
 
         Route::resource('coupons', \App\Http\Controllers\Admin\AdminCouponController::class)->names([
