@@ -45,7 +45,7 @@
 /* ─── CONTAINERS ─── */
 .pd-container {
     max-width: 1200px; margin: 0 auto 1.5rem;
-    background: #fff; border-radius: 0 0 20px 20px;
+    background: #fff; border-radius: 20px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
     overflow: hidden;
 }
@@ -183,7 +183,7 @@
 .pd-seller-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; }
 .pd-seller-actions { display: flex; gap: 0.5rem; }
 .pd-seller-btn {
-    padding: 0.35rem 0.75rem; border-radius: 2px; font-size: 0.85rem; font-weight: 500;
+    padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.85rem; font-weight: 500;
     cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;
     text-decoration: none; transition: 0.2s;
 }
@@ -291,7 +291,7 @@
                     </div>
                     @endforeach
                     @if($service->tiktok_video_url)
-                    <div class="swiper-slide pd-tiktok-slide">
+                    <div class="swiper-slide pd-tiktok-slide swiper-no-swiping">
                         <blockquote class="tiktok-embed"
                             cite="{{ $service->tiktok_video_url }}"
                             data-video-id="{{ Str::afterLast(rtrim($service->tiktok_video_url, '/'), '/') }}"
