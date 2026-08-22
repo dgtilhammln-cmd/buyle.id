@@ -204,6 +204,30 @@
 /* ── Empty State ── */
 .sf-empty { grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: #94A3B8; }
 .sf-empty svg { margin: 0 auto 1rem; opacity: 0.5; }
+
+/* ── Smart Search Notice ── */
+.sf-search-notice {
+    margin: 1rem 1rem 0;
+    padding: 0.875rem 1.25rem;
+    border-radius: 14px;
+    display: flex; align-items: center; gap: 0.75rem;
+    font-size: 0.85rem; line-height: 1.5;
+    animation: sf-fade-in 0.3s ease;
+}
+.sf-search-notice.suggestion {
+    background: linear-gradient(135deg, #f0fdf4, #f7fee7);
+    border: 1px solid rgba(30,179,73,0.25);
+    color: #166534;
+}
+.sf-search-notice.fuzzy {
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    color: #92400e;
+}
+.sf-search-notice-icon { font-size: 1.25rem; flex-shrink: 0; }
+.sf-search-notice a { color: #1eb349; font-weight: 600; text-decoration: underline; cursor: pointer; }
+.sf-search-notice a:hover { color: #166534; }
+@keyframes sf-fade-in { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
 </style>
 
 <div class="sf-page">
@@ -311,6 +335,35 @@
                 </div>
             </div>
 
+            {{-- ── Smart Search Notices ── --}}
+            @if(request('q'))
+                @if(isset($suggestion) && $suggestion && !($suggestionApplied ?? false))
+                {{-- Ini saran saja, hasil sudah muncul dari LIKE biasa --}}
+                @elseif(isset($suggestion) && $suggestion && ($suggestionApplied ?? false) && $products->count() > 0)
+                <div class="sf-search-notice fuzzy">
+                    <span class="sf-search-notice-icon">🔍</span>
+                    <div>
+                        Tidak ditemukan hasil untuk <b>"{{ request('q') }}"</b>. Menampilkan hasil untuk:
+                        <a href="{{ route('store.show', $profile->store_slug) }}?q={{ urlencode($suggestion) }}{{ request('group') ? '&group='.request('group') : '' }}{{ request('sort') ? '&sort='.request('sort') : '' }}">
+                            "{{ $suggestion }}"
+                        </a>
+                    </div>
+                </div>
+                @endif
+
+                @if(isset($suggestion) && $suggestion)
+                <div class="sf-search-notice suggestion">
+                    <span class="sf-search-notice-icon">💡</span>
+                    <div>
+                        Mungkin Maksud Anda:
+                        <a href="{{ route('store.show', $profile->store_slug) }}?q={{ urlencode($suggestion) }}{{ request('group') ? '&group='.request('group') : '' }}{{ request('sort') ? '&sort='.request('sort') : '' }}">
+                            {{ $suggestion }}
+                        </a>?
+                    </div>
+                </div>
+                @endif
+            @endif
+
             {{-- ── Products Grid ── --}}
             <div class="sf-grid">
                 @forelse($products as $product)
@@ -331,10 +384,26 @@
                 @empty
                     <div class="sf-empty">
                         <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                            <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
-                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                         </svg>
-                        <p style="margin-top: 1rem;">Belum ada produk{{ request('q') ? ' untuk pencarian ini' : ' di sini' }}.</p>
+                        @if(request('q'))
+                            <p style="margin-top: 1rem; font-size:0.95rem;">Tidak ada produk yang cocok untuk <b>"{{ request('q') }}"</b>.</p>
+                            @if(isset($suggestion) && $suggestion)
+                            <p style="margin-top:0.5rem; font-size:0.88rem; color:#64748B;">
+                                Coba cari:
+                                <a href="{{ route('store.show', $profile->store_slug) }}?q={{ urlencode($suggestion) }}{{ request('group') ? '&group='.request('group') : '' }}{{ request('sort') ? '&sort='.request('sort') : '' }}"
+                                   style="color:#1eb349; font-weight:600; text-decoration:underline;">
+                                    {{ $suggestion }}
+                                </a>
+                            </p>
+                            @endif
+                            <a href="{{ route('store.show', $profile->store_slug) }}"
+                               style="display:inline-block; margin-top:1rem; padding:0.5rem 1.25rem; border-radius:99px; background:linear-gradient(135deg,#1eb349,#a5cf37); color:#fff; font-size:0.82rem; font-weight:600; text-decoration:none;">
+                               Lihat Semua Produk
+                            </a>
+                        @else
+                            <p style="margin-top: 1rem;">Belum ada produk di sini.</p>
+                        @endif
                     </div>
                 @endforelse
             </div>
