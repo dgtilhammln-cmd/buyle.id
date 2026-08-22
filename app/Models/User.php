@@ -56,11 +56,19 @@ class User extends Authenticatable
     }
 
     /**
-     * Alamat pengiriman utama (default).
+     * Semua alamat pengiriman utama (default).
      */
     public function defaultAddress(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Address::class)->where('is_default', true);
+    }
+
+    /**
+     * Produk yang dimiliki oleh user ini sebagai seller.
+     */
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'seller_id');
     }
 
     /**

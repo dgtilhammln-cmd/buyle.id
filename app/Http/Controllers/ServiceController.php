@@ -25,7 +25,9 @@ class ServiceController extends Controller
             // Search for Creators
             $foundCreators = CreatorProfile::where('store_name', 'like', '%' . $rawQ . '%')
                                 ->orWhere('store_slug', 'like', '%' . $rawQ . '%')
-                                ->with('user')
+                                ->with(['user.products' => function($q) {
+                                    $q->active()->ordered()->take(4);
+                                }])
                                 ->get()
                                 ->sortByDesc(function ($creator) use ($rawQ) {
                                     // Hitung kemiripan untuk mengurutkan yang paling relevan di atas
