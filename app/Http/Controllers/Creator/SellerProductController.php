@@ -207,6 +207,10 @@ class SellerProductController extends Controller
      */
     private function authorizeProduct(Product $product): void
     {
+        if (auth()->user()->role === 'admin') {
+            return;
+        }
+
         if ($product->seller_id !== auth()->id()) {
             abort(403, 'Anda tidak memiliki akses ke produk ini.');
         }

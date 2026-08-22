@@ -9,11 +9,13 @@ class UpdateProductRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Hanya seller pemilik produk yang boleh edit
+        // Hanya seller pemilik produk (atau admin) yang boleh edit
         $product = $this->route('product');
         return auth()->check()
-            && auth()->user()->role === 'seller'
-            && $product->seller_id === auth()->id();
+            && (
+                auth()->user()->role === 'admin' 
+                || (auth()->user()->role === 'seller' && $product->seller_id === auth()->id())
+            );
     }
 
     public function rules(): array
