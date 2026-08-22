@@ -23,6 +23,10 @@ return $builder->withMiddleware(function (Middleware $middleware): void {
             'track.pageview' => TrackPageView::class,
             'role'           => \App\Http\Middleware\RoleMiddleware::class,
         ]);
+
+        $middleware->web(append: [
+            \App\Http\Middleware\UpdateUserLastSeen::class,
+        ]);
         
         $middleware->validateCsrfTokens(except: [
             'payment/callback',

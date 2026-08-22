@@ -96,10 +96,10 @@ body { background: var(--c-bg); font-family: var(--font); }
             </div>
             <h2>Keranjang Masih Kosong</h2>
             <p>Yuk cari produk perlengkapan rumah impianmu dan tambahkan ke keranjang!</p>
-            <a href="{{ route('products') }}" class="btn-shop">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                Mulai Belanja
-            </a>
+                <a href="{{ route('products') }}" style="display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-weight:700; padding:0.875rem 2rem; border-radius:50px; text-decoration:none; margin-top:0.5rem; box-shadow:0 4px 15px rgba(30,179,73,0.3); transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    Mulai Belanja
+                </a>
         </div>
     @else
         <div class="cart-items-wrap">

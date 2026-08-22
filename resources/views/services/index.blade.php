@@ -12,6 +12,7 @@
             --c-muted2: #94A3B8;
             --c-accent: #1eb349;
             --c-accent-h: #16a34a;
+            --c-gradient: linear-gradient(135deg, #1eb349, #a5cf37);
             --c-wa: #25D366;
             --font: 'Montserrat', sans-serif;
             --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -1289,7 +1290,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="{{ route('store.show', $creator->store_slug) }}" style="display: inline-flex; align-items: center; justify-content: center; background: var(--c-accent); color: #fff; padding: 0.75rem 1.5rem; border-radius: 12px; font-family: var(--font); font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='var(--c-accent-h)'" onmouseout="this.style.background='var(--c-accent)'">
+                                    <a href="{{ route('store.show', $creator->store_slug) }}" style="display: inline-flex; align-items: center; justify-content: center; background: var(--c-gradient); color: #fff; padding: 0.75rem 1.5rem; border-radius: 12px; font-family: var(--font); font-weight: 700; font-size: 0.9rem; text-decoration: none; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
                                         Kunjungi Creator
                                     </a>
                                 </div>
@@ -1429,7 +1430,7 @@
 
                                 {{-- 1 Button: Lihat Detail --}}
                                 <div class="sp-card-actions" style="grid-template-columns: 1fr;">
-                                    <a href="{{ route_locale('products.show', $service->slug) }}" class="sp-btn-main" style="background: var(--c-accent); color: #fff;">
+                                    <a href="{{ route_locale('products.show', $service->slug) }}" class="sp-btn-main" style="background: var(--c-gradient); color: #fff; font-weight: 700; border: none; border-radius: 12px;">
                                         Lihat Detail
                                     </a>
                                 </div>
@@ -1448,9 +1449,9 @@
                         <h3>Tidak ada produk ditemukan</h3>
                         <p>Coba ubah filter atau kata kunci pencarian Anda</p>
                         <a href="{{ route_locale('products') }}"
-                            style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--c-accent);color:#fff;padding:0.75rem 1.75rem;border-radius:50px;font-family:var(--font);font-weight:700;font-size:0.9375rem;text-decoration:none;"
-                            onmouseover="this.style.background='var(--c-accent-h)'"
-                            onmouseout="this.style.background='var(--c-accent)'">
+                            style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--c-gradient);color:#fff;padding:0.75rem 1.75rem;border-radius:50px;font-family:var(--font);font-weight:700;font-size:0.9375rem;text-decoration:none;transition:transform 0.2s;"
+                            onmouseover="this.style.transform='translateY(-2px)'"
+                            onmouseout="this.style.transform='none'">
                             Lihat Semua Produk
                         </a>
                     </div>

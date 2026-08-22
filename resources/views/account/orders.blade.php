@@ -123,7 +123,8 @@
                 <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                 <h3 style="color:#334155; margin:0 0 0.5rem; font-size:1.2rem;">Belum ada pesanan</h3>
                 <p style="margin:0; font-size:0.95rem;">Temukan produk terbaik untuk kebutuhan rumah Anda.</p>
-                <a href="{{ route('products') }}" style="display:inline-flex;align-items:center;gap:0.5rem;margin-top:1.25rem;background:#1eb349;color:#fff;padding:0.75rem 1.5rem;border-radius:10px;font-size:0.9rem;font-weight:700;text-decoration:none;">
+                <a href="{{ route('products') }}" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.75rem 1.75rem; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; border-radius:12px; font-weight:700; text-decoration:none; font-size:0.875rem;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
                     Mulai Belanja
                 </a>
             </div>

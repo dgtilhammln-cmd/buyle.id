@@ -442,7 +442,15 @@
             @endif
             <div class="pd-seller-info">
                 <div class="pd-seller-name">{{ optional($cp)->store_name ?: $seller->name }}</div>
-                <div class="pd-seller-sub">Toko Aktif</div>
+                @if($seller->last_seen_at && $seller->last_seen_at->gt(now()->subMinutes(5)))
+                    <div class="pd-seller-sub" style="color: #1eb349; font-weight: 600;">
+                        <span style="display:inline-block; width:8px; height:8px; background:#1eb349; border-radius:50%; margin-right:4px;"></span> Online
+                    </div>
+                @else
+                    <div class="pd-seller-sub">
+                        Aktif {{ $seller->last_seen_at ? $seller->last_seen_at->diffForHumans() : 'beberapa saat yang lalu' }}
+                    </div>
+                @endif
                 <div class="pd-seller-actions">
                     <a href="javascript:void(0)" class="pd-seller-btn pd-seller-btn-outline">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z"></path></svg>
@@ -450,7 +458,7 @@
                     </a>
                     <a href="{{ route('store.show', optional($cp)->store_slug ?? '#') }}" class="pd-seller-btn pd-seller-btn-gray">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                        Kunjungi Toko
+                        Kunjungi Creator
                     </a>
                 </div>
             </div>
