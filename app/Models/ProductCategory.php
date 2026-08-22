@@ -11,6 +11,8 @@ class ProductCategory extends Model
     protected $fillable = [
         'name',
         'slug',
+        'tab',
+        'badge',
         'description',
         'image',
         'is_active',
@@ -35,6 +37,14 @@ class ProductCategory extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'product_category_id');
+    }
+
+    /**
+     * Semua sub-kategori dari kategori ini.
+     */
+    public function subCategories(): HasMany
+    {
+        return $this->hasMany(ProductSubCategory::class, 'category_id')->orderBy('order');
     }
 
     // =========================================================================

@@ -1290,7 +1290,7 @@
                                         </div>
                                     </div>
                                     <a href="{{ route('store.show', $creator->store_slug) }}" style="display: inline-flex; align-items: center; justify-content: center; background: var(--c-accent); color: #fff; padding: 0.75rem 1.5rem; border-radius: 12px; font-family: var(--font); font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='var(--c-accent-h)'" onmouseout="this.style.background='var(--c-accent)'">
-                                        Kunjungi Toko
+                                        Kunjungi Creator
                                     </a>
                                 </div>
                                 
