@@ -286,40 +286,13 @@
 <script>
 let galleryFiles = new DataTransfer();
 
-function compressImage(file, maxW = 1200, maxH = 1200, quality = 0.82) {
-    return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-                let { width, height } = img;
-                if (width > maxW || height > maxH) {
-                    const ratio = Math.min(maxW / width, maxH / height);
-                    width  = Math.round(width  * ratio);
-                    height = Math.round(height * ratio);
-                }
-                const canvas  = document.createElement('canvas');
-                canvas.width  = width;
-                canvas.height = height;
-                canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-                canvas.toBlob((blob) => {
-                    resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.webp'), { type: 'image/webp' }));
-                }, 'image/webp', quality);
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    });
-}
-
 async function previewGallery(event) {
     const input   = event.target;
     const preview = document.getElementById('galleryPreview');
-    preview.innerHTML = '<p style="font-size:0.75rem;color:#94A3B8;margin:0.5rem 0;">⏳ Mengompres gambar…</p>';
 
     for (const file of Array.from(input.files)) {
         if (galleryFiles.items.length >= 7) break;
-        galleryFiles.items.add(await compressImage(file));
+        galleryFiles.items.add(file); // upload file asli tanpa kompresi
     }
     input.files = galleryFiles.files;
     renderGalleryPreview();
