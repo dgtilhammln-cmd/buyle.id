@@ -19,18 +19,6 @@ www.buyle.id
         font-family: 'Montserrat', sans-serif;
         position: relative;
         overflow: hidden;
-        border-top: 3px solid transparent;
-        background-clip: padding-box;
-        border-image: linear-gradient(90deg, #1eb349, #a5cf37) 1;
-    }
-    /* Top gradient line */
-    .cv-footer-v2::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #1eb349, #a5cf37, #1eb349);
-        z-index: 2;
     }
     .cv-footer-v2-main {
         position: relative;

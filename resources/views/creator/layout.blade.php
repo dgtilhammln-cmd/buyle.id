@@ -35,11 +35,12 @@
             top: 0;
             bottom: 0;
             width: 240px;
-            background: #0f1f0f;
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
             z-index: 100;
             display: flex;
             flex-direction: column;
             transition: transform 0.3s;
+            box-shadow: 4px 0 24px rgba(30,179,73,0.25);
         }
 
         .cr-sidebar-logo {

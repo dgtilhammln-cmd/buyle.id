@@ -23,13 +23,25 @@ class ServiceController extends Controller
             $rawQ = trim(request('q'));
 
             // Search for Creators
-            $foundCreators = CreatorProfile::where('store_name', 'like', '%' . $rawQ . '%')
-                                ->orWhere('store_slug', 'like', '%' . $rawQ . '%')
-                                ->with(['user.products' => function($q) {
+            $tokens = array_filter(explode(' ', strtolower(preg_replace('/[^a-z0-9]/', ' ', $rawQ))));
+            
+            $creatorQuery = CreatorProfile::with(['user.products' => function($q) {
                                     $q->active()->ordered()->take(4);
-                                }])
-                                ->get()
-                                ->sortByDesc(function ($creator) use ($rawQ) {
+                                }]);
+            
+            $creatorQuery->where(function($q) use ($rawQ, $tokens) {
+                $q->where('store_name', 'like', '%' . $rawQ . '%')
+                  ->orWhere('store_slug', 'like', '%' . $rawQ . '%');
+                
+                foreach ($tokens as $token) {
+                    if (strlen($token) > 2) {
+                        $q->orWhere('store_name', 'like', '%' . $token . '%')
+                          ->orWhere('store_slug', 'like', '%' . $token . '%');
+                    }
+                }
+            });
+
+            $foundCreators = $creatorQuery->get()->sortByDesc(function ($creator) use ($rawQ) {
                                     // Hitung kemiripan untuk mengurutkan yang paling relevan di atas
                                     similar_text(mb_strtolower($rawQ), mb_strtolower($creator->store_name), $pct);
                                     return $pct;

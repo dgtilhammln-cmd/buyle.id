@@ -1393,7 +1393,7 @@
                         <h3>Tidak ada produk ditemukan</h3>
                         <p>Coba ubah filter atau kata kunci pencarian Anda</p>
                         <a href="{{ route_locale('products') }}"
-                            style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--c-gradient);color:#fff;padding:0.75rem 1.75rem;border-radius:50px;font-family:var(--font);font-weight:700;font-size:0.9375rem;text-decoration:none;transition:transform 0.2s;"
+                            style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--c-gradient);color:#fff;padding:0.5rem 1.25rem;border-radius:50px;font-family:var(--font);font-weight:700;font-size:0.85rem;text-decoration:none;transition:transform 0.2s;"
                             onmouseover="this.style.transform='translateY(-2px)'"
                             onmouseout="this.style.transform='none'">
                             Lihat Semua Produk

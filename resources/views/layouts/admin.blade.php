@@ -60,11 +60,11 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
 /* ═══════ SIDEBAR PREMIUM BLUE ═══════ */
 #sidebar{
   width:240px;height:100vh;
-  background:linear-gradient(170deg,#1B6FE8 0%,#1254C0 100%);
+  background:linear-gradient(135deg, #1eb349, #a5cf37);
   position:fixed;top:0;left:0;z-index:200;
   display:flex;flex-direction:column;
   transition:transform .3s ease;
-  box-shadow:4px 0 24px rgba(27,111,232,0.25);
+  box-shadow:4px 0 24px rgba(30,179,73,0.25);
 }
 /* Logo area */
 .sb-logo{padding:1.5rem 1.25rem 1.25rem;display:flex;align-items:center;gap:.75rem}
