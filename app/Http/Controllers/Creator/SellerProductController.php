@@ -75,7 +75,15 @@ class SellerProductController extends Controller
         // Produk digital buyle.id selalu external_link
         $data['seller_id']    = auth()->id();
         $data['product_type'] = 'external_link';
-        $data['slug']         = Str::slug($data['name']);
+        
+        // Generate unique slug
+        $slug = Str::slug($data['name']);
+        $originalSlug = $slug;
+        $counter = 1;
+        while (\App\Models\Product::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter++;
+        }
+        $data['slug'] = $slug;
 
         $product = Product::create($data);
 
