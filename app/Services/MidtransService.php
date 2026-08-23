@@ -78,9 +78,13 @@ class MidtransService
             ];
         }
 
+        // Gunakan 'BUYLE-{id}' sebagai Midtrans order_id agar selalu unik
+        // (order_number bisa bentrok jika percobaan sebelumnya gagal di Midtrans)
+        $midtransOrderId = 'BUYLE-' . $order->id;
+
         $params = [
             'transaction_details' => [
-                'order_id'     => $order->order_number,
+                'order_id'     => $midtransOrderId,
                 'gross_amount' => (int) $order->total,
             ],
             'customer_details' => $customerDetails,

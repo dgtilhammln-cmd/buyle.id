@@ -135,51 +135,12 @@
         display: block;
     }
 
+    @media (max-width: 1024px) {
+        .cv-hero-grid { display: none !important; }
+        .cv-hero-oval-bg, .cv-hero-bg-layer { display: none !important; }
+    }
     @media (max-width: 991px) {
-        .cv-hero-grid { grid-template-columns: 1fr !important; padding: 0 0.75rem !important; gap: 0 !important; }
-        /* Use aspect-ratio 16/9 for a natural banner look */
-        .cv-hero-slider-col { 
-            position: relative !important; 
-            width: 100% !important; 
-            height: auto !important;
-            aspect-ratio: 2 / 1 !important;
-            border-radius: 16px !important; 
-            overflow: hidden !important; 
-            box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
-        }
-        /* The .swiper container must fill its parent */
-        .cv-hero-slider-col > .hero-swiper { 
-            position: absolute !important; 
-            top: 0 !important; left: 0 !important;
-            width: 100% !important; 
-            height: 100% !important; 
-        }
-        /* swiper-wrapper must be full height for loop clones to work */
-        .cv-hero-slider-col .swiper-wrapper { 
-            height: 100% !important; 
-        }
-        /* Each swiper-slide must be full height */
-        .cv-hero-slider-col .swiper-slide { 
-            height: 100% !important;
-            position: relative !important;
-        }
-        /* The <a> hero-swiper-slide inside each swiper-slide */
-        .cv-hero-slider-col .hero-swiper-slide { 
-            position: absolute !important; 
-            inset: 0 !important;
-            display: block !important; 
-            width: 100% !important; 
-            height: 100% !important; 
-        }
-        /* Image inside slide */
-        .cv-hero-slider-col .hero-swiper-slide img,
-        .cv-hero-slider-col .cv-hero-img-main { 
-            position: absolute !important; 
-            inset: 0 !important; 
-            width: 100% !important; 
-            height: 100% !important; 
-            object-fit: cover !important; 
-        }
+        /* Kept for legacy reference but cv-hero-grid is already hidden above */
         .cv-hero-static-col { display: none !important; }
     }
     .cv-hero-modern {
@@ -1181,6 +1142,49 @@
         </div>
     </section>
 
+    {{-- ════ MOBILE BANNER SWIPE (hanya tampil di mobile ≤ 1024px) ════ --}}
+    <style>
+    .mob-banner-swiper-wrap { display: none; }
+    @media (max-width: 1024px) {
+        .mob-banner-swiper-wrap { display: block; padding: 0.5rem 0.75rem 0; }
+        .mob-banner-swiper { border-radius: 14px; overflow: hidden; position: relative; }
+        .mob-banner-swiper .swiper-slide { border-radius: 14px; overflow: hidden; aspect-ratio: 2 / 1; }
+        .mob-banner-swiper .swiper-slide a { display: block; width: 100%; height: 100%; }
+        .mob-banner-swiper .swiper-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .mob-banner-pg { position: absolute; bottom: 10px !important; left: 0; right: 0; text-align: center; z-index: 10; display: flex; justify-content: center; gap: 5px; }
+        .mob-banner-pg .swiper-pagination-bullet { background: rgba(255,255,255,0.6); opacity: 1; width: 8px; height: 8px; margin: 0 !important; transition: all 0.3s; }
+        .mob-banner-pg .swiper-pagination-bullet-active { background: #fff; width: 22px; border-radius: 4px; }
+    }
+    </style>
+    <div class="mob-banner-swiper-wrap">
+        <div class="swiper mob-banner-swiper">
+            <div class="swiper-wrapper">
+                {{-- Slide 1: Banner Utama / Hero Slider --}}
+                @if(isset($heroSlides) && $heroSlides->count() > 0)
+                    @php $firstSlide = $heroSlides->first(); @endphp
+                    <div class="swiper-slide"><a href="{{ $firstSlide->button_url ?? '#' }}" aria-label="{{ $firstSlide->title }}"><img src="{{ asset('storage/' . $firstSlide->image) }}" alt="{{ $firstSlide->title }}" loading="eager"></a></div>
+                @elseif(!empty($settings['hero_main_image']))
+                    <div class="swiper-slide"><a href="{{ route('products') }}"><img src="{{ asset('storage/' . $settings['hero_main_image']) }}" alt="Banner Utama" loading="eager"></a></div>
+                @endif
+                {{-- Slide 2: Banner Kanan Atas --}}
+                @if(isset($utamaBanners) && $utamaBanners->count() > 0)
+                    @php $utama = $utamaBanners->first(); @endphp
+                    <div class="swiper-slide"><a href="{{ $utama->button_url ?? route('products') }}"><img src="{{ asset('storage/' . $utama->image) }}" alt="{{ $utama->title }}" loading="lazy"></a></div>
+                @elseif(!empty($settings['hero_secondary_image']))
+                    <div class="swiper-slide"><a href="{{ route('products') }}"><img src="{{ asset('storage/' . $settings['hero_secondary_image']) }}" alt="Banner Promo" loading="lazy"></a></div>
+                @endif
+                {{-- Slide 3: Banner Kanan Bawah --}}
+                @if(isset($sampingBanners) && $sampingBanners->count() > 0)
+                    @php $samping = $sampingBanners->first(); @endphp
+                    <div class="swiper-slide"><a href="{{ $samping->button_url ?? route('products') }}"><img src="{{ asset('storage/' . $samping->image) }}" alt="{{ $samping->title }}" loading="lazy"></a></div>
+                @elseif(!empty($settings['hero_third_image']))
+                    <div class="swiper-slide"><a href="{{ route('products') }}"><img src="{{ asset('storage/' . $settings['hero_third_image']) }}" alt="Banner Samping" loading="lazy"></a></div>
+                @endif
+            </div>
+            <div class="swiper-pagination mob-banner-pg"></div>
+        </div>
+    </div>
+
     {{-- ════ VISIBLE H1 & SEO SECTION ════ --}}
     <div style="display:none;" class="hide-on-mobile">
         <div style="max-width:1000px; margin:0 auto;">
@@ -2009,6 +2013,17 @@
                 },
             });
         });
+
+        // ── Mobile Banner Swiper (3 banners as swipeable slides on mobile) ──
+        if(document.querySelector('.mob-banner-swiper')) {
+            new Swiper('.mob-banner-swiper', {
+                loop: true,
+                autoplay: { delay: 3500, disableOnInteraction: false },
+                pagination: { el: '.mob-banner-pg', clickable: true },
+                grabCursor: true,
+                effect: 'slide',
+            });
+        }
     } // end initSwipers
     // Flash Sale Timer Logic
     document.addEventListener('DOMContentLoaded', function() {

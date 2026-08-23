@@ -152,21 +152,29 @@ class CheckoutService
      */
     public function handleCallback(array $payload): bool
     {
-        $orderNumber = $payload['order_id'] ?? null;
-        if (!$orderNumber) return false;
+        $midtransOrderId = $payload['order_id'] ?? null;
+        if (!$midtransOrderId) return false;
 
-        $order = Order::where('order_number', $orderNumber)->first();
+        // Format baru: 'BUYLE-{order.id}' → lookup by DB id
+        if (str_starts_with($midtransOrderId, 'BUYLE-')) {
+            $orderId = (int) str_replace('BUYLE-', '', $midtransOrderId);
+            $order = Order::find($orderId);
+        } else {
+            // Format lama: order_number langsung (fallback)
+            $order = Order::where('order_number', $midtransOrderId)->first();
+        }
+
         if (!$order) return false;
 
         $payment = $order->payment;
         if (!$payment) return false;
 
         // Validasi Signature Key (SHA512)
-        $serverKey = config('midtrans.server_key');
-        $signatureKey = hash("sha512", $payload['order_id'] . $payload['status_code'] . $payload['gross_amount'] . $serverKey);
+        $serverKey = \App\Models\Setting::get('midtrans_server_key') ?: config('midtrans.server_key');
+        $signatureKey = hash("sha512", $midtransOrderId . $payload['status_code'] . $payload['gross_amount'] . $serverKey);
         
         if ($signatureKey !== ($payload['signature_key'] ?? '')) {
-            \Log::warning('Midtrans Invalid Signature Key', ['order' => $orderNumber]);
+            \Log::warning('Midtrans Invalid Signature Key', ['midtrans_order_id' => $midtransOrderId]);
             return false;
         }
 
