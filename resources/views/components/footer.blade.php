@@ -10,19 +10,31 @@ www.buyle.id
 @endphp
 
 <style>
-    /* ═══════════════════════════════════
-   FOOTER — Jangkauan Section Style (#EAEBED)
-═══════════════════════════════════ */
+    /* ═════════════════════════════════════════
+       FOOTER — Premium Dark Theme (buyle.id)
+    ═════════════════════════════════════════ */
     .cv-footer-v2 {
-        background: #F8FAFC;
-        border-top: 1px solid #E2E8F0;
-        color: #0F172A;
+        background: #0B1121;
+        color: #94A3B8;
         font-family: 'Montserrat', sans-serif;
         position: relative;
+        overflow: hidden;
+        border-top: 1px solid rgba(255,255,255,0.05);
     }
-
-    /* ── MAIN GRID ─────────────────── */
+    .cv-footer-v2::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 100%; max-width: 1000px;
+        height: 500px;
+        background: radial-gradient(ellipse at top, rgba(30,179,73,0.12) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+    }
     .cv-footer-v2-main {
+        position: relative;
+        z-index: 1;
         max-width: 1200px;
         margin: 0 auto;
         padding: 5rem clamp(1.25rem, 5vw, 2.5rem) 4rem;
@@ -30,339 +42,278 @@ www.buyle.id
         grid-template-columns: 2fr 1fr 1fr 1.5fr;
         gap: 3.5rem;
     }
-
-    /* ── BRAND COL ─────────────────── */
     .cv-footer-v2-logo-wrap {
         display: inline-flex;
         align-items: center;
         background: #ffffff;
-        border-radius: 999px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04);
-        padding: 0.25rem 0.5rem;
+        border-radius: 99px;
+        padding: 0.5rem 1rem;
         text-decoration: none;
         margin-bottom: 1.5rem;
-        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        transition: transform 0.3s;
     }
-
+    .cv-footer-v2-logo-wrap:hover {
+        transform: translateY(-2px);
+    }
     .cv-footer-v2-logo-icon {
         height: 38px;
         width: auto;
-        border-radius: 999px;
-        overflow: hidden;
-        background: transparent;
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-shrink: 0;
     }
-
     .cv-footer-v2-logo-icon img {
         width: auto;
         height: 100%;
         object-fit: contain;
     }
-
     .cv-footer-v2-tagline {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         font-weight: 400;
-        color: #64748B;
-        line-height: 1.75;
+        color: #94A3B8;
+        line-height: 1.8;
         margin-bottom: 2rem;
         max-width: 320px;
     }
-
-    /* Badges — white cards like stat cards */
     .cv-footer-v2-badges {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: 0.6rem;
         margin-bottom: 2rem;
     }
-
     .cv-footer-v2-badge {
         display: inline-flex;
         align-items: center;
         gap: 0.4rem;
-        background: #ffffff;
-        color: #1E293B;
-        font-size: 0.625rem;
+        background: rgba(30, 179, 73, 0.1);
+        border: 1px solid rgba(30, 179, 73, 0.2);
+        color: #a5cf37;
+        font-size: 0.65rem;
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        padding: 0.4rem 0.875rem;
+        padding: 0.5rem 0.875rem;
         border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        backdrop-filter: blur(4px);
+        transition: all 0.3s;
     }
-
-    .cv-footer-v2-badge svg {
-        color: #64748B;
-        transition: color 0.3s;
+    .cv-footer-v2-badge:hover {
+        background: rgba(30, 179, 73, 0.2);
+        border-color: rgba(30, 179, 73, 0.4);
+        color: #fff;
     }
-
-    .cv-footer-v2-badge:hover svg {
-        color: #1eb349;
-    }
-
-    /* Social */
+    .cv-footer-v2-badge svg { color: inherit; }
     .cv-footer-v2-socials {
         display: flex;
         gap: 0.6rem;
     }
-
     .cv-footer-v2-social-btn {
-        width: 36px;
-        height: 36px;
-        background: #ffffff;
-        border: 1px solid #E2E8F0;
-        border-radius: 10px;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #64748B;
+        color: #CBD5E1;
         text-decoration: none;
-        transition: all 0.25s;
+        transition: all 0.3s ease;
     }
-
     .cv-footer-v2-social-btn:hover {
-        background: #1eb349;
-        border-color: #1eb349;
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
+        border-color: transparent;
         color: #ffffff;
         transform: translateY(-3px);
         box-shadow: 0 8px 20px rgba(30, 179, 73, 0.25);
     }
-
-    /* ── COLUMN HEADINGS ───────────── */
     .cv-footer-v2-col-title {
-        font-size: 0.65rem;
+        font-size: 0.75rem;
         font-weight: 700;
         letter-spacing: 0.15em;
         text-transform: uppercase;
-        color: #64748B;
-        margin-bottom: 1.5rem;
+        color: #FFFFFF;
+        margin-bottom: 1.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
-
-    /* ── LINKS ─────────────────────── */
+    .cv-footer-v2-col-title::before {
+        content: '';
+        width: 8px; height: 8px;
+        background: #1eb349;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 10px rgba(30, 179, 73, 0.5);
+    }
     .cv-footer-v2-links {
         list-style: none;
         padding: 0;
         margin: 0;
     }
-
     .cv-footer-v2-links li {
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.85rem;
     }
-
     .cv-footer-v2-links a {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         font-weight: 400;
-        color: #1E293B;
+        color: #CBD5E1;
         text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0;
-        transition: all 0.25s;
+        transition: all 0.3s;
+        display: inline-block;
     }
-
     .cv-footer-v2-links a:hover {
-        color: #0F172A;
-        font-weight: 600;
+        color: #1eb349;
+        transform: translateX(4px);
     }
-
-    /* ── CONTACT ───────────────────── */
     .cv-footer-v2-contact-item {
         display: flex;
         align-items: flex-start;
-        gap: 0.875rem;
-        margin-bottom: 1.25rem;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
     }
-
     .cv-footer-v2-contact-icon {
-        width: 36px;
-        height: 36px;
-        background: #ffffff;
-        border: 1px solid #E2E8F0;
+        width: 38px;
+        height: 38px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        color: #64748B;
-        transition: all 0.25s;
+        color: #1eb349;
+        transition: all 0.3s;
     }
-
     .cv-footer-v2-contact-item:hover .cv-footer-v2-contact-icon {
-        background: #1eb349;
-        border-color: #1eb349;
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
+        border-color: transparent;
         color: #ffffff;
-        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.25);
+        box-shadow: 0 4px 15px rgba(30, 179, 73, 0.3);
         transform: scale(1.05);
     }
-
-    .cv-footer-v2-contact-label {
-        font-size: 0.6rem;
-        font-weight: 700;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: #64748B;
-        display: block;
-        margin-bottom: 3px;
-    }
-
     .cv-footer-v2-contact-text {
-        font-size: 0.8125rem;
-        font-weight: 400;
-        color: #1E293B;
-        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        line-height: 1.5;
+        font-size: 0.9rem;
+        color: #94A3B8;
     }
-
     .cv-footer-v2-contact-text a {
-        color: #0F172A;
+        color: #CBD5E1;
         text-decoration: none;
-        font-weight: 500;
-        transition: opacity 0.2s;
+        transition: color 0.3s;
     }
-
     .cv-footer-v2-contact-text a:hover {
-        opacity: 0.7;
+        color: #1eb349;
     }
-
-    /* ── DIVIDER ───────────────────── */
+    .cv-footer-v2-contact-label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #64748B;
+        margin-bottom: 0.1rem;
+    }
     .cv-footer-v2-divider {
         border: none;
-        border-top: 1px solid rgba(15, 23, 42, 0.08);
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
         margin: 0;
     }
-
-    /* ── BOTTOM BAR ────────────────── */
     .cv-footer-v2-bottom-wrap {
-        background: rgba(15, 23, 42, 0.04);
+        background: #070B14;
+        position: relative;
+        z-index: 1;
     }
-
+    .cv-footer-v2-pay-wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2.5rem clamp(1.25rem, 5vw, 2.5rem);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3rem;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .cv-footer-v2-pay-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    .cv-footer-v2-pay-title {
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #64748B;
+    }
+    .cv-footer-v2-pay-logos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+        background: #ffffff;
+        padding: 0.5rem 1rem;
+        border-radius: 12px;
+    }
+    .cv-footer-v2-pay-logos img {
+        height: 24px;
+        width: auto;
+        object-fit: contain;
+    }
     .cv-footer-v2-bottom {
         max-width: 1200px;
         margin: 0 auto;
         padding: 1.5rem clamp(1.25rem, 5vw, 2.5rem);
         display: flex;
-        align-items: center;
         justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
         gap: 1rem;
-        flex-wrap: wrap;
     }
-
     .cv-footer-v2-copy {
-        font-size: 0.8rem;
-        color: #64748B;
-        font-weight: 400;
-    }
-
-    .cv-footer-v2-copy strong {
-        color: #0F172A;
-        font-weight: 600;
-    }
-
-    .cv-footer-v2-bottom-links {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-    }
-
-    .cv-footer-v2-bottom-links a {
-        font-size: 0.8rem;
-        color: #64748B;
-        text-decoration: none;
-        font-weight: 400;
-        transition: color 0.2s;
-    }
-
-    .cv-footer-v2-bottom-links a:hover {
-        color: #0F172A;
-    }
-
-    /* ── PAYMENT & EXPEDITION ─────── */
-    .cv-footer-v2-pay-wrap {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 1.5rem;
-        padding: 1.5rem clamp(1.25rem, 5vw, 2.5rem);
-        max-width: 1200px;
-        margin: 0 auto;
-        border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-        justify-content: space-between;
-    }
-
-    .cv-footer-v2-pay-section {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .cv-footer-v2-pay-title {
-        font-size: 0.65rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
+        font-size: 0.85rem;
         color: #64748B;
     }
-
-    .cv-footer-v2-pay-logos {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        align-items: center;
-    }
-
-    .cv-footer-v2-pay-logos img {
-        height: 28px;
-        width: auto;
-        object-fit: contain;
-        border-radius: 4px;
-    }
-
+    .cv-footer-v2-copy strong { color: #94A3B8; }
     .cv-footer-v2-dev {
-        font-size: 0.7rem;
-        color: #94A3B8;
+        font-size: 0.8rem;
+        color: #64748B;
     }
-
     .cv-footer-v2-dev a {
-        color: #475569;
+        color: #1eb349;
         text-decoration: none;
         font-weight: 600;
         transition: color 0.2s;
     }
-
     .cv-footer-v2-dev a:hover {
-        color: #0F172A;
+        color: #a5cf37;
     }
-
-    /* ── RESPONSIVE ────────────────── */
     @media (max-width: 1024px) {
         .cv-footer-v2-main {
             grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
+            gap: 3rem;
         }
     }
-
     @media (max-width: 640px) {
         .cv-footer-v2-main {
             grid-template-columns: 1fr;
-            gap: 2rem;
+            gap: 2.5rem;
             padding: 3rem 1.25rem 2.5rem;
         }
-
+        .cv-footer-v2-pay-wrap {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2rem;
+            padding: 2rem 1.25rem;
+        }
         .cv-footer-v2-bottom {
             flex-direction: column;
             align-items: flex-start;
-            gap: 0.75rem;
-        }
-
-        .cv-footer-v2-bottom-links {
-            flex-wrap: wrap;
-            gap: 0.875rem;
-        }
-
-        .cv-footer-v2-tagline {
-            max-width: 100%;
+            gap: 1rem;
         }
     }
 </style>
