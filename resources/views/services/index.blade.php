@@ -469,7 +469,7 @@
         /* GRID */
         .sp-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 1.25rem;
         }
 
@@ -526,9 +526,9 @@
         }
 
         .sp-card-badge.diskon {
-            background: rgba(255, 255, 255, 0.95);
-            color: #EF4444;
-            border: 1px solid rgba(239, 68, 68, 0.2);
+            background: #EF4444;
+            color: #ffffff;
+            border: none;
         }
 
         .sp-card-img {
@@ -1028,6 +1028,20 @@
                 width: 28px;
                 height: 28px;
             }
+
+        }
+        
+        /* Wishlist Modal */
+        .sp-modal-backdrop {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15,23,42,0.6); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center;
+            z-index: 9999; opacity: 0; transition: opacity 0.3s;
+        }
+        .sp-modal {
+            background: #fff; width: 90%; max-width: 400px;
+            border-radius: 20px; padding: 2rem; position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
     </style>
 
@@ -1312,7 +1326,8 @@
                         {{-- Badge --}}
                         @if($service->price > 0)
                             @if($service->sale_price > 0 && $service->sale_price < $service->price)
-                                <div class="sp-card-badge diskon">% Diskon</div>
+                                @php $discount = round((($service->price - $service->sale_price) / $service->price) * 100); @endphp
+                                <div class="sp-card-badge diskon">{{ $discount }}%</div>
                             @else
                                 <div class="sp-card-badge produk">Produk</div>
                             @endif
