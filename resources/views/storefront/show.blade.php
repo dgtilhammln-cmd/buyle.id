@@ -21,7 +21,7 @@
         'name'        => $profile->store_name . ' — buyle.id Creator',
         'description' => $profile->store_description ?: ('Toko digital ' . $profile->store_name . ' di buyle.id'),
         'mainEntity'  => array_filter([
-            '@type'       => 'Person',
+            '@type'       => 'Organization',
             '@id'         => $storeUrl . '#seller',
             'name'        => $profile->store_name,
             'url'         => $storeUrl,
@@ -48,11 +48,11 @@
                 'image'       => $prod->image ? asset('storage/' . $prod->image) : null,
                 'offers'      => $effPrice > 0 ? [
                     '@type'         => 'Offer',
-                    'price'         => number_format($effPrice, 2, '.', ''),
+                    'price'         => number_format($effPrice, 0, '', ''),
                     'priceCurrency' => 'IDR',
                     'availability'  => 'https://schema.org/InStock',
                     'url'           => route('products.show', $prod->slug),
-                    'seller'        => ['@type' => 'Person', 'name' => $profile->store_name],
+                    'seller'        => ['@type' => 'Organization', 'name' => $profile->store_name],
                 ] : null,
             ]),
         ];

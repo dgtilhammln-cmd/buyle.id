@@ -186,6 +186,8 @@ Route::get('/robots.txt', function () {
         'Disallow: /checkout',
         'Disallow: /cek-resi',
         'Disallow: /deploy-hostinger',
+        'Disallow: /creator/',
+        'Disallow: /buyer/',
         '',
         '# Parameter filter/sort menciptakan URL duplikat — biarkan canonical yang handle',
         'Disallow: /*?q=',

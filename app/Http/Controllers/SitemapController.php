@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Service;
+use App\Models\Product;
+use App\Models\CreatorProfile;
 use App\Models\Article;
 use App\Models\Author;
 use Illuminate\Http\Request;
@@ -11,10 +12,11 @@ class SitemapController extends Controller
 {
     public function index(Request $request)
     {
-        // Single sitemap with image support for Google Image Search
-        $services = \App\Models\Service::active()->ordered()->get(['id','slug','name','image','updated_at']);
-        $articles = \App\Models\Article::published()->latest()->get(['slug','title','image','updated_at']);
-        $authors  = \App\Models\Author::whereNotNull('slug')->get(['slug','name','updated_at']);
+        // Fetch data for sitemap
+        $products = Product::where('is_active', true)->get(['id','slug','name','image','updated_at']);
+        $creators = CreatorProfile::with('user')->get(['id','store_slug','store_name','updated_at', 'user_id']);
+        $articles = Article::published()->latest()->get(['slug','title','image','updated_at']);
+        $authors  = Author::whereNotNull('slug')->get(['slug','name','updated_at']);
 
         $appUrl = rtrim(config('app.url'), '/');
 
@@ -26,20 +28,38 @@ class SitemapController extends Controller
             ['url' => route('contact'),  'priority' => '0.7', 'changefreq' => 'monthly', 'lastmod' => now()->toDateString(), 'images' => []],
         ];
 
-        $serviceUrls = $services->map(function($s) use ($appUrl) {
+        $productUrls = $products->map(function($p) use ($appUrl) {
             $images = [];
-            if (!empty($s->image)) {
+            if (!empty($p->image)) {
                 $images[] = [
-                    'loc'     => $appUrl . '/storage/' . ltrim($s->image, '/'),
-                    'title'   => $s->name,
-                    'caption' => $s->name,
+                    'loc'     => $appUrl . '/storage/' . ltrim($p->image, '/'),
+                    'title'   => $p->name,
+                    'caption' => $p->name,
                 ];
             }
             return [
-                'url'        => route('products.show', ['slug' => $s->slug]),
+                'url'        => route('products.show', ['slug' => $p->slug]),
                 'priority'   => '0.85',
                 'changefreq' => 'monthly',
-                'lastmod'    => $s->updated_at->toDateString(),
+                'lastmod'    => $p->updated_at ? $p->updated_at->toDateString() : now()->toDateString(),
+                'images'     => $images,
+            ];
+        })->toArray();
+
+        $creatorUrls = $creators->map(function($c) use ($appUrl) {
+            $images = [];
+            if ($c->user && !empty($c->user->avatar)) {
+                $images[] = [
+                    'loc'     => $appUrl . '/storage/' . ltrim($c->user->avatar, '/'),
+                    'title'   => $c->store_name,
+                    'caption' => $c->store_name,
+                ];
+            }
+            return [
+                'url'        => route('store.show', ['slug' => $c->store_slug]),
+                'priority'   => '0.9',
+                'changefreq' => 'weekly',
+                'lastmod'    => $c->updated_at ? $c->updated_at->toDateString() : now()->toDateString(),
                 'images'     => $images,
             ];
         })->toArray();
@@ -70,7 +90,7 @@ class SitemapController extends Controller
             'images'     => [],
         ])->toArray();
 
-        $urls    = array_merge($staticPages, $serviceUrls, $articleUrls, $authorUrls);
+        $urls    = array_merge($staticPages, $productUrls, $creatorUrls, $articleUrls, $authorUrls);
         $content = view('sitemap', compact('urls'))->render();
 
         return response($content, 200)->header('Content-Type', 'application/xml');
