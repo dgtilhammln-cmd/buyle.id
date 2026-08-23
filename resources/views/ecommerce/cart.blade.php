@@ -152,18 +152,25 @@ body { background: var(--c-bg); font-family: var(--font); }
                 <span class="footer-row-label">{{ $summary['count'] }} produk dipilih</span>
                 <span class="footer-row-val">Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
             </div>
-            <div class="footer-row">
-                <span class="footer-row-label">Total Berat</span>
-                <span class="footer-row-val">{{ $summary['total_weight'] }} gr</span>
-            </div>
             <div class="footer-total-row">
                 <span class="footer-total-label">Total Harga</span>
                 <span class="footer-total-val">Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
             </div>
-            <a href="{{ route('checkout.index') }}" class="btn-checkout">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                Lanjut Checkout
-            </a>
+            
+            @auth
+                <form action="{{ route('checkout.store') }}" method="POST" style="margin-top: 1rem;">
+                    @csrf
+                    <button type="submit" class="btn-checkout" style="width: 100%; border-radius: 999px; background: linear-gradient(135deg, #1eb349, #a5cf37); border: none; cursor: pointer;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        Lanjut Checkout
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('checkout.login') }}" class="btn-checkout" style="width: 100%; border-radius: 999px; background: linear-gradient(135deg, #1eb349, #a5cf37); margin-top: 1rem;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    Masuk Akun & Checkout
+                </a>
+            @endauth
         </div>
     @endif
 </div>

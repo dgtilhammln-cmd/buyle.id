@@ -46,22 +46,9 @@ class CheckoutController extends Controller
         try {
             $data = $request->validated();
             
-            // Auto Register if Guest
+            // Only logged in users can reach this point (due to cart redirect logic)
             if (!auth()->check()) {
-                // Tangkap session ID sebelum login (karena auth()->login bisa mengubah/regenerate session ID)
-                $guestSessionId = \Illuminate\Support\Facades\Session::getId();
-
-                $user = \App\Models\User::create([
-                    'name'     => $data['guest_name'],
-                    'email'    => $data['guest_email'],
-                    'phone'    => $data['guest_phone'],
-                    'password' => bcrypt($data['guest_password']),
-                    'role'     => 'buyer', // Assign buyer role
-                ]);
-                auth()->login($user);
-                
-                // Merge guest cart to the new user
-                $this->cartService->mergeGuestCart($user->id, $guestSessionId);
+                return redirect()->route('login');
             }
 
             $order = $this->checkoutService->processCheckout($data, auth()->user());

@@ -161,94 +161,36 @@
     </div> <!-- END od-body -->
 </div> <!-- END od-card -->
 
-<div class="tr-card">
-    <div class="tr-left">
-        <h3 class="tr-title">Alamat Pengiriman</h3>
-        <div class="tr-addr-name">{{ $order->shipping_address['receiver_name'] ?? '-' }}</div>
-        <div class="tr-addr-phone">{{ $order->shipping_address['phone'] ?? '-' }}</div>
-        <div class="tr-addr-text">
-            {{ $order->shipping_address['full_address'] ?? '-' }}<br>
-            {{ $order->shipping_address['district'] ?? '' }}, {{ $order->shipping_address['city'] ?? '' }}<br>
-            {{ $order->shipping_address['province'] ?? '' }} {{ $order->shipping_address['postal_code'] ?? '' }}
-        </div>
-    </div>
-    
-    <div class="tr-right">
-        @if($order->shipment)
-        <div class="tr-right-header">
-            <div>
-                <h3 class="tr-title" style="margin-bottom:0.25rem;">Status Pengiriman</h3>
-                <span style="font-size:0.85rem; color:var(--c-muted);">Informasi tracking resi otomatis</span>
-            </div>
-            <div style="text-align: right;">
-                <div class="tr-courier-name">{{ strtoupper($order->shipment->courier_name) }} {{ strtoupper($order->shipment->courier_service ?? '') }}</div>
-                <div class="tr-courier-awb">{{ $order->shipment->tracking_number ?? 'Resi belum diinput' }}</div>
-            </div>
-        </div>
-
-        @if($tracking && !empty($tracking['manifest']))
-            <div class="tr-timeline">
-                @php
-                    $manifests = array_reverse($tracking['manifest']);
-                    $limit = 3;
-                    $hasMore = count($manifests) > $limit;
-                    $shown = array_slice($manifests, 0, $limit);
-                    $hidden = array_slice($manifests, $limit);
-                @endphp
-
-                @foreach($shown as $index => $tl)
-                <div class="tr-tl-item">
-                    @if($index === 0)
-                        <div class="tr-tl-icon active">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
-                        </div>
-                    @elseif($index === 1)
-                        <div class="tr-tl-icon truck">
-                            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                        </div>
-                    @else
-                        <div class="tr-tl-icon dot"></div>
-                    @endif
-
-                    <div class="tr-tl-content">
-                        <div class="tr-tl-time {{ $index === 0 ? 'active' : '' }}">{{ $tl['date'] }}</div>
-                        <div class="tr-tl-desc {{ $index === 0 ? 'active' : '' }}">{{ $tl['desc'] }}</div>
-                        @if(!empty($tl['city']))
-                        <div class="tr-tl-city">{{ $tl['city'] }}</div>
-                        @endif
-                    </div>
-                </div>
-                @endforeach
-
-                @if($hasMore)
-                <div id="hiddenTimeline" style="display:none;">
-                    @foreach($hidden as $index => $tl)
-                    <div class="tr-tl-item">
-                        <div class="tr-tl-icon dot"></div>
-                        <div class="tr-tl-content">
-                            <div class="tr-tl-time">{{ $tl['date'] }}</div>
-                            <div class="tr-tl-desc">{{ $tl['desc'] }}</div>
-                            @if(!empty($tl['city']))
-                            <div class="tr-tl-city">{{ $tl['city'] }}</div>
-                            @endif
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-                <a class="tr-tl-more" id="showMoreBtn" onclick="document.getElementById('hiddenTimeline').style.display='block'; this.style.display='none';">Lihat Lainnya</a>
-                @endif
-            </div>
-        @elseif($order->shipment->tracking_number)
-            <div style="margin-top:2rem; padding: 2rem; background: #F8FAFC; border-radius: 8px; border: 1px solid #E2E8F0; color:var(--c-muted); text-align:center;">
-                <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:0.5rem; opacity:0.5;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                <div>Tracking belum tersedia atau masih diproses oleh ekspedisi.</div>
-                <div style="font-size: 0.8rem; margin-top: 0.25rem;">Biasanya update status membutuhkan waktu 1x24 jam setelah resi diinput.</div>
-            </div>
-        @endif
+@if(in_array($order->status->value, ['processing', 'shipped', 'completed']))
+<div class="tr-card" style="background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border: none; box-shadow: 0 10px 30px rgba(30,179,73,0.3); display: block;">
+    <div style="padding: 2rem;">
+        <h3 class="tr-title" style="color: #fff; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align: -4px; margin-right: 8px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+            Akses Produk / Layanan Jasa
+        </h3>
         
-        @endif
+        @foreach($order->items as $item)
+            @if($item->product && $item->product->digital_resource)
+                <div style="margin-bottom: 1.25rem;">
+                    <div style="font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem;">{{ $item->product_name }}</div>
+                    <a href="{{ $item->product->digital_resource }}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #1eb349; padding: 0.75rem 1.5rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: transform 0.2s;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                        Buka Link / WhatsApp
+                    </a>
+                </div>
+            @endif
+        @endforeach
     </div>
 </div>
+@else
+<div class="tr-card" style="padding: 3rem 2rem; text-align: center; color: var(--c-muted); display: block;">
+    <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom: 1rem; opacity: 0.5;">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    </svg>
+    <div style="font-weight: 600; font-size: 1.15rem; color: var(--c-text);">Menunggu Pembayaran</div>
+    <div style="font-size: 0.95rem; margin-top: 0.5rem;">Selesaikan pembayaran Anda untuk mengakses produk atau layanan jasa.</div>
+</div>
+@endif
 
 {{-- Custom Confirm Modal --}}
 <div id="confirmModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:9999;align-items:center;justify-content:center;padding:1rem;opacity:0;transition:opacity .2s;">

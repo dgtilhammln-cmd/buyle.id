@@ -83,6 +83,9 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::post('/keranjang/hapus',    [CartController::class, 'remove'])->name('cart.remove');
 
     // E-commerce: Checkout (bisa guest, auto register)
+    Route::get('/checkout/login', function () {
+        return redirect()->guest(route('login'));
+    })->name('checkout.login');
     Route::get('/checkout',                [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout',               [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/checkout/selesai/{order}',[CheckoutController::class, 'finish'])->name('checkout.finish');

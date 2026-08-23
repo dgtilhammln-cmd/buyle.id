@@ -59,6 +59,11 @@ body { background-color: #F8FAFC !important; }
     100% { transform: scale(1); opacity: 1; }
 }
 
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 .fin-title {
     font-size: 1.75rem; font-weight: 800;
     color: var(--text); margin-bottom: 0.75rem;
@@ -167,19 +172,39 @@ body { background-color: #F8FAFC !important; }
                             Pembayaran Berhasil
                         </span>
                     </div>
-                    <div class="fin-title">Pesanan Dikonfirmasi! 🎉</div>
+                    <div class="fin-title" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        Pesanan Berhasil!
+                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#1eb349;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                        </svg>
+                    </div>
                     <p class="fin-sub">
                         Terima kasih sudah berbelanja di buyle.id.<br>
-                        Pesanan Anda sedang kami proses. Notifikasi akan dikirim ke email Anda.
+                        Akses produk digital atau jasa Anda melalui link di bawah ini.
                     </p>
 
+                    <div style="background: linear-gradient(135deg, #1eb349, #a5cf37); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; color: #fff; text-align: left; box-shadow: 0 10px 30px rgba(30,179,73,0.3);">
+                        <h4 style="margin-bottom: 1rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 0.5rem;">Akses Produk / Jasa</h4>
+                        @foreach($order->items as $item)
+                            @if($item->product && $item->product->digital_resource)
+                                <div style="margin-bottom: 0.75rem;">
+                                    <strong style="display:block; font-size: 0.9rem; margin-bottom: 0.25rem;">{{ $item->product_name }}</strong>
+                                    <a href="{{ $item->product->digital_resource }}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #1eb349; padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem;">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                                        Buka Link / WhatsApp
+                                    </a>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+
                     <div>
-                        <a href="{{ route('account.orders') }}" class="btn-pay">
+                        <a href="{{ route('account.orders') }}" class="btn-pay" style="background: #0f1f0f;">
                             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-                            Lacak Pesanan Saya
+                            Riwayat Pesanan
                         </a>
                     </div>
-                    <div>
+                    <div style="margin-top: 1rem;">
                         <a href="{{ route('products') }}" class="btn-secondary-link">
                             Lanjut Belanja &rarr;
                         </a>
@@ -219,14 +244,14 @@ body { background-color: #F8FAFC !important; }
                             function launchSnapPay() {
                                 const btn = document.getElementById('pay-button');
                                 btn.disabled = true;
-                                btn.innerHTML = '⏳ &nbsp;Memuat Pembayaran...';
+                                btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;animation:spin 1s linear infinite;"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Memuat Pembayaran...';
 
                                 snap.pay('{{ $order->payment->midtrans_token }}', {
                                     onSuccess: function(result) {
-                                        btn.innerHTML = '✅ &nbsp;Pembayaran Berhasil!';
+                                        btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Pembayaran Berhasil!';
                                         btn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
                                         setTimeout(() => {
-                                            window.location.href = "{{ route('account.orders') }}";
+                                            window.location.reload();
                                         }, 1500);
                                     },
                                     onPending: function(result) {
@@ -236,7 +261,7 @@ body { background-color: #F8FAFC !important; }
                                     },
                                     onError: function(result) {
                                         btn.disabled = false;
-                                        btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Coba Lagi';
+                                        btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>Coba Lagi';
                                         alert('Pembayaran gagal. Silakan coba metode pembayaran lain.');
                                     },
                                     onClose: function() {

@@ -64,40 +64,9 @@ class CheckoutService
             }
         }
 
-        $total = max(0, $subtotal + $shippingCost - $discount);
+        $total = max(0, $subtotal - $discount);
 
-        // Siapkan snapshot alamat pengiriman
-        $shippingSnapshot = [];
-        if ($summary['has_physical_product']) {
-            if (!empty($data['address_id']) && $data['address_id'] !== 'new') {
-                $address = Address::where('user_id', $user->id)->findOrFail($data['address_id']);
-                $shippingSnapshot = $address->toShippingSnapshot();
-            } else {
-                // Buat alamat baru untuk user ini
-                $address = Address::create([
-                    'user_id'       => $user->id,
-                    'label'         => 'Rumah', // Default
-                    'receiver_name' => $data['new_address_receiver'],
-                    'phone'         => $data['new_address_phone'],
-                    'province'      => $data['new_address_province'],
-                    'city'          => $data['new_address_city'],
-                    'district'      => $data['new_address_district'],
-                    'postal_code'   => $data['new_address_postal'],
-                    'full_address'  => $data['new_address_full'],
-                    'latitude'      => $data['new_address_lat'] ?? null,
-                    'longitude'     => $data['new_address_lng'] ?? null,
-                    'is_default'    => $user->addresses()->count() === 0 ? true : false,
-                ]);
-                $shippingSnapshot = $address->toShippingSnapshot();
-            }
-        }
-
-        // Jika ada produk jasa, tambahkan alamat pengerjaan ke notes atau struktur khusus
         $notes = $data['notes'] ?? null;
-        if ($summary['has_service'] && !empty($data['service_address'])) {
-            $serviceNote = "Alamat Pengerjaan Jasa:\n" . $data['service_address'];
-            $notes = $notes ? $notes . "\n\n" . $serviceNote : $serviceNote;
-        }
 
         DB::beginTransaction();
 
@@ -108,10 +77,10 @@ class CheckoutService
                 'user_id'          => $user->id,
                 'status'           => OrderStatus::Pending,
                 'subtotal'         => $subtotal,
-                'shipping_cost'    => $shippingCost,
+                'shipping_cost'    => 0,
                 'discount'         => $discount,
                 'total'            => $total,
-                'shipping_address' => $shippingSnapshot,
+                'shipping_address' => [],
                 'notes'            => $notes,
             ]);
 
@@ -132,16 +101,6 @@ class CheckoutService
                     'price'            => $cartItem->unit_price,
                     'qty'              => $cartItem->qty,
                     'subtotal'         => $cartItem->subtotal,
-                ]);
-            }
-
-            // 3. Buat Pengiriman (Shipment)
-            if ($summary['has_physical_product'] && !empty($data['courier_name'])) {
-                Shipment::create([
-                    'order_id'        => $order->id,
-                    'courier_name'    => $data['courier_name'],
-                    'courier_service' => $data['courier_service'] ?? null,
-                    'status'          => \App\Enums\ShipmentStatus::Pending,
                 ]);
             }
 
