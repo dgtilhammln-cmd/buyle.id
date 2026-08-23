@@ -196,7 +196,7 @@
                 </div>
             </div>
             <div class="sm-footer">
-                SEO by <a href="https://buyle.id" target="_blank" rel="noopener noreferrer">buyle.id</a> &mdash; Digital Creator Marketplace Indonesia
+                SEO by <a href="https://buyle.id" target="_blank" rel="noopener noreferrer">buyle.id</a> &#8212; Digital Creator Marketplace Indonesia
             </div>
         </body>
         </html>
