@@ -33,6 +33,13 @@
         $bodyScripts = $layoutSettings['body_scripts'] ?? '';
     @endphp
 
+    {{-- Custom og:type if provided --}}
+    @hasSection('og_type')
+        @php
+            $seo['og_type'] = View::getSection('og_type');
+        @endphp
+    @endif
+
     {{-- SEO Component --}}
     @include('components.seo')
 
@@ -225,6 +232,8 @@
 
     {{-- Custom Head Scripts (e.g. GTM, Analytics) --}}
     {!! $headScripts !!}
+    
+    @stack('head')
 </head>
 
 <body style="overflow-x: hidden; margin: 0; padding: 0; background-color: #ffffff;">

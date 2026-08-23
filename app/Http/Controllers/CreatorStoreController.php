@@ -99,19 +99,40 @@ class CreatorStoreController extends Controller
 
         $products = $query->paginate(12)->withQueryString();
 
+        // Build dynamic keywords from store name + top product names
+        $topProductNames = $products->take(5)->pluck('name')->map(fn($n) => \Illuminate\Support\Str::limit($n, 30, ''))->join(', ');
+        $storeKeywords = implode(', ', array_filter([
+            $profile->store_name,
+            $profile->store_name . ' buyle.id',
+            'toko ' . $profile->store_name,
+            'beli ' . $profile->store_name,
+            $topProductNames,
+            'creator digital marketplace',
+            'buyle.id',
+        ]));
+
         $seo = [
-            'title'       => $profile->meta_title ?: ($profile->store_name . ' | buyle.id'),
-            'description' => $profile->meta_desc ?: $profile->store_description,
-            'keywords'    => $profile->meta_keywords,
+            'title'       => $profile->meta_title ?: ($profile->store_name . ' | Digital Creator — buyle.id'),
+            'description' => $profile->meta_desc  ?: ($profile->store_name . ' — ' . ($profile->store_description ?: 'Toko digital di buyle.id. Temukan produk dan layanan dari creator ini.')),
+            'keywords'    => $profile->meta_keywords ?: $storeKeywords,
             'og_image'    => $seller->avatar ? asset('storage/' . $seller->avatar) : asset('images/og-default.jpg'),
             'canonical'   => route('store.show', ['slug' => $slug]),
+            'og_type'     => 'profile',
+        ];
+
+        // BreadcrumbList
+        $breadcrumbs = [
+            ['name' => 'Beranda',       'url' => route('home')],
+            ['name' => 'Creator',       'url' => url('/c')],
+            ['name' => $profile->store_name, 'url' => route('store.show', $slug)],
         ];
 
         return view('storefront.show', compact(
             'profile', 'seller', 'groups', 'products', 'seo', 'sort',
-            'suggestion', 'suggestionApplied'
+            'suggestion', 'suggestionApplied', 'breadcrumbs'
         ));
     }
+
 
     /**
      * Temukan kata yang paling mirip dari daftar nama produk

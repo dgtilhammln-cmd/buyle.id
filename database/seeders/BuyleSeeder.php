@@ -30,43 +30,43 @@ class BuyleSeeder extends Seeder
             // Identitas Utama
             'site_name'    => 'buyle.id',
             'domain'       => 'buyle.id',
-            'tagline'      => 'Semua Kebutuhan Rumah, Satu Tempat',
-            'short_desc'   => 'Toko online buyle.id tangga terlengkap. Menjual produk berkualitas dan menyediakan jasa pemasangan serta servis untuk kebutuhan hunian Anda.',
+            'tagline'      => 'Digital Creator Marketplace',
+            'short_desc'   => 'buyle.id adalah digital creator marketplace terlengkap. Menjual produk digital, layanan jasa, dan aset kreatif berkualitas.',
             'established'  => '',
-            'business_type'=> 'Toko online & Jasa',
+            'business_type'=> 'Marketplace & Digital Service',
 
             // Kontak & Lokasi
             'contact.phone'    => '',
             'contact.whatsapp' => '',
             'contact.email'    => '',
             'contact.address'  => '',
-            'contact.city'     => 'Jakarta',
-            'contact.province' => 'DKI Jakarta',
+            'contact.city'     => 'Surabaya',
+            'contact.province' => 'Jawa Timur',
 
             // SEO Default
-            'meta_title_home' => 'Beranda | buyle.id - Toko buyle.id Tangga Online',
-            'meta_desc_home'  => 'Belanja buyle.id tangga berkualitas di buyle.id. Produk lengkap, harga terjangkau, pengiriman ke seluruh Indonesia.',
-            'meta_keywords_home' => 'buyle.id tangga, peralatan rumah, toko buyle.id online, jasa pemasangan',
+            'meta_title_home' => 'Beranda | buyle.id - Digital Creator Marketplace',
+            'meta_desc_home'  => 'Belanja aset digital berkualitas di buyle.id. Produk lengkap, transaksi aman, akses instan, karya kreator Indonesia.',
+            'meta_keywords_home' => 'buyle.id, digital marketplace, produk digital, creator, jual beli digital',
 
             'meta_title_about' => 'Tentang Kami | buyle.id',
-            'meta_desc_about'  => 'Profil buyle.id, toko online buyle.id tangga terlengkap. Melayani seluruh Indonesia.',
-            'meta_keywords_about' => 'tentang buyle.id, profil toko, toko buyle.id',
+            'meta_desc_about'  => 'Profil buyle.id, marketplace produk digital dan jasa freelancer terpercaya di Indonesia.',
+            'meta_keywords_about' => 'tentang buyle.id, profil platform, marketplace digital',
 
             'meta_title_products' => 'Produk & Layanan | buyle.id',
-            'meta_desc_products'  => 'Temukan berbagai produk buyle.id tangga berkualitas dan layanan jasa profesional di buyle.id.',
-            'meta_keywords_products' => 'produk rumah tangga, jual buyle.id, layanan servis, jasa pasang',
+            'meta_desc_products'  => 'Temukan berbagai produk digital dan layanan jasa profesional dari para kreator di buyle.id.',
+            'meta_keywords_products' => 'produk digital, jual aset digital, jasa digital, jasa freelancer',
 
-            'meta_title_articles' => 'Artikel & Tips | buyle.id',
-            'meta_desc_articles'  => 'Kumpulan artikel, tips, dan panduan merawat buyle.id tangga.',
-            'meta_keywords_articles' => 'tips rumah tangga, artikel rumah, panduan produk',
+            'meta_title_articles' => 'Blog & Info | buyle.id',
+            'meta_desc_articles'  => 'Kumpulan artikel, tips bisnis digital, dan info terbaru seputar ekosistem kreator.',
+            'meta_keywords_articles' => 'artikel bisnis, tips digital, blog creator',
 
             'meta_title_contact' => 'Hubungi Kami | buyle.id',
-            'meta_desc_contact'  => 'Hubungi buyle.id untuk konsultasi produk, pemesanan, dan layanan jasa.',
-            'meta_keywords_contact' => 'kontak buyle.id, hubungi toko',
+            'meta_desc_contact'  => 'Hubungi tim dukungan buyle.id untuk bantuan transaksi dan pertanyaan seputar marketplace.',
+            'meta_keywords_contact' => 'kontak buyle.id, hubungi tim support, cs digital',
 
-            'meta_title_gallery' => 'Galeri | buyle.id',
-            'meta_desc_gallery'  => 'Dokumentasi produk dan instalasi buyle.id tangga dari buyle.id.',
-            'meta_keywords_gallery' => 'galeri buyle.id, instalasi',
+            'meta_title_gallery' => 'Katalog Kreator | buyle.id',
+            'meta_desc_gallery'  => 'Katalog karya terbaik dari para kreator berbakat di platform buyle.id.',
+            'meta_keywords_gallery' => 'katalog digital, karya kreator, portofolio',
         ];
 
         // Kosongkan tabel settings lama

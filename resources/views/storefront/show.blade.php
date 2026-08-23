@@ -3,6 +3,74 @@
 @section('title', $seo['title'])
 @section('meta_description', $seo['description'])
 @section('meta_keywords', $seo['keywords'])
+@section('og_type', 'profile')
+
+@push('head')
+@php
+    $appUrl     = rtrim(config('app.url'), '/');
+    $storeUrl   = route('store.show', $profile->store_slug);
+    $avatarUrl  = $seller->avatar ? asset('storage/' . $seller->avatar) : null;
+    $totalProducts = $products->total();
+
+    // ── ProfilePage Schema ──────────────────────────────────────────
+    $profilePageSchema = [
+        '@context'    => 'https://schema.org',
+        '@type'       => 'ProfilePage',
+        '@id'         => $storeUrl . '#profilepage',
+        'url'         => $storeUrl,
+        'name'        => $profile->store_name . ' — buyle.id Creator',
+        'description' => $profile->store_description ?: ('Toko digital ' . $profile->store_name . ' di buyle.id'),
+        'mainEntity'  => array_filter([
+            '@type'       => 'Person',
+            '@id'         => $storeUrl . '#seller',
+            'name'        => $profile->store_name,
+            'url'         => $storeUrl,
+            'description' => $profile->store_description,
+            'image'       => $avatarUrl ?: null,
+            'sameAs'      => [$storeUrl],
+        ]),
+    ];
+    $profilePageJson = json_encode($profilePageSchema, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+
+    // ── ItemList Schema — first page of products ──────────────────
+    $itemListElements = [];
+    foreach ($products as $idx => $prod) {
+        $effPrice = ($prod->sale_price > 0 && $prod->sale_price < $prod->price) ? $prod->sale_price : $prod->price;
+        $itemListElements[] = [
+            '@type'    => 'ListItem',
+            'position' => $idx + 1,
+            'item'     => array_filter([
+                '@type'       => 'Product',
+                '@id'         => route('products.show', $prod->slug) . '#product',
+                'name'        => $prod->name,
+                'url'         => route('products.show', $prod->slug),
+                'description' => $prod->short_desc ?: null,
+                'image'       => $prod->image ? asset('storage/' . $prod->image) : null,
+                'offers'      => $effPrice > 0 ? [
+                    '@type'         => 'Offer',
+                    'price'         => number_format($effPrice, 2, '.', ''),
+                    'priceCurrency' => 'IDR',
+                    'availability'  => 'https://schema.org/InStock',
+                    'url'           => route('products.show', $prod->slug),
+                    'seller'        => ['@type' => 'Person', 'name' => $profile->store_name],
+                ] : null,
+            ]),
+        ];
+    }
+    $itemListSchema = [
+        '@context'        => 'https://schema.org',
+        '@type'           => 'ItemList',
+        'name'            => 'Produk ' . $profile->store_name,
+        'description'     => 'Daftar produk dari ' . $profile->store_name . ' di buyle.id',
+        'url'             => $storeUrl,
+        'numberOfItems'   => $totalProducts,
+        'itemListElement' => $itemListElements,
+    ];
+    $itemListJson = json_encode($itemListSchema, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+@endphp
+<script type="application/ld+json">{!! $profilePageJson !!}</script>
+<script type="application/ld+json">{!! $itemListJson !!}</script>
+@endpush
 
 @section('content')
 <style>

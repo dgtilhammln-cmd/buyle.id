@@ -29,7 +29,7 @@
     // Auto-Fallback Logic
     $autoTitle = !empty($seoData['title']) ? $seoData['title'] : ($siteName . ' - ' . $tagline);
     $autoDesc  = !empty($seoData['description']) ? $seoData['description'] : $shortDesc;
-    $autoKeywords = !empty($seoData['keywords']) ? $seoData['keywords'] : (!empty($settings['meta_keywords_home']) ? $settings['meta_keywords_home'] : 'buyle.id tangga, peralatan rumah');
+    $autoKeywords = !empty($seoData['keywords']) ? $seoData['keywords'] : (!empty($settings['meta_keywords_home']) ? $settings['meta_keywords_home'] : 'buyle.id, digital marketplace, produk digital, creator, jual beli digital');
 
     // Canonical — always use app.url, never localhost
     $rawCanonical   = $seoData['canonical'] ?? url()->current();
