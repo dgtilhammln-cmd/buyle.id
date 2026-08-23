@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Artikel & Tips buyle.id — buyle.id')
-@section('meta_description', 'Temukan artikel, panduan, dan tips seputar buyle.id tangga, perawatan rumah, dan produk terbaik hanya di buyle.id.')
+@section('title', 'Blog & Artikel | buyle.id — Digital Creator Marketplace')
+@section('meta_description', 'Temukan artikel, tips bisnis digital, panduan kreator, dan inspirasi terbaru seputar ekosistem digital creator marketplace hanya di buyle.id.')
 @section('content')
 
 <style>
@@ -306,14 +306,14 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
             <span class="sv-breadcrumb-sep">/</span>
             <span class="sv-breadcrumb-current">Artikel &amp; Tips</span>
         </nav>
-        <div class="sv-label">Blog &amp; Panduan</div>
+        <div class="sv-label">Blog &amp; Info</div>
         <h1 class="sv-title">
-            Tips &amp; Panduan<br>
-            buyle.id Tangga
+            Tips &amp; Inspirasi<br>
+            Digital Creator
         </h1>
         <p class="sv-intro">
-            Kumpulan artikel, panduan belanja, dan tips perawatan seputar
-            buyle.id tangga berkualitas — hanya di buyle.id.
+            Kumpulan artikel, panduan bisnis digital, tips kreator sukses,
+            dan informasi terbaru seputar ekosistem digital marketplace — hanya di buyle.id.
         </p>
     </div>
 </section>
@@ -411,8 +411,8 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
         {{-- CTA Mini --}}
         <div class="ar-sidebar-card" style="background:var(--c-accent);border-color:var(--c-accent);" data-aos="fade-up" data-aos-delay="200">
             <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:rgba(255,255,255,0.8);margin-bottom:0.75rem;font-family:var(--font);">Belanja Sekarang</div>
-            <h3 style="font-size:1.125rem;font-weight:700;color:#fff;margin-bottom:0.75rem;line-height:1.3;font-family:var(--font);">Cari buyle.id Tangga?</h3>
-            <p style="font-size:0.8125rem;color:rgba(255,255,255,0.85);line-height:1.6;margin-bottom:1.25rem;font-family:var(--font);">Temukan ribuan produk buyle.id tangga berkualitas dengan harga terbaik di buyle.id.</p>
+            <h3 style="font-size:1.125rem;font-weight:700;color:#fff;margin-bottom:0.75rem;line-height:1.3;font-family:var(--font);">Cari Produk Digital?</h3>
+            <p style="font-size:0.8125rem;color:rgba(255,255,255,0.85);line-height:1.6;margin-bottom:1.25rem;font-family:var(--font);">Temukan ribuan produk digital dan layanan jasa profesional dari kreator terbaik di buyle.id.</p>
             <a href="{{ route_locale('products') }}" style="display:inline-flex;align-items:center;gap:0.5rem;background:#fff;color:var(--c-accent);font-size:0.8125rem;font-weight:700;padding:0.75rem 1.5rem;border-radius:50px;text-decoration:none !important;font-family:var(--font);transition:opacity 0.2s;" onmouseover="this.style.opacity=0.9" onmouseout="this.style.opacity=1">
                 Lihat Produk
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>

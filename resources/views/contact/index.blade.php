@@ -289,12 +289,12 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
         </nav>
         <div class="sv-label">Kontak</div>
         <h1 class="sv-title">
-            Konsultasi Gratis<br>
-            dengan Tim Ahli Kami
+            Ada Pertanyaan?<br>
+            Tim Kami Siap Membantu
         </h1>
         <p class="sv-intro">
-            Kami siap membantu menemukan solusi ventilasi terbaik untuk bangunan Anda.
-            Hubungi kami sekarang — respon cepat, gratis!
+            Kami siap membantu Anda menemukan produk digital, mendaftarkan kreator,
+            atau menyelesaikan kendala transaksi. Hubungi kami sekarang, respon cepat!
         </p>
     </div>
 </section>
@@ -341,17 +341,17 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
                     </div>
                 </div>
                 <div class="ct-field">
-                    <label class="ct-label">Produk yang Diminati</label>
+                    <label class="ct-label">Kebutuhan Anda</label>
                     <select name="product" class="ct-select">
-                        <option value="">-- Pilih Produk --</option>
-                        @foreach(['buyle.id 12"','buyle.id 14"','buyle.id 18"','buyle.id 24"','buyle.id Stainless','Instalasi buyle.id','Konsultasi Ventilasi','Lainnya'] as $p)
+                        <option value="">-- Pilih Topik --</option>
+                        @foreach(['Beli Produk Digital','Jasa / Layanan Kreator','Daftar sebagai Kreator','Masalah Transaksi','Akses Produk','Refund & Keluhan','Kerjasama & Partnership','Lainnya'] as $p)
                         <option value="{{ $p }}" {{ old('product')===$p?'selected':'' }}>{{ $p }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="ct-field">
                     <label class="ct-label">Pesan <span class="ct-required">*</span></label>
-                    <textarea name="message" class="ct-textarea" placeholder="Ceritakan kebutuhan Anda: jenis bangunan, luas atap, lokasi, jumlah unit yang dibutuhkan, dll." required>{{ old('message') }}</textarea>
+                    <textarea name="message" class="ct-textarea" placeholder="Ceritakan kebutuhan Anda: produk yang diminati, kendala yang dihadapi, atau pertanyaan seputar marketplace buyle.id." required>{{ old('message') }}</textarea>
                     @error('message')<span class="ct-error">{{ $message }}</span>@enderror
                 </div>
                 <button type="submit" class="ct-submit">

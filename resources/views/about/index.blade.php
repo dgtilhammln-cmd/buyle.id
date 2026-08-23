@@ -209,15 +209,14 @@ body { background: var(--cv-bg); color: var(--cv-text); }
             <span class="sv-breadcrumb-current">Tentang Kami</span>
         </nav>
 
-        <div class="sv-label">Profil Perusahaan</div>
+        <div class="sv-label">Profil Platform</div>
         <h1 class="sv-title">
-            Mitra Ventilasi Udara Terpercaya<br>
-            Sejak {{ \App\Models\Setting::get('founding_year') ?? '2013' }}
+            Marketplace Digital Creator<br>
+            Terpercaya di Indonesia
         </h1>
         <p class="sv-intro">
-            PT. Hiranatha Makmur Sukses dengan merek dagang "buyle.id" hadir untuk menjawab
-            kebutuhan sirkulasi udara bangunan industri dan komersial di seluruh Indonesia
-            dengan teknologi buyle.id non-electric terbaik.
+            buyle.id adalah platform marketplace yang menghubungkan para kreator berbakat
+            dengan pembeli yang mencari produk digital, aset kreatif, dan layanan jasa profesional berkualitas.
         </p>
     </div>
 </section>
@@ -228,26 +227,26 @@ body { background: var(--cv-bg); color: var(--cv-text); }
         <div class="cv-cards-grid">
             <div class="cv-card cv-card-gray" data-aos="fade-up">
                 <div class="cv-card-bg-pattern">
-                    <span class="cv-chip" style="top:10%;left:5%;">Tanpa Listrik</span>
-                    <span class="cv-chip" style="top:15%;left:45%;">Bebas Perawatan</span>
-                    <span class="cv-chip" style="top:12%;left:80%;">0 Watt</span>
-                    <span class="cv-chip" style="top:35%;left:15%;">Anti Karat</span>
-                    <span class="cv-chip" style="top:38%;left:50%;">Sejuk Alami</span>
-                    <span class="cv-chip" style="top:60%;left:5%;">Tahan Lama</span>
-                    <span class="cv-chip" style="top:65%;left:40%;">Efisien</span>
-                    <span class="cv-chip" style="top:62%;left:75%;">Hemat Biaya</span>
+                    <span class="cv-chip" style="top:10%;left:5%;">Produk Digital</span>
+                    <span class="cv-chip" style="top:15%;left:45%;">Instan Download</span>
+                    <span class="cv-chip" style="top:12%;left:75%;">Terverifikasi</span>
+                    <span class="cv-chip" style="top:35%;left:15%;">Aman</span>
+                    <span class="cv-chip" style="top:38%;left:50%;">Terpercaya</span>
+                    <span class="cv-chip" style="top:60%;left:5%;">Kreator Lokal</span>
+                    <span class="cv-chip" style="top:65%;left:40%;">Berkualitas</span>
+                    <span class="cv-chip" style="top:62%;left:75%;">Garansi</span>
                 </div>
                 <div class="cv-card-content push-bottom">
-                    <div class="cv-card-label">Continents</div>
-                    <div class="cv-card-value">20+</div>
+                    <div class="cv-card-label">Kategori Produk</div>
+                    <div class="cv-card-value">50+</div>
                 </div>
             </div>
 
             <div class="cv-card cv-card-accent" data-aos="fade-up" data-aos-delay="100">
                 <div class="cv-card-content">
-                    <div class="cv-card-label">Commitment to measurable</div>
+                    <div class="cv-card-label">Komitmen Platform</div>
                     <div class="cv-card-value">100%</div>
-                    <div class="cv-card-desc">Komitmen terhadap kualitas terukur 15 Tahun &rarr; "Garansi jangka panjang dengan material aluminium &amp; stainless steel premium."</div>
+                    <div class="cv-card-desc">Transaksi aman, produk terverifikasi, dan akses instan setelah pembayaran → "Jaminan kepuasan pembeli setiap saat."</div>
                 </div>
             </div>
 
@@ -256,16 +255,16 @@ body { background: var(--cv-bg); color: var(--cv-text); }
                 <img src="{{ !empty($settings['about_image']) ? asset('storage/'.$settings['about_image']) : $aboutImgFallback }}" alt="Tim buyle.id" class="cv-card-img" loading="lazy">
                 <div class="cv-card-overlay"></div>
                 <div class="cv-card-content" style="justify-content: flex-end;">
-                    <div class="cv-card-value">120+</div>
-                    <div class="cv-card-desc">Mitra industri nasional yang berdedikasi membangun sistem ventilasi yang lebih cerdas dan lebih tahan lama.</div>
+                    <div class="cv-card-value">1K+</div>
+                    <div class="cv-card-desc">Kreator aktif dari seluruh Indonesia yang menjual karya dan layanan terbaik mereka di platform buyle.id.</div>
                 </div>
             </div>
 
             <div class="cv-card cv-card-gray" data-aos="fade-up" data-aos-delay="300">
                 <div class="cv-card-content">
-                    <div class="cv-card-label">Data Points</div>
-                    <div class="cv-card-value">520k+</div>
-                    <div class="cv-card-desc" style="margin-top:auto;">Unit buyle.id aktif bekerja 24 jam non-stop tanpa listrik.</div>
+                    <div class="cv-card-label">Transaksi Terlayani</div>
+                    <div class="cv-card-value">10k+</div>
+                    <div class="cv-card-desc" style="margin-top:auto;">Transaksi produk digital yang berhasil diselesaikan dengan aman dan instan.</div>
                 </div>
             </div>
         </div>
@@ -282,16 +281,16 @@ body { background: var(--cv-bg); color: var(--cv-text); }
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:1.5rem;">
             <div class="cv-card cv-card-gray" style="min-height:auto;" data-aos="fade-up">
                 <div class="cv-card-content">
-                    <div class="cv-card-label" style="color:var(--cv-accent); font-weight:700;">Visi Perusahaan</div>
+                    <div class="cv-card-label" style="color:var(--cv-accent); font-weight:700;">Visi Platform</div>
                     <h3 style="font-size:1.5rem; font-weight:600; color:var(--cv-text); margin-bottom:1rem;">Menjadi Pelopor</h3>
-                    <p style="font-size:0.9375rem; color:#475569; line-height:1.7; margin:0;">{{ str_replace('buyle.id', 'buyle.id', $settings['visi'] ?? 'Menjadi pelopor penyedia sirkulasi udara hemat energi yang profesional dan terpercaya di Indonesia.') }}</p>
+                    <p style="font-size:0.9375rem; color:#475569; line-height:1.7; margin:0;">{{ $settings['visi'] ?? 'Menjadi digital creator marketplace terdepan di Indonesia yang menghubungkan kreator berbakat dengan pembeli yang mencari karya dan layanan digital berkualitas.' }}</p>
                 </div>
             </div>
             <div class="cv-card cv-card-gray" style="min-height:auto;" data-aos="fade-up" data-aos-delay="100">
                 <div class="cv-card-content">
-                    <div class="cv-card-label" style="color:var(--cv-accent); font-weight:700;">Misi Perusahaan</div>
-                    <h3 style="font-size:1.5rem; font-weight:600; color:var(--cv-text); margin-bottom:1rem;">Solusi Menyeluruh</h3>
-                    <p style="font-size:0.9375rem; color:#475569; line-height:1.7; margin:0;">{{ str_replace('buyle.id', 'buyle.id', $settings['misi'] ?? 'Menciptakan solusi menyeluruh dengan kualitas terbaik dalam pengadaan buyle.id atap untuk meningkatkan efisiensi dan kenyamanan pelanggan.') }}</p>
+                    <div class="cv-card-label" style="color:var(--cv-accent); font-weight:700;">Misi Platform</div>
+                    <h3 style="font-size:1.5rem; font-weight:600; color:var(--cv-text); margin-bottom:1rem;">Ekosistem Digital</h3>
+                    <p style="font-size:0.9375rem; color:#475569; line-height:1.7; margin:0;">{{ $settings['misi'] ?? 'Membangun ekosistem marketplace yang adil, aman, dan menguntungkan bagi kreator dan pembeli; mendorong pertumbuhan ekonomi digital Indonesia.' }}</p>
                 </div>
             </div>
         </div>
@@ -507,79 +506,79 @@ body { background: var(--cv-bg); color: var(--cv-text); }
                     <h2 class="cv-adv-section-title">Mengapa Pilih<br>buyle.id?</h2>
                 </div>
                 <p style="max-width:320px;font-size:0.875rem;color:#64748B;line-height:1.65;text-align:right;">
-                    Didesain untuk iklim tropis Indonesia, dibuktikan oleh ratusan proyek dari Sabang sampai Merauke.
+                    Platform yang dirancang khusus untuk ekosistem digital creator Indonesia, terpercaya oleh ribuan kreator dan pembeli.
                 </p>
             </div>
 
             {{-- Premium Cards Grid --}}
             <div class="cv-adv-cards">
 
-                {{-- Card 1: Garansi — Blue Accent --}}
+                {{-- Card 1: Transaksi Aman — Accent --}}
                 <div class="cv-adv-card-v2 accent" data-aos="fade-up" data-aos-delay="0">
                     <div class="cv-adv-card-icon-wrap white-bg">
                         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     </div>
-                    <div class="cv-adv-card-num white">15+</div>
-                    <div class="cv-adv-card-title white">Garansi 15 Tahun</div>
-                    <div class="cv-adv-card-desc white">Garansi tidak berkarat & tidak rusak. Garansi instalasi 5 tahun dan sparepart 5 tahun.</div>
+                    <div class="cv-adv-card-num white">100%</div>
+                    <div class="cv-adv-card-title white">Transaksi Aman</div>
+                    <div class="cv-adv-card-desc white">Semua transaksi dilindungi. Uang ditahan dulu, baru cair setelah pembeli konfirmasi puas.</div>
                 </div>
 
-                {{-- Card 2: 0 Watt —Gray --}}
+                {{-- Card 2: Akses Instan — Gray --}}
                 <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="80">
                     <div class="cv-adv-card-icon-wrap blue-bg">
                         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </div>
-                    <div class="cv-adv-card-num">0W</div>
-                    <div class="cv-adv-card-title">Tanpa Listrik</div>
-                    <div class="cv-adv-card-desc">Bertenaga sepenuhnya dari angin. Tidak ada tagihan listrik, nol risiko korsleting.</div>
+                    <div class="cv-adv-card-num">⚡</div>
+                    <div class="cv-adv-card-title">Akses Instan</div>
+                    <div class="cv-adv-card-desc">Produk digital langsung bisa diunduh atau diakses setelah pembayaran berhasil. Tidak ada menunggu.</div>
                 </div>
 
-                {{-- Card 3: 24 Jam — Gray --}}
+                {{-- Card 3: 24/7 — Gray --}}
                 <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="160">
                     <div class="cv-adv-card-icon-wrap blue-bg">
                         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     </div>
                     <div class="cv-adv-card-num">24/7</div>
-                    <div class="cv-adv-card-title">Non-Stop 365 Hari</div>
-                    <div class="cv-adv-card-desc">Bebas perawatan dan beroperasi 24 jam sehari, 365 hari setahun tanpa henti.</div>
+                    <div class="cv-adv-card-title">Toko Selalu Buka</div>
+                    <div class="cv-adv-card-desc">Kreator berjualan dan pembeli berbelanja kapan saja, dari mana saja, tanpa batas waktu.</div>
                 </div>
 
-                {{-- Card 4: Kapasitas — Dark --}}
+                {{-- Card 4: Kreator Terverifikasi — Dark --}}
                 <div class="cv-adv-card-v2 accent-dark" data-aos="fade-up" data-aos-delay="240">
                     <div class="cv-adv-card-icon-wrap dark-bg">
                         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                     </div>
-                    <div class="cv-adv-card-num blue">257</div>
-                    <div class="cv-adv-card-title light">Kapasitas Hisap Superior</div>
-                    <div class="cv-adv-card-desc white">Hingga 257,87 m³/menit — jauh lebih tinggi dari buyle.id tipe stasioner manapun.</div>
+                    <div class="cv-adv-card-num blue">1K+</div>
+                    <div class="cv-adv-card-title light">Kreator Terverifikasi</div>
+                    <div class="cv-adv-card-desc white">Semua kreator di buyle.id telah melewati proses verifikasi untuk memastikan kualitas karya dan layanan.</div>
                 </div>
 
-                {{-- Card 5: Anti Hujan --}}
+                {{-- Card 5: Beragam Produk --}}
                 <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="0">
+                    <div class="cv-adv-card-icon-wrap blue-bg">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                    </div>
+                    <div class="cv-adv-card-title" style="margin-top:auto;">Beragam Kategori</div>
+                    <div class="cv-adv-card-desc">Template, source code, desain, foto, kursus, jasa penulisan, dan masih banyak lagi.</div>
+                </div>
+
+                {{-- Card 6: Komisi Kompetitif --}}
+                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="80">
                     <div class="cv-adv-card-icon-wrap blue-bg">
                         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
                     </div>
-                    <div class="cv-adv-card-title" style="margin-top:auto;">100% Anti Tampias Hujan</div>
-                    <div class="cv-adv-card-desc">Desain khusus memastikan air hujan tidak masuk ke dalam bangunan dalam kondisi apapun.</div>
+                    <div class="cv-adv-card-title" style="margin-top:auto;">Komisi Kompetitif</div>
+                    <div class="cv-adv-card-desc">Kreator mendapatkan komisi yang kompetitif dan transparan. Lebih banyak jual, lebih banyak untung.</div>
                 </div>
 
-                {{-- Card 6: Iklim Tropis --}}
-                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="80">
-                    <div class="cv-adv-card-icon-wrap blue-bg">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-                    </div>
-                    <div class="cv-adv-card-title" style="margin-top:auto;">Cocok Iklim Tropis</div>
-                    <div class="cv-adv-card-desc">Dioptimalkan untuk kondisi panas dan lembab Indonesia, efektif bahkan di angin minimum.</div>
-                </div>
-
-                {{-- Card 7: Desain USA — spans 2 columns --}}
+                {{-- Card 7: Payment Gateway — spans 2 columns --}}
                 <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="160" style="grid-column: span 2; flex-direction: row; gap: 2rem; align-items: center;">
                     <div class="cv-adv-card-icon-wrap blue-bg" style="flex-shrink:0; width:60px; height:60px;">
-                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                     </div>
                     <div>
-                        <div class="cv-adv-card-title" style="font-size:1.125rem; margin-bottom:0.5rem;">Desain Konstruksi USA</div>
-                        <div class="cv-adv-card-desc">Mengikuti standar desain USA dengan powder coating pada rangka bola dan topi bola untuk ketahanan dan keawetan maksimal di iklim tropis yang ekstrem.</div>
+                        <div class="cv-adv-card-title" style="font-size:1.125rem; margin-bottom:0.5rem;">Pembayaran Lengkap & Terjamin</div>
+                        <div class="cv-adv-card-desc">Mendukung transfer bank, e-wallet (GoPay, OVO, DANA), QRIS, dan kartu kredit. Semua transaksi diproses dengan standar keamanan tertinggi.</div>
                     </div>
                 </div>
 
