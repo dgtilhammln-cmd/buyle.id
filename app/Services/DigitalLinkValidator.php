@@ -76,6 +76,10 @@ class DigitalLinkValidator
         'mega.io',
         // Box
         'app.box.com',
+        // WhatsApp
+        'wa.me',
+        'api.whatsapp.com',
+        'web.whatsapp.com',
         // Custom domain seller (domain buyle.id sendiri)
         'buyle.id',
     ];
