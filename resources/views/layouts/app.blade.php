@@ -14,7 +14,7 @@
       "@type": "WebSite",
       "@id": "https://buyle.id/#website",
       "name": "BUYLE",
-      "alternateName": ["BuyLe", "BuyLe.id", "BUYLE.ID"],
+      "alternateName": "BUYLE.ID",
       "url": "https://buyle.id/"
     }
     </script>
