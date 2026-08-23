@@ -154,14 +154,20 @@
 }
 .sf-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
 .sf-card:hover .sf-card-img img { transform: scale(1.05); }
-.sf-card-body { padding: 0.75rem; flex: 1; display: flex; flex-direction: column; }
-.sf-card-name {
-    font-size: 0.85rem; color: #1E293B; margin: 0 0 0.4rem;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4;
+.sf-discount-badge {
+    position: absolute; top: 0.5rem; left: 0.5rem;
+    background: #EF4444; color: #fff; font-size: 0.65rem; font-weight: 700;
+    padding: 0.2rem 0.4rem; border-radius: 4px; z-index: 2;
 }
-.sf-card-price { margin-top: auto; font-size: 1rem; color: #1eb349; }
-.sf-card-price-strike { font-size: 0.75rem; color: #94A3B8; text-decoration: line-through; }
-
+.sf-card-body { padding: 0.6rem; flex: 1; display: flex; flex-direction: column; }
+.sf-card-name {
+    font-size: 0.8rem; color: #1E293B; margin: 0 0 0.4rem;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.35;
+    font-weight: 500;
+}
+.sf-card-price { margin-top: auto; display: flex; flex-direction: column; }
+.sf-card-price-strike { font-size: 0.7rem; color: #94A3B8; text-decoration: line-through; margin-bottom: 0.1rem; }
+.sf-card-price-main { font-size: 0.95rem; color: #1eb349; font-weight: 600; }
 /* ── Desktop Layout Overrides ── */
 @media (min-width: 768px) {
     .sf-layout { padding: 2rem 1rem; flex-direction: row; align-items: flex-start; }
@@ -357,14 +363,18 @@
                     <a href="{{ route('products.show', $product->slug) }}" class="sf-card">
                         <div class="sf-card-img">
                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy">
+                            @if($product->sale_price && $product->sale_price < $product->price)
+                                @php $discount = round((($product->price - $product->sale_price) / $product->price) * 100); @endphp
+                                <div class="sf-discount-badge">{{ $discount }}%</div>
+                            @endif
                         </div>
                         <div class="sf-card-body">
                             <p class="sf-card-name">{{ $product->name }}</p>
                             <div class="sf-card-price">
-                                Rp{{ number_format($product->sale_price ?? $product->price, 0, ',', '.') }}
                                 @if($product->sale_price && $product->sale_price < $product->price)
                                     <div class="sf-card-price-strike">Rp{{ number_format($product->price, 0, ',', '.') }}</div>
                                 @endif
+                                <div class="sf-card-price-main">Rp{{ number_format($product->sale_price ?? $product->price, 0, ',', '.') }}</div>
                             </div>
                         </div>
                     </a>

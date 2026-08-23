@@ -533,7 +533,7 @@
 
         .sp-card-img {
             width: 100%;
-            aspect-ratio: 4/3;
+            aspect-ratio: 1/1;
             overflow: hidden;
             background: var(--c-surface);
             position: relative;
@@ -564,46 +564,13 @@
         }
 
         .sp-card-body {
-            padding: 1.25rem;
+            padding: 0.8rem;
             display: flex;
             flex-direction: column;
             flex: 1;
         }
 
-        .sp-card-cat {
-            font-size: 0.68rem;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--c-muted);
-            font-family: var(--font);
-            margin-bottom: 0.4rem;
-        }
-
         .sp-card-name {
-            font-size: 0.9375rem;
-            font-weight: 600;
-            color: var(--c-text);
-            font-family: var(--font);
-            line-height: 1.4;
-            margin-bottom: 0.4rem;
-            transition: color 0.2s;
-        }
-
-        .sp-card:hover .sp-card-name {
-            color: var(--c-accent);
-        }
-
-        .sp-card-desc {
-            font-size: 0.8rem;
-            color: var(--c-muted);
-            font-family: var(--font);
-            font-weight: 400;
-            line-height: 1.6;
-            flex: 1;
-            margin-bottom: 1rem;
-        }
-
         .sp-card-footer {
             border-top: 1px solid var(--c-border);
             padding-top: 1rem;
@@ -1372,44 +1339,9 @@
 
                         {{-- Body --}}
                         <div class="sp-card-body">
-                            @if($service->category)
-                                <div class="sp-card-cat">{{ $service->category->name }}</div>
-                            @endif
                             <a href="{{ route_locale('products.show', $service->slug) }}" style="text-decoration:none;">
                                 <h2 class="sp-card-name">{{ $service->name }}</h2>
                             </a>
-                            <p class="sp-card-desc">{{ Str::limit($service->short_desc ?? '', 75) }}</p>
-
-                            {{-- List view: extra meta info --}}
-                            <div class="sp-card-meta-row">
-                                @if($service->category)
-                                    <span class="sp-card-meta-item">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" />
-                                        </svg>
-                                        {{ $service->category->name }}
-                                    </span>
-                                @endif
-                                @if($service->stock)
-                                    <span class="sp-card-meta-item">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                        </svg>
-                                        Stok: {{ $service->stock }}
-                                    </span>
-                                @endif
-                                <span class="sp-card-meta-item">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <path d="M9 11l3 3L22 4" />
-                                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
-                                    </svg>
-                                    Terjual: {{ $service->sold_count ?? 0 }}
-                                </span>
-                            </div>
 
                             <div class="sp-card-footer">
                                 {{-- Price --}}
@@ -1424,15 +1356,7 @@
                                         @endif
                                     @else
                                         <div class="sp-card-price-jasa">Layanan Jasa</div>
-                                        <div class="sp-card-price-jasa-sub">Konsultasi untuk harga</div>
                                     @endif
-                                </div>
-
-                                {{-- 1 Button: Lihat Detail --}}
-                                <div class="sp-card-actions" style="grid-template-columns: 1fr;">
-                                    <a href="{{ route_locale('products.show', $service->slug) }}" class="sp-btn-main" style="background: var(--c-gradient); color: #fff; font-weight: 700; border: none; border-radius: 12px;">
-                                        Lihat Detail
-                                    </a>
                                 </div>
                             </div>
                         </div>
