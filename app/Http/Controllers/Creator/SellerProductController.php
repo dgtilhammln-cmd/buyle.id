@@ -75,6 +75,7 @@ class SellerProductController extends Controller
         // Produk digital buyle.id selalu external_link
         $data['seller_id']    = auth()->id();
         $data['product_type'] = 'external_link';
+        $data['stock']        = $data['stock'] ?? 0;
         
         // Generate unique slug
         $slug = Str::slug($data['name']);
@@ -152,6 +153,7 @@ class SellerProductController extends Controller
         }
 
         $data['product_type'] = 'external_link'; // Selalu link
+        $data['stock']        = $data['stock'] ?? 0;
 
         $product->update($data);
 
