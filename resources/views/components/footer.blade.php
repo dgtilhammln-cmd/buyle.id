@@ -158,14 +158,30 @@ www.buyle.id
     .cv-footer-v2-links a {
         font-size: 0.95rem;
         font-weight: 400;
-        color: #CBD5E1;
+        color: #94A3B8;
         text-decoration: none;
         transition: all 0.3s;
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+    }
+    .cv-footer-v2-links a::before {
+        content: '›';
+        color: #1eb349;
+        font-size: 1rem;
+        font-weight: 700;
+        opacity: 0;
+        transform: translateX(-4px);
+        transition: all 0.3s;
     }
     .cv-footer-v2-links a:hover {
-        color: #1eb349;
-        transform: translateX(4px);
+        color: #ffffff;
+        transform: translateX(6px);
+    }
+    .cv-footer-v2-links a:hover::before {
+        opacity: 1;
+        transform: translateX(0);
     }
     .cv-footer-v2-contact-item {
         display: flex;
@@ -248,21 +264,29 @@ www.buyle.id
         font-weight: 700;
         letter-spacing: 0.15em;
         text-transform: uppercase;
-        color: #64748B;
+        color: #1eb349;
+        margin-bottom: 0.25rem;
     }
     .cv-footer-v2-pay-logos {
         display: flex;
         flex-wrap: wrap;
         gap: 0.75rem;
         align-items: center;
-        background: #ffffff;
-        padding: 0.5rem 1rem;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        padding: 0.6rem 1.25rem;
         border-radius: 12px;
+        font-size: 0.875rem;
+        color: #CBD5E1;
+        font-weight: 500;
+        letter-spacing: 0.02em;
     }
     .cv-footer-v2-pay-logos img {
         height: 24px;
         width: auto;
         object-fit: contain;
+        filter: brightness(0) invert(1);
+        opacity: 0.7;
     }
     .cv-footer-v2-bottom {
         max-width: 1200px;
