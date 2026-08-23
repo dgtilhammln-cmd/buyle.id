@@ -127,7 +127,7 @@ Route::middleware(['guest'])->group(function () {
 
     // Google OAuth
     Route::get('/auth/google',          [AuthController::class, 'googleRedirect'])->name('auth.google');
-    Route::get('/auth/google/callback', [AuthController::class, 'googleCallback'])->name('auth.google.callback');
+    Route::get('/auth/callback/google', [AuthController::class, 'googleCallback'])->name('auth.google.callback');
 });
 
 Route::post('/keluar', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
