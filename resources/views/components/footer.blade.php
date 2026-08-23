@@ -361,34 +361,7 @@ www.buyle.id
                 {{ $s['footer_desc'] ?? 'Toko serba ada yang menyediakan berbagai kebutuhan rumah tangga, produk elektronik, furnitur, hingga jasa profesional terpercaya.' }}
             </p>
 
-            <div class="cv-footer-v2-badges">
-                <span class="cv-footer-v2-badge">
-                    <svg width="9" height="9" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Produk Berkualitas
-                </span>
-                <span class="cv-footer-v2-badge">
-                    <svg width="9" height="9" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                    </svg>
-                    Harga Terbaik
-                </span>
-                <span class="cv-footer-v2-badge">
-                    <svg width="9" height="9" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    Pengiriman Cepat
-                </span>
-                <span class="cv-footer-v2-badge">
-                    <svg width="9" height="9" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                    CS Siap Bantu
-                </span>
-            </div>
+
 
             <div class="cv-footer-v2-socials">
                 @if($wa)
@@ -541,18 +514,7 @@ www.buyle.id
                 </div>
             </div>
 
-            <div class="cv-footer-v2-contact-item">
-                <div class="cv-footer-v2-contact-icon">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" />
-                        <polyline points="12 6 12 12 16 14" />
-                    </svg>
-                </div>
-                <div class="cv-footer-v2-contact-text">
-                    <span class="cv-footer-v2-contact-label">Jam Operasional</span>
-                    {{ $s['hours'] ?? '' ?: 'Senin - Sabtu, 08.00 - 17.00 WIB' }}
-                </div>
-            </div>
+
         </div>
 
     </div>{{-- /cv-footer-v2-main --}}
@@ -560,33 +522,7 @@ www.buyle.id
     <hr class="cv-footer-v2-divider">
 
     <div class="cv-footer-v2-bottom-wrap">
-        {{-- Payment & Expedition Section --}}
-        <div class="cv-footer-v2-pay-wrap">
-            <div class="cv-footer-v2-pay-section">
-                <div class="cv-footer-v2-pay-title">Metode Pembayaran</div>
-                <div class="cv-footer-v2-pay-logos">
-                    @if(!empty($s['payment_logos']))
-                        <img src="{{ asset('storage/' . $s['payment_logos']) }}" alt="Metode Pembayaran" loading="lazy">
-                    @else
-                        {{-- Fallback default text or empty --}}
-                        <span style="font-size: 0.8rem; color: #94A3B8; font-weight: 500;">BCA • Mandiri • BNI • QRIS</span>
-                    @endif
-                </div>
-            </div>
 
-            <div class="cv-footer-v2-pay-section">
-                <div class="cv-footer-v2-pay-title">Jasa Pengiriman</div>
-                <div class="cv-footer-v2-pay-logos">
-                    @if(!empty($s['expedition_logos']))
-                        <img src="{{ asset('storage/' . $s['expedition_logos']) }}" alt="Jasa Pengiriman" loading="lazy">
-                    @else
-                        {{-- Fallback default text or empty --}}
-                        <span style="font-size: 0.8rem; color: #94A3B8; font-weight: 500;">JNE • J&T • Sicepat • GoSend •
-                            GrabExpress</span>
-                    @endif
-                </div>
-            </div>
-        </div>
 
         <div class="cv-footer-v2-bottom">
             <div class="cv-footer-v2-copy">

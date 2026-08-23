@@ -446,12 +446,14 @@
         {{-- ── CTA Actions & Auth ── --}}
         <div class="nav-pill-box nav-pill-actions">
             
-            {{-- Lacak Resi Icon (Box with search) --}}
-            <a href="{{ url('/cek-resi') }}" class="pill-icon-btn" title="Lacak Pesanan">
+            {{-- Blog / Artikel Icon --}}
+            <a href="{{ url('/artikel') }}" class="pill-icon-btn" title="Blog & Artikel">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
                 </svg>
             </a>
             
@@ -520,7 +522,7 @@
                                 </div>
                             @endforeach
                         </div>
-                        <a href="{{ route('cart.index') }}" style="display:block; width:100%; padding:0.55rem; text-align:center; background:#0F172A; color:#fff; font-size:0.78rem; font-weight:600; font-family:'Montserrat',sans-serif; text-decoration:none; border-radius:8px; transition:background 0.2s; letter-spacing:0.01em;" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='#0F172A'">
+                        <a href="{{ route('cart.index') }}" style="display:block; width:100%; padding:0.65rem 1.5rem; text-align:center; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-size:0.8rem; font-weight:700; font-family:'Montserrat',sans-serif; text-decoration:none; border-radius:999px; transition:all 0.3s; letter-spacing:0.02em; box-shadow:0 4px 14px rgba(30,179,73,0.35);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 20px rgba(30,179,73,0.45)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(30,179,73,0.35)';">
                             Lanjut ke Pembayaran
                         </a>
                     @endif
