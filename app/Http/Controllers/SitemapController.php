@@ -15,8 +15,8 @@ class SitemapController extends Controller
         // Fetch data for sitemap
         $products = Product::where('is_active', true)->get(['id','slug','name','image','updated_at']);
         $creators = CreatorProfile::with('user')->get(['id','store_slug','store_name','updated_at', 'user_id']);
-        $articles = Article::published()->latest()->get(['slug','title','image','updated_at']);
-        $authors  = Author::whereNotNull('slug')->get(['slug','name','updated_at']);
+        $articles = Article::published()->latest()->get();
+        $authors  = Author::whereNotNull('slug')->get();
 
         $appUrl = rtrim(config('app.url'), '/');
 
