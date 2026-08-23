@@ -223,7 +223,7 @@ class ServiceController extends Controller
         $service->increment('views_count');
         $settings     = Setting::getAllAsArray();
         $wa           = WaSetting::primary();
-        $related      = Product::active()->ordered()->where('id', '!=', $service->id)->limit(4)->get();
+        $related      = Product::active()->ordered()->where('seller_id', $service->seller_id)->where('id', '!=', $service->id)->limit(10)->get();
         $testimonials = Testimonial::active()->ordered()->get()->unique('name');
         $siteName     = $settings['site_name'] ?? 'buyle.id';
         $appUrl       = rtrim(config('app.url'), '/');

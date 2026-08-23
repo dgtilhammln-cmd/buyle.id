@@ -296,20 +296,33 @@
 }
 
 /* ─── RELATED ─── */
-.pd-related-title { font-size: 1rem; font-weight: 500; color: var(--text-muted); text-transform: uppercase; margin-bottom: 1rem; }
-.pd-related-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem; }
-@media (max-width: 992px) { .pd-related-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 768px) { .pd-related-grid { grid-template-columns: repeat(2, 1fr); } }
-.pd-related-card {
-    background: #fff; text-decoration: none; color: inherit;
-    border-radius: 0 0 16px 16px; overflow: hidden; border: 1px solid var(--border); transition: 0.2s;
+.pd-related-title { font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem; font-family: 'Montserrat', sans-serif; }
+.pd-related-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+@media (max-width: 768px) { 
+    .pd-related-grid { 
+        display: flex; overflow-x: auto; scroll-snap-type: x mandatory; 
+        padding-bottom: 1rem; -webkit-overflow-scrolling: touch; gap: 0.75rem;
+    }
+    .pd-related-grid > * { flex: 0 0 160px; scroll-snap-align: start; }
 }
-.pd-related-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(30,179,73,0.1); }
-.pd-related-img { width: 100%; aspect-ratio: 1/1; background: var(--bg-light); }
-.pd-related-img img { width: 100%; height: 100%; object-fit: cover; }
-.pd-related-body { padding: 0.75rem; }
-.pd-related-name { font-size: 0.85rem; font-weight: 400; color: var(--text-main); margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
-.pd-related-price { font-size: 1rem; font-weight: 600; background: linear-gradient(135deg, #1eb349, #a5cf37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+/* Card Design Matching Landing Page */
+.cv-promo-card {
+    display: flex; flex-direction: column; background: #fff;
+    border: 1.5px solid #F1F5F9; border-radius: 14px; overflow: hidden; height: 100%;
+    text-decoration: none; transition: border-color .25s, box-shadow .25s, transform .25s;
+}
+.cv-promo-card:hover { border-color: var(--primary); box-shadow: 0 8px 24px rgba(30,179,73,.1); transform: translateY(-3px); }
+.cv-promo-card-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+.cv-promo-card-body { padding: 1rem; display: flex; flex-direction: column; flex: 1; }
+.cv-promo-card-badge { align-self: flex-start; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 6px; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; background: #DBEAFE; color: #2563EB; }
+.cv-promo-card-badge.service { background: #FEF3C7; color: #D97706; }
+.cv-promo-card-name { font-size: 0.85rem; font-weight: 600; color: #1E293B; line-height: 1.4; margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.cv-promo-card-price { font-size: 0.95rem; font-weight: 700; color: #1E293B; margin-top: auto; }
+.cv-promo-card-price-old { font-size: 0.7rem; color: #94A3B8; text-decoration: line-through; font-weight: 400; }
+.cv-promo-card-discount { display: inline-block; font-size: 0.65rem; font-weight: 700; color: #DC2626; background: #FEE2E2; padding: 0.1rem 0.35rem; border-radius: 4px; }
+.cv-promo-card-meta { display: flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; color: #94A3B8; margin-top: 0.25rem; }
+.cv-promo-card-star { color: #FBBF24; }
 
 </style>
 
@@ -574,19 +587,56 @@
 
     {{-- 4. RELATED --}}
     @if($related->count() > 0)
-    <div style="max-width:1200px; margin: 0 auto 4rem;">
-        <div class="pd-related-title">Produk Lain Dari Toko Ini</div>
+    <div style="max-width:1200px; margin: 0 auto 4rem; padding: 0 1rem;">
+        <div class="pd-related-title">Produk Lain Dari Creator Ini</div>
         <div class="pd-related-grid">
             @foreach($related as $r)
-            <a href="{{ route_locale('products.show', $r->slug) }}" class="pd-related-card">
-                <div class="pd-related-img">
-                    <img src="{{ $r->image_url }}" alt="{{ $r->name }}" loading="lazy">
-                </div>
-                <div class="pd-related-body">
-                    <div class="pd-related-name">{{ $r->name }}</div>
-                    <div class="pd-related-price">Rp{{ number_format($r->sale_price ?? $r->price, 0, ',', '.') }}</div>
-                </div>
-            </a>
+            @php
+                $effPrice = ($r->sale_price > 0 && $r->sale_price < $r->price) ? $r->sale_price : $r->price;
+                $discount = ($r->sale_price > 0 && $r->sale_price < $r->price)
+                    ? round((($r->price - $r->sale_price)/$r->price)*100) : 0;
+            @endphp
+            <div>
+                <a href="{{ route('products.show', $r->slug) }}" class="cv-promo-card">
+                    @if($r->image)
+                        <img src="{{ asset('storage/'.$r->image) }}" alt="{{ $r->name }}" class="cv-promo-card-img" loading="lazy">
+                    @else
+                        <div style="width:100%; aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; background:#F1F5F9;">
+                            <svg width="32" height="32" fill="none" stroke="#CBD5E1" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        </div>
+                    @endif
+                    <div class="cv-promo-card-body">
+                        <span class="cv-promo-card-badge {{ $r->type === 'service' ? 'service' : '' }}">
+                            {{ $r->type === 'service' ? 'Jasa' : 'Produk' }}
+                        </span>
+                        <div class="cv-promo-card-name">{{ $r->name }}</div>
+                        @if($r->price > 0)
+                        <div>
+                            @if($discount > 0)
+                            <div class="cv-promo-card-price-old">Rp{{ number_format($r->price,0,',','.') }}</div>
+                            @endif
+                            <div style="display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;">
+                                <span class="cv-promo-card-price">Rp{{ number_format($effPrice,0,',','.') }}</span>
+                                @if($discount > 0)
+                                    <span class="cv-promo-card-discount">{{ $discount }}%</span>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
+                        @if($r->rating > 0 || $r->sold_count > 0)
+                        <div class="cv-promo-card-meta">
+                            @if($r->rating > 0)
+                                <span class="cv-promo-card-star">★</span>
+                                <span>{{ number_format($r->rating,1) }}</span>
+                            @endif
+                            @if($r->sold_count > 0)
+                                <span>· {{ $r->sold_count >= 1000 ? number_format($r->sold_count/1000,1).'rb' : $r->sold_count }} {{ $r->type === 'service' ? 'dipesan' : 'terjual' }}</span>
+                            @endif
+                        </div>
+                        @endif
+                    </div>
+                </a>
+            </div>
             @endforeach
         </div>
     </div>

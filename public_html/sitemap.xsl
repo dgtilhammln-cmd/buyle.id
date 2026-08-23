@@ -121,7 +121,7 @@
         <body>
             <div class="sm-hero">
                 <h1>XML Sitemap by HVM Digital</h1>
-                <p>Ini adalah format XML sitemap yang digunakan oleh Google Search Console dan mesin pencari lainnya untuk melakukan indexing pada seluruh halaman website Alatrumah.com.</p>
+                <p>Ini adalah format XML sitemap yang digunakan oleh Google Search Console dan mesin pencari lainnya untuk melakukan indexing pada seluruh halaman website buyle.id.</p>
             </div>
             <div class="sm-main">
                 <div class="sm-table-wrap">
@@ -196,7 +196,7 @@
                 </div>
             </div>
             <div class="sm-footer">
-                SEO by <a href="https://hvmdigital.com" target="_blank" rel="noopener noreferrer">HVM Digital</a>
+                SEO by <a href="https://buyle.id" target="_blank" rel="noopener noreferrer">buyle.id</a> &mdash; Digital Creator Marketplace Indonesia
             </div>
         </body>
         </html>

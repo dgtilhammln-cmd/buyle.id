@@ -378,17 +378,17 @@ body { background-color: var(--c-bg); font-family: var(--font); }
         <nav class="sv-breadcrumb" aria-label="Breadcrumb">
             <a href="{{ route_locale('home') }}">Beranda</a>
             <span class="sv-breadcrumb-sep">/</span>
-            <span class="sv-breadcrumb-current">Galeri Proyek</span>
+            <span class="sv-breadcrumb-current">Katalog Kreator</span>
         </nav>
 
-        <div class="sv-label">Galeri Instalasi</div>
+        <div class="sv-label">Karya & Portofolio</div>
         <h1 class="sv-title">
-            Bukti Nyata<br>
-            di Lapangan
+            Karya Terbaik<br>
+            Para Kreator Digital
         </h1>
         <p class="sv-intro">
-            Dokumentasi proyek pemasangan &amp; instalasi buyle.id buyle.id
-            di berbagai industri, gudang, dan bangunan komersial seluruh Indonesia.
+            Temukan inspirasi dari portofolio dan karya terbaik para kreator di buyle.id —
+            produk digital, desain, template, dan aset kreatif berkualitas.
         </p>
     </div>
 </section>
@@ -471,8 +471,8 @@ body { background-color: var(--c-bg); font-family: var(--font); }
     @else
     <div class="gl-empty" data-aos="fade-up">
         <div style="
-            background: #FFF7ED;
-            border: 1.5px solid #FED7AA;
+            background: #F0FDF4;
+            border: 1.5px solid #BBF7D0;
             border-radius: 20px;
             padding: 3rem 2.5rem;
             max-width: 520px;
@@ -481,25 +481,25 @@ body { background-color: var(--c-bg); font-family: var(--font); }
         ">
             <div style="
                 width: 64px; height: 64px;
-                background: #FEF3C7;
+                background: #DCFCE7;
                 border-radius: 50%;
                 display: flex; align-items: center; justify-content: center;
                 margin: 0 auto 1.5rem;
             ">
-                <svg width="28" height="28" fill="none" stroke="#F59E0B" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+                <svg width="28" height="28" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
                 </svg>
             </div>
-            <h3 style="font-size:1.25rem; font-weight:700; color:#92400E; margin-bottom:0.75rem; font-family:'Montserrat',sans-serif;">
-                Galeri Sedang Diperbarui
+            <h3 style="font-size:1.25rem; font-weight:700; color:#166534; margin-bottom:0.75rem; font-family:'Montserrat',sans-serif;">
+                Katalog Sedang Diperbarui
             </h3>
-            <p style="font-size:0.9rem; color:#B45309; line-height:1.7; margin-bottom:1.5rem; font-family:'Montserrat',sans-serif;">
-                Foto-foto proyek instalasi kami sedang dalam proses penambahan.
+            <p style="font-size:0.9rem; color:#15803D; line-height:1.7; margin-bottom:1.5rem; font-family:'Montserrat',sans-serif;">
+                Karya dan portofolio kreator sedang dalam proses penambahan.
                 Segera hadir! Sementara itu, hubungi kami untuk informasi lebih lanjut.
             </p>
             <a href="{{ route_locale('contact') }}" style="
                 display: inline-flex; align-items: center; gap: 0.5rem;
-                background: #F59E0B; color: #fff; font-family: 'Montserrat', sans-serif;
+                background: #1eb349; color: #fff; font-family: 'Montserrat', sans-serif;
                 font-size: 0.875rem; font-weight: 600; padding: 0.75rem 1.75rem;
                 border-radius: 50px; text-decoration: none; transition: all 0.3s;
             ">Hubungi Kami
@@ -514,24 +514,19 @@ body { background-color: var(--c-bg); font-family: var(--font); }
 <section class="sv-cta-premium" data-aos="fade-up">
     <div class="sv-cta-glow"></div>
     <div class="sv-cta-inner">
-        <div class="sv-label" style="margin-bottom:1rem;">Butuh Instalasi?</div>
-        <h2 class="sv-cta-h2">Wujudkan Proyek<br>Ventilasi Anda Bersama Kami</h2>
+        <div class="sv-label" style="margin-bottom:1rem;">Jadi Kreator?</div>
+        <h2 class="sv-cta-h2">Tampilkan Karya Anda<br>di buyle.id dan Mulai Berjualan</h2>
         <p class="sv-cta-sub">
-            Tim teknis buyle.id siap membantu merencanakan dan memasang sistem
-            ventilasi terbaik untuk bangunan Anda.
+            Daftarkan diri sebagai kreator, unggah produk digital Anda,
+            dan jangkau ribuan pembeli di seluruh Indonesia.
         </p>
         <div class="sv-cta-btns">
-            @php $wa = \App\Models\WaSetting::primary(); @endphp
-            @if($wa)
-            <a href="javascript:void(0)" onclick="openOrderModal('Galeri CTA')" class="btn-primary-v2" data-track="wa">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                </svg>
-                Konsultasi via WhatsApp
+            <a href="{{ route('creator.onboarding') }}" class="btn-primary-v2">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                Daftar sebagai Kreator
             </a>
-            @endif
             <a href="{{ route_locale('contact') }}" class="btn-outline-v2">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                 </svg>
                 Hubungi Kami
