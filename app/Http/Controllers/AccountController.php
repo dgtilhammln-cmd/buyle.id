@@ -47,7 +47,7 @@ class AccountController extends Controller
 
     public function toggleWishlist(Request $request)
     {
-        $request->validate(['product_id' => 'required|exists:services,id']);
+        $request->validate(['product_id' => 'required|exists:products,id']);
         $user = Auth::user();
         
         $wishlist = $user->wishlists()->where('product_id', $request->product_id)->first();
