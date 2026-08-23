@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Halaman transaksional — tidak perlu diindex Google
+Disallow: /admin
+Disallow: /admin/
+Disallow: /akun/
+Disallow: /keranjang
+Disallow: /checkout
+Disallow: /cek-resi
+Disallow: /deploy-hostinger
+Disallow: /creator/
+Disallow: /buyer/
+
+# Parameter filter/sort menciptakan URL duplikat
+Disallow: /*?q=
+Disallow: /*?sort=
+Disallow: /*?page=
+
+# Disallow common bot traps
+Disallow: /storage/
+Disallow: /*.php$
+
+Sitemap: https://buyle.id/sitemap.xml

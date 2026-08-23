@@ -1,28 +1,28 @@
-﻿# buyle.id
+# buyle.id
 
-> buyle.id adalah toko online buyle.id tangga terlengkap di Surabaya, Indonesia. Menyediakan berbagai produk berkualitas untuk kebutuhan dapur, kebersihan, dan perlengkapan rumah tangga dengan harga terbaik, pengiriman cepat ke seluruh Indonesia, dan garansi 100% original.
+> buyle.id adalah Digital Creator Marketplace terlengkap di Indonesia. Tempat terbaik untuk menemukan dan membeli berbagai produk digital, layanan jasa profesional, dan aset kreatif berkualitas dari para kreator berbakat dengan harga terbaik, akses instan, dan transaksi 100% aman.
 
-buyle.id menyediakan sistem belanja online yang mudah dengan fitur keranjang belanja, checkout, pelacakan resi, dan customer service via WhatsApp.
+buyle.id menyediakan sistem belanja online yang mudah dengan fitur keranjang belanja, checkout instan, manajemen lisensi, dan customer service responsif.
 
 ## Halaman Utama
 
-- [Beranda](https://buyle.id/): Halaman utama dengan promo, flash sale, dan kategori produk
-- [Daftar Produk](https://buyle.id/produk): Semua produk buyle.id tangga yang tersedia
-- [Tentang Kami](https://buyle.id/tentang-kami): Informasi tentang buyle.id dan HVM Digital
+- [Beranda](https://buyle.id/): Halaman utama dengan kreator pilihan, produk populer, dan kategori produk
+- [Katalog Kreator](https://buyle.id/galeri): Temukan portofolio dan karya terbaik dari kreator
+- [Daftar Produk & Layanan](https://buyle.id/produk): Semua aset digital dan jasa yang tersedia
+- [Tentang Kami](https://buyle.id/tentang-kami): Informasi tentang platform buyle.id dan ekosistem kreator
 - [Kontak](https://buyle.id/kontak): Formulir kontak dan informasi customer service
 
 ## Kategori Produk
 
-- [Semua Produk](https://buyle.id/produk): Peralatan dapur, kebersihan, furnitur, dan elektronik rumah tangga
+- [Semua Produk](https://buyle.id/produk): Produk digital, template, source code, desain, kursus online, dan layanan freelance
 
 ## Informasi Tambahan
 
-- [Galeri](https://buyle.id/galeri): Foto produk dan dokumentasi
-- [Artikel & Blog](https://buyle.id/artikel): Tips dan informasi seputar perawatan rumah tangga
-- [Lacak Pesanan](https://buyle.id/cek-resi): Cek status pengiriman pesanan
+- [Artikel & Blog](https://buyle.id/artikel): Tips bisnis digital, panduan kreator, dan informasi terbaru
+- [Cek Status Pesanan](https://buyle.id/cek-resi): Lacak status transaksi dan akses produk Anda
 
-## Optional
+## Halaman Transaksional
 
-- [Login Akun](https://buyle.id/login): Masuk ke akun pelanggan
-- [Daftar Akun](https://buyle.id/register): Buat akun baru untuk belanja
-- [Keranjang Belanja](https://buyle.id/cart): Lihat dan kelola keranjang belanja
+- [Login Akun](https://buyle.id/login): Masuk ke dashboard kreator / pembeli
+- [Daftar Akun](https://buyle.id/register): Bergabung sebagai pembeli atau kreator
+- [Keranjang Belanja](https://buyle.id/cart): Lihat dan kelola pembelian produk digital Anda
