@@ -120,7 +120,7 @@
         </head>
         <body>
             <div class="sm-hero">
-                <h1>XML Sitemap by HVM Digital</h1>
+                <h1>XML Sitemap by buyle.id</h1>
                 <p>Ini adalah format XML sitemap yang digunakan oleh Google Search Console dan mesin pencari lainnya untuk melakukan indexing pada seluruh halaman website buyle.id.</p>
             </div>
             <div class="sm-main">
