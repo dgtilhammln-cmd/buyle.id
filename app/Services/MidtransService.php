@@ -90,7 +90,13 @@ class MidtransService
         try {
             return Snap::getSnapToken($params);
         } catch (Exception $e) {
-            \Log::error('Midtrans Snap Error: ' . $e->getMessage());
+            \Log::error('Midtrans Snap Error: ' . $e->getMessage(), [
+                'server_key_prefix' => substr(Config::$serverKey ?? '', 0, 10) . '...',
+                'is_production'     => Config::$isProduction,
+                'order_id'          => $params['transaction_details']['order_id'],
+                'gross_amount'      => $params['transaction_details']['gross_amount'],
+                'item_count'        => count($params['item_details']),
+            ]);
             return null;
         }
     }
