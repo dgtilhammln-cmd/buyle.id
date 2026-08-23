@@ -11,50 +11,52 @@ www.buyle.id
 
 <style>
     /* ═════════════════════════════════════════
-       FOOTER — Premium Dark Theme (buyle.id)
+       FOOTER — Clean Light Theme (buyle.id)
     ═════════════════════════════════════════ */
     .cv-footer-v2 {
-        background: #0B1121;
-        color: #94A3B8;
+        background: #F8FAFC;
+        color: #475569;
         font-family: 'Montserrat', sans-serif;
         position: relative;
         overflow: hidden;
-        border-top: 1px solid rgba(255,255,255,0.05);
+        border-top: 3px solid transparent;
+        background-clip: padding-box;
+        border-image: linear-gradient(90deg, #1eb349, #a5cf37) 1;
     }
+    /* Top gradient line */
     .cv-footer-v2::before {
         content: '';
         position: absolute;
-        top: 0; left: 50%;
-        transform: translateX(-50%);
-        width: 100%; max-width: 1000px;
-        height: 500px;
-        background: radial-gradient(ellipse at top, rgba(30,179,73,0.12) 0%, transparent 70%);
-        pointer-events: none;
-        z-index: 0;
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #1eb349, #a5cf37, #1eb349);
+        z-index: 2;
     }
     .cv-footer-v2-main {
         position: relative;
         z-index: 1;
         max-width: 1200px;
         margin: 0 auto;
-        padding: 5rem clamp(1.25rem, 5vw, 2.5rem) 4rem;
+        padding: 4rem clamp(1.25rem, 5vw, 2.5rem) 3.5rem;
         display: grid;
         grid-template-columns: 2fr 1fr 1fr 1.5fr;
-        gap: 3.5rem;
+        gap: 3rem;
     }
     .cv-footer-v2-logo-wrap {
         display: inline-flex;
         align-items: center;
         background: #ffffff;
         border-radius: 99px;
-        padding: 0.5rem 1rem;
+        padding: 0.5rem 1.25rem;
         text-decoration: none;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        transition: transform 0.3s;
+        margin-bottom: 1.25rem;
+        box-shadow: 0 2px 12px rgba(30,179,73,0.15);
+        border: 1.5px solid rgba(30,179,73,0.15);
+        transition: all 0.3s;
     }
     .cv-footer-v2-logo-wrap:hover {
         transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(30,179,73,0.25);
     }
     .cv-footer-v2-logo-icon {
         height: 38px;
@@ -69,39 +71,40 @@ www.buyle.id
         object-fit: contain;
     }
     .cv-footer-v2-tagline {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         font-weight: 400;
-        color: #94A3B8;
+        color: #64748B;
         line-height: 1.8;
-        margin-bottom: 2rem;
-        max-width: 320px;
+        margin-bottom: 1.75rem;
+        max-width: 300px;
     }
     .cv-footer-v2-badges {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.6rem;
-        margin-bottom: 2rem;
+        gap: 0.5rem;
+        margin-bottom: 1.75rem;
     }
     .cv-footer-v2-badge {
         display: inline-flex;
         align-items: center;
         gap: 0.4rem;
-        background: rgba(30, 179, 73, 0.1);
-        border: 1px solid rgba(30, 179, 73, 0.2);
-        color: #a5cf37;
-        font-size: 0.65rem;
+        background: #ffffff;
+        border: 1.5px solid #E2E8F0;
+        color: #1eb349;
+        font-size: 0.62rem;
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        padding: 0.5rem 0.875rem;
+        padding: 0.4rem 0.75rem;
         border-radius: 8px;
-        backdrop-filter: blur(4px);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         transition: all 0.3s;
     }
     .cv-footer-v2-badge:hover {
-        background: rgba(30, 179, 73, 0.2);
-        border-color: rgba(30, 179, 73, 0.4);
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
+        border-color: transparent;
         color: #fff;
+        box-shadow: 0 4px 12px rgba(30,179,73,0.25);
     }
     .cv-footer-v2-badge svg { color: inherit; }
     .cv-footer-v2-socials {
@@ -111,41 +114,41 @@ www.buyle.id
     .cv-footer-v2-social-btn {
         width: 40px;
         height: 40px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: #ffffff;
+        border: 1.5px solid #E2E8F0;
         border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #CBD5E1;
+        color: #64748B;
         text-decoration: none;
         transition: all 0.3s ease;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
     }
     .cv-footer-v2-social-btn:hover {
         background: linear-gradient(135deg, #1eb349, #a5cf37);
         border-color: transparent;
         color: #ffffff;
         transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(30, 179, 73, 0.25);
+        box-shadow: 0 8px 20px rgba(30, 179, 73, 0.3);
     }
     .cv-footer-v2-col-title {
-        font-size: 0.75rem;
-        font-weight: 700;
+        font-size: 0.7rem;
+        font-weight: 800;
         letter-spacing: 0.15em;
         text-transform: uppercase;
-        color: #FFFFFF;
-        margin-bottom: 1.75rem;
+        color: #1E293B;
+        margin-bottom: 1.5rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
     }
     .cv-footer-v2-col-title::before {
         content: '';
-        width: 8px; height: 8px;
-        background: #1eb349;
-        border-radius: 50%;
+        width: 14px; height: 3px;
+        background: linear-gradient(90deg, #1eb349, #a5cf37);
+        border-radius: 2px;
         display: inline-block;
-        box-shadow: 0 0 10px rgba(30, 179, 73, 0.5);
     }
     .cv-footer-v2-links {
         list-style: none;
@@ -153,18 +156,17 @@ www.buyle.id
         margin: 0;
     }
     .cv-footer-v2-links li {
-        margin-bottom: 0.85rem;
+        margin-bottom: 0.75rem;
     }
     .cv-footer-v2-links a {
-        font-size: 0.95rem;
-        font-weight: 400;
-        color: #94A3B8;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #64748B;
         text-decoration: none;
         transition: all 0.3s;
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        position: relative;
+        gap: 0.4rem;
     }
     .cv-footer-v2-links a::before {
         content: '›';
@@ -176,8 +178,8 @@ www.buyle.id
         transition: all 0.3s;
     }
     .cv-footer-v2-links a:hover {
-        color: #ffffff;
-        transform: translateX(6px);
+        color: #1eb349;
+        transform: translateX(5px);
     }
     .cv-footer-v2-links a:hover::before {
         opacity: 1;
@@ -187,13 +189,13 @@ www.buyle.id
         display: flex;
         align-items: flex-start;
         gap: 1rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
     }
     .cv-footer-v2-contact-icon {
-        width: 38px;
-        height: 38px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        width: 36px;
+        height: 36px;
+        background: #f0fdf4;
+        border: 1.5px solid #bbf7d0;
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -206,92 +208,86 @@ www.buyle.id
         background: linear-gradient(135deg, #1eb349, #a5cf37);
         border-color: transparent;
         color: #ffffff;
-        box-shadow: 0 4px 15px rgba(30, 179, 73, 0.3);
-        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3);
     }
     .cv-footer-v2-contact-text {
         display: flex;
         flex-direction: column;
         line-height: 1.5;
-        font-size: 0.9rem;
-        color: #94A3B8;
+        font-size: 0.875rem;
+        color: #475569;
     }
     .cv-footer-v2-contact-text a {
-        color: #CBD5E1;
+        color: #1E293B;
         text-decoration: none;
+        font-weight: 500;
         transition: color 0.3s;
     }
     .cv-footer-v2-contact-text a:hover {
         color: #1eb349;
     }
     .cv-footer-v2-contact-label {
-        font-size: 0.65rem;
+        font-size: 0.6rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        color: #64748B;
+        color: #94A3B8;
         margin-bottom: 0.1rem;
     }
     .cv-footer-v2-divider {
         border: none;
         height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+        background: linear-gradient(90deg, transparent, #E2E8F0, transparent);
         margin: 0;
     }
     .cv-footer-v2-bottom-wrap {
-        background: #070B14;
+        background: #ffffff;
+        border-top: 1px solid #F1F5F9;
         position: relative;
         z-index: 1;
     }
     .cv-footer-v2-pay-wrap {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 2.5rem clamp(1.25rem, 5vw, 2.5rem);
+        padding: 1.75rem clamp(1.25rem, 5vw, 2.5rem);
         display: flex;
         flex-wrap: wrap;
-        gap: 3rem;
+        gap: 2.5rem;
         align-items: center;
         justify-content: space-between;
-        border-bottom: 1px solid rgba(255,255,255,0.03);
+        border-bottom: 1px solid #F1F5F9;
     }
     .cv-footer-v2-pay-section {
         display: flex;
         flex-direction: column;
-        gap: 0.8rem;
+        gap: 0.5rem;
     }
     .cv-footer-v2-pay-title {
-        font-size: 0.65rem;
-        font-weight: 700;
+        font-size: 0.6rem;
+        font-weight: 800;
         letter-spacing: 0.15em;
         text-transform: uppercase;
-        color: #1eb349;
-        margin-bottom: 0.25rem;
+        color: #94A3B8;
     }
     .cv-footer-v2-pay-logos {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.75rem;
+        gap: 0.5rem;
         align-items: center;
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.08);
-        padding: 0.6rem 1.25rem;
-        border-radius: 12px;
         font-size: 0.875rem;
-        color: #CBD5E1;
-        font-weight: 500;
-        letter-spacing: 0.02em;
+        color: #475569;
+        font-weight: 600;
     }
     .cv-footer-v2-pay-logos img {
-        height: 24px;
+        height: 22px;
         width: auto;
         object-fit: contain;
-        filter: brightness(0) invert(1);
-        opacity: 0.7;
+        opacity: 0.85;
     }
     .cv-footer-v2-bottom {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 1.5rem clamp(1.25rem, 5vw, 2.5rem);
+        padding: 1.25rem clamp(1.25rem, 5vw, 2.5rem);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -299,18 +295,18 @@ www.buyle.id
         gap: 1rem;
     }
     .cv-footer-v2-copy {
-        font-size: 0.85rem;
-        color: #64748B;
+        font-size: 0.82rem;
+        color: #94A3B8;
     }
-    .cv-footer-v2-copy strong { color: #94A3B8; }
+    .cv-footer-v2-copy strong { color: #475569; font-weight: 700; }
     .cv-footer-v2-dev {
         font-size: 0.8rem;
-        color: #64748B;
+        color: #94A3B8;
     }
     .cv-footer-v2-dev a {
         color: #1eb349;
         text-decoration: none;
-        font-weight: 600;
+        font-weight: 700;
         transition: color 0.2s;
     }
     .cv-footer-v2-dev a:hover {
