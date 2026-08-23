@@ -195,7 +195,6 @@ Route::get('/robots.txt', function () {
         'Disallow: /*?page=',
         '',
         '# Disallow common bot traps',
-        'Disallow: /storage/',
         'Disallow: /*.php$',
         '',
         "Sitemap: {$sitemap}",

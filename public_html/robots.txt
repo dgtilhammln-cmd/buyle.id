@@ -18,7 +18,6 @@ Disallow: /*?sort=
 Disallow: /*?page=
 
 # Disallow common bot traps
-Disallow: /storage/
 Disallow: /*.php$
 
 Sitemap: https://buyle.id/sitemap.xml
