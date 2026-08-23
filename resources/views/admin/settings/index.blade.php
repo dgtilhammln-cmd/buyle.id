@@ -333,6 +333,11 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
         <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Tampil di footer website sebagai deskripsi singkat perusahaan.</p>
       </div>
       <div>
+        <label class="form-label" for="s-tagline">Tagline / Sub-Logo</label>
+        <input type="text" name="tagline" id="s-tagline" class="form-input" value="{{ $settings['tagline'] ?? '' }}" placeholder="Digital Creator Marketplace Indonesia">
+        <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Teks kecil yang tampil di bawah logo (header & footer).</p>
+      </div>
+      <div>
         <label class="form-label" for="s-copyright">Copyright Text</label>
         <input type="text" name="copyright" id="s-copyright" class="form-input" value="{{ $settings['copyright'] ?? '' }}" placeholder="© 2026 buyle.id. All rights reserved.">
         <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Tampil di bagian bawah footer.</p>

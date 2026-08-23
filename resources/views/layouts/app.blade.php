@@ -25,14 +25,15 @@
         $favVer = md5(json_encode($layoutSettings));
 
         // Resolve favicon
+        // Google Search prefers stable URLs without changing query parameters.
         if (!empty($layoutSettings['favicon'])) {
             $favPath = ltrim($layoutSettings['favicon'], '/');
-            $favicon = asset('storage/' . $favPath) . '?v=' . $favVer;
+            $favicon = asset('storage/' . $favPath); // Hapus ?v= agar Googlebot tidak bingung
             $favExt = strtolower(pathinfo($favPath, PATHINFO_EXTENSION));
             $favTypeMap = ['png' => 'image/png', 'svg' => 'image/svg+xml', 'webp' => 'image/webp', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg'];
             $favType = $favTypeMap[$favExt] ?? 'image/x-icon';
         } else {
-            $favicon = asset('favicon.ico') . '?v=' . $favVer;
+            $favicon = asset('favicon.ico');
             $favType = 'image/x-icon';
         }
 
