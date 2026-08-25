@@ -6,6 +6,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SitemapController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminServiceController;
 use App\Http\Controllers\Admin\AdminGalleryController;
 use App\Http\Controllers\Admin\AdminArticleController;
+use App\Http\Controllers\Admin\AdminFaqController;
 use App\Http\Controllers\Admin\AdminClientController;
 use App\Http\Controllers\Admin\AdminWaController;
 use App\Http\Controllers\Admin\AdminTestimonialController;
@@ -74,6 +76,8 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/produk/{slug}',  [ServiceController::class,'show'])->name('products.show');
     Route::get('/artikel',        [ArticleController::class,'index'])->name('articles');
     Route::get('/artikel/{slug}', [ArticleController::class,'show'])->name('articles.show');
+    Route::get('/faq',            [FaqController::class,'index'])->name('faqs');
+    Route::get('/faq/{slug}',     [FaqController::class,'show'])->name('faqs.show');
     Route::get('/penulis/{slug}', [AuthorController::class, 'show'])->name('author.show');
 
     // E-commerce: Cart (boleh tanpa login)
@@ -297,6 +301,13 @@ Route::prefix('admin')->group(function () {
             'store'   => 'admin.articles.store',   'show'    => 'admin.articles.show',
             'edit'    => 'admin.articles.edit',    'update'  => 'admin.articles.update',
             'destroy' => 'admin.articles.destroy',
+        ]);
+
+        Route::resource('faqs', AdminFaqController::class)->names([
+            'index'   => 'admin.faqs.index',   'create'  => 'admin.faqs.create',
+            'store'   => 'admin.faqs.store',   'show'    => 'admin.faqs.show',
+            'edit'    => 'admin.faqs.edit',    'update'  => 'admin.faqs.update',
+            'destroy' => 'admin.faqs.destroy',
         ]);
 
         Route::resource('authors', \App\Http\Controllers\Admin\AdminAuthorController::class)->names([
