@@ -217,12 +217,12 @@ body { background-color: #F8FAFC !important; }
 
                 @else
                     {{-- PENDING PAYMENT STATE --}}
-                    <div style="width:80px;height:80px;background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;animation:popIn 0.6s cubic-bezier(0.22,1,0.36,1) both;">
+                    <div style="margin: 0 auto 1.5rem; animation: popIn 0.6s cubic-bezier(0.22,1,0.36,1) both; display:flex; justify-content:center;">
                         @php $logo = \App\Models\Setting::get('logo'); @endphp
                         @if($logo)
-                            <img src="{{ asset('storage/'.$logo) }}" alt="buyle.id" style="width:52px;height:52px;object-fit:contain;border-radius:50%;">
+                            <img src="{{ asset('storage/'.$logo) }}" alt="buyle.id" style="height:56px;width:auto;object-fit:contain;">
                         @else
-                            <span style="font-weight:800;color:#1eb349;font-size:1.1rem;font-family:'Montserrat',sans-serif;">buyle</span>
+                            <span style="font-weight:800;color:#1eb349;font-size:1.75rem;font-family:'Montserrat',sans-serif;">buyle.id</span>
                         @endif
                     </div>
                     <div>
