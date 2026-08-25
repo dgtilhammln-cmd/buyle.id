@@ -2,7 +2,7 @@
 
 @section('content')
 <style>
-:root { --accent: #1eb349; --accent-dark: #15803d; --text: #0F172A; --muted: #64748B; --border: #E2E8F0; --bg: #F8FAFC; }
+:root { --accent: #1eb349; --accent-dark: #a5cf37; --text: #0F172A; --muted: #64748B; --border: #E2E8F0; --bg: #F8FAFC; }
 body { background-color: #F8FAFC !important; }
 
 .fin-wrap {
@@ -95,21 +95,26 @@ body { background-color: #F8FAFC !important; }
 .fin-order-row:not(:last-child) { border-bottom: 1px solid #E2E8F0; }
 .fin-order-row .label { color: var(--muted); font-weight: 500; }
 .fin-order-row .value { font-weight: 700; color: var(--text); text-align: right; }
-.fin-order-row .value.total { color: var(--accent); font-size: 1.25rem; font-weight: 800; }
+.fin-order-row .value.total { color: #1eb349 !important; font-size: 1.25rem; font-weight: 800; }
 
 .btn-pay {
     display: inline-flex; width: auto; min-width: 220px;
     align-items: center; justify-content: center; gap: 8px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-    color: #fff; border: none; border-radius: 999px;
+    background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
+    color: #fff !important; border: none; border-radius: 999px;
     padding: 1rem 2rem; font-size: 1rem; font-weight: 700;
     cursor: pointer; transition: all 0.2s;
     font-family: 'Montserrat', sans-serif;
     text-decoration: none; text-align: center;
-    box-shadow: 0 8px 24px rgba(30,179,73,0.3);
+    box-shadow: 0 8px 24px rgba(30,179,73,0.35) !important;
     margin: 0 auto;
 }
-.btn-pay:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(30,179,73,0.4); color: #fff; }
+.btn-pay:hover { 
+    background: linear-gradient(135deg, #17a03d, #8fbf2e) !important;
+    transform: translateY(-2px); 
+    box-shadow: 0 14px 32px rgba(30,179,73,0.45) !important; 
+    color: #fff !important; 
+}
 .btn-pay:active { transform: translateY(0); }
 
 .btn-secondary-link {
@@ -212,10 +217,13 @@ body { background-color: #F8FAFC !important; }
 
                 @else
                     {{-- PENDING PAYMENT STATE --}}
-                    <div class="fin-icon-wrap">
-                        <svg width="40" height="40" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" d="M12 8v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
-                        </svg>
+                    <div style="width:80px;height:80px;background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;animation:popIn 0.6s cubic-bezier(0.22,1,0.36,1) both;">
+                        @php $logo = \App\Models\Setting::get('logo'); @endphp
+                        @if($logo)
+                            <img src="{{ asset('storage/'.$logo) }}" alt="buyle.id" style="width:52px;height:52px;object-fit:contain;border-radius:50%;">
+                        @else
+                            <span style="font-weight:800;color:#1eb349;font-size:1.1rem;font-family:'Montserrat',sans-serif;">buyle</span>
+                        @endif
                     </div>
                     <div>
                         <span class="fin-status-badge badge-pending">
@@ -230,47 +238,27 @@ body { background-color: #F8FAFC !important; }
                     </p>
 
                     @if($isPending && $order->payment && $order->payment->midtrans_token)
+                        @php
+                            $midtransIsProd  = \App\Models\Setting::get('midtrans_is_production', config('midtrans.is_production'));
+                            $midtransClientKey = \App\Models\Setting::get('midtrans_client_key') ?: config('midtrans.client_key');
+                            $snapUrl = $midtransIsProd ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js';
+                        @endphp
+
+                        {{-- Tombol dengan data-snap-token agar tidak perlu inline script (CSP safe) --}}
                         <div>
-                            <button id="pay-button" class="btn-pay" onclick="launchSnapPay()">
+                            <button
+                                id="pay-button"
+                                class="btn-pay"
+                                data-snap-token="{{ $order->payment->midtrans_token }}">
                                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
                                 Bayar Sekarang
                             </button>
                         </div>
 
-                        <script src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
-                            data-client-key="{{ config('midtrans.client_key') }}"></script>
-
-                        <script>
-                            function launchSnapPay() {
-                                const btn = document.getElementById('pay-button');
-                                btn.disabled = true;
-                                btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;animation:spin 1s linear infinite;"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Memuat Pembayaran...';
-
-                                snap.pay('{{ $order->payment->midtrans_token }}', {
-                                    onSuccess: function(result) {
-                                        btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Pembayaran Berhasil!';
-                                        btn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
-                                        setTimeout(() => {
-                                            window.location.reload();
-                                        }, 1500);
-                                    },
-                                    onPending: function(result) {
-                                        btn.disabled = false;
-                                        btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Bayar Sekarang';
-                                        alert('Pembayaran menunggu konfirmasi. Cek email Anda untuk instruksi selanjutnya.');
-                                    },
-                                    onError: function(result) {
-                                        btn.disabled = false;
-                                        btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>Coba Lagi';
-                                        alert('Pembayaran gagal. Silakan coba metode pembayaran lain.');
-                                    },
-                                    onClose: function() {
-                                        btn.disabled = false;
-                                        btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Bayar Sekarang';
-                                    }
-                                });
-                            }
-                        </script>
+                        {{-- Midtrans Snap JS (external, CSP-safe) --}}
+                        <script src="{{ $snapUrl }}" data-client-key="{{ $midtransClientKey }}"></script>
+                        {{-- Payment handler (external JS, no inline script) --}}
+                        <script src="{{ asset('js/snap-pay.js') }}" defer></script>
 
                         <div>
                             <a href="{{ route('account.orders') }}" class="btn-secondary-link">
