@@ -251,6 +251,79 @@
 
 <body style="overflow-x: hidden; margin: 0; padding: 0; background-color: #ffffff;">
 
+    {{-- Global Skeleton Loader --}}
+    <style>
+        #cv-app-preloader {
+            position: fixed; inset: 0; z-index: 999999;
+            background: #F8FAFC;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            overflow: hidden;
+        }
+        #cv-app-preloader.fade-out { opacity: 0; visibility: hidden; }
+        .skel-shimmer {
+            background: #e2e8f0;
+            background-image: linear-gradient(90deg, #e2e8f0 0px, #f1f5f9 40px, #e2e8f0 80px);
+            background-size: 600px;
+            animation: shimmer 1.5s infinite linear;
+        }
+        @keyframes shimmer { 0% { background-position: -300px; } 100% { background-position: 300px; } }
+        
+        .skel-header { height: 72px; width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; background: #fff; border-bottom: 1px solid #f1f5f9; }
+        .skel-header-left { display: flex; align-items: center; gap: 20px; flex: 1; }
+        .skel-logo { width: 120px; height: 32px; border-radius: 6px; }
+        .skel-search { height: 40px; border-radius: 50px; flex: 1; max-width: 500px; display: none; }
+        .skel-header-right { display: flex; gap: 15px; }
+        .skel-circle { width: 40px; height: 40px; border-radius: 50%; }
+        
+        @media(max-width: 768px) {
+            .skel-header { padding: 0 1rem; }
+            .skel-header-right { display: none; }
+        }
+        @media(min-width: 768px) { .skel-search { display: block; } }
+        
+        .skel-body { padding: 2rem 5%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem; }
+        .skel-banner { width: 100%; height: 180px; border-radius: 16px; }
+        @media(min-width: 768px) { .skel-banner { height: 320px; } }
+        
+        .skel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        @media(min-width: 768px) { .skel-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
+        @media(min-width: 1024px) { .skel-grid { grid-template-columns: repeat(5, 1fr); } }
+        .skel-card { width: 100%; height: 220px; border-radius: 12px; }
+    </style>
+    <div id="cv-app-preloader">
+        <div class="skel-header">
+            <div class="skel-header-left">
+                <div class="skel-shimmer skel-logo"></div>
+                <div class="skel-shimmer skel-search"></div>
+            </div>
+            <div class="skel-header-right">
+                <div class="skel-shimmer skel-circle"></div>
+                <div class="skel-shimmer skel-circle"></div>
+            </div>
+        </div>
+        <div class="skel-body">
+            <div class="skel-shimmer skel-banner"></div>
+            <div class="skel-grid">
+                <div class="skel-shimmer skel-card"></div>
+                <div class="skel-shimmer skel-card"></div>
+                <div class="skel-shimmer skel-card"></div>
+                <div class="skel-shimmer skel-card"></div>
+                <div class="skel-shimmer skel-card"></div>
+                <div class="skel-shimmer skel-card hide-on-mobile"></div>
+                <div class="skel-shimmer skel-card hide-on-mobile"></div>
+                <div class="skel-shimmer skel-card hide-on-mobile"></div>
+                <div class="skel-shimmer skel-card hide-on-mobile"></div>
+                <div class="skel-shimmer skel-card hide-on-mobile"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('load', function() {
+            const s = document.getElementById('cv-app-preloader');
+            if(s) { s.classList.add('fade-out'); setTimeout(() => { s.remove(); }, 400); }
+        });
+    </script>
+
     @include('components.navbar')
 
     {{-- Main Content --}}
