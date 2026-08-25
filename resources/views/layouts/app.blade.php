@@ -292,14 +292,22 @@
         .skel-body { flex: 1; padding: calc(1rem + 60px + 2rem) 1.5rem 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
         @media(max-width: 768px) { .skel-body { padding: calc(1rem + 50px + 1rem) 1rem 2rem; } }
 
-        /* Home */
-        .skel-hero-banner { width: 100%; height: 200px; border-radius: 20px; margin-bottom: 2rem; }
-        @media(min-width: 768px) { .skel-hero-banner { height: 400px; border-radius: 30px; } }
+        /* Home Banner Grid */
+        .skel-hero-wrapper { margin-bottom: 2rem; width: 100%; }
+        .skel-hero-grid { display: none; }
+        .skel-hero-mob-slide { width: 100%; aspect-ratio: 2 / 1; border-radius: 14px; }
+        @media(min-width: 1025px) {
+            .skel-hero-mob-slide { display: none; }
+            .skel-hero-grid { display: grid; grid-template-columns: 2.3fr 1fr; gap: 1.25rem; align-items: stretch; height: 440px; }
+            .skel-hero-main { border-radius: 16px; height: 100%; }
+            .skel-hero-side { display: flex; flex-direction: column; gap: 0.75rem; height: 100%; }
+            .skel-hero-sub { flex: 1; border-radius: 16px; min-height: 0; }
+        }
         
         /* Grid */
         .skel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
         @media(min-width: 768px) { .skel-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
-        @media(min-width: 1024px) { .skel-grid { grid-template-columns: repeat(5, 1fr); } }
+        @media(min-width: 1025px) { .skel-grid { grid-template-columns: repeat(5, 1fr); } }
         .skel-card { width: 100%; height: 260px; border-radius: 16px; }
 
         /* Product Detail */
@@ -331,7 +339,18 @@
         {{-- BODY SKELETON --}}
         <div class="skel-body">
             @if(request()->routeIs('home') || request()->is('/'))
-                <div class="skel-shimmer skel-hero-banner"></div>
+                <div class="skel-hero-wrapper">
+                    {{-- Desktop Grid (Visible > 1024px) --}}
+                    <div class="skel-hero-grid">
+                        <div class="skel-shimmer skel-hero-main"></div>
+                        <div class="skel-hero-side">
+                            <div class="skel-shimmer skel-hero-sub"></div>
+                            <div class="skel-shimmer skel-hero-sub"></div>
+                        </div>
+                    </div>
+                    {{-- Mobile Swipe (Visible <= 1024px) --}}
+                    <div class="skel-shimmer skel-hero-mob-slide"></div>
+                </div>
                 <div class="skel-grid">
                     @for($i=0; $i<10; $i++) 
                         <div class="skel-shimmer skel-card {{ $i > 3 ? 'hide-on-mobile' : '' }}"></div> 
