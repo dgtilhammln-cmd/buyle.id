@@ -258,6 +258,7 @@
             background: #F8FAFC;
             transition: opacity 0.4s ease, visibility 0.4s ease;
             overflow: hidden;
+            display: flex; flex-direction: column;
         }
         #cv-app-preloader.fade-out { opacity: 0; visibility: hidden; }
         .skel-shimmer {
@@ -268,55 +269,95 @@
         }
         @keyframes shimmer { 0% { background-position: -300px; } 100% { background-position: 300px; } }
         
-        .skel-header { height: 72px; width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; background: #fff; border-bottom: 1px solid #f1f5f9; }
-        .skel-header-left { display: flex; align-items: center; gap: 20px; flex: 1; }
-        .skel-logo { width: 120px; height: 32px; border-radius: 6px; }
-        .skel-search { height: 40px; border-radius: 50px; flex: 1; max-width: 500px; display: none; }
-        .skel-header-right { display: flex; gap: 15px; }
-        .skel-circle { width: 40px; height: 40px; border-radius: 50%; }
+        /* ── HEADER SKELETON (PILL STYLE) ── */
+        .skel-header-wrap { position: absolute; top: 1rem; left: 0; width: 100%; z-index: 10; pointer-events: none; }
+        .skel-header-inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+        .skel-pill { background: #fff; border-radius: 999px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); display: flex; align-items: center; }
+        
+        .skel-logo { height: 50px; width: 140px; }
+        .skel-search { flex: 1; max-width: 600px; height: 50px; }
+        .skel-actions { height: 50px; padding: 0 0.5rem; gap: 0.5rem; background: transparent; box-shadow: none; display: flex; align-items: center; justify-content: flex-end; }
+        
+        .skel-circle { width: 38px; height: 38px; border-radius: 50%; background: #fff; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
+        .skel-btn { width: 90px; height: 38px; border-radius: 999px; background: #fff; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
         
         @media(max-width: 768px) {
-            .skel-header { padding: 0 1rem; }
-            .skel-header-right { display: none; }
+            .hide-on-mobile { display: none !important; }
+            .skel-header-inner { padding: 0 1rem; }
+            .skel-logo { height: 46px; width: 120px; }
+            .skel-actions { flex: 1; }
         }
-        @media(min-width: 768px) { .skel-search { display: block; } }
+
+        /* ── BODY SKELETON ── */
+        .skel-body { flex: 1; padding: calc(1rem + 60px + 2rem) 1.5rem 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+        @media(max-width: 768px) { .skel-body { padding: calc(1rem + 50px + 1rem) 1rem 2rem; } }
+
+        /* Home */
+        .skel-hero-banner { width: 100%; height: 200px; border-radius: 20px; margin-bottom: 2rem; }
+        @media(min-width: 768px) { .skel-hero-banner { height: 400px; border-radius: 30px; } }
         
-        .skel-body { padding: 2rem 5%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem; }
-        .skel-banner { width: 100%; height: 180px; border-radius: 16px; }
-        @media(min-width: 768px) { .skel-banner { height: 320px; } }
-        
+        /* Grid */
         .skel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
         @media(min-width: 768px) { .skel-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
         @media(min-width: 1024px) { .skel-grid { grid-template-columns: repeat(5, 1fr); } }
-        .skel-card { width: 100%; height: 220px; border-radius: 12px; }
+        .skel-card { width: 100%; height: 260px; border-radius: 16px; }
+
+        /* Product Detail */
+        .skel-breadcrumb { width: 40%; height: 20px; border-radius: 4px; margin-bottom: 2rem; }
+        .skel-product-split { display: flex; flex-direction: column; gap: 2rem; }
+        .skel-product-img { width: 100%; height: 300px; border-radius: 20px; }
+        .skel-product-info { display: flex; flex-direction: column; gap: 1rem; flex: 1; }
+        .skel-line { border-radius: 6px; }
+        @media(min-width: 768px) {
+            .skel-product-split { flex-direction: row; gap: 3rem; }
+            .skel-product-img { width: 45%; height: 500px; }
+        }
     </style>
+    
     <div id="cv-app-preloader">
-        <div class="skel-header">
-            <div class="skel-header-left">
-                <div class="skel-shimmer skel-logo"></div>
-                <div class="skel-shimmer skel-search"></div>
-            </div>
-            <div class="skel-header-right">
-                <div class="skel-shimmer skel-circle"></div>
-                <div class="skel-shimmer skel-circle"></div>
+        {{-- HEADER SKELETON --}}
+        <div class="skel-header-wrap">
+            <div class="skel-header-inner">
+                <div class="skel-pill skel-shimmer skel-logo"></div>
+                <div class="skel-pill skel-shimmer skel-search hide-on-mobile"></div>
+                <div class="skel-actions">
+                    <div class="skel-shimmer skel-circle hide-on-mobile"></div>
+                    <div class="skel-shimmer skel-circle"></div>
+                    <div class="skel-shimmer skel-btn hide-on-mobile"></div>
+                </div>
             </div>
         </div>
+
+        {{-- BODY SKELETON --}}
         <div class="skel-body">
-            <div class="skel-shimmer skel-banner"></div>
-            <div class="skel-grid">
-                <div class="skel-shimmer skel-card"></div>
-                <div class="skel-shimmer skel-card"></div>
-                <div class="skel-shimmer skel-card"></div>
-                <div class="skel-shimmer skel-card"></div>
-                <div class="skel-shimmer skel-card"></div>
-                <div class="skel-shimmer skel-card hide-on-mobile"></div>
-                <div class="skel-shimmer skel-card hide-on-mobile"></div>
-                <div class="skel-shimmer skel-card hide-on-mobile"></div>
-                <div class="skel-shimmer skel-card hide-on-mobile"></div>
-                <div class="skel-shimmer skel-card hide-on-mobile"></div>
-            </div>
+            @if(request()->routeIs('home') || request()->is('/'))
+                <div class="skel-shimmer skel-hero-banner"></div>
+                <div class="skel-grid">
+                    @for($i=0; $i<10; $i++) 
+                        <div class="skel-shimmer skel-card {{ $i > 3 ? 'hide-on-mobile' : '' }}"></div> 
+                    @endfor
+                </div>
+            @elseif(request()->routeIs('products.show'))
+                <div class="skel-shimmer skel-breadcrumb"></div>
+                <div class="skel-product-split">
+                    <div class="skel-shimmer skel-product-img"></div>
+                    <div class="skel-product-info">
+                        <div class="skel-shimmer skel-line" style="width: 80%; height: 32px;"></div>
+                        <div class="skel-shimmer skel-line" style="width: 40%; height: 24px;"></div>
+                        <div class="skel-shimmer skel-line" style="width: 100%; height: 120px; margin-top: 1.5rem;"></div>
+                        <div class="skel-shimmer skel-line" style="width: 100%; height: 56px; margin-top: auto; border-radius: 999px;"></div>
+                    </div>
+                </div>
+            @else
+                <div class="skel-grid">
+                    @for($i=0; $i<15; $i++) 
+                        <div class="skel-shimmer skel-card {{ $i > 5 ? 'hide-on-mobile' : '' }}"></div> 
+                    @endfor
+                </div>
+            @endif
         </div>
     </div>
+    
     <script>
         window.addEventListener('load', function() {
             const s = document.getElementById('cv-app-preloader');
