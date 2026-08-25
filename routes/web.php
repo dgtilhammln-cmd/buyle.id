@@ -84,7 +84,8 @@ Route::middleware(['track.pageview'])->group(function () {
 
     // E-commerce: Checkout (bisa guest, auto register)
     Route::get('/checkout/login', function () {
-        return redirect()->guest(route('login'));
+        session()->put('url.intended', route('checkout.index'));
+        return redirect()->route('login');
     })->name('checkout.login');
     Route::get('/checkout',                [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout',               [CheckoutController::class, 'store'])->name('checkout.store');

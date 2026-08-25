@@ -12,7 +12,7 @@
     @endpush
     {{-- ════════════════════════════════════════════════
       HOME PAGE — buyle.id
-      Toko Online buyle.id Tangga Terbaik
+      Platform Produk Digital buyle.id Terbaik
     ════════════════════════════════════════════════ --}}
 
     {{-- ════ APP-LIKE PRELOADER ════ --}}
@@ -1189,10 +1189,10 @@
     <div style="display:none;" class="hide-on-mobile">
         <div style="max-width:1000px; margin:0 auto;">
             <h1 style="font-size:1.4rem; font-weight:600; color:#1E293B; margin:0 0 0.25rem 0; font-family:'Montserrat', sans-serif;">
-                buyle.id - Toko buyle.id Tangga Terlengkap di Surabaya
+                buyle.id - Platform Produk Digital & Jasa Terlengkap di Indonesia
             </h1>
             <p style="font-size:0.9rem; color:#64748B; line-height:1.5; margin:0; font-family:'Montserrat', sans-serif;">
-                Temukan ribuan produk berkualitas dari merek-merek ternama dengan harga terbaik dan pengiriman cepat ke seluruh Indonesia.
+                Temukan ribuan karya dan produk digital berkualitas dari kreator lokal dengan harga terbaik dan akses instan.
             </p>
         </div>
     </div>

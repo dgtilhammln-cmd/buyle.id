@@ -176,7 +176,7 @@ class AuthController extends Controller
         Auth::login($user, true);
         request()->session()->regenerate();
 
-        return redirect()->route('account.overview')
+        return redirect()->intended(route('account.overview'))
             ->with('success', 'Selamat datang, ' . $user->name . '!');
     }
 

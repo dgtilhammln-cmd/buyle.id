@@ -612,8 +612,8 @@ a { text-decoration: none; color: inherit; }
         $ctaWa = \App\Models\WaSetting::primary();
     @endphp
     <div class="ar-cta-box">
-        <h3>Cari Produk buyle.id Tangga?</h3>
-        <p>Temukan ribuan produk buyle.id tangga berkualitas dengan harga terbaik, dikirim ke seluruh Indonesia dari Surabaya.</p>
+        <h3>Cari Produk Digital Berkualitas?</h3>
+        <p>Tingkatkan produktivitas dan kreativitas Anda dengan produk digital unggulan dari para kreator terbaik di buyle.id.</p>
         <a href="{{ route_locale('products') }}" class="ar-cta-btn" style="display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
             Lihat Semua Produk
@@ -700,23 +700,23 @@ a { text-decoration: none; color: inherit; }
     <div class="ar-why-inner">
         <div class="ar-why-header">
             <div class="ar-why-label">Mengapa buyle.id</div>
-            <h2 class="ar-why-title">Toko buyle.id Tangga<br>Terpercaya di Surabaya</h2>
+            <h2 class="ar-why-title">Platform Produk Digital<br>Terpercaya di Indonesia</h2>
         </div>
         <div class="ar-why-grid">
             <div class="ar-why-card" data-aos="fade-up">
                 <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-                <div class="ar-why-card-title">Produk Berkualitas</div>
-                <div class="ar-why-card-desc">Semua produk tersertifikasi dan telah diuji kualitasnya. Garansi resmi dari produsen.</div>
+                <div class="ar-why-card-title">Produk Terkurasi</div>
+                <div class="ar-why-card-desc">Setiap produk digital yang dipublikasikan telah dipastikan orisinalitas dan standar kualitas terbaiknya.</div>
             </div>
             <div class="ar-why-card" data-aos="fade-up" data-aos-delay="80">
-                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-                <div class="ar-why-card-title">Pengiriman Cepat</div>
-                <div class="ar-why-card-desc">Dikirim ke seluruh Indonesia dari Surabaya. Proses packing aman, pesanan tiba tepat waktu.</div>
+                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                <div class="ar-why-card-title">Akses Instan</div>
+                <div class="ar-why-card-desc">Akses dan unduh produk secara instan dan otomatis tepat setelah pembayaran Anda berhasil.</div>
             </div>
             <div class="ar-why-card" data-aos="fade-up" data-aos-delay="160">
-                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-                <div class="ar-why-card-title">Harga Terbaik</div>
-                <div class="ar-why-card-desc">Harga kompetitif langsung dari distributor resmi. Promo dan diskon spesial setiap hari.</div>
+                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+                <div class="ar-why-card-title">Karya Kreator Pilihan</div>
+                <div class="ar-why-card-desc">Dukung para kreator lokal dengan karya terbaik. Harga transparan dan langsung mendanai pembuatnya.</div>
             </div>
             <div class="ar-why-card" data-aos="fade-up" data-aos-delay="240">
                 <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
