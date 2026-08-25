@@ -7,7 +7,7 @@
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
   <div>
     <h1 style="font-size:1.5rem;font-weight:800;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.02em;">Kelola Artikel</h1>
-    <p style="font-size:.875rem;color:#94A3B8;margin:0;">{{ $faqs.>count() }} artikel terdaftar</p>
+    <p style="font-size:.875rem;color:#94A3B8;margin:0;">{{ $faqs->count() }} artikel terdaftar</p>
   </div>
   <div style="display:flex;align-items:center;gap:1rem;">
     <form action="{{ route('admin.faqs.index') }}" method="GET" style="display:flex;align-items:center;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.02);">
@@ -41,7 +41,7 @@
       <svg width="20" height="20" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
     </div>
     <div>
-      <div style="font-size:1.5rem;font-weight:800;color:#1E293B;line-height:1;">{{ $faqs.>count() }}</div>
+      <div style="font-size:1.5rem;font-weight:800;color:#1E293B;line-height:1;">{{ $faqs->count() }}</div>
       <div style="font-size:.75rem;color:#94A3B8;font-weight:600;margin-top:.15rem;">Total Artikel</div>
     </div>
   </div>
@@ -50,7 +50,7 @@
       <svg width="20" height="20" fill="none" stroke="#10B981" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
     </div>
     <div>
-      <div style="font-size:1.5rem;font-weight:800;color:#1E293B;line-height:1;">{{ $faqs.>where('is_published',true)->count() }}</div>
+      <div style="font-size:1.5rem;font-weight:800;color:#1E293B;line-height:1;">{{ $faqs->where('is_published',true)->count() }}</div>
       <div style="font-size:.75rem;color:#94A3B8;font-weight:600;margin-top:.15rem;">Published</div>
     </div>
   </div>
@@ -59,7 +59,7 @@
       <svg width="20" height="20" fill="none" stroke="#F59E0B" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     </div>
     <div>
-      <div style="font-size:1.5rem;font-weight:800;color:#1E293B;line-height:1;">{{ $faqs.>where('is_published',false)->count() }}</div>
+      <div style="font-size:1.5rem;font-weight:800;color:#1E293B;line-height:1;">{{ $faqs->where('is_published',false)->count() }}</div>
       <div style="font-size:.75rem;color:#94A3B8;font-weight:600;margin-top:.15rem;">Draft</div>
     </div>
   </div>
@@ -80,7 +80,7 @@
       </tr>
     </thead>
     <tbody>
-      @forelse($faqs.as $a)
+      @forelse($faqs as $a)
       <tr style="border-bottom:1px solid #F8FAFC;transition:background .15s;" onmouseover="this.style.background='#FAFBFF'" onmouseout="this.style.background='transparent'">
 
         {{-- Gambar --}}
@@ -139,7 +139,7 @@
               <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </a>
             {{-- Preview --}}
-            <a href="{{ url('/en/faqs.' . $a->slug) }}" target="_blank" title="Lihat di website"
+            <a href="{{ route('faqs.show', $a->slug) }}" target="_blank" title="Lihat di website"
                style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(139,92,246,0.08);border-radius:8px;color:#8B5CF6;text-decoration:none;transition:all .2s;"
                onmouseover="this.style.background='rgba(139,92,246,0.18)'" onmouseout="this.style.background='rgba(139,92,246,0.08)'">
               <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -174,12 +174,11 @@
       @endforelse
     </tbody>
   </table>
-  </table>
 </div>
 
 {{-- GRID VIEW --}}
 <div id="view-grid" class="view-container" style="display:none; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
-  @forelse($faqs.as $a)
+  @forelse($faqs as $a)
     <div style="background:#fff;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,0.04);overflow:hidden;border:1px solid #F1F5F9;display:flex;flex-direction:column;position:relative;transition:transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 30px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.04)'">
       <div style="position:absolute;top:12px;right:12px;display:inline-flex;align-items:center;gap:.375rem;font-size:.7rem;font-weight:700;padding:.3rem .75rem;border-radius:100px;background:{{ $a->is_published ? 'rgba(16,185,129,0.9)' : 'rgba(245,158,11,0.9)' }};color:#fff;z-index:10;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);">
           {{ $a->is_published ? 'Published' : 'Draft' }}
@@ -206,7 +205,7 @@
           </div>
           
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:1rem;border-top:1px solid #F1F5F9;">
-              <a href="{{ url('/en/faqs.' . $a->slug) }}" target="_blank" style="font-size:.75rem;font-weight:700;color:#3B82F6;text-decoration:none;display:flex;align-items:center;gap:.25rem;">
+              <a href="{{ route('faqs.show', $a->slug) }}" target="_blank" style="font-size:.75rem;font-weight:700;color:#3B82F6;text-decoration:none;display:flex;align-items:center;gap:.25rem;">
                  Lihat di website <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
               </a>
               <div style="display:flex;gap:.375rem;">

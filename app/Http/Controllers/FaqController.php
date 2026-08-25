@@ -31,10 +31,10 @@ class FaqController extends Controller
         $currentPage = request()->get('page', 1);
         $seo = [
             'title'       => ($currentPage > 1)
-                ? ($settings['meta_title_faqs'] ?? 'FAQ & Tips | ' . $siteName) . ' — Halaman ' . $currentPage
-                : ($settings['meta_title_faqs'] ?? 'FAQ & Tips | ' . $siteName),
-            'description' => $settings['meta_desc_faqs']  ?? 'Kumpulan artikel informatif, tips, dan panduan seputar produk buyle.id tangga.',
-            'keywords'    => $settings['meta_keywords_faqs'] ?? 'artikel buyle.id, tips rumah, panduan produk',
+                ? ($settings['meta_title_faqs'] ?? 'Panduan & Tutorial Kreator | ' . $siteName) . ' — Halaman ' . $currentPage
+                : ($settings['meta_title_faqs'] ?? 'Panduan & Tutorial Kreator | ' . $siteName),
+            'description' => $settings['meta_desc_faqs']  ?? 'Panduan lengkap, tutorial teknis, dan dokumentasi resmi untuk kreator buyle.id. Pelajari cara upload produk, setting toko, dan memaksimalkan penjualan digital.',
+            'keywords'    => $settings['meta_keywords_faqs'] ?? 'panduan kreator buyle.id, tutorial jual produk digital, cara daftar kreator, tips berjualan digital, dokumentasi buyle.id',
             'og_image'    => !empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : asset('images/og-default.jpg'),
             // Canonical per-page: page 1 = clean URL, page 2+ = with ?page=N
             'canonical'   => $currentPage > 1
@@ -124,14 +124,14 @@ class FaqController extends Controller
         $schemas = [
             [
                 '@context'         => 'https://schema.org',
-                '@type'            => 'Faq',
+                '@type'            => 'TechArticle',
                 'headline'         => $faq->title,
                 'description'      => $faq->excerpt,
                 'image'            => $ogImg,
                 'datePublished'    => $faq->published_at?->toIso8601String(),
                 'dateModified'     => $faq->updated_at->toIso8601String(),
                 'wordCount'        => $wordCount,
-                'articleSection'   => $faq->category ?? 'FAQ',
+                'articleSection'   => $faq->category ?? 'Tutorial Kreator',
                 'inLanguage'       => 'id-ID',
                 'author'           => $authorData,
                 'publisher'        => [
@@ -165,11 +165,12 @@ class FaqController extends Controller
             JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
         );
 
-        // For view compatibility, pass $trans as alias to $faq
+        // For view compatibility
+        $article = $faq;
         $trans = $faq;
         $locale = 'id';
 
-        return view('faqs.show', compact('article', 'trans', 'related', 'settings', 'seo', 'schema', 'breadcrumbs', 'readTime', 'wordCount', 'locale'));
+        return view('faqs.show', compact('article', 'faq', 'trans', 'related', 'settings', 'seo', 'schema', 'breadcrumbs', 'readTime', 'wordCount', 'locale'));
     }
 }
 

@@ -96,7 +96,7 @@
                 <div class="form-group">
                     <label class="form-label">Slug (URL) <span class="hint">Otomatis dari judul jika dikosongkan.</span></label>
                     <div style="display:flex;align-items:center;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:10px;padding:0 1rem;overflow:hidden;">
-                        <span style="font-size:.85rem;color:#94A3B8;white-space:nowrap;">/faqs.</span>
+                        <span style="font-size:.85rem;color:#94A3B8;white-space:nowrap;">/faq/</span>
                         <input type="text" name="slug" id="art-slug" value="{{ old('slug',$a?->slug) }}"
                             style="border:none;background:transparent;padding:0.75rem 0;width:100%;font-size:.9rem;color:#1E293B;outline:none;" pattern="[a-z0-9\-]*" placeholder="auto-dari-judul">
                     </div>
