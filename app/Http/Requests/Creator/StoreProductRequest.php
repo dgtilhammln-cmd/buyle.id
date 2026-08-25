@@ -36,6 +36,7 @@ class StoreProductRequest extends FormRequest
             'is_featured'         => ['boolean'],
             'meta_title'          => ['nullable', 'string', 'max:70'],
             'meta_desc'           => ['nullable', 'string', 'max:160'],
+            'meta_keywords'       => ['nullable', 'string', 'max:255'],
         ];
     }
 

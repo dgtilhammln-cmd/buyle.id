@@ -270,6 +270,34 @@
             </div>
         </div>
 
+        {{-- Meta Data (SEO) --}}
+        <div class="form-section-title">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            Meta Data (SEO)
+        </div>
+        <div class="form-body">
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label class="form-label">Meta Title</label>
+                    <input type="text" name="meta_title" value="{{ old('meta_title', $product->meta_title) }}" class="form-input" placeholder="Otomatis menggunakan nama produk jika kosong">
+                    <span class="form-hint">Maksimal 70 karakter</span>
+                    @error('meta_title')<span class="form-error">{{ $message }}</span>@enderror
+                </div>
+                <div class="form-group full">
+                    <label class="form-label">Meta Description</label>
+                    <textarea name="meta_desc" class="form-input" rows="2" placeholder="Otomatis menggunakan deskripsi singkat jika kosong">{{ old('meta_desc', $product->meta_desc) }}</textarea>
+                    <span class="form-hint">Maksimal 160 karakter</span>
+                    @error('meta_desc')<span class="form-error">{{ $message }}</span>@enderror
+                </div>
+                <div class="form-group full">
+                    <label class="form-label">Meta Keywords</label>
+                    <input type="text" name="meta_keywords" value="{{ old('meta_keywords', $product->meta_keywords) }}" class="form-input" placeholder="e.g. preset lightroom, ebook bisnis">
+                    <span class="form-hint">Pisahkan dengan koma</span>
+                    @error('meta_keywords')<span class="form-error">{{ $message }}</span>@enderror
+                </div>
+            </div>
+        </div>
+
         <div class="form-footer">
             <a href="{{ route('creator.products.index') }}" class="btn-cancel">Batal</a>
             <button type="submit" class="btn-submit" id="submitBtn">
