@@ -565,13 +565,13 @@ a { text-decoration: none; color: inherit; }
             <div style="width:42px; height:42px; border-radius:12px; background:rgba(30,179,73,0.08); color:#1eb349; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </div>
-            <div style="margin:0; font-size:1.15rem; color:#0F172A; font-weight:700; letter-spacing:-0.01em;">Lengkapi Kebutuhan Rumah Anda</div>
+            <div style="margin:0; font-size:1.15rem; color:#0F172A; font-weight:700; letter-spacing:-0.01em;">Eksplorasi Katalog Produk Digital Kami</div>
         </div>
         
-        <p style="margin:0; color:#475569; font-size:0.95rem; line-height:1.65; max-width:95%;">Tingkatkan kenyamanan rumah dengan produk dari buyle.id. Kualitas terjamin, harga bersahabat, dan bergaransi resmi.</p>
+        <p style="margin:0; color:#475569; font-size:0.95rem; line-height:1.65; max-width:95%;">Temukan ribuan karya kreator dan produk digital terbaik di buyle.id. Dukung pembuat karya dan tingkatkan produktivitas Anda sekarang juga.</p>
         
-        <a href="{{ url('/products') }}" style="align-self:flex-start; margin-top:0.25rem; display:inline-flex; align-items:center; gap:0.5rem; background:#1eb349; color:#fff; padding:0.75rem 1.75rem; border-radius:50px; font-weight:600; text-decoration:none; font-size:0.925rem; transition:all 0.3s; box-shadow:0 4px 12px rgba(30,179,73,0.2);" onmouseover="this.style.background='#16a34a'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(30,179,73,0.3)';" onmouseout="this.style.background='#1eb349'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(30,179,73,0.2)';">
-            Lihat Spesifikasi Produk
+        <a href="{{ route_locale('products') }}" style="align-self:flex-start; margin-top:0.25rem; display:inline-flex; align-items:center; gap:0.5rem; background:#1eb349; color:#fff; padding:0.75rem 1.75rem; border-radius:50px; font-weight:600; text-decoration:none; font-size:0.925rem; transition:all 0.3s; box-shadow:0 4px 12px rgba(30,179,73,0.2);" onmouseover="this.style.background='#16a34a'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(30,179,73,0.3)';" onmouseout="this.style.background='#1eb349'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(30,179,73,0.2)';">
+            Lihat Katalog Produk
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
     </div>
