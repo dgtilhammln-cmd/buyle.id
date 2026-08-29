@@ -48,7 +48,8 @@ class CategoryController extends Controller
         }
 
         $products = $query->paginate(24)->withQueryString();
+        $categories = ProductCategory::active()->orderBy('order')->get();
 
-        return view('categories.show', compact('category', 'subcategory', 'products'));
+        return view('categories.show', compact('category', 'subcategory', 'products', 'categories'));
     }
 }

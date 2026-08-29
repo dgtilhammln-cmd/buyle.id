@@ -1156,7 +1156,7 @@
             <div class="sp-sidebar-card">
                 <div class="sp-sidebar-head"><span class="sp-sidebar-head-dot"></span>Pencarian</div>
                 <div class="sp-sidebar-body">
-                    <form method="GET" action="{{ route_locale('products') }}" id="searchForm">
+                    <form method="GET" action="{{ route('products') }}" id="searchForm">
                         @foreach(request()->except('q') as $k => $v)
                             <input type="hidden" name="{{ $k }}" value="{{ is_array($v) ? implode(',', $v) : $v }}">
                         @endforeach
@@ -1182,20 +1182,14 @@
                     <div class="sp-sidebar-body" style="padding:0.5rem 1.25rem;">
                         <div class="sp-cat-list">
                             @foreach($categories as $cat)
-                                @php
-                                    $isCatA = in_array($cat->slug, $activeCats);
-                                    $newList = $isCatA ? array_values(array_filter($activeCats, fn($c) => $c !== $cat->slug)) : array_merge($activeCats, [$cat->slug]);
-                                    $catQ = array_merge(request()->except('category'), $newList ? ['category' => implode(',', $newList)] : []);
-                                @endphp
-                                <a href="{{ route_locale('products') }}?{{ http_build_query($catQ) }}"
-                                    class="sp-cat-item {{ $isCatA ? 'active' : '' }}">
+                                <a href="{{ route('category.show', $cat->slug) }}"
+                                    class="sp-cat-item {{ $category->slug === $cat->slug ? 'active' : '' }}">
                                     <div class="sp-cat-check">
                                         <svg width="10" height="10" fill="none" stroke="white" stroke-width="3" viewBox="0 0 24 24">
                                             <polyline points="20 6 9 17 4 12" />
                                         </svg>
                                     </div>
                                     <span class="sp-cat-name">{{ $cat->name }}</span>
-                                    <span class="sp-cat-badge">{{ $cat->services_count }}</span>
                                 </a>
                             @endforeach
                         </div>
@@ -1203,13 +1197,13 @@
                 </div>
             @endif
 
-            @if(request()->hasAny(['q', 'category', 'type', 'price_min', 'price_max', 'sort']))
-                <a href="{{ route_locale('products') }}" class="sp-reset-link">
+                        @if(request()->filled('q'))
+                <a href="{{ route('category.show', $category->slug) }}" class="sp-reset-link">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <polyline points="23 4 23 10 17 10" />
                         <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
                     </svg>
-                    Reset semua filter
+                    Reset filter
                 </a>
             @endif
         </aside>
@@ -1223,7 +1217,7 @@
                 <div class="sp-active-filters">
                     <span style="font-size:0.8rem;color:var(--c-muted);font-family:var(--font);font-weight:600;">Filter:</span>
                     @if(request()->filled('q'))
-                        <a href="{{ route_locale('products') }}?{{ http_build_query(request()->except('q')) }}"
+                        <a href="{{ route('products') }}?{{ http_build_query(request()->except('q')) }}"
                             class="sp-filter-chip">
                             "{{ request('q') }}" <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                 <line x1="18" y1="6" x2="6" y2="18" />
@@ -1236,7 +1230,7 @@
                         @php $cObj = $categories->firstWhere('slug', $cs); @endphp
                         @if($cObj)
                             @php $rem = array_values(array_diff($activeCats, [$cs])); @endphp
-                            <a href="{{ route_locale('products') }}?{{ http_build_query(array_merge(request()->except('category'), $rem ? ['category' => implode(',', $rem)] : [])) }}"
+                            <a href="{{ route('products') }}?{{ http_build_query(array_merge(request()->except('category'), $rem ? ['category' => implode(',', $rem)] : [])) }}"
                                 class="sp-filter-chip">
                                 {{ $cObj->name }} <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                     <line x1="18" y1="6" x2="6" y2="18" />
@@ -1289,7 +1283,7 @@
                                 <div style="padding: 1.5rem;">
                                     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.25rem;">
                                         @foreach($creator->user->products as $p => $cProd)
-                                            <a href="{{ route_locale('products.show', $cProd->slug) }}" style="text-decoration: none; display: flex; flex-direction: column; gap: 0.75rem; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
+                                            <a href="{{ route('products.show', $cProd->slug) }}" style="text-decoration: none; display: flex; flex-direction: column; gap: 0.75rem; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
                                                 <div style="width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; border: 1px solid var(--c-border); background: var(--c-surface); position: relative;">
                                                     @if($cProd->sale_price > 0 && $cProd->sale_price < $cProd->price)
                                                         <div style="position: absolute; top: 0.5rem; left: 0.5rem; background: #EF4444; color: #fff; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: var(--font);">Diskon</div>

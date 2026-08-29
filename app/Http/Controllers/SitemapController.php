@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductCategory;
+use App\Models\ProductSubCategory;
 use App\Models\CreatorProfile;
 use App\Models\Article;
 use App\Models\Author;
@@ -13,10 +15,11 @@ class SitemapController extends Controller
     public function index(Request $request)
     {
         // Fetch data for sitemap
-        $products = Product::where('is_active', true)->get(['id','slug','name','image','updated_at']);
-        $creators = CreatorProfile::with('user')->get(['id','store_slug','store_name','updated_at', 'user_id']);
-        $articles = Article::published()->latest()->get();
-        $authors  = Author::whereNotNull('slug')->get();
+        $products     = Product::where('is_active', true)->get(['id','slug','name','image','updated_at']);
+        $creators     = CreatorProfile::with('user')->get(['id','store_slug','store_name','updated_at', 'user_id']);
+        $articles     = Article::published()->latest()->get();
+        $authors      = Author::whereNotNull('slug')->get();
+        $categories   = ProductCategory::active()->with('subCategories')->orderBy('order')->get();
 
         $appUrl = rtrim(config('app.url'), '/');
 
@@ -90,7 +93,29 @@ class SitemapController extends Controller
             'images'     => [],
         ])->toArray();
 
-        $urls    = array_merge($staticPages, $productUrls, $creatorUrls, $articleUrls, $authorUrls);
+        // Category URLs (priority 0.9 — paling penting setelah beranda, strategi seperti Shopee/Tokopedia)
+        $categoryUrls = [];
+        foreach ($categories as $cat) {
+            $categoryUrls[] = [
+                'url'        => route('category.show', ['categorySlug' => $cat->slug]),
+                'priority'   => '0.9',
+                'changefreq' => 'weekly',
+                'lastmod'    => $cat->updated_at ? $cat->updated_at->toDateString() : now()->toDateString(),
+                'images'     => [],
+            ];
+            // Sub-kategori juga dimasukkan: /kategori/{slug}/{sub-slug}
+            foreach ($cat->subCategories as $sub) {
+                $categoryUrls[] = [
+                    'url'        => route('category.show', ['categorySlug' => $cat->slug, 'subcategorySlug' => $sub->slug]),
+                    'priority'   => '0.8',
+                    'changefreq' => 'weekly',
+                    'lastmod'    => $sub->updated_at ? $sub->updated_at->toDateString() : now()->toDateString(),
+                    'images'     => [],
+                ];
+            }
+        }
+
+        $urls    = array_merge($staticPages, $categoryUrls, $productUrls, $creatorUrls, $articleUrls, $authorUrls);
         $content = view('sitemap', compact('urls'))->render();
 
         return response($content, 200)->header('Content-Type', 'application/xml');
