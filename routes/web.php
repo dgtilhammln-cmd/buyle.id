@@ -12,6 +12,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\LeadController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\AdminAuthController;
@@ -72,6 +73,10 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::post('/chat-cs',       [\App\Http\Controllers\ChatController::class, 'store'])->name('chat.store');
     Route::get('/galeri',         [GalleryController::class,'index'])->name('gallery');
     Route::get('/galeri/{slug}',  [GalleryController::class,'show'])->name('gallery.show');
+    
+    // SEO Friendly Category Route
+    Route::get('/kategori/{categorySlug}/{subcategorySlug?}', [CategoryController::class, 'show'])->name('category.show');
+    
     Route::get('/produk',         [ServiceController::class,'index'])->name('products');
     Route::get('/produk/{slug}',  [ServiceController::class,'show'])->name('products.show');
     Route::get('/artikel',        [ArticleController::class,'index'])->name('articles');

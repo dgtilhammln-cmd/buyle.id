@@ -86,6 +86,12 @@ class ServiceController extends Controller
         if ($categoryParam) {
             $cats = is_array($categoryParam) ? $categoryParam : explode(',', $categoryParam);
             $cats = array_filter(array_map('trim', $cats));
+            
+            // SEO-friendly Redirect: If it's a single category search on the legacy URL, redirect to the new route
+            if (count($cats) === 1 && !request()->routeIs('category.show') && !request()->filled('q')) {
+                return redirect()->route('category.show', ['categorySlug' => $cats[0]], 301);
+            }
+
             if (!empty($cats)) {
                 $query->whereHas('category', function($q) use ($cats) {
                     $q->whereIn('slug', $cats);

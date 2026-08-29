@@ -1180,7 +1180,7 @@
                 <div class="swiper-wrapper">
                     @foreach($categoryItems as $cat)
                         <div class="swiper-slide">
-                            <a href="{{ $cat->url ?? route('products') }}" class="cv-cat-slide" aria-label="{{ $cat->name }}">
+                            <a href="{{ route('category.show', $cat->slug) }}" class="cv-cat-slide" aria-label="{{ $cat->name }}">
                                 <div class="cv-cat-icon-wrap">
                                     @if($cat->icon_type === 'upload' && $cat->icon_value)
                                         <img src="{{ asset('storage/' . $cat->icon_value) }}" alt="" loading="lazy" aria-hidden="true">

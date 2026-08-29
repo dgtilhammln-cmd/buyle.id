@@ -3,7 +3,7 @@ echo ==============================================
 echo 1. Menyiapkan ^& Commit Perubahan Lokal...
 echo ==============================================
 git add .
-git commit -m "Update layout 3 kolom produk, tabs, dan profil creator"
+git commit -m "Penyatuan Kategori & Optimasi SEO"
 
 echo.
 echo ==============================================

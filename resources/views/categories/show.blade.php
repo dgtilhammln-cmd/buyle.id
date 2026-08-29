@@ -1328,13 +1328,13 @@
 
             {{-- Grid --}}
             <div class="sp-grid" id="spGrid">
-                @forelse($services as $i => $service)
+                @forelse($products as $i => $product)
                     <div class="sp-card" data-aos="fade-up" data-aos-delay="{{ ($i % 3) * 50 }}">
 
                         {{-- Badge --}}
-                        @if($service->price > 0)
-                            @if($service->sale_price > 0 && $service->sale_price < $service->price)
-                                @php $discount = round((($service->price - $service->sale_price) / $service->price) * 100); @endphp
+                        @if($product->price > 0)
+                            @if($product->sale_price > 0 && $product->sale_price < $product->price)
+                                @php $discount = round((($product->price - $product->sale_price) / $product->price) * 100); @endphp
                                 <div class="sp-card-badge diskon">{{ $discount }}%</div>
                             @else
                                 <div class="sp-card-badge produk">Produk</div>
@@ -1344,10 +1344,12 @@
                         @endif
 
                         {{-- Image --}}
-                        <a href="{{ route_locale('products.show', $service->slug) }}" class="sp-card-img">
-                            @if($service->image)
-                                <img src="{{ asset('storage/' . $service->image) }}" alt="{{ $service->name }}"
-                                    loading="{{ $i < 4 ? 'eager' : 'lazy' }}">
+                        <a href="{{ route('products.show', $product->slug) }}" class="sp-card-img-wrap"
+                            style="text-decoration:none;">
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+                                    class="sp-card-img"
+                                    onerror="this.onerror=null;this.src='https://placehold.co/600x400/F1F5F9/94A3B8?text={{ urlencode($product->name) }}';" loading="{{ $i < 4 ? 'eager' : 'lazy' }}">
                             @else
                                 <div class="sp-card-img-ph">
                                     <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5"
@@ -1362,20 +1364,20 @@
 
                         {{-- Body --}}
                         <div class="sp-card-body">
-                            <a href="{{ route_locale('products.show', $service->slug) }}" style="text-decoration:none;">
-                                <h2 class="sp-card-name">{{ $service->name }}</h2>
+                            <a href="{{ route('products.show', $product->slug) }}" style="text-decoration:none;">
+                                <h2 class="sp-card-name">{{ $product->name }}</h2>
                             </a>
 
                             <div class="sp-card-footer">
                                 {{-- Price --}}
                                 <div class="sp-card-price">
-                                    @if($service->price > 0)
-                                        @if($service->sale_price > 0 && $service->sale_price < $service->price)
-                                            <div class="sp-card-price-old">Rp {{ number_format($service->price, 0, ',', '.') }}</div>
-                                            <div class="sp-card-price-main">Rp {{ number_format($service->sale_price, 0, ',', '.') }}
+                                    @if($product->price > 0)
+                                        @if($product->sale_price > 0 && $product->sale_price < $product->price)
+                                            <div class="sp-card-price-old">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
+                                            <div class="sp-card-price-main">Rp {{ number_format($product->sale_price, 0, ',', '.') }}
                                             </div>
                                         @else
-                                            <div class="sp-card-price-main">Rp {{ number_format($service->price, 0, ',', '.') }}</div>
+                                            <div class="sp-card-price-main">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
                                         @endif
                                     @else
                                         <div class="sp-card-price-jasa">Layanan Jasa</div>
@@ -1395,7 +1397,7 @@
                         </div>
                         <h3>Tidak ada produk ditemukan</h3>
                         <p>Coba ubah filter atau kata kunci pencarian Anda</p>
-                        <a href="{{ route_locale('products') }}"
+                        <a href="{{ route('products') }}"
                             style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--c-gradient);color:#fff;padding:0.5rem 1.25rem;border-radius:50px;font-family:var(--font);font-weight:700;font-size:0.85rem;text-decoration:none;transition:transform 0.2s;"
                             onmouseover="this.style.transform='translateY(-2px)'"
                             onmouseout="this.style.transform='none'">
@@ -1403,6 +1405,10 @@
                         </a>
                     </div>
                 @endforelse
+            </div>
+            
+            <div style="margin-top:2rem;">
+                {{ $products->links() }}
             </div>
         </div>
     </div>
