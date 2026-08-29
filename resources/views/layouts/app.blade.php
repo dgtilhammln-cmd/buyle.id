@@ -257,10 +257,11 @@
             position: fixed; inset: 0; z-index: 999999;
             background: #F8FAFC;
             transition: opacity 0.4s ease, visibility 0.4s ease;
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
             display: flex; flex-direction: column;
         }
-        #cv-app-preloader.fade-out { opacity: 0; visibility: hidden; }
+        #cv-app-preloader.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
         .skel-shimmer {
             background: #e2e8f0;
             background-image: linear-gradient(90deg, #e2e8f0 0px, #f1f5f9 40px, #e2e8f0 80px);
@@ -270,7 +271,7 @@
         @keyframes shimmer { 0% { background-position: -300px; } 100% { background-position: 300px; } }
         
         /* ── HEADER SKELETON (PILL STYLE) ── */
-        .skel-header-wrap { position: absolute; top: 1rem; left: 0; width: 100%; z-index: 10; pointer-events: none; }
+        .skel-header-wrap { position: sticky; top: 0; left: 0; width: 100%; z-index: 10; pointer-events: none; background: #F8FAFC; padding: 1rem 0; }
         .skel-header-inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
         .skel-pill { background: #fff; border-radius: 999px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); display: flex; align-items: center; }
         
@@ -289,8 +290,8 @@
         }
 
         /* ── BODY SKELETON ── */
-        .skel-body { flex: 1; padding: calc(1rem + 60px + 2rem) 1.5rem 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
-        @media(max-width: 768px) { .skel-body { padding: calc(1rem + 50px + 1rem) 1rem 2rem; } }
+        .skel-body { flex: 1; padding: 1.5rem 1.5rem 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+        @media(max-width: 768px) { .skel-body { padding: 1rem 1rem 2rem; } }
 
         /* Home Banner Grid */
         .skel-hero-wrapper { margin-bottom: 2rem; width: 100%; }
@@ -310,15 +311,30 @@
         @media(min-width: 1025px) { .skel-grid { grid-template-columns: repeat(5, 1fr); } }
         .skel-card { width: 100%; height: 260px; border-radius: 16px; }
 
-        /* Product Detail */
-        .skel-breadcrumb { width: 40%; height: 20px; border-radius: 4px; margin-bottom: 2rem; }
-        .skel-product-split { display: flex; flex-direction: column; gap: 2rem; }
-        .skel-product-img { width: 100%; height: 300px; border-radius: 20px; }
-        .skel-product-info { display: flex; flex-direction: column; gap: 1rem; flex: 1; }
+        /* Product Detail — 3 Column Layout */
+        .skel-breadcrumb { width: 40%; height: 20px; border-radius: 4px; margin-bottom: 1.5rem; }
         .skel-line { border-radius: 6px; }
-        @media(min-width: 768px) {
-            .skel-product-split { flex-direction: row; gap: 3rem; }
-            .skel-product-img { width: 45%; height: 500px; }
+
+        /* Mobile: stacked */
+        .skel-pd-grid { display: flex; flex-direction: column; gap: 1rem; }
+        .skel-pd-gallery { width: 100%; border-radius: 16px; overflow: hidden; }
+        .skel-pd-gallery-main { width: 100%; aspect-ratio: 1/1; }
+        .skel-pd-gallery-thumbs { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+        .skel-pd-gallery-thumb { width: 60px; height: 60px; border-radius: 8px; flex-shrink: 0; }
+        .skel-pd-info { display: flex; flex-direction: column; gap: 0.875rem; }
+        .skel-pd-sidebar { display: none; }
+
+        /* Desktop: 3-column (gallery | info | sidebar) */
+        @media(min-width: 1024px) {
+            .skel-pd-grid { display: grid; grid-template-columns: 320px 1fr 280px; gap: 1.5rem; align-items: start; }
+            .skel-pd-gallery-main { aspect-ratio: 1/1; }
+            .skel-pd-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+            .skel-pd-sidebar-card { width: 100%; border-radius: 16px; height: 260px; }
+            .skel-pd-sidebar-banner { width: 100%; border-radius: 16px; aspect-ratio: 3/4; }
+        }
+        @media(min-width: 768px) and (max-width: 1023px) {
+            .skel-pd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+            .skel-pd-sidebar { display: none; }
         }
     </style>
     
@@ -358,13 +374,29 @@
                 </div>
             @elseif(request()->routeIs('products.show'))
                 <div class="skel-shimmer skel-breadcrumb"></div>
-                <div class="skel-product-split">
-                    <div class="skel-shimmer skel-product-img"></div>
-                    <div class="skel-product-info">
-                        <div class="skel-shimmer skel-line" style="width: 80%; height: 32px;"></div>
-                        <div class="skel-shimmer skel-line" style="width: 40%; height: 24px;"></div>
-                        <div class="skel-shimmer skel-line" style="width: 100%; height: 120px; margin-top: 1.5rem;"></div>
-                        <div class="skel-shimmer skel-line" style="width: 100%; height: 56px; margin-top: auto; border-radius: 999px;"></div>
+                <div class="skel-pd-grid">
+                    {{-- Gallery Column --}}
+                    <div class="skel-pd-gallery">
+                        <div class="skel-shimmer skel-pd-gallery-main" style="border-radius:16px;"></div>
+                        <div class="skel-pd-gallery-thumbs">
+                            @for($t=0; $t<4; $t++)
+                                <div class="skel-shimmer skel-pd-gallery-thumb"></div>
+                            @endfor
+                        </div>
+                    </div>
+                    {{-- Info Column --}}
+                    <div class="skel-pd-info">
+                        <div class="skel-shimmer skel-line" style="width:70%;height:28px;"></div>
+                        <div class="skel-shimmer skel-line" style="width:40%;height:36px;"></div>
+                        <div class="skel-shimmer skel-line" style="width:100%;height:80px;margin-top:0.5rem;"></div>
+                        <div class="skel-shimmer skel-line" style="width:100%;height:48px;margin-top:0.5rem;"></div>
+                        <div class="skel-shimmer skel-line" style="width:100%;height:52px;border-radius:999px;margin-top:0.5rem;"></div>
+                    </div>
+                    {{-- Sidebar Column --}}
+                    <div class="skel-pd-sidebar">
+                        <div class="skel-shimmer skel-pd-sidebar-card"></div>
+                        <div class="skel-shimmer skel-pd-sidebar-banner"></div>
+                        <div class="skel-shimmer skel-pd-sidebar-banner"></div>
                     </div>
                 </div>
             @else
