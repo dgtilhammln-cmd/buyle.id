@@ -563,7 +563,7 @@
                                 $catName = $service->category?->name ?? $service->type_label ?? 'Produk Digital';
                             @endphp
                             <p style="font-size:0.9rem; color:#334155; line-height:1.8; margin-bottom:1.25rem; padding:1rem 1.25rem; background:linear-gradient(135deg,#f0fdf4,#e8f5e9); border-left:4px solid #1eb349; border-radius:0 12px 12px 0;">
-                                Cari berbagai macam dari pilihan terlengkap <strong>{{ $catName }}</strong>. Temukan {{ $catName }} terbaik, termurah, dan berkualitas tinggi hanya di <strong>BUYLE.ID</strong>, marketplace produk dan jasa digital terpercaya untuk para kreator dan pelaku bisnis Indonesia.
+                                Cari berbagai macam dari pilihan terlengkap <strong>{{ $catName }}</strong>. Temukan {{ $catName }} terbaik, termurah, dan berkualitas tinggi hanya di <strong>BUYLE.ID</strong>, marketplace produk dan jasa digital terpercaya untuk para Konten Kreator dan Freelancer Indonesia.
                             </p>
 
                             @if($service->short_desc)
