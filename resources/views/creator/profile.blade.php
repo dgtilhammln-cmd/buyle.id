@@ -342,7 +342,12 @@
                 .then(provinces => {
                     provinces.forEach(p => {
                         let option = new Option(p.name, p.id);
-                        if (p.id == selProv) option.selected = true;
+                        if (p.id == selProv) {
+                            option.selected = true;
+                            if (!document.getElementById('province_name').value) {
+                                document.getElementById('province_name').value = p.name;
+                            }
+                        }
                         provSelect.add(option);
                     });
                     if (selProv) loadCities(selProv, selCity);
@@ -374,7 +379,12 @@
                         citySelect.innerHTML = '<option value="">— Pilih Kabupaten/Kota —</option>';
                         cities.forEach(c => {
                             let option = new Option(c.name, c.id);
-                            if (c.id == selectedId) option.selected = true;
+                            if (c.id == selectedId) {
+                                option.selected = true;
+                                if (!document.getElementById('city_name').value) {
+                                    document.getElementById('city_name').value = c.name;
+                                }
+                            }
                             citySelect.add(option);
                         });
                         citySelect.disabled = false;

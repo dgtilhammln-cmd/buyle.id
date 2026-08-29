@@ -611,13 +611,18 @@
                 </div>
                 
                 <div style="text-align:center; padding: 1.5rem 1.25rem;">
-                    <div style="font-size:1.15rem; font-weight:700; color:var(--text-main); margin-bottom:0.6rem;">
+                    <div style="font-size:1.15rem; font-weight:700; color:var(--text-main); margin-bottom:0.4rem;">
                         {{ $displaySellerName }}
                     </div>
                     
-                    <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.4; display:flex; align-items:center; justify-content:center; gap:4px;">
+                    {{-- Lokasi Creator --}}
+                    <div id="creator-location-box" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.75rem; line-height:1.4; display:flex; align-items:center; justify-content:center; gap:4px;"
+                         data-prov-id="{{ optional($cp)->province_id }}"
+                         data-city-id="{{ optional($cp)->city_id }}"
+                         data-prov-name="{{ optional($cp)->province_name }}"
+                         data-city-name="{{ optional($cp)->city_name }}">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                        <span>
+                        <span id="creator-location-text">
                             @if(optional($cp)->city_name && optional($cp)->province_name)
                                 {{ $cp->city_name }}, {{ $cp->province_name }}
                             @elseif(optional($cp)->city_name)
@@ -629,9 +634,25 @@
                             @endif
                         </span>
                     </div>
+
+                    {{-- Bio / Profil Singkat --}}
+                    @if(optional($cp)->store_description)
+                    <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.5; margin-bottom:0.75rem; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">
+                        {{ $cp->store_description }}
+                    </div>
+                    @endif
                     
-                    <div style="font-size:0.82rem; font-weight:600; color:var(--text-main); margin-bottom:1.25rem;">
-                        Login Terakhir: <span style="font-weight:400; color:var(--text-muted);">{{ ($seller && $seller->last_seen_at) ? $seller->last_seen_at->format('d/m/Y') : 'Baru saja' }}</span>
+                    {{-- Status Keaktifan Realtime --}}
+                    <div style="font-size:0.82rem; margin-bottom:1.25rem;">
+                        @if($seller && $seller->last_seen_at && $seller->last_seen_at->gt(now()->subMinutes(10)))
+                            <span style="color: #1eb349; font-weight: 600; display:inline-flex; align-items:center; gap:5px;">
+                                <span style="width:8px; height:8px; background:#1eb349; border-radius:50%; display:inline-block;"></span> Online
+                            </span>
+                        @else
+                            <span style="color: var(--text-muted);">
+                                Aktif {{ ($seller && $seller->last_seen_at) ? $seller->last_seen_at->diffForHumans() : 'baru saja' }}
+                            </span>
+                        @endif
                     </div>
                     
                     <a href="{{ $cp?->store_slug ? route('store.show', $cp->store_slug) : (isset($sellerUrl) ? $sellerUrl : '#') }}" class="pd-btn pd-btn-primary" style="width:100%; height:44px; border-radius:99px; font-size:0.85rem; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(30,179,73,0.25);">
@@ -754,6 +775,41 @@ function switchTab(tab) {
 
 document.addEventListener('DOMContentLoaded', function () {
     GLightbox({ selector: '.glightbox', touchNavigation: true, loop: true });
+
+    // Auto-resolve city/province name from ID if name is not yet saved in DB
+    const locBox = document.getElementById('creator-location-box');
+    if (locBox) {
+        const provId = locBox.getAttribute('data-prov-id');
+        const cityId = locBox.getAttribute('data-city-id');
+        const provName = locBox.getAttribute('data-prov-name');
+        const cityName = locBox.getAttribute('data-city-name');
+        const locText = document.getElementById('creator-location-text');
+
+        if ((!provName || !cityName) && (provId || cityId)) {
+            const apiBase = "https://www.emsifa.com/api-wilayah-indonesia/api";
+            let cName = cityName || '', pName = provName || '';
+            
+            const promises = [];
+            if (provId && !pName) {
+                promises.push(fetch(`${apiBase}/provinces.json`).then(r => r.json()).then(provinces => {
+                    const found = provinces.find(p => p.id == provId);
+                    if (found) pName = found.name;
+                }).catch(() => {}));
+            }
+            if (provId && cityId && !cName) {
+                promises.push(fetch(`${apiBase}/regencies/${provId}.json`).then(r => r.json()).then(cities => {
+                    const found = cities.find(c => c.id == cityId);
+                    if (found) cName = found.name;
+                }).catch(() => {}));
+            }
+            
+            Promise.all(promises).then(() => {
+                if (cName && pName) locText.textContent = `${cName}, ${pName}`;
+                else if (cName) locText.textContent = cName;
+                else if (pName) locText.textContent = pName;
+            });
+        }
+    }
 
     var thumbsEl = document.getElementById('pd-swiper-thumbs');
     if (thumbsEl) {

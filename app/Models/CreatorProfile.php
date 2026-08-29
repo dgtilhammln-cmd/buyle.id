@@ -15,6 +15,8 @@ class CreatorProfile extends Model
         'province_id',
         'city_id',
         'subdistrict_id',
+        'province_name',
+        'city_name',
         'meta_title',
         'meta_desc',
         'meta_keywords',
