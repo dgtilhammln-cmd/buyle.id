@@ -558,10 +558,20 @@
                         @endif
 
                         <div class="pd-desc-content">
+                            {{-- SEO Prefix Paragraph --}}
+                            <p style="font-size:0.9rem; color:#334155; line-height:1.8; margin-bottom:1.25rem; padding:1rem 1.25rem; background:linear-gradient(135deg,#f0fdf4,#e8f5e9); border-left:4px solid #1eb349; border-radius:0 12px 12px 0;">
+                                Cari berbagai macam dari pilihan terlengkap <strong>{{ $service->name }}</strong>. Temukan {{ $service->name }} terbaik, termurah, dan berkualitas tinggi hanya di <strong>BUYLE.ID</strong> — marketplace produk &amp; jasa digital terpercaya untuk para kreator dan pelaku bisnis Indonesia.
+                            </p>
+
                             @if($service->short_desc)
                             <p><b>{{ $service->short_desc }}</b></p>
                             @endif
                             {!! $service->description ?? 'Belum ada deskripsi mendetail.' !!}
+
+                            {{-- SEO Closing Paragraph --}}
+                            <p style="font-size:0.85rem; color:#64748B; line-height:1.75; margin-top:1.75rem; padding:0.875rem 1.25rem; background:#f8fafc; border:1px dashed #CBD5E1; border-radius:10px;">
+                                🛡️ <strong>Belanja aman di BUYLE.ID</strong> — Semua produk digital diverifikasi, transaksi terlindungi, dan layanan pelanggan siap membantu. Dapatkan <strong>{{ $service->name }}</strong> asli dan berlisensi langsung dari kreatornya. Tersedia pilihan produk digital terbaik, termurah, dan terlengkap hanya di <strong>buyle.id</strong>.
+                            </p>
                         </div>
                     </div>
                     <div id="tab-creator" class="pd-tab-content" style="display:none;">

@@ -274,9 +274,15 @@ class ServiceController extends Controller
                         : $service->price;
 
         $seo = [
-            'title'       => $service->meta_title ?: ($service->name . ' — ' . $sellerName . ' | ' . $siteName),
-            'description' => $service->meta_desc  ?: ($service->short_desc ?: strip_tags($service->description ?? '')),
-            'keywords'    => $service->meta_keywords ?: ($service->name . ', ' . $sellerName . ', ' . $siteName),
+            'title'       => $service->meta_title ?: ($service->name . ' Terbaik & Terlengkap — ' . $sellerName . ' | ' . $siteName),
+            'description' => $service->meta_desc  ?: (
+                'Cari berbagai macam dari pilihan terlengkap ' . $service->name . '. '
+                . ($service->short_desc
+                    ? trim($service->short_desc) . ' '
+                    : '')
+                . 'Dapatkan ' . $service->name . ' terbaik, termurah, dan berkualitas dari ' . $sellerName . ' hanya di BUYLE.ID — marketplace produk & jasa digital terpercaya Indonesia.'
+            ),
+            'keywords'    => $service->meta_keywords ?: ($service->name . ', beli ' . $service->name . ', harga ' . $service->name . ', ' . $sellerName . ', produk digital, ' . $siteName),
             'og_image'    => $ogImage,
             'og_type'     => 'product',
             'canonical'   => $productUrl,
