@@ -287,7 +287,7 @@ class ServiceController extends Controller
         $faq = is_array($service->faqs) ? $service->faqs : [];
         if (empty($faq)) {
             $faq = [
-                ['q' => 'Bagaimana cara memesan produk ini?',         'a' => 'Klik tombol "Beli Sekarang" atau "Masukkan Keranjang", lalu ikuti langkah checkout. Anda juga bisa chat langsung dengan creator via WhatsApp.'],
+                ['q' => 'Bagaimana cara memesan produk ini?',         'a' => 'Klik tombol "Beli Sekarang" atau "Tambah Keranjang", lalu ikuti langkah checkout. Anda juga bisa chat langsung dengan creator via WhatsApp.'],
                 ['q' => 'Apakah produk ini asli dari creator ' . $sellerName . '?', 'a' => 'Ya, produk ini dijual langsung oleh ' . $sellerName . ' melalui platform buyle.id.'],
                 ['q' => 'Apakah tersedia garansi produk?',            'a' => 'Setiap produk dilengkapi garansi sesuai kebijakan seller. Hubungi ' . $sellerName . ' untuk detail lebih lanjut.'],
             ];

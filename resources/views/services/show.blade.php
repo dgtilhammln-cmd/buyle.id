@@ -154,8 +154,8 @@
     border-radius: 0 8px 8px 0;
 }
 .pd-price-old { font-size: 1rem; color: var(--text-muted); text-decoration: line-through; }
-.pd-price-main { font-size: 1.8rem; font-weight: 600; background: linear-gradient(135deg, #1eb349, #a5cf37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.pd-discount { background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.03em; }
+.pd-price-main { font-size: 1.6rem; font-weight: 700; background: linear-gradient(135deg, #1eb349, #a5cf37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; white-space: nowrap; }
+.pd-discount { background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap; flex-shrink: 0; }
 
 /* Shipping & Attributes Row */
 .pd-attr-row { display: flex; align-items: flex-start; margin-bottom: 1.5rem; font-size: 0.9rem; }
@@ -468,7 +468,7 @@
                         @if($service->sale_price > 0 && $service->sale_price < $service->price)
                             <div class="pd-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
                             <div class="pd-price-main">Rp{{ number_format($service->sale_price, 0, ',', '.') }}</div>
-                            <div class="pd-discount">{{ round((($service->price - $service->sale_price)/$service->price)*100) }}% OFF</div>
+                            <span class="pd-discount">{{ round((($service->price - $service->sale_price)/$service->price)*100) }}% OFF</span>
                         @else
                             <div class="pd-price-main">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
                         @endif
@@ -519,7 +519,7 @@
                         <div class="pd-actions" style="margin-top:1.5rem; display:flex; gap:0.75rem;">
                             <button type="submit" name="action" value="cart" class="pd-btn pd-btn-outline" style="flex:1;"
                                 @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
-                                Masukkan Keranjang
+                                Tambah Keranjang
                             </button>
                             <button type="submit" name="action" value="buy" class="pd-btn pd-btn-primary" style="flex:1;"
                                 @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
@@ -611,53 +611,32 @@
                 </div>
                 
                 <div style="text-align:center; padding: 1.5rem 1.25rem;">
-                    <!-- Badge Profil Perusahaan -->
-                    <div style="display:inline-block; font-size:0.7rem; font-weight:700; color:#d97706; background:#fef3c7; border-radius:99px; padding:4px 12px; margin-bottom:0.75rem; border:1px solid #fde68a;">
-                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:-2px; margin-right:4px;"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 9h6M9 13h6M9 17h6"/></svg>
-                        PROFIL CREATOR
-                    </div>
-
-                    <div style="font-size:1.15rem; font-weight:700; color:var(--text-main); margin-bottom:0.75rem;">
+                    <div style="font-size:1.15rem; font-weight:700; color:var(--text-main); margin-bottom:0.6rem;">
                         {{ $displaySellerName }}
                     </div>
                     
-                    @if(optional($cp)->city_name || optional($cp)->address)
-                    <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.25rem; line-height:1.5;">
-                        @if(optional($cp)->city_name && optional($cp)->province_name)
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:-2px; margin-right:2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                            {{ $cp->city_name }}, {{ $cp->province_name }}
-                        @elseif(optional($cp)->address)
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:-2px; margin-right:2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                            {{ Str::limit($cp->address, 60) }}
-                        @endif
+                    <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.4; display:flex; align-items:center; justify-content:center; gap:4px;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        <span>
+                            @if(optional($cp)->city_name && optional($cp)->province_name)
+                                {{ $cp->city_name }}, {{ $cp->province_name }}
+                            @elseif(optional($cp)->city_name)
+                                {{ $cp->city_name }}
+                            @elseif(optional($cp)->province_name)
+                                {{ $cp->province_name }}
+                            @else
+                                Indonesia
+                            @endif
+                        </span>
                     </div>
-                    @else
-                    <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.25rem; line-height:1.5;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:-2px; margin-right:2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                        Indonesia
-                    </div>
-                    @endif
                     
-                    <div style="font-size:0.85rem; font-weight:600; color:var(--text-main); margin-bottom:1.25rem;">
+                    <div style="font-size:0.82rem; font-weight:600; color:var(--text-main); margin-bottom:1.25rem;">
                         Login Terakhir: <span style="font-weight:400; color:var(--text-muted);">{{ ($seller && $seller->last_seen_at) ? $seller->last_seen_at->format('d/m/Y') : 'Baru saja' }}</span>
                     </div>
                     
-                    <div style="display:flex; gap:0.5rem; justify-content:center; margin-bottom:0.75rem;">
-                        <a href="tel:{{ $displayPhone ?: '#' }}" class="pd-btn pd-btn-primary" style="flex:1; height:42px; border-radius:8px; font-size:0.8rem; background:#3b82f6; box-shadow:none; padding:0 0.5rem;">
-                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" style="margin-right:4px;"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 0 0-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
-                            TELEPON
-                        </a>
-                        <a href="javascript:void(0)" onclick="openOrderModal('Halo {{ addslashes($displaySellerName) }}, saya mau tanya produk {{ addslashes($service->name) }}')" class="pd-btn pd-btn-primary" style="flex:1; height:42px; border-radius:8px; font-size:0.8rem; box-shadow:none; padding:0 0.5rem;">
-                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" style="margin-right:4px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.66-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 22H12A10 10 0 013 7.37L1.64 12.35l5.09-1.34A10 10 0 1112.004 22zm0-18A8 8 0 1017.65 17.65a8 8 0 00-5.646-13.65z"/></svg>
-                            WHATSAPP
-                        </a>
-                    </div>
-
-                    @if($cp?->store_slug)
-                    <a href="{{ route('store.show', $cp->store_slug) }}" class="pd-btn pd-btn-outline" style="width:100%; height:38px; border-radius:8px; font-size:0.8rem; margin-top:0.4rem;">
+                    <a href="{{ $cp?->store_slug ? route('store.show', $cp->store_slug) : (isset($sellerUrl) ? $sellerUrl : '#') }}" class="pd-btn pd-btn-primary" style="width:100%; height:44px; border-radius:99px; font-size:0.85rem; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(30,179,73,0.25);">
                         Lihat Profil Creator
                     </a>
-                    @endif
                 </div>
             </div>
         </div>
