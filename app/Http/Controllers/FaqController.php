@@ -31,10 +31,10 @@ class FaqController extends Controller
         $currentPage = request()->get('page', 1);
         $seo = [
             'title'       => ($currentPage > 1)
-                ? ($settings['meta_title_faqs'] ?? 'Panduan & Tutorial Kreator | ' . $siteName) . ' — Halaman ' . $currentPage
-                : ($settings['meta_title_faqs'] ?? 'Panduan & Tutorial Kreator | ' . $siteName),
-            'description' => $settings['meta_desc_faqs']  ?? 'Panduan lengkap, tutorial teknis, dan dokumentasi resmi untuk kreator buyle.id. Pelajari cara upload produk, setting toko, dan memaksimalkan penjualan digital.',
-            'keywords'    => $settings['meta_keywords_faqs'] ?? 'panduan kreator buyle.id, tutorial jual produk digital, cara daftar kreator, tips berjualan digital, dokumentasi buyle.id',
+                ? ($settings['meta_title_faqs'] ?? 'Pusat Bantuan & FAQ | ' . $siteName) . ' — Halaman ' . $currentPage
+                : ($settings['meta_title_faqs'] ?? 'Pusat Bantuan & FAQ | ' . $siteName),
+            'description' => $settings['meta_desc_faqs']  ?? 'Pusat Bantuan dan FAQ buyle.id. Temukan jawaban cepat untuk pertanyaan seputar transaksi, layanan, lisensi produk, dan panduan lainnya.',
+            'keywords'    => $settings['meta_keywords_faqs'] ?? 'pusat bantuan, faq buyle.id, pertanyaan umum, panduan pengguna, bantuan transaksi digital',
             'og_image'    => !empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : asset('images/og-default.jpg'),
             // Canonical per-page: page 1 = clean URL, page 2+ = with ?page=N
             'canonical'   => $currentPage > 1
@@ -124,23 +124,9 @@ class FaqController extends Controller
         $schemas = [
             [
                 '@context'         => 'https://schema.org',
-                '@type'            => 'TechArticle',
-                'headline'         => $faq->title,
+                '@type'            => 'WebPage',
+                'name'             => $faq->title,
                 'description'      => $faq->excerpt,
-                'image'            => $ogImg,
-                'datePublished'    => $faq->published_at?->toIso8601String(),
-                'dateModified'     => $faq->updated_at->toIso8601String(),
-                'wordCount'        => $wordCount,
-                'articleSection'   => $faq->category ?? 'Tutorial Kreator',
-                'inLanguage'       => 'id-ID',
-                'author'           => $authorData,
-                'publisher'        => [
-                    '@type'  => 'Organization',
-                    'name'   => $siteName,
-                    '@id'    => $appUrl . '/#organization',
-                    'logo'   => ['@type' => 'ImageObject', 'url' => $appUrl . '/images/logo.png'],
-                ],
-                'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => route('faqs.show', ['slug' => $slug])],
                 'url'              => route('faqs.show', ['slug' => $slug]),
             ],
         ];

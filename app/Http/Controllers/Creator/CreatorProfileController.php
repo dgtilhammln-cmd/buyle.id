@@ -34,6 +34,8 @@ class CreatorProfileController extends Controller
             'province_id' => 'nullable|integer',
             'city_id' => 'nullable|integer',
             'subdistrict_id' => 'nullable|integer',
+            'province_name' => 'nullable|string|max:100',
+            'city_name' => 'nullable|string|max:100',
             'meta_title' => 'nullable|string|max:70',
             'meta_desc' => 'nullable|string|max:160',
             'meta_keywords' => 'nullable|string|max:255',
@@ -47,6 +49,7 @@ class CreatorProfileController extends Controller
             $request->only([
                 'store_name', 'store_slug', 'store_description',
                 'address', 'province_id', 'city_id', 'subdistrict_id',
+                'province_name', 'city_name',
                 'meta_title', 'meta_desc', 'meta_keywords'
             ])
         );

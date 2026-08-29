@@ -264,11 +264,11 @@
                             placeholder="Nama Jalan, Gedung, No. Rumah">{{ old('address', $profile->address) }}</textarea>
                     </div>
 
-                    {{-- Hidden inputs to store names if needed for SEO fallback without querying EMSIFA again on frontend
-                    --}}
                     <input type="hidden" id="provId_val" value="{{ old('province_id', $profile->province_id) }}">
                     <input type="hidden" id="cityId_val" value="{{ old('city_id', $profile->city_id) }}">
                     <input type="hidden" id="distId_val" value="{{ old('subdistrict_id', $profile->subdistrict_id) }}">
+                    <input type="hidden" name="province_name" id="province_name" value="{{ old('province_name', $profile->province_name) }}">
+                    <input type="hidden" name="city_name" id="city_name" value="{{ old('city_name', $profile->city_name) }}">
                 </div>
             </div>
 
@@ -354,6 +354,8 @@
                 distSelect.innerHTML = '<option value="">— Pilih Kecamatan —</option>';
                 citySelect.disabled = true;
                 distSelect.disabled = true;
+                document.getElementById('province_name').value = this.options[this.selectedIndex].text !== '— Pilih Provinsi —' ? this.options[this.selectedIndex].text : '';
+                document.getElementById('city_name').value = '';
                 if (this.value) loadCities(this.value);
             });
 
@@ -361,6 +363,7 @@
             citySelect.addEventListener('change', function () {
                 distSelect.innerHTML = '<option value="">— Pilih Kecamatan —</option>';
                 distSelect.disabled = true;
+                document.getElementById('city_name').value = this.options[this.selectedIndex].text !== '— Pilih Kabupaten/Kota —' ? this.options[this.selectedIndex].text : '';
                 if (this.value) loadDistricts(this.value);
             });
 

@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Blog & FAQ | buyle.id — Digital Creator Marketplace')
-@section('meta_description', 'Temukan artikel, tips bisnis digital, panduan kreator, dan inspirasi terbaru seputar ekosistem digital creator marketplace hanya di buyle.id.')
+@section('title', 'Pusat Bantuan & FAQ | buyle.id — Digital Creator Marketplace')
+@section('meta_description', 'Pusat bantuan dan FAQ. Temukan jawaban untuk pertanyaan umum seputar pembelian, penjualan produk digital, lisensi, dan layanan di buyle.id.')
 @section('content')
 
 <style>
@@ -304,16 +304,16 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
         <nav class="sv-breadcrumb" aria-label="Breadcrumb">
             <a href="{{ route_locale('home') }}">Beranda</a>
             <span class="sv-breadcrumb-sep">/</span>
-            <span class="sv-breadcrumb-current">FAQ &amp; Tips</span>
+            <span class="sv-breadcrumb-current">FAQ</span>
         </nav>
-        <div class="sv-label">Blog &amp; Info</div>
+        <div class="sv-label">Pusat Bantuan</div>
         <h1 class="sv-title">
-            Tips &amp; Inspirasi<br>
-            Digital Creator
+            Pertanyaan Umum<br>
+            (FAQ)
         </h1>
         <p class="sv-intro">
-            Kumpulan artikel, panduan bisnis digital, tips kreator sukses,
-            dan informasi terbaru seputar ekosistem digital marketplace — hanya di buyle.id.
+            Temukan jawaban cepat untuk pertanyaan seputar cara bertransaksi,
+            menjadi kreator, lisensi produk, dan informasi layanan lainnya di buyle.id.
         </p>
     </div>
 </section>

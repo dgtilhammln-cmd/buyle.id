@@ -416,7 +416,7 @@ a { text-decoration: none; color: inherit; }
         <nav class="sv-breadcrumb" aria-label="Breadcrumb">
             <a href="{{ route_locale('home') }}">Beranda</a>
             <span class="sv-breadcrumb-sep">/</span>
-            <a href="{{ $seo['canonical'] ?? route_locale('faqs') }}">FAQ &amp; Tips</a>
+            <a href="{{ $seo['canonical'] ?? route_locale('faqs') }}">FAQ</a>
             <span class="sv-breadcrumb-sep">/</span>
             <span class="sv-breadcrumb-current">{{ Str::limit($trans?->title ?? $faq->slug, 50) }}</span>
         </nav>
@@ -436,29 +436,7 @@ a { text-decoration: none; color: inherit; }
         <h1 class="ar-hero-title">{{ $trans?->title ?? $faq->slug }}</h1>
         <p class="ar-hero-excerpt">{{ $trans?->excerpt }}</p>
 
-        @if(isset($faq->authorRel) && $faq->authorRel->slug)
-        <a href="{{ url("/{$locale}/author/" . $faq->authorRel->slug) }}" class="ar-author-row" style="text-decoration:none; display:inline-flex; transition:all .2s; padding-right:1rem; border-radius:12px; margin-left:-0.5rem; padding-left:0.5rem; border-top:none; margin-top:1.5rem; padding-top:0.5rem; border:1px solid transparent;" onmouseover="this.style.background='rgba(30,179,73,0.05)';this.style.borderColor='rgba(30,179,73,0.1)'" onmouseout="this.style.background='transparent';this.style.borderColor='transparent'">
-        @else
-        <div class="ar-author-row" style="border-top:none; margin-top:1.5rem; padding-top:0.5rem;">
-        @endif
-            <div class="ar-author-avatar" style="background:transparent; width:42px; height:42px; overflow:hidden;">
-            @if(isset($faq->authorRel) && $faq->authorRel->getRawOriginal('photo'))
-                <img src="{{ asset('storage/'.$faq->authorRel->getRawOriginal('photo')) }}" alt="{{ $faq->authorRel->name }}" style="width:100%; height:100%; object-fit:cover;">
-            @elseif(!empty($settings['logo']))
-                <img src="{{ asset('storage/'.$settings['logo']) }}" alt="buyle.id" style="width:100%; height:100%; object-fit:contain;">
-            @else
-                <span style="background:var(--c-accent); width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:1rem; border-radius:50%;">C</span>
-            @endif
-            </div>
-            <div>
-                <div class="ar-author-name" style="transition:color .2s; {{ isset($faq->authorRel) && $faq->authorRel->slug ? 'color:var(--c-accent);' : '' }}">{{ isset($faq->authorRel) ? $faq->authorRel->name : ($faq->author ?? 'Tim buyle.id') }}</div>
-                <div class="ar-author-company">buyle.id</div>
-            </div>
-        @if(isset($faq->authorRel) && $faq->authorRel->slug)
-        </a>
-        @else
-        </div>
-        @endif
+
     </div>
 </section>
 
@@ -519,42 +497,6 @@ a { text-decoration: none; color: inherit; }
         {!! $renderedContent !!}
     </faq>
 
-    {{-- Author Bio --}}
-    @if(isset($faq->authorRel))
-        @php
-            $authorTrans = $faq->authorRel->translations->where('locale', $locale)->first();
-        @endphp
-        @if($authorTrans && !empty($authorTrans->bio))
-        <div class="ar-author-bio-box" style="margin-top:3.5rem; padding:2rem; background:#ffffff; border:1px solid #E2E8F0; border-radius:16px; display:flex; gap:1.5rem; align-items:flex-start; box-shadow:0 10px 25px rgba(0,0,0,0.02);" dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}">
-            <div style="width:72px; height:72px; border-radius:50%; overflow:hidden; flex-shrink:0; background:#F1F5F9;">
-                @if($faq->authorRel->getRawOriginal('photo'))
-                    <img src="{{ asset('storage/'.$faq->authorRel->getRawOriginal('photo')) }}" alt="{{ $faq->authorRel->name }}" style="width:100%; height:100%; object-fit:cover;">
-                @else
-                    <span style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:700; color:#94A3B8;">{{ substr($faq->authorRel->name, 0, 1) }}</span>
-                @endif
-            </div>
-            <div>
-                <div style="margin:0 0 0.5rem; font-size:1.125rem; font-weight:700; color:#0F172A; font-family:var(--font);">
-                    @if($faq->authorRel->slug)
-                        <a href="{{ url("/{$locale}/author/" . $faq->authorRel->slug) }}" style="color:inherit; transition:color .2s;" onmouseover="this.style.color='var(--c-accent)'" onmouseout="this.style.color='inherit'">{{ $faq->authorRel->name }}</a>
-                    @else
-                        {{ $faq->authorRel->name }}
-                    @endif
-                </div>
-                <p style="margin:0; font-size:0.95rem; color:#475569; line-height:1.6; font-family:var(--font);">{{ $authorTrans->bio }}</p>
-                @if(!empty($faq->authorRel->social_links))
-                    <div style="margin-top:1rem; display:flex; gap:0.75rem;">
-                        @foreach($faq->authorRel->social_links as $sname => $surl)
-                            @if(!empty($surl))
-                            <a href="{{ $surl }}" target="_blank" rel="noopener noreferrer" style="font-size:0.8rem; font-weight:600; color:var(--c-accent); text-decoration:none;">{{ ucfirst($sname) }}</a>
-                            @endif
-                        @endforeach
-                    </div>
-                @endif
-            </div>
-        </div>
-        @endif
-    @endif
 
     {{-- Internal Link CTA to Products --}}
     <div style="position:relative; overflow:hidden; background:linear-gradient(135deg, #ffffff 0%, #F8FAFC 100%); border:1px solid #E2E8F0; padding:2rem 2.5rem; margin:2.5rem 0; border-radius:16px; box-shadow:0 12px 32px rgba(15,23,42,0.04); display:flex; flex-direction:column; gap:1.25rem;">

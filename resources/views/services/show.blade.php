@@ -43,24 +43,62 @@
 .pd-breadcrumb a:hover { color: var(--primary); }
 .pd-breadcrumb span.cur { color: var(--text-main); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-/* ─── CONTAINERS ─── */
+/* ─── CONTAINERS & GRID ─── */
+.pd-layout-grid {
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 1.5rem;
+    align-items: start;
+}
+@media (max-width: 992px) {
+    .pd-layout-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pd-main-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 0;
+}
+
+.pd-sidebar-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: sticky;
+    top: 90px;
+}
+@media (max-width: 992px) {
+    .pd-sidebar-col {
+        position: static;
+    }
+}
+
 .pd-container {
-    max-width: 1200px; margin: 0 auto 1.5rem;
-    background: #fff; border-radius: 20px;
+    width: 100%;
+    background: #fff;
+    border-radius: 20px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
     overflow: hidden;
 }
 
 /* ─── PRODUCT BLOCK ─── */
 .pd-product-block {
-    display: flex; padding: 1.5rem; gap: 2rem;
+    display: flex;
+    padding: 1.5rem;
+    gap: 1.5rem;
 }
 @media (max-width: 768px) {
     .pd-product-block { flex-direction: column; padding: 1rem; gap: 1rem; }
 }
 
 /* ── GALLERY (Left) ── */
-.pd-gallery { width: 450px; flex-shrink: 0; }
+.pd-gallery { width: 360px; flex-shrink: 0; }
 @media (max-width: 768px) { .pd-gallery { width: 100%; } }
 
 .pd-gallery-main {
@@ -337,236 +375,293 @@
         <span class="cur">{{ Str::limit($service->name, 40) }}</span>
     </div>
 
-    {{-- 1. PRODUCT BLOCK --}}
-    <div class="pd-container pd-product-block">
+    {{-- LAYOUT 3 KOLOM --}}
+    <div class="pd-layout-grid">
+        
+        {{-- MAIN COLUMN (Kiri & Tengah) --}}
+        <div class="pd-main-col">
+            <div class="pd-container pd-product-block">
+                {{-- LEFT: Gallery --}}
+                <div class="pd-gallery">
+                    @php
+                        $imgs = [];
+                        if ($service->image) $imgs[] = asset('storage/'.$service->image);
+                        else $imgs[] = asset('images/service-default.jpg');
+                        if (is_array($service->gallery)) {
+                            foreach ($service->gallery as $g) $imgs[] = asset('storage/'.$g);
+                        }
+                    @endphp
 
-        {{-- LEFT COLUMN: Gallery --}}
-        <div class="pd-gallery">
-            @php
-                $imgs = [];
-                if ($service->image) $imgs[] = asset('storage/'.$service->image);
-                else $imgs[] = asset('images/service-default.jpg');
-                if (is_array($service->gallery)) {
-                    foreach ($service->gallery as $g) $imgs[] = asset('storage/'.$g);
-                }
-            @endphp
-
-            <div class="pd-gallery-main swiper" id="pd-swiper-main">
-                <div class="swiper-wrapper">
-                    @foreach($imgs as $img)
-                    <div class="swiper-slide">
-                        <a href="{{ $img }}" class="glightbox" data-gallery="product-gallery">
-                            <img src="{{ $img }}" alt="{{ $service->name }}" loading="lazy">
-                        </a>
-                    </div>
-                    @endforeach
-                    @if($service->tiktok_video_url)
-                    <div class="swiper-slide pd-tiktok-slide swiper-no-swiping">
-                        <blockquote class="tiktok-embed"
-                            cite="{{ $service->tiktok_video_url }}"
-                            data-video-id="{{ Str::afterLast(rtrim($service->tiktok_video_url, '/'), '/') }}"
-                            style="max-width:100%; margin:0; border:none;">
-                            <section>
-                                <a target="_blank" href="{{ $service->tiktok_video_url }}">Tonton di TikTok</a>
-                            </section>
-                        </blockquote>
-                        <script async src="https://www.tiktok.com/embed.js"></script>
-                    </div>
-                    @endif
-                </div>
-                @if(count($imgs) > 1 || $service->tiktok_video_url)
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                @endif
-            </div>
-
-            @if(count($imgs) > 1 || $service->tiktok_video_url)
-            <div class="swiper pd-thumbs" id="pd-swiper-thumbs">
-                <div class="swiper-wrapper">
-                    @foreach($imgs as $img)
-                    <div class="swiper-slide pd-thumb-item">
-                        <img src="{{ $img }}" alt="thumb" loading="lazy">
-                    </div>
-                    @endforeach
-                    @if($service->tiktok_video_url)
-                    <div class="swiper-slide pd-thumb-item" style="background:#000; display:flex; align-items:center; justify-content:center; color:#fff;">
-                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    </div>
-                    @endif
-                </div>
-            </div>
-            @endif
-        </div>
-
-        {{-- RIGHT COLUMN: Info --}}
-        <div class="pd-info">
-            <h1 class="pd-title">{{ $service->name }}</h1>
-
-            <div class="pd-stats">
-                @if($service->rating > 0)
-                <div class="pd-stars">
-                    <span class="pd-stat-val" style="color:var(--primary); border-color:var(--primary);">{{ number_format($service->rating, 1) }}</span>
-                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                </div>
-                <div class="pd-stat-sep"></div>
-                @endif
-                
-                @if($service->rating > 0)
-                <div><span class="pd-stat-val">156</span> Penilaian</div>
-                <div class="pd-stat-sep"></div>
-                @endif
-
-                @if($service->sold_count > 0)
-                <div>Terjual <span style="color:var(--text-main); font-weight:500;">{{ $service->sold_count >= 1000 ? number_format($service->sold_count/1000, 1, ',', '').'RB' : $service->sold_count }}</span></div>
-                @endif
-            </div>
-
-            {{-- PRICE --}}
-            @if($service->price > 0)
-            <div class="pd-price-box">
-                @if($service->sale_price > 0 && $service->sale_price < $service->price)
-                    <div class="pd-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
-                    <div class="pd-price-main">Rp{{ number_format($service->sale_price, 0, ',', '.') }}</div>
-                    <div class="pd-discount">{{ round((($service->price - $service->sale_price)/$service->price)*100) }}% OFF</div>
-                @else
-                    <div class="pd-price-main">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
-                @endif
-            </div>
-
-            {{-- Pengiriman Digital --}}
-            <div class="pd-attr-row">
-                <div class="pd-attr-label">Pengiriman</div>
-                <div class="pd-attr-content">
-                    <div>
-                        <div style="display:flex; align-items:center; gap:4px; color:var(--text-main);">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                            <b>Akses Instan & Otomatis</b>
+                    <div class="pd-gallery-main swiper" id="pd-swiper-main">
+                        <div class="swiper-wrapper">
+                            @foreach($imgs as $img)
+                            <div class="swiper-slide">
+                                <a href="{{ $img }}" class="glightbox" data-gallery="product-gallery">
+                                    <img src="{{ $img }}" alt="{{ $service->name }}" loading="lazy">
+                                </a>
+                            </div>
+                            @endforeach
+                            @if($service->tiktok_video_url)
+                            <div class="swiper-slide pd-tiktok-slide swiper-no-swiping">
+                                <blockquote class="tiktok-embed"
+                                    cite="{{ $service->tiktok_video_url }}"
+                                    data-video-id="{{ Str::afterLast(rtrim($service->tiktok_video_url, '/'), '/') }}"
+                                    style="max-width:100%; margin:0; border:none;">
+                                    <section>
+                                        <a target="_blank" href="{{ $service->tiktok_video_url }}">Tonton di TikTok</a>
+                                    </section>
+                                </blockquote>
+                                <script async src="https://www.tiktok.com/embed.js"></script>
+                            </div>
+                            @endif
                         </div>
-                        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Produk ini dapat langsung diakses/diunduh setelah pembayaran berhasil.</div>
+                        @if(count($imgs) > 1 || $service->tiktok_video_url)
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                        @endif
                     </div>
-                </div>
-            </div>
 
-            {{-- CART FORM --}}
-            <form action="{{ route('cart.add') }}" method="POST">
-                @csrf
-                <input type="hidden" name="product_id" value="{{ $service->id }}">
-
-                <div class="pd-attr-row" style="align-items:center;">
-                    <div class="pd-attr-label">Kuantitas</div>
-                    <div class="pd-attr-content">
-                        <div class="pd-qty-ctrl">
-                            <button type="button" class="pd-qty-btn" onclick="document.getElementById('qty_input').stepDown()">−</button>
-                            <input type="number" id="qty_input" class="pd-qty-input" name="qty"
-                                value="{{ $service->min_order ?? 1 }}" min="{{ $service->min_order ?? 1 }}"
-                                @if($service->type !== 'service' && $service->stock > 0) max="{{ $service->stock }}" @endif
-                                @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
-                            <button type="button" class="pd-qty-btn" onclick="document.getElementById('qty_input').stepUp()">+</button>
-                        </div>
-                        <div class="pd-stock">
-                            @if($service->type === 'service')
-                                Jasa / Layanan
-                            @elseif($service->stock > 0)
-                                Sisa {{ $service->stock }} buah
-                            @else
-                                <span style="color:#EE4D2D;">Habis</span>
+                    @if(count($imgs) > 1 || $service->tiktok_video_url)
+                    <div class="swiper pd-thumbs" id="pd-swiper-thumbs">
+                        <div class="swiper-wrapper">
+                            @foreach($imgs as $img)
+                            <div class="swiper-slide pd-thumb-item">
+                                <img src="{{ $img }}" alt="thumb" loading="lazy">
+                            </div>
+                            @endforeach
+                            @if($service->tiktok_video_url)
+                            <div class="swiper-slide pd-thumb-item" style="background:#000; display:flex; align-items:center; justify-content:center; color:#fff;">
+                                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
                             @endif
                         </div>
                     </div>
+                    @endif
                 </div>
 
-                <div class="pd-actions">
-                    <button type="submit" name="action" value="cart" class="pd-btn pd-btn-outline"
-                        @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                        Masukkan Keranjang
-                    </button>
-                    <button type="submit" name="action" value="buy" class="pd-btn pd-btn-primary"
-                        @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
-                        Beli Sekarang
-                    </button>
-                </div>
-            </form>
-            @else
-            <div class="pd-price-box">
-                <div class="pd-price-main">Konsultasi Penawaran</div>
-            </div>
-            <a href="javascript:void(0)" onclick="openOrderModal('Produk: {{ addslashes($service->name) }}')" class="pd-btn pd-btn-primary" style="margin-top:2rem;">
-                Tanya via WhatsApp
-            </a>
-            @endif
+                {{-- CENTER: Info --}}
+                <div class="pd-info">
+                    <h1 class="pd-title">{{ $service->name }}</h1>
 
-        </div>
-    </div>
+                    <div class="pd-stats">
+                        @if($service->rating > 0)
+                        <div class="pd-stars">
+                            <span class="pd-stat-val" style="color:var(--primary); border-color:var(--primary);">{{ number_format($service->rating, 1) }}</span>
+                            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        </div>
+                        <div class="pd-stat-sep"></div>
+                        @endif
+                        
+                        @if($service->rating > 0)
+                        <div><span class="pd-stat-val">156</span> Penilaian</div>
+                        <div class="pd-stat-sep"></div>
+                        @endif
 
-
-    {{-- 2. SELLER BLOCK --}}
-    @if(isset($service->seller) && $service->seller)
-    @php $seller = $service->seller; $cp = $seller->creatorProfile; @endphp
-    <div class="pd-container pd-seller-block">
-        <div class="pd-seller-left">
-            @if($seller->avatar)
-                <img src="{{ asset('storage/'.$seller->avatar) }}" class="pd-seller-ava" alt="{{ $seller->name }}">
-            @else
-                <div class="pd-seller-ava">{{ strtoupper(substr($seller->name,0,2)) }}</div>
-            @endif
-            <div class="pd-seller-info">
-                <div class="pd-seller-name">{{ optional($cp)->store_name ?: $seller->name }}</div>
-                @if($seller->last_seen_at && $seller->last_seen_at->gt(now()->subMinutes(5)))
-                    <div class="pd-seller-sub" style="color: #1eb349; font-weight: 600;">
-                        <span style="display:inline-block; width:8px; height:8px; background:#1eb349; border-radius:50%; margin-right:4px;"></span> Online
+                        @if($service->sold_count > 0)
+                        <div>Terjual <span style="color:var(--text-main); font-weight:500;">{{ $service->sold_count >= 1000 ? number_format($service->sold_count/1000, 1, ',', '').'RB' : $service->sold_count }}</span></div>
+                        @endif
                     </div>
-                @else
-                    <div class="pd-seller-sub">
-                        Aktif {{ $seller->last_seen_at ? $seller->last_seen_at->diffForHumans() : 'beberapa saat yang lalu' }}
+
+                    {{-- PRICE --}}
+                    @if($service->price > 0)
+                    <div class="pd-price-box">
+                        @if($service->sale_price > 0 && $service->sale_price < $service->price)
+                            <div class="pd-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
+                            <div class="pd-price-main">Rp{{ number_format($service->sale_price, 0, ',', '.') }}</div>
+                            <div class="pd-discount">{{ round((($service->price - $service->sale_price)/$service->price)*100) }}% OFF</div>
+                        @else
+                            <div class="pd-price-main">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
+                        @endif
                     </div>
-                @endif
-                <div class="pd-seller-actions">
-                    <a href="javascript:void(0)" class="pd-seller-btn pd-seller-btn-outline">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z"></path></svg>
-                        Chat Sekarang
+
+                    {{-- Pengiriman Digital --}}
+                    <div class="pd-attr-row">
+                        <div class="pd-attr-label">Pengiriman</div>
+                        <div class="pd-attr-content">
+                            <div>
+                                <div style="display:flex; align-items:center; gap:4px; color:var(--text-main);">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    <b>Akses Instan & Otomatis</b>
+                                </div>
+                                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Produk ini dapat langsung diakses/diunduh setelah pembayaran berhasil.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- CART FORM --}}
+                    <form action="{{ route('cart.add') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $service->id }}">
+
+                        <div class="pd-attr-row" style="align-items:center;">
+                            <div class="pd-attr-label">Kuantitas</div>
+                            <div class="pd-attr-content">
+                                <div class="pd-qty-ctrl">
+                                    <button type="button" class="pd-qty-btn" onclick="document.getElementById('qty_input').stepDown()">−</button>
+                                    <input type="number" id="qty_input" class="pd-qty-input" name="qty"
+                                        value="{{ $service->min_order ?? 1 }}" min="{{ $service->min_order ?? 1 }}"
+                                        @if($service->type !== 'service' && $service->stock > 0) max="{{ $service->stock }}" @endif
+                                        @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+                                    <button type="button" class="pd-qty-btn" onclick="document.getElementById('qty_input').stepUp()">+</button>
+                                </div>
+                                <div class="pd-stock">
+                                    @if($service->type === 'service')
+                                        Jasa / Layanan
+                                    @elseif($service->stock > 0)
+                                        Sisa {{ $service->stock }} buah
+                                    @else
+                                        <span style="color:#EE4D2D;">Habis</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pd-actions" style="margin-top:1.5rem; display:flex; gap:0.75rem;">
+                            <button type="submit" name="action" value="cart" class="pd-btn pd-btn-outline" style="flex:1;"
+                                @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+                                Masukkan Keranjang
+                            </button>
+                            <button type="submit" name="action" value="buy" class="pd-btn pd-btn-primary" style="flex:1;"
+                                @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+                                Beli Sekarang
+                            </button>
+                        </div>
+                    </form>
+                    @else
+                    <div class="pd-price-box">
+                        <div class="pd-price-main">Konsultasi Penawaran</div>
+                    </div>
+                    <a href="javascript:void(0)" onclick="openOrderModal('Produk: {{ addslashes($service->name) }}')" class="pd-btn pd-btn-primary" style="margin-top:2rem; width:100%;">
+                        Tanya via WhatsApp
                     </a>
-                    <a href="{{ route('store.show', optional($cp)->store_slug ?? '#') }}" class="pd-seller-btn pd-seller-btn-gray">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                        Kunjungi Creator
-                    </a>
+                    @endif
+                </div>
+            </div>
+
+            {{-- TABS --}}
+            <div class="pd-container pd-tabs-block" style="padding:0;">
+                <div class="pd-tabs-header" style="display:flex; border-bottom:1px solid var(--border); background:#f8fafc;">
+                    <button id="tabBtn-desc" class="pd-tab-btn active" onclick="switchTab('desc')" style="flex:1; padding:1.2rem; background:transparent; border:none; font-weight:700; color:var(--text-main); border-bottom:3px solid var(--primary); cursor:pointer;">DESKRIPSI PRODUK</button>
+                    <button id="tabBtn-creator" class="pd-tab-btn" onclick="switchTab('creator')" style="flex:1; padding:1.2rem; background:transparent; border:none; font-weight:700; color:var(--text-muted); border-bottom:3px solid transparent; cursor:pointer;">PROFIL CREATOR</button>
+                </div>
+                <div style="padding: 2rem;">
+                    <div id="tab-desc" class="pd-tab-content" style="display:block;">
+                        @if(is_array($service->specifications) && count($service->specifications) > 0)
+                        <table class="pd-specs">
+                            @foreach($service->specifications as $spec)
+                            <tr>
+                                <td>{{ $spec['key'] }}</td>
+                                <td>{{ $spec['value'] }}</td>
+                            </tr>
+                            @endforeach
+                        </table>
+                        @endif
+
+                        <div class="pd-desc-content">
+                            @if($service->short_desc)
+                            <p><b>{{ $service->short_desc }}</b></p>
+                            @endif
+                            {!! $service->description ?? 'Belum ada deskripsi mendetail.' !!}
+                        </div>
+                    </div>
+                    <div id="tab-creator" class="pd-tab-content" style="display:none;">
+                        @if(isset($service->seller) && $service->seller)
+                            @php $seller = $service->seller; $cp = $seller->creatorProfile; @endphp
+                            <div style="display:flex; gap:1.5rem; align-items:flex-start;">
+                                @if($seller->avatar)
+                                    <img src="{{ asset('storage/'.$seller->avatar) }}" alt="{{ $seller->name }}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">
+                                @else
+                                    <div style="width:80px;height:80px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#64748b;font-weight:600;">{{ strtoupper(substr($seller->name,0,2)) }}</div>
+                                @endif
+                                <div>
+                                    <h3 style="margin:0 0 0.5rem; font-size:1.2rem;">{{ optional($cp)->store_name ?: $seller->name }}</h3>
+                                    <p style="margin:0 0 1rem; color:var(--text-muted); font-size:0.95rem; line-height:1.6;">
+                                        {{ optional($cp)->store_description ?: 'Creator ini belum menuliskan deskripsi profilnya.' }}
+                                    </p>
+                                    <a href="{{ route('store.show', optional($cp)->store_slug ?? '#') }}" class="pd-btn pd-btn-outline" style="height:38px;font-size:0.85rem;">Kunjungi Profil Lengkap</a>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="pd-seller-right">
-            <div class="pd-seller-stat">Penilaian <span>10,4RB</span></div>
-            <div class="pd-seller-stat">Persentase Chat Dibalas <span>81%</span></div>
-            <div class="pd-seller-stat">Bergabung <span>6 tahun lalu</span></div>
-            <div class="pd-seller-stat">Produk <span>56</span></div>
-            <div class="pd-seller-stat">Waktu Chat Dibalas <span>hitungan jam</span></div>
-            <div class="pd-seller-stat">Pengikut <span>1,6RB</span></div>
+
+        {{-- RIGHT COLUMN: Creator Card --}}
+        <div class="pd-sidebar-col">
+            @php 
+                $seller = $service->seller; 
+                $cp = $seller?->creatorProfile; 
+                $displaySellerName = optional($cp)->store_name ?: ($seller?->name ?? ($settings['site_name'] ?? 'buyle.id Official'));
+                $displayPhone = $seller?->phone ?? ($wa?->phone_number ?? '');
+                $bannerUrl = optional($cp)->store_banner_1 ? asset('storage/'.$cp->store_banner_1) : null;
+            @endphp
+            <div class="pd-creator-card" style="background:#fff; border-radius:20px; overflow:hidden; border: 1.5px solid var(--border); box-shadow:0 4px 20px rgba(0,0,0,0.04);">
+                <!-- Banner -->
+                <div style="height:100px; background: {{ $bannerUrl ? 'url('.$bannerUrl.') center/cover' : 'linear-gradient(135deg, var(--primary), #a5cf37)' }};"></div>
+                <!-- Avatar -->
+                <div style="margin-top:-45px; display:flex; justify-content:center;">
+                    @if($seller?->avatar)
+                        <img src="{{ asset('storage/'.$seller->avatar) }}" style="width:90px; height:90px; border-radius:50%; border:4px solid #fff; object-fit:cover; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                    @else
+                        <div style="width:90px; height:90px; border-radius:50%; border:4px solid #fff; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:700; color:var(--primary); background:#e7f0e7; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                            {{ strtoupper(substr($displaySellerName, 0, 2)) }}
+                        </div>
+                    @endif
+                </div>
+                
+                <div style="text-align:center; padding: 1.5rem 1.25rem;">
+                    <!-- Badge Profil Perusahaan -->
+                    <div style="display:inline-block; font-size:0.7rem; font-weight:700; color:#d97706; background:#fef3c7; border-radius:99px; padding:4px 12px; margin-bottom:0.75rem; border:1px solid #fde68a;">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:-2px; margin-right:4px;"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 9h6M9 13h6M9 17h6"/></svg>
+                        PROFIL CREATOR
+                    </div>
+
+                    <div style="font-size:1.15rem; font-weight:700; color:var(--text-main); margin-bottom:0.75rem;">
+                        {{ $displaySellerName }}
+                    </div>
+                    
+                    @if(optional($cp)->city_name || optional($cp)->address)
+                    <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.25rem; line-height:1.5;">
+                        @if(optional($cp)->city_name && optional($cp)->province_name)
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:-2px; margin-right:2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            {{ $cp->city_name }}, {{ $cp->province_name }}
+                        @elseif(optional($cp)->address)
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:-2px; margin-right:2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            {{ Str::limit($cp->address, 60) }}
+                        @endif
+                    </div>
+                    @else
+                    <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.25rem; line-height:1.5;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:-2px; margin-right:2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        Indonesia
+                    </div>
+                    @endif
+                    
+                    <div style="font-size:0.85rem; font-weight:600; color:var(--text-main); margin-bottom:1.25rem;">
+                        Login Terakhir: <span style="font-weight:400; color:var(--text-muted);">{{ ($seller && $seller->last_seen_at) ? $seller->last_seen_at->format('d/m/Y') : 'Baru saja' }}</span>
+                    </div>
+                    
+                    <div style="display:flex; gap:0.5rem; justify-content:center; margin-bottom:0.75rem;">
+                        <a href="tel:{{ $displayPhone ?: '#' }}" class="pd-btn pd-btn-primary" style="flex:1; height:42px; border-radius:8px; font-size:0.8rem; background:#3b82f6; box-shadow:none; padding:0 0.5rem;">
+                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" style="margin-right:4px;"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 0 0-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
+                            TELEPON
+                        </a>
+                        <a href="javascript:void(0)" onclick="openOrderModal('Halo {{ addslashes($displaySellerName) }}, saya mau tanya produk {{ addslashes($service->name) }}')" class="pd-btn pd-btn-primary" style="flex:1; height:42px; border-radius:8px; font-size:0.8rem; box-shadow:none; padding:0 0.5rem;">
+                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" style="margin-right:4px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.66-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 22H12A10 10 0 013 7.37L1.64 12.35l5.09-1.34A10 10 0 1112.004 22zm0-18A8 8 0 1017.65 17.65a8 8 0 00-5.646-13.65z"/></svg>
+                            WHATSAPP
+                        </a>
+                    </div>
+
+                    @if($cp?->store_slug)
+                    <a href="{{ route('store.show', $cp->store_slug) }}" class="pd-btn pd-btn-outline" style="width:100%; height:38px; border-radius:8px; font-size:0.8rem; margin-top:0.4rem;">
+                        Lihat Profil Creator
+                    </a>
+                    @endif
+                </div>
+            </div>
         </div>
-    </div>
-    @endif
 
-
-    {{-- 3. DETAILS BLOCK --}}
-    <div class="pd-container pd-details-block">
-        
-        @if(is_array($service->specifications) && count($service->specifications) > 0)
-        <div class="pd-section-title">SPESIFIKASI PRODUK</div>
-        <table class="pd-specs">
-            @foreach($service->specifications as $spec)
-            <tr>
-                <td>{{ $spec['key'] }}</td>
-                <td>{{ $spec['value'] }}</td>
-            </tr>
-            @endforeach
-        </table>
-        @endif
-
-        <div class="pd-section-title">DESKRIPSI PRODUK</div>
-        <div class="pd-desc-content">
-            @if($service->short_desc)
-            <p><b>{{ $service->short_desc }}</b></p>
-            @endif
-            {!! $service->description ?? 'Belum ada deskripsi mendetail.' !!}
-        </div>
     </div>
 
     {{-- MOBILE STICKY BAR --}}
@@ -647,6 +742,37 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 <script>
+function switchTab(tab) {
+    const descTab = document.getElementById('tab-desc');
+    const creatorTab = document.getElementById('tab-creator');
+    const btnDesc = document.getElementById('tabBtn-desc');
+    const btnCreator = document.getElementById('tabBtn-creator');
+
+    if (tab === 'desc') {
+        if (descTab) descTab.style.display = 'block';
+        if (creatorTab) creatorTab.style.display = 'none';
+        if (btnDesc) {
+            btnDesc.style.color = 'var(--text-main)';
+            btnDesc.style.borderBottom = '3px solid var(--primary)';
+        }
+        if (btnCreator) {
+            btnCreator.style.color = 'var(--text-muted)';
+            btnCreator.style.borderBottom = '3px solid transparent';
+        }
+    } else {
+        if (descTab) descTab.style.display = 'none';
+        if (creatorTab) creatorTab.style.display = 'block';
+        if (btnDesc) {
+            btnDesc.style.color = 'var(--text-muted)';
+            btnDesc.style.borderBottom = '3px solid transparent';
+        }
+        if (btnCreator) {
+            btnCreator.style.color = 'var(--text-main)';
+            btnCreator.style.borderBottom = '3px solid var(--primary)';
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     GLightbox({ selector: '.glightbox', touchNavigation: true, loop: true });
 
