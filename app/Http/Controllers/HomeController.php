@@ -27,8 +27,8 @@ class HomeController extends Controller
         $articles     = collect();
         $clients      = collect();
         $testimonials = collect();
-        $uspItems       = collect();
-        $categoryItems  = collect();
+        $uspItems       = UspItem::active()->get();
+        $categoryItems  = CategoryItem::active()->get();
         $promoSections  = PromoSection::active()->get();
         
         $wa           = WaSetting::primary();
