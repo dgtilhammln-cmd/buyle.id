@@ -333,10 +333,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
       USP Bar
     </a>
-    <a href="{{ route('admin.category-items.index') }}" class="sb-link {{ request()->routeIs('admin.category-items*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      Kategori
-    </a>
     <a href="{{ route('admin.promo-sections.index') }}" class="sb-link {{ request()->routeIs('admin.promo-sections*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
       Promo & Deals

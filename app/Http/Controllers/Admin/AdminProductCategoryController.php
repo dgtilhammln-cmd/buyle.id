@@ -40,18 +40,30 @@ class AdminProductCategoryController extends Controller
             'name'        => 'required|string|max:100',
             'slug'        => 'nullable|string|max:120|unique:product_categories,slug',
             'tab'         => 'required|in:produk,jasa',
-            'badge'       => 'nullable|in:terpopuler,naik-daun',
+            'badge'       => 'nullable|string|max:50',
+            'badge_color' => 'nullable|string|max:50',
+            'icon_type'   => 'nullable|in:icon,upload',
+            'icon_value'  => 'nullable|string',
+            'icon_upload' => 'nullable|image|max:1024',
             'description' => 'nullable|string|max:255',
             'order'       => 'integer|min:0',
         ]);
 
         $slug = $request->slug ?: Str::slug($request->name);
 
+        $iconValue = $request->icon_value;
+        if ($request->icon_type === 'upload' && $request->hasFile('icon_upload')) {
+            $iconValue = $request->file('icon_upload')->store('category-icons', 'public');
+        }
+
         ProductCategory::create([
             'name'        => $request->name,
             'slug'        => $slug,
             'tab'         => $request->tab,
             'badge'       => $request->badge ?: null,
+            'badge_color' => $request->badge_color ?: null,
+            'icon_type'   => $request->icon_type ?: 'icon',
+            'icon_value'  => $iconValue,
             'description' => $request->description,
             'is_active'   => $request->boolean('is_active', true),
             'order'       => $request->input('order', 0),
@@ -73,18 +85,30 @@ class AdminProductCategoryController extends Controller
             'name'        => 'required|string|max:100',
             'slug'        => 'nullable|string|max:120|unique:product_categories,slug,' . $productCategory->id,
             'tab'         => 'required|in:produk,jasa',
-            'badge'       => 'nullable|in:terpopuler,naik-daun',
+            'badge'       => 'nullable|string|max:50',
+            'badge_color' => 'nullable|string|max:50',
+            'icon_type'   => 'nullable|in:icon,upload',
+            'icon_value'  => 'nullable|string',
+            'icon_upload' => 'nullable|image|max:1024',
             'description' => 'nullable|string|max:255',
             'order'       => 'integer|min:0',
         ]);
 
         $slug = $request->slug ?: Str::slug($request->name);
 
+        $iconValue = $request->icon_value;
+        if ($request->icon_type === 'upload' && $request->hasFile('icon_upload')) {
+            $iconValue = $request->file('icon_upload')->store('category-icons', 'public');
+        }
+
         $productCategory->update([
             'name'        => $request->name,
             'slug'        => $slug,
             'tab'         => $request->tab,
             'badge'       => $request->badge ?: null,
+            'badge_color' => $request->badge_color ?: null,
+            'icon_type'   => $request->icon_type ?: 'icon',
+            'icon_value'  => $iconValue,
             'description' => $request->description,
             'is_active'   => $request->boolean('is_active', true),
             'order'       => $request->input('order', 0),

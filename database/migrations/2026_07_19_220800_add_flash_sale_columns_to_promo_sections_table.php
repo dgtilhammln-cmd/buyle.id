@@ -12,11 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('promo_sections', function (Blueprint $table) {
-            $table->dateTime('start_time')->nullable()->after('view_all_url');
-            $table->dateTime('end_time')->nullable()->after('start_time');
-            $table->string('bg_color_1')->nullable()->after('end_time');
-            $table->string('bg_color_2')->nullable()->after('bg_color_1');
-            $table->string('logo')->nullable()->after('bg_color_2');
+            if (!Schema::hasColumn('promo_sections', 'start_time')) {
+                $table->dateTime('start_time')->nullable()->after('view_all_url');
+            }
+            if (!Schema::hasColumn('promo_sections', 'end_time')) {
+                $table->dateTime('end_time')->nullable()->after('start_time');
+            }
+            if (!Schema::hasColumn('promo_sections', 'bg_color_1')) {
+                $table->string('bg_color_1')->nullable()->after('end_time');
+            }
+            if (!Schema::hasColumn('promo_sections', 'bg_color_2')) {
+                $table->string('bg_color_2')->nullable()->after('bg_color_1');
+            }
+            if (!Schema::hasColumn('promo_sections', 'logo')) {
+                $table->string('logo')->nullable()->after('bg_color_2');
+            }
         });
     }
 

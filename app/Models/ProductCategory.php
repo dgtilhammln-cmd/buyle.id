@@ -13,8 +13,11 @@ class ProductCategory extends Model
         'slug',
         'tab',
         'badge',
+        'badge_color',
         'description',
         'image',
+        'icon_type',
+        'icon_value',
         'is_active',
         'order',
     ];
