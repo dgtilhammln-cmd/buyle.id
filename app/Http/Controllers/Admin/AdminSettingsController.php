@@ -19,7 +19,7 @@ class AdminSettingsController extends Controller
 
     public function update(Request $request)
     {
-        $imageKeys = ['hero_bg_image', 'hero_main_image', 'hero_secondary_image', 'about_image', 'about_c3_image', 'og_image_default', 'logo', 'favicon', 'coverage_map'];
+        $imageKeys = ['hero_bg_image', 'hero_main_image', 'hero_secondary_image', 'about_image', 'about_c3_image', 'og_image_default', 'logo', 'favicon', 'coverage_map', 'ad_product_sidebar_1_image', 'ad_product_sidebar_2_image'];
         $data      = $request->except(['_token', '_method']);
 
         foreach ($data as $key => $value) {

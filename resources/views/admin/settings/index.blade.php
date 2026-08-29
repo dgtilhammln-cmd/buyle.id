@@ -235,7 +235,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       'hero'    => ['Hero & Konten', 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'],
       'contact' => ['Kontak', 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z'],
       'api'     => ['Integrasi API', 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4'],
-      
+      'ads'     => ['Space Iklan / Banner', 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z'],
     ];
   @endphp
   @foreach($tabs as $tabKey => [$tabLabel, $tabIcon])
@@ -962,7 +962,80 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
         </div>
       </div>
     </div>
-  </form>
+</div>
+
+{{-- ======== TAB: SPACE IKLAN / BANNER ======== --}}
+<div id="tab-ads" class="tab-section" style="display:none;">
+  <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;">
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
+      <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+      <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Space Iklan Sidebar Halaman Produk (Rasio 4:3)</div>
+    </div>
+    
+    <p style="font-size:0.85rem;color:#64748B;margin-bottom:1.5rem;line-height:1.5;">
+      Kelola banner iklan yang tampil di bawah Card Profil Creator pada halaman detail produk (Desktop & Mobile). Rekomendasi resolusi: <strong>800x600 px (Rasio 4:3)</strong>.
+    </p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+      
+      {{-- Banner Iklan 1 (Atas) --}}
+      <div style="padding:1.25rem;border:1px solid #E2E8F0;border-radius:12px;background:#F8FAFC;">
+        <h4 style="font-size:0.9rem;font-weight:700;color:#1E293B;margin-bottom:1rem;display:flex;align-items:center;gap:0.4rem;">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#1eb349;color:#fff;border-radius:50%;font-size:0.75rem;">1</span>
+          Banner Iklan 1 (Atas)
+        </h4>
+
+        @if(!empty($settings['ad_product_sidebar_1_image']))
+        <div style="margin-bottom:1rem;border-radius:8px;overflow:hidden;border:1px solid #CBD5E1;max-width:260px;aspect-ratio:4/3;background:#fff;">
+          <img src="{{ asset('storage/'.$settings['ad_product_sidebar_1_image']) }}" alt="Banner 1" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        @endif
+
+        <div style="margin-bottom:1rem;">
+          <label class="form-label">Upload Gambar Banner (4:3)</label>
+          <input type="file" name="ad_product_sidebar_1_image" class="form-input" accept="image/*" style="padding:0.5rem;">
+          <span style="font-size:0.7rem;color:#94A3B8;">Format JPG, PNG, atau WebP (Rasio 4:3). Kosongkan jika tidak ingin mengubah.</span>
+        </div>
+
+        <div>
+          <label class="form-label">Link / URL Tujuan Klik</label>
+          <input type="url" name="ad_product_sidebar_1_url" class="form-input" value="{{ $settings['ad_product_sidebar_1_url'] ?? '' }}" placeholder="https://contoh-link-iklan.com">
+          <span style="font-size:0.7rem;color:#94A3B8;">Kosongkan jika banner tidak bisa diklik.</span>
+        </div>
+      </div>
+
+      {{-- Banner Iklan 2 (Bawah) --}}
+      <div style="padding:1.25rem;border:1px solid #E2E8F0;border-radius:12px;background:#F8FAFC;">
+        <h4 style="font-size:0.9rem;font-weight:700;color:#1E293B;margin-bottom:1rem;display:flex;align-items:center;gap:0.4rem;">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#1eb349;color:#fff;border-radius:50%;font-size:0.75rem;">2</span>
+          Banner Iklan 2 (Bawah)
+        </h4>
+
+        @if(!empty($settings['ad_product_sidebar_2_image']))
+        <div style="margin-bottom:1rem;border-radius:8px;overflow:hidden;border:1px solid #CBD5E1;max-width:260px;aspect-ratio:4/3;background:#fff;">
+          <img src="{{ asset('storage/'.$settings['ad_product_sidebar_2_image']) }}" alt="Banner 2" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        @endif
+
+        <div style="margin-bottom:1rem;">
+          <label class="form-label">Upload Gambar Banner (4:3)</label>
+          <input type="file" name="ad_product_sidebar_2_image" class="form-input" accept="image/*" style="padding:0.5rem;">
+          <span style="font-size:0.7rem;color:#94A3B8;">Format JPG, PNG, atau WebP (Rasio 4:3). Kosongkan jika tidak ingin mengubah.</span>
+        </div>
+
+        <div>
+          <label class="form-label">Link / URL Tujuan Klik</label>
+          <input type="url" name="ad_product_sidebar_2_url" class="form-input" value="{{ $settings['ad_product_sidebar_2_url'] ?? '' }}" placeholder="https://contoh-link-iklan.com">
+          <span style="font-size:0.7rem;color:#94A3B8;">Kosongkan jika banner tidak bisa diklik.</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:1.5rem;text-align:right;">
+      <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:#1eb349;color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;">Simpan Banner Iklan</button>
+    </div>
+  </div>
 </div>
 
 </form>

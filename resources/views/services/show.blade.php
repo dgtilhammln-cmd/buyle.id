@@ -660,6 +660,45 @@
                     </a>
                 </div>
             </div>
+
+            {{-- BANNER IKLAN SIDEBAR (Rasio 4:3 - Atas Bawah) --}}
+            @php
+                $ad1Img = $settings['ad_product_sidebar_1_image'] ?? null;
+                $ad1Url = $settings['ad_product_sidebar_1_url'] ?? null;
+                $ad2Img = $settings['ad_product_sidebar_2_image'] ?? null;
+                $ad2Url = $settings['ad_product_sidebar_2_url'] ?? null;
+                $waContactUrl = isset($wa) && $wa->phone_number ? 'https://wa.me/'.$wa->phone_number.'?text='.urlencode('Halo Admin buyle.id, saya tertarik untuk pasang iklan banner di halaman produk.') : route('contact');
+            @endphp
+
+            {{-- Banner 1 (Atas) --}}
+            @if(!empty($ad1Img))
+                <div style="border-radius:16px; overflow:hidden; border:1.5px solid var(--border); background:#fff; box-shadow:0 4px 15px rgba(0,0,0,0.03);">
+                    <a href="{{ $ad1Url ?: 'javascript:void(0)' }}" {{ $ad1Url ? 'target="_blank" rel="noopener noreferrer"' : '' }} style="display:block; width:100%; aspect-ratio:4/3; overflow:hidden;">
+                        <img src="{{ asset('storage/'.$ad1Img) }}" alt="Iklan Banner 1" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                    </a>
+                </div>
+            @else
+                <a href="{{ $waContactUrl }}" target="_blank" style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; aspect-ratio:4/3; border-radius:16px; border:2px dashed #CBD5E1; background:#F8FAFC; text-decoration:none; color:#64748B; padding:1rem; text-align:center; transition:all 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.background='#F0FDF4';this.style.color='var(--primary)'" onmouseout="this.style.borderColor='#CBD5E1';this.style.background='#F8FAFC';this.style.color='#64748B'">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" style="margin-bottom:0.4rem;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                    <span style="font-size:0.8rem; font-weight:700;">Space Iklan Tersedia (4:3)</span>
+                    <span style="font-size:0.7rem; color:#94A3B8; margin-top:2px;">Pasang Banner Disini &rsaquo;</span>
+                </a>
+            @endif
+
+            {{-- Banner 2 (Bawah) --}}
+            @if(!empty($ad2Img))
+                <div style="border-radius:16px; overflow:hidden; border:1.5px solid var(--border); background:#fff; box-shadow:0 4px 15px rgba(0,0,0,0.03);">
+                    <a href="{{ $ad2Url ?: 'javascript:void(0)' }}" {{ $ad2Url ? 'target="_blank" rel="noopener noreferrer"' : '' }} style="display:block; width:100%; aspect-ratio:4/3; overflow:hidden;">
+                        <img src="{{ asset('storage/'.$ad2Img) }}" alt="Iklan Banner 2" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                    </a>
+                </div>
+            @else
+                <a href="{{ $waContactUrl }}" target="_blank" style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; aspect-ratio:4/3; border-radius:16px; border:2px dashed #CBD5E1; background:#F8FAFC; text-decoration:none; color:#64748B; padding:1rem; text-align:center; transition:all 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.background='#F0FDF4';this.style.color='var(--primary)'" onmouseout="this.style.borderColor='#CBD5E1';this.style.background='#F8FAFC';this.style.color='#64748B'">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" style="margin-bottom:0.4rem;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                    <span style="font-size:0.8rem; font-weight:700;">Space Iklan Tersedia (4:3)</span>
+                    <span style="font-size:0.7rem; color:#94A3B8; margin-top:2px;">Pasang Banner Disini &rsaquo;</span>
+                </a>
+            @endif
         </div>
 
     </div>
