@@ -579,6 +579,11 @@
             
             @auth
                 {{-- User is logged in - show account dropdown --}}
+                @php
+                    $rawName = Auth::user()->creatorProfile?->store_name ?: Auth::user()->name;
+                    $nameParts = preg_split('/\s+/', trim($rawName));
+                    $navFirstName = !empty($nameParts[0]) ? $nameParts[0] : Auth::user()->name;
+                @endphp
                 <div style="position:relative;" id="user-menu-wrap">
                     <button onclick="document.getElementById('userDropdown').classList.toggle('open')"
                         style="display:flex;align-items:center;gap:0.5rem;background:#F1F5F9;border:1.5px solid #E2E8F0;border-radius:999px;padding:0.4rem 0.9rem 0.4rem 0.4rem;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:0.825rem;font-weight:600;color:#374151;">
@@ -587,9 +592,9 @@
                         @elseif(Auth::user()->avatar)
                             <img src="{{ asset('storage/'.Auth::user()->avatar) }}" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">
                         @else
-                            <span style="width:28px;height:28px;border-radius:50%;background:#1eb349;color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;">{{ strtoupper(substr(Auth::user()->name,0,1)) }}</span>
+                            <span style="width:28px;height:28px;border-radius:50%;background:#1eb349;color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;">{{ strtoupper(substr($navFirstName,0,1)) }}</span>
                         @endif
-                        {{ explode(' ', Auth::user()->name)[0] }}
+                        {{ $navFirstName }}
                         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
                     <div id="userDropdown" style="position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,0.1);min-width:220px;padding:0.5rem;display:none;z-index:999;">
