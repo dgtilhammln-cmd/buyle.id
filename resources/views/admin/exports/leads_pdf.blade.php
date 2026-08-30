@@ -85,7 +85,7 @@
             text-transform: uppercase;
         }
         .status-new { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
-        .status-contacted { background: #dcfce7; color: #1e40af; border: 1px solid #93c5fd; }
+        .status-contacted { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
         .status-closed { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
 
         .footer {
@@ -173,7 +173,7 @@
             <td style="white-space:nowrap; color:#555;">{{ $lead->created_at->format('H:i') }}</td>
             <td style="font-weight:700; color:#111;">{{ $lead->name }}</td>
             <td style="color:#555;">{{ $lead->company ?: '-' }}</td>
-            <td style="color:#3B82F6;">{{ $lead->email ?: '-' }}</td>
+            <td style="color:#1eb349;">{{ $lead->email ?: '-' }}</td>
             <td style="white-space:nowrap; font-weight:600;">{{ $lead->phone }}</td>
             <td style="color:#555; max-width:120px;">{{ $lead->product ?: '-' }}</td>
             <td style="font-size:0.6rem;">{{ $lead->source ?: 'Website' }}</td>

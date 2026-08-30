@@ -14,7 +14,7 @@
 }
 .upage-title { font-size: 1.5rem; font-weight: 800; color: #0F172A; letter-spacing: -.03em; margin: 0 0 .2rem; }
 .upage-sub   { font-size: .8rem; color: #94A3B8; margin: 0; font-weight: 500; }
-.upage-sub strong { color: #3B82F6; }
+.upage-sub strong { color: #1eb349; }
 
 /* Search bar */
 .usearch-wrap { display: flex; gap: .5rem; align-items: center; }
@@ -23,7 +23,7 @@
     font-size: .8rem; outline: none; width: 220px; font-family: 'Montserrat', sans-serif;
     background: #F8FAFC; transition: all .2s; color: #0F172A;
 }
-.usearch-input:focus { border-color: #93C5FD; background: #fff; box-shadow: 0 0 0 3px rgba(59,130,246,0.08); }
+.usearch-input:focus { border-color: #bbf7d0; background: #fff; box-shadow: 0 0 0 3px rgba(30,179,73,0.08); }
 .usearch-btn {
     background: #0F172A; color: #fff; border: none; border-radius: 12px;
     padding: .6rem 1.1rem; font-size: .8rem; font-weight: 700;
@@ -40,7 +40,7 @@
     cursor: pointer; color: #94A3B8; transition: all .2s; display: flex; align-items: center;
 }
 .utoggle-btn + .utoggle-btn { border-left: 1.5px solid #E2E8F0; }
-.utoggle-btn.active { background: #f0fdf4; color: #1D4ED8; }
+.utoggle-btn.active { background: #f0fdf4; color: #16a34a; }
 .utoggle-btn:hover { background: #F8FAFC; color: #475569; }
 
 /* ──────────────── GRID VIEW ──────────────── */
@@ -59,8 +59,8 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.03);
 }
 .u-card:hover {
-    border-color: #BFDBFE;
-    box-shadow: 0 8px 28px rgba(59,130,246,0.08);
+    border-color: #bbf7d0;
+    box-shadow: 0 8px 28px rgba(30,179,73,0.08);
     transform: translateY(-3px);
 }
 
@@ -74,7 +74,7 @@
 .u-av-init {
     display: flex; align-items: center; justify-content: center;
     font-weight: 800; font-size: 1.5rem; color: #fff;
-    background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+    background: linear-gradient(135deg, #1eb349, #a5cf37);
     font-family: 'Montserrat', sans-serif;
 }
 .u-online-dot {
@@ -107,7 +107,7 @@
 }
 .u-btn-danger { background: #FEF2F2; color: #DC2626; }
 .u-btn-danger:hover { background: #FEE2E2; }
-.u-btn-primary { background: #f0fdf4; color: #1D4ED8; }
+.u-btn-primary { background: #f0fdf4; color: #16a34a; }
 .u-btn-primary:hover { background: #dcfce7; }
 .u-btn-success { background: #F0FDF4; color: #16A34A; }
 .u-btn-success:hover { background: #DCFCE7; }
@@ -218,7 +218,7 @@
             {{ ($u->is_active ?? true) ? 'Aktif' : 'Nonaktif' }}
           </span>
           @if($u->orders_count > 0)
-          <span class="u-pill" style="background:#f0fdf4;color:#1D4ED8;">
+          <span class="u-pill" style="background:#f0fdf4;color:#16a34a;">
             <svg width="9" height="9" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg>
             {{ $u->orders_count }}x Order
           </span>

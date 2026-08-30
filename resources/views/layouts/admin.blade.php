@@ -41,10 +41,10 @@
     --bg2: #FFFFFF;
     --bg3: #F8FAFC;
     --border: #E2E8F0;
-    --text1: #2B3674 !important;
+    --text1: #1E293B !important;
     --text2: #475569;
     --text3: #A3AED0;
-    --sb-bg: #1B6FE8;
+    --sb-bg: #1eb349;
     --sb-bg2: rgba(255,255,255,0.1);
     --sb-border: rgba(255,255,255,0.12);
     --sb-text: rgba(255,255,255,0.65);
@@ -53,10 +53,10 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
 
 /* ── Global Scrollbar (content area) ── */
 ::-webkit-scrollbar { width: 7px; height: 7px; }
-::-webkit-scrollbar-track { background: #EEF2FF; border-radius: 10px; }
-::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #1B6FE8, #1254C0); border-radius: 10px; border: 1.5px solid #EEF2FF; }
-::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #1254C0, #0E3E96); }
-* { scrollbar-width: thin; scrollbar-color: #1B6FE8 #EEF2FF; }
+::-webkit-scrollbar-track { background: #f0fdf4; border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #1eb349, #16a34a); border-radius: 10px; border: 1.5px solid #f0fdf4; }
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #16a34a, #15803d); }
+* { scrollbar-width: thin; scrollbar-color: #1eb349 #f0fdf4; }
 /* ═══════ SIDEBAR PREMIUM BLUE ═══════ */
 #sidebar{
   width:240px;height:100vh;
@@ -99,10 +99,10 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
 /* Active link — white card with cutout style */
 .sb-link.active{
   background:#fff;
-  color:#1B6FE8;
+  color:#1eb349;
   box-shadow:0 4px 18px rgba(0,0,0,0.12);
 }
-.sb-link.active svg{opacity:1;stroke:#1B6FE8}
+.sb-link.active svg{opacity:1;stroke:#1eb349}
 /* Badge */
 .sb-badge{margin-left:auto;background:#EF4444;color:#fff;font-size:.575rem;font-weight:800;padding:.2rem .5rem;border-radius:100px;line-height:1.4;box-shadow:0 2px 8px rgba(239,68,68,0.4)}
 .sb-link.active .sb-badge{background:#EF4444;color:#fff}
@@ -120,8 +120,8 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
 .topbar-title{font-size:1.5rem;font-weight:700;color:var(--text1)}
 .topbar-right{display:flex;align-items:center;gap:.75rem;background:#fff;padding:.375rem .375rem .375rem 1rem;border-radius:100px;box-shadow:0 4px 15px rgba(0,0,0,.03)}
 .topbar-icon-btn{width:36px;height:36px;background:var(--bg3);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text3);cursor:pointer;transition:all .2s;text-decoration:none}
-.topbar-icon-btn:hover{background:#E0E8F5;color:var(--text1)}
-.avatar{width:36px;height:36px;background:#3B82F6;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.875rem;flex-shrink:0}
+.topbar-icon-btn:hover{background:#e7f0e7;color:var(--text1)}
+.avatar{width:36px;height:36px;background:#1eb349;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.875rem;flex-shrink:0}
 .success-toast{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:#4ade80;font-size:.75rem;padding:.375rem .875rem;border-radius:100px}
 #content{padding:1.75rem;flex:1}
 .errors-box{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);padding:.875rem 1.25rem;margin-bottom:1.5rem;border-radius:6px}
@@ -170,17 +170,17 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #3B82F6;
+    color: #1eb349;
     font-weight: 800;
     font-size: 1.25rem;
     margin-bottom: 2rem;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.03), 0 0 40px rgba(59,130,246,0.08);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.03), 0 0 40px rgba(30,179,73,0.08);
     position: relative;
     animation: pl-bounce 2s infinite ease-in-out;
 }
 @keyframes pl-bounce {
-    0%, 100% { transform: translateY(0); box-shadow: 0 10px 25px rgba(0,0,0,0.03), 0 0 40px rgba(59,130,246,0.08); }
-    50% { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(0,0,0,0.05), 0 0 50px rgba(59,130,246,0.12); }
+    0%, 100% { transform: translateY(0); box-shadow: 0 10px 25px rgba(0,0,0,0.03), 0 0 40px rgba(30,179,73,0.08); }
+    50% { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(0,0,0,0.05), 0 0 50px rgba(30,179,73,0.12); }
 }
 .pl-progress-wrap {
     width: 220px;
@@ -194,11 +194,11 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
 .pl-progress-bar {
     position: absolute;
     top: 0; left: 0; height: 100%;
-    background: #3B82F6;
+    background: #1eb349;
     width: 0%;
     transition: width 0.1s linear;
     border-radius: 4px;
-    box-shadow: 0 0 10px rgba(59,130,246,0.3);
+    box-shadow: 0 0 10px rgba(30,179,73,0.3);
 }
 .pl-percent {
     font-size: 0.8rem;
@@ -227,7 +227,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
        @if($adminLogo)
          <img src="{{ asset('storage/'.$adminLogo) }}" alt="Logo" style="width:36px;height:auto;object-fit:contain;">
        @else
-         <svg width="28" height="28" fill="none" stroke="#3B82F6" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+         <svg width="28" height="28" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
        @endif
     </div>
     <div class="pl-progress-wrap">
@@ -247,7 +247,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
       @if($adminLogo)
         <img src="{{ asset('storage/'.$adminLogo) }}" alt="Logo" style="height:28px;width:auto;max-width:100%;object-fit:contain;border-radius:4px;">
       @else
-        <svg width="22" height="22" fill="none" stroke="#1B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
       @endif
     </div>
     <div>
@@ -367,7 +367,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
     <div class="sb-bottom-card">
       <strong>buyle.id</strong>
       <p>Kelola konten & leads bisnis Anda</p>
-      <a href="{{ url('/en/') }}" target="_blank" style="display:inline-flex;align-items:center;gap:.375rem;background:#fff;color:#1B6FE8;font-size:.75rem;font-weight:700;padding:.4rem .875rem;border-radius:8px;text-decoration:none;transition:all .2s;">
+      <a href="{{ url('/en/') }}" target="_blank" style="display:inline-flex;align-items:center;gap:.375rem;background:#fff;color:#1eb349;font-size:.75rem;font-weight:700;padding:.4rem .875rem;border-radius:8px;text-decoration:none;transition:all .2s;">
         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         Preview Website
       </a>
@@ -412,7 +412,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
         <button id="notif-btn" title="{{ $newLeadsCount }} lead baru" onclick="toggleNotif(event)" style="position:relative;width:38px;height:38px;border-radius:12px;border:1.5px solid var(--border,#E4E7F0);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.04);">
           <svg width="16" height="16" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
           @if($newLeadsCount > 0)
-          <span id="notif-badge" style="position:absolute;top:-4px;right:-4px;background:#3B82F6;color:#fff;font-size:.55rem;font-weight:800;min-width:16px;height:16px;border-radius:100px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid #F4F7FE;">{{ $newLeadsCount }}</span>
+          <span id="notif-badge" style="position:absolute;top:-4px;right:-4px;background:#1eb349;color:#fff;font-size:.55rem;font-weight:800;min-width:16px;height:16px;border-radius:100px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid #F4F7FE;">{{ $newLeadsCount }}</span>
           @endif
         </button>
 
@@ -534,7 +534,7 @@ function toggleNotif(e) {
       dropdown.style.transform = 'translateY(0)';
     });
     btn.style.background = '#f0fdf4';
-    btn.style.borderColor = '#BFDBFE';
+    btn.style.borderColor = '#bbf7d0';
   } else {
     dropdown.style.opacity = '0';
     dropdown.style.transform = 'translateY(-8px)';
@@ -564,10 +564,10 @@ document.addEventListener('DOMContentLoaded', function() {
         Swal.fire({
             text: msg,
             icon: 'info',
-            confirmButtonColor: '#3B82F6',
+            confirmButtonColor: '#1eb349',
             confirmButtonText: 'Mengerti',
             background: '#ffffff',
-            color: '#2B3674',
+            color: '#1E293B',
             customClass: { popup: 'premium-swal-popup' },
             showClass: { popup: 'animate__animated animate__fadeInDown animate__faster' },
             hideClass: { popup: 'animate__animated animate__fadeOutUp animate__faster' }
@@ -593,7 +593,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 confirmButtonText: 'Ya, Lanjutkan',
                 cancelButtonText: 'Batal',
                 background: '#ffffff',
-                color: '#2B3674',
+                color: '#1E293B',
                 customClass: { popup: 'premium-swal-popup' }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -623,7 +623,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 confirmButtonText: 'Ya, Lanjutkan',
                 cancelButtonText: 'Batal',
                 background: '#ffffff',
-                color: '#2B3674',
+                color: '#1E293B',
                 customClass: { popup: 'premium-swal-popup' }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -655,7 +655,7 @@ div:where(.swal2-container) button:where(.swal2-styled) {
 }
 div:where(.swal2-container) h2:where(.swal2-title) {
     font-size: 1.25rem !important;
-    color: #2B3674 !important;
+    color: #1E293B !important;
 }
 div:where(.swal2-container) div:where(.swal2-html-container) {
     font-size: 0.95rem !important;

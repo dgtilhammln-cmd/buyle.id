@@ -62,7 +62,7 @@ $adminName = str_ireplace('Cyclevent', 'buyle.id', session('admin_name', 'Admin 
       @if($adminLogo)
         <img src="{{ asset('storage/'.$adminLogo) }}" alt="Logo" style="height: 38px; width: auto; max-width: 180px; object-fit: contain; display: block;">
       @else
-        <svg width="36" height="36" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        <svg width="36" height="36" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
       @endif
     </div>
 
@@ -75,7 +75,7 @@ $adminName = str_ireplace('Cyclevent', 'buyle.id', session('admin_name', 'Admin 
         Dashboard Admin — {{ now()->timezone('Asia/Jakarta')->translatedFormat('l, d F Y') }}
       </div>
       <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-        <span style="display: inline-flex; align-items: center; gap: 0.375rem; background: #f0fdf4; border: 1px solid #BFDBFE; color: #2563EB; font-size: 0.75rem; font-weight: 700; padding: 0.375rem 0.875rem; border-radius: 100px;">
+        <span style="display: inline-flex; align-items: center; gap: 0.375rem; background: #f0fdf4; border: 1px solid #bbf7d0; color: #1eb349; font-size: 0.75rem; font-weight: 700; padding: 0.375rem 0.875rem; border-radius: 100px;">
           <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
           HVM Digital
         </span>
@@ -99,7 +99,7 @@ $adminName = str_ireplace('Cyclevent', 'buyle.id', session('admin_name', 'Admin 
   <div style="text-align: right; padding-left: 1.5rem; border-left: 1px dashed #E2E8F0;">
     <div style="font-size: 0.85rem; color: #64748B; font-weight: 600; margin-bottom: 0.25rem;">Selamat {{ ucfirst($greeting) }},</div>
     <div style="font-size: 1.125rem; font-weight: 800; color: #0F172A; letter-spacing: -0.01em;">{{ $adminName }}</div>
-    <div id="realtime-time" style="font-family: 'Montserrat', monospace; font-size: 1.5rem; font-weight: 800; color: #3B82F6; margin-top: 0.5rem; font-variant-numeric: tabular-nums;">00:00:00</div>
+    <div id="realtime-time" style="font-family: 'Montserrat', monospace; font-size: 1.5rem; font-weight: 800; color: #1eb349; margin-top: 0.5rem; font-variant-numeric: tabular-nums;">00:00:00</div>
     <div id="realtime-date" style="display:none;"></div>
   </div>
 </div>
@@ -114,9 +114,9 @@ $adminName = str_ireplace('Cyclevent', 'buyle.id', session('admin_name', 'Admin 
     <input type="date" id="dash-start" name="start_date" value="{{ $start_date ?? '' }}" style="padding: 0.5rem 0.75rem; font-size: 0.8rem; background: #fff; border: 1px solid var(--border); border-radius: 50px; color: var(--text1); font-family: inherit; font-weight: 500;">
     <span style="color: var(--text3); font-weight: 500; font-size: 0.8rem;">s/d</span>
     <input type="date" id="dash-end" name="end_date" value="{{ $end_date ?? '' }}" style="padding: 0.5rem 0.75rem; font-size: 0.8rem; background: #fff; border: 1px solid var(--border); border-radius: 50px; color: var(--text1); font-family: inherit; font-weight: 500;">
-    <button type="submit" class="btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.8rem; border-radius: 50px; background: #3B82F6; color: #fff; border: none; cursor: pointer; font-weight: 600;">Filter</button>
+    <button type="submit" class="btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.8rem; border-radius: 50px; background: #1eb349; color: #fff; border: none; cursor: pointer; font-weight: 600;">Filter</button>
     <div style="border-left: 1px solid var(--border); margin: 0 0.25rem; height: 30px;"></div>
-    <button type="button" onclick="downloadReport('xls')" class="btn-outline" style="padding: 0.5rem 1rem; font-size: 0.8rem; border: 1px solid var(--border); border-radius: 50px; color: var(--text2); background: #fff; cursor: pointer; font-weight: 600; display:flex; gap:0.3rem; align-items:center;" onmouseover="this.style.borderColor='#3B82F6'; this.style.color='#3B82F6';" onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--text2)';">
+    <button type="button" onclick="downloadReport('xls')" class="btn-outline" style="padding: 0.5rem 1rem; font-size: 0.8rem; border: 1px solid var(--border); border-radius: 50px; color: var(--text2); background: #fff; cursor: pointer; font-weight: 600; display:flex; gap:0.3rem; align-items:center;" onmouseover="this.style.borderColor='#1eb349'; this.style.color='#1eb349';" onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--text2)';">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> XLS
     </button>
     <button type="button" onclick="downloadReport('pdf')" class="btn-outline" style="padding: 0.5rem 1rem; font-size: 0.8rem; border: 1px solid var(--border); border-radius: 50px; color: var(--text2); background: #fff; cursor: pointer; font-weight: 600; display:flex; gap:0.3rem; align-items:center;" onmouseover="this.style.borderColor='#EF4444'; this.style.color='#EF4444';" onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--text2)';">
@@ -148,7 +148,7 @@ function downloadReport(format) {
 {{-- STAT CARDS ROW --}}
 <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-bottom:2rem;">
   @foreach([
-    ['Visitor / Page Views','visitor',$stats['visitor'],'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z','#3B82F6', 'rgba(59, 130, 246, 0.1)'],
+    ['Visitor / Page Views','visitor',$stats['visitor'],'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z','#1eb349', 'rgba(59, 130, 246, 0.1)'],
     ['Klik WA','wa_click',$stats['wa_click'],'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z','#10B981', 'rgba(16, 185, 129, 0.1)'],
     ['Total Leads','leads',$stats['leads'],'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z','#F59E0B', 'rgba(245, 158, 11, 0.1)'],
     ['Total Buyer','total_buyers',$stats['total_buyers'],'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75','#8B5CF6', 'rgba(139, 92, 246, 0.1)'],
@@ -180,7 +180,7 @@ function downloadReport(format) {
       <div style="display:flex;gap:.625rem;align-items:center;padding:.5rem .875rem;background:#F8FAFC;border-radius:100px;">
         <div style="display:flex;align-items:center;gap:.35rem;font-size:.72rem;font-weight:700;color:#64748B;"><span style="display:inline-block;width:10px;height:3px;background:#A3AED0;border-radius:2px;"></span>Visitor</div>
         <div style="display:flex;align-items:center;gap:.35rem;font-size:.72rem;font-weight:700;color:#64748B;"><span style="display:inline-block;width:10px;height:3px;background:#10B981;border-radius:2px;"></span>WA</div>
-        <div style="display:flex;align-items:center;gap:.35rem;font-size:.72rem;font-weight:700;color:#64748B;"><span style="display:inline-block;width:10px;height:3px;background:#3B82F6;border-radius:2px;"></span>Leads</div>
+        <div style="display:flex;align-items:center;gap:.35rem;font-size:.72rem;font-weight:700;color:#64748B;"><span style="display:inline-block;width:10px;height:3px;background:#1eb349;border-radius:2px;"></span>Leads</div>
         <div style="display:flex;align-items:center;gap:.35rem;font-size:.72rem;font-weight:700;color:#64748B;"><span style="display:inline-block;width:10px;height:3px;background:#8B5CF6;border-radius:2px;"></span>Buyer Baru</div>
       </div>
     </div>
@@ -193,7 +193,7 @@ function downloadReport(format) {
     <div style="display:flex; flex-direction:column; gap:0.5rem;">
     @foreach([
       ['Layanan',route('admin.services.index'),$counts['services'],'#F59E0B','M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z', 'rgba(245, 158, 11, 0.1)'],
-      ['Galeri',route('admin.gallery.index'),$counts['gallery'],'#3B82F6','M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z', 'rgba(59, 130, 246, 0.1)'],
+      ['Galeri',route('admin.gallery.index'),$counts['gallery'],'#1eb349','M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z', 'rgba(59, 130, 246, 0.1)'],
       ['Artikel',route('admin.articles.index'),$counts['articles'],'#8B5CF6','M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'rgba(139, 92, 246, 0.1)'],
       ['Klien',route('admin.clients.index'),$counts['clients'],'#10B981','M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', 'rgba(16, 185, 129, 0.1)'],
     ] as $cc)
@@ -221,7 +221,7 @@ function downloadReport(format) {
       <div style="font-size:1.125rem;font-weight:700;color:var(--text1);">Checkup progress / Leads</div>
       <div style="font-size:.8rem;color:var(--text3);margin-top:.25rem;">Data Request Order terbaru</div>
     </div>
-    <a href="{{ route('admin.leads.index') }}" style="display:inline-flex;align-items:center;gap:.375rem;font-size:.875rem;font-weight:600;color:#3B82F6;text-decoration:none;">
+    <a href="{{ route('admin.leads.index') }}" style="display:inline-flex;align-items:center;gap:.375rem;font-size:.875rem;font-weight:600;color:#1eb349;text-decoration:none;">
       Lihat Semua
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
     </a>
@@ -251,7 +251,7 @@ function downloadReport(format) {
             @php
               $sc = match($lead->status){
                 'new'=>['#F59E0B','rgba(245, 158, 11, 0.1)','Baru'],
-                'contacted'=>['#3B82F6','rgba(59, 130, 246, 0.1)','Dihubungi'],
+                'contacted'=>['#1eb349','rgba(59, 130, 246, 0.1)','Dihubungi'],
                 'closed'=>['#10B981','rgba(16, 185, 129, 0.1)','Selesai'],
                 default=>['#64748B','rgba(100, 116, 139, 0.1)','Lainnya']};
             @endphp
@@ -270,7 +270,7 @@ function downloadReport(format) {
 <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:2rem;">
   @foreach([
     ['Tambah Layanan',route('admin.services.create'),'#F59E0B','rgba(245, 158, 11, 0.1)','M12 4v16m8-8H4'],
-    ['Upload Foto',route('admin.gallery.create'),'#3B82F6','rgba(59, 130, 246, 0.1)','M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01'],
+    ['Upload Foto',route('admin.gallery.create'),'#1eb349','rgba(59, 130, 246, 0.1)','M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01'],
     ['Tulis Artikel',route('admin.articles.create'),'#8B5CF6','rgba(139, 92, 246, 0.1)','M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'],
     ['Pengaturan WA',route('admin.wa.index'),'#10B981','rgba(16, 185, 129, 0.1)','M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15'],
   ] as $qa)
@@ -323,7 +323,7 @@ const crosshairPlugin = {
       ctx.moveTo(x, chart.scales.y.top);
       ctx.lineTo(x, chart.scales.y.bottom);
       ctx.lineWidth = 1;
-      ctx.strokeStyle = 'rgba(59,130,246,0.2)';
+      ctx.strokeStyle = 'rgba(30,179,73,0.2)';
       ctx.setLineDash([5, 4]);
       ctx.stroke();
       ctx.restore();
@@ -343,7 +343,7 @@ gWa.addColorStop(0, 'rgba(16,185,129,0.15)');
 gWa.addColorStop(1, 'rgba(16,185,129,0.00)');
 
 const gLeads = dashCtx.createLinearGradient(0, 0, 0, 280);
-gLeads.addColorStop(0, 'rgba(59,130,246,0.25)');
+gLeads.addColorStop(0, 'rgba(30,179,73,0.25)');
 gLeads.addColorStop(1, 'rgba(59,130,246,0.00)');
 
 const gBuyer = dashCtx.createLinearGradient(0, 0, 0, 280);
@@ -386,7 +386,7 @@ new Chart(dashCtx, {
       {
         label: 'Leads',
         data: {!! json_encode($values) !!},
-        borderColor: '#3B82F6',
+        borderColor: '#1eb349',
         backgroundColor: gLeads,
         borderWidth: 2.5,
         tension: 0.45,
@@ -394,7 +394,7 @@ new Chart(dashCtx, {
         pointRadius: 0,
         pointHoverRadius: 6,
         pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: '#3B82F6',
+        pointHoverBorderColor: '#1eb349',
         pointHoverBorderWidth: 2.5,
       },
       {

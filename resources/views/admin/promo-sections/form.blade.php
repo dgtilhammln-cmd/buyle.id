@@ -13,7 +13,7 @@
 .pf-icon { width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
 .form-label { display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem; }
 .form-input { width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;font-family:inherit; }
-.form-input:focus { border-color:#3B82F6; }
+.form-input:focus { border-color:#1eb349; }
 .form-hint { font-size:.7rem;color:#94A3B8;margin:.3rem 0 0; }
 .pf-preview-section {
     border-radius: 14px;
@@ -53,7 +53,7 @@
     <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,.04);margin-bottom:1.5rem;">
       <h2 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0 0 1.25rem;display:flex;align-items:center;gap:.5rem;">
         <div style="width:28px;height:28px;background:rgba(59,130,246,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-          <svg width="14" height="14" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         </div>
         Informasi Section
       </h2>
@@ -64,7 +64,7 @@
           <input type="text" name="title" value="{{ old('title', $promoSection->title ?? '') }}" required
             placeholder="cth: Penawaran Spesial Hari Ini"
             style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;"
-            onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+            onfocus="this.style.borderColor='#1eb349'" onblur="this.style.borderColor='#E4E7F0'">
           @error('title')<p style="color:#EF4444;font-size:.75rem;margin:.35rem 0 0;">{{ $message }}</p>@enderror
         </div>
 
@@ -73,14 +73,14 @@
           <input type="text" name="subtitle" value="{{ old('subtitle', $promoSection->subtitle ?? '') }}"
             placeholder="cth: Diskon hingga 60% untuk produk pilihan"
             style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;"
-            onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+            onfocus="this.style.borderColor='#1eb349'" onblur="this.style.borderColor='#E4E7F0'">
         </div>
 
         <div style="grid-column:1/-1;">
           <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Urutan Tampil</label>
           <input type="number" name="sort_order" value="{{ old('sort_order', $promoSection->sort_order ?? 0) }}" min="0"
             style="width:200px;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;"
-            onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+            onfocus="this.style.borderColor='#1eb349'" onblur="this.style.borderColor='#E4E7F0'">
         </div>
       </div>
 
@@ -88,7 +88,7 @@
         <label style="display:flex;align-items:center;gap:.625rem;cursor:pointer;user-select:none;">
           <input type="hidden" name="is_active" value="0">
           <input type="checkbox" name="is_active" value="1" {{ old('is_active', $promoSection->is_active ?? true) ? 'checked' : '' }}
-            style="width:18px;height:18px;accent-color:#3B82F6;">
+            style="width:18px;height:18px;accent-color:#1eb349;">
           <span style="font-size:.875rem;font-weight:600;color:#374151;">Aktifkan Section ini (tampil di beranda)</span>
         </label>
       </div>
@@ -215,18 +215,18 @@
       <input type="text" id="productSearch" placeholder="Cari nama produk..."
         oninput="filterProducts(this.value)"
         style="width:100%;padding:.65rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.875rem;color:#1E293B;outline:none;box-sizing:border-box;margin-bottom:1rem;"
-        onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+        onfocus="this.style.borderColor='#1eb349'" onblur="this.style.borderColor='#E4E7F0'">
 
       <div id="productList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.625rem;max-height:380px;overflow-y:auto;padding:.25rem;">
         @foreach($services as $svc)
           @php $checked = in_array($svc->id, $selectedIds ?? []); @endphp
           <label class="product-item" data-name="{{ strtolower($svc->name) }}"
-            style="display:flex;align-items:center;gap:.625rem;padding:.5rem;border:1.5px solid {{ $checked ? '#3B82F6' : '#E4E7F0' }};border-radius:12px;cursor:pointer;transition:all .2s;background:{{ $checked ? '#f0fdf4' : '#fff' }};"
-            onmouseover="this.style.borderColor='#3B82F6'" onmouseout="syncLabel(this)">
+            style="display:flex;align-items:center;gap:.625rem;padding:.5rem;border:1.5px solid {{ $checked ? '#1eb349' : '#E4E7F0' }};border-radius:12px;cursor:pointer;transition:all .2s;background:{{ $checked ? '#f0fdf4' : '#fff' }};"
+            onmouseover="this.style.borderColor='#1eb349'" onmouseout="syncLabel(this)">
             <div style="padding-left:.35rem; display:flex; align-items:center;">
               <input type="checkbox" name="service_ids[]" value="{{ $svc->id }}" {{ $checked ? 'checked' : '' }}
                 onchange="syncLabel(this.closest('label'))"
-                style="width:16px;height:16px;accent-color:#3B82F6;flex-shrink:0;">
+                style="width:16px;height:16px;accent-color:#1eb349;flex-shrink:0;">
             </div>
             <img src="{{ $svc->image ? asset('storage/'.$svc->image) : asset('img/no-image.jpg') }}" style="width:42px;height:42px;border-radius:8px;object-fit:cover;border:1px solid #E2E8F0;" onerror="this.src='https://via.placeholder.com/42?text=Img'">
             <div style="font-size:.8rem;font-weight:600;color:#1E293B;line-height:1.3;padding-right:.35rem;">
@@ -318,8 +318,8 @@
   @endif
 
   {{-- Tips --}}
-  <div class="pf-card" style="background:linear-gradient(135deg,#f0fdf4,#F0FDF4);border:1.5px solid #BFDBFE;">
-    <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#2563EB;margin-bottom:.875rem;">💡 Tips Penggunaan</div>
+  <div class="pf-card" style="background:linear-gradient(135deg,#f0fdf4,#F0FDF4);border:1.5px solid #bbf7d0;">
+    <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#1eb349;margin-bottom:.875rem;">💡 Tips Penggunaan</div>
     <ul style="margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:.5rem;">
       <li style="font-size:.775rem;color:#374151;line-height:1.5;">Pilih <strong>5–8 produk</strong> agar swiper terlihat proporsional.</li>
       <li style="font-size:.775rem;color:#374151;line-height:1.5;">Isi <strong>Warna Background</strong> untuk mode Flash Sale. Kosongkan untuk tampilan standar.</li>
@@ -330,7 +330,7 @@
   </div>
 
   {{-- Quick Submit --}}
-  <button type="submit" form="promoForm" style="display:flex;align-items:center;justify-content:center;gap:.5rem;background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;font-weight:800;font-size:.9rem;padding:.875rem 1.5rem;border-radius:14px;border:none;cursor:pointer;font-family:inherit;width:100%;box-shadow:0 4px 14px rgba(59,130,246,.35);transition:all .2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
+  <button type="submit" form="promoForm" style="display:flex;align-items:center;justify-content:center;gap:.5rem;background:linear-gradient(135deg,#1eb349,#1eb349);color:#fff;font-weight:800;font-size:.9rem;padding:.875rem 1.5rem;border-radius:14px;border:none;cursor:pointer;font-family:inherit;width:100%;box-shadow:0 4px 14px rgba(59,130,246,.35);transition:all .2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
     {{ isset($promoSection) ? 'Simpan Perubahan' : 'Buat Section Promo' }}
   </button>
@@ -351,7 +351,7 @@ function previewBanner(input) {
 function syncLabel(label) {
   const cb = label.querySelector('input[type=checkbox]');
   if (!cb) return;
-  label.style.borderColor = cb.checked ? '#3B82F6' : '#E4E7F0';
+  label.style.borderColor = cb.checked ? '#1eb349' : '#E4E7F0';
   label.style.background   = cb.checked ? '#f0fdf4' : '#fff';
 }
 

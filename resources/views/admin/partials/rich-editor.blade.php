@@ -2,45 +2,45 @@
 {{-- Usage: @include('admin.partials.rich-editor', ['name'=>'content', 'value'=>$item->content??'', 'height'=>'350px']) --}}
 @php $edId = 'editor_'.Str::random(6); $haId = 'ha_'.Str::random(6); @endphp
 
-<div style="border:1.5px solid #E4E7F0;border-radius:12px;overflow:hidden;transition:border-color .2s;" onfocusin="this.style.borderColor='#3B82F6'" onfocusout="this.style.borderColor='#E4E7F0'">
+<div style="border:1.5px solid #E4E7F0;border-radius:12px;overflow:hidden;transition:border-color .2s;" onfocusin="this.style.borderColor='#1eb349'" onfocusout="this.style.borderColor='#E4E7F0'">
   {{-- Toolbar --}}
   <div style="display:flex;flex-wrap:wrap;align-items:center;gap:3px;padding:.5rem .75rem;background:#F8FAFC;border-bottom:1px solid #F1F5F9;" id="tb_{{ $edId }}">
     @foreach([['bold','<strong>B</strong>','font-weight:800'],['italic','<em>I</em>','font-style:italic'],['underline','<span style=\"text-decoration:underline\">U</span>','']] as $b)
     <button type="button" onclick="edFmt('{{$edId}}','{{$b[0]}}')"
       style="padding:.3rem .5rem;background:#fff;border:1.5px solid #E4E7F0;color:#374151;border-radius:6px;cursor:pointer;font-size:.8rem;min-width:30px;font-family:inherit;transition:all .15s;"
-      onmouseover="this.style.borderColor='#3B82F6';this.style.color='#3B82F6'" onmouseout="this.style.borderColor='#E4E7F0';this.style.color='#374151'">{!! $b[1] !!}</button>
+      onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E4E7F0';this.style.color='#374151'">{!! $b[1] !!}</button>
     @endforeach
     <div style="width:1px;height:20px;background:#E4E7F0;margin:0 .25rem;"></div>
     @foreach([['h2','H2'],['h3','H3'],['p','¶']] as $b)
     <button type="button" onclick="edBlock('{{$edId}}','{{$b[0]}}')"
-      style="padding:.3rem .5rem;background:#fff;border:1.5px solid #E4E7F0;color:#3B82F6;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:700;min-width:30px;transition:all .15s;"
+      style="padding:.3rem .5rem;background:#fff;border:1.5px solid #E4E7F0;color:#1eb349;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:700;min-width:30px;transition:all .15s;"
       onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='#fff'">{{$b[1]}}</button>
     @endforeach
     <div style="width:1px;height:20px;background:#E4E7F0;margin:0 .25rem;"></div>
     <button type="button" onclick="edFmt('{{$edId}}','insertUnorderedList')"
       style="padding:.3rem .5rem;background:#fff;border:1.5px solid #E4E7F0;color:#374151;border-radius:6px;cursor:pointer;transition:all .15s;" title="Bullet List"
-      onmouseover="this.style.borderColor='#3B82F6'" onmouseout="this.style.borderColor='#E4E7F0'">
+      onmouseover="this.style.borderColor='#1eb349'" onmouseout="this.style.borderColor='#E4E7F0'">
       <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><rect x="2" y="5" width="3" height="3" rx="1"/><rect x="8" y="5" width="14" height="3" rx="1"/><rect x="2" y="11" width="3" height="3" rx="1"/><rect x="8" y="11" width="14" height="3" rx="1"/><rect x="2" y="17" width="3" height="3" rx="1"/><rect x="8" y="17" width="14" height="3" rx="1"/></svg>
     </button>
     <button type="button" onclick="edFmt('{{$edId}}','insertOrderedList')"
       style="padding:.3rem .5rem;background:#fff;border:1.5px solid #E4E7F0;color:#374151;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:700;transition:all .15s;" title="Numbered List"
-      onmouseover="this.style.borderColor='#3B82F6'" onmouseout="this.style.borderColor='#E4E7F0'">1.</button>
+      onmouseover="this.style.borderColor='#1eb349'" onmouseout="this.style.borderColor='#E4E7F0'">1.</button>
     <button type="button" onclick="edLink('{{$edId}}')"
       style="padding:.3rem .5rem;background:#fff;border:1.5px solid #E4E7F0;color:#374151;border-radius:6px;cursor:pointer;transition:all .15s;" title="Insert Link"
-      onmouseover="this.style.borderColor='#3B82F6'" onmouseout="this.style.borderColor='#E4E7F0'">
+      onmouseover="this.style.borderColor='#1eb349'" onmouseout="this.style.borderColor='#E4E7F0'">
       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
     </button>
     <button type="button" onclick="edImage('{{$edId}}')"
       style="padding:.3rem .5rem;background:#fff;border:1.5px solid #E4E7F0;color:#374151;border-radius:6px;cursor:pointer;transition:all .15s;" title="Insert Image"
-      onmouseover="this.style.borderColor='#3B82F6'" onmouseout="this.style.borderColor='#E4E7F0'">
+      onmouseover="this.style.borderColor='#1eb349'" onmouseout="this.style.borderColor='#E4E7F0'">
       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
     </button>
     <button type="button" onclick="edQuote('{{$edId}}')"
       style="padding:.3rem .5rem;background:#fff;border:1.5px solid #E4E7F0;color:#374151;border-radius:6px;cursor:pointer;font-size:.85rem;transition:all .15s;" title="Blockquote"
-      onmouseover="this.style.borderColor='#3B82F6'" onmouseout="this.style.borderColor='#E4E7F0'">&ldquo;</button>
+      onmouseover="this.style.borderColor='#1eb349'" onmouseout="this.style.borderColor='#E4E7F0'">&ldquo;</button>
     <button type="button" onclick="edCode('{{$edId}}')"
       style="padding:.3rem .5rem;background:#fff;border:1.5px solid #E4E7F0;color:#374151;border-radius:6px;cursor:pointer;font-size:.72rem;font-family:monospace;transition:all .15s;" title="Inline Code"
-      onmouseover="this.style.borderColor='#3B82F6'" onmouseout="this.style.borderColor='#E4E7F0'">&lt;/&gt;</button>
+      onmouseover="this.style.borderColor='#1eb349'" onmouseout="this.style.borderColor='#E4E7F0'">&lt;/&gt;</button>
     <div style="width:1px;height:20px;background:#E4E7F0;margin:0 .25rem;"></div>
     <button type="button" id="htmlbtn_{{ $edId }}" onclick="edToggleHtml('{{$edId}}','{{$haId}}')"
       style="padding:.3rem .5rem;background:#fff;border:1.5px solid #E4E7F0;color:#94A3B8;border-radius:6px;cursor:pointer;font-size:.72rem;font-family:monospace;transition:all .15s;">HTML</button>

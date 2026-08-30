@@ -74,8 +74,8 @@
 
         .o-tab.active {
             background: #f0fdf4;
-            border-color: #93C5FD;
-            color: #1D4ED8;
+            border-color: #bbf7d0;
+            color: #16a34a;
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
         }
 
@@ -89,7 +89,7 @@
         }
 
         .o-tab.active .o-tab-count {
-            background: #3B82F6;
+            background: #1eb349;
             color: #fff;
         }
 
@@ -478,9 +478,9 @@
             padding: .5rem;
             font-size: .75rem;
             font-weight: 700;
-            color: #3B82F6;
+            color: #1eb349;
             background: #f0fdf4;
-            border: 1px solid #BFDBFE;
+            border: 1px solid #bbf7d0;
             border-radius: 8px;
             cursor: pointer;
             transition: all .2s;
@@ -491,9 +491,9 @@
         }
 
         .rm-preset-btn.active {
-            background: #3B82F6;
+            background: #1eb349;
             color: #fff;
-            border-color: #2563EB;
+            border-color: #1eb349;
         }
 
         .rm-date-inputs {
@@ -517,7 +517,7 @@
 
         .rm-input:focus,
         .rm-select:focus {
-            border-color: #3B82F6;
+            border-color: #1eb349;
             background: #fff;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
@@ -584,7 +584,7 @@
                     </button>
                 </div>
                 <button type="button" class="o-btn" onclick="openReportModal()"
-                    style="background:#3B82F6; box-shadow:0 4px 12px rgba(59,130,246,0.2); display:flex; align-items:center; gap:.5rem;">
+                    style="background:#1eb349; box-shadow:0 4px 12px rgba(30,179,73,0.2); display:flex; align-items:center; gap:.5rem;">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
                         stroke-linejoin="round" viewBox="0 0 24 24">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -773,7 +773,7 @@
 
             <div
                 style="display:flex; align-items:center; gap:.5rem; margin-bottom:1rem; margin-top: 1rem; padding-bottom:.5rem; border-bottom:1px solid #E2E8F0;">
-                <svg width="18" height="18" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24">
+                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                     <line x1="16" y1="2" x2="16" y2="6" />
                     <line x1="8" y1="2" x2="8" y2="6" />
@@ -830,7 +830,7 @@
                         <div>
                             <div class="o-col-title">Status Pesanan</div>
                             <div class="o-status-text"
-                                style="color: {{ $o->status->color() === 'red' ? '#EF4444' : ($o->status->color() === 'green' ? '#10B981' : ($o->status->color() === 'yellow' ? '#F59E0B' : '#3B82F6')) }};">
+                                style="color: {{ $o->status->color() === 'red' ? '#EF4444' : ($o->status->color() === 'green' ? '#10B981' : ($o->status->color() === 'yellow' ? '#F59E0B' : '#1eb349')) }};">
                                 {{ $o->status->label() }}
                             </div>
 
@@ -933,7 +933,7 @@
                                     style="font-size:.68rem;color:#94A3B8;font-weight:700;text-transform:uppercase;margin-bottom:.2rem;">
                                     Status</div>
                                 <div
-                                    style="font-weight:800;font-size:.8rem;color:{{ $o->status->color() === 'red' ? '#EF4444' : ($o->status->color() === 'green' ? '#10B981' : ($o->status->color() === 'yellow' ? '#F59E0B' : '#3B82F6')) }};">
+                                    style="font-weight:800;font-size:.8rem;color:{{ $o->status->color() === 'red' ? '#EF4444' : ($o->status->color() === 'green' ? '#10B981' : ($o->status->color() === 'yellow' ? '#F59E0B' : '#1eb349')) }};">
                                     {{ $o->status->label() }}
                                 </div>
                             </div>
@@ -1046,9 +1046,9 @@
             if (abl) abl.style.display = type === 'list' ? 'block' : 'none';
             if (abg) abg.style.display = type === 'grid' ? 'grid' : 'none';
 
-            document.getElementById('btn-view-list').style.background = type === 'list' ? '#3B82F6' : 'transparent';
+            document.getElementById('btn-view-list').style.background = type === 'list' ? '#1eb349' : 'transparent';
             document.getElementById('btn-view-list').style.color = type === 'list' ? '#fff' : '#94A3B8';
-            document.getElementById('btn-view-grid').style.background = type === 'grid' ? '#3B82F6' : 'transparent';
+            document.getElementById('btn-view-grid').style.background = type === 'grid' ? '#1eb349' : 'transparent';
             document.getElementById('btn-view-grid').style.color = type === 'grid' ? '#fff' : '#94A3B8';
         }
         const savedOrderView = localStorage.getItem('admin_orders_view') || 'list';

@@ -8,7 +8,7 @@
     <h1 style="font-size:1.5rem;font-weight:800;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.02em;">Kelola USP Bar</h1>
     <p style="font-size:.875rem;color:#94A3B8;margin:0;">Tampil di bawah Hero sebagai keunggulan layanan. Max 5 item.</p>
   </div>
-  <a href="{{ route('admin.usp.create') }}" style="display:inline-flex;align-items:center;gap:.5rem;background:#3B82F6;color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;text-decoration:none;box-shadow:0 4px 14px rgba(59,130,246,0.35);">
+  <a href="{{ route('admin.usp.create') }}" style="display:inline-flex;align-items:center;gap:.5rem;background:#1eb349;color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;text-decoration:none;box-shadow:0 4px 14px rgba(30,179,73,0.35);">
     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     Tambah USP
   </a>
@@ -49,7 +49,7 @@
           </span>
         </td>
         <td style="padding:1rem 1.5rem;text-align:right;">
-          <a href="{{ route('admin.usp.edit', $item) }}" style="display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .875rem;border-radius:8px;background:#f0fdf4;color:#2563EB;font-size:.8rem;font-weight:600;text-decoration:none;margin-right:.5rem;">Edit</a>
+          <a href="{{ route('admin.usp.edit', $item) }}" style="display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .875rem;border-radius:8px;background:#f0fdf4;color:#1eb349;font-size:.8rem;font-weight:600;text-decoration:none;margin-right:.5rem;">Edit</a>
           <form action="{{ route('admin.usp.destroy', $item) }}" method="POST" style="display:inline;" onsubmit="return confirm('Hapus USP ini?')">
             @csrf @method('DELETE')
             <button type="submit" style="display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .875rem;border-radius:8px;background:#FEF2F2;color:#DC2626;font-size:.8rem;font-weight:600;border:none;cursor:pointer;">Hapus</button>

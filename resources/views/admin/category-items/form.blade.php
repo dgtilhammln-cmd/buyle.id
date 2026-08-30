@@ -85,7 +85,7 @@
             ];
           @endphp
           @foreach($icons as $iconKey => $iconSvg)
-            <div class="icon-option {{ old('icon_value', $item->icon_value ?? '') == $iconKey ? 'selected' : '' }}" data-key="{{ $iconKey }}" onclick="selectIcon('{{ $iconKey }}', this)" style="width:48px;height:48px;border-radius:12px;border:2px solid {{ old('icon_value', $item->icon_value ?? '') == $iconKey ? '#3B82F6' : '#E2E8F0' }};display:flex;align-items:center;justify-content:center;cursor:pointer;color:{{ old('icon_value', $item->icon_value ?? '') == $iconKey ? '#3B82F6' : '#64748B' }};background:{{ old('icon_value', $item->icon_value ?? '') == $iconKey ? '#f0fdf4' : '#fff' }};transition:all .2s;" title="{{ ucfirst(str_replace('-',' ',$iconKey)) }}">
+            <div class="icon-option {{ old('icon_value', $item->icon_value ?? '') == $iconKey ? 'selected' : '' }}" data-key="{{ $iconKey }}" onclick="selectIcon('{{ $iconKey }}', this)" style="width:48px;height:48px;border-radius:12px;border:2px solid {{ old('icon_value', $item->icon_value ?? '') == $iconKey ? '#1eb349' : '#E2E8F0' }};display:flex;align-items:center;justify-content:center;cursor:pointer;color:{{ old('icon_value', $item->icon_value ?? '') == $iconKey ? '#1eb349' : '#64748B' }};background:{{ old('icon_value', $item->icon_value ?? '') == $iconKey ? '#f0fdf4' : '#fff' }};transition:all .2s;" title="{{ ucfirst(str_replace('-',' ',$iconKey)) }}">
               <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">{!! $iconSvg !!}</svg>
             </div>
           @endforeach
@@ -140,7 +140,7 @@
       </div>
 
       <div style="display:flex;gap:.75rem;">
-        <button type="submit" style="flex:1;padding:.875rem;background:#3B82F6;color:#fff;font-weight:700;font-size:.875rem;border:none;border-radius:12px;cursor:pointer;">
+        <button type="submit" style="flex:1;padding:.875rem;background:#1eb349;color:#fff;font-weight:700;font-size:.875rem;border:none;border-radius:12px;cursor:pointer;">
           {{ isset($item) ? 'Simpan Perubahan' : 'Tambah Kategori' }}
         </button>
         <a href="{{ route('admin.category-items.index') }}" style="padding:.875rem 1.5rem;border:1.5px solid #E2E8F0;border-radius:12px;font-weight:600;font-size:.875rem;text-decoration:none;color:#64748B;">Batal</a>
@@ -164,8 +164,8 @@ function selectIcon(key, el) {
     opt.style.color = '#64748B';
     opt.style.background = '#fff';
   });
-  el.style.borderColor = '#3B82F6';
-  el.style.color = '#3B82F6';
+  el.style.borderColor = '#1eb349';
+  el.style.color = '#1eb349';
   el.style.background = '#f0fdf4';
 }
 </script>

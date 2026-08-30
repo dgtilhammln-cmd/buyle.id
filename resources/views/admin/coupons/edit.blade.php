@@ -5,7 +5,7 @@
 
 {{-- PAGE HEADER --}}
 <div style="display:flex;align-items:center;gap:1rem;margin-bottom:2rem;">
-  <a href="{{ route('admin.coupons.index') }}" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:#fff;border:1.5px solid #E4E7F0;border-radius:10px;color:#64748B;text-decoration:none;flex-shrink:0;transition:all .2s;" onmouseover="this.style.borderColor='#3B82F6';this.style.color='#3B82F6'" onmouseout="this.style.borderColor='#E4E7F0';this.style.color='#64748B'">
+  <a href="{{ route('admin.coupons.index') }}" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:#fff;border:1.5px solid #E4E7F0;border-radius:10px;color:#64748B;text-decoration:none;flex-shrink:0;transition:all .2s;" onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E4E7F0';this.style.color='#64748B'">
     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
   </a>
   <div>
@@ -34,8 +34,8 @@
     <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
       
       <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1.5rem;">
-        <div style="width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-          <svg width="16" height="16" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        <div style="width:32px;height:32px;background:rgba(30,179,73,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
         </div>
         <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Informasi Utama Voucher</h3>
       </div>
@@ -46,14 +46,14 @@
           <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Kode Voucher <span style="color:#EF4444;">*</span></label>
           <input type="text" name="code" value="{{ old('code', $coupon->code) }}" required oninput="this.value=this.value.toUpperCase()"
             style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;font-family:monospace;font-weight:700;letter-spacing:1px;outline:none;box-sizing:border-box;transition:border-color .2s;"
-            onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+            onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
           <div style="font-size:0.7rem;color:#94A3B8;margin-top:4px;">Kode unik yang diinput oleh pembeli.</div>
         </div>
 
         <div>
           <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Kategori <span style="color:#EF4444;">*</span></label>
           <select name="category" required style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;transition:border-color .2s;"
-            onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+            onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
             <option value="product" {{ old('category', $coupon->category) == 'product' ? 'selected' : '' }}>Diskon Produk</option>
             <option value="shipping" {{ old('category', $coupon->category) == 'shipping' ? 'selected' : '' }}>Gratis Ongkir</option>
             <option value="event" {{ old('category', $coupon->category) == 'event' ? 'selected' : '' }}>Event Spesial</option>
@@ -66,14 +66,14 @@
           <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Deskripsi Singkat</label>
           <input type="text" name="description" value="{{ old('description', $coupon->description) }}"
             style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;transition:border-color .2s;"
-            onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+            onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
         </div>
 
         <div>
           <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Teks Label / Badge</label>
           <input type="text" name="badge" value="{{ old('badge', $coupon->badge) }}"
             style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;transition:border-color .2s;"
-            onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+            onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
         </div>
       </div>
       
@@ -90,7 +90,7 @@
         <div>
           <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Tipe Diskon <span style="color:#EF4444;">*</span></label>
           <select name="type" id="discount-type" required style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;transition:border-color .2s;"
-            onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+            onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
             <option value="percentage" {{ old('type', $coupon->type->value ?? $coupon->type) == 'percentage' ? 'selected' : '' }}>Persentase (%)</option>
             <option value="fixed" {{ old('type', $coupon->type->value ?? $coupon->type) == 'fixed' ? 'selected' : '' }}>Nominal Tetap (Rp)</option>
           </select>
@@ -100,14 +100,14 @@
           <label id="value-label" style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Nilai Diskon <span style="color:#EF4444;">*</span></label>
           <input type="number" step="0.01" name="value" value="{{ old('value', (float)$coupon->value) }}" required
             style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;transition:border-color .2s;"
-            onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+            onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
         </div>
 
         <div>
           <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Minimal Pembelian (Rp) <span style="color:#EF4444;">*</span></label>
           <input type="number" name="min_purchase" value="{{ old('min_purchase', (float)$coupon->min_purchase) }}" required
             style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;transition:border-color .2s;"
-            onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+            onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
           <div style="font-size:0.7rem;color:#94A3B8;margin-top:4px;">Isi 0 jika tanpa batas minimal.</div>
         </div>
 
@@ -115,7 +115,7 @@
           <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Maksimal Potongan Harga (Rp)</label>
           <input type="number" name="max_discount" value="{{ old('max_discount', (float)$coupon->max_discount) }}"
             style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;transition:border-color .2s;"
-            onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+            onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
           <div style="font-size:0.7rem;color:#94A3B8;margin-top:4px;">Batas nilai potongan tertinggi jika pakai persentase.</div>
         </div>
       </div>
@@ -134,7 +134,7 @@
           <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Batas Pemakaian Voucher</label>
           <input type="number" name="usage_limit" value="{{ old('usage_limit', $coupon->usage_limit) }}"
             style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;transition:border-color .2s;"
-            onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+            onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
           <div style="font-size:0.75rem;color:#1E293B;margin-top:4px;font-weight:600;">Saat ini terpakai: {{ $coupon->used_count }} kali.</div>
         </div>
 
@@ -142,14 +142,14 @@
           <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Tanggal Mulai</label>
           <input type="datetime-local" name="started_at" value="{{ old('started_at', $coupon->started_at ? $coupon->started_at->format('Y-m-d\TH:i') : '') }}"
             style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;transition:border-color .2s;"
-            onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+            onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
         </div>
 
         <div>
           <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Tanggal Berakhir</label>
           <input type="datetime-local" name="expired_at" value="{{ old('expired_at', $coupon->expired_at ? $coupon->expired_at->format('Y-m-d\TH:i') : '') }}"
             style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;transition:border-color .2s;"
-            onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+            onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
         </div>
       </div>
       
@@ -178,8 +178,8 @@
         Batal
       </a>
       <button type="submit"
-        style="padding:.875rem 2rem;background:#3B82F6;border:none;border-radius:12px;color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(59,130,246,0.35);"
-        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(59,130,246,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(59,130,246,0.35)'">
+        style="padding:.875rem 2rem;background:#1eb349;border:none;border-radius:12px;color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(30,179,73,0.35);"
+        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(30,179,73,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(30,179,73,0.35)'">
         Simpan Perubahan
       </button>
     </div>

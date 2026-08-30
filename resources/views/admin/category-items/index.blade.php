@@ -8,7 +8,7 @@
     <h1 style="font-size:1.5rem;font-weight:800;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.02em;">Kelola Kategori</h1>
     <p style="font-size:.875rem;color:#94A3B8;margin:0;">Tampil sebagai kategori swipeable. Ubah urutan langsung tanpa buka Edit.</p>
   </div>
-  <a href="{{ route('admin.category-items.create') }}" style="display:inline-flex;align-items:center;gap:.5rem;background:#3B82F6;color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;text-decoration:none;box-shadow:0 4px 14px rgba(59,130,246,0.35);">
+  <a href="{{ route('admin.category-items.create') }}" style="display:inline-flex;align-items:center;gap:.5rem;background:#1eb349;color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;text-decoration:none;box-shadow:0 4px 14px rgba(30,179,73,0.35);">
     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     Tambah Kategori
   </a>
@@ -29,7 +29,7 @@
         <th style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;">Icon</th>
         <th style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;">Nama</th>
         <th style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;">Badge</th>
-        <th style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;">Urutan <span style="color:#3B82F6;font-weight:600;">(edit langsung)</span></th>
+        <th style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;">Urutan <span style="color:#1eb349;font-weight:600;">(edit langsung)</span></th>
         <th style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;">Status</th>
         <th style="padding:1rem 1.5rem;text-align:right;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;">Aksi</th>
       </tr>
@@ -61,7 +61,7 @@
             ];
             $svg = $icons[$cat->icon_value] ?? $icons['box'];
           @endphp
-          <div style="width:40px;height:40px;background:#F1F5F9;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#3B82F6;">
+          <div style="width:40px;height:40px;background:#F1F5F9;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#1eb349;">
             <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">{!! $svg !!}</svg>
           </div>
         </td>
@@ -80,7 +80,7 @@
             <input type="number" id="order-{{ $cat->id }}" value="{{ $cat->sort_order }}" min="0"
               style="width:52px;text-align:center;padding:.35rem .5rem;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:8px;font-size:.875rem;font-weight:600;color:#1E293B;outline:none;"
               onchange="saveOrder({{ $cat->id }}, this.value)"
-              onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E2E8F0'">
+              onfocus="this.style.borderColor='#1eb349'" onblur="this.style.borderColor='#E2E8F0'">
             <button type="button" onclick="changeOrder({{ $cat->id }}, 1)" title="Turunkan"
               style="width:28px;height:28px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748B;padding:0;flex-shrink:0;">
               <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -93,7 +93,7 @@
           </span>
         </td>
         <td style="padding:1rem 1.5rem;text-align:right;">
-          <a href="{{ route('admin.category-items.edit', $cat) }}" style="display:inline-flex;align-items:center;padding:.4rem .875rem;border-radius:8px;background:#f0fdf4;color:#2563EB;font-size:.8rem;font-weight:600;text-decoration:none;margin-right:.5rem;">Edit</a>
+          <a href="{{ route('admin.category-items.edit', $cat) }}" style="display:inline-flex;align-items:center;padding:.4rem .875rem;border-radius:8px;background:#f0fdf4;color:#1eb349;font-size:.8rem;font-weight:600;text-decoration:none;margin-right:.5rem;">Edit</a>
           <form action="{{ route('admin.category-items.destroy', $cat) }}" method="POST" style="display:inline;" onsubmit="return confirm('Hapus kategori ini?')">
             @csrf @method('DELETE')
             <button type="submit" style="padding:.4rem .875rem;border-radius:8px;background:#FEF2F2;color:#DC2626;font-size:.8rem;font-weight:600;border:none;cursor:pointer;">Hapus</button>

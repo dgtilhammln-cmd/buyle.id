@@ -8,7 +8,7 @@
     <h1 style="font-size:1.5rem;font-weight:800;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.02em;">Metode Pengiriman</h1>
     <p style="font-size:.875rem;color:#94A3B8;margin:0;">Kelola kurir/ekspedisi yang aktif di halaman checkout.</p>
   </div>
-  <button onclick="document.getElementById('add-modal').style.display='flex'" style="display:inline-flex;align-items:center;gap:.5rem;background:#3B82F6;color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(59,130,246,0.35);">
+  <button onclick="document.getElementById('add-modal').style.display='flex'" style="display:inline-flex;align-items:center;gap:.5rem;background:#1eb349;color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(30,179,73,0.35);">
     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     Tambah Kurir
   </button>
@@ -40,7 +40,7 @@
           <code style="background:#F1F5F9;padding:.2rem .6rem;border-radius:6px;font-size:.8rem;color:#475569;">{{ $c->code }}</code>
         </td>
         <td style="padding:1.25rem 1.5rem;">
-          <span style="font-size:.8rem;padding:.25rem .75rem;border-radius:50px;background:{{ $c->type==='expedition' ? '#f0fdf4' : '#F0FDF4' }};color:{{ $c->type==='expedition' ? '#1D4ED8' : '#15803D' }};font-weight:600;">
+          <span style="font-size:.8rem;padding:.25rem .75rem;border-radius:50px;background:{{ $c->type==='expedition' ? '#f0fdf4' : '#F0FDF4' }};color:{{ $c->type==='expedition' ? '#16a34a' : '#15803D' }};font-weight:600;">
             {{ $c->type==='expedition' ? 'Ekspedisi' : 'Kurir Toko' }}
           </span>
         </td>
@@ -57,7 +57,7 @@
         </td>
         <td style="padding:1.25rem 1.5rem;text-align:center;">
           <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;">
-            <button onclick="openEdit({{ $c->id }}, '{{ addslashes($c->name) }}', {{ $c->is_active ? 'true' : 'false' }})" style="background:#f0fdf4;color:#1D4ED8;border:none;border-radius:8px;padding:.4rem .8rem;font-size:.8rem;font-weight:600;cursor:pointer;">Edit</button>
+            <button onclick="openEdit({{ $c->id }}, '{{ addslashes($c->name) }}', {{ $c->is_active ? 'true' : 'false' }})" style="background:#f0fdf4;color:#16a34a;border:none;border-radius:8px;padding:.4rem .8rem;font-size:.8rem;font-weight:600;cursor:pointer;">Edit</button>
             <form action="{{ route('admin.couriers.destroy', $c) }}" method="POST" onsubmit="return confirm('Hapus kurir ini?')">
               @csrf @method('DELETE')
               <button type="submit" style="background:#FEE2E2;color:#DC2626;border:none;border-radius:8px;padding:.4rem .8rem;font-size:.8rem;font-weight:600;cursor:pointer;">Hapus</button>
@@ -98,7 +98,7 @@
       </div>
       <div style="display:flex;gap:.75rem;">
         <button type="button" onclick="document.getElementById('add-modal').style.display='none'" style="flex:1;padding:.75rem;background:#F1F5F9;color:#475569;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;">Batal</button>
-        <button type="submit" style="flex:2;padding:.75rem;background:#3B82F6;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;">Simpan</button>
+        <button type="submit" style="flex:2;padding:.75rem;background:#1eb349;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;">Simpan</button>
       </div>
     </form>
   </div>
@@ -119,13 +119,13 @@
       </div>
       <div style="margin-bottom:1.5rem;">
         <label style="display:flex;align-items:center;gap:.5rem;font-size:.875rem;font-weight:600;color:#475569;cursor:pointer;">
-          <input type="checkbox" name="is_active" value="1" id="edit-active" style="width:16px;height:16px;accent-color:#3B82F6;">
+          <input type="checkbox" name="is_active" value="1" id="edit-active" style="width:16px;height:16px;accent-color:#1eb349;">
           Aktif (tampil di halaman checkout)
         </label>
       </div>
       <div style="display:flex;gap:.75rem;">
         <button type="button" onclick="document.getElementById('edit-modal').style.display='none'" style="flex:1;padding:.75rem;background:#F1F5F9;color:#475569;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;">Batal</button>
-        <button type="submit" style="flex:2;padding:.75rem;background:#3B82F6;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;">Simpan</button>
+        <button type="submit" style="flex:2;padding:.75rem;background:#1eb349;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;">Simpan</button>
       </div>
     </form>
   </div>

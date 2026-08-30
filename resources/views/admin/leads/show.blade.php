@@ -77,18 +77,18 @@
         font-family: inherit;
     }
     .form-select:focus, .form-input:focus {
-        border-color: #3B82F6;
+        border-color: #1eb349;
         background: #fff;
-        box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
+        box-shadow: 0 0 0 4px rgba(30,179,73,0.1);
     }
     
     .btn-primary-new {
-        background: #3B82F6; color: #fff; border: none; padding: 0.875rem 1.5rem;
+        background: #1eb349; color: #fff; border: none; padding: 0.875rem 1.5rem;
         border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
         display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-        transition: all 0.2s; box-shadow: 0 4px 14px rgba(59,130,246,0.3); width: 100%;
+        transition: all 0.2s; box-shadow: 0 4px 14px rgba(30,179,73,0.3); width: 100%;
     }
-    .btn-primary-new:hover { background: #2563EB; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59,130,246,0.4); }
+    .btn-primary-new:hover { background: #1eb349; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(30,179,73,0.4); }
 
     .message-box {
         background: #F8FAFC;
@@ -130,7 +130,7 @@
     {{-- Header Card --}}
     <div class="premium-card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
         <div style="display:flex;align-items:center;gap:1.25rem;">
-            <div style="width:56px;height:56px;border-radius:50%;background:#F1F5F9;display:flex;align-items:center;justify-content:center;color:#3B82F6;font-size:1.5rem;font-weight:800;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#F1F5F9;display:flex;align-items:center;justify-content:center;color:#1eb349;font-size:1.5rem;font-weight:800;">
                 {{ substr($lead->name, 0, 1) }}
             </div>
             <div>

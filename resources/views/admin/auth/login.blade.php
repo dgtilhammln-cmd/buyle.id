@@ -14,7 +14,7 @@
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #F0F9FF;
+            background-color: #F4FBF7;
             color: #0F172A;
             display: flex;
             flex-direction: column;
@@ -25,7 +25,7 @@
             position: relative;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.2) 0px, transparent 50%),
+                radial-gradient(at 0% 0%, rgba(165, 207, 55, 0.2) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(30, 179, 73, 0.15) 0px, transparent 50%);
         }
         
@@ -43,7 +43,7 @@
             position: absolute;
             bottom: -150px; right: -50px;
             width: 500px; height: 500px;
-            background: rgba(56, 189, 248, 0.15);
+            background: rgba(165, 207, 55, 0.15);
             filter: blur(100px);
             border-radius: 50%;
             z-index: -1;

@@ -6,7 +6,7 @@
 
 {{-- PAGE HEADER --}}
 <div style="display:flex;align-items:center;gap:1rem;margin-bottom:2rem;">
-  <a href="{{ route('admin.gallery.index') }}" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:#fff;border:1.5px solid #E4E7F0;border-radius:10px;color:#64748B;text-decoration:none;flex-shrink:0;transition:all .2s;" onmouseover="this.style.borderColor='#3B82F6';this.style.color='#3B82F6'" onmouseout="this.style.borderColor='#E4E7F0';this.style.color='#64748B'">
+  <a href="{{ route('admin.gallery.index') }}" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:#fff;border:1.5px solid #E4E7F0;border-radius:10px;color:#64748B;text-decoration:none;flex-shrink:0;transition:all .2s;" onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E4E7F0';this.style.color='#64748B'">
     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
   </a>
   <div>
@@ -26,8 +26,8 @@
   {{-- Info Proyek --}}
   <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
     <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1.5rem;">
-      <div style="width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-        <svg width="16" height="16" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+      <div style="width:32px;height:32px;background:rgba(30,179,73,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
       </div>
       <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Info Proyek</h3>
     </div>
@@ -36,7 +36,7 @@
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Judul Proyek <span style="color:#EF4444;">*</span></label>
         <input type="text" name="title" id="gal-title" value="{{ old('title',$g?->title) }}" required oninput="galAutoSlug()"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .2s;"
-          onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'"
+          onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'"
           placeholder="Contoh: Pemasangan buyle.id PT. ABC">
       </div>
       <div>
@@ -47,7 +47,7 @@
           <span style="padding:.75rem .875rem;font-size:.8rem;color:#94A3B8;background:#F1F5F9;border-right:1px solid #E4E7F0;white-space:nowrap;">/gallery/</span>
           <input type="text" name="slug" id="gal-slug" value="{{ old('slug',$g?->slug) }}" pattern="[a-z0-9\-]*"
             style="flex:1;padding:.75rem .875rem;background:transparent;border:none;font-size:.9rem;color:#1E293B;font-family:inherit;outline:none;"
-            onfocus="document.getElementById('slug-wrapper').style.borderColor='#3B82F6'" onblur="document.getElementById('slug-wrapper').style.borderColor='#E4E7F0'"
+            onfocus="document.getElementById('slug-wrapper').style.borderColor='#1eb349'" onblur="document.getElementById('slug-wrapper').style.borderColor='#E4E7F0'"
             placeholder="contoh-slug">
         </div>
       </div>
@@ -55,7 +55,7 @@
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Deskripsi Singkat</label>
         <textarea name="description" rows="2"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;font-family:inherit;outline:none;resize:vertical;box-sizing:border-box;transition:border-color .2s;"
-          onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'"
+          onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'"
           placeholder="Ringkasan singkat proyek...">{{ old('description',$g?->description) }}</textarea>
       </div>
     </div>
@@ -65,8 +65,8 @@
   <div style="background:#fff;border-radius:20px;box-shadow:0 2px 20px rgba(0,0,0,0.04);overflow:hidden;">
     <div style="padding:1.5rem 1.75rem;border-bottom:1px solid #E4E7F0;">
       <div style="display:flex;align-items:center;gap:.625rem;">
-        <div style="width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-          <svg width="16" height="16" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <div style="width:32px;height:32px;background:rgba(30,179,73,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </div>
         <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Detail Konten Proyek</h3>
       </div>
@@ -79,8 +79,8 @@
   {{-- Spesifikasi Proyek --}}
   <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
     <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1.5rem;">
-      <div style="width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-        <svg width="16" height="16" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div style="width:32px;height:32px;background:rgba(30,179,73,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
       </div>
       <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Spesifikasi Proyek</h3>
     </div>
@@ -89,25 +89,25 @@
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Klien / Perusahaan</label>
         <input type="text" name="client" value="{{ old('client',$g?->client) }}"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .2s;"
-          onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+          onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
       </div>
       <div>
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Lokasi</label>
         <input type="text" name="location" value="{{ old('location',$g?->location) }}"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .2s;"
-          onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+          onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
       </div>
       <div>
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Tahun</label>
         <input type="number" name="year" value="{{ old('year',$g?->year ?? date('Y')) }}" min="2000" max="2099"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .2s;"
-          onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+          onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
       </div>
       <div>
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Kategori</label>
         <input type="text" name="category" list="cat-suggestions" value="{{ old('category', $g?->category) }}"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .2s;"
-          onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'"
+          onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'"
           placeholder="Ketik kategori...">
         <datalist id="cat-suggestions">
           <option value="Pabrik"><option value="Gudang"><option value="Ruko">
@@ -120,13 +120,13 @@
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Alt Text (SEO)</label>
         <input type="text" name="alt_text" value="{{ old('alt_text',$g?->alt_text) }}"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .2s;"
-          onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+          onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
       </div>
       <div>
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Tags (pisah koma)</label>
         <input type="text" name="tags" value="{{ old('tags',$g?->tags) }}"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .2s;"
-          onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+          onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
       </div>
     </div>
   </div>
@@ -140,8 +140,8 @@
   {{-- Status --}}
   <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
     <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1.25rem;">
-      <div style="width:28px;height:28px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-        <svg width="14" height="14" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <div style="width:28px;height:28px;background:rgba(30,179,73,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
       </div>
       <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Status & Urutan</h3>
     </div>
@@ -149,17 +149,17 @@
     <div style="display:flex;flex-direction:column;gap:1rem;">
       <label style="display:flex;align-items:center;gap:.75rem;cursor:pointer;">
         <input type="hidden" name="is_published" value="0">
-        <input type="checkbox" name="is_published" value="1" {{ old('is_published',$g?->is_published??true)?'checked':'' }} style="width:18px;height:18px;accent-color:#3B82F6;cursor:pointer;">
+        <input type="checkbox" name="is_published" value="1" {{ old('is_published',$g?->is_published??true)?'checked':'' }} style="width:18px;height:18px;accent-color:#1eb349;cursor:pointer;">
         <span style="font-size:.875rem;color:#475569;font-weight:500;">Published (Tampil)</span>
       </label>
       <label style="display:flex;align-items:center;gap:.75rem;cursor:pointer;">
         <input type="hidden" name="is_active" value="0">
-        <input type="checkbox" name="is_active" value="1" {{ old('is_active',$g?->is_active??true)?'checked':'' }} style="width:18px;height:18px;accent-color:#3B82F6;cursor:pointer;">
+        <input type="checkbox" name="is_active" value="1" {{ old('is_active',$g?->is_active??true)?'checked':'' }} style="width:18px;height:18px;accent-color:#1eb349;cursor:pointer;">
         <span style="font-size:.875rem;color:#475569;font-weight:500;">Aktif</span>
       </label>
       <label style="display:flex;align-items:center;gap:.75rem;cursor:pointer;">
         <input type="hidden" name="is_featured" value="0">
-        <input type="checkbox" name="is_featured" value="1" {{ old('is_featured',$g?->is_featured??false)?'checked':'' }} style="width:18px;height:18px;accent-color:#3B82F6;cursor:pointer;">
+        <input type="checkbox" name="is_featured" value="1" {{ old('is_featured',$g?->is_featured??false)?'checked':'' }} style="width:18px;height:18px;accent-color:#1eb349;cursor:pointer;">
         <span style="font-size:.875rem;color:#475569;font-weight:500;">Featured (Homepage)</span>
       </label>
 
@@ -167,7 +167,7 @@
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Urutan Tampil</label>
         <input type="number" name="order" value="{{ old('order',$g?->order??0) }}" min="0"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .2s;"
-          onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
+          onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
       </div>
     </div>
   </div>
@@ -175,8 +175,8 @@
   {{-- Gambar --}}
   <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
     <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1.25rem;">
-      <div style="width:28px;height:28px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-        <svg width="14" height="14" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <div style="width:28px;height:28px;background:rgba(30,179,73,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
       </div>
       <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Media Visual</h3>
     </div>
@@ -191,7 +191,7 @@
 
   {{-- Actions --}}
   <div style="display:flex;flex-direction:column;gap:.75rem;">
-    <button type="submit" style="display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:1rem;background:#3B82F6;color:#fff;border:none;border-radius:12px;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(59,130,246,0.3);" onmouseover="this.style.background='#2563EB';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#3B82F6';this.style.transform='';">
+    <button type="submit" style="display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:1rem;background:#1eb349;color:#fff;border:none;border-radius:12px;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(30,179,73,0.3);" onmouseover="this.style.background='#1eb349';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#1eb349';this.style.transform='';">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
       {{ $g ? 'Update Proyek' : 'Simpan Proyek' }}
     </button>

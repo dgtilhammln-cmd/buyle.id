@@ -11,9 +11,9 @@
     </div>
     <div style="display:flex;align-items:center;gap:1rem;">
       <a href="{{ route('admin.coupons.create') }}"
-        style="display:inline-flex;align-items:center;gap:.5rem;background:#3B82F6;color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;text-decoration:none;transition:all .2s;box-shadow:0 4px 14px rgba(59,130,246,0.35);"
-        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(59,130,246,0.4)'"
-        onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(59,130,246,0.35)'">
+        style="display:inline-flex;align-items:center;gap:.5rem;background:#1eb349;color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;text-decoration:none;transition:all .2s;box-shadow:0 4px 14px rgba(30,179,73,0.35);"
+        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(30,179,73,0.4)'"
+        onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(30,179,73,0.35)'">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <line x1="12" y1="5" x2="12" y2="19" />
           <line x1="5" y1="12" x2="19" y2="12" />
@@ -73,7 +73,7 @@
                 @endif
                 
                 <div style="display:flex;gap:.5rem;">
-                  <a href="{{ route('admin.coupons.edit', $c->id) }}" style="color:#3B82F6;background:#f0fdf4;border-radius:8px;padding:6px 10px;text-decoration:none;transition:background .2s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'" title="Edit">
+                  <a href="{{ route('admin.coupons.edit', $c->id) }}" style="color:#1eb349;background:#f0fdf4;border-radius:8px;padding:6px 10px;text-decoration:none;transition:background .2s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'" title="Edit">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                   </a>
                   <form action="{{ route('admin.coupons.destroy', $c->id) }}" method="POST" onsubmit="return confirm('Yakin hapus?');" style="margin:0;">

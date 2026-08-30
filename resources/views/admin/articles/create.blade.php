@@ -27,7 +27,7 @@
     outline: none; font-family: inherit; box-sizing: border-box;
 }
 .form-input:focus, .form-select:focus, .form-textarea:focus {
-    border-color: #3B82F6; background: #fff; box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
+    border-color: #1eb349; background: #fff; box-shadow: 0 0 0 4px rgba(30,179,73,0.1);
 }
 .form-textarea { resize: vertical; min-height: 80px; }
 .char-count { font-size: 0.75rem; color: #94A3B8; margin-top: 0.35rem; text-align: right; }
@@ -45,14 +45,14 @@
     border: 1.5px solid #E2E8F0; border-radius: 0 0 12px 12px; min-height: 380px;
     padding: 1.5rem; font-size: 1rem; line-height: 1.8; color: #1E293B; background: #fff; outline: none;
 }
-.editor-area:focus { border-color: #3B82F6; }
+.editor-area:focus { border-color: #1eb349; }
 .img-preview { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; margin-bottom: 0.75rem; border: 1px solid #E2E8F0; }
 .btn-primary-new {
-    background: #3B82F6; color: #fff; border: none; padding: 0.875rem 1.5rem; border-radius: 12px;
+    background: #1eb349; color: #fff; border: none; padding: 0.875rem 1.5rem; border-radius: 12px;
     font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center;
-    justify-content: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 4px 14px rgba(59,130,246,0.3); width: 100%;
+    justify-content: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 4px 14px rgba(30,179,73,0.3); width: 100%;
 }
-.btn-primary-new:hover { background: #2563EB; transform: translateY(-2px); }
+.btn-primary-new:hover { background: #1eb349; transform: translateY(-2px); }
 .btn-outline-new {
     background: #fff; color: #64748B; border: 1.5px solid #E2E8F0; padding: 0.875rem 1.5rem;
     border-radius: 12px; font-weight: 600; font-size: 0.9rem; cursor: pointer;
@@ -61,7 +61,7 @@
 }
 .btn-outline-new:hover { background: #F8FAFC; color: #1E293B; }
 .switch-label { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
-.switch-input { width: 20px; height: 20px; accent-color: #3B82F6; cursor: pointer; }
+.switch-input { width: 20px; height: 20px; accent-color: #1eb349; cursor: pointer; }
 .switch-text { font-size: 0.9rem; font-weight: 600; color: #334155; }
 </style>
 
@@ -141,7 +141,7 @@
             <div class="premium-card">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
                     <h3 style="font-size:.85rem;font-weight:700;color:#1E293B;text-transform:uppercase;letter-spacing:.05em;margin:0;">FAQ (Tanya Jawab)</h3>
-                    <button type="button" onclick="addFaq()" class="editor-btn" style="color:#3B82F6;">
+                    <button type="button" onclick="addFaq()" class="editor-btn" style="color:#1eb349;">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         Tambah FAQ
                     </button>
@@ -288,7 +288,7 @@ function toggleHtml() {
     if (htmlMode) {
         textarea.value = editor.innerHTML;
         editor.style.display = 'none'; textarea.style.display = 'block';
-        btn.style.background = '#3B82F6'; btn.style.color = '#fff';
+        btn.style.background = '#1eb349'; btn.style.color = '#fff';
     } else {
         editor.innerHTML = textarea.value;
         textarea.style.display = 'none'; editor.style.display = 'block';

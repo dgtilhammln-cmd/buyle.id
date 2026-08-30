@@ -27,7 +27,7 @@
       </div>
       <div style="display:flex;align-items:center;gap:.5rem;">
         <a href="{{ route('admin.product-categories.edit', $cat) }}"
-          style="display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .875rem;border-radius:8px;background:#EFF6FF;color:#2563EB;font-size:.8rem;font-weight:600;text-decoration:none;">
+          style="display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .875rem;border-radius:8px;background:#f0fdf4;color:#1eb349;font-size:.8rem;font-weight:600;text-decoration:none;">
           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           Edit
         </a>
@@ -63,7 +63,7 @@
             <td style="padding:.5rem .75rem;font-size:.8rem;color:#64748B;max-width:260px;">{{ Str::limit($sub->description, 60) }}</td>
             <td style="padding:.5rem .75rem;text-align:right;white-space:nowrap;">
               <button onclick="openEditSub({{ $sub->id }}, '{{ addslashes($sub->name) }}', '{{ $sub->slug }}', '{{ addslashes($sub->description) }}', '{{ addslashes($sub->contoh_produk) }}')"
-                style="padding:.3rem .7rem;border-radius:6px;background:#EFF6FF;color:#2563EB;font-size:.75rem;font-weight:600;border:none;cursor:pointer;margin-right:.3rem;">Edit</button>
+                style="padding:.3rem .7rem;border-radius:6px;background:#f0fdf4;color:#1eb349;font-size:.75rem;font-weight:600;border:none;cursor:pointer;margin-right:.3rem;">Edit</button>
               <form action="{{ route('admin.product-categories.sub.destroy', $sub) }}" method="POST" style="display:inline;" onsubmit="return confirm('Hapus sub-kategori ini?')">
                 @csrf @method('DELETE')
                 <button type="submit" style="padding:.3rem .7rem;border-radius:6px;background:#FEF2F2;color:#DC2626;font-size:.75rem;font-weight:600;border:none;cursor:pointer;">Hapus</button>

@@ -29,7 +29,7 @@
       @if($user->avatar)
         <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;margin:0 auto 1rem;display:block;">
       @else
-        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#8B5CF6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.75rem;margin:0 auto 1rem;">
+        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg, #1eb349, #a5cf37);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.75rem;margin:0 auto 1rem;">
           {{ strtoupper(substr($user->name,0,1)) }}
         </div>
       @endif
@@ -67,7 +67,7 @@
           @endif
         </button>
       </form>
-      <button onclick="document.getElementById('pw-modal').style.display='flex'" style="width:100%;padding:.75rem;background:#f0fdf4;color:#1D4ED8;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.875rem;display:flex;align-items:center;justify-content:center;gap:.5rem;">
+      <button onclick="document.getElementById('pw-modal').style.display='flex'" style="width:100%;padding:.75rem;background:#f0fdf4;color:#16a34a;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.875rem;display:flex;align-items:center;justify-content:center;gap:.5rem;">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
         Ganti Password
       </button>
@@ -128,7 +128,7 @@
           <div style="font-size:.75rem;color:#94A3B8;">{{ $addr->city }}, {{ $addr->province }} {{ $addr->postal_code }}</div>
           
           <div style="display:flex; gap:1rem; align-items:center; margin-top:.5rem;">
-              @if($addr->is_default)<span style="font-size:.7rem;color:#1D4ED8;font-weight:700;display:inline-flex;align-items:center;gap:0.25rem;"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Utama</span>@endif
+              @if($addr->is_default)<span style="font-size:.7rem;color:#16a34a;font-weight:700;display:inline-flex;align-items:center;gap:0.25rem;"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Utama</span>@endif
               @if($addr->latitude && $addr->longitude)
                   <a href="https://maps.google.com/?q={{ $addr->latitude }},{{ $addr->longitude }}" target="_blank" style="font-size:.75rem;color:#16A34A;text-decoration:none;font-weight:700;display:inline-flex;align-items:center;gap:0.25rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>Buka di Google Maps</a>
               @endif

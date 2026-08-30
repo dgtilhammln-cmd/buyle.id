@@ -70,7 +70,7 @@
     outline: none;
     transition: all 0.2s;
 }
-.filter-input:focus { border-color: #3B82F6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+.filter-input:focus { border-color: #1eb349; box-shadow: 0 0 0 3px rgba(30,179,73,0.1); }
 
 .export-btn {
     padding: 0.5rem 1rem;
@@ -128,7 +128,7 @@
 {{-- Stat Cards --}}
 <div class="stats-grid">
   @foreach([
-    ['Total Laporan', $stats['total'], '#3B82F6', 'rgba(59,130,246,0.1)', 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22,6 12,13 2,6'],
+    ['Total Laporan', $stats['total'], '#1eb349', 'rgba(30,179,73,0.1)', 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22,6 12,13 2,6'],
     ['Hari Ini', $stats['today'], '#10B981', 'rgba(16,213,129,0.1)', 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
     ['Bulan Ini', $stats['this_month'], '#8B5CF6', 'rgba(139,92,246,0.1)', 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'],
     ['Belum Ditindak', $stats['new'], '#F59E0B', 'rgba(245,158,11,0.1)', 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'],
@@ -172,7 +172,7 @@
           </td>
           <td class="td-cell">
             <div style="font-size:.85rem;color:#334155;font-weight:600;white-space:nowrap;">{{ $lead->phone }}</div>
-            @if($lead->email)<div style="font-size:.75rem;color:#3B82F6;margin-top:2px;">{{ $lead->email }}</div>@endif
+            @if($lead->email)<div style="font-size:.75rem;color:#1eb349;margin-top:2px;">{{ $lead->email }}</div>@endif
           </td>
           <td class="td-cell" style="font-size:.85rem;color:#475569;max-width:160px;">
             <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;">{{ $lead->product ?: '—' }}</span>
@@ -182,7 +182,7 @@
               $src = $lead->source ?? 'Website';
               $srcColor = match(true) {
                 str_contains($src,'Hero')     => '#EAB308', // Yellow
-                str_contains($src,'Navbar')   => '#3B82F6', // Blue
+                str_contains($src,'Navbar')   => '#1eb349', // Blue
                 str_contains($src,'Footer')   => '#8B5CF6', // Purple
                 str_contains($src,'Artikel')  => '#F97316', // Orange
                 str_contains($src,'Layanan')  => '#10B981', // Green
@@ -214,7 +214,7 @@
             @php
               $sc = match($lead->status) {
                 'new'       => ['#F59E0B','rgba(245,158,11,.1)','Baru'],
-                'contacted' => ['#3B82F6','rgba(59,130,246,.1)','Diproses'],
+                'contacted' => ['#1eb349','rgba(59,130,246,.1)','Diproses'],
                 'closed'    => ['#10B981','rgba(16,213,129,.1)','Selesai'],
                 default     => ['#64748B','rgba(100,116,139,.1)','Lainnya'],
               };
@@ -223,7 +223,7 @@
           </td>
           <td class="td-cell">
             <div style="display:flex;gap:.75rem;align-items:center;">
-              <a href="{{ route('admin.leads.show',$lead) }}" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:#F1F5F9;color:#3B82F6;border-radius:8px;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='#3B82F6';this.style.color='#fff';" onmouseout="this.style.background='#F1F5F9';this.style.color='#3B82F6';">
+              <a href="{{ route('admin.leads.show',$lead) }}" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:#F1F5F9;color:#1eb349;border-radius:8px;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='#1eb349';this.style.color='#fff';" onmouseout="this.style.background='#F1F5F9';this.style.color='#1eb349';">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" title="Lihat"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </a>
               

@@ -15,8 +15,8 @@
 <div style="background:#fff;border-radius:20px;padding:1.5rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
   {{-- Header --}}
   <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1rem;">
-    <div style="width:28px;height:28px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-      <svg width="14" height="14" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+    <div style="width:28px;height:28px;background:rgba(30,179,73,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+      <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
     </div>
     <h3 style="font-size:.8rem;font-weight:800;color:#1E293B;margin:0;">{{ $imgLabel }}</h3>
   </div>
@@ -36,7 +36,7 @@
   @endif
 
   {{-- New file preview (shown after picking new file) --}}
-  <div id="{{ $imgPreviewId }}_newwrap" style="display:none;position:relative;border-radius:10px;overflow:hidden;border:2px solid #3B82F6;margin-bottom:.75rem;">
+  <div id="{{ $imgPreviewId }}_newwrap" style="display:none;position:relative;border-radius:10px;overflow:hidden;border:2px solid #1eb349;margin-bottom:.75rem;">
     <img id="{{ $imgPreviewId }}_new" src="" style="width:100%;height:140px;object-fit:cover;display:block;">
     <button type="button" onclick="removeNewImg('{{ $imgInputId }}','{{ $imgPreviewId }}')"
       style="position:absolute;top:.375rem;right:.375rem;width:28px;height:28px;background:rgba(239,68,68,0.95);border:none;border-radius:6px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.3);">
@@ -51,10 +51,10 @@
   <div id="{{ $imgPreviewId }}_trigger"
        onclick="document.getElementById('{{ $imgInputId }}').click()"
        style="display:{{ $currentSrc ? 'none' : 'flex' }};flex-direction:column;align-items:center;gap:.5rem;padding:1.25rem;border:2px dashed #E4E7F0;border-radius:12px;cursor:pointer;transition:all .2s;text-align:center;"
-       onmouseover="this.style.borderColor='#3B82F6';this.style.background='#F0F6FF'"
+       onmouseover="this.style.borderColor='#1eb349';this.style.background='#F0F6FF'"
        onmouseout="this.style.borderColor='#E4E7F0';this.style.background='transparent'">
     <div style="width:40px;height:40px;background:#f0fdf4;border-radius:10px;display:flex;align-items:center;justify-content:center;">
-      <svg width="20" height="20" fill="none" stroke="#3B82F6" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
     </div>
     <div style="font-size:.8rem;font-weight:700;color:#1E293B;">Klik untuk upload</div>
     <div style="font-size:.72rem;color:#94A3B8;">JPG, PNG, WebP — Maks 8MB</div>
@@ -63,7 +63,7 @@
   @if($currentSrc)
   <div style="text-align:center;margin-top:.5rem;">
     <button type="button" onclick="document.getElementById('{{ $imgInputId }}').click()"
-      style="font-size:.72rem;font-weight:600;color:#3B82F6;background:none;border:none;cursor:pointer;text-decoration:underline;">
+      style="font-size:.72rem;font-weight:600;color:#1eb349;background:none;border:none;cursor:pointer;text-decoration:underline;">
       Ganti foto
     </button>
   </div>
@@ -135,7 +135,7 @@ if (typeof window._imgUploadInit === 'undefined') {
         btnCancel.style.cssText = 'padding:.75rem 1.5rem;background:#F1F5F9;color:#475569;border:none;border-radius:12px;font-weight:700;cursor:pointer;';
         var btnCrop = document.createElement('button');
         btnCrop.innerText = 'Crop & Simpan'; btnCrop.type = 'button';
-        btnCrop.style.cssText = 'padding:.75rem 1.5rem;background:#3B82F6;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;';
+        btnCrop.style.cssText = 'padding:.75rem 1.5rem;background:#1eb349;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;';
         btnWrapper.appendChild(btnCancel); btnWrapper.appendChild(btnCrop);
         container.appendChild(title); container.appendChild(imgWrapper); container.appendChild(btnWrapper);
         modal.appendChild(container); document.body.appendChild(modal);

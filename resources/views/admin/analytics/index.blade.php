@@ -19,7 +19,7 @@
     <input type="date" id="date-from" style="padding: 0.375rem 0.5rem; font-size: 0.8rem; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; color: var(--text1); font-family: inherit; font-weight:600; outline:none;">
     <span style="color: var(--text3); font-weight:600; font-size:0.8rem;">s/d</span>
     <input type="date" id="date-to" style="padding: 0.375rem 0.5rem; font-size: 0.8rem; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; color: var(--text1); font-family: inherit; font-weight:600; outline:none;">
-    <button onclick="loadCustomData()" style="padding: 0.4rem 1rem; font-size: 0.8rem; background:#3B82F6; color:#fff; border:none; border-radius:6px; font-weight:700; cursor:pointer; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">Filter</button>
+    <button onclick="loadCustomData()" style="padding: 0.4rem 1rem; font-size: 0.8rem; background:#1eb349; color:#fff; border:none; border-radius:6px; font-weight:700; cursor:pointer; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">Filter</button>
     
     <div style="border-left: 1px solid var(--border); margin: 0 0.5rem; height: 30px;"></div>
     
@@ -34,7 +34,7 @@
 <div style="display:flex;gap:0.75rem;margin-bottom:2rem;flex-wrap:wrap;align-items:center;">
     <span style="font-size:0.875rem;color:var(--text3);font-weight:700;">Periode Cepat:</span>
     @foreach(['7'=>'7 Hari','30'=>'30 Hari','365'=>'1 Tahun'] as $p=>$l)
-    <button onclick="loadData('{{ $p }}')" id="btn-{{ $p }}" style="padding:0.4rem 1rem;font-size:0.8rem;font-weight:700;border:none;background:{{ $p==='30'?'rgba(59, 130, 246, 0.1)':'#FFFFFF' }};color:{{ $p==='30'?'#3B82F6':'var(--text3)' }};border-radius:100px;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 10px rgba(0,0,0,0.02);">{{ $l }}</button>
+    <button onclick="loadData('{{ $p }}')" id="btn-{{ $p }}" style="padding:0.4rem 1rem;font-size:0.8rem;font-weight:700;border:none;background:{{ $p==='30'?'rgba(59, 130, 246, 0.1)':'#FFFFFF' }};color:{{ $p==='30'?'#1eb349':'var(--text3)' }};border-radius:100px;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 10px rgba(0,0,0,0.02);">{{ $l }}</button>
     @endforeach
 </div>
 
@@ -42,8 +42,8 @@
 <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-bottom:1rem;">
     {{-- Visitor --}}
     <div style="background:#FFFFFF;border-radius:20px;padding:1.5rem;box-shadow:0 4px 15px rgba(0,0,0,0.03);display:flex;align-items:center;gap:1.25rem;transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
-      <div style="width:50px;height:50px;background:rgba(59,130,246,0.1);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-        <svg width="24" height="24" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      <div style="width:50px;height:50px;background:rgba(30,179,73,0.1);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="24" height="24" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
       </div>
       <div>
         <div style="font-size:.75rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem;">Visitor</div>
@@ -156,9 +156,9 @@
                 <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;text-transform:uppercase;letter-spacing:.05em;margin:0 0 .2rem;">Pengunjung Aktif (1 Jam Terakhir)</h3>
                 <p style="font-size:.75rem;color:#64748B;margin:0;">Berdasarkan kunjungan terbaru</p>
             </div>
-            <div style="display:flex;align-items:center;gap:0.4rem;background:rgba(59,130,246,0.1);padding:.35rem .75rem;border-radius:100px;">
-                <span style="width:7px;height:7px;background:#3B82F6;border-radius:50%;animation:pulse-dot 1.5s infinite .5s;"></span>
-                <span style="font-size:.7rem;font-weight:700;color:#3B82F6;">LIVE</span>
+            <div style="display:flex;align-items:center;gap:0.4rem;background:rgba(30,179,73,0.1);padding:.35rem .75rem;border-radius:100px;">
+                <span style="width:7px;height:7px;background:#1eb349;border-radius:50%;animation:pulse-dot 1.5s infinite .5s;"></span>
+                <span style="font-size:.7rem;font-weight:700;color:#1eb349;">LIVE</span>
             </div>
         </div>
         <div style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.5rem;padding:1.5rem 0;">
@@ -226,7 +226,7 @@ async function loadData(period) {
     ['7','30','365'].forEach(p => {
         const btn = document.getElementById('btn-' + p);
         btn.style.background = p === period ? 'rgba(59, 130, 246, 0.1)' : '#FFFFFF';
-        btn.style.color = p === period ? '#3B82F6' : 'var(--text3)';
+        btn.style.color = p === period ? '#1eb349' : 'var(--text3)';
     });
 
     setStatsLoading();
@@ -268,7 +268,7 @@ function renderData(data) {
     gW.addColorStop(1, 'rgba(16,185,129,0.00)');
 
     const gL = chartCtx.createLinearGradient(0, 0, 0, 300);
-    gL.addColorStop(0, 'rgba(59,130,246,0.25)');
+    gL.addColorStop(0, 'rgba(30,179,73,0.25)');
     gL.addColorStop(1, 'rgba(59,130,246,0.00)');
 
     // Update period label
@@ -383,7 +383,7 @@ function renderData(data) {
             const path = p.page_url ? (new URL(p.page_url, window.location.origin)).pathname : '/';
             return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.625rem 0;border-bottom:1px solid var(--border);font-size:0.875rem;">
                 <span style="color:var(--text2);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:75%;">${path}</span>
-                <span style="font-weight:800;color:#3B82F6;flex-shrink:0;">${parseInt(p.views).toLocaleString()}</span>
+                <span style="font-weight:800;color:#1eb349;flex-shrink:0;">${parseInt(p.views).toLocaleString()}</span>
             </div>`;
         }).join('');
     } else {
@@ -408,7 +408,7 @@ function renderData(data) {
                     <div style="font-weight:700;color:var(--text2);">${pct}% <span style="color:var(--text3);font-size:0.75rem;font-weight:500;">(${count})</span></div>
                 </div>
                 <div style="width:100%;background:var(--bg3);border-radius:100px;height:6px;overflow:hidden;">
-                    <div style="height:100%;background:#3B82F6;border-radius:100px;width:${pct}%;"></div>
+                    <div style="height:100%;background:#1eb349;border-radius:100px;width:${pct}%;"></div>
                 </div>
             </div>`;
         }).join('');
@@ -421,7 +421,7 @@ function renderData(data) {
     const locEl = document.getElementById('location-list');
     if (data.locations && Object.keys(data.locations).length) {
         const totalLoc = Object.values(data.locations).reduce((a, b) => a + b, 0);
-        const colors = ['#3B82F6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#F97316','#6366F1','#14B8A6'];
+        const colors = ['#1eb349','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#F97316','#6366F1','#14B8A6'];
         locEl.innerHTML = Object.entries(data.locations).map(([loc, count], i) => {
             const pct = Math.round((count / totalLoc) * 100);
             const color = colors[i % colors.length];

@@ -17,11 +17,11 @@
       <div style="margin-bottom:1.25rem;">
         <label style="font-size:.8rem;font-weight:700;color:#64748B;display:block;margin-bottom:.5rem;">TIPE ICON</label>
         <div style="display:flex;gap:.75rem;">
-          <label style="flex:1;display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border:2px solid {{ old('icon_type', $usp->icon_type ?? 'emoji') === 'emoji' ? '#3B82F6' : '#E2E8F0' }};border-radius:12px;cursor:pointer;">
+          <label style="flex:1;display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border:2px solid {{ old('icon_type', $usp->icon_type ?? 'emoji') === 'emoji' ? '#1eb349' : '#E2E8F0' }};border-radius:12px;cursor:pointer;">
             <input type="radio" name="icon_type" value="emoji" {{ old('icon_type', $usp->icon_type ?? 'emoji') === 'emoji' ? 'checked' : '' }} onchange="document.getElementById('emoji-wrap').style.display='block';document.getElementById('upload-wrap').style.display='none';">
             <span style="font-size:.875rem;font-weight:600;color:#1E293B;">Emoji / Teks</span>
           </label>
-          <label style="flex:1;display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border:2px solid {{ old('icon_type', $usp->icon_type ?? 'emoji') === 'upload' ? '#3B82F6' : '#E2E8F0' }};border-radius:12px;cursor:pointer;">
+          <label style="flex:1;display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border:2px solid {{ old('icon_type', $usp->icon_type ?? 'emoji') === 'upload' ? '#1eb349' : '#E2E8F0' }};border-radius:12px;cursor:pointer;">
             <input type="radio" name="icon_type" value="upload" {{ old('icon_type', $usp->icon_type ?? '') === 'upload' ? 'checked' : '' }} onchange="document.getElementById('emoji-wrap').style.display='none';document.getElementById('upload-wrap').style.display='block';">
             <span style="font-size:.875rem;font-weight:600;color:#1E293B;">Upload Gambar</span>
           </label>
@@ -61,7 +61,7 @@
       </div>
 
       <div style="display:flex;gap:.75rem;">
-        <button type="submit" style="flex:1;padding:.875rem;background:#3B82F6;color:#fff;font-weight:700;font-size:.875rem;border:none;border-radius:12px;cursor:pointer;">
+        <button type="submit" style="flex:1;padding:.875rem;background:#1eb349;color:#fff;font-weight:700;font-size:.875rem;border:none;border-radius:12px;cursor:pointer;">
           {{ isset($usp) ? 'Simpan Perubahan' : 'Tambah USP' }}
         </button>
         <a href="{{ route('admin.usp.index') }}" style="padding:.875rem 1.5rem;border:1.5px solid #E2E8F0;border-radius:12px;font-weight:600;font-size:.875rem;text-decoration:none;color:#64748B;">Batal</a>

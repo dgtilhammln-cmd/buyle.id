@@ -27,9 +27,9 @@
             <label style="font-size:.7rem;font-weight:600;color:rgba(255,255,255,.5);display:block;margin-bottom:.5rem;">Warna / Gradient CSS</label>
             <div style="display:flex;gap:.5rem;align-items:center;">
                 <input type="color" id="colorPicker" value="#1e3a8a" style="width:42px;height:42px;border-radius:8px;border:none;cursor:pointer;padding:2px;background:transparent;" title="Pilih warna solid" onchange="document.getElementById('gradientInput').value = this.value;">
-                <input type="text" name="hero_oval_gradient" id="gradientInput" class="form-input" value="{{ \App\Models\Setting::get('hero_oval_gradient', 'linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)') }}" placeholder="linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)" style="flex:1;">
+                <input type="text" name="hero_oval_gradient" id="gradientInput" class="form-input" value="{{ \App\Models\Setting::get('hero_oval_gradient', 'linear-gradient(180deg, #1e3a8a 0%, #1eb349 100%)') }}" placeholder="linear-gradient(180deg, #1e3a8a 0%, #1eb349 100%)" style="flex:1;">
             </div>
-            <p style="font-size:.68rem;color:rgba(255,255,255,.25);margin:.35rem 0 0;">Klik picker untuk warna solid, atau ketik manual untuk gradient. Contoh: <code style="color:#a5cf37;">linear-gradient(135deg, #1e3a8a, #3b82f6)</code></p>
+            <p style="font-size:.68rem;color:rgba(255,255,255,.25);margin:.35rem 0 0;">Klik picker untuk warna solid, atau ketik manual untuk gradient. Contoh: <code style="color:#a5cf37;">linear-gradient(135deg, #1e3a8a, #1eb349)</code></p>
         </div>
         <button type="submit" class="btn-primary" style="height:42px;padding:0 1.5rem;white-space:nowrap;flex-shrink:0;">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-right:.35rem;"><polyline points="20 6 9 17 4 12"/></svg>

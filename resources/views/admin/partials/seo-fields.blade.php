@@ -20,7 +20,7 @@
       <input type="text" name="meta_title" value="{{ old('meta_title', $s?->getRawOriginal('meta_title')) }}" maxlength="70" required
         oninput="document.getElementById('seo-mt-cnt').textContent=this.value.length;seoTitleBar(this)"
         style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .2s;"
-        onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'"
+        onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'"
         placeholder="Judul SEO (idealnya 50–60 karakter)">
       {{-- Progress bar --}}
       <div style="margin-top:.375rem;height:3px;background:#F1F5F9;border-radius:100px;overflow:hidden;">
@@ -37,7 +37,7 @@
       <textarea name="meta_desc" rows="3" maxlength="160" required
         oninput="document.getElementById('seo-md-cnt').textContent=this.value.length;seoDescBar(this)"
         style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;resize:vertical;box-sizing:border-box;transition:border-color .2s;"
-        onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'"
+        onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'"
         placeholder="Deskripsi singkat halaman untuk mesin pencari (idealnya 120–160 karakter)...">{{ old('meta_desc', $s?->getRawOriginal('meta_desc')) }}</textarea>
       <div style="margin-top:.375rem;height:3px;background:#F1F5F9;border-radius:100px;overflow:hidden;">
         <div id="seo-md-bar" style="height:100%;border-radius:100px;transition:width .3s,background .3s;background:#10B981;width:{{ min(100, round(strlen(old('meta_desc', $s?->getRawOriginal('meta_desc') ?? ''))/160*100)) }}%;"></div>
@@ -49,7 +49,7 @@
       <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Meta Keywords <span style="color:#EF4444;">*</span> <span style="font-weight:500;color:#94A3B8;font-size:.75rem;">— pisah dengan koma</span></label>
       <input type="text" name="meta_keywords" value="{{ old('meta_keywords', $s?->meta_keywords) }}" required
         style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .2s;"
-        onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'"
+        onfocus="this.style.borderColor='#1eb349';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'"
         placeholder="crane surabaya, overhead crane, lift industri">
     </div>
   </div>

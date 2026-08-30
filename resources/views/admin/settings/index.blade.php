@@ -27,10 +27,10 @@
     width: 34px !important;
     height: 34px !important;
     padding: 8px !important;
-    background: rgba(59,130,246,0.1) !important;
+    background: rgba(30,179,73,0.1) !important;
     border-radius: 10px !important;
-    stroke: #3B82F6 !important;
-    color: #3B82F6 !important;
+    stroke: #1eb349 !important;
+    color: #1eb349 !important;
     box-sizing: border-box !important;
 }
 .tab-section [style*="background:#FFFFFF"] > div:first-child[style*="display:flex"] > div {
@@ -57,7 +57,7 @@
     transition: all .2s !important;
 }
 .form-input:focus {
-    border-color: #3B82F6 !important;
+    border-color: #1eb349 !important;
     background: #ffffff !important;
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
 }
@@ -91,7 +91,7 @@ input[type="file"].form-input {
     cursor: pointer !important;
 }
 input[type="file"].form-input:hover {
-    border-color: #3B82F6 !important;
+    border-color: #1eb349 !important;
     background: #F8FAFF !important;
 }
 input[type="file"]::file-selector-button {
@@ -148,19 +148,19 @@ button.tab-btn-active {
 }
 /* 9. Premium Buttons */
 button[type="submit"][style*="background:#1eb349"] {
-    background: #3B82F6 !important;
+    background: #1eb349 !important;
     color: #fff !important;
     font-size: .875rem !important;
     font-weight: 700 !important;
     padding: .625rem 1.25rem !important;
     border-radius: 10px !important;
     border: none !important;
-    box-shadow: 0 4px 14px rgba(59,130,246,0.3) !important;
+    box-shadow: 0 4px 14px rgba(30,179,73,0.3) !important;
     transition: all .2s !important;
 }
 button[type="submit"][style*="background:#1eb349"]:hover {
     transform: translateY(-1px) !important;
-    box-shadow: 0 6px 20px rgba(59,130,246,0.4) !important;
+    box-shadow: 0 6px 20px rgba(30,179,73,0.4) !important;
 }
 a[target="_blank"][style*="border:1px solid"] {
     background: #fff !important;
@@ -173,8 +173,8 @@ a[target="_blank"][style*="border:1px solid"] {
     transition: all .2s !important;
 }
 a[target="_blank"][style*="border:1px solid"]:hover {
-    border-color: #3B82F6 !important;
-    color: #3B82F6 !important;
+    border-color: #1eb349 !important;
+    color: #1eb349 !important;
     background: #F8FAFC !important;
 }
 button[style*="background:#25D366"] {

@@ -7,19 +7,19 @@
 .lic-card { background:#fff; border-radius:20px; padding:2rem; box-shadow:0 2px 20px rgba(0,0,0,0.05); }
 .lic-badge-active { display:inline-flex;align-items:center;gap:.4rem;background:#ECFDF5;border:1.5px solid #6EE7B7;color:#065F46;font-size:.8rem;font-weight:800;padding:.4rem 1rem;border-radius:100px; }
 .lic-badge-suspended { display:inline-flex;align-items:center;gap:.4rem;background:#FEF2F2;border:1.5px solid #FCA5A5;color:#991B1B;font-size:.8rem;font-weight:800;padding:.4rem 1rem;border-radius:100px; }
-.lic-btn-activate { width:100%;padding:1rem;background:#3B82F6;color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s;letter-spacing:.01em; }
-.lic-btn-activate:hover { background:#2563EB;transform:translateY(-1px);box-shadow:0 6px 20px rgba(59,130,246,0.35); }
+.lic-btn-activate { width:100%;padding:1rem;background:#1eb349;color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s;letter-spacing:.01em; }
+.lic-btn-activate:hover { background:#1eb349;transform:translateY(-1px);box-shadow:0 6px 20px rgba(30,179,73,0.35); }
 .lic-btn-suspend { width:100%;padding:1rem;background:#EF4444;color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s;letter-spacing:.01em; }
 .lic-btn-suspend:hover { background:#DC2626;transform:translateY(-1px);box-shadow:0 6px 20px rgba(239,68,68,0.35); }
 .lic-input { width:100%;padding:.75rem 1rem;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.95rem;font-family:inherit;outline:none;transition:border-color .2s;background:#F8FAFC;box-sizing:border-box; }
-.lic-input:focus { border-color:#3B82F6;background:#fff; }
+.lic-input:focus { border-color:#1eb349;background:#fff; }
 </style>
 
 <div style="max-width:640px;margin:0 auto;">
 
   {{-- Page Header --}}
   <div style="display:flex;align-items:center;gap:1rem;margin-bottom:2rem;">
-    <div style="width:44px;height:44px;background:linear-gradient(135deg,#3B82F6,#6366F1);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+    <div style="width:44px;height:44px;background:linear-gradient(135deg, #1eb349, #a5cf37);border-radius:12px;display:flex;align-items:center;justify-content:center;">
       <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
     </div>
     <div>
@@ -83,9 +83,9 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
           <label style="cursor:pointer;" id="lbl-active">
             <input type="radio" name="status" value="active" {{ $status === 'active' ? 'checked' : '' }} style="display:none;" onchange="updateStatusUI()">
-            <div id="card-active" style="padding:1rem;border:2px solid {{ $status === 'active' ? '#3B82F6' : '#E4E7F0' }};border-radius:12px;text-align:center;transition:all .2s;background:{{ $status === 'active' ? '#f0fdf4' : '#fff' }};">
-              <svg width="24" height="24" fill="none" stroke="{{ $status === 'active' ? '#3B82F6' : '#94A3B8' }}" stroke-width="2" viewBox="0 0 24 24" style="margin-bottom:.5rem;"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              <div style="font-size:.8rem;font-weight:800;color:{{ $status === 'active' ? '#3B82F6' : '#64748B' }};">Aktifkan</div>
+            <div id="card-active" style="padding:1rem;border:2px solid {{ $status === 'active' ? '#1eb349' : '#E4E7F0' }};border-radius:12px;text-align:center;transition:all .2s;background:{{ $status === 'active' ? '#f0fdf4' : '#fff' }};">
+              <svg width="24" height="24" fill="none" stroke="{{ $status === 'active' ? '#1eb349' : '#94A3B8' }}" stroke-width="2" viewBox="0 0 24 24" style="margin-bottom:.5rem;"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <div style="font-size:.8rem;font-weight:800;color:{{ $status === 'active' ? '#1eb349' : '#64748B' }};">Aktifkan</div>
               <div style="font-size:.7rem;color:#94A3B8;margin-top:.2rem;">Website berjalan normal</div>
             </div>
           </label>
@@ -140,7 +140,7 @@ function updateStatusUI() {
   const btn = document.getElementById('submit-btn');
 
   if (isActive) {
-    cardActive.style.borderColor = '#3B82F6';
+    cardActive.style.borderColor = '#1eb349';
     cardActive.style.background = '#f0fdf4';
     cardSuspended.style.borderColor = '#E4E7F0';
     cardSuspended.style.background = '#fff';

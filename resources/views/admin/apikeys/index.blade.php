@@ -112,7 +112,7 @@ input:checked + .env-slider:before { transform:translateX(24px); }
                     <td>@include('admin.apikeys._key_cell', ['keyVal' => $settings->get('rajaongkir_api_key_sandbox',''), 'active' => !$isLive])</td>
                     <td>@include('admin.apikeys._key_cell', ['keyVal' => $settings->get('rajaongkir_api_key',''), 'active' => $isLive])</td>
                     <td style="text-align:center;">
-                        <button onclick="openApiModal('rajaongkir')" style="background:transparent;border:none;color:#3B82F6;font-weight:600;cursor:pointer;font-size:.85rem;">Edit ➔</button>
+                        <button onclick="openApiModal('rajaongkir')" style="background:transparent;border:none;color:#1eb349;font-weight:600;cursor:pointer;font-size:.85rem;">Edit ➔</button>
                     </td>
                 </tr>
                 {{-- Shipping Delivery --}}
@@ -129,7 +129,7 @@ input:checked + .env-slider:before { transform:translateX(24px); }
                     <td>@include('admin.apikeys._key_cell', ['keyVal' => $settings->get('shipping_delivery_api_key_sandbox',''), 'active' => !$isLive])</td>
                     <td>@include('admin.apikeys._key_cell', ['keyVal' => $settings->get('shipping_delivery_api_key',''), 'active' => $isLive])</td>
                     <td style="text-align:center;">
-                        <button onclick="openApiModal('delivery')" style="background:transparent;border:none;color:#3B82F6;font-weight:600;cursor:pointer;font-size:.85rem;">Edit ➔</button>
+                        <button onclick="openApiModal('delivery')" style="background:transparent;border:none;color:#1eb349;font-weight:600;cursor:pointer;font-size:.85rem;">Edit ➔</button>
                     </td>
                 </tr>
                 {{-- Payment API --}}
@@ -151,7 +151,7 @@ input:checked + .env-slider:before { transform:translateX(24px); }
                         </div>
                     </td>
                     <td style="text-align:center;">
-                        <button onclick="openApiModal('midtrans')" style="background:transparent;border:none;color:#3B82F6;font-weight:600;cursor:pointer;font-size:.85rem;">Edit ➔</button>
+                        <button onclick="openApiModal('midtrans')" style="background:transparent;border:none;color:#1eb349;font-weight:600;cursor:pointer;font-size:.85rem;">Edit ➔</button>
                     </td>
                 </tr>
                 {{-- QRISLY API --}}
@@ -173,7 +173,7 @@ input:checked + .env-slider:before { transform:translateX(24px); }
                         </div>
                     </td>
                     <td style="text-align:center;">
-                        <button onclick="openApiModal('qrisly')" style="background:transparent;border:none;color:#3B82F6;font-weight:600;cursor:pointer;font-size:.85rem;">Edit ➔</button>
+                        <button onclick="openApiModal('qrisly')" style="background:transparent;border:none;color:#1eb349;font-weight:600;cursor:pointer;font-size:.85rem;">Edit ➔</button>
                     </td>
                 </tr>
             </tbody>

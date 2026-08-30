@@ -82,7 +82,7 @@
     font-family: 'Montserrat', sans-serif; font-size: .85rem; outline: none;
     background: #F8FAFC; font-weight: 600; transition: all .2s; color: #0F172A;
 }
-.od-select:focus, .od-input:focus { border-color: #3B82F6; background: #fff; box-shadow: 0 0 0 4px rgba(59,130,246,0.1); }
+.od-select:focus, .od-input:focus { border-color: #1eb349; background: #fff; box-shadow: 0 0 0 4px rgba(30,179,73,0.1); }
 .od-btn {
     width: 100%; padding: .85rem; background: #0F172A; color: #fff; font-family: 'Montserrat', sans-serif;
     font-weight: 800; font-size: .9rem; border: none; border-radius: 12px; cursor: pointer; transition: all .2s;
@@ -97,7 +97,7 @@
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Kembali ke Daftar Pesanan
         </a>
-        <div class="od-status-pill" style="background:{{ $order->status->color() === 'red' ? '#FEF2F2' : ($order->status->color() === 'green' ? '#F0FDF4' : ($order->status->color() === 'yellow' ? '#FFFBEB' : '#f0fdf4')) }};color:{{ $order->status->color() === 'red' ? '#DC2626' : ($order->status->color() === 'green' ? '#16A34A' : ($order->status->color() === 'yellow' ? '#D97706' : '#2563EB')) }}; border: 1px solid currentColor;">
+        <div class="od-status-pill" style="background:{{ $order->status->color() === 'red' ? '#FEF2F2' : ($order->status->color() === 'green' ? '#F0FDF4' : ($order->status->color() === 'yellow' ? '#FFFBEB' : '#f0fdf4')) }};color:{{ $order->status->color() === 'red' ? '#DC2626' : ($order->status->color() === 'green' ? '#16A34A' : ($order->status->color() === 'yellow' ? '#D97706' : '#1eb349')) }}; border: 1px solid currentColor;">
             <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8"/></svg>
             Status: {{ $order->status->label() }}
         </div>
@@ -179,7 +179,7 @@
             {{-- Shipping Address --}}
             <div class="od-card">
                 <div class="od-card-title">
-                    <svg width="24" height="24" fill="none" stroke="#3B82F6" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+                    <svg width="24" height="24" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
                     Informasi Pengiriman
                 </div>
                 @if($order->shipping_address)
