@@ -20,7 +20,7 @@ class Product extends Model
         'meta_title', 'meta_desc', 'meta_keywords',
         // Kolom e-commerce (new)
         'price', 'sale_price', 'stock', 'weight', 'sku',
-        'product_category_id', 'is_featured',
+        'product_category_id', 'product_sub_category_id', 'is_featured',
         'product_type', 'file_type', 'digital_resource', 'seller_id', 'creator_group_id', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating', 'tiktok_video_url'
     ];
 
@@ -72,6 +72,14 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class, 'product_category_id');
+    }
+
+    /**
+     * Sub-Kategori produk yang menaungi produk ini.
+     */
+    public function subCategory(): BelongsTo
+    {
+        return $this->belongsTo(ProductSubCategory::class, 'product_sub_category_id');
     }
 
     /**
