@@ -40,46 +40,40 @@
             z-index: 50;
         }
 
-        .cr-brand-box {
-            background: #111a13;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 18px;
-            padding: 0.75rem 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.65rem;
-            margin-right: 1.25rem;
+        .cr-brand-area {
+            padding: 0 1.25rem 0 0;
             margin-bottom: 2.25rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .cr-brand-logo-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
+        .cr-brand-area img {
+            height: 36px;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .cr-brand-logo-fallback {
+            height: 36px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .cr-brand-logo-dot {
+            width: 26px;
+            height: 26px;
+            border-radius: 7px;
             background: linear-gradient(135deg, #1eb349, #a5cf37);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
             font-weight: 900;
-            font-size: 0.9rem;
-            flex-shrink: 0;
-        }
-
-        .cr-brand-text {
-            font-size: 0.95rem;
-            font-weight: 800;
+            font-size: 0.85rem;
             color: #fff;
-            line-height: 1.1;
-        }
-
-        .cr-brand-sub {
-            font-size: 0.62rem;
-            color: #a3e635;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
         }
 
         .cr-nav {
@@ -364,10 +358,15 @@
 
     {{-- MOBILE TOPBAR --}}
     <div class="cr-mobile-bar">
-        <div style="display:flex;align-items:center;gap:0.5rem;">
-            <div class="cr-brand-logo-icon">B</div>
-            <div class="cr-brand-text">buyle.id <span style="color:#a3e635;font-size:0.7rem;">CREATOR</span></div>
-        </div>
+        @php $mobileLogo = \App\Models\Setting::get('logo'); @endphp
+        @if($mobileLogo)
+            <img src="{{ asset('storage/' . $mobileLogo) }}" alt="buyle.id" style="height:30px;width:auto;object-fit:contain;">
+        @else
+            <div style="display:flex;align-items:center;gap:0.4rem;">
+                <div style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#1eb349,#a5cf37);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.8rem;color:#fff;">B</div>
+                <span style="color:#fff;font-weight:700;font-size:0.95rem;">buyle.id</span>
+            </div>
+        @endif
         <button class="cr-mobile-toggle" id="crMobileToggle" aria-label="Menu">
             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <line x1="3" y1="6" x2="21" y2="6" />
@@ -376,6 +375,7 @@
             </svg>
         </button>
     </div>
+
 
     <div class="cr-overlay" id="crOverlay"></div>
 
@@ -388,17 +388,16 @@
             $storeSlug = $cp->store_slug ?? '';
         @endphp
 
-        {{-- Brand Box --}}
-        <div class="cr-brand-box">
+        {{-- Brand / Logo Only --}}
+        <div class="cr-brand-area">
             @if($logo)
-                <img src="{{ asset('storage/' . $logo) }}" alt="buyle.id" style="height:26px;width:auto;max-width:32px;object-fit:contain;">
+                <img src="{{ asset('storage/' . $logo) }}" alt="buyle.id">
             @else
-                <div class="cr-brand-logo-icon">B</div>
+                <div class="cr-brand-logo-fallback">
+                    <div class="cr-brand-logo-dot">B</div>
+                    buyle.id
+                </div>
             @endif
-            <div>
-                <div class="cr-brand-text">buyle.id</div>
-                <div class="cr-brand-sub">Creator Studio</div>
-            </div>
         </div>
 
         {{-- Nav Links --}}

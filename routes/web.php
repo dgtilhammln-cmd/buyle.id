@@ -429,6 +429,9 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
 
     // Laporan Penjualan
     Route::get('/sales-report', [\App\Http\Controllers\Creator\SellerReportController::class, 'index'])->name('sales.report');
+
+    // Realtime Stats API (AJAX polling for dashboard)
+    Route::get('/stats/realtime', [\App\Http\Controllers\Creator\SellerController::class, 'realtimeStats'])->name('stats.realtime');
 });
 
 // 3. Buyer Dashboard

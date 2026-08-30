@@ -9,12 +9,12 @@
         margin-bottom: 2rem;
     }
     .cr-dash-title {
-        font-size: 2rem;
-        font-weight: 900;
+        font-size: 1.75rem;
+        font-weight: 600;
         color: #0b120c;
-        letter-spacing: -0.03em;
+        letter-spacing: -0.01em;
         margin: 0;
-        line-height: 1.1;
+        line-height: 1.2;
     }
     .cr-dash-sub {
         font-size: 0.875rem;
@@ -60,11 +60,11 @@
         margin-bottom: 1.25rem;
     }
     .banner-title {
-        font-size: 1.75rem;
-        font-weight: 800;
+        font-size: 1.5rem;
+        font-weight: 700;
         color: #ffffff;
-        letter-spacing: -0.02em;
-        line-height: 1.15;
+        letter-spacing: -0.01em;
+        line-height: 1.2;
     }
     .banner-sub {
         font-size: 0.82rem;
@@ -94,10 +94,10 @@
         text-transform: uppercase;
     }
     .balance-val {
-        font-size: 1.85rem;
-        font-weight: 900;
+        font-size: 1.6rem;
+        font-weight: 700;
         color: #032d16;
-        letter-spacing: -0.03em;
+        letter-spacing: -0.02em;
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -148,12 +148,12 @@
         text-transform: uppercase;
     }
     .calendar-day {
-        font-size: 3rem;
-        font-weight: 900;
+        font-size: 2.75rem;
+        font-weight: 700;
         color: #0b120c;
-        line-height: 1.05;
-        margin: 0.15rem 0;
-        letter-spacing: -0.03em;
+        line-height: 1.1;
+        margin: 0.2rem 0;
+        letter-spacing: -0.02em;
     }
     .calendar-clock {
         font-size: 0.78rem;
@@ -268,11 +268,11 @@
         margin-bottom: 0.35rem;
     }
     .counter-value {
-        font-size: 2.25rem;
-        font-weight: 900;
+        font-size: 2rem;
+        font-weight: 700;
         color: #0b120c;
         line-height: 1;
-        letter-spacing: -0.03em;
+        letter-spacing: -0.02em;
     }
 
     /* Responsive */
@@ -322,9 +322,9 @@
     {{-- 2. Neon Lime Affiliate Balance Card --}}
     <div class="card-balance-neon">
         <div class="balance-label-sm">AFFILIATE BALANCE</div>
-        <div class="balance-val">
+        <div class="balance-val" id="rt-balance">
             Rp {{ number_format($availableBalance ?? $gmv ?? 0, 0, ',', '.') }}
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="opacity:0.7; cursor:pointer;" title="Saldo Siap Ditarik"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="opacity:0.7;" title="Saldo Siap Ditarik"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </div>
         <a href="{{ route('creator.payout.settings') }}" class="btn-withdraw-pill">
             WITHDRAW &rarr;
@@ -388,7 +388,7 @@
             </svg>
         </div>
         <div class="counter-label">TOTAL VIEWS</div>
-        <div class="counter-value">{{ number_format(($totalProducts * 12) + 24, 0, ',', '.') }}</div>
+        <div class="counter-value" id="rt-views">{{ number_format(($totalProducts * 12) + 24, 0, ',', '.') }}</div>
     </div>
 
     {{-- 6. Total Clicks / Transaksi Counter Card --}}
@@ -398,8 +398,8 @@
                 <path d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/>
             </svg>
         </div>
-        <div class="counter-label">TOTAL CLICKS</div>
-        <div class="counter-value">{{ number_format($totalTransactions ?? 0, 0, ',', '.') }}</div>
+        <div class="counter-label">TOTAL TRANSAKSI</div>
+        <div class="counter-value" id="rt-clicks">{{ number_format($totalTransactions ?? 0, 0, ',', '.') }}</div>
     </div>
 </div>
 
@@ -407,17 +407,58 @@
 
 @section('scripts')
 <script>
-    // Realtime Digital Clock Ticker
+    // ── Realtime Digital Clock ──
     function updateClock() {
         const now = new Date();
-        const hrs = String(now.getHours()).padStart(2, '0');
+        const hrs  = String(now.getHours()).padStart(2, '0');
         const mins = String(now.getMinutes()).padStart(2, '0');
         const secs = String(now.getSeconds()).padStart(2, '0');
-        const clockEl = document.getElementById('liveClockDisplay');
-        if (clockEl) {
-            clockEl.textContent = `${hrs}.${mins}.${secs}`;
-        }
+        const el = document.getElementById('liveClockDisplay');
+        if (el) el.textContent = `${hrs}.${mins}.${secs}`;
     }
     setInterval(updateClock, 1000);
+    updateClock();
+
+    // ── Realtime Stats Polling (every 30s) ──
+    const statsUrl = '{{ route("creator.stats.realtime") }}';
+
+    function formatIDR(num) {
+        return 'Rp ' + Number(num).toLocaleString('id-ID');
+    }
+    function formatNum(num) {
+        return Number(num).toLocaleString('id-ID');
+    }
+
+    async function fetchRealtimeStats() {
+        try {
+            const resp = await fetch(statsUrl, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+            });
+            if (!resp.ok) return;
+            const data = await resp.json();
+
+            const balEl   = document.getElementById('rt-balance');
+            const viewEl  = document.getElementById('rt-views');
+            const clickEl = document.getElementById('rt-clicks');
+
+            if (balEl) {
+                balEl.innerHTML = formatIDR(data.available_balance)
+                    + ` <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="opacity:0.7;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+            }
+            if (viewEl)  viewEl.textContent  = formatNum(data.total_views);
+            if (clickEl) clickEl.textContent = formatNum(data.total_transactions);
+
+            // Flash animation to signal update
+            [balEl, viewEl, clickEl].forEach(el => {
+                if (!el) return;
+                el.style.transition = 'color 0.3s';
+                el.style.color = '#1eb349';
+                setTimeout(() => { el.style.color = ''; }, 600);
+            });
+        } catch(e) {}
+    }
+
+    // Poll every 30 seconds
+    setInterval(fetchRealtimeStats, 30000);
 </script>
 @endsection
