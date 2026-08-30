@@ -6,48 +6,67 @@
 
 @section('styles')
     <style>
-        .form-card {
-            background: #fff;
-            border-radius: 16px;
-            border: 1px solid #e7f0e7;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            overflow: hidden;
-            max-width: 860px;
+        .profile-page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .profile-page-header h1 {
+            font-size: 1.35rem;
+            font-weight: 500 !important;
+            color: #1E293B;
+            margin: 0 0 .2rem;
+        }
+        .profile-page-header p {
+            font-size: .8rem;
+            color: #94A3B8;
+            margin: 0;
         }
 
-        .form-section-title {
+        .profile-section {
+            background: #fff;
+            border-radius: 20px;
+            border: 1px solid #eef2ee;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            overflow: hidden;
+            margin-bottom: 1.25rem;
+        }
+
+        .profile-section-header {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: #94A3B8;
+            gap: 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #64748B;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            padding: 1rem 1.5rem 0.5rem;
-            border-top: 1px solid #f3f7f3;
-            margin-top: 0.5rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #F1F5F9;
+            background: #FAFCFA;
         }
 
-        .form-section-title:first-child {
-            border-top: none;
-            margin-top: 0;
+        .profile-section-header svg {
+            color: #1eb349;
         }
 
-        .form-body {
-            padding: 0 1.5rem 1.5rem;
+        .profile-section-body {
+            padding: 1.5rem;
         }
 
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.25rem;
+            gap: 1.1rem;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
+            gap: 0.35rem;
         }
 
         .form-group.full {
@@ -55,20 +74,24 @@
         }
 
         .form-label {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #374151;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
         }
 
         .form-input {
-            height: 44px;
-            padding: 0 1rem;
-            border: 1.5px solid #e7f0e7;
+            height: 42px;
+            padding: 0 0.9rem;
+            border: 1.5px solid #E2E8F0;
             border-radius: 10px;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.875rem;
+            font-size: 0.82rem;
+            font-weight: 400;
             color: #1a1a1a;
-            background: #f9fefb;
+            background: #F8FAFC;
             outline: none;
             transition: all 0.2s;
         }
@@ -81,9 +104,9 @@
 
         textarea.form-input {
             height: auto;
-            padding: 0.75rem 1rem;
+            padding: 0.7rem 0.9rem;
             resize: vertical;
-            min-height: 90px;
+            min-height: 80px;
         }
 
         select.form-input {
@@ -91,34 +114,34 @@
         }
 
         .form-hint {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: #94A3B8;
         }
 
         .form-error {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: #ef4444;
         }
 
-        /* Submit bar */
         .form-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid #f3f7f3;
             display: flex;
             align-items: center;
             justify-content: flex-end;
             gap: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid #F1F5F9;
+            background: #FAFCFA;
         }
 
         .btn-submit {
-            height: 42px;
+            height: 40px;
             padding: 0 1.5rem;
             border-radius: 10px;
             background: linear-gradient(135deg, #1eb349, #a5cf37);
             border: none;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.82rem;
-            font-weight: 700;
+            font-size: 0.8rem;
+            font-weight: 600;
             color: #fff;
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(30, 179, 73, 0.3);
@@ -130,32 +153,103 @@
 
         .btn-submit:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.4);
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.4);
         }
 
-        @media(max-width:640px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
+        .social-input-wrap {
+            display: flex;
+            align-items: center;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 10px;
+            background: #F8FAFC;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .social-input-wrap:focus-within {
+            border-color: #1eb349;
+            box-shadow: 0 0 0 3px rgba(30,179,73,0.1);
+        }
+
+        .social-input-prefix {
+            padding: 0 0.65rem;
+            font-size: 0.72rem;
+            color: #94A3B8;
+            background: #F1F5F9;
+            border-right: 1px solid #E2E8F0;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .social-input-field {
+            border: none !important;
+            background: transparent !important;
+            height: 42px !important;
+            padding: 0 0.75rem !important;
+            flex: 1;
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.82rem;
+            box-shadow: none !important;
+        }
+
+        .avatar-preview {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #E2E8F0;
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+
+        .banner-upload-slot {
+            border: 1.5px dashed #D1D5DB;
+            padding: 1rem;
+            border-radius: 12px;
+            background: #F8FAFC;
+            transition: border-color 0.2s;
+        }
+        .banner-upload-slot:hover { border-color: #1eb349; }
+
+        .banner-preview {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        @media(max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .profile-section-body { padding: 1rem; }
         }
     </style>
 @endsection
 
 @section('content')
-    <div class="creator-content">
-        <form action="{{ route('creator.profile.update') }}" method="POST" enctype="multipart/form-data" id="profileForm">
-            @csrf
-            @method('PUT')
+    <div class="profile-page-header">
+        <div>
+            <h1>Profil & Pengaturan Toko</h1>
+            <p>Kelola identitas, sosial media, dan informasi SEO toko Anda</p>
+        </div>
+    </div>
 
-            {{-- Identitas Toko --}}
-            <div class="form-section-title">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+    <form action="{{ route('creator.profile.update') }}" method="POST" enctype="multipart/form-data" id="profileForm">
+        @csrf
+        @method('PUT')
+
+        {{-- Identitas Toko --}}
+        <div class="profile-section">
+            <div class="profile-section-header">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
                 </svg>
                 Identitas Toko
             </div>
-            <div class="form-body">
+            <div class="profile-section-body">
                 <div class="form-grid">
                     <div class="form-group full" style="display:flex; align-items:center; gap:1rem;">
                         <div class="form-group-content" style="flex:1;">
@@ -259,17 +353,18 @@
                             placeholder="Ceritakan tentang toko Anda, spesialisasi Anda, dll.">{{ old('store_description', $profile->store_description) }}</textarea>
                         @error('store_description')<span class="form-error">{{ $message }}</span>@enderror
                     </div>
-                </div>
             </div>
+        </div>
 
-            {{-- Sosial Media Toko --}}
-            <div class="form-section-title">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        {{-- Sosial Media Toko --}}
+        <div class="profile-section">
+            <div class="profile-section-header">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                 </svg>
                 Sosial Media & Saluran Promosi
             </div>
-            <div class="form-body">
+            <div class="profile-section-body">
                 <div class="form-grid">
                     @php
                         $socials = old('social_links', $profile->social_links ?? []);
@@ -383,18 +478,19 @@
                         <input type="url" name="social_links[website]" value="{{ $socials['website'] ?? '' }}"
                             class="form-input" placeholder="https://portofolio-anda.com">
                     </div>
-                </div>
             </div>
+        </div>
 
-            {{-- Alamat Toko --}}
-            <div class="form-section-title">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        {{-- Alamat Toko --}}
+        <div class="profile-section">
+            <div class="profile-section-header">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                     <circle cx="12" cy="10" r="3"></circle>
                 </svg>
-                Lokasi & Alamat (Untuk Validasi & Skema SEO)
+                Lokasi & Alamat
             </div>
-            <div class="form-body">
+            <div class="profile-section-body">
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label">Provinsi</label>
@@ -427,18 +523,19 @@
                         value="{{ old('province_name', $profile->province_name) }}">
                     <input type="hidden" name="city_name" id="city_name"
                         value="{{ old('city_name', $profile->city_name) }}">
-                </div>
             </div>
+        </div>
 
-            {{-- SEO Pengaturan --}}
-            <div class="form-section-title">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        {{-- SEO Pengaturan --}}
+        <div class="profile-section">
+            <div class="profile-section-header">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
                 Metadata SEO
             </div>
-            <div class="form-body">
+            <div class="profile-section-body">
                 <div class="form-grid">
                     <div class="form-group full">
                         <label class="form-label">Meta Title</label>
@@ -460,8 +557,9 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="form-footer">
+        <div class="form-footer" style="border-radius:20px;background:#fff;border:1px solid #eef2ee;box-shadow:0 2px 12px rgba(0,0,0,0.04);margin-bottom:2rem;">
                 <button type="submit" class="btn-submit">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />

@@ -1,15 +1,31 @@
 @extends('creator.layout')
 @section('title', 'Produk Saya')
 @section('page_title', 'Services')
+
+@section('styles')
+<style>
+    #view-grid {
+        grid-template-columns: repeat(7, 1fr) !important;
+    }
+    @media (max-width: 1400px) { #view-grid { grid-template-columns: repeat(5, 1fr) !important; } }
+    @media (max-width: 1024px) { #view-grid { grid-template-columns: repeat(4, 1fr) !important; } }
+    @media (max-width: 768px)  { #view-grid { grid-template-columns: repeat(3, 1fr) !important; } }
+    @media (max-width: 500px)  { #view-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+
+    #view-list { overflow-x: auto; }
+    #view-list table { min-width: 700px; }
+</style>
+@endsection
+
 @section('content')
 
   {{-- PAGE HEADER --}}
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;">
     <div>
-      <h1 style="font-size:1.5rem;font-weight:600;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.01em;">Produk Saya &
+      <h1 style="font-size:1.35rem;font-weight:500;color:#1E293B;margin:0 0 .2rem;">Produk Saya &
         Layanan
       </h1>
-      <p style="font-size:.875rem;color:#94A3B8;margin:0;">{{ $products->count() }} produk/layanan terdaftar</p>
+      <p style="font-size:.8rem;color:#94A3B8;margin:0;">{{ $products->count() }} produk/layanan terdaftar</p>
     </div>
     <div style="display:flex;align-items:center;gap:1rem;">
       <form action="{{ route('creator.products.index') }}" method="GET"
@@ -187,37 +203,36 @@
     </table>
   </div>
 
-  {{-- GRID VIEW --}}
-  <div id="view-grid" class="view-container" style="display:none; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+  {{-- GRID VIEW: 7 per row --}}
+  <div id="view-grid" class="view-container" style="display:none; grid-template-columns: repeat(7, 1fr); gap: 0.75rem;">
     @foreach($products as $s)
-      <div style="background:#fff;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,0.04);overflow:hidden;border:1px solid #F1F5F9;display:flex;flex-direction:column;position:relative;transition:transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 30px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.04)'">
-        <div style="position:absolute;top:12px;right:12px;display:inline-flex;align-items:center;gap:.375rem;font-size:.7rem;font-weight:700;padding:.3rem .75rem;border-radius:100px;background:{{ $s->is_active ? 'rgba(16,185,129,0.9)' : 'rgba(239,68,68,0.9)' }};color:#fff;z-index:10;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);">
+      <div style="background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06);overflow:hidden;border:1px solid #F1F5F9;display:flex;flex-direction:column;position:relative;transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 10px rgba(0,0,0,0.06)'">
+        <div style="position:absolute;top:6px;right:6px;font-size:.6rem;font-weight:600;padding:.2rem .5rem;border-radius:100px;background:{{ $s->is_active ? 'rgba(16,185,129,0.9)' : 'rgba(239,68,68,0.9)' }};color:#fff;z-index:10;backdrop-filter:blur(4px);">
             {{ $s->is_active ? 'Aktif' : 'Nonaktif' }}
         </div>
         <div style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-bottom:1px solid #F1F5F9;">
             <img src="{{ $s->image_url }}" alt="{{ $s->name }}" style="width:100%;height:100%;object-fit:cover;display:block;">
         </div>
-        <div style="padding:1.25rem;flex:1;display:flex;flex-direction:column;">
-            <div style="font-size:1rem;font-weight:800;color:#1E293B;margin-bottom:.35rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $s->name }}</div>
-            <code style="font-size:.7rem;background:#F8FAFC;color:#3B82F6;padding:.2rem .5rem;border-radius:6px;align-self:flex-start;margin-bottom:.75rem;border:1px solid #E2E8F0;">/{{ $s->slug }}</code>
+        <div style="padding:0.65rem;flex:1;display:flex;flex-direction:column;">
+            <div style="font-size:0.72rem;font-weight:500;color:#1E293B;margin-bottom:.25rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $s->name }}</div>
+            <code style="font-size:.6rem;background:#F8FAFC;color:#1eb349;padding:.15rem .4rem;border-radius:4px;align-self:flex-start;margin-bottom:.5rem;border:1px solid #E2E8F0;display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">/{{ $s->slug }}</code>
             
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:1rem;border-top:1px solid #F1F5F9;">
-                <div style="display:flex;align-items:center;gap:.5rem;">
-                   <span style="font-size:.75rem;color:#94A3B8;font-weight:700;">STOK:</span>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:0.5rem;border-top:1px solid #F1F5F9;">
+                <div style="display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;">
+                   <span style="font-size:.62rem;color:#94A3B8;font-weight:500;">STOK:</span>
                    <form action="{{ route('admin.services.stock', $s->id) }}" method="POST" style="margin:0;">
                        @csrf @method('PATCH')
                        <input type="number" name="stock" value="{{ $s->stock }}" min="0" onchange="this.form.submit()" 
-                              style="width:50px;padding:.25rem;border:1px solid #E2E8F0;border-radius:6px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.85rem;font-weight:700;color:{{ $s->stock > 0 ? '#10B981' : '#EF4444' }};outline:none;background:#F8FAFC;">
+                              style="width:38px;padding:.15rem;border:1px solid #E2E8F0;border-radius:4px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:500;color:{{ $s->stock > 0 ? '#10B981' : '#EF4444' }};outline:none;background:#F8FAFC;">
                    </form>
-                   
-                   <span style="font-size:.75rem;color:#94A3B8;font-weight:700;margin-left:.25rem;">URT:</span>
+                   <span style="font-size:.62rem;color:#94A3B8;font-weight:500;">URT:</span>
                    <form action="{{ route('admin.services.order', $s->id) }}" method="POST" style="margin:0;">
                        @csrf @method('PATCH')
                        <input type="number" name="order" value="{{ $s->order }}" min="0" onchange="this.form.submit()" 
-                              style="width:50px;padding:.25rem;border:1px solid #E2E8F0;border-radius:6px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.85rem;font-weight:700;color:#334155;outline:none;background:#F8FAFC;">
+                              style="width:38px;padding:.15rem;border:1px solid #E2E8F0;border-radius:4px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:500;color:#334155;outline:none;background:#F8FAFC;">
                    </form>
                 </div>
-                <div style="display:flex;gap:.375rem;">
+                <div style="display:flex;gap:.25rem;">
                    <a href="{{ route('creator.products.edit', $s) }}" title="Edit" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;color:#3B82F6;transition:all .2s;" onmouseover="this.style.background='rgba(59,130,246,0.2)'" onmouseout="this.style.background='rgba(59,130,246,0.1)'">
                      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
                    </a>

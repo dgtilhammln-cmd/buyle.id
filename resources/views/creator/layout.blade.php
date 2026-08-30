@@ -19,12 +19,19 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
             background: #0b120c;
             color: #0f172a;
             height: 100vh;
             overflow: hidden;
             display: flex;
         }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 500 !important;
+        }
+
+        strong, b { font-weight: 600 !important; }
 
         /* ── SIDEBAR (Dark Shell) ── */
         .cr-sidebar {
