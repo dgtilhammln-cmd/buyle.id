@@ -11,6 +11,8 @@ class CreatorProfile extends Model
         'store_name',
         'store_slug',
         'store_description',
+        'creator_type',
+        'social_links',
         'address',
         'province_id',
         'city_id',
@@ -22,6 +24,10 @@ class CreatorProfile extends Model
         'meta_keywords',
         'store_banner_1',
         'store_banner_2',
+    ];
+
+    protected $casts = [
+        'social_links' => 'array',
     ];
 
     public function user()

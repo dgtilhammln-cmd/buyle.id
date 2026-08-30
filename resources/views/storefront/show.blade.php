@@ -314,8 +314,58 @@
                     @endif
                     <div class="sf-profile-text">
                         <h1 class="sf-store-name">{{ $profile->store_name ?: $seller->name }}</h1>
+                        @if($profile->creator_type)
+                            <div style="margin: 0.35rem 0 0.5rem;">
+                                <span style="display:inline-flex;align-items:center;gap:0.3rem;background:#F0FDF4;color:#15803D;font-size:0.75rem;font-weight:600;padding:0.25rem 0.65rem;border-radius:999px;border:1px solid #BBF7D0;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    {{ $profile->creator_type }}
+                                </span>
+                            </div>
+                        @endif
                         @if($profile->store_description)
                             <p class="sf-desc">{{ $profile->store_description }}</p>
+                        @endif
+
+                        {{-- Social Links --}}
+                        @php $socials = $profile->social_links ?? []; @endphp
+                        @if(is_array($socials) && count(array_filter($socials)) > 0)
+                            <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0.5rem;margin-top:0.75rem;">
+                                @if(!empty($socials['instagram']))
+                                    @php $igUrl = str_starts_with($socials['instagram'], 'http') ? $socials['instagram'] : 'https://instagram.com/' . ltrim($socials['instagram'], '@'); @endphp
+                                    <a href="{{ $igUrl }}" target="_blank" rel="noopener noreferrer" style="width:30px;height:30px;border-radius:50%;background:#FDF2F8;border:1px solid #FBCFE8;display:flex;align-items:center;justify-content:center;color:#E1306C;text-decoration:none;transition:transform 0.2s;" title="Instagram">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                                    </a>
+                                @endif
+                                @if(!empty($socials['tiktok']))
+                                    @php $ttUrl = str_starts_with($socials['tiktok'], 'http') ? $socials['tiktok'] : 'https://tiktok.com/@' . ltrim($socials['tiktok'], '@'); @endphp
+                                    <a href="{{ $ttUrl }}" target="_blank" rel="noopener noreferrer" style="width:30px;height:30px;border-radius:50%;background:#F1F5F9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;color:#0F172A;text-decoration:none;transition:transform 0.2s;" title="TikTok">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43 6.2 6.2 0 0 0 1.91-4.42V8.92a8.28 8.28 0 0 0 4.82 1.55v-3.47a4.91 4.91 0 0 1-1-.31z"/></svg>
+                                    </a>
+                                @endif
+                                @if(!empty($socials['youtube']))
+                                    @php $ytUrl = str_starts_with($socials['youtube'], 'http') ? $socials['youtube'] : 'https://youtube.com/' . $socials['youtube']; @endphp
+                                    <a href="{{ $ytUrl }}" target="_blank" rel="noopener noreferrer" style="width:30px;height:30px;border-radius:50%;background:#FEF2F2;border:1px solid #FECACA;display:flex;align-items:center;justify-content:center;color:#EF4444;text-decoration:none;transition:transform 0.2s;" title="YouTube">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+                                    </a>
+                                @endif
+                                @if(!empty($socials['x']))
+                                    @php $xUrl = str_starts_with($socials['x'], 'http') ? $socials['x'] : 'https://x.com/' . ltrim($socials['x'], '@'); @endphp
+                                    <a href="{{ $xUrl }}" target="_blank" rel="noopener noreferrer" style="width:30px;height:30px;border-radius:50%;background:#F8FAFC;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;color:#0F172A;text-decoration:none;transition:transform 0.2s;" title="X (Twitter)">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                    </a>
+                                @endif
+                                @if(!empty($socials['linkedin']))
+                                    @php $inUrl = str_starts_with($socials['linkedin'], 'http') ? $socials['linkedin'] : 'https://linkedin.com/in/' . $socials['linkedin']; @endphp
+                                    <a href="{{ $inUrl }}" target="_blank" rel="noopener noreferrer" style="width:30px;height:30px;border-radius:50%;background:#EFF6FF;border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center;color:#2563EB;text-decoration:none;transition:transform 0.2s;" title="LinkedIn">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                                    </a>
+                                @endif
+                                @if(!empty($socials['website']))
+                                    <a href="{{ $socials['website'] }}" target="_blank" rel="noopener noreferrer" style="width:30px;height:30px;border-radius:50%;background:#F0FDF4;border:1px solid #BBF7D0;display:flex;align-items:center;justify-content:center;color:#1eb349;text-decoration:none;transition:transform 0.2s;" title="Website / Portofolio">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                    </a>
+                                @endif
+                            </div>
                         @endif
                     </div>
                 </div>

@@ -222,10 +222,125 @@
                         @error('store_slug')<span class="form-error">{{ $message }}</span>@enderror
                     </div>
                     <div class="form-group full">
+                        <label class="form-label">Tipe / Peran Creator</label>
+                        <select name="creator_type" class="form-input">
+                            <option value="">— Pilih Peran / Kategori Creator —</option>
+                            @php
+                                $creatorTypes = [
+                                    'Content Creator' => 'Content Creator (Video, Edukasi & Lifestyle)',
+                                    'Affiliate Marketer' => 'Affiliate Marketer / Affiliator Digital',
+                                    'Graphic & UI/UX Designer' => 'Graphic, UI/UX & Visual Designer',
+                                    'Video Editor & Motion' => 'Video Editor, Animator & 3D Artist',
+                                    'Software Developer' => 'Software Developer / Programmer & Web Creator',
+                                    'Course Creator' => 'Course Creator & Instruktur / Mentor Online',
+                                    'Copywriter & Writer' => 'Copywriter, Penulis & Prompt Engineer',
+                                    'Digital Marketer' => 'Digital Marketer & Agency Kreatif',
+                                    'Konsultan & Coach' => 'Konsultan Bisnis / Digital Coach',
+                                    'Kreator Template & Aset' => 'Kreator Template (Notion, Canva, Figma, Spreadsheet, dll)',
+                                    'Fotografer & Videografer' => 'Fotografer & Kreator Media Visual',
+                                    'Audio & Music Producer' => 'Musisi, Sound Engineer & Audio Creator',
+                                    'Supplier / Vendor Digital' => 'Supplier / Vendor Produk Digital',
+                                    'Lainnya' => 'Lainnya / General Digital Creator',
+                                ];
+                                $selectedType = old('creator_type', $profile->creator_type ?? '');
+                            @endphp
+                            @foreach($creatorTypes as $key => $label)
+                                <option value="{{ $key }}" {{ $selectedType === $key ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        <span class="form-hint">Pilih peran yang paling mendeskripsikan karya dan bisnis kreatif Anda.</span>
+                        @error('creator_type')<span class="form-error">{{ $message }}</span>@enderror
+                    </div>
+
+                    <div class="form-group full">
                         <label class="form-label">Deskripsi Toko</label>
                         <textarea name="store_description" class="form-input" rows="4"
                             placeholder="Ceritakan tentang toko Anda, spesialisasi Anda, dll.">{{ old('store_description', $profile->store_description) }}</textarea>
                         @error('store_description')<span class="form-error">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+            </div>
+
+            {{-- Sosial Media Toko --}}
+            <div class="form-section-title">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                </svg>
+                Sosial Media & Saluran Promosi
+            </div>
+            <div class="form-body">
+                <div class="form-grid">
+                    @php
+                        $socials = old('social_links', $profile->social_links ?? []);
+                    @endphp
+
+                    {{-- Instagram --}}
+                    <div class="form-group">
+                        <label class="form-label" style="display:flex;align-items:center;gap:0.4rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                            Instagram
+                        </label>
+                        <div style="display:flex;align-items:center;border:1.5px solid #e7f0e7;border-radius:10px;background:#f9fefb;overflow:hidden;">
+                            <span style="padding:0 0.75rem;font-size:0.8rem;color:#94A3B8;background:#f1f5f9;border-right:1px solid #e7f0e7;height:44px;display:flex;align-items:center;">instagram.com/</span>
+                            <input type="text" name="social_links[instagram]" value="{{ $socials['instagram'] ?? '' }}" class="form-input" style="border:none;background:transparent;height:100%;padding:0 0.75rem;flex:1;" placeholder="username_anda">
+                        </div>
+                    </div>
+
+                    {{-- TikTok --}}
+                    <div class="form-group">
+                        <label class="form-label" style="display:flex;align-items:center;gap:0.4rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43 6.2 6.2 0 0 0 1.91-4.42V8.92a8.28 8.28 0 0 0 4.82 1.55v-3.47a4.91 4.91 0 0 1-1-.31z"/></svg>
+                            TikTok
+                        </label>
+                        <div style="display:flex;align-items:center;border:1.5px solid #e7f0e7;border-radius:10px;background:#f9fefb;overflow:hidden;">
+                            <span style="padding:0 0.75rem;font-size:0.8rem;color:#94A3B8;background:#f1f5f9;border-right:1px solid #e7f0e7;height:44px;display:flex;align-items:center;">tiktok.com/@</span>
+                            <input type="text" name="social_links[tiktok]" value="{{ $socials['tiktok'] ?? '' }}" class="form-input" style="border:none;background:transparent;height:100%;padding:0 0.75rem;flex:1;" placeholder="username_anda">
+                        </div>
+                    </div>
+
+                    {{-- YouTube --}}
+                    <div class="form-group">
+                        <label class="form-label" style="display:flex;align-items:center;gap:0.4rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF0000" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+                            YouTube
+                        </label>
+                        <input type="text" name="social_links[youtube]" value="{{ $socials['youtube'] ?? '' }}" class="form-input" placeholder="https://youtube.com/@channel">
+                    </div>
+
+                    {{-- X / Twitter --}}
+                    <div class="form-group">
+                        <label class="form-label" style="display:flex;align-items:center;gap:0.4rem;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                            X / Twitter
+                        </label>
+                        <input type="text" name="social_links[x]" value="{{ $socials['x'] ?? '' }}" class="form-input" placeholder="https://x.com/username">
+                    </div>
+
+                    {{-- LinkedIn --}}
+                    <div class="form-group">
+                        <label class="form-label" style="display:flex;align-items:center;gap:0.4rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A66C2" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                            LinkedIn
+                        </label>
+                        <input type="text" name="social_links[linkedin]" value="{{ $socials['linkedin'] ?? '' }}" class="form-input" placeholder="https://linkedin.com/in/username">
+                    </div>
+
+                    {{-- Facebook --}}
+                    <div class="form-group">
+                        <label class="form-label" style="display:flex;align-items:center;gap:0.4rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1877F2" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                            Facebook
+                        </label>
+                        <input type="text" name="social_links[facebook]" value="{{ $socials['facebook'] ?? '' }}" class="form-input" placeholder="https://facebook.com/username">
+                    </div>
+
+                    {{-- Website / Portfolio --}}
+                    <div class="form-group full">
+                        <label class="form-label" style="display:flex;align-items:center;gap:0.4rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            Website / Portofolio / Linktree
+                        </label>
+                        <input type="url" name="social_links[website]" value="{{ $socials['website'] ?? '' }}" class="form-input" placeholder="https://portofolio-anda.com">
                     </div>
                 </div>
             </div>

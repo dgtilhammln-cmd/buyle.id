@@ -36,19 +36,35 @@ class CreatorOnboardingController extends Controller
             'store_name' => 'required|string|max:30', // Max 30 chars per user feedback
             'store_slug' => 'required|string|max:30|regex:/^[a-z0-9\-]+$/|unique:creator_profiles,store_slug,' . ($user->creatorProfile->id ?? 'NULL'),
             'store_description' => 'required|string|max:60', // Max 60 chars
+            'creator_type' => 'required|string|max:100',
+            'social_links' => 'required|array',
+            'social_links.instagram' => 'required|string|max:255',
+            'social_links.tiktok' => 'required|string|max:255',
+            'social_links.*' => 'nullable|string|max:255',
             'address' => 'required|string|max:255',
             'province_id' => 'required|integer',
             'city_id' => 'required|integer',
             'subdistrict_id' => 'required|integer',
             'avatar' => 'nullable|image|max:10240',
+        ], [
+            'creator_type.required' => 'Pilih peran / tipe Creator Anda.',
+            'social_links.instagram.required' => 'Akun Instagram wajib diisi.',
+            'social_links.tiktok.required' => 'Akun TikTok wajib diisi.',
         ]);
 
         $profile = CreatorProfile::updateOrCreate(
             ['user_id' => $user->id],
-            $request->only([
-                'store_name', 'store_slug', 'store_description',
-                'address', 'province_id', 'city_id', 'subdistrict_id'
-            ])
+            [
+                'store_name' => $request->store_name,
+                'store_slug' => $request->store_slug,
+                'store_description' => $request->store_description,
+                'creator_type' => $request->creator_type,
+                'social_links' => array_filter($request->input('social_links', [])),
+                'address' => $request->address,
+                'province_id' => $request->province_id,
+                'city_id' => $request->city_id,
+                'subdistrict_id' => $request->subdistrict_id,
+            ]
         );
 
         // SEO fallback during onboarding (can be changed later in full profile settings)

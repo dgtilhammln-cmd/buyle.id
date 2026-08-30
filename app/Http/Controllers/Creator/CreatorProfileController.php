@@ -30,6 +30,9 @@ class CreatorProfileController extends Controller
             'store_name' => 'nullable|string|max:100',
             'store_slug' => 'nullable|string|max:100|regex:/^[a-z0-9\-]+$/|unique:creator_profiles,store_slug,' . ($user->creatorProfile->id ?? 'NULL'),
             'store_description' => 'nullable|string|max:500',
+            'creator_type' => 'nullable|string|max:100',
+            'social_links' => 'nullable|array',
+            'social_links.*' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
             'province_id' => 'nullable|integer',
             'city_id' => 'nullable|integer',
@@ -46,12 +49,18 @@ class CreatorProfileController extends Controller
 
         $profile = CreatorProfile::updateOrCreate(
             ['user_id' => $user->id],
-            $request->only([
-                'store_name', 'store_slug', 'store_description',
-                'address', 'province_id', 'city_id', 'subdistrict_id',
-                'province_name', 'city_name',
-                'meta_title', 'meta_desc', 'meta_keywords'
-            ])
+            array_merge(
+                $request->only([
+                    'store_name', 'store_slug', 'store_description',
+                    'creator_type',
+                    'address', 'province_id', 'city_id', 'subdistrict_id',
+                    'province_name', 'city_name',
+                    'meta_title', 'meta_desc', 'meta_keywords'
+                ]),
+                [
+                    'social_links' => array_filter($request->input('social_links', []))
+                ]
+            )
         );
 
         if ($request->hasFile('store_banner_1')) {
