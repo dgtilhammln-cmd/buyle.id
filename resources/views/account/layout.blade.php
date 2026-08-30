@@ -391,7 +391,7 @@
             padding: 3rem 1rem;
             color: #94A3B8;
         }
-        .empty-state svg { margin-bottom: 1rem; opacity: 0.5; }
+        .empty-state > svg { width: 56px; height: 56px; margin-bottom: 1rem; opacity: 0.5; }
         .empty-state h3 { font-size: 1rem; font-weight: 700; color: #374151; margin-bottom: 0.5rem; }
         .empty-state p { font-size: 0.85rem; }
 
@@ -563,11 +563,6 @@
                class="acc-tab {{ request()->routeIs('account.orders') ? 'active' : '' }}">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                 Pesanan
-            </a>
-            <a href="{{ route('account.addresses') }}"
-               class="acc-tab {{ request()->routeIs('account.addresses') ? 'active' : '' }}">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                Alamat
             </a>
             <a href="{{ route('account.profile') }}"
                class="acc-tab {{ request()->routeIs('account.profile') ? 'active' : '' }}">

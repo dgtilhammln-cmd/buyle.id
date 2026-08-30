@@ -197,7 +197,8 @@
                     <div class="form-group full">
                         <label class="form-label">Deskripsi Toko</label>
                         <textarea name="store_description" class="form-input" rows="4"
-                            placeholder="Ceritakan tentang toko Anda, spesialisasi Anda, dll." maxlength="60" required>{{ old('store_description', $profile->store_description) }}</textarea>
+                            placeholder="Ceritakan tentang toko Anda, spesialisasi Anda, dll." maxlength="60"
+                            required>{{ old('store_description', $profile->store_description) }}</textarea>
                         <span class="form-hint">Maksimal 60 karakter.</span>
                         @error('store_description')<span class="form-error">{{ $message }}</span>@enderror
                     </div>
@@ -252,7 +253,7 @@
                         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
                         <polyline points="17 21 17 13 7 13 7 21" />
                     </svg>
-                    Buka Toko Sekarang
+                    Jadilah Creator Sekarang
                 </button>
             </div>
         </form>

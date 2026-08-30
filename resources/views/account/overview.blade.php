@@ -18,8 +18,8 @@
         <div class="acc-stat-value">Rp {{ number_format($totalSpent, 0, ',', '.') }}</div>
     </div>
     <div class="acc-stat-card">
-        <div class="acc-stat-label">Alamat Tersimpan</div>
-        <div class="acc-stat-value">{{ $totalAddresses }}</div>
+        <div class="acc-stat-label">Item Wishlist</div>
+        <div class="acc-stat-value">{{ $totalWishlist ?? 0 }}</div>
     </div>
 </div>
 

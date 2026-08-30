@@ -627,7 +627,7 @@
                         @if(Auth::user()->role === 'buyer')
                             <a href="{{ route('creator.onboarding') }}" style="display:flex;align-items:center;gap:0.6rem;padding:0.65rem 0.875rem;border-radius:10px;text-decoration:none;color:#374151;font-size:0.85rem;font-weight:600;transition:background 0.15s;" onmouseover="this.style.background='#F0FDF4'" onmouseout="this.style.background='transparent'">
                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-                                Buka Toko (Gratis)
+                                Jadilah Creators (Gratis)
                             </a>
                         @else
                             <a href="{{ route('creator.dashboard') }}" style="display:flex;align-items:center;gap:0.6rem;padding:0.65rem 0.875rem;border-radius:10px;text-decoration:none;color:#374151;font-size:0.85rem;font-weight:600;transition:background 0.15s;" onmouseover="this.style.background='#F0FDF4'" onmouseout="this.style.background='transparent'">

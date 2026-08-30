@@ -28,7 +28,17 @@ class RoleMiddleware
         }
 
         if ($userRole !== $role) {
-            abort(403, 'Unauthorized access.');
+            // Jika buyer mencoba membuka menu creator/seller, arahkan ke onboarding dengan pesan interaktif
+            if ($role === 'seller' && $userRole === 'buyer') {
+                return redirect()->route('creator.onboarding')->with('warning_onboarding', 'Yuk, lengkapi profil tokomu terlebih dahulu untuk membuka akses ke semua fitur Creator.');
+            }
+
+            // Jika seller membuka halaman buyer, izinkan akses
+            if ($role === 'buyer' && $userRole === 'seller') {
+                return $next($request);
+            }
+
+            abort(403, 'Akses Terbatas: Anda tidak memiliki izin untuk membuka halaman ini.');
         }
 
         return $next($request);

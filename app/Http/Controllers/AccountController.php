@@ -20,11 +20,11 @@ class AccountController extends Controller
         $totalOrders    = $user->orders()->count();
         $activeOrders   = $user->orders()->whereIn('status', ['pending', 'processing', 'shipped'])->count();
         $totalSpent     = $user->orders()->where('status', '!=', 'cancelled')->sum('total');
-        $totalAddresses = $user->addresses()->count();
+        $totalWishlist  = $user->wishlists()->count();
         $recentOrders   = $user->orders()->latest()->limit(5)->get();
 
         return view('account.overview', compact(
-            'user', 'totalOrders', 'activeOrders', 'totalSpent', 'totalAddresses', 'recentOrders'
+            'user', 'totalOrders', 'activeOrders', 'totalSpent', 'totalWishlist', 'recentOrders'
         ));
     }
 

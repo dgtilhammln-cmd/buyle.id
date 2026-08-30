@@ -37,8 +37,17 @@
 .order-price-label { font-size:0.75rem; color:#64748B; margin-bottom:0.25rem; }
 .order-price-total { font-weight:800; color:#1eb349; font-size:1.1rem; }
 
-.empty-state { text-align:center; padding:4rem 1rem; color:#94A3B8; }
-.empty-state svg { width:64px; height:64px; margin-bottom:1rem; opacity:0.5; }
+.empty-state { text-align:center; padding:3.5rem 1rem; color:#94A3B8; }
+.empty-state > svg { width:56px; height:56px; margin-bottom:1rem; opacity:0.4; }
+.btn-empty-shop {
+    display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;
+    margin-top:1.25rem; padding:0.6rem 1.35rem;
+    background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff;
+    border-radius:10px; font-weight:700; font-size:0.85rem;
+    text-decoration:none; transition:all 0.2s; box-shadow:0 4px 14px rgba(30,179,73,0.25);
+}
+.btn-empty-shop:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(30,179,73,0.35); }
+.btn-empty-shop svg { width:15px !important; height:15px !important; margin:0 !important; opacity:1 !important; }
 </style>
 
 <div class="acc-card" style="background:transparent; border:none; box-shadow:none; padding:0;">
@@ -120,11 +129,11 @@
             </div>
         @else
             <div class="empty-state">
-                <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                <h3 style="color:#334155; margin:0 0 0.5rem; font-size:1.2rem;">Belum ada pesanan</h3>
-                <p style="margin:0; font-size:0.95rem;">Temukan produk terbaik untuk kebutuhan rumah Anda.</p>
-                <a href="{{ route('products') }}" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.75rem 1.75rem; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; border-radius:12px; font-weight:700; text-decoration:none; font-size:0.875rem;">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+                <svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <h3 style="color:#0F172A; margin:0 0 0.5rem; font-size:1.15rem; font-weight:700;">Belum ada pesanan</h3>
+                <p style="margin:0; font-size:0.875rem; color:#64748B;">Temukan berbagai produk digital dan kreatif terbaik untuk Anda.</p>
+                <a href="{{ route('products') }}" class="btn-empty-shop">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
                     Mulai Belanja
                 </a>
             </div>

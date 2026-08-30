@@ -363,9 +363,11 @@
             </div>
         </div>
 
+        @php $isBuyer = auth()->user()->role === 'buyer'; @endphp
         <nav class="cr-nav">
             <div class="cr-nav-section">Utama</div>
-            <a href="{{ route('creator.dashboard') }}"
+            <a href="{{ $isBuyer ? '#' : route('creator.dashboard') }}"
+                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.dashboard') ? 'active' : '' }}">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <rect x="3" y="3" width="7" height="7" rx="1" />
@@ -374,18 +376,22 @@
                     <rect x="14" y="14" width="7" height="7" rx="1" />
                 </svg>
                 Beranda
+                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;opacity:0.7;">🔒</span> @endif
             </a>
 
             <div class="cr-nav-section" style="margin-top:0.75rem;">Katalog</div>
-            <a href="{{ route('creator.products.index') }}"
+            <a href="{{ $isBuyer ? '#' : route('creator.products.index') }}"
+                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.products*') ? 'active' : '' }}">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path
                         d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                 </svg>
                 Produk Digital
+                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;opacity:0.7;">🔒</span> @endif
             </a>
-            <a href="{{ route('creator.groups.index') }}"
+            <a href="{{ $isBuyer ? '#' : route('creator.groups.index') }}"
+                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.groups*') ? 'active' : '' }}">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M12 2L2 7l10 5 10-5-10-5z" />
@@ -393,18 +399,22 @@
                     <path d="M2 12l10 5 10-5" />
                 </svg>
                 Kelompok Produk
+                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;opacity:0.7;">🔒</span> @endif
             </a>
 
             <div class="cr-nav-section" style="margin-top:0.75rem;">Keuangan</div>
-            <a href="{{ route('creator.payout.settings') }}"
+            <a href="{{ $isBuyer ? '#' : route('creator.payout.settings') }}"
+                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.payout*') ? 'active' : '' }}">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <rect x="1" y="4" width="22" height="16" rx="2" />
                     <line x1="1" y1="10" x2="23" y2="10" />
                 </svg>
                 Pencairan Dana
+                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;opacity:0.7;">🔒</span> @endif
             </a>
-            <a href="{{ route('creator.sales.report') }}"
+            <a href="{{ $isBuyer ? '#' : route('creator.sales.report') }}"
+                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.sales*') ? 'active' : '' }}">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <line x1="18" y1="20" x2="18" y2="10" />
@@ -412,11 +422,12 @@
                     <line x1="6" y1="20" x2="6" y2="14" />
                 </svg>
                 Laporan Penjualan
+                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;opacity:0.7;">🔒</span> @endif
             </a>
 
             <div class="cr-nav-section" style="margin-top:0.75rem;">Toko</div>
-            <a href="{{ route('creator.profile.edit') }}"
-                class="cr-nav-link {{ request()->routeIs('creator.profile*') ? 'active' : '' }}">
+            <a href="{{ $isBuyer ? route('creator.onboarding') : route('creator.profile.edit') }}"
+                class="cr-nav-link {{ request()->routeIs('creator.profile*', 'creator.onboarding') ? 'active' : '' }}">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
@@ -484,6 +495,17 @@
                     {{ session('success') }}
                 </div>
             @endif
+            @if(session('warning_onboarding'))
+                <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:0.75rem;box-shadow:0 2px 8px rgba(245,158,11,0.08);">
+                    <div style="width:32px;height:32px;border-radius:50%;background:#FEF3C7;color:#D97706;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.1rem;">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:0.9rem;font-weight:700;color:#92400E;margin-bottom:0.2rem;">Langkah Terakhir: Lengkapi Data Creator</div>
+                        <div style="font-size:0.8rem;color:#B45309;line-height:1.5;">{{ session('warning_onboarding') }}</div>
+                    </div>
+                </div>
+            @endif
             @if(session('error'))
                 <div class="flash-error">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -499,12 +521,51 @@
         </div>
     </div>
 
+    {{-- Interactive Locked Feature Modal for Buyers --}}
+    <div id="lockedFeatureModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.5);backdrop-filter:blur(4px);z-index:9999;align-items:center;justify-content:center;padding:1rem;">
+        <div style="background:#fff;border-radius:20px;max-width:440px;width:100%;padding:2rem;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.15);position:relative;animation:modalScale 0.25s cubic-bezier(0.34,1.56,0.64,1);">
+            <div style="width:64px;height:64px;border-radius:50%;background:#F0FDF4;color:#1eb349;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;border:2px solid #BBF7D0;">
+                <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h3 style="font-size:1.2rem;font-weight:800;color:#0F172A;margin:0 0 0.5rem;font-family:'Montserrat',sans-serif;">Yuk, Jadi Creator Dulu! 🚀</h3>
+            <p style="font-size:0.875rem;color:#64748B;line-height:1.6;margin:0 0 1.5rem;font-family:'Montserrat',sans-serif;">
+                Fitur ini akan <strong style="color:#1eb349;font-weight:700;">langsung terbuka</strong> setelah Anda melengkapi form data toko di halaman ini. Gratis dan hanya butuh 1 menit!
+            </p>
+            <div style="display:flex;gap:0.75rem;justify-content:center;">
+                <button type="button" onclick="closeLockedModal()" style="padding:0.65rem 1.5rem;border-radius:10px;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;border:none;font-weight:700;font-size:0.85rem;cursor:pointer;font-family:'Montserrat',sans-serif;box-shadow:0 4px 14px rgba(30,179,73,0.3);">
+                    Isi Data Sekarang
+                </button>
+            </div>
+        </div>
+    </div>
+    <style>
+        @keyframes modalScale { from { opacity:0; transform:scale(0.92); } to { opacity:1; transform:scale(1); } }
+    </style>
+
     <script>
         const toggle = document.getElementById('crMobileToggle');
         const sidebar = document.getElementById('crSidebar');
         const overlay = document.getElementById('crOverlay');
-        toggle.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
-        overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+        if(toggle) {
+            toggle.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
+            overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+        }
+
+        function showLockedModal(e) {
+            if(e) e.preventDefault();
+            const modal = document.getElementById('lockedFeatureModal');
+            if(modal) {
+                modal.style.display = 'flex';
+            }
+        }
+        function closeLockedModal() {
+            const modal = document.getElementById('lockedFeatureModal');
+            if(modal) {
+                modal.style.display = 'none';
+            }
+            const firstInput = document.querySelector('#profileForm input[name="store_name"]');
+            if(firstInput) firstInput.focus();
+        }
     </script>
     @yield('scripts')
 </body>
