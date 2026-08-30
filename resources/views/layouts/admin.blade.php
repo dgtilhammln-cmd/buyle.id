@@ -121,11 +121,27 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
 .topbar-right{display:flex;align-items:center;gap:.75rem;background:#fff;padding:.375rem .375rem .375rem 1rem;border-radius:100px;box-shadow:0 4px 15px rgba(0,0,0,.03)}
 .topbar-icon-btn{width:36px;height:36px;background:var(--bg3);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text3);cursor:pointer;transition:all .2s;text-decoration:none}
 .topbar-icon-btn:hover{background:#e7f0e7;color:var(--text1)}
-.avatar{width:36px;height:36px;background:#1eb349;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.875rem;flex-shrink:0}
+.avatar{width:36px;height:36px;background:linear-gradient(135deg, #1eb349, #a5cf37);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.875rem;flex-shrink:0;box-shadow:0 2px 8px rgba(30,179,73,0.3)}
 .success-toast{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:#4ade80;font-size:.75rem;padding:.375rem .875rem;border-radius:100px}
 #content{padding:1.75rem;flex:1}
 .errors-box{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);padding:.875rem 1.25rem;margin-bottom:1.5rem;border-radius:6px}
 .errors-box li{color:#f87171;font-size:.8125rem;margin-left:1rem}
+
+/* Global buyle.id Green Gradient Buttons */
+.btn-primary, .btn-submit, .btn-success, .u-btn-primary,
+button.btn-primary, a.btn-primary {
+  background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px rgba(30,179,73,0.35) !important;
+  border: none !important;
+  border-radius: 999px !important;
+  transition: transform .2s, box-shadow .2s !important;
+}
+.btn-primary:hover, .btn-submit:hover, .btn-success:hover, .u-btn-primary:hover,
+button.btn-primary:hover, a.btn-primary:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(30,179,73,0.45) !important;
+}
 
 /* MOBILE */
 #sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:199}
@@ -412,7 +428,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
         <button id="notif-btn" title="{{ $newLeadsCount }} lead baru" onclick="toggleNotif(event)" style="position:relative;width:38px;height:38px;border-radius:12px;border:1.5px solid var(--border,#E4E7F0);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.04);">
           <svg width="16" height="16" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
           @if($newLeadsCount > 0)
-          <span id="notif-badge" style="position:absolute;top:-4px;right:-4px;background:#1eb349;color:#fff;font-size:.55rem;font-weight:800;min-width:16px;height:16px;border-radius:100px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid #F4F7FE;">{{ $newLeadsCount }}</span>
+          <span id="notif-badge" style="position:absolute;top:-4px;right:-4px;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;font-size:.55rem;font-weight:800;min-width:16px;height:16px;border-radius:100px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid #F4F7FE;">{{ $newLeadsCount }}</span>
           @endif
         </button>
 

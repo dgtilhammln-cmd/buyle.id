@@ -7,7 +7,7 @@
 .lic-card { background:#fff; border-radius:20px; padding:2rem; box-shadow:0 2px 20px rgba(0,0,0,0.05); }
 .lic-badge-active { display:inline-flex;align-items:center;gap:.4rem;background:#ECFDF5;border:1.5px solid #6EE7B7;color:#065F46;font-size:.8rem;font-weight:800;padding:.4rem 1rem;border-radius:100px; }
 .lic-badge-suspended { display:inline-flex;align-items:center;gap:.4rem;background:#FEF2F2;border:1.5px solid #FCA5A5;color:#991B1B;font-size:.8rem;font-weight:800;padding:.4rem 1rem;border-radius:100px; }
-.lic-btn-activate { width:100%;padding:1rem;background:#1eb349;color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s;letter-spacing:.01em; }
+.lic-btn-activate { width:100%;padding:1rem;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s;letter-spacing:.01em; }
 .lic-btn-activate:hover { background:#1eb349;transform:translateY(-1px);box-shadow:0 6px 20px rgba(30,179,73,0.35); }
 .lic-btn-suspend { width:100%;padding:1rem;background:#EF4444;color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s;letter-spacing:.01em; }
 .lic-btn-suspend:hover { background:#DC2626;transform:translateY(-1px);box-shadow:0 6px 20px rgba(239,68,68,0.35); }

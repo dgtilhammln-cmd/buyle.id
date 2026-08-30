@@ -1046,9 +1046,9 @@
             if (abl) abl.style.display = type === 'list' ? 'block' : 'none';
             if (abg) abg.style.display = type === 'grid' ? 'grid' : 'none';
 
-            document.getElementById('btn-view-list').style.background = type === 'list' ? '#1eb349' : 'transparent';
+            document.getElementById('btn-view-list').style.background = type === 'list' ? 'linear-gradient(135deg, #1eb349, #a5cf37)' : 'transparent';
             document.getElementById('btn-view-list').style.color = type === 'list' ? '#fff' : '#94A3B8';
-            document.getElementById('btn-view-grid').style.background = type === 'grid' ? '#1eb349' : 'transparent';
+            document.getElementById('btn-view-grid').style.background = type === 'grid' ? 'linear-gradient(135deg, #1eb349, #a5cf37)' : 'transparent';
             document.getElementById('btn-view-grid').style.color = type === 'grid' ? '#fff' : '#94A3B8';
         }
         const savedOrderView = localStorage.getItem('admin_orders_view') || 'list';

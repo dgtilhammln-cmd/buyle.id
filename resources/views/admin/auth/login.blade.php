@@ -218,7 +218,7 @@
             justify-content: center;
         }
         .btn-primary:hover {
-            background: #16a34a;
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
             transform: translateY(-2px);
             box-shadow: 0 12px 20px rgba(30, 179, 73, 0.3);
         }

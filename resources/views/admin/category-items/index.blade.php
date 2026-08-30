@@ -8,7 +8,7 @@
     <h1 style="font-size:1.5rem;font-weight:800;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.02em;">Kelola Kategori</h1>
     <p style="font-size:.875rem;color:#94A3B8;margin:0;">Tampil sebagai kategori swipeable. Ubah urutan langsung tanpa buka Edit.</p>
   </div>
-  <a href="{{ route('admin.category-items.create') }}" style="display:inline-flex;align-items:center;gap:.5rem;background:#1eb349;color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;text-decoration:none;box-shadow:0 4px 14px rgba(30,179,73,0.35);">
+  <a href="{{ route('admin.category-items.create') }}" style="display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;text-decoration:none;box-shadow:0 4px 14px rgba(30,179,73,0.35);">
     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     Tambah Kategori
   </a>

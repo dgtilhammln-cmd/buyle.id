@@ -52,7 +52,7 @@
       </div>
 
       <a href="{{ route('admin.faqs.create') }}"
-        style="display:inline-flex;align-items:center;gap:.5rem;background:#1eb349;color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;text-decoration:none;transition:all .2s;box-shadow:0 4px 14px rgba(30,179,73,0.35);"
+        style="display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;text-decoration:none;transition:all .2s;box-shadow:0 4px 14px rgba(30,179,73,0.35);"
         onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(30,179,73,0.4)'"
         onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(30,179,73,0.35)'">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -262,7 +262,7 @@
               <div style="font-size:.82rem;color:#94A3B8;margin-top:.35rem;">Klik tombol "Tulis Artikel" untuk memulai.
               </div>
               <a href="{{ route('admin.faqs.create') }}"
-                style="display:inline-flex;align-items:center;gap:.5rem;margin-top:1.25rem;background:#1eb349;color:#fff;font-size:.85rem;font-weight:700;padding:.625rem 1.25rem;border-radius:10px;text-decoration:none;">
+                style="display:inline-flex;align-items:center;gap:.5rem;margin-top:1.25rem;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;font-size:.85rem;font-weight:700;padding:.625rem 1.25rem;border-radius:10px;text-decoration:none;">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                   <line x1="12" y1="5" x2="12" y2="19" />
                   <line x1="5" y1="12" x2="19" y2="12" />
@@ -384,10 +384,10 @@
       document.getElementById('view-list').style.display = type === 'list' ? 'block' : 'none';
       document.getElementById('view-grid').style.display = type === 'grid' ? 'grid' : 'none';
 
-      document.getElementById('btn-view-list').style.background = type === 'list' ? '#1eb349' : 'transparent';
+      document.getElementById('btn-view-list').style.background = type === 'list' ? 'linear-gradient(135deg, #1eb349, #a5cf37)' : 'transparent';
       document.getElementById('btn-view-list').style.color = type === 'list' ? '#fff' : '#94A3B8';
 
-      document.getElementById('btn-view-grid').style.background = type === 'grid' ? '#1eb349' : 'transparent';
+      document.getElementById('btn-view-grid').style.background = type === 'grid' ? 'linear-gradient(135deg, #1eb349, #a5cf37)' : 'transparent';
       document.getElementById('btn-view-grid').style.color = type === 'grid' ? '#fff' : '#94A3B8';
     }
 

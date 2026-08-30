@@ -140,7 +140,7 @@
       </div>
 
       <div style="display:flex;gap:.75rem;">
-        <button type="submit" style="flex:1;padding:.875rem;background:#1eb349;color:#fff;font-weight:700;font-size:.875rem;border:none;border-radius:12px;cursor:pointer;">
+        <button type="submit" style="flex:1;padding:.875rem;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;font-weight:700;font-size:.875rem;border:none;border-radius:12px;cursor:pointer;">
           {{ isset($item) ? 'Simpan Perubahan' : 'Tambah Kategori' }}
         </button>
         <a href="{{ route('admin.category-items.index') }}" style="padding:.875rem 1.5rem;border:1.5px solid #E2E8F0;border-radius:12px;font-weight:600;font-size:.875rem;text-decoration:none;color:#64748B;">Batal</a>

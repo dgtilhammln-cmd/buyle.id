@@ -191,7 +191,7 @@
 
   {{-- Actions --}}
   <div style="display:flex;flex-direction:column;gap:.75rem;">
-    <button type="submit" style="display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:1rem;background:#1eb349;color:#fff;border:none;border-radius:12px;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(30,179,73,0.3);" onmouseover="this.style.background='#1eb349';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#1eb349';this.style.transform='';">
+    <button type="submit" style="display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:1rem;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;border:none;border-radius:12px;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(30,179,73,0.3);" onmouseover="this.style.background='#1eb349';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#1eb349';this.style.transform='';">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
       {{ $g ? 'Update Proyek' : 'Simpan Proyek' }}
     </button>

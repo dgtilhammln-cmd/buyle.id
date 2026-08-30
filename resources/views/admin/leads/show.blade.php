@@ -83,7 +83,7 @@
     }
     
     .btn-primary-new {
-        background: #1eb349; color: #fff; border: none; padding: 0.875rem 1.5rem;
+        background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border: none; padding: 0.875rem 1.5rem;
         border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
         display: flex; align-items: center; justify-content: center; gap: 0.5rem;
         transition: all 0.2s; box-shadow: 0 4px 14px rgba(30,179,73,0.3); width: 100%;

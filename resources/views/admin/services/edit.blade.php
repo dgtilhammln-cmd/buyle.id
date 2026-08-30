@@ -228,7 +228,7 @@
 
   {{-- Tombol Simpan --}}
   <div style="background:#fff;border-radius:20px;padding:1.25rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
-    <button type="submit" style="width:100%;display:flex;align-items:center;justify-content:center;gap:.5rem;background:#1eb349;color:#fff;font-size:.9rem;font-weight:700;padding:.875rem 1.5rem;border-radius:12px;border:none;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(30,179,73,0.3);" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(30,179,73,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(30,179,73,0.3)'">
+    <button type="submit" style="width:100%;display:flex;align-items:center;justify-content:center;gap:.5rem;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;font-size:.9rem;font-weight:700;padding:.875rem 1.5rem;border-radius:12px;border:none;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(30,179,73,0.3);" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(30,179,73,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(30,179,73,0.3)'">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
       Update Layanan
     </button>
@@ -362,7 +362,7 @@
     <p style="font-size:.9rem;color:#64748B;margin:0 0 1.5rem;line-height:1.5;">Apakah Anda yakin semua data (kategori, harga, spek produk, FAQ, dan foto) sudah terisi dengan benar sesuai tema?</p>
     <div style="display:flex;gap:.75rem;">
       <button type="button" onclick="closeConfirmModal()" style="flex:1;padding:.75rem;background:#F1F5F9;color:#64748B;font-weight:700;border:none;border-radius:12px;cursor:pointer;transition:background .2s;" onmouseover="this.style.background='#E2E8F0'" onmouseout="this.style.background='#F1F5F9'">Cek Lagi</button>
-      <button type="button" onclick="submitRealForm()" style="flex:1;padding:.75rem;background:#1eb349;color:#fff;font-weight:700;border:none;border-radius:12px;cursor:pointer;transition:background .2s;box-shadow:0 4px 12px rgba(30,179,73,0.3);" onmouseover="this.style.background='#1eb349'" onmouseout="this.style.background='#1eb349'">Ya, Simpan</button>
+      <button type="button" onclick="submitRealForm()" style="flex:1;padding:.75rem;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;font-weight:700;border:none;border-radius:12px;cursor:pointer;transition:background .2s;box-shadow:0 4px 12px rgba(30,179,73,0.3);" onmouseover="this.style.background='#1eb349'" onmouseout="this.style.background='#1eb349'">Ya, Simpan</button>
     </div>
   </div>
 </div>

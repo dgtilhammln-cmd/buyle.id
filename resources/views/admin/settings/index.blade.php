@@ -219,7 +219,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       Preview Website
     </a>
-    <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:#1eb349;color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;" onmouseover="this.style.background='#16a34a'" onmouseout="this.style.background='#1eb349'">
+    <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;" onmouseover="this.style.background='#16a34a'" onmouseout="this.style.background='#1eb349'">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
       Simpan Semua
     </button>
@@ -958,7 +958,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
         </div>
 
         <div style="margin-top:1.5rem;text-align:right;">
-          <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:#1eb349;color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;">Simpan API</button>
+          <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;">Simpan API</button>
         </div>
       </div>
     </div>
@@ -981,7 +981,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       {{-- Banner Iklan 1 (Atas) --}}
       <div style="padding:1.25rem;border:1px solid #E2E8F0;border-radius:12px;background:#F8FAFC;">
         <h4 style="font-size:0.9rem;font-weight:700;color:#1E293B;margin-bottom:1rem;display:flex;align-items:center;gap:0.4rem;">
-          <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#1eb349;color:#fff;border-radius:50%;font-size:0.75rem;">1</span>
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;border-radius:50%;font-size:0.75rem;">1</span>
           Banner Iklan 1 (Atas)
         </h4>
 
@@ -1007,7 +1007,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       {{-- Banner Iklan 2 (Bawah) --}}
       <div style="padding:1.25rem;border:1px solid #E2E8F0;border-radius:12px;background:#F8FAFC;">
         <h4 style="font-size:0.9rem;font-weight:700;color:#1E293B;margin-bottom:1rem;display:flex;align-items:center;gap:0.4rem;">
-          <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#1eb349;color:#fff;border-radius:50%;font-size:0.75rem;">2</span>
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;border-radius:50%;font-size:0.75rem;">2</span>
           Banner Iklan 2 (Bawah)
         </h4>
 
@@ -1033,7 +1033,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     </div>
 
     <div style="margin-top:1.5rem;text-align:right;">
-      <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:#1eb349;color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;">Simpan Banner Iklan</button>
+      <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;">Simpan Banner Iklan</button>
     </div>
   </div>
 </div>

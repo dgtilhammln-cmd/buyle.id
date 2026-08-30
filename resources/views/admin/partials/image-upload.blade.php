@@ -135,7 +135,7 @@ if (typeof window._imgUploadInit === 'undefined') {
         btnCancel.style.cssText = 'padding:.75rem 1.5rem;background:#F1F5F9;color:#475569;border:none;border-radius:12px;font-weight:700;cursor:pointer;';
         var btnCrop = document.createElement('button');
         btnCrop.innerText = 'Crop & Simpan'; btnCrop.type = 'button';
-        btnCrop.style.cssText = 'padding:.75rem 1.5rem;background:#1eb349;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;';
+        btnCrop.style.cssText = 'padding:.75rem 1.5rem;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;';
         btnWrapper.appendChild(btnCancel); btnWrapper.appendChild(btnCrop);
         container.appendChild(title); container.appendChild(imgWrapper); container.appendChild(btnWrapper);
         modal.appendChild(container); document.body.appendChild(modal);
