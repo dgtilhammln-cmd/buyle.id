@@ -15,7 +15,7 @@
   </div>
 
   <div style="background:#fff;border-radius:20px;box-shadow:0 2px 20px rgba(0,0,0,0.04);padding:2rem;">
-    <form action="{{ $category ? route('admin.product-categories.update', $category) : route('admin.product-categories.store') }}" method="POST">
+    <form action="{{ $category ? route('admin.product-categories.update', $category) : route('admin.product-categories.store') }}" method="POST" enctype="multipart/form-data">
       @csrf
       @if($category) @method('PUT') @endif
 
@@ -97,7 +97,7 @@
             ];
           @endphp
           @foreach($icons as $iconKey => $iconSvg)
-            <div class="icon-option {{ old('icon_value', $category?->icon_value ?? '') == $iconKey ? 'selected' : '' }}" data-key="{{ $iconKey }}" onclick="selectIcon('{{ $iconKey }}', this)" style="width:48px;height:48px;border-radius:12px;border:2px solid {{ old('icon_value', $category?->icon_value ?? '') == $iconKey ? '#3B82F6' : '#E2E8F0' }};display:flex;align-items:center;justify-content:center;cursor:pointer;color:{{ old('icon_value', $category?->icon_value ?? '') == $iconKey ? '#3B82F6' : '#64748B' }};background:{{ old('icon_value', $category?->icon_value ?? '') == $iconKey ? '#f0fdf4' : '#fff' }};transition:all .2s;" title="{{ ucfirst(str_replace('-',' ',$iconKey)) }}">
+            <div class="icon-option {{ old('icon_value', $category?->icon_value ?? '') == $iconKey ? 'selected' : '' }}" data-key="{{ $iconKey }}" onclick="selectIcon('{{ $iconKey }}', this)" style="width:48px;height:48px;border-radius:12px;border:2px solid {{ old('icon_value', $category?->icon_value ?? '') == $iconKey ? '#1eb349' : '#E2E8F0' }};display:flex;align-items:center;justify-content:center;cursor:pointer;color:{{ old('icon_value', $category?->icon_value ?? '') == $iconKey ? '#1eb349' : '#64748B' }};background:{{ old('icon_value', $category?->icon_value ?? '') == $iconKey ? '#f0fdf4' : '#fff' }};transition:all .2s;" title="{{ ucfirst(str_replace('-',' ',$iconKey)) }}">
               <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">{!! $iconSvg !!}</svg>
             </div>
           @endforeach
@@ -218,8 +218,8 @@ function selectIcon(key, element) {
         el.style.color = '#64748B';
         el.style.background = '#fff';
     });
-    element.style.borderColor = '#3B82F6';
-    element.style.color = '#3B82F6';
+    element.style.borderColor = '#1eb349';
+    element.style.color = '#1eb349';
     element.style.background = '#f0fdf4';
 }
 </script>

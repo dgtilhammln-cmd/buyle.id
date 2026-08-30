@@ -1219,7 +1219,7 @@
                                             ];
                                             $svg = $icons[$cat->icon_value] ?? $icons['box'];
                                         @endphp
-                                        <svg width="28" height="28" fill="none" stroke="#3B82F6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">{!! $svg !!}</svg>
+                                        <svg width="28" height="28" fill="none" stroke="#1eb349" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">{!! $svg !!}</svg>
                                     @endif
                                     
                                     @if($cat->badge)
