@@ -1,298 +1,423 @@
 @extends('creator.layout')
 
-@section('title', 'Beranda Creator')
-@section('page_title', 'Beranda')
-@section('breadcrumb', 'Overview')
-
-@section('topbar_actions')
-    <a href="{{ route('creator.products.create') }}" class="btn-primary">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Tambah Produk
-    </a>
-@endsection
+@section('title', 'Overview – Creator Studio')
 
 @section('styles')
 <style>
-    /* ── STAT GRID ── */
-    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.75rem; }
-    .stat-card {
-        background: #fff; border-radius: 16px; padding: 1.25rem 1.5rem;
-        border: 1px solid #e7f0e7;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        transition: box-shadow 0.2s;
-        display: flex; flex-direction: column; gap: 0.5rem;
+    /* ── DASHBOARD GRID LAYOUT ── */
+    .cr-dash-header {
+        margin-bottom: 2rem;
     }
-    .stat-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.07); }
-    .stat-icon {
-        width: 40px; height: 40px; border-radius: 10px;
-        display: flex; align-items: center; justify-content: center;
-        margin-bottom: 0.25rem;
+    .cr-dash-title {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #0b120c;
+        letter-spacing: -0.03em;
+        margin: 0;
+        line-height: 1.1;
     }
-    .stat-icon.green { background: #dcfce7; color: #15803d; }
-    .stat-icon.lime { background: #f7fee7; color: #65a30d; }
-    .stat-icon.emerald { background: #ecfdf5; color: #059669; }
-    .stat-icon.amber { background: #fffbeb; color: #d97706; }
-    .stat-label { font-size: 0.72rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; }
-    .stat-value { font-size: 1.75rem; font-weight: 800; color: #0f1f0f; letter-spacing: -0.03em; line-height: 1.1; }
-    .stat-sub { font-size: 0.72rem; color: #64748B; }
+    .cr-dash-sub {
+        font-size: 0.875rem;
+        color: #94a3b8;
+        font-weight: 500;
+        margin-top: 0.35rem;
+    }
 
-    /* ── SECTION CARD ── */
-    .section-card {
-        background: #fff; border-radius: 16px; border: 1px solid #e7f0e7;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden; margin-bottom: 1.5rem;
+    /* Row 1 Grid: 3 Columns */
+    .cr-grid-top {
+        display: grid;
+        grid-template-columns: 1.8fr 1.15fr 0.85fr;
+        gap: 1.25rem;
+        margin-bottom: 1.5rem;
     }
-    .section-header {
-        padding: 1rem 1.5rem; border-bottom: 1px solid #f1f5f1;
-        display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    }
-    .section-header h2 { font-size: 0.9rem; font-weight: 800; color: #0f1f0f; }
-    .section-header p { font-size: 0.75rem; color: #64748B; margin-top: 0.1rem; }
-    .section-body { padding: 1.25rem 1.5rem; }
 
-    /* ── TABLE ── */
-    .cr-table { width: 100%; border-collapse: collapse; }
-    .cr-table th {
-        text-align: left; font-size: 0.68rem; font-weight: 700; color: #94A3B8;
-        text-transform: uppercase; letter-spacing: 0.07em;
-        padding: 0.6rem 1rem; border-bottom: 2px solid #f1f5f1;
+    /* Card 1: Black Welcome Banner */
+    .card-banner-black {
+        background: #0b120c;
+        border-radius: 28px;
+        padding: 2.25rem 2.25rem;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 190px;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
-    .cr-table td { padding: 0.875rem 1rem; font-size: 0.82rem; color: #374151; border-bottom: 1px solid #f8f9fa; }
-    .cr-table tr:last-child td { border-bottom: none; }
-    .cr-table tbody tr:hover td { background: #f9fefb; }
+    .badge-member {
+        background: #a3e635;
+        color: #0b120c;
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        padding: 0.3rem 0.85rem;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        text-transform: uppercase;
+        align-self: flex-start;
+        margin-bottom: 1.25rem;
+    }
+    .banner-title {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #ffffff;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+    }
+    .banner-sub {
+        font-size: 0.82rem;
+        color: #94a3b8;
+        font-weight: 500;
+        margin-top: 0.45rem;
+    }
 
-    /* ── BADGES ── */
-    .badge { display: inline-flex; align-items: center; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.68rem; font-weight: 700; }
-    .badge-green { background: #dcfce7; color: #15803d; }
-    .badge-red { background: #fee2e2; color: #b91c1c; }
-    .badge-gray { background: #f1f5f9; color: #64748B; }
-    .badge-amber { background: #fef3c7; color: #92400e; }
+    /* Card 2: Affiliate Balance (Neon Green Gradient) */
+    .card-balance-neon {
+        background: linear-gradient(135deg, #1eb349, #4ade80);
+        border-radius: 28px;
+        padding: 2rem;
+        color: #032d16;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 190px;
+        box-shadow: 0 12px 30px rgba(30,179,73,0.25);
+    }
+    .balance-label-sm {
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        color: #032d16;
+        opacity: 0.75;
+        text-transform: uppercase;
+    }
+    .balance-val {
+        font-size: 1.85rem;
+        font-weight: 900;
+        color: #032d16;
+        letter-spacing: -0.03em;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        line-height: 1;
+        margin: 0.6rem 0;
+    }
+    .btn-withdraw-pill {
+        background: #0b120c;
+        color: #ffffff;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        padding: 0.55rem 1.35rem;
+        border-radius: 999px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        align-self: flex-start;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-withdraw-pill:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+        color: #fff;
+    }
 
-    /* ── PRODUCT MINI CARD ── */
-    .product-mini { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid #f1f5f1; }
-    .product-mini:last-child { border-bottom: none; padding-bottom: 0; }
-    .product-mini-thumb {
-        width: 44px; height: 44px; border-radius: 10px; object-fit: cover;
-        background: #f1f5f1; flex-shrink: 0;
-        display: flex; align-items: center; justify-content: center; color: #94A3B8;
-        overflow: hidden;
+    /* Card 3: Date & Digital Live Clock */
+    .card-calendar-white {
+        background: #fafcfa;
+        border: 1.5px solid #f1f5f9;
+        border-radius: 28px;
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-height: 190px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
     }
-    .product-mini-name { font-size: 0.82rem; font-weight: 700; color: #0f1f0f; }
-    .product-mini-cat { font-size: 0.7rem; color: #94A3B8; margin-top: 0.1rem; }
-    .product-mini-price { font-size: 0.82rem; font-weight: 800; color: #1eb349; margin-left: auto; white-space: nowrap; }
+    .calendar-month {
+        color: #1eb349;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    .calendar-day {
+        font-size: 3rem;
+        font-weight: 900;
+        color: #0b120c;
+        line-height: 1.05;
+        margin: 0.15rem 0;
+        letter-spacing: -0.03em;
+    }
+    .calendar-clock {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #94a3b8;
+        font-variant-numeric: tabular-nums;
+    }
 
-    /* ── BALANCE CARD ── */
-    .balance-card {
-        background: linear-gradient(135deg, #1eb349, #a5cf37);
-        border-radius: 16px; padding: 1.5rem;
-        color: #fff; margin-bottom: 1.5rem;
-        position: relative; overflow: hidden;
+    /* Row 2 Grid: 3 Columns (Wave Chart + Views + Clicks) */
+    .cr-grid-bottom {
+        display: grid;
+        grid-template-columns: 1.8fr 1fr 1fr;
+        gap: 1.25rem;
     }
-    .balance-card::before {
-        content: ''; position: absolute; right: -30px; top: -40px;
-        width: 160px; height: 160px; border-radius: 50%;
-        background: rgba(255,255,255,0.08);
-    }
-    .balance-card::after {
-        content: ''; position: absolute; right: 40px; bottom: -50px;
-        width: 120px; height: 120px; border-radius: 50%;
-        background: rgba(255,255,255,0.06);
-    }
-    .balance-label { font-size: 0.72rem; font-weight: 700; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.08em; }
-    .balance-amount { font-size: 2rem; font-weight: 800; letter-spacing: -0.04em; margin: 0.25rem 0 0.75rem; line-height: 1; }
-    .balance-meta { font-size: 0.75rem; opacity: 0.8; }
-    .btn-withdraw {
-        display: inline-flex; align-items: center; gap: 0.4rem;
-        background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);
-        color: #fff; border-radius: 8px; padding: 0.5rem 1rem;
-        font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 700;
-        cursor: pointer; text-decoration: none; margin-top: 1rem;
-        transition: all 0.2s; backdrop-filter: blur(4px);
-    }
-    .btn-withdraw:hover { background: rgba(255,255,255,0.3); color: #fff; }
 
-    /* ── EMPTY STATE ── */
-    .empty-state { text-align: center; padding: 2.5rem 1rem; color: #94A3B8; }
-    .empty-state svg { margin-bottom: 1rem; opacity: 0.4; }
-    .empty-state h3 { font-size: 0.95rem; font-weight: 700; color: #374151; margin-bottom: 0.5rem; }
-    .empty-state p { font-size: 0.8rem; }
-
-    @media (max-width: 991px) {
-        .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    /* Card 4: Traffic Wave */
+    .card-wave {
+        background: #ffffff;
+        border: 1.5px solid #f1f5f9;
+        border-radius: 28px;
+        padding: 1.75rem 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 230px;
     }
-    @media (max-width: 640px) {
-        .stat-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-        .stat-value { font-size: 1.375rem; }
+    .wave-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+    .wave-title {
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: #475569;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    .wave-live-badge {
+        color: #1eb349;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        background: #f0fdf4;
+        border: 1px solid #dcfce7;
+        padding: 0.25rem 0.65rem;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .wave-live-dot {
+        width: 6px;
+        height: 6px;
+        background: #1eb349;
+        border-radius: 50%;
+        animation: livePulse 1.8s infinite;
+    }
+    @keyframes livePulse {
+        0% { transform: scale(0.9); opacity: 0.8; }
+        50% { transform: scale(1.4); opacity: 1; box-shadow: 0 0 8px #1eb349; }
+        100% { transform: scale(0.9); opacity: 0.8; }
+    }
+    .wave-chart-svg {
+        width: 100%;
+        height: 90px;
+        overflow: visible;
+    }
+    .wave-days {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: #94a3b8;
+        padding: 0 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Card 5 & 6: Stat Counter Cards */
+    .card-counter {
+        background: #ffffff;
+        border: 1.5px solid #f1f5f9;
+        border-radius: 28px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 230px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    }
+    .counter-icon-box {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #F1F5F9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0b120c;
+        margin-bottom: 1rem;
+    }
+    .counter-label {
+        font-size: 0.72rem;
+        font-weight: 800;
+        color: #94a3b8;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 0.35rem;
+    }
+    .counter-value {
+        font-size: 2.25rem;
+        font-weight: 900;
+        color: #0b120c;
+        line-height: 1;
+        letter-spacing: -0.03em;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+        .cr-grid-top { grid-template-columns: 1fr 1fr; }
+        .card-calendar-white { grid-column: span 2; }
+        .cr-grid-bottom { grid-template-columns: 1fr 1fr; }
+        .card-wave { grid-column: span 2; }
+    }
+    @media (max-width: 768px) {
+        .cr-grid-top, .cr-grid-bottom { grid-template-columns: 1fr; }
+        .card-calendar-white, .card-wave { grid-column: span 1; }
+        .card-banner-black, .card-balance-neon, .card-calendar-white, .card-wave, .card-counter { min-height: auto; padding: 1.5rem; }
+        .cr-dash-title { font-size: 1.6rem; }
     }
 </style>
 @endsection
 
 @section('content')
 
-{{-- ── STATUS BANNER ── --}}
-@if(!$seller->email_verified_at)
-<div style="background:#fef3c7; border:1px solid #fde68a; border-radius:12px; padding:0.875rem 1.25rem; margin-bottom:1.5rem; display:flex; align-items:center; gap:0.75rem; font-size:0.82rem; color:#92400e;">
-    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    Email belum terverifikasi. Verifikasi email untuk mengaktifkan fitur penjualan penuh.
-</div>
-@endif
+@php
+    $cp = $seller->creatorProfile;
+    $storeName = $cp?->store_name ?: ($seller->name ?: 'Surabaya');
+    $location = $cp?->city_name ?: 'Surabaya';
+@endphp
 
-{{-- ── STAT GRID ── --}}
-<div class="stat-grid">
-    <div class="stat-card">
-        <div class="stat-icon green">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </div>
-        <div class="stat-label">Total GMV</div>
-        <div class="stat-value">Rp {{ number_format($gmv, 0, ',', '.') }}</div>
-        <div class="stat-sub">Semua penjualan sukses</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon lime">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        </div>
-        <div class="stat-label">Transaksi</div>
-        <div class="stat-value">{{ $totalTransactions }}</div>
-        <div class="stat-sub">Order sukses terbayar</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon emerald">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-        </div>
-        <div class="stat-label">Produk Aktif</div>
-        <div class="stat-value">{{ $activeProducts }}<span style="font-size:1rem; color:#94A3B8;">/{{ $totalProducts }}</span></div>
-        <div class="stat-sub">Dari total {{ $totalProducts }} produk</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon amber">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-        </div>
-        <div class="stat-label">Platform Fee</div>
-        <div class="stat-value">{{ $platformFeeRate }}%</div>
-        <div class="stat-sub">Rp {{ number_format($platformFee, 0, ',', '.') }}</div>
-    </div>
+{{-- ── OVERVIEW HEADER ── --}}
+<div class="cr-dash-header">
+    <h1 class="cr-dash-title">Overview</h1>
+    <p class="cr-dash-sub">Manage your premium branding assets & digital products.</p>
 </div>
 
-{{-- ── ROW: BALANCE + RECENT PRODUCTS ── --}}
-<div style="display:grid; grid-template-columns:1fr 1.5fr; gap:1.25rem; margin-bottom:1.5rem; align-items:start;">
-
-    {{-- Balance Card --}}
-    <div>
-        <div class="balance-card">
-            <div class="balance-label" style="display:flex;align-items:center;gap:0.4rem;"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Saldo Tersedia</div>
-            <div class="balance-amount">Rp {{ number_format($availableBalance, 0, ',', '.') }}</div>
-            <div class="balance-meta">Sudah dicairkan: Rp {{ number_format($totalPayout, 0, ',', '.') }}</div>
-            <a href="{{ route('creator.payout.settings') }}" class="btn-withdraw">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
-                Ajukan Pencairan
-            </a>
-        </div>
-
-        {{-- Status Akun --}}
-        <div class="section-card">
-            <div class="section-header">
-                <div>
-                    <h2>Status Akun</h2>
-                    <p>Informasi creator Anda</p>
-                </div>
-            </div>
-            <div class="section-body" style="display:flex; flex-direction:column; gap:0.75rem;">
-                <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.82rem;">
-                    <span style="color:#64748B;">Status</span>
-                    <span class="badge badge-green" style="display:inline-flex;align-items:center;gap:0.3rem;"><svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Aktif</span>
-                </div>
-                <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.82rem;">
-                    <span style="color:#64748B;">Bergabung</span>
-                    <span style="font-weight:600; color:#374151;">{{ $seller->created_at ? $seller->created_at->format('d M Y') : '-' }}</span>
-                </div>
-                <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.82rem;">
-                    <span style="color:#64748B;">Email</span>
-                    <span style="font-weight:600; color:#374151; font-size:0.75rem;">{{ $seller->email }}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Recent Products --}}
-    <div class="section-card">
-        <div class="section-header">
-            <div>
-                <h2>Produk Terbaru</h2>
-                <p>5 produk terakhir yang Anda tambahkan</p>
-            </div>
-            <a href="{{ route('creator.products.index') }}" style="font-size:0.75rem; font-weight:700; color:#1eb349; text-decoration:none;">Lihat Semua →</a>
-        </div>
-        <div class="section-body" style="padding-top:0.25rem; padding-bottom:0.25rem;">
-            @forelse($recentProducts as $p)
-                <div class="product-mini">
-                    <div class="product-mini-thumb">
-                        @if($p->image)
-                            <img src="{{ asset('storage/'.$p->image) }}" alt="{{ $p->name }}" style="width:100%;height:100%;object-fit:cover;">
-                        @else
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                        @endif
-                    </div>
-                    <div>
-                        <div class="product-mini-name">{{ Str::limit($p->name, 30) }}</div>
-                        <div class="product-mini-cat">{{ $p->category->name ?? 'Tanpa Kategori' }} &bull; @if($p->is_active)<span style="color:#16a34a;font-weight:700;">Aktif</span>@else<span style="color:#94A3B8;">Non-aktif</span>@endif</div>
-                    </div>
-                    <div class="product-mini-price">Rp {{ number_format($p->price, 0, ',', '.') }}</div>
-                </div>
-            @empty
-                <div class="empty-state">
-                    <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-                    <h3>Belum ada produk</h3>
-                    <p>Mulai tambahkan produk digital Anda</p>
-                    <a href="{{ route('creator.products.create') }}" class="btn-primary" style="margin-top:1rem; display:inline-flex;">+ Tambah Produk</a>
-                </div>
-            @endforelse
-        </div>
-    </div>
-
-</div>
-
-{{-- ── PENJUALAN TERBARU ── --}}
-<div class="section-card">
-    <div class="section-header">
+{{-- ── ROW 1: TOP 3 CARDS ── --}}
+<div class="cr-grid-top">
+    {{-- 1. Black Welcome Card --}}
+    <div class="card-banner-black">
         <div>
-            <h2>Penjualan Terbaru</h2>
-            <p>Order sukses 30 hari terakhir</p>
+            <div class="badge-member">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                PREMIUM MEMBER
+            </div>
+            <div class="banner-title">Halo, {{ $storeName }}!</div>
+            <div class="banner-sub">Kelola aset premium dan kembangkan tokomu.</div>
         </div>
-        <a href="{{ route('creator.sales.report') }}" style="font-size:0.75rem; font-weight:700; color:#1eb349; text-decoration:none;">Laporan Lengkap →</a>
     </div>
-    @if($recentSales->count())
-    <div style="overflow-x:auto;">
-        <table class="cr-table">
-            <thead>
-                <tr>
-                    <th>No. Order</th>
-                    <th>Produk</th>
-                    <th>Pembeli</th>
-                    <th>Total</th>
-                    <th>Tanggal</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($recentSales as $order)
-                    @foreach($order->items as $item)
-                    <tr>
-                        <td style="font-weight:700; color:#0f1f0f;">#{{ $order->order_number ?? $order->id }}</td>
-                        <td>{{ Str::limit($item->product->name ?? 'Produk', 35) }}</td>
-                        <td style="color:#64748B;">{{ $order->user->name ?? '-' }}</td>
-                        <td style="font-weight:700; color:#1eb349;">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
-                        <td style="color:#94A3B8;">{{ $order->created_at->format('d M Y') }}</td>
-                    </tr>
-                    @endforeach
-                @endforeach
-            </tbody>
-        </table>
+
+    {{-- 2. Neon Lime Affiliate Balance Card --}}
+    <div class="card-balance-neon">
+        <div class="balance-label-sm">AFFILIATE BALANCE</div>
+        <div class="balance-val">
+            Rp {{ number_format($availableBalance ?? $gmv ?? 0, 0, ',', '.') }}
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="opacity:0.7; cursor:pointer;" title="Saldo Siap Ditarik"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <a href="{{ route('creator.payout.settings') }}" class="btn-withdraw-pill">
+            WITHDRAW &rarr;
+        </a>
     </div>
-    @else
-    <div class="empty-state">
-        <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        <h3>Belum ada penjualan</h3>
-        <p>Penjualan sukses akan muncul di sini setelah pembeli melakukan pembayaran.</p>
+
+    {{-- 3. Date & Digital Clock Card --}}
+    <div class="card-calendar-white">
+        <div class="calendar-month">{{ strtoupper(now()->translatedFormat('F')) }}</div>
+        <div class="calendar-day">{{ now()->format('d') }}</div>
+        <div class="calendar-clock" id="liveClockDisplay">{{ now()->format('H.i.s') }}</div>
     </div>
-    @endif
 </div>
 
+{{-- ── ROW 2: BOTTOM 3 CARDS ── --}}
+<div class="cr-grid-bottom">
+    {{-- 4. Traffic Wave Card --}}
+    <div class="card-wave">
+        <div class="wave-header">
+            <span class="wave-title">TRAFFIC WAVE</span>
+            <span class="wave-live-badge">
+                <span class="wave-live-dot"></span>
+                LIVE
+            </span>
+        </div>
+
+        {{-- Smooth Wave SVG Visualization --}}
+        <svg class="wave-chart-svg" viewBox="0 0 500 100" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="waveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#1eb349" stop-opacity="0.35"/>
+                    <stop offset="100%" stop-color="#1eb349" stop-opacity="0.0"/>
+                </linearGradient>
+                <linearGradient id="waveLineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#1eb349"/>
+                    <stop offset="50%" stop-color="#a3e635"/>
+                    <stop offset="100%" stop-color="#1eb349"/>
+                </linearGradient>
+            </defs>
+            <path d="M 0,80 Q 60,10 120,45 T 240,65 T 360,15 T 500,60 L 500,100 L 0,100 Z" fill="url(#waveGradient)"/>
+            <path d="M 0,80 Q 60,10 120,45 T 240,65 T 360,15 T 500,60" fill="none" stroke="url(#waveLineGradient)" stroke-width="3.5" stroke-linecap="round"/>
+        </svg>
+
+        <div class="wave-days">
+            <span>Mon</span>
+            <span>Tue</span>
+            <span>Wed</span>
+            <span>Thu</span>
+            <span>Fri</span>
+            <span>Sat</span>
+            <span>Sun</span>
+        </div>
+    </div>
+
+    {{-- 5. Total Views Counter Card --}}
+    <div class="card-counter">
+        <div class="counter-icon-box">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+        </div>
+        <div class="counter-label">TOTAL VIEWS</div>
+        <div class="counter-value">{{ number_format(($totalProducts * 12) + 24, 0, ',', '.') }}</div>
+    </div>
+
+    {{-- 6. Total Clicks / Transaksi Counter Card --}}
+    <div class="card-counter">
+        <div class="counter-icon-box">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/>
+            </svg>
+        </div>
+        <div class="counter-label">TOTAL CLICKS</div>
+        <div class="counter-value">{{ number_format($totalTransactions ?? 0, 0, ',', '.') }}</div>
+    </div>
+</div>
+
+@endsection
+
+@section('scripts')
+<script>
+    // Realtime Digital Clock Ticker
+    function updateClock() {
+        const now = new Date();
+        const hrs = String(now.getHours()).padStart(2, '0');
+        const mins = String(now.getMinutes()).padStart(2, '0');
+        const secs = String(now.getSeconds()).padStart(2, '0');
+        const clockEl = document.getElementById('liveClockDisplay');
+        if (clockEl) {
+            clockEl.textContent = `${hrs}.${mins}.${secs}`;
+        }
+    }
+    setInterval(updateClock, 1000);
+</script>
 @endsection

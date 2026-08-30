@@ -5,10 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Creator Dashboard') – buyle.id</title>
+    <title>@yield('title', 'Creator Studio') – buyle.id</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet">
     <style>
         *,
         *::before,
@@ -20,212 +19,210 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            font-weight: 400;
-            background: #f1f5f1;
-            color: #1a1a1a;
+            background: #0b120c;
+            color: #0f172a;
             min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
         }
 
-        h1, h2, h3, h4, h5, h6, strong, b { font-weight: 500 !important; }
-
-        /* ── SIDEBAR ── */
+        /* ── SIDEBAR (Dark Shell) ── */
         .cr-sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
             width: 240px;
-            background: linear-gradient(135deg, #1eb349, #a5cf37);
-            z-index: 100;
+            background: #0b120c;
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s;
-            box-shadow: 4px 0 24px rgba(30,179,73,0.25);
+            padding: 1.75rem 0 1.75rem 1.25rem;
+            flex-shrink: 0;
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            z-index: 50;
         }
 
-        .cr-sidebar-logo {
-            padding: 1.25rem 1.5rem 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        .cr-brand-box {
+            background: #111a13;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 0.75rem 1rem;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.65rem;
+            margin-right: 1.25rem;
+            margin-bottom: 2.25rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .cr-sidebar-logo img {
-            height: 32px;
-            width: auto;
-        }
-
-        .cr-sidebar-logo-text {
+        .cr-brand-logo-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 900;
             font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .cr-brand-text {
+            font-size: 0.95rem;
             font-weight: 800;
             color: #fff;
+            line-height: 1.1;
         }
 
-        .cr-sidebar-logo-sub {
-            font-size: 0.65rem;
-            font-weight: 500;
-            color: #a5cf37;
+        .cr-brand-sub {
+            font-size: 0.62rem;
+            color: #a3e635;
+            font-weight: 600;
             letter-spacing: 0.08em;
             text-transform: uppercase;
         }
 
         .cr-nav {
             flex: 1;
-            padding: 1rem 0;
-            overflow-y: auto;
-        }
-
-        .cr-nav-section {
-            padding: 0.5rem 1.5rem 0.25rem;
-            font-size: 0.6rem;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
         }
 
         .cr-nav-link {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.65rem 1.5rem;
+            gap: 0.85rem;
+            padding: 0.85rem 1.25rem;
             font-size: 0.82rem;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.6);
+            color: #7e8d81;
             text-decoration: none;
-            border-left: 3px solid transparent;
-            transition: all 0.2s;
+            border-radius: 30px 0 0 30px;
+            transition: color 0.2s;
+            position: relative;
         }
 
         .cr-nav-link:hover {
             color: #fff;
-            background: rgba(255, 255, 255, 0.05);
         }
 
+        /* Seamless Active Tab Cutout into White Canvas */
         .cr-nav-link.active {
-            color: #a5cf37;
-            background: rgba(165, 207, 55, 0.1);
-            border-left-color: #a5cf37;
-        }
-
-        .cr-nav-link svg {
-            flex-shrink: 0;
-            opacity: 0.7;
+            background: #ffffff;
+            color: #0b120c !important;
+            font-weight: 800;
+            position: relative;
+            z-index: 10;
         }
 
         .cr-nav-link.active svg {
-            opacity: 1;
+            stroke: #0b120c !important;
+            stroke-width: 2.2;
         }
 
-        .cr-sidebar-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        .cr-nav-link.active::before {
+            content: '';
+            position: absolute;
+            top: -24px;
+            right: 0;
+            width: 24px;
+            height: 24px;
+            background: transparent;
+            border-bottom-right-radius: 24px;
+            box-shadow: 10px 10px 0 10px #ffffff;
+            pointer-events: none;
         }
 
-        .cr-user-chip {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.6rem 0.75rem;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.05);
+        .cr-nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -24px;
+            right: 0;
+            width: 24px;
+            height: 24px;
+            background: transparent;
+            border-top-right-radius: 24px;
+            box-shadow: 10px -10px 0 10px #ffffff;
+            pointer-events: none;
         }
 
-        .cr-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #1eb349, #a5cf37);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: #fff;
+        .cr-nav-link svg {
+            width: 18px;
+            height: 18px;
             flex-shrink: 0;
+            stroke-width: 2;
         }
 
-        .cr-user-name {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .cr-sidebar-bottom {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            padding-top: 1.5rem;
+            margin-right: 1.25rem;
         }
 
-        .cr-user-role {
-            font-size: 0.65rem;
-            color: #a5cf37;
-            font-weight: 600;
-        }
-
-        .cr-logout-btn {
+        .cr-bottom-link-web {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            width: 100%;
-            margin-top: 0.5rem;
-            padding: 0.5rem;
-            border-radius: 8px;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            color: #f87171;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
+            gap: 0.65rem;
+            color: #a3e635;
+            font-size: 0.85rem;
+            font-weight: 700;
             text-decoration: none;
+            padding: 0.65rem 0.85rem;
+            border-radius: 14px;
             transition: all 0.2s;
         }
 
-        .cr-logout-btn:hover {
-            background: rgba(239, 68, 68, 0.2);
+        .cr-bottom-link-web:hover {
+            background: rgba(163, 230, 53, 0.12);
         }
 
-        /* ── MAIN AREA ── */
-        .cr-main {
-            margin-left: 240px;
-            min-height: 100vh;
+        .cr-bottom-link-logout {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            color: #f87171;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 0.65rem 0.85rem;
+            border-radius: 14px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-family: inherit;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .cr-bottom-link-logout:hover {
+            background: rgba(248, 113, 113, 0.12);
+        }
+
+        /* ── MAIN CANVAS (Large White Rounded Card) ── */
+        .cr-main-wrapper {
+            flex: 1;
+            min-width: 0;
+            padding: 1.25rem 1.25rem 1.25rem 0;
+            display: flex;
+        }
+
+        .cr-main-canvas {
+            flex: 1;
+            background: #ffffff;
+            border-radius: 40px;
+            padding: 2.75rem 3rem;
+            min-height: calc(100vh - 2.5rem);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
             display: flex;
             flex-direction: column;
         }
 
-        .cr-topbar {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid #e7f0e7;
-            padding: 0 2rem;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-        }
-
-        .cr-topbar-title {
-            font-size: 1rem;
-            font-weight: 800;
-            color: #0f1f0f;
-        }
-
-        .cr-topbar-breadcrumb {
-            font-size: 0.75rem;
-            color: #64748B;
-            margin-top: 0.1rem;
-        }
-
-        .cr-topbar-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
+        /* Global button style */
         .btn-primary {
             display: inline-flex;
             align-items: center;
@@ -233,83 +230,102 @@
             background: linear-gradient(135deg, #1eb349, #a5cf37);
             color: #fff;
             border: none;
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            padding: 0.65rem 1.35rem;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             font-weight: 700;
             cursor: pointer;
             text-decoration: none;
-            box-shadow: 0 2px 8px rgba(30, 179, 73, 0.3);
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
             transition: all 0.2s;
         }
 
         .btn-primary:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.4);
+            box-shadow: 0 6px 20px rgba(30, 179, 73, 0.45);
         }
 
-        .cr-content {
-            flex: 1;
-            padding: 2rem;
-        }
-
-        /* ── FLASH ── */
+        /* Flash messages */
         .flash-success {
             background: #f0fdf4;
             border: 1px solid #bbf7d0;
-            border-radius: 10px;
-            padding: 0.75rem 1rem;
+            border-radius: 16px;
+            padding: 0.875rem 1.25rem;
             margin-bottom: 1.5rem;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #15803d;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-weight: 600;
         }
 
         .flash-error {
             background: #fef2f2;
             border: 1px solid #fecaca;
-            border-radius: 10px;
-            padding: 0.75rem 1rem;
+            border-radius: 16px;
+            padding: 0.875rem 1.25rem;
             margin-bottom: 1.5rem;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #b91c1c;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-weight: 600;
         }
 
-        /* ── MOBILE ── */
-        .cr-mobile-toggle {
+        /* ── RESPONSIVE MOBILE ── */
+        .cr-mobile-bar {
             display: none;
-            position: fixed;
-            top: 1rem;
-            left: 1rem;
-            z-index: 200;
-            background: #0f1f0f;
-            border: none;
-            border-radius: 8px;
+            background: #0b120c;
+            padding: 1rem 1.25rem;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .cr-mobile-toggle {
+            background: #111a13;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 12px;
             width: 40px;
             height: 40px;
+            display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            color: #fff;
         }
 
         .cr-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             z-index: 90;
         }
 
-        @media (max-width: 991px) {
+        @media (max-width: 1024px) {
+            body {
+                flex-direction: column;
+            }
+
+            .cr-mobile-bar {
+                display: flex;
+            }
+
             .cr-sidebar {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
                 transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                z-index: 100;
+                box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
             }
 
             .cr-sidebar.open {
@@ -320,20 +336,24 @@
                 display: block;
             }
 
-            .cr-main {
-                margin-left: 0;
+            .cr-main-wrapper {
+                padding: 0.75rem;
             }
 
-            .cr-topbar {
-                padding: 0 1rem 0 4rem;
+            .cr-main-canvas {
+                border-radius: 28px;
+                padding: 1.5rem;
+                min-height: auto;
             }
 
-            .cr-content {
-                padding: 1.25rem;
+            .cr-nav-link.active::before,
+            .cr-nav-link.active::after {
+                display: none;
             }
 
-            .cr-mobile-toggle {
-                display: flex;
+            .cr-nav-link {
+                border-radius: 16px;
+                margin-right: 1.25rem;
             }
         }
     </style>
@@ -342,173 +362,153 @@
 
 <body>
 
-    <button class="cr-mobile-toggle" id="crMobileToggle" aria-label="Menu">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-        </svg>
-    </button>
+    {{-- MOBILE TOPBAR --}}
+    <div class="cr-mobile-bar">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+            <div class="cr-brand-logo-icon">B</div>
+            <div class="cr-brand-text">buyle.id <span style="color:#a3e635;font-size:0.7rem;">CREATOR</span></div>
+        </div>
+        <button class="cr-mobile-toggle" id="crMobileToggle" aria-label="Menu">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+        </button>
+    </div>
+
     <div class="cr-overlay" id="crOverlay"></div>
 
     {{-- SIDEBAR --}}
     <aside class="cr-sidebar" id="crSidebar">
-        <div class="cr-sidebar-logo">
-            @php $logo = \App\Models\Setting::get('logo'); @endphp
+        @php 
+            $logo = \App\Models\Setting::get('logo'); 
+            $isBuyer = auth()->user()->role === 'buyer';
+            $cp = auth()->user()->creatorProfile;
+            $storeSlug = $cp->store_slug ?? '';
+        @endphp
+
+        {{-- Brand Box --}}
+        <div class="cr-brand-box">
             @if($logo)
-                <img src="{{ asset('storage/' . $logo) }}" alt="buyle.id">
+                <img src="{{ asset('storage/' . $logo) }}" alt="buyle.id" style="height:26px;width:auto;max-width:32px;object-fit:contain;">
+            @else
+                <div class="cr-brand-logo-icon">B</div>
             @endif
             <div>
-                <div class="cr-sidebar-logo-sub">Creator Studio</div>
+                <div class="cr-brand-text">buyle.id</div>
+                <div class="cr-brand-sub">Creator Studio</div>
             </div>
         </div>
 
-        @php $isBuyer = auth()->user()->role === 'buyer'; @endphp
+        {{-- Nav Links --}}
         <nav class="cr-nav">
-            <div class="cr-nav-section">Utama</div>
             <a href="{{ $isBuyer ? '#' : route('creator.dashboard') }}"
                 onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.dashboard') ? 'active' : '' }}">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="3" y="3" width="7" height="7" rx="1" />
-                    <rect x="14" y="3" width="7" height="7" rx="1" />
-                    <rect x="3" y="14" width="7" height="7" rx="1" />
-                    <rect x="14" y="14" width="7" height="7" rx="1" />
-                </svg>
-                Beranda
-                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;opacity:0.7;">🔒</span> @endif
-            </a>
-
-            <div class="cr-nav-section" style="margin-top:0.75rem;">Katalog</div>
-            <a href="{{ $isBuyer ? '#' : route('creator.products.index') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.products*') ? 'active' : '' }}">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path
-                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                </svg>
-                Produk Digital
-                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;opacity:0.7;">🔒</span> @endif
-            </a>
-            <a href="{{ $isBuyer ? '#' : route('creator.groups.index') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.groups*') ? 'active' : '' }}">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                    <path d="M2 17l10 5 10-5" />
-                    <path d="M2 12l10 5 10-5" />
-                </svg>
-                Kelompok Produk
-                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;opacity:0.7;">🔒</span> @endif
-            </a>
-
-            <div class="cr-nav-section" style="margin-top:0.75rem;">Keuangan</div>
-            <a href="{{ $isBuyer ? '#' : route('creator.payout.settings') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.payout*') ? 'active' : '' }}">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="1" y="4" width="22" height="16" rx="2" />
-                    <line x1="1" y1="10" x2="23" y2="10" />
-                </svg>
-                Pencairan Dana
-                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;opacity:0.7;">🔒</span> @endif
-            </a>
-            <a href="{{ $isBuyer ? '#' : route('creator.sales.report') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.sales*') ? 'active' : '' }}">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <line x1="18" y1="20" x2="18" y2="10" />
-                    <line x1="12" y1="20" x2="12" y2="4" />
-                    <line x1="6" y1="20" x2="6" y2="14" />
-                </svg>
-                Laporan Penjualan
-                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;opacity:0.7;">🔒</span> @endif
-            </a>
-
-            <div class="cr-nav-section" style="margin-top:0.75rem;">Toko</div>
-            <a href="{{ $isBuyer ? route('creator.onboarding') : route('creator.profile.edit') }}"
-                class="cr-nav-link {{ request()->routeIs('creator.profile*', 'creator.onboarding') ? 'active' : '' }}">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
-                Profil & Pengaturan
+                Overview
+                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
             </a>
-            @php 
-                $storeSlug = auth()->user()->creatorProfile->store_slug ?? '';
-            @endphp
-            <a href="{{ $storeSlug ? route('store.show', $storeSlug) : url('/') }}" target="_blank" class="cr-nav-link">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+
+            <a href="{{ $isBuyer ? '#' : route('creator.products.index') }}"
+                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                class="cr-nav-link {{ request()->routeIs('creator.products*') ? 'active' : '' }}">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+                Link Settings
+                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+            </a>
+
+            <a href="{{ $isBuyer ? route('creator.onboarding') : route('creator.profile.edit') }}"
+                class="cr-nav-link {{ request()->routeIs('creator.profile*', 'creator.onboarding') ? 'active' : '' }}">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                    <path d="M2 2l7.586 7.586"></path>
+                    <circle cx="11" cy="11" r="2"></circle>
+                </svg>
+                Tema & Visual
+            </a>
+
+            <a href="{{ $isBuyer ? '#' : route('creator.sales.report') }}"
+                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                class="cr-nav-link {{ request()->routeIs('creator.sales*') ? 'active' : '' }}">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                Analytics
+                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+            </a>
+
+            <a href="{{ $isBuyer ? '#' : route('creator.payout.settings') }}"
+                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                class="cr-nav-link {{ request()->routeIs('creator.payout*', 'creator.groups*') ? 'active' : '' }}">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                </svg>
+                Premium & Saldo
+                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+            </a>
+        </nav>
+
+        {{-- Bottom Actions --}}
+        <div class="cr-sidebar-bottom">
+            <a href="{{ $storeSlug ? route('store.show', $storeSlug) : url('/') }}" target="_blank" class="cr-bottom-link-web">
+                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                     <polyline points="15 3 21 3 21 9" />
                     <line x1="10" y1="14" x2="21" y2="3" />
                 </svg>
-                Lihat Website
+                Lihat Web
             </a>
-        </nav>
 
-        <div class="cr-sidebar-footer">
-            <div class="cr-user-chip">
-            @if(auth()->user()->avatar)
-                <img src="{{ asset('storage/' . auth()->user()->avatar) }}" class="cr-avatar" style="border:none;object-fit:cover;" alt="Avatar">
-            @else
-                <div class="cr-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}</div>
-            @endif
-                <div style="overflow:hidden;">
-                    <div class="cr-user-name">{{ auth()->user()->name }}</div>
-                    <div class="cr-user-role">Creator</div>
-                </div>
-            </div>
-            <a href="{{ route('logout') }}"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                class="cr-logout-btn">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                    <polyline points="16 17 21 12 16 7" />
-                    <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-                Logout
-            </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">@csrf</form>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="margin:0;">
+                @csrf
+                <button type="submit" class="cr-bottom-link-logout">
+                    <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                        <line x1="12" y1="2" x2="12" y2="12"></line>
+                    </svg>
+                    Logout
+                </button>
+            </form>
         </div>
     </aside>
 
-    {{-- MAIN --}}
-    <div class="cr-main">
-        <header class="cr-topbar">
-            <div>
-                <div class="cr-topbar-title">@yield('page_title', 'Dashboard')</div>
-                <div class="cr-topbar-breadcrumb">Creator Studio › @yield('breadcrumb', 'Beranda')</div>
-            </div>
-            <div class="cr-topbar-actions">
-                @yield('topbar_actions')
-            </div>
-        </header>
-
-        <div class="cr-content">
+    {{-- MAIN CANVAS WRAPPER --}}
+    <div class="cr-main-wrapper">
+        <main class="cr-main-canvas">
             @if(session('success'))
                 <div class="flash-success">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                         <polyline points="22 4 12 14.01 9 11.01" />
                     </svg>
                     {{ session('success') }}
                 </div>
             @endif
+
             @if(session('warning_onboarding'))
-                <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:0.75rem;box-shadow:0 2px 8px rgba(245,158,11,0.08);">
-                    <div style="width:32px;height:32px;border-radius:50%;background:#FEF3C7;color:#D97706;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.1rem;">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:18px;padding:1.25rem 1.5rem;margin-bottom:2rem;display:flex;align-items:flex-start;gap:0.85rem;box-shadow:0 2px 12px rgba(245,158,11,0.08);">
+                    <div style="width:34px;height:34px;border-radius:50%;background:#FEF3C7;color:#D97706;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     </div>
                     <div>
-                        <div style="font-size:0.9rem;font-weight:700;color:#92400E;margin-bottom:0.2rem;">Langkah Terakhir: Lengkapi Data Creator</div>
-                        <div style="font-size:0.8rem;color:#B45309;line-height:1.5;">{{ session('warning_onboarding') }}</div>
+                        <div style="font-size:0.95rem;font-weight:700;color:#92400E;margin-bottom:0.2rem;">Langkah Terakhir: Lengkapi Data Creator</div>
+                        <div style="font-size:0.82rem;color:#B45309;line-height:1.5;">{{ session('warning_onboarding') }}</div>
                     </div>
                 </div>
             @endif
+
             @if(session('error'))
                 <div class="flash-error">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="10" />
                         <line x1="15" y1="9" x2="9" y2="15" />
                         <line x1="9" y1="9" x2="15" y2="15" />
@@ -518,21 +518,21 @@
             @endif
 
             @yield('content')
-        </div>
+        </main>
     </div>
 
     {{-- Interactive Locked Feature Modal for Buyers --}}
-    <div id="lockedFeatureModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.5);backdrop-filter:blur(4px);z-index:9999;align-items:center;justify-content:center;padding:1rem;">
-        <div style="background:#fff;border-radius:20px;max-width:440px;width:100%;padding:2rem;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.15);position:relative;animation:modalScale 0.25s cubic-bezier(0.34,1.56,0.64,1);">
+    <div id="lockedFeatureModal" style="display:none;position:fixed;inset:0;background:rgba(11,18,12,0.7);backdrop-filter:blur(6px);z-index:9999;align-items:center;justify-content:center;padding:1rem;">
+        <div style="background:#fff;border-radius:28px;max-width:440px;width:100%;padding:2.25rem 2rem;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.25);position:relative;animation:modalScale 0.25s cubic-bezier(0.34,1.56,0.64,1);">
             <div style="width:64px;height:64px;border-radius:50%;background:#F0FDF4;color:#1eb349;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;border:2px solid #BBF7D0;">
                 <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </div>
-            <h3 style="font-size:1.2rem;font-weight:800;color:#0F172A;margin:0 0 0.5rem;font-family:'Montserrat',sans-serif;">Yuk, Jadi Creator Dulu! 🚀</h3>
+            <h3 style="font-size:1.25rem;font-weight:800;color:#0F172A;margin:0 0 0.5rem;font-family:'Montserrat',sans-serif;">Yuk, Jadi Creator Dulu! 🚀</h3>
             <p style="font-size:0.875rem;color:#64748B;line-height:1.6;margin:0 0 1.5rem;font-family:'Montserrat',sans-serif;">
                 Fitur ini akan <strong style="color:#1eb349;font-weight:700;">langsung terbuka</strong> setelah Anda melengkapi form data toko di halaman ini. Gratis dan hanya butuh 1 menit!
             </p>
             <div style="display:flex;gap:0.75rem;justify-content:center;">
-                <button type="button" onclick="closeLockedModal()" style="padding:0.65rem 1.5rem;border-radius:10px;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;border:none;font-weight:700;font-size:0.85rem;cursor:pointer;font-family:'Montserrat',sans-serif;box-shadow:0 4px 14px rgba(30,179,73,0.3);">
+                <button type="button" onclick="closeLockedModal()" style="padding:0.75rem 1.75rem;border-radius:999px;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;border:none;font-weight:700;font-size:0.875rem;cursor:pointer;font-family:'Montserrat',sans-serif;box-shadow:0 4px 14px rgba(30,179,73,0.35);">
                     Isi Data Sekarang
                 </button>
             </div>
