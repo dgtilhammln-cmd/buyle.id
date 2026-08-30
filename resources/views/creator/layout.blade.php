@@ -21,9 +21,9 @@
             font-family: 'Montserrat', sans-serif;
             background: #0b120c;
             color: #0f172a;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
             display: flex;
-            overflow-x: hidden;
         }
 
         /* ── SIDEBAR (Dark Shell) ── */
@@ -34,15 +34,21 @@
             flex-direction: column;
             padding: 1.75rem 0 1.75rem 1.25rem;
             flex-shrink: 0;
-            min-height: 100vh;
-            position: sticky;
+            height: 100vh;
+            position: fixed;
             top: 0;
+            left: 0;
             z-index: 50;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
         .cr-brand-area {
             padding: 0 1.25rem 0 0;
             margin-bottom: 2.25rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .cr-brand-area img {
@@ -199,10 +205,14 @@
 
         /* ── MAIN CANVAS (Large White Rounded Card) ── */
         .cr-main-wrapper {
+            margin-left: 240px;
             flex: 1;
             min-width: 0;
             padding: 1.25rem 1.25rem 1.25rem 0;
             display: flex;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
         .cr-main-canvas {
@@ -214,6 +224,8 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
             display: flex;
             flex-direction: column;
+            align-self: flex-start;
+            width: 100%;
         }
 
         /* Global button style */
@@ -304,22 +316,27 @@
 
         @media (max-width: 1024px) {
             body {
-                flex-direction: column;
+                flex-direction: row;
+                height: 100vh;
+                overflow: hidden;
             }
 
             .cr-mobile-bar {
                 display: flex;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 80;
+                height: 56px;
             }
 
             .cr-sidebar {
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                left: 0;
                 transform: translateX(-100%);
                 transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
                 z-index: 100;
                 box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+                height: 100vh;
             }
 
             .cr-sidebar.open {
@@ -331,7 +348,9 @@
             }
 
             .cr-main-wrapper {
+                margin-left: 0 !important;
                 padding: 0.75rem;
+                padding-top: calc(56px + 0.75rem);
             }
 
             .cr-main-canvas {
@@ -417,22 +436,22 @@
                 onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.products*') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    <rect x="2" y="7" width="20" height="14" rx="2"/>
+                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                    <line x1="12" y1="12" x2="12" y2="16"/>
+                    <line x1="10" y1="14" x2="14" y2="14"/>
                 </svg>
-                Link Settings
+                Produk Digital
                 @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
             </a>
 
             <a href="{{ $isBuyer ? route('creator.onboarding') : route('creator.profile.edit') }}"
                 class="cr-nav-link {{ request()->routeIs('creator.profile*', 'creator.onboarding') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-                    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-                    <path d="M2 2l7.586 7.586"></path>
-                    <circle cx="11" cy="11" r="2"></circle>
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M20 21a8 8 0 1 0-16 0"/>
                 </svg>
-                Tema & Visual
+                Profil & Toko
             </a>
 
             <a href="{{ $isBuyer ? '#' : route('creator.sales.report') }}"
@@ -441,7 +460,7 @@
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                 </svg>
-                Analytics
+                Laporan Penjualan
                 @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
             </a>
 
@@ -449,9 +468,10 @@
                 onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.payout*', 'creator.groups*') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                    <line x1="12" y1="1" x2="12" y2="23"/>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                 </svg>
-                Premium & Saldo
+                Saldo & Pencairan
                 @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
             </a>
         </nav>

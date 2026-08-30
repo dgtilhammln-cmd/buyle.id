@@ -6,7 +6,7 @@
   {{-- PAGE HEADER --}}
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
     <div>
-      <h1 style="font-size:1.5rem;font-weight:800;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.02em;">Produk Saya &
+      <h1 style="font-size:1.5rem;font-weight:600;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.01em;">Produk Saya &
         Layanan
       </h1>
       <p style="font-size:.875rem;color:#94A3B8;margin:0;">{{ $products->count() }} produk/layanan terdaftar</p>
@@ -33,9 +33,9 @@
       </div>
 
       <a href="{{ route('creator.products.create') }}"
-        style="display:inline-flex;align-items:center;gap:.5rem;background:#3B82F6;color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;text-decoration:none;transition:all .2s;box-shadow:0 4px 14px rgba(59,130,246,0.35);"
-        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(59,130,246,0.4)'"
-        onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(59,130,246,0.35)'">
+        style="display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;text-decoration:none;transition:all .2s;box-shadow:0 4px 14px rgba(30,179,73,0.35);"
+        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(30,179,73,0.4)'"
+        onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(30,179,73,0.35)'">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <line x1="12" y1="5" x2="12" y2="19" />
           <line x1="5" y1="12" x2="19" y2="12" />
@@ -194,7 +194,9 @@
         <div style="position:absolute;top:12px;right:12px;display:inline-flex;align-items:center;gap:.375rem;font-size:.7rem;font-weight:700;padding:.3rem .75rem;border-radius:100px;background:{{ $s->is_active ? 'rgba(16,185,129,0.9)' : 'rgba(239,68,68,0.9)' }};color:#fff;z-index:10;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);">
             {{ $s->is_active ? 'Aktif' : 'Nonaktif' }}
         </div>
-        <img src="{{ $s->image_url }}" alt="{{ $s->name }}" style="width:100%;height:180px;object-fit:cover;border-bottom:1px solid #F1F5F9;">
+        <div style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-bottom:1px solid #F1F5F9;">
+            <img src="{{ $s->image_url }}" alt="{{ $s->name }}" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
         <div style="padding:1.25rem;flex:1;display:flex;flex-direction:column;">
             <div style="font-size:1rem;font-weight:800;color:#1E293B;margin-bottom:.35rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $s->name }}</div>
             <code style="font-size:.7rem;background:#F8FAFC;color:#3B82F6;padding:.2rem .5rem;border-radius:6px;align-self:flex-start;margin-bottom:.75rem;border:1px solid #E2E8F0;">/{{ $s->slug }}</code>
@@ -248,10 +250,10 @@
         document.getElementById('view-list').style.display = type === 'list' ? 'block' : 'none';
         document.getElementById('view-grid').style.display = type === 'grid' ? 'grid' : 'none';
         
-        document.getElementById('btn-view-list').style.background = type === 'list' ? '#3B82F6' : 'transparent';
+        document.getElementById('btn-view-list').style.background = type === 'list' ? 'linear-gradient(135deg,#1eb349,#a5cf37)' : 'transparent';
         document.getElementById('btn-view-list').style.color = type === 'list' ? '#fff' : '#94A3B8';
         
-        document.getElementById('btn-view-grid').style.background = type === 'grid' ? '#3B82F6' : 'transparent';
+        document.getElementById('btn-view-grid').style.background = type === 'grid' ? 'linear-gradient(135deg,#1eb349,#a5cf37)' : 'transparent';
         document.getElementById('btn-view-grid').style.color = type === 'grid' ? '#fff' : '#94A3B8';
     }
 
