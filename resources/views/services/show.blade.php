@@ -611,22 +611,38 @@
             @endphp
             <div class="pd-creator-card" style="background:#fff; border-radius:20px; overflow:hidden; border: 1.5px solid var(--border); box-shadow:0 4px 20px rgba(0,0,0,0.04);">
                 <!-- Banner -->
-                <div style="height:100px; background: {{ $bannerUrl ? 'url('.$bannerUrl.') center/cover' : 'linear-gradient(135deg, var(--primary), #a5cf37)' }};"></div>
+                @if($bannerUrl)
+                    <div style="width:100%; aspect-ratio:16/7; overflow:hidden; background:#f8fafc;">
+                        <img src="{{ $bannerUrl }}" alt="{{ $displaySellerName }}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                    </div>
+                @else
+                    <div style="width:100%; height:95px; background:linear-gradient(135deg, var(--primary), #a5cf37);"></div>
+                @endif
+
                 <!-- Avatar -->
-                <div style="margin-top:-45px; display:flex; justify-content:center;">
+                <div style="margin-top:-38px; display:flex; justify-content:center; position:relative; z-index:2;">
                     @if($seller?->avatar)
-                        <img src="{{ asset('storage/'.$seller->avatar) }}" style="width:90px; height:90px; border-radius:50%; border:4px solid #fff; object-fit:cover; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                        <img src="{{ asset('storage/'.$seller->avatar) }}" style="width:76px; height:76px; border-radius:50%; border:3.5px solid #fff; object-fit:cover; background:#fff; box-shadow:0 4px 14px rgba(0,0,0,0.12);">
                     @else
-                        <div style="width:90px; height:90px; border-radius:50%; border:4px solid #fff; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:700; color:var(--primary); background:#e7f0e7; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="width:76px; height:76px; border-radius:50%; border:3.5px solid #fff; display:flex; align-items:center; justify-content:center; font-size:1.6rem; font-weight:700; color:var(--primary); background:#e7f0e7; box-shadow:0 4px 14px rgba(0,0,0,0.12);">
                             {{ strtoupper(substr($displaySellerName, 0, 2)) }}
                         </div>
                     @endif
                 </div>
                 
-                <div style="text-align:center; padding: 1.5rem 1.25rem;">
+                <div style="text-align:center; padding: 1rem 1.25rem 1.5rem;">
                     <div style="font-size:1.15rem; font-weight:700; color:var(--text-main); margin-bottom:0.4rem;">
                         {{ $displaySellerName }}
                     </div>
+
+                    @if(optional($cp)->creator_type)
+                        <div style="margin-bottom:0.6rem;">
+                            <span style="display:inline-flex;align-items:center;gap:0.3rem;background:#F0FDF4;color:#15803D;font-size:0.75rem;font-weight:600;padding:0.2rem 0.6rem;border-radius:999px;border:1px solid #BBF7D0;">
+                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                {{ $cp->creator_type }}
+                            </span>
+                        </div>
+                    @endif
                     
                     {{-- Lokasi Creator --}}
                     <div id="creator-location-box" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.75rem; line-height:1.4; display:flex; align-items:center; justify-content:center; gap:4px;"
@@ -674,7 +690,7 @@
                 </div>
             </div>
 
-            {{-- BANNER IKLAN SIDEBAR (Rasio 4:3 - Atas Bawah) --}}
+            {{-- BANNER IKLAN SIDEBAR (Mendukung Rasio 4:3, 3:4 & Gambar Utuh) --}}
             @php
                 $ad1Img = $settings['ad_product_sidebar_1_image'] ?? null;
                 $ad1Url = $settings['ad_product_sidebar_1_url'] ?? null;
@@ -686,30 +702,30 @@
             {{-- Banner 1 (Atas) --}}
             @if(!empty($ad1Img))
                 <div style="border-radius:16px; overflow:hidden; border:1.5px solid var(--border); background:#fff; box-shadow:0 4px 15px rgba(0,0,0,0.03);">
-                    <a href="{{ $ad1Url ?: 'javascript:void(0)' }}" {{ $ad1Url ? 'target="_blank" rel="noopener noreferrer"' : '' }} style="display:block; width:100%; aspect-ratio:3/4; overflow:hidden;">
-                        <img src="{{ asset('storage/'.$ad1Img) }}" alt="Iklan Banner 1" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                    <a href="{{ $ad1Url ?: 'javascript:void(0)' }}" {{ $ad1Url ? 'target="_blank" rel="noopener noreferrer"' : '' }} style="display:block; width:100%; overflow:hidden;">
+                        <img src="{{ asset('storage/'.$ad1Img) }}" alt="Iklan Banner 1" style="width:100%; height:auto; display:block; object-fit:contain; transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                     </a>
                 </div>
             @else
-                <a href="{{ $waContactUrl }}" target="_blank" style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; aspect-ratio:3/4; border-radius:16px; border:2px dashed #CBD5E1; background:#F8FAFC; text-decoration:none; color:#64748B; padding:1rem; text-align:center; transition:all 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.background='#F0FDF4';this.style.color='var(--primary)'" onmouseout="this.style.borderColor='#CBD5E1';this.style.background='#F8FAFC';this.style.color='#64748B'">
+                <a href="{{ $waContactUrl }}" target="_blank" style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; min-height:180px; border-radius:16px; border:2px dashed #CBD5E1; background:#F8FAFC; text-decoration:none; color:#64748B; padding:1.25rem 1rem; text-align:center; transition:all 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.background='#F0FDF4';this.style.color='var(--primary)'" onmouseout="this.style.borderColor='#CBD5E1';this.style.background='#F8FAFC';this.style.color='#64748B'">
                     <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" style="margin-bottom:0.4rem;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
                     <span style="font-size:0.8rem; font-weight:700;">Space Iklan Tersedia</span>
-                    <span style="font-size:0.7rem; color:#94A3B8; margin-top:2px;">Portrait 3:4 - Pasang Banner Disini &rsaquo;</span>
+                    <span style="font-size:0.7rem; color:#94A3B8; margin-top:2px;">Pasang Banner Iklan Disini &rsaquo;</span>
                 </a>
             @endif
 
             {{-- Banner 2 (Bawah) --}}
             @if(!empty($ad2Img))
                 <div style="border-radius:16px; overflow:hidden; border:1.5px solid var(--border); background:#fff; box-shadow:0 4px 15px rgba(0,0,0,0.03);">
-                    <a href="{{ $ad2Url ?: 'javascript:void(0)' }}" {{ $ad2Url ? 'target="_blank" rel="noopener noreferrer"' : '' }} style="display:block; width:100%; aspect-ratio:3/4; overflow:hidden;">
-                        <img src="{{ asset('storage/'.$ad2Img) }}" alt="Iklan Banner 2" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                    <a href="{{ $ad2Url ?: 'javascript:void(0)' }}" {{ $ad2Url ? 'target="_blank" rel="noopener noreferrer"' : '' }} style="display:block; width:100%; overflow:hidden;">
+                        <img src="{{ asset('storage/'.$ad2Img) }}" alt="Iklan Banner 2" style="width:100%; height:auto; display:block; object-fit:contain; transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                     </a>
                 </div>
             @else
-                <a href="{{ $waContactUrl }}" target="_blank" style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; aspect-ratio:3/4; border-radius:16px; border:2px dashed #CBD5E1; background:#F8FAFC; text-decoration:none; color:#64748B; padding:1rem; text-align:center; transition:all 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.background='#F0FDF4';this.style.color='var(--primary)'" onmouseout="this.style.borderColor='#CBD5E1';this.style.background='#F8FAFC';this.style.color='#64748B'">
+                <a href="{{ $waContactUrl }}" target="_blank" style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; min-height:180px; border-radius:16px; border:2px dashed #CBD5E1; background:#F8FAFC; text-decoration:none; color:#64748B; padding:1.25rem 1rem; text-align:center; transition:all 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.background='#F0FDF4';this.style.color='var(--primary)'" onmouseout="this.style.borderColor='#CBD5E1';this.style.background='#F8FAFC';this.style.color='#64748B'">
                     <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" style="margin-bottom:0.4rem;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
                     <span style="font-size:0.8rem; font-weight:700;">Space Iklan Tersedia</span>
-                    <span style="font-size:0.7rem; color:#94A3B8; margin-top:2px;">Portrait 3:4 - Pasang Banner Disini &rsaquo;</span>
+                    <span style="font-size:0.7rem; color:#94A3B8; margin-top:2px;">Pasang Banner Iklan Disini &rsaquo;</span>
                 </a>
             @endif
         </div>

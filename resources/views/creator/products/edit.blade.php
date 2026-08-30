@@ -142,15 +142,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Harga (Rp) <span>*</span></label>
-                    <input type="number" name="price" value="{{ old('price', (int)$product->price) }}" class="form-input" placeholder="50000" min="0" required>
+                    <label class="form-label">Harga Normal (Rp) <span>*</span></label>
+                    <input type="text" name="price" id="input_price" value="{{ old('price', $product->price) ? number_format((float)preg_replace('/[^\d]/', '', (string)old('price', $product->price)), 0, ',', '.') : '' }}" class="form-input currency-input" placeholder="Misal: 50.000" min="0" required autocomplete="off">
+                    <span class="form-hint">Format otomatis rupiah (contoh: 50.000)</span>
                     @error('price')<span class="form-error">{{ $message }}</span>@enderror
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Harga Coret (Rp)</label>
-                    <input type="number" name="sale_price" value="{{ old('sale_price', (int)$product->sale_price) }}" class="form-input" placeholder="Opsional" min="0">
-                    <span class="form-hint">Kosongkan jika tidak ada diskon</span>
+                    <label class="form-label">Harga Coret / Diskon (Rp)</label>
+                    <input type="text" name="sale_price" id="input_sale_price" value="{{ old('sale_price', $product->sale_price) ? number_format((float)preg_replace('/[^\d]/', '', (string)old('sale_price', $product->sale_price)), 0, ',', '.') : '' }}" class="form-input currency-input" placeholder="Opsional, misal: 99.000" autocomplete="off">
+                    <span class="form-hint">Kosongkan jika tidak ada diskon harga coret</span>
+                    @error('sale_price')<span class="form-error">{{ $message }}</span>@enderror
                 </div>
 
                 <div class="form-group">
@@ -210,32 +212,90 @@
             </div>
         </div>
 
-        {{-- Gambar --}}
+        {{-- 1. Thumbnail Utama Produk --}}
         <div class="form-section-title">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-            Gambar Thumbnail
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            Thumbnail Utama Produk
         </div>
         <div class="form-body">
             <div class="form-group">
-                <label class="form-label">Thumbnail Utama & Galeri (Maks 7 Gambar)</label>
-                <div class="img-upload-area" onclick="document.getElementById('img-input').click()" style="margin-bottom:0.75rem;">
-                    <div id="imgPlaceholder">
-                        <svg width="32" height="32" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                        <p style="font-size:0.8rem; color:#94A3B8; margin-top:0.5rem; font-weight:600;">Klik untuk ganti gambar (pilih hingga 7)</p>
-                        <p style="font-size:0.7rem; color:#cbd5e1; margin-top:0.2rem;">JPG, PNG, WEBP — maks 10MB/file</p>
+                <label class="form-label">Ganti / Perbarui Thumbnail Utama</label>
+                
+                {{-- Dropzone Thumbnail --}}
+                <div class="img-upload-area" id="thumbDropzone" onclick="document.getElementById('thumb-input').click()" style="margin-bottom:0.75rem; {{ $product->image ? 'display:none;' : '' }}">
+                    <div id="thumbPlaceholder">
+                        <svg width="32" height="32" fill="none" stroke="#1eb349" stroke-width="1.6" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                            <circle cx="8.5" cy="8.5" r="1.5" />
+                            <polyline points="21 15 16 10 5 21" />
+                        </svg>
+                        <p style="font-size:0.82rem; color:#1E293B; margin-top:0.4rem; font-weight:700;">Klik untuk upload Thumbnail Baru</p>
+                        <p style="font-size:0.72rem; color:#94A3B8; margin-top:0.2rem;">JPG, PNG, WEBP — Rekomendasi Rasio 1:1 (Maks 10MB)</p>
                     </div>
                 </div>
-                <div id="galleryPreview" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
-                    @if($product->image)
-                        <img src="{{ Storage::url($product->image) }}" style="width:80px;height:80px;object-fit:cover;border-radius:10px;">
-                    @endif
-                    @if(is_array($product->gallery))
-                        @foreach($product->gallery as $galImg)
-                            <img src="{{ Storage::url($galImg) }}" style="width:80px;height:80px;object-fit:cover;border-radius:10px;">
-                        @endforeach
-                    @endif
+
+                {{-- Preview Thumbnail --}}
+                <div id="thumbPreviewWrap" style="margin-bottom:1rem; {{ $product->image ? 'display:block;' : 'display:none;' }}">
+                    <div style="position:relative; display:inline-block; border-radius:12px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 12px rgba(30,179,73,0.15);">
+                        <img id="thumbPreviewImg" src="{{ $product->image ? asset('storage/'.$product->image) : '' }}" style="width:110px; height:110px; object-fit:cover; display:block;">
+                        <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.9); color:#fff; font-size:10px; font-weight:700; text-align:center; padding:3px 0;">
+                            ⭐ Thumbnail Utama
+                        </div>
+                        <button type="button" onclick="removeThumbnail()" style="position:absolute; top:4px; right:4px; background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.2);" title="Ganti Thumbnail">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                    </div>
                 </div>
-                <input type="file" name="gallery[]" id="img-input" accept="image/*" multiple max="7" onchange="previewGallery(event)" style="display:none;">
+
+                <input type="file" name="image" id="thumb-input" accept="image/*" onchange="previewSingleThumb(event)" style="display:none;">
+                @error('image')<span class="form-error">{{ $message }}</span>@enderror
+            </div>
+        </div>
+
+        {{-- 2. Galeri Foto Produk (Opsional) --}}
+        <div class="form-section-title">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            </svg>
+            Foto Galeri Tambahan (Opsional, Maks 6 Foto)
+        </div>
+        <div class="form-body">
+            <div class="form-group">
+                <label class="form-label">Upload Foto Galeri / Screenshot Baru</label>
+                
+                {{-- Dropzone Gallery --}}
+                <div class="img-upload-area" id="galleryDropzone" onclick="document.getElementById('gallery-input').click()" style="margin-bottom:0.75rem;">
+                    <div id="galleryPlaceholder">
+                        <svg width="30" height="30" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <p style="font-size:0.8rem; color:#64748B; margin-top:0.4rem; font-weight:600;">Klik untuk upload foto galeri baru (pilih hingga 6 foto)</p>
+                        <p style="font-size:0.7rem; color:#94A3B8; margin-top:0.2rem;">JPG, PNG, WEBP — Maks 10MB/file</p>
+                    </div>
+                </div>
+
+                {{-- Current Existing Gallery if any --}}
+                @if(is_array($product->gallery) && count($product->gallery) > 0)
+                    <div id="currentGalleryWrap" style="margin-bottom:0.75rem;">
+                        <span style="font-size:0.75rem; font-weight:700; color:#64748B; display:block; margin-bottom:0.4rem;">Galeri Saat Ini:</span>
+                        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+                            @foreach($product->gallery as $galImg)
+                                <div style="position:relative; border-radius:8px; overflow:hidden; border:1px solid #e2e8f0;">
+                                    <img src="{{ asset('storage/'.$galImg) }}" style="width:80px; height:80px; object-fit:cover; display:block;">
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Preview Gallery List for newly selected --}}
+                <div id="galleryPreview" style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1rem;"></div>
+                <input type="file" name="gallery[]" id="gallery-input" accept="image/*" multiple max="6" onchange="previewGalleryList(event)" style="display:none;">
                 @error('gallery')<span class="form-error">{{ $message }}</span>@enderror
             </div>
         </div>
@@ -302,7 +362,7 @@
             <a href="{{ route('creator.products.index') }}" class="btn-cancel">Batal</a>
             <button type="submit" class="btn-submit" id="submitBtn">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-right:0.4rem;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
-                Perbarui Produk
+                Simpan Perubahan
             </button>
         </div>
     </form>
@@ -320,52 +380,109 @@
 
 @section('scripts')
 <script>
-let galleryFiles = new DataTransfer();
+// ── 1. Rupiah / Thousand Separator Formatter ──
+function formatRupiah(val) {
+    let numberString = val.replace(/[^,\d]/g, '').toString();
+    let split = numberString.split(',');
+    let sisa = split[0].length % 3;
+    let rupiah = split[0].substr(0, sisa);
+    let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-async function previewGallery(event) {
-    const input   = event.target;
-    const preview = document.getElementById('galleryPreview');
-
-    for (const file of Array.from(input.files)) {
-        if (galleryFiles.items.length >= 7) break;
-        galleryFiles.items.add(file); // upload file asli tanpa kompresi
+    if (ribuan) {
+        let separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
     }
-    input.files = galleryFiles.files;
-    renderGalleryPreview();
+    return split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
 }
 
-function removeGalleryImage(index) {
-    const newFiles = new DataTransfer();
-    Array.from(galleryFiles.files).forEach((f, i) => { if (i !== index) newFiles.items.add(f); });
-    galleryFiles = newFiles;
-    document.getElementById('img-input').files = galleryFiles.files;
-    renderGalleryPreview();
+document.querySelectorAll('.currency-input').forEach(input => {
+    input.addEventListener('input', function() {
+        this.value = formatRupiah(this.value);
+    });
+});
+
+// ── 2. Thumbnail Upload & Live Preview with Delete ──
+function previewSingleThumb(event) {
+    const file = event.target.files[0];
+    const dropzone = document.getElementById('thumbDropzone');
+    const previewWrap = document.getElementById('thumbPreviewWrap');
+    const previewImg = document.getElementById('thumbPreviewImg');
+
+    if (file) {
+        previewImg.src = URL.createObjectURL(file);
+        previewWrap.style.display = 'block';
+        dropzone.style.display = 'none';
+    }
 }
 
-function renderGalleryPreview() {
-    const preview     = document.getElementById('galleryPreview');
-    const placeholder = document.getElementById('imgPlaceholder');
+function removeThumbnail() {
+    const input = document.getElementById('thumb-input');
+    const dropzone = document.getElementById('thumbDropzone');
+    const previewWrap = document.getElementById('thumbPreviewWrap');
+    const previewImg = document.getElementById('thumbPreviewImg');
+
+    input.value = '';
+    previewImg.src = '';
+    previewWrap.style.display = 'none';
+    dropzone.style.display = 'block';
+}
+
+// ── 3. Gallery Upload & Live Preview with Individual Delete ──
+let galleryFilesDT = new DataTransfer();
+
+function previewGalleryList(event) {
+    const files = Array.from(event.target.files);
+
+    for (const file of files) {
+        if (galleryFilesDT.items.length >= 6) {
+            alert('Maksimal 6 foto galeri pendukung.');
+            break;
+        }
+        galleryFilesDT.items.add(file);
+    }
+
+    event.target.files = galleryFilesDT.files;
+    renderGalleryList();
+}
+
+function removeGalleryItem(index) {
+    const input = document.getElementById('gallery-input');
+    const newDT = new DataTransfer();
+    Array.from(galleryFilesDT.files).forEach((file, idx) => {
+        if (idx !== index) newDT.items.add(file);
+    });
+    galleryFilesDT = newDT;
+    input.files = galleryFilesDT.files;
+    renderGalleryList();
+}
+
+function renderGalleryList() {
+    const preview = document.getElementById('galleryPreview');
+    const placeholder = document.getElementById('galleryPlaceholder');
+    const currentWrap = document.getElementById('currentGalleryWrap');
     preview.innerHTML = '';
 
-    if (galleryFiles.files.length > 0) {
+    if (galleryFilesDT.files.length > 0) {
         if (placeholder) placeholder.style.display = 'none';
-        Array.from(galleryFiles.files).forEach((file, index) => {
+        if (currentWrap) currentWrap.style.display = 'none';
+        Array.from(galleryFilesDT.files).forEach((file, index) => {
             const wrap = document.createElement('div');
-            wrap.style.cssText = 'position:relative;display:inline-block;';
+            wrap.style.cssText = 'position:relative; display:inline-block; border-radius:10px; overflow:hidden; border:1px solid #cbd5e1; box-shadow:0 2px 6px rgba(0,0,0,0.06);';
 
             const img = document.createElement('img');
             img.src = URL.createObjectURL(file);
-            img.style.cssText = 'width:80px;height:80px;object-fit:cover;border-radius:10px;display:block;';
+            img.style.cssText = 'width:90px; height:90px; object-fit:cover; display:block;';
 
             const badge = document.createElement('div');
-            badge.textContent = index === 0 ? '🖼 Thumbnail' : `#${index+1}`;
-            badge.style.cssText = 'position:absolute;bottom:2px;left:2px;right:2px;background:rgba(0,0,0,0.55);color:#fff;font-size:9px;border-radius:0 0 8px 8px;text-align:center;padding:2px 0;';
+            badge.textContent = `Baru #${index + 1}`;
+            badge.style.cssText = 'position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;';
 
             const btn = document.createElement('button');
             btn.innerHTML = '&times;';
             btn.type = 'button';
-            btn.style.cssText = 'position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;';
-            btn.onclick = () => removeGalleryImage(index);
+            btn.title = 'Hapus foto ini';
+            btn.style.cssText = 'position:absolute; top:3px; right:3px; background:#ef4444; color:#fff; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:14px; font-weight:bold; line-height:1; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(0,0,0,0.3);';
+            btn.onclick = () => removeGalleryItem(index);
 
             wrap.appendChild(img);
             wrap.appendChild(badge);
@@ -374,6 +491,7 @@ function renderGalleryPreview() {
         });
     } else {
         if (placeholder) placeholder.style.display = 'block';
+        if (currentWrap) currentWrap.style.display = 'block';
     }
 }
 

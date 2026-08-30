@@ -28,10 +28,11 @@ class UpdateProductRequest extends FormRequest
             'sale_price'          => ['nullable', 'numeric', 'min:0', 'lt:price'],
             'stock'               => ['nullable', 'integer', 'min:0'],
             'product_category_id' => ['nullable', 'exists:product_categories,id'],
+            'product_sub_category_id' => ['nullable', 'exists:product_sub_categories,id'],
             'creator_group_id'    => ['nullable', 'exists:creator_product_groups,id'],
             'file_type'           => ['nullable', 'string', 'max:50'],
             'image'               => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
-            'gallery'             => ['nullable', 'array', 'max:7'],
+            'gallery'             => ['nullable', 'array', 'max:6'],
             'gallery.*'           => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'tiktok_video_url'    => ['nullable', 'url', 'max:255'],
 
@@ -53,17 +54,28 @@ class UpdateProductRequest extends FormRequest
             'price.required'           => 'Harga produk wajib diisi.',
             'sale_price.lt'            => 'Harga diskon harus lebih kecil dari harga normal.',
             'image.max'                => 'Ukuran thumbnail maksimal 10MB.',
-            'gallery.*.max'            => 'Ukuran masing-masing gambar maksimal 10MB.',
-            'gallery.*.mimes'          => 'Format gambar harus berupa JPG, JPEG, PNG, atau WEBP.',
+            'gallery.*.max'            => 'Ukuran masing-masing gambar galeri maksimal 10MB.',
+            'gallery.*.mimes'          => 'Format gambar galeri harus berupa JPG, JPEG, PNG, atau WEBP.',
             'digital_resource.required'=> 'Link produk digital wajib diisi.',
         ];
     }
 
     protected function prepareForValidation(): void
     {
-        $this->merge([
+        $merge = [
             'is_active'   => $this->boolean('is_active', true),
             'is_featured' => $this->boolean('is_featured', false),
-        ]);
+        ];
+
+        if ($this->has('price') && $this->input('price') !== null) {
+            $merge['price'] = preg_replace('/[^\d]/', '', (string)$this->input('price'));
+        }
+
+        if ($this->has('sale_price')) {
+            $rawSale = preg_replace('/[^\d]/', '', (string)$this->input('sale_price'));
+            $merge['sale_price'] = $rawSale !== '' ? $rawSale : null;
+        }
+
+        $this->merge($merge);
     }
 }

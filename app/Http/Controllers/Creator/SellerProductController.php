@@ -56,20 +56,22 @@ class SellerProductController extends Controller
     {
         $data = $request->validated();
 
-        // Handle thumbnail and gallery upload from the same input
-        // Filter out null/empty file inputs (browsers send empty elements when no file selected)
+        // Handle thumbnail (wajib saat create)
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        // Handle gallery (opsional, maks 6)
         unset($data['gallery']);
         $galleryFiles = collect($request->file('gallery', []))->filter(fn($f) => $f && $f->isValid());
         if ($galleryFiles->isNotEmpty()) {
             $galleryPaths = [];
-            foreach ($galleryFiles as $index => $gFile) {
-                if ($index === 0) {
-                    $data['image'] = $gFile->store('products', 'public');
-                } else {
-                    $galleryPaths[] = $gFile->store('products/gallery', 'public');
-                }
+            foreach ($galleryFiles as $gFile) {
+                $galleryPaths[] = $gFile->store('products/gallery', 'public');
             }
             $data['gallery'] = $galleryPaths;
+        } else {
+            $data['gallery'] = [];
         }
 
         // Produk digital buyle.id selalu external_link
@@ -126,15 +128,18 @@ class SellerProductController extends Controller
     {
         $data = $request->validated();
 
-        // Handle thumbnail and gallery upload from the same input
-        // Filter out null/empty file inputs (browsers send empty elements when no file selected)
-        unset($data['gallery']);
-        $galleryFiles = collect($request->file('gallery', []))->filter(fn($f) => $f && $f->isValid());
-        if ($galleryFiles->isNotEmpty()) {
-            // Delete old images since we are replacing them
+        // Handle thumbnail upload (jika ada file baru)
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        // Handle gallery upload (jika ada file baru)
+        unset($data['gallery']);
+        $galleryFiles = collect($request->file('gallery', []))->filter(fn($f) => $f && $f->isValid());
+        if ($galleryFiles->isNotEmpty()) {
             if (is_array($product->gallery)) {
                 foreach ($product->gallery as $oldImg) {
                     Storage::disk('public')->delete($oldImg);
@@ -142,12 +147,8 @@ class SellerProductController extends Controller
             }
 
             $galleryPaths = [];
-            foreach ($galleryFiles as $index => $gFile) {
-                if ($index === 0) {
-                    $data['image'] = $gFile->store('products', 'public');
-                } else {
-                    $galleryPaths[] = $gFile->store('products/gallery', 'public');
-                }
+            foreach ($galleryFiles as $gFile) {
+                $galleryPaths[] = $gFile->store('products/gallery', 'public');
             }
             $data['gallery'] = $galleryPaths;
         }
