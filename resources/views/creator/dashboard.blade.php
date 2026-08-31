@@ -77,18 +77,18 @@
     .card-budget-modern {
         background: #ffffff;
         border-radius: 28px;
-        padding: 1.75rem 0 0 0;
+        padding: 1.5rem 0 0 0;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        min-height: 230px;
+        min-height: 190px;
         position: relative;
         overflow: hidden;
         box-shadow: 0 12px 30px rgba(0,0,0,0.04);
         border: 1px solid #f1f5f9;
     }
     .budget-content {
-        padding: 0 2rem;
+        padding: 0 1.75rem;
         position: relative;
         z-index: 10;
     }
@@ -99,11 +99,11 @@
         margin-bottom: 0.35rem;
     }
     .budget-val {
-        font-size: 2.3rem;
+        font-size: 2rem;
         font-weight: 800;
         color: #0f172a;
         letter-spacing: -0.02em;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
     }
     .budget-badge {
         display: inline-flex;
@@ -138,7 +138,7 @@
         filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
     }
     .budget-chart-container {
-        margin-top: 1rem;
+        margin-top: 0.5rem;
         position: relative;
         z-index: 5;
         width: 100%;
@@ -146,7 +146,7 @@
     }
     .budget-chart-svg {
         width: 100%;
-        height: 120px;
+        height: 80px;
         display: block;
         overflow: visible;
     }
@@ -182,8 +182,8 @@
     .budget-days {
         display: flex;
         justify-content: space-between;
-        padding: 0.75rem 2rem 1.25rem 2rem;
-        font-size: 0.7rem;
+        padding: 0.25rem 1.75rem 1.25rem 1.75rem;
+        font-size: 0.65rem;
         font-weight: 600;
         color: #94a3b8;
     }
