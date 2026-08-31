@@ -12,11 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->string('utm_source')->nullable()->after('notes');
-            $table->string('utm_medium')->nullable()->after('utm_source');
-            $table->string('utm_campaign')->nullable()->after('utm_medium');
-            $table->string('utm_term')->nullable()->after('utm_campaign');
-            $table->string('utm_content')->nullable()->after('utm_term');
+            if (!Schema::hasColumn('orders', 'utm_source')) {
+                $table->string('utm_source')->nullable()->after('notes');
+            }
+            if (!Schema::hasColumn('orders', 'utm_medium')) {
+                $table->string('utm_medium')->nullable()->after('utm_source');
+            }
+            if (!Schema::hasColumn('orders', 'utm_campaign')) {
+                $table->string('utm_campaign')->nullable()->after('utm_medium');
+            }
+            if (!Schema::hasColumn('orders', 'utm_term')) {
+                $table->string('utm_term')->nullable()->after('utm_campaign');
+            }
+            if (!Schema::hasColumn('orders', 'utm_content')) {
+                $table->string('utm_content')->nullable()->after('utm_term');
+            }
         });
     }
 

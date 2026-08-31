@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('product_visits')) {
+            return; // Already exists, skip
+        }
+
         Schema::create('product_visits', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
@@ -24,9 +28,6 @@ return new class extends Migration
             $table->string('utm_content')->nullable();
             $table->timestamps();
 
-            $table->foreign('product_id')->references('id')->on('services')->onDelete('cascade');
-            $table->foreign('seller_id')->references('id')->on('users')->onDelete('cascade');
-            
             $table->index('created_at');
             $table->index(['seller_id', 'created_at']);
         });

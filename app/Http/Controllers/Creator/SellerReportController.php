@@ -93,15 +93,19 @@ class SellerReportController extends Controller
             ->get();
 
         // ── 4. UTM Sources (dari orders yang sudah paid) ────────────────────────
-        $utmSources = $this->paidOrdersBaseQuery($seller->id, $startDate, $endDate)
-            ->select(
-                DB::raw("COALESCE(NULLIF(utm_source,''), 'Organic / Direct') as utm_source"),
-                DB::raw('COUNT(*) as count'),
-                DB::raw('SUM(total) as revenue')
-            )
-            ->groupBy(DB::raw("COALESCE(NULLIF(utm_source,''), 'Organic / Direct')"))
-            ->orderByDesc('count')
-            ->get();
+        // Guard: kolom utm_source mungkin belum ada di server lama
+        $utmSources = collect();
+        if (\Illuminate\Support\Facades\Schema::hasColumn('orders', 'utm_source')) {
+            $utmSources = $this->paidOrdersBaseQuery($seller->id, $startDate, $endDate)
+                ->select(
+                    DB::raw("COALESCE(NULLIF(utm_source,''), 'Organic / Direct') as utm_source"),
+                    DB::raw('COUNT(*) as count'),
+                    DB::raw('SUM(total) as revenue')
+                )
+                ->groupBy(DB::raw("COALESCE(NULLIF(utm_source,''), 'Organic / Direct')"))
+                ->orderByDesc('count')
+                ->get();
+        }
 
         // ── 5. Buyers list ─────────────────────────────────────────────────────
         $buyers = $allOrders; // already sorted by created_at desc
