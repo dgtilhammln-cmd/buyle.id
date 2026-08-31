@@ -73,12 +73,18 @@ class SellerReportController extends Controller
         // Guard: tabel product_visits mungkin belum ada di server lama
         $totalVisitors  = 0;
         $uniqueVisitors = 0;
+        $visitorsByDate = [];
         if (Schema::hasTable('product_visits')) {
             $visitRows      = ProductVisit::where('seller_id', $seller->id)
                 ->whereBetween('created_at', [$startDate, $endDate])
-                ->get(['session_id']);
+                ->get(['session_id', 'created_at']);
             $totalVisitors  = $visitRows->count();
             $uniqueVisitors = $visitRows->pluck('session_id')->unique()->filter()->count();
+            // Group by date for Traffic Wave chart
+            $visitorsByDate = $visitRows
+                ->groupBy(fn($v) => $v->created_at->format('Y-m-d'))
+                ->map(fn($g) => $g->count())
+                ->toArray();
         }
 
         // ── 3. Top Products (by visits count) ──────────────────────────────────
@@ -128,7 +134,7 @@ class SellerReportController extends Controller
         return view('creator.reports.index', compact(
             'filter', 'startDate', 'endDate',
             'totalSales', 'totalOrders', 'totalVisitors', 'uniqueVisitors',
-            'topProducts', 'utmSources', 'buyers'
+            'topProducts', 'utmSources', 'buyers', 'visitorsByDate'
         ));
     }
 
