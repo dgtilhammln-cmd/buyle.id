@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class CreatorStoreController extends Controller
 {
-    public function show(Request $request, $slug)
+    public function show(Request $request, $slug, $groupSlug = null)
     {
         // 1. Cari profil creator berdasarkan slug
         $profile = CreatorProfile::where('store_slug', $slug)
@@ -37,9 +37,16 @@ class CreatorStoreController extends Controller
         $query = Product::where('seller_id', $seller->id)
             ->where('is_active', true);
 
-        if ($request->filled('group')) {
-            $group = $groups->firstWhere('slug', $request->group);
-            if ($group) $query->where('creator_group_id', $group->id);
+        // Fallback ke request('group') untuk support old URL
+        $activeGroupSlug = $groupSlug ?? $request->group;
+
+        if ($activeGroupSlug) {
+            $group = $groups->firstWhere('slug', $activeGroupSlug);
+            if ($group) {
+                $query->where('creator_group_id', $group->id);
+                // Supaya pagination link/view active state pakai request('group') bisa tetep works kalo di merge
+                $request->merge(['group' => $group->slug]);
+            }
         }
 
         // 4. Smart Search
@@ -123,9 +130,24 @@ class CreatorStoreController extends Controller
             'description' => $profile->meta_desc  ?: ($profile->store_name . ' — ' . ($profile->store_description ?: 'Toko digital di buyle.id. Temukan produk dan layanan dari creator ini.')),
             'keywords'    => $profile->meta_keywords ?: $storeKeywords,
             'og_image'    => $seller->avatar ? asset('storage/' . $seller->avatar) : asset('images/og-default.jpg'),
-            'canonical'   => route('store.show', ['slug' => $slug]),
+            'canonical'   => route('store.show', array_filter(['slug' => $slug, 'groupSlug' => $activeGroupSlug])),
             'og_type'     => 'profile',
         ];
+
+        // Schema.org for Creator Store with sameAs
+        $schemaUrl = route('store.show', ['slug' => $slug]);
+        $sameAs = array_filter(array_values((array)($profile->social_links ?? [])));
+        
+        $organizationSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => $profile->store_name,
+            'url' => $schemaUrl,
+            'description' => $profile->store_description,
+            'logo' => $seller->avatar ? asset('storage/' . $seller->avatar) : null,
+            'sameAs' => empty($sameAs) ? null : $sameAs
+        ];
+        $schema = json_encode(array_filter($organizationSchema), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         // BreadcrumbList
         $breadcrumbs = [
@@ -135,7 +157,7 @@ class CreatorStoreController extends Controller
         ];
 
         return view('storefront.show', compact(
-            'profile', 'seller', 'groups', 'products', 'seo', 'sort',
+            'profile', 'seller', 'groups', 'products', 'seo', 'schema', 'sort',
             'suggestion', 'suggestionApplied', 'breadcrumbs', 'totalProductsCount'
         ));
     }

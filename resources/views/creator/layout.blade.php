@@ -452,6 +452,16 @@
                 @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
             </a>
 
+            <a href="{{ $isBuyer ? '#' : route('creator.groups.index') }}"
+                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                class="cr-nav-link {{ request()->routeIs('creator.groups*') ? 'active' : '' }}">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M4 6h16M4 12h16M4 18h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                </svg>
+                Kelompok Produk
+                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+            </a>
+
             <a href="{{ $isBuyer ? route('creator.onboarding') : route('creator.profile.edit') }}"
                 class="cr-nav-link {{ request()->routeIs('creator.profile*', 'creator.onboarding') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -177,7 +177,7 @@
     background: #fff; color: #475569; border: 1px solid #e2e8f0;
     display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;
 }
-.sf-tab:hover, .sf-tab-sidebar:hover { border-color: #1eb349; color: #1eb349; }
+.sf-tab:not(.active):hover, .sf-tab-sidebar:not(.active):hover { border-color: #1eb349; color: #1eb349; }
 .sf-tab.active, .sf-tab-sidebar.active {
     background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
     border-color: transparent; color: #fff; box-shadow: 0 4px 10px rgba(30,179,73,0.2);
@@ -390,12 +390,12 @@
             @if($groups->count() > 0)
             <div class="sf-desktop-tabs">
                 <div style="font-size: 0.9rem; font-weight: 600; color: #1E293B; margin-bottom: 0.5rem; padding-left: 0.5rem;">Kategori Produk</div>
-                <a href="{{ route('store.show', $profile->store_slug) }}{{ request()->has('sort') ? '?sort='.request('sort') : '' }}"
+                <a href="{{ route('store.show', ['slug' => $profile->store_slug]) }}{{ request()->has('sort') ? '?sort='.request('sort') : '' }}"
                    class="sf-tab-sidebar {{ !request()->has('group') ? 'active' : '' }}">
                    Semua Produk <span class="sf-tab-badge">{{ $totalProductsCount ?? 0 }}</span>
                 </a>
                 @foreach($groups as $group)
-                    <a href="{{ route('store.show', $profile->store_slug) }}?group={{ $group->slug }}{{ request()->has('sort') ? '&sort='.request('sort') : '' }}"
+                    <a href="{{ route('store.show', ['slug' => $profile->store_slug, 'groupSlug' => $group->slug]) }}{{ request()->has('sort') ? '?sort='.request('sort') : '' }}"
                        class="sf-tab-sidebar {{ request('group') === $group->slug ? 'active' : '' }}">
                         {{ $group->name }} <span class="sf-tab-badge">{{ $group->products_count ?? 0 }}</span>
                     </a>
@@ -438,12 +438,12 @@
             {{-- ── Mobile Tabs ── --}}
             @if($groups->count() > 0)
             <div class="sf-mobile-tabs">
-                <a href="{{ route('store.show', $profile->store_slug) }}{{ request()->has('sort') ? '?sort='.request('sort') : '' }}"
+                <a href="{{ route('store.show', ['slug' => $profile->store_slug]) }}{{ request()->has('sort') ? '?sort='.request('sort') : '' }}"
                    class="sf-tab {{ !request()->has('group') ? 'active' : '' }}">
                    Semua <span class="sf-tab-badge">{{ $totalProductsCount ?? 0 }}</span>
                 </a>
                 @foreach($groups as $group)
-                    <a href="{{ route('store.show', $profile->store_slug) }}?group={{ $group->slug }}{{ request()->has('sort') ? '&sort='.request('sort') : '' }}"
+                    <a href="{{ route('store.show', ['slug' => $profile->store_slug, 'groupSlug' => $group->slug]) }}{{ request()->has('sort') ? '?sort='.request('sort') : '' }}"
                        class="sf-tab {{ request('group') === $group->slug ? 'active' : '' }}">
                         {{ $group->name }} <span class="sf-tab-badge">{{ $group->products_count ?? 0 }}</span>
                     </a>
@@ -454,16 +454,19 @@
             {{-- ── Toolbar (Search & Sort) ── --}}
             <div class="sf-toolbar">
                 @php
-                    $baseParams = array_filter(['group' => request('group'), 'q' => request('q')]);
+                    $baseParams = array_filter(['q' => request('q')]);
+                    $routeParams = ['slug' => $profile->store_slug];
+                    if(request('group')) {
+                        $routeParams['groupSlug'] = request('group');
+                    }
                 @endphp
-                <a href="{{ route('store.show', $profile->store_slug) }}?{{ http_build_query(array_merge($baseParams, ['sort' => 'terbaru'])) }}"
+                <a href="{{ route('store.show', $routeParams) }}?{{ http_build_query(array_merge($baseParams, ['sort' => 'terbaru'])) }}"
                    class="sf-sort-btn {{ ($sort ?? 'terbaru') === 'terbaru' ? 'active' : '' }}">Terbaru</a>
-                <a href="{{ route('store.show', $profile->store_slug) }}?{{ http_build_query(array_merge($baseParams, ['sort' => 'terlaris'])) }}"
+                <a href="{{ route('store.show', $routeParams) }}?{{ http_build_query(array_merge($baseParams, ['sort' => 'terlaris'])) }}"
                    class="sf-sort-btn {{ ($sort ?? '') === 'terlaris' ? 'active' : '' }}">Terlaris</a>
                 
                 <div class="sf-search-wrap">
-                    <form method="GET" action="{{ route('store.show', $profile->store_slug) }}" id="sfSearchForm">
-                        @if(request('group'))<input type="hidden" name="group" value="{{ request('group') }}">@endif
+                    <form method="GET" action="{{ route('store.show', $routeParams) }}" id="sfSearchForm">
                         @if(request('sort'))<input type="hidden" name="sort" value="{{ request('sort') }}">@endif
                         <input type="text" name="q" value="{{ request('q') }}" class="sf-search"
                             placeholder="Cari Produk {{ $profile->store_name }}…"
