@@ -491,8 +491,15 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
             <input type="hidden" name="scraped_image" id="affScrapedImage">
             <div class="form-group">
                 <label class="form-label">Link Produk (Shopee / Tokopedia / dll)</label>
-                <input type="url" name="url" id="affUrl" class="form-input" placeholder="https://shopee.co.id/..." onblur="scrapeUrl(this.value)">
-                <span class="form-hint">Link akan discrape otomatis untuk mendapatkan gambar & judul</span>
+                <div style="display:flex; gap:0.5rem; align-items:center;">
+                    <input type="url" name="url" id="affUrl" class="form-input" placeholder="https://shopee.co.id/..." style="flex:1;">
+                    <button type="button" id="btnScrape" onclick="scrapeUrl(document.getElementById('affUrl').value, true)" style="height:44px; padding:0 1.1rem; border-radius:10px; background:linear-gradient(135deg,#1eb349,#a5cf37); border:none; color:#fff; font-weight:700; font-size:0.82rem; cursor:pointer; display:flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0;">
+                        <svg id="scrapeSpinner" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:none;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                        <svg id="scrapeIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+                        Scrape
+                    </button>
+                </div>
+                <span class="form-hint" id="scrapeStatus">Klik "Scrape" untuk mengambil gambar & judul otomatis dari link</span>
             </div>
             <div class="form-group">
                 <label class="form-label">Judul Produk</label>
