@@ -380,7 +380,7 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
             </div>
             <div class="form-group">
                 <label class="form-label">Judul / Label Tombol</label>
-                <input type="text" name="title" class="form-input" placeholder="Contoh: Download Portfolio" required>
+                <input type="text" name="title" class="form-input" placeholder="Contoh: Download Portfolio" maxlength="150" required>
             </div>
             <div class="form-group">
                 <label class="form-label">URL / Link</label>
@@ -420,7 +420,7 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
             </div>
             <div class="form-group">
                 <label class="form-label">Judul Produk</label>
-                <input type="text" name="title" id="affTitle" class="form-input" placeholder="Nama produk..." required>
+                <input type="text" name="title" id="affTitle" class="form-input" placeholder="Nama produk..." maxlength="150" required>
             </div>
             <div class="form-group">
                 <label class="form-label">Upload Gambar Manual (jika scrape gagal)</label>
@@ -443,7 +443,7 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
             @method('PUT')
             <div class="form-group">
                 <label class="form-label">Judul / Label</label>
-                <input type="text" name="title" id="editBlockTitle" class="form-input" required>
+                <input type="text" name="title" id="editBlockTitle" class="form-input" maxlength="150" required>
             </div>
             <div class="form-group">
                 <label class="form-label">URL / Link</label>
@@ -504,7 +504,7 @@ function scrapeUrl(url) {
                     document.getElementById('affScrapedImage').value = data.image;
                 }
                 if(data.title) { 
-                    const shortTitle = data.title.length > 250 ? data.title.substring(0, 247) + '...' : data.title;
+                    const shortTitle = data.title.length > 145 ? data.title.substring(0, 145) + '...' : data.title;
                     document.getElementById('scrapeTitle').textContent = shortTitle; 
                     document.getElementById('affTitle').value = shortTitle; 
                 }

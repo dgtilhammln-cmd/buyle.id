@@ -125,7 +125,7 @@ class CreatorBioController extends Controller
     {
         $request->validate([
             'type'  => 'required|in:link,pdf,tiktok,affiliate,shopee,buyle_product',
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:150',
             'url'   => 'nullable|string|max:2000',
             'block_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'description' => 'nullable|string|max:500',
@@ -191,7 +191,7 @@ class CreatorBioController extends Controller
         if ($block->creator_id !== $profile->id) abort(403);
 
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:150',
             'url'   => 'nullable|string|max:2000',
             'block_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'scraped_image' => 'nullable|string',
