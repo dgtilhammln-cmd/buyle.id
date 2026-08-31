@@ -291,10 +291,6 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                 </form>
             </div>
         </div>
-
-                </form>
-            </div>
-        </div>
         </div>
 
         {{-- ══ TAB 2: PROFIL ══ --}}
