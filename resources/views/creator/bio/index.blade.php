@@ -292,49 +292,6 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
             </div>
         </div>
 
-        {{-- Hero/Banner Image --}}
-        <div class="prof-card" style="margin-top:0;">
-            <div class="prof-card-head"><span>Hero / Banner Halaman Bio</span></div>
-            <div class="card-body">
-                <form action="{{ route('creator.bio.save-profile') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <input type="hidden" name="bio_name" value="{{ $cfg['name'] ?? '' }}">
-                    <input type="hidden" name="bio_bio" value="{{ $cfg['bio'] ?? '' }}">
-                    <input type="hidden" name="bio_location" value="{{ $cfg['location'] ?? '' }}">
-                    <input type="hidden" name="bio_wa" value="{{ $cfg['wa'] ?? '' }}">
-                    <input type="hidden" name="bio_ig" value="{{ $cfg['ig'] ?? '' }}">
-                    <input type="hidden" name="bio_tiktok" value="{{ $cfg['tiktok'] ?? '' }}">
-                    <input type="hidden" name="bio_youtube" value="{{ $cfg['youtube'] ?? '' }}">
-                    <input type="hidden" name="color_bg" value="{{ $cfg['color_bg'] ?? '' }}">
-                    <input type="hidden" name="color_text" value="{{ $cfg['color_text'] ?? '' }}">
-                    <input type="hidden" name="color_btn" value="{{ $cfg['color_btn'] ?? '' }}">
-                    <input type="hidden" name="color_btn_text" value="{{ $cfg['color_btn_text'] ?? '' }}">
-                    <input type="hidden" name="color_accent" value="{{ $cfg['color_accent'] ?? '' }}">
-                    <input type="hidden" name="color_card" value="{{ $cfg['color_card'] ?? '' }}">
-                    <input type="hidden" name="hero_size" id="heroSizeHidden" value="{{ $cfg['hero_size'] ?? '200' }}">
-                    @if(!empty($cfg['hero']))
-                    <div id="heroPreviewWrap" style="margin-bottom:1rem;">
-                        <img id="heroPreview" src="{{ asset('storage/'.$cfg['hero']) }}" style="width:100%; height:{{ $cfg['hero_size'] ?? 200 }}px; object-fit:cover; border-radius:12px; display:block;">
-                    </div>
-                    @else
-                    <div id="heroPreviewWrap" style="display:none; margin-bottom:1rem;">
-                        <img id="heroPreview" src="" style="width:100%; height:200px; object-fit:cover; border-radius:12px; display:block;">
-                    </div>
-                    @endif
-                    <div class="form-group">
-                        <label class="form-label">Upload Gambar Hero / Banner</label>
-                        <input type="file" name="bio_hero" accept="image/*" class="form-input" style="height:auto; padding:0.5rem;"
-                            onchange="var r=new FileReader(); r.onload=function(e){document.getElementById('heroPreview').src=e.target.result; document.getElementById('heroPreviewWrap').style.display='block';}; r.readAsDataURL(this.files[0]);">
-                        <span class="form-hint">Minimal 1080x400px. Tampil di atas halaman bio Anda.</span>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Tinggi Gambar: <span id="heroSizeLabel">{{ $cfg['hero_size'] ?? 200 }}px</span></label>
-                        <input type="range" min="80" max="500" step="10" value="{{ $cfg['hero_size'] ?? 200 }}" style="width:100%; accent-color:#1eb349;"
-                            oninput="document.getElementById('heroSizeLabel').textContent=this.value+'px'; document.getElementById('heroSizeHidden').value=this.value; var p=document.getElementById('heroPreview'); if(p) p.style.height=this.value+'px';">
-                    </div>
-                    <div style="display:flex; justify-content:flex-end;">
-                        <button type="submit" class="btn-submit-sm">Simpan Hero</button>
-                    </div>
                 </form>
             </div>
         </div>
@@ -374,18 +331,28 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
 
                 <div class="prof-card">
                     <div class="prof-card-head">Foto Profil & Cover</div>
-                    <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+                    <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
                         <div class="form-group">
-                            <label class="form-label">Foto Profil (Avatar)</label>
+                            <label class="form-label">Foto Profil / Avatar</label>
                             @if(!empty($cfg['avatar']))
-                                <img src="{{ asset('storage/'.$cfg['avatar']) }}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:0.5rem; border:3px solid #1eb349;">
+                                <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.5rem;">
+                                    <img src="{{ asset('storage/'.$cfg['avatar']) }}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid #1eb349;">
+                                    <label style="font-size:0.75rem; color:#ef4444; display:flex; align-items:center; gap:0.25rem; cursor:pointer;">
+                                        <input type="checkbox" name="delete_avatar" value="1"> Hapus Avatar
+                                    </label>
+                                </div>
                             @endif
                             <input type="file" name="bio_avatar" accept="image/*" class="form-input" style="height:auto; padding:0.5rem;">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Foto Cover / Banner</label>
                             @if(!empty($cfg['cover']))
-                                <img src="{{ asset('storage/'.$cfg['cover']) }}" style="width:100%; height:60px; border-radius:10px; object-fit:cover; margin-bottom:0.5rem;">
+                                <div style="margin-bottom:0.5rem;">
+                                    <img src="{{ asset('storage/'.$cfg['cover']) }}" style="width:100%; height:60px; border-radius:10px; object-fit:cover; margin-bottom:0.25rem;">
+                                    <label style="font-size:0.75rem; color:#ef4444; display:flex; align-items:center; gap:0.25rem; cursor:pointer;">
+                                        <input type="checkbox" name="delete_cover" value="1"> Hapus Cover
+                                    </label>
+                                </div>
                             @endif
                             <input type="file" name="bio_cover" accept="image/*" class="form-input" style="height:auto; padding:0.5rem;">
                         </div>
@@ -641,6 +608,7 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                     <option value="link">Custom Link / Button</option>
                     <option value="pdf">File / Dokumen PDF</option>
                     <option value="tiktok">TikTok Video</option>
+                    <option value="image">Gambar / Banner (Poster)</option>
                 </select>
             </div>
             <div class="form-group">

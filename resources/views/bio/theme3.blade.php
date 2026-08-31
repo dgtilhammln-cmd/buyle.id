@@ -136,14 +136,8 @@
 
 <div class="container">
 
-    {{-- Hero / Cover Area --}}
-    @if(!empty($config['hero']))
-        <div class="hero-banner" style="width:100%; margin-bottom:-50px; position:relative; z-index:0;">
-            <img src="{{ asset('storage/'.$config['hero']) }}" alt="Hero" style="width:100%; height:{{ $config['hero_size'] ?? 200 }}px; object-fit:cover; display:block;">
-        </div>
-    @else
-        <div class="cover-area" @if(!empty($config['cover'])) style="background-image:url('{{ asset('storage/'.$config['cover']) }}');" @endif></div>
-    @endif
+        {{-- Cover --}}
+    <div class="cover-area" @if(!empty($config['cover'])) style="background-image:url('{{ asset('storage/'.$config['cover']) }}');" @endif></div>
 
     {{-- Profile Header --}}
     <div class="profile-container fade-up" style="animation-delay:0.1s">
@@ -178,7 +172,7 @@
     @endif
 
     @php
-        $linkBlocks    = $blocks->whereIn('type', ['link','pdf']);
+        $linkBlocks    = $blocks->whereIn('type', ['link','pdf','image']);
         $tiktokBlocks  = $blocks->where('type', 'tiktok');
         $affBlocks     = $blocks->whereIn('type', ['shopee','affiliate']);
         $buyleBlocks   = $blocks->where('type', 'buyle_product');

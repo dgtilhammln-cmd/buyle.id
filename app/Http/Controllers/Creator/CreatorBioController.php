@@ -84,29 +84,28 @@ class CreatorBioController extends Controller
             'color_btn_text'=> 'nullable|string|max:20',
             'color_accent'  => 'nullable|string|max:20',
             'color_card'    => 'nullable|string|max:20',
-            'hero_size'     => 'nullable|integer',
-            'bio_hero'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'embed_location'=> 'nullable|string|max:1000',
         ]);
 
         $profile = $this->getProfile();
         $config  = $profile->bio_config ?? [];
 
-        // Handle avatar upload
-        if ($request->hasFile('bio_avatar')) {
+        // Handle avatar upload / deletion
+        if ($request->has('delete_avatar') && !empty($config['avatar'])) {
+            Storage::disk('public')->delete($config['avatar']);
+            $config['avatar'] = null;
+        } elseif ($request->hasFile('bio_avatar')) {
             if (!empty($config['avatar'])) Storage::disk('public')->delete($config['avatar']);
             $config['avatar'] = $request->file('bio_avatar')->store('bio/avatars', 'public');
         }
-        // Handle cover upload
-        if ($request->hasFile('bio_cover')) {
+
+        // Handle cover upload / deletion
+        if ($request->has('delete_cover') && !empty($config['cover'])) {
+            Storage::disk('public')->delete($config['cover']);
+            $config['cover'] = null;
+        } elseif ($request->hasFile('bio_cover')) {
             if (!empty($config['cover'])) Storage::disk('public')->delete($config['cover']);
             $config['cover'] = $request->file('bio_cover')->store('bio/covers', 'public');
-        }
-
-        // Handle hero upload
-        if ($request->hasFile('bio_hero')) {
-            if (!empty($config['hero'])) Storage::disk('public')->delete($config['hero']);
-            $config['hero'] = $request->file('bio_hero')->store('bio/heroes', 'public');
         }
 
         $config['name']     = $request->bio_name     ?? $config['name'] ?? '';
@@ -123,7 +122,6 @@ class CreatorBioController extends Controller
         if ($request->filled('color_btn_text')) $config['color_btn_text'] = $request->color_btn_text;
         if ($request->filled('color_accent')) $config['color_accent'] = $request->color_accent;
         if ($request->filled('color_card')) $config['color_card'] = $request->color_card;
-        if ($request->filled('hero_size')) $config['hero_size'] = $request->hero_size;
         
         if ($request->has('embed_location')) {
             // allow empty to clear
@@ -152,7 +150,7 @@ class CreatorBioController extends Controller
     public function storeBlock(Request $request)
     {
         $request->validate([
-            'type'  => 'required|in:link,pdf,tiktok,affiliate,shopee,buyle_product',
+            'type'  => 'required|in:link,pdf,tiktok,affiliate,shopee,buyle_product,image',
             'title' => 'required|string|max:150',
             'url'   => 'nullable|string|max:2000',
             'block_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
