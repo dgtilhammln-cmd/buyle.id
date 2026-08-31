@@ -607,35 +607,61 @@ if(savedTab) {
 
 // Shopee URL scraper AJAX
 let scrapeTimeout;
-function scrapeUrl(url) {
-    if(!url || !url.startsWith('http')) return;
-    clearTimeout(scrapeTimeout);
-    scrapeTimeout = setTimeout(() => {
+function scrapeUrl(url, immediate) {
+    var btn = document.getElementById('btnScrape');
+    var spinner = document.getElementById('scrapeSpinner');
+    var icon = document.getElementById('scrapeIcon');
+    var status = document.getElementById('scrapeStatus');
+
+    if (!url || !url.startsWith('http')) {
+        if (status) { status.textContent = 'Masukkan link produk yang valid terlebih dahulu.'; status.style.color = '#ef4444'; }
+        return;
+    }
+
+    var doScrape = function() {
+        if (btn) btn.disabled = true;
+        if (spinner) { spinner.style.display = 'inline'; }
+        if (icon) icon.style.display = 'none';
+        if (status) { status.textContent = 'Sedang mengambil data produk...'; status.style.color = '#64748b'; }
+
         fetch('{{ route("creator.bio.scrape-url") }}', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-            body: JSON.stringify({ url })
+            body: JSON.stringify({ url: url })
         })
-        .then(r => r.json())
-        .then(data => {
-            const preview = document.getElementById('scrapePreview');
-            if(data.image || data.title) {
-                if(data.image) { 
-                    const img = document.getElementById('scrapeImg');
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            var preview = document.getElementById('scrapePreview');
+            if (data.image || data.title) {
+                if (data.image) {
+                    var img = document.getElementById('scrapeImg');
                     img.src = data.image;
                     img.style.display = 'block';
                     document.getElementById('affScrapedImage').value = data.image;
                 }
-                if(data.title) { 
-                    const shortTitle = data.title.length > 145 ? data.title.substring(0, 145) + '...' : data.title;
-                    document.getElementById('scrapeTitle').textContent = shortTitle; 
-                    document.getElementById('affTitle').value = shortTitle; 
+                if (data.title) {
+                    var shortTitle = data.title.length > 145 ? data.title.substring(0, 145) + '...' : data.title;
+                    document.getElementById('scrapeTitle').textContent = shortTitle;
+                    document.getElementById('affTitle').value = shortTitle;
                 }
                 preview.style.display = 'flex';
+                if (status) { status.textContent = '✓ Data berhasil diambil! Periksa judul & gambar di atas.'; status.style.color = '#1eb349'; }
+            } else {
+                if (status) { status.textContent = 'Data tidak ditemukan otomatis. Silakan isi judul & gambar manual.'; status.style.color = '#f59e0b'; }
             }
         })
-        .catch(() => {});
-    }, 800);
+        .catch(function() {
+            if (status) { status.textContent = 'Gagal terhubung ke link. Silakan isi manual.'; status.style.color = '#ef4444'; }
+        })
+        .then(function() {
+            if (btn) btn.disabled = false;
+            if (spinner) spinner.style.display = 'none';
+            if (icon) icon.style.display = 'inline';
+        });
+    };
+
+    clearTimeout(scrapeTimeout);
+    if (immediate) { doScrape(); } else { scrapeTimeout = setTimeout(doScrape, 800); }
 }
 
 function editBlock(btn) {
