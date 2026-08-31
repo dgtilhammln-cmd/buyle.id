@@ -14,7 +14,8 @@
 @section('styles')
 <style>
 .bio-layout    { display:flex; gap:2rem; align-items:flex-start; }
-.bio-sidebar   { width:240px; flex-shrink:0; background:#fff; border-radius:20px; padding:1.25rem; box-shadow:0 4px 12px rgba(0,0,0,0.03); border:1px solid #f0fdf4; position:sticky; top:1.5rem; }
+.bio-sidebar   { width:320px; flex-shrink:0; background:#fff; border-radius:20px; padding:1.25rem; box-shadow:0 4px 12px rgba(0,0,0,0.03); border:1px solid #f0fdf4; position:sticky; top:1.5rem; max-height: calc(100vh - 3rem); overflow-y: auto; scrollbar-width: none; }
+.bio-sidebar::-webkit-scrollbar { display: none; }
 .bio-content   { flex:1; min-width:0; }
 .tab-btn       { width:100%; display:flex; align-items:center; gap:0.8rem; padding:0.85rem 1rem; border:none; background:transparent; color:#64748b; font-family:'Montserrat',sans-serif; font-size:0.85rem; font-weight:600; border-radius:12px; cursor:pointer; text-align:left; transition:all 0.2s; margin-bottom:0.2rem; }
 .tab-btn:hover { background:#f8fafc; color:#1eb349; }
@@ -106,6 +107,19 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
             </a>
             @endif
         </div>
+
+        {{-- Mobile Preview Mockup --}}
+        @if($bioUrl)
+        <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7;">
+            <div style="font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:1rem; text-align:center;">Live Preview</div>
+            <div style="width: 260px; height: 530px; margin: 0 auto; border: 12px solid #1a1a1a; border-radius: 36px; overflow: hidden; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1); background:#fff;">
+                {{-- Notch --}}
+                <div style="position:absolute; top:0; left:50%; transform:translateX(-50%); width:100px; height:20px; background:#1a1a1a; border-bottom-left-radius:12px; border-bottom-right-radius:12px; z-index:10;"></div>
+                <iframe src="{{ $bioUrl }}" style="width:100%; height:100%; border:none; background:#fff;" id="bioPreviewFrame"></iframe>
+            </div>
+            <p style="text-align:center; font-size:0.7rem; color:#94a3b8; margin-top:0.75rem;">Perubahan profil akan terupdate otomatis saat disimpan.</p>
+        </div>
+        @endif
     </div>
 
     {{-- Main Content --}}
