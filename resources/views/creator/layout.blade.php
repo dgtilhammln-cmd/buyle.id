@@ -530,6 +530,16 @@
     {{-- MAIN CANVAS WRAPPER --}}
     <div class="cr-main-wrapper">
         <main class="cr-main-canvas">
+            {{-- Header Area: Title & Actions --}}
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h1 style="font-size: 1.5rem; font-weight: 800; color: #0b120c; margin: 0; font-family: 'Montserrat', sans-serif;">
+                    @yield('page_title', 'Dashboard')
+                </h1>
+                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                    @yield('topbar_actions')
+                </div>
+            </div>
+
             @if(session('success'))
                 <div class="flash-success">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">

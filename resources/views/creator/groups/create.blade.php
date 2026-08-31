@@ -69,6 +69,13 @@
             </div>
 
             <div class="form-group">
+                <label class="form-label">Deskripsi Singkat (Maks 300 kata)</label>
+                <textarea name="description" class="form-input" style="height:auto; padding-top:0.75rem; padding-bottom:0.75rem;" rows="3" placeholder="Deskripsi singkat kelompok produk untuk keperluan SEO..." maxlength="2000">{{ old('description', $group->description ?? '') }}</textarea>
+                <span class="form-hint">Digunakan untuk meta deskripsi pada halaman kelompok ini.</span>
+                @error('description')<span class="form-error">{{ $message }}</span>@enderror
+            </div>
+
+            <div class="form-group">
                 <label class="form-label">Urutan (Opsional)</label>
                 <input type="number" name="order" value="{{ old('order', $group->order ?? 0) }}" class="form-input" placeholder="0">
                 <span class="form-hint">Angka lebih kecil akan tampil lebih dulu.</span>

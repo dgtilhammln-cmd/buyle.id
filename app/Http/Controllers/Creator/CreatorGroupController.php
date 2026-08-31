@@ -28,6 +28,7 @@ class CreatorGroupController extends Controller
         $request->validate([
             'name' => 'required|string|max:100',
             'order' => 'nullable|integer|min:0',
+            'description' => 'nullable|string|max:2000',
         ]);
 
         $slug = Str::slug($request->name);
@@ -42,6 +43,7 @@ class CreatorGroupController extends Controller
             'seller_id' => auth()->id(),
             'name' => $request->name,
             'slug' => $slug,
+            'description' => $request->description,
             'order' => $request->order ?? 0,
             'is_active' => $request->boolean('is_active', true),
         ]);
@@ -63,9 +65,11 @@ class CreatorGroupController extends Controller
         $request->validate([
             'name' => 'required|string|max:100',
             'order' => 'nullable|integer|min:0',
+            'description' => 'nullable|string|max:2000',
         ]);
 
         $group->name = $request->name;
+        $group->description = $request->description;
         $group->order = $request->order ?? 0;
         $group->is_active = $request->boolean('is_active', true);
         

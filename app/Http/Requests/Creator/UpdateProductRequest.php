@@ -35,6 +35,7 @@ class UpdateProductRequest extends FormRequest
             'gallery'             => ['nullable', 'array', 'max:6'],
             'gallery.*'           => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'tiktok_video_url'    => ['nullable', 'url', 'max:255'],
+            'youtube_video_url'   => ['nullable', 'url', 'max:255'],
 
             // URL produk digital — divalidasi oleh SafeDigitalUrl
             'digital_resource'    => ['required', 'string', 'max:2000', new SafeDigitalUrl()],
@@ -44,6 +45,9 @@ class UpdateProductRequest extends FormRequest
             'meta_title'          => ['nullable', 'string', 'max:70'],
             'meta_desc'           => ['nullable', 'string', 'max:160'],
             'meta_keywords'       => ['nullable', 'string', 'max:255'],
+            'faqs'                => ['nullable', 'array'],
+            'faqs.*.question'     => ['nullable', 'string', 'max:500'],
+            'faqs.*.answer'       => ['nullable', 'string'],
         ];
     }
 
@@ -66,6 +70,30 @@ class UpdateProductRequest extends FormRequest
             'is_active'   => $this->boolean('is_active', true),
             'is_featured' => $this->boolean('is_featured', false),
         ];
+
+        // Map external_link → digital_resource (form uses external_link)
+        if ($this->has('external_link') && $this->input('external_link')) {
+            $merge['digital_resource'] = $this->input('external_link');
+        }
+
+        // Map youtube_video_url → tiktok_video_url (reuse column)
+        if ($this->has('youtube_video_url')) {
+            $merge['tiktok_video_url'] = $this->input('youtube_video_url');
+        }
+
+        // Map meta_description → meta_desc
+        if ($this->has('meta_description')) {
+            $merge['meta_desc'] = $this->input('meta_description');
+        }
+
+        // Filter empty FAQ entries
+        if ($this->has('faqs')) {
+            $faqs = collect($this->input('faqs', []))
+                ->filter(fn($f) => !empty($f['question']) || !empty($f['answer']))
+                ->values()
+                ->toArray();
+            $merge['faqs'] = $faqs ?: null;
+        }
 
         if ($this->has('price') && $this->input('price') !== null) {
             $merge['price'] = preg_replace('/[^\d]/', '', (string)$this->input('price'));

@@ -10,6 +10,7 @@ class CreatorProductGroup extends Model
         'seller_id',
         'name',
         'slug',
+        'description',
         'order',
         'is_active',
     ];
