@@ -492,6 +492,19 @@
 
         @endif
 
+                .prod-number {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: var(--accent);
+            color: #000;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            z-index: 10;
+        }
+
         /* Fix map iframe responsive */
         .map-container iframe {
             width: 100% !important;
@@ -553,7 +566,7 @@
         @php
             $linkBlocks = $blocks->whereIn('type', ['link', 'pdf', 'image']);
             $tiktokBlocks = $blocks->where('type', 'tiktok');
-            $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate']);
+            $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
             $buyleBlocks = $blocks->where('type', 'buyle_product');
         @endphp
 
@@ -562,7 +575,7 @@
             <span class="section-label fade-up" style="animation-delay:0.25s">Highlights</span>
             <div class="slider-wrap fade-up" style="animation-delay:0.3s">
                 @foreach($tiktokBlocks as $b)
-                    <a href="{{ $b->url }}" target="_blank" class="video-card tt-fetch" data-url="{{ $b->url }}">
+                    <a href="{{ $b->url }}" target="_blank" class="video-card tt-fetch search-item" data-title="TikTok Video" data-url="{{ $b->url }}">
                         <img src="" alt="TikTok" class="tt-thumb" style="opacity:0; transition:opacity 0.3s;">
                         <span class="tt-icon"><i class="fab fa-tiktok" style="font-size:16px;"></i></span>
                         <span class="watch-label">Watch Video</span>
@@ -576,7 +589,7 @@
             <span class="section-label fade-up" style="animation-delay:0.3s">Links</span>
             <div class="link-stack">
                 @foreach($linkBlocks as $i => $block)
-                    <a href="{{ $block->url }}" target="_blank" class="glass-btn fade-up"
+                    <a href="{{ $block->url }}" target="_blank" class="glass-btn fade-up search-item" data-title="{{ $block->title }}"
                         style="animation-delay:{{ 0.35 + $i * 0.05 }}s">
                         <div class="btn-icon">
                             @if(!empty($block->data_json['icon_class']))
@@ -605,9 +618,11 @@
         @if($affBlocks->isNotEmpty())
             <span class="section-label fade-up" style="animation-delay:0.4s">Produk Rekomendasi</span>
             <div class="product-grid fade-up" style="animation-delay:0.45s">
-                @foreach($affBlocks as $block)
-                    <a href="{{ $block->url }}" target="_blank" class="prod-card">
+                @foreach($affBlocks as $index => $block)
+                    <a href="{{ $block->url }}" target="_blank" class="prod-card search-item" data-title="{{ $block->title }}">
                         <div class="prod-img-wrap">
+                            <div class="prod-number">{{ sprintf('%02d', $index + 1) }}</div>
+
                             @if(!empty($block->data_json['icon_class']))
                                 <i class="{{ $block->data_json['icon_class'] }}" style="font-size:24px;"></i>
                             @elseif(!empty($block->data_json['image']))
@@ -634,9 +649,10 @@
                 @foreach($buyleBlocks as $i => $block)
                     @php $prod = $products[$block->data_json['product_id'] ?? 0] ?? null; @endphp
                     @if($prod)
-                        <a href="{{ $block->url }}" target="_blank" class="prod-card fade-up"
+                        <a href="{{ $block->url }}" target="_blank" class="prod-card fade-up search-item" data-title="{{ $prod->name }}"
                             style="animation-delay:{{ 0.55 + $i * 0.05 }}s">
                             <div class="prod-img-wrap">
+
                                 @if($prod->image)
                                     <img src="{{ asset('storage/' . $prod->image) }}" alt="{{ $prod->name }}">
                                 @else
