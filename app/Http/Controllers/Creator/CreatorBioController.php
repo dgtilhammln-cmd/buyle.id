@@ -78,6 +78,15 @@ class CreatorBioController extends Controller
             'bio_ig'        => 'nullable|string|max:80',
             'bio_tiktok'    => 'nullable|string|max:80',
             'bio_youtube'   => 'nullable|url|max:200',
+            'color_bg'      => 'nullable|string|max:20',
+            'color_text'    => 'nullable|string|max:20',
+            'color_btn'     => 'nullable|string|max:20',
+            'color_btn_text'=> 'nullable|string|max:20',
+            'color_accent'  => 'nullable|string|max:20',
+            'color_card'    => 'nullable|string|max:20',
+            'hero_size'     => 'nullable|integer',
+            'bio_hero'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'embed_location'=> 'nullable|string|max:1000',
         ]);
 
         $profile = $this->getProfile();
@@ -94,6 +103,12 @@ class CreatorBioController extends Controller
             $config['cover'] = $request->file('bio_cover')->store('bio/covers', 'public');
         }
 
+        // Handle hero upload
+        if ($request->hasFile('bio_hero')) {
+            if (!empty($config['hero'])) Storage::disk('public')->delete($config['hero']);
+            $config['hero'] = $request->file('bio_hero')->store('bio/heroes', 'public');
+        }
+
         $config['name']     = $request->bio_name     ?? $config['name'] ?? '';
         $config['bio']      = $request->bio_bio       ?? $config['bio'] ?? '';
         $config['location'] = $request->bio_location  ?? $config['location'] ?? '';
@@ -101,6 +116,19 @@ class CreatorBioController extends Controller
         $config['ig']       = $request->bio_ig        ?? $config['ig'] ?? '';
         $config['tiktok']   = $request->bio_tiktok    ?? $config['tiktok'] ?? '';
         $config['youtube']  = $request->bio_youtube   ?? $config['youtube'] ?? '';
+
+        if ($request->filled('color_bg')) $config['color_bg'] = $request->color_bg;
+        if ($request->filled('color_text')) $config['color_text'] = $request->color_text;
+        if ($request->filled('color_btn')) $config['color_btn'] = $request->color_btn;
+        if ($request->filled('color_btn_text')) $config['color_btn_text'] = $request->color_btn_text;
+        if ($request->filled('color_accent')) $config['color_accent'] = $request->color_accent;
+        if ($request->filled('color_card')) $config['color_card'] = $request->color_card;
+        if ($request->filled('hero_size')) $config['hero_size'] = $request->hero_size;
+        
+        if ($request->has('embed_location')) {
+            // allow empty to clear
+            $config['embed_location'] = $request->embed_location;
+        }
 
         // Handle username (store_slug used as bio URL slug)
         if ($request->filled('bio_username')) {
@@ -251,30 +279,55 @@ class CreatorBioController extends Controller
     }
 
     /**
-     * Shopee URL Scraper: tries to get OG image from Shopee product page.
-     * Returns a URL string (remote) that gets stored in data_json.
+     * Scrape OG image using multiple strategies.
+     * Strategy 1: Direct HTML fetch (works for Tokopedia, most sites)
+     * Strategy 2: Microlink.io API (works for Shopee JS-rendered pages)
      */
     private function scrapeOgImage(string $url): ?string
     {
+        // Strategy 1: Direct HTML scrape
         try {
             $response = Http::timeout(10)
-                ->withHeaders(['User-Agent' => 'Mozilla/5.0 (compatible; Googlebot/2.1)'])
+                ->withHeaders([
+                    'User-Agent'      => 'Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Mobile Safari/537.36',
+                    'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                    'Accept-Language' => 'id-ID,id;q=0.9,en-US;q=0.8',
+                    'Accept-Encoding' => 'gzip, deflate, br',
+                    'Cache-Control'   => 'no-cache',
+                ])
                 ->get($url);
 
             if ($response->successful()) {
                 $html = $response->body();
-                // Try og:image first
-                if (preg_match('/<meta[^>]+property=["\']og:image["\'][^>]+content=["\'](.*?)["\']/i', $html, $m)) {
-                    return $m[1];
+                // og:image
+                if (preg_match('/<meta[^>]+property=["\']og:image["\'][^>]+content=["\'](.*?)["\']/i', $html, $m) ||
+                    preg_match('/<meta[^>]+content=["\'](.*?)["\'\s][^>]+property=["\']og:image["\']/i', $html, $m)) {
+                    if (!empty($m[1]) && filter_var($m[1], FILTER_VALIDATE_URL)) return $m[1];
                 }
-                // Fallback: twitter:image
+                // twitter:image
                 if (preg_match('/<meta[^>]+name=["\']twitter:image["\'][^>]+content=["\'](.*?)["\']/i', $html, $m)) {
-                    return $m[1];
+                    if (!empty($m[1]) && filter_var($m[1], FILTER_VALIDATE_URL)) return $m[1];
                 }
             }
-        } catch (\Throwable $e) {
-            // Silent fail - user can upload manually
-        }
+        } catch (\Throwable $e) {}
+
+        // Strategy 2: Microlink.io (handles JS-rendered pages like Shopee)
+        try {
+            $mlResponse = Http::timeout(15)
+                ->get('https://api.microlink.io', [
+                    'url'        => $url,
+                    'meta'       => 'true',
+                    'screenshot' => 'false',
+                ]);
+            if ($mlResponse->successful()) {
+                $data = $mlResponse->json();
+                $img = $data['data']['image']['url']
+                    ?? $data['data']['logo']['url']
+                    ?? null;
+                if ($img && filter_var($img, FILTER_VALIDATE_URL)) return $img;
+            }
+        } catch (\Throwable $e) {}
+
         return null;
     }
 
@@ -285,14 +338,29 @@ class CreatorBioController extends Controller
     {
         $request->validate(['url' => 'required|url']);
         $url   = $request->url;
-        $image = $this->scrapeOgImage($url);
 
-        // Try to get title too
+        $image = null;
         $title = null;
+
+        // Strategy 1: Direct HTML
         try {
-            $response = Http::timeout(8)->withHeaders(['User-Agent' => 'Mozilla/5.0'])->get($url);
+            $response = Http::timeout(10)
+                ->withHeaders([
+                    'User-Agent'      => 'Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Mobile Safari/537.36',
+                    'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    'Accept-Language' => 'id-ID,id;q=0.9',
+                ])
+                ->get($url);
+
             if ($response->successful()) {
                 $html = $response->body();
+
+                // og:image
+                if (preg_match('/<meta[^>]+property=["\']og:image["\'][^>]+content=["\'](.*?)["\']/i', $html, $m) ||
+                    preg_match('/<meta[^>]+content=["\'](.*?)["\'\s][^>]+property=["\']og:image["\']/i', $html, $m)) {
+                    if (!empty($m[1]) && filter_var($m[1], FILTER_VALIDATE_URL)) $image = $m[1];
+                }
+                // og:title
                 if (preg_match('/<meta[^>]+property=["\']og:title["\'][^>]+content=["\'](.*?)["\']/i', $html, $m)) {
                     $title = html_entity_decode($m[1], ENT_QUOTES);
                 } elseif (preg_match('/<title>(.*?)<\/title>/is', $html, $m)) {
@@ -300,6 +368,30 @@ class CreatorBioController extends Controller
                 }
             }
         } catch (\Throwable $e) {}
+
+        // Strategy 2: Microlink.io fallback (especially for Shopee)
+        if (!$image || !$title) {
+            try {
+                $mlResponse = Http::timeout(15)
+                    ->get('https://api.microlink.io', [
+                        'url'        => $url,
+                        'meta'       => 'true',
+                        'screenshot' => 'false',
+                    ]);
+                if ($mlResponse->successful()) {
+                    $data = $mlResponse->json();
+                    if (!$image) {
+                        $img = $data['data']['image']['url']
+                            ?? $data['data']['logo']['url']
+                            ?? null;
+                        if ($img && filter_var($img, FILTER_VALIDATE_URL)) $image = $img;
+                    }
+                    if (!$title) {
+                        $title = $data['data']['title'] ?? $data['data']['description'] ?? null;
+                    }
+                }
+            } catch (\Throwable $e) {}
+        }
 
         return response()->json(['image' => $image, 'title' => $title]);
     }
