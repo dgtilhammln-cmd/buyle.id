@@ -141,21 +141,21 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
             Pengaturan Profil
         </button>
-        <button class="tab-btn" data-tab="tab-blocks">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            Kelola Block
-        </button>
         <button class="tab-btn" data-tab="tab-social">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M22 12A10 10 0 1 0 12 22a10 10 0 0 0 10-10zM8 12a4 4 0 1 0 8 0 4 4 0 0 0-8 0z"/></svg>
             Social Links
         </button>
-        <button class="tab-btn" data-tab="tab-embed">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Lokasi / Map
+        <button class="tab-btn" data-tab="tab-blocks">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Kelola Block
         </button>
         <button class="tab-btn" data-tab="tab-catalog">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
             Katalog & Affiliate
+        </button>
+        <button class="tab-btn" data-tab="tab-embed">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Lokasi / Map
         </button>
 
         <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7;">
@@ -337,6 +337,7 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                     </div>
                 </form>
             </div>
+        </div>
         </div>
 
         {{-- ══ TAB 2: PROFIL ══ --}}
