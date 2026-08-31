@@ -73,57 +73,119 @@
         margin-top: 0.45rem;
     }
 
-    /* Card 2: Affiliate Balance (Neon Green Gradient) */
-    .card-balance-neon {
-        background: linear-gradient(135deg, #1eb349, #4ade80);
+    /* Card 2: Budget Card (Modern White with Chart) */
+    .card-budget-modern {
+        background: #ffffff;
         border-radius: 28px;
-        padding: 2rem;
-        color: #032d16;
+        padding: 1.75rem 0 0 0;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        min-height: 190px;
-        box-shadow: 0 12px 30px rgba(30,179,73,0.25);
+        min-height: 230px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.04);
+        border: 1px solid #f1f5f9;
     }
-    .balance-label-sm {
-        font-size: 0.72rem;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        color: #032d16;
-        opacity: 0.75;
-        text-transform: uppercase;
+    .budget-content {
+        padding: 0 2rem;
+        position: relative;
+        z-index: 10;
     }
-    .balance-val {
-        font-size: 1.6rem;
+    .budget-label {
+        font-size: 0.85rem;
         font-weight: 700;
-        color: #032d16;
-        letter-spacing: -0.02em;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        line-height: 1;
-        margin: 0.6rem 0;
+        color: #64748b;
+        margin-bottom: 0.35rem;
     }
-    .btn-withdraw-pill {
-        background: #0b120c;
-        color: #ffffff;
-        font-size: 0.75rem;
+    .budget-val {
+        font-size: 2.3rem;
         font-weight: 800;
-        letter-spacing: 0.05em;
-        padding: 0.55rem 1.35rem;
-        border-radius: 999px;
-        text-decoration: none;
+        color: #0f172a;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.75rem;
+    }
+    .budget-badge {
         display: inline-flex;
         align-items: center;
-        gap: 0.4rem;
-        align-self: flex-start;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-        transition: transform 0.2s, box-shadow 0.2s;
+        gap: 0.35rem;
+        background: #f8fafc;
+        color: #0f172a;
+        font-size: 0.75rem;
+        font-weight: 800;
+        padding: 0.35rem 0.75rem;
+        border-radius: 100px;
+        border: 1.5px solid #e2e8f0;
+        text-decoration: none;
+        transition: all 0.2s;
     }
-    .btn-withdraw-pill:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(0,0,0,0.35);
-        color: #fff;
+    .budget-badge:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+    }
+    .budget-badge svg {
+        color: #1eb349;
+    }
+    .budget-decor {
+        position: absolute;
+        top: -15px;
+        right: -10px;
+        width: 140px;
+        height: auto;
+        opacity: 0.9;
+        z-index: 5;
+        pointer-events: none;
+        filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
+    }
+    .budget-chart-container {
+        margin-top: 1rem;
+        position: relative;
+        z-index: 5;
+        width: 100%;
+        margin-bottom: -5px;
+    }
+    .budget-chart-svg {
+        width: 100%;
+        height: 120px;
+        display: block;
+        overflow: visible;
+    }
+    
+    /* Interactive Slow-mo loading animations (5 seconds) */
+    .draw-line-slow {
+        stroke-dasharray: 1200;
+        stroke-dashoffset: 1200;
+        animation: dashSlow 5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes dashSlow {
+        to { stroke-dashoffset: 0; }
+    }
+    .fade-fill-slow {
+        opacity: 0;
+        animation: fadeFillSlow 5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes fadeFillSlow {
+        0% { opacity: 0; }
+        60% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+    .pop-dot-slow {
+        opacity: 0;
+        transform: scale(0);
+        transform-origin: center;
+        animation: popSlow 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes popSlow {
+        to { opacity: 1; transform: scale(1); }
+    }
+    
+    .budget-days {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 2rem 1.25rem 2rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #94a3b8;
     }
 
     /* Card 3: Date & Digital Live Clock */
@@ -319,16 +381,84 @@
         </div>
     </div>
 
-    {{-- 2. Neon Lime Affiliate Balance Card --}}
-    <div class="card-balance-neon">
-        <div class="balance-label-sm">AFFILIATE BALANCE</div>
-        <div class="balance-val" id="rt-balance">
-            Rp {{ number_format($availableBalance ?? $gmv ?? 0, 0, ',', '.') }}
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="opacity:0.7;" title="Saldo Siap Ditarik"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    {{-- 2. Budget Card (Modern with Chart) --}}
+    <div class="card-budget-modern">
+        <!-- Floating Decor SVG -->
+        <svg class="budget-decor" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g style="transform: rotate(20deg) translate(40px, -20px);">
+                <rect x="50" y="30" width="110" height="65" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+                <circle cx="75" cy="62" r="12" fill="#e2e8f0"/>
+                <circle cx="130" cy="62" r="22" fill="#e2e8f0"/>
+            </g>
+            <g style="transform: rotate(5deg) translate(0px, 15px);">
+                <rect x="30" y="60" width="120" height="70" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+                <circle cx="55" cy="95" r="14" fill="#cbd5e1"/>
+                <circle cx="115" cy="95" r="26" fill="#cbd5e1"/>
+            </g>
+        </svg>
+
+        <div class="budget-content">
+            <div class="budget-label">{{ $storeName }}</div>
+            <div class="budget-val" id="rt-balance">
+                Rp {{ number_format($availableBalance ?? $gmv ?? 0, 0, ',', '.') }}
+            </div>
+            <a href="{{ route('creator.payout.settings') }}" class="budget-badge">
+                + Tarik Saldo
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
         </div>
-        <a href="{{ route('creator.payout.settings') }}" class="btn-withdraw-pill">
-            WITHDRAW &rarr;
-        </a>
+
+        <div class="budget-chart-container">
+            <!-- SVG Chart with 5s slow-mo animation -->
+            <svg class="budget-chart-svg" viewBox="0 0 500 120" preserveAspectRatio="none">
+                <defs>
+                    <linearGradient id="budgetGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#1eb349" stop-opacity="0.4"/>
+                        <stop offset="100%" stop-color="#a5cf37" stop-opacity="0.0"/>
+                    </linearGradient>
+                    <linearGradient id="budgetLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#1eb349"/>
+                        <stop offset="100%" stop-color="#a5cf37"/>
+                    </linearGradient>
+                    
+                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="4" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                </defs>
+                <!-- Filled area -->
+                <path class="fade-fill-slow" d="M 0,110 L 50,110 L 120,70 L 200,90 L 280,30 L 360,60 L 460,20 L 500,10 L 500,120 L 0,120 Z" fill="url(#budgetGrad)"/>
+                
+                <!-- Vertical grid lines (optional, to mimic image) -->
+                <path d="M 120,70 L 120,120 M 200,90 L 200,120 M 280,30 L 280,120 M 360,60 L 360,120 M 460,20 L 460,120" stroke="#f1f5f9" stroke-width="1" class="fade-fill-slow"/>
+
+                <!-- Stroke Line -->
+                <path class="draw-line-slow" d="M 0,110 L 50,110 L 120,70 L 200,90 L 280,30 L 360,60 L 460,20 L 500,10" fill="none" stroke="url(#budgetLineGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                
+                <!-- Dot marker -->
+                <g class="pop-dot-slow" style="animation-delay: 3.5s;">
+                    <!-- Pulse glow -->
+                    <circle cx="280" cy="30" r="12" fill="#1eb349" opacity="0.2" filter="url(#glow)"/>
+                    <circle cx="280" cy="30" r="6" fill="#ffffff" stroke="#1eb349" stroke-width="3"/>
+                </g>
+                
+                <!-- Floating badge on dot -->
+                <g class="pop-dot-slow" style="animation-delay: 4.2s;">
+                    <rect x="250" y="-5" width="60" height="24" rx="12" fill="#1eb349" filter="url(#glow)"/>
+                    <polygon points="280,25 275,18 285,18" fill="#1eb349"/>
+                    <text x="280" y="11" fill="#fff" font-family="Montserrat" font-size="11" font-weight="bold" text-anchor="middle">Aktif</text>
+                </g>
+            </svg>
+            <div class="budget-days">
+                <span>Sun</span>
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+            </div>
+        </div>
     </div>
 
     {{-- 3. Date & Digital Clock Card --}}
@@ -442,8 +572,7 @@
             const clickEl = document.getElementById('rt-clicks');
 
             if (balEl) {
-                balEl.innerHTML = formatIDR(data.available_balance)
-                    + ` <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="opacity:0.7;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+                balEl.innerHTML = formatIDR(data.available_balance);
             }
             if (viewEl)  viewEl.textContent  = formatNum(data.total_views);
             if (clickEl) clickEl.textContent = formatNum(data.total_transactions);
