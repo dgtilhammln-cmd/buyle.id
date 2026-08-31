@@ -392,6 +392,16 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                     </div>
                 </div>
 
+                <div style="display:flex; justify-content:flex-end;">
+                    <button type="submit" class="btn-submit-sm">Simpan Profil</button>
+                </div>
+            </form>
+        </div>
+
+        {{-- ══ TAB 3: SOCIAL LINKS ══ --}}
+        <div class="tab-pane" id="tab-social">
+            <form action="{{ route('creator.bio.save-profile') }}" method="POST">
+                @csrf
                 <div class="prof-card">
                     <div class="prof-card-head">Social Media</div>
                     <div class="card-body">
@@ -413,16 +423,15 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                                 <input type="url" name="bio_youtube" value="{{ old('bio_youtube', $cfg['youtube'] ?? '') }}" class="form-input" placeholder="https://youtube.com/...">
                             </div>
                         </div>
+                        <div style="display:flex; justify-content:flex-end; margin-top:1.25rem;">
+                            <button type="submit" class="btn-submit-sm">Simpan Social Media</button>
+                        </div>
                     </div>
-                </div>
-
-                <div style="display:flex; justify-content:flex-end;">
-                    <button type="submit" class="btn-primary">Simpan Profil</button>
                 </div>
             </form>
         </div>
 
-        {{-- ══ TAB 3: BLOCKS ══ --}}
+        {{-- ══ TAB 4: BLOCKS ══ --}}
         <div class="tab-pane" id="tab-blocks">
             <div class="prof-card">
                 <div class="prof-card-head">
