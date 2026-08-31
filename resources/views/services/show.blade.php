@@ -150,13 +150,19 @@
     background: linear-gradient(135deg, rgba(30,179,73,0.04), rgba(165,207,55,0.04));
     border-left: 3px solid var(--primary);
     padding: 1rem 1.25rem;
-    display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;
     border-radius: 0 8px 8px 0;
+    flex-wrap: wrap;
 }
-.pd-price-old { font-size: 1rem; color: var(--text-muted); text-decoration: line-through; }
+.pd-price-old { font-size: 1rem; color: var(--text-muted); text-decoration: line-through; white-space: nowrap; }
 .pd-price-main { font-size: 1.6rem; font-weight: 700; background: linear-gradient(135deg, #1eb349, #a5cf37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; white-space: nowrap; }
-.pd-discount { background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap; flex-shrink: 0; }
+.pd-discount { background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap; flex-shrink: 0; }
 
+@media (max-width: 640px) {
+    .pd-price-box { padding: 1rem; }
+    .pd-price-main { font-size: 1.35rem; }
+    .pd-price-old { font-size: 0.9rem; }
+}
 /* Shipping & Attributes Row */
 .pd-attr-row { display: flex; align-items: flex-start; margin-bottom: 1.5rem; font-size: 0.9rem; }
 .pd-attr-label { width: 110px; color: var(--text-muted); flex-shrink: 0; padding-top: 6px; }
