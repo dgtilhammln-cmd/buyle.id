@@ -317,7 +317,7 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                             @csrf
                             <input type="hidden" name="type" value="buyle_product">
                             <input type="hidden" name="title" value="{{ $product->name }}">
-                            <input type="hidden" name="url" value="{{ route('product.show', $product->slug) }}">
+                            <input type="hidden" name="url" value="{{ route('products.show', $product->slug) }}">
                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                             <button type="submit" class="btn-submit-sm" style="font-size:0.75rem; height:34px;">+ Tampilkan</button>
                         </form>
