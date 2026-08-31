@@ -405,8 +405,8 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
         <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Tempel link Shopee/Tokopedia — sistem akan ambil gambar otomatis. Atau upload manual.</p>
 
         <div id="scrapePreview" style="display:none; background:#f0fdf4; border-radius:12px; padding:1rem; margin-bottom:1rem; display:none; align-items:center; gap:0.75rem;">
-            <img id="scrapeImg" style="width:60px; height:60px; border-radius:8px; object-fit:cover;" src="" onerror="this.style.display='none'">
-            <div><div id="scrapeTitle" style="font-weight:700; font-size:0.82rem; color:#0b120c;"></div><div style="font-size:0.7rem; color:#1eb349;">✓ Gambar berhasil ditemukan</div></div>
+            <img id="scrapeImg" style="width:60px; height:60px; border-radius:8px; object-fit:cover;" src="" onerror="this.src='https://placehold.co/60x60/fff/cbd5e1?text=Img'">
+            <div><div id="scrapeTitle" style="font-weight:700; font-size:0.82rem; color:#0b120c; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"></div><div style="font-size:0.7rem; color:#1eb349;">✓ Info berhasil ditemukan</div></div>
         </div>
 
         <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data" id="affForm">
@@ -504,8 +504,9 @@ function scrapeUrl(url) {
                     document.getElementById('affScrapedImage').value = data.image;
                 }
                 if(data.title) { 
-                    document.getElementById('scrapeTitle').textContent = data.title; 
-                    document.getElementById('affTitle').value = data.title; 
+                    const shortTitle = data.title.length > 250 ? data.title.substring(0, 247) + '...' : data.title;
+                    document.getElementById('scrapeTitle').textContent = shortTitle; 
+                    document.getElementById('affTitle').value = shortTitle; 
                 }
                 preview.style.display = 'flex';
             }
