@@ -665,7 +665,7 @@ select.form-input { cursor: pointer; }
 
 @endsection
 
-@push('scripts')
+@section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -826,4 +826,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
-@endpush
+@endsection

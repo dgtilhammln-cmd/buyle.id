@@ -477,7 +477,7 @@
 
 @endsection
 
-@push('scripts')
+@section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 <script>
 // ── Traffic Wave Chart ────────────────────────────────────────────────
@@ -556,4 +556,4 @@ btnOpen.addEventListener('click', () => modal.classList.add('show'));
 btnClose.addEventListener('click', () => modal.classList.remove('show'));
 modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
 </script>
-@endpush
+@endsection
