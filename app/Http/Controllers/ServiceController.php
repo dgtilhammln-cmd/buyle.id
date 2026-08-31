@@ -239,6 +239,20 @@ class ServiceController extends Controller
     {
         $service      = Product::where('slug', $slug)->where('is_active', true)->with('seller.creatorProfile')->firstOrFail();
         $service->increment('views_count');
+
+        // Track Visit
+        \App\Models\ProductVisit::create([
+            'product_id'   => $service->id,
+            'seller_id'    => $service->seller_id,
+            'session_id'   => session()->getId(),
+            'ip_address'   => request()->ip(),
+            'utm_source'   => request()->query('utm_source') ?? session('utm_source'),
+            'utm_medium'   => request()->query('utm_medium') ?? session('utm_medium'),
+            'utm_campaign' => request()->query('utm_campaign') ?? session('utm_campaign'),
+            'utm_term'     => request()->query('utm_term') ?? session('utm_term'),
+            'utm_content'  => request()->query('utm_content') ?? session('utm_content'),
+        ]);
+
         $settings     = Setting::getAllAsArray();
         $wa           = WaSetting::primary();
         $related      = Product::active()->ordered()->where('seller_id', $service->seller_id)->where('id', '!=', $service->id)->limit(10)->get();

@@ -82,6 +82,11 @@ class CheckoutService
                 'total'            => $total,
                 'shipping_address' => [],
                 'notes'            => $notes,
+                'utm_source'       => session('utm_source'),
+                'utm_medium'       => session('utm_medium'),
+                'utm_campaign'     => session('utm_campaign'),
+                'utm_term'         => session('utm_term'),
+                'utm_content'      => session('utm_content'),
             ]);
 
             // 2. Buat Order Items & Kurangi Stok

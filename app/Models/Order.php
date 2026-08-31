@@ -24,6 +24,11 @@ class Order extends Model
         'total',
         'shipping_address',
         'notes',
+        'utm_source',
+        'utm_medium',
+        'utm_campaign',
+        'utm_term',
+        'utm_content',
     ];
 
     protected function casts(): array
