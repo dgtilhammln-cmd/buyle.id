@@ -69,7 +69,7 @@
         .section-label { font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; margin: 1.75rem var(--side) 0.75rem; display: block; }
 
         /* Blocks */
-        .link-stack { padding: 0 var(--side); }
+        .link-stack { padding: 0 var(--side); margin-bottom: 20px; }
         .glass-btn { display: flex; align-items: center; gap: 0.85rem; background: #fff; border: 1px solid var(--glass-border); border-radius: 18px; padding: 14px 16px; text-decoration: none; color: var(--text); transition: all 0.2s; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .glass-btn:hover { border-color: var(--accent); transform: scale(1.01); }
         .glass-btn .btn-icon { width: 40px; height: 40px; border-radius: 10px; background: #f8fafc; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; border: 1px solid #e2e8f0; }
@@ -79,11 +79,15 @@
         .glass-btn .btn-sub { font-size: 0.7rem; color: var(--text-sub); margin-top: 2px; }
         .glass-btn .btn-arrow { color: #cbd5e1; flex-shrink: 0; }
 
-        /* Affiliate card */
-        .aff-card-pub { display: flex; align-items: center; gap: 0.85rem; background: #fff; border: 1px solid var(--glass-border); border-radius: 18px; padding: 12px; text-decoration: none; color: var(--text); transition: all 0.2s; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .aff-card-pub:hover { border-color: var(--accent); }
-        .aff-card-pub img { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; flex-shrink: 0; border: 1px solid #e2e8f0; }
-        .aff-price { font-size: 0.78rem; color: var(--accent); font-weight: 700; margin-top: 0.2rem; }
+        /* Product Grid (1:1 Ratio, 2 Columns) */
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 var(--side); margin-bottom: 20px; }
+        .prod-card { background: #fff; border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; text-decoration: none; color: var(--text); display: flex; flex-direction: column; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .prod-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .prod-img-wrap { width: 100%; padding-top: 100%; position: relative; background: #f8fafc; border-bottom: 1px solid var(--glass-border); }
+        .prod-img-wrap img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .prod-info { padding: 10px 12px; display: flex; flex-direction: column; flex: 1; }
+        .prod-title { font-weight: 700; font-size: 0.75rem; line-height: 1.4; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .prod-price { font-size: 0.75rem; color: var(--accent); font-weight: 800; margin-top: auto; }
 
         /* TikTok Slider */
         .slider-wrap { display: flex; gap: 12px; overflow-x: auto; padding: 0 var(--side) 1rem; scrollbar-width: none; scroll-snap-type: x mandatory; }
@@ -191,15 +195,19 @@
     {{-- Affiliate / Shopee Products --}}
     @if($affBlocks->isNotEmpty())
     <span class="section-label fade-up" style="animation-delay:0.4s">Produk Rekomendasi</span>
-    <div class="link-stack fade-up" style="animation-delay:0.45s">
+    <div class="product-grid fade-up" style="animation-delay:0.45s">
         @foreach($affBlocks as $block)
-        <a href="{{ $block->url }}" target="_blank" class="aff-card-pub">
-            @if(!empty($block->data_json['image']))
-            <img src="{{ $block->data_json['image'] }}" alt="{{ $block->title }}" onerror="this.style.display='none'">
-            @endif
-            <div style="flex:1; min-width:0;">
-                <div style="font-weight:700; font-size:0.85rem; line-height:1.3;">{{ $block->title }}</div>
-                <div class="aff-price">Lihat di Shopee →</div>
+        <a href="{{ $block->url }}" target="_blank" class="prod-card">
+            <div class="prod-img-wrap">
+                @if(!empty($block->data_json['image']))
+                <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/'.$block->data_json['image']) }}" alt="{{ $block->title }}" onerror="this.src='https://placehold.co/400x400/fff/cbd5e1?text=Product'">
+                @else
+                <img src="https://placehold.co/400x400/fff/cbd5e1?text=Product" alt="No Image">
+                @endif
+            </div>
+            <div class="prod-info">
+                <div class="prod-title">{{ $block->title }}</div>
+                <div class="prod-price">Lihat di Shopee →</div>
             </div>
         </a>
         @endforeach
@@ -209,19 +217,22 @@
     {{-- Buyle Products --}}
     @if($buyleBlocks->isNotEmpty())
     <span class="section-label fade-up" style="animation-delay:0.5s">Produk Digital Saya</span>
-    <div class="link-stack">
+    <div class="product-grid">
         @foreach($buyleBlocks as $i => $block)
         @php $prod = $products[$block->data_json['product_id'] ?? 0] ?? null; @endphp
         @if($prod)
-        <a href="{{ $block->url }}" target="_blank" class="aff-card-pub fade-up" style="animation-delay:{{ 0.55 + $i * 0.05 }}s">
-            @if($prod->image)
-            <img src="{{ asset('storage/'.$prod->image) }}" alt="{{ $prod->name }}">
-            @endif
-            <div style="flex:1; min-width:0;">
-                <div style="font-weight:700; font-size:0.85rem; line-height:1.3;">{{ $prod->name }}</div>
-                <div class="aff-price">Rp {{ number_format($prod->price, 0, ',', '.') }}</div>
+        <a href="{{ $block->url }}" target="_blank" class="prod-card fade-up" style="animation-delay:{{ 0.55 + $i * 0.05 }}s">
+            <div class="prod-img-wrap">
+                @if($prod->image)
+                <img src="{{ asset('storage/'.$prod->image) }}" alt="{{ $prod->name }}">
+                @else
+                <img src="https://placehold.co/400x400/fff/cbd5e1?text=Product" alt="No Image">
+                @endif
             </div>
-            <i class="fas fa-chevron-right" style="color:#cbd5e1; font-size:11px; flex-shrink:0;"></i>
+            <div class="prod-info">
+                <div class="prod-title">{{ $prod->name }}</div>
+                <div class="prod-price">Rp {{ number_format($prod->price, 0, ',', '.') }}</div>
+            </div>
         </a>
         @endif
         @endforeach

@@ -100,7 +100,10 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
             <div style="font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.5rem;">Tipe Profil</div>
             <div style="font-size:0.82rem; font-weight:700; color:#1eb349;">{{ $roleLabels[$profile->bio_role] ?? '-' }}</div>
             @if($bioUrl)
-            <a href="{{ $bioUrl }}" target="_blank" style="display:block; margin-top:0.75rem; font-size:0.72rem; color:#64748b; text-decoration:none; word-break:break-all;">🔗 {{ $bioUrl }}</a>
+            <a href="{{ $bioUrl }}" target="_blank" style="display:flex; align-items:center; gap:0.4rem; margin-top:0.75rem; font-size:0.72rem; color:#64748b; text-decoration:none; word-break:break-all;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke-linecap="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke-linecap="round"/></svg>
+                {{ $bioUrl }}
+            </a>
             @endif
         </div>
     </div>
@@ -270,7 +273,10 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
             {{-- Shopee Affiliate / Produk Eksternal --}}
             <div class="prof-card">
                 <div class="prof-card-head">
-                    <span>🛍️ Tambah Produk Affiliate / Shopee</span>
+                    <span style="display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                        Tambah Produk Affiliate / Shopee
+                    </span>
                     <button onclick="document.getElementById('addAffModal').classList.add('open')" class="btn-submit-sm">+ Tambah</button>
                 </div>
                 <div class="card-body">
@@ -297,7 +303,10 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
             {{-- Produk Buyle Saya --}}
             <div class="prof-card">
                 <div class="prof-card-head">
-                    <span>📦 Tampilkan Produk Buyle Saya</span>
+                    <span style="display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                        Tampilkan Produk Buyle Saya
+                    </span>
                 </div>
                 <div class="card-body">
                     @forelse($myProducts as $product)
@@ -342,9 +351,9 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
             <div class="form-group">
                 <label class="form-label">Tipe Block</label>
                 <select name="type" class="form-input" id="blockType" onchange="handleTypeChange(this.value)">
-                    <option value="link">🔗 Custom Link / Button</option>
-                    <option value="pdf">📄 File / Dokumen PDF</option>
-                    <option value="tiktok">📱 TikTok Video</option>
+                    <option value="link">Custom Link / Button</option>
+                    <option value="pdf">File / Dokumen PDF</option>
+                    <option value="tiktok">TikTok Video</option>
                 </select>
             </div>
             <div class="form-group">
