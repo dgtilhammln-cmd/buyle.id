@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title', $subcategory ? $subcategory->name . ' - ' . $category->name : $category->name . ' - Kategori Digital')
-@section('meta_description', $category->description ?? 'Cari berbagai macam pilihan terlengkap ' . $category->name . ' di BUYLE.ID. Terbaik, termurah, dan terlengkap.')
+@section('meta_description', 'Cari berbagai macam dari pilihan terlengkap ' . ($subcategory ? $subcategory->name : $category->name) . '. Temukan ' . ($subcategory ? $subcategory->name : $category->name) . ' terbaik, termurah, dan berkualitas tinggi hanya di BUYLE.ID, marketplace produk dan jasa digital terpercaya untuk para Konten Kreator dan Freelancer Indonesia.')
 
 @push('head')
 <script type="application/ld+json">
@@ -8,7 +8,7 @@
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "name": "{{ $subcategory ? $subcategory->name . ' di ' . $category->name : $category->name }}",
-  "description": "{{ $category->description ?? 'Koleksi ' . $category->name . ' terbaik di BUYLE.ID.' }}",
+  "description": "Cari berbagai macam dari pilihan terlengkap {{ $subcategory ? $subcategory->name : $category->name }}. Temukan {{ $subcategory ? $subcategory->name : $category->name }} terbaik, termurah, dan berkualitas tinggi hanya di BUYLE.ID, marketplace produk dan jasa digital terpercaya untuk para Konten Kreator dan Freelancer Indonesia.",
   "url": "{{ url()->current() }}"
 }
 </script>
