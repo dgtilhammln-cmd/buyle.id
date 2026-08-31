@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
+<head><meta name=\referrer\ content=\no-referrer\>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="referrer" content="no-referrer">
 
     <title>{{ $seoTitle }}</title>
     <meta name="description" content="{{ $seoDesc }}">
@@ -106,6 +107,7 @@
         @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
         .fade-up { animation: fadeUp 0.6s ease forwards; opacity: 0; }
     </style>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
 
@@ -174,7 +176,9 @@
         @foreach($linkBlocks as $i => $block)
         <a href="{{ $block->url }}" target="_blank" class="glass-btn fade-up" style="animation-delay:{{ 0.35 + $i * 0.05 }}s">
             <div class="btn-icon">
-                @if(!empty($block->data_json['image']))
+                @if(!empty($block->data_json['icon_class']))
+                    <i class="{{ $block->data_json['icon_class'] }}" style="font-size:24px;"></i>
+                @elseif(!empty($block->data_json['image']))
                     <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/'.$block->data_json['image']) }}" alt="">
                 @elseif($block->type==='pdf')
                     <i class="fas fa-file-pdf" style="color:#ef4444;"></i>
@@ -199,7 +203,9 @@
         @foreach($affBlocks as $block)
         <a href="{{ $block->url }}" target="_blank" class="prod-card">
             <div class="prod-img-wrap">
-                @if(!empty($block->data_json['image']))
+                @if(!empty($block->data_json['icon_class']))
+                    <i class="{{ $block->data_json['icon_class'] }}" style="font-size:24px;"></i>
+                @elseif(!empty($block->data_json['image']))
                 <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/'.$block->data_json['image']) }}" alt="{{ $block->title }}" onerror="this.src='https://placehold.co/400x400/fff/cbd5e1?text=Product'">
                 @else
                 <img src="https://placehold.co/400x400/fff/cbd5e1?text=Product" alt="No Image">

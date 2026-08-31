@@ -12,6 +12,7 @@
 @endsection
 
 @section('styles')
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
 <style>
 .bio-layout    { display:flex; gap:2rem; align-items:flex-start; }
 .bio-sidebar   { width:320px; flex-shrink:0; background:#fff; border-radius:20px; padding:1.25rem; box-shadow:0 4px 12px rgba(0,0,0,0.03); border:1px solid #f0fdf4; position:sticky; top:1.5rem; max-height: calc(100vh - 3rem); overflow-y: auto; scrollbar-width: none; }
@@ -64,7 +65,44 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
 .aff-title    { font-weight:700; font-size:0.82rem; color:#0b120c; line-height:1.3; margin-bottom:0.3rem; }
 .aff-sub      { font-size:0.7rem; color:#64748b; }
 
+/* Icon Picker */
+.icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 0.5rem; max-height: 250px; overflow-y: auto; padding-right: 0.5rem; }
+.icon-grid::-webkit-scrollbar { width: 6px; }
+.icon-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+.icon-btn { font-size: 24px; color: #64748b; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; padding: 0; }
+.icon-btn:hover { background: #e0f2fe; color: #0284c7; border-color: #7dd3fc; transform:scale(1.1); }
+
 @media(max-width:768px) { .bio-layout{flex-direction:column} .bio-sidebar{width:100%;position:static} .theme-grid{grid-template-columns:1fr} }
+
+/* Theme Mockups */
+.theme-mockup { width: 100%; height: 140px; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; padding-top: 1.5rem; gap: 0.5rem; }
+.mockup-avatar { width: 34px; height: 34px; border-radius: 50%; }
+.mockup-title { width: 50px; height: 6px; border-radius: 4px; margin-bottom: 0.5rem; }
+.mockup-btn { width: 75%; height: 14px; }
+
+/* Theme 1: Gelap Elegan */
+.theme-mockup.theme1 { background: #0b120c; }
+.theme-mockup.theme1 .mockup-avatar { background: #1a231b; border: 1px solid #1eb349; }
+.theme-mockup.theme1 .mockup-title { background: #fff; }
+.theme-mockup.theme1 .mockup-btn { background: #1a231b; border: 1px solid #1eb349; border-radius: 6px; }
+
+/* Theme 2: Minimalis Pro */
+.theme-mockup.theme2 { background: #f8fafc; }
+.theme-mockup.theme2 .mockup-avatar { background: #e2e8f0; border: 1px solid #cbd5e1; }
+.theme-mockup.theme2 .mockup-title { background: #0b120c; }
+.theme-mockup.theme2 .mockup-btn { background: #fff; border: 1px solid #cbd5e1; border-radius: 999px; }
+
+/* Theme 3: Gradient Neon */
+.theme-mockup.theme3 { background: linear-gradient(135deg, #1e293b, #0f172a); }
+.theme-mockup.theme3 .mockup-avatar { background: #334155; }
+.theme-mockup.theme3 .mockup-title { background: #38bdf8; }
+.theme-mockup.theme3 .mockup-btn { background: transparent; border: 1.5px solid #38bdf8; border-radius: 6px; }
+
+/* Theme 4: Clean Light */
+.theme-mockup.theme4 { background: #ffffff; }
+.theme-mockup.theme4 .mockup-avatar { background: #f1f5f9; border: 1px solid #e2e8f0; }
+.theme-mockup.theme4 .mockup-title { background: #334155; }
+.theme-mockup.theme4 .mockup-btn { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; }
 </style>
 @endsection
 
@@ -139,7 +177,12 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                             @foreach(['theme1'=>'Gelap Elegan','theme2'=>'Minimalis Pro','theme3'=>'Gradient Neon','theme4'=>'Clean Light'] as $key=>$label)
                             <label class="theme-card {{ $currentTheme === $key ? 'active' : '' }}">
                                 <input type="radio" name="bio_theme" value="{{ $key }}" {{ $currentTheme === $key ? 'checked' : '' }} style="display:none;" onchange="this.closest('form').submit()">
-                                <img src="{{ asset('images/bio-preview/'.$key.'.png') }}" alt="{{ $label }}" onerror="this.style.background='#0b120c'; this.removeAttribute('src'); this.style.height='140px'">
+                                <div class="theme-mockup {{ $key }}">
+                                    <div class="mockup-avatar"></div>
+                                    <div class="mockup-title"></div>
+                                    <div class="mockup-btn"></div>
+                                    <div class="mockup-btn"></div>
+                                </div>
                                 <div class="theme-label">
                                     @if($currentTheme === $key) <svg width="14" height="14" fill="#1eb349" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> @endif
                                     {{ $label }}
@@ -387,8 +430,17 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                 <input type="url" name="url" class="form-input" placeholder="https://" required>
             </div>
             <div class="form-group">
-                <label class="form-label">Gambar Icon (opsional)</label>
-                <input type="file" name="block_image" accept="image/*" class="form-input" style="height:auto; padding:0.5rem;">
+                <label class="form-label">Ikon (Pilih dari Galeri ATAU Upload)</label>
+                <div style="display:flex; gap:0.5rem; align-items:center;">
+                    <button type="button" class="btn-primary" style="background:#f8fafc; color:#1e293b; border:1.5px solid #cbd5e1; height:44px; padding:0 1rem; border-radius:10px; font-weight:600; display:flex; gap:0.5rem; align-items:center;" onclick="openIconPicker('addBlockIconClass', 'addBlockIconPreview')">
+                        <i class="ph ph-squares-four" style="font-size:1.2rem;"></i> Pilih Ikon
+                    </button>
+                    <div id="addBlockIconPreview" style="display:none; font-size:24px; color:#1eb349; width:44px; height:44px; align-items:center; justify-content:center; border:1.5px solid #1eb349; border-radius:10px; background:#f0fdf4;"></div>
+                    <div style="flex:1;">
+                        <input type="file" name="block_image" accept="image/*" class="form-input" style="height:44px; padding:0.5rem; width:100%;">
+                    </div>
+                </div>
+                <input type="hidden" name="icon_class" id="addBlockIconClass">
             </div>
             <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
                 <button type="button" onclick="document.getElementById('addBlockModal').classList.remove('open')" style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
@@ -450,14 +502,39 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                 <input type="url" name="url" id="editBlockUrl" class="form-input">
             </div>
             <div class="form-group">
-                <label class="form-label">Ganti Gambar (opsional)</label>
-                <input type="file" name="block_image" accept="image/*" class="form-input" style="height:auto; padding:0.5rem;">
+                <label class="form-label">Ganti Ikon (Pilih dari Galeri ATAU Upload)</label>
+                <div style="display:flex; gap:0.5rem; align-items:center;">
+                    <button type="button" class="btn-primary" style="background:#f8fafc; color:#1e293b; border:1.5px solid #cbd5e1; height:44px; padding:0 1rem; border-radius:10px; font-weight:600; display:flex; gap:0.5rem; align-items:center;" onclick="openIconPicker('editBlockIconClass', 'editBlockIconPreview')">
+                        <i class="ph ph-squares-four" style="font-size:1.2rem;"></i> Pilih Ikon
+                    </button>
+                    <div id="editBlockIconPreview" style="display:none; font-size:24px; color:#1eb349; width:44px; height:44px; align-items:center; justify-content:center; border:1.5px solid #1eb349; border-radius:10px; background:#f0fdf4;"></div>
+                    <div style="flex:1;">
+                        <input type="file" name="block_image" accept="image/*" class="form-input" style="height:44px; padding:0.5rem; width:100%;">
+                    </div>
+                </div>
+                <input type="hidden" name="icon_class" id="editBlockIconClass">
             </div>
             <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
                 <button type="button" onclick="document.getElementById('editBlockModal').classList.remove('open')" style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
                 <button type="submit" class="btn-submit-sm">Simpan Perubahan</button>
             </div>
         </form>
+    </div>
+</div>
+
+{{-- ── Modal: Icon Picker ── --}}
+<div class="modal-overlay" id="iconPickerModal" onclick="if(event.target===this)this.classList.remove('open')" style="z-index: 1050;">
+    <div class="modal-box">
+        <h3 style="font-size:1.1rem; font-weight:800; margin:0 0 1rem; color:#0b120c; font-family:'Montserrat',sans-serif;">Pilih Ikon</h3>
+        <p style="font-size:0.75rem; color:#64748b; margin-bottom:1rem;">Pilih salah satu ikon di bawah ini untuk ditampilkan di tombol Anda.</p>
+        
+        <div class="icon-grid" id="iconGrid">
+            <!-- Icons injected via JS -->
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.5rem;">
+            <button type="button" onclick="document.getElementById('iconPickerModal').classList.remove('open')" style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Tutup</button>
+        </div>
     </div>
 </div>
 
@@ -520,7 +597,87 @@ function editBlock(block) {
     form.action = '{{ url("creator/bio/blocks") }}/' + block.id;
     document.getElementById('editBlockTitle').value = block.title;
     document.getElementById('editBlockUrl').value = block.url;
+    // Restore icon if saved
+    const iconClass = block.data_json?.icon_class ?? '';
+    const iconClassInput = document.getElementById('editBlockIconClass');
+    const iconPreview = document.getElementById('editBlockIconPreview');
+    iconClassInput.value = iconClass;
+    if (iconClass) {
+        iconPreview.innerHTML = `<i class="${iconClass}" style="font-size:24px;"></i>`;
+        iconPreview.style.display = 'flex';
+    } else {
+        iconPreview.style.display = 'none';
+    }
     document.getElementById('editBlockModal').classList.add('open');
+}
+
+// ── Icon Picker ──────────────────────────────────────────
+const ICON_LIST = [
+    // Communication
+    'ph ph-chat-circle','ph ph-chat-dots','ph ph-phone','ph ph-phone-call','ph ph-envelope',
+    'ph ph-envelope-simple','ph ph-telegram-logo','ph ph-whatsapp-logo','ph ph-instagram-logo',
+    'ph ph-tiktok-logo','ph ph-youtube-logo','ph ph-twitter-logo','ph ph-facebook-logo',
+    'ph ph-linkedin-logo','ph ph-discord-logo','ph ph-snapchat-logo','ph ph-pinterest-logo',
+    // Commerce
+    'ph ph-shopping-cart','ph ph-shopping-bag','ph ph-storefront','ph ph-tag','ph ph-currency-circle-dollar',
+    'ph ph-wallet','ph ph-credit-card','ph ph-bank','ph ph-receipt','ph ph-package',
+    'ph ph-gift','ph ph-percent','ph ph-barcode','ph ph-qr-code',
+    // Media & Files
+    'ph ph-play-circle','ph ph-video','ph ph-microphone','ph ph-music-note','ph ph-headphones',
+    'ph ph-film-strip','ph ph-image','ph ph-images','ph ph-camera','ph ph-file-pdf',
+    'ph ph-file-text','ph ph-file-zip','ph ph-download','ph ph-upload','ph ph-cloud',
+    // Navigation
+    'ph ph-house','ph ph-map-pin','ph ph-compass','ph ph-navigation','ph ph-globe',
+    'ph ph-globe-hemisphere-east','ph ph-link','ph ph-link-simple','ph ph-arrow-right',
+    'ph ph-arrow-circle-right','ph ph-arrow-square-out','ph ph-caret-right',
+    // People & Profile
+    'ph ph-user','ph ph-users','ph ph-user-circle','ph ph-identification-badge',
+    'ph ph-smiley','ph ph-handshake','ph ph-hand-waving',
+    // Business
+    'ph ph-briefcase','ph ph-chart-bar','ph ph-chart-line','ph ph-presentation-chart',
+    'ph ph-clipboard-text','ph ph-calendar','ph ph-clock','ph ph-bell','ph ph-megaphone',
+    'ph ph-broadcast','ph ph-projector-screen','ph ph-article','ph ph-newspaper',
+    // Creative
+    'ph ph-palette','ph ph-pen','ph ph-pen-nib','ph ph-pencil','ph ph-paint-brush',
+    'ph ph-magic-wand','ph ph-star','ph ph-sparkle','ph ph-crown','ph ph-trophy',
+    'ph ph-medal','ph ph-lightning','ph ph-fire','ph ph-heart','ph ph-diamond',
+    // Tech
+    'ph ph-code','ph ph-code-block','ph ph-terminal','ph ph-laptop','ph ph-device-mobile',
+    'ph ph-robot','ph ph-gear','ph ph-plugin','ph ph-cpu','ph ph-wifi',
+    // Misc
+    'ph ph-book','ph ph-book-open','ph ph-graduation-cap','ph ph-certificate',
+    'ph ph-first-aid-kit','ph ph-leaf','ph ph-planet','ph ph-rocket','ph ph-key',
+];
+
+let _activeIconInputId = null;
+let _activeIconPreviewId = null;
+
+function openIconPicker(iconInputId, iconPreviewId) {
+    _activeIconInputId = iconInputId;
+    _activeIconPreviewId = iconPreviewId;
+
+    const grid = document.getElementById('iconGrid');
+    if (!grid.hasChildNodes()) {
+        ICON_LIST.forEach(iconClass => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'icon-btn';
+            btn.title = iconClass.replace('ph ph-', '').replace(/-/g, ' ');
+            btn.innerHTML = `<i class="${iconClass}"></i>`;
+            btn.onclick = () => selectIcon(iconClass);
+            grid.appendChild(btn);
+        });
+    }
+    document.getElementById('iconPickerModal').classList.add('open');
+}
+
+function selectIcon(iconClass) {
+    if (!_activeIconInputId) return;
+    document.getElementById(_activeIconInputId).value = iconClass;
+    const preview = document.getElementById(_activeIconPreviewId);
+    preview.innerHTML = `<i class="${iconClass}" style="font-size:24px;"></i>`;
+    preview.style.display = 'flex';
+    document.getElementById('iconPickerModal').classList.remove('open');
 }
 </script>
 @endsection

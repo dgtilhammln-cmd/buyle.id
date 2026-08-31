@@ -128,6 +128,7 @@ class CreatorBioController extends Controller
             'title' => 'required|string|max:150',
             'url'   => 'nullable|string|max:2000',
             'block_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'icon_class'  => 'nullable|string|max:100',
             'description' => 'nullable|string|max:500',
             'product_id'  => 'nullable|exists:products,id',
         ]);
@@ -150,6 +151,7 @@ class CreatorBioController extends Controller
 
         if ($request->filled('description')) $data['description'] = $request->description;
         if ($request->filled('product_id'))  $data['product_id']  = $request->product_id;
+        if ($request->filled('icon_class'))  $data['icon_class']  = $request->icon_class;
 
         $lastOrder = $profile->bioBlocks()->max('order') ?? 0;
 
@@ -195,6 +197,7 @@ class CreatorBioController extends Controller
             'url'   => 'nullable|string|max:2000',
             'block_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'scraped_image' => 'nullable|string',
+            'icon_class'  => 'nullable|string|max:100',
         ]);
 
         $data = $block->data_json ?? [];
@@ -206,6 +209,12 @@ class CreatorBioController extends Controller
             $data['image'] = $request->file('block_image')->store('bio/blocks', 'public');
         } elseif ($request->filled('scraped_image')) {
             $data['image'] = $request->scraped_image;
+        }
+
+        if ($request->filled('icon_class')) {
+            $data['icon_class'] = $request->icon_class;
+        } else {
+            unset($data['icon_class']); // Remove if cleared
         }
 
         $block->update([
