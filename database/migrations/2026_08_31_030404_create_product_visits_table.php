@@ -6,13 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
+        // Idempotent: skip jika tabel sudah ada (misal dari deploy sebelumnya)
         if (Schema::hasTable('product_visits')) {
-            return; // Already exists, skip
+            return;
         }
 
         Schema::create('product_visits', function (Blueprint $table) {
@@ -33,9 +31,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('product_visits');
