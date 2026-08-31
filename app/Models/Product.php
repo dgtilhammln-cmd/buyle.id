@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use App\Models\ProductVisit;
+use App\Models\OrderItem;
 
 class Product extends Model
 {
@@ -112,6 +114,22 @@ class Product extends Model
     public function wishlists(): HasMany
     {
         return $this->hasMany(Wishlist::class, 'product_id');
+    }
+
+    /**
+     * Semua kunjungan (views) ke produk ini.
+     */
+    public function visits(): HasMany
+    {
+        return $this->hasMany(ProductVisit::class, 'product_id');
+    }
+
+    /**
+     * Semua item pesanan yang berisi produk ini.
+     */
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(OrderItem::class, 'product_id');
     }
 
     // =========================================================================
