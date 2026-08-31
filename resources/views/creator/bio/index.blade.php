@@ -86,6 +86,9 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
 
 @media(max-width:768px) { .bio-layout{flex-direction:column} .bio-sidebar{width:100%;position:static} .theme-grid{grid-template-columns:1fr} }
 
+@keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+/* Theme Mockups */
 /* Theme Mockups */
 .theme-mockup { width: 100%; height: 140px; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; padding-top: 1.5rem; gap: 0.5rem; }
 .mockup-avatar { width: 34px; height: 34px; border-radius: 50%; }
