@@ -23,8 +23,15 @@ class CreatorStoreController extends Controller
         // 2. Ambil grup produk yang aktif untuk filter kategori
         $groups = \App\Models\CreatorProductGroup::where('seller_id', $seller->id)
             ->where('is_active', true)
+            ->withCount(['products' => function ($q) {
+                $q->where('is_active', true);
+            }])
             ->orderBy('order')
             ->get();
+
+        $totalProductsCount = Product::where('seller_id', $seller->id)
+            ->where('is_active', true)
+            ->count();
 
         // 3. Ambil produk berdasarkan grup (atau semua)
         $query = Product::where('seller_id', $seller->id)
@@ -129,7 +136,7 @@ class CreatorStoreController extends Controller
 
         return view('storefront.show', compact(
             'profile', 'seller', 'groups', 'products', 'seo', 'sort',
-            'suggestion', 'suggestionApplied', 'breadcrumbs'
+            'suggestion', 'suggestionApplied', 'breadcrumbs', 'totalProductsCount'
         ));
     }
 

@@ -164,16 +164,32 @@
 .sf-banner img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* ── Tabs & Buttons ── */
-.sf-tab, .sf-tab-sidebar {
-    padding: 0.6rem 1.2rem; border-radius: 99px;
+.sf-tab {
+    padding: 0.5rem 1rem; border-radius: 99px;
     font-size: 0.85rem; white-space: nowrap;
     text-decoration: none; transition: all 0.2s;
     background: #fff; color: #475569; border: 1px solid #e2e8f0;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.sf-tab-sidebar {
+    padding: 0.65rem 1.25rem; border-radius: 99px;
+    font-size: 0.85rem; text-decoration: none; transition: all 0.2s;
+    background: #fff; color: #475569; border: 1px solid #e2e8f0;
+    display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;
 }
 .sf-tab:hover, .sf-tab-sidebar:hover { border-color: #1eb349; color: #1eb349; }
 .sf-tab.active, .sf-tab-sidebar.active {
     background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
     border-color: transparent; color: #fff; box-shadow: 0 4px 10px rgba(30,179,73,0.2);
+}
+.sf-tab-badge {
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    color: #475569; font-size: 0.65rem; font-weight: 700;
+    padding: 0.25rem 0.5rem; border-radius: 99px; line-height: 1;
+}
+.sf-tab.active .sf-tab-badge, .sf-tab-sidebar.active .sf-tab-badge {
+    background: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.15));
+    color: #fff;
 }
 
 /* ── Toolbar ── */
@@ -375,11 +391,13 @@
             <div class="sf-desktop-tabs">
                 <div style="font-size: 0.9rem; font-weight: 600; color: #1E293B; margin-bottom: 0.5rem; padding-left: 0.5rem;">Kategori Produk</div>
                 <a href="{{ route('store.show', $profile->store_slug) }}{{ request()->has('sort') ? '?sort='.request('sort') : '' }}"
-                   class="sf-tab-sidebar {{ !request()->has('group') ? 'active' : '' }}">Semua Produk</a>
+                   class="sf-tab-sidebar {{ !request()->has('group') ? 'active' : '' }}">
+                   Semua Produk <span class="sf-tab-badge">{{ $totalProductsCount ?? 0 }}</span>
+                </a>
                 @foreach($groups as $group)
                     <a href="{{ route('store.show', $profile->store_slug) }}?group={{ $group->slug }}{{ request()->has('sort') ? '&sort='.request('sort') : '' }}"
                        class="sf-tab-sidebar {{ request('group') === $group->slug ? 'active' : '' }}">
-                        {{ $group->name }}
+                        {{ $group->name }} <span class="sf-tab-badge">{{ $group->products_count ?? 0 }}</span>
                     </a>
                 @endforeach
             </div>
@@ -421,11 +439,13 @@
             @if($groups->count() > 0)
             <div class="sf-mobile-tabs">
                 <a href="{{ route('store.show', $profile->store_slug) }}{{ request()->has('sort') ? '?sort='.request('sort') : '' }}"
-                   class="sf-tab {{ !request()->has('group') ? 'active' : '' }}">Semua</a>
+                   class="sf-tab {{ !request()->has('group') ? 'active' : '' }}">
+                   Semua <span class="sf-tab-badge">{{ $totalProductsCount ?? 0 }}</span>
+                </a>
                 @foreach($groups as $group)
                     <a href="{{ route('store.show', $profile->store_slug) }}?group={{ $group->slug }}{{ request()->has('sort') ? '&sort='.request('sort') : '' }}"
                        class="sf-tab {{ request('group') === $group->slug ? 'active' : '' }}">
-                        {{ $group->name }}
+                        {{ $group->name }} <span class="sf-tab-badge">{{ $group->products_count ?? 0 }}</span>
                     </a>
                 @endforeach
             </div>
