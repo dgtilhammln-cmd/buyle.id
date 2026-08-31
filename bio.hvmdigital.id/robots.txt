@@ -1,0 +1,33 @@
+# ==============================================================================
+# HVM DIGITAL ID - ROBOTS CONTROL CENTER
+# ==============================================================================
+
+User-agent: *
+Allow: /
+Allow: /home/
+Allow: /login
+Allow: /dashboard/
+Allow: /assets/css/
+Allow: /assets/js/
+Allow: /assets/uploads/
+
+# Proteksi Area Sensitif agar tidak dianggap spam/duplicate content
+Disallow: /admin/
+Disallow: /actions/
+Disallow: /config.php
+Disallow: /create_admin.php
+Disallow: /logout/
+Disallow: /register?reff=*
+
+# Spesifik instruksi untuk AI Crawlers (ChatGPT & CCBot)
+User-agent: GPTBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# Link ke Dynamic Sitemap Anda
+Sitemap: https://bio.hvmdigital.id/sitemap.xml
+
+# Crawl Delay agar server tidak overload (Luxury Performance)
+Crawl-delay: 1

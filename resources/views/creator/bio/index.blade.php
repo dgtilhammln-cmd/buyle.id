@@ -1,0 +1,449 @@
+@extends('creator.layout')
+@section('title', 'Link in Bio · Dashboard')
+@section('page_title', 'Link in Bio')
+
+@section('topbar_actions')
+@if($profile->store_slug)
+<a href="{{ url('/'.$profile->store_slug) }}" target="_blank" class="btn-primary" style="background:transparent; color:#1eb349; border:1.5px solid #1eb349; box-shadow:none;">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    Lihat Bio
+</a>
+@endif
+@endsection
+
+@section('styles')
+<style>
+.bio-layout    { display:flex; gap:2rem; align-items:flex-start; }
+.bio-sidebar   { width:240px; flex-shrink:0; background:#fff; border-radius:20px; padding:1.25rem; box-shadow:0 4px 12px rgba(0,0,0,0.03); border:1px solid #f0fdf4; position:sticky; top:1.5rem; }
+.bio-content   { flex:1; min-width:0; }
+.tab-btn       { width:100%; display:flex; align-items:center; gap:0.8rem; padding:0.85rem 1rem; border:none; background:transparent; color:#64748b; font-family:'Montserrat',sans-serif; font-size:0.85rem; font-weight:600; border-radius:12px; cursor:pointer; text-align:left; transition:all 0.2s; margin-bottom:0.2rem; }
+.tab-btn:hover { background:#f8fafc; color:#1eb349; }
+.tab-btn.active{ background:linear-gradient(135deg,#1eb349,#a5cf37); color:#fff; font-weight:700; box-shadow:0 4px 12px rgba(30,179,73,0.2); }
+.tab-pane      { display:none; animation:fadeIn 0.3s; }
+.tab-pane.active{ display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+.prof-card     { background:#fff; border-radius:20px; border:1px solid #f0fdf4; box-shadow:0 4px 20px rgba(0,0,0,0.03); margin-bottom:1.5rem; overflow:hidden; }
+.prof-card-head{ padding:1.25rem 1.75rem; border-bottom:1px solid #f8fafc; display:flex; align-items:center; justify-content:space-between; gap:0.6rem; font-size:0.95rem; font-weight:800; color:#0b120c; }
+.card-body     { padding:1.5rem 1.75rem; }
+.form-group    { display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1.25rem; }
+.form-label    { font-size:0.8rem; font-weight:700; color:#374151; }
+.form-input    { height:44px; padding:0 1rem; border:1.5px solid #e7f0e7; border-radius:10px; font-family:'Montserrat',sans-serif; font-size:0.875rem; color:#1a1a1a; background:#f9fefb; outline:none; transition:all 0.2s; }
+.form-input:focus { border-color:#1eb349; background:#fff; box-shadow:0 0 0 3px rgba(30,179,73,0.1); }
+textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-height:80px; }
+.form-hint     { font-size:0.72rem; color:#94a3b8; }
+
+/* Theme grid */
+.theme-grid    { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.theme-card    { border:2px solid #e7f0e7; border-radius:14px; overflow:hidden; cursor:pointer; transition:all 0.2s; background:#f9fefb; }
+.theme-card:hover { border-color:#1eb349; transform:scale(1.02); }
+.theme-card.active { border-color:#1eb349; box-shadow:0 0 0 4px rgba(30,179,73,0.15); }
+.theme-card img { width:100%; height:160px; object-fit:cover; display:block; }
+.theme-label   { padding:0.6rem 0.8rem; font-weight:700; font-size:0.8rem; color:#0b120c; display:flex; align-items:center; gap:0.4rem; }
+
+/* Block list */
+.block-item    { background:#f9fefb; border:1px solid #e7f0e7; border-radius:12px; padding:0.85rem 1rem; display:flex; align-items:center; gap:0.75rem; margin-bottom:0.65rem; transition:all 0.2s; }
+.block-item:hover { border-color:#1eb349; background:#f0fdf4; }
+.block-icon    { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.block-info    { flex:1; min-width:0; }
+.block-title   { font-weight:700; font-size:0.85rem; color:#0b120c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.block-sub     { font-size:0.72rem; color:#64748b; }
+.block-actions { display:flex; gap:0.4rem; flex-shrink:0; }
+.btn-icon-sm   { width:30px; height:30px; border:none; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+
+/* Add block modal */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); z-index:1000; align-items:center; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal-box     { background:#fff; border-radius:24px; max-width:500px; width:calc(100% - 2rem); padding:2rem; box-shadow:0 24px 60px rgba(0,0,0,0.25); animation:fadeIn 0.25s; }
+.btn-submit-sm { height:40px; padding:0 1.25rem; border-radius:999px; background:linear-gradient(135deg,#1eb349,#a5cf37); border:none; color:#fff; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; }
+
+/* Affiliate product card */
+.aff-card     { border:1px solid #e7f0e7; border-radius:14px; overflow:hidden; background:#fff; display:flex; gap:0; margin-bottom:1rem; }
+.aff-img      { width:80px; height:80px; object-fit:cover; flex-shrink:0; }
+.aff-info     { padding:0.75rem; flex:1; }
+.aff-title    { font-weight:700; font-size:0.82rem; color:#0b120c; line-height:1.3; margin-bottom:0.3rem; }
+.aff-sub      { font-size:0.7rem; color:#64748b; }
+
+@media(max-width:768px) { .bio-layout{flex-direction:column} .bio-sidebar{width:100%;position:static} .theme-grid{grid-template-columns:1fr} }
+</style>
+@endsection
+
+@section('content')
+@php
+    $cfg = $profile->bio_config ?? [];
+    $currentTheme = $profile->bio_theme ?? 'theme1';
+    $roleLabels = ['content_creator'=>'Content Creator','affiliator'=>'Affiliator','business'=>'Business / Brand'];
+    $bioUrl = $profile->store_slug ? url('/'.$profile->store_slug) : null;
+@endphp
+
+<div class="bio-layout">
+
+    {{-- Sidebar Nav --}}
+    <div class="bio-sidebar">
+        <button class="tab-btn active" data-tab="tab-theme">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            Tampilan & Tema
+        </button>
+        <button class="tab-btn" data-tab="tab-profile">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+            Pengaturan Profil
+        </button>
+        <button class="tab-btn" data-tab="tab-blocks">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Kelola Block
+        </button>
+        <button class="tab-btn" data-tab="tab-catalog">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            Katalog & Affiliate
+        </button>
+
+        <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7;">
+            <div style="font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.5rem;">Tipe Profil</div>
+            <div style="font-size:0.82rem; font-weight:700; color:#1eb349;">{{ $roleLabels[$profile->bio_role] ?? '-' }}</div>
+            @if($bioUrl)
+            <a href="{{ $bioUrl }}" target="_blank" style="display:block; margin-top:0.75rem; font-size:0.72rem; color:#64748b; text-decoration:none; word-break:break-all;">🔗 {{ $bioUrl }}</a>
+            @endif
+        </div>
+    </div>
+
+    {{-- Main Content --}}
+    <div class="bio-content">
+
+        {{-- ══ TAB 1: TEMA ══ --}}
+        <div class="tab-pane active" id="tab-theme">
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    <span>Pilih Tema Visual</span>
+                </div>
+                <div class="card-body">
+                    <p style="font-size:0.82rem; color:#64748b; margin-bottom:1.5rem;">Tema menentukan tampilan halaman publik Link in Bio Anda. Klik untuk memilih, lalu klik Simpan.</p>
+                    <form action="{{ route('creator.bio.save-theme') }}" method="POST">
+                        @csrf
+                        <div class="theme-grid">
+                            @foreach(['theme1'=>'Gelap Elegan','theme2'=>'Minimalis Pro','theme3'=>'Gradient Neon','theme4'=>'Clean Light'] as $key=>$label)
+                            <label class="theme-card {{ $currentTheme === $key ? 'active' : '' }}">
+                                <input type="radio" name="bio_theme" value="{{ $key }}" {{ $currentTheme === $key ? 'checked' : '' }} style="display:none;" onchange="this.closest('form').submit()">
+                                <img src="{{ asset('images/bio-preview/'.$key.'.png') }}" alt="{{ $label }}" onerror="this.style.background='#0b120c'; this.removeAttribute('src'); this.style.height='140px'">
+                                <div class="theme-label">
+                                    @if($currentTheme === $key) <svg width="14" height="14" fill="#1eb349" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> @endif
+                                    {{ $label }}
+                                </div>
+                            </label>
+                            @endforeach
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {{-- ══ TAB 2: PROFIL ══ --}}
+        <div class="tab-pane" id="tab-profile">
+            <form action="{{ route('creator.bio.save-profile') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="prof-card">
+                    <div class="prof-card-head">Informasi Profil Kreator</div>
+                    <div class="card-body">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                            <div class="form-group">
+                                <label class="form-label">Nama Tampilan</label>
+                                <input type="text" name="bio_name" value="{{ old('bio_name', $cfg['name'] ?? $profile->store_name) }}" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Username / URL Publik</label>
+                                <div style="display:flex; align-items:center; border:1.5px solid #e7f0e7; border-radius:10px; background:#f9fefb; overflow:hidden;">
+                                    <span style="padding:0 0.75rem; color:#94a3b8; font-size:0.8rem; border-right:1.5px solid #e7f0e7; background:#f1f5f9; height:44px; display:flex; align-items:center;">buyle.id/</span>
+                                    <input type="text" name="bio_username" value="{{ old('bio_username', $profile->store_slug) }}" style="height:44px; border:none; background:transparent; padding:0 1rem; font-family:'Montserrat',sans-serif; font-size:0.875rem; color:#1a1a1a; outline:none; flex:1;" placeholder="username">
+                                </div>
+                                @error('bio_username')<span style="font-size:0.72rem; color:#ef4444;">{{ $message }}</span>@enderror
+                            </div>
+                            <div class="form-group" style="grid-column:1/-1;">
+                                <label class="form-label">Bio / Tagline</label>
+                                <textarea name="bio_bio" class="form-input" rows="2" maxlength="300" placeholder="Ceritakan sedikit tentang diri Anda...">{{ old('bio_bio', $cfg['bio'] ?? '') }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Lokasi</label>
+                                <input type="text" name="bio_location" value="{{ old('bio_location', $cfg['location'] ?? '') }}" class="form-input" placeholder="Jakarta, Indonesia">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prof-card">
+                    <div class="prof-card-head">Foto Profil & Cover</div>
+                    <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Foto Profil (Avatar)</label>
+                            @if(!empty($cfg['avatar']))
+                                <img src="{{ asset('storage/'.$cfg['avatar']) }}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:0.5rem; border:3px solid #1eb349;">
+                            @endif
+                            <input type="file" name="bio_avatar" accept="image/*" class="form-input" style="height:auto; padding:0.5rem;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Foto Cover / Banner</label>
+                            @if(!empty($cfg['cover']))
+                                <img src="{{ asset('storage/'.$cfg['cover']) }}" style="width:100%; height:60px; border-radius:10px; object-fit:cover; margin-bottom:0.5rem;">
+                            @endif
+                            <input type="file" name="bio_cover" accept="image/*" class="form-input" style="height:auto; padding:0.5rem;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prof-card">
+                    <div class="prof-card-head">Social Media</div>
+                    <div class="card-body">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                            <div class="form-group">
+                                <label class="form-label"><span style="color:#25D366;">●</span> WhatsApp</label>
+                                <input type="text" name="bio_wa" value="{{ old('bio_wa', $cfg['wa'] ?? '') }}" class="form-input" placeholder="628xxxxxxxxx">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><span style="color:#E4405F;">●</span> Instagram</label>
+                                <input type="text" name="bio_ig" value="{{ old('bio_ig', $cfg['ig'] ?? '') }}" class="form-input" placeholder="@username">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><span style="color:#000;">●</span> TikTok</label>
+                                <input type="text" name="bio_tiktok" value="{{ old('bio_tiktok', $cfg['tiktok'] ?? '') }}" class="form-input" placeholder="@username">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><span style="color:#FF0000;">●</span> YouTube</label>
+                                <input type="url" name="bio_youtube" value="{{ old('bio_youtube', $cfg['youtube'] ?? '') }}" class="form-input" placeholder="https://youtube.com/...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end;">
+                    <button type="submit" class="btn-primary">Simpan Profil</button>
+                </div>
+            </form>
+        </div>
+
+        {{-- ══ TAB 3: BLOCKS ══ --}}
+        <div class="tab-pane" id="tab-blocks">
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    <span>Block Aktif</span>
+                    <button onclick="document.getElementById('addBlockModal').classList.add('open')" class="btn-submit-sm">+ Tambah Block</button>
+                </div>
+                <div class="card-body">
+                    @php
+                        $typeBlocks = $blocks->whereIn('type', ['link','pdf','tiktok']);
+                    @endphp
+                    @forelse($typeBlocks as $block)
+                    <div class="block-item" style="{{ !$block->is_active ? 'opacity:0.5;' : '' }}">
+                        <div class="block-icon" style="background:{{ ['link'=>'#f0fdf4','pdf'=>'#fef2f2','tiktok'=>'#1a1a1a'][$block->type] ?? '#f8fafc' }}; color:{{ ['link'=>'#1eb349','pdf'=>'#ef4444','tiktok'=>'#fff'][$block->type] ?? '#64748b' }};">
+                            @if($block->type==='link') <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke-linecap="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke-linecap="round"/></svg>
+                            @elseif($block->type==='pdf') <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            @else <svg width="18" height="18" fill="white" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.77 1.52V6.76a4.85 4.85 0 0 1-1-.07z"/></svg>
+                            @endif
+                        </div>
+                        <div class="block-info">
+                            <div class="block-title">{{ $block->title }}</div>
+                            <div class="block-sub">{{ $block->type }} · {{ Str::limit($block->url, 40) }}</div>
+                        </div>
+                        <div class="block-actions">
+                            <form action="{{ route('creator.bio.blocks.toggle', $block) }}" method="POST" style="display:inline;">
+                                @csrf @method('PATCH')
+                                <button type="submit" class="btn-icon-sm" style="background:{{ $block->is_active ? '#dcfce7' : '#f1f5f9' }}; color:{{ $block->is_active ? '#15803d' : '#94a3b8' }};" title="{{ $block->is_active ? 'Nonaktifkan' : 'Aktifkan' }}">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="{{ $block->is_active ? 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z' : 'M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19' }}"/><circle cx="12" cy="12" r="3" {{ $block->is_active ? '' : 'style=display:none' }}/></svg>
+                                </button>
+                            </form>
+                            <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST" onsubmit="return confirm('Hapus block ini?')" style="display:inline;">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn-icon-sm" style="background:#fef2f2; color:#ef4444;" title="Hapus">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    @empty
+                    <div style="text-align:center; padding:2rem; color:#94a3b8; font-size:0.85rem;">
+                        Belum ada block. Klik "+ Tambah Block" untuk menambahkan link, PDF, atau TikTok.
+                    </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+
+        {{-- ══ TAB 4: KATALOG & AFFILIATE ══ --}}
+        <div class="tab-pane" id="tab-catalog">
+
+            {{-- Shopee Affiliate / Produk Eksternal --}}
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    <span>🛍️ Tambah Produk Affiliate / Shopee</span>
+                    <button onclick="document.getElementById('addAffModal').classList.add('open')" class="btn-submit-sm">+ Tambah</button>
+                </div>
+                <div class="card-body">
+                    @forelse($blocks->whereIn('type',['shopee','affiliate']) as $block)
+                    <div class="aff-card">
+                        @if(!empty($block->data_json['image']))
+                            <img src="{{ $block->data_json['image'] }}" class="aff-img" onerror="this.style.display='none'">
+                        @endif
+                        <div class="aff-info">
+                            <div class="aff-title">{{ $block->title }}</div>
+                            <div class="aff-sub">{{ Str::limit($block->url, 50) }}</div>
+                        </div>
+                        <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST" style="padding:0.75rem; display:flex; align-items:center;" onsubmit="return confirm('Hapus?')">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn-icon-sm" style="background:#fef2f2; color:#ef4444;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+                        </form>
+                    </div>
+                    @empty
+                    <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:2rem 0;">Belum ada produk affiliate. Masukkan link Shopee dan sistem akan mengambil gambar otomatis.</p>
+                    @endforelse
+                </div>
+            </div>
+
+            {{-- Produk Buyle Saya --}}
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    <span>📦 Tampilkan Produk Buyle Saya</span>
+                </div>
+                <div class="card-body">
+                    @forelse($myProducts as $product)
+                    @php $alreadyAdded = $blocks->where('type','buyle_product')->contains(fn($b) => ($b->data_json['product_id'] ?? null) == $product->id); @endphp
+                    <div style="display:flex; align-items:center; gap:0.75rem; padding:0.65rem 0; border-bottom:1px solid #f3f7f3;">
+                        @if($product->image)
+                        <img src="{{ asset('storage/'.$product->image) }}" style="width:48px; height:48px; border-radius:8px; object-fit:cover; flex-shrink:0;">
+                        @endif
+                        <div style="flex:1; min-width:0;">
+                            <div style="font-weight:700; font-size:0.82rem; color:#0b120c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $product->name }}</div>
+                            <div style="font-size:0.72rem; color:#64748b;">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
+                        </div>
+                        @if($alreadyAdded)
+                        <span style="font-size:0.72rem; font-weight:700; color:#1eb349; background:#f0fdf4; padding:0.25rem 0.6rem; border-radius:6px;">Ditampilkan</span>
+                        @else
+                        <form action="{{ route('creator.bio.blocks.store') }}" method="POST" style="display:inline;">
+                            @csrf
+                            <input type="hidden" name="type" value="buyle_product">
+                            <input type="hidden" name="title" value="{{ $product->name }}">
+                            <input type="hidden" name="url" value="{{ route('product.show', $product->slug) }}">
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <button type="submit" class="btn-submit-sm" style="font-size:0.75rem; height:34px;">+ Tampilkan</button>
+                        </form>
+                        @endif
+                    </div>
+                    @empty
+                    <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:2rem 0;">Belum ada produk. <a href="{{ route('creator.products.create') }}" style="color:#1eb349;">Tambah Produk →</a></p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+
+    </div>{{-- /bio-content --}}
+</div>{{-- /bio-layout --}}
+
+{{-- ── Modal: Tambah Block Biasa ── --}}
+<div class="modal-overlay" id="addBlockModal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="modal-box">
+        <h3 style="font-size:1.1rem; font-weight:800; margin:0 0 1.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">Tambah Block Baru</h3>
+        <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label class="form-label">Tipe Block</label>
+                <select name="type" class="form-input" id="blockType" onchange="handleTypeChange(this.value)">
+                    <option value="link">🔗 Custom Link / Button</option>
+                    <option value="pdf">📄 File / Dokumen PDF</option>
+                    <option value="tiktok">📱 TikTok Video</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Judul / Label Tombol</label>
+                <input type="text" name="title" class="form-input" placeholder="Contoh: Download Portfolio" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">URL / Link</label>
+                <input type="url" name="url" class="form-input" placeholder="https://" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Gambar Icon (opsional)</label>
+                <input type="file" name="block_image" accept="image/*" class="form-input" style="height:auto; padding:0.5rem;">
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
+                <button type="button" onclick="document.getElementById('addBlockModal').classList.remove('open')" style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                <button type="submit" class="btn-submit-sm">Tambah Block</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ── Modal: Tambah Affiliate / Shopee ── --}}
+<div class="modal-overlay" id="addAffModal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="modal-box">
+        <h3 style="font-size:1.1rem; font-weight:800; margin:0 0 0.5rem; color:#0b120c; font-family:'Montserrat',sans-serif;">Tambah Produk Affiliate</h3>
+        <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Tempel link Shopee/Tokopedia — sistem akan ambil gambar otomatis. Atau upload manual.</p>
+
+        <div id="scrapePreview" style="display:none; background:#f0fdf4; border-radius:12px; padding:1rem; margin-bottom:1rem; display:none; align-items:center; gap:0.75rem;">
+            <img id="scrapeImg" style="width:60px; height:60px; border-radius:8px; object-fit:cover;" src="" onerror="this.style.display='none'">
+            <div><div id="scrapeTitle" style="font-weight:700; font-size:0.82rem; color:#0b120c;"></div><div style="font-size:0.7rem; color:#1eb349;">✓ Gambar berhasil ditemukan</div></div>
+        </div>
+
+        <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data" id="affForm">
+            @csrf
+            <input type="hidden" name="type" value="shopee">
+            <div class="form-group">
+                <label class="form-label">Link Produk (Shopee / Tokopedia / dll)</label>
+                <input type="url" name="url" id="affUrl" class="form-input" placeholder="https://shopee.co.id/..." onblur="scrapeUrl(this.value)">
+                <span class="form-hint">Link akan discrape otomatis untuk mendapatkan gambar & judul</span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Judul Produk</label>
+                <input type="text" name="title" id="affTitle" class="form-input" placeholder="Nama produk..." required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Upload Gambar Manual (jika scrape gagal)</label>
+                <input type="file" name="block_image" accept="image/*" class="form-input" style="height:auto; padding:0.5rem;">
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
+                <button type="button" onclick="document.getElementById('addAffModal').classList.remove('open')" style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                <button type="submit" class="btn-submit-sm">Tambah Produk</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script>
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById(this.dataset.tab).classList.add('active');
+        localStorage.setItem('bio_active_tab', this.dataset.tab);
+    });
+});
+// Restore tab
+const savedTab = localStorage.getItem('bio_active_tab');
+if(savedTab) {
+    const btn = document.querySelector(`[data-tab="${savedTab}"]`);
+    if(btn) btn.click();
+}
+
+// Shopee URL scraper AJAX
+let scrapeTimeout;
+function scrapeUrl(url) {
+    if(!url || !url.startsWith('http')) return;
+    clearTimeout(scrapeTimeout);
+    scrapeTimeout = setTimeout(() => {
+        fetch('{{ route("creator.bio.scrape-url") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+            body: JSON.stringify({ url })
+        })
+        .then(r => r.json())
+        .then(data => {
+            const preview = document.getElementById('scrapePreview');
+            if(data.image || data.title) {
+                if(data.image) { document.getElementById('scrapeImg').src = data.image; }
+                if(data.title) { document.getElementById('scrapeTitle').textContent = data.title; document.getElementById('affTitle').value = data.title; }
+                preview.style.display = 'flex';
+            }
+        })
+        .catch(() => {});
+    }, 800);
+}
+</script>
+@endsection

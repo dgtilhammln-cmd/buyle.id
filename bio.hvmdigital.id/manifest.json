@@ -1,0 +1,21 @@
+{
+  "name": "Bio by HVM Digital",
+  "short_name": "Bio HVM",
+  "description": "Radically Better Bio Link Stack for Professionals.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020b09",
+  "theme_color": "#a1ff5a",
+  "icons": [
+    {
+      "src": "/assets/images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

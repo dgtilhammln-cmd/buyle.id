@@ -471,6 +471,17 @@
                 Profil & Toko
             </a>
 
+            <a href="{{ $isBuyer ? '#' : route('creator.bio.index') }}"
+                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                class="cr-nav-link {{ request()->routeIs('creator.bio*') ? 'active' : '' }}">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                </svg>
+                Link in Bio
+                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+            </a>
+
             <a href="{{ $isBuyer ? '#' : route('creator.membership') }}"
                 onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.membership') ? 'active' : '' }}">

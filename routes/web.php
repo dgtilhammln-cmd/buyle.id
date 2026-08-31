@@ -436,6 +436,17 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
 
     // Membership Plans
     Route::get('/membership', [\App\Http\Controllers\Creator\SellerController::class, 'membership'])->name('membership');
+
+    // ── Link in Bio ──────────────────────────────────────────────────────
+    Route::get('/bio',          [\App\Http\Controllers\Creator\CreatorBioController::class, 'index'])->name('bio.index');
+    Route::post('/bio/role',    [\App\Http\Controllers\Creator\CreatorBioController::class, 'setRole'])->name('bio.set-role');
+    Route::post('/bio/theme',   [\App\Http\Controllers\Creator\CreatorBioController::class, 'saveTheme'])->name('bio.save-theme');
+    Route::post('/bio/profile', [\App\Http\Controllers\Creator\CreatorBioController::class, 'saveProfile'])->name('bio.save-profile');
+    Route::post('/bio/blocks',  [\App\Http\Controllers\Creator\CreatorBioController::class, 'storeBlock'])->name('bio.blocks.store');
+    Route::delete('/bio/blocks/{block}', [\App\Http\Controllers\Creator\CreatorBioController::class, 'destroyBlock'])->name('bio.blocks.destroy');
+    Route::patch('/bio/blocks/{block}/toggle', [\App\Http\Controllers\Creator\CreatorBioController::class, 'toggleBlock'])->name('bio.blocks.toggle');
+    Route::post('/bio/blocks/reorder', [\App\Http\Controllers\Creator\CreatorBioController::class, 'reorderBlocks'])->name('bio.blocks.reorder');
+    Route::post('/bio/scrape-url', [\App\Http\Controllers\Creator\CreatorBioController::class, 'scrapeUrl'])->name('bio.scrape-url');
 });
 
 // 3. Buyer Dashboard
@@ -449,3 +460,10 @@ Route::middleware(['auth', 'role:buyer'])->prefix('buyer')->name('buyer.')->grou
     // Akses produk digital (verifikasi kepemilikan order, redirect ke link)
     Route::get('/access-product/{product}', [\App\Http\Controllers\Buyer\BuyerOrderController::class, 'accessProduct'])->name('access.product');
 });
+
+// ── Public Bio Link Page — MUST be last route (/username)
+// Reserved slugs are blocked in BioPageController
+Route::get('/{username}', [\App\Http\Controllers\BioPageController::class, 'show'])
+    ->name('bio.public')
+    ->where('username', '[a-zA-Z0-9_\-]+');
+

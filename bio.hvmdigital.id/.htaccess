@@ -1,0 +1,51 @@
+# ==============================================================================
+# HVM DIGITAL - ELITE SERVER CONFIGURATION v2.0
+# ==============================================================================
+
+# 1. SET ERROR HANDLER
+ErrorDocument 404 /error.php
+ErrorDocument 403 /error.php
+ErrorDocument 500 /error.php
+ErrorDocument 503 /error.php
+
+# 2. SEO & SECURITY ENGINE
+RewriteEngine On
+RewriteBase /
+
+# 2.1. FORCE HTTPS (Wajib untuk SEO Modern)
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# 2.2. HVM DYNAMIC SITEMAP REDIRECT
+# Mengarahkan bio.hvmdigital.id/sitemap.xml ke sitemap.php secara internal
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+# 2.3. PREVENT DIRECTORY BROWSING
+Options -Indexes
+
+# 3. FIX: Logout Process (Jangan diubah - Jalur Asli Anda)
+RewriteRule ^logout-process$ dashboard/views/parts/animasi-logout.php [L]
+
+# 4. PENGECUALIAN FILE FISIK
+# Jika file atau folder beneran ada di server, jangan di-route ke index.php
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 5. PENGECUALIAN KHUSUS: error.php
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^error\.php$ - [L]
+
+# 6. ROUTING UTAMA (ELITE FRONT-CONTROLLER)
+# Menangani routing profil user: bio.hvmdigital.id/username
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?route=$1 [L,QSA]
+
+# 7. SECURITY HEADERS (Meningkatkan skor SEO & Trust Google)
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

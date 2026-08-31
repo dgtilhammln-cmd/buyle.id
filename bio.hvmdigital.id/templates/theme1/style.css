@@ -1,0 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border_box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+body {
+    background-color: #050505;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex; justify-content: center;
+    padding: 0; margin: 0; overflow-x: hidden;
+    /* Background abstract luxury */
+    background-image: 
+        radial-gradient(circle at 50% 0%, #1a1a1a 0%, transparent 70%),
+        radial-gradient(circle at 100% 100%, #111 0%, transparent 50%);
+}
+
+/* Container HP */
+.container {
+    width: 100%; max-width: 430px;
+    background: #000;
+    min-height: 100vh;
+    padding-bottom: 50px;
+    position: relative;
+    box-shadow: 0 0 60px rgba(255,255,255,0.05);
+    border-left: 1px solid #111;
+    border-right: 1px solid #111;
+}
+
+/* --- HEADER MEWAH --- */
+.header-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.cover-area {
+    width: 100%; height: 200px;
+    background-size: cover; background-position: center;
+    position: relative;
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+
+.profile-container {
+    margin-top: -80px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    padding: 0 20px;
+}
+
+/* Profile Picture dengan Efek Silver Ring */
+.profile-box {
+    width: 120px; height: 120px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, #fff, #333, #fff); /* Silver Gradient */
+    box-shadow: 0 0 30px rgba(255,255,255,0.1);
+}
+.profile-box img {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #000;
+    background: #000;
+}
+
+/* Typography Mewah */
+h1 {
+    font-size: 26px; font-weight: 700;
+    background: linear-gradient(to bottom, #fff 0%, #aaa 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 5px; letter-spacing: -0.5px;
+}
+.nick {
+    font-size: 14px; color: #666; font-weight: 400;
+    text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 15px; display: block;
+}
+
+/* Badges (Glass Pills) */
+.badges { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 25px; }
+.badge {
+    font-size: 11px; font-weight: 500;
+    padding: 6px 14px; border-radius: 30px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #ccc; backdrop-filter: blur(10px);
+    display: flex; align-items: center; gap: 5px;
+}
+.badge i { font-size: 10px; color: #fff; }
+
+/* --- DRIVE CARD (Premium Card) --- */
+.drive-card {
+    margin: 0 20px 30px;
+    background: linear-gradient(135deg, #151515, #0a0a0a);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 25px;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none; display: block;
+    transition: 0.3s;
+}
+.drive-card::before {
+    content: ''; position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
+    transform: rotate(45deg); animation: shine 3s infinite;
+}
+@keyframes shine { 0% { transform: translateX(-100%) rotate(45deg); } 100% { transform: translateX(100%) rotate(45deg); } }
+
+.drive-icon { font-size: 32px; color: #fff; margin-bottom: 10px; opacity: 0.8; }
+.drive-title { font-size: 18px; font-weight: 600; color: white; margin-bottom: 4px; }
+.drive-sub { font-size: 12px; color: #666; display: flex; align-items: center; gap: 5px; }
+
+/* --- BUTTON LIST --- */
+.link-stack { padding: 0 20px; display: flex; flex-direction: column; gap: 15px; }
+
+.glass-btn {
+    background: rgba(20, 20, 20, 0.6);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 12px;
+    display: flex; align-items: center; gap: 15px;
+    text-decoration: none; color: #e0e0e0;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-btn:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Icon Box */
+.btn-img-box {
+    width: 50px; height: 50px;
+    background: #fff; border-radius: 12px;
+    overflow: hidden; padding: 2px;
+    flex-shrink: 0;
+}
+.btn-img-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+
+/* Icon FontAwesome */
+.btn-icon-fa {
+    width: 50px; height: 50px; flex-shrink: 0;
+    background: linear-gradient(to bottom, #222, #000);
+    border: 1px solid #333; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: #fff;
+}
+
+.btn-info { flex: 1; }
+.btn-title { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+.btn-desc { font-size: 11px; color: #777; line-height: 1.3; }
+
+.btn-arrow {
+    width: 30px; height: 30px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: #fff;
+    transition: 0.3s;
+}
+.glass-btn:hover .btn-arrow { background: #fff; color: #000; }
+/* ... (KODE LAMA TETAP ADA) ... */
+
+/* --- FIX BUG CAPTURE 1 (VIDEO TITLE) --- */
+.video-section-title {
+    margin: 10px 20px 15px; 
+    font-size: 12px; font-weight: 700; color: #888; letter-spacing: 1.5px;
+    display: flex; align-items: center; gap: 12px; text-transform: uppercase;
+}
+.video-section-title::after { content:''; flex:1; height:1px; background: rgba(255,255,255,0.1); }
+
+.video-slider {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 0 20px 30px; /* Padding bawah untuk shadow */
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Hide scrollbar Firefox */
+}
+.video-slider::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome */
+
+.video-card {
+    min-width: 200px;
+    height: 280px;
+    background: linear-gradient(180deg, #1a1a1a, #000);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    scroll-snap-align: center;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    transition: 0.3s;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+}
+
+/* Efek Mewah pada Card Video */
+.video-card::before {
+    content:''; position: absolute; top:0; left:0; width:100%; height:100%;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 60%);
+}
+
+.video-card:hover { transform: scale(1.02); border-color: rgba(255,255,255,0.3); }
+
+.vid-icon {
+    font-size: 40px; color: #fff; z-index: 2;
+    filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
+    margin-bottom: 10px;
+}
+.vid-play {
+    width: 50px; height: 50px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(5px);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(255,255,255,0.2);
+    z-index: 2; color: #fff;
+}
+.vid-label {
+    position: absolute; bottom: 20px; left: 0; right: 0;
+    text-align: center; color: #aaa; font-size: 12px; z-index: 2;
+}
+
+/* Background TikTok visual */
+.vid-bg-effect {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    opacity: 0.3; filter: blur(20px); z-index: 1;
+    background: linear-gradient(45deg, #00f2ea, #ff0050);
+}
+/* --- FOOTER GLASS CREDIT (BARU) --- */
+.footer-credit {
+    margin: 40px 20px 20px;
+    padding: 15px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 15px;
+    text-align: center;
+    font-size: 11px; color: #666;
+    text-decoration: none;
+    display: block;
+    backdrop-filter: blur(5px);
+    transition: 0.3s;
+}
+.footer-credit b { color: #fff; font-weight: 600; }
+.footer-credit:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }

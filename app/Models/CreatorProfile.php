@@ -24,14 +24,24 @@ class CreatorProfile extends Model
         'meta_keywords',
         'store_banner_1',
         'store_banner_2',
+        // Bio Link fields
+        'bio_role',
+        'bio_theme',
+        'bio_config',
     ];
 
     protected $casts = [
         'social_links' => 'array',
+        'bio_config'   => 'array',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function bioBlocks()
+    {
+        return $this->hasMany(CreatorBioBlock::class, 'creator_id')->orderBy('order');
     }
 }
