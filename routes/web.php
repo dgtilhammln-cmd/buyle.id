@@ -432,6 +432,9 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
 
     // Realtime Stats API (AJAX polling for dashboard)
     Route::get('/stats/realtime', [\App\Http\Controllers\Creator\SellerController::class, 'realtimeStats'])->name('stats.realtime');
+
+    // Membership Plans
+    Route::get('/membership', [\App\Http\Controllers\Creator\SellerController::class, 'membership'])->name('membership');
 });
 
 // 3. Buyer Dashboard

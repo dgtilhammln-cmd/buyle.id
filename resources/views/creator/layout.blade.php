@@ -461,6 +461,16 @@
                 Profil & Toko
             </a>
 
+            <a href="{{ $isBuyer ? '#' : route('creator.membership') }}"
+                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                class="cr-nav-link {{ request()->routeIs('creator.membership') ? 'active' : '' }}">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                Membership Seller
+                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+            </a>
+
             <a href="{{ $isBuyer ? '#' : route('creator.sales.report') }}"
                 onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.sales*') ? 'active' : '' }}">

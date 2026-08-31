@@ -117,4 +117,12 @@ class SellerController extends Controller
             'timestamp'         => now()->format('H:i:s'),
         ]);
     }
+
+    /**
+     * Membership Seller - Halaman Pilihan Paket Membership & Fitur
+     */
+    public function membership()
+    {
+        return view('creator.membership');
+    }
 }
