@@ -443,6 +443,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/bio/theme',   [\App\Http\Controllers\Creator\CreatorBioController::class, 'saveTheme'])->name('bio.save-theme');
     Route::post('/bio/profile', [\App\Http\Controllers\Creator\CreatorBioController::class, 'saveProfile'])->name('bio.save-profile');
     Route::post('/bio/blocks',  [\App\Http\Controllers\Creator\CreatorBioController::class, 'storeBlock'])->name('bio.blocks.store');
+    Route::put('/bio/blocks/{block}', [\App\Http\Controllers\Creator\CreatorBioController::class, 'updateBlock'])->name('bio.blocks.update');
     Route::delete('/bio/blocks/{block}', [\App\Http\Controllers\Creator\CreatorBioController::class, 'destroyBlock'])->name('bio.blocks.destroy');
     Route::patch('/bio/blocks/{block}/toggle', [\App\Http\Controllers\Creator\CreatorBioController::class, 'toggleBlock'])->name('bio.blocks.toggle');
     Route::post('/bio/blocks/reorder', [\App\Http\Controllers\Creator\CreatorBioController::class, 'reorderBlocks'])->name('bio.blocks.reorder');

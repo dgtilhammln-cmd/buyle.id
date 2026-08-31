@@ -264,6 +264,9 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="{{ $block->is_active ? 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z' : 'M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19' }}"/><circle cx="12" cy="12" r="3" {{ $block->is_active ? '' : 'style=display:none' }}/></svg>
                                 </button>
                             </form>
+                            <button type="button" class="btn-icon-sm" onclick="editBlock({{ htmlspecialchars(json_encode($block), ENT_QUOTES, 'UTF-8') }})" style="background:#e0f2fe; color:#0284c7;" title="Edit">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </button>
                             <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST" onsubmit="return confirm('Hapus block ini?')" style="display:inline;">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="btn-icon-sm" style="background:#fef2f2; color:#ef4444;" title="Hapus">
@@ -303,10 +306,15 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                             <div class="aff-title">{{ $block->title }}</div>
                             <div class="aff-sub">{{ Str::limit($block->url, 50) }}</div>
                         </div>
-                        <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST" style="padding:0.75rem; display:flex; align-items:center;" onsubmit="return confirm('Hapus?')">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn-icon-sm" style="background:#fef2f2; color:#ef4444;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
-                        </form>
+                        <div style="padding:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+                            <button type="button" class="btn-icon-sm" onclick="editBlock({{ htmlspecialchars(json_encode($block), ENT_QUOTES, 'UTF-8') }})" style="background:#e0f2fe; color:#0284c7;" title="Edit">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </button>
+                            <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST" onsubmit="return confirm('Hapus?')">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn-icon-sm" style="background:#fef2f2; color:#ef4444;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+                            </form>
+                        </div>
                     </div>
                     @empty
                     <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:2rem 0;">Belum ada produk affiliate. Masukkan link Shopee dan sistem akan mengambil gambar otomatis.</p>
@@ -404,6 +412,7 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
         <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data" id="affForm">
             @csrf
             <input type="hidden" name="type" value="shopee">
+            <input type="hidden" name="scraped_image" id="affScrapedImage">
             <div class="form-group">
                 <label class="form-label">Link Produk (Shopee / Tokopedia / dll)</label>
                 <input type="url" name="url" id="affUrl" class="form-input" placeholder="https://shopee.co.id/..." onblur="scrapeUrl(this.value)">
@@ -424,6 +433,34 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
         </form>
     </div>
 </div>
+
+{{-- ── Modal: Edit Block ── --}}
+<div class="modal-overlay" id="editBlockModal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="modal-box">
+        <h3 style="font-size:1.1rem; font-weight:800; margin:0 0 1.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">Edit Block</h3>
+        <form action="" method="POST" enctype="multipart/form-data" id="editBlockForm">
+            @csrf
+            @method('PUT')
+            <div class="form-group">
+                <label class="form-label">Judul / Label</label>
+                <input type="text" name="title" id="editBlockTitle" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">URL / Link</label>
+                <input type="url" name="url" id="editBlockUrl" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Ganti Gambar (opsional)</label>
+                <input type="file" name="block_image" accept="image/*" class="form-input" style="height:auto; padding:0.5rem;">
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
+                <button type="button" onclick="document.getElementById('editBlockModal').classList.remove('open')" style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                <button type="submit" class="btn-submit-sm">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -460,13 +497,29 @@ function scrapeUrl(url) {
         .then(data => {
             const preview = document.getElementById('scrapePreview');
             if(data.image || data.title) {
-                if(data.image) { document.getElementById('scrapeImg').src = data.image; }
-                if(data.title) { document.getElementById('scrapeTitle').textContent = data.title; document.getElementById('affTitle').value = data.title; }
+                if(data.image) { 
+                    const img = document.getElementById('scrapeImg');
+                    img.src = data.image;
+                    img.style.display = 'block';
+                    document.getElementById('affScrapedImage').value = data.image;
+                }
+                if(data.title) { 
+                    document.getElementById('scrapeTitle').textContent = data.title; 
+                    document.getElementById('affTitle').value = data.title; 
+                }
                 preview.style.display = 'flex';
             }
         })
         .catch(() => {});
     }, 800);
+}
+
+function editBlock(block) {
+    const form = document.getElementById('editBlockForm');
+    form.action = '{{ url("creator/bio/blocks") }}/' + block.id;
+    document.getElementById('editBlockTitle').value = block.title;
+    document.getElementById('editBlockUrl').value = block.url;
+    document.getElementById('editBlockModal').classList.add('open');
 }
 </script>
 @endsection

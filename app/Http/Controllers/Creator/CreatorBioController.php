@@ -138,10 +138,12 @@ class CreatorBioController extends Controller
         // Handle custom image upload
         if ($request->hasFile('block_image')) {
             $data['image'] = $request->file('block_image')->store('bio/blocks', 'public');
+        } elseif ($request->filled('scraped_image')) {
+            $data['image'] = $request->scraped_image;
         }
 
-        // If shopee: try to scrape OG image
-        if ($request->type === 'shopee' && $request->filled('url') && empty($data['image'])) {
+        // If shopee: try to scrape OG image if still empty
+        if (in_array($request->type, ['shopee', 'affiliate']) && $request->filled('url') && empty($data['image'])) {
             $scraped = $this->scrapeOgImage($request->url);
             if ($scraped) $data['image'] = $scraped;
         }
@@ -172,12 +174,47 @@ class CreatorBioController extends Controller
         $profile = $this->getProfile();
         if ($block->creator_id !== $profile->id) abort(403);
 
-        // Delete image if stored
-        if (!empty($block->data_json['image'])) {
+        // Delete image if stored locally
+        if (!empty($block->data_json['image']) && !Str::startsWith($block->data_json['image'], 'http')) {
             Storage::disk('public')->delete($block->data_json['image']);
         }
         $block->delete();
         return back()->with('success', 'Block dihapus.');
+    }
+
+    /**
+     * Update a block.
+     */
+    public function updateBlock(Request $request, CreatorBioBlock $block)
+    {
+        $profile = $this->getProfile();
+        if ($block->creator_id !== $profile->id) abort(403);
+
+        $request->validate([
+            'title' => 'required|string|max:150',
+            'url'   => 'nullable|string|max:2000',
+            'block_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'scraped_image' => 'nullable|string',
+        ]);
+
+        $data = $block->data_json ?? [];
+
+        if ($request->hasFile('block_image')) {
+            if (!empty($data['image']) && !Str::startsWith($data['image'], 'http')) {
+                Storage::disk('public')->delete($data['image']);
+            }
+            $data['image'] = $request->file('block_image')->store('bio/blocks', 'public');
+        } elseif ($request->filled('scraped_image')) {
+            $data['image'] = $request->scraped_image;
+        }
+
+        $block->update([
+            'title'     => $request->title,
+            'url'       => $request->url,
+            'data_json' => $data,
+        ]);
+
+        return back()->with('success', 'Block berhasil diupdate!');
     }
 
     /**
