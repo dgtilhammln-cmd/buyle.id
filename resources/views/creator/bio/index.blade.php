@@ -72,6 +72,18 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
 .icon-btn { font-size: 24px; color: #64748b; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; padding: 0; }
 .icon-btn:hover { background: #e0f2fe; color: #0284c7; border-color: #7dd3fc; transform:scale(1.1); }
 
+/* Custom Confirm Modal */
+.confirm-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); backdrop-filter:blur(6px); z-index:2000; align-items:center; justify-content:center; }
+.confirm-modal-overlay.open { display:flex; }
+.confirm-modal-box { background:#fff; border-radius:24px; max-width:380px; width:calc(100% - 2rem); padding:2rem; box-shadow:0 24px 60px rgba(0,0,0,0.25); animation:fadeIn 0.2s; text-align:center; }
+.confirm-modal-icon { width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; }
+.confirm-modal-title { font-size:1.05rem; font-weight:800; color:#0b120c; margin-bottom:0.4rem; font-family:'Montserrat',sans-serif; }
+.confirm-modal-desc { font-size:0.82rem; color:#64748b; margin-bottom:1.5rem; line-height:1.5; }
+.confirm-modal-actions { display:flex; gap:0.75rem; justify-content:center; }
+.confirm-btn-cancel { height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; font-size:0.82rem; cursor:pointer; }
+.confirm-btn-danger { height:40px; padding:0 1.5rem; border-radius:999px; border:none; background:#ef4444; color:#fff; font-weight:700; font-size:0.82rem; cursor:pointer; }
+.confirm-btn-primary { height:40px; padding:0 1.5rem; border-radius:999px; border:none; background:linear-gradient(135deg,#1eb349,#a5cf37); color:#fff; font-weight:700; font-size:0.82rem; cursor:pointer; }
+
 @media(max-width:768px) { .bio-layout{flex-direction:column} .bio-sidebar{width:100%;position:static} .theme-grid{grid-template-columns:1fr} }
 
 /* Theme Mockups */
@@ -307,12 +319,17 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="{{ $block->is_active ? 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z' : 'M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19' }}"/><circle cx="12" cy="12" r="3" {{ $block->is_active ? '' : 'style=display:none' }}/></svg>
                                 </button>
                             </form>
-                            <button type="button" class="btn-icon-sm" onclick="editBlock({{ htmlspecialchars(json_encode($block), ENT_QUOTES, 'UTF-8') }})" style="background:#e0f2fe; color:#0284c7;" title="Edit">
+                            <button type="button" class="btn-icon-sm btn-edit-block"
+                                data-id="{{ $block->id }}"
+                                data-title="{{ addslashes($block->title) }}"
+                                data-url="{{ addslashes($block->url ?? '') }}"
+                                data-icon="{{ $block->data_json['icon_class'] ?? '' }}"
+                                style="background:#e0f2fe; color:#0284c7;" title="Edit">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             </button>
-                            <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST" onsubmit="return confirm('Hapus block ini?')" style="display:inline;">
+                            <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST" class="form-delete-block" style="display:inline;">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="btn-icon-sm" style="background:#fef2f2; color:#ef4444;" title="Hapus">
+                                <button type="button" class="btn-icon-sm btn-delete-block" style="background:#fef2f2; color:#ef4444;" title="Hapus">
                                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>
                                 </button>
                             </form>
@@ -350,12 +367,19 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                             <div class="aff-sub">{{ Str::limit($block->url, 50) }}</div>
                         </div>
                         <div style="padding:0.75rem; display:flex; align-items:center; gap:0.4rem;">
-                            <button type="button" class="btn-icon-sm" onclick="editBlock({{ htmlspecialchars(json_encode($block), ENT_QUOTES, 'UTF-8') }})" style="background:#e0f2fe; color:#0284c7;" title="Edit">
+                            <button type="button" class="btn-icon-sm btn-edit-block"
+                                data-id="{{ $block->id }}"
+                                data-title="{{ addslashes($block->title) }}"
+                                data-url="{{ addslashes($block->url ?? '') }}"
+                                data-icon="{{ $block->data_json['icon_class'] ?? '' }}"
+                                style="background:#e0f2fe; color:#0284c7;" title="Edit">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             </button>
-                            <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST" onsubmit="return confirm('Hapus?')">
+                            <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST" class="form-delete-block">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="btn-icon-sm" style="background:#fef2f2; color:#ef4444;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+                                <button type="button" class="btn-icon-sm btn-delete-block" style="background:#fef2f2; color:#ef4444;">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -538,6 +562,21 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
     </div>
 </div>
 
+{{-- ── Modal: Custom Confirm / Delete ── --}}
+<div class="confirm-modal-overlay" id="confirmModal">
+    <div class="confirm-modal-box">
+        <div class="confirm-modal-icon" id="confirmIcon" style="background:#fef2f2;">
+            <svg width="26" height="26" fill="none" stroke="#ef4444" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </div>
+        <div class="confirm-modal-title" id="confirmTitle">Hapus Block Ini?</div>
+        <div class="confirm-modal-desc" id="confirmDesc">Block yang dihapus tidak bisa dikembalikan. Pastikan Anda sudah yakin.</div>
+        <div class="confirm-modal-actions">
+            <button class="confirm-btn-cancel" onclick="closeConfirmModal()">Batal</button>
+            <button class="confirm-btn-danger" id="confirmOkBtn" onclick="doConfirmAction()">Ya, Hapus</button>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -592,13 +631,17 @@ function scrapeUrl(url) {
     }, 800);
 }
 
-function editBlock(block) {
+function editBlock(btn) {
+    const id = btn.dataset.id;
+    const title = btn.dataset.title;
+    const url = btn.dataset.url;
+    const iconClass = btn.dataset.icon || '';
+
     const form = document.getElementById('editBlockForm');
-    form.action = '{{ url("creator/bio/blocks") }}/' + block.id;
-    document.getElementById('editBlockTitle').value = block.title;
-    document.getElementById('editBlockUrl').value = block.url;
-    // Restore icon if saved
-    const iconClass = block.data_json?.icon_class ?? '';
+    form.action = '{{ url("creator/bio/blocks") }}/' + id;
+    document.getElementById('editBlockTitle').value = title;
+    document.getElementById('editBlockUrl').value = url;
+
     const iconClassInput = document.getElementById('editBlockIconClass');
     const iconPreview = document.getElementById('editBlockIconPreview');
     iconClassInput.value = iconClass;
@@ -609,6 +652,30 @@ function editBlock(block) {
         iconPreview.style.display = 'none';
     }
     document.getElementById('editBlockModal').classList.add('open');
+}
+
+// Attach edit block listeners
+document.querySelectorAll('.btn-edit-block').forEach(btn => {
+    btn.addEventListener('click', function() { editBlock(this); });
+});
+
+// Custom confirm modal
+let _pendingDeleteForm = null;
+function closeConfirmModal() {
+    document.getElementById('confirmModal').classList.remove('open');
+    _pendingDeleteForm = null;
+}
+document.querySelectorAll('.btn-delete-block').forEach(btn => {
+    btn.addEventListener('click', function() {
+        _pendingDeleteForm = this.closest('.form-delete-block');
+        document.getElementById('confirmModal').classList.add('open');
+    });
+});
+function doConfirmAction() {
+    if (_pendingDeleteForm) {
+        _pendingDeleteForm.submit();
+    }
+    closeConfirmModal();
 }
 
 // ── Icon Picker ──────────────────────────────────────────
