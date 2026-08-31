@@ -58,8 +58,18 @@ class CreatorBioController extends Controller
     public function saveTheme(Request $request)
     {
         $request->validate(['bio_theme' => 'required|in:theme1,theme2,theme3,theme4']);
-        $this->getProfile()->update(['bio_theme' => $request->bio_theme]);
-        return back()->with('success', 'Tema berhasil diperbarui!');
+        $profile = $this->getProfile();
+        
+        $config = $profile->bio_config ?? [];
+        // Reset custom colors so the new theme takes precedence
+        unset($config['color_bg'], $config['color_text'], $config['color_btn'], $config['color_btn_text'], $config['color_accent'], $config['color_card']);
+        
+        $profile->update([
+            'bio_theme' => $request->bio_theme,
+            'bio_config' => $config
+        ]);
+        
+        return back()->with('success', 'Tema berhasil diperbarui & Warna Kustom telah direset!');
     }
 
     /**
