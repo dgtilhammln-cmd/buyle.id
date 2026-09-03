@@ -313,6 +313,12 @@ select.form-input { cursor: pointer; }
     .form-grid.cols-3 { grid-template-columns: 1fr; }
     .pg-title { font-size: 1.3rem; }
 }
+.switch-box { position: relative; display: inline-block; width: 50px; height: 26px; flex-shrink: 0; }
+.switch-box input { opacity: 0; width: 0; height: 0; }
+.switch-slider { position: absolute; cursor: pointer; inset: 0; background-color: #cbd5e1; transition: .3s; border-radius: 34px; }
+.switch-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .3s; border-radius: 50%; }
+.switch-box input:checked + .switch-slider { background-color: #1eb349; }
+.switch-box input:checked + .switch-slider:before { transform: translateX(24px); }
 </style>
 @endsection
 
@@ -409,6 +415,22 @@ select.form-input { cursor: pointer; }
                                 <option value="{{ $key }}" {{ $selectedType === $key ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
+                    <div class="form-group full" style="margin-top: 0.75rem; padding: 1.1rem 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                            <div>
+                                <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-bottom: 0.15rem;">
+                                    Aktifkan Online Store di Marketplace Buyle.id
+                                </div>
+                                <div style="font-size: 0.76rem; color: #64748b; line-height: 1.4;">
+                                    Tampilkan profil toko dan katalog produk Anda di pencarian marketplace publik.
+                                </div>
+                            </div>
+                            <label class="switch-box">
+                                <input type="checkbox" name="is_store_active" value="1" {{ old('is_store_active', $profile->bio_config['is_store_active'] ?? true) ? 'checked' : '' }}>
+                                <span class="switch-slider"></span>
+                            </label>
+                        </div>
+                    </div>
                         @error('creator_type')<span class="form-error">{{ $message }}</span>@enderror
                     </div>
 
@@ -444,7 +466,7 @@ select.form-input { cursor: pointer; }
                     <div class="avatar-info">
                         <h4>{{ auth()->user()->name }}</h4>
                         <p>Foto digunakan sebagai identitas di seluruh platform buyle.id</p>
-                        <input type="file" name="avatar" class="form-input" style="height:auto;padding:0.5rem;" accept="image/*">
+                        <input type="file" name="avatar" class="form-input" style="height:auto;padding:0.5rem;" accept="image/*" onchange="initImageCropper(this, {aspectRatio: 1, width: 400, height: 400, title: 'Crop Foto Profil (1:1 Square)', previewTarget: '.avatar-img'})">
                     </div>
                 </div>
                 <span class="form-hint">Rekomendasi: 400×400 px. Maks 10MB. Dikonversi otomatis ke WebP.</span>
@@ -464,14 +486,14 @@ select.form-input { cursor: pointer; }
                         @if($profile->store_banner_1)
                             <img src="{{ asset('storage/' . $profile->store_banner_1) }}" class="banner-preview">
                         @endif
-                        <input type="file" name="store_banner_1" class="form-input" style="height:auto;padding:0.5rem;font-size:0.75rem;" accept="image/*">
+                        <input type="file" name="store_banner_1" class="form-input" style="height:auto;padding:0.5rem;font-size:0.75rem;" accept="image/*" onchange="initImageCropper(this, {aspectRatio: 3, width: 1200, height: 400, title: 'Crop Banner Toko Utama (3:1 Landscape)', previewTarget: '.banner-slot:nth-child(1) .banner-preview'})">
                     </div>
                     <div class="banner-slot">
                         <div class="banner-label">🖼 Slide 2 <span style="font-weight:400;color:#94a3b8;">(Opsional)</span></div>
                         @if($profile->store_banner_2)
                             <img src="{{ asset('storage/' . $profile->store_banner_2) }}" class="banner-preview">
                         @endif
-                        <input type="file" name="store_banner_2" class="form-input" style="height:auto;padding:0.5rem;font-size:0.75rem;" accept="image/*">
+                        <input type="file" name="store_banner_2" class="form-input" style="height:auto;padding:0.5rem;font-size:0.75rem;" accept="image/*" onchange="initImageCropper(this, {aspectRatio: 3, width: 1200, height: 400, title: 'Crop Banner Toko Slide 2 (3:1 Landscape)', previewTarget: '.banner-slot:nth-child(2) .banner-preview'})">
                     </div>
                 </div>
                 <span class="form-hint" style="display:block;margin-top:0.75rem;">Rekomendasi: 1200×600 px (rasio 2:1). Maks 10MB per slide. Dikonversi otomatis ke WebP.</span>
@@ -583,18 +605,66 @@ select.form-input { cursor: pointer; }
                         <select name="province_id" id="province" class="form-input">
                             <option value="">— Pilih Provinsi —</option>
                         </select>
+                    <div class="form-group full" style="margin-top: 0.75rem; padding: 1.1rem 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                            <div>
+                                <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-bottom: 0.15rem;">
+                                    Aktifkan Online Store di Marketplace Buyle.id
+                                </div>
+                                <div style="font-size: 0.76rem; color: #64748b; line-height: 1.4;">
+                                    Tampilkan profil toko dan katalog produk Anda di pencarian marketplace publik.
+                                </div>
+                            </div>
+                            <label class="switch-box">
+                                <input type="checkbox" name="is_store_active" value="1" {{ old('is_store_active', $profile->bio_config['is_store_active'] ?? true) ? 'checked' : '' }}>
+                                <span class="switch-slider"></span>
+                            </label>
+                        </div>
+                    </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Kabupaten / Kota</label>
                         <select name="city_id" id="city" class="form-input" disabled>
                             <option value="">— Pilih Kabupaten/Kota —</option>
                         </select>
+                    <div class="form-group full" style="margin-top: 0.75rem; padding: 1.1rem 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                            <div>
+                                <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-bottom: 0.15rem;">
+                                    Aktifkan Online Store di Marketplace Buyle.id
+                                </div>
+                                <div style="font-size: 0.76rem; color: #64748b; line-height: 1.4;">
+                                    Tampilkan profil toko dan katalog produk Anda di pencarian marketplace publik.
+                                </div>
+                            </div>
+                            <label class="switch-box">
+                                <input type="checkbox" name="is_store_active" value="1" {{ old('is_store_active', $profile->bio_config['is_store_active'] ?? true) ? 'checked' : '' }}>
+                                <span class="switch-slider"></span>
+                            </label>
+                        </div>
+                    </div>
                     </div>
                     <div class="form-group full">
                         <label class="form-label">Kecamatan</label>
                         <select name="subdistrict_id" id="subdistrict" class="form-input" disabled>
                             <option value="">— Pilih Kecamatan —</option>
                         </select>
+                    <div class="form-group full" style="margin-top: 0.75rem; padding: 1.1rem 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                            <div>
+                                <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-bottom: 0.15rem;">
+                                    Aktifkan Online Store di Marketplace Buyle.id
+                                </div>
+                                <div style="font-size: 0.76rem; color: #64748b; line-height: 1.4;">
+                                    Tampilkan profil toko dan katalog produk Anda di pencarian marketplace publik.
+                                </div>
+                            </div>
+                            <label class="switch-box">
+                                <input type="checkbox" name="is_store_active" value="1" {{ old('is_store_active', $profile->bio_config['is_store_active'] ?? true) ? 'checked' : '' }}>
+                                <span class="switch-slider"></span>
+                            </label>
+                        </div>
+                    </div>
                     </div>
                     <div class="form-group full">
                         <label class="form-label">Alamat Lengkap</label>

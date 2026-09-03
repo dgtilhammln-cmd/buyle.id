@@ -63,6 +63,12 @@ class CreatorProfileController extends Controller
             )
         );
 
+        // Handle is_store_active toggle setting in bio_config
+        $bioConfig = $profile->bio_config ?? [];
+        $bioConfig['is_store_active'] = $request->has('is_store_active') ? $request->boolean('is_store_active') : false;
+        $profile->bio_config = $bioConfig;
+        $profile->save();
+
         if ($request->hasFile('store_banner_1')) {
             $b1 = $request->file('store_banner_1');
             if ($b1->isValid()) {

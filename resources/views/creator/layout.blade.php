@@ -378,6 +378,8 @@
         }
     </style>
     @yield('styles')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 </head>
 
 <body>
@@ -641,6 +643,117 @@
             const firstInput = document.querySelector('#profileForm input[name="store_name"]');
             if(firstInput) firstInput.focus();
         }
+    </script>
+    
+    {{-- ── Global Interactive Cropper.js Modal ── --}}
+    <div id="cropperModal" style="display:none; position:fixed; inset:0; background:rgba(11,18,12,0.85); backdrop-filter:blur(8px); z-index:99999; align-items:center; justify-content:center; padding:1rem;">
+        <div style="background:#fff; border-radius:24px; max-width:620px; width:100%; padding:1.5rem; box-shadow:0 24px 60px rgba(0,0,0,0.3); position:relative; display:flex; flex-direction:column; gap:1rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:0.75rem;">
+                <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0; font-family:'Montserrat',sans-serif;" id="cropperModalTitle">Potong & Atur Ukuran Foto</h3>
+                <button type="button" onclick="closeCropperModal()" style="border:none; background:transparent; font-size:1.5rem; color:#94a3b8; cursor:pointer; line-height:1;">&times;</button>
+            </div>
+            
+            <div style="height:380px; width:100%; overflow:hidden; background:#0b120c; border-radius:14px; display:flex; align-items:center; justify-content:center;">
+                <img id="cropperImageSrc" src="" style="max-width:100%; max-height:380px; display:block;">
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                <div style="display:flex; gap:0.4rem;">
+                    <button type="button" onclick="if(cropperObj)cropperObj.zoom(0.1)" class="crop-btn-tool" title="Zoom In">🔍+</button>
+                    <button type="button" onclick="if(cropperObj)cropperObj.zoom(-0.1)" class="crop-btn-tool" title="Zoom Out">🔍-</button>
+                    <button type="button" onclick="if(cropperObj)cropperObj.rotate(-45)" class="crop-btn-tool" title="Rotate Left">↺</button>
+                    <button type="button" onclick="if(cropperObj)cropperObj.rotate(45)" class="crop-btn-tool" title="Rotate Right">↻</button>
+                    <button type="button" onclick="if(cropperObj)cropperObj.reset()" class="crop-btn-tool" title="Reset">🔄 Reset</button>
+                </div>
+                <div style="display:flex; gap:0.6rem;">
+                    <button type="button" onclick="closeCropperModal()" style="padding:0.6rem 1.25rem; border-radius:999px; border:1.5px solid #cbd5e1; background:#fff; color:#64748b; font-weight:700; font-size:0.82rem; cursor:pointer;">Batal</button>
+                    <button type="button" id="applyCropBtn" style="padding:0.6rem 1.5rem; border-radius:999px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; border:none; font-weight:700; font-size:0.82rem; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,0.35);">Potong & Gunakan Foto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+    .crop-btn-tool {
+        padding: 0.4rem 0.75rem; border-radius: 8px; border: 1px solid #e2e8f0; background: #f8fafc;
+        color: #334155; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .crop-btn-tool:hover { background: #e2e8f0; color: #0f172a; }
+    </style>
+
+    <script>
+    let cropperObj = null;
+
+    function initImageCropper(fileInput, options = {}) {
+        if (!fileInput || !fileInput.files || !fileInput.files[0]) return;
+
+        const file = fileInput.files[0];
+        if (!file.type.startsWith('image/')) return;
+
+        const title = options.title || 'Potong & Atur Ukuran Foto';
+        const aspectRatio = options.aspectRatio || 1;
+        const targetWidth = options.width || (aspectRatio === 1 ? 600 : 1200);
+        const targetHeight = options.height || (aspectRatio === 1 ? 600 : 400);
+
+        document.getElementById('cropperModalTitle').innerText = title;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const image = document.getElementById('cropperImageSrc');
+            image.src = e.target.result;
+
+            const modal = document.getElementById('cropperModal');
+            modal.style.display = 'flex';
+
+            if (cropperObj) cropperObj.destroy();
+
+            cropperObj = new Cropper(image, {
+                aspectRatio: aspectRatio,
+                viewMode: 1,
+                autoCropArea: 0.9,
+                responsive: true,
+                restore: false,
+                checkCrossOrigin: false,
+            });
+
+            document.getElementById('applyCropBtn').onclick = function() {
+                const canvas = cropperObj.getCroppedCanvas({
+                    width: targetWidth,
+                    height: targetHeight,
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high',
+                });
+
+                canvas.toBlob(function(blob) {
+                    const croppedFile = new File([blob], file.name, { type: file.type || 'image/jpeg', lastModified: Date.now() });
+
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(croppedFile);
+                    fileInput.files = dataTransfer.files;
+
+                    if (options.previewTarget) {
+                        const prevEl = typeof options.previewTarget === 'string' ? document.querySelector(options.previewTarget) : options.previewTarget;
+                        if (prevEl) {
+                            if (prevEl.tagName === 'IMG') prevEl.src = canvas.toDataURL();
+                            else prevEl.style.backgroundImage = `url(${canvas.toDataURL()})`;
+                        }
+                    }
+
+                    closeCropperModal();
+                }, file.type || 'image/jpeg', 0.92);
+            };
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function closeCropperModal() {
+        const modal = document.getElementById('cropperModal');
+        if (modal) modal.style.display = 'none';
+        if (cropperObj) {
+            cropperObj.destroy();
+            cropperObj = null;
+        }
+    }
     </script>
     @yield('scripts')
 </body>

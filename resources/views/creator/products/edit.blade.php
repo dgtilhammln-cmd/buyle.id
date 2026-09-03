@@ -426,11 +426,19 @@
 
     // Single Thumb
     function previewSingleThumb(event) {
-        const file = event.target.files[0];
-        if (file) {
-            document.getElementById('thumbPreviewImg').src = URL.createObjectURL(file);
-            document.getElementById('thumbPreviewWrap').style.display = 'block';
-            document.getElementById('thumbDropzone').style.display = 'none';
+        const input = event.target;
+        if (input.files && input.files[0]) {
+            initImageCropper(input, {
+                aspectRatio: 1,
+                width: 800,
+                height: 800,
+                title: 'Crop Foto Produk Utama (1:1 Square)',
+                onCropSuccess: function(file, dataUrl) {
+                    document.getElementById('thumbPreviewImg').src = dataUrl;
+                    document.getElementById('thumbPreviewWrap').style.display = 'block';
+                    document.getElementById('thumbDropzone').style.display = 'none';
+                }
+            });
         }
     }
     function removeThumbnail() {
