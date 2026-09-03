@@ -15,7 +15,7 @@ echo.
 echo ==============================================
 echo 3. Pull ke Hosting, Jalankan Migration ^& Clear Cache...
 echo ==============================================
-ssh -p 65002 u664715641@46.202.186.86 "cd domains/buyle.id/public_html && git checkout . && git pull origin main && php artisan migrate --force && php artisan optimize:clear"
+ssh -p 65002 u664715641@46.202.186.86 "cd domains/buyle.id/public_html && git checkout . && git pull origin main && php artisan migrate --force && php artisan favicon:refresh && php artisan optimize:clear"
 
 echo.
 echo ==============================================

@@ -35,6 +35,24 @@ trait HandlesImageUpload
     }
 
     /**
+     * Load GD image from raw path + mime (used for favicon transparency-preserving re-encode)
+     */
+    private function gdLoadRaw(string $path, string $mime): mixed
+    {
+        @ini_set('memory_limit', '512M');
+        @set_time_limit(120);
+
+        return match (true) {
+            str_contains($mime, 'jpeg'), str_contains($mime, 'jpg') => imagecreatefromjpeg($path),
+            str_contains($mime, 'png')  => imagecreatefrompng($path),
+            str_contains($mime, 'webp') => imagecreatefromwebp($path),
+            str_contains($mime, 'gif')  => imagecreatefromgif($path),
+            str_contains($mime, 'bmp')  => imagecreatefrombmp($path),
+            default                     => @imagecreatefromjpeg($path) ?: @imagecreatefrompng($path),
+        };
+    }
+
+    /**
      * Scale image down to max dimensions (keep aspect ratio)
      */
     private function gdScaleDown($src, int $maxW, int $maxH)

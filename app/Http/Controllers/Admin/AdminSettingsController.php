@@ -40,32 +40,46 @@ class AdminSettingsController extends Controller
         foreach ($request->allFiles() as $key => $file) {
             if (!$file->isValid()) continue;
 
-            // Handle favicon separately — convert to PNG via GD for max compatibility
+            // Handle favicon separately — store original file as-is to preserve transparency
             if ($key === 'favicon') {
                 $ext      = strtolower($file->getClientOriginalExtension());
-                $realPath = $file->getRealPath();
+                $rawData  = file_get_contents($file->getRealPath());
 
-                // Always save as PNG for browser favicon compatibility (unless SVG)
                 if ($ext === 'svg') {
                     $filename = 'favicon_' . time() . '.svg';
-                    $path     = 'settings/' . $filename;
-                    Storage::disk('public')->put($path, file_get_contents($realPath));
+                } elseif ($ext === 'ico') {
+                    // Store ico as-is, also save a PNG copy from it
+                    $filename = 'favicon_' . time() . '.ico';
                 } else {
-                    // Convert to PNG via GD with transparency preservation
-                    $img = $this->gdLoad($file);
-                    imagealphablending($img, false);
-                    imagesavealpha($img, true);
-                    ob_start();
-                    imagepng($img, null, 9);
-                    $pngData = ob_get_clean();
-                    imagedestroy($img);
-
+                    // PNG, WebP, JPG — store as PNG to ensure browser compatibility
+                    // Re-encode via GD only to guarantee PNG format, preserving transparency
+                    $src = $this->gdLoadRaw($file->getRealPath(), $file->getMimeType());
+                    if ($src) {
+                        $w = imagesx($src); $h = imagesy($src);
+                        // Create fresh true-colour canvas with full alpha support
+                        $out = imagecreatetruecolor($w, $h);
+                        imagealphablending($out, false);
+                        imagesavealpha($out, true);
+                        // Fill with transparent
+                        $transparent = imagecolorallocatealpha($out, 0, 0, 0, 127);
+                        imagefilledrectangle($out, 0, 0, $w, $h, $transparent);
+                        imagealphablending($out, true);
+                        imagecopy($out, $src, 0, 0, 0, 0, $w, $h);
+                        imagedestroy($src);
+                        ob_start();
+                        imagealphablending($out, false);
+                        imagesavealpha($out, true);
+                        imagepng($out, null, 9);
+                        $rawData = ob_get_clean();
+                        imagedestroy($out);
+                    }
                     $filename = 'favicon_' . time() . '.png';
-                    $path     = 'settings/' . $filename;
-                    Storage::disk('public')->put($path, $pngData);
                 }
 
-                // Sync favicon file to public_html and public root (ico and png)
+                $path = 'settings/' . $filename;
+                Storage::disk('public')->put($path, $rawData);
+
+                // Sync favicon file to all public root locations
                 $storedFullPath = storage_path('app/public/' . $path);
                 $syncTargets = [
                     public_path('favicon.ico'),
