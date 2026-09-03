@@ -550,7 +550,42 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                 </div>
             </div>
 
-            {{-- Produk Buyle Saya --}}
+            {{-- Produk Fisik / UMKM --}}
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    <span style="display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        Produk Fisik / UMKM
+                    </span>
+                    <button onclick="document.getElementById('addUmkmModal').classList.add('open')" class="btn-submit-sm">+ Tambah Produk</button>
+                </div>
+                <div class="card-body">
+                    @forelse($blocks->where('type','custom_product') as $block)
+                    <div class="aff-card">
+                        @php $imgs = $block->data_json['images'] ?? []; @endphp
+                        @if(!empty($imgs[0]))
+                            <img src="{{ asset('storage/'.$imgs[0]) }}" class="aff-img" onerror="this.style.display='none'">
+                        @endif
+                        <div class="aff-info">
+                            <div class="aff-title">{{ $block->title }}</div>
+                            <div class="aff-sub">Rp {{ number_format($block->data_json['price'] ?? 0, 0, ',', '.') }} &middot; {{ $block->data_json['payment_method'] === 'wa' ? 'Beli via WA' : 'Beli via Web' }}</div>
+                        </div>
+                        <div style="padding:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+                            <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST" class="form-delete-block">
+                                @csrf @method('DELETE')
+                                <button type="button" class="btn-icon-sm btn-delete-block" style="background:#fef2f2; color:#ef4444;">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    @empty
+                    <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:2rem 0;">Belum ada produk fisik/UMKM. Klik "+ Tambah Produk" untuk menambahkan.</p>
+                    @endforelse
+                </div>
+            </div>
+
+
             <div class="prof-card">
                 <div class="prof-card-head">
                     <span style="display:flex; align-items:center; gap:0.5rem;">
@@ -728,6 +763,61 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
         <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.5rem;">
             <button type="button" onclick="document.getElementById('iconPickerModal').classList.remove('open')" style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Tutup</button>
         </div>
+    </div>
+</div>
+
+{{-- ── Modal: Tambah Produk UMKM / Fisik ── --}}
+<div class="modal-overlay" id="addUmkmModal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="modal-box" style="max-width:540px; max-height:90vh; overflow-y:auto;">
+        <h3 style="font-size:1.1rem; font-weight:800; margin:0 0 0.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">Tambah Produk Fisik / UMKM</h3>
+        <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Produk ini akan tampil di halaman bio Anda dengan halaman detail sendiri.</p>
+        <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" name="type" value="custom_product">
+            <div class="form-group">
+                <label class="form-label">Nama Produk *</label>
+                <input type="text" name="title" class="form-input" placeholder="Contoh: Tas Kulit Handmade" maxlength="150" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Harga (Rp) *</label>
+                <input type="number" name="price" class="form-input" placeholder="150000" min="0" step="500" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Deskripsi Produk</label>
+                <textarea name="description" class="form-input" style="height:80px; padding:0.75rem;" placeholder="Ceritakan produk Anda..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Foto Produk (Maks 3 foto)</label>
+                <input type="file" name="custom_images[]" accept="image/*" multiple class="form-input" style="height:auto; padding:0.5rem;"
+                    onchange="if(this.files.length>3){alert('Maksimal 3 foto!'); this.value=''; return;} previewUmkmImages(this)">
+                <div id="umkmImagePreview" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;"></div>
+                <span class="form-hint">Format: JPG, PNG. Maksimal 5MB per foto.</span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Metode Pembelian</label>
+                <div style="display:flex; gap:0.75rem; margin-top:0.25rem;">
+                    <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
+                        <input type="radio" name="payment_method" value="wa" checked onchange="toggleWaText(true)"> Beli via WhatsApp
+                    </label>
+                    <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
+                        <input type="radio" name="payment_method" value="web" onchange="toggleWaText(false)"> Beli via Web (Buyle)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group" id="waTextGroup">
+                <label class="form-label">Teks Template Pesan WA (Opsional)</label>
+                <textarea name="wa_text" class="form-input" style="height:70px; padding:0.75rem;" placeholder="Halo, saya tertarik dengan produk [nama produk]..."></textarea>
+                <span class="form-hint" style="color:#64748b; font-size:0.72rem;">💡 Pesan akan otomatis diawali: "Halo, saya mendapatkan nomor dari buyle.id." Teks kustom Anda ditambahkan setelah itu.</span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">URL / Link (Opsional - isi jika ada halaman produk eksternal)</label>
+                <input type="text" name="url" class="form-input" placeholder="https://shopee.co.id/... (kosongkan untuk pakai halaman otomatis)">
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
+                <button type="button" onclick="document.getElementById('addUmkmModal').classList.remove('open')" style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                <button type="submit" class="btn-submit-sm">Simpan Produk</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -981,5 +1071,27 @@ function selectIcon(iconClass) {
     preview.style.display = 'flex';
     document.getElementById('iconPickerModal').classList.remove('open');
 }
+
+// UMKM Modal Helpers
+function toggleWaText(show) {
+    const el = document.getElementById('waTextGroup');
+    if (el) el.style.display = show ? '' : 'none';
+}
+
+function previewUmkmImages(input) {
+    const preview = document.getElementById('umkmImagePreview');
+    preview.innerHTML = '';
+    Array.from(input.files).slice(0, 3).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.cssText = 'width:70px;height:70px;object-fit:cover;border-radius:8px;border:2px solid #e2e8f0;';
+            preview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
 </script>
 @endsection

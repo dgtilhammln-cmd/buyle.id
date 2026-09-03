@@ -28,9 +28,9 @@ class RoleMiddleware
         }
 
         if ($userRole !== $role) {
-            // Jika buyer mencoba membuka menu creator/seller, arahkan ke onboarding dengan pesan interaktif
+            // Jika buyer mencoba membuka menu creator/seller, arahkan ke onboarding (yang sekarang akan mengubah role secara otomatis dan melempar ke /creator/profile)
             if ($role === 'seller' && $userRole === 'buyer') {
-                return redirect()->route('creator.onboarding')->with('warning_onboarding', 'Yuk, lengkapi profil tokomu terlebih dahulu untuk membuka akses ke semua fitur Creator.');
+                return redirect()->route('creator.onboarding');
             }
 
             // Jika seller membuka halaman buyer, izinkan akses
@@ -39,6 +39,19 @@ class RoleMiddleware
             }
 
             abort(403, 'Akses Terbatas: Anda tidak memiliki izin untuk membuka halaman ini.');
+        }
+
+        // Kunci di halaman profile jika profil seller belum lengkap (wajib isi nama toko)
+        if ($userRole === 'seller') {
+            $profile = $request->user()->creatorProfile;
+            $isProfileIncomplete = !$profile || empty($profile->store_name);
+
+            $allowedRoutes = ['creator.profile.edit', 'creator.profile.update', 'logout', 'creator.onboarding'];
+            $routeName = $request->route() ? $request->route()->getName() : '';
+            
+            if ($isProfileIncomplete && !in_array($routeName, $allowedRoutes)) {
+                return redirect()->route('creator.profile.edit')->with('error', 'Anda wajib melengkapi profil (terutama Nama Toko) sebelum dapat mengakses halaman lain.');
+            }
         }
 
         return $next($request);

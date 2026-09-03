@@ -161,13 +161,17 @@ class CreatorBioController extends Controller
     public function storeBlock(Request $request)
     {
         $request->validate([
-            'type'  => 'required|in:link,pdf,tiktok,affiliate,shopee,buyle_product,image',
+            'type'  => 'required|in:link,pdf,tiktok,affiliate,shopee,buyle_product,image,custom_product',
             'title' => 'required|string|max:150',
             'url'   => 'nullable|string|max:2000',
             'block_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'custom_images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'icon_class'  => 'nullable|string|max:100',
-            'description' => 'nullable|string|max:500',
+            'description' => 'nullable|string|max:1000',
             'product_id'  => 'nullable|exists:products,id',
+            'price'       => 'nullable|numeric|min:0',
+            'payment_method' => 'nullable|in:wa,web',
+            'wa_text'     => 'nullable|string|max:500',
         ]);
 
         $profile = $this->getProfile();
@@ -189,6 +193,23 @@ class CreatorBioController extends Controller
         if ($request->filled('description')) $data['description'] = $request->description;
         if ($request->filled('product_id'))  $data['product_id']  = $request->product_id;
         if ($request->filled('icon_class'))  $data['icon_class']  = $request->icon_class;
+        
+        // Handle custom product specific fields
+        if ($request->type === 'custom_product') {
+            if ($request->filled('price')) $data['price'] = $request->price;
+            if ($request->filled('payment_method')) $data['payment_method'] = $request->payment_method;
+            if ($request->filled('wa_text')) $data['wa_text'] = $request->wa_text;
+            
+            // Handle multiple images
+            if ($request->hasFile('custom_images')) {
+                $images = [];
+                $files = array_slice($request->file('custom_images'), 0, 3); // Max 3
+                foreach ($files as $file) {
+                    $images[] = $file->store('bio/blocks', 'public');
+                }
+                $data['images'] = $images;
+            }
+        }
 
         $lastOrder = $profile->bioBlocks()->max('order') ?? 0;
 
@@ -233,8 +254,13 @@ class CreatorBioController extends Controller
             'title' => 'required|string|max:150',
             'url'   => 'nullable|string|max:2000',
             'block_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'custom_images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'scraped_image' => 'nullable|string',
             'icon_class'  => 'nullable|string|max:100',
+            'description' => 'nullable|string|max:1000',
+            'price'       => 'nullable|numeric|min:0',
+            'payment_method' => 'nullable|in:wa,web',
+            'wa_text'     => 'nullable|string|max:500',
         ]);
 
         $data = $block->data_json ?? [];
@@ -246,6 +272,31 @@ class CreatorBioController extends Controller
             $data['image'] = $request->file('block_image')->store('bio/blocks', 'public');
         } elseif ($request->filled('scraped_image')) {
             $data['image'] = $request->scraped_image;
+        }
+        
+        if ($request->filled('description')) $data['description'] = $request->description;
+        if ($request->filled('icon_class'))  $data['icon_class']  = $request->icon_class;
+        
+        if ($block->type === 'custom_product') {
+            if ($request->has('price')) $data['price'] = $request->price;
+            if ($request->has('payment_method')) $data['payment_method'] = $request->payment_method;
+            if ($request->has('wa_text')) $data['wa_text'] = $request->wa_text;
+            
+            if ($request->hasFile('custom_images')) {
+                // Delete old images
+                if (!empty($data['images'])) {
+                    foreach ($data['images'] as $oldImg) {
+                        if (!Str::startsWith($oldImg, 'http')) Storage::disk('public')->delete($oldImg);
+                    }
+                }
+                
+                $images = [];
+                $files = array_slice($request->file('custom_images'), 0, 3);
+                foreach ($files as $file) {
+                    $images[] = $file->store('bio/blocks', 'public');
+                }
+                $data['images'] = $images;
+            }
         }
 
         if ($request->filled('icon_class')) {

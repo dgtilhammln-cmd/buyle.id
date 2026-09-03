@@ -13,14 +13,14 @@ class CreatorOnboardingController extends Controller
     {
         $user = Auth::user();
         
-        // Jika sudah jadi seller, arahkan ke dashboard
-        if ($user->role === 'seller' || $user->role === 'admin') {
-            return redirect()->route('creator.dashboard');
+        // Change user role to seller instantly if they are buyer
+        if ($user->role === 'buyer') {
+            $user->role = 'seller';
+            $user->save();
         }
 
-        $profile = $user->creatorProfile ?? new CreatorProfile();
-        
-        return view('creator.onboarding', compact('user', 'profile'));
+        // Always redirect to profile edit since we no longer use onboarding page
+        return redirect()->route('creator.profile.edit')->with('warning', 'Yuk, lengkapi profil Anda terlebih dahulu untuk membuka akses ke semua fitur Creator.');
     }
 
     public function store(Request $request)
