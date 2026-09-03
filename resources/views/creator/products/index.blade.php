@@ -1,8 +1,28 @@
 @extends('creator.layout')
 @section('title', 'Produk Saya')
 @section('page_title', 'Produk Saya')
+@section('page_subtitle', $products->count() . ' produk/layanan terdaftar')
 
 @section('topbar_actions')
+<form action="{{ route('creator.products.index') }}" method="GET"
+    style="display:flex;align-items:center;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk/layanan..."
+        style="border:none;outline:none;padding:8px 12px;font-size:0.875rem;width:200px;font-family:'Montserrat',sans-serif;">
+    <button type="submit"
+        style="background:#F1F5F9;border:none;border-radius:8px;padding:8px;cursor:pointer;color:#64748B;display:flex;align-items:center;justify-content:center;">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+    </button>
+</form>
+
+<div style="display:flex;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+    <button onclick="switchView('list')" id="btn-view-list" style="border:none;background:transparent;border-radius:8px;padding:8px;cursor:pointer;color:#94A3B8;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="List View">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+    </button>
+    <button onclick="switchView('grid')" id="btn-view-grid" style="border:none;background:transparent;border-radius:8px;padding:8px;cursor:pointer;color:#94A3B8;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="Grid View">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+    </button>
+</div>
+
 <a href="{{ route('creator.products.create') }}" class="btn-primary">
     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     Tambah Produk
@@ -26,47 +46,7 @@
 
 @section('content')
 
-  {{-- PAGE HEADER --}}
-  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;">
-    <div>
-      <h1 style="font-size:1.35rem;font-weight:500;color:#1E293B;margin:0 0 .2rem;">Produk Saya &
-        Layanan
-      </h1>
-      <p style="font-size:.8rem;color:#94A3B8;margin:0;">{{ $products->count() }} produk/layanan terdaftar</p>
-    </div>
-    <div style="display:flex;align-items:center;gap:1rem;">
-      <form action="{{ route('creator.products.index') }}" method="GET"
-        style="display:flex;align-items:center;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.02);">
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk/layanan..."
-          style="border:none;outline:none;padding:8px 12px;font-size:0.875rem;width:200px;font-family:'Montserrat',sans-serif;">
-        <button type="submit"
-          style="background:#F1F5F9;border:none;border-radius:8px;padding:8px;cursor:pointer;color:#64748B;display:flex;align-items:center;justify-content:center;">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
-        </button>
-      </form>
-      
-      {{-- VIEW TOGGLE --}}
-      <div style="display:flex;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.02);">
-        <button onclick="switchView('list')" id="btn-view-list" style="border:none;background:transparent;border-radius:8px;padding:8px;cursor:pointer;color:#94A3B8;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="List View">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-        </button>
-        <button onclick="switchView('grid')" id="btn-view-grid" style="border:none;background:transparent;border-radius:8px;padding:8px;cursor:pointer;color:#94A3B8;display:flex;align-items:center;justify-content:center;transition:all .2s;" title="Grid View">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-        </button>
-      </div>
-
-      <a href="{{ route('creator.products.create') }}"
-        style="display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;font-size:.875rem;font-weight:700;padding:.625rem 1.25rem;border-radius:12px;text-decoration:none;transition:all .2s;box-shadow:0 4px 14px rgba(30,179,73,0.35);"
-        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(30,179,73,0.4)'"
-        onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(30,179,73,0.35)'">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <line x1="12" y1="5" x2="12" y2="19" />
-          <line x1="5" y1="12" x2="19" y2="12" />
-        </svg>
-        Tambah
-      </a>
-    </div>
-  </div>
+  
 
   {{-- TABLE CARD (LIST VIEW) --}}
   <div id="view-list" class="view-container" style="background:#fff;border-radius:24px;box-shadow:0 2px 20px rgba(0,0,0,0.04);overflow-x:auto;display:block;">

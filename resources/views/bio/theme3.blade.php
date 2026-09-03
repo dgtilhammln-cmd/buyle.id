@@ -533,8 +533,7 @@
             @endif
             <div class="badges">
                 @php $roleMap = ['content_creator' => 'Content Creator', 'affiliator' => 'Affiliator', 'business' => 'Business']; @endphp
-                <div class="badge"><i class="fas fa-briefcase" style="font-size:9px;"></i>
-                    {{ $roleMap[$profile->bio_role] ?? $profile->bio_role }}</div>
+                
                 @if(!empty($config['location']))
                     <div class="badge"><i class="fas fa-map-marker-alt" style="font-size:9px;"></i>
                         {{ $config['location'] }}</div>

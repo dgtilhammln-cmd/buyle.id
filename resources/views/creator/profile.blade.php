@@ -1,6 +1,8 @@
 @extends('creator.layout')
 
 @section('title', 'Profil & Pengaturan Toko')
+@section('page_title', 'Profil & Pengaturan Toko')
+@section('page_subtitle', 'Kelola identitas, media sosial, lokasi, dan metadata SEO toko Anda.')
 
 @section('styles')
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -316,10 +318,7 @@ select.form-input { cursor: pointer; }
 
 @section('content')
 
-<div class="pg-header">
-    <h1 class="pg-title">Profil & Pengaturan Toko</h1>
-    <p class="pg-sub">Kelola identitas, media sosial, lokasi, dan metadata SEO toko Anda.</p>
-</div>
+
 
 @if(session('success'))
     <div class="alert-success">

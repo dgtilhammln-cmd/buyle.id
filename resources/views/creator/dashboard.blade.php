@@ -1,6 +1,8 @@
 @extends('creator.layout')
 
 @section('title', 'Overview – Creator Studio')
+@section('page_title', 'Overview')
+@section('page_subtitle', 'Kelola aset premium dan produk digital Anda.')
 
 @section('styles')
 <style>
@@ -361,11 +363,7 @@
     $location = $cp?->city_name ?: 'Surabaya';
 @endphp
 
-{{-- ── OVERVIEW HEADER ── --}}
-<div class="cr-dash-header">
-    <h1 class="cr-dash-title">Overview</h1>
-    <p class="cr-dash-sub">Manage your premium branding assets & digital products.</p>
-</div>
+
 
 {{-- ── ROW 1: TOP 3 CARDS ── --}}
 <div class="cr-grid-top">

@@ -542,11 +542,19 @@
     <div class="cr-main-wrapper">
         <main class="cr-main-canvas">
             {{-- Header Area: Title & Actions --}}
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h1 style="font-size: 1.5rem; font-weight: 800; color: #0b120c; margin: 0; font-family: 'Montserrat', sans-serif;">
-                    @yield('page_title', 'Dashboard')
-                </h1>
-                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        {{-- Header Area: Title & Actions --}}
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h1 style="font-size: 1.5rem; font-weight: 800; color: #0b120c; margin: 0 0 0.25rem; font-family: 'Montserrat', sans-serif;">
+                        @yield('page_title', 'Dashboard')
+                    </h1>
+                    @hasSection('page_subtitle')
+                    <p style="font-size: 0.85rem; color: #64748b; margin: 0; font-weight: 500;">
+                        @yield('page_subtitle')
+                    </p>
+                    @endif
+                </div>
+                <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
                     @yield('topbar_actions')
                 </div>
             </div>

@@ -1,6 +1,7 @@
 @extends('creator.layout')
 @section('title', 'Laporan Penjualan')
 @section('page_title', 'Laporan Penjualan')
+@section('page_subtitle', 'Pantau performa penjualan dan pendapatan Anda.')
 @section('breadcrumb', 'Keuangan › Laporan Penjualan')
 
 @section('styles')
