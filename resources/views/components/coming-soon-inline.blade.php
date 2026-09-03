@@ -276,7 +276,7 @@ Target: 26 Oktober 2026, 08:00 WIB
                     <circle cx="9" cy="7" r="4" />
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
-                Ribuan Kreator
+                Ribuan Kreator Digital
             </div>
             <div class="csi-feat">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

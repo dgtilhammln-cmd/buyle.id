@@ -25,7 +25,7 @@ return [
     'hero_right_stat_desc'  => 'Pilihan lengkap untuk kebutuhan digital Anda',
 
     // Clients Bar
-    'clients_label' => 'Dipercaya oleh ribuan kreator dan pembeli di seluruh Indonesia',
+    'clients_label' => 'Dipercaya oleh ribuan kreator digital dan pembeli di seluruh Indonesia',
 
     // About Section
     'about_label'   => 'Tentang Kami',
