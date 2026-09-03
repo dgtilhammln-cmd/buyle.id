@@ -508,6 +508,10 @@ class CreatorBioController extends Controller
             } catch (\Throwable $e) {}
         }
 
+        if ($image) {
+            $image = $this->resolveUrl($image, $url);
+            $image = $this->saveRemoteImageLocally($image);
+        }
         return response()->json(['image' => $image, 'title' => $title]);
     }
 
@@ -515,7 +519,27 @@ class CreatorBioController extends Controller
      * Smart Image Downloader: Download remote scraped image & save locally to hosting storage
      * so images never expire or disappear over time.
      */
-    private function saveRemoteImageLocally(?string $imageUrl): ?string
+    /**
+     * Resolve relative image URL to absolute URL.
+     */
+    private function resolveUrl(string $url, string $baseUrl): string
+    {
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
+            return $url;
+        }
+        $scheme = parse_url($baseUrl, PHP_URL_SCHEME) ?: 'https';
+        $host   = parse_url($baseUrl, PHP_URL_HOST);
+        if (str_starts_with($url, '//')) {
+            return $scheme . ':' . $url;
+        }
+        if (str_starts_with($url, '/')) {
+            return $scheme . '://' . $host . $url;
+        }
+        return $scheme . '://' . $host . '/' . ltrim($url, '/');
+    }
+
+    /**
+     * Smart Image Downloader: Download remote scraped image & save locally to hosting storage(?string $imageUrl): ?string
     {
         if (empty($imageUrl)) {
             return null;

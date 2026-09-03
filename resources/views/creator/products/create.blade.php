@@ -408,20 +408,27 @@
     function previewSingleThumb(event) {
         const input = event.target;
         if (input.files && input.files[0]) {
-            initImageCropper(input, {
-                aspectRatio: 1,
-                width: 800,
-                height: 800,
-                title: 'Crop Foto Produk Utama (1:1 Square)',
-                onCropSuccess: function(file, dataUrl) {
-                    const img = document.getElementById('thumbPreviewImg');
-                    const wrap = document.getElementById('thumbPreviewWrap');
-                    const drop = document.getElementById('thumbDropzone');
-                    if (img) img.src = dataUrl;
-                    if (wrap) wrap.style.display = 'block';
-                    if (drop) drop.style.display = 'none';
-                }
-            });
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('thumbPreviewImg');
+                const wrap = document.getElementById('thumbPreviewWrap');
+                const drop = document.getElementById('thumbDropzone');
+                if (img) img.src = e.target.result;
+                if (wrap) wrap.style.display = 'block';
+                if (drop) drop.style.display = 'none';
+
+                // Launch Cropper for fine-tuning
+                initImageCropper(input, {
+                    aspectRatio: 1,
+                    width: 800,
+                    height: 800,
+                    title: 'Crop Foto Produk Utama (1:1 Square)',
+                    onCropSuccess: function(file, dataUrl) {
+                        if (img) img.src = dataUrl;
+                    }
+                });
+            };
+            reader.readAsDataURL(input.files[0]);
         }
     }
     function removeThumbnail() {

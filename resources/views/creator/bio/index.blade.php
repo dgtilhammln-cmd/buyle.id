@@ -1222,21 +1222,21 @@ function editUmkmProduct(data) {
     if (deleteInputs) deleteInputs.innerHTML = '';
     if (newPreview) newPreview.innerHTML = '';
 
-    // Render Saved Images with ✕ Delete Button
+    // Render Saved Images with SVG Delete Button
     const images = data.images || [];
     images.forEach(img => {
         const wrap = document.createElement('div');
-        wrap.style.cssText = 'position:relative; width:70px; height:70px; border-radius:8px; overflow:hidden; border:2px solid #e2e8f0;';
+        wrap.style.cssText = 'position:relative; width:75px; height:75px; border-radius:10px; overflow:hidden; border:2px solid #e2e8f0; box-shadow:0 2px 6px rgba(0,0,0,0.05);';
         
         const image = document.createElement('img');
         image.src = img.startsWith('http') ? img : '/storage/' + img;
-        image.style.cssText = 'width:100%; height:100%; object-fit:cover;';
+        image.style.cssText = 'width:100%; height:100%; object-fit:cover; display:block;';
         
         const delBtn = document.createElement('button');
         delBtn.type = 'button';
-        delBtn.innerHTML = '✕';
-        delBtn.title = 'Hapus foto dari server';
-        delBtn.style.cssText = 'position:absolute; top:2px; right:2px; width:20px; height:20px; border-radius:50%; background:#ef4444; color:#fff; border:none; font-size:11px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 4px rgba(0,0,0,0.3);';
+        delBtn.innerHTML = '<svg width="12" height="12" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>';
+        delBtn.title = 'Hapus foto ini dari server';
+        delBtn.style.cssText = 'position:absolute; top:3px; right:3px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 4px rgba(0,0,0,0.3);';
         
         delBtn.onclick = function() {
             wrap.remove();
@@ -1261,17 +1261,29 @@ function previewEditUmkmImages(input) {
     const preview = document.getElementById('editNewImagePreview');
     if (!preview) return;
     preview.innerHTML = '';
-    Array.from(input.files).slice(0, 3).forEach(file => {
+    const files = Array.from(input.files).slice(0, 3);
+    files.forEach(file => {
         const reader = new FileReader();
         reader.onload = e => {
             const wrap = document.createElement('div');
-            wrap.style.cssText = 'position:relative; width:70px; height:70px; border-radius:8px; overflow:hidden; border:2px solid #1eb349;';
+            wrap.style.cssText = 'position:relative; width:75px; height:75px; border-radius:10px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 6px rgba(0,0,0,0.05);';
             
             const img = document.createElement('img');
             img.src = e.target.result;
-            img.style.cssText = 'width:100%; height:100%; object-fit:cover;';
+            img.style.cssText = 'width:100%; height:100%; object-fit:cover; display:block;';
             
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.title = 'Batalkan foto ini';
+            delBtn.innerHTML = '<svg width="12" height="12" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>';
+            delBtn.style.cssText = 'position:absolute; top:3px; right:3px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 4px rgba(0,0,0,0.3);';
+            
+            delBtn.onclick = function() {
+                wrap.remove();
+            };
+
             wrap.appendChild(img);
+            wrap.appendChild(delBtn);
             preview.appendChild(wrap);
         };
         reader.readAsDataURL(file);
