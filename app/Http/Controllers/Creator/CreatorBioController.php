@@ -539,7 +539,9 @@ class CreatorBioController extends Controller
     }
 
     /**
-     * Smart Image Downloader: Download remote scraped image & save locally to hosting storage(?string $imageUrl): ?string
+     * Smart Image Downloader: Download remote scraped image & save locally to hosting storage
+     */
+    private function saveRemoteImageLocally(?string $imageUrl): ?string
     {
         if (empty($imageUrl)) {
             return null;
