@@ -19,7 +19,19 @@ class CreatorOnboardingController extends Controller
             $user->save();
         }
 
-        // Always redirect to profile edit since we no longer use onboarding page
+        $profile = $user->creatorProfile ?? CreatorProfile::firstOrCreate(
+            ['user_id' => $user->id],
+            ['store_name' => $user->name, 'store_slug' => '']
+        );
+
+        if (!$profile->bio_role) {
+            return view('creator.bio.role_picker', compact('profile'));
+        }
+
+        if ($profile->bio_role === 'affiliator') {
+            return redirect()->route('creator.bio.index');
+        }
+
         return redirect()->route('creator.profile.edit')->with('warning', 'Yuk, lengkapi profil Anda terlebih dahulu untuk membuka akses ke semua fitur Creator.');
     }
 

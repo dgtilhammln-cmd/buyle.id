@@ -464,9 +464,9 @@ Route::middleware(['auth', 'role:buyer'])->prefix('buyer')->name('buyer.')->grou
 
 // ── Public Bio Link Page — MUST be last route (/username)
 // Reserved slugs are blocked in BioPageController
-Route::get('/{username}/p/{blockId}', [\App\Http\Controllers\BioProductController::class, 'show'])
+Route::get('/{username}/p/{identifier}', [\App\Http\Controllers\BioProductController::class, 'show'])
     ->name('bio.product.show')
-    ->where(['username' => '[a-zA-Z0-9_\-]+', 'blockId' => '[0-9]+']);
+    ->where('username', '[a-zA-Z0-9_\-]+');
 
 Route::get('/{username}', [\App\Http\Controllers\BioPageController::class, 'show'])
     ->name('bio.public')

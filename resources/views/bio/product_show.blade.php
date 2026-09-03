@@ -3,8 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>{{ $block->title }} — {{ $config['name'] ?? $username }} | buyle.id</title>
-    <meta name="description" content="{{ Str::limit($block->data_json['description'] ?? 'Produk dari '.$username, 160) }}">
+    @php
+        $images = $block->data_json['images'] ?? [];
+        $price  = $block->data_json['price'] ?? 0;
+        $origPrice = $block->data_json['original_price'] ?? null;
+        $paymentMethod = $block->data_json['payment_method'] ?? 'wa';
+        $waText = $block->data_json['wa_text'] ?? '';
+        $waNumber = $config['wa'] ?? '';
+        $waMessage = 'Halo, saya mendapatkan nomor dari buyle.id. ' . ($waText ?: 'Saya tertarik dengan produk *'.$block->title.'* (Rp '.number_format($price,0,',','.').'). Apakah masih tersedia?');
+        $firstImage = !empty($images[0]) ? asset('storage/'.$images[0]) : asset('images/buyle-og.png');
+        $pageTitle = $block->title . ' — ' . ($config['name'] ?? $username) . ' | buyle.id';
+        $pageDesc  = Str::limit($block->data_json['description'] ?? 'Beli produk '.$block->title.' dari '.$username.' di buyle.id', 160);
+    @endphp
+
+    <title>{{ $pageTitle }}</title>
+    <meta name="description" content="{{ $pageDesc }}">
+
+    <!-- OpenGraph Meta Tags for Social Sharing -->
+    <meta property="og:title" content="{{ $block->title }}">
+    <meta property="og:description" content="{{ $pageDesc }}">
+    <meta property="og:image" content="{{ $firstImage }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="product">
+    <meta property="product:price:amount" content="{{ $price }}">
+    <meta property="product:price:currency" content="IDR">
+
+    <!-- Schema.org Product Structured Data for Google SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": "{{ addslashes($block->title) }}",
+      "image": [
+        @foreach($images as $i => $img)"{{ asset('storage/'.$img) }}"@if(!$loop->last),@endif @endforeach
+      ],
+      "description": "{{ addslashes($pageDesc) }}",
+      "offers": {
+        "@type": "Offer",
+        "url": "{{ url()->current() }}",
+        "priceCurrency": "IDR",
+        "price": "{{ $price }}",
+        "availability": "https://schema.org/InStock"
+      }
+    }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -45,7 +88,9 @@
 
         .prod-info-box { padding: 1.5rem 1.25rem; }
         .prod-name { font-size: 1.35rem; font-weight: 900; line-height: 1.25; color: {{ $text }}; }
-        .prod-price { font-size: 1.5rem; font-weight: 900; color: {{ $accent }}; margin-top: 0.5rem; }
+        .prod-price-wrap { display: flex; align-items: baseline; gap: 0.5rem; margin-top: 0.5rem; }
+        .prod-price { font-size: 1.5rem; font-weight: 900; color: {{ $accent }}; }
+        .prod-orig-price { font-size: 1.05rem; font-weight: 600; text-decoration: line-through; opacity: 0.5; color: {{ $text }}; }
         .prod-desc { font-size: 0.85rem; line-height: 1.7; color: {{ $text }}; opacity: 0.75; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid {{ $border }}; white-space: pre-wrap; }
 
         .seller-card { margin: 0 1.25rem 1.5rem; background: {{ $glass }}; border: 1px solid {{ $border }}; border-radius: 16px; padding: 1rem; display: flex; align-items: center; gap: 0.85rem; }
@@ -67,15 +112,6 @@
             <i class="fas fa-arrow-left"></i> Kembali ke Profil
         </a>
     </div>
-
-    @php
-        $images = $block->data_json['images'] ?? [];
-        $price  = $block->data_json['price'] ?? 0;
-        $paymentMethod = $block->data_json['payment_method'] ?? 'wa';
-        $waText = $block->data_json['wa_text'] ?? '';
-        $waNumber = $config['wa'] ?? '';
-        $waMessage = 'Halo, saya mendapatkan nomor dari buyle.id. ' . ($waText ?: 'Saya tertarik dengan produk *'.$block->title.'* (Rp '.number_format($price,0,',','.').'). Apakah masih tersedia?');
-    @endphp
 
     <div class="slider-container" id="sliderContainer">
         @if(count($images) > 0)
@@ -101,8 +137,13 @@
     </div>
 
     <div class="prod-info-box">
-        <div class="prod-name">{{ $block->title }}</div>
-        <div class="prod-price">Rp {{ number_format($price, 0, ',', '.') }}</div>
+        <h1 class="prod-name">{{ $block->title }}</h1>
+        <div class="prod-price-wrap">
+            @if(!empty($origPrice) && $origPrice > $price)
+                <span class="prod-orig-price">Rp {{ number_format($origPrice, 0, ',', '.') }}</span>
+            @endif
+            <span class="prod-price">Rp {{ number_format($price, 0, ',', '.') }}</span>
+        </div>
         @if(!empty($block->data_json['description']))
         <div class="prod-desc">{{ $block->data_json['description'] }}</div>
         @endif

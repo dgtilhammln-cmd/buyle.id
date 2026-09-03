@@ -568,12 +568,34 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                         @endif
                         <div class="aff-info">
                             <div class="aff-title">{{ $block->title }}</div>
-                            <div class="aff-sub">Rp {{ number_format($block->data_json['price'] ?? 0, 0, ',', '.') }} &middot; {{ $block->data_json['payment_method'] === 'wa' ? 'Beli via WA' : 'Beli via Web' }}</div>
+                            <div class="aff-sub">
+                                @if(!empty($block->data_json['original_price']) && $block->data_json['original_price'] > ($block->data_json['price'] ?? 0))
+                                    <span style="text-decoration:line-through; color:#94a3b8; margin-right:0.35rem;">Rp {{ number_format($block->data_json['original_price'], 0, ',', '.') }}</span>
+                                @endif
+                                <strong style="color:#1eb349;">Rp {{ number_format($block->data_json['price'] ?? 0, 0, ',', '.') }}</strong> &middot; {{ ($block->data_json['payment_method'] ?? 'wa') === 'wa' ? 'Beli via WA' : 'Beli via Web' }}
+                            </div>
                         </div>
                         <div style="padding:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+                            @if(!empty($profile->store_slug))
+                            <a href="{{ route('bio.product.show', [$profile->store_slug, $block->data_json['slug'] ?? $block->id]) }}" target="_blank" class="btn-icon-sm" style="background:#f0fdf4; color:#1eb349;" title="Lihat Halaman Produk (SEO)">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            </a>
+                            @endif
+                            <button type="button" onclick="editUmkmProduct({{ json_encode([
+                                'id' => $block->id,
+                                'title' => $block->title,
+                                'price' => $block->data_json['price'] ?? 0,
+                                'original_price' => $block->data_json['original_price'] ?? '',
+                                'payment_method' => $block->data_json['payment_method'] ?? 'wa',
+                                'description' => $block->data_json['description'] ?? '',
+                                'wa_text' => $block->data_json['wa_text'] ?? '',
+                                'url' => $block->url ?? ''
+                            ]) }})" class="btn-icon-sm" style="background:#eff6ff; color:#2563eb;" title="Edit Produk">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </button>
                             <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST" class="form-delete-block">
                                 @csrf @method('DELETE')
-                                <button type="button" class="btn-icon-sm btn-delete-block" style="background:#fef2f2; color:#ef4444;">
+                                <button type="button" class="btn-icon-sm btn-delete-block" style="background:#fef2f2; color:#ef4444;" title="Hapus Produk">
                                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
                                 </button>
                             </form>
@@ -770,7 +792,7 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
 <div class="modal-overlay" id="addUmkmModal" onclick="if(event.target===this)this.classList.remove('open')">
     <div class="modal-box" style="max-width:540px; max-height:90vh; overflow-y:auto;">
         <h3 style="font-size:1.1rem; font-weight:800; margin:0 0 0.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">Tambah Produk Fisik / UMKM</h3>
-        <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Produk ini akan tampil di halaman bio Anda dengan halaman detail sendiri.</p>
+        <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Produk ini akan dibuatkan halaman detail produk SEO tersendiri.</p>
         <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="type" value="custom_product">
@@ -778,9 +800,15 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                 <label class="form-label">Nama Produk *</label>
                 <input type="text" name="title" class="form-input" placeholder="Contoh: Tas Kulit Handmade" maxlength="150" required>
             </div>
-            <div class="form-group">
-                <label class="form-label">Harga (Rp) *</label>
-                <input type="number" name="price" class="form-input" placeholder="150000" min="0" step="500" required>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                <div class="form-group">
+                    <label class="form-label">Harga Jual (Rp) *</label>
+                    <input type="number" name="price" class="form-input" placeholder="150000" min="0" step="500" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Harga Coret (Rp) <span style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
+                    <input type="number" name="original_price" class="form-input" placeholder="200000" min="0" step="500">
+                </div>
             </div>
             <div class="form-group">
                 <label class="form-label">Deskripsi Produk</label>
@@ -816,6 +844,65 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
             <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
                 <button type="button" onclick="document.getElementById('addUmkmModal').classList.remove('open')" style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
                 <button type="submit" class="btn-submit-sm">Simpan Produk</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ── Modal: Edit Produk UMKM / Fisik ── --}}
+<div class="modal-overlay" id="editUmkmModal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="modal-box" style="max-width:540px; max-height:90vh; overflow-y:auto;">
+        <h3 style="font-size:1.1rem; font-weight:800; margin:0 0 0.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">Edit Produk Fisik / UMKM</h3>
+        <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Perbarui data produk fisik Anda di bawah ini.</p>
+        <form action="" method="POST" enctype="multipart/form-data" id="editUmkmForm">
+            @csrf
+            @method('PUT')
+            <div class="form-group">
+                <label class="form-label">Nama Produk *</label>
+                <input type="text" name="title" id="edit_title" class="form-input" maxlength="150" required>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                <div class="form-group">
+                    <label class="form-label">Harga Jual (Rp) *</label>
+                    <input type="number" name="price" id="edit_price" class="form-input" min="0" step="500" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Harga Coret (Rp) <span style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
+                    <input type="number" name="original_price" id="edit_original_price" class="form-input" min="0" step="500">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Deskripsi Produk</label>
+                <textarea name="description" id="edit_description" class="form-input" style="height:80px; padding:0.75rem;"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Ganti Foto Produk (Kosongkan jika tidak diubah, Maks 3 foto)</label>
+                <input type="file" name="custom_images[]" accept="image/*" multiple class="form-input" style="height:auto; padding:0.5rem;"
+                    onchange="if(this.files.length>3){alert('Maksimal 3 foto!'); this.value=''; return;}">
+                <span class="form-hint">Format: JPG, PNG. Maksimal 5MB per foto.</span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Metode Pembelian</label>
+                <div style="display:flex; gap:0.75rem; margin-top:0.25rem;">
+                    <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
+                        <input type="radio" name="payment_method" id="edit_pm_wa" value="wa" onchange="toggleEditWaText(true)"> Beli via WhatsApp
+                    </label>
+                    <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
+                        <input type="radio" name="payment_method" id="edit_pm_web" value="web" onchange="toggleEditWaText(false)"> Beli via Web (Buyle)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group" id="editWaTextGroup">
+                <label class="form-label">Teks Template Pesan WA (Opsional)</label>
+                <textarea name="wa_text" id="edit_wa_text" class="form-input" style="height:70px; padding:0.75rem;"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">URL / Link (Opsional)</label>
+                <input type="text" name="url" id="edit_url" class="form-input">
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
+                <button type="button" onclick="document.getElementById('editUmkmModal').classList.remove('open')" style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                <button type="submit" class="btn-submit-sm">Simpan Perubahan</button>
             </div>
         </form>
     </div>
@@ -1091,6 +1178,31 @@ function previewUmkmImages(input) {
         };
         reader.readAsDataURL(file);
     });
+}
+
+function toggleEditWaText(show) {
+    const el = document.getElementById('editWaTextGroup');
+    if (el) el.style.display = show ? '' : 'none';
+}
+
+function editUmkmProduct(data) {
+    const form = document.getElementById('editUmkmForm');
+    form.action = '/creator/bio/blocks/' + data.id;
+    document.getElementById('edit_title').value = data.title || '';
+    document.getElementById('edit_price').value = data.price || '';
+    document.getElementById('edit_original_price').value = data.original_price || '';
+    document.getElementById('edit_description').value = data.description || '';
+    document.getElementById('edit_wa_text').value = data.wa_text || '';
+    document.getElementById('edit_url').value = data.url || '';
+    
+    if (data.payment_method === 'web') {
+        document.getElementById('edit_pm_web').checked = true;
+        toggleEditWaText(false);
+    } else {
+        document.getElementById('edit_pm_wa').checked = true;
+        toggleEditWaText(true);
+    }
+    document.getElementById('editUmkmModal').classList.add('open');
 }
 
 </script>

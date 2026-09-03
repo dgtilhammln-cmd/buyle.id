@@ -41,15 +41,16 @@ class RoleMiddleware
             abort(403, 'Akses Terbatas: Anda tidak memiliki izin untuk membuka halaman ini.');
         }
 
-        // Kunci di halaman profile jika profil seller belum lengkap (wajib isi nama toko)
+        // Kunci di halaman profile jika profil seller belum lengkap (wajib isi nama toko), KECUALI jika tipe profil adalah affiliator
         if ($userRole === 'seller') {
             $profile = $request->user()->creatorProfile;
+            $isAffiliator = $profile && $profile->bio_role === 'affiliator';
             $isProfileIncomplete = !$profile || empty($profile->store_name);
 
-            $allowedRoutes = ['creator.profile.edit', 'creator.profile.update', 'logout', 'creator.onboarding'];
+            $allowedRoutes = ['creator.profile.edit', 'creator.profile.update', 'logout', 'creator.onboarding', 'creator.bio.set-role'];
             $routeName = $request->route() ? $request->route()->getName() : '';
             
-            if ($isProfileIncomplete && !in_array($routeName, $allowedRoutes)) {
+            if (!$isAffiliator && $isProfileIncomplete && !in_array($routeName, $allowedRoutes)) {
                 return redirect()->route('creator.profile.edit')->with('error', 'Anda wajib melengkapi profil (terutama Nama Toko) sebelum dapat mengakses halaman lain.');
             }
         }

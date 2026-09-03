@@ -45,12 +45,34 @@ class CreatorBioController extends Controller
     {
         $request->validate(['bio_role' => 'required|in:content_creator,affiliator,business']);
         $profile = $this->getProfile();
-        $profile->update([
+
+        $updateData = [
             'bio_role'  => $request->bio_role,
             'bio_theme' => $profile->bio_theme ?? 'theme1',
-        ]);
+        ];
 
-        return redirect()->route('creator.bio.index')->with('success', 'Selamat! Profil Link in Bio Anda siap dibuat. 🎉');
+        if ($request->bio_role === 'affiliator') {
+            if (empty($profile->store_name)) {
+                $updateData['store_name'] = auth()->user()->name;
+            }
+            if (empty($profile->store_slug)) {
+                $baseSlug = \Illuminate\Support\Str::slug(auth()->user()->name);
+                $slug = $baseSlug ?: 'affiliate-' . auth()->id();
+                $i = 1;
+                while (\App\Models\CreatorProfile::where('store_slug', $slug)->where('id', '!=', $profile->id)->exists()) {
+                    $slug = $baseSlug . '-' . $i++;
+                }
+                $updateData['store_slug'] = $slug;
+            }
+        }
+
+        $profile->update($updateData);
+
+        if ($request->bio_role === 'affiliator') {
+            return redirect()->route('creator.bio.index')->with('success', 'Selamat! Profil Link in Bio Affiliator Anda siap dibuat. 🎉');
+        }
+
+        return redirect()->route('creator.profile.edit')->with('success', 'Selamat datang! Silakan lengkapi profil toko Anda.');
     }
 
     /**
@@ -169,9 +191,10 @@ class CreatorBioController extends Controller
             'icon_class'  => 'nullable|string|max:100',
             'description' => 'nullable|string|max:1000',
             'product_id'  => 'nullable|exists:products,id',
-            'price'       => 'nullable|numeric|min:0',
+            'price'          => 'nullable|numeric|min:0',
+            'original_price' => 'nullable|numeric|min:0',
             'payment_method' => 'nullable|in:wa,web',
-            'wa_text'     => 'nullable|string|max:500',
+            'wa_text'        => 'nullable|string|max:500',
         ]);
 
         $profile = $this->getProfile();
@@ -197,8 +220,13 @@ class CreatorBioController extends Controller
         // Handle custom product specific fields
         if ($request->type === 'custom_product') {
             if ($request->filled('price')) $data['price'] = $request->price;
+            if ($request->filled('original_price')) $data['original_price'] = $request->original_price;
             if ($request->filled('payment_method')) $data['payment_method'] = $request->payment_method;
             if ($request->filled('wa_text')) $data['wa_text'] = $request->wa_text;
+            
+            // Automatic slug for SEO friendly detail page
+            $baseSlug = Str::slug($request->title);
+            $data['slug'] = $baseSlug ?: 'produk-' . time();
             
             // Handle multiple images
             if ($request->hasFile('custom_images')) {
@@ -258,9 +286,10 @@ class CreatorBioController extends Controller
             'scraped_image' => 'nullable|string',
             'icon_class'  => 'nullable|string|max:100',
             'description' => 'nullable|string|max:1000',
-            'price'       => 'nullable|numeric|min:0',
+            'price'          => 'nullable|numeric|min:0',
+            'original_price' => 'nullable|numeric|min:0',
             'payment_method' => 'nullable|in:wa,web',
-            'wa_text'     => 'nullable|string|max:500',
+            'wa_text'        => 'nullable|string|max:500',
         ]);
 
         $data = $block->data_json ?? [];
@@ -274,13 +303,19 @@ class CreatorBioController extends Controller
             $data['image'] = $request->scraped_image;
         }
         
-        if ($request->filled('description')) $data['description'] = $request->description;
-        if ($request->filled('icon_class'))  $data['icon_class']  = $request->icon_class;
+        if ($request->has('description')) $data['description'] = $request->description;
+        if ($request->has('icon_class'))  $data['icon_class']  = $request->icon_class;
         
         if ($block->type === 'custom_product') {
             if ($request->has('price')) $data['price'] = $request->price;
+            if ($request->has('original_price')) $data['original_price'] = $request->original_price;
             if ($request->has('payment_method')) $data['payment_method'] = $request->payment_method;
             if ($request->has('wa_text')) $data['wa_text'] = $request->wa_text;
+            
+            if (empty($data['slug']) || $block->title !== $request->title) {
+                $baseSlug = Str::slug($request->title);
+                $data['slug'] = $baseSlug ?: 'produk-' . time();
+            }
             
             if ($request->hasFile('custom_images')) {
                 // Delete old images

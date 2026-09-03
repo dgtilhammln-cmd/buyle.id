@@ -538,14 +538,12 @@
             @if(!empty($config['bio']))
                 <div class="profile-bio">{{ $config['bio'] }}</div>
             @endif
-            <div class="badges">
-                @php $roleMap = ['content_creator' => 'Content Creator', 'affiliator' => 'Affiliator', 'business' => 'Business']; @endphp
-                
-                @if(!empty($config['location']))
+                        @if(!empty($config['location']))
+                <div class="badges">
                     <div class="badge"><i class="fas fa-map-marker-alt" style="font-size:9px;"></i>
                         {{ $config['location'] }}</div>
-                @endif
-            </div>
+                </div>
+            @endif
         </div>
 
         {{-- Social Icons --}}
