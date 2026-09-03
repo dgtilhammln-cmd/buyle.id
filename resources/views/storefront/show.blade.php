@@ -330,14 +330,7 @@
                     @endif
                     <div class="sf-profile-text">
                         <h1 class="sf-store-name">{{ $profile->store_name ?: $seller->name }}</h1>
-                        @if($profile->creator_type)
-                            <div style="margin: 0.35rem 0 0.5rem;">
-                                <span style="display:inline-flex;align-items:center;gap:0.3rem;background:#F0FDF4;color:#15803D;font-size:0.75rem;font-weight:600;padding:0.25rem 0.65rem;border-radius:999px;border:1px solid #BBF7D0;">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                    {{ $profile->creator_type }}
-                                </span>
-                            </div>
-                        @endif
+                        
                         @if($profile->store_description)
                             <p class="sf-desc">{{ $profile->store_description }}</p>
                         @endif

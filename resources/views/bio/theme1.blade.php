@@ -45,7 +45,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="{{ asset('favicon.ico') }}">
+        @php
+        $favSetting = \App\Models\Setting::get('favicon');
+        if ($favSetting) {
+            $favPath = ltrim($favSetting, '/');
+            $favicon = asset('storage/' . $favPath);
+            $favType = str_ends_with($favPath, '.png') ? 'image/png' : (str_ends_with($favPath, '.svg') ? 'image/svg+xml' : 'image/x-icon');
+        } else {
+            $favicon = asset('favicon.ico');
+            $favType = 'image/x-icon';
+        }
+    @endphp
+    <link rel="icon" type="{{ $favType }}" href="{{ $favicon }}">
+    <link rel="shortcut icon" href="{{ $favicon }}">
+    <link rel="apple-touch-icon" href="{{ $favicon }}">
 
     <style>
         :root {
@@ -547,7 +560,7 @@
         {{-- Realtime Global Search Box --}}
         <div class="search-box-wrap fade-up" style="animation-delay:0.22s; margin: 1.25rem var(--side, 1rem) 0.5rem;">
             <div style="position:relative; width:100%;">
-                <input type="text" id="bioSearchInput" placeholder="Cari di bio (produk, link, nomor...)" 
+                <input type="text" id="bioSearchInput" placeholder="Cari produk {{ $config['name'] ?? $profile->store_name ?? $username }}" 
                     onkeyup="filterBioItems(this.value)"
                     style="width:100%; padding:0.75rem 1rem 0.75rem 2.6rem; border-radius:999px; background:var(--glass, rgba(255,255,255,0.08)); border:1px solid var(--glass-border, rgba(255,255,255,0.15)); color:var(--text, #fff); font-family:'Montserrat',sans-serif; font-size:0.82rem; outline:none; transition:all 0.2s;">
                 <i class="fas fa-search" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); opacity:0.5; font-size:0.85rem; color:var(--text, #fff);"></i>
@@ -650,7 +663,7 @@
 
                 {{-- Custom Physical / UMKM Products --}}
         @if($customProdBlocks->isNotEmpty())
-            <span class="section-label fade-up" style="animation-delay:0.48s">Produk Fisik / UMKM</span>
+            <span class="section-label fade-up" style="animation-delay:0.48s">Produk {{ $config['name'] ?? $profile->store_name ?? $username }}</span>
             <div class="product-grid fade-up" style="animation-delay:0.52s">
                 @foreach($customProdBlocks as $i => $block)
                     @php 

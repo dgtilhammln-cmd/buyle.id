@@ -200,17 +200,17 @@ class CreatorBioController extends Controller
         $profile = $this->getProfile();
         $data    = [];
 
-        // Handle custom image upload
+        // Handle custom image upload or scraped image
         if ($request->hasFile('block_image')) {
             $data['image'] = $request->file('block_image')->store('bio/blocks', 'public');
         } elseif ($request->filled('scraped_image')) {
-            $data['image'] = $request->scraped_image;
+            $data['image'] = $this->saveRemoteImageLocally($request->scraped_image);
         }
 
-        // If shopee: try to scrape OG image if still empty
+        // If shopee/affiliate: try to scrape OG image if still empty and save locally
         if (in_array($request->type, ['shopee', 'affiliate']) && $request->filled('url') && empty($data['image'])) {
             $scraped = $this->scrapeOgImage($request->url);
-            if ($scraped) $data['image'] = $scraped;
+            if ($scraped) $data['image'] = $this->saveRemoteImageLocally($scraped);
         }
 
         if ($request->filled('description')) $data['description'] = $request->description;
@@ -263,9 +263,17 @@ class CreatorBioController extends Controller
         $profile = $this->getProfile();
         if ($block->creator_id !== $profile->id) abort(403);
 
-        // Delete image if stored locally
+        // Smart File Deletion: Delete single image from hosting disk space
         if (!empty($block->data_json['image']) && !Str::startsWith($block->data_json['image'], 'http')) {
             Storage::disk('public')->delete($block->data_json['image']);
+        }
+        // Smart File Deletion: Delete multiple product images from hosting disk space
+        if (!empty($block->data_json['images']) && is_array($block->data_json['images'])) {
+            foreach ($block->data_json['images'] as $imgFile) {
+                if (!empty($imgFile) && !Str::startsWith($imgFile, 'http')) {
+                    Storage::disk('public')->delete($imgFile);
+                }
+            }
         }
         $block->delete();
         return back()->with('success', 'Block dihapus.');
@@ -301,7 +309,10 @@ class CreatorBioController extends Controller
             }
             $data['image'] = $request->file('block_image')->store('bio/blocks', 'public');
         } elseif ($request->filled('scraped_image')) {
-            $data['image'] = $request->scraped_image;
+            if (!empty($data['image']) && !Str::startsWith($data['image'], 'http')) {
+                Storage::disk('public')->delete($data['image']);
+            }
+            $data['image'] = $this->saveRemoteImageLocally($request->scraped_image);
         }
         
         if ($request->has('description')) $data['description'] = $request->description;
@@ -491,5 +502,41 @@ class CreatorBioController extends Controller
         }
 
         return response()->json(['image' => $image, 'title' => $title]);
+    }
+
+    /**
+     * Smart Image Downloader: Download remote scraped image & save locally to hosting storage
+     * so images never expire or disappear over time.
+     */
+    private function saveRemoteImageLocally(?string $imageUrl): ?string
+    {
+        if (empty($imageUrl)) {
+            return null;
+        }
+
+        if (!Str::startsWith($imageUrl, 'http')) {
+            return $imageUrl;
+        }
+
+        try {
+            $response = Http::timeout(15)
+                ->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36',
+                ])
+                ->get($imageUrl);
+
+            if ($response->successful() && !empty($response->body())) {
+                $ext = 'jpg';
+                $ct = $response->header('Content-Type');
+                if ($ct && str_contains($ct, 'png')) $ext = 'png';
+                elseif ($ct && str_contains($ct, 'webp')) $ext = 'webp';
+
+                $filename = 'bio/scraped/' . md5($imageUrl) . '.' . $ext;
+                Storage::disk('public')->put($filename, $response->body());
+                return $filename;
+            }
+        } catch (\Throwable $e) {}
+
+        return $imageUrl;
     }
 }

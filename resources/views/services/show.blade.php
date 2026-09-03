@@ -641,14 +641,7 @@
                         {{ $displaySellerName }}
                     </div>
 
-                    @if(optional($cp)->creator_type)
-                        <div style="margin-bottom:0.6rem;">
-                            <span style="display:inline-flex;align-items:center;gap:0.3rem;background:#F0FDF4;color:#15803D;font-size:0.75rem;font-weight:600;padding:0.2rem 0.6rem;border-radius:999px;border:1px solid #BBF7D0;">
-                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                {{ $cp->creator_type }}
-                            </span>
-                        </div>
-                    @endif
+                    
                     
                     {{-- Lokasi Creator --}}
                     <div id="creator-location-box" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.75rem; line-height:1.4; display:flex; align-items:center; justify-content:center; gap:4px;"
