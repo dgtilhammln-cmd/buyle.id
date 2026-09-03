@@ -7,7 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="referrer" content="no-referrer">
 
-    <title>{{ $seoTitle }}</title>
+        @php
+        $roleTitleMap = [
+            'content_creator' => 'Content Creator',
+            'affiliator'      => 'Affiliator',
+            'business'        => 'Business',
+        ];
+        $roleTitle = $roleTitleMap[$profile->bio_role ?? ''] ?? 'Creator';
+        $bioName   = $config['name'] ?? $profile->store_name ?? $username;
+        $pageTitle = $bioName . ' - ' . $roleTitle . ' | buyle.id';
+    @endphp
+    <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $seoDesc }}">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ $canonical }}">
@@ -125,13 +135,7 @@
             object-fit: cover;
         }
 
-        .profile-name {
-            font-size: 1.35rem;
-            font-weight: 900;
-            color: #fff;
-            letter-spacing: -0.02em;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
+        .profile-name { font-size: 1.2rem !important; font-weight: 700 !important; margin-top: 0.65rem; color: var(--text); font-family: 'Montserrat', sans-serif; }
 
         .profile-bio {
             font-size: 0.82rem;
@@ -540,7 +544,7 @@
                         {{ strtoupper(substr($config['name'] ?? $username, 0, 1)) }}</div>
                 @endif
             </div>
-            <div class="profile-name">{{ $config['name'] ?? $profile->store_name ?? $username }}</div>
+            <h1 class="profile-name">{{ $config['name'] ?? $profile->store_name ?? $username }}</h1>
             @if(!empty($config['bio']))
                 <div class="profile-bio">{{ $config['bio'] }}</div>
             @endif
@@ -662,7 +666,7 @@
                             @endif
                         </div>
                         <div class="prod-info">
-                            <div class="prod-title">{{ $block->title }}</div>
+                            <h3 class="prod-title">{{ $block->title }}</h3>
                             <div class="prod-price"> →</div>
                         </div>
                     </a>
@@ -687,7 +691,7 @@
                             <img src="{{ $img }}" alt="{{ $block->title }}">
                         </div>
                         <div class="prod-info">
-                            <div class="prod-title">{{ $block->title }}</div>
+                            <h3 class="prod-title">{{ $block->title }}</h3>
                             <div class="prod-price">
                                 @if(!empty($origPrice) && $origPrice > $price)
                                     <span style="text-decoration:line-through; opacity:0.5; font-size:0.75rem; margin-right:0.2rem;">Rp {{ number_format($origPrice, 0, ',', '.') }}</span>
@@ -718,7 +722,7 @@
                                 @endif
                             </div>
                             <div class="prod-info">
-                                <div class="prod-title">{{ $prod->name }}</div>
+                                <h3 class="prod-title">{{ $prod->name }}</h3>
                                 <div class="prod-price">Rp {{ number_format($prod->price, 0, ',', '.') }}</div>
                             </div>
                         </a>

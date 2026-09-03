@@ -48,9 +48,16 @@ class BioPageController extends Controller
         $theme = $profile->bio_theme ?? 'theme1';
 
         // SEO meta
-        $seoTitle = ($config['name'] ?? $profile->store_name ?? $username) . ' | Link in Bio · buyle.id';
-        $seoDesc  = $config['bio'] ?? 'Temukan semua link, produk, dan konten dari ' . ($config['name'] ?? $username) . ' di sini.';
-        $ogImage  = !empty($config['avatar']) ? asset('storage/' . $config['avatar']) : asset('images/buyle-og.png');
+        $roleTitleMap = [
+            'content_creator' => 'Content Creator',
+            'affiliator'      => 'Affiliator',
+            'business'        => 'Business',
+        ];
+        $roleTitle = $roleTitleMap[$profile->bio_role ?? ''] ?? 'Creator';
+        $bioName   = $config['name'] ?? $profile->store_name ?? $username;
+        $seoTitle  = $bioName . ' - ' . $roleTitle . ' | buyle.id';
+        $seoDesc   = $config['bio'] ?? 'Temukan semua link, produk, dan konten dari ' . $bioName . ' di sini.';
+        $ogImage   = !empty($config['avatar']) ? asset('storage/' . $config['avatar']) : asset('images/buyle-og.png');
         $canonical = url('/' . $username);
 
         return view("bio.{$theme}", compact(

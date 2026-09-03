@@ -13,12 +13,13 @@
         $waNumber = $config['wa'] ?? '';
         $waMessage = 'Halo, saya mendapatkan nomor dari buyle.id. ' . ($waText ?: 'Saya tertarik dengan produk *' . $block->title . '* (Rp ' . number_format($price, 0, ',', '.') . ' IDR). Apakah masih tersedia?');
         $firstImage = !empty($images[0]) ? asset('storage/' . $images[0]) : asset('images/buyle-og.png');
-        $pageTitle = $block->title . ' — ' . ($config['name'] ?? $username) . ' | buyle.id';
+        $pageTitle = $block->title . ' - ' . ($config['name'] ?? $username) . ' | buyle.id';
         $pageDesc = Str::limit($block->data_json['description'] ?? 'Beli produk ' . $block->title . ' dari ' . $username . ' di buyle.id', 160);
     @endphp
 
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDesc }}">
+    <link rel="canonical" href="{{ url()->current() }}">
 
     <meta property="og:title" content="{{ $block->title }}">
     <meta property="og:description" content="{{ $pageDesc }}">
@@ -383,6 +384,7 @@
             transform: scale(1.02);
         }
     </style>
+    <link rel="canonical" href="{{ url()->current() }}">
 </head>
 
 <body>
