@@ -322,7 +322,6 @@ class CreatorBioController extends Controller
             if ($request->has('price')) $data['price'] = $request->price;
             if ($request->has('original_price')) $data['original_price'] = $request->original_price;
             if ($request->has('payment_method')) $data['payment_method'] = $request->payment_method;
-            if ($request->has('wa_text')) $data['wa_text'] = $request->wa_text;
             
             if (empty($data['slug']) || $block->title !== $request->title) {
                 $cleanTitle = Str::limit($request->title, 45, '');
@@ -330,21 +329,29 @@ class CreatorBioController extends Controller
                 $data['slug'] = $baseSlug ?: 'produk-' . time();
             }
             
-            if ($request->hasFile('custom_images')) {
-                // Delete old images
-                if (!empty($data['images'])) {
-                    foreach ($data['images'] as $oldImg) {
-                        if (!Str::startsWith($oldImg, 'http')) Storage::disk('public')->delete($oldImg);
+            $currentImages = $data['images'] ?? [];
+
+            // Delete requested existing images from disk & array
+            if ($request->filled('delete_existing_images')) {
+                foreach ($request->delete_existing_images as $delImg) {
+                    $currentImages = array_filter($currentImages, fn($i) => $i !== $delImg);
+                    if (!Str::startsWith($delImg, 'http')) {
+                        Storage::disk('public')->delete($delImg);
                     }
                 }
-                
-                $images = [];
-                $files = array_slice($request->file('custom_images'), 0, 3);
-                foreach ($files as $file) {
-                    $images[] = $file->store('bio/blocks', 'public');
-                }
-                $data['images'] = $images;
+                $currentImages = array_values($currentImages);
             }
+
+            // Append new uploaded images up to max 3
+            if ($request->hasFile('custom_images')) {
+                $maxAllow = max(0, 3 - count($currentImages));
+                $newFiles = array_slice($request->file('custom_images'), 0, $maxAllow);
+                foreach ($newFiles as $file) {
+                    $currentImages[] = $file->store('bio/blocks', 'public');
+                }
+            }
+
+            $data['images'] = array_slice($currentImages, 0, 3);
         }
 
         if ($request->filled('icon_class')) {

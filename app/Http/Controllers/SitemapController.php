@@ -115,7 +115,46 @@ class SitemapController extends Controller
             }
         }
 
-        $urls    = array_merge($staticPages, $categoryUrls, $productUrls, $creatorUrls, $articleUrls, $authorUrls);
+                $creatorBioUrls = [];
+        $bioBlocks = \App\Models\CreatorBioBlock::where('type', 'custom_product')
+            ->where('is_active', true)
+            ->get();
+
+        foreach ($creators as $c) {
+            if (empty($c->store_slug)) continue;
+            $creatorBioUrls[] = [
+                'url'        => route('bio.public', ['username' => $c->store_slug]),
+                'priority'   => '0.95',
+                'changefreq' => 'daily',
+                'lastmod'    => $c->updated_at ? $c->updated_at->toDateString() : now()->toDateString(),
+                'images'     => [],
+            ];
+        }
+
+        $creatorMap = $creators->keyBy('id');
+        $customProductUrls = [];
+        foreach ($bioBlocks as $b) {
+            $creator = $creatorMap[$b->creator_id] ?? null;
+            if (!$creator || empty($creator->store_slug)) continue;
+            $slug = $b->data_json['slug'] ?? $b->id;
+            $images = [];
+            if (!empty($b->data_json['images'][0])) {
+                $images[] = [
+                    'loc'     => $appUrl . '/storage/' . ltrim($b->data_json['images'][0], '/'),
+                    'title'   => $b->title,
+                    'caption' => $b->title,
+                ];
+            }
+            $customProductUrls[] = [
+                'url'        => route('bio.product.show', ['username' => $creator->store_slug, 'identifier' => $slug]),
+                'priority'   => '0.9',
+                'changefreq' => 'weekly',
+                'lastmod'    => $b->updated_at ? $b->updated_at->toDateString() : now()->toDateString(),
+                'images'     => $images,
+            ];
+        }
+
+        $urls    = array_merge($staticPages, $categoryUrls, $productUrls, $creatorUrls, $creatorBioUrls, $customProductUrls, $articleUrls, $authorUrls);
         $content = view('sitemap', compact('urls'))->render();
 
         return response($content, 200)->header('Content-Type', 'application/xml');

@@ -819,24 +819,19 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                 <label class="form-label">Foto Produk (Maks 3 foto)</label>
                 <input type="file" name="custom_images[]" accept="image/*" multiple class="form-input" style="height:auto; padding:0.5rem;"
                     onchange="if(this.files.length>3){alert('Maksimal 3 foto!'); this.value=''; return;} previewUmkmImages(this)">
-                <div id="umkmImagePreview" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;"></div>
-                <span class="form-hint">Format: JPG, PNG. Maksimal 5MB per foto.</span>
+                <div id="umkmImagePreview" style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.5rem;"></div>
+                <span class="form-hint">Format: JPG, PNG, WEBP. Maksimal 5MB per foto.</span>
             </div>
             <div class="form-group">
                 <label class="form-label">Metode Pembelian</label>
                 <div style="display:flex; gap:0.75rem; margin-top:0.25rem;">
                     <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
-                        <input type="radio" name="payment_method" value="wa" checked onchange="toggleWaText(true)"> Beli via WhatsApp
+                        <input type="radio" name="payment_method" value="wa" checked> Beli via WhatsApp
                     </label>
                     <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
-                        <input type="radio" name="payment_method" value="web" onchange="toggleWaText(false)"> Beli via Web (Buyle)
+                        <input type="radio" name="payment_method" value="web"> Beli via Web (Buyle)
                     </label>
                 </div>
-            </div>
-            <div class="form-group" id="waTextGroup">
-                <label class="form-label">Teks Template Pesan WA (Opsional)</label>
-                <textarea name="wa_text" class="form-input" style="height:70px; padding:0.75rem;" placeholder="Halo, saya tertarik dengan produk [nama produk]..."></textarea>
-                <span class="form-hint" style="color:#64748b; font-size:0.72rem;">💡 Pesan akan otomatis diawali: "Halo, saya mendapatkan nomor dari buyle.id." Teks kustom Anda ditambahkan setelah itu.</span>
             </div>
             <div class="form-group">
                 <label class="form-label">URL / Link (Opsional - isi jika ada halaman produk eksternal)</label>
@@ -876,26 +871,30 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                 <label class="form-label">Deskripsi Produk</label>
                 <textarea name="description" id="edit_description" class="form-input" style="height:80px; padding:0.75rem;"></textarea>
             </div>
+            
             <div class="form-group">
-                <label class="form-label">Ganti Foto Produk (Kosongkan jika tidak diubah, Maks 3 foto)</label>
+                <label class="form-label">Foto Produk Tersimpan & Preview (Maks 3 foto)</label>
+                {{-- Container for saved images with Delete ✕ button --}}
+                <div id="editSavedImagesContainer" style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.5rem;"></div>
+                <div id="deleteExistingImagesInputs"></div>
+
+                <label style="font-size:0.75rem; font-weight:600; color:#64748b; margin-top:0.5rem; display:block;">Tambah / Ganti Foto Baru:</label>
                 <input type="file" name="custom_images[]" accept="image/*" multiple class="form-input" style="height:auto; padding:0.5rem;"
-                    onchange="if(this.files.length>3){alert('Maksimal 3 foto!'); this.value=''; return;}">
-                <span class="form-hint">Format: JPG, PNG. Maksimal 5MB per foto.</span>
+                    onchange="if(this.files.length>3){alert('Maksimal 3 foto!'); this.value=''; return;} previewEditUmkmImages(this)">
+                <div id="editNewImagePreview" style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.5rem;"></div>
+                <span class="form-hint" style="color:#64748b; font-size:0.72rem;">💡 Klik tombol ✕ pada foto tersimpan untuk menghapusnya secara permanen dari server.</span>
             </div>
+
             <div class="form-group">
                 <label class="form-label">Metode Pembelian</label>
                 <div style="display:flex; gap:0.75rem; margin-top:0.25rem;">
                     <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
-                        <input type="radio" name="payment_method" id="edit_pm_wa" value="wa" onchange="toggleEditWaText(true)"> Beli via WhatsApp
+                        <input type="radio" name="payment_method" id="edit_pm_wa" value="wa"> Beli via WhatsApp
                     </label>
                     <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
-                        <input type="radio" name="payment_method" id="edit_pm_web" value="web" onchange="toggleEditWaText(false)"> Beli via Web (Buyle)
+                        <input type="radio" name="payment_method" id="edit_pm_web" value="web"> Beli via Web (Buyle)
                     </label>
                 </div>
-            </div>
-            <div class="form-group" id="editWaTextGroup">
-                <label class="form-label">Teks Template Pesan WA (Opsional)</label>
-                <textarea name="wa_text" id="edit_wa_text" class="form-input" style="height:70px; padding:0.75rem;"></textarea>
             </div>
             <div class="form-group">
                 <label class="form-label">URL / Link (Opsional)</label>
@@ -1200,11 +1199,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function toggleEditWaText(show) {
-    const el = document.getElementById('editWaTextGroup');
-    if (el) el.style.display = show ? '' : 'none';
-}
-
 function editUmkmProduct(data) {
     const form = document.getElementById('editUmkmForm');
     form.action = '/creator/bio/blocks/' + data.id;
@@ -1212,17 +1206,76 @@ function editUmkmProduct(data) {
     document.getElementById('edit_price').value = data.price ? new Intl.NumberFormat('id-ID').format(data.price) : '';
     document.getElementById('edit_original_price').value = data.original_price ? new Intl.NumberFormat('id-ID').format(data.original_price) : '';
     document.getElementById('edit_description').value = data.description || '';
-    document.getElementById('edit_wa_text').value = data.wa_text || '';
     document.getElementById('edit_url').value = data.url || '';
     
     if (data.payment_method === 'web') {
         document.getElementById('edit_pm_web').checked = true;
-        toggleEditWaText(false);
     } else {
         document.getElementById('edit_pm_wa').checked = true;
-        toggleEditWaText(true);
     }
+
+    // Reset Containers
+    const savedContainer = document.getElementById('editSavedImagesContainer');
+    const deleteInputs = document.getElementById('deleteExistingImagesInputs');
+    const newPreview = document.getElementById('editNewImagePreview');
+    if (savedContainer) savedContainer.innerHTML = '';
+    if (deleteInputs) deleteInputs.innerHTML = '';
+    if (newPreview) newPreview.innerHTML = '';
+
+    // Render Saved Images with ✕ Delete Button
+    const images = data.images || [];
+    images.forEach(img => {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'position:relative; width:70px; height:70px; border-radius:8px; overflow:hidden; border:2px solid #e2e8f0;';
+        
+        const image = document.createElement('img');
+        image.src = img.startsWith('http') ? img : '/storage/' + img;
+        image.style.cssText = 'width:100%; height:100%; object-fit:cover;';
+        
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.innerHTML = '✕';
+        delBtn.title = 'Hapus foto dari server';
+        delBtn.style.cssText = 'position:absolute; top:2px; right:2px; width:20px; height:20px; border-radius:50%; background:#ef4444; color:#fff; border:none; font-size:11px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 4px rgba(0,0,0,0.3);';
+        
+        delBtn.onclick = function() {
+            wrap.remove();
+            if (deleteInputs) {
+                const inp = document.createElement('input');
+                inp.type = 'hidden';
+                inp.name = 'delete_existing_images[]';
+                inp.value = img;
+                deleteInputs.appendChild(inp);
+            }
+        };
+
+        wrap.appendChild(image);
+        wrap.appendChild(delBtn);
+        if (savedContainer) savedContainer.appendChild(wrap);
+    });
+
     document.getElementById('editUmkmModal').classList.add('open');
+}
+
+function previewEditUmkmImages(input) {
+    const preview = document.getElementById('editNewImagePreview');
+    if (!preview) return;
+    preview.innerHTML = '';
+    Array.from(input.files).slice(0, 3).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const wrap = document.createElement('div');
+            wrap.style.cssText = 'position:relative; width:70px; height:70px; border-radius:8px; overflow:hidden; border:2px solid #1eb349;';
+            
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.cssText = 'width:100%; height:100%; object-fit:cover;';
+            
+            wrap.appendChild(img);
+            preview.appendChild(wrap);
+        };
+        reader.readAsDataURL(file);
+    });
 }
 
 </script>
