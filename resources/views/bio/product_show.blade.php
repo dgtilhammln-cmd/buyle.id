@@ -64,9 +64,10 @@
             $favType = 'image/x-icon';
         }
     @endphp
-    <link rel="icon" type="{{ $favType }}" href="{{ $favicon }}">
-    <link rel="shortcut icon" href="{{ $favicon }}">
-    <link rel="apple-touch-icon" href="{{ $favicon }}">
+    <link rel="icon" type="{{ $favType }}" href="{{ $favicon }}?v=2">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ $favicon }}?v=2">
+    <link rel="shortcut icon" href="{{ $favicon }}?v=2">
+    <link rel="apple-touch-icon" href="{{ $favicon }}?v=2">
 
     @php
         $bg = $config['color_bg'] ?? ($theme === 'theme2' || $theme === 'theme4' ? '#ffffff' : '#0b120c');

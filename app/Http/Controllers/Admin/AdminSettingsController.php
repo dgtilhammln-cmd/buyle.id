@@ -51,8 +51,10 @@ class AdminSettingsController extends Controller
                     $path     = 'settings/' . $filename;
                     Storage::disk('public')->put($path, file_get_contents($realPath));
                 } else {
-                    // Convert to PNG via GD
+                    // Convert to PNG via GD with transparency preservation
                     $img = $this->gdLoad($file);
+                    imagealphablending($img, false);
+                    imagesavealpha($img, true);
                     ob_start();
                     imagepng($img, null, 9);
                     $pngData = ob_get_clean();
@@ -61,13 +63,22 @@ class AdminSettingsController extends Controller
                     $filename = 'favicon_' . time() . '.png';
                     $path     = 'settings/' . $filename;
                     Storage::disk('public')->put($path, $pngData);
+                }
 
-                    // Copy PNG to public_html root as favicon.ico (browsers accept PNG too)
-                    $storedFullPath = storage_path('app/public/' . $path);
-                    $publicHtmlPath = base_path('public_html/favicon.ico');
-                    $publicPath     = public_path('favicon.ico');
-                    try { copy($storedFullPath, $publicHtmlPath); } catch (\Exception $e) {}
-                    try { copy($storedFullPath, $publicPath); } catch (\Exception $e) {}
+                // Sync favicon file to public_html and public root (ico and png)
+                $storedFullPath = storage_path('app/public/' . $path);
+                $syncTargets = [
+                    public_path('favicon.ico'),
+                    public_path('favicon.png'),
+                    base_path('public_html/favicon.ico'),
+                    base_path('public_html/favicon.png'),
+                ];
+                foreach ($syncTargets as $target) {
+                    try {
+                        $dir = dirname($target);
+                        if (!is_dir($dir)) @mkdir($dir, 0755, true);
+                        copy($storedFullPath, $target);
+                    } catch (\Exception $e) {}
                 }
 
                 Setting::clearCache();
