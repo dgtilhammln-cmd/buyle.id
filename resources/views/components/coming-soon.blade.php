@@ -395,7 +395,7 @@
                     <line x1="12" y1="12" x2="12" y2="16"/>
                     <line x1="10" y1="14" x2="14" y2="14"/>
                 </svg>
-                Produk Digital & Fisik
+                Produk Digital
             </div>
             <div class="cs-feat">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
