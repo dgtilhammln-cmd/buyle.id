@@ -1243,7 +1243,6 @@
     @endif
 
     {{-- ════ PROMO SECTIONS (Dynamic) ════ --}}
-    @if(isset($promoSections) && $promoSections->count())
     <style>
     .cv-promo-wrap {
         background: #ffffff;
