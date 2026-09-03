@@ -10,7 +10,7 @@
         $paymentMethod = $block->data_json['payment_method'] ?? 'wa';
         $waText = $block->data_json['wa_text'] ?? '';
         $waNumber = $config['wa'] ?? '';
-        $waMessage = 'Halo, saya mendapatkan nomor dari buyle.id. ' . ($waText ?: 'Saya tertarik dengan produk *'.$block->title.'* (Rp '.number_format($price,0,',','.').'). Apakah masih tersedia?');
+        $waMessage = 'Halo, saya mendapatkan nomor dari buyle.id. ' . ($waText ?: 'Saya tertarik dengan produk *'.$block->title.'* (Rp '.number_format($price,0,',','.').' IDR). Apakah masih tersedia?');
         $firstImage = !empty($images[0]) ? asset('storage/'.$images[0]) : asset('images/buyle-og.png');
         $pageTitle = $block->title . ' — ' . ($config['name'] ?? $username) . ' | buyle.id';
         $pageDesc  = Str::limit($block->data_json['description'] ?? 'Beli produk '.$block->title.' dari '.$username.' di buyle.id', 160);
@@ -19,7 +19,6 @@
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDesc }}">
 
-    <!-- OpenGraph Meta Tags for Social Sharing -->
     <meta property="og:title" content="{{ $block->title }}">
     <meta property="og:description" content="{{ $pageDesc }}">
     <meta property="og:image" content="{{ $firstImage }}">
@@ -28,7 +27,6 @@
     <meta property="product:price:amount" content="{{ $price }}">
     <meta property="product:price:currency" content="IDR">
 
-    <!-- Schema.org Product Structured Data for Google SEO -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org/",
@@ -68,13 +66,13 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: {{ $bg }}; color: {{ $text }}; font-family: 'Montserrat', sans-serif; min-height: 100vh; }
-        .page-wrap { max-width: 480px; margin: 0 auto; padding: 0 0 80px; }
+        .page-wrap { max-width: 440px; margin: 0 auto; padding: 0 0 80px; }
 
-        .back-bar { display: flex; align-items: center; gap: 0.5rem; padding: 1rem 1.25rem; }
-        .back-btn { display: flex; align-items: center; gap: 0.4rem; color: {{ $text }}; text-decoration: none; font-size: 0.82rem; font-weight: 700; opacity: 0.7; transition: opacity 0.2s; }
+        .back-bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.25rem; }
+        .back-btn { display: flex; align-items: center; gap: 0.4rem; color: {{ $text }}; text-decoration: none; font-size: 0.8rem; font-weight: 700; opacity: 0.75; transition: opacity 0.2s; }
         .back-btn:hover { opacity: 1; }
 
-        .slider-container { position: relative; overflow: hidden; background: {{ $card }}; }
+        .slider-container { position: relative; overflow: hidden; background: {{ $card }}; border-radius: 20px; margin: 0 1rem; }
         .slider-track { display: flex; transition: transform 0.4s ease; }
         .slide { min-width: 100%; aspect-ratio: 1/1; }
         .slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -82,26 +80,26 @@
         .slider-dots { display: flex; justify-content: center; gap: 6px; padding: 0.75rem 0; }
         .slider-dot { width: 6px; height: 6px; border-radius: 50%; background: {{ $text }}; opacity: 0.3; cursor: pointer; transition: all 0.2s; }
         .slider-dot.active { opacity: 1; width: 18px; border-radius: 3px; background: {{ $accent }}; }
-        .slider-prev, .slider-next { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: #fff; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; }
+        .slider-prev, .slider-next { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: #fff; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; }
         .slider-prev { left: 10px; }
         .slider-next { right: 10px; }
 
-        .prod-info-box { padding: 1.5rem 1.25rem; }
-        .prod-name { font-size: 1.35rem; font-weight: 900; line-height: 1.25; color: {{ $text }}; }
-        .prod-price-wrap { display: flex; align-items: baseline; gap: 0.5rem; margin-top: 0.5rem; }
-        .prod-price { font-size: 1.5rem; font-weight: 900; color: {{ $accent }}; }
-        .prod-orig-price { font-size: 1.05rem; font-weight: 600; text-decoration: line-through; opacity: 0.5; color: {{ $text }}; }
-        .prod-desc { font-size: 0.85rem; line-height: 1.7; color: {{ $text }}; opacity: 0.75; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid {{ $border }}; white-space: pre-wrap; }
+        .prod-info-box { padding: 1.25rem 1.25rem 1rem; }
+        .prod-name { font-size: 1.1rem; font-weight: 800; line-height: 1.35; color: {{ $text }}; letter-spacing: -0.01em; }
+        .prod-price-wrap { display: flex; align-items: baseline; gap: 0.4rem; margin-top: 0.4rem; }
+        .prod-price { font-size: 1.2rem; font-weight: 800; color: {{ $accent }}; }
+        .prod-orig-price { font-size: 0.88rem; font-weight: 600; text-decoration: line-through; opacity: 0.5; color: {{ $text }}; }
+        .prod-desc { font-size: 0.82rem; line-height: 1.6; color: {{ $text }}; opacity: 0.75; margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px solid {{ $border }}; white-space: pre-wrap; }
 
-        .seller-card { margin: 0 1.25rem 1.5rem; background: {{ $glass }}; border: 1px solid {{ $border }}; border-radius: 16px; padding: 1rem; display: flex; align-items: center; gap: 0.85rem; }
-        .seller-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid {{ $accent }}; flex-shrink: 0; }
-        .seller-avatar-placeholder { width: 42px; height: 42px; border-radius: 50%; background: {{ $accent }}; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; color: #000; flex-shrink: 0; }
+        .seller-card { margin: 0 1.25rem 1.5rem; background: {{ $glass }}; border: 1px solid {{ $border }}; border-radius: 14px; padding: 0.85rem 1rem; display: flex; align-items: center; gap: 0.75rem; }
+        .seller-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid {{ $accent }}; flex-shrink: 0; }
+        .seller-avatar-placeholder { width: 38px; height: 38px; border-radius: 50%; background: {{ $accent }}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; color: #000; flex-shrink: 0; }
         .seller-info { flex: 1; min-width: 0; }
-        .seller-name { font-weight: 800; font-size: 0.88rem; color: {{ $text }}; }
-        .seller-label { font-size: 0.72rem; color: {{ $text }}; opacity: 0.6; }
+        .seller-name { font-weight: 800; font-size: 0.85rem; color: {{ $text }}; }
+        .seller-label { font-size: 0.7rem; color: {{ $text }}; opacity: 0.6; }
 
-        .cta-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; padding: 1rem 1.25rem; background: {{ $bg }}; border-top: 1px solid {{ $border }}; z-index: 100; }
-        .btn-buy { display: block; width: 100%; padding: 1rem; border-radius: 999px; background: {{ $btnBg }}; color: {{ $btnText }}; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 800; text-align: center; text-decoration: none; border: none; cursor: pointer; transition: transform 0.15s; }
+        .cta-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 440px; padding: 0.85rem 1.25rem; background: {{ $bg }}; border-top: 1px solid {{ $border }}; z-index: 100; }
+        .btn-buy { display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; padding: 0.85rem; border-radius: 999px; background: {{ $btnBg }}; color: {{ $btnText }}; font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; text-align: center; text-decoration: none; border: none; cursor: pointer; transition: transform 0.15s; }
         .btn-buy:hover { transform: scale(1.02); }
     </style>
 </head>
@@ -132,7 +130,7 @@
             </div>
             @endif
         @else
-            <div class="slide-placeholder"><i class="fas fa-image" style="font-size:4rem;opacity:0.2;"></i></div>
+            <div class="slide-placeholder"><i class="fas fa-image" style="font-size:3.5rem;opacity:0.2;"></i></div>
         @endif
     </div>
 
@@ -142,7 +140,7 @@
             @if(!empty($origPrice) && $origPrice > $price)
                 <span class="prod-orig-price">Rp {{ number_format($origPrice, 0, ',', '.') }}</span>
             @endif
-            <span class="prod-price">Rp {{ number_format($price, 0, ',', '.') }}</span>
+            <span class="prod-price">Rp {{ number_format($price, 0, ',', '.') }} IDR</span>
         </div>
         @if(!empty($block->data_json['description']))
         <div class="prod-desc">{{ $block->data_json['description'] }}</div>
@@ -166,7 +164,7 @@
 <div class="cta-bar">
     @if($paymentMethod === 'wa' && $waNumber)
         <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $waNumber) }}?text={{ urlencode($waMessage) }}" target="_blank" class="btn-buy">
-            <i class="fab fa-whatsapp"></i> Beli via WhatsApp
+            <i class="fab fa-whatsapp" style="font-size:1.1rem;"></i> Beli via WhatsApp
         </a>
     @elseif($block->url)
         <a href="{{ $block->url }}" target="_blank" class="btn-buy">

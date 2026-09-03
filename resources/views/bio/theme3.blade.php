@@ -553,11 +553,36 @@
             </div>
         @endif
 
+        {{-- Realtime Global Search Box --}}
+        <div class="search-box-wrap fade-up" style="animation-delay:0.22s; margin: 1.25rem var(--side, 1rem) 0.5rem;">
+            <div style="position:relative; width:100%;">
+                <input type="text" id="bioSearchInput" placeholder="Cari di bio (produk, link, nomor...)" 
+                    onkeyup="filterBioItems(this.value)"
+                    style="width:100%; padding:0.75rem 1rem 0.75rem 2.6rem; border-radius:999px; background:var(--glass, rgba(255,255,255,0.08)); border:1px solid var(--glass-border, rgba(255,255,255,0.15)); color:var(--text, #fff); font-family:'Montserrat',sans-serif; font-size:0.82rem; outline:none; transition:all 0.2s;">
+                <i class="fas fa-search" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); opacity:0.5; font-size:0.85rem; color:var(--text, #fff);"></i>
+            </div>
+        </div>
+
+        <script>
+        function filterBioItems(query) {
+            const q = query.toLowerCase().trim();
+            document.querySelectorAll('.search-item').forEach(item => {
+                const text = (item.innerText + ' ' + (item.dataset.title || '') + ' ' + (item.dataset.url || '')).toLowerCase();
+                if (!q || text.includes(q)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        </script>
+
         @php
             $linkBlocks = $blocks->whereIn('type', ['link', 'pdf', 'image']);
             $tiktokBlocks = $blocks->where('type', 'tiktok');
             $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
             $buyleBlocks = $blocks->where('type', 'buyle_product');
+            $customProdBlocks = $blocks->where('type', 'custom_product');
         @endphp
 
         {{-- TikTok Slider --}}
@@ -626,6 +651,36 @@
                         <div class="prod-info">
                             <div class="prod-title">{{ $block->title }}</div>
                             <div class="prod-price"> →</div>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        @endif
+
+                {{-- Custom Physical / UMKM Products --}}
+        @if($customProdBlocks->isNotEmpty())
+            <span class="section-label fade-up" style="animation-delay:0.48s">Produk Fisik / UMKM</span>
+            <div class="product-grid fade-up" style="animation-delay:0.52s">
+                @foreach($customProdBlocks as $i => $block)
+                    @php 
+                        $imgs = $block->data_json['images'] ?? []; 
+                        $img = !empty($imgs[0]) ? asset('storage/' . $imgs[0]) : (!empty($block->data_json['image']) ? asset('storage/' . $block->data_json['image']) : 'https://placehold.co/400x400/222/555?text=Product');
+                        $prodUrl = route('bio.product.show', [$username, $block->data_json['slug'] ?? $block->id]);
+                        $price = $block->data_json['price'] ?? 0;
+                        $origPrice = $block->data_json['original_price'] ?? null;
+                    @endphp
+                    <a href="{{ $prodUrl }}" class="prod-card search-item" data-title="{{ $block->title }} {{ $price }} {{ $config['wa'] ?? '' }}">
+                        <div class="prod-img-wrap">
+                            <img src="{{ $img }}" alt="{{ $block->title }}">
+                        </div>
+                        <div class="prod-info">
+                            <div class="prod-title">{{ $block->title }}</div>
+                            <div class="prod-price">
+                                @if(!empty($origPrice) && $origPrice > $price)
+                                    <span style="text-decoration:line-through; opacity:0.5; font-size:0.75rem; margin-right:0.2rem;">Rp {{ number_format($origPrice, 0, ',', '.') }}</span>
+                                @endif
+                                Rp {{ number_format($price, 0, ',', '.') }} IDR
+                            </div>
                         </div>
                     </a>
                 @endforeach

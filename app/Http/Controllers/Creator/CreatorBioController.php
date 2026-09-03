@@ -224,8 +224,9 @@ class CreatorBioController extends Controller
             if ($request->filled('payment_method')) $data['payment_method'] = $request->payment_method;
             if ($request->filled('wa_text')) $data['wa_text'] = $request->wa_text;
             
-            // Automatic slug for SEO friendly detail page
-            $baseSlug = Str::slug($request->title);
+                        // Smart slug logic: limit title length intelligently for clean URLs
+            $cleanTitle = Str::limit($request->title, 45, '');
+            $baseSlug   = rtrim(Str::slug($cleanTitle), '-');
             $data['slug'] = $baseSlug ?: 'produk-' . time();
             
             // Handle multiple images
@@ -313,7 +314,8 @@ class CreatorBioController extends Controller
             if ($request->has('wa_text')) $data['wa_text'] = $request->wa_text;
             
             if (empty($data['slug']) || $block->title !== $request->title) {
-                $baseSlug = Str::slug($request->title);
+                $cleanTitle = Str::limit($request->title, 45, '');
+                $baseSlug   = rtrim(Str::slug($cleanTitle), '-');
                 $data['slug'] = $baseSlug ?: 'produk-' . time();
             }
             

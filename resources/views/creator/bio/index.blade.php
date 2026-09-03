@@ -802,12 +802,13 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
                 <div class="form-group">
-                    <label class="form-label">Harga Jual (Rp) *</label>
-                    <input type="number" name="price" class="form-input" placeholder="150000" min="0" step="500" required>
+                    <label class="form-label">Harga Jual (Rp / IDR) *</label>
+                    <input type="text" name="price" id="umkmPrice" class="form-input" placeholder="150.000" oninput="formatRupiahInput(this)" required>
+                    <span class="form-hint" style="color:#1eb349; font-size:0.7rem;">Otomatis dengan titik (contoh: 3.355.555 IDR)</span>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Harga Coret (Rp) <span style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
-                    <input type="number" name="original_price" class="form-input" placeholder="200000" min="0" step="500">
+                    <label class="form-label">Harga Coret (Rp / IDR) <span style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
+                    <input type="text" name="original_price" id="umkmOriginalPrice" class="form-input" placeholder="200.000" oninput="formatRupiahInput(this)">
                 </div>
             </div>
             <div class="form-group">
@@ -863,12 +864,12 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
                 <div class="form-group">
-                    <label class="form-label">Harga Jual (Rp) *</label>
-                    <input type="number" name="price" id="edit_price" class="form-input" min="0" step="500" required>
+                    <label class="form-label">Harga Jual (Rp / IDR) *</label>
+                    <input type="text" name="price" id="edit_price" class="form-input" oninput="formatRupiahInput(this)" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Harga Coret (Rp) <span style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
-                    <input type="number" name="original_price" id="edit_original_price" class="form-input" min="0" step="500">
+                    <label class="form-label">Harga Coret (Rp / IDR) <span style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
+                    <input type="text" name="original_price" id="edit_original_price" class="form-input" oninput="formatRupiahInput(this)">
                 </div>
             </div>
             <div class="form-group">
@@ -1180,6 +1181,25 @@ function previewUmkmImages(input) {
     });
 }
 
+function formatRupiahInput(el) {
+    let val = el.value.replace(/[^0-9]/g, '');
+    if (!val) {
+        el.value = '';
+        return;
+    }
+    el.value = new Intl.NumberFormat('id-ID').format(parseInt(val, 10));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('#addUmkmModal form, #editUmkmModal form').forEach(form => {
+        form.addEventListener('submit', function() {
+            this.querySelectorAll('input[name="price"], input[name="original_price"]').forEach(inp => {
+                inp.value = inp.value.replace(/[^0-9]/g, '');
+            });
+        });
+    });
+});
+
 function toggleEditWaText(show) {
     const el = document.getElementById('editWaTextGroup');
     if (el) el.style.display = show ? '' : 'none';
@@ -1189,8 +1209,8 @@ function editUmkmProduct(data) {
     const form = document.getElementById('editUmkmForm');
     form.action = '/creator/bio/blocks/' + data.id;
     document.getElementById('edit_title').value = data.title || '';
-    document.getElementById('edit_price').value = data.price || '';
-    document.getElementById('edit_original_price').value = data.original_price || '';
+    document.getElementById('edit_price').value = data.price ? new Intl.NumberFormat('id-ID').format(data.price) : '';
+    document.getElementById('edit_original_price').value = data.original_price ? new Intl.NumberFormat('id-ID').format(data.original_price) : '';
     document.getElementById('edit_description').value = data.description || '';
     document.getElementById('edit_wa_text').value = data.wa_text || '';
     document.getElementById('edit_url').value = data.url || '';
