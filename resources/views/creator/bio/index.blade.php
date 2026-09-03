@@ -521,7 +521,11 @@ textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-he
                     @forelse($blocks->whereIn('type',['shopee','affiliate']) as $block)
                     <div class="aff-card">
                         @if(!empty($block->data_json['image']))
-                            <img src="{{ $block->data_json['image'] }}" class="aff-img" onerror="this.style.display='none'">
+                            @php
+                                $affImgPath = $block->data_json['image'];
+                                $affImgUrl  = \Illuminate\Support\Str::startsWith($affImgPath, 'http') ? $affImgPath : asset('storage/' . ltrim($affImgPath, '/'));
+                            @endphp
+                            <img src="{{ $affImgUrl }}" class="aff-img" onerror="this.style.display='none'">
                         @endif
                         <div class="aff-info">
                             <div class="aff-title">{{ $block->title }}</div>
@@ -1014,7 +1018,8 @@ function scrapeUrl(url, immediate) {
             if (data.image || data.title) {
                 if (data.image) {
                     var img = document.getElementById('scrapeImg');
-                    img.src = data.image;
+                    var displayImg = data.image_url || (data.image.startsWith('http') ? data.image : '/storage/' + data.image.replace(/^\//, ''));
+                    img.src = displayImg;
                     img.style.display = 'block';
                     document.getElementById('affScrapedImage').value = data.image;
                 }
