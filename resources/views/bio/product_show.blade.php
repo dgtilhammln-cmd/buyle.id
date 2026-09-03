@@ -14,7 +14,8 @@
         $waMessage = 'Halo, saya mendapatkan nomor dari buyle.id. ' . ($waText ?: 'Saya tertarik dengan produk *' . $block->title . '* (Rp ' . number_format($price, 0, ',', '.') . ' IDR). Apakah masih tersedia?');
         $firstImage = !empty($images[0]) ? asset('storage/' . $images[0]) : asset('images/buyle-og.png');
         $pageTitle = $block->title . ' - ' . ($config['name'] ?? $username) . ' | buyle.id';
-        $pageDesc = Str::limit($block->data_json['description'] ?? 'Beli produk ' . $block->title . ' dari ' . $username . ' di buyle.id', 160);
+        $rawDesc  = $block->data_json['description'] ?? '';
+        $pageDesc = !empty($rawDesc) ? Str::limit(strip_tags($rawDesc), 160) : 'Beli ' . $block->title . ' berkualitas dengan harga terbaik dari ' . ($config['name'] ?? $username) . ' di buyle.id.';
     @endphp
 
     <title>{{ $pageTitle }}</title>

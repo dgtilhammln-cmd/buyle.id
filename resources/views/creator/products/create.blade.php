@@ -234,9 +234,12 @@
                                 </div>
                             </div>
                             <div id="thumbPreviewWrap" style="display:none; margin-bottom:1rem;">
-                                <div style="position:relative; display:inline-block; border-radius:12px; overflow:hidden; border:2px solid #1eb349;">
-                                    <img id="thumbPreviewImg" src="" style="width:110px; height:110px; object-fit:cover;">
-                                    <button type="button" onclick="removeThumbnail()" style="position:absolute; top:4px; right:4px; background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer;" title="Hapus">&times;</button>
+                                <div style="position:relative; display:inline-block; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08);">
+                                    <img id="thumbPreviewImg" src="" style="width:130px; height:130px; object-fit:cover; display:block;">
+                                    <div style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
+                                        <button type="button" onclick="document.getElementById('thumb-input').click()" style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;" title="Ganti Foto">✎</button>
+                                        <button type="button" onclick="removeThumbnail()" style="background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;" title="Hapus Foto">✕</button>
+                                    </div>
                                 </div>
                             </div>
                             <input type="file" name="image" id="thumb-input" accept="image/*" onchange="previewSingleThumb(event)" style="display:none;" required>
@@ -411,9 +414,12 @@
                 height: 800,
                 title: 'Crop Foto Produk Utama (1:1 Square)',
                 onCropSuccess: function(file, dataUrl) {
-                    document.getElementById('thumbPreviewImg').src = dataUrl;
-                    document.getElementById('thumbPreviewWrap').style.display = 'block';
-                    document.getElementById('thumbDropzone').style.display = 'none';
+                    const img = document.getElementById('thumbPreviewImg');
+                    const wrap = document.getElementById('thumbPreviewWrap');
+                    const drop = document.getElementById('thumbDropzone');
+                    if (img) img.src = dataUrl;
+                    if (wrap) wrap.style.display = 'block';
+                    if (drop) drop.style.display = 'none';
                 }
             });
         }

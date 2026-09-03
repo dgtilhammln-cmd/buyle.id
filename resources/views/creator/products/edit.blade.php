@@ -434,9 +434,12 @@
                 height: 800,
                 title: 'Crop Foto Produk Utama (1:1 Square)',
                 onCropSuccess: function(file, dataUrl) {
-                    document.getElementById('thumbPreviewImg').src = dataUrl;
-                    document.getElementById('thumbPreviewWrap').style.display = 'block';
-                    document.getElementById('thumbDropzone').style.display = 'none';
+                    const img = document.getElementById('thumbPreviewImg');
+                    const wrap = document.getElementById('thumbPreviewWrap');
+                    const drop = document.getElementById('thumbDropzone');
+                    if (img) img.src = dataUrl;
+                    if (wrap) wrap.style.display = 'block';
+                    if (drop) drop.style.display = 'none';
                 }
             });
         }

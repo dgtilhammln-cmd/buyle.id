@@ -56,7 +56,7 @@ class BioPageController extends Controller
         $roleTitle = $roleTitleMap[$profile->bio_role ?? ''] ?? 'Creator';
         $bioName   = $config['name'] ?? $profile->store_name ?? $username;
         $seoTitle  = $bioName . ' - ' . $roleTitle . ' | buyle.id';
-        $seoDesc   = $config['bio'] ?? 'Temukan semua link, produk, dan konten dari ' . $bioName . ' di sini.';
+        $seoDesc   = !empty($config['bio']) ? $config['bio'] : (!empty($profile->store_description) ? $profile->store_description : 'Temukan berbagai produk digital, rekomendasi affiliate, dan informasi resmi dari ' . $bioName . ' di buyle.id.');
         $ogImage   = !empty($config['avatar']) ? asset('storage/' . $config['avatar']) : asset('images/buyle-og.png');
         $canonical = url('/' . $username);
 
