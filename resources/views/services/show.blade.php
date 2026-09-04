@@ -331,13 +331,20 @@
     .pd-actions { display: none; }
     .pd-sticky-bar {
         display: flex; align-items: center; gap: 0.5rem;
-        position: fixed; bottom: 85px; left: 0; right: 0;
-        background: #fff; padding: 0.75rem 1rem; border-top: 1px solid var(--border);
-        box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 40;
+        position: fixed; bottom: 0; left: 0; right: 0;
+        background: #fff; padding: 0.75rem 1rem env(safe-area-inset-bottom, 0px);
+        padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+        border-top: 1px solid var(--border);
+        box-shadow: 0 -4px 15px rgba(0,0,0,0.08); z-index: 200;
     }
-    .pd-sticky-bar .pd-btn { flex: 1; height: 42px; font-size: 0.9rem; }
+    .pd-sticky-bar .pd-btn { flex: 1; height: 46px; font-size: 0.9rem; border-radius: 12px; }
     .pd-breadcrumb { padding: 1rem 1rem 0.5rem; }
+    /* push content up so sticky bar doesn't overlap */
+    .pd-page { padding-bottom: 80px; }
+    /* move report button above sticky bar */
+    .buyle-report-btn { bottom: 80px !important; left: 12px !important; }
 }
+
 
 /* ─── RELATED ─── */
 .pd-related-title { font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem; font-family: 'Montserrat', sans-serif; }

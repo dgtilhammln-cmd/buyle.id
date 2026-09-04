@@ -484,15 +484,6 @@
         }
 
         @media (max-width: 768px) {
-            .fc-widget {
-                @if(request()->routeIs('products.show'))
-                bottom: 160px !important;
-                @else
-                bottom: 90px !important;
-                @endif
-            }
-
-            /* Move chat widget up */
             .mobile-bottom-nav {
                 display: flex;
                 position: fixed;
