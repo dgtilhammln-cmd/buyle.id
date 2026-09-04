@@ -208,7 +208,7 @@
         </div>
 
         <button type="button" class="tab-btn active" onclick="switchPayoutTab('tab-withdraw', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
             Penarikan Saldo
         </button>
         <button type="button" class="tab-btn" onclick="switchPayoutTab('tab-bank', this)">
@@ -228,7 +228,7 @@
         <div id="tab-withdraw" class="payout-tab-pane" style="display: block;">
             <div class="prof-card">
                 <div class="prof-card-head">
-                    <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
                     Form Pengajuan Penarikan Saldo
                 </div>
                 <div class="form-body">
@@ -252,7 +252,7 @@
                     <form action="{{ route('creator.payout.request') }}" method="POST">
                         @csrf
                         <div class="form-group">
-                            <label class="form-label">Tujuan Bank / E-Wallet</label>
+                            <label class="form-label">Tujuan Bank / E-Wallet <span>*</span></label>
                             <select name="bank_name" class="form-input" required>
                                 <option value="">— Pilih Bank —</option>
                                 @foreach(['BCA','BNI','BRI','Mandiri','BSI','CIMB Niaga','Jenius/SMBC','Dana','GoPay','OVO','ShopeePay'] as $bank)
@@ -261,15 +261,15 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Nomor Rekening / Akun</label>
-                            <input type="text" name="account_number" value="{{ $seller->bank_account_number ?? '' }}" class="form-input" placeholder="1234567890" required>
+                            <label class="form-label">Nomor Rekening / Akun <span>*</span></label>
+                            <input type="text" name="bank_account_number" value="{{ $seller->bank_account_number ?? '' }}" class="form-input" placeholder="Contoh: 1234567890" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Nama Pemilik Rekening</label>
-                            <input type="text" name="account_name" value="{{ $seller->bank_account_name ?? $seller->name }}" class="form-input" required>
+                            <label class="form-label">Nama Pemilik Rekening <span>*</span></label>
+                            <input type="text" name="bank_account_name" value="{{ $seller->bank_account_name ?? $seller->name }}" class="form-input" placeholder="Nama sesuai di rekening" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Jumlah Penarikan (Rp)</label>
+                            <label class="form-label">Jumlah Penarikan (Rp) <span>*</span></label>
                             <input type="number" name="amount" id="withdrawAmount" class="form-input" min="50000" max="{{ $availableBalance }}" placeholder="Minimum Rp 50.000" oninput="calcNetPayout()" required>
                             <span style="font-size:0.75rem; color:#64748B; margin-top:0.25rem;" id="netPayoutCalc">Biaya Penarikan: Rp 5.000 | Dana Bersih Diterima: Rp 0</span>
                         </div>
@@ -298,16 +298,38 @@
             <div class="prof-card">
                 <div class="prof-card-head">
                     <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    Informasi Rekening Bank Terdaftar
+                    Informasi & Pengaturan Rekening Bank
                 </div>
                 <div class="form-body">
-                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.25rem;">
-                        <div class="info-row"><span class="info-label">Nama Bank / E-Wallet</span><span class="info-val">{{ $seller->bank_name ?? 'Belum diatur' }}</span></div>
-                        <div class="info-row"><span class="info-label">Nomor Rekening</span><span class="info-val">{{ $seller->bank_account_number ?? 'Belum diatur' }}</span></div>
-                        <div class="info-row"><span class="info-label">Nama Pemilik Rekening</span><span class="info-val">{{ $seller->bank_account_name ?? 'Belum diatur' }}</span></div>
-                    </div>
-                    <p style="font-size:0.8rem; color:#64748b; margin-top:1.25rem; line-height:1.5;">
-                        Informasi rekening di atas akan otomatis tersimpan saat Anda melakukan pengajuan penarikan dana.
+                    <form action="{{ route('creator.payout.bank.update') }}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <label class="form-label">Nama Bank / E-Wallet <span>*</span></label>
+                            <select name="bank_name" class="form-input" required>
+                                <option value="">— Pilih Bank / E-Wallet —</option>
+                                @foreach(['BCA','BNI','BRI','Mandiri','BSI','CIMB Niaga','Jenius/SMBC','Dana','GoPay','OVO','ShopeePay'] as $bank)
+                                    <option value="{{ $bank }}" {{ ($seller->bank_name ?? '') === $bank ? 'selected' : '' }}>{{ $bank }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Nomor Rekening / Akun E-Wallet <span>*</span></label>
+                            <input type="text" name="bank_account_number" value="{{ $seller->bank_account_number ?? '' }}" class="form-input" placeholder="Contoh: 1234567890" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Nama Pemilik Rekening <span>*</span></label>
+                            <input type="text" name="bank_account_name" value="{{ $seller->bank_account_name ?? $seller->name }}" class="form-input" placeholder="Nama sesuai di rekening" required>
+                        </div>
+
+                        <button type="submit" class="btn-submit-payout" style="margin-top:0.75rem;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                            Simpan Pengaturan Rekening
+                        </button>
+                    </form>
+                    <p style="font-size:0.78rem; color:#64748b; margin-top:1.25rem; line-height:1.5;">
+                        Informasi rekening di atas akan otomatis digunakan sebagai tujuan penarikan saldo Anda.
                     </p>
                 </div>
             </div>

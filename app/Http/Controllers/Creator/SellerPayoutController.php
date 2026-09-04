@@ -92,4 +92,24 @@ class SellerPayoutController extends Controller
 
         return back()->with('success', 'Request pencairan saldo berhasil diajukan! Admin fee Rp 5.000 telah dipotong dari jumlah pencairan.');
     }
+
+    /**
+     * Simpan / update informasi rekening bank seller.
+     */
+    public function updateBank(Request $request)
+    {
+        $validated = $request->validate([
+            'bank_name'           => 'required|string|max:100',
+            'bank_account_number' => 'required|string|max:50',
+            'bank_account_name'   => 'required|string|max:100',
+        ]);
+
+        auth()->user()->update([
+            'bank_name'           => $validated['bank_name'],
+            'bank_account_number' => $validated['bank_account_number'],
+            'bank_account_name'   => $validated['bank_account_name'],
+        ]);
+
+        return back()->with('success', 'Informasi rekening bank berhasil diperbarui!');
+    }
 }

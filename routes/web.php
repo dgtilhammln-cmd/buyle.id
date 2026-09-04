@@ -436,6 +436,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
 
     // Modul Pengaturan Bank Account & Penarikan
     Route::get('/payout-settings', [\App\Http\Controllers\Creator\SellerPayoutController::class, 'settings'])->name('payout.settings');
+    Route::post('/payout-settings/bank', [\App\Http\Controllers\Creator\SellerPayoutController::class, 'updateBank'])->name('payout.bank.update');
     Route::post('/payout-request', [\App\Http\Controllers\Creator\SellerPayoutController::class, 'requestPayout'])->name('payout.request');
 
     // Laporan Penjualan

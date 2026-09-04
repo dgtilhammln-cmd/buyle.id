@@ -507,9 +507,10 @@
             <a href="{{ $isBuyer ? '#' : route('creator.payout.settings') }}"
                 onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.payout*') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <line x1="12" y1="1" x2="12" y2="23"/>
-                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="2" y="6" width="20" height="12" rx="2"/>
+                    <circle cx="16" cy="12" r="2"/>
+                    <path d="M6 12h.01"/>
                 </svg>
                 Saldo & Pencairan
                 @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
