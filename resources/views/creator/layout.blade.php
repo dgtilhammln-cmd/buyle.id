@@ -515,9 +515,9 @@
                 @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
             </a>
 
-            <a href="{{ $isBuyer ? '#' : route('ticket.scanner') }}"
+            <a href="{{ $isBuyer ? '#' : route('creator.ticket.scanner') }}"
                 onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('ticket.scanner') ? 'active' : '' }}">
+                class="cr-nav-link {{ request()->routeIs('creator.ticket.scanner*') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/>
                     <rect x="7" y="7" width="10" height="10" rx="1"/>

@@ -12,7 +12,7 @@
     
     /* Tabs Navigation */
     .payout-tabs { display:flex; gap:0.5rem; padding:0.5rem; background:#f8fafc; border-radius:14px; border:1px solid #e2e8f0; margin-bottom:1.5rem; }
-    .payout-tab { flex:1; text-align:center; padding:0.65rem 1rem; font-size:0.85rem; font-weight:700; color:#64748b; border-radius:10px; cursor:pointer; transition:all 0.2s; text-decoration:none; border:none; background:transparent; }
+    .payout-tab { flex:1; text-align:center; padding:0.65rem 1rem; font-size:0.85rem; font-weight:700; color:#64748b; border-radius:10px; cursor:pointer; transition:all 0.2s; text-decoration:none; border:none; background:transparent; display:flex; align-items:center; justify-content:center; gap:0.4rem; }
     .payout-tab.active { background:#fff; color:#1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
 
     .info-row { display:flex; justify-content:space-between; align-items:center; padding:0.75rem 0; border-bottom:1px solid #f3f7f3; font-size:0.85rem; }
@@ -24,7 +24,7 @@
     .form-label { font-size:0.8rem; font-weight:700; color:#374151; }
     .form-input { height:44px; padding:0 1rem; border:1.5px solid #e7f0e7; border-radius:10px; font-family:'Montserrat',sans-serif; font-size:0.875rem; color:#1a1a1a; background:#f9fefb; outline:none; transition:all 0.2s; }
     .form-input:focus { border-color:#1eb349; background:#fff; box-shadow:0 0 0 3px rgba(30,179,73,0.1); }
-    .btn-submit { height:46px; padding:0 1.5rem; border-radius:12px; background:linear-gradient(135deg,#1eb349,#a5cf37); border:none; font-family:'Montserrat',sans-serif; font-size:0.875rem; font-weight:700; color:#fff; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,0.3); transition:all 0.2s; width:100%; margin-top:0.5rem; }
+    .btn-submit { height:46px; padding:0 1.5rem; border-radius:12px; background:linear-gradient(135deg,#1eb349,#a5cf37); border:none; font-family:'Montserrat',sans-serif; font-size:0.875rem; font-weight:700; color:#fff; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,0.3); transition:all 0.2s; width:100%; margin-top:0.5rem; display:flex; align-items:center; justify-content:center; gap:0.5rem; }
     .btn-submit:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(30,179,73,0.4); }
     
     .alert-info { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:1rem; font-size:0.82rem; color:#15803d; margin-bottom:1.5rem; line-height:1.5; }
@@ -37,7 +37,10 @@
     <div class="payout-header">
         <div style="display:flex; justify-content:space-between; align-items:center;">
             <div>
-                <div style="font-size:0.75rem; font-weight:700; opacity:0.85; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.25rem;">💰 Saldo Tersedia</div>
+                <div style="font-size:0.75rem; font-weight:700; opacity:0.85; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.25rem; display:flex; align-items:center; gap:0.35rem;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                    Saldo Tersedia
+                </div>
                 <div class="payout-balance">Rp {{ number_format($availableBalance, 0, ',', '.') }}</div>
             </div>
             <div style="background:rgba(255,255,255,0.2); padding:0.5rem 1rem; border-radius:12px; backdrop-filter:blur(4px); font-size:0.78rem; font-weight:600;">
@@ -50,13 +53,16 @@
         {{-- Navigation Tabs --}}
         <div class="payout-tabs">
             <button type="button" class="payout-tab active" onclick="switchTab('withdrawTab', this)">
-                💸 Penarikan Saldo
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Penarikan Saldo
             </button>
             <button type="button" class="payout-tab" onclick="switchTab('settingsTab', this)">
-                🏦 Pengaturan Rekening
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Pengaturan Rekening
             </button>
             <button type="button" class="payout-tab" onclick="switchTab('historyTab', this)">
-                📜 Riwayat Pencairan
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Riwayat Pencairan
             </button>
         </div>
 
@@ -67,8 +73,8 @@
                 <div>
                     <strong>Informasi Penarikan Saldo:</strong><br>
                     • Pencairan diproses dalam 1–3 hari kerja setelah disetujui Admin.<br>
-                    • Dikenakan **Biaya Penarikan (Withdrawal Fee)** sebesar **Rp 5.000** per transaksi penarikan.<br>
-                    • Minimal penarikan saldo adalah **Rp 50.000**.
+                    • Dikenakan <strong>Biaya Penarikan (Withdrawal Fee)</strong> sebesar <strong>Rp 5.000</strong> per transaksi penarikan.<br>
+                    • Minimal penarikan saldo adalah <strong>Rp 50.000</strong>.
                 </div>
             </div>
 
@@ -108,7 +114,8 @@
                     <input type="text" name="notes" class="form-input" placeholder="Misal: Penarikan saldo event">
                 </div>
                 <button type="submit" class="btn-submit" onclick="return confirm('Ajukan penarikan saldo?')">
-                    💸 Ajukan Penarikan Dana
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+                    Ajukan Penarikan Dana
                 </button>
             </form>
             @else

@@ -176,13 +176,16 @@
                             <div class="form-group">
                                 <label class="form-label">Tipe Produk <span>*</span></label>
                                 <select name="product_type" id="productTypeSelect" class="form-input" onchange="toggleProductTypeFields(this.value)" required>
-                                    <option value="external_link" {{ old('product_type') == 'external_link' ? 'selected' : '' }}>📦 Produk Digital / Link Access</option>
-                                    <option value="ticket" {{ old('product_type') == 'ticket' ? 'selected' : '' }}>🎟️ Tiket Event / Wisata / Webinar</option>
+                                    <option value="external_link" {{ old('product_type') == 'external_link' ? 'selected' : '' }}>Produk Digital / Link Access</option>
+                                    <option value="ticket" {{ old('product_type') == 'ticket' ? 'selected' : '' }}>Tiket Event / Wisata / Webinar</option>
                                 </select>
                             </div>
 
                             <div class="form-group full" id="ticketFieldsWrap" style="display:none; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:14px; padding:1.25rem;">
-                                <h5 style="font-size:0.9rem; font-weight:800; color:#166534; margin-bottom:1rem;">🎟️ Detail Informasi Event / Tiket</h5>
+                                <h5 style="font-size:0.9rem; font-weight:800; color:#166534; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/><path d="M13 5v14"/><path d="M13 9h.01"/><path d="M13 15h.01"/></svg>
+                                    Detail Informasi Event / Tiket
+                                </h5>
                                 <div class="form-grid">
                                     <div class="form-group">
                                         <label class="form-label">Tanggal Pelaksanaan Event</label>

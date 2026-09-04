@@ -107,7 +107,7 @@
     function verifyCode(code) {
         isProcessing = true;
 
-        fetch("{{ route('ticket.scanner.verify') }}", {
+        fetch("{{ route('creator.ticket.scanner.verify') }}", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
