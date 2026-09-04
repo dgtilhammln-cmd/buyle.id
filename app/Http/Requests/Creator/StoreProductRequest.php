@@ -76,8 +76,15 @@ class StoreProductRequest extends FormRequest
         // Map external_link → digital_resource (form uses external_link)
         if ($this->has('external_link') && $this->input('external_link')) {
             $merge['digital_resource'] = $this->input('external_link');
-        } elseif ($this->input('product_type') === 'ticket' && empty($this->input('digital_resource'))) {
-            $merge['digital_resource'] = 'https://buyle.id/ticket';
+        } elseif ($this->input('product_type') === 'ticket') {
+            if (empty($this->input('digital_resource'))) {
+                $merge['digital_resource'] = 'https://buyle.id/ticket';
+            }
+            if ($this->input('event_type') === 'online') {
+                $merge['event_location'] = $this->input('event_location_online') ?: $this->input('event_location');
+            } else {
+                $merge['event_location'] = $this->input('event_location_offline') ?: $this->input('event_location');
+            }
         }
 
         // Map youtube_video_url → tiktok_video_url (reuse column)

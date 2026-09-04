@@ -188,23 +188,31 @@
                                 </h5>
                                 <div class="form-grid">
                                     <div class="form-group">
-                                        <label class="form-label">Tanggal Pelaksanaan Event</label>
+                                        <label class="form-label">Tanggal Pelaksanaan Event <span>*</span></label>
                                         <input type="date" name="event_date" value="{{ old('event_date') }}" class="form-input">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">Waktu Event (Jam)</label>
-                                        <input type="text" name="event_time" value="{{ old('event_time') }}" class="form-input" placeholder="Contoh: 19:00 WIB">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Jenis Pelaksanaan</label>
-                                        <select name="event_type" class="form-input">
-                                            <option value="offline" {{ old('event_type') == 'offline' ? 'selected' : '' }}>Offline (Tatap Muka di Venue)</option>
-                                            <option value="online" {{ old('event_type') == 'online' ? 'selected' : '' }}>Online (Webinar / Zoom Streaming)</option>
-                                        </select>
+                                        <label class="form-label">Waktu Event (Jam) <span>*</span></label>
+                                        <input type="text" name="event_time" value="{{ old('event_time') }}" class="form-input" placeholder="Contoh: 19:00 - 22:00 WIB">
                                     </div>
                                     <div class="form-group full">
-                                        <label class="form-label">Lokasi Event / Venue / Link Zoom</label>
-                                        <input type="text" name="event_location" value="{{ old('event_location') }}" class="form-input" placeholder="Contoh: Gedung Senayan Jakarta / Link Zoom">
+                                        <label class="form-label">Jenis Pelaksanaan Event <span>*</span></label>
+                                        <select name="event_type" id="eventTypeSelect" class="form-input" onchange="toggleEventTypeFields(this.value)">
+                                            <option value="offline" {{ old('event_type') == 'offline' ? 'selected' : '' }}>🏢 Offline (Tatap Muka di Venue / Gedung / Tempat Acara)</option>
+                                            <option value="online" {{ old('event_type') == 'online' ? 'selected' : '' }}>🌐 Online (Webinar / Zoom Meeting / Live Streaming)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group full" id="offlineLocationWrap">
+                                        <label class="form-label">Alamat / Lokasi Venue Event (Offline) <span>*</span></label>
+                                        <input type="text" name="event_location_offline" id="eventLocationOffline" value="{{ old('event_location_offline') }}" class="form-input" placeholder="Contoh: Gedung Senayan Hall A, Jl. Asia Afrika, Jakarta Pusat">
+                                        <span class="form-hint">Tuliskan nama tempat / alamat fisik acara berlangsung.</span>
+                                    </div>
+
+                                    <div class="form-group full" id="onlineLocationWrap" style="display:none;">
+                                        <label class="form-label">Link Access Online / Room Zoom / Streaming (Online) <span>*</span></label>
+                                        <input type="text" name="event_location_online" id="eventLocationOnline" value="{{ old('event_location_online') }}" class="form-input" placeholder="Contoh: https://zoom.us/j/123456789 atau Link Youtube Live">
+                                        <span class="form-hint">Tautan ini hanya akan dikirimkan / dapat diakses oleh pembeli tiket online.</span>
                                     </div>
                                 </div>
                             </div>
@@ -298,7 +306,7 @@
                     </div>
                 </div>
 
-                <div class="prof-card">
+                <div class="prof-card" id="digitalAccessCard">
                     <div class="prof-card-head">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                         Akses File Digital <span>*</span>
@@ -535,10 +543,40 @@
     const wlCheck = document.getElementById('isWhitelabelCheck');
     if (wlCheck) toggleWhitelabelFields(wlCheck.checked);
 
+    // Event Type Toggle (Offline vs Online)
+    function toggleEventTypeFields(val) {
+        const offWrap = document.getElementById('offlineLocationWrap');
+        const onWrap = document.getElementById('onlineLocationWrap');
+        if (val === 'online') {
+            if (offWrap) offWrap.style.display = 'none';
+            if (onWrap) onWrap.style.display = 'block';
+        } else {
+            if (offWrap) offWrap.style.display = 'block';
+            if (onWrap) onWrap.style.display = 'none';
+        }
+    }
+
     // Product Type Toggle
     function toggleProductTypeFields(val) {
         const wrap = document.getElementById('ticketFieldsWrap');
-        if (wrap) wrap.style.display = (val === 'ticket') ? 'block' : 'none';
+        const digitalCard = document.getElementById('digitalAccessCard');
+        const extInput = document.getElementById('externalLink');
+        const evType = document.getElementById('eventTypeSelect');
+        
+        if (val === 'ticket') {
+            if (wrap) wrap.style.display = 'block';
+            if (digitalCard) digitalCard.style.display = 'none';
+            if (extInput) {
+                extInput.removeAttribute('required');
+            }
+            if (evType) toggleEventTypeFields(evType.value);
+        } else {
+            if (wrap) wrap.style.display = 'none';
+            if (digitalCard) digitalCard.style.display = 'block';
+            if (extInput) {
+                extInput.setAttribute('required', 'required');
+            }
+        }
     }
     const initPType = document.getElementById('productTypeSelect');
     if (initPType) toggleProductTypeFields(initPType.value);
