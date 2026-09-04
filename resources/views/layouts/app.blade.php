@@ -56,11 +56,16 @@
     {{-- SEO Component --}}
     @include('components.seo')
 
-    {{-- Favicon --}}
-    <link rel="icon" type="{{ $favType }}" href="{{ $favicon }}?v={{ $favVer }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ $favicon }}?v={{ $favVer }}">
-    <link rel="shortcut icon" href="{{ $favicon }}?v={{ $favVer }}">
-    <link rel="apple-touch-icon" href="{{ $favicon }}?v={{ $favVer }}">
+    {{-- Favicon — always uses /favicon.ico (static root, consistent across all pages + GSC) --}}
+    @php
+        $faviconUrl = asset('favicon.ico') . '?v=3';
+        $faviconPng = asset('favicon.png') . '?v=3';
+    @endphp
+    <link rel="icon" type="image/x-icon" href="{{ $faviconUrl }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ $faviconPng }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ $faviconPng }}">
+    <link rel="shortcut icon" href="{{ $faviconUrl }}">
+    <link rel="apple-touch-icon" href="{{ $faviconPng }}">
 
     {{-- Google Fonts: Montserrat — Non-blocking (reduced weights for speed) --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">

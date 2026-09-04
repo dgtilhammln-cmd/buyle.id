@@ -3,27 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
-@php 
-    $adminLogo = \App\Models\Setting::get('logo'); 
-    $adminFavicon = \App\Models\Setting::get('favicon');
-    
-    // Resolve favicon
-    if (!empty($adminFavicon)) {
-        $favPath = ltrim($adminFavicon, '/');
-        $adminFaviconUrl = asset('storage/' . $favPath) . '?v=' . md5($adminFavicon);
-        $favExt  = strtolower(pathinfo($favPath, PATHINFO_EXTENSION));
-        $favTypeMap = ['png' => 'image/png', 'svg' => 'image/svg+xml', 'webp' => 'image/webp', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg'];
-        $adminFavType = $favTypeMap[$favExt] ?? 'image/x-icon';
-    } else {
-        $adminFaviconUrl = asset('favicon.ico') . '?v=1';
-        $adminFavType = 'image/x-icon';
-    }
+@php
+    $adminLogo = \App\Models\Setting::get('logo');
 @endphp
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <title>@yield('title','Dashboard') | buyle.id Admin</title>
-<link rel="icon" type="{{ $adminFavType }}" href="{{ $adminFaviconUrl }}">
-<link rel="shortcut icon" href="{{ $adminFaviconUrl }}">
-<link rel="apple-touch-icon" href="{{ $adminFaviconUrl }}">
+<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=3">
+<link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=3">
+<link rel="apple-touch-icon" href="{{ asset('favicon.png') }}?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('css/app.css') }}">

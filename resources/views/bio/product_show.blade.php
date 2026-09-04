@@ -53,21 +53,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        @php
-        $favSetting = \App\Models\Setting::get('favicon');
-        if ($favSetting) {
-            $favPath = ltrim($favSetting, '/');
-            $favicon = asset('storage/' . $favPath);
-            $favType = str_ends_with($favPath, '.png') ? 'image/png' : (str_ends_with($favPath, '.svg') ? 'image/svg+xml' : 'image/x-icon');
-        } else {
-            $favicon = asset('favicon.ico');
-            $favType = 'image/x-icon';
-        }
-    @endphp
-    <link rel="icon" type="{{ $favType }}" href="{{ $favicon }}?v=2">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ $favicon }}?v=2">
-    <link rel="shortcut icon" href="{{ $favicon }}?v=2">
-    <link rel="apple-touch-icon" href="{{ $favicon }}?v=2">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=3">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=3">
+    <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}?v=3">
 
     @php
         $bg = $config['color_bg'] ?? ($theme === 'theme2' || $theme === 'theme4' ? '#ffffff' : '#0b120c');
