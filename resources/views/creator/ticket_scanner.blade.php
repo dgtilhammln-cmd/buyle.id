@@ -25,6 +25,7 @@
     .bio-content {
         flex: 1;
         min-width: 0;
+        max-width: 100%;
     }
 
     .prof-card {
@@ -34,6 +35,8 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
         margin-bottom: 1.5rem;
         overflow: hidden;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     .prof-card-head {
@@ -50,17 +53,22 @@
 
     .form-body {
         padding: 1.5rem;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
     }
 
     #reader {
-        width: 100%;
+        width: 100% !important;
+        max-width: 100% !important;
         border-radius: 20px;
-        overflow: hidden;
+        overflow: hidden !important;
         border: 2px dashed #bbf7d0 !important;
         background: #f8fafc;
-        padding: 1.5rem 1rem !important;
+        padding: 1.25rem 0.75rem !important;
         text-align: center;
         margin-bottom: 1.5rem;
+        box-sizing: border-box !important;
     }
 
     #reader select {
@@ -74,12 +82,14 @@
         color: #0f172a;
         background: #fff;
         outline: none;
-        margin: 0.5rem;
+        margin: 0.5rem 0;
         cursor: pointer;
         box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         transition: all 0.2s;
-        max-width: 320px;
-        display: inline-block;
+        max-width: 100% !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        display: block;
     }
     #reader select:focus {
         border-color: #1eb349 !important;
@@ -97,7 +107,7 @@
         font-weight: 700;
         color: #fff !important;
         cursor: pointer;
-        margin: 0.5rem;
+        margin: 0.5rem auto;
         box-shadow: 0 4px 14px rgba(30,179,73,0.35) !important;
         transition: all 0.2s;
         display: inline-flex;
@@ -105,6 +115,7 @@
         justify-content: center;
         gap: 0.4rem;
         text-decoration: none !important;
+        max-width: 100% !important;
     }
     #reader button:hover {
         transform: translateY(-1px);
@@ -124,6 +135,8 @@
         background: #f0fdf4;
         border: 1px solid #bbf7d0;
         transition: all 0.2s;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
     #reader a:hover {
         background: #dcfce7;
@@ -145,6 +158,7 @@
         font-weight: 600;
         color: #64748b;
         margin-bottom: 0.75rem;
+        word-break: break-word;
     }
     #reader__dashboard_section_csr span {
         font-family: 'Montserrat', sans-serif;
@@ -153,9 +167,11 @@
         color: #334155;
     }
 
-    #reader video, #reader canvas {
+    #reader video, #reader canvas, #reader img, #reader div, #reader table {
         border-radius: 14px;
-        object-fit: cover;
+        max-width: 100% !important;
+        height: auto !important;
+        box-sizing: border-box !important;
         -webkit-transform: scaleX(1) !important;
         transform: scaleX(1) !important;
     }
@@ -166,6 +182,8 @@
         border-radius: 16px;
         display: none;
         animation: fadeIn 0.3s ease;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     .res-valid { background: #F0FDF4; border: 1.5px solid #86EFAC; color: #166534; }
@@ -174,16 +192,18 @@
 
     .form-input-code {
         height: 44px;
-        padding: 0 1rem;
+        padding: 0 0.85rem;
         border: 1.5px solid #e2e8f0;
         border-radius: 12px 0 0 12px;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.875rem;
+        font-size: 0.82rem;
         color: #1a1a1a;
         background: #f8fafc;
         outline: none;
         flex: 1;
+        min-width: 0;
         transition: all 0.2s;
+        box-sizing: border-box;
     }
 
     .form-input-code:focus {
@@ -194,26 +214,30 @@
 
     .btn-submit-scan {
         height: 44px;
-        padding: 0 1.5rem;
+        padding: 0 1.25rem;
         border-radius: 0 12px 12px 0;
         background: linear-gradient(135deg, #1eb349, #a5cf37);
         border: none;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         font-weight: 700;
         color: #fff;
         cursor: pointer;
         transition: all 0.2s;
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 0.4rem;
+        flex-shrink: 0;
     }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
     @media (max-width: 991px) {
-        .bio-layout { flex-direction: column; }
-        .bio-sidebar { width: 100%; position: static; }
+        .bio-layout { flex-direction: column; width: 100%; }
+        .bio-sidebar { width: 100%; position: static; box-sizing: border-box; }
+        .bio-content { width: 100%; max-width: 100%; box-sizing: border-box; }
+        .form-body { padding: 1rem 0.85rem; }
     }
 </style>
 @endsection

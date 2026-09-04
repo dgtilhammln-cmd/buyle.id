@@ -175,6 +175,111 @@
         line-height: 1.5;
     }
 
+    /* Premium Custom Select Component */
+    .custom-select-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    .custom-select-trigger {
+        height: 46px;
+        padding: 0 1.15rem;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #0f172a;
+        background: #f8fafc;
+        outline: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.2s;
+        box-sizing: border-box;
+        user-select: none;
+    }
+
+    .custom-select-trigger:hover,
+    .custom-select-trigger.active {
+        border-color: #1eb349;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.12);
+    }
+
+    .custom-select-trigger svg {
+        transition: transform 0.2s;
+        color: #64748b;
+        flex-shrink: 0;
+    }
+
+    .custom-select-trigger.active svg {
+        transform: rotate(180deg);
+        color: #1eb349;
+    }
+
+    .custom-select-options {
+        display: none;
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(30, 179, 73, 0.08);
+        z-index: 999;
+        max-height: 240px;
+        overflow-y: auto;
+        padding: 6px;
+    }
+
+    .custom-select-options.open {
+        display: block;
+        animation: selectFadeIn 0.15s ease-out;
+    }
+
+    @keyframes selectFadeIn {
+        from { opacity: 0; transform: translateY(-4px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .custom-select-option {
+        padding: 10px 14px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #334155;
+        border-radius: 99px;
+        cursor: pointer;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2px;
+    }
+
+    .custom-select-option:hover {
+        background: #f0fdf4;
+        color: #1eb349;
+        font-weight: 700;
+    }
+
+    .custom-select-option.selected {
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
+        color: #ffffff;
+        font-weight: 700;
+    }
+
+    .custom-select-option.custom-other {
+        border-top: 1px dashed #e2e8f0;
+        border-radius: 12px;
+        margin-top: 4px;
+        color: #1eb349;
+        font-weight: 700;
+        background: #f0fdf4;
+    }
+
     @media (max-width: 991px) {
         .bio-layout {
             flex-direction: column;
@@ -249,17 +354,42 @@
                     </div>
 
                     @if($availableBalance >= 50000)
-                    <form action="{{ route('creator.payout.request') }}" method="POST">
+                    <form action="{{ route('creator.payout.request') }}" method="POST" id="withdrawForm">
                         @csrf
+                        @php
+                            $presetBanks = ['BCA','BNI','BRI','Mandiri','BSI','CIMB Niaga','Jenius/SMBC','Permata Bank','Bank DKI','Bank BJB','Bank Jatim','Dana','GoPay','OVO','ShopeePay'];
+                            $currentBank1 = $seller->bank_name ?? '';
+                            $isCustomBank1 = $currentBank1 && !in_array($currentBank1, $presetBanks);
+                        @endphp
                         <div class="form-group">
                             <label class="form-label">Tujuan Bank / E-Wallet <span>*</span></label>
-                            <select name="bank_name" class="form-input" required>
-                                <option value="">— Pilih Bank —</option>
-                                @foreach(['BCA','BNI','BRI','Mandiri','BSI','CIMB Niaga','Jenius/SMBC','Dana','GoPay','OVO','ShopeePay'] as $bank)
-                                    <option value="{{ $bank }}" {{ ($seller->bank_name ?? '') === $bank ? 'selected' : '' }}>{{ $bank }}</option>
-                                @endforeach
-                            </select>
+                            
+                            <div class="custom-select-wrapper" id="wrapBankTab1">
+                                <div class="custom-select-trigger" onclick="toggleCustomDropdown('wrapBankTab1')">
+                                    <span class="custom-select-text" id="textBankTab1">
+                                        {{ $currentBank1 ? ($isCustomBank1 ? "Lainnya: {$currentBank1}" : $currentBank1) : '— Pilih Bank / E-Wallet —' }}
+                                    </span>
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                                </div>
+                                <div class="custom-select-options">
+                                    @foreach($presetBanks as $bank)
+                                        <div class="custom-select-option {{ $currentBank1 === $bank ? 'selected' : '' }}" onclick="selectBankOption('wrapBankTab1', '{{ $bank }}', '{{ $bank }}')">
+                                            <span>{{ $bank }}</span>
+                                            @if($currentBank1 === $bank)<span>✓</span>@endif
+                                        </div>
+                                    @endforeach
+                                    <div class="custom-select-option custom-other {{ $isCustomBank1 ? 'selected' : '' }}" onclick="selectBankOption('wrapBankTab1', 'custom', '✍️ Lainnya (Ketik Manual...)')">
+                                        <span>✍️ Lainnya (Ketik Manual...)</span>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="bank_name" id="hiddenBankTab1" value="{{ $currentBank1 }}" required>
+                            </div>
+
+                            <div id="customInputWrapTab1" style="display: {{ $isCustomBank1 ? 'block' : 'none' }}; margin-top: 0.6rem;">
+                                <input type="text" id="customBankInputTab1" class="form-input" placeholder="Ketik nama Bank / E-Wallet Anda (misal: SeaBank, Blu, Neobank)..." value="{{ $isCustomBank1 ? $currentBank1 : '' }}" oninput="updateCustomBankVal('wrapBankTab1', this.value)">
+                            </div>
                         </div>
+
                         <div class="form-group">
                             <label class="form-label">Nomor Rekening / Akun <span>*</span></label>
                             <input type="text" name="bank_account_number" value="{{ $seller->bank_account_number ?? '' }}" class="form-input" placeholder="Contoh: 1234567890" required>
@@ -301,16 +431,39 @@
                     Informasi & Pengaturan Rekening Bank
                 </div>
                 <div class="form-body">
-                    <form action="{{ route('creator.payout.bank.update') }}" method="POST">
+                    <form action="{{ route('creator.payout.bank.update') }}" method="POST" id="bankSettingForm">
                         @csrf
+                        @php
+                            $currentBank2 = $seller->bank_name ?? '';
+                            $isCustomBank2 = $currentBank2 && !in_array($currentBank2, $presetBanks);
+                        @endphp
                         <div class="form-group">
                             <label class="form-label">Nama Bank / E-Wallet <span>*</span></label>
-                            <select name="bank_name" class="form-input" required>
-                                <option value="">— Pilih Bank / E-Wallet —</option>
-                                @foreach(['BCA','BNI','BRI','Mandiri','BSI','CIMB Niaga','Jenius/SMBC','Dana','GoPay','OVO','ShopeePay'] as $bank)
-                                    <option value="{{ $bank }}" {{ ($seller->bank_name ?? '') === $bank ? 'selected' : '' }}>{{ $bank }}</option>
-                                @endforeach
-                            </select>
+                            
+                            <div class="custom-select-wrapper" id="wrapBankTab2">
+                                <div class="custom-select-trigger" onclick="toggleCustomDropdown('wrapBankTab2')">
+                                    <span class="custom-select-text" id="textBankTab2">
+                                        {{ $currentBank2 ? ($isCustomBank2 ? "Lainnya: {$currentBank2}" : $currentBank2) : '— Pilih Bank / E-Wallet —' }}
+                                    </span>
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                                </div>
+                                <div class="custom-select-options">
+                                    @foreach($presetBanks as $bank)
+                                        <div class="custom-select-option {{ $currentBank2 === $bank ? 'selected' : '' }}" onclick="selectBankOption('wrapBankTab2', '{{ $bank }}', '{{ $bank }}')">
+                                            <span>{{ $bank }}</span>
+                                            @if($currentBank2 === $bank)<span>✓</span>@endif
+                                        </div>
+                                    @endforeach
+                                    <div class="custom-select-option custom-other {{ $isCustomBank2 ? 'selected' : '' }}" onclick="selectBankOption('wrapBankTab2', 'custom', '✍️ Lainnya (Ketik Manual...)')">
+                                        <span>✍️ Lainnya (Ketik Manual...)</span>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="bank_name" id="hiddenBankTab2" value="{{ $currentBank2 }}" required>
+                            </div>
+
+                            <div id="customInputWrapTab2" style="display: {{ $isCustomBank2 ? 'block' : 'none' }}; margin-top: 0.6rem;">
+                                <input type="text" id="customBankInputTab2" class="form-input" placeholder="Ketik nama Bank / E-Wallet Anda (misal: SeaBank, Blu, Neobank)..." value="{{ $isCustomBank2 ? $currentBank2 : '' }}" oninput="updateCustomBankVal('wrapBankTab2', this.value)">
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -400,5 +553,64 @@
         const net = Math.max(0, val - adminFee);
         document.getElementById('netPayoutCalc').textContent = `Biaya Penarikan: Rp 5.000 | Dana Bersih Diterima: Rp ${net.toLocaleString('id-ID')}`;
     }
+
+    function toggleCustomDropdown(wrapperId) {
+        const wrap = document.getElementById(wrapperId);
+        if (!wrap) return;
+        const trigger = wrap.querySelector('.custom-select-trigger');
+        const options = wrap.querySelector('.custom-select-options');
+        
+        const isOpen = options.classList.contains('open');
+        document.querySelectorAll('.custom-select-options').forEach(el => el.classList.remove('open'));
+        document.querySelectorAll('.custom-select-trigger').forEach(el => el.classList.remove('active'));
+
+        if (!isOpen) {
+            options.classList.add('open');
+            trigger.classList.add('active');
+        }
+    }
+
+    function selectBankOption(wrapperId, val, labelText) {
+        const wrap = document.getElementById(wrapperId);
+        if (!wrap) return;
+        const textSpan = wrap.querySelector('.custom-select-text');
+        const hiddenInput = wrap.querySelector('input[type="hidden"]');
+        const options = wrap.querySelector('.custom-select-options');
+        const trigger = wrap.querySelector('.custom-select-trigger');
+        const isTab1 = wrapperId.includes('Tab1');
+        const customInputWrap = document.getElementById(isTab1 ? 'customInputWrapTab1' : 'customInputWrapTab2');
+        const customBankInput = document.getElementById(isTab1 ? 'customBankInputTab1' : 'customBankInputTab2');
+
+        wrap.querySelectorAll('.custom-select-option').forEach(el => el.classList.remove('selected'));
+
+        if (val === 'custom') {
+            textSpan.textContent = '✍️ Lainnya (Ketik Manual...)';
+            customInputWrap.style.display = 'block';
+            customBankInput.focus();
+            hiddenInput.value = customBankInput.value.trim() || 'Lainnya';
+        } else {
+            textSpan.textContent = labelText;
+            customInputWrap.style.display = 'none';
+            hiddenInput.value = val;
+        }
+
+        options.classList.remove('open');
+        trigger.classList.remove('active');
+    }
+
+    function updateCustomBankVal(wrapperId, typedVal) {
+        const wrap = document.getElementById(wrapperId);
+        if (!wrap) return;
+        const hiddenInput = wrap.querySelector('input[type="hidden"]');
+        hiddenInput.value = typedVal.trim() || 'Lainnya';
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.custom-select-wrapper')) {
+            document.querySelectorAll('.custom-select-options').forEach(el => el.classList.remove('open'));
+            document.querySelectorAll('.custom-select-trigger').forEach(el => el.classList.remove('active'));
+        }
+    });
 </script>
 @endsection
