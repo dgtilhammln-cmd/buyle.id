@@ -6,17 +6,17 @@
 <style>
     .bio-layout {
         display: flex;
-        gap: 2rem;
+        gap: 1.75rem;
         align-items: flex-start;
     }
 
     .bio-sidebar {
-        width: 300px;
+        width: 280px;
         flex-shrink: 0;
         background: #fff;
         border-radius: 20px;
         padding: 1.25rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
         border: 1px solid #f0fdf4;
         position: sticky;
         top: 1.5rem;
@@ -33,23 +33,23 @@
         display: flex;
         align-items: center;
         gap: 0.8rem;
-        padding: 0.85rem 1rem;
+        padding: 0.9rem 1.1rem;
         border: none;
         background: transparent;
         color: #64748b;
         font-family: 'Montserrat', sans-serif;
         font-size: 0.85rem;
         font-weight: 600;
-        border-radius: 12px;
+        border-radius: 14px;
         cursor: pointer;
         text-align: left;
-        transition: all 0.2s;
+        transition: all 0.25s ease;
         margin-bottom: 0.35rem;
         text-decoration: none;
     }
 
     .tab-btn:hover {
-        background: #f8fafc;
+        background: #f0fdf4;
         color: #1eb349;
     }
 
@@ -57,14 +57,14 @@
         background: linear-gradient(135deg, #1eb349, #a5cf37);
         color: #fff;
         font-weight: 700;
-        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.2);
+        box-shadow: 0 6px 18px rgba(30, 179, 73, 0.28);
     }
 
     .prof-card {
         background: #fff;
-        border-radius: 20px;
-        border: 1px solid #e7f0e7;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        border-radius: 22px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         margin-bottom: 1.5rem;
         overflow: hidden;
         max-width: 100%;
@@ -73,14 +73,14 @@
 
     .prof-card-head {
         padding: 1.25rem 1.5rem;
-        border-bottom: 1px solid #f3f7f3;
+        border-bottom: 1px solid #f1f5f9;
         font-size: 0.95rem;
         font-weight: 800;
         color: #0f172a;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.5rem;
+        gap: 0.75rem;
         background: #fafdfb;
     }
 
@@ -88,7 +88,6 @@
         padding: 1.5rem;
         max-width: 100%;
         box-sizing: border-box;
-        overflow-x: hidden;
     }
 
     /* ── SCANNER SPECIFIC ── */
@@ -106,7 +105,7 @@
     }
 
     #reader select {
-        height: 44px;
+        height: 46px;
         padding: 0 2rem 0 1rem;
         border-radius: 12px;
         border: 1.5px solid #cbd5e1 !important;
@@ -125,13 +124,9 @@
         box-sizing: border-box !important;
         display: block;
     }
-    #reader select:focus {
-        border-color: #1eb349 !important;
-        box-shadow: 0 0 0 3px rgba(30,179,73,0.15);
-    }
 
     #reader button {
-        height: 42px;
+        height: 44px;
         padding: 0 1.5rem !important;
         border-radius: 999px !important;
         background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
@@ -152,32 +147,6 @@
         max-width: 100% !important;
     }
 
-    #reader a, #reader__dashboard_section_swaplink {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.82rem;
-        font-weight: 700;
-        color: #1eb349 !important;
-        text-decoration: none !important;
-        display: inline-block;
-        margin-top: 0.75rem;
-        padding: 0.45rem 1rem;
-        border-radius: 12px;
-        background: #f0fdf4;
-        border: 1px solid #bbf7d0;
-        transition: all 0.2s;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-    }
-
-    #reader video, #reader canvas, #reader img, #reader div, #reader table {
-        border-radius: 14px;
-        max-width: 100% !important;
-        height: auto !important;
-        box-sizing: border-box !important;
-        -webkit-transform: scaleX(1) !important;
-        transform: scaleX(1) !important;
-    }
-
     .res-box {
         margin-top: 1rem;
         margin-bottom: 1.25rem;
@@ -194,13 +163,13 @@
     .res-invalid { background: #FEF2F2; border: 1.5px solid #FCA5A5; color: #991B1B; }
 
     .form-input-code {
-        height: 44px;
-        padding: 0 0.85rem;
+        height: 46px;
+        padding: 0 1rem;
         border: 1.5px solid #e2e8f0;
-        border-radius: 12px 0 0 12px;
+        border-radius: 14px 0 0 14px;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.82rem;
-        color: #1a1a1a;
+        font-size: 0.85rem;
+        color: #0f172a;
         background: #f8fafc;
         outline: none;
         flex: 1;
@@ -212,17 +181,17 @@
     .form-input-code:focus {
         border-color: #1eb349;
         background: #fff;
-        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.1);
+        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.12);
     }
 
     .btn-submit-scan {
-        height: 44px;
-        padding: 0 1.25rem;
-        border-radius: 0 12px 12px 0;
+        height: 46px;
+        padding: 0 1.35rem;
+        border-radius: 0 14px 14px 0;
         background: linear-gradient(135deg, #1eb349, #a5cf37);
         border: none;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.82rem;
+        font-size: 0.85rem;
         font-weight: 700;
         color: #fff;
         cursor: pointer;
@@ -232,53 +201,246 @@
         justify-content: center;
         gap: 0.4rem;
         flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.2);
     }
 
-    /* ── STATS GRID & TABLE ── */
+    /* ── FILTER PANEL & CUSTOM CONTROLS ── */
+    .filter-panel {
+        background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+        border: 1.5px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 1.15rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: 2fr 1.2fr 2.5fr;
+        gap: 0.85rem;
+        align-items: center;
+    }
+
+    .input-icon-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+
+    .input-icon-wrap svg.icon-left {
+        position: absolute;
+        left: 0.85rem;
+        color: #64748b;
+        pointer-events: none;
+        flex-shrink: 0;
+    }
+
+    .filter-select, .filter-input {
+        width: 100%;
+        height: 44px;
+        padding: 0 0.85rem 0 2.5rem;
+        border-radius: 12px;
+        border: 1.5px solid #cbd5e1;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.83rem;
+        font-weight: 600;
+        color: #0f172a;
+        background: #ffffff;
+        outline: none;
+        transition: all 0.2s;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        box-sizing: border-box;
+
+        /* Custom dropdown arrow */
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%64748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.85rem center;
+        background-size: 16px;
+    }
+
+    .filter-input {
+        padding-right: 0.85rem;
+        background-image: none;
+    }
+
+    .filter-select:focus, .filter-input:focus {
+        border-color: #1eb349;
+        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.15);
+        background-color: #ffffff;
+    }
+
+    .btn-search {
+        height: 44px;
+        padding: 0 1.25rem;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
+        border: none;
+        color: #fff;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.83rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.25);
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+    .btn-search:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(30, 179, 73, 0.35);
+    }
+
+    .btn-reset {
+        height: 44px;
+        padding: 0 0.9rem;
+        border-radius: 12px;
+        background: #ffffff;
+        border: 1.5px solid #cbd5e1;
+        color: #475569;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+    .btn-reset:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+    }
+
+    /* ── STATS GRID (PREMIUM CARDS) ── */
     .stat-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(4, 1fr);
         gap: 1rem;
         margin-bottom: 1.5rem;
     }
 
     .stat-card {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 16px;
-        padding: 1.1rem 1.25rem;
+        border-radius: 18px;
+        padding: 1.2rem;
         position: relative;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: all 0.25s;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
     }
 
-    .stat-card-title {
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+    }
+
+    .card-blue {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        border: 1.5px solid #bfdbfe;
+    }
+
+    .card-green {
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        border: 1.5px solid #bbf7d0;
+    }
+
+    .card-amber {
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        border: 1.5px solid #fde68a;
+    }
+
+    .card-red {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        border: 1.5px solid #fecaca;
+    }
+
+    .stat-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.6rem;
+    }
+
+    .stat-icon-bubble {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        flex-shrink: 0;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-blue .stat-icon-bubble { background: #3b82f6; }
+    .card-green .stat-icon-bubble { background: #16a34a; }
+    .card-amber .stat-icon-bubble { background: #d97706; }
+    .card-red .stat-icon-bubble { background: #dc2626; }
+
+    .stat-title {
         font-size: 0.72rem;
-        font-weight: 700;
-        color: #64748b;
+        font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        margin-bottom: 0.35rem;
     }
 
-    .stat-card-value {
-        font-size: 1.6rem;
-        font-weight: 800;
-        color: #0f172a;
-        line-height: 1.2;
+    .card-blue .stat-title { color: #1e40af; }
+    .card-green .stat-title { color: #166534; }
+    .card-amber .stat-title { color: #92400e; }
+    .card-red .stat-title { color: #991b1b; }
+
+    .stat-val {
+        font-size: 1.75rem;
+        font-weight: 900;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
     }
 
-    .stat-card-sub {
+    .card-blue .stat-val { color: #1e3a8a; }
+    .card-green .stat-val { color: #14532d; }
+    .card-amber .stat-val { color: #78350f; }
+    .card-red .stat-val { color: #7f1d1d; }
+
+    .stat-sub {
         font-size: 0.75rem;
-        color: #166534;
         font-weight: 600;
-        margin-top: 0.3rem;
+        margin-top: 0.4rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
     }
 
+    .card-blue .stat-sub { color: #2563eb; }
+    .card-green .stat-sub { color: #15803d; }
+    .card-amber .stat-sub { color: #b45309; }
+    .card-red .stat-sub { color: #b91c1c; }
+
+    .pill-badge {
+        display: inline-block;
+        padding: 0.15rem 0.55rem;
+        border-radius: 99px;
+        font-size: 0.7rem;
+        font-weight: 800;
+        background: #ffffff;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    /* ── TABLE DESIGN ── */
     .table-container {
         width: 100%;
         overflow-x: auto;
-        border-radius: 14px;
-        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        border: 1.5px solid #e2e8f0;
+        background: #fff;
     }
 
     .custom-table {
@@ -290,18 +452,25 @@
 
     .custom-table th {
         background: #f8fafc;
-        padding: 0.9rem 1rem;
-        font-weight: 700;
+        padding: 0.95rem 1.1rem;
+        font-weight: 800;
         color: #475569;
         border-bottom: 1.5px solid #e2e8f0;
         white-space: nowrap;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
     }
 
     .custom-table td {
-        padding: 0.9rem 1rem;
+        padding: 1rem 1.1rem;
         border-bottom: 1px solid #f1f5f9;
         vertical-align: middle;
         color: #1e293b;
+    }
+
+    .custom-table tr:last-child td {
+        border-bottom: none;
     }
 
     .custom-table tr:hover {
@@ -312,10 +481,11 @@
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
-        padding: 0.3rem 0.75rem;
+        padding: 0.35rem 0.85rem;
         border-radius: 99px;
-        font-size: 0.73rem;
+        font-size: 0.74rem;
         font-weight: 700;
+        white-space: nowrap;
     }
 
     .badge-used { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
@@ -323,9 +493,9 @@
     .badge-cancelled { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
 
     .btn-action-sm {
-        padding: 0.4rem 0.85rem;
+        padding: 0.45rem 0.95rem;
         border-radius: 10px;
-        font-size: 0.75rem;
+        font-size: 0.76rem;
         font-weight: 700;
         border: none;
         cursor: pointer;
@@ -337,44 +507,80 @@
     }
 
     .btn-toggle-checkin {
-        background: #1eb349;
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
         color: #fff;
+        box-shadow: 0 3px 10px rgba(30,179,73,0.25);
     }
-    .btn-toggle-checkin:hover { background: #16963c; }
+    .btn-toggle-checkin:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 14px rgba(30,179,73,0.35);
+    }
 
     .btn-toggle-undo {
-        background: #f1f5f9;
+        background: #ffffff;
         color: #475569;
-        border: 1px solid #cbd5e1;
+        border: 1.5px solid #cbd5e1;
     }
-    .btn-toggle-undo:hover { background: #e2e8f0; }
+    .btn-toggle-undo:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+    }
 
     .btn-export {
-        background: #f0fdf4;
-        border: 1px solid #bbf7d0;
-        color: #166534;
-        padding: 0.5rem 1rem;
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        border: 1.5px solid #bbf7d0;
+        color: #15803d;
+        padding: 0.55rem 1.1rem;
         border-radius: 12px;
         font-size: 0.8rem;
         font-weight: 700;
         display: inline-flex;
         align-items: center;
-        gap: 0.4rem;
+        gap: 0.45rem;
         cursor: pointer;
         text-decoration: none;
         transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(30, 179, 73, 0.1);
     }
     .btn-export:hover {
         background: #dcfce7;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.2);
     }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* ── RESPONSIVE MOBILE FIXES ── */
     @media (max-width: 991px) {
-        .bio-layout { flex-direction: column; width: 100%; }
+        .bio-layout { flex-direction: column; width: 100%; gap: 1.25rem; }
         .bio-sidebar { width: 100%; position: static; box-sizing: border-box; }
         .bio-content { width: 100%; max-width: 100%; box-sizing: border-box; }
-        .form-body { padding: 1rem 0.85rem; }
+        .form-body { padding: 1.15rem 1rem; }
+        
+        .filter-grid {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .stat-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .stat-grid {
+            grid-template-columns: 1fr;
+        }
+        .prof-card-head {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        .btn-export {
+            width: 100%;
+            justify-content: center;
+        }
     }
 </style>
 @endsection
@@ -385,12 +591,12 @@
     {{-- SUB SIDEBAR NAV --}}
     <div class="bio-sidebar">
         <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem;">
-            <div style="font-size: 0.85rem; font-weight: 800; color: #15803d; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+            <div style="font-size: 0.85rem; font-weight: 800; color: #15803d; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
                 Gatekeeper Studio
             </div>
             <div style="font-size: 0.78rem; color: #166534; line-height: 1.5; font-weight: 500;">
-                Kelola pemindaian tiket live kamera dan pantau data rekap kehadiran pengunjung event Anda secara real-time.
+                Pemindaian live kamera & pemantauan data kehadiran pengunjung event secara real-time.
             </div>
         </div>
 
@@ -403,11 +609,11 @@
             Data Kehadiran & Event
         </button>
 
-        <div style="background: #fafdfb; border: 1px solid #e7f0e7; border-radius: 14px; padding: 1rem; font-size: 0.8rem; color: #475569; margin-top: 1.25rem;">
+        <div style="background: #fafdfb; border: 1px solid #e7f0e7; border-radius: 14px; padding: 1rem; font-size: 0.78rem; color: #475569; margin-top: 1.25rem;">
             <strong style="color: #0f172a; display: block; margin-bottom: 0.4rem;">💡 Tips Verifikasi:</strong>
             • Izinkan akses kamera browser saat diminta.<br>
             • Pastikan pencahayaan layar pengunjung cukup.<br>
-            • Anda dapat menandai check-in manual pada tab Data Kehadiran jika pengunjung lupa membawa QR Code.
+            • Anda dapat menandai check-in manual pada tab Data Kehadiran jika pengunjung tidak membawa QR Code.
         </div>
     </div>
 
@@ -415,14 +621,16 @@
     <div class="bio-content">
 
         @if(session('success'))
-            <div style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; padding:0.9rem 1.25rem; border-radius:14px; font-weight:600; font-size:0.85rem; margin-bottom:1.25rem;">
-                ✓ {{ session('success') }}
+            <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; color:#166534; padding:0.9rem 1.25rem; border-radius:16px; font-weight:600; font-size:0.85rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                {{ session('success') }}
             </div>
         @endif
 
         @if(session('error'))
-            <div style="background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; padding:0.9rem 1.25rem; border-radius:14px; font-weight:600; font-size:0.85rem; margin-bottom:1.25rem;">
-                ⚠️ {{ session('error') }}
+            <div style="background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b; padding:0.9rem 1.25rem; border-radius:16px; font-weight:600; font-size:0.85rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                {{ session('error') }}
             </div>
         @endif
 
@@ -431,7 +639,7 @@
             <div class="prof-card">
                 <div class="prof-card-head">
                     <div style="display:flex; align-items:center; gap:0.5rem;">
-                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+                        <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
                         Live Camera QR Ticket Scanner
                     </div>
                 </div>
@@ -439,7 +647,7 @@
                 <div class="form-body">
                     {{-- Input Manual --}}
                     <form id="manualScanForm" class="mb-4" onsubmit="handleManualSubmit(event)">
-                        <label class="form-label" style="font-size:0.8rem; font-weight:700; color:#334155; margin-bottom:0.4rem; display:block;">Pemeriksaan Kode Tiket / Token (Manual)</label>
+                        <label class="form-label" style="font-size:0.82rem; font-weight:700; color:#334155; margin-bottom:0.5rem; display:block;">Pemeriksaan Kode Tiket / Token (Manual)</label>
                         <div style="display: flex;">
                             <input type="text" id="manualCodeInput" class="form-input-code" placeholder="Ketik Kode Tiket (misal: TKT-20260905-XXXX)...">
                             <button class="btn-submit-scan" type="submit">
@@ -472,78 +680,122 @@
             <div class="prof-card">
                 <div class="prof-card-head">
                     <div style="display:flex; align-items:center; gap:0.5rem;">
-                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                         Data Kehadiran Pengunjung & Rekap Event
                     </div>
                     <a href="{{ route('creator.ticket.scanner.export', request()->all()) }}" class="btn-export">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                         Export Excel/CSV
                     </a>
                 </div>
 
                 <div class="form-body">
 
-                    {{-- Filter Bar --}}
-                    <form method="GET" action="{{ route('creator.ticket.scanner') }}" style="margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+                    {{-- Modern Filter Panel --}}
+                    <form method="GET" action="{{ route('creator.ticket.scanner') }}" class="filter-panel">
                         <input type="hidden" name="tab" value="data">
 
-                        <div style="flex: 1; min-width: 200px;">
-                            <select name="event_id" class="form-input" style="height: 42px; border-radius: 12px; font-size: 0.83rem; width: 100%;" onchange="this.form.submit()">
-                                <option value="">— Semua Event Ticket —</option>
-                                @foreach($events as $event)
-                                    <option value="{{ $event->id }}" {{ (string)$selectedEventId === (string)$event->id ? 'selected' : '' }}>
-                                        🎟️ {{ $event->name }} ({{ $event->event_date ? $event->event_date->format('d M Y') : 'Event' }})
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <div class="filter-grid">
+                            {{-- Event Selector --}}
+                            <div class="input-icon-wrap">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="icon-left"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                <select name="event_id" class="filter-select" onchange="this.form.submit()">
+                                    <option value="">— Semua Event Ticket —</option>
+                                    @foreach($events as $event)
+                                        <option value="{{ $event->id }}" {{ (string)$selectedEventId === (string)$event->id ? 'selected' : '' }}>
+                                            {{ $event->name }} ({{ $event->event_date ? $event->event_date->format('d M Y') : 'Event' }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                        <div style="width: 160px;">
-                            <select name="status" class="form-input" style="height: 42px; border-radius: 12px; font-size: 0.83rem; width: 100%;" onchange="this.form.submit()">
-                                <option value="">Status Kehadiran</option>
-                                <option value="used" {{ $statusFilter === 'used' ? 'selected' : '' }}>Checked-In (Hadir)</option>
-                                <option value="valid" {{ $statusFilter === 'valid' ? 'selected' : '' }}>Belum Hadir</option>
-                                <option value="cancelled" {{ $statusFilter === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
-                            </select>
-                        </div>
+                            {{-- Status Filter --}}
+                            <div class="input-icon-wrap">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="icon-left"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                <select name="status" class="filter-select" onchange="this.form.submit()">
+                                    <option value="">Semua Status</option>
+                                    <option value="used" {{ $statusFilter === 'used' ? 'selected' : '' }}>Checked-In (Hadir)</option>
+                                    <option value="valid" {{ $statusFilter === 'valid' ? 'selected' : '' }}>Belum Hadir</option>
+                                    <option value="cancelled" {{ $statusFilter === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
+                                </select>
+                            </div>
 
-                        <div style="flex: 1; min-width: 220px; display: flex; gap: 0.4rem;">
-                            <input type="text" name="search" value="{{ $search }}" class="form-input" placeholder="Cari nama, email, HP, atau kode..." style="height: 42px; border-radius: 12px; font-size: 0.83rem; flex: 1;">
-                            <button type="submit" style="height: 42px; padding: 0 1rem; border-radius: 12px; background: #1eb349; color: #fff; border: none; font-weight: 700; cursor: pointer;">
-                                Cari
-                            </button>
-                            @if($selectedEventId || $statusFilter || $search)
-                                <a href="{{ route('creator.ticket.scanner', ['tab' => 'data']) }}" style="height: 42px; padding: 0 0.85rem; border-radius: 12px; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; display: inline-flex; align-items: center; text-decoration: none; font-size: 0.8rem;">
-                                    Reset
-                                </a>
-                            @endif
+                            {{-- Search Input & Action Buttons --}}
+                            <div style="display: flex; gap: 0.5rem; width: 100%;">
+                                <div class="input-icon-wrap" style="flex: 1;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="icon-left"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                                    <input type="text" name="search" value="{{ $search }}" class="filter-input" placeholder="Cari nama, email, HP, kode...">
+                                </div>
+                                
+                                <button type="submit" class="btn-search">
+                                    Cari
+                                </button>
+                                
+                                @if($selectedEventId || $statusFilter || $search)
+                                    <a href="{{ route('creator.ticket.scanner', ['tab' => 'data']) }}" class="btn-reset">
+                                        Reset
+                                    </a>
+                                @endif
+                            </div>
                         </div>
                     </form>
 
-                    {{-- Stats Summary --}}
+                    {{-- Premium Stat Cards Grid --}}
                     <div class="stat-grid">
-                        <div class="stat-card" style="border-left: 4px solid #3b82f6;">
-                            <div class="stat-card-title">Total Tiket Terbit</div>
-                            <div class="stat-card-value" style="color: #1e40af;">{{ number_format($stats['total']) }}</div>
-                            <div class="stat-card-sub" style="color: #64748b;">Tiket Terjual / Terdaftar</div>
+                        {{-- Card 1: Total Tiket --}}
+                        <div class="stat-card card-blue">
+                            <div class="stat-head">
+                                <span class="stat-title">Total Tiket Terbit</span>
+                                <div class="stat-icon-bubble">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/><path d="M13 5v14"/></svg>
+                                </div>
+                            </div>
+                            <div class="stat-val">{{ number_format($stats['total']) }}</div>
+                            <div class="stat-sub">
+                                <span>Tiket Terjual / Terdaftar</span>
+                            </div>
                         </div>
 
-                        <div class="stat-card" style="border-left: 4px solid #22c55e;">
-                            <div class="stat-card-title">Checked-In (Hadir)</div>
-                            <div class="stat-card-value" style="color: #15803d;">{{ number_format($stats['checked_in']) }}</div>
-                            <div class="stat-card-sub" style="color: #15803d;">Tingkat Kehadiran: {{ $stats['rate'] }}%</div>
+                        {{-- Card 2: Checked-In --}}
+                        <div class="stat-card card-green">
+                            <div class="stat-head">
+                                <span class="stat-title">Checked-In (Hadir)</span>
+                                <div class="stat-icon-bubble">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                </div>
+                            </div>
+                            <div class="stat-val">{{ number_format($stats['checked_in']) }}</div>
+                            <div class="stat-sub">
+                                <span class="pill-badge" style="color: #166534;">Tingkat Kehadiran: {{ $stats['rate'] }}%</span>
+                            </div>
                         </div>
 
-                        <div class="stat-card" style="border-left: 4px solid #eab308;">
-                            <div class="stat-card-title">Belum Check-In</div>
-                            <div class="stat-card-value" style="color: #a16207;">{{ number_format($stats['unchecked']) }}</div>
-                            <div class="stat-card-sub" style="color: #a16207;">Tiket Belum Dipindai</div>
+                        {{-- Card 3: Belum Check-In --}}
+                        <div class="stat-card card-amber">
+                            <div class="stat-head">
+                                <span class="stat-title">Belum Check-In</span>
+                                <div class="stat-icon-bubble">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                </div>
+                            </div>
+                            <div class="stat-val">{{ number_format($stats['unchecked']) }}</div>
+                            <div class="stat-sub">
+                                <span>Tiket Belum Dipindai</span>
+                            </div>
                         </div>
 
-                        <div class="stat-card" style="border-left: 4px solid #ef4444;">
-                            <div class="stat-card-title">Tiket Dibatalkan</div>
-                            <div class="stat-card-value" style="color: #b91c1c;">{{ number_format($stats['cancelled']) }}</div>
-                            <div class="stat-card-sub" style="color: #b91c1c;">Refund / Cancelled</div>
+                        {{-- Card 4: Dibatalkan --}}
+                        <div class="stat-card card-red">
+                            <div class="stat-head">
+                                <span class="stat-title">Tiket Dibatalkan</span>
+                                <div class="stat-icon-bubble">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                                </div>
+                            </div>
+                            <div class="stat-val">{{ number_format($stats['cancelled']) }}</div>
+                            <div class="stat-sub">
+                                <span>Refund / Cancelled</span>
+                            </div>
                         </div>
                     </div>
 
@@ -566,7 +818,7 @@
                                     <tr>
                                         <td>{{ $tickets->firstItem() + $index }}</td>
                                         <td>
-                                            <span style="font-family: monospace; font-weight: 700; font-size: 0.88rem; color: #0f172a;">
+                                            <span style="font-family: monospace; font-weight: 700; font-size: 0.88rem; color: #0f172a; background: #f1f5f9; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
                                                 {{ $ticket->ticket_code }}
                                             </span>
                                         </td>
@@ -631,10 +883,10 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" style="text-align: center; padding: 2.5rem 1rem; color: #94a3b8;">
-                                            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom: 0.5rem; opacity: 0.4;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                                            <div style="font-weight: 700; color: #475569; margin-bottom: 0.2rem;">Belum Ada Data Tiket / Kehadiran</div>
-                                            <div style="font-size: 0.78rem;">Tiket pembeli yang sudah lunas akan otomatis muncul di tabel ini.</div>
+                                        <td colspan="7" style="text-align: center; padding: 3rem 1rem; color: #94a3b8;">
+                                            <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom: 0.75rem; opacity: 0.4;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                                            <div style="font-weight: 700; color: #334155; margin-bottom: 0.25rem; font-size: 0.95rem;">Belum Ada Data Tiket / Kehadiran</div>
+                                            <div style="font-size: 0.8rem; color: #64748b;">Tiket pembeli yang sudah lunas akan otomatis tercantum pada daftar presensi ini.</div>
                                         </td>
                                     </tr>
                                 @endforelse
@@ -668,7 +920,6 @@
         document.getElementById(tabId).style.display = 'block';
         btn.classList.add('active');
 
-        // Update URL parameter without page reload
         const tabName = tabId === 'tab-data' ? 'data' : 'scanner';
         const url = new URL(window.location);
         url.searchParams.set('tab', tabName);
@@ -737,7 +988,6 @@
             osc.type = 'sine';
             
             if (status === 'valid') {
-                // High clean "TIT!" beep (880Hz for 0.14s)
                 osc.frequency.setValueAtTime(880, ctx.currentTime);
                 gain.gain.setValueAtTime(0.25, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.14);
@@ -746,7 +996,6 @@
                 osc.start();
                 osc.stop(ctx.currentTime + 0.14);
             } else {
-                // Low warning beep for used/invalid (320Hz for 0.25s)
                 osc.frequency.setValueAtTime(320, ctx.currentTime);
                 gain.gain.setValueAtTime(0.3, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.25);
@@ -775,7 +1024,6 @@
         titleEl.textContent = data.title || 'Status Tiket';
         msgEl.textContent = data.message || '';
 
-        // Clean SVG Icons
         if (data.status === 'valid') {
             iconDiv.innerHTML = `<svg width="36" height="36" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
         } else if (data.status === 'used') {
