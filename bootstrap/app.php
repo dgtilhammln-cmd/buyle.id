@@ -26,13 +26,7 @@ return $builder->withMiddleware(function (Middleware $middleware): void {
 
         $middleware->web(append: [
             \App\Http\Middleware\UpdateUserLastSeen::class,
-        ]);
-        
-        $middleware->validateCsrfTokens(except: [
-            'payment/callback',
-        ]);
-        
-        $middleware->web(append: [
+            \App\Http\Middleware\TrackPageView::class,
             \App\Http\Middleware\CaptureUtmMiddleware::class,
             \App\Http\Middleware\OptimizeResponseMiddleware::class,
             \App\Http\Middleware\TrackUserActivity::class,

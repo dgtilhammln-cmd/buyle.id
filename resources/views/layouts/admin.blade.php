@@ -278,11 +278,6 @@ button.btn-primary:hover, a.btn-primary:hover {
     </a>
 
     <div class="sb-sec">Konten</div>
-    <a href="{{ route('admin.services.index') }}" class="sb-link {{ request()->routeIs('admin.services*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
-      Produk & Layanan
-    </a>
-
     <a href="{{ route('admin.articles.index') }}" class="sb-link {{ request()->routeIs('admin.articles*') ? 'active' : '' }}">
       <div class="sb-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div>
       Artikel
@@ -311,6 +306,12 @@ button.btn-primary:hover, a.btn-primary:hover {
     </a>
 
     <div class="sb-sec">E-Commerce</div>
+    @php $pendingWlCount = \App\Models\Product::where('is_whitelabel', true)->where('whitelabel_approval_status', 'pending')->count(); @endphp
+    <a href="{{ route('admin.whitelabel.index') }}" class="sb-link {{ request()->routeIs('admin.whitelabel*') ? 'active' : '' }}">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Approval White Label
+      @if($pendingWlCount > 0)<span class="sb-badge">{{ $pendingWlCount }}</span>@endif
+    </a>
     <a href="{{ route('admin.product-categories.index') }}" class="sb-link {{ request()->routeIs('admin.product-categories*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
       Kategori Marketplace
