@@ -19,6 +19,9 @@
     padding-top: 80px;
     color: #1E293B;
 }
+@media (max-width: 768px) {
+    footer.cv-footer-v2 { display: none !important; }
+}
 
 /* ── Accent Vars ── */
 .pd-page {

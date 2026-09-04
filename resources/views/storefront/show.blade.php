@@ -95,6 +95,10 @@
 }
 @media (max-width: 768px) {
     .sf-page { padding-top: 56px; }
+    /* Hide footer on mobile storefront per user request */
+    footer.cv-footer-v2 { display: none !important; }
+    /* Hide promotional banner slider on mobile to prevent duplicate banners */
+    .sf-banner-slider { display: none !important; }
 }
 
 .sf-page * { box-sizing: border-box; }
@@ -114,12 +118,13 @@
 }
 .sf-profile {
     background: #fff;
-    padding: 0.75rem;
-    border-radius: 0 0 16px 16px;
+    padding: 0;
+    border-radius: 16px;
     color: #1E293B;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    border-bottom: 1px solid #e2e8f0;
+    border: 1px solid #e2e8f0;
     overflow: hidden;
+    margin: 0 0.5rem;
 }
 
 /* Store cover banner */
@@ -129,49 +134,49 @@
     object-fit: cover;
     object-position: center;
     display: block;
-    border-radius: 12px;
-    margin-bottom: 0.65rem;
+    border-radius: 0;
+    margin-bottom: 0;
 }
 .sf-cover-placeholder {
     width: 100%;
     height: 120px;
     background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-    border-radius: 12px;
-    margin-bottom: 0.65rem;
+    border-radius: 0;
+    margin-bottom: 0;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 @media (max-width: 500px) {
-    .sf-cover { height: 40vw; border-radius: 10px; margin-bottom: 0.5rem; }
-    .sf-cover-placeholder { height: 36vw; border-radius: 10px; margin-bottom: 0.5rem; }
+    .sf-cover { height: 35vw; }
+    .sf-cover-placeholder { height: 32vw; }
 }
 
 .sf-profile-inner {
-    display: flex; align-items: center; gap: 0.75rem; max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; max-width: 1200px; margin: 0 auto;
 }
 .sf-avatar {
-    width: 52px; height: 52px; border-radius: 50%;
+    width: 48px; height: 48px; border-radius: 50%;
     border: 2px solid #fff;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     object-fit: cover; flex-shrink: 0;
     background: #f0fdf4; color: #1eb349;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.15rem; font-weight: 600;
+    font-size: 1.1rem; font-weight: 600;
 }
 .sf-profile-text { flex: 1; min-width: 0; }
 .sf-store-name {
-    font-size: 1.1rem; margin: 0 0 0.15rem; line-height: 1.2;
+    font-size: 1.05rem; margin: 0 0 0.1rem; line-height: 1.2; font-weight: 600 !important;
 }
 .sf-desc {
-    font-size: 0.78rem; color: #475569;
-    line-height: 1.35; margin: 0;
+    font-size: 0.76rem; color: #475569;
+    line-height: 1.3; margin: 0;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 
 .sf-desktop-tabs { display: none; } /* Hidden on mobile */
 .sf-mobile-tabs {
-    padding: 0.4rem 0.75rem 0; overflow-x: auto; scrollbar-width: none;
+    padding: 0.25rem 0.75rem 0; overflow-x: auto; scrollbar-width: none;
     -webkit-overflow-scrolling: touch; display: flex; gap: 0.35rem;
 }
 .sf-mobile-tabs::-webkit-scrollbar { display: none; }
