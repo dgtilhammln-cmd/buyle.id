@@ -106,12 +106,16 @@
 
         /* Cover & Avatar */
         .cover-area {
-            height: 160px;
+            height: 200px;
             background: linear-gradient(135deg, #e7f0e7, #f0fdf4);
             background-size: cover;
             background-position: center;
             position: relative;
             border-bottom: 1px solid #e7f0e7;
+        }
+
+        @media (max-width: 500px) {
+            .cover-area { height: 44vw; }
         }
 
         .profile-container {

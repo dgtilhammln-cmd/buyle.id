@@ -91,8 +91,12 @@
 .sf-page {
     background: #f8fafc;
     min-height: 100vh;
-    padding-top: 80px; /* offset for fixed header */
+    padding-top: 64px; /* offset for fixed header */
 }
+@media (max-width: 768px) {
+    .sf-page { padding-top: 56px; }
+}
+
 .sf-page * { box-sizing: border-box; }
 
 .sf-layout {
@@ -110,12 +114,39 @@
 }
 .sf-profile {
     background: #fff;
-    padding: 1.5rem 1rem;
+    padding: 1rem 1rem 1rem;
     border-radius: 0 0 20px 20px;
     color: #1E293B;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
     border-bottom: 1px solid #e2e8f0;
+    overflow: hidden;
 }
+
+/* Store cover banner */
+.sf-cover {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: 14px;
+    margin-bottom: 1rem;
+}
+.sf-cover-placeholder {
+    width: 100%;
+    height: 140px;
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border-radius: 14px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+@media (max-width: 500px) {
+    .sf-cover { height: 44vw; border-radius: 10px; }
+    .sf-cover-placeholder { height: 40vw; border-radius: 10px; }
+}
+
 .sf-profile-inner {
     display: flex; align-items: center; gap: 1rem; max-width: 1200px; margin: 0 auto;
 }
@@ -321,8 +352,19 @@
 
         {{-- ── Sidebar ── --}}
         <aside class="sf-sidebar">
-            <div class="sf-profile">
+        <div class="sf-profile">
+                @php
+                    $coverImg = $profile->cover_image ?? ($profile->bio_config['cover'] ?? null);
+                @endphp
+                @if($coverImg)
+                    <img src="{{ asset('storage/' . $coverImg) }}" alt="{{ $profile->store_name }}" class="sf-cover">
+                @else
+                    <div class="sf-cover-placeholder">
+                        <svg width="48" height="48" fill="none" stroke="#1eb349" stroke-width="1" viewBox="0 0 24 24" opacity="0.3"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8.5" cy="13.5" r="1.5"/></svg>
+                    </div>
+                @endif
                 <div class="sf-profile-inner">
+
                     @if($seller->avatar)
                         <img src="{{ asset('storage/' . $seller->avatar) }}" alt="{{ $profile->store_name }}" class="sf-avatar">
                     @else
