@@ -103,6 +103,24 @@
 
 .sf-page * { box-sizing: border-box; }
 
+/* ── Full-width banner wrapper (outside flex row) ── */
+.sf-cover-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: none; /* hidden on mobile, shown on desktop */
+}
+@media (min-width: 768px) {
+    .sf-cover-wrap { display: block; padding: 1.5rem 1rem 0; }
+    .sf-cover-wrap .sf-cover {
+        width: 100%; height: auto; max-height: 260px;
+        border-radius: 20px; display: block; object-fit: cover;
+    }
+    .sf-cover-wrap .sf-cover-placeholder {
+        width: 100%; height: 180px; border-radius: 20px;
+    }
+}
+
 .sf-layout {
     max-width: 1200px;
     margin: 0 auto;
@@ -291,23 +309,33 @@
 .sf-card-price-main { font-size: 0.95rem; color: #1eb349; font-weight: 600; }
 /* ── Desktop Layout Overrides ── */
 @media (min-width: 768px) {
-    .sf-layout { padding: 2rem 1rem; flex-direction: row; align-items: flex-start; }
+    .sf-layout { padding: 1rem 1rem 2rem; flex-direction: row; align-items: flex-start; }
     
     .sf-sidebar {
-        width: 300px; flex-shrink: 0; position: sticky; top: 100px;
+        width: 260px; flex-shrink: 0; position: sticky; top: 100px;
         background: #fff; border-radius: 20px; padding: 1.5rem;
         box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
     }
+    /* On desktop: hide the mobile profile card (banner+cover inside sidebar) */
     .sf-profile {
         background: transparent; padding: 0; border-radius: 0;
-        box-shadow: none; text-align: center; margin-bottom: 2rem; border: none;
+        box-shadow: none; text-align: center; margin-bottom: 1.25rem; border: none;
     }
-    .sf-profile-inner { flex-direction: column; gap: 1rem; align-items: center; }
+    /* Hide the cover/banner inside the sidebar on desktop — shown in sf-cover-wrap instead */
+    .sf-profile > .sf-cover,
+    .sf-profile > .sf-cover-placeholder { display: none !important; }
+    .sf-profile-inner { flex-direction: column; gap: 0.75rem; align-items: center; padding: 0; }
     .sf-avatar {
-        width: 100px; height: 100px; border-width: 4px;
-        box-shadow: 0 8px 16px rgba(30,179,73,0.15); font-size: 2rem;
+        width: 80px; height: 80px; border-width: 3px;
+        box-shadow: 0 8px 16px rgba(30,179,73,0.15); font-size: 1.6rem;
     }
-    .sf-desc { color: #64748B; font-size: 0.9rem; -webkit-line-clamp: 3; }
+    .sf-profile-text { text-align: center; }
+    .sf-store-name { font-size: 1rem; text-align: center; }
+    .sf-desc { color: #64748B; font-size: 0.82rem; -webkit-line-clamp: 3; text-align: center; }
+    /* Center social icons on desktop */
+    .sf-profile-text > div[style*="display:flex"] {
+        justify-content: center !important;
+    }
     
     .sf-mobile-tabs { display: none; }
     .sf-desktop-tabs {
@@ -319,11 +347,12 @@
     }
     .sf-tab-sidebar:hover { background: #f0fdf4; }
     
+    /* Promotional banners inside main still work but hide on mobile via class */
     .sf-banner-slider { padding: 0; gap: 1rem; }
     .sf-banner { aspect-ratio: 21/6; border-radius: 20px; }
     
-    .sf-toolbar { padding: 1.5rem 0 0; }
-    .sf-grid { grid-template-columns: repeat(3, 1fr); padding: 1.5rem 0 3rem; gap: 1.25rem; }
+    .sf-toolbar { padding: 1rem 0 0; }
+    .sf-grid { grid-template-columns: repeat(3, 1fr); padding: 1rem 0 3rem; gap: 1rem; }
 }
 @media (min-width: 1024px) {
     .sf-grid { grid-template-columns: repeat(4, 1fr); }
@@ -354,14 +383,27 @@
 </style>
 
 <div class="sf-page">
+
+    {{-- ── Full-width Cover Banner (Desktop only) ── --}}
+    @php
+        $coverImg = $profile->cover_image ?? ($profile->bio_config['cover'] ?? null);
+    @endphp
+    <div class="sf-cover-wrap">
+        @if($coverImg)
+            <img src="{{ asset('storage/' . $coverImg) }}" alt="{{ $profile->store_name }}" class="sf-cover">
+        @else
+            <div class="sf-cover-placeholder">
+                <svg width="48" height="48" fill="none" stroke="#1eb349" stroke-width="1" viewBox="0 0 24 24" opacity="0.3"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8.5" cy="13.5" r="1.5"/></svg>
+            </div>
+        @endif
+    </div>
+
     <div class="sf-layout">
 
         {{-- ── Sidebar ── --}}
         <aside class="sf-sidebar">
         <div class="sf-profile">
-                @php
-                    $coverImg = $profile->cover_image ?? ($profile->bio_config['cover'] ?? null);
-                @endphp
+                {{-- Mobile only: show cover inside profile card --}}
                 @if($coverImg)
                     <img src="{{ asset('storage/' . $coverImg) }}" alt="{{ $profile->store_name }}" class="sf-cover">
                 @else
@@ -386,7 +428,7 @@
                         {{-- Social Links --}}
                         @php $socials = $profile->social_links ?? []; @endphp
                         @if(is_array($socials) && count(array_filter($socials)) > 0)
-                            <div style="display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:0.35rem;margin-top:0.4rem;">
+                            <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0.35rem;margin-top:0.4rem;">
                                 @if(!empty($socials['instagram']))
                                     @php $igUrl = str_starts_with($socials['instagram'], 'http') ? $socials['instagram'] : 'https://instagram.com/' . ltrim($socials['instagram'], '@'); @endphp
                                     <a href="{{ $igUrl }}" target="_blank" rel="noopener noreferrer" style="width:30px;height:30px;border-radius:50%;background:#FDF2F8;border:1px solid #FBCFE8;display:flex;align-items:center;justify-content:center;color:#E1306C;text-decoration:none;transition:transform 0.2s;" title="Instagram">
