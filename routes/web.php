@@ -430,7 +430,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     // CRUD Kelompok Produk
     Route::resource('groups', \App\Http\Controllers\Creator\CreatorGroupController::class);
 
-    // Pengaturan Profil & Toko
+    // Pengaturan 
     Route::get('/profile', [\App\Http\Controllers\Creator\CreatorProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [\App\Http\Controllers\Creator\CreatorProfileController::class, 'update'])->name('profile.update');
 
