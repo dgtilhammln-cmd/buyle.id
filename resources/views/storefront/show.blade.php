@@ -104,7 +104,7 @@
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0.5rem;
     padding: 0;
 }
 
@@ -114,10 +114,10 @@
 }
 .sf-profile {
     background: #fff;
-    padding: 1rem 1rem 1rem;
-    border-radius: 0 0 20px 20px;
+    padding: 0.75rem;
+    border-radius: 0 0 16px 16px;
     color: #1E293B;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     border-bottom: 1px solid #e2e8f0;
     overflow: hidden;
 }
@@ -125,53 +125,54 @@
 /* Store cover banner */
 .sf-cover {
     width: 100%;
-    height: 160px;
+    height: 140px;
     object-fit: cover;
     object-position: center;
     display: block;
-    border-radius: 14px;
-    margin-bottom: 1rem;
+    border-radius: 12px;
+    margin-bottom: 0.65rem;
 }
 .sf-cover-placeholder {
     width: 100%;
-    height: 140px;
+    height: 120px;
     background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-    border-radius: 14px;
-    margin-bottom: 1rem;
+    border-radius: 12px;
+    margin-bottom: 0.65rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 @media (max-width: 500px) {
-    .sf-cover { height: 44vw; border-radius: 10px; }
-    .sf-cover-placeholder { height: 40vw; border-radius: 10px; }
+    .sf-cover { height: 40vw; border-radius: 10px; margin-bottom: 0.5rem; }
+    .sf-cover-placeholder { height: 36vw; border-radius: 10px; margin-bottom: 0.5rem; }
 }
 
 .sf-profile-inner {
-    display: flex; align-items: center; gap: 1rem; max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; gap: 0.75rem; max-width: 1200px; margin: 0 auto;
 }
 .sf-avatar {
-    width: 64px; height: 64px; border-radius: 50%;
-    border: 3px solid #f8fafc;
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     object-fit: cover; flex-shrink: 0;
     background: #f0fdf4; color: #1eb349;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem; font-weight: 600;
+    font-size: 1.15rem; font-weight: 600;
 }
 .sf-profile-text { flex: 1; min-width: 0; }
 .sf-store-name {
-    font-size: 1.25rem; margin: 0 0 0.25rem; line-height: 1.2;
+    font-size: 1.1rem; margin: 0 0 0.15rem; line-height: 1.2;
 }
 .sf-desc {
-    font-size: 0.85rem; color: #475569;
-    line-height: 1.5; margin: 0;
+    font-size: 0.78rem; color: #475569;
+    line-height: 1.35; margin: 0;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 
 .sf-desktop-tabs { display: none; } /* Hidden on mobile */
 .sf-mobile-tabs {
-    padding: 1rem 1rem 0; overflow-x: auto; scrollbar-width: none;
-    -webkit-overflow-scrolling: touch; display: flex; gap: 0.5rem;
+    padding: 0.4rem 0.75rem 0; overflow-x: auto; scrollbar-width: none;
+    -webkit-overflow-scrolling: touch; display: flex; gap: 0.35rem;
 }
 .sf-mobile-tabs::-webkit-scrollbar { display: none; }
 
@@ -183,24 +184,24 @@
 /* ── Banner ── */
 .sf-banner-slider {
     display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
-    gap: 0.5rem; padding: 1rem 1rem 0; scrollbar-width: none;
+    gap: 0.5rem; padding: 0.4rem 0.75rem 0; scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
 }
 .sf-banner-slider::-webkit-scrollbar { display: none; }
 .sf-banner {
     flex: 0 0 100%; scroll-snap-align: center;
-    border-radius: 16px; overflow: hidden;
-    aspect-ratio: 2/1; background: #e2e8f0;
+    border-radius: 12px; overflow: hidden;
+    aspect-ratio: 2.2/1; background: #e2e8f0;
 }
 .sf-banner img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* ── Tabs & Buttons ── */
 .sf-tab {
-    padding: 0.5rem 1rem; border-radius: 99px;
-    font-size: 0.85rem; white-space: nowrap;
+    padding: 0.4rem 0.85rem; border-radius: 99px;
+    font-size: 0.78rem; white-space: nowrap;
     text-decoration: none; transition: all 0.2s;
     background: #fff; color: #475569; border: 1px solid #e2e8f0;
-    display: inline-flex; align-items: center; gap: 0.5rem;
+    display: inline-flex; align-items: center; gap: 0.35rem;
 }
 .sf-tab-sidebar {
     padding: 0.65rem 1.25rem; border-radius: 99px;
@@ -215,8 +216,8 @@
 }
 .sf-tab-badge {
     background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-    color: #475569; font-size: 0.65rem; font-weight: 700;
-    padding: 0.25rem 0.5rem; border-radius: 99px; line-height: 1;
+    color: #475569; font-size: 0.62rem; font-weight: 700;
+    padding: 0.2rem 0.45rem; border-radius: 99px; line-height: 1;
 }
 .sf-tab.active .sf-tab-badge, .sf-tab-sidebar.active .sf-tab-badge {
     background: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.15));
@@ -225,11 +226,11 @@
 
 /* ── Toolbar ── */
 .sf-toolbar {
-    display: flex; align-items: center; gap: 0.5rem;
-    padding: 1rem 1rem 0; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 0.35rem;
+    padding: 0.4rem 0.75rem 0; flex-wrap: wrap;
 }
 .sf-sort-btn {
-    padding: 0.6rem 1.2rem; border-radius: 99px; font-size: 0.85rem;
+    padding: 0.45rem 0.9rem; border-radius: 99px; font-size: 0.78rem;
     background: #fff; color: #475569; border: 1px solid #e2e8f0;
     cursor: pointer; transition: all 0.2s; text-decoration: none;
 }
@@ -238,23 +239,23 @@
 }
 .sf-sort-btn:hover:not(.active) { border-color: #1eb349; color: #1eb349; }
 
-.sf-search-wrap { flex: 1; min-width: 200px; position: relative; }
+.sf-search-wrap { flex: 1; min-width: 160px; position: relative; }
 .sf-search {
-    width: 100%; height: 42px; border-radius: 99px;
-    border: 1px solid #e2e8f0; padding: 0 2.5rem 0 1rem;
-    font-size: 0.85rem; background: #fff; outline: none;
-    transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    width: 100%; height: 36px; border-radius: 99px;
+    border: 1px solid #e2e8f0; padding: 0 2.2rem 0 0.85rem;
+    font-size: 0.78rem; background: #fff; outline: none;
+    transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 .sf-search:focus { border-color: #1eb349; box-shadow: 0 0 0 3px rgba(30,179,73,0.1); }
 .sf-search-icon {
-    position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+    position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
     color: #94A3B8; pointer-events: none;
 }
 
 /* ── Products Grid ── */
 .sf-grid {
     display: grid; grid-template-columns: 1fr 1fr;
-    gap: 0.75rem; padding: 1rem 1rem 3rem;
+    gap: 0.5rem; padding: 0.5rem 0.75rem 3rem;
 }
 
 .sf-card {
@@ -380,7 +381,7 @@
                         {{-- Social Links --}}
                         @php $socials = $profile->social_links ?? []; @endphp
                         @if(is_array($socials) && count(array_filter($socials)) > 0)
-                            <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0.5rem;margin-top:0.75rem;">
+                            <div style="display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:0.35rem;margin-top:0.4rem;">
                                 @if(!empty($socials['instagram']))
                                     @php $igUrl = str_starts_with($socials['instagram'], 'http') ? $socials['instagram'] : 'https://instagram.com/' . ltrim($socials['instagram'], '@'); @endphp
                                     <a href="{{ $igUrl }}" target="_blank" rel="noopener noreferrer" style="width:30px;height:30px;border-radius:50%;background:#FDF2F8;border:1px solid #FBCFE8;display:flex;align-items:center;justify-content:center;color:#E1306C;text-decoration:none;transition:transform 0.2s;" title="Instagram">
@@ -441,10 +442,10 @@
 
         {{-- ── Main Content ── --}}
         <main class="sf-main">
-            {{-- ── Banners ── --}}
-            @if($profile->store_banner_1 || $profile->store_banner_2)
+            {{-- ── Promotional Banners (Only if explicitly set and not matching cover) ── --}}
+            @if(($profile->store_banner_1 && $profile->store_banner_1 !== $coverImg) || $profile->store_banner_2)
                 <div class="sf-banner-slider">
-                    @if($profile->store_banner_1)
+                    @if($profile->store_banner_1 && $profile->store_banner_1 !== $coverImg)
                     <div class="sf-banner">
                         <img src="{{ asset('storage/' . $profile->store_banner_1) }}" alt="Banner 1">
                     </div>
@@ -455,19 +456,6 @@
                     </div>
                     @endif
                 </div>
-            @else
-                @php
-                    $bannerImg = isset($profile->store_banner) && $profile->store_banner
-                        ? asset('storage/' . $profile->store_banner)
-                        : ($products->count() > 0 && $products->first()->image ? $products->first()->image_url : null);
-                @endphp
-                @if($bannerImg)
-                <div class="sf-banner-slider">
-                    <div class="sf-banner">
-                        <img src="{{ $bannerImg }}" alt="Banner {{ $profile->store_name }}">
-                    </div>
-                </div>
-                @endif
             @endif
 
             {{-- ── Mobile Tabs ── --}}

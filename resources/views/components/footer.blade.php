@@ -322,6 +322,7 @@ www.buyle.id
             flex-direction: column;
             align-items: flex-start;
             gap: 1rem;
+            padding-bottom: 90px !important;
         }
     }
 </style>

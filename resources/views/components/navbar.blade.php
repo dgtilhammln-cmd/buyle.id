@@ -375,10 +375,15 @@
         /* Make search icon blue to match theme */
         .search-btn { background: #F0F9FF; color: #1eb349; }
 
-        /* Hide all icons except Daftar */
+        /* Hide all icons except Mobile Cart & Share & Daftar */
         .pill-icon-btn { display: flex !important; width: 32px; height: 32px; background: #fff; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center; justify-content: center; }
         .pill-icon-btn svg { width: 16px; height: 16px; color: #64748B; }
-        .cart-dropdown-wrap, .auth-text-btn, .auth-divider { display: none !important; } /* Hide cart and login text on mobile header since they go to bottom nav */
+        .cart-dropdown-wrap, .auth-text-btn, .auth-divider { display: none !important; } /* Hide cart dropdown and login text on mobile header since cart has direct mobile icon button */
+        .nav-mobile-cart-btn { display: none !important; }
+        @media (max-width: 991px) {
+            .nav-article-btn { display: none !important; }
+            .nav-mobile-cart-btn { display: flex !important; }
+        }
         
         body { padding-top: 115px !important; background-color: #F8FAFC !important; }
     }
@@ -447,7 +452,7 @@
         <div class="nav-pill-box nav-pill-actions">
             
             {{-- Blog / Artikel Icon --}}
-            <a href="{{ url('/artikel') }}" class="pill-icon-btn" title="Blog & Artikel">
+            <a href="{{ url('/artikel') }}" class="pill-icon-btn nav-article-btn" title="Blog & Artikel">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                     <polyline points="14 2 14 8 20 8"></polyline>
@@ -455,6 +460,27 @@
                     <line x1="16" y1="17" x2="8" y2="17"></line>
                     <polyline points="10 9 9 9 8 9"></polyline>
                 </svg>
+            </a>
+
+            {{-- Mobile Cart Icon (Shown on mobile header instead of article icon) --}}
+            <a href="{{ route('cart.index') }}" class="pill-icon-btn nav-mobile-cart-btn" title="Keranjang" style="position:relative;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                @php
+                    try {
+                        $cartService = app(\App\Services\CartService::class);
+                        $cartCount = $cartService->getSummary()['count'];
+                    } catch(\Exception $e) {
+                        $cartCount = 0;
+                    }
+                @endphp
+                @if($cartCount > 0)
+                    <span style="position:absolute; top:-3px; right:-3px; background:#EF4444; color:#fff; font-size:0.55rem; font-weight:800; width:15px; height:15px; display:flex; align-items:center; justify-content:center; border-radius:50%;">
+                        {{ $cartCount > 99 ? '99+' : $cartCount }}
+                    </span>
+                @endif
             </a>
             
             {{-- Cart Dropdown --}}
