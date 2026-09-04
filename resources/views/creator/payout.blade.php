@@ -1,191 +1,373 @@
 @extends('creator.layout')
-@section('title', 'Pencairan Dana & Pengaturan Payout')
-@section('page_title', 'Pencairan Dana & Pengaturan Payout')
-@section('breadcrumb', 'Keuangan › Payout Settings')
+@section('title', 'Saldo & Pencairan · Creator Dashboard')
+@section('page_title', 'Saldo & Pencairan')
 
 @section('styles')
 <style>
-    .payout-card { background:#fff; border-radius:20px; border:1px solid #e7f0e7; box-shadow:0 4px 20px rgba(0,0,0,0.04); overflow:hidden; max-width:900px; margin-bottom: 2rem; }
-    .payout-header { background:linear-gradient(135deg,#1eb349,#a5cf37); padding:1.75rem 2rem; color:#fff; }
-    .payout-balance { font-size:2.25rem; font-weight:800; letter-spacing:-0.04em; }
-    .payout-body { padding:2rem; }
-    
-    /* Tabs Navigation */
-    .payout-tabs { display:flex; gap:0.5rem; padding:0.5rem; background:#f8fafc; border-radius:14px; border:1px solid #e2e8f0; margin-bottom:1.5rem; }
-    .payout-tab { flex:1; text-align:center; padding:0.65rem 1rem; font-size:0.85rem; font-weight:700; color:#64748b; border-radius:10px; cursor:pointer; transition:all 0.2s; text-decoration:none; border:none; background:transparent; display:flex; align-items:center; justify-content:center; gap:0.4rem; }
-    .payout-tab.active { background:#fff; color:#1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
+    .bio-layout {
+        display: flex;
+        gap: 2rem;
+        align-items: flex-start;
+    }
 
-    .info-row { display:flex; justify-content:space-between; align-items:center; padding:0.75rem 0; border-bottom:1px solid #f3f7f3; font-size:0.85rem; }
-    .info-row:last-child { border-bottom:none; }
-    .info-label { color:#64748B; font-weight:600; }
-    .info-val { font-weight:700; color:#0f1f0f; }
-    
-    .form-group { display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1.25rem; }
-    .form-label { font-size:0.8rem; font-weight:700; color:#374151; }
-    .form-input { height:44px; padding:0 1rem; border:1.5px solid #e7f0e7; border-radius:10px; font-family:'Montserrat',sans-serif; font-size:0.875rem; color:#1a1a1a; background:#f9fefb; outline:none; transition:all 0.2s; }
-    .form-input:focus { border-color:#1eb349; background:#fff; box-shadow:0 0 0 3px rgba(30,179,73,0.1); }
-    .btn-submit { height:46px; padding:0 1.5rem; border-radius:12px; background:linear-gradient(135deg,#1eb349,#a5cf37); border:none; font-family:'Montserrat',sans-serif; font-size:0.875rem; font-weight:700; color:#fff; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,0.3); transition:all 0.2s; width:100%; margin-top:0.5rem; display:flex; align-items:center; justify-content:center; gap:0.5rem; }
-    .btn-submit:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(30,179,73,0.4); }
-    
-    .alert-info { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:1rem; font-size:0.82rem; color:#15803d; margin-bottom:1.5rem; line-height:1.5; }
-    .badge-status { font-size:0.75rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:99px; text-transform:uppercase; }
+    .bio-sidebar {
+        width: 300px;
+        flex-shrink: 0;
+        background: #fff;
+        border-radius: 20px;
+        padding: 1.25rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        border: 1px solid #f0fdf4;
+        position: sticky;
+        top: 1.5rem;
+    }
+
+    .bio-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .tab-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 0.85rem 1rem;
+        border: none;
+        background: transparent;
+        color: #64748b;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-radius: 12px;
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.2s;
+        margin-bottom: 0.25rem;
+    }
+
+    .tab-btn:hover {
+        background: #f8fafc;
+        color: #1eb349;
+    }
+
+    .tab-btn.active {
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.2);
+    }
+
+    .prof-card {
+        background: #fff;
+        border-radius: 20px;
+        border: 1px solid #e7f0e7;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+
+    .prof-card-head {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #f3f7f3;
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #fafdfb;
+    }
+
+    .form-body {
+        padding: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #334155;
+    }
+
+    .form-input {
+        height: 44px;
+        padding: 0 1rem;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.875rem;
+        color: #1a1a1a;
+        background: #f8fafc;
+        outline: none;
+        transition: all 0.2s;
+    }
+
+    .form-input:focus {
+        border-color: #1eb349;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.1);
+    }
+
+    .btn-submit-payout {
+        height: 46px;
+        padding: 0 1.5rem;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
+        border: none;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .btn-submit-payout:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(30, 179, 73, 0.45);
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.85rem;
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .info-val {
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .alert-notice {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 14px;
+        padding: 1rem 1.25rem;
+        font-size: 0.82rem;
+        color: #15803d;
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+    }
+
+    @media (max-width: 991px) {
+        .bio-layout {
+            flex-direction: column;
+        }
+
+        .bio-sidebar {
+            width: 100%;
+            position: static;
+        }
+    }
 </style>
 @endsection
 
 @section('content')
-<div class="payout-card">
-    <div class="payout-header">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div>
-                <div style="font-size:0.75rem; font-weight:700; opacity:0.85; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.25rem; display:flex; align-items:center; gap:0.35rem;">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-                    Saldo Tersedia
-                </div>
-                <div class="payout-balance">Rp {{ number_format($availableBalance, 0, ',', '.') }}</div>
+<div class="bio-layout">
+
+    {{-- SUB SIDEBAR --}}
+    <div class="bio-sidebar">
+        {{-- Balance Card --}}
+        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem;">
+            <div style="font-size: 0.72rem; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.35rem;">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                Saldo Siap Ditarik
             </div>
-            <div style="background:rgba(255,255,255,0.2); padding:0.5rem 1rem; border-radius:12px; backdrop-filter:blur(4px); font-size:0.78rem; font-weight:600;">
-                Platform Fee: 5% (Pembeli)
+            <div style="font-size: 1.75rem; font-weight: 800; color: #15803d; letter-spacing: -0.03em;">
+                Rp {{ number_format($availableBalance, 0, ',', '.') }}
+            </div>
+            <div style="font-size: 0.72rem; color: #166534; margin-top: 0.4rem; font-weight: 600;">
+                Platform Fee: 5% (Dibayar Pembeli)
             </div>
         </div>
+
+        <button type="button" class="tab-btn active" onclick="switchPayoutTab('tab-withdraw', this)">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Penarikan Saldo
+        </button>
+        <button type="button" class="tab-btn" onclick="switchPayoutTab('tab-bank', this)">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Pengaturan Rekening
+        </button>
+        <button type="button" class="tab-btn" onclick="switchPayoutTab('tab-history', this)">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Riwayat Pencairan
+        </button>
     </div>
-    
-    <div class="payout-body">
-        {{-- Navigation Tabs --}}
-        <div class="payout-tabs">
-            <button type="button" class="payout-tab active" onclick="switchTab('withdrawTab', this)">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                Penarikan Saldo
-            </button>
-            <button type="button" class="payout-tab" onclick="switchTab('settingsTab', this)">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                Pengaturan Rekening
-            </button>
-            <button type="button" class="payout-tab" onclick="switchTab('historyTab', this)">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                Riwayat Pencairan
-            </button>
-        </div>
+
+    {{-- CONTENT AREA --}}
+    <div class="bio-content">
 
         {{-- TAB 1: PENARIKAN SALDO --}}
-        <div id="withdrawTab" class="tab-content">
-            <div class="alert-info d-flex align-items-start gap-2">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                <div>
-                    <strong>Informasi Penarikan Saldo:</strong><br>
-                    • Pencairan diproses dalam 1–3 hari kerja setelah disetujui Admin.<br>
-                    • Dikenakan <strong>Biaya Penarikan (Withdrawal Fee)</strong> sebesar <strong>Rp 5.000</strong> per transaksi penarikan.<br>
-                    • Minimal penarikan saldo adalah <strong>Rp 50.000</strong>.
+        <div id="tab-withdraw" class="payout-tab-pane" style="display: block;">
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Form Pengajuan Penarikan Saldo
                 </div>
-            </div>
+                <div class="form-body">
+                    <div class="alert-notice d-flex align-items-start gap-2">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        <div>
+                            <strong>Ketentuan Penarikan Saldo:</strong><br>
+                            • Pencairan diproses 1–3 hari kerja setelah diajukan.<br>
+                            • Dikenakan <strong>Biaya Penarikan (Withdrawal Fee)</strong> sebesar <strong>Rp 5.000</strong> per transaksi.<br>
+                            • Minimal jumlah penarikan saldo adalah <strong>Rp 50.000</strong>.
+                        </div>
+                    </div>
 
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.25rem; margin-bottom:1.5rem;">
-                <div class="info-row"><span class="info-label">Total Pendapatan (GMV)</span><span class="info-val">Rp {{ number_format($gmv, 0, ',', '.') }}</span></div>
-                <div class="info-row"><span class="info-label">Sudah Dicairkan</span><span class="info-val" style="color:#64748B;">- Rp {{ number_format($totalPayout, 0, ',', '.') }}</span></div>
-                <div class="info-row" style="font-size:1rem;"><span class="info-label" style="color:#0f1f0f; font-weight:800;">Saldo Siap Ditarik</span><span class="info-val" style="color:#1eb349; font-size:1.15rem;">Rp {{ number_format($availableBalance, 0, ',', '.') }}</span></div>
-            </div>
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.25rem; margin-bottom:1.5rem;">
+                        <div class="info-row"><span class="info-label">Total Penjualan (GMV)</span><span class="info-val">Rp {{ number_format($gmv, 0, ',', '.') }}</span></div>
+                        <div class="info-row"><span class="info-label">Total Sudah Dicairkan</span><span class="info-val" style="color:#64748B;">- Rp {{ number_format($totalPayout, 0, ',', '.') }}</span></div>
+                        <div class="info-row" style="font-size:1rem;"><span class="info-label" style="color:#0f172a; font-weight:800;">Saldo Siap Ditarik</span><span class="info-val" style="color:#1eb349; font-size:1.15rem;">Rp {{ number_format($availableBalance, 0, ',', '.') }}</span></div>
+                    </div>
 
-            @if($availableBalance >= 50000)
-            <form action="{{ route('creator.payout.request') }}" method="POST">
-                @csrf
-                <div class="form-group">
-                    <label class="form-label">Tujuan Bank / E-Wallet</label>
-                    <select name="bank_name" class="form-input" required>
-                        <option value="">— Pilih Bank —</option>
-                        @foreach(['BCA','BNI','BRI','Mandiri','BSI','CIMB Niaga','Jenius/SMBC','Dana','GoPay','OVO','ShopeePay'] as $bank)
-                            <option value="{{ $bank }}" {{ ($seller->bank_name ?? '') === $bank ? 'selected' : '' }}>{{ $bank }}</option>
-                        @endforeach
-                    </select>
+                    @if($availableBalance >= 50000)
+                    <form action="{{ route('creator.payout.request') }}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <label class="form-label">Tujuan Bank / E-Wallet</label>
+                            <select name="bank_name" class="form-input" required>
+                                <option value="">— Pilih Bank —</option>
+                                @foreach(['BCA','BNI','BRI','Mandiri','BSI','CIMB Niaga','Jenius/SMBC','Dana','GoPay','OVO','ShopeePay'] as $bank)
+                                    <option value="{{ $bank }}" {{ ($seller->bank_name ?? '') === $bank ? 'selected' : '' }}>{{ $bank }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nomor Rekening / Akun</label>
+                            <input type="text" name="account_number" value="{{ $seller->bank_account_number ?? '' }}" class="form-input" placeholder="1234567890" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nama Pemilik Rekening</label>
+                            <input type="text" name="account_name" value="{{ $seller->bank_account_name ?? $seller->name }}" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Jumlah Penarikan (Rp)</label>
+                            <input type="number" name="amount" id="withdrawAmount" class="form-input" min="50000" max="{{ $availableBalance }}" placeholder="Minimum Rp 50.000" oninput="calcNetPayout()" required>
+                            <span style="font-size:0.75rem; color:#64748B; margin-top:0.25rem;" id="netPayoutCalc">Biaya Penarikan: Rp 5.000 | Dana Bersih Diterima: Rp 0</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Catatan (Opsional)</label>
+                            <input type="text" name="notes" class="form-input" placeholder="Misal: Penarikan saldo bulan ini">
+                        </div>
+                        <button type="submit" class="btn-submit-payout" onclick="return confirm('Ajukan penarikan saldo?')">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+                            Ajukan Penarikan Dana
+                        </button>
+                    </form>
+                    @else
+                    <div style="text-align:center; padding:2.5rem 1rem; color:#94A3B8;">
+                        <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:1rem; opacity:0.4;"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                        <h4 style="font-size:0.95rem; font-weight:700; color:#374151; margin-bottom:0.4rem;">Saldo Belum Mencapai Minimum</h4>
+                        <p style="font-size:0.8rem; margin:0;">Batas minimal penarikan saldo adalah Rp 50.000.</p>
+                    </div>
+                    @endif
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Nomor Rekening / Akun</label>
-                    <input type="text" name="account_number" value="{{ $seller->bank_account_number ?? '' }}" class="form-input" placeholder="1234567890" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Nama Pemilik Rekening</label>
-                    <input type="text" name="account_name" value="{{ $seller->bank_account_name ?? $seller->name }}" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Jumlah Penarikan (Rp)</label>
-                    <input type="number" name="amount" id="withdrawAmount" class="form-input" min="50000" max="{{ $availableBalance }}" placeholder="Minimum Rp 50.000" oninput="calcNetPayout()" required>
-                    <span style="font-size:0.75rem; color:#64748B; margin-top:0.25rem;" id="netPayoutCalc">Biaya Penarikan: Rp 5.000 | Dana Bersih Diterima: Rp 0</span>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Catatan (opsional)</label>
-                    <input type="text" name="notes" class="form-input" placeholder="Misal: Penarikan saldo event">
-                </div>
-                <button type="submit" class="btn-submit" onclick="return confirm('Ajukan penarikan saldo?')">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
-                    Ajukan Penarikan Dana
-                </button>
-            </form>
-            @else
-            <div style="text-align:center; padding:2rem 1rem; color:#94A3B8;">
-                <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:1rem; opacity:0.4;"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                <h3 style="font-size:0.95rem; font-weight:700; color:#374151; margin-bottom:0.5rem;">Saldo Minimal Rp 50.000</h3>
-                <p style="font-size:0.8rem;">Saldo akan dapat ditarik setelah mencapai batas minimal penarikan.</p>
             </div>
-            @endif
         </div>
 
         {{-- TAB 2: PENGATURAN REKENING --}}
-        <div id="settingsTab" class="tab-content" style="display:none;">
-            <h4 style="font-weight:700; color:#0F172A; margin-bottom:1rem; font-size:1rem;">Detail Rekening Bank Penerima</h4>
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.25rem;">
-                <div class="info-row"><span class="info-label">Bank</span><span class="info-val">{{ $seller->bank_name ?? 'Belum diatur' }}</span></div>
-                <div class="info-row"><span class="info-label">No. Rekening</span><span class="info-val">{{ $seller->bank_account_number ?? 'Belum diatur' }}</span></div>
-                <div class="info-row"><span class="info-label">Atas Nama</span><span class="info-val">{{ $seller->bank_account_name ?? 'Belum diatur' }}</span></div>
+        <div id="tab-bank" class="payout-tab-pane" style="display: none;">
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    Informasi Rekening Bank Terdaftar
+                </div>
+                <div class="form-body">
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.25rem;">
+                        <div class="info-row"><span class="info-label">Nama Bank / E-Wallet</span><span class="info-val">{{ $seller->bank_name ?? 'Belum diatur' }}</span></div>
+                        <div class="info-row"><span class="info-label">Nomor Rekening</span><span class="info-val">{{ $seller->bank_account_number ?? 'Belum diatur' }}</span></div>
+                        <div class="info-row"><span class="info-label">Nama Pemilik Rekening</span><span class="info-val">{{ $seller->bank_account_name ?? 'Belum diatur' }}</span></div>
+                    </div>
+                    <p style="font-size:0.8rem; color:#64748b; margin-top:1.25rem; line-height:1.5;">
+                        Informasi rekening di atas akan otomatis tersimpan saat Anda melakukan pengajuan penarikan dana.
+                    </p>
+                </div>
             </div>
-            <p style="font-size:0.8rem; color:#64748B; margin-top:1rem;">Detail rekening bank akan terisi otomatis saat Anda melakukan pengajuan penarikan dana.</p>
         </div>
 
         {{-- TAB 3: RIWAYAT PENCAIRAN --}}
-        <div id="historyTab" class="tab-content" style="display:none;">
-            <h4 style="font-weight:700; color:#0F172A; margin-bottom:1rem; font-size:1rem;">Riwayat Pengajuan Penarikan</h4>
-            @if(isset($requests) && $requests->count() > 0)
-                <div class="table-responsive">
-                    <table class="table align-middle" style="font-size:0.85rem;">
-                        <thead>
-                            <tr style="background:#f8fafc; color:#475569;">
-                                <th>Tanggal</th>
-                                <th>Bank</th>
-                                <th>Jumlah</th>
-                                <th>Admin Fee</th>
-                                <th>Diterima Bersih</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($requests as $req)
-                            <tr>
-                                <td>{{ $req->created_at->format('d M Y, H:i') }}</td>
-                                <td>{{ $req->bank_name }} ({{ $req->bank_account_number }})</td>
-                                <td>Rp {{ number_format($req->amount, 0, ',', '.') }}</td>
-                                <td style="color:#ef4444;">- Rp {{ number_format($req->admin_fee ?? 5000, 0, ',', '.') }}</td>
-                                <td style="font-weight:700; color:#1eb349;">Rp {{ number_format(($req->amount - ($req->admin_fee ?? 5000)), 0, ',', '.') }}</td>
-                                <td>
-                                    <span class="badge-status" style="background:{{ $req->status === 'approved' || $req->status === 'processed' ? '#dcfce7' : ($req->status === 'pending' ? '#fef3c7' : '#fef2f2') }}; color:{{ $req->status === 'approved' || $req->status === 'processed' ? '#166534' : ($req->status === 'pending' ? '#92400E' : '#991B1B') }};">
-                                        {{ $req->status_label }}
-                                    </span>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+        <div id="tab-history" class="payout-tab-pane" style="display: none;">
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    Riwayat Pengajuan Pencairan
                 </div>
-            @else
-                <div style="text-align:center; padding:2rem 1rem; color:#94A3B8;">
-                    <p style="font-size:0.85rem;">Belum ada riwayat penarikan saldo.</p>
+                <div class="form-body">
+                    @if(isset($requests) && $requests->count() > 0)
+                        <div style="overflow-x:auto;">
+                            <table class="table align-middle" style="font-size:0.85rem; width:100%;">
+                                <thead>
+                                    <tr style="background:#f8fafc; color:#475569; text-align:left;">
+                                        <th style="padding:0.75rem 1rem;">Tanggal</th>
+                                        <th style="padding:0.75rem 1rem;">Bank</th>
+                                        <th style="padding:0.75rem 1rem;">Jumlah</th>
+                                        <th style="padding:0.75rem 1rem;">Admin Fee</th>
+                                        <th style="padding:0.75rem 1rem;">Bersih</th>
+                                        <th style="padding:0.75rem 1rem;">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($requests as $req)
+                                    <tr style="border-bottom:1px solid #f1f5f9;">
+                                        <td style="padding:0.85rem 1rem;">{{ $req->created_at->format('d M Y, H:i') }}</td>
+                                        <td style="padding:0.85rem 1rem;">{{ $req->bank_name }} ({{ $req->bank_account_number }})</td>
+                                        <td style="padding:0.85rem 1rem;">Rp {{ number_format($req->amount, 0, ',', '.') }}</td>
+                                        <td style="padding:0.85rem 1rem; color:#ef4444;">- Rp {{ number_format($req->admin_fee ?? 5000, 0, ',', '.') }}</td>
+                                        <td style="padding:0.85rem 1rem; font-weight:700; color:#1eb349;">Rp {{ number_format(($req->amount - ($req->admin_fee ?? 5000)), 0, ',', '.') }}</td>
+                                        <td style="padding:0.85rem 1rem;">
+                                            <span style="font-size:0.72rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:99px; text-transform:uppercase; background:{{ $req->status === 'approved' || $req->status === 'processed' ? '#dcfce7' : ($req->status === 'pending' ? '#fef3c7' : '#fef2f2') }}; color:{{ $req->status === 'approved' || $req->status === 'processed' ? '#166534' : ($req->status === 'pending' ? '#92400E' : '#991B1B') }};">
+                                                {{ $req->status_label }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div style="text-align:center; padding:2.5rem 1rem; color:#94A3B8;">
+                            <p style="font-size:0.85rem; margin:0;">Belum ada riwayat penarikan saldo.</p>
+                        </div>
+                    @endif
                 </div>
-            @endif
+            </div>
         </div>
 
     </div>
 </div>
 
 <script>
-    function switchTab(tabId, btn) {
-        document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-        document.querySelectorAll('.payout-tab').forEach(el => el.classList.remove('active'));
+    function switchPayoutTab(tabId, btn) {
+        document.querySelectorAll('.payout-tab-pane').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(tabId).style.display = 'block';
         btn.classList.add('active');
     }

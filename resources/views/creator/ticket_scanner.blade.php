@@ -1,77 +1,191 @@
-@extends('layouts.app')
+@extends('creator.layout')
+@section('title', 'Scan Tiket Event · Creator Dashboard')
+@section('page_title', 'Scan Tiket Event')
 
-@section('content')
+@section('styles')
 <style>
-    .scanner-card {
-        max-width: 540px;
-        margin: 2rem auto;
-        background: #ffffff;
-        border-radius: 24px;
-        padding: 1.5rem;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.06);
-        border: 1px solid #E2E8F0;
+    .bio-layout {
+        display: flex;
+        gap: 2rem;
+        align-items: flex-start;
     }
+
+    .bio-sidebar {
+        width: 300px;
+        flex-shrink: 0;
+        background: #fff;
+        border-radius: 20px;
+        padding: 1.25rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        border: 1px solid #f0fdf4;
+        position: sticky;
+        top: 1.5rem;
+    }
+
+    .bio-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .prof-card {
+        background: #fff;
+        border-radius: 20px;
+        border: 1px solid #e7f0e7;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+
+    .prof-card-head {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #f3f7f3;
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #fafdfb;
+    }
+
+    .form-body {
+        padding: 1.5rem;
+    }
+
     #reader {
         width: 100%;
         border-radius: 16px;
         overflow: hidden;
-        border: 2px dashed #CBD5E1;
-        background: #F8FAFC;
+        border: 2px dashed #bbf7d0;
+        background: #f8fafc;
+        margin-bottom: 1.5rem;
     }
+
     #reader video {
         border-radius: 14px;
         object-fit: cover;
     }
+
     .res-box {
         margin-top: 1.5rem;
-        padding: 1.25rem;
+        padding: 1.25rem 1.5rem;
         border-radius: 16px;
         display: none;
         animation: fadeIn 0.3s ease;
     }
+
     .res-valid { background: #F0FDF4; border: 1.5px solid #86EFAC; color: #166534; }
     .res-used { background: #FEFCE8; border: 1.5px solid #FDE047; color: #854D0E; }
     .res-invalid { background: #FEF2F2; border: 1.5px solid #FCA5A5; color: #991B1B; }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-</style>
+    .form-input-code {
+        height: 44px;
+        padding: 0 1rem;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px 0 0 12px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.875rem;
+        color: #1a1a1a;
+        background: #f8fafc;
+        outline: none;
+        flex: 1;
+        transition: all 0.2s;
+    }
 
-<div class="container py-4">
-    <div class="scanner-card">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-            <div>
-                <h4 style="font-weight: 800; color: #0F172A; margin: 0;">Ticket Gate Scanner</h4>
-                <p style="font-size: 0.82rem; color: #64748B; margin: 0;">Arahkan kamera ke QR Code E-Ticket pengunjung</p>
+    .form-input-code:focus {
+        border-color: #1eb349;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.1);
+    }
+
+    .btn-submit-scan {
+        height: 44px;
+        padding: 0 1.5rem;
+        border-radius: 0 12px 12px 0;
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
+        border: none;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 991px) {
+        .bio-layout { flex-direction: column; }
+        .bio-sidebar { width: 100%; position: static; }
+    }
+</style>
+@endsection
+
+@section('content')
+<div class="bio-layout">
+
+    {{-- SUB SIDEBAR --}}
+    <div class="bio-sidebar">
+        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem;">
+            <div style="font-size: 0.85rem; font-weight: 800; color: #15803d; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+                Gatekeeper Scanner
             </div>
-            <div style="width:42px; height:42px; background:#F0FDF4; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#1eb349;">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+            <div style="font-size: 0.78rem; color: #166534; line-height: 1.5; font-weight: 500;">
+                Gunakan kamera smartphone atau ketik kode tiket secara manual untuk memverifikasi kedatangan pengunjung event.
             </div>
         </div>
 
-        {{-- Manual Code Input --}}
-        <form id="manualScanForm" class="mb-3" onsubmit="handleManualSubmit(event)">
-            <div class="input-group">
-                <input type="text" id="manualCodeInput" class="form-control" placeholder="Atau ketik Kode Tiket / Token..." style="border-radius: 12px 0 0 12px; font-size: 0.85rem; padding: 0.65rem 1rem;">
-                <button class="btn btn-primary px-3" type="submit" style="background:#1eb349; border-color:#1eb349; border-radius: 0 12px 12px 0; font-weight:600; font-size:0.85rem;">Periksa</button>
+        <div style="background: #fafdfb; border: 1px solid #e7f0e7; border-radius: 14px; padding: 1rem; font-size: 0.8rem; color: #475569;">
+            <strong style="color: #0f172a; display: block; margin-bottom: 0.4rem;">💡 Tips Verifikasi:</strong>
+            • Izinkan akses kamera browser saat diminta.<br>
+            • Pastikan pencahayaan layar pengunjung cukup.<br>
+            • Tiket yang berhasil diverifikasi otomatis terdaftar sebagai <strong>Checked-In</strong>.
+        </div>
+    </div>
+
+    {{-- CONTENT AREA --}}
+    <div class="bio-content">
+        <div class="prof-card">
+            <div class="prof-card-head">
+                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+                Live Camera QR Ticket Scanner
             </div>
-        </form>
 
-        {{-- Camera Scanner Container --}}
-        <div id="reader"></div>
+            <div class="form-body">
+                {{-- Input Manual --}}
+                <form id="manualScanForm" class="mb-4" onsubmit="handleManualSubmit(event)">
+                    <label class="form-label" style="font-size:0.8rem; font-weight:700; color:#334155; margin-bottom:0.4rem; display:block;">Pemeriksaan Kode Tiket / Token (Manual)</label>
+                    <div style="display: flex;">
+                        <input type="text" id="manualCodeInput" class="form-input-code" placeholder="Ketik Kode Tiket (misal: TKT-20260905-XXXX)...">
+                        <button class="btn-submit-scan" type="submit">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                            Periksa
+                        </button>
+                    </div>
+                </form>
 
-        {{-- Dynamic Result Container --}}
-        <div id="resultBox" class="res-box">
-            <div class="d-flex align-items-start gap-3">
-                <div id="resultIcon" class="flex-shrink-0 mt-1"></div>
-                <div class="flex-grow-1">
-                    <h5 id="resultTitle" style="font-weight: 700; margin-bottom: 0.25rem;"></h5>
-                    <p id="resultMsg" style="font-size: 0.85rem; margin-bottom: 0.75rem; line-height: 1.4;"></p>
+                {{-- Camera Viewport --}}
+                <div id="reader"></div>
 
-                    <div id="ticketDetails" style="font-size: 0.8rem; background: rgba(255,255,255,0.7); padding: 0.75rem; border-radius: 10px; display: none;"></div>
+                {{-- Result Box --}}
+                <div id="resultBox" class="res-box">
+                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                        <div id="resultIcon" style="flex-shrink: 0; margin-top: 2px;"></div>
+                        <div style="flex: 1;">
+                            <h5 id="resultTitle" style="font-weight: 800; font-size: 1rem; margin-bottom: 0.25rem;"></h5>
+                            <p id="resultMsg" style="font-size: 0.85rem; margin-bottom: 0.75rem; line-height: 1.4;"></p>
+                            <div id="ticketDetails" style="font-size: 0.8rem; background: rgba(255,255,255,0.8); padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid rgba(0,0,0,0.05); display: none;"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
@@ -143,7 +257,7 @@
         titleEl.textContent = data.title || 'Status Tiket';
         msgEl.textContent = data.message || '';
 
-        // SVG Icons without emojis
+        // Clean SVG Icons
         if (data.status === 'valid') {
             iconDiv.innerHTML = `<svg width="36" height="36" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
         } else if (data.status === 'used') {
@@ -155,9 +269,9 @@
         if (data.ticket) {
             detailsEl.style.display = 'block';
             detailsEl.innerHTML = `
-                <div><strong>Kode:</strong> ${data.ticket.code || '-'}</div>
-                <div><strong>Event:</strong> ${data.ticket.event_name || '-'}</div>
-                <div><strong>Pemegang:</strong> ${data.ticket.holder_name || '-'}</div>
+                <div><strong>Kode Tiket:</strong> ${data.ticket.code || '-'}</div>
+                <div><strong>Nama Event:</strong> ${data.ticket.event_name || '-'}</div>
+                <div><strong>Pemegang Tiket:</strong> ${data.ticket.holder_name || '-'}</div>
             `;
         } else {
             detailsEl.style.display = 'none';
