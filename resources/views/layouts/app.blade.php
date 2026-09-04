@@ -552,12 +552,6 @@
                 line-height: 1;
             }
         }
-    </style>
-
-
-
-
-    @include('partials.report_modal', ['reportType' => 'online_store', 'targetName' => 'Online Store / Product'])
 </body>
 
 </html>

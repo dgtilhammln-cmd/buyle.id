@@ -21,6 +21,7 @@
 }
 @media (max-width: 768px) {
     footer.cv-footer-v2 { display: none !important; }
+    .pd-actions { display: none !important; } /* Hide inline buttons on mobile since sticky bottom bar handles checkout */
 }
 
 /* ── Accent Vars ── */
@@ -505,7 +506,7 @@
                     </div>
 
                     {{-- CART FORM --}}
-                    <form action="{{ route('cart.add') }}" method="POST">
+                    <form id="pd-cart-form" action="{{ route('cart.add') }}" method="POST">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $service->id }}">
 
@@ -744,13 +745,11 @@
     {{-- MOBILE STICKY BAR --}}
     @if($service->price > 0)
     <div class="pd-sticky-bar">
-        <button type="button" class="pd-btn pd-btn-outline"
-            onclick="document.querySelector('button[value=\'cart\']').click()"
+        <button type="submit" form="pd-cart-form" name="action" value="cart" class="pd-btn pd-btn-outline"
             @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
             Keranjang
         </button>
-        <button type="button" class="pd-btn pd-btn-primary"
-            onclick="document.querySelector('button[value=\'buy\']').click()"
+        <button type="submit" form="pd-cart-form" name="action" value="buy" class="pd-btn pd-btn-primary"
             @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
             Beli Langsung
         </button>
@@ -906,4 +905,5 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
+@include('partials.report_modal', ['reportType' => 'product', 'targetName' => $service->name])
 @endsection
