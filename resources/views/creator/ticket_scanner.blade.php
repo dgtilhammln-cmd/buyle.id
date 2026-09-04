@@ -336,7 +336,44 @@
         });
     }
 
+    function playScanBeep(status = 'valid') {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            const ctx = new AudioCtx();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = 'sine';
+            
+            if (status === 'valid') {
+                // High clean "TIT!" beep (880Hz for 0.14s)
+                osc.frequency.setValueAtTime(880, ctx.currentTime);
+                gain.gain.setValueAtTime(0.25, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.14);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.14);
+            } else {
+                // Low warning beep for used/invalid (320Hz for 0.25s)
+                osc.frequency.setValueAtTime(320, ctx.currentTime);
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.25);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.25);
+            }
+        } catch(e) {
+            console.log('Audio beep error:', e);
+        }
+    }
+
     function renderResult(data) {
+        // Play instant "TIT" sound effect using Web Audio API
+        playScanBeep(data.status);
+
         const box = document.getElementById('resultBox');
         const iconDiv = document.getElementById('resultIcon');
         const titleEl = document.getElementById('resultTitle');
