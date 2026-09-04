@@ -153,9 +153,11 @@
         color: #334155;
     }
 
-    #reader video {
+    #reader video, #reader canvas {
         border-radius: 14px;
         object-fit: cover;
+        -webkit-transform: scaleX(1) !important;
+        transform: scaleX(1) !important;
     }
 
     .res-box {
