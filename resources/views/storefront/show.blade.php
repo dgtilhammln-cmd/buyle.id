@@ -294,14 +294,17 @@
     .sf-layout { padding: 1rem 1rem 2rem; flex-direction: row; align-items: flex-start; }
     
     .sf-sidebar {
-        width: 260px; flex-shrink: 0; position: sticky; top: 100px;
+        width: 260px; flex-shrink: 0; position: sticky; top: 100px; margin-top: 0;
         background: #fff; border-radius: 20px; padding: 1.5rem;
         box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+    }
+    .sf-main {
+        flex: 1; min-width: 0; margin-top: 0; padding-top: 0;
     }
     /* On desktop: hide the mobile profile card (banner+cover inside sidebar) */
     .sf-profile {
         background: transparent; padding: 0; border-radius: 0;
-        box-shadow: none; text-align: center; margin-bottom: 1.25rem; border: none;
+        box-shadow: none; text-align: center; margin-bottom: 1.25rem; border: none; margin-top: 0;
     }
     /* Hide the cover/banner inside the sidebar on desktop — shown in sf-cover-wrap instead */
     .sf-profile > .sf-cover,
@@ -330,7 +333,7 @@
     .sf-tab-sidebar:hover { background: #f0fdf4; }
     
     /* Promotional banners in main content area */
-    .sf-banner-slider { display: flex; padding: 0; gap: 1rem; }
+    .sf-banner-slider { display: flex; padding: 0; margin-top: 0; gap: 1rem; }
     .sf-banner { aspect-ratio: 21/6; border-radius: 20px; }
     
     .sf-toolbar { padding: 1rem 0 0; }

@@ -252,6 +252,9 @@
     .pill-icon-btn:hover {
         color: #1eb349;
     }
+    .nav-mobile-cart-btn {
+        display: none !important;
+    }
     .auth-text-btn {
         font-family: 'Montserrat', sans-serif;
         font-size: 0.85rem;
@@ -378,12 +381,8 @@
         /* Hide all icons except Mobile Cart & Share & Daftar */
         .pill-icon-btn { display: flex !important; width: 32px; height: 32px; background: #fff; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center; justify-content: center; }
         .pill-icon-btn svg { width: 16px; height: 16px; color: #64748B; }
-        .cart-dropdown-wrap, .auth-text-btn, .auth-divider { display: none !important; } /* Hide cart dropdown and login text on mobile header since cart has direct mobile icon button */
-        .nav-mobile-cart-btn { display: none !important; }
-        @media (max-width: 991px) {
-            .nav-article-btn { display: none !important; }
-            .nav-mobile-cart-btn { display: flex !important; }
-        }
+        .cart-dropdown-wrap, .auth-text-btn, .auth-divider, .nav-article-btn { display: none !important; } /* Hide cart dropdown, article icon, and login text on mobile header since cart has direct mobile icon button */
+        .nav-mobile-cart-btn { display: flex !important; }
         
         body { padding-top: 115px !important; background-color: #F8FAFC !important; }
     }
