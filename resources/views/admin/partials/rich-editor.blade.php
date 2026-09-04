@@ -99,7 +99,8 @@
         fd.append('image', file);
         fd.append('_token', '{{ csrf_token() }}');
         
-        fetch('{{ route("admin.upload.image") }}', { method: 'POST', body: fd })
+        @php $uploadRoute = (auth()->check() && auth()->user()->role === 'seller') ? route('creator.upload.image') : route('admin.upload.image'); @endphp
+        fetch('{{ $uploadRoute }}', { method: 'POST', body: fd })
         .then(res => res.json())
         .then(data => {
             const loadingEl = document.getElementById(loadingId);
