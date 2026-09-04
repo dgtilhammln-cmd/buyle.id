@@ -30,23 +30,34 @@
     <meta property="product:price:amount" content="{{ $price }}">
     <meta property="product:price:currency" content="IDR">
 
+    @php
+        $productImages = [];
+        if (!empty($images) && is_array($images)) {
+            foreach ($images as $img) {
+                $productImages[] = asset('storage/' . $img);
+            }
+        }
+        if (empty($productImages)) {
+            $productImages[] = asset('images/service-default.jpg');
+        }
+
+        $prodSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Product',
+            'name' => (string) ($block->title ?? 'Produk Digital'),
+            'image' => $productImages,
+            'description' => (string) strip_tags($pageDesc ?? ''),
+            'offers' => [
+                '@type' => 'Offer',
+                'url' => (string) url()->current(),
+                'priceCurrency' => 'IDR',
+                'price' => (string) ($price ?? 0),
+                'availability' => 'https://schema.org/InStock',
+            ]
+        ];
+    @endphp
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org/",
-      "@type": "Product",
-      "name": "{{ addslashes($block->title) }}",
-      "image": [
-        @foreach($images as $i => $img)"{{ asset('storage/' . $img) }}"@if(!$loop->last),@endif @endforeach
-      ],
-      "description": "{{ addslashes($pageDesc) }}",
-      "offers": {
-        "@type": "Offer",
-        "url": "{{ url()->current() }}",
-        "priceCurrency": "IDR",
-        "price": "{{ $price }}",
-        "availability": "https://schema.org/InStock"
-      }
-    }
+    {!! json_encode($prodSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -478,6 +489,7 @@
             });
         }
     </script>
+    @include('partials.report_modal', ['reportType' => 'product', 'targetName' => $block->title ?? 'Produk Digital'])
 </body>
 
 </html>

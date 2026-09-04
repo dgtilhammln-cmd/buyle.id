@@ -549,4 +549,5 @@
         </main>
     </div>
 </div>
+@include('partials.report_modal', ['reportType' => 'store', 'targetName' => $profile->store_name ?? 'Online Store'])
 @endsection

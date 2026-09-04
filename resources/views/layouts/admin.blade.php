@@ -300,6 +300,12 @@ button.btn-primary:hover, a.btn-primary:hover {
       Laporan Chat
       @if($newLeads > 0)<span class="sb-badge">{{ $newLeads }}</span>@endif
     </a>
+    @php $pendingReportsCount = \App\Models\Report::where('status', 'pending')->count(); @endphp
+    <a href="{{ route('admin.reports.index') }}" class="sb-link {{ request()->routeIs('admin.reports*') ? 'active' : '' }}">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+      Laporan Penyalahgunaan
+      @if($pendingReportsCount > 0)<span class="sb-badge">{{ $pendingReportsCount }}</span>@endif
+    </a>
     <a href="{{ route('admin.hero_slides.index') }}" class="sb-link {{ request()->routeIs('admin.hero_slides*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
       Banner Hero

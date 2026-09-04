@@ -21,6 +21,10 @@
     <meta name="description" content="{{ $seoDesc }}">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ $canonical }}">
+    <title>{{ $pageTitle }}</title>
+    <meta name="description" content="{{ $seoDesc }}">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ $canonical }}">
 
     <meta property="og:type" content="profile">
     <meta property="og:title" content="{{ $seoTitle }}">
@@ -28,38 +32,46 @@
     <meta property="og:image" content="{{ $ogImage }}">
     <meta property="og:url" content="{{ $canonical }}">
     <meta property="og:site_name" content="buyle.id">
-
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $seoTitle }}">
     <meta name="twitter:description" content="{{ $seoDesc }}">
     <meta name="twitter:image" content="{{ $ogImage }}">
 
+    @php
+        $sameAsLinks = array_values(array_filter([
+            !empty($config['ig']) ? 'https://instagram.com/' . ltrim($config['ig'], '@') : null,
+            !empty($config['tiktok']) ? 'https://tiktok.com/@' . ltrim($config['tiktok'], '@') : null,
+            !empty($config['youtube']) ? $config['youtube'] : null,
+            $canonical ?? url()->current(),
+        ]));
+
+        $personSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Person',
+            'name' => (string) ($config['name'] ?? $profile->store_name ?? $username),
+            'url' => (string) ($canonical ?? url()->current()),
+            'image' => (string) ($ogImage ?? asset('favicon.png')),
+            'description' => (string) ($seoDesc ?? ''),
+            'sameAs' => $sameAsLinks,
+        ];
+        if (!empty($config['location'])) {
+            $personSchema['address'] = [
+                '@type' => 'PostalAddress',
+                'addressLocality' => (string) $config['location'],
+                'addressCountry' => 'ID',
+            ];
+        }
+    @endphp
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "{{ addslashes($config['name'] ?? $profile->store_name ?? $username) }}",
-      "url": "{{ $canonical }}",
-      "image": "{{ $ogImage }}",
-      "description": "{{ addslashes($seoDesc) }}",
-      "address": { "@type": "PostalAddress", "addressLocality": "{{ addslashes($config['location'] ?? 'Indonesia') }}", "addressCountry": "ID" },
-      "sameAs": [
-        {{ !empty($config['ig']) ? '"https://instagram.com/' . ltrim($config['ig'], '@') . '",' : '' }}
-        {{ !empty($config['tiktok']) ? '"https://tiktok.com/@' . ltrim($config['tiktok'], '@') . '",' : '' }}
-        {{ !empty($config['youtube']) ? '"' . $config['youtube'] . '",' : '' }}
-        "{{ $canonical }}"
-      ]
-    }
+    {!! json_encode($personSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=3">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=3">
-    <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}?v=3">
 
     <style>
         :root {
@@ -755,13 +767,13 @@
                 if (!url) return;
                 fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`)
                     .then(r => r.json())
-                    .then(data => {
-                        if (data.thumbnail_url) { img.src = data.thumbnail_url; img.style.opacity = '1'; }
+                    .then(data => {                        if (data.thumbnail_url) { img.src = data.thumbnail_url; img.style.opacity = '1'; }
                     })
                     .catch(() => { img.src = 'https://placehold.co/130x200/111/fff?text=TikTok'; img.style.opacity = '1'; });
             });
         });
     </script>
+    @include('partials.report_modal', ['reportType' => 'link_in_bio', 'targetName' => $config['name'] ?? $profile->store_name ?? $username])
 </body>
 
 </html>

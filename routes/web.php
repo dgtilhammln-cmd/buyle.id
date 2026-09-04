@@ -71,6 +71,7 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/kontak',         [ContactController::class,'index'])->name('contact');
     Route::post('/kontak',        [ContactController::class,'send'])->name('contact.send');
     Route::post('/chat-cs',       [\App\Http\Controllers\ChatController::class, 'store'])->name('chat.store');
+    Route::post('/report-abuse',  [\App\Http\Controllers\ReportAbuseController::class, 'store'])->name('report.store');
     Route::get('/galeri',         [GalleryController::class,'index'])->name('gallery');
     Route::get('/galeri/{slug}',  [GalleryController::class,'show'])->name('gallery.show');
     
@@ -262,6 +263,11 @@ Route::prefix('admin')->group(function () {
         Route::post('/leads/{lead}/status',  [AdminLeadController::class, 'updateStatus'])->name('admin.leads.status');
         Route::post('/leads/{lead}/notes',   [AdminLeadController::class, 'updateNote'])->name('admin.leads.notes');
         Route::delete('/leads/{lead}',       [AdminLeadController::class, 'destroy'])->name('admin.leads.destroy');
+
+        // Laporan Penyalahgunaan / Public Reports
+        Route::get('/reports', [\App\Http\Controllers\Admin\AdminReportController::class, 'index'])->name('admin.reports.index');
+        Route::post('/reports/{report}/status', [\App\Http\Controllers\Admin\AdminReportController::class, 'updateStatus'])->name('admin.reports.update_status');
+        Route::delete('/reports/{report}', [\App\Http\Controllers\Admin\AdminReportController::class, 'destroy'])->name('admin.reports.destroy');
 
         Route::patch('services/{service}/order', [AdminServiceController::class, 'updateOrder'])->name('admin.services.order');
         Route::patch('services/{service}/stock', [AdminServiceController::class, 'updateStock'])->name('admin.services.stock');
