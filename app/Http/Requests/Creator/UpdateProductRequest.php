@@ -33,12 +33,14 @@ class UpdateProductRequest extends FormRequest
             'file_type'           => ['nullable', 'string', 'max:50'],
             'image'               => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'gallery'             => ['nullable', 'array', 'max:6'],
-            'gallery.*'           => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
-            'tiktok_video_url'    => ['nullable', 'url', 'max:255'],
-            'youtube_video_url'   => ['nullable', 'url', 'max:255'],
+            'product_type'        => ['nullable', 'string', 'in:digital,physical,ticket,external_link'],
+            'event_date'          => ['nullable', 'date'],
+            'event_time'          => ['nullable', 'string', 'max:100'],
+            'event_location'      => ['nullable', 'string', 'max:1000'],
+            'event_type'          => ['nullable', 'string', 'in:online,offline'],
 
-            // URL produk digital — divalidasi oleh SafeDigitalUrl
-            'digital_resource'    => ['required', 'string', 'max:2000', new SafeDigitalUrl()],
+            // URL produk digital — divalidasi oleh SafeDigitalUrl jika diisi
+            'digital_resource'    => ['nullable', 'string', 'max:2000'],
 
             'is_active'           => ['boolean'],
             'is_featured'         => ['boolean'],

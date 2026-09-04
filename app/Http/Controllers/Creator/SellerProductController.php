@@ -78,9 +78,9 @@ class SellerProductController extends Controller
         $data['is_whitelabel'] = $request->boolean('is_whitelabel');
         $data['whitelabel_approval_status'] = $data['is_whitelabel'] ? 'pending' : 'none';
 
-        // Produk digital buyle.id selalu external_link
+        // Produk type: ticket atau external_link
         $data['seller_id']    = auth()->id();
-        $data['product_type'] = 'external_link';
+        $data['product_type'] = $request->input('product_type') === 'ticket' ? 'ticket' : 'external_link';
         $data['stock']        = $data['stock'] ?? 0;
         
         // Generate unique slug
@@ -162,7 +162,7 @@ class SellerProductController extends Controller
             $data['gallery'] = $galleryPaths;
         }
 
-        $data['product_type'] = 'external_link'; // Selalu link
+        $data['product_type'] = $request->input('product_type') === 'ticket' ? 'ticket' : ($product->product_type === 'ticket' ? 'ticket' : 'external_link');
         $data['stock']        = $data['stock'] ?? 0;
 
         $isWhitelabel = $request->boolean('is_whitelabel');

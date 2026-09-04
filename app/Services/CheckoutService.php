@@ -64,7 +64,15 @@ class CheckoutService
             }
         }
 
-        $total = max(0, $subtotal - $discount);
+        // Hitung Platform Fee (5% untuk produk bertipe ticket)
+        $platformFee = 0;
+        foreach ($items as $cartItem) {
+            if ($cartItem->product && $cartItem->product->product_type === 'ticket') {
+                $platformFee += round($cartItem->subtotal * 0.05, 2);
+            }
+        }
+
+        $total = max(0, $subtotal + $platformFee - $discount);
 
         $notes = $data['notes'] ?? null;
 
@@ -78,6 +86,7 @@ class CheckoutService
                 'status'           => OrderStatus::Pending,
                 'subtotal'         => $subtotal,
                 'shipping_cost'    => 0,
+                'platform_fee'     => $platformFee,
                 'discount'         => $discount,
                 'total'            => $total,
                 'shipping_address' => [],
@@ -248,6 +257,25 @@ class CheckoutService
                     'courier_name' => 'Internal / Ekspedisi',
                     'status'       => \App\Enums\ShipmentStatus::Pending,
                 ]);
+            }
+
+            // Generate TicketPass jika terdapat produk bertipe ticket
+            foreach ($order->items as $item) {
+                if ($item->product && $item->product->product_type === 'ticket') {
+                    for ($i = 0; $i < $item->qty; $i++) {
+                        \App\Models\TicketPass::create([
+                            'order_id'      => $order->id,
+                            'order_item_id' => $item->id,
+                            'product_id'    => $item->product_id,
+                            'user_id'       => $order->user_id,
+                            'seller_id'     => $item->product->seller_id,
+                            'holder_name'   => $order->user?->name ?? 'Pemegang Tiket',
+                            'holder_email'  => $order->user?->email,
+                            'holder_phone'  => $order->user?->phone,
+                            'status'        => 'valid',
+                        ]);
+                    }
+                }
             }
 
             event(new \App\Events\OrderStatusUpdated($order));

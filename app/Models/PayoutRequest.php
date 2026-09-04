@@ -10,6 +10,8 @@ class PayoutRequest extends Model
     protected $fillable = [
         'seller_id',
         'amount',
+        'admin_fee',
+        'net_amount',
         'status',
         'bank_name',
         'bank_account_number',
@@ -24,6 +26,8 @@ class PayoutRequest extends Model
     {
         return [
             'amount'       => 'decimal:2',
+            'admin_fee'    => 'decimal:2',
+            'net_amount'   => 'decimal:2',
             'processed_at' => 'datetime',
         ];
     }

@@ -173,6 +173,39 @@
                                 </select>
                             </div>
 
+                            <div class="form-group">
+                                <label class="form-label">Tipe Produk <span>*</span></label>
+                                <select name="product_type" id="productTypeSelect" class="form-input" onchange="toggleProductTypeFields(this.value)" required>
+                                    <option value="external_link" {{ old('product_type') == 'external_link' ? 'selected' : '' }}>📦 Produk Digital / Link Access</option>
+                                    <option value="ticket" {{ old('product_type') == 'ticket' ? 'selected' : '' }}>🎟️ Tiket Event / Wisata / Webinar</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full" id="ticketFieldsWrap" style="display:none; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:14px; padding:1.25rem;">
+                                <h5 style="font-size:0.9rem; font-weight:800; color:#166534; margin-bottom:1rem;">🎟️ Detail Informasi Event / Tiket</h5>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label">Tanggal Pelaksanaan Event</label>
+                                        <input type="date" name="event_date" value="{{ old('event_date') }}" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Waktu Event (Jam)</label>
+                                        <input type="text" name="event_time" value="{{ old('event_time') }}" class="form-input" placeholder="Contoh: 19:00 WIB">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Jenis Pelaksanaan</label>
+                                        <select name="event_type" class="form-input">
+                                            <option value="offline" {{ old('event_type') == 'offline' ? 'selected' : '' }}>Offline (Tatap Muka di Venue)</option>
+                                            <option value="online" {{ old('event_type') == 'online' ? 'selected' : '' }}>Online (Webinar / Zoom Streaming)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group full">
+                                        <label class="form-label">Lokasi Event / Venue / Link Zoom</label>
+                                        <input type="text" name="event_location" value="{{ old('event_location') }}" class="form-input" placeholder="Contoh: Gedung Senayan Jakarta / Link Zoom">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group" id="subCatWrap" style="display:none;">
                                 <label class="form-label">Sub-Kategori</label>
                                 <select name="product_sub_category_id" id="subCatSelect" class="form-input">
@@ -498,5 +531,13 @@
     // Init check
     const wlCheck = document.getElementById('isWhitelabelCheck');
     if (wlCheck) toggleWhitelabelFields(wlCheck.checked);
+
+    // Product Type Toggle
+    function toggleProductTypeFields(val) {
+        const wrap = document.getElementById('ticketFieldsWrap');
+        if (wrap) wrap.style.display = (val === 'ticket') ? 'block' : 'none';
+    }
+    const initPType = document.getElementById('productTypeSelect');
+    if (initPType) toggleProductTypeFields(initPType.value);
 </script>
 @endsection

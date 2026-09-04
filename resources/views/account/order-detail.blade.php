@@ -103,6 +103,50 @@
             </div>
             </div> <!-- END KIRI -->
 
+            @if(isset($order->ticketPasses) && $order->ticketPasses->count() > 0)
+                <div style="margin-top: 2rem;">
+                    <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--c-text); display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/><path d="M13 5v14"/><path d="M13 9h.01"/><path d="M13 15h.01"/></svg>
+                        E-Ticket Digital Pass ({{ $order->ticketPasses->count() }} Tiket)
+                    </h3>
+                    
+                    @foreach($order->ticketPasses as $pass)
+                    <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1.5px solid #CBD5E1; border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center;">
+                        {{-- QR CODE --}}
+                        <div style="text-align: center; background: #fff; padding: 0.75rem; border-radius: 14px; border: 1px solid #E2E8F0; width: 160px;">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data={{ urlencode($pass->qr_token) }}" alt="QR Code Tiket" style="width: 130px; height: 130px; display: block; margin: 0 auto 0.5rem;">
+                            <div style="font-family: monospace; font-size: 0.75rem; font-weight: 700; color: #475569;">{{ $pass->ticket_code }}</div>
+                        </div>
+
+                        {{-- TICKET INFO --}}
+                        <div style="flex: 1; min-width: 240px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <h4 style="font-size: 1.05rem; font-weight: 800; color: #0F172A; margin: 0;">{{ $pass->product?->name }}</h4>
+                                <span style="font-size: 0.72rem; font-weight: 800; padding: 0.25rem 0.65rem; border-radius: 99px; text-transform: uppercase; background: {{ $pass->status === 'valid' ? '#DCFCE7' : '#FEF3C7' }}; color: {{ $pass->status === 'valid' ? '#166534' : '#92400E' }};">
+                                    {{ $pass->status === 'valid' ? 'VALID / TERDAFTAR' : 'SUDAH DIPAKAI' }}
+                                </span>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; font-size: 0.82rem; color: #475569; margin-top: 0.75rem;">
+                                <div>
+                                    <div style="font-size: 0.7rem; color: #94A3B8; font-weight: 600; text-transform: uppercase;">Pemegang Tiket</div>
+                                    <div style="font-weight: 700; color: #0F172A;">{{ $pass->holder_name }}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.7rem; color: #94A3B8; font-weight: 600; text-transform: uppercase;">Tanggal & Waktu</div>
+                                    <div style="font-weight: 700; color: #0F172A;">{{ $pass->product?->event_date?->format('d M Y') ?? 'Sesuai Jadwal' }} ({{ $pass->product?->event_time ?? '-' }})</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.7rem; color: #94A3B8; font-weight: 600; text-transform: uppercase;">Lokasi / Venue</div>
+                                    <div style="font-weight: 700; color: #0F172A;">{{ $pass->product?->event_location ?? 'Online / Venue Event' }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            @endif
+
         {{-- KANAN: RINGKASAN --}}
         <div>
             @if($order->status->value === 'pending' && $order->payment && $order->payment->status->value === 'pending')

@@ -506,12 +506,23 @@
 
             <a href="{{ $isBuyer ? '#' : route('creator.payout.settings') }}"
                 onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.payout*', 'creator.groups*') ? 'active' : '' }}">
+                class="cr-nav-link {{ request()->routeIs('creator.payout*') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <line x1="12" y1="1" x2="12" y2="23"/>
                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                 </svg>
                 Saldo & Pencairan
+                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+            </a>
+
+            <a href="{{ $isBuyer ? '#' : route('ticket.scanner') }}"
+                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                class="cr-nav-link {{ request()->routeIs('ticket.scanner') ? 'active' : '' }}">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/>
+                    <rect x="7" y="7" width="10" height="10" rx="1"/>
+                </svg>
+                Scan Tiket Event
                 @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
             </a>
         </nav>

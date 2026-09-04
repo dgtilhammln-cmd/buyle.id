@@ -24,6 +24,8 @@ class Product extends Model
         'price', 'sale_price', 'stock', 'weight', 'sku',
         'product_category_id', 'product_sub_category_id', 'is_featured',
         'product_type', 'file_type', 'digital_resource', 'seller_id', 'creator_group_id', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating', 'tiktok_video_url',
+        // Event / Ticket fields
+        'event_date', 'event_time', 'event_location', 'event_type',
         // Kolom White Label & Reseller
         'is_whitelabel', 'whitelabel_price', 'whitelabel_terms', 'whitelabel_approval_status', 'whitelabel_rejection_reason'
     ];
@@ -46,6 +48,7 @@ class Product extends Model
         'min_order'      => 'integer',
         'max_order'      => 'integer',
         'rating'         => 'decimal:1',
+        'event_date'     => 'date',
         // White Label casts
         'is_whitelabel'    => 'boolean',
         'whitelabel_price' => 'decimal:2',

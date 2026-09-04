@@ -448,6 +448,10 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     // Membership Plans
     Route::get('/membership', [\App\Http\Controllers\Creator\SellerController::class, 'membership'])->name('membership');
 
+    // Ticket Gate Scanner
+    Route::get('/scanner', [\App\Http\Controllers\TicketScannerController::class, 'index'])->name('ticket.scanner');
+    Route::post('/scanner/verify', [\App\Http\Controllers\TicketScannerController::class, 'verify'])->name('ticket.scanner.verify');
+
     // ── Link in Bio ──────────────────────────────────────────────────────
     Route::get('/bio',          [\App\Http\Controllers\Creator\CreatorBioController::class, 'index'])->name('bio.index');
     Route::post('/bio/role',    [\App\Http\Controllers\Creator\CreatorBioController::class, 'setRole'])->name('bio.set-role');

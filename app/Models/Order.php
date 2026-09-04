@@ -20,6 +20,8 @@ class Order extends Model
         'status',
         'subtotal',
         'shipping_cost',
+        'platform_fee',
+        'payment_gateway_fee',
         'discount',
         'total',
         'shipping_address',
@@ -34,12 +36,14 @@ class Order extends Model
     protected function casts(): array
     {
         return [
-            'status'           => OrderStatus::class,
-            'subtotal'         => 'decimal:2',
-            'shipping_cost'    => 'decimal:2',
-            'discount'         => 'decimal:2',
-            'total'            => 'decimal:2',
-            'shipping_address' => 'array',
+            'status'              => OrderStatus::class,
+            'subtotal'            => 'decimal:2',
+            'shipping_cost'       => 'decimal:2',
+            'platform_fee'        => 'decimal:2',
+            'payment_gateway_fee' => 'decimal:2',
+            'discount'            => 'decimal:2',
+            'total'               => 'decimal:2',
+            'shipping_address'    => 'array',
         ];
     }
 
@@ -85,6 +89,14 @@ class Order extends Model
     public function couponUsage(): HasOne
     {
         return $this->hasOne(CouponUsage::class);
+    }
+
+    /**
+     * E-Ticket pass untuk produk event di order ini.
+     */
+    public function ticketPasses(): HasMany
+    {
+        return $this->hasMany(TicketPass::class);
     }
 
     // =========================================================================
