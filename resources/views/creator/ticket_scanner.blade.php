@@ -54,11 +54,103 @@
 
     #reader {
         width: 100%;
-        border-radius: 16px;
+        border-radius: 20px;
         overflow: hidden;
-        border: 2px dashed #bbf7d0;
+        border: 2px dashed #bbf7d0 !important;
         background: #f8fafc;
+        padding: 1.5rem 1rem !important;
+        text-align: center;
         margin-bottom: 1.5rem;
+    }
+
+    #reader select {
+        height: 44px;
+        padding: 0 2rem 0 1rem;
+        border-radius: 12px;
+        border: 1.5px solid #cbd5e1 !important;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #0f172a;
+        background: #fff;
+        outline: none;
+        margin: 0.5rem;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        transition: all 0.2s;
+        max-width: 320px;
+        display: inline-block;
+    }
+    #reader select:focus {
+        border-color: #1eb349 !important;
+        box-shadow: 0 0 0 3px rgba(30,179,73,0.15);
+    }
+
+    #reader button {
+        height: 42px;
+        padding: 0 1.5rem !important;
+        border-radius: 999px !important;
+        background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
+        border: none !important;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #fff !important;
+        cursor: pointer;
+        margin: 0.5rem;
+        box-shadow: 0 4px 14px rgba(30,179,73,0.35) !important;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        text-decoration: none !important;
+    }
+    #reader button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(30,179,73,0.45) !important;
+    }
+
+    #reader a, #reader__dashboard_section_swaplink {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #1eb349 !important;
+        text-decoration: none !important;
+        display: inline-block;
+        margin-top: 0.75rem;
+        padding: 0.45rem 1rem;
+        border-radius: 12px;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        transition: all 0.2s;
+    }
+    #reader a:hover {
+        background: #dcfce7;
+        transform: translateY(-1px);
+    }
+
+    #reader img[alt="Info icon"] {
+        display: none !important;
+    }
+    #reader img[alt="Camera implementation"] {
+        width: 52px !important;
+        height: 52px !important;
+        opacity: 0.85;
+        margin-bottom: 0.75rem;
+    }
+    #reader__header_message {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 0.75rem;
+    }
+    #reader__dashboard_section_csr span {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #334155;
     }
 
     #reader video {
