@@ -329,8 +329,9 @@
     }
     .sf-tab-sidebar:hover { background: #f0fdf4; }
     
-    /* Hide promotional banner slider on desktop too */
-    .sf-banner-slider { display: none !important; }
+    /* Promotional banners in main content area */
+    .sf-banner-slider { display: flex; padding: 0; gap: 1rem; }
+    .sf-banner { aspect-ratio: 21/6; border-radius: 20px; }
     
     .sf-toolbar { padding: 1rem 0 0; }
     .sf-grid { grid-template-columns: repeat(3, 1fr); padding: 1rem 0 3rem; gap: 1rem; }
