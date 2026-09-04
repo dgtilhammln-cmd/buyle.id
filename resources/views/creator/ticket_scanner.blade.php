@@ -1,6 +1,6 @@
 @extends('creator.layout')
-@section('title', 'Scan Tiket Event · Creator Dashboard')
-@section('page_title', 'Scan Tiket Event')
+@section('title', 'Scan Tiket & Data Kehadiran · Creator Studio')
+@section('page_title', 'Scan Tiket & Data Kehadiran')
 
 @section('styles')
 <style>
@@ -28,6 +28,38 @@
         max-width: 100%;
     }
 
+    .tab-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 0.85rem 1rem;
+        border: none;
+        background: transparent;
+        color: #64748b;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-radius: 12px;
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.2s;
+        margin-bottom: 0.35rem;
+        text-decoration: none;
+    }
+
+    .tab-btn:hover {
+        background: #f8fafc;
+        color: #1eb349;
+    }
+
+    .tab-btn.active {
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.2);
+    }
+
     .prof-card {
         background: #fff;
         border-radius: 20px;
@@ -47,6 +79,7 @@
         color: #0f172a;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 0.5rem;
         background: #fafdfb;
     }
@@ -58,6 +91,7 @@
         overflow-x: hidden;
     }
 
+    /* ── SCANNER SPECIFIC ── */
     #reader {
         width: 100% !important;
         max-width: 100% !important;
@@ -117,10 +151,6 @@
         text-decoration: none !important;
         max-width: 100% !important;
     }
-    #reader button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(30,179,73,0.45) !important;
-    }
 
     #reader a, #reader__dashboard_section_swaplink {
         font-family: 'Montserrat', sans-serif;
@@ -138,34 +168,6 @@
         max-width: 100% !important;
         box-sizing: border-box !important;
     }
-    #reader a:hover {
-        background: #dcfce7;
-        transform: translateY(-1px);
-    }
-
-    #reader img[alt="Info icon"] {
-        display: none !important;
-    }
-    #reader img[alt="Camera implementation"] {
-        width: 52px !important;
-        height: 52px !important;
-        opacity: 0.85;
-        margin-bottom: 0.75rem;
-    }
-    #reader__header_message {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #64748b;
-        margin-bottom: 0.75rem;
-        word-break: break-word;
-    }
-    #reader__dashboard_section_csr span {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.85rem;
-        font-weight: 700;
-        color: #334155;
-    }
 
     #reader video, #reader canvas, #reader img, #reader div, #reader table {
         border-radius: 14px;
@@ -177,7 +179,8 @@
     }
 
     .res-box {
-        margin-top: 1.5rem;
+        margin-top: 1rem;
+        margin-bottom: 1.25rem;
         padding: 1.25rem 1.5rem;
         border-radius: 16px;
         display: none;
@@ -231,6 +234,140 @@
         flex-shrink: 0;
     }
 
+    /* ── STATS GRID & TABLE ── */
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 1.1rem 1.25rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.35rem;
+    }
+
+    .stat-card-value {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #0f172a;
+        line-height: 1.2;
+    }
+
+    .stat-card-sub {
+        font-size: 0.75rem;
+        color: #166534;
+        font-weight: 600;
+        margin-top: 0.3rem;
+    }
+
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.83rem;
+        text-align: left;
+    }
+
+    .custom-table th {
+        background: #f8fafc;
+        padding: 0.9rem 1rem;
+        font-weight: 700;
+        color: #475569;
+        border-bottom: 1.5px solid #e2e8f0;
+        white-space: nowrap;
+    }
+
+    .custom-table td {
+        padding: 0.9rem 1rem;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+        color: #1e293b;
+    }
+
+    .custom-table tr:hover {
+        background: #f0fdf4;
+    }
+
+    .badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.3rem 0.75rem;
+        border-radius: 99px;
+        font-size: 0.73rem;
+        font-weight: 700;
+    }
+
+    .badge-used { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+    .badge-valid { background: #fef9c3; color: #a16207; border: 1px solid #fef08a; }
+    .badge-cancelled { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+
+    .btn-action-sm {
+        padding: 0.4rem 0.85rem;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+
+    .btn-toggle-checkin {
+        background: #1eb349;
+        color: #fff;
+    }
+    .btn-toggle-checkin:hover { background: #16963c; }
+
+    .btn-toggle-undo {
+        background: #f1f5f9;
+        color: #475569;
+        border: 1px solid #cbd5e1;
+    }
+    .btn-toggle-undo:hover { background: #e2e8f0; }
+
+    .btn-export {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #166534;
+        padding: 0.5rem 1rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .btn-export:hover {
+        background: #dcfce7;
+    }
+
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
     @media (max-width: 991px) {
@@ -245,63 +382,276 @@
 @section('content')
 <div class="bio-layout">
 
-    {{-- SUB SIDEBAR --}}
+    {{-- SUB SIDEBAR NAV --}}
     <div class="bio-sidebar">
         <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem;">
             <div style="font-size: 0.85rem; font-weight: 800; color: #15803d; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
-                Gatekeeper Scanner
+                Gatekeeper Studio
             </div>
             <div style="font-size: 0.78rem; color: #166534; line-height: 1.5; font-weight: 500;">
-                Gunakan kamera smartphone atau ketik kode tiket secara manual untuk memverifikasi kedatangan pengunjung event.
+                Kelola pemindaian tiket live kamera dan pantau data rekap kehadiran pengunjung event Anda secara real-time.
             </div>
         </div>
 
-        <div style="background: #fafdfb; border: 1px solid #e7f0e7; border-radius: 14px; padding: 1rem; font-size: 0.8rem; color: #475569;">
+        <button type="button" class="tab-btn {{ $activeTab === 'scanner' ? 'active' : '' }}" onclick="switchTab('tab-scanner', this)">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+            Live QR Scanner
+        </button>
+        <button type="button" class="tab-btn {{ $activeTab === 'data' ? 'active' : '' }}" onclick="switchTab('tab-data', this)">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Data Kehadiran & Event
+        </button>
+
+        <div style="background: #fafdfb; border: 1px solid #e7f0e7; border-radius: 14px; padding: 1rem; font-size: 0.8rem; color: #475569; margin-top: 1.25rem;">
             <strong style="color: #0f172a; display: block; margin-bottom: 0.4rem;">💡 Tips Verifikasi:</strong>
             • Izinkan akses kamera browser saat diminta.<br>
             • Pastikan pencahayaan layar pengunjung cukup.<br>
-            • Tiket yang berhasil diverifikasi otomatis terdaftar sebagai <strong>Checked-In</strong>.
+            • Anda dapat menandai check-in manual pada tab Data Kehadiran jika pengunjung lupa membawa QR Code.
         </div>
     </div>
 
     {{-- CONTENT AREA --}}
     <div class="bio-content">
-        <div class="prof-card">
-            <div class="prof-card-head">
-                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
-                Live Camera QR Ticket Scanner
+
+        @if(session('success'))
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; padding:0.9rem 1.25rem; border-radius:14px; font-weight:600; font-size:0.85rem; margin-bottom:1.25rem;">
+                ✓ {{ session('success') }}
             </div>
+        @endif
 
-            <div class="form-body">
-                {{-- Input Manual --}}
-                <form id="manualScanForm" class="mb-4" onsubmit="handleManualSubmit(event)">
-                    <label class="form-label" style="font-size:0.8rem; font-weight:700; color:#334155; margin-bottom:0.4rem; display:block;">Pemeriksaan Kode Tiket / Token (Manual)</label>
-                    <div style="display: flex;">
-                        <input type="text" id="manualCodeInput" class="form-input-code" placeholder="Ketik Kode Tiket (misal: TKT-20260905-XXXX)...">
-                        <button class="btn-submit-scan" type="submit">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                            Periksa
-                        </button>
-                    </div>
-                </form>
+        @if(session('error'))
+            <div style="background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; padding:0.9rem 1.25rem; border-radius:14px; font-weight:600; font-size:0.85rem; margin-bottom:1.25rem;">
+                ⚠️ {{ session('error') }}
+            </div>
+        @endif
 
-                {{-- Result Box (Placed directly below manual input) --}}
-                <div id="resultBox" class="res-box" style="margin-top: 1rem; margin-bottom: 1.25rem;">
-                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
-                        <div id="resultIcon" style="flex-shrink: 0; margin-top: 2px;"></div>
-                        <div style="flex: 1;">
-                            <h5 id="resultTitle" style="font-weight: 800; font-size: 1rem; margin-bottom: 0.25rem;"></h5>
-                            <p id="resultMsg" style="font-size: 0.85rem; margin-bottom: 0.75rem; line-height: 1.4;"></p>
-                            <div id="ticketDetails" style="font-size: 0.8rem; background: rgba(255,255,255,0.8); padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid rgba(0,0,0,0.05); display: none;"></div>
-                        </div>
+        {{-- TAB 1: SCANNER --}}
+        <div id="tab-scanner" class="payout-tab-pane" style="display: {{ $activeTab === 'scanner' ? 'block' : 'none' }};">
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+                        Live Camera QR Ticket Scanner
                     </div>
                 </div>
 
-                {{-- Camera Viewport --}}
-                <div id="reader"></div>
+                <div class="form-body">
+                    {{-- Input Manual --}}
+                    <form id="manualScanForm" class="mb-4" onsubmit="handleManualSubmit(event)">
+                        <label class="form-label" style="font-size:0.8rem; font-weight:700; color:#334155; margin-bottom:0.4rem; display:block;">Pemeriksaan Kode Tiket / Token (Manual)</label>
+                        <div style="display: flex;">
+                            <input type="text" id="manualCodeInput" class="form-input-code" placeholder="Ketik Kode Tiket (misal: TKT-20260905-XXXX)...">
+                            <button class="btn-submit-scan" type="submit">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                                Periksa
+                            </button>
+                        </div>
+                    </form>
+
+                    {{-- Result Box (Terletak TEPAT di Atas Kamera) --}}
+                    <div id="resultBox" class="res-box">
+                        <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                            <div id="resultIcon" style="flex-shrink: 0; margin-top: 2px;"></div>
+                            <div style="flex: 1;">
+                                <h5 id="resultTitle" style="font-weight: 800; font-size: 1rem; margin-bottom: 0.25rem;"></h5>
+                                <p id="resultMsg" style="font-size: 0.85rem; margin-bottom: 0.75rem; line-height: 1.4;"></p>
+                                <div id="ticketDetails" style="font-size: 0.8rem; background: rgba(255,255,255,0.8); padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid rgba(0,0,0,0.05); display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Camera Viewport --}}
+                    <div id="reader"></div>
+                </div>
             </div>
         </div>
+
+        {{-- TAB 2: DATA KEHADIRAN & EVENT --}}
+        <div id="tab-data" class="payout-tab-pane" style="display: {{ $activeTab === 'data' ? 'block' : 'none' }};">
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        Data Kehadiran Pengunjung & Rekap Event
+                    </div>
+                    <a href="{{ route('creator.ticket.scanner.export', request()->all()) }}" class="btn-export">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Export Excel/CSV
+                    </a>
+                </div>
+
+                <div class="form-body">
+
+                    {{-- Filter Bar --}}
+                    <form method="GET" action="{{ route('creator.ticket.scanner') }}" style="margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+                        <input type="hidden" name="tab" value="data">
+
+                        <div style="flex: 1; min-width: 200px;">
+                            <select name="event_id" class="form-input" style="height: 42px; border-radius: 12px; font-size: 0.83rem; width: 100%;" onchange="this.form.submit()">
+                                <option value="">— Semua Event Ticket —</option>
+                                @foreach($events as $event)
+                                    <option value="{{ $event->id }}" {{ (string)$selectedEventId === (string)$event->id ? 'selected' : '' }}>
+                                        🎟️ {{ $event->name }} ({{ $event->event_date ? $event->event_date->format('d M Y') : 'Event' }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div style="width: 160px;">
+                            <select name="status" class="form-input" style="height: 42px; border-radius: 12px; font-size: 0.83rem; width: 100%;" onchange="this.form.submit()">
+                                <option value="">Status Kehadiran</option>
+                                <option value="used" {{ $statusFilter === 'used' ? 'selected' : '' }}>Checked-In (Hadir)</option>
+                                <option value="valid" {{ $statusFilter === 'valid' ? 'selected' : '' }}>Belum Hadir</option>
+                                <option value="cancelled" {{ $statusFilter === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
+                            </select>
+                        </div>
+
+                        <div style="flex: 1; min-width: 220px; display: flex; gap: 0.4rem;">
+                            <input type="text" name="search" value="{{ $search }}" class="form-input" placeholder="Cari nama, email, HP, atau kode..." style="height: 42px; border-radius: 12px; font-size: 0.83rem; flex: 1;">
+                            <button type="submit" style="height: 42px; padding: 0 1rem; border-radius: 12px; background: #1eb349; color: #fff; border: none; font-weight: 700; cursor: pointer;">
+                                Cari
+                            </button>
+                            @if($selectedEventId || $statusFilter || $search)
+                                <a href="{{ route('creator.ticket.scanner', ['tab' => 'data']) }}" style="height: 42px; padding: 0 0.85rem; border-radius: 12px; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; display: inline-flex; align-items: center; text-decoration: none; font-size: 0.8rem;">
+                                    Reset
+                                </a>
+                            @endif
+                        </div>
+                    </form>
+
+                    {{-- Stats Summary --}}
+                    <div class="stat-grid">
+                        <div class="stat-card" style="border-left: 4px solid #3b82f6;">
+                            <div class="stat-card-title">Total Tiket Terbit</div>
+                            <div class="stat-card-value" style="color: #1e40af;">{{ number_format($stats['total']) }}</div>
+                            <div class="stat-card-sub" style="color: #64748b;">Tiket Terjual / Terdaftar</div>
+                        </div>
+
+                        <div class="stat-card" style="border-left: 4px solid #22c55e;">
+                            <div class="stat-card-title">Checked-In (Hadir)</div>
+                            <div class="stat-card-value" style="color: #15803d;">{{ number_format($stats['checked_in']) }}</div>
+                            <div class="stat-card-sub" style="color: #15803d;">Tingkat Kehadiran: {{ $stats['rate'] }}%</div>
+                        </div>
+
+                        <div class="stat-card" style="border-left: 4px solid #eab308;">
+                            <div class="stat-card-title">Belum Check-In</div>
+                            <div class="stat-card-value" style="color: #a16207;">{{ number_format($stats['unchecked']) }}</div>
+                            <div class="stat-card-sub" style="color: #a16207;">Tiket Belum Dipindai</div>
+                        </div>
+
+                        <div class="stat-card" style="border-left: 4px solid #ef4444;">
+                            <div class="stat-card-title">Tiket Dibatalkan</div>
+                            <div class="stat-card-value" style="color: #b91c1c;">{{ number_format($stats['cancelled']) }}</div>
+                            <div class="stat-card-sub" style="color: #b91c1c;">Refund / Cancelled</div>
+                        </div>
+                    </div>
+
+                    {{-- Table Attendance --}}
+                    <div class="table-container">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">No</th>
+                                    <th>Kode Tiket</th>
+                                    <th>Nama Event</th>
+                                    <th>Pemegang Tiket</th>
+                                    <th>Status Kehadiran</th>
+                                    <th>Waktu Check-In</th>
+                                    <th style="text-align: center;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($tickets as $index => $ticket)
+                                    <tr>
+                                        <td>{{ $tickets->firstItem() + $index }}</td>
+                                        <td>
+                                            <span style="font-family: monospace; font-weight: 700; font-size: 0.88rem; color: #0f172a;">
+                                                {{ $ticket->ticket_code }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <strong style="color: #0f172a; display: block; font-size: 0.84rem;">
+                                                {{ $ticket->product?->name ?? 'Event' }}
+                                            </strong>
+                                            <span style="font-size: 0.73rem; color: #64748b;">
+                                                {{ $ticket->product?->event_date ? $ticket->product->event_date->format('d M Y') : '' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <strong style="color: #0f172a; display: block; font-size: 0.85rem;">{{ $ticket->holder_name ?? '-' }}</strong>
+                                            <span style="font-size: 0.74rem; color: #64748b; display: block;">{{ $ticket->holder_email ?? '-' }}</span>
+                                            <span style="font-size: 0.74rem; color: #64748b;">{{ $ticket->holder_phone ?? '' }}</span>
+                                        </td>
+                                        <td>
+                                            @if($ticket->status === 'used')
+                                                <span class="badge-status badge-used">
+                                                    ✓ Hadir (Checked-In)
+                                                </span>
+                                            @elseif($ticket->status === 'cancelled')
+                                                <span class="badge-status badge-cancelled">
+                                                    ✕ Dibatalkan
+                                                </span>
+                                            @else
+                                                <span class="badge-status badge-valid">
+                                                    ⏳ Belum Hadir
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($ticket->checked_in_at)
+                                                <span style="font-weight: 700; color: #15803d; display: block; font-size: 0.8rem;">
+                                                    {{ $ticket->checked_in_at->format('H:i:s WIB') }}
+                                                </span>
+                                                <span style="font-size: 0.73rem; color: #64748b;">
+                                                    {{ $ticket->checked_in_at->format('d M Y') }}
+                                                </span>
+                                            @else
+                                                <span style="color: #94a3b8; font-style: italic; font-size: 0.8rem;">— Belum —</span>
+                                            @endif
+                                        </td>
+                                        <td style="text-align: center;">
+                                            @if($ticket->status !== 'cancelled')
+                                                <form action="{{ route('creator.ticket.scanner.toggle-checkin', $ticket->id) }}" method="POST" style="display: inline-block;">
+                                                    @csrf
+                                                    @if($ticket->status === 'used')
+                                                        <button type="submit" class="btn-action-sm btn-toggle-undo" onclick="return confirm('Batalkan status check-in tiket ini?')">
+                                                            ↩️ Batalkan
+                                                        </button>
+                                                    @else
+                                                        <button type="submit" class="btn-action-sm btn-toggle-checkin">
+                                                            ✓ Check-In
+                                                        </button>
+                                                    @endif
+                                                </form>
+                                            @else
+                                                <span style="font-size: 0.75rem; color: #94a3b8;">Tidak Aktif</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" style="text-align: center; padding: 2.5rem 1rem; color: #94a3b8;">
+                                            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom: 0.5rem; opacity: 0.4;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                                            <div style="font-weight: 700; color: #475569; margin-bottom: 0.2rem;">Belum Ada Data Tiket / Kehadiran</div>
+                                            <div style="font-size: 0.78rem;">Tiket pembeli yang sudah lunas akan otomatis muncul di tabel ini.</div>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if($tickets->hasPages())
+                        <div style="margin-top: 1.25rem;">
+                            {{ $tickets->links() }}
+                        </div>
+                    @endif
+
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>
@@ -310,6 +660,20 @@
 <script>
     let html5QrcodeScanner = null;
     let isProcessing = false;
+
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.payout-tab-pane').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById(tabId).style.display = 'block';
+        btn.classList.add('active');
+
+        // Update URL parameter without page reload
+        const tabName = tabId === 'tab-data' ? 'data' : 'scanner';
+        const url = new URL(window.location);
+        url.searchParams.set('tab', tabName);
+        window.history.pushState({}, '', url);
+    }
 
     document.addEventListener("DOMContentLoaded", function() {
         html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
@@ -397,7 +761,6 @@
     }
 
     function renderResult(data) {
-        // Play instant "TIT" sound effect using Web Audio API
         playScanBeep(data.status);
 
         const box = document.getElementById('resultBox');
@@ -427,6 +790,7 @@
                 <div><strong>Kode Tiket:</strong> ${data.ticket.code || '-'}</div>
                 <div><strong>Nama Event:</strong> ${data.ticket.event_name || '-'}</div>
                 <div><strong>Pemegang Tiket:</strong> ${data.ticket.holder_name || '-'}</div>
+                ${data.ticket.checked_in_at ? `<div><strong>Waktu Check-In:</strong> ${data.ticket.checked_in_at}</div>` : ''}
             `;
         } else {
             detailsEl.style.display = 'none';

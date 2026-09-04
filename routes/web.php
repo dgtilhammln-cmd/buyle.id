@@ -449,9 +449,11 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     // Membership Plans
     Route::get('/membership', [\App\Http\Controllers\Creator\SellerController::class, 'membership'])->name('membership');
 
-    // Ticket Gate Scanner
+    // Ticket Gate Scanner & Attendance Data
     Route::get('/scanner', [\App\Http\Controllers\TicketScannerController::class, 'index'])->name('ticket.scanner');
     Route::post('/scanner/verify', [\App\Http\Controllers\TicketScannerController::class, 'verify'])->name('ticket.scanner.verify');
+    Route::post('/scanner/toggle-checkin/{ticket}', [\App\Http\Controllers\TicketScannerController::class, 'toggleCheckin'])->name('ticket.scanner.toggle-checkin');
+    Route::get('/scanner/export', [\App\Http\Controllers\TicketScannerController::class, 'exportCsv'])->name('ticket.scanner.export');
 
     // ── Link in Bio ──────────────────────────────────────────────────────
     Route::get('/bio',          [\App\Http\Controllers\Creator\CreatorBioController::class, 'index'])->name('bio.index');
