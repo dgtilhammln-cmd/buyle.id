@@ -36,6 +36,9 @@ class StoreProductRequest extends FormRequest
 
             'is_active'           => ['boolean'],
             'is_featured'         => ['boolean'],
+            'is_whitelabel'       => ['nullable', 'boolean'],
+            'whitelabel_price'    => ['nullable', 'numeric', 'min:0'],
+            'whitelabel_terms'    => ['nullable', 'string', 'max:2000'],
             'meta_title'          => ['nullable', 'string', 'max:70'],
             'meta_desc'           => ['nullable', 'string', 'max:160'],
             'meta_keywords'       => ['nullable', 'string', 'max:255'],

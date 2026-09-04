@@ -271,8 +271,51 @@
                     <div class="form-body">
                         <div class="form-group">
                             <label class="form-label">Tautan Eksternal (G-Drive / Notion / Website)</label>
-                            <input type="url" name="external_link" id="externalLink" value="{{ old('external_link') }}" class="form-input" placeholder="https://..." required>
+                            <input type="url" name="digital_resource" id="externalLink" value="{{ old('digital_resource') }}" class="form-input" placeholder="https://..." required>
                             <span id="linkStatus" style="font-size:0.75rem; font-weight:600; display:none; margin-top:0.5rem; padding:0.5rem; border-radius:6px;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- WHITE LABEL CARD --}}
+                <div class="prof-card" style="border: 2px solid #E2E8F0; transition: border-color 0.2s;" id="whitelabelCard">
+                    <div class="prof-card-head" style="background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%); display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="18" height="18" fill="none" stroke="#2563EB" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        <span style="color:#1E293B; font-weight:800;">Fitur White Label & Lisensi Jual Kembali (Reseller / Makelar)</span>
+                    </div>
+                    <div class="form-body">
+                        <div style="background:#F0F9FF; border:1px solid #BAE6FD; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
+                            <label style="display:flex; align-items:center; gap:0.6rem; cursor:pointer; font-weight:700; color:#0369A1; font-size:0.88rem;">
+                                <input type="checkbox" name="is_whitelabel" id="isWhitelabelCheck" value="1" {{ old('is_whitelabel') ? 'checked' : '' }} onchange="toggleWhitelabelFields(this.checked)" style="width:18px; height:18px; accent-color:#0284C7; cursor:pointer;">
+                                <span>Tawarkan Produk Ini Sebagai White Label (Dapat Dijual Kembali Oleh Reseller / Creator Lain)</span>
+                            </label>
+                        </div>
+
+                        <div id="whitelabelOptionsWrap" style="display:none;">
+                            <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:1rem; margin-bottom:1.25rem; font-size:0.83rem; color:#92400E; line-height:1.5;">
+                                <strong style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.4rem; font-size:0.88rem; color:#B45309;">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                    Ketentuan & Panduan White Label:
+                                </strong>
+                                <ul style="margin:0; padding-left:1.2rem; display:flex; flex-direction:column; gap:0.25rem;">
+                                    <li><strong>Aset Netral:</strong> File / link produk <u>TIDAK BOLEH</u> mengandung watermark, logo personal, atau nomor kontak yang mengikat.</li>
+                                    <li><strong>Bebas Markup:</strong> Creator / reseller lain dapat menyalin link produk ini ke Bio Link / Store mereka dan menaikkan harga jual sesuai keinginan.</li>
+                                    <li><strong>Approval Tim Buyle:</strong> Setelah produk disimpan, statusnya akan <code>Menunggu Approval Tim Buyle (Pending)</code>. Admin akan memverifikasi file Anda sebelum muncul di katalog White Label Marketplace.</li>
+                                </ul>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Harga Modal Reseller / Minimal Jual (Rp)</label>
+                                    <input type="text" name="whitelabel_price" value="{{ old('whitelabel_price') }}" class="form-input currency-input" placeholder="Misal: 35.000 (Opsional)">
+                                    <span class="form-hint">Rekomendasi harga minimum bagi reseller.</span>
+                                </div>
+
+                                <div class="form-group full">
+                                    <label class="form-label">Ketentuan Lisensi / Catatan Reseller</label>
+                                    <textarea name="whitelabel_terms" class="form-input" rows="2" placeholder="Contoh: Boleh ubah nama & cover produk, dilarang menjual di bawah Rp 30.000...">{{ old('whitelabel_terms') }}</textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -451,5 +494,15 @@
     }
     const initCat = document.getElementById('catSelect').value;
     if (initCat) loadSubCat(initCat);
+    // Whitelabel toggle
+    function toggleWhitelabelFields(checked) {
+        const wrap = document.getElementById('whitelabelOptionsWrap');
+        const card = document.getElementById('whitelabelCard');
+        if (wrap) wrap.style.display = checked ? 'block' : 'none';
+        if (card) card.style.borderColor = checked ? '#0284C7' : '#E2E8F0';
+    }
+    // Init check
+    const wlCheck = document.getElementById('isWhitelabelCheck');
+    if (wlCheck) toggleWhitelabelFields(wlCheck.checked);
 </script>
 @endsection

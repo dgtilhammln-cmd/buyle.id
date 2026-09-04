@@ -23,7 +23,9 @@ class Product extends Model
         // Kolom e-commerce (new)
         'price', 'sale_price', 'stock', 'weight', 'sku',
         'product_category_id', 'product_sub_category_id', 'is_featured',
-        'product_type', 'file_type', 'digital_resource', 'seller_id', 'creator_group_id', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating', 'tiktok_video_url'
+        'product_type', 'file_type', 'digital_resource', 'seller_id', 'creator_group_id', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating', 'tiktok_video_url',
+        // Kolom White Label & Reseller
+        'is_whitelabel', 'whitelabel_price', 'whitelabel_terms', 'whitelabel_approval_status', 'whitelabel_rejection_reason'
     ];
 
     protected $casts = [
@@ -44,6 +46,9 @@ class Product extends Model
         'min_order'      => 'integer',
         'max_order'      => 'integer',
         'rating'         => 'decimal:1',
+        // White Label casts
+        'is_whitelabel'    => 'boolean',
+        'whitelabel_price' => 'decimal:2',
     ];
 
     protected static function boot()
@@ -138,6 +143,22 @@ class Product extends Model
 
     public function scopeActive(Builder $query): Builder { return $query->where('is_active', true); }
     public function scopeOrdered(Builder $query): Builder { return $query->orderBy('created_at', 'desc'); }
+
+    /**
+     * Scope produk White Label yang disetujui Admin.
+     */
+    public function scopeWhiteLabelApproved(Builder $query): Builder
+    {
+        return $query->where('is_whitelabel', true)->where('whitelabel_approval_status', 'approved');
+    }
+
+    /**
+     * Scope produk White Label yang menunggu approval Admin.
+     */
+    public function scopeWhiteLabelPending(Builder $query): Builder
+    {
+        return $query->where('is_whitelabel', true)->where('whitelabel_approval_status', 'pending');
+    }
 
     /**
      * Hanya produk yang ditandai sebagai unggulan.

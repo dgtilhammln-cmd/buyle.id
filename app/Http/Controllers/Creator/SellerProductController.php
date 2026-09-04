@@ -74,6 +74,10 @@ class SellerProductController extends Controller
             $data['gallery'] = [];
         }
 
+        // Handle White Label status
+        $data['is_whitelabel'] = $request->boolean('is_whitelabel');
+        $data['whitelabel_approval_status'] = $data['is_whitelabel'] ? 'pending' : 'none';
+
         // Produk digital buyle.id selalu external_link
         $data['seller_id']    = auth()->id();
         $data['product_type'] = 'external_link';
@@ -94,9 +98,14 @@ class SellerProductController extends Controller
         Cache::forget('catalog_main');
         Cache::forget("seller_products_{$product->seller_id}");
 
+        $msg = "Produk \"{$product->name}\" berhasil ditambahkan. Link telah diverifikasi.";
+        if ($product->is_whitelabel) {
+            $msg .= " Produk ini telah dikirim ke Tim Buyle untuk proses persetujuan (approval) White Label.";
+        }
+
         return redirect()
             ->route('creator.products.index')
-            ->with('success', "Produk \"{$product->name}\" berhasil ditambahkan! Link telah diverifikasi ✅");
+            ->with('success', $msg);
     }
 
     /**
@@ -156,6 +165,16 @@ class SellerProductController extends Controller
         $data['product_type'] = 'external_link'; // Selalu link
         $data['stock']        = $data['stock'] ?? 0;
 
+        $isWhitelabel = $request->boolean('is_whitelabel');
+        $data['is_whitelabel'] = $isWhitelabel;
+        if ($isWhitelabel) {
+            if ($product->whitelabel_approval_status === 'none' || $product->whitelabel_approval_status === 'rejected' || !$product->is_whitelabel) {
+                $data['whitelabel_approval_status'] = 'pending';
+            }
+        } else {
+            $data['whitelabel_approval_status'] = 'none';
+        }
+
         $product->update($data);
 
         // Invalidate cache
@@ -163,9 +182,14 @@ class SellerProductController extends Controller
         Cache::forget("seller_products_{$product->seller_id}");
         Cache::forget("product_{$product->id}");
 
+        $msg = 'Produk berhasil diperbarui. Link telah diverifikasi ulang.';
+        if ($isWhitelabel && $product->whitelabel_approval_status === 'pending') {
+            $msg .= ' Status White Label diajukan untuk ditinjau oleh Admin Tim Buyle.';
+        }
+
         return redirect()
             ->route('creator.products.edit', $product)
-            ->with('success', 'Produk berhasil diperbarui. Link telah diverifikasi ulang ✅');
+            ->with('success', $msg);
     }
 
     /**

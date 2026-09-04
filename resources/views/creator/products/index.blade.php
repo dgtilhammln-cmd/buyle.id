@@ -148,6 +148,26 @@
                   {{ $s->short_desc }}
                 </div>
               @endif
+              @if($s->is_whitelabel)
+                <div style="margin-top:.35rem;">
+                  @if($s->whitelabel_approval_status === 'pending')
+                    <span style="font-size:.68rem;font-weight:700;background:#FEF3C7;color:#D97706;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;">
+                      <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      WL Approval Pending
+                    </span>
+                  @elseif($s->whitelabel_approval_status === 'approved')
+                    <span style="font-size:.68rem;font-weight:700;background:#DCFCE7;color:#16A34A;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;">
+                      <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                      WL Approved (Disetujui)
+                    </span>
+                  @elseif($s->whitelabel_approval_status === 'rejected')
+                    <span style="font-size:.68rem;font-weight:700;background:#FEE2E2;color:#DC2626;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;" title="{{ $s->whitelabel_rejection_reason }}">
+                      <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      WL Ditolak
+                    </span>
+                  @endif
+                </div>
+              @endif
             </td>
             <td style="padding:1.25rem 1.5rem;">
               <code

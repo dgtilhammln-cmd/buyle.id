@@ -1351,6 +1351,78 @@
                         @endforelse
                     </div>
                 </div>
+
+                {{-- Produk White Label (Siap Jual Kembali / Resell) --}}
+                <div class="prof-card" style="border: 2px solid #BAE6FD; background: #F0F9FF;">
+                    <div class="prof-card-head" style="background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);">
+                        <span style="display:flex; align-items:center; gap:0.5rem; color:#0369A1; font-weight:800;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                            Kategori Produk White Label (Siap Jual Kembali / Makelar)
+                        </span>
+                        <span style="font-size:0.75rem; background:#0284C7; color:#fff; padding:0.2rem 0.6rem; border-radius:12px; font-weight:700;">
+                            {{ $whitelabelProducts->count() }} Produk Tersedia
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <p style="font-size:0.8rem; color:#0369A1; margin-bottom:1.25rem; line-height:1.4; display:flex; align-items:flex-start; gap:0.4rem;">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            <span><strong>Peluang Reseller / Makelar:</strong> Produk di bawah ini bebas watermark dan telah disetujui oleh Tim Buyle. Anda dapat memasukkannya ke Bio Link Anda dan menentukan harga jual (markup) sesuai keinginan Anda!</span>
+                        </p>
+
+                        @forelse($whitelabelProducts as $wlProd)
+                            @php
+                                $alreadyAddedWl = $blocks->where('type', 'buyle_product')->contains(fn($b) => ($b->data_json['product_id'] ?? null) == $wlProd->id);
+                            @endphp
+                            <div style="background:#fff; border:1px solid #BAE6FD; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem;">
+                                <img src="{{ $wlProd->main_image }}" style="width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
+                                <div style="flex:1; min-width:0;">
+                                    <div style="font-weight:700; font-size:0.85rem; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                        {{ $wlProd->name }}
+                                    </div>
+                                    <div style="font-size:0.75rem; color:#64748B; margin-top:0.15rem;">
+                                        Oleh: <strong>{{ $wlProd->seller->name ?? 'Creator' }}</strong>
+                                        @if($wlProd->whitelabel_price)
+                                            · Min. Resell: <span style="color:#0284C7; font-weight:700;">Rp {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}</span>
+                                        @else
+                                            · Harga Asli: <span style="color:#0284C7; font-weight:700;">Rp {{ number_format($wlProd->price, 0, ',', '.') }}</span>
+                                        @endif
+                                    </div>
+                                    @if($wlProd->whitelabel_terms)
+                                        <div style="font-size:0.72rem; color:#0369A1; margin-top:0.2rem; font-style:italic;">
+                                            Lisensi: {{ Str::limit($wlProd->whitelabel_terms, 60) }}
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div>
+                                    @if($alreadyAddedWl)
+                                        <span style="font-size:0.72rem; font-weight:700; color:#1eb349; background:#f0fdf4; padding:0.3rem 0.7rem; border-radius:8px; display:inline-flex; align-items:center; gap:0.3rem;">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                            Ditampilkan
+                                        </span>
+                                    @else
+                                        <form action="{{ route('creator.bio.blocks.store') }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            <input type="hidden" name="type" value="buyle_product">
+                                            <input type="hidden" name="title" value="{{ $wlProd->name }}">
+                                            <input type="hidden" name="url" value="{{ route('products.show', $wlProd->slug) }}">
+                                            <input type="hidden" name="product_id" value="{{ $wlProd->id }}">
+                                            <button type="submit" class="btn-submit-sm" style="background:#0284C7; color:#fff; border:none; padding:0.4rem 0.85rem; font-size:0.75rem; height:34px; border-radius:8px;">
+                                                + Jual di Bio Page
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        @empty
+                            <div style="text-align:center; padding:1.5rem; color:#0369A1; font-size:0.83rem;">
+                                Belum ada produk White Label disetujui dari creator lain saat ini.
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
             </div>
 
         </div>{{-- /bio-content --}}

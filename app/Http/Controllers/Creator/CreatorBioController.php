@@ -34,8 +34,14 @@ class CreatorBioController extends Controller
 
         $blocks = $profile->bioBlocks()->get();
         $myProducts = Product::where('seller_id', auth()->id())->where('is_active', true)->orderBy('name')->get(['id', 'name', 'price', 'image', 'slug']);
+        $whitelabelProducts = Product::whiteLabelApproved()
+            ->where('is_active', true)
+            ->where('seller_id', '!=', auth()->id())
+            ->with('seller:id,name')
+            ->orderBy('name')
+            ->get(['id', 'name', 'price', 'whitelabel_price', 'whitelabel_terms', 'image', 'slug', 'seller_id']);
 
-        return view('creator.bio.index', compact('profile', 'blocks', 'myProducts'));
+        return view('creator.bio.index', compact('profile', 'blocks', 'myProducts', 'whitelabelProducts'));
     }
 
     /**

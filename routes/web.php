@@ -389,6 +389,11 @@ Route::prefix('admin')->group(function () {
         Route::post('/orders/{order}/status',                   [\App\Http\Controllers\Admin\AdminOrderController::class, 'updateStatus'])->name('admin.orders.status');
         Route::post('/orders/{order}/tracking',                 [\App\Http\Controllers\Admin\AdminOrderController::class, 'updateTracking'])->name('admin.orders.tracking');
         Route::post('/orders/{order}/shipping-cost',            [\App\Http\Controllers\Admin\AdminOrderController::class, 'updateShippingCost'])->name('admin.orders.shipping_cost');
+
+        // White Label Approval Management
+        Route::get('/whitelabel-approval',                      [\App\Http\Controllers\Admin\AdminWhiteLabelController::class, 'index'])->name('admin.whitelabel.index');
+        Route::post('/whitelabel-approval/{product}/approve',    [\App\Http\Controllers\Admin\AdminWhiteLabelController::class, 'approve'])->name('admin.whitelabel.approve');
+        Route::post('/whitelabel-approval/{product}/reject',     [\App\Http\Controllers\Admin\AdminWhiteLabelController::class, 'reject'])->name('admin.whitelabel.reject');
     });
 });
 

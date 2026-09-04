@@ -291,8 +291,83 @@
                     <div class="form-body">
                         <div class="form-group">
                             <label class="form-label">Tautan Eksternal (G-Drive / Notion / Website)</label>
-                            <input type="url" name="external_link" id="externalLink" value="{{ old('external_link', $product->external_link) }}" class="form-input" placeholder="https://..." required>
+                            <input type="url" name="digital_resource" id="externalLink" value="{{ old('digital_resource', $product->digital_resource) }}" class="form-input" placeholder="https://..." required>
                             <span id="linkStatus" style="font-size:0.75rem; font-weight:600; display:none; margin-top:0.5rem; padding:0.5rem; border-radius:6px;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- WHITE LABEL CARD --}}
+                <div class="prof-card" style="border: 2px solid #E2E8F0; transition: border-color 0.2s;" id="whitelabelCard">
+                    <div class="prof-card-head" style="background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%); display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                            <svg width="18" height="18" fill="none" stroke="#2563EB" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                            <span style="color:#1E293B; font-weight:800;">Fitur White Label & Lisensi Jual Kembali (Reseller / Makelar)</span>
+                        </div>
+
+                        @if($product->is_whitelabel)
+                            @if($product->whitelabel_approval_status === 'pending')
+                                <span style="background:#FEF3C7; color:#D97706; font-size:.73rem; font-weight:700; padding:.25rem .65rem; border-radius:20px; display:inline-flex; align-items:center; gap:.3rem;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    Menunggu Review Tim Buyle
+                                </span>
+                            @elseif($product->whitelabel_approval_status === 'approved')
+                                <span style="background:#DCFCE7; color:#16A34A; font-size:.73rem; font-weight:700; padding:.25rem .65rem; border-radius:20px; display:inline-flex; align-items:center; gap:.3rem;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Approved (Disetujui)
+                                </span>
+                            @elseif($product->whitelabel_approval_status === 'rejected')
+                                <span style="background:#FEE2E2; color:#DC2626; font-size:.73rem; font-weight:700; padding:.25rem .65rem; border-radius:20px; display:inline-flex; align-items:center; gap:.3rem;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                    Ditolak Admin
+                                </span>
+                            @endif
+                        @endif
+                    </div>
+                    <div class="form-body">
+                        @if($product->is_whitelabel && $product->whitelabel_approval_status === 'rejected' && $product->whitelabel_rejection_reason)
+                            <div style="background:#FEE2E2; border:1px solid #FCA5A5; border-radius:12px; padding:0.9rem 1rem; margin-bottom:1.25rem; font-size:0.83rem; color:#991B1B;">
+                                <strong style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.2rem;">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    Catatan Penolakan dari Admin Tim Buyle:
+                                </strong>
+                                <div>{{ $product->whitelabel_rejection_reason }}</div>
+                                <div style="font-size:0.75rem; margin-top:0.3rem; color:#7F1D1D;">Silakan perbaiki aset/file Anda agar netral (tanpa watermark) dan simpan ulang untuk mengajukan review baru.</div>
+                            </div>
+                        @endif
+
+                        <div style="background:#F0F9FF; border:1px solid #BAE6FD; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
+                            <label style="display:flex; align-items:center; gap:0.6rem; cursor:pointer; font-weight:700; color:#0369A1; font-size:0.88rem;">
+                                <input type="checkbox" name="is_whitelabel" id="isWhitelabelCheck" value="1" {{ old('is_whitelabel', $product->is_whitelabel) ? 'checked' : '' }} onchange="toggleWhitelabelFields(this.checked)" style="width:18px; height:18px; accent-color:#0284C7; cursor:pointer;">
+                                <span>Tawarkan Produk Ini Sebagai White Label (Dapat Dijual Kembali Oleh Reseller / Creator Lain)</span>
+                            </label>
+                        </div>
+
+                        <div id="whitelabelOptionsWrap" style="display:none;">
+                            <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:1rem; margin-bottom:1.25rem; font-size:0.83rem; color:#92400E; line-height:1.5;">
+                                <strong style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.4rem; font-size:0.88rem; color:#B45309;">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                    Ketentuan & Panduan White Label:
+                                </strong>
+                                <ul style="margin:0; padding-left:1.2rem; display:flex; flex-direction:column; gap:0.25rem;">
+                                    <li><strong>Aset Netral:</strong> File / link produk <u>TIDAK BOLEH</u> mengandung watermark, logo personal, atau nomor kontak yang mengikat.</li>
+                                    <li><strong>Bebas Markup:</strong> Creator / reseller lain dapat menyalin link produk ini ke Bio Link / Store mereka dan menaikkan harga jual sesuai keinginan.</li>
+                                    <li><strong>Approval Tim Buyle:</strong> Setelah disimpan/diubah, produk akan ditinjau kembali oleh Admin Tim Buyle jika ada perubahan status.</li>
+                                </ul>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Harga Modal Reseller / Minimal Jual (Rp)</label>
+                                    <input type="text" name="whitelabel_price" value="{{ old('whitelabel_price', $product->whitelabel_price ? number_format($product->whitelabel_price, 0, ',', '.') : '') }}" class="form-input currency-input" placeholder="Misal: 35.000 (Opsional)">
+                                    <span class="form-hint">Rekomendasi harga minimum bagi reseller.</span>
+                                </div>
+
+                                <div class="form-group full">
+                                    <label class="form-label">Ketentuan Lisensi / Catatan Reseller</label>
+                                    <textarea name="whitelabel_terms" class="form-input" rows="2" placeholder="Contoh: Boleh ubah nama & cover produk, dilarang menjual di bawah Rp 30.000...">{{ old('whitelabel_terms', $product->whitelabel_terms) }}</textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -478,5 +553,16 @@
     }
     const initCat = document.getElementById('catSelect').value;
     if (initCat) loadSubCat(initCat);
+
+    // Whitelabel toggle
+    function toggleWhitelabelFields(checked) {
+        const wrap = document.getElementById('whitelabelOptionsWrap');
+        const card = document.getElementById('whitelabelCard');
+        if (wrap) wrap.style.display = checked ? 'block' : 'none';
+        if (card) card.style.borderColor = checked ? '#0284C7' : '#E2E8F0';
+    }
+    // Init check
+    const wlCheck = document.getElementById('isWhitelabelCheck');
+    if (wlCheck) toggleWhitelabelFields(wlCheck.checked);
 </script>
 @endsection
