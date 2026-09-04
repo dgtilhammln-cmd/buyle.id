@@ -3,7 +3,7 @@ echo ==============================================
 echo 1. Menyiapkan ^& Commit Perubahan Lokal...
 echo ==============================================
 git add .
-git commit -m "Penyatuan Kategori & Optimasi SEO"
+git commit -m "Deploy: update terbaru"
 
 echo.
 echo ==============================================
