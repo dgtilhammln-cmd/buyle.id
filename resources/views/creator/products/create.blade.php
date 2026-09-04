@@ -42,20 +42,30 @@
     }
     .form-body { padding:1.5rem 1.75rem; }
     
-    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
-    .form-group { display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1.25rem; }
-    .form-group.full { grid-column:1/-1; }
-    .form-label { font-size:0.8rem; font-weight:700; color:#374151; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; width:100%; box-sizing:border-box; }
+    .form-group { display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1.25rem; width:100%; box-sizing:border-box; }
+    .form-group.full { grid-column:1/-1; width:100%; box-sizing:border-box; }
+    .form-label { font-size:0.8rem; font-weight:700; color:#374151; display:block; }
     .form-label span { color:#ef4444; }
     .form-input {
-        height:44px; padding:0 1rem; border:1.5px solid #e7f0e7; border-radius:10px;
-        font-family:'Montserrat',sans-serif; font-size:0.875rem; color:#1a1a1a;
-        background:#f9fefb; outline:none; transition:all 0.2s;
+        width: 100%;
+        box-sizing: border-box;
+        height: 44px;
+        padding: 0 1rem;
+        border: 1.5px solid #e7f0e7;
+        border-radius: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.875rem;
+        color: #1a1a1a;
+        background: #f9fefb;
+        outline: none;
+        transition: all 0.2s;
+        display: block;
     }
     .form-input:focus { border-color:#1eb349; background:#fff; box-shadow:0 0 0 3px rgba(30,179,73,0.1); }
-    textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-height:90px; }
+    textarea.form-input { height:auto; padding:0.75rem 1rem; resize:vertical; min-height:90px; width:100%; box-sizing:border-box; }
     
-    .form-hint { font-size:0.72rem; color:#94A3B8; }
+    .form-hint { font-size:0.72rem; color:#94A3B8; display:block; margin-top:0.25rem; }
     .form-error { font-size:0.72rem; color:#ef4444; }
 
     /* Toggle Switch */
@@ -73,6 +83,7 @@
     .img-upload-area {
         border:2px dashed #bbf7d0; border-radius:12px; padding:1.5rem;
         text-align:center; cursor:pointer; transition:all 0.2s; background:#f9fefb;
+        width:100%; box-sizing:border-box;
     }
     .img-upload-area:hover { border-color:#1eb349; background:#f0fdf4; }
 
@@ -94,9 +105,11 @@
     }
     
     @media(max-width:768px) {
-        .prof-layout { flex-direction:column; }
-        .prof-sidebar { width:100%; position:static; }
-        .form-grid { grid-template-columns:1fr; }
+        .prof-layout { flex-direction:column; width:100%; }
+        .prof-sidebar { width:100%; position:static; box-sizing:border-box; }
+        .prof-content { width:100%; max-width:100%; box-sizing:border-box; }
+        .form-grid { grid-template-columns:1fr; gap:1rem; }
+        .form-body { padding:1.25rem 1rem; }
     }
 </style>
 @endsection
@@ -160,7 +173,7 @@
                         <div class="form-grid">
                             <div class="form-group full">
                                 <label class="form-label">Nama Produk <span>*</span></label>
-                                <input type="text" name="name" value="{{ old('name') }}" class="form-input" placeholder="Contoh: Template Premium Social Media Pack" required>
+                                <input type="text" name="name" value="{{ old('name') }}" class="form-input" placeholder="Contoh: Tiket Konser Musik Fest 2026" required>
                             </div>
 
                             <div class="form-group">
@@ -181,9 +194,9 @@
                                 </select>
                             </div>
 
-                            <div class="form-group full" id="ticketFieldsWrap" style="display:none; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:14px; padding:1.25rem;">
-                                <h5 style="font-size:0.9rem; font-weight:800; color:#166534; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/><path d="M13 5v14"/><path d="M13 9h.01"/><path d="M13 15h.01"/></svg>
+                            <div class="form-group full" id="ticketFieldsWrap" style="display:none; background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:16px; padding:1.5rem; width:100%; box-sizing:border-box;">
+                                <h5 style="font-size:0.95rem; font-weight:800; color:#166534; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem; border-bottom:1px dashed #bbf7d0; padding-bottom:0.75rem;">
+                                    <svg width="20" height="20" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/><path d="M13 5v14"/><path d="M13 9h.01"/><path d="M13 15h.01"/></svg>
                                     Detail Informasi Event / Tiket
                                 </h5>
                                 <div class="form-grid">
@@ -198,19 +211,25 @@
                                     <div class="form-group full">
                                         <label class="form-label">Jenis Pelaksanaan Event <span>*</span></label>
                                         <select name="event_type" id="eventTypeSelect" class="form-input" onchange="toggleEventTypeFields(this.value)">
-                                            <option value="offline" {{ old('event_type') == 'offline' ? 'selected' : '' }}>🏢 Offline (Tatap Muka di Venue / Gedung / Tempat Acara)</option>
-                                            <option value="online" {{ old('event_type') == 'online' ? 'selected' : '' }}>🌐 Online (Webinar / Zoom Meeting / Live Streaming)</option>
+                                            <option value="offline" {{ old('event_type') == 'offline' ? 'selected' : '' }}>Offline (Tatap Muka di Venue / Gedung / Tempat Acara)</option>
+                                            <option value="online" {{ old('event_type') == 'online' ? 'selected' : '' }}>Online (Webinar / Zoom Meeting / Live Streaming)</option>
                                         </select>
                                     </div>
 
                                     <div class="form-group full" id="offlineLocationWrap">
-                                        <label class="form-label">Alamat / Lokasi Venue Event (Offline) <span>*</span></label>
+                                        <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
+                                            <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                            Alamat / Lokasi Venue Event (Offline) <span>*</span>
+                                        </label>
                                         <input type="text" name="event_location_offline" id="eventLocationOffline" value="{{ old('event_location_offline') }}" class="form-input" placeholder="Contoh: Gedung Senayan Hall A, Jl. Asia Afrika, Jakarta Pusat">
-                                        <span class="form-hint">Tuliskan nama tempat / alamat fisik acara berlangsung.</span>
+                                        <span class="form-hint">Tuliskan nama tempat / alamat fisik tempat acara berlangsung.</span>
                                     </div>
 
                                     <div class="form-group full" id="onlineLocationWrap" style="display:none;">
-                                        <label class="form-label">Link Access Online / Room Zoom / Streaming (Online) <span>*</span></label>
+                                        <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
+                                            <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                            Link Access Online / Room Zoom / Streaming (Online) <span>*</span>
+                                        </label>
                                         <input type="text" name="event_location_online" id="eventLocationOnline" value="{{ old('event_location_online') }}" class="form-input" placeholder="Contoh: https://zoom.us/j/123456789 atau Link Youtube Live">
                                         <span class="form-hint">Tautan ini hanya akan dikirimkan / dapat diakses oleh pembeli tiket online.</span>
                                     </div>

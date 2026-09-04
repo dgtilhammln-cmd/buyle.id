@@ -294,6 +294,9 @@
 @endsection
 
 @section('content')
+@php
+    $presetBanks = ['BCA','BNI','BRI','Mandiri','BSI','CIMB Niaga','Jenius/SMBC','Permata Bank','Bank DKI','Bank BJB','Bank Jatim','Dana','GoPay','OVO','ShopeePay'];
+@endphp
 <div class="bio-layout">
 
     {{-- SUB SIDEBAR --}}
@@ -357,7 +360,6 @@
                     <form action="{{ route('creator.payout.request') }}" method="POST" id="withdrawForm">
                         @csrf
                         @php
-                            $presetBanks = ['BCA','BNI','BRI','Mandiri','BSI','CIMB Niaga','Jenius/SMBC','Permata Bank','Bank DKI','Bank BJB','Bank Jatim','Dana','GoPay','OVO','ShopeePay'];
                             $currentBank1 = $seller->bank_name ?? '';
                             $isCustomBank1 = $currentBank1 && !in_array($currentBank1, $presetBanks);
                         @endphp
@@ -378,8 +380,8 @@
                                             @if($currentBank1 === $bank)<span>✓</span>@endif
                                         </div>
                                     @endforeach
-                                    <div class="custom-select-option custom-other {{ $isCustomBank1 ? 'selected' : '' }}" onclick="selectBankOption('wrapBankTab1', 'custom', '✍️ Lainnya (Ketik Manual...)')">
-                                        <span>✍️ Lainnya (Ketik Manual...)</span>
+                                    <div class="custom-select-option custom-other {{ $isCustomBank1 ? 'selected' : '' }}" onclick="selectBankOption('wrapBankTab1', 'custom', 'Lainnya (Ketik Manual...)')">
+                                        <span>Lainnya (Ketik Manual...)</span>
                                     </div>
                                 </div>
                                 <input type="hidden" name="bank_name" id="hiddenBankTab1" value="{{ $currentBank1 }}" required>
@@ -454,8 +456,8 @@
                                             @if($currentBank2 === $bank)<span>✓</span>@endif
                                         </div>
                                     @endforeach
-                                    <div class="custom-select-option custom-other {{ $isCustomBank2 ? 'selected' : '' }}" onclick="selectBankOption('wrapBankTab2', 'custom', '✍️ Lainnya (Ketik Manual...)')">
-                                        <span>✍️ Lainnya (Ketik Manual...)</span>
+                                    <div class="custom-select-option custom-other {{ $isCustomBank2 ? 'selected' : '' }}" onclick="selectBankOption('wrapBankTab2', 'custom', 'Lainnya (Ketik Manual...)')">
+                                        <span>Lainnya (Ketik Manual...)</span>
                                     </div>
                                 </div>
                                 <input type="hidden" name="bank_name" id="hiddenBankTab2" value="{{ $currentBank2 }}" required>

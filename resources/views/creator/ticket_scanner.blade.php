@@ -286,11 +286,8 @@
                     </div>
                 </form>
 
-                {{-- Camera Viewport --}}
-                <div id="reader"></div>
-
-                {{-- Result Box --}}
-                <div id="resultBox" class="res-box">
+                {{-- Result Box (Placed directly below manual input) --}}
+                <div id="resultBox" class="res-box" style="margin-top: 1rem; margin-bottom: 1.25rem;">
                     <div style="display: flex; align-items: flex-start; gap: 1rem;">
                         <div id="resultIcon" style="flex-shrink: 0; margin-top: 2px;"></div>
                         <div style="flex: 1;">
@@ -300,6 +297,9 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Camera Viewport --}}
+                <div id="reader"></div>
             </div>
         </div>
     </div>
