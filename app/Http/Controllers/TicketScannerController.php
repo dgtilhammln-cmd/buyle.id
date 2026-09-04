@@ -21,10 +21,8 @@ class TicketScannerController extends Controller
         $search = trim($request->input('search', ''));
         $activeTab = $request->input('tab', 'scanner'); // 'scanner' or 'data'
 
-        // Ambil daftar event/produk bertipe ticket milik creator ini
-        $events = Product::where(function ($q) use ($sellerId) {
-                $q->where('user_id', $sellerId)->orWhere('seller_id', $sellerId);
-            })
+        // Ambil daftar event/produk bertipe ticket milik creator ini (menggunakan seller_id)
+        $events = Product::where('seller_id', $sellerId)
             ->where('product_type', 'ticket')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -185,7 +183,7 @@ class TicketScannerController extends Controller
     {
         $sellerId = auth()->id();
         
-        if ($ticket->seller_id != $sellerId && $ticket->product?->user_id != $sellerId) {
+        if ($ticket->seller_id != $sellerId && $ticket->product?->seller_id != $sellerId) {
             if ($request->wantsJson()) {
                 return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
             }
@@ -264,10 +262,8 @@ class TicketScannerController extends Controller
 
         $callback = function () use ($tickets) {
             $file = fopen('php://output', 'w');
-            // Add BOM for UTF-8 Excel compatibility
             fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 
-            // CSV Header
             fputcsv($file, [
                 'No',
                 'Kode Tiket',
