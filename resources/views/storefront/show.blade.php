@@ -103,24 +103,6 @@
 
 .sf-page * { box-sizing: border-box; }
 
-/* ── Full-width banner wrapper (outside flex row) ── */
-.sf-cover-wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    display: none; /* hidden on mobile, shown on desktop */
-}
-@media (min-width: 768px) {
-    .sf-cover-wrap { display: block; padding: 1.5rem 1rem 0; }
-    .sf-cover-wrap .sf-cover {
-        width: 100%; height: auto; max-height: 260px;
-        border-radius: 20px; display: block; object-fit: cover;
-    }
-    .sf-cover-wrap .sf-cover-placeholder {
-        width: 100%; height: 180px; border-radius: 20px;
-    }
-}
-
 .sf-layout {
     max-width: 1200px;
     margin: 0 auto;
@@ -347,9 +329,8 @@
     }
     .sf-tab-sidebar:hover { background: #f0fdf4; }
     
-    /* Promotional banners inside main still work but hide on mobile via class */
-    .sf-banner-slider { padding: 0; gap: 1rem; }
-    .sf-banner { aspect-ratio: 21/6; border-radius: 20px; }
+    /* Hide promotional banner slider on desktop too */
+    .sf-banner-slider { display: none !important; }
     
     .sf-toolbar { padding: 1rem 0 0; }
     .sf-grid { grid-template-columns: repeat(3, 1fr); padding: 1rem 0 3rem; gap: 1rem; }
@@ -383,21 +364,9 @@
 </style>
 
 <div class="sf-page">
-
-    {{-- ── Full-width Cover Banner (Desktop only) ── --}}
     @php
         $coverImg = $profile->cover_image ?? ($profile->bio_config['cover'] ?? null);
     @endphp
-    <div class="sf-cover-wrap">
-        @if($coverImg)
-            <img src="{{ asset('storage/' . $coverImg) }}" alt="{{ $profile->store_name }}" class="sf-cover">
-        @else
-            <div class="sf-cover-placeholder">
-                <svg width="48" height="48" fill="none" stroke="#1eb349" stroke-width="1" viewBox="0 0 24 24" opacity="0.3"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8.5" cy="13.5" r="1.5"/></svg>
-            </div>
-        @endif
-    </div>
-
     <div class="sf-layout">
 
         {{-- ── Sidebar ── --}}
