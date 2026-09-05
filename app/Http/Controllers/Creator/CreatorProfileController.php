@@ -66,6 +66,13 @@ class CreatorProfileController extends Controller
         // Handle is_store_active toggle setting in bio_config
         $bioConfig = $profile->bio_config ?? [];
         $bioConfig['is_store_active'] = $request->has('is_store_active') ? $request->boolean('is_store_active') : false;
+        // Sync WhatsApp from social_links to bio_config for backward compat
+        $socialLinks = $request->input('social_links', []);
+        if (!empty($socialLinks['wa'])) {
+            $bioConfig['wa'] = preg_replace('/^0+/', '', $socialLinks['wa']);
+        } else {
+            unset($bioConfig['wa']);
+        }
         $profile->bio_config = $bioConfig;
         $profile->save();
 
