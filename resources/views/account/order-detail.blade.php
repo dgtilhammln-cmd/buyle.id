@@ -103,9 +103,6 @@
                     <div class="od-item-price">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</div>
                 </div>
                 @endforeach
-            </div>
-            </div> <!-- END KIRI -->
-
             @if(isset($order->ticketPasses) && $order->ticketPasses->count() > 0)
                 <div style="margin-top: 2rem;">
                     <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--c-text); display: flex; align-items: center; gap: 0.5rem;">
@@ -149,6 +146,7 @@
                     @endforeach
                 </div>
             @endif
+        </div> <!-- END KIRI -->
 
         {{-- KANAN: RINGKASAN --}}
         <div>
@@ -218,12 +216,12 @@
         </h3>
         
         @foreach($order->items as $item)
-            @if($item->product && $item->product->digital_resource)
+            @if($item->product && $item->product->product_type !== 'ticket' && $item->product->digital_resource)
                 <div style="margin-bottom: 1.25rem;">
                     <div style="font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem;">{{ $item->product_name }}</div>
                     <a href="{{ $item->product->digital_resource }}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #1eb349; padding: 0.75rem 1.5rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: transform 0.2s;">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                        Buka Link / WhatsApp
+                        Buka Link / Akses Produk
                     </a>
                 </div>
             @endif

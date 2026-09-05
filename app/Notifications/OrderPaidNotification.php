@@ -23,7 +23,17 @@ class OrderPaidNotification extends Notification
     {
         $orderNumber = $this->order->order_number;
         $totalFormatted = 'Rp ' . number_format($this->order->total, 0, ',', '.');
-        $buyerName = $notifiable->name ?? 'Teman buyle.id';
+        $buyerName = htmlspecialchars($notifiable->name ?? 'Teman buyle.id');
+
+        // Pastikan TicketPass telah ter-generate jika ada produk tiket
+        try {
+            \App\Models\TicketPass::generateForOrder($this->order);
+        } catch (\Throwable $e) {
+            // Silence exception in mail generator
+        }
+
+        $ticketPasses = \App\Models\TicketPass::where('order_id', $this->order->id)->with('product')->get();
+        $hasTickets = $ticketPasses->isNotEmpty();
 
         // Render item list table
         $itemsHtml = '
@@ -53,6 +63,49 @@ class OrderPaidNotification extends Notification
             </div>
         </div>';
 
+        // Render E-Ticket Pass HTML Card if ticket products exist
+        $ticketsHtml = '';
+        if ($hasTickets) {
+            $ticketsHtml = '
+            <div style="margin: 24px 0;">
+                <div style="font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 14px;">
+                    E-Ticket Digital Pass (QR Code Check-In Masuk Acara)
+                </div>';
+            
+            foreach ($ticketPasses as $pass) {
+                $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' . urlencode($pass->qr_token);
+                $eventName = htmlspecialchars($pass->product?->name ?? 'Tiket Event');
+                $eventDate = $pass->product?->event_date?->format('d M Y') ?? 'Sesuai Jadwal';
+                $eventTime = htmlspecialchars($pass->product?->event_time ?? '-');
+                $eventLocation = htmlspecialchars($pass->product?->event_location ?? 'Venue / Online');
+
+                $ticketsHtml .= '
+                <div style="background-color: #FFFFFF; border: 2px solid #1eb349; border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 14px rgba(30,179,73,0.1);">
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <tr>
+                            <td width="140" align="center" valign="top" style="padding-right: 14px;">
+                                <img src="' . $qrUrl . '" alt="QR Code Tiket" width="130" height="130" style="display: block; margin: 0 auto; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #fff; padding: 4px;">
+                                <div style="font-family: monospace; font-size: 11px; font-weight: 800; color: #0F172A; margin-top: 8px; text-align: center; background: #F1F5F9; padding: 3px 6px; border-radius: 6px;">
+                                    ' . htmlspecialchars($pass->ticket_code) . '
+                                </div>
+                            </td>
+                            <td valign="top" style="font-size: 13px; color: #334155; line-height: 1.6;">
+                                <div style="font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 8px;">' . $eventName . '</div>
+                                <div style="margin-bottom: 4px;"><strong>Pemegang Tiket:</strong> ' . htmlspecialchars($pass->holder_name) . '</div>
+                                <div style="margin-bottom: 4px;"><strong>Tanggal & Waktu:</strong> ' . $eventDate . ' (' . $eventTime . ')</div>
+                                <div style="margin-bottom: 6px;"><strong>Lokasi / Venue:</strong> ' . $eventLocation . '</div>
+                                <div style="display: inline-block; margin-top: 4px; background-color: #DCFCE7; color: #166534; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 99px; text-transform: uppercase;">
+                                    Status: TIKET VALID / BISA SCANNED
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>';
+            }
+
+            $ticketsHtml .= '</div>';
+        }
+
         $accountNotice = '';
         if ($this->isNewAccount) {
             $accountNotice = '
@@ -62,25 +115,42 @@ class OrderPaidNotification extends Notification
                 </div>';
         }
 
+        $subject = $hasTickets 
+            ? "Pembayaran Berhasil! E-Ticket Event #{$orderNumber} Siap Digunakan | buyle.id" 
+            : "Pembayaran Berhasil! Pesanan #{$orderNumber} Siap Diunduh | buyle.id";
+
+        $subtitle = $hasTickets 
+            ? "Terima kasih! E-Ticket & QR Code kamu sudah aktif #{$orderNumber}" 
+            : "Terima kasih ya! Produk digital kamu siap diakses #{$orderNumber}";
+
+        $ctaText = $hasTickets 
+            ? 'Buka & Simpan E-Ticket Saya' 
+            : 'Akses Produk Digital Sekarang';
+
+        $promptMsg = $hasTickets
+            ? "Tunjukkan QR Code di atas atau tunjukkan halaman E-Ticket saat memasuki lokasi acara / venue:"
+            : "Klik tombol hijau di bawah untuk langsung mengunduh atau mengakses produk digital kamu:";
+
         return (new MailMessage)
-            ->subject("Pembayaran Berhasil! Pesanan #{$orderNumber} Siap Diunduh | buyle.id")
+            ->subject($subject)
             ->view('emails.layout', [
-                'subject'          => "Pembayaran Berhasil! Pesanan #{$orderNumber} Siap Diunduh | buyle.id",
+                'subject'          => $subject,
                 'badgeText'        => 'PEMBAYARAN SUCCESS',
                 'title'            => 'Pembayaran Berhasil Diterima!',
-                'subtitle'         => "Terima kasih ya! Produk digital kamu siap diakses #{$orderNumber}",
+                'subtitle'         => $subtitle,
                 'content'          => "
                     <p>Halo <strong>{$buyerName}</strong>,</p>
                     <p>Makasih banyak sudah berbelanja di <strong>buyle.id</strong>. Pembayaran kamu untuk transaksi <strong>#{$orderNumber}</strong> sudah terverifikasi.</p>
                     {$itemsHtml}
+                    {$ticketsHtml}
                     {$accountNotice}
-                    <p style='margin-top: 20px;'>Klik tombol hijau di bawah untuk langsung mengunduh atau mengakses produk digital kamu:</p>
+                    <p style='margin-top: 20px;'>{$promptMsg}</p>
                 ",
                 'ctaUrl'           => route('account.orders.show', $this->order->id),
-                'ctaText'          => 'Akses Produk Digital Sekarang',
+                'ctaText'          => $ctaText,
                 'secondaryCtaUrl'  => $this->isNewAccount ? $this->magicLoginUrl : route('account.orders'),
                 'secondaryCtaText' => $this->isNewAccount ? 'Masuk Instan ke Dashboard Pembeli' : 'Lihat Riwayat Pesanan Saya',
-                'footerNote'       => 'Ada kendala dalam mengunduh atau butuh bantuan lisensi? Balas email ini aja, kami siap bantu sampai tuntas!',
+                'footerNote'       => 'Ada kendala dalam mengunduh atau butuh bantuan tiket? Balas email ini aja, kami siap bantu sampai tuntas!',
             ]);
     }
 }

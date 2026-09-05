@@ -56,6 +56,13 @@ class ProcessSuccessfulOrderJob implements ShouldQueue
             'status'  => \App\Enums\OrderStatus::Confirmed,
         ]);
 
+        // Generate E-Ticket Pass jika terdapat produk tipe ticket
+        try {
+            \App\Models\TicketPass::generateForOrder($order);
+        } catch (\Throwable $e) {
+            Log::warning("Gagal generate TicketPass for order #{$order->id}: " . $e->getMessage());
+        }
+
         // 3. Generate Magic Login Token (password reset token dipakai ulang)
         $loginToken = Str::random(64);
         \DB::table('password_reset_tokens')->updateOrInsert(

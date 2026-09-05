@@ -74,7 +74,17 @@ class AccountController extends Controller
         if ($order->user_id !== Auth::id()) {
             abort(403);
         }
-        $order->load(['items.product', 'payment', 'shipment', 'couponUsage']);
+
+        // Generate E-Ticket Pass jika belum ter-generate (sebagai fallback untuk order terbayar)
+        if (in_array($order->status->value ?? $order->status, ['confirmed', 'processing', 'shipped', 'delivered', 'completed'])) {
+            try {
+                \App\Models\TicketPass::generateForOrder($order);
+            } catch (\Throwable $e) {
+                // Silently continue
+            }
+        }
+
+        $order->load(['items.product', 'payment', 'shipment', 'couponUsage', 'ticketPasses.product']);
 
         // If there is a tracking number, fetch live tracking from RajaOngkir/Komerce
         $tracking = null;

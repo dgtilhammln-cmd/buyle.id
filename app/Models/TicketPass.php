@@ -45,6 +45,39 @@ class TicketPass extends Model
         });
     }
 
+    /**
+     * Otomatis membuatkan TicketPass untuk seluruh produk tipe ticket pada suatu Order.
+     */
+    public static function generateForOrder(Order $order): void
+    {
+        if (!$order->relationLoaded('items')) {
+            $order->load('items.product');
+        }
+
+        foreach ($order->items as $item) {
+            if ($item->product && $item->product->product_type === 'ticket') {
+                $existingCount = static::where('order_id', $order->id)
+                    ->where('order_item_id', $item->id)
+                    ->count();
+
+                $qtyNeeded = $item->qty - $existingCount;
+                for ($i = 0; $i < $qtyNeeded; $i++) {
+                    static::create([
+                        'order_id'      => $order->id,
+                        'order_item_id' => $item->id,
+                        'product_id'    => $item->product_id,
+                        'user_id'       => $order->user_id,
+                        'seller_id'     => $item->product->seller_id,
+                        'holder_name'   => $order->user?->name ?? 'Pemegang Tiket',
+                        'holder_email'  => $order->user?->email,
+                        'holder_phone'  => $order->user?->phone,
+                        'status'        => 'valid',
+                    ]);
+                }
+            }
+        }
+    }
+
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
