@@ -764,14 +764,14 @@
                     </div>
                 </div>
 
-                {{-- Custom Color Customizer --}}
+                {{-- Custom Background & Color Customizer --}}
                 <div class="prof-card" style="margin-top:0;">
                     <div class="prof-card-head">
-                        <span>Kustomisasi Warna</span>
-                        <span style="font-size:0.72rem; font-weight:600; color:#64748b;">Override warna tema</span>
+                        <span>Kustomisasi Background & Warna</span>
+                        <span style="font-size:0.72rem; font-weight:600; color:#64748b;">Override tema (Warna Kustom / Gambar WebP)</span>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('creator.bio.save-profile') }}" method="POST" id="colorForm">
+                        <form action="{{ route('creator.bio.save-profile') }}" method="POST" id="colorForm" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="bio_name" value="{{ $cfg['name'] ?? '' }}">
                             <input type="hidden" name="bio_bio" value="{{ $cfg['bio'] ?? '' }}">
@@ -780,19 +780,66 @@
                             <input type="hidden" name="bio_ig" value="{{ $cfg['ig'] ?? '' }}">
                             <input type="hidden" name="bio_tiktok" value="{{ $cfg['tiktok'] ?? '' }}">
                             <input type="hidden" name="bio_youtube" value="{{ $cfg['youtube'] ?? '' }}">
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                                <div class="form-group" style="margin-bottom:0.75rem;">
-                                    <label class="form-label">Warna Background</label>
-                                    <div style="display:flex; gap:0.5rem; align-items:center;">
-                                        <input type="color" name="color_bg" id="color_bg_picker"
-                                            value="{{ $cfg['color_bg'] ?? '#0b120c' }}"
-                                            style="width:44px; height:40px; border-radius:8px; border:1.5px solid #e2e8f0; padding:2px; cursor:pointer; flex-shrink:0;"
-                                            oninput="syncColor('color_bg', this.value)">
-                                        <input type="text" id="color_bg_text" value="{{ $cfg['color_bg'] ?? '#0b120c' }}"
-                                            class="form-input" style="flex:1;"
-                                            oninput="syncColor('color_bg', this.value, true)">
-                                    </div>
+                            
+                            @php
+                                $curBgType = $cfg['bg_type'] ?? 'color';
+                                $curBgImg  = $cfg['bg_image'] ?? null;
+                            @endphp
+
+                            {{-- 2 Opsi Background --}}
+                            <div style="margin-bottom: 1.25rem;">
+                                <label class="form-label" style="font-weight:700; margin-bottom:0.5rem; display:block;">Pilih Tipe Background</label>
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                                    <label id="bg_mode_card_color" class="bg-mode-card" style="display:flex; align-items:center; gap:0.6rem; padding:0.75rem 1rem; border-radius:10px; border:2px solid {{ $curBgType === 'color' ? '#1eb349' : '#e2e8f0' }}; cursor:pointer; background: {{ $curBgType === 'color' ? '#f0fdf4' : '#fff' }};">
+                                        <input type="radio" name="bg_type" value="color" {{ $curBgType === 'color' ? 'checked' : '' }} onchange="toggleBgMode('color')" style="accent-color:#1eb349;">
+                                        <div>
+                                            <strong style="display:block; font-size:0.85rem; color:#0f172a;">🎨 Warna Kustom</strong>
+                                            <span style="font-size:0.73rem; color:#64748b;">Warna solid / gradasi</span>
+                                        </div>
+                                    </label>
+                                    <label id="bg_mode_card_image" class="bg-mode-card" style="display:flex; align-items:center; gap:0.6rem; padding:0.75rem 1rem; border-radius:10px; border:2px solid {{ $curBgType === 'image' ? '#1eb349' : '#e2e8f0' }}; cursor:pointer; background: {{ $curBgType === 'image' ? '#f0fdf4' : '#fff' }};">
+                                        <input type="radio" name="bg_type" value="image" {{ $curBgType === 'image' ? 'checked' : '' }} onchange="toggleBgMode('image')" style="accent-color:#1eb349;">
+                                        <div>
+                                            <strong style="display:block; font-size:0.85rem; color:#0f172a;">🖼️ Gambar Custom</strong>
+                                            <span style="font-size:0.73rem; color:#64748b;">Upload (Auto WebP)</span>
+                                        </div>
+                                    </label>
                                 </div>
+                            </div>
+
+                            {{-- Sub-panel Warna Background --}}
+                            <div id="bg_color_panel" style="display: {{ $curBgType === 'color' ? 'block' : 'none' }}; margin-bottom:1rem; background:#f8fafc; padding:0.85rem; border-radius:10px; border:1px solid #e2e8f0;">
+                                <label class="form-label" style="font-weight:600; margin-bottom:0.4rem; display:block;">Pilih Warna Background</label>
+                                <div style="display:flex; gap:0.5rem; align-items:center;">
+                                    <input type="color" name="color_bg" id="color_bg_picker"
+                                        value="{{ $cfg['color_bg'] ?? '#0b120c' }}"
+                                        style="width:44px; height:40px; border-radius:8px; border:1.5px solid #e2e8f0; padding:2px; cursor:pointer; flex-shrink:0;"
+                                        oninput="syncColor('color_bg', this.value)">
+                                    <input type="text" id="color_bg_text" value="{{ $cfg['color_bg'] ?? '#0b120c' }}"
+                                        class="form-input" style="flex:1;"
+                                        oninput="syncColor('color_bg', this.value, true)">
+                                </div>
+                            </div>
+
+                            {{-- Sub-panel Gambar Background --}}
+                            <div id="bg_image_panel" style="display: {{ $curBgType === 'image' ? 'block' : 'none' }}; margin-bottom:1rem; background:#f8fafc; padding:0.85rem; border-radius:10px; border:1px solid #e2e8f0;">
+                                <label class="form-label" style="font-weight:600; margin-bottom:0.4rem; display:block;">Upload Gambar Background (Otomatis Konversi WebP)</label>
+                                @if(!empty($curBgImg))
+                                    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; background:#fff; padding:0.5rem 0.75rem; border-radius:8px; border:1px solid #e2e8f0;">
+                                        <img src="{{ asset('storage/' . $curBgImg) }}" id="bg_image_thumb" style="width:50px; height:50px; object-fit:cover; border-radius:6px;">
+                                        <div style="flex:1;">
+                                            <span style="font-size:0.78rem; color:#475569; display:block; font-weight:600;">Gambar Terpasang (.webp)</span>
+                                            <label style="font-size:0.75rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin-top:2px;">
+                                                <input type="checkbox" name="delete_bg_image" value="1" onchange="previewBgDelete(this)"> Hapus Gambar
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endif
+                                <input type="file" name="bio_bg_image" id="bio_bg_image_input" accept="image/*" class="form-input" style="height:auto; padding:0.5rem;" onchange="previewUploadedBgImage(this)">
+                                <span style="font-size:0.72rem; color:#64748b; margin-top:4px; display:block;">✨ Semua format gambar (JPG, PNG, WebP) akan otomatis di-convert ke WebP resolusi tinggi secara ringan & cepat.</span>
+                            </div>
+
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                                 <div class="form-group" style="margin-bottom:0.75rem;">
                                     <label class="form-label">Warna Teks</label>
                                     <div style="display:flex; gap:0.5rem; align-items:center;">
@@ -856,7 +903,7 @@
                             </div>
                             <div style="margin-top:0.75rem; border-radius:14px; overflow:hidden; border:1px solid #e2e8f0;">
                                 <div id="cpBg"
-                                    style="padding:1.25rem; display:flex; flex-direction:column; align-items:center; gap:0.6rem; background:{{ $cfg['color_bg'] ?? '#0b120c' }};">
+                                    style="padding:1.25rem; display:flex; flex-direction:column; align-items:center; gap:0.6rem; {{ $curBgType === 'image' && !empty($curBgImg) ? 'background: url(' . asset('storage/' . $curBgImg) . ') center center / cover no-repeat;' : 'background:' . ($cfg['color_bg'] ?? '#0b120c') . ';' }}">
                                     <div id="cpCard"
                                         style="width:46px; height:46px; border-radius:50%; background:{{ $cfg['color_card'] ?? '#1a231b' }}; border:2px solid {{ $cfg['color_accent'] ?? '#1eb349' }};">
                                     </div>
@@ -872,7 +919,7 @@
                                 <button type="button" onclick="resetColors()"
                                     style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Reset
                                     Default</button>
-                                <button type="submit" class="btn-submit-sm">Simpan Warna</button>
+                                <button type="submit" class="btn-submit-sm">Simpan Kustomisasi</button>
                             </div>
                         </form>
                     </div>
@@ -1896,7 +1943,71 @@
             });
         });
 
-        // Color Sync for Custom Theme
+        // Color & Background Sync for Custom Theme
+        function toggleBgMode(mode) {
+            let colorPanel = document.getElementById('bg_color_panel');
+            let imagePanel = document.getElementById('bg_image_panel');
+            let cardColor = document.getElementById('bg_mode_card_color');
+            let cardImage = document.getElementById('bg_mode_card_image');
+
+            if (mode === 'image') {
+                if (colorPanel) colorPanel.style.display = 'none';
+                if (imagePanel) imagePanel.style.display = 'block';
+                if (cardColor) { cardColor.style.borderColor = '#e2e8f0'; cardColor.style.background = '#fff'; }
+                if (cardImage) { cardImage.style.borderColor = '#1eb349'; cardImage.style.background = '#f0fdf4'; }
+
+                let imgThumb = document.getElementById('bg_image_thumb');
+                let cpBg = document.getElementById('cpBg');
+                if (cpBg && imgThumb && imgThumb.src) {
+                    cpBg.style.background = `url("${imgThumb.src}") center center / cover no-repeat`;
+                }
+            } else {
+                if (colorPanel) colorPanel.style.display = 'block';
+                if (imagePanel) imagePanel.style.display = 'none';
+                if (cardColor) { cardColor.style.borderColor = '#1eb349'; cardColor.style.background = '#f0fdf4'; }
+                if (cardImage) { cardImage.style.borderColor = '#e2e8f0'; cardImage.style.background = '#fff'; }
+
+                let bg = document.getElementById('color_bg_picker')?.value || '#0b120c';
+                let cpBg = document.getElementById('cpBg');
+                if (cpBg) cpBg.style.background = bg;
+            }
+        }
+
+        function previewUploadedBgImage(input) {
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let cpBg = document.getElementById('cpBg');
+                    if (cpBg) {
+                        cpBg.style.background = `url("${e.target.result}") center center / cover no-repeat`;
+                    }
+                    let imgThumb = document.getElementById('bg_image_thumb');
+                    if (imgThumb) {
+                        imgThumb.src = e.target.result;
+                    }
+                    let radioImg = document.querySelector('input[name="bg_type"][value="image"]');
+                    if (radioImg) {
+                        radioImg.checked = true;
+                        toggleBgMode('image');
+                    }
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function previewBgDelete(chk) {
+            let cpBg = document.getElementById('cpBg');
+            if (chk.checked) {
+                let bg = document.getElementById('color_bg_picker')?.value || '#0b120c';
+                if (cpBg) cpBg.style.background = bg;
+            } else {
+                let imgThumb = document.getElementById('bg_image_thumb');
+                if (cpBg && imgThumb && imgThumb.src) {
+                    cpBg.style.background = `url("${imgThumb.src}") center center / cover no-repeat`;
+                }
+            }
+        }
+
         function syncColor(id, value, fromText = false) {
             if (fromText) {
                 let p = document.getElementById(id + '_picker');
@@ -1906,16 +2017,19 @@
                 if (t) t.value = value;
             }
 
-            // Live preview
-            let bg = document.getElementById('color_bg_picker')?.value || '#0b120c';
+            let bgType = document.querySelector('input[name="bg_type"]:checked')?.value || 'color';
+            if (bgType === 'color') {
+                let bg = document.getElementById('color_bg_picker')?.value || '#0b120c';
+                let cpBg = document.getElementById('cpBg');
+                if (cpBg) cpBg.style.background = bg;
+            }
+
             let text = document.getElementById('color_text_picker')?.value || '#ffffff';
             let btn = document.getElementById('color_btn_picker')?.value || '#1eb349';
             let btnText = document.getElementById('color_btn_text_picker')?.value || '#ffffff';
             let accent = document.getElementById('color_accent_picker')?.value || '#1eb349';
             let card = document.getElementById('color_card_picker')?.value || '#1a231b';
 
-            let cpBg = document.getElementById('cpBg');
-            if (cpBg) cpBg.style.background = bg;
             let cpCard = document.getElementById('cpCard');
             if (cpCard) { cpCard.style.background = card; cpCard.style.borderColor = accent; }
             let cpText = document.getElementById('cpText');
@@ -1931,6 +2045,11 @@
                 let t = document.getElementById(k + '_text');
                 if (p) p.value = defs[k];
                 if (t) t.value = defs[k];
+            }
+            let radioColor = document.querySelector('input[name="bg_type"][value="color"]');
+            if (radioColor) {
+                radioColor.checked = true;
+                toggleBgMode('color');
             }
             syncColor('color_bg', defs['color_bg']);
         }

@@ -90,15 +90,15 @@ class CreatorBioController extends Controller
         $profile = $this->getProfile();
         
         $config = $profile->bio_config ?? [];
-        // Reset custom colors so the new theme takes precedence
-        unset($config['color_bg'], $config['color_text'], $config['color_btn'], $config['color_btn_text'], $config['color_accent'], $config['color_card']);
+        // Reset custom colors & background so the new theme takes precedence
+        unset($config['color_bg'], $config['color_text'], $config['color_btn'], $config['color_btn_text'], $config['color_accent'], $config['color_card'], $config['bg_type'], $config['bg_image']);
         
         $profile->update([
             'bio_theme' => $request->bio_theme,
             'bio_config' => $config
         ]);
         
-        return back()->with('success', 'Tema berhasil diperbarui & Warna Kustom telah direset!');
+        return back()->with('success', 'Tema berhasil diperbarui & Kustomisasi Background telah direset!');
     }
 
     /**
@@ -113,6 +113,8 @@ class CreatorBioController extends Controller
             'bio_location'  => 'nullable|string|max:100',
             'bio_avatar'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'bio_cover'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'bio_bg_image'  => 'nullable|image|mimes:jpg,jpeg,png,webp|max:8192',
+            'bg_type'       => 'nullable|in:color,image',
             'bio_wa'        => 'nullable|string|max:30',
             'bio_ig'        => 'nullable|string|max:80',
             'bio_tiktok'    => 'nullable|string|max:80',
@@ -154,6 +156,22 @@ class CreatorBioController extends Controller
         } elseif ($request->hasFile('bio_cover')) {
             if (!empty($config['cover'])) Storage::disk('public')->delete($config['cover']);
             $config['cover'] = $request->file('bio_cover')->store('bio/covers', 'public');
+        }
+
+        // Handle custom background image upload / deletion
+        if ($request->has('bg_type')) {
+            $config['bg_type'] = $request->bg_type;
+        }
+
+        if ($request->has('delete_bg_image') && !empty($config['bg_image'])) {
+            Storage::disk('public')->delete($config['bg_image']);
+            $config['bg_image'] = null;
+        } elseif ($request->hasFile('bio_bg_image')) {
+            if (!empty($config['bg_image'])) {
+                Storage::disk('public')->delete($config['bg_image']);
+            }
+            $config['bg_image'] = $this->convertToWebp($request->file('bio_bg_image'), 'bio/backgrounds');
+            $config['bg_type'] = 'image';
         }
 
         $config['name']     = $request->bio_name     ?? $config['name'] ?? '';
@@ -595,5 +613,47 @@ class CreatorBioController extends Controller
         } catch (\Throwable $e) {}
 
         return $imageUrl;
+    }
+
+    /**
+     * Convert uploaded background image to WebP automatically.
+     */
+    private function convertToWebp($file, string $destinationDirectory, int $quality = 85): string
+    {
+        $extension = strtolower($file->getClientOriginalExtension());
+        $filename = 'bg_' . md5(uniqid('', true) . time()) . '.webp';
+        $relativeDir = trim($destinationDirectory, '/');
+        $fullDirPath = storage_path('app/public/' . $relativeDir);
+
+        if (!file_exists($fullDirPath)) {
+            @mkdir($fullDirPath, 0755, true);
+        }
+
+        $fullPath = $fullDirPath . '/' . $filename;
+        $image = null;
+
+        if ($extension === 'jpeg' || $extension === 'jpg') {
+            $image = @imagecreatefromjpeg($file->getRealPath());
+        } elseif ($extension === 'png') {
+            $image = @imagecreatefrompng($file->getRealPath());
+            if ($image) {
+                imagealphablending($image, true);
+                imagesavealpha($image, true);
+            }
+        } elseif ($extension === 'webp') {
+            $file->storeAs($relativeDir, $filename, 'public');
+            return $relativeDir . '/' . $filename;
+        }
+
+        if ($image && function_exists('imagewebp')) {
+            @imagewebp($image, $fullPath, $quality);
+            @imagedestroy($image);
+            if (file_exists($fullPath)) {
+                return $relativeDir . '/' . $filename;
+            }
+        }
+
+        // Fallback if GD fails or WebP not created
+        return $file->store($relativeDir, 'public');
     }
 }

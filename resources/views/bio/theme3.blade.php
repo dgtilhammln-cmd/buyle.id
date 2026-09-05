@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -438,14 +438,21 @@
     </style>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        /* Custom Colors Override */
-        @if(!empty($config['color_bg']))
-            body {
-                background:
-                    {{ $config['color_bg'] }}
-                    !important;
-            }
+        /* Custom Background & Colors Override */
+        @php
+            $bgType  = $config['bg_type'] ?? 'color';
+            $bgImg   = $config['bg_image'] ?? null;
+            $colorBg = $config['color_bg'] ?? null;
+        @endphp
 
+        @if($bgType === 'image' && !empty($bgImg))
+            body {
+                background: url("{{ asset('storage/' . $bgImg) }}") center center / cover no-repeat fixed !important;
+            }
+        @elseif(!empty($colorBg))
+            body {
+                background: {{ $colorBg }} !important;
+            }
         @endif
 
         @if(!empty($config['color_text']))
