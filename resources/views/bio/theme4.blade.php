@@ -568,17 +568,6 @@
 
         {{-- Social Icons --}}
         @include('bio._social_icons')
-                @if(!empty($config['wa'])) <a href="https://wa.me/{{ $config['wa'] }}" target="_blank"
-                class="social-icon" title="WhatsApp"><i class="fab fa-whatsapp"></i></a> @endif
-                @if(!empty($config['ig'])) <a href="https://instagram.com/{{ ltrim($config['ig'], '@') }}" target="_blank"
-                class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a> @endif
-                @if(!empty($config['tiktok'])) <a href="https://tiktok.com/@{{ ltrim($config['tiktok'],'@') }}"
-                target="_blank" class="social-icon" title="TikTok"><i class="fab fa-tiktok"></i></a> @endif
-                @if(!empty($config['youtube'])) <a href="{{ $config['youtube'] }}" target="_blank" class="social-icon" title="YouTube"><i
-                class="fab fa-youtube"></i></a> @endif
-            </div>
-        @endif
-
         {{-- Realtime Global Search Box --}}
         <div class="search-box-wrap fade-up" style="animation-delay:0.22s; margin: 1.25rem var(--side, 1rem) 0.5rem;">
             <div style="position:relative; width:100%;">

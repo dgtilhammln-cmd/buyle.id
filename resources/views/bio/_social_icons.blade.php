@@ -1,18 +1,18 @@
-﻿@php
+@php
     $sl      = $profile->social_links ?? [];
-    $s_wa    = $sl['wa']        ?? $config['wa']     ?? null;
-    $s_ig    = $sl['instagram'] ?? $config['ig']     ?? null;
-    $s_tt    = $sl['tiktok']    ?? $config['tiktok'] ?? null;
-    $s_yt    = $sl['youtube']   ?? $config['youtube'] ?? null;
-    $s_fb    = $sl['facebook']  ?? null;
-    $s_x     = $sl['x']        ?? null;
-    $s_li    = $sl['linkedin']  ?? null;
-    $s_pin   = $sl['pinterest'] ?? null;
-    $s_dsc   = $sl['discord']   ?? null;
-    $s_thr   = $sl['threads']   ?? null;
-    $s_tg    = $sl['telegram']  ?? null;
-    $s_sn    = $sl['snapchat']  ?? null;
-    $s_web   = $sl['website']   ?? null;
+    $s_wa    = $sl['wa']        ?? $config['wa']        ?? null;
+    $s_ig    = $sl['instagram'] ?? $config['ig']        ?? null;
+    $s_tt    = $sl['tiktok']    ?? $config['tiktok']    ?? null;
+    $s_yt    = $sl['youtube']   ?? $config['youtube']   ?? null;
+    $s_fb    = $sl['facebook']  ?? $config['facebook']  ?? null;
+    $s_x     = $sl['x']        ?? $config['x']         ?? null;
+    $s_li    = $sl['linkedin']  ?? $config['linkedin']  ?? null;
+    $s_pin   = $sl['pinterest'] ?? $config['pinterest'] ?? null;
+    $s_dsc   = $sl['discord']   ?? $config['discord']   ?? null;
+    $s_thr   = $sl['threads']   ?? $config['threads']   ?? null;
+    $s_tg    = $sl['telegram']  ?? $config['telegram']  ?? null;
+    $s_sn    = $sl['snapchat']  ?? $config['snapchat']  ?? null;
+    $s_web   = $sl['website']   ?? $config['website']   ?? null;
     $hasAny  = !empty($profile->store_slug) || $s_wa || $s_ig || $s_tt || $s_yt || $s_fb || $s_x || $s_li || $s_pin || $s_dsc || $s_thr || $s_tg || $s_sn || $s_web;
 @endphp
 @if($hasAny)

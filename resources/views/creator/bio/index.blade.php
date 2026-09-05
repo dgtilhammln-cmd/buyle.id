@@ -964,37 +964,133 @@
                 </form>
             </div>
 
-            {{-- ══ TAB 3: SOCIAL LINKS ══ --}}
             <div class="tab-pane" id="tab-social">
                 <form action="{{ route('creator.bio.save-profile') }}" method="POST">
                     @csrf
                     <div class="prof-card">
                         <div class="prof-card-head">Social Media</div>
                         <div class="card-body">
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+
+                                {{-- WhatsApp --}}
                                 <div class="form-group">
-                                    <label class="form-label"><span style="color:#25D366;">●</span> WhatsApp</label>
-                                    <input type="text" name="bio_wa" value="{{ old('bio_wa', $cfg['wa'] ?? '') }}"
-                                        class="form-input" placeholder="628xxxxxxxxx">
+                                    <label class="form-label">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366" style="vertical-align:middle;margin-right:4px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.556 4.117 1.528 5.849L0 24l6.335-1.508A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.154-1.422l-.37-.218-3.764.896.924-3.667-.243-.381A9.953 9.953 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/></svg>
+                                        WhatsApp
+                                    </label>
+                                    <input type="text" name="bio_wa" value="{{ old('bio_wa', $cfg['wa'] ?? '') }}" class="form-input" placeholder="628xxxxxxxxx">
                                 </div>
+
+                                {{-- Instagram --}}
                                 <div class="form-group">
-                                    <label class="form-label"><span style="color:#E4405F;">●</span> Instagram</label>
-                                    <input type="text" name="bio_ig" value="{{ old('bio_ig', $cfg['ig'] ?? '') }}"
-                                        class="form-input" placeholder="@username">
+                                    <label class="form-label">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px"><defs><linearGradient id="ig2" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="50%" stop-color="#dc2743"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5.5" fill="url(#ig2)"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="white" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.2" fill="white"/></svg>
+                                        Instagram
+                                    </label>
+                                    <input type="text" name="bio_ig" value="{{ old('bio_ig', $cfg['ig'] ?? '') }}" class="form-input" placeholder="@username">
                                 </div>
+
+                                {{-- TikTok --}}
                                 <div class="form-group">
-                                    <label class="form-label"><span style="color:#000;">●</span> TikTok</label>
-                                    <input type="text" name="bio_tiktok"
-                                        value="{{ old('bio_tiktok', $cfg['tiktok'] ?? '') }}" class="form-input"
-                                        placeholder="@username">
+                                    <label class="form-label">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43 6.2 6.2 0 0 0 1.91-4.42V8.92a8.28 8.28 0 0 0 4.82 1.55v-3.47a4.91 4.91 0 0 1-1-.31z"/></svg>
+                                        TikTok
+                                    </label>
+                                    <input type="text" name="bio_tiktok" value="{{ old('bio_tiktok', $cfg['tiktok'] ?? '') }}" class="form-input" placeholder="@username">
                                 </div>
+
+                                {{-- YouTube --}}
                                 <div class="form-group">
-                                    <label class="form-label"><span style="color:#FF0000;">●</span> YouTube</label>
-                                    <input type="url" name="bio_youtube"
-                                        value="{{ old('bio_youtube', $cfg['youtube'] ?? '') }}" class="form-input"
-                                        placeholder="https://youtube.com/...">
+                                    <label class="form-label">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z" fill="#FF0000"/></svg>
+                                        YouTube
+                                    </label>
+                                    <input type="text" name="bio_youtube" value="{{ old('bio_youtube', $cfg['youtube'] ?? '') }}" class="form-input" placeholder="@channel atau URL">
                                 </div>
+
+                                {{-- Facebook --}}
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#1877F2" style="vertical-align:middle;margin-right:4px"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.428c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.234 2.686.234v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+                                        Facebook
+                                    </label>
+                                    <input type="text" name="bio_facebook" value="{{ old('bio_facebook', $cfg['facebook'] ?? '') }}" class="form-input" placeholder="username atau URL">
+                                </div>
+
+                                {{-- X / Twitter --}}
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                        X / Twitter
+                                    </label>
+                                    <input type="text" name="bio_x" value="{{ old('bio_x', $cfg['x'] ?? '') }}" class="form-input" placeholder="@username">
+                                </div>
+
+                                {{-- Threads --}}
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.5 12.068c0-3.507.857-6.355 2.49-8.414C5.845 1.348 8.6.166 12.18.142h.014c2.746.019 5.037.744 6.811 2.154 1.828 1.454 3.02 3.552 3.547 6.236l-2.937.578c-.39-2.013-1.252-3.59-2.565-4.684-1.266-1.055-2.985-1.601-5.114-1.609-2.468.017-4.39.763-5.714 2.219C4.886 6.484 4.217 8.677 4.217 12.07c0 3.4.665 5.59 1.997 7.038 1.327 1.455 3.252 2.2 5.725 2.218 1.832-.011 3.38-.419 4.6-1.213 1.332-.867 2.093-2.14 2.261-3.785.17-1.65-.22-2.985-.937-3.76-.607-.657-1.485-1.032-2.523-1.087-.164 2.044-.741 3.51-1.717 4.366a4.06 4.06 0 0 1-2.757.974c-1.072 0-2.006-.341-2.703-1.007-.742-.706-1.12-1.712-1.062-2.833.11-2.152 1.792-3.676 4.382-3.676.5 0 .978.046 1.43.135a9.1 9.1 0 0 0-.014-.613c-.105-1.52-.885-2.314-2.316-2.361a3.43 3.43 0 0 0-.238-.008c-.921 0-1.76.341-2.375.96l-2.036-2.036C8.26 5.54 9.715 4.94 11.424 4.85a9.92 9.92 0 0 1 .388-.007c2.698 0 4.576 1.46 4.762 4.314.033.502.045 1.017.037 1.535a7.7 7.7 0 0 1 2.085.903c1.404.906 2.175 2.319 2.147 3.963-.005.26-.023.525-.055.793-.366 3.16-1.878 5.282-4.494 6.307-1.196.473-2.564.72-4.108.742z"/></svg>
+                                        Threads
+                                    </label>
+                                    <input type="text" name="bio_threads" value="{{ old('bio_threads', $cfg['threads'] ?? '') }}" class="form-input" placeholder="@username">
+                                </div>
+
+                                {{-- LinkedIn --}}
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#0A66C2" style="vertical-align:middle;margin-right:4px"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                                        LinkedIn
+                                    </label>
+                                    <input type="text" name="bio_linkedin" value="{{ old('bio_linkedin', $cfg['linkedin'] ?? '') }}" class="form-input" placeholder="username atau URL">
+                                </div>
+
+                                {{-- Pinterest --}}
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#E60023" style="vertical-align:middle;margin-right:4px"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+                                        Pinterest
+                                    </label>
+                                    <input type="text" name="bio_pinterest" value="{{ old('bio_pinterest', $cfg['pinterest'] ?? '') }}" class="form-input" placeholder="username">
+                                </div>
+
+                                {{-- Telegram --}}
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#26A5E4" style="vertical-align:middle;margin-right:4px"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                                        Telegram
+                                    </label>
+                                    <input type="text" name="bio_telegram" value="{{ old('bio_telegram', $cfg['telegram'] ?? '') }}" class="form-input" placeholder="@username atau group">
+                                </div>
+
+                                {{-- Discord --}}
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#5865F2" style="vertical-align:middle;margin-right:4px"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.054a19.824 19.824 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                                        Discord
+                                    </label>
+                                    <input type="text" name="bio_discord" value="{{ old('bio_discord', $cfg['discord'] ?? '') }}" class="form-input" placeholder="https://discord.gg/...">
+                                </div>
+
+                                {{-- Snapchat --}}
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="12" fill="#FFFC00"/><path d="M12.206 5.293c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c.053.022.11.03.171.03.317 0 .68-.13 1.038-.325.134-.073.36-.159.587-.159.14 0 .519.032.703.386.132.26.05.542-.23.77-.11.09-.699.51-1.599.933.12.343.25.7.42 1.035.49 1.013 1.244 1.814 2.298 2.404a.93.93 0 0 1-.24 1.742c-.374.062-.744.103-1.117.145-.49.055-.988.112-1.47.195-.5.087-.962.273-1.37.554-.415.286-.836.71-.836 1.436 0 .38.081.681.152.897-.137.12-.31.17-.484.17-.225 0-.44-.07-.62-.161-.376-.19-.739-.296-1.107-.296a3.02 3.02 0 0 0-.734.087c-.396.098-.792.302-1.213.54-.394.224-.809.462-1.306.548a2.8 2.8 0 0 1-.442.036c-.464 0-.9-.114-1.28-.319-.426-.23-.786-.42-1.163-.507a3.11 3.11 0 0 0-.728-.083c-.367 0-.73.104-1.102.292-.177.09-.383.16-.59.16-.186 0-.374-.054-.52-.18-.232-.196-.152-.432-.054-.725.074-.217.156-.518.156-.9 0-.71-.41-1.13-.817-1.417a4.45 4.45 0 0 0-1.361-.558c-.48-.088-.976-.146-1.463-.202a11.7 11.7 0 0 1-1.14-.148.935.935 0 0 1-.23-1.744c1.053-.591 1.809-1.392 2.297-2.405.172-.333.3-.694.42-1.035-.905-.425-1.492-.842-1.6-.932-.28-.228-.36-.51-.23-.77.184-.355.563-.387.703-.387.225 0 .455.086.587.16.353.193.712.323 1.027.323.064 0 .124-.009.18-.032l-.033-.569c-.104-1.628-.23-3.655.299-4.847C7.86 5.57 11.217 5.294 12.206 5.293z" fill="#000"/></svg>
+                                        Snapchat
+                                    </label>
+                                    <input type="text" name="bio_snapchat" value="{{ old('bio_snapchat', $cfg['snapchat'] ?? '') }}" class="form-input" placeholder="username">
+                                </div>
+
                             </div>
+
+                            {{-- Website - full width --}}
+                            <div class="form-group" style="margin-top:0.75rem;">
+                                <label class="form-label">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2" style="vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                    Website / Portofolio / Linktree
+                                </label>
+                                <input type="url" name="bio_website" value="{{ old('bio_website', $cfg['website'] ?? '') }}" class="form-input" placeholder="https://portofolio-anda.com">
+                            </div>
+
                             <div style="display:flex; justify-content:flex-end; margin-top:1.25rem;">
                                 <button type="submit" class="btn-submit-sm">Simpan Social Media</button>
                             </div>
