@@ -40,7 +40,7 @@
         <label class="remember-label">
             <input type="checkbox" name="remember"> Ingat saya
         </label>
-        {{-- <a href="#" class="forgot-link">Lupa sandi?</a> --}}
+        <a href="{{ route('password.request') }}" class="forgot-link">Lupa sandi?</a>
     </div>
 
     <button type="submit" class="btn-primary">Masuk</button>

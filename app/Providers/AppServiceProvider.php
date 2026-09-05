@@ -27,5 +27,8 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.env') === 'production') {
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
+
+        // Apply dynamic SMTP configuration
+        \App\Services\MailConfigService::apply();
     }
 }

@@ -112,6 +112,12 @@ class AuthController extends Controller
             'role'     => 'buyer',
         ]);
 
+        try {
+            $user->notify(new \App\Notifications\WelcomeNotification());
+        } catch (\Throwable $e) {
+            \Log::warning('WelcomeNotification failed: ' . $e->getMessage());
+        }
+
         Auth::login($user);
         $request->session()->regenerate();
 
@@ -171,6 +177,12 @@ class AuthController extends Controller
                 'password'  => Hash::make(Str::random(24)),
                 'role'      => 'buyer',
             ]);
+
+            try {
+                $user->notify(new \App\Notifications\WelcomeNotification());
+            } catch (\Throwable $e) {
+                \Log::warning('WelcomeNotification failed: ' . $e->getMessage());
+            }
         }
 
         Auth::login($user, true);
@@ -219,5 +231,92 @@ class AuthController extends Controller
 
         return redirect()->route('buyer.dashboard')
             ->with('success', '✅ Selamat datang di buyle.id! Akses produk Anda ada di sini.');
+    }
+
+    // ── Show Forgot Password Form ──
+    public function showForgotPassword()
+    {
+        return view('auth.forgot_password');
+    }
+
+    // ── Send Reset Link Email ──
+    public function sendResetLink(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ], [
+            'email.required' => 'Email wajib diisi.',
+            'email.email'    => 'Format email tidak valid.',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return back()->withInput()->withErrors(['email' => 'Email tidak terdaftar di sistem kami.']);
+        }
+
+        $token = Str::random(64);
+
+        \DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $user->email],
+            ['token' => Hash::make($token), 'created_at' => now()]
+        );
+
+        try {
+            $user->notify(new \App\Notifications\ResetPasswordNotification($token, $user->email));
+        } catch (\Throwable $e) {
+            \Log::error('ResetPasswordNotification error: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Gagal mengirim email reset password: ' . $e->getMessage());
+        }
+
+        return back()->with('success', 'Tautan reset kata sandi telah dikirim ke email Anda (' . $user->email . '). Silakan periksa inbox/spam Anda.');
+    }
+
+    // ── Show Reset Password Form ──
+    public function showResetPassword(Request $request, $token)
+    {
+        $email = $request->query('email', '');
+        return view('auth.reset_password', compact('token', 'email'));
+    }
+
+    // ── Process Reset Password ──
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token'                 => 'required',
+            'email'                 => 'required|email',
+            'password'              => 'required|min:6|confirmed',
+        ], [
+            'email.required'        => 'Email wajib diisi.',
+            'password.required'     => 'Kata sandi baru wajib diisi.',
+            'password.min'          => 'Kata sandi minimal 6 karakter.',
+            'password.confirmed'    => 'Konfirmasi kata sandi tidak cocok.',
+        ]);
+
+        $record = \DB::table('password_reset_tokens')
+            ->where('email', $request->email)
+            ->first();
+
+        if (!$record || !Hash::check($request->token, $record->token)) {
+            return back()->withInput()->withErrors(['email' => 'Tautan reset kata sandi tidak valid atau sudah kadaluwarsa.']);
+        }
+
+        if (\Carbon\Carbon::parse($record->created_at)->addHours(2)->isPast()) {
+            \DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+            return back()->withInput()->withErrors(['email' => 'Tautan reset kata sandi sudah kedaluwarsa. Silakan minta tautan baru.']);
+        }
+
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return back()->withInput()->withErrors(['email' => 'Pengguna tidak ditemukan.']);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        \DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
+        return redirect()->route('login')->with('success', '✅ Kata sandi Anda berhasil diperbarui! Silakan masuk dengan kata sandi baru Anda.');
     }
 }

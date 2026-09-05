@@ -68,8 +68,28 @@ class ProcessSuccessfulOrderJob implements ShouldQueue
             'email' => $user->email,
         ]);
 
-        // 4. Kirim Email Notifikasi via Queue
-        $user->notify(new OrderPaidNotification($order, $magicLoginUrl, $wasNewlyCreated));
+        // 4. Kirim Email Notifikasi ke Buyer (Akses Produk)
+        try {
+            $user->notify(new OrderPaidNotification($order, $magicLoginUrl, $wasNewlyCreated));
+        } catch (\Throwable $e) {
+            Log::warning("Gagal mengirim OrderPaidNotification to buyer: " . $e->getMessage());
+        }
+
+        // 5. Kirim Email Notifikasi Order Masuk ke Seller
+        try {
+            $sellerIds = [];
+            foreach ($order->items as $item) {
+                if ($item->product && $item->product->seller && $item->product->seller->user) {
+                    $sellerUser = $item->product->seller->user;
+                    if (!in_array($sellerUser->id, $sellerIds)) {
+                        $sellerIds[] = $sellerUser->id;
+                        $sellerUser->notify(new \App\Notifications\SellerNewOrderNotification($order));
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            Log::warning("Gagal mengirim SellerNewOrderNotification: " . $e->getMessage());
+        }
 
         Log::info("ProcessSuccessfulOrderJob: Order #{$order->order_number} berhasil diproses untuk user {$user->email}.");
     }

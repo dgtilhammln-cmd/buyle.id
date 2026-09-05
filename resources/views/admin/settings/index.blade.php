@@ -236,6 +236,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       'contact' => ['Kontak', 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z'],
       'api'     => ['Integrasi API', 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4'],
       'ads'     => ['Space Iklan / Banner', 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z'],
+      'email'   => ['Pengaturan Email (SMTP)', 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'],
     ];
   @endphp
   @foreach($tabs as $tabKey => [$tabLabel, $tabIcon])
@@ -1036,6 +1037,82 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;">Simpan Banner Iklan</button>
     </div>
   </div>
+{{-- ======== TAB: EMAIL (SMTP) ======== --}}
+<div id="tab-email" class="tab-section" style="display:none;">
+  <div style="background:#FFFFFF;border-radius:20px;padding:1.75rem;box-shadow:0 4px 20px rgba(0,0,0,0.03);border:1px solid #F8FAFC;margin-bottom:1.5rem;">
+    <div style="display:flex;gap:.75rem;margin-bottom:1.75rem;align-items:center;">
+      <svg width="24" height="24" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      <div>
+        <div style="font-size:.95rem;font-weight:800;color:#1E293B;">Pengaturan Server Email (SMTP Hostinger / Custom)</div>
+        <div style="font-size:.78rem;color:#64748B;">Konfigurasikan akun email untuk notifikasi order, reset password, & email selamat datang.</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;">
+      <div>
+        <label class="form-label">Mailer <span>(Default: smtp)</span></label>
+        <input type="text" name="mail_mailer" class="form-input" value="{{ old('mail_mailer', $settings['mail_mailer'] ?? 'smtp') }}" placeholder="smtp">
+      </div>
+
+      <div>
+        <label class="form-label">Host SMTP <span>(Hostinger: smtp.hostinger.com)</span></label>
+        <input type="text" name="mail_host" class="form-input" value="{{ old('mail_host', $settings['mail_host'] ?? 'smtp.hostinger.com') }}" placeholder="smtp.hostinger.com">
+      </div>
+
+      <div>
+        <label class="form-label">Port SMTP <span>(465 untuk SSL / 587 untuk TLS)</span></label>
+        <input type="number" name="mail_port" class="form-input" value="{{ old('mail_port', $settings['mail_port'] ?? '465') }}" placeholder="465">
+      </div>
+
+      <div>
+        <label class="form-label">Enkripsi <span>(ssl / tls)</span></label>
+        <select name="mail_encryption" class="form-input">
+          <option value="ssl" {{ (old('mail_encryption', $settings['mail_encryption'] ?? 'ssl')) === 'ssl' ? 'selected' : '' }}>SSL (Port 465)</option>
+          <option value="tls" {{ (old('mail_encryption', $settings['mail_encryption'] ?? 'ssl')) === 'tls' ? 'selected' : '' }}>TLS / STARTTLS (Port 587)</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="form-label">Username Email / SMTP <span>(Alamat Email)</span></label>
+        <input type="text" name="mail_username" class="form-input" value="{{ old('mail_username', $settings['mail_username'] ?? 'hai@buylee.id') }}" placeholder="hai@buylee.id">
+      </div>
+
+      <div>
+        <label class="form-label">Password Email / SMTP</label>
+        <input type="password" name="mail_password" class="form-input" value="{{ old('mail_password', $settings['mail_password'] ?? '#Ilhammaulana23') }}" placeholder="Password email anda">
+      </div>
+
+      <div>
+        <label class="form-label">Alamat Pengirim (From Address)</label>
+        <input type="email" name="mail_from_address" class="form-input" value="{{ old('mail_from_address', $settings['mail_from_address'] ?? 'hai@buylee.id') }}" placeholder="hai@buylee.id">
+      </div>
+
+      <div>
+        <label class="form-label">Nama Pengirim (From Name)</label>
+        <input type="text" name="mail_from_name" class="form-input" value="{{ old('mail_from_name', $settings['mail_from_name'] ?? 'buyle.id') }}" placeholder="buyle.id">
+      </div>
+    </div>
+  </div>
+
+  {{-- Card Tes Kirim Email --}}
+  <div style="background:#FFFFFF;border-radius:20px;padding:1.75rem;box-shadow:0 4px 20px rgba(0,0,0,0.03);border:1px solid #F8FAFC;">
+    <div style="display:flex;gap:.75rem;margin-bottom:1rem;align-items:center;">
+      <svg width="24" height="24" fill="none" stroke="#2563EB" stroke-width="2" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+      <div>
+        <div style="font-size:.95rem;font-weight:800;color:#1E293B;">Uji Coba Pengiriman Email (Test SMTP Connection)</div>
+        <div style="font-size:.78rem;color:#64748B;">Kirim email tes untuk memastikan koneksi ke server Hostinger berhasil tanpa error.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;max-width:600px;">
+      <input type="email" id="test_email_input" placeholder="Masukkan email tujuan tes (misal: email@anda.com)" value="{{ old('test_email', $settings['mail_from_address'] ?? 'hai@buylee.id') }}" class="form-input" style="flex:1;">
+      <button type="button" onclick="submitTestEmail()" style="display:inline-flex;align-items:center;gap:.375rem;padding:.75rem 1.25rem;font-size:.85rem;font-weight:700;background:#2563EB;color:#ffffff;border:none;border-radius:10px;cursor:pointer;transition:all .2s;">
+        🚀 Kirim Email Tes
+      </button>
+    </div>
+  </div>
+</div>
+
 </div>
 
 </form>
@@ -1068,6 +1145,31 @@ function switchTab(name) {
 }
 function updateCounter(el, cntId) {
     document.getElementById(cntId).textContent = el.value.length;
+}
+function submitTestEmail() {
+    let email = document.getElementById('test_email_input').value;
+    if (!email) {
+        alert('Silakan masukkan email tujuan tes terlebih dahulu!');
+        return;
+    }
+    let form = document.createElement('form');
+    form.method = 'POST';
+    form.action = "{{ route('admin.settings.test-email') }}";
+    
+    let csrf = document.createElement('input');
+    csrf.type = 'hidden';
+    csrf.name = '_token';
+    csrf.value = "{{ csrf_token() }}";
+    form.appendChild(csrf);
+
+    let input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'test_email';
+    input.value = email;
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    form.submit();
 }
 switchTab('general');
 </script>

@@ -126,8 +126,41 @@ class AdminSettingsController extends Controller
             Setting::set($key, $path, 'image');
         }
 
+        // Sync & Apply Mail configuration if present
+        \App\Services\MailConfigService::updateEnv($data);
+        \App\Services\MailConfigService::apply();
+
         Setting::clearCache();
         return back()->with('success', 'Pengaturan berhasil disimpan!');
+    }
+
+    /**
+     * Test Send Email via configured SMTP settings
+     */
+    public function testEmail(Request $request)
+    {
+        $request->validate([
+            'test_email' => 'required|email',
+        ], [
+            'test_email.required' => 'Email tujuan tes wajib diisi.',
+            'test_email.email'    => 'Format email tujuan tes tidak valid.',
+        ]);
+
+        try {
+            \App\Services\MailConfigService::apply();
+
+            $targetEmail = $request->test_email;
+            $fromName    = config('mail.from.name', 'buyle.id');
+
+            \Illuminate\Support\Facades\Mail::raw("Halo!\n\nIni adalah email pengujian konfigurasi SMTP dari {$fromName}.\n\nJika Anda menerima pesan ini, artinya pengiriman email (SMTP Hostinger) di buyle.id sudah AKTIF dan BERHASIL terhubung tanpa kendala! 🎉\n\nWaktu Tes: " . now()->format('Y-m-d H:i:s T'), function ($message) use ($targetEmail, $fromName) {
+                $message->to($targetEmail)
+                        ->subject("✅ Tes Koneksi SMTP Email — {$fromName}");
+            });
+
+            return back()->with('success', "✅ Tes Koneksi Berhasil! Email pengujian telah sukses dikirim ke: {$targetEmail}");
+        } catch (\Throwable $e) {
+            return back()->with('error', "❌ Gagal Mengirim Email: " . $e->getMessage());
+        }
     }
 
     public function license()

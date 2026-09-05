@@ -139,6 +139,12 @@ Route::middleware(['guest'])->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register',[AuthController::class, 'register'])->name('register.submit');
 
+    // Password Reset Routes
+    Route::get('/lupa-password',          [AuthController::class, 'showForgotPassword'])->name('password.request');
+    Route::post('/lupa-password',         [AuthController::class, 'sendResetLink'])->name('password.email');
+    Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
+    Route::post('/reset-password',        [AuthController::class, 'resetPassword'])->name('password.update');
+
     // Google OAuth
     Route::get('/auth/google',          [AuthController::class, 'googleRedirect'])->name('auth.google');
     Route::get('/auth/callback/google', [AuthController::class, 'googleCallback'])->name('auth.google.callback');
@@ -245,6 +251,7 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/settings',  [AdminSettingsController::class, 'index'])->name('admin.settings');
         Route::post('/settings', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
+        Route::post('/settings/test-email', [AdminSettingsController::class, 'testEmail'])->name('admin.settings.test-email');
         Route::post('upload-image', [\App\Http\Controllers\Admin\AdminUploadController::class, 'uploadImage'])->name('admin.upload.image');
 
         // ⚡ Secret license management page (tidak ada di sidebar)
