@@ -155,9 +155,40 @@ body { background-color: #F8FAFC !important; }
 <div class="fin-wrap">
     
     @php
-        $isPaid = $order->payment && $order->payment->status?->value === 'success';
-        $isPending = $order->payment && $order->payment->status?->value === 'pending';
+        $isPaid = ($order->payment && $order->payment->status?->value === 'success')
+            || in_array($order->status?->value, ['confirmed', 'completed', 'processing']);
+        $isPending = !$isPaid && $order->payment && $order->payment->status?->value === 'pending';
     @endphp
+
+    @if($isPaid)
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Pembayaran Berhasil! 🎉',
+                    html: `
+                        <div style="font-size:0.9rem; color:#334155; line-height:1.6; text-align:left; margin-top:0.5rem;">
+                            <p style="margin-bottom:0.75rem;">Terima kasih! Pembayaran Anda telah kami terima.</p>
+                            <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; font-size:0.83rem; color:#166534;">
+                                ✉️ <strong>Cek Email Anda:</strong> Link akses & detail produk telah otomatis dikirim ke <u>{{ $order->user->email ?? 'email Anda' }}</u>.
+                            </div>
+                            <div style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:12px; padding:0.85rem; font-size:0.83rem; color:#1E40AF;">
+                                📱 <strong>Cek Dashboard Akun:</strong> Anda juga bisa mengakses file/link produk kapan saja di menu Pesanan Akun Anda.
+                            </div>
+                        </div>
+                    `,
+                    confirmButtonColor: '#1eb349',
+                    confirmButtonText: 'Buka Pesanan Akun',
+                    customClass: { popup: 'rounded-xl' }
+                }).then((res) => {
+                    if (res.isConfirmed) {
+                        window.location.href = "{{ route('account.orders') }}";
+                    }
+                });
+            });
+        </script>
+    @endif
 
     <div class="fin-single-card">
         <div class="fin-grid">
