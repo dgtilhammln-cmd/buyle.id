@@ -33,7 +33,11 @@ class OrderPaidNotification extends Notification
         }
 
         $ticketPasses = \App\Models\TicketPass::where('order_id', $this->order->id)->with('product')->get();
-        $hasTickets = $ticketPasses->isNotEmpty();
+        // Deteksi jenis transaksi (Ticketing, White Label, Affiliate, atau Standard Digital)
+        $hasTickets = $ticketPasses->isNotEmpty() || $this->order->items->contains(fn($i) => $i->product?->product_type === 'ticket');
+        $hasWhitelabel = $this->order->items->contains(fn($i) => $i->product?->is_whitelabel);
+        $hasAffiliate = (!empty($this->order->utm_source) && $this->order->utm_source === 'affiliate') || 
+                        $this->order->items->contains(fn($i) => \Illuminate\Support\Str::contains(strtolower($i->product?->digital_resource ?? ''), ['affiliate', 'ref=']) || \Illuminate\Support\Str::contains(strtolower($i->product?->name ?? ''), 'affiliate'));
 
         // Render item list table
         $itemsHtml = '
@@ -106,6 +110,20 @@ class OrderPaidNotification extends Notification
             $ticketsHtml .= '</div>';
         }
 
+        // Whitelabel Special License Notice
+        $whitelabelNotice = '';
+        if ($hasWhitelabel) {
+            $whitelabelNotice = '
+            <div style="background-color: #F0FDF4; border: 1.5px solid #86EFAC; border-radius: 14px; padding: 16px; margin: 18px 0; font-size: 13px; color: #166534; line-height: 1.6;">
+                <div style="font-size: 14px; font-weight: 800; color: #15803D; margin-bottom: 6px;">
+                    Hak Lisensi & Master File White Label Terverifikasi:
+                </div>
+                • Kamu berhak menggunakan, mengedit, dan menjual kembali produk ini tanpa batas.<br>
+                • Master file dan tautan akses yang diberikan bersifat <strong>netral (tanpa watermark / kontak asli)</strong>.<br>
+                • 100% keuntungan hasil penjualan ulang adalah milik kamu.
+            </div>';
+        }
+
         $accountNotice = '';
         if ($this->isNewAccount) {
             $accountNotice = '
@@ -115,34 +133,57 @@ class OrderPaidNotification extends Notification
                 </div>';
         }
 
-        $subject = $hasTickets 
-            ? "Pembayaran Berhasil! E-Ticket Event #{$orderNumber} Siap Digunakan | buyle.id" 
-            : "Pembayaran Berhasil! Pesanan #{$orderNumber} Siap Diunduh | buyle.id";
-
-        $subtitle = $hasTickets 
-            ? "Terima kasih! E-Ticket & QR Code kamu sudah aktif #{$orderNumber}" 
-            : "Terima kasih ya! Produk digital kamu siap diakses #{$orderNumber}";
-
-        $ctaText = $hasTickets 
-            ? 'Buka & Simpan E-Ticket Saya' 
-            : 'Akses Produk Digital Sekarang';
-
-        $promptMsg = $hasTickets
-            ? "Tunjukkan QR Code di atas atau tunjukkan halaman E-Ticket saat memasuki lokasi acara / venue:"
-            : "Klik tombol hijau di bawah untuk langsung mengunduh atau mengakses produk digital kamu:";
+        // Differentiated Copywriting Parameters
+        if ($hasTickets) {
+            $subject          = "Pembayaran Berhasil! E-Ticket Event #{$orderNumber} Siap Digunakan | buyle.id";
+            $badgeText        = 'E-TICKET EVENT ACTIVE';
+            $title            = 'E-Ticket Kamu Sudah Aktif!';
+            $subtitle         = "Pembayaran terverifikasi. Tunjukkan QR Code ini saat masuk lokasi acara #{$orderNumber}";
+            $introText        = "Halo <strong>{$buyerName}</strong>, pembayaran tiket event kamu sudah terverifikasi. Berikut adalah akses E-Ticket resmi beserta QR Code unik untuk masuk ke tempat acara:";
+            $ctaText          = 'Buka & Simpan E-Ticket Saya';
+            $promptMsg        = "Silakan simpan email ini atau tunjukkan QR Code di atas saat proses check-in di lokasi acara:";
+            $footerNote       = 'Ada kendala terkait lokasi, jadwal event, atau tiket? Balas email ini aja, tim kami siap bantu!';
+        } elseif ($hasWhitelabel) {
+            $subject          = "Pembayaran Berhasil! Hak Akses Master & Lisensi White Label #{$orderNumber} | buyle.id";
+            $badgeText        = 'WHITE LABEL LICENSE APPROVED';
+            $title            = 'Akses Master File & Lisensi White Label Ready!';
+            $subtitle         = "Selamat! Kamu berhak menjual kembali produk ini dengan nama brand kamu sendiri #{$orderNumber}";
+            $introText        = "Halo <strong>{$buyerName}</strong>, selamat! Pembayaran kamu berhasil terverifikasi. Kamu kini memegang hak lisensi White Label penuh untuk produk ini:";
+            $ctaText          = 'Unduh Master File & Lisensi White Label';
+            $promptMsg        = "Klik tombol di bawah untuk mengunduh master file bersih & panduan lisensi penjualan kamu:";
+            $footerNote       = 'Butuh bantuan master file netral atau lisensi produk? Balas email ini aja, kami siap bantu!';
+        } elseif ($hasAffiliate) {
+            $subject          = "Pembayaran Berhasil! Akses Produk Digital & Bonus Affiliate #{$orderNumber} | buyle.id";
+            $badgeText        = 'AFFILIATE PURCHASE VERIFIED';
+            $title            = 'Pesanan Pembelian Affiliate Berhasil!';
+            $subtitle         = "Terima kasih telah berbelanja via rekomendasi affiliate resmi #{$orderNumber}";
+            $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih! Pembelian produk digital kamu melalui link rekomendasi mitra affiliate kami sudah terverifikasi dengan sukses. Seluruh file produk & materi bonus siap diakses:";
+            $ctaText          = 'Akses Produk Digital & Bonus Affiliate';
+            $promptMsg        = "Klik tombol di bawah untuk langsung mengunduh produk digital dan klaim materi bonus kamu:";
+            $footerNote       = 'Ada kendala klaim bonus atau akses file affiliate? Balas email ini aja, kami siap bantu!';
+        } else {
+            $subject          = "Pembayaran Berhasil! File Akses Produk Digital #{$orderNumber} Ready | buyle.id";
+            $badgeText        = 'DIGITAL PRODUCT READY';
+            $title            = 'Pembayaran Produk Digital Berhasil!';
+            $subtitle         = "Produk digital kamu sudah siap diunduh dan dipelajari #{$orderNumber}";
+            $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih banyak telah berbelanja di <strong>buyle.id</strong>. Pembayaran kamu untuk produk digital <strong>#{$orderNumber}</strong> sudah terverifikasi:";
+            $ctaText          = 'Unduh & Akses Produk Digital';
+            $promptMsg        = "Klik tombol hijau di bawah untuk langsung mengunduh file atau membuka tautan akses produk digital kamu:";
+            $footerNote       = 'Ada kendala mengunduh file atau membuka link? Balas email ini aja, kami siap bantu sampai tuntas!';
+        }
 
         return (new MailMessage)
             ->subject($subject)
             ->view('emails.layout', [
                 'subject'          => $subject,
-                'badgeText'        => 'PEMBAYARAN SUCCESS',
-                'title'            => 'Pembayaran Berhasil Diterima!',
+                'badgeText'        => $badgeText,
+                'title'            => $title,
                 'subtitle'         => $subtitle,
                 'content'          => "
-                    <p>Halo <strong>{$buyerName}</strong>,</p>
-                    <p>Makasih banyak sudah berbelanja di <strong>buyle.id</strong>. Pembayaran kamu untuk transaksi <strong>#{$orderNumber}</strong> sudah terverifikasi.</p>
+                    <p>{$introText}</p>
                     {$itemsHtml}
                     {$ticketsHtml}
+                    {$whitelabelNotice}
                     {$accountNotice}
                     <p style='margin-top: 20px;'>{$promptMsg}</p>
                 ",
@@ -150,7 +191,7 @@ class OrderPaidNotification extends Notification
                 'ctaText'          => $ctaText,
                 'secondaryCtaUrl'  => $this->isNewAccount ? $this->magicLoginUrl : route('account.orders'),
                 'secondaryCtaText' => $this->isNewAccount ? 'Masuk Instan ke Dashboard Pembeli' : 'Lihat Riwayat Pesanan Saya',
-                'footerNote'       => 'Ada kendala dalam mengunduh atau butuh bantuan tiket? Balas email ini aja, kami siap bantu sampai tuntas!',
+                'footerNote'       => $footerNote,
             ]);
     }
 }
