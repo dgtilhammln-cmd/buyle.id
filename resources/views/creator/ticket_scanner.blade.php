@@ -669,6 +669,18 @@
                         </div>
                     </div>
 
+                    {{-- Header & Camera Switch Control --}}
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <div style="font-weight: 700; font-size: 0.85rem; color: #334155; display: flex; align-items: center; gap: 6px;">
+                            <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                            Viewport Live QR Scanner
+                        </div>
+                        <button type="button" id="toggleCamBtn" onclick="toggleCameraFacing()" style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 99px; font-weight: 700; font-size: 0.8rem; cursor: pointer; box-shadow: 0 4px 12px rgba(30,179,73,0.25); transition: all 0.2s;">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                            Balik Kamera (<span id="camFacingLabel">Belakang</span>)
+                        </button>
+                    </div>
+
                     {{-- Camera Viewport --}}
                     <div id="reader"></div>
                 </div>
@@ -908,9 +920,31 @@
 
 </div>
 
+{{-- POPUP MODAL RESULT SCANNER (MOBILE FRIENDLY & TEMA BUYLE) --}}
+<div id="scanResultModal" onclick="if(event.target===this)closeScanModal()" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.75); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:1rem; opacity:0; transition:all 0.25s ease;">
+    <div id="scanResultModalBox" style="background:#ffffff; border-radius:24px; padding:1.75rem; width:100%; max-width:420px; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.3); transform:scale(0.9); transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);">
+        
+        {{-- Icon Bubble --}}
+        <div id="modalIconBubble" style="width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;"></div>
+
+        {{-- Status Title & Message --}}
+        <h3 id="modalTitle" style="font-size:1.35rem; font-weight:800; margin:0 0 0.35rem; font-family:'Montserrat',sans-serif;"></h3>
+        <p id="modalMsg" style="font-size:0.875rem; color:#64748B; margin:0 0 1.25rem; line-height:1.5;"></p>
+
+        {{-- Ticket Detail Card --}}
+        <div id="modalDetailsCard" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:1rem; text-align:left; margin-bottom:1.5rem; font-size:0.85rem; display:none;"></div>
+
+        {{-- Action Button --}}
+        <button type="button" onclick="closeScanModal()" style="width:100%; padding:0.8rem; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; border:none; border-radius:14px; font-weight:700; font-size:0.95rem; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,0.3); transition:all 0.2s;">
+            Scan Tiket Berikutnya
+        </button>
+    </div>
+</div>
+
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <script>
-    let html5QrcodeScanner = null;
+    let html5QrCode = null;
+    let currentFacingMode = "environment";
     let isProcessing = false;
 
     function switchTab(tabId, btn) {
@@ -927,14 +961,45 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-        html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
-            fps: 10, 
-            qrbox: { width: 250, height: 250 },
-            rememberLastUsedCamera: true
-        }, false);
-
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        initCamera(currentFacingMode);
     });
+
+    function initCamera(facingMode) {
+        const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+        if (html5QrCode) {
+            html5QrCode.stop().then(() => {
+                startCameraStream(facingMode, config);
+            }).catch(() => {
+                startCameraStream(facingMode, config);
+            });
+        } else {
+            html5QrCode = new Html5Qrcode("reader");
+            startCameraStream(facingMode, config);
+        }
+    }
+
+    function startCameraStream(facingMode, config) {
+        html5QrCode.start({ facingMode: facingMode }, config, onScanSuccess, onScanFailure)
+        .catch(err => {
+            Html5Qrcode.getCameras().then(cameras => {
+                if (cameras && cameras.length > 0) {
+                    let selectedId = cameras[0].id;
+                    if (facingMode === 'environment' && cameras.length > 1) {
+                        selectedId = cameras[cameras.length - 1].id;
+                    }
+                    html5QrCode.start(selectedId, config, onScanSuccess, onScanFailure);
+                }
+            });
+        });
+    }
+
+    function toggleCameraFacing() {
+        currentFacingMode = (currentFacingMode === "environment") ? "user" : "environment";
+        const label = document.getElementById("camFacingLabel");
+        if (label) label.textContent = (currentFacingMode === "environment") ? "Belakang" : "Depan";
+        initCamera(currentFacingMode);
+    }
 
     function onScanSuccess(decodedText, decodedResult) {
         if (isProcessing) return;
@@ -965,7 +1030,6 @@
         .then(res => res.json())
         .then(data => {
             renderResult(data);
-            setTimeout(() => { isProcessing = false; }, 2000);
         })
         .catch(err => {
             renderResult({
@@ -973,7 +1037,6 @@
                 title: 'Gagal Memproses',
                 message: 'Terjadi kesalahan sistem saat memverifikasi tiket.'
             });
-            setTimeout(() => { isProcessing = false; }, 2000);
         });
     }
 
@@ -1012,37 +1075,115 @@
     function renderResult(data) {
         playScanBeep(data.status);
 
+        // Populate inline resultBox
         const box = document.getElementById('resultBox');
         const iconDiv = document.getElementById('resultIcon');
         const titleEl = document.getElementById('resultTitle');
         const msgEl = document.getElementById('resultMsg');
         const detailsEl = document.getElementById('ticketDetails');
 
-        box.className = 'res-box res-' + data.status;
-        box.style.display = 'block';
+        if (box) {
+            box.className = 'res-box res-' + data.status;
+            box.style.display = 'block';
 
-        titleEl.textContent = data.title || 'Status Tiket';
-        msgEl.textContent = data.message || '';
+            titleEl.textContent = data.title || 'Status Tiket';
+            msgEl.textContent = data.message || '';
+
+            if (data.status === 'valid') {
+                iconDiv.innerHTML = `<svg width="36" height="36" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+            } else if (data.status === 'used') {
+                iconDiv.innerHTML = `<svg width="36" height="36" fill="none" stroke="#854D0E" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+            } else {
+                iconDiv.innerHTML = `<svg width="36" height="36" fill="none" stroke="#991B1B" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+            }
+
+            if (data.ticket) {
+                detailsEl.style.display = 'block';
+                detailsEl.innerHTML = `
+                    <div><strong>Kode Tiket:</strong> ${data.ticket.code || '-'}</div>
+                    <div><strong>Nama Event:</strong> ${data.ticket.event_name || '-'}</div>
+                    <div><strong>Pemegang Tiket:</strong> ${data.ticket.holder_name || '-'}</div>
+                    ${data.ticket.checked_in_at ? `<div><strong>Waktu Check-In:</strong> ${data.ticket.checked_in_at}</div>` : ''}
+                `;
+            } else {
+                detailsEl.style.display = 'none';
+            }
+        }
+
+        // Open Mobile-Friendly Popup Modal
+        openScanModal(data);
+    }
+
+    function openScanModal(data) {
+        const overlay = document.getElementById('scanResultModal');
+        const box = document.getElementById('scanResultModalBox');
+        const bubble = document.getElementById('modalIconBubble');
+        const titleEl = document.getElementById('modalTitle');
+        const msgEl = document.getElementById('modalMsg');
+        const detailsCard = document.getElementById('modalDetailsCard');
 
         if (data.status === 'valid') {
-            iconDiv.innerHTML = `<svg width="36" height="36" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+            bubble.style.background = '#DCFCE7';
+            bubble.innerHTML = `<svg width="40" height="40" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+            titleEl.style.color = '#15803D';
+            titleEl.textContent = data.title || 'Check-In Berhasil!';
         } else if (data.status === 'used') {
-            iconDiv.innerHTML = `<svg width="36" height="36" fill="none" stroke="#854D0E" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+            bubble.style.background = '#FEF3C7';
+            bubble.innerHTML = `<svg width="40" height="40" fill="none" stroke="#B45309" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+            titleEl.style.color = '#B45309';
+            titleEl.textContent = data.title || 'Tiket Sudah Dipakai!';
         } else {
-            iconDiv.innerHTML = `<svg width="36" height="36" fill="none" stroke="#991B1B" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+            bubble.style.background = '#FEE2E2';
+            bubble.innerHTML = `<svg width="40" height="40" fill="none" stroke="#DC2626" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+            titleEl.style.color = '#DC2626';
+            titleEl.textContent = data.title || 'Tiket Tidak Valid!';
         }
 
+        msgEl.textContent = data.message || '';
+
         if (data.ticket) {
-            detailsEl.style.display = 'block';
-            detailsEl.innerHTML = `
-                <div><strong>Kode Tiket:</strong> ${data.ticket.code || '-'}</div>
-                <div><strong>Nama Event:</strong> ${data.ticket.event_name || '-'}</div>
-                <div><strong>Pemegang Tiket:</strong> ${data.ticket.holder_name || '-'}</div>
-                ${data.ticket.checked_in_at ? `<div><strong>Waktu Check-In:</strong> ${data.ticket.checked_in_at}</div>` : ''}
+            detailsCard.style.display = 'block';
+            detailsCard.innerHTML = `
+                <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:#64748B;">Kode Tiket:</span>
+                    <strong style="color:#0F172A; font-family:monospace; font-size:0.9rem;">${data.ticket.code || '-'}</strong>
+                </div>
+                <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:#64748B;">Nama Event:</span>
+                    <strong style="color:#0F172A;">${data.ticket.event_name || '-'}</strong>
+                </div>
+                <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:#64748B;">Pemegang:</span>
+                    <strong style="color:#0F172A;">${data.ticket.holder_name || '-'}</strong>
+                </div>
+                ${data.ticket.checked_in_at ? `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:#64748B;">Waktu Check-In:</span>
+                    <strong style="color:#166534;">${data.ticket.checked_in_at}</strong>
+                </div>` : ''}
             `;
         } else {
-            detailsEl.style.display = 'none';
+            detailsCard.style.display = 'none';
         }
+
+        overlay.style.display = 'flex';
+        setTimeout(() => {
+            overlay.style.opacity = '1';
+            box.style.transform = 'scale(1)';
+        }, 20);
+    }
+
+    function closeScanModal() {
+        const overlay = document.getElementById('scanResultModal');
+        const box = document.getElementById('scanResultModalBox');
+
+        overlay.style.opacity = '0';
+        box.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            isProcessing = false;
+        }, 250);
     }
 </script>
 @endsection
+
