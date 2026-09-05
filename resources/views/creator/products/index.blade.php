@@ -174,7 +174,7 @@
                 style="font-size:.75rem;background:#F1F5F9;color:#3B82F6;padding:.25rem .625rem;border-radius:6px;font-family:'Courier New',monospace;">/{{ $s->slug }}</code>
             </td>
             <td style="padding:1.25rem 1.5rem;text-align:center;">
-              <form action="{{ route('admin.services.stock', $s->id) }}" method="POST" style="margin:0;">
+              <form action="{{ route('creator.products.stock', $s->id) }}" method="POST" style="margin:0;">
                 @csrf
                 @method('PATCH')
                 <input type="number" name="stock" value="{{ $s->stock }}" min="0" onchange="this.form.submit()"
@@ -182,7 +182,7 @@
               </form>
             </td>
             <td style="padding:1.25rem 1.5rem;text-align:center;">
-              <form action="{{ route('admin.services.order', $s->id) }}" method="POST" style="margin:0;">
+              <form action="{{ route('creator.products.order', $s->id) }}" method="POST" style="margin:0;">
                 @csrf
                 @method('PATCH')
                 <input type="number" name="order" value="{{ $s->order }}" min="0" onchange="this.form.submit()"
@@ -286,13 +286,13 @@
             style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:0.5rem;border-top:1px solid #F1F5F9;">
             <div style="display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;">
               <span style="font-size:.62rem;color:#94A3B8;font-weight:500;">STOK:</span>
-              <form action="{{ route('admin.services.stock', $s->id) }}" method="POST" style="margin:0;">
+              <form action="{{ route('creator.products.stock', $s->id) }}" method="POST" style="margin:0;">
                 @csrf @method('PATCH')
                 <input type="number" name="stock" value="{{ $s->stock }}" min="0" onchange="this.form.submit()"
                   style="width:38px;padding:.15rem;border:1px solid #E2E8F0;border-radius:4px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:500;color:{{ $s->stock > 0 ? '#10B981' : '#EF4444' }};outline:none;background:#F8FAFC;">
               </form>
               <span style="font-size:.62rem;color:#94A3B8;font-weight:500;">URT:</span>
-              <form action="{{ route('admin.services.order', $s->id) }}" method="POST" style="margin:0;">
+              <form action="{{ route('creator.products.order', $s->id) }}" method="POST" style="margin:0;">
                 @csrf @method('PATCH')
                 <input type="number" name="order" value="{{ $s->order }}" min="0" onchange="this.form.submit()"
                   style="width:38px;padding:.15rem;border:1px solid #E2E8F0;border-radius:4px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:500;color:#334155;outline:none;background:#F8FAFC;">

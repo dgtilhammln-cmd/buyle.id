@@ -430,6 +430,8 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/upload-image', [\App\Http\Controllers\Admin\AdminUploadController::class, 'uploadImage'])->name('upload.image');
 
     // CRUD Produk
+    Route::patch('/products/{product}/stock', [\App\Http\Controllers\Creator\SellerProductController::class, 'updateStock'])->name('products.stock');
+    Route::patch('/products/{product}/order', [\App\Http\Controllers\Creator\SellerProductController::class, 'updateOrder'])->name('products.order');
     Route::resource('products', \App\Http\Controllers\Creator\SellerProductController::class);
 
     // AJAX: Validasi URL produk

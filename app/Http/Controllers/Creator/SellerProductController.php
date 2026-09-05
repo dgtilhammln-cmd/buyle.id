@@ -234,6 +234,54 @@ class SellerProductController extends Controller
     }
 
     /**
+     * Update stok produk (quick form / quick update).
+     */
+    public function updateStock(Request $request, Product $product)
+    {
+        $this->authorizeProduct($product);
+
+        $request->validate([
+            'stock' => 'required|integer|min:0',
+        ]);
+
+        $product->update(['stock' => $request->stock]);
+
+        Cache::forget('catalog_main');
+        Cache::forget("seller_products_{$product->seller_id}");
+        Cache::forget("product_{$product->id}");
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'stock' => $product->stock]);
+        }
+
+        return redirect()->back()->with('success', 'Stok berhasil diperbarui.');
+    }
+
+    /**
+     * Update urutan produk (quick form / quick update).
+     */
+    public function updateOrder(Request $request, Product $product)
+    {
+        $this->authorizeProduct($product);
+
+        $request->validate([
+            'order' => 'required|integer|min:0',
+        ]);
+
+        $product->update(['order' => $request->order]);
+
+        Cache::forget('catalog_main');
+        Cache::forget("seller_products_{$product->seller_id}");
+        Cache::forget("product_{$product->id}");
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'order' => $product->order]);
+        }
+
+        return redirect()->back()->with('success', 'Urutan berhasil diperbarui.');
+    }
+
+    /**
      * Pastikan produk milik seller yang sedang login.
      */
     private function authorizeProduct(Product $product): void
