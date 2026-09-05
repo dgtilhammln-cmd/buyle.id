@@ -114,7 +114,7 @@
                     <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1.5px solid #CBD5E1; border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center;">
                         {{-- QR CODE --}}
                         <div style="text-align: center; background: #fff; padding: 0.75rem; border-radius: 14px; border: 1px solid #E2E8F0; width: 160px;">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data={{ urlencode($pass->qr_token) }}" alt="QR Code Tiket" style="width: 130px; height: 130px; display: block; margin: 0 auto 0.5rem;">
+                            <img src="{{ route('qr.code', ['data' => $pass->qr_token]) }}" alt="QR Code Tiket" style="width: 130px; height: 130px; display: block; margin: 0 auto 0.5rem; border-radius: 8px;">
                             <div style="font-family: monospace; font-size: 0.75rem; font-weight: 700; color: #475569;">{{ $pass->ticket_code }}</div>
                         </div>
 

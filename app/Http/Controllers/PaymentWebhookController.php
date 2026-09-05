@@ -75,19 +75,32 @@ class PaymentWebhookController extends Controller
         );
 
         if ($isPaid) {
-            if ($order->payment) {
-                DB::transaction(function () use ($order, $payload) {
-                    $order->payment->update([
+            $alreadyProcessed = false;
+            DB::transaction(function () use ($order, $payload, &$alreadyProcessed) {
+                $lockedOrder = Order::where('id', $order->id)->lockForUpdate()->first();
+                if (!$lockedOrder) return;
+
+                if ($lockedOrder->status === OrderStatus::Confirmed) {
+                    $alreadyProcessed = true;
+                    return;
+                }
+
+                if ($lockedOrder->payment) {
+                    $lockedOrder->payment->update([
                         'status'                  => PaymentStatus::Success,
                         'paid_at'                 => now(),
                         'midtrans_transaction_id' => $payload['transaction_id'] ?? null,
                         'method'                  => $payload['payment_type'] ?? null,
                         'raw_response'            => $payload,
                     ]);
-                    $order->update([
-                        'status' => OrderStatus::Confirmed,
-                    ]);
-                });
+                }
+
+                $lockedOrder->update([
+                    'status' => OrderStatus::Confirmed,
+                ]);
+            });
+
+            if (!$alreadyProcessed) {
 
                 // Run job synchronously so emails & user assignment happen immediately
                 try {

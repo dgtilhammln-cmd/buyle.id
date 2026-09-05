@@ -60,6 +60,8 @@ Route::prefix('api/region')->group(function() {
     });
 });
 
+Route::get('/qr-code', [\App\Http\Controllers\QrCodeController::class, 'generate'])->name('qr.code');
+
 Route::middleware(['track.pageview'])->group(function () {
     // Legacy redirects for cached locale routes
     Route::get('/en', function () { return redirect('/', 301); });

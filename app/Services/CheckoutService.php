@@ -101,17 +101,26 @@ class CheckoutService
                 'utm_content'      => session('utm_content'),
             ]);
 
-            // 2. Buat Order Items & Kurangi Stok
+            // 2. Buat Order Items & Kurangi Stok secara aman dari Race Condition
             foreach ($items as $cartItem) {
-                $product = $cartItem->product;
+                // Kunci baris produk di database untuk mencegah overselling / race condition
+                $product = \App\Models\Product::where('id', $cartItem->product_id)->lockForUpdate()->first();
+                if (!$product) {
+                    throw new Exception("Produk \"{$cartItem->product_name}\" tidak ditemukan.");
+                }
 
-                // Kurangi stok (akan dilewati jika tipe service di dalam method)
-                $product->reduceStock($cartItem->qty);
-                $product->addSoldCount($cartItem->qty);
+                // Proteksi race condition pada stok tiket & produk
+                if ($product->product_type === 'ticket' || $product->type === 'product') {
+                    if ($product->stock < $cartItem->qty) {
+                        throw new Exception("Stok tiket / produk \"{$product->name}\" tidak mencukupi (Sisa: {$product->stock}).");
+                    }
+                    $product->decrement('stock', $cartItem->qty);
+                }
+                $product->increment('sold_count', $cartItem->qty);
 
                 OrderItem::create([
                     'order_id'         => $order->id,
-                    'product_id'       => $cartItem->product_id,
+                    'product_id'       => $product->id,
                     'variant_value_id' => $cartItem->variant_value_id,
                     'product_name'     => $product->name,
                     'variant_name'     => $cartItem->variantValue?->value,

@@ -33,11 +33,8 @@ class OrderPaidNotification extends Notification
         }
 
         $ticketPasses = \App\Models\TicketPass::where('order_id', $this->order->id)->with('product')->get();
-        // Deteksi jenis transaksi (Ticketing, White Label, Affiliate, atau Standard Digital)
+        // Deteksi jenis transaksi (Ticketing vs Produk Digital)
         $hasTickets = $ticketPasses->isNotEmpty() || $this->order->items->contains(fn($i) => $i->product?->product_type === 'ticket');
-        $hasWhitelabel = $this->order->items->contains(fn($i) => $i->product?->is_whitelabel);
-        $hasAffiliate = (!empty($this->order->utm_source) && $this->order->utm_source === 'affiliate') || 
-                        $this->order->items->contains(fn($i) => \Illuminate\Support\Str::contains(strtolower($i->product?->digital_resource ?? ''), ['affiliate', 'ref=']) || \Illuminate\Support\Str::contains(strtolower($i->product?->name ?? ''), 'affiliate'));
 
         // Render item list table
         $itemsHtml = '
@@ -67,7 +64,7 @@ class OrderPaidNotification extends Notification
             </div>
         </div>';
 
-        // Render E-Ticket Pass HTML Card if ticket products exist
+        // Render E-Ticket Pass HTML Card jika ada tiket
         $ticketsHtml = '';
         if ($hasTickets) {
             $ticketsHtml = '
@@ -77,7 +74,7 @@ class OrderPaidNotification extends Notification
                 </div>';
             
             foreach ($ticketPasses as $pass) {
-                $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' . urlencode($pass->qr_token);
+                $qrUrl = route('qr.code', ['data' => $pass->qr_token]);
                 $eventName = htmlspecialchars($pass->product?->name ?? 'Tiket Event');
                 $eventDate = $pass->product?->event_date?->format('d M Y') ?? 'Sesuai Jadwal';
                 $eventTime = htmlspecialchars($pass->product?->event_time ?? '-');
@@ -110,20 +107,6 @@ class OrderPaidNotification extends Notification
             $ticketsHtml .= '</div>';
         }
 
-        // Whitelabel Special License Notice
-        $whitelabelNotice = '';
-        if ($hasWhitelabel) {
-            $whitelabelNotice = '
-            <div style="background-color: #F0FDF4; border: 1.5px solid #86EFAC; border-radius: 14px; padding: 16px; margin: 18px 0; font-size: 13px; color: #166534; line-height: 1.6;">
-                <div style="font-size: 14px; font-weight: 800; color: #15803D; margin-bottom: 6px;">
-                    Hak Lisensi & Master File White Label Terverifikasi:
-                </div>
-                • Kamu berhak menggunakan, mengedit, dan menjual kembali produk ini tanpa batas.<br>
-                • Master file dan tautan akses yang diberikan bersifat <strong>netral (tanpa watermark / kontak asli)</strong>.<br>
-                • 100% keuntungan hasil penjualan ulang adalah milik kamu.
-            </div>';
-        }
-
         $accountNotice = '';
         if ($this->isNewAccount) {
             $accountNotice = '
@@ -133,7 +116,6 @@ class OrderPaidNotification extends Notification
                 </div>';
         }
 
-        // Differentiated Copywriting Parameters
         if ($hasTickets) {
             $subject          = "Pembayaran Berhasil! E-Ticket Event #{$orderNumber} Siap Digunakan | buyle.id";
             $badgeText        = 'E-TICKET EVENT ACTIVE';
@@ -143,24 +125,6 @@ class OrderPaidNotification extends Notification
             $ctaText          = 'Buka & Simpan E-Ticket Saya';
             $promptMsg        = "Silakan simpan email ini atau tunjukkan QR Code di atas saat proses check-in di lokasi acara:";
             $footerNote       = 'Ada kendala terkait lokasi, jadwal event, atau tiket? Balas email ini aja, tim kami siap bantu!';
-        } elseif ($hasWhitelabel) {
-            $subject          = "Pembayaran Berhasil! Hak Akses Master & Lisensi White Label #{$orderNumber} | buyle.id";
-            $badgeText        = 'WHITE LABEL LICENSE APPROVED';
-            $title            = 'Akses Master File & Lisensi White Label Ready!';
-            $subtitle         = "Selamat! Kamu berhak menjual kembali produk ini dengan nama brand kamu sendiri #{$orderNumber}";
-            $introText        = "Halo <strong>{$buyerName}</strong>, selamat! Pembayaran kamu berhasil terverifikasi. Kamu kini memegang hak lisensi White Label penuh untuk produk ini:";
-            $ctaText          = 'Unduh Master File & Lisensi White Label';
-            $promptMsg        = "Klik tombol di bawah untuk mengunduh master file bersih & panduan lisensi penjualan kamu:";
-            $footerNote       = 'Butuh bantuan master file netral atau lisensi produk? Balas email ini aja, kami siap bantu!';
-        } elseif ($hasAffiliate) {
-            $subject          = "Pembayaran Berhasil! Akses Produk Digital & Bonus Affiliate #{$orderNumber} | buyle.id";
-            $badgeText        = 'AFFILIATE PURCHASE VERIFIED';
-            $title            = 'Pesanan Pembelian Affiliate Berhasil!';
-            $subtitle         = "Terima kasih telah berbelanja via rekomendasi affiliate resmi #{$orderNumber}";
-            $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih! Pembelian produk digital kamu melalui link rekomendasi mitra affiliate kami sudah terverifikasi dengan sukses. Seluruh file produk & materi bonus siap diakses:";
-            $ctaText          = 'Akses Produk Digital & Bonus Affiliate';
-            $promptMsg        = "Klik tombol di bawah untuk langsung mengunduh produk digital dan klaim materi bonus kamu:";
-            $footerNote       = 'Ada kendala klaim bonus atau akses file affiliate? Balas email ini aja, kami siap bantu!';
         } else {
             $subject          = "Pembayaran Berhasil! File Akses Produk Digital #{$orderNumber} Ready | buyle.id";
             $badgeText        = 'DIGITAL PRODUCT READY';
@@ -183,7 +147,6 @@ class OrderPaidNotification extends Notification
                     <p>{$introText}</p>
                     {$itemsHtml}
                     {$ticketsHtml}
-                    {$whitelabelNotice}
                     {$accountNotice}
                     <p style='margin-top: 20px;'>{$promptMsg}</p>
                 ",
