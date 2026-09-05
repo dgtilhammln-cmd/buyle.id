@@ -17,6 +17,11 @@ return $builder->withMiddleware(function (Middleware $middleware): void {
         // Trust all proxies (required for correct IP detection on Hostinger, Rumahweb, etc.)
         $middleware->trustProxies(at: '*');
 
+        // Kecualikan webhook Midtrans dari CSRF (Midtrans POST tanpa CSRF token)
+        $middleware->validateCsrfTokens(except: [
+            'payment/callback',
+        ]);
+
         // Register custom middleware aliases
         $middleware->alias([
             'admin.auth'     => AdminAuth::class,
