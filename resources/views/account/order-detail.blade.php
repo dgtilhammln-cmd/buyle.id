@@ -149,16 +149,11 @@
 
         {{-- KANAN: RINGKASAN --}}
         <div>
-            @if($order->status->value === 'pending' && $order->payment && $order->payment->status->value === 'pending')
+            @if($order->status->value === 'pending')
                 <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem;">
                     <div style="font-size: 0.9rem; font-weight: 700; color: #92400E; margin-bottom: 0.5rem;">Belum Dibayar</div>
                     <div style="font-size: 0.8rem; color: #B45309; margin-bottom: 1rem;">Selesaikan pembayaran Anda agar pesanan dapat diproses.</div>
-                    
-                    @if($order->shipping_cost > 0)
-                        <a href="{{ route('checkout.finish', $order->order_number) }}" style="display: block; width: 100%; text-align: center; background: #059669; color: #fff; text-decoration: none; padding: 0.75rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem;">Bayar Sekarang</a>
-                    @else
-                        <button disabled style="display: block; width: 100%; text-align: center; background: #94A3B8; color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: not-allowed;">Menunggu Info Ongkir</button>
-                    @endif
+                    <a href="{{ route('checkout.finish', $order->order_number) }}" style="display: block; width: 100%; text-align: center; background: #059669; color: #fff; text-decoration: none; padding: 0.75rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem;">Bayar Sekarang</a>
                 </div>
             @endif
             @if($order->status->value === 'shipped')
@@ -187,10 +182,16 @@
                         @if($order->shipping_cost > 0)
                             Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}
                         @else
-                            <span style="color:#D97706; font-size:0.8rem; font-weight:600;">Menunggu Konfirmasi Admin</span>
+                            Rp 0
                         @endif
                     </span>
                 </div>
+                @if($order->platform_fee > 0)
+                <div class="summary-row">
+                    <span>Platform Fee (5%)</span>
+                    <span>Rp {{ number_format($order->platform_fee, 0, ',', '.') }}</span>
+                </div>
+                @endif
                 @if($order->discount > 0)
                 <div class="summary-row" style="color: #10B981;">
                     <span>Diskon</span>
@@ -205,7 +206,7 @@
     </div> <!-- END od-body -->
 </div> <!-- END od-card -->
 
-@if(in_array($order->status->value, ['processing', 'shipped', 'completed']))
+@if(in_array($order->status->value, ['confirmed', 'processing', 'shipped', 'delivered']))
 <div class="tr-card" style="background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border: none; box-shadow: 0 10px 30px rgba(30,179,73,0.3); display: block;">
     <div style="padding: 2rem;">
         <h3 class="tr-title" style="color: #fff; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 1rem; margin-bottom: 1.5rem;">

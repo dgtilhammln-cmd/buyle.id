@@ -88,7 +88,7 @@ class CheckoutService
                 'user_id'          => $user->id,
                 'status'           => OrderStatus::Pending,
                 'subtotal'         => $subtotal,
-                'shipping_cost'    => 0,
+                'shipping_cost'    => $shippingCost,
                 'platform_fee'     => $platformFee,
                 'discount'         => $discount,
                 'total'            => $total,

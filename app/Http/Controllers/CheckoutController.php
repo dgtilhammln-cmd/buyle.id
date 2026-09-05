@@ -103,7 +103,7 @@ class CheckoutController extends Controller
 
         // Auto-sync status dari Midtrans jika di database belum tercatat Lunas/Success
         $isPaidInDb = ($order->payment && $order->payment->status === PaymentStatus::Success)
-            || in_array($order->status, [OrderStatus::Confirmed, OrderStatus::Completed, OrderStatus::Processing]);
+            || in_array($order->status, [OrderStatus::Confirmed, OrderStatus::Delivered, OrderStatus::Processing]);
 
         if (!$isPaidInDb) {
             try {
