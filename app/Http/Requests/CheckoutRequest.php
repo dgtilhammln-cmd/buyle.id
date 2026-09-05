@@ -24,7 +24,7 @@ class CheckoutRequest extends FormRequest
             $rules['guest_name']     = 'required|string|max:100';
             $rules['guest_email']    = 'required|email';
             $rules['guest_phone']    = 'required|string|max:20';
-            $rules['guest_password'] = 'required|min:6';
+            $rules['guest_password'] = 'nullable|string|min:6';
         }
 
         return $rules;
@@ -33,13 +33,12 @@ class CheckoutRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'coupon_code.exists'     => 'Kode kupon tidak valid atau tidak ditemukan.',
-            'guest_name.required'    => 'Nama lengkap wajib diisi.',
-            'guest_email.required'   => 'Email wajib diisi.',
-            'guest_email.email'      => 'Format email tidak valid.',
-            'guest_phone.required'   => 'No. WhatsApp wajib diisi.',
-            'guest_password.required' => 'Kata sandi wajib diisi.',
-            'guest_password.min'     => 'Kata sandi minimal 6 karakter.',
+            'coupon_code.exists'   => 'Kode kupon tidak valid atau tidak ditemukan.',
+            'guest_name.required'  => 'Nama lengkap wajib diisi.',
+            'guest_email.required' => 'Email wajib diisi.',
+            'guest_email.email'    => 'Format email tidak valid.',
+            'guest_phone.required' => 'No. WhatsApp wajib diisi.',
+            'guest_password.min'   => 'Kata sandi minimal 6 karakter.',
         ];
     }
 }

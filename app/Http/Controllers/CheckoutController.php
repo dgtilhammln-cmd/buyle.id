@@ -56,7 +56,7 @@ class CheckoutController extends Controller
                 $user = User::where('email', $data['guest_email'])->first();
 
                 if ($user) {
-                    if (!Hash::check($data['guest_password'], $user->password)) {
+                    if (!empty($data['guest_password']) && !Hash::check($data['guest_password'], $user->password)) {
                         return back()->withInput()->withErrors([
                             'guest_email' => 'Email ini sudah terdaftar. Silakan masukkan kata sandi yang benar atau login terlebih dahulu.'
                         ]);
@@ -70,12 +70,14 @@ class CheckoutController extends Controller
                         $username = $base . $i++;
                     }
 
+                    $password = !empty($data['guest_password']) ? $data['guest_password'] : Str::random(12);
+
                     $user = User::create([
                         'name'     => $data['guest_name'],
                         'email'    => $data['guest_email'],
                         'phone'    => $data['guest_phone'],
                         'username' => $username,
-                        'password' => Hash::make($data['guest_password']),
+                        'password' => Hash::make($password),
                         'role'     => 'buyer',
                     ]);
 

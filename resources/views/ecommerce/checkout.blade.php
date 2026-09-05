@@ -127,34 +127,49 @@ label:focus{outline:none !important;box-shadow:none !important;}
             <div class="co-left">
                 
                 @guest
-                {{-- GUEST CHECKOUT / AUTO REGISTER --}}
+                {{-- GUEST CHECKOUT / INFORMASI PEMBELI --}}
                 <div class="co-section" style="margin-bottom:1.5rem;">
                     <div class="co-section-title">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        Informasi Akun (Buat Akun Baru)
+                        Informasi Pembeli
                     </div>
-                    <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1rem;">Anda belum masuk. Silakan lengkapi data di bawah ini untuk otomatis membuat akun saat checkout.</p>
+                    <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.25rem;">Akses produk digital dan bukti transaksi akan dikirimkan langsung ke Email & WhatsApp Anda.</p>
                     
                     <div class="form-group">
-                        <label class="form-label">Nama Lengkap</label>
-                        <input type="text" name="guest_name" class="form-input" value="{{ old('guest_name') }}" required placeholder="Nama Lengkap">
+                        <label class="form-label">Nama Lengkap <span style="color:#EF4444;">*</span></label>
+                        <input type="text" name="guest_name" class="form-input" value="{{ old('guest_name') }}" required placeholder="Masukkan nama lengkap Anda">
                     </div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
                         <div class="form-group">
-                            <label class="form-label">Email</label>
+                            <label class="form-label">Email (Pengiriman Produk) <span style="color:#EF4444;">*</span></label>
                             <input type="email" name="guest_email" class="form-input" value="{{ old('guest_email') }}" required placeholder="email@contoh.com">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">No. WhatsApp</label>
+                            <label class="form-label">No. WhatsApp <span style="color:#EF4444;">*</span></label>
                             <input type="text" name="guest_phone" class="form-input" value="{{ old('guest_phone') }}" required placeholder="08xxxxxxxxxx">
                         </div>
                     </div>
                     <div class="form-group mb-0">
-                        <label class="form-label">Buat Password</label>
-                        <input type="password" name="guest_password" class="form-input" required placeholder="Minimal 6 karakter">
+                        <label class="form-label">Kata Sandi Akun <span style="font-weight:400;color:var(--c-muted);">(Opsional, untuk login kembali nanti)</span></label>
+                        <input type="password" name="guest_password" class="form-input" placeholder="Kosongkan jika tidak ingin membuat kata sandi">
                     </div>
                 </div>
-                @endguest
+                @else
+                {{-- LOGGED IN BUYER INFO --}}
+                <div class="co-section" style="margin-bottom:1.5rem; background:#F0FDF4; border:1px solid #BBF7D0;">
+                    <div class="co-section-title" style="color:#166534; margin-bottom:0.5rem;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        Informasi Pembeli
+                    </div>
+                    <div style="font-size:0.95rem; color:#15803D; font-weight:700;">
+                        {{ auth()->user()->name }} <span style="font-weight:500; color:#4B5563; font-size:0.85rem;">({{ auth()->user()->email }})</span>
+                    </div>
+                    <div style="font-size:0.8rem; color:#166534; margin-top:0.35rem; display:flex; align-items:center; gap:0.4rem;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Akses produk digital akan dikirim dan dihubungkan ke akun ini.
+                    </div>
+                </div>
+                @endauth
 
                 {{-- ALAMAT PENGIRIMAN --}}
                 @if($summary['has_physical_product'])
@@ -337,10 +352,10 @@ label:focus{outline:none !important;box-shadow:none !important;}
                 <div class="co-section">
                     <div class="co-section-title">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                        Catatan (Wajib Diisi)
+                        Catatan Pesanan (Opsional)
                     </div>
                     <div class="form-group mb-0">
-                        <textarea name="notes" id="notes_input" class="form-input" rows="2" placeholder="Tuliskan catatan pesanan (Warna, Ukuran, atau instruksi pengiriman)..." required></textarea>
+                        <textarea name="notes" id="notes_input" class="form-input" rows="2" placeholder="Tuliskan pesan atau instruksi tambahan jika ada..."></textarea>
                     </div>
                 </div>
             </div>
