@@ -166,15 +166,17 @@ body { background-color: #F8FAFC !important; }
             document.addEventListener('DOMContentLoaded', function() {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Pembayaran Berhasil! 🎉',
+                    title: 'Pembayaran Berhasil!',
                     html: `
                         <div style="font-size:0.9rem; color:#334155; line-height:1.6; text-align:left; margin-top:0.5rem;">
                             <p style="margin-bottom:0.75rem;">Terima kasih! Pembayaran Anda telah kami terima.</p>
-                            <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; font-size:0.83rem; color:#166534;">
-                                ✉️ <strong>Cek Email Anda:</strong> Link akses & detail produk telah otomatis dikirim ke <u>{{ $order->user->email ?? 'email Anda' }}</u>.
+                            <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
+                                <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                <div><strong>Cek Email Anda:</strong> Link akses & detail produk telah otomatis dikirim ke <u>{{ $order->user->email ?? 'email Anda' }}</u>.</div>
                             </div>
-                            <div style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:12px; padding:0.85rem; font-size:0.83rem; color:#1E40AF;">
-                                📱 <strong>Cek Dashboard Akun:</strong> Anda juga bisa mengakses file/link produk kapan saja di menu Pesanan Akun Anda.
+                            <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
+                                <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                                <div><strong>Cek Dashboard Akun:</strong> Anda juga bisa mengakses file/link produk kapan saja di menu Pesanan Akun Anda.</div>
                             </div>
                         </div>
                     `,
