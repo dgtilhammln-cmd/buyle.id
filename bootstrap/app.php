@@ -30,6 +30,7 @@ return $builder->withMiddleware(function (Middleware $middleware): void {
         ]);
 
         $middleware->web(append: [
+            \App\Http\Middleware\SecuritySanitizerMiddleware::class,
             \App\Http\Middleware\UpdateUserLastSeen::class,
             \App\Http\Middleware\TrackPageView::class,
             \App\Http\Middleware\CaptureUtmMiddleware::class,

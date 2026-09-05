@@ -16,11 +16,22 @@ class OptimizeResponseMiddleware
     {
         $response = $next($request);
 
-        // Add X-Robots-Tag header for SEO compliance
-        if (method_exists($response, 'header')) {
-            $response->header('X-Robots-Tag', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
-        } else if (isset($response->headers)) {
-            $response->headers->set('X-Robots-Tag', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+        // Add HTTP Security Headers (XSS, Clickjacking, Sniffing protection)
+        $securityHeaders = [
+            'X-Robots-Tag'             => 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+            'X-Content-Type-Options'   => 'nosniff',
+            'X-Frame-Options'          => 'SAMEORIGIN',
+            'X-XSS-Protection'         => '1; mode=block',
+            'Referrer-Policy'          => 'strict-origin-when-cross-origin',
+            'Permissions-Policy'       => 'camera=(), microphone=(), geolocation=()',
+        ];
+
+        foreach ($securityHeaders as $headerKey => $headerValue) {
+            if (method_exists($response, 'header')) {
+                $response->header($headerKey, $headerValue);
+            } else if (isset($response->headers)) {
+                $response->headers->set($headerKey, $headerValue);
+            }
         }
 
         // Only minify text/html responses (not JSON, files, redirects)
