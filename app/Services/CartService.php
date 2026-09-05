@@ -179,7 +179,7 @@ class CartService
             $totalWeight += ($item->product->weight ?? 0) * $item->qty;
 
             if ($item->product) {
-                if ($item->product->type !== 'service') {
+                if (in_array($item->product->type, ['physical', 'product'])) {
                     $hasPhysicalProduct = true;
                 } elseif ($item->product->type === 'service') {
                     $hasService = true;

@@ -127,13 +127,50 @@ label:focus{outline:none !important;box-shadow:none !important;}
             <div class="co-left">
                 
                 @guest
-                {{-- GUEST CHECKOUT / INFORMASI PEMBELI --}}
+                {{-- BENEFIT CARD (IMING-IMING AKUN GEN Z) --}}
+                <div style="background: linear-gradient(135deg, #EFF6FF, #F0FDF4); border: 1.5px solid #6EE7B7; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.5rem; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(30,179,73,0.08);">
+                    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
+                        <div style="flex:1; min-width:240px;">
+                            <div style="display:inline-flex; align-items:center; gap:6px; background:#DCFCE7; color:#15803D; font-size:0.75rem; font-weight:800; padding:0.25rem 0.65rem; border-radius:99px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.6rem;">
+                                ⚡ Opsional (Bisa Tanpa Akun)
+                            </div>
+                            <h3 style="font-size:1.05rem; font-weight:800; color:#0F172A; margin:0 0 0.35rem; font-family:var(--font);">
+                                Punya Akun buyle.id? Login Biar Makin Untung! 🎁
+                            </h3>
+                            <p style="font-size:0.83rem; color:#475569; line-height:1.5; margin:0 0 0.75rem;">
+                                Beli pakai akun bikin file digital kamu <strong>tersimpan selamanya di Dashboard</strong> (akses 24/7 tanpa takut link email hilang) + kumpulin poin reward!
+                            </p>
+                            <div style="display:flex; align-items:center; gap:1rem; font-size:0.78rem; font-weight:600; color:#166534; flex-wrap:wrap;">
+                                <span>✓ Simpan Akses 24/7</span>
+                                <span>✓ Bebas Ketik Ulang</span>
+                                <span>✓ Promo Eksklusif</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:0.4rem; width:100%; max-width:180px; align-self:center;">
+                            <a href="{{ route('checkout.login') }}" style="display:inline-flex; align-items:center; justify-content:center; gap:0.4rem; background:#1eb349; color:#fff; font-weight:800; font-size:0.85rem; padding:0.7rem 1rem; border-radius:10px; text-decoration:none; text-align:center; box-shadow:0 4px 12px rgba(30,179,73,0.3); transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                                Masuk / Buat Akun
+                            </a>
+                            <span style="font-size:0.72rem; color:#64748B; text-align:center; font-weight:500;">atau isi form cepat di bawah 👇</span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- GUEST CHECKOUT / FORM SIMPEL DIRECT --}}
                 <div class="co-section" style="margin-bottom:1.5rem;">
                     <div class="co-section-title">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        Informasi Pembeli
+                        Data Pembeli (Langsung Checkout)
                     </div>
-                    <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.25rem;">Akses produk digital dan bukti transaksi akan dikirimkan langsung ke Email & WhatsApp Anda.</p>
+
+                    {{-- Panduan & Double Check Alert --}}
+                    <div style="background:#FFFBEB; border:1px dashed #F59E0B; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1.25rem; display:flex; align-items:flex-start; gap:0.75rem;">
+                        <div style="background:#F59E0B; color:#fff; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:800; font-size:0.8rem; margin-top:2px;">!</div>
+                        <div style="font-size:0.82rem; color:#78350F; line-height:1.45;">
+                            <strong>Double Check Kontak Kamu Ya! 🎯</strong><br>
+                            Pastikan <strong>Email & No. WhatsApp aktif</strong> dan bebas dari salah ketik. Link akses / file digital kamu akan <u>langsung dikirimkan otomatis</u> ke kontak ini setelah bayar.
+                        </div>
+                    </div>
                     
                     <div class="form-group">
                         <label class="form-label">Nama Lengkap <span style="color:#EF4444;">*</span></label>
@@ -141,32 +178,29 @@ label:focus{outline:none !important;box-shadow:none !important;}
                     </div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
                         <div class="form-group">
-                            <label class="form-label">Email (Pengiriman Produk) <span style="color:#EF4444;">*</span></label>
-                            <input type="email" name="guest_email" class="form-input" value="{{ old('guest_email') }}" required placeholder="email@contoh.com">
+                            <label class="form-label">Email (Tempat Kirim File/Akses) <span style="color:#EF4444;">*</span></label>
+                            <input type="email" name="guest_email" class="form-input" value="{{ old('guest_email') }}" required placeholder="emailaktif@gmail.com">
                         </div>
                         <div class="form-group">
                             <label class="form-label">No. WhatsApp <span style="color:#EF4444;">*</span></label>
                             <input type="text" name="guest_phone" class="form-input" value="{{ old('guest_phone') }}" required placeholder="08xxxxxxxxxx">
                         </div>
                     </div>
-                    <div class="form-group mb-0">
-                        <label class="form-label">Kata Sandi Akun <span style="font-weight:400;color:var(--c-muted);">(Opsional, untuk login kembali nanti)</span></label>
-                        <input type="password" name="guest_password" class="form-input" placeholder="Kosongkan jika tidak ingin membuat kata sandi">
-                    </div>
+                    <input type="hidden" name="guest_password" value="">
                 </div>
                 @else
                 {{-- LOGGED IN BUYER INFO --}}
-                <div class="co-section" style="margin-bottom:1.5rem; background:#F0FDF4; border:1px solid #BBF7D0;">
+                <div class="co-section" style="margin-bottom:1.5rem; background:#F0FDF4; border:1.5px solid #BBF7D0;">
                     <div class="co-section-title" style="color:#166534; margin-bottom:0.5rem;">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        Informasi Pembeli
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Data Pembeli (Sudah Login)
                     </div>
-                    <div style="font-size:0.95rem; color:#15803D; font-weight:700;">
+                    <div style="font-size:0.95rem; color:#15803D; font-weight:800;">
                         {{ auth()->user()->name }} <span style="font-weight:500; color:#4B5563; font-size:0.85rem;">({{ auth()->user()->email }})</span>
                     </div>
                     <div style="font-size:0.8rem; color:#166534; margin-top:0.35rem; display:flex; align-items:center; gap:0.4rem;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                        Akses produk digital akan dikirim dan dihubungkan ke akun ini.
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                        Akses produk digital akan dikirim ke email & otomatis tersimpan di Dashboard Akun kamu.
                     </div>
                 </div>
                 @endauth
