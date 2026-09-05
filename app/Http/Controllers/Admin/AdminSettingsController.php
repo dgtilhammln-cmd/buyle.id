@@ -153,19 +153,19 @@ class AdminSettingsController extends Controller
             $fromName    = config('mail.from.name', 'buyle.id');
 
             $html = view('emails.layout', [
-                'subject'   => "Tes Koneksi SMTP Email | {$fromName}",
+                'subject'   => "Tes Koneksi Email SMTP | {$fromName}",
                 'badgeText' => 'UJI COBA SMTP',
-                'title'     => 'Tes Uji Coba Konfigurasi Email',
-                'subtitle'  => 'Konfigurasi SMTP Hostinger berhasil terhubung dengan sempurna',
+                'title'     => 'Koneksi Email Berhasil Dikirim!',
+                'subtitle'  => 'Tes pengiriman SMTP Hostinger kamu terhubung dengan sempurna',
                 'content'   => "
-                    <p>Halo,</p>
-                    <p>Pesan ini dikirimkan untuk menguji konfigurasi email SMTP pada platform <strong>{$fromName}</strong>.</p>
-                    <p>Jika Anda menerima email ini, artinya integrasi SMTP Hostinger (Port 465 SSL) pada website Anda telah aktif secara penuh dan siap mengirimkan notifikasi ke seluruh pengguna.</p>
+                    <p>Halo Admin,</p>
+                    <p>Mantap! Email uji coba pengujian SMTP pada platform <strong>{$fromName}</strong> telah terkirim secara instan.</p>
+                    <p>Semua settingan SMTP Hostinger Port 465 (SSL) sudah aktif dan siap melayani notifikasi otomatis untuk seluruh transaksi & akun pengguna.</p>
                     <p style='margin-top: 16px; font-size: 13px; color: #64748B;'>Waktu Pengiriman: " . now()->format('Y-m-d H:i:s T') . "</p>
                 ",
                 'ctaUrl'    => url('/'),
-                'ctaText'   => 'Buka Platform buyle.id',
-                'footerNote' => 'Ini adalah pesan otomatis dari sistem untuk pengujian konektivitas server email.',
+                'ctaText'   => 'Mulai Buka Platform buyle.id',
+                'footerNote' => 'Ini adalah pesan uji coba dari sistem untuk memastikan fungsi email terhubung lancar.',
             ])->render();
 
             \Illuminate\Support\Facades\Mail::html($html, function ($message) use ($targetEmail, $fromName) {

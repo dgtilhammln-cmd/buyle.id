@@ -25,12 +25,12 @@ class SellerNewOrderNotification extends Notification
 
         // Render item list table
         $itemsHtml = '
-        <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin: 20px 0;">
+        <div style="background-color: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 18px; margin: 20px 0;">
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="font-size: 14px; color: #334155;">
                 <thead>
-                    <tr style="border-bottom: 1px solid #CBD5E1; text-align: left;">
-                        <th style="padding-bottom: 8px; font-weight: 700; color: #0F172A;">Produk</th>
-                        <th style="padding-bottom: 8px; font-weight: 700; color: #0F172A; text-align: center;">Jumlah</th>
+                    <tr style="border-bottom: 1.5px solid #CBD5E1; text-align: left;">
+                        <th style="padding-bottom: 10px; font-weight: 700; color: #0F172A;">Item Produk</th>
+                        <th style="padding-bottom: 10px; font-weight: 700; color: #0F172A; text-align: center;">Jumlah</th>
                     </tr>
                 </thead>
                 <tbody>';
@@ -38,8 +38,8 @@ class SellerNewOrderNotification extends Notification
         foreach ($this->order->items as $item) {
             $itemsHtml .= '
                     <tr>
-                        <td style="padding: 8px 0; border-top: 1px solid #F1F5F9; font-weight: 600; color: #1E293B;">' . htmlspecialchars($item->product_name) . '</td>
-                        <td style="padding: 8px 0; border-top: 1px solid #F1F5F9; text-align: center; color: #64748B;">' . $item->qty . 'x</td>
+                        <td style="padding: 10px 0; border-top: 1px solid #F1F5F9; font-weight: 600; color: #0F172A;">' . htmlspecialchars($item->product_name) . '</td>
+                        <td style="padding: 10px 0; border-top: 1px solid #F1F5F9; text-align: center; color: #64748B; font-weight: 600;">' . $item->qty . 'x</td>
                     </tr>';
         }
 
@@ -47,26 +47,26 @@ class SellerNewOrderNotification extends Notification
                 </tbody>
             </table>
             <div style="border-top: 2px solid #E2E8F0; margin-top: 12px; padding-top: 12px; font-size: 15px; font-weight: 800; color: #0F172A; text-align: right;">
-                Total Pembayaran: <span style="color: #10B981;">' . $totalFormatted . '</span>
+                Total Transaksi: <span style="color: #1eb349;">' . $totalFormatted . '</span>
             </div>
         </div>';
 
         return (new MailMessage)
-            ->subject("Pesanan Baru Masuk #{$orderNumber} | buyle.id")
+            ->subject("Hore! Ada Pesanan Baru #{$orderNumber} | buyle.id")
             ->view('emails.layout', [
-                'subject'   => "Pesanan Baru Masuk #{$orderNumber} | buyle.id",
+                'subject'   => "Hore! Ada Pesanan Baru #{$orderNumber} | buyle.id",
                 'badgeText' => 'PESANAN MASUK',
-                'title'     => 'Pesanan Baru Berhasil Diterima',
-                'subtitle'  => "Nomor Pesanan: #{$orderNumber}",
+                'title'     => 'Hore! Ada Cuan Baru Masuk',
+                'subtitle'  => "Pembeli baru saja menyelesaikan pembayaran #{$orderNumber}",
                 'content'   => "
                     <p>Halo <strong>{$sellerName}</strong>,</p>
-                    <p>Selamat! Pembeli telah menyelesaikan pembayaran untuk pesanan <strong>#{$orderNumber}</strong>.</p>
+                    <p>Kabar gembira! Pembeli baru saja melunasi pembayaran untuk produk toko kamu.</p>
                     {$itemsHtml}
-                    <p>Silakan periksa dan kelola detail transaksi ini melalui dashboard creator Anda.</p>
+                    <p>Yuk langsung cek dan kelola detail pesanan ini di dashboard creator kamu!</p>
                 ",
                 'ctaUrl'    => route('creator.orders.index'),
-                'ctaText'   => 'Lihat Pesanan di Dashboard Creator',
-                'footerNote' => 'Notifikasi ini dikirimkan secara otomatis saat pembayaran transaksi berhasil dikonfirmasi oleh sistem.',
+                'ctaText'   => 'Cek Pesanan di Dashboard Creator',
+                'footerNote' => 'Notifikasi ini otomatis dikirim begitu pembayaran pembeli berhasil diverifikasi oleh sistem.',
             ]);
     }
 }

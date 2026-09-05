@@ -25,23 +25,23 @@ class ResetPasswordNotification extends Notification
             'email' => $this->email,
         ]);
 
-        $name = $notifiable->name ?? 'Pengguna';
+        $name = $notifiable->name ?? 'Teman buyle.id';
 
         return (new MailMessage)
-            ->subject('Reset Kata Sandi Anda - buyle.id')
+            ->subject('Yuk Reset Kata Sandi Kamu | buyle.id')
             ->view('emails.layout', [
-                'subject'     => 'Reset Kata Sandi Anda - buyle.id',
+                'subject'     => 'Yuk Reset Kata Sandi Kamu | buyle.id',
                 'badgeText'   => 'KEAMANAN AKUN',
-                'title'       => 'Reset Kata Sandi',
-                'subtitle'    => 'Permintaan perubahan kata sandi akun buyle.id',
+                'title'       => 'Yuk Atur Kata Sandi Baru Kamu',
+                'subtitle'    => 'Minta reset kata sandi? Tenang, kamu bisa buat yang baru di sini',
                 'content'     => "
                     <p>Halo <strong>{$name}</strong>,</p>
-                    <p>Kami menerima permintaan untuk mengatur ulang kata sandi akun buyle.id yang terhubung dengan email ini.</p>
-                    <p>Silakan klik tombol hijau di bawah ini untuk melanjutkan pembuatan kata sandi baru:</p>
+                    <p>Kami menerima permintaan untuk mereset kata sandi akun buyle.id kamu. Kalau ini beneran kamu, langsung klik tombol hijau di bawah ya buat bikin kata sandi yang baru!</p>
+                    <p>Prosesnya instan dan dijamin aman kok.</p>
                 ",
                 'ctaUrl'      => $resetUrl,
-                'ctaText'     => 'Reset Kata Sandi Sekarang',
-                'footerNote'  => 'Tautan reset ini berlaku selama <strong>60 menit</strong>. Jika Anda tidak merasa meminta ini, Anda dapat mengabaikan email ini dengan aman.',
+                'ctaText'     => 'Buat Kata Sandi Baru Sekarang',
+                'footerNote'  => 'Tautan reset ini berlaku selama <strong>60 menit</strong> ya. Kalau kamu tidak merasa minta reset, abaikan aja email ini dengan santai.',
             ]);
     }
 }

@@ -15,24 +15,24 @@ class WelcomeNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $name = $notifiable->name ?? 'Pengguna';
+        $name = $notifiable->name ?? 'Teman buyle.id';
 
         return (new MailMessage)
-            ->subject('Selamat Datang di buyle.id')
+            ->subject('Selamat Datang di buyle.id! Yuk Mulai Eksplor')
             ->view('emails.layout', [
-                'subject'   => 'Selamat Datang di buyle.id',
-                'badgeText' => 'AKUN RESMI',
-                'title'     => 'Selamat Datang di buyle.id',
-                'subtitle'  => 'Akun Anda telah berhasil terdaftar dan siap digunakan',
+                'subject'   => 'Selamat Datang di buyle.id! Yuk Mulai Eksplor',
+                'badgeText' => 'WELCOME ABOARD',
+                'title'     => 'Selamat Datang di buyle.id!',
+                'subtitle'  => 'Akun kamu sudah siap 100% buat belanja dan berkreasi',
                 'content'   => "
                     <p>Halo <strong>{$name}</strong>,</p>
-                    <p>Terima kasih telah bergabung dengan platform <strong>buyle.id</strong>!</p>
-                    <p>Akun Anda telah aktif secara penuh. Anda sekarang dapat menelusuri katalog produk digital, membeli layanan pilihan, atau mengelola toko creator Anda secara langsung.</p>
-                    <p style='margin-top: 20px;'>Klik tombol di bawah ini untuk mulai menjelajahi platform:</p>
+                    <p>Senang banget kamu resmi jadi bagian dari <strong>buyle.id</strong>!</p>
+                    <p>Sekarang akun kamu sudah aktif sepenuhnya. Kamu bisa langsung nyari produk digital favorit, layanan keren, atau mulai buka toko creator kamu sendiri dalam hitungan menit.</p>
+                    <p style='margin-top: 16px;'>Yuk klik tombol di bawah buat mulai petualangan kamu:</p>
                 ",
                 'ctaUrl'    => url('/'),
-                'ctaText'   => 'Mulai Jelajahi buyle.id',
-                'footerNote' => 'Jika Anda membutuhkan bantuan teknis atau informasi layanan, tim dukungan kami selalu siap membantu Anda.',
+                'ctaText'   => 'Mulai Eksplor buyle.id Now',
+                'footerNote' => 'Ada pertanyaan atau kendala? Balas aja email ini, tim buyle.id siap bantu kamu kapan aja!',
             ]);
     }
 }
