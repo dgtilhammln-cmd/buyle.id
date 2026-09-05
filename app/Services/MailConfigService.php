@@ -15,21 +15,37 @@ class MailConfigService
     {
         try {
             $host       = Setting::get('mail_host', env('MAIL_HOST', 'smtp.hostinger.com'));
-            $port       = Setting::get('mail_port', env('MAIL_PORT', 465));
-            $username   = Setting::get('mail_username', env('MAIL_USERNAME', 'hai@buylee.id'));
+            $port       = (int) Setting::get('mail_port', env('MAIL_PORT', 465));
+            $username   = Setting::get('mail_username', env('MAIL_USERNAME', 'hai@buyle.id'));
             $password   = Setting::get('mail_password', env('MAIL_PASSWORD', '#Ilhammaulana23'));
-            $encryption = Setting::get('mail_encryption', env('MAIL_ENCRYPTION', 'ssl'));
-            $fromAddr   = Setting::get('mail_from_address', env('MAIL_FROM_ADDRESS', 'hai@buylee.id'));
+            $encryption = strtolower(Setting::get('mail_encryption', env('MAIL_ENCRYPTION', 'ssl')));
+            $fromAddr   = Setting::get('mail_from_address', env('MAIL_FROM_ADDRESS', 'hai@buyle.id'));
             $fromName   = Setting::get('mail_from_name', env('MAIL_FROM_NAME', 'buyle.id'));
             $mailer     = Setting::get('mail_mailer', env('MAIL_MAILER', 'smtp'));
 
             Config::set('mail.default', $mailer);
             Config::set('mail.mailers.smtp.host', $host);
-            Config::set('mail.mailers.smtp.port', (int) $port);
+            Config::set('mail.mailers.smtp.port', $port);
             Config::set('mail.mailers.smtp.username', $username);
             Config::set('mail.mailers.smtp.password', $password);
-            Config::set('mail.mailers.smtp.encryption', $encryption);
-            Config::set('mail.from.address', $fromAddr);
+            
+            if ($encryption === 'ssl') {
+                Config::set('mail.mailers.smtp.scheme', 'smtps');
+                Config::set('mail.mailers.smtp.encryption', 'ssl');
+            } else {
+                Config::set('mail.mailers.smtp.scheme', null);
+                Config::set('mail.mailers.smtp.encryption', $encryption);
+            }
+
+            Config::set('mail.mailers.smtp.stream', [
+                'ssl' => [
+                    'allow_self_signed' => true,
+                    'verify_peer'       => false,
+                    'verify_peer_name'  => false,
+                ],
+            ]);
+
+            Config::set('mail.from.address', $fromAddr ?: $username);
             Config::set('mail.from.name', $fromName);
         } catch (\Throwable $e) {
             Log::warning('MailConfigService apply failed: ' . $e->getMessage());
