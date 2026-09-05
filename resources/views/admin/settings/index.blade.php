@@ -1037,18 +1037,21 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;">Simpan Banner Iklan</button>
     </div>
   </div>
+</div>
+
 {{-- ======== TAB: EMAIL (SMTP) ======== --}}
 <div id="tab-email" class="tab-section" style="display:none;">
-  <div style="background:#FFFFFF;border-radius:20px;padding:1.75rem;box-shadow:0 4px 20px rgba(0,0,0,0.03);border:1px solid #F8FAFC;margin-bottom:1.5rem;">
-    <div style="display:flex;gap:.75rem;margin-bottom:1.75rem;align-items:center;">
-      <svg width="24" height="24" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-      <div>
-        <div style="font-size:.95rem;font-weight:800;color:#1E293B;">Pengaturan Server Email (SMTP Hostinger / Custom)</div>
-        <div style="font-size:.78rem;color:#64748B;">Konfigurasikan akun email untuk notifikasi order, reset password, & email selamat datang.</div>
-      </div>
+  <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;">
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
+      <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      <div style="font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Pengaturan Server Email (SMTP Hostinger / Custom)</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;">
+    <p style="font-size:0.85rem;color:#64748B;margin-bottom:1.5rem;line-height:1.5;">
+      Konfigurasikan akun email server Hostinger Anda untuk pengiriman otomatis notifikasi order, reset password, & email selamat datang.
+    </p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
       <div>
         <label class="form-label">Mailer <span>(Default: smtp)</span></label>
         <input type="text" name="mail_mailer" class="form-input" value="{{ old('mail_mailer', $settings['mail_mailer'] ?? 'smtp') }}" placeholder="smtp">
@@ -1073,8 +1076,8 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       </div>
 
       <div>
-        <label class="form-label">Username Email / SMTP <span>(Alamat Email)</span></label>
-        <input type="text" name="mail_username" class="form-input" value="{{ old('mail_username', $settings['mail_username'] ?? 'hai@buylee.id') }}" placeholder="hai@buylee.id">
+        <label class="form-label">Username Email / SMTP <span>(Alamat Email Hostinger)</span></label>
+        <input type="text" name="mail_username" class="form-input" value="{{ old('mail_username', $settings['mail_username'] ?? 'hai@buyle.id') }}" placeholder="hai@buyle.id">
       </div>
 
       <div>
@@ -1084,7 +1087,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
 
       <div>
         <label class="form-label">Alamat Pengirim (From Address)</label>
-        <input type="email" name="mail_from_address" class="form-input" value="{{ old('mail_from_address', $settings['mail_from_address'] ?? 'hai@buylee.id') }}" placeholder="hai@buylee.id">
+        <input type="email" name="mail_from_address" class="form-input" value="{{ old('mail_from_address', $settings['mail_from_address'] ?? 'hai@buyle.id') }}" placeholder="hai@buyle.id">
       </div>
 
       <div>
@@ -1092,21 +1095,26 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
         <input type="text" name="mail_from_name" class="form-input" value="{{ old('mail_from_name', $settings['mail_from_name'] ?? 'buyle.id') }}" placeholder="buyle.id">
       </div>
     </div>
+
+    <div style="margin-top:1.5rem;text-align:right;">
+      <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;">Simpan Pengaturan Email</button>
+    </div>
   </div>
 
   {{-- Card Tes Kirim Email --}}
-  <div style="background:#FFFFFF;border-radius:20px;padding:1.75rem;box-shadow:0 4px 20px rgba(0,0,0,0.03);border:1px solid #F8FAFC;">
-    <div style="display:flex;gap:.75rem;margin-bottom:1rem;align-items:center;">
-      <svg width="24" height="24" fill="none" stroke="#2563EB" stroke-width="2" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-      <div>
-        <div style="font-size:.95rem;font-weight:800;color:#1E293B;">Uji Coba Pengiriman Email (Test SMTP Connection)</div>
-        <div style="font-size:.78rem;color:#64748B;">Kirim email tes untuk memastikan koneksi ke server Hostinger berhasil tanpa error.</div>
-      </div>
+  <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
+      <svg width="18" height="18" fill="none" stroke="#2563EB" stroke-width="2" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+      <div style="font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#2563EB;">Uji Coba Pengiriman Email (Test SMTP Connection)</div>
     </div>
 
+    <p style="font-size:0.85rem;color:#64748B;margin-bottom:1rem;line-height:1.5;">
+      Kirim email pengujian untuk memastikan server Hostinger Anda terhubung dengan baik tanpa error.
+    </p>
+
     <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;max-width:600px;">
-      <input type="email" id="test_email_input" placeholder="Masukkan email tujuan tes (misal: email@anda.com)" value="{{ old('test_email', $settings['mail_from_address'] ?? 'hai@buylee.id') }}" class="form-input" style="flex:1;">
-      <button type="button" onclick="submitTestEmail()" style="display:inline-flex;align-items:center;gap:.375rem;padding:.75rem 1.25rem;font-size:.85rem;font-weight:700;background:#2563EB;color:#ffffff;border:none;border-radius:10px;cursor:pointer;transition:all .2s;">
+      <input type="email" id="test_email_input" placeholder="Masukkan email tujuan tes (misal: email@anda.com)" value="{{ old('test_email', $settings['mail_from_address'] ?? 'hai@buyle.id') }}" class="form-input" style="flex:1;">
+      <button type="button" onclick="submitTestEmail()" style="display:inline-flex;align-items:center;gap:.375rem;padding:.625rem 1.25rem;font-size:.85rem;font-weight:700;background:#2563EB;color:#ffffff;border:none;border-radius:8px;cursor:pointer;transition:all .2s;">
         🚀 Kirim Email Tes
       </button>
     </div>

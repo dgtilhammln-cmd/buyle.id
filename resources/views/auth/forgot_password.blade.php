@@ -6,11 +6,7 @@
 <h1 class="auth-title">Lupa Kata Sandi?</h1>
 <p class="auth-subtitle">Masukkan alamat email Anda, kami akan mengirimkan tautan untuk mereset kata sandi Anda.</p>
 
-@if(session('success'))
-    <div style="background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; padding:12px 16px; border-radius:10px; font-size:0.88rem; margin-bottom:1.25rem; line-height:1.5;">
-        {{ session('success') }}
-    </div>
-@endif
+
 
 @if($errors->any())
     <div class="alert-error">
