@@ -106,8 +106,16 @@ body { background: var(--c-bg); font-family: var(--font); }
             @foreach($summary['items'] as $item)
             <div class="cart-item">
                 <div class="cart-item-img">
-                    @if($item->product && $item->product->image)
-                        <img src="{{ asset('storage/'.$item->product->image) }}" alt="{{ $item->product->name }}" loading="lazy">
+                    @if($item->product && !empty($item->product->image))
+                        @php
+                            $img = $item->product->image;
+                            $imgUrl = \Illuminate\Support\Str::startsWith($img, ['http://', 'https://']) 
+                                ? $img 
+                                : (\Illuminate\Support\Str::startsWith($img, ['storage/', '/storage/']) 
+                                    ? asset(ltrim($img, '/')) 
+                                    : asset('storage/' . ltrim($img, '/')));
+                        @endphp
+                        <img src="{{ $imgUrl }}" alt="{{ $item->product->name }}" loading="lazy">
                     @else
                         <div style="width:100%;height:100%;background:#E2E8F0;display:flex;align-items:center;justify-content:center;">
                             <svg width="24" height="24" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>

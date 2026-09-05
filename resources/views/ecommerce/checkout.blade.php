@@ -409,7 +409,15 @@ label:focus{outline:none !important;box-shadow:none !important;}
                         @foreach($summary['items'] as $item)
                             <div class="summary-item">
                                 @if($item->product && !empty($item->product->image))
-                                    <img src="{{ \Illuminate\Support\Str::startsWith($item->product->image, ['http://', 'https://']) ? $item->product->image : asset('storage/'.$item->product->image) }}" class="summary-img" alt="{{ $item->product->name ?? '' }}">
+                                    @php
+                                        $img = $item->product->image;
+                                        $imgUrl = \Illuminate\Support\Str::startsWith($img, ['http://', 'https://']) 
+                                            ? $img 
+                                            : (\Illuminate\Support\Str::startsWith($img, ['storage/', '/storage/']) 
+                                                ? asset(ltrim($img, '/')) 
+                                                : asset('storage/' . ltrim($img, '/')));
+                                    @endphp
+                                    <img src="{{ $imgUrl }}" class="summary-img" alt="{{ $item->product->name ?? '' }}">
                                 @else
                                     <div class="summary-img" style="display:flex;align-items:center;justify-content:center;color:#94A3B8;">
                                         <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -1008,69 +1016,79 @@ label:focus{outline:none !important;box-shadow:none !important;}
 
 
     function prepareSubmit(e) {
-        const select = document.getElementById('address_id_select');
-        const isNewAddress = (!select || select.value === 'new');
+        const hasPhysicalProduct = @json($summary['has_physical_product']);
+        const isGuest = @json(auth()->guest());
 
-        if (isNewAddress) {
-            const provName = document.getElementById('province_name');
-            const cityName = document.getElementById('city_name');
-            const distName = document.getElementById('district_name');
-            const newAddrFull = document.getElementById('new_addr_full');
-            const newAddrReceiver = document.getElementById('new_addr_receiver');
-            const newAddrPhone = document.getElementById('new_addr_phone');
+        // Validate guest contact info
+        if (isGuest) {
+            const guestName = document.querySelector('input[name="guest_name"]')?.value?.trim();
+            const guestEmail = document.querySelector('input[name="guest_email"]')?.value?.trim();
+            const guestPhone = document.querySelector('input[name="guest_phone"]')?.value?.trim();
 
-            if (!provName?.value || !cityName?.value || !distName?.value || !newAddrFull?.value || !newAddrReceiver?.value || !newAddrPhone?.value) {
+            if (!guestName || !guestEmail || !guestPhone) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Data Alamat Belum Lengkap',
-                    text: 'Mohon isi semua kolom penerima, nomor telepon, dan detail alamat lengkap.',
-                    confirmButtonColor: '#0F172A',
+                    title: 'Data Pembeli Belum Lengkap',
+                    text: 'Mohon lengkapi Nama Lengkap, Email, dan No. WhatsApp aktif Anda.',
+                    confirmButtonColor: '#1eb349',
                     confirmButtonText: 'Lengkapi Data'
                 });
                 e.preventDefault();
                 return;
             }
-        } else if (select && select.value !== 'new') {
-            // Saved address — check city id is selected
-            const savedCityId = document.getElementById('saved_city_id')?.value;
-            if (!savedCityId) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Pilih Kota Tujuan',
-                    text: 'Mohon pilih Provinsi dan Kota di bagian ongkir agar biaya pengiriman dapat dihitung.',
-                    confirmButtonColor: '#0F172A'
-                });
-                e.preventDefault();
-                return;
-            }
         }
 
-        if (document.getElementById('courier_name_select')) {
-            const service = document.getElementById('courier_service_hidden')?.value;
-            // Allow 'manual' value (when ongkir API is unreachable, admin confirms cost)
-            if (!service) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Pilih Layanan Pengiriman',
-                    text: 'Anda belum memilih layanan pengiriman (contoh: REG / YES).',
-                    confirmButtonColor: '#0F172A'
-                });
-                e.preventDefault();
-                return;
-            }
-        }
+        // Validate physical shipping address & courier ONLY IF there is physical product
+        if (hasPhysicalProduct) {
+            const select = document.getElementById('address_id_select');
+            const isNewAddress = (!select || select.value === 'new');
 
-        const notes = document.getElementById('notes_input')?.value;
-        if (!notes || notes.trim() === '') {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Catatan Wajib Diisi',
-                text: 'Mohon isi catatan pesanan (bisa berupa ukuran, warna, atau keterangan lainnya).',
-                confirmButtonColor: '#0F172A'
-            });
-            document.getElementById('notes_input')?.focus();
-            e.preventDefault();
-            return;
+            if (isNewAddress) {
+                const provName = document.getElementById('province_name');
+                const cityName = document.getElementById('city_name');
+                const distName = document.getElementById('district_name');
+                const newAddrFull = document.getElementById('new_addr_full');
+                const newAddrReceiver = document.getElementById('new_addr_receiver');
+                const newAddrPhone = document.getElementById('new_addr_phone');
+
+                if (!provName?.value || !cityName?.value || !distName?.value || !newAddrFull?.value || !newAddrReceiver?.value || !newAddrPhone?.value) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Data Alamat Belum Lengkap',
+                        text: 'Mohon isi semua kolom penerima, nomor telepon, dan detail alamat lengkap.',
+                        confirmButtonColor: '#1eb349',
+                        confirmButtonText: 'Lengkapi Data'
+                    });
+                    e.preventDefault();
+                    return;
+                }
+            } else if (select && select.value !== 'new') {
+                const savedCityId = document.getElementById('saved_city_id')?.value;
+                if (!savedCityId) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Pilih Kota Tujuan',
+                        text: 'Mohon pilih Provinsi dan Kota di bagian ongkir agar biaya pengiriman dapat dihitung.',
+                        confirmButtonColor: '#1eb349'
+                    });
+                    e.preventDefault();
+                    return;
+                }
+            }
+
+            if (document.getElementById('courier_name_select')) {
+                const service = document.getElementById('courier_service_hidden')?.value;
+                if (!service) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Pilih Layanan Pengiriman',
+                        text: 'Anda belum memilih layanan pengiriman (contoh: REG / YES).',
+                        confirmButtonColor: '#1eb349'
+                    });
+                    e.preventDefault();
+                    return;
+                }
+            }
         }
 
         // PREVENT DEFAULT TO SHOW CONFIRMATION MODAL FIRST
@@ -1078,44 +1096,43 @@ label:focus{outline:none !important;box-shadow:none !important;}
 
         // Gather summary data for double check
         let receiverName = '';
+        let receiverEmail = '';
         let receiverPhone = '';
         let addressText = '';
 
-        if (isNewAddress) {
-            // Guest or New Address
-            const guestName = document.querySelector('input[name="guest_name"]');
-            const guestPhone = document.querySelector('input[name="guest_phone"]');
-            
-            if (guestName && guestName.value) {
-                receiverName = guestName.value;
-                receiverPhone = guestPhone ? guestPhone.value : '';
-            } else {
-                receiverName = document.getElementById('new_addr_receiver')?.value || '';
-                receiverPhone = document.getElementById('new_addr_phone')?.value || '';
-            }
-            
-            const prov = document.getElementById('province_name')?.value || '';
-            const city = document.getElementById('city_name')?.value || '';
-            const dist = document.getElementById('district_name')?.value || '';
-            const full = document.getElementById('new_addr_full')?.value || '';
-            addressText = `${full}, ${dist}, ${city}, ${prov}`;
+        if (isGuest) {
+            receiverName = document.querySelector('input[name="guest_name"]')?.value || '';
+            receiverEmail = document.querySelector('input[name="guest_email"]')?.value || '';
+            receiverPhone = document.querySelector('input[name="guest_phone"]')?.value || '';
         } else {
-            // Saved Address
-            const opt = select.options[select.selectedIndex];
-            // Format format dari blade: "Label - Nama (Kota, Prov)"
-            const parts = opt.text.split('-');
-            receiverName = parts.length > 1 ? parts[1].split('(')[0].trim() : opt.text;
-            addressText = opt.getAttribute('data-full-address') || opt.text;
+            receiverName = @json(auth()->check() ? auth()->user()->name : '');
+            receiverEmail = @json(auth()->check() ? auth()->user()->email : '');
+            receiverPhone = @json(auth()->check() ? (auth()->user()->phone ?? '') : '');
+        }
+
+        if (hasPhysicalProduct) {
+            const select = document.getElementById('address_id_select');
+            const isNewAddress = (!select || select.value === 'new');
+            if (isNewAddress) {
+                const prov = document.getElementById('province_name')?.value || '';
+                const city = document.getElementById('city_name')?.value || '';
+                const dist = document.getElementById('district_name')?.value || '';
+                const full = document.getElementById('new_addr_full')?.value || '';
+                addressText = `${full}, ${dist}, ${city}, ${prov}`;
+            } else if (select) {
+                const opt = select.options[select.selectedIndex];
+                addressText = opt.getAttribute('data-full-address') || opt.text;
+            }
         }
 
         let courierText = '';
-        if (document.getElementById('courier_name_select')) {
+        if (hasPhysicalProduct && document.getElementById('courier_name_select')) {
             const cSel = document.getElementById('courier_name_select');
             const cName = cSel.options[cSel.selectedIndex]?.text || '';
             const cSvc = document.getElementById('courier_service_hidden')?.value || '';
             courierText = `${cName} - ${cSvc}`;
         } else {
-            courierText = 'Tidak menggunakan kurir fisik';
+            courierText = 'Produk Digital / Akses Langsung (Tanpa Pengiriman Fisik)';
         }
 
         const notesText = document.getElementById('notes_input')?.value || '-';
@@ -1124,10 +1141,12 @@ label:focus{outline:none !important;box-shadow:none !important;}
         const htmlSummary = `
             <div style="text-align:left; font-size:0.9rem; line-height:1.5; color:#334155; margin-top:1rem;">
                 <div style="margin-bottom:0.75rem;">
-                    <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Penerima</strong>
-                    <div>${receiverName}</div>
-                    ${receiverPhone ? `<div>${receiverPhone}</div>` : ''}
+                    <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Pembeli & Kontak Akses</strong>
+                    <div><strong>${receiverName}</strong></div>
+                    <div style="color:#166534; font-weight:600;">Email: ${receiverEmail}</div>
+                    ${receiverPhone ? `<div>WhatsApp: ${receiverPhone}</div>` : ''}
                 </div>
+                ${hasPhysicalProduct ? `
                 <div style="margin-bottom:0.75rem;">
                     <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Alamat Pengiriman</strong>
                     <div>${addressText}</div>
@@ -1136,11 +1155,19 @@ label:focus{outline:none !important;box-shadow:none !important;}
                     <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Kurir</strong>
                     <div>${courierText}</div>
                 </div>
+                ` : `
+                <div style="margin-bottom:0.75rem;">
+                    <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Pengiriman</strong>
+                    <div style="color:#166534; font-weight:600;">Instan / Otomatis dikirim ke Email & WhatsApp</div>
+                </div>
+                `}
+                ${notesText && notesText !== '-' ? `
                 <div style="margin-bottom:0.75rem;">
                     <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Catatan</strong>
                     <div style="font-style:italic;">"${notesText}"</div>
                 </div>
-                <div style="margin-top:1rem; padding-top:1rem; border-top:1px dashed #CBD5E1; color:#1eb349; font-weight:700; font-size:1.1rem; text-align:right;">
+                ` : ''}
+                <div style="margin-top:1rem; padding-top:1rem; border-top:1px dashed #CBD5E1; color:#1eb349; font-weight:800; font-size:1.15rem; text-align:right;">
                     ${totalCost}
                 </div>
             </div>
@@ -1151,7 +1178,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
             html: htmlSummary,
             icon: 'info',
             showCancelButton: true,
-            confirmButtonColor: '#059669',
+            confirmButtonColor: '#1eb349',
             cancelButtonColor: '#94A3B8',
             confirmButtonText: 'Semua Benar, Lanjut!',
             cancelButtonText: 'Cek Lagi',
