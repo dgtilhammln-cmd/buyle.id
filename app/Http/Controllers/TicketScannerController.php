@@ -6,7 +6,10 @@ use App\Models\Product;
 use App\Models\TicketPass;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+
 
 class TicketScannerController extends Controller
 {
@@ -85,95 +88,119 @@ class TicketScannerController extends Controller
 
     /**
      * API untuk validasi QR Code / Kode Tiket via Scanner.
+     * Dilindungi dengan DB transaction + lockForUpdate() untuk mencegah race condition
+     * (dua request scan simultan tidak bisa keduanya menandai 'used').
      */
     public function verify(Request $request): JsonResponse
     {
-        $token = trim($request->input('code') ?? $request->input('qr_token'));
+        $token = trim($request->input('code') ?? $request->input('qr_token') ?? '');
 
         if (empty($token)) {
             return response()->json([
                 'status'  => 'invalid',
+                'title'   => 'Kode Kosong',
                 'message' => 'Kode tiket atau QR Code tidak valid.'
             ], 400);
         }
 
-        // Cari tiket berdasarkan qr_token atau ticket_code
-        $ticket = TicketPass::with(['product', 'order', 'buyer', 'organizer'])
-            ->where('seller_id', auth()->id())
-            ->where(function($q) use ($token) {
-                $q->where('qr_token', $token)->orWhere('ticket_code', $token);
-            })
-            ->first();
+        $result = null;
 
-        // Fallback pencarian tanpa filter seller_id (jika tiket ada di sistem)
-        if (!$ticket) {
-            $ticket = TicketPass::with(['product', 'order', 'buyer', 'organizer'])
-                ->where('qr_token', $token)
-                ->orWhere('ticket_code', $token)
-                ->first();
-        }
+        try {
+            DB::transaction(function () use ($token, &$result) {
+                // 1. Cari tiket milik seller yang sedang login (prioritas)
+                $ticket = TicketPass::with(['product', 'buyer'])
+                    ->where('seller_id', auth()->id())
+                    ->where(function ($q) use ($token) {
+                        $q->where('qr_token', $token)->orWhere('ticket_code', $token);
+                    })
+                    ->lockForUpdate()
+                    ->first();
 
-        if (!$ticket) {
+                // 2. Fallback: cari di seluruh sistem (misal saat cross-event scanning)
+                if (!$ticket) {
+                    $ticket = TicketPass::with(['product', 'buyer'])
+                        ->where(function ($q) use ($token) {
+                            $q->where('qr_token', $token)->orWhere('ticket_code', $token);
+                        })
+                        ->lockForUpdate()
+                        ->first();
+                }
+
+                if (!$ticket) {
+                    $result = response()->json([
+                        'status'  => 'invalid',
+                        'title'   => 'Tiket Tidak Ditemukan',
+                        'message' => 'Kode tiket / QR Code ini tidak terdaftar di sistem buyle.id.'
+                    ]);
+                    return;
+                }
+
+                // 3. Tiket dibatalkan
+                if ($ticket->status === 'cancelled') {
+                    $result = response()->json([
+                        'status'  => 'invalid',
+                        'title'   => 'Tiket Dibatalkan',
+                        'message' => 'Tiket ini telah dibatalkan atau direfund. Tidak dapat check-in.',
+                        'ticket'  => [
+                            'code'        => $ticket->ticket_code,
+                            'event_name'  => $ticket->product?->name ?? '-',
+                            'holder_name' => $ticket->holder_name ?? '-',
+                        ]
+                    ]);
+                    return;
+                }
+
+                // 4. Tiket sudah digunakan (termasuk yang baru saja di-scan bersamaan — dilindungi oleh lock)
+                if ($ticket->status === 'used') {
+                    $time = $ticket->checked_in_at ? $ticket->checked_in_at->format('H:i (d M Y)') : '-';
+                    $result = response()->json([
+                        'status'  => 'used',
+                        'title'   => 'Tiket Sudah Digunakan',
+                        'message' => "Tiket a.n {$ticket->holder_name} sudah dipindai sebelumnya pada pukul {$time}.",
+                        'ticket'  => [
+                            'code'          => $ticket->ticket_code,
+                            'event_name'    => $ticket->product?->name ?? '-',
+                            'holder_name'   => $ticket->holder_name ?? '-',
+                            'checked_in_at' => $time,
+                        ]
+                    ]);
+                    return;
+                }
+
+                // 5. Tiket valid — tandai sebagai used (di dalam transaction, aman dari race condition)
+                $ticket->update([
+                    'status'        => 'used',
+                    'checked_in_at' => now(),
+                    'checked_in_by' => auth()->id(),
+                ]);
+
+                $result = response()->json([
+                    'status'  => 'valid',
+                    'title'   => 'Check-In Berhasil! ✓',
+                    'message' => "Selamat datang, {$ticket->holder_name}! Tiket berhasil diverifikasi.",
+                    'ticket'  => [
+                        'code'           => $ticket->ticket_code,
+                        'event_name'     => $ticket->product?->name ?? '-',
+                        'event_date'     => $ticket->product?->event_date?->format('d M Y') ?? '-',
+                        'event_time'     => $ticket->product?->event_time ?? '-',
+                        'event_location' => $ticket->product?->event_location ?? '-',
+                        'holder_name'    => $ticket->holder_name ?? '-',
+                        'holder_email'   => $ticket->holder_email ?? '-',
+                        'holder_phone'   => $ticket->holder_phone ?? '-',
+                        'checked_in_at'  => now()->format('H:i:s'),
+                    ]
+                ]);
+            });
+        } catch (\Throwable $e) {
+            Log::error('[TicketScanner] verify error: ' . $e->getMessage());
             return response()->json([
                 'status'  => 'invalid',
-                'title'   => 'Tiket Tidak Ditemukan',
-                'message' => 'Kode tiket / QR Code ini tidak terdaftar di sistem buyle.id.'
-            ]);
+                'title'   => 'Kesalahan Sistem',
+                'message' => 'Terjadi kesalahan saat memproses tiket. Silakan coba lagi.'
+            ], 500);
         }
 
-        // Cek jika tiket dibatalkan
-        if ($ticket->status === 'cancelled') {
-            return response()->json([
-                'status'  => 'invalid',
-                'title'   => 'Tiket Dibatalkan',
-                'message' => 'Tiket ini telah dibatalkan atau direfund.',
-                'ticket'  => [
-                    'code'        => $ticket->ticket_code,
-                    'event_name'  => $ticket->product?->name,
-                    'holder_name' => $ticket->holder_name,
-                ]
-            ]);
-        }
-
-        // Cek jika tiket sudah pernah dipakai
-        if ($ticket->status === 'used') {
-            $time = $ticket->checked_in_at ? $ticket->checked_in_at->format('H:i (d M Y)') : '-';
-            return response()->json([
-                'status'  => 'used',
-                'title'   => 'Tiket Sudah Digunakan',
-                'message' => "Tiket a.n {$ticket->holder_name} sudah dipindai sebelumnya pada pukul {$time}.",
-                'ticket'  => [
-                    'code'          => $ticket->ticket_code,
-                    'event_name'    => $ticket->product?->name,
-                    'holder_name'   => $ticket->holder_name,
-                    'checked_in_at' => $time,
-                ]
-            ]);
-        }
-
-        // Tiket Valid! Update status menjadi used
-        $ticket->update([
-            'status'        => 'used',
-            'checked_in_at' => now(),
-            'checked_in_by' => auth()->id(),
-        ]);
-
-        return response()->json([
-            'status'  => 'valid',
-            'title'   => 'Tiket Valid!',
-            'message' => "Selamat datang, {$ticket->holder_name}! Tiket berhasil diverifikasi.",
-            'ticket'  => [
-                'code'          => $ticket->ticket_code,
-                'event_name'    => $ticket->product?->name,
-                'event_date'    => $ticket->product?->event_date?->format('d M Y') ?? '-',
-                'event_time'    => $ticket->product?->event_time ?? '-',
-                'event_location'=> $ticket->product?->event_location ?? '-',
-                'holder_name'   => $ticket->holder_name,
-                'holder_email'  => $ticket->holder_email,
-                'holder_phone'  => $ticket->holder_phone,
-                'checked_in_at' => now()->format('H:i:s'),
-            ]
-        ]);
+        return $result;
     }
 
     /**

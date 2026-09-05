@@ -946,32 +946,32 @@
     let html5QrCode = null;
     let currentFacingMode = "environment";
     let isProcessing = false;
+    let isCameraSwitching = false; // Guard against double camera switch
 
     function switchTab(tabId, btn) {
         document.querySelectorAll('.payout-tab-pane').forEach(el => el.style.display = 'none');
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        
         document.getElementById(tabId).style.display = 'block';
         btn.classList.add('active');
-
         const tabName = tabId === 'tab-data' ? 'data' : 'scanner';
         const url = new URL(window.location);
         url.searchParams.set('tab', tabName);
         window.history.pushState({}, '', url);
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         initCamera(currentFacingMode);
     });
 
     function initCamera(facingMode) {
-        const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+        const config = { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1 };
 
         if (html5QrCode) {
-            html5QrCode.stop().then(() => {
-                startCameraStream(facingMode, config);
-            }).catch(() => {
-                startCameraStream(facingMode, config);
+            // Safe stop: ignore errors if already stopped
+            const stopPromise = html5QrCode.isScanning ? html5QrCode.stop() : Promise.resolve();
+            stopPromise.catch(() => {}).finally(() => {
+                // Small delay to let the camera fully release
+                setTimeout(() => startCameraStream(facingMode, config), 300);
             });
         } else {
             html5QrCode = new Html5Qrcode("reader");
@@ -981,43 +981,81 @@
 
     function startCameraStream(facingMode, config) {
         html5QrCode.start({ facingMode: facingMode }, config, onScanSuccess, onScanFailure)
-        .catch(err => {
-            Html5Qrcode.getCameras().then(cameras => {
-                if (cameras && cameras.length > 0) {
-                    let selectedId = cameras[0].id;
-                    if (facingMode === 'environment' && cameras.length > 1) {
-                        selectedId = cameras[cameras.length - 1].id;
+            .catch(err => {
+                // Fallback: enumerate cameras and pick by index
+                Html5Qrcode.getCameras().then(cameras => {
+                    if (cameras && cameras.length > 0) {
+                        let selectedId = cameras[0].id;
+                        // For 'environment' (back camera), try last entry which is usually the back
+                        if (facingMode === 'environment' && cameras.length > 1) {
+                            selectedId = cameras[cameras.length - 1].id;
+                        }
+                        html5QrCode.start(selectedId, config, onScanSuccess, onScanFailure)
+                            .catch(e2 => console.warn('Camera start failed:', e2));
+                    } else {
+                        showCameraError();
                     }
-                    html5QrCode.start(selectedId, config, onScanSuccess, onScanFailure);
-                }
+                }).catch(() => showCameraError());
+            })
+            .finally(() => {
+                isCameraSwitching = false;
             });
-        });
+    }
+
+    function showCameraError() {
+        const reader = document.getElementById('reader');
+        if (reader) {
+            reader.innerHTML = `<div style="padding:2rem; text-align:center; color:#991b1b; font-size:0.85rem; font-weight:600;">
+                ⚠️ Kamera tidak dapat diakses.<br>
+                <span style="font-size:0.78rem; color:#64748b; font-weight:400;">Pastikan izin kamera sudah diberikan di browser Anda.</span>
+            </div>`;
+        }
     }
 
     function toggleCameraFacing() {
+        if (isCameraSwitching) return; // Prevent double-click
+        isCameraSwitching = true;
+
         currentFacingMode = (currentFacingMode === "environment") ? "user" : "environment";
         const label = document.getElementById("camFacingLabel");
         if (label) label.textContent = (currentFacingMode === "environment") ? "Belakang" : "Depan";
+
         initCamera(currentFacingMode);
     }
 
     function onScanSuccess(decodedText, decodedResult) {
-        if (isProcessing) return;
+        if (isProcessing) return; // Prevent duplicate scan calls
         verifyCode(decodedText);
     }
 
     function onScanFailure(error) {
-        // ignore scan failures
+        // Silently ignore scan failures (normal when no QR is in view)
     }
 
     function handleManualSubmit(e) {
         e.preventDefault();
+        if (isProcessing) return;
         const code = document.getElementById('manualCodeInput').value.trim();
         if (code) verifyCode(code);
     }
 
     function verifyCode(code) {
+        if (isProcessing) return;
         isProcessing = true;
+
+        // Visual feedback: show loading state
+        const resultBox = document.getElementById('resultBox');
+        if (resultBox) {
+            resultBox.className = 'res-box';
+            resultBox.style.background = '#f8fafc';
+            resultBox.style.border = '1.5px solid #e2e8f0';
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = `<div style="display:flex;align-items:center;gap:0.75rem;color:#334155;font-weight:600;font-size:0.88rem;">
+                <svg width="20" height="20" stroke="#1eb349" stroke-width="2.5" fill="none" viewBox="0 0 24 24" style="animation:spin 1s linear infinite;">
+                    <circle cx="12" cy="12" r="10" stroke-dasharray="31" stroke-dashoffset="10"/>
+                </svg>
+                Memverifikasi tiket...</div>`;
+        }
 
         fetch("{{ route('creator.ticket.scanner.verify') }}", {
             method: "POST",
@@ -1027,7 +1065,12 @@
             },
             body: JSON.stringify({ code: code })
         })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok && res.status !== 400) {
+                throw new Error('Server error ' + res.status);
+            }
+            return res.json();
+        })
         .then(data => {
             renderResult(data);
         })
@@ -1035,7 +1078,7 @@
             renderResult({
                 status: 'invalid',
                 title: 'Gagal Memproses',
-                message: 'Terjadi kesalahan sistem saat memverifikasi tiket.'
+                message: 'Terjadi kesalahan jaringan atau sistem. Silakan coba lagi.'
             });
         });
     }
@@ -1047,67 +1090,81 @@
             const ctx = new AudioCtx();
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
-
             osc.type = 'sine';
-            
             if (status === 'valid') {
+                // Double beep for success
                 osc.frequency.setValueAtTime(880, ctx.currentTime);
-                gain.gain.setValueAtTime(0.25, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.14);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.14);
-            } else {
-                osc.frequency.setValueAtTime(320, ctx.currentTime);
                 gain.gain.setValueAtTime(0.3, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.25);
+                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.1);
                 osc.connect(gain);
                 gain.connect(ctx.destination);
                 osc.start();
-                osc.stop(ctx.currentTime + 0.25);
+                osc.stop(ctx.currentTime + 0.1);
+                // Second beep
+                const osc2 = ctx.createOscillator();
+                const gain2 = ctx.createGain();
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(1100, ctx.currentTime + 0.13);
+                gain2.gain.setValueAtTime(0.3, ctx.currentTime + 0.13);
+                gain2.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.25);
+                osc2.connect(gain2);
+                gain2.connect(ctx.destination);
+                osc2.start(ctx.currentTime + 0.13);
+                osc2.stop(ctx.currentTime + 0.25);
+            } else {
+                // Low warning tone for error/duplicate
+                osc.frequency.setValueAtTime(300, ctx.currentTime);
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.3);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.3);
             }
-        } catch(e) {
-            console.log('Audio beep error:', e);
+        } catch (e) {
+            // Audio not available, ignore
         }
     }
 
     function renderResult(data) {
         playScanBeep(data.status);
 
-        // Populate inline resultBox
+        // Re-render inline resultBox with proper styling
         const box = document.getElementById('resultBox');
-        const iconDiv = document.getElementById('resultIcon');
-        const titleEl = document.getElementById('resultTitle');
-        const msgEl = document.getElementById('resultMsg');
-        const detailsEl = document.getElementById('ticketDetails');
-
         if (box) {
-            box.className = 'res-box res-' + data.status;
+            // Reset inline styles that may have been set by loading state
+            box.style.background = '';
+            box.style.border = '';
+            box.className = 'res-box res-' + (data.status === 'used' ? 'used' : (data.status === 'valid' ? 'valid' : 'invalid'));
             box.style.display = 'block';
 
-            titleEl.textContent = data.title || 'Status Tiket';
-            msgEl.textContent = data.message || '';
-
+            let iconHtml = '';
             if (data.status === 'valid') {
-                iconDiv.innerHTML = `<svg width="36" height="36" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+                iconHtml = `<svg width="36" height="36" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
             } else if (data.status === 'used') {
-                iconDiv.innerHTML = `<svg width="36" height="36" fill="none" stroke="#854D0E" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+                iconHtml = `<svg width="36" height="36" fill="none" stroke="#854D0E" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
             } else {
-                iconDiv.innerHTML = `<svg width="36" height="36" fill="none" stroke="#991B1B" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+                iconHtml = `<svg width="36" height="36" fill="none" stroke="#991B1B" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
             }
 
+            let detailsHtml = '';
             if (data.ticket) {
-                detailsEl.style.display = 'block';
-                detailsEl.innerHTML = `
+                detailsHtml = `<div style="font-size:0.8rem;background:rgba(255,255,255,0.8);padding:0.75rem 1rem;border-radius:10px;border:1px solid rgba(0,0,0,0.05);margin-top:0.5rem;">
                     <div><strong>Kode Tiket:</strong> ${data.ticket.code || '-'}</div>
                     <div><strong>Nama Event:</strong> ${data.ticket.event_name || '-'}</div>
-                    <div><strong>Pemegang Tiket:</strong> ${data.ticket.holder_name || '-'}</div>
+                    <div><strong>Pemegang:</strong> ${data.ticket.holder_name || '-'}</div>
                     ${data.ticket.checked_in_at ? `<div><strong>Waktu Check-In:</strong> ${data.ticket.checked_in_at}</div>` : ''}
-                `;
-            } else {
-                detailsEl.style.display = 'none';
+                </div>`;
             }
+
+            box.innerHTML = `<div style="display:flex;align-items:flex-start;gap:1rem;">
+                <div style="flex-shrink:0;margin-top:2px;">${iconHtml}</div>
+                <div style="flex:1;">
+                    <h5 style="font-weight:800;font-size:1rem;margin-bottom:0.25rem;">${data.title || 'Status Tiket'}</h5>
+                    <p style="font-size:0.85rem;margin-bottom:0;line-height:1.4;">${data.message || ''}</p>
+                    ${detailsHtml}
+                </div>
+            </div>`;
         }
 
         // Open Mobile-Friendly Popup Modal
@@ -1116,74 +1173,93 @@
 
     function openScanModal(data) {
         const overlay = document.getElementById('scanResultModal');
-        const box = document.getElementById('scanResultModalBox');
-        const bubble = document.getElementById('modalIconBubble');
+        const box     = document.getElementById('scanResultModalBox');
+        const bubble  = document.getElementById('modalIconBubble');
         const titleEl = document.getElementById('modalTitle');
-        const msgEl = document.getElementById('modalMsg');
-        const detailsCard = document.getElementById('modalDetailsCard');
+        const msgEl   = document.getElementById('modalMsg');
+        const card    = document.getElementById('modalDetailsCard');
 
+        // Set icon & color theme
         if (data.status === 'valid') {
             bubble.style.background = '#DCFCE7';
             bubble.innerHTML = `<svg width="40" height="40" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
             titleEl.style.color = '#15803D';
-            titleEl.textContent = data.title || 'Check-In Berhasil!';
         } else if (data.status === 'used') {
             bubble.style.background = '#FEF3C7';
             bubble.innerHTML = `<svg width="40" height="40" fill="none" stroke="#B45309" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
             titleEl.style.color = '#B45309';
-            titleEl.textContent = data.title || 'Tiket Sudah Dipakai!';
         } else {
             bubble.style.background = '#FEE2E2';
             bubble.innerHTML = `<svg width="40" height="40" fill="none" stroke="#DC2626" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
             titleEl.style.color = '#DC2626';
-            titleEl.textContent = data.title || 'Tiket Tidak Valid!';
         }
 
-        msgEl.textContent = data.message || '';
+        titleEl.textContent = data.title || 'Status Tiket';
+        msgEl.textContent   = data.message || '';
 
         if (data.ticket) {
-            detailsCard.style.display = 'block';
-            detailsCard.innerHTML = `
-                <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="color:#64748B;">Kode Tiket:</span>
-                    <strong style="color:#0F172A; font-family:monospace; font-size:0.9rem;">${data.ticket.code || '-'}</strong>
+            card.style.display = 'block';
+            const t = data.ticket;
+            card.innerHTML = `
+                <div style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+                    <span style="color:#64748B;font-size:0.82rem;">Kode Tiket</span>
+                    <strong style="color:#0F172A;font-family:monospace;font-size:0.88rem;">${t.code || '-'}</strong>
                 </div>
-                <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="color:#64748B;">Nama Event:</span>
-                    <strong style="color:#0F172A;">${data.ticket.event_name || '-'}</strong>
+                <div style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                    <span style="color:#64748B;font-size:0.82rem;flex-shrink:0;">Nama Event</span>
+                    <strong style="color:#0F172A;font-size:0.82rem;text-align:right;">${t.event_name || '-'}</strong>
                 </div>
-                <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="color:#64748B;">Pemegang:</span>
-                    <strong style="color:#0F172A;">${data.ticket.holder_name || '-'}</strong>
+                <div style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+                    <span style="color:#64748B;font-size:0.82rem;">Pemegang</span>
+                    <strong style="color:#0F172A;font-size:0.82rem;">${t.holder_name || '-'}</strong>
                 </div>
-                ${data.ticket.checked_in_at ? `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="color:#64748B;">Waktu Check-In:</span>
-                    <strong style="color:#166534;">${data.ticket.checked_in_at}</strong>
+                ${t.event_date && t.event_date !== '-' ? `
+                <div style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+                    <span style="color:#64748B;font-size:0.82rem;">Tgl. Event</span>
+                    <strong style="color:#0F172A;font-size:0.82rem;">${t.event_date}</strong>
+                </div>` : ''}
+                ${t.event_time && t.event_time !== '-' ? `
+                <div style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+                    <span style="color:#64748B;font-size:0.82rem;">Waktu</span>
+                    <strong style="color:#0F172A;font-size:0.82rem;">${t.event_time}</strong>
+                </div>` : ''}
+                ${t.event_location && t.event_location !== '-' ? `
+                <div style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                    <span style="color:#64748B;font-size:0.82rem;flex-shrink:0;">Lokasi</span>
+                    <strong style="color:#0F172A;font-size:0.82rem;text-align:right;">${t.event_location}</strong>
+                </div>` : ''}
+                ${t.checked_in_at ? `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid #E2E8F0;margin-top:4px;">
+                    <span style="color:#64748B;font-size:0.82rem;">Check-In</span>
+                    <strong style="color:#166534;font-size:0.82rem;">${t.checked_in_at}</strong>
                 </div>` : ''}
             `;
         } else {
-            detailsCard.style.display = 'none';
+            card.style.display = 'none';
         }
 
         overlay.style.display = 'flex';
         setTimeout(() => {
             overlay.style.opacity = '1';
-            box.style.transform = 'scale(1)';
+            box.style.transform   = 'scale(1)';
         }, 20);
     }
 
     function closeScanModal() {
         const overlay = document.getElementById('scanResultModal');
-        const box = document.getElementById('scanResultModalBox');
+        const box     = document.getElementById('scanResultModalBox');
 
-        overlay.style.opacity = '0';
-        box.style.transform = 'scale(0.9)';
+        overlay.style.opacity   = '0';
+        box.style.transform     = 'scale(0.9)';
         setTimeout(() => {
             overlay.style.display = 'none';
-            isProcessing = false;
+            isProcessing = false; // Re-enable scanning after modal closes
         }, 250);
     }
+
+    // CSS animation for loading spinner
+    const style = document.createElement('style');
+    style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+    document.head.appendChild(style);
 </script>
 @endsection
-
