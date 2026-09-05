@@ -178,20 +178,27 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Kategori Utama <span>*</span></label>
-                                <select name="product_category_id" id="catSelect" class="form-input" required onchange="loadSubCat(this.value)">
-                                    <option value="">— Pilih Kategori —</option>
-                                    @foreach($categories as $cat)
-                                        <option value="{{ $cat->id }}" {{ old('product_category_id', $product->product_category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group">
                                 <label class="form-label">Tipe Produk <span>*</span></label>
                                 <select name="product_type" id="productTypeSelect" class="form-input" onchange="toggleProductTypeFields(this.value)" required>
                                     <option value="external_link" {{ old('product_type', $product->product_type) == 'external_link' ? 'selected' : '' }}>Produk Digital / Link Access</option>
                                     <option value="ticket" {{ old('product_type', $product->product_type) == 'ticket' ? 'selected' : '' }}>Tiket Event / Wisata / Webinar</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Kategori Utama <span>*</span></label>
+                                <select name="product_category_id" id="catSelect" class="form-input" required onchange="loadSubCat(this.value)">
+                                    <option value="">— Pilih Kategori —</option>
+                                    <optgroup label="--- TIKET & EVENT ---">
+                                        @foreach($categories->where('tab', 'event') as $cat)
+                                            <option value="{{ $cat->id }}" data-tab="{{ $cat->tab }}" {{ old('product_category_id', $product->product_category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                        @endforeach
+                                    </optgroup>
+                                    <optgroup label="--- PRODUK DIGITAL & LAINNYA ---">
+                                        @foreach($categories->where('tab', '!=', 'event') as $cat)
+                                            <option value="{{ $cat->id }}" data-tab="{{ $cat->tab }}" {{ old('product_category_id', $product->product_category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                        @endforeach
+                                    </optgroup>
                                 </select>
                             </div>
 
@@ -639,12 +646,19 @@
     function toggleProductTypeFields(val) {
         const wrap = document.getElementById('ticketFieldsWrap');
         const digitalCard = document.getElementById('digitalAccessCard');
+        const whitelabelCard = document.getElementById('whitelabelCard');
         const extInput = document.getElementById('externalLink');
         const evType = document.getElementById('eventTypeSelect');
+        const wlCheck = document.getElementById('isWhitelabelCheck');
         
         if (val === 'ticket') {
             if (wrap) wrap.style.display = 'block';
             if (digitalCard) digitalCard.style.display = 'none';
+            if (whitelabelCard) whitelabelCard.style.display = 'none';
+            if (wlCheck) {
+                wlCheck.checked = false;
+                toggleWhitelabelFields(false);
+            }
             if (extInput) {
                 extInput.removeAttribute('required');
             }
@@ -652,6 +666,7 @@
         } else {
             if (wrap) wrap.style.display = 'none';
             if (digitalCard) digitalCard.style.display = 'block';
+            if (whitelabelCard) whitelabelCard.style.display = 'block';
             if (extInput) {
                 extInput.setAttribute('required', 'required');
             }

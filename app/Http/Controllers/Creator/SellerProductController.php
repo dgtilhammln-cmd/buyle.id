@@ -43,7 +43,7 @@ class SellerProductController extends Controller
     public function create()
     {
         $groups         = \App\Models\CreatorProductGroup::where('seller_id', auth()->id())->where('is_active', true)->orderBy('order')->get(['id', 'name']);
-        $categories     = ProductCategory::with('subCategories:id,category_id,name')->orderBy('name')->get(['id', 'name']);
+        $categories     = ProductCategory::where('is_active', true)->with('subCategories:id,category_id,name')->orderBy('order', 'asc')->orderBy('name', 'asc')->get(['id', 'name', 'tab']);
         $allowedDomains = DigitalLinkValidator::getAllowedDomains();
 
         return view('creator.products.create', compact('groups', 'categories', 'allowedDomains'));
@@ -74,14 +74,19 @@ class SellerProductController extends Controller
             $data['gallery'] = [];
         }
 
-        // Handle White Label status
-        $data['is_whitelabel'] = $request->boolean('is_whitelabel');
-        $data['whitelabel_approval_status'] = $data['is_whitelabel'] ? 'pending' : 'none';
-
         // Produk type: ticket atau external_link
         $data['seller_id']    = auth()->id();
         $data['product_type'] = $request->input('product_type') === 'ticket' ? 'ticket' : 'external_link';
         $data['stock']        = $data['stock'] ?? 0;
+
+        // Handle White Label status (hanya untuk produk non-tiket)
+        if ($data['product_type'] === 'ticket') {
+            $data['is_whitelabel'] = false;
+            $data['whitelabel_approval_status'] = 'none';
+        } else {
+            $data['is_whitelabel'] = $request->boolean('is_whitelabel');
+            $data['whitelabel_approval_status'] = $data['is_whitelabel'] ? 'pending' : 'none';
+        }
         
         // Generate unique slug
         $slug = Str::slug($data['name']);
@@ -124,7 +129,7 @@ class SellerProductController extends Controller
     {
         $this->authorizeProduct($product);
         $groups         = \App\Models\CreatorProductGroup::where('seller_id', auth()->id())->where('is_active', true)->orderBy('order')->get(['id', 'name']);
-        $categories     = ProductCategory::with('subCategories:id,category_id,name')->orderBy('name')->get(['id', 'name']);
+        $categories     = ProductCategory::where('is_active', true)->with('subCategories:id,category_id,name')->orderBy('order', 'asc')->orderBy('name', 'asc')->get(['id', 'name', 'tab']);
         $allowedDomains = DigitalLinkValidator::getAllowedDomains();
 
         return view('creator.products.edit', compact('product', 'groups', 'categories', 'allowedDomains'));
@@ -162,17 +167,22 @@ class SellerProductController extends Controller
             $data['gallery'] = $galleryPaths;
         }
 
-        $data['product_type'] = $request->input('product_type') === 'ticket' ? 'ticket' : ($product->product_type === 'ticket' ? 'ticket' : 'external_link');
+        $data['product_type'] = $request->input('product_type') === 'ticket' ? 'ticket' : 'external_link';
         $data['stock']        = $data['stock'] ?? 0;
 
-        $isWhitelabel = $request->boolean('is_whitelabel');
-        $data['is_whitelabel'] = $isWhitelabel;
-        if ($isWhitelabel) {
-            if ($product->whitelabel_approval_status === 'none' || $product->whitelabel_approval_status === 'rejected' || !$product->is_whitelabel) {
-                $data['whitelabel_approval_status'] = 'pending';
-            }
-        } else {
+        if ($data['product_type'] === 'ticket') {
+            $data['is_whitelabel'] = false;
             $data['whitelabel_approval_status'] = 'none';
+        } else {
+            $isWhitelabel = $request->boolean('is_whitelabel');
+            $data['is_whitelabel'] = $isWhitelabel;
+            if ($isWhitelabel) {
+                if ($product->whitelabel_approval_status === 'none' || $product->whitelabel_approval_status === 'rejected' || !$product->is_whitelabel) {
+                    $data['whitelabel_approval_status'] = 'pending';
+                }
+            } else {
+                $data['whitelabel_approval_status'] = 'none';
+            }
         }
 
         $product->update($data);
