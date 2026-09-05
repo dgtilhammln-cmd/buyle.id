@@ -19,10 +19,10 @@ enum OrderStatus: string
     {
         return match($this) {
             self::Pending    => 'Menunggu Pembayaran',
-            self::Confirmed  => 'Pesanan Dikonfirmasi',
+            self::Confirmed  => 'Pesanan Selesai',
             self::Processing => 'Sedang Diproses',
             self::Shipped    => 'Sedang Dikirim',
-            self::Delivered  => 'Pesanan Diterima',
+            self::Delivered  => 'Pesanan Selesai',
             self::Cancelled  => 'Dibatalkan',
             self::Refunded   => 'Dana Dikembalikan',
         };
@@ -34,10 +34,10 @@ enum OrderStatus: string
     public function color(): string
     {
         return match($this) {
-            self::Pending    => 'yellow',
-            self::Confirmed  => 'blue',
-            self::Processing => 'indigo',
-            self::Shipped    => 'purple',
+            self::Pending    => 'green',
+            self::Confirmed  => 'green',
+            self::Processing => 'green',
+            self::Shipped    => 'green',
             self::Delivered  => 'green',
             self::Cancelled  => 'red',
             self::Refunded   => 'gray',

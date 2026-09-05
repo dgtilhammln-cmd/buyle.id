@@ -18,11 +18,11 @@
 .order-card-meta { display:flex; align-items:center; gap:0.75rem; font-size:0.85rem; color:#64748B; }
 .order-card-id { font-weight:700; color:#0F172A; }
 .order-card-status { font-size:0.75rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:6px; text-transform:uppercase; letter-spacing:0.02em; }
-.order-card-status.pending { background:#FEF3C7; color:#D97706; }
-.order-card-status.confirmed { background:#dcfce7; color:#2563EB; }
-.order-card-status.processing { background:#E0E7FF; color:#4F46E5; }
-.order-card-status.shipped { background:#F3E8FF; color:#9333EA; }
-.order-card-status.delivered { background:#DCFCE7; color:#059669; }
+.order-card-status.pending { background:#DCFCE7; color:#15803D; }
+.order-card-status.confirmed { background:#DCFCE7; color:#15803D; }
+.order-card-status.processing { background:#DCFCE7; color:#15803D; }
+.order-card-status.shipped { background:#DCFCE7; color:#15803D; }
+.order-card-status.delivered { background:#DCFCE7; color:#15803D; }
 .order-card-status.cancelled, .order-card-status.refunded { background:#FEE2E2; color:#DC2626; }
 
 .order-card-body { padding:1.25rem; display:flex; align-items:flex-start; justify-content:space-between; gap:1.25rem; flex-wrap:wrap; }
@@ -78,8 +78,8 @@
             @foreach($orders as $order)
                 @php
                     $statusEnum = $order->status->value;
-                    // Group confirmed and processing into 'processing' for the tabs
-                    $tabStatus = in_array($statusEnum, ['confirmed', 'processing']) ? 'processing' : $statusEnum;
+                    // Group confirmed and delivered into 'delivered' (Selesai) for the tabs
+                    $tabStatus = in_array($statusEnum, ['confirmed', 'delivered']) ? 'delivered' : $statusEnum;
                     
                     $firstItem = $order->items->first();
                     $productName = $firstItem && $firstItem->product ? $firstItem->product->name : 'Produk Dihapus';
