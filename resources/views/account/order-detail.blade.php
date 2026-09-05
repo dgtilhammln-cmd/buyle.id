@@ -88,11 +88,10 @@
             <div style="margin-bottom: 2rem;">
                 @foreach($order->items as $item)
                 <div class="od-item">
-                    @if($item->product && !empty($item->product->image))
-                        <img src="{{ $item->product->image_url }}" class="od-item-img" onerror="this.src='https://placehold.co/150x150/f1f5f9/94a3b8?text=No+Image'">
-                    @else
-                        <div class="od-item-img"></div>
-                    @endif
+                    @php
+                        $imgUrl = $item->product ? $item->product->image_url : asset('images/service-default.jpg');
+                    @endphp
+                    <img src="{{ $imgUrl }}" class="od-item-img" alt="{{ $item->product_name }}" onerror="this.src='https://placehold.co/150x150/f1f5f9/94a3b8?text=No+Image'">
                     <div class="od-item-info">
                         <div class="od-item-title">{{ $item->product_name }}</div>
                         <div class="od-item-meta">{{ $item->qty }} x Rp {{ number_format($item->price, 0, ',', '.') }}</div>

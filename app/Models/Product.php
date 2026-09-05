@@ -243,18 +243,28 @@ class Product extends Model
 
     public function getImageUrlAttribute(): string
     {
-        return $this->image ? asset('storage/'.$this->image) : asset('images/service-default.jpg');
+        if (!$this->image) {
+            return asset('images/service-default.jpg');
+        }
+        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+            return $this->image;
+        }
+        return asset('storage/' . ltrim($this->image, '/'));
     }
     public function getOgImageUrlAttribute(): string
     {
-        return $this->og_image ? asset('storage/'.$this->og_image) : $this->image_url;
+        return $this->og_image ? (str_starts_with($this->og_image, 'http') ? $this->og_image : asset('storage/'.ltrim($this->og_image, '/'))) : $this->image_url;
     }
     public function getGalleryUrlsAttribute(): array
     {
         $urls = [];
         if (is_array($this->gallery)) {
             foreach ($this->gallery as $img) {
-                $urls[] = asset('storage/' . $img);
+                if (str_starts_with($img, 'http://') || str_starts_with($img, 'https://')) {
+                    $urls[] = $img;
+                } else {
+                    $urls[] = asset('storage/' . ltrim($img, '/'));
+                }
             }
         }
         return $urls;
