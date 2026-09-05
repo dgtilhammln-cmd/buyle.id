@@ -15,7 +15,10 @@
 .od-body { padding: 1.5rem; }
 .od-title { font-size: 1rem; font-weight: 700; color: var(--c-text); margin: 0; }
 .od-meta { font-size: 0.85rem; color: var(--c-muted); }
-.od-status { font-size: 0.85rem; font-weight: 700; padding: 0.4rem 1rem; border-radius: 999px; }
+.od-status { font-size: 0.75rem; font-weight: 700; padding: 0.35rem 0.75rem; border-radius: 999px; white-space: nowrap; flex-shrink: 0; display: inline-block; }
+@media (max-width: 640px) {
+    .od-status { font-size: 0.7rem; padding: 0.25rem 0.55rem; }
+}
 
 .od-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px dashed var(--c-border); }
 .od-item:last-child { border-bottom: none; padding-bottom: 0; }
@@ -64,8 +67,9 @@
 </style>
 
 <div class="mb-4">
-    <a href="{{ route('account.orders') }}" style="color: var(--c-muted); font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-        &larr; Kembali ke Daftar Pesanan
+    <a href="{{ route('account.orders') }}" style="background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border-radius: 10px; font-weight: 700; font-size: 0.85rem; padding: 0.6rem 1.25rem; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; box-shadow: 0 4px 14px rgba(30,179,73,0.25); transition: all 0.2s;">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Kembali ke Daftar Pesanan
     </a>
 </div>
 
@@ -75,7 +79,7 @@
             <h2 class="od-title">No. Pesanan: #{{ $order->order_number }}</h2>
             <div class="od-meta">{{ $order->created_at->format('d M Y, H:i') }} WIB</div>
         </div>
-        <div class="od-status" style="background-color: {{ $order->status->color() === 'yellow' ? '#FEF3C7' : ($order->status->color() === 'green' ? '#D1FAE5' : ($order->status->color() === 'blue' ? '#dcfce7' : '#F1F5F9')) }}; color: {{ $order->status->color() === 'yellow' ? '#D97706' : ($order->status->color() === 'green' ? '#059669' : ($order->status->color() === 'blue' ? '#2563EB' : '#475569')) }}; border: 1px solid currentColor;">
+        <div class="od-status" style="background-color: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0;">
             {{ $order->status->label() }}
         </div>
     </div>

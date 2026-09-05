@@ -17,7 +17,10 @@
 .order-card-header { padding:1rem 1.25rem; border-bottom:1px solid #F1F5F9; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
 .order-card-meta { display:flex; align-items:center; gap:0.75rem; font-size:0.85rem; color:#64748B; }
 .order-card-id { font-weight:700; color:#0F172A; }
-.order-card-status { font-size:0.75rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:6px; text-transform:uppercase; letter-spacing:0.02em; }
+.order-card-status { font-size:0.75rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:6px; text-transform:uppercase; letter-spacing:0.02em; white-space:nowrap; flex-shrink:0; display:inline-block; }
+@media (max-width: 640px) {
+    .order-card-status { font-size:0.7rem; padding:0.25rem 0.55rem; }
+}
 .order-card-status.pending { background:#DCFCE7; color:#15803D; }
 .order-card-status.confirmed { background:#DCFCE7; color:#15803D; }
 .order-card-status.processing { background:#DCFCE7; color:#15803D; }
