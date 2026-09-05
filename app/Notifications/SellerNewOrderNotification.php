@@ -51,24 +51,22 @@ class SellerNewOrderNotification extends Notification
             </div>
         </div>';
 
-        $bodyHtml = view('emails.layout', [
-            'subject'   => "Pesanan Baru Masuk #{$orderNumber} | buyle.id",
-            'badgeText' => 'PESANAN MASUK',
-            'title'     => 'Pesanan Baru Berhasil Diterima',
-            'subtitle'  => "Nomor Pesanan: #{$orderNumber}",
-            'content'   => "
-                <p>Halo <strong>{$sellerName}</strong>,</p>
-                <p>Selamat! Pembeli telah menyelesaikan pembayaran untuk pesanan <strong>#{$orderNumber}</strong>.</p>
-                {$itemsHtml}
-                <p>Silakan periksa dan kelola detail transaksi ini melalui dashboard creator Anda.</p>
-            ",
-            'ctaUrl'    => route('creator.orders.index'),
-            'ctaText'   => 'Lihat Pesanan di Dashboard Creator',
-            'footerNote' => 'Notifikasi ini dikirimkan secara otomatis saat pembayaran transaksi berhasil dikonfirmasi oleh sistem.',
-        ])->render();
-
         return (new MailMessage)
             ->subject("Pesanan Baru Masuk #{$orderNumber} | buyle.id")
-            ->html($bodyHtml);
+            ->view('emails.layout', [
+                'subject'   => "Pesanan Baru Masuk #{$orderNumber} | buyle.id",
+                'badgeText' => 'PESANAN MASUK',
+                'title'     => 'Pesanan Baru Berhasil Diterima',
+                'subtitle'  => "Nomor Pesanan: #{$orderNumber}",
+                'content'   => "
+                    <p>Halo <strong>{$sellerName}</strong>,</p>
+                    <p>Selamat! Pembeli telah menyelesaikan pembayaran untuk pesanan <strong>#{$orderNumber}</strong>.</p>
+                    {$itemsHtml}
+                    <p>Silakan periksa dan kelola detail transaksi ini melalui dashboard creator Anda.</p>
+                ",
+                'ctaUrl'    => route('creator.orders.index'),
+                'ctaText'   => 'Lihat Pesanan di Dashboard Creator',
+                'footerNote' => 'Notifikasi ini dikirimkan secara otomatis saat pembayaran transaksi berhasil dikonfirmasi oleh sistem.',
+            ]);
     }
 }

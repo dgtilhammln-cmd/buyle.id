@@ -62,27 +62,25 @@ class OrderPaidNotification extends Notification
                 </div>';
         }
 
-        $bodyHtml = view('emails.layout', [
-            'subject'          => "Pembayaran Berhasil #{$orderNumber} | buyle.id",
-            'badgeText'        => 'PEMBAYARAN SUCCESS',
-            'title'            => 'Pembayaran Anda Berhasil Diterima',
-            'subtitle'         => "Nomor Transaksi: #{$orderNumber}",
-            'content'          => "
-                <p>Halo <strong>{$buyerName}</strong>,</p>
-                <p>Terima kasih atas pembelian Anda di <strong>buyle.id</strong>. Pembayaran untuk transaksi <strong>#{$orderNumber}</strong> telah dikonfirmasi.</p>
-                {$itemsHtml}
-                {$accountNotice}
-                <p style='margin-top: 20px;'>Klik tombol di bawah ini untuk mengakses atau mengunduh produk digital Anda:</p>
-            ",
-            'ctaUrl'           => route('buyer.orders.show', $this->order->id),
-            'ctaText'          => 'Akses Produk Digital Sekarang',
-            'secondaryCtaUrl'  => $this->isNewAccount ? $this->magicLoginUrl : route('buyer.orders.index'),
-            'secondaryCtaText' => $this->isNewAccount ? 'Masuk ke Dashboard Pembeli (Instan)' : 'Lihat Riwayat Pesanan',
-            'footerNote'       => 'Jika Anda memiliki pertanyaan seputar produk atau akses lisensi, Anda dapat membalas email ini secara langsung.',
-        ])->render();
-
         return (new MailMessage)
             ->subject("Pembayaran Berhasil #{$orderNumber} | buyle.id")
-            ->html($bodyHtml);
+            ->view('emails.layout', [
+                'subject'          => "Pembayaran Berhasil #{$orderNumber} | buyle.id",
+                'badgeText'        => 'PEMBAYARAN SUCCESS',
+                'title'            => 'Pembayaran Anda Berhasil Diterima',
+                'subtitle'         => "Nomor Transaksi: #{$orderNumber}",
+                'content'          => "
+                    <p>Halo <strong>{$buyerName}</strong>,</p>
+                    <p>Terima kasih atas pembelian Anda di <strong>buyle.id</strong>. Pembayaran untuk transaksi <strong>#{$orderNumber}</strong> telah dikonfirmasi.</p>
+                    {$itemsHtml}
+                    {$accountNotice}
+                    <p style='margin-top: 20px;'>Klik tombol di bawah ini untuk mengakses atau mengunduh produk digital Anda:</p>
+                ",
+                'ctaUrl'           => route('buyer.orders.show', $this->order->id),
+                'ctaText'          => 'Akses Produk Digital Sekarang',
+                'secondaryCtaUrl'  => $this->isNewAccount ? $this->magicLoginUrl : route('buyer.orders.index'),
+                'secondaryCtaText' => $this->isNewAccount ? 'Masuk ke Dashboard Pembeli (Instan)' : 'Lihat Riwayat Pesanan',
+                'footerNote'       => 'Jika Anda memiliki pertanyaan seputar produk atau akses lisensi, Anda dapat membalas email ini secara langsung.',
+            ]);
     }
 }

@@ -27,23 +27,21 @@ class ResetPasswordNotification extends Notification
 
         $name = $notifiable->name ?? 'Pengguna';
 
-        $bodyHtml = view('emails.layout', [
-            'subject'     => 'Reset Kata Sandi Anda - buyle.id',
-            'badgeText'   => 'KEAMANAN AKUN',
-            'title'       => 'Reset Kata Sandi',
-            'subtitle'    => 'Permintaan perubahan kata sandi akun buyle.id',
-            'content'     => "
-                <p>Halo <strong>{$name}</strong>,</p>
-                <p>Kami menerima permintaan untuk mengatur ulang kata sandi akun buyle.id yang terhubung dengan email ini.</p>
-                <p>Silakan klik tombol hijau di bawah ini untuk melanjutkan pembuatan kata sandi baru:</p>
-            ",
-            'ctaUrl'      => $resetUrl,
-            'ctaText'     => 'Reset Kata Sandi Sekarang',
-            'footerNote'  => 'Tautan reset ini berlaku selama <strong>60 menit</strong>. Jika Anda tidak merasa meminta ini, Anda dapat mengabaikan email ini dengan aman.',
-        ])->render();
-
         return (new MailMessage)
             ->subject('Reset Kata Sandi Anda - buyle.id')
-            ->html($bodyHtml);
+            ->view('emails.layout', [
+                'subject'     => 'Reset Kata Sandi Anda - buyle.id',
+                'badgeText'   => 'KEAMANAN AKUN',
+                'title'       => 'Reset Kata Sandi',
+                'subtitle'    => 'Permintaan perubahan kata sandi akun buyle.id',
+                'content'     => "
+                    <p>Halo <strong>{$name}</strong>,</p>
+                    <p>Kami menerima permintaan untuk mengatur ulang kata sandi akun buyle.id yang terhubung dengan email ini.</p>
+                    <p>Silakan klik tombol hijau di bawah ini untuk melanjutkan pembuatan kata sandi baru:</p>
+                ",
+                'ctaUrl'      => $resetUrl,
+                'ctaText'     => 'Reset Kata Sandi Sekarang',
+                'footerNote'  => 'Tautan reset ini berlaku selama <strong>60 menit</strong>. Jika Anda tidak merasa meminta ini, Anda dapat mengabaikan email ini dengan aman.',
+            ]);
     }
 }
