@@ -24,12 +24,13 @@ class MailConfigService
             $mailer     = Setting::get('mail_mailer', env('MAIL_MAILER', 'smtp'));
 
             Config::set('mail.default', $mailer);
+            Config::set('mail.mailers.smtp.transport', 'smtp');
             Config::set('mail.mailers.smtp.host', $host);
             Config::set('mail.mailers.smtp.port', $port);
             Config::set('mail.mailers.smtp.username', $username);
             Config::set('mail.mailers.smtp.password', $password);
             
-            if ($encryption === 'ssl') {
+            if ($encryption === 'ssl' || $port == 465) {
                 Config::set('mail.mailers.smtp.scheme', 'smtps');
                 Config::set('mail.mailers.smtp.encryption', 'ssl');
             } else {
@@ -37,16 +38,24 @@ class MailConfigService
                 Config::set('mail.mailers.smtp.encryption', $encryption);
             }
 
-            Config::set('mail.mailers.smtp.stream', [
-                'ssl' => [
-                    'allow_self_signed' => true,
-                    'verify_peer'       => false,
-                    'verify_peer_name'  => false,
-                ],
-            ]);
+            $sslOptions = [
+                'allow_self_signed' => true,
+                'verify_peer'       => false,
+                'verify_peer_name'  => false,
+            ];
+
+            Config::set('mail.mailers.smtp.stream', ['ssl' => $sslOptions]);
+            Config::set('mail.mailers.smtp.context', ['ssl' => $sslOptions]);
 
             Config::set('mail.from.address', $fromAddr ?: $username);
             Config::set('mail.from.name', $fromName);
+
+            // Purge cached mailer instance so new dynamic config takes effect immediately
+            if (class_exists(\Illuminate\Support\Facades\Mail::class)) {
+                try {
+                    \Illuminate\Support\Facades\Mail::purge();
+                } catch (\Throwable $t) {}
+            }
         } catch (\Throwable $e) {
             Log::warning('MailConfigService apply failed: ' . $e->getMessage());
         }
