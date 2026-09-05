@@ -48,13 +48,15 @@
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d M Y') }}</td>
                             <td style="font-weight:700;">Rp {{ number_format($order->total, 0, ',', '.') }}</td>
                             <td>
-                                @php $s = $order->status->value ?? $order->status; @endphp
-                                <span class="order-badge badge-{{ $s }}">
-                                    {{ match($s) {
-                                        'pending'    => 'Menunggu',
-                                        'processing' => 'Diproses',
-                                        'shipped'    => 'Dikirim',
-                                        'completed'  => 'Selesai',
+                                @php $s = is_object($order->status) ? $order->status->value : $order->status; @endphp
+                                <span class="order-badge badge-{{ $s }}" style="background:#DCFCE7; color:#15803D; font-weight:700; padding:0.3rem 0.65rem; border-radius:6px; font-size:0.75rem;">
+                                    {{ is_object($order->status) ? $order->status->label() : match($s) {
+                                        'pending'    => 'Menunggu Pembayaran',
+                                        'confirmed'  => 'Pesanan Selesai',
+                                        'processing' => 'Sedang Diproses',
+                                        'shipped'    => 'Sedang Dikirim',
+                                        'delivered'  => 'Pesanan Selesai',
+                                        'completed'  => 'Pesanan Selesai',
                                         'cancelled'  => 'Dibatalkan',
                                         default      => ucfirst($s),
                                     } }}

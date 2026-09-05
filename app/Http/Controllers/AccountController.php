@@ -18,8 +18,8 @@ class AccountController extends Controller
     {
         $user           = Auth::user();
         $totalOrders    = $user->orders()->count();
-        $activeOrders   = $user->orders()->whereIn('status', ['pending', 'processing', 'shipped'])->count();
-        $totalSpent     = $user->orders()->where('status', '!=', 'cancelled')->sum('total');
+        $activeOrders   = $user->orders()->whereIn('status', ['processing', 'shipped'])->count();
+        $totalSpent     = $user->orders()->whereIn('status', ['confirmed', 'processing', 'shipped', 'delivered'])->sum('total');
         $totalWishlist  = $user->wishlists()->count();
         $recentOrders   = $user->orders()->latest()->limit(5)->get();
 
