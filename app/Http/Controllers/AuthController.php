@@ -263,6 +263,7 @@ class AuthController extends Controller
         );
 
         try {
+            \App\Services\MailConfigService::apply();
             $user->notify(new \App\Notifications\ResetPasswordNotification($token, $user->email));
         } catch (\Throwable $e) {
             \Log::error('ResetPasswordNotification error: ' . $e->getMessage());
