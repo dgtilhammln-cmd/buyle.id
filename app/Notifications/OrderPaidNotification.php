@@ -3,15 +3,11 @@
 namespace App\Notifications;
 
 use App\Models\Order;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class OrderPaidNotification extends Notification implements ShouldQueue
+class OrderPaidNotification extends Notification
 {
-    use Queueable;
-
     public function __construct(
         protected Order $order,
         protected string $magicLoginUrl,
@@ -26,37 +22,67 @@ class OrderPaidNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         $orderNumber = $this->order->order_number;
+        $totalFormatted = 'Rp ' . number_format($this->order->total_price, 0, ',', '.');
+        $buyerName = $notifiable->name ?? 'Pembeli';
 
-        $mail = (new MailMessage)
-            ->subject("✅ Pembayaran Berhasil — {$orderNumber} | buyle.id")
-            ->greeting("Halo, {$notifiable->name}!")
-            ->line("Pembayaran untuk pesanan **{$orderNumber}** telah kami terima. Terima kasih sudah berbelanja di buyle.id!");
+        // Render item list table
+        $itemsHtml = '
+        <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin: 20px 0;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="font-size: 14px; color: #334155;">
+                <thead>
+                    <tr style="border-bottom: 1px solid #CBD5E1; text-align: left;">
+                        <th style="padding-bottom: 8px; font-weight: 700; color: #0F172A;">Rincian Produk</th>
+                        <th style="padding-bottom: 8px; font-weight: 700; color: #0F172A; text-align: center;">Jumlah</th>
+                    </tr>
+                </thead>
+                <tbody>';
 
-        // Tampilkan daftar produk yang dibeli
         foreach ($this->order->items as $item) {
-            $mail->line("• **{$item->product_name}** × {$item->qty}");
+            $itemsHtml .= '
+                    <tr>
+                        <td style="padding: 8px 0; border-top: 1px solid #F1F5F9; font-weight: 600; color: #1E293B;">' . htmlspecialchars($item->product_name) . '</td>
+                        <td style="padding: 8px 0; border-top: 1px solid #F1F5F9; text-align: center; color: #64748B;">' . $item->qty . 'x</td>
+                    </tr>';
         }
 
-        $mail->line('---');
+        $itemsHtml .= '
+                </tbody>
+            </table>
+            <div style="border-top: 2px solid #E2E8F0; margin-top: 12px; padding-top: 12px; font-size: 15px; font-weight: 800; color: #0F172A; text-align: right;">
+                Total Dibayar: <span style="color: #10B981;">' . $totalFormatted . '</span>
+            </div>
+        </div>';
 
-        // Tombol akses produk digital
-        $mail->action('🚀 Akses Produk Sekarang', route('buyer.orders.show', $this->order->id));
-
+        $accountNotice = '';
         if ($this->isNewAccount) {
-            $mail->line('---')
-                 ->line('💡 **Akun buyle.id Anda telah dibuat secara otomatis** menggunakan email ini.')
-                 ->line('Gunakan tautan di bawah untuk masuk ke Buyer Dashboard Anda — tanpa perlu password!')
-                 ->action('🔑 Masuk ke Dashboard Saya', $this->magicLoginUrl)
-                 ->line('Tautan login ini hanya berlaku selama **24 jam**.');
-        } else {
-            $mail->line('Anda dapat mengakses riwayat pembelian di Buyer Dashboard.');
-            $mail->action('📦 Lihat Riwayat Pesanan', route('buyer.orders.index'));
+            $accountNotice = '
+                <div style="background-color: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 10px; padding: 14px 16px; margin-top: 16px; font-size: 13px; color: #166534;">
+                    <strong>Akun buyle.id Otomatis Dibuat:</strong><br>
+                    Akun Anda telah dikonfigurasi menggunakan alamat email ini. Anda dapat masuk langsung ke Dashboard Pembeli tanpa memerlukan kata sandi.
+                </div>';
         }
 
-        $mail->line('---')
-             ->line('Jika ada pertanyaan, hubungi kami via WhatsApp atau balas email ini.')
-             ->salutation('Salam hangat, Tim buyle.id 🙌');
+        $bodyHtml = view('emails.layout', [
+            'subject'          => "Pembayaran Berhasil #{$orderNumber} | buyle.id",
+            'badgeText'        => 'PEMBAYARAN SUCCESS',
+            'title'            => 'Pembayaran Anda Berhasil Diterima',
+            'subtitle'         => "Nomor Transaksi: #{$orderNumber}",
+            'content'          => "
+                <p>Halo <strong>{$buyerName}</strong>,</p>
+                <p>Terima kasih atas pembelian Anda di <strong>buyle.id</strong>. Pembayaran untuk transaksi <strong>#{$orderNumber}</strong> telah dikonfirmasi.</p>
+                {$itemsHtml}
+                {$accountNotice}
+                <p style='margin-top: 20px;'>Klik tombol di bawah ini untuk mengakses atau mengunduh produk digital Anda:</p>
+            ",
+            'ctaUrl'           => route('buyer.orders.show', $this->order->id),
+            'ctaText'          => 'Akses Produk Digital Sekarang',
+            'secondaryCtaUrl'  => $this->isNewAccount ? $this->magicLoginUrl : route('buyer.orders.index'),
+            'secondaryCtaText' => $this->isNewAccount ? 'Masuk ke Dashboard Pembeli (Instan)' : 'Lihat Riwayat Pesanan',
+            'footerNote'       => 'Jika Anda memiliki pertanyaan seputar produk atau akses lisensi, Anda dapat membalas email ini secara langsung.',
+        ])->render();
 
-        return $mail;
+        return (new MailMessage)
+            ->subject("Pembayaran Berhasil #{$orderNumber} | buyle.id")
+            ->html($bodyHtml);
     }
 }

@@ -152,14 +152,30 @@ class AdminSettingsController extends Controller
             $targetEmail = $request->test_email;
             $fromName    = config('mail.from.name', 'buyle.id');
 
-            \Illuminate\Support\Facades\Mail::raw("Halo!\n\nIni adalah email pengujian konfigurasi SMTP dari {$fromName}.\n\nJika Anda menerima pesan ini, artinya pengiriman email (SMTP Hostinger) di buyle.id sudah AKTIF dan BERHASIL terhubung tanpa kendala! 🎉\n\nWaktu Tes: " . now()->format('Y-m-d H:i:s T'), function ($message) use ($targetEmail, $fromName) {
+            $html = view('emails.layout', [
+                'subject'   => "Tes Koneksi SMTP Email | {$fromName}",
+                'badgeText' => 'UJI COBA SMTP',
+                'title'     => 'Tes Uji Coba Konfigurasi Email',
+                'subtitle'  => 'Konfigurasi SMTP Hostinger berhasil terhubung dengan sempurna',
+                'content'   => "
+                    <p>Halo,</p>
+                    <p>Pesan ini dikirimkan untuk menguji konfigurasi email SMTP pada platform <strong>{$fromName}</strong>.</p>
+                    <p>Jika Anda menerima email ini, artinya integrasi SMTP Hostinger (Port 465 SSL) pada website Anda telah aktif secara penuh dan siap mengirimkan notifikasi ke seluruh pengguna.</p>
+                    <p style='margin-top: 16px; font-size: 13px; color: #64748B;'>Waktu Pengiriman: " . now()->format('Y-m-d H:i:s T') . "</p>
+                ",
+                'ctaUrl'    => url('/'),
+                'ctaText'   => 'Buka Platform buyle.id',
+                'footerNote' => 'Ini adalah pesan otomatis dari sistem untuk pengujian konektivitas server email.',
+            ])->render();
+
+            \Illuminate\Support\Facades\Mail::html($html, function ($message) use ($targetEmail, $fromName) {
                 $message->to($targetEmail)
-                        ->subject("✅ Tes Koneksi SMTP Email — {$fromName}");
+                        ->subject("Tes Koneksi SMTP Email | {$fromName}");
             });
 
-            return back()->with('success', "✅ Tes Koneksi Berhasil! Email pengujian telah sukses dikirim ke: {$targetEmail}");
+            return back()->with('success', "Tes Koneksi Berhasil! Email pengujian telah sukses dikirim ke: {$targetEmail}");
         } catch (\Throwable $e) {
-            return back()->with('error', "❌ Gagal Mengirim Email: " . $e->getMessage());
+            return back()->with('error', "Gagal Mengirim Email: " . $e->getMessage());
         }
     }
 
