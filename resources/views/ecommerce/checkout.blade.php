@@ -132,18 +132,20 @@ label:focus{outline:none !important;box-shadow:none !important;}
                     <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
                         <div style="flex:1; min-width:240px;">
                             <div style="display:inline-flex; align-items:center; gap:6px; background:#DCFCE7; color:#15803D; font-size:0.75rem; font-weight:800; padding:0.25rem 0.65rem; border-radius:99px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.6rem;">
-                                ⚡ Opsional (Bisa Tanpa Akun)
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                Opsional (Bisa Tanpa Akun)
                             </div>
-                            <h3 style="font-size:1.05rem; font-weight:800; color:#0F172A; margin:0 0 0.35rem; font-family:var(--font);">
-                                Punya Akun buyle.id? Login Biar Makin Untung! 🎁
+                            <h3 style="font-size:1.05rem; font-weight:800; color:#0F172A; margin:0 0 0.35rem; font-family:var(--font); display:flex; align-items:center; gap:0.4rem;">
+                                Punya Akun buyle.id? Login Biar Makin Untung!
+                                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M20 12v10H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
                             </h3>
                             <p style="font-size:0.83rem; color:#475569; line-height:1.5; margin:0 0 0.75rem;">
                                 Beli pakai akun bikin file digital kamu <strong>tersimpan selamanya di Dashboard</strong> (akses 24/7 tanpa takut link email hilang) + kumpulin poin reward!
                             </p>
                             <div style="display:flex; align-items:center; gap:1rem; font-size:0.78rem; font-weight:600; color:#166534; flex-wrap:wrap;">
-                                <span>✓ Simpan Akses 24/7</span>
-                                <span>✓ Bebas Ketik Ulang</span>
-                                <span>✓ Promo Eksklusif</span>
+                                <span style="display:inline-flex; align-items:center; gap:4px;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Simpan Akses 24/7</span>
+                                <span style="display:inline-flex; align-items:center; gap:4px;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Bebas Ketik Ulang</span>
+                                <span style="display:inline-flex; align-items:center; gap:4px;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Promo Eksklusif</span>
                             </div>
                         </div>
                         <div style="display:flex; flex-direction:column; gap:0.4rem; width:100%; max-width:180px; align-self:center;">
@@ -151,7 +153,10 @@ label:focus{outline:none !important;box-shadow:none !important;}
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                                 Masuk / Buat Akun
                             </a>
-                            <span style="font-size:0.72rem; color:#64748B; text-align:center; font-weight:500;">atau isi form cepat di bawah 👇</span>
+                            <span style="font-size:0.72rem; color:#64748B; text-align:center; font-weight:500; display:inline-flex; align-items:center; justify-content:center; gap:3px;">
+                                atau isi form cepat di bawah
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -165,9 +170,11 @@ label:focus{outline:none !important;box-shadow:none !important;}
 
                     {{-- Panduan & Double Check Alert --}}
                     <div style="background:#FFFBEB; border:1px dashed #F59E0B; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1.25rem; display:flex; align-items:flex-start; gap:0.75rem;">
-                        <div style="background:#F59E0B; color:#fff; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:800; font-size:0.8rem; margin-top:2px;">!</div>
+                        <div style="background:#F59E0B; color:#fff; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        </div>
                         <div style="font-size:0.82rem; color:#78350F; line-height:1.45;">
-                            <strong>Double Check Kontak Kamu Ya! 🎯</strong><br>
+                            <strong>Double Check Kontak Kamu Ya!</strong><br>
                             Pastikan <strong>Email & No. WhatsApp aktif</strong> dan bebas dari salah ketik. Link akses / file digital kamu akan <u>langsung dikirimkan otomatis</u> ke kontak ini setelah bayar.
                         </div>
                     </div>
