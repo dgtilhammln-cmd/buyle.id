@@ -31,7 +31,6 @@ class ResetPasswordNotification extends Notification
             ->subject('Yuk Reset Kata Sandi Kamu | buyle.id')
             ->view('emails.layout', [
                 'subject'     => 'Yuk Reset Kata Sandi Kamu | buyle.id',
-                'badgeText'   => 'KEAMANAN AKUN',
                 'title'       => 'Yuk Atur Kata Sandi Baru Kamu',
                 'subtitle'    => 'Minta reset kata sandi? Tenang, kamu bisa buat yang baru di sini',
                 'content'     => "

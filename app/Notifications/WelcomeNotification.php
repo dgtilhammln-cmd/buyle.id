@@ -21,14 +21,13 @@ class WelcomeNotification extends Notification
             ->subject('Selamat Datang di buyle.id! Yuk Mulai Eksplor')
             ->view('emails.layout', [
                 'subject'   => 'Selamat Datang di buyle.id! Yuk Mulai Eksplor',
-                'badgeText' => 'WELCOME ABOARD',
                 'title'     => 'Selamat Datang di buyle.id!',
-                'subtitle'  => 'Akun kamu sudah siap 100% buat belanja dan berkreasi',
+                'subtitle'  => 'Akun kamu sudah aktif di Digital Creator Platform-nya Indonesia',
                 'content'   => "
                     <p>Halo <strong>{$name}</strong>,</p>
                     <p>Senang banget kamu resmi jadi bagian dari <strong>buyle.id</strong>!</p>
-                    <p>Sekarang akun kamu sudah aktif sepenuhnya. Kamu bisa langsung nyari produk digital favorit, layanan keren, atau mulai buka toko creator kamu sendiri dalam hitungan menit.</p>
-                    <p style='margin-top: 16px;'>Yuk klik tombol di bawah buat mulai petualangan kamu:</p>
+                    <p>Kamu sekarang punya akses penuh ke platform kreator digital Indonesia - dari beli produk creator favorit, bikin Link in Bio, sampai support kreator lewat fitur Traktir.</p>
+                    <p style='margin-top: 16px;'>Yuk klik tombol di bawah buat mulai eksplor:</p>
                 ",
                 'ctaUrl'    => url('/'),
                 'ctaText'   => 'Mulai Eksplor buyle.id Now',
