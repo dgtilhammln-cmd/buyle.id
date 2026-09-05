@@ -5,13 +5,21 @@ $app = require_once __DIR__ . '/../bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 
+use App\Models\Setting;
 use App\Services\MailConfigService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
 
-echo "--- Testing MailConfigService ---\n";
+// Set DB settings to port 465 SSL
+Setting::set('mail_host', 'smtp.hostinger.com');
+Setting::set('mail_port', '465');
+Setting::set('mail_username', 'hai@buyle.id');
+Setting::set('mail_password', '#Ilhammaulana23');
+Setting::set('mail_encryption', 'ssl');
+
 MailConfigService::apply();
 
+echo "--- Testing MailConfigService Port 465 SSL ---\n";
 echo "Default Mailer: " . Config::get('mail.default') . "\n";
 echo "Host: " . Config::get('mail.mailers.smtp.host') . "\n";
 echo "Port: " . Config::get('mail.mailers.smtp.port') . "\n";
@@ -20,12 +28,11 @@ echo "Scheme: " . Config::get('mail.mailers.smtp.scheme') . "\n";
 echo "Encryption: " . Config::get('mail.mailers.smtp.encryption') . "\n";
 
 try {
-    Mail::purge();
-    Mail::raw("Tes Email dari Buyle.id via Hostinger SMTP", function ($message) {
+    Mail::raw("Tes Email dari Buyle.id via Hostinger SMTP (Port 465 SSL)", function ($message) {
         $message->to("dgtilhammln@gmail.com")
-                ->subject("Tes Email SMTP Hostinger");
+                ->subject("✅ Tes Email SMTP Hostinger Port 465");
     });
-    echo "\nSUCCESS: Email sent successfully!\n";
+    echo "\nSUCCESS: Email sent successfully via Port 465 SSL!\n";
 } catch (\Throwable $e) {
     echo "\nERROR: " . $e->getMessage() . "\n";
     echo "Trace:\n" . $e->getTraceAsString() . "\n";
