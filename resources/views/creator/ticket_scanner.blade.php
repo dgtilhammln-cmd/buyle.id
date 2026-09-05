@@ -966,50 +966,95 @@
     function initCamera(facingMode) {
         const config = { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1 };
 
-        if (html5QrCode) {
-            // Safe stop: ignore errors if already stopped
-            const stopPromise = html5QrCode.isScanning ? html5QrCode.stop() : Promise.resolve();
-            stopPromise.catch(() => {}).finally(() => {
-                // Small delay to let the camera fully release
-                setTimeout(() => startCameraStream(facingMode, config), 300);
-            });
-        } else {
-            html5QrCode = new Html5Qrcode("reader");
-            startCameraStream(facingMode, config);
-        }
-    }
+        const doStart = () => {
+            // Always enumerate cameras first — this works on desktop (webcam) AND mobile (front/back)
+            Html5Qrcode.getCameras().then(cameras => {
+                if (!cameras || cameras.length === 0) {
+                    showCameraError('Tidak ada kamera yang ditemukan di perangkat ini.');
+                    isCameraSwitching = false;
+                    return;
+                }
 
-    function startCameraStream(facingMode, config) {
-        html5QrCode.start({ facingMode: facingMode }, config, onScanSuccess, onScanFailure)
-            .catch(err => {
-                // Fallback: enumerate cameras and pick by index
-                Html5Qrcode.getCameras().then(cameras => {
-                    if (cameras && cameras.length > 0) {
-                        let selectedId = cameras[0].id;
-                        // For 'environment' (back camera), try last entry which is usually the back
-                        if (facingMode === 'environment' && cameras.length > 1) {
-                            selectedId = cameras[cameras.length - 1].id;
-                        }
-                        html5QrCode.start(selectedId, config, onScanSuccess, onScanFailure)
-                            .catch(e2 => console.warn('Camera start failed:', e2));
+                // Pick camera: 1 camera = just use it; 2+ cameras = try to pick by facing
+                let cameraId = cameras[0].id;
+                if (cameras.length > 1) {
+                    if (facingMode === 'environment') {
+                        // Back camera is usually the last in the list on mobile
+                        cameraId = cameras[cameras.length - 1].id;
                     } else {
-                        showCameraError();
+                        // Front camera is usually the first
+                        cameraId = cameras[0].id;
                     }
-                }).catch(() => showCameraError());
-            })
-            .finally(() => {
+                }
+
+                // Recreate Html5Qrcode instance for clean start (avoids bad state from previous failed start)
+                if (html5QrCode) {
+                    try { html5QrCode.clear(); } catch(e) {}
+                }
+                html5QrCode = new Html5Qrcode("reader");
+
+                html5QrCode.start(cameraId, config, onScanSuccess, onScanFailure)
+                    .then(() => {
+                        isCameraSwitching = false;
+                    })
+                    .catch(err => {
+                        console.warn('[Scanner] Camera start by ID failed:', err);
+                        // Last resort: try facingMode constraint (works on some mobile browsers)
+                        html5QrCode = new Html5Qrcode("reader");
+                        html5QrCode.start({ facingMode: facingMode }, config, onScanSuccess, onScanFailure)
+                            .then(() => { isCameraSwitching = false; })
+                            .catch(e2 => {
+                                console.error('[Scanner] All camera start methods failed:', e2);
+                                showCameraError('Kamera tidak dapat diakses. Pastikan izin kamera diberikan di browser Anda.');
+                                isCameraSwitching = false;
+                            });
+                    });
+            }).catch(err => {
+                console.error('[Scanner] getCameras failed:', err);
+                showCameraError('Gagal mendeteksi kamera. Pastikan izin kamera sudah diberikan.');
                 isCameraSwitching = false;
             });
+        };
+
+        // Stop active stream first (if any), then restart
+        if (html5QrCode) {
+            const stopFn = () => setTimeout(doStart, 350);
+            try {
+                // html5QrCode.stop() throws if not scanning — catch it gracefully
+                const maybePromise = html5QrCode.stop();
+                if (maybePromise && typeof maybePromise.then === 'function') {
+                    maybePromise.catch(() => {}).finally(stopFn);
+                } else {
+                    stopFn();
+                }
+            } catch (e) {
+                stopFn();
+            }
+        } else {
+            doStart();
+        }
     }
 
-    function showCameraError() {
+    function showCameraError(msg) {
+        isCameraSwitching = false;
         const reader = document.getElementById('reader');
         if (reader) {
-            reader.innerHTML = `<div style="padding:2rem; text-align:center; color:#991b1b; font-size:0.85rem; font-weight:600;">
-                ⚠️ Kamera tidak dapat diakses.<br>
-                <span style="font-size:0.78rem; color:#64748b; font-weight:400;">Pastikan izin kamera sudah diberikan di browser Anda.</span>
+            reader.innerHTML = `<div style="padding:2.5rem 1rem; text-align:center;">
+                <div style="font-size:2rem; margin-bottom:0.75rem;">📷</div>
+                <div style="font-size:0.88rem; font-weight:700; color:#991b1b; margin-bottom:0.4rem;">Kamera Tidak Dapat Diakses</div>
+                <div style="font-size:0.78rem; color:#64748b; line-height:1.5; margin-bottom:1rem;">${msg || 'Pastikan izin kamera sudah diberikan di browser Anda.'}</div>
+                <button onclick="retryCamera()" style="background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;padding:0.55rem 1.25rem;border-radius:999px;font-size:0.82rem;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(30,179,73,0.3);">
+                    🔄 Coba Lagi
+                </button>
             </div>`;
         }
+    }
+
+    function retryCamera() {
+        const reader = document.getElementById('reader');
+        if (reader) reader.innerHTML = '';
+        html5QrCode = null;
+        initCamera(currentFacingMode);
     }
 
     function toggleCameraFacing() {
