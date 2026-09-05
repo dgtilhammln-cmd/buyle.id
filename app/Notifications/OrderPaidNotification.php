@@ -76,9 +76,9 @@ class OrderPaidNotification extends Notification
                     {$accountNotice}
                     <p style='margin-top: 20px;'>Klik tombol hijau di bawah untuk langsung mengunduh atau mengakses produk digital kamu:</p>
                 ",
-                'ctaUrl'           => route('buyer.orders.show', $this->order->id),
+                'ctaUrl'           => route('account.orders.show', $this->order->id),
                 'ctaText'          => 'Akses Produk Digital Sekarang',
-                'secondaryCtaUrl'  => $this->isNewAccount ? $this->magicLoginUrl : route('buyer.orders.index'),
+                'secondaryCtaUrl'  => $this->isNewAccount ? $this->magicLoginUrl : route('account.orders'),
                 'secondaryCtaText' => $this->isNewAccount ? 'Masuk Instan ke Dashboard Pembeli' : 'Lihat Riwayat Pesanan Saya',
                 'footerNote'       => 'Ada kendala dalam mengunduh atau butuh bantuan lisensi? Balas email ini aja, kami siap bantu sampai tuntas!',
             ]);
