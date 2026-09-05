@@ -158,20 +158,103 @@ body { background: var(--c-bg); font-family: var(--font); }
             </div>
             
             @auth
-                <form action="{{ route('checkout.store') }}" method="POST" style="margin-top: 1rem;">
-                    @csrf
-                    <button type="submit" class="btn-checkout" style="width: 100%; border-radius: 999px; background: linear-gradient(135deg, #1eb349, #a5cf37); border: none; cursor: pointer;">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        Lanjut Checkout
-                    </button>
-                </form>
-            @else
-                <a href="{{ route('checkout.login') }}" class="btn-checkout" style="width: 100%; border-radius: 999px; background: linear-gradient(135deg, #1eb349, #a5cf37); margin-top: 1rem;">
+                <a href="{{ route('checkout.index') }}" class="btn-checkout" style="width: 100%; border-radius: 999px; background: linear-gradient(135deg, #1eb349, #a5cf37); margin-top: 1rem; text-decoration: none;">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    Masuk Akun & Checkout
+                    Lanjut Checkout
                 </a>
+            @else
+                <button type="button" onclick="openCheckoutModal()" class="btn-checkout" style="width: 100%; border-radius: 999px; background: linear-gradient(135deg, #1eb349, #a5cf37); margin-top: 1rem; border: none; cursor: pointer;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    Lanjut Checkout
+                </button>
             @endauth
         </div>
     @endif
 </div>
+
+{{-- CHECKOUT OPTIONS MODAL FOR GUESTS --}}
+<div id="co-modal-overlay" onclick="closeCheckoutModal()" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); z-index:99998; backdrop-filter:blur(4px); opacity:0; transition:opacity 0.3s ease;"></div>
+
+<div id="co-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -45%); width:92%; max-width:440px; z-index:99999; background:#ffffff; border-radius:24px; padding:1.5rem; opacity:0; transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1); box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); font-family:var(--font);">
+    
+    {{-- Header --}}
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
+        <div style="display:inline-flex; align-items:center; gap:6px; background:#DCFCE7; color:#15803D; font-size:0.75rem; font-weight:800; padding:0.25rem 0.65rem; border-radius:99px; text-transform:uppercase; letter-spacing:0.5px;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Opsi Pembelian
+        </div>
+        <button type="button" onclick="closeCheckoutModal()" style="background:#F1F5F9; border:none; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.9rem; color:#64748B; transition:background 0.2s;">✕</button>
+    </div>
+
+    <h2 style="font-size:1.2rem; font-weight:800; color:#0F172A; margin:0 0 0.5rem; line-height:1.3;">
+        Pilih Cara Checkout Kamu
+    </h2>
+    <p style="font-size:0.83rem; color:#64748B; margin:0 0 1.25rem; line-height:1.5;">
+        Kamu bisa masuk 1-klik dengan Google untuk simpan file digital selamanya, atau langsung checkout tanpa akun!
+    </p>
+
+    {{-- Option 1: Google Auth (Recommended with benefits) --}}
+    <div style="background:linear-gradient(135deg, #F0FDF4, #EFF6FF); border:1.5px solid #86EFAC; border-radius:16px; padding:1.15rem; margin-bottom:1rem; position:relative;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem;">
+            <span style="font-size:0.88rem; font-weight:800; color:#15803D; display:inline-flex; align-items:center; gap:6px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+                Masuk / Buat Akun (Rekomendasi)
+            </span>
+            <span style="background:#1eb349; color:#fff; font-size:0.68rem; font-weight:800; padding:0.15rem 0.5rem; border-radius:99px;">1-KLIK</span>
+        </div>
+        <ul style="list-style:none; padding:0; margin:0 0 1rem; font-size:0.78rem; color:#334155; line-height:1.6;">
+            <li style="display:flex; align-items:center; gap:6px; margin-bottom:0.3rem;">
+                <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                Akses file & link digital tersimpan selamanya 24/7 di Dashboard
+            </li>
+            <li style="display:flex; align-items:center; gap:6px; margin-bottom:0.3rem;">
+                <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                Bebas ketik ulang email & nama setiap belanja
+            </li>
+            <li style="display:flex; align-items:center; gap:6px;">
+                <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                Dapat promo & diskon khusus pembeli setia
+            </li>
+        </ul>
+        <a href="{{ route('auth.google') }}" style="display:flex; align-items:center; justify-content:center; gap:0.6rem; width:100%; background:#ffffff; color:#0F172A; border:1.5px solid #CBD5E1; border-radius:12px; padding:0.75rem; font-weight:700; font-size:0.9rem; text-decoration:none; box-shadow:0 2px 8px rgba(0,0,0,0.06); transition:all 0.2s;" onmouseover="this.style.borderColor='#1eb349'" onmouseout="this.style.borderColor='#CBD5E1'">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+            Lanjutkan dengan Google
+        </a>
+    </div>
+
+    {{-- Option 2: Direct Guest Checkout --}}
+    <div style="text-align:center;">
+        <a href="{{ route('checkout.index') }}" style="display:flex; align-items:center; justify-content:center; gap:0.5rem; width:100%; background:#F8FAFC; color:#475569; border:1px solid #E2E8F0; border-radius:12px; padding:0.75rem; font-weight:700; font-size:0.88rem; text-decoration:none; transition:all 0.2s;" onmouseover="this.style.background='#F1F5F9'" onmouseout="this.style.background='#F8FAFC'">
+            Lanjut Checkout Tanpa Akun
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+    </div>
+</div>
+
+<script>
+function openCheckoutModal() {
+    const overlay = document.getElementById('co-modal-overlay');
+    const modal = document.getElementById('co-modal');
+    if (!overlay || !modal) return;
+    overlay.style.display = 'block';
+    modal.style.display = 'block';
+    setTimeout(() => {
+        overlay.style.opacity = '1';
+        modal.style.opacity = '1';
+        modal.style.transform = 'translate(-50%, -50%)';
+    }, 10);
+}
+function closeCheckoutModal() {
+    const overlay = document.getElementById('co-modal-overlay');
+    const modal = document.getElementById('co-modal');
+    if (!overlay || !modal) return;
+    overlay.style.opacity = '0';
+    modal.style.opacity = '0';
+    modal.style.transform = 'translate(-50%, -45%)';
+    setTimeout(() => {
+        overlay.style.display = 'none';
+        modal.style.display = 'none';
+    }, 300);
+}
+</script>
 @endsection
