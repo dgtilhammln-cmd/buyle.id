@@ -515,6 +515,14 @@ select.form-input { cursor: pointer; }
                 Akun Sosial Media
             </div>
             <div class="prof-card-body">
+                <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <div style="font-size:0.85rem;color:#166534;line-height:1.5;">
+                        <strong style="display:block;margin-bottom:2px;font-size:0.9rem;color:#15803D;">💡 Panduan Tampilan Online Store:</strong>
+                        Disarankan mengisi <strong>maksimal 3 sosial media utama</strong> yang paling sering Anda gunakan (contoh: <em>WhatsApp, Instagram, & TikTok</em>). Ikon sosial media ini akan tampil rapi & elegan di header <strong>Online Store</strong> Anda.
+                    </div>
+                </div>
+
                 <div class="form-grid">
                     {{-- WhatsApp --}}
                     <div class="form-group">
