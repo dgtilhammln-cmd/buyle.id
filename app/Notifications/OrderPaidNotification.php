@@ -22,7 +22,7 @@ class OrderPaidNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $orderNumber = $this->order->order_number;
-        $totalFormatted = 'Rp ' . number_format($this->order->total_price, 0, ',', '.');
+        $totalFormatted = 'Rp ' . number_format($this->order->total, 0, ',', '.');
         $buyerName = $notifiable->name ?? 'Teman buyle.id';
 
         // Render item list table

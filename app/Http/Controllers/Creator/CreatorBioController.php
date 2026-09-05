@@ -174,22 +174,22 @@ class CreatorBioController extends Controller
             $config['bg_type'] = 'image';
         }
 
-        $config['name']     = $request->bio_name     ?? $config['name'] ?? '';
-        $config['bio']      = $request->bio_bio       ?? $config['bio'] ?? '';
-        $config['location'] = $request->bio_location  ?? $config['location'] ?? '';
-        $config['wa']        = $request->bio_wa        ?? $config['wa'] ?? '';
-        $config['ig']        = $request->bio_ig        ?? $config['ig'] ?? '';
-        $config['tiktok']    = $request->bio_tiktok    ?? $config['tiktok'] ?? '';
-        $config['youtube']   = $request->bio_youtube   ?? $config['youtube'] ?? '';
-        $config['facebook']  = $request->bio_facebook  ?? $config['facebook'] ?? '';
-        $config['x']         = $request->bio_x         ?? $config['x'] ?? '';
-        $config['linkedin']  = $request->bio_linkedin   ?? $config['linkedin'] ?? '';
-        $config['pinterest'] = $request->bio_pinterest  ?? $config['pinterest'] ?? '';
-        $config['threads']   = $request->bio_threads    ?? $config['threads'] ?? '';
-        $config['telegram']  = $request->bio_telegram   ?? $config['telegram'] ?? '';
-        $config['discord']   = $request->bio_discord    ?? $config['discord'] ?? '';
-        $config['snapchat']  = $request->bio_snapchat   ?? $config['snapchat'] ?? '';
-        $config['website']   = $request->bio_website    ?? $config['website'] ?? '';
+        $config['name']     = $request->has('bio_name') ? ($request->bio_name ?? '') : ($config['name'] ?? '');
+        $config['bio']      = $request->has('bio_bio') ? ($request->bio_bio ?? '') : ($config['bio'] ?? '');
+        $config['location'] = $request->has('bio_location') ? ($request->bio_location ?? '') : ($config['location'] ?? '');
+        $config['wa']        = $request->has('bio_wa') ? ($request->bio_wa ?? '') : ($config['wa'] ?? '');
+        $config['ig']        = $request->has('bio_ig') ? ($request->bio_ig ?? '') : ($config['ig'] ?? '');
+        $config['tiktok']    = $request->has('bio_tiktok') ? ($request->bio_tiktok ?? '') : ($config['tiktok'] ?? '');
+        $config['youtube']   = $request->has('bio_youtube') ? ($request->bio_youtube ?? '') : ($config['youtube'] ?? '');
+        $config['facebook']  = $request->has('bio_facebook') ? ($request->bio_facebook ?? '') : ($config['facebook'] ?? '');
+        $config['x']         = $request->has('bio_x') ? ($request->bio_x ?? '') : ($config['x'] ?? '');
+        $config['linkedin']  = $request->has('bio_linkedin') ? ($request->bio_linkedin ?? '') : ($config['linkedin'] ?? '');
+        $config['pinterest'] = $request->has('bio_pinterest') ? ($request->bio_pinterest ?? '') : ($config['pinterest'] ?? '');
+        $config['threads']   = $request->has('bio_threads') ? ($request->bio_threads ?? '') : ($config['threads'] ?? '');
+        $config['telegram']  = $request->has('bio_telegram') ? ($request->bio_telegram ?? '') : ($config['telegram'] ?? '');
+        $config['discord']   = $request->has('bio_discord') ? ($request->bio_discord ?? '') : ($config['discord'] ?? '');
+        $config['snapchat']  = $request->has('bio_snapchat') ? ($request->bio_snapchat ?? '') : ($config['snapchat'] ?? '');
+        $config['website']   = $request->has('bio_website') ? ($request->bio_website ?? '') : ($config['website'] ?? '');
 
         if ($request->filled('color_bg')) $config['color_bg'] = $request->color_bg;
         if ($request->filled('color_text')) $config['color_text'] = $request->color_text;
