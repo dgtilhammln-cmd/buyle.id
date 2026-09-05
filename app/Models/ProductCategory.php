@@ -91,11 +91,4 @@ class ProductCategory extends Model
         return asset('images/placeholder-category.webp');
     }
 
-    /**
-     * Route model binding menggunakan slug.
-     */
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
-    }
 }
