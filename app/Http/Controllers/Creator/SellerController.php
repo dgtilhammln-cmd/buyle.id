@@ -38,14 +38,16 @@ class SellerController extends Controller
         }
 
         // ── Platform Fee & Saldo ──────────────────────────────────────────────
-        $platformFeeRate = (float) config('marketplace.platform_fee_rate', 10);
-        $platformFee     = $gmv * ($platformFeeRate / 100);
+        // Model A: fee ditanggung buyer → seller menerima full GMV
+        $platformFeeRate = 5.0; // 5% (hanya untuk display)
+        $platformFee     = 0;   // tidak dipotong dari saldo seller
 
         $totalPayout = PayoutRequest::where('seller_id', $seller->id)
             ->whereIn('status', ['approved', 'processed'])
             ->sum('amount');
 
-        $availableBalance = max(0, ($gmv - $platformFee) - $totalPayout);
+        // Saldo = GMV penuh dikurangi total yang sudah dicairkan
+        $availableBalance = max(0, $gmv - $totalPayout);
 
         // ── Penjualan Terbaru (30 hari) ───────────────────────────────────────
         try {
@@ -98,14 +100,14 @@ class SellerController extends Controller
             $totalTransactions = 0;
         }
 
-        $platformFeeRate = (float) config('marketplace.platform_fee_rate', 10);
-        $platformFee     = $gmv * ($platformFeeRate / 100);
+        $platformFeeRate = 5.0; // 5% (display only)
+        $platformFee     = 0;   // tidak dipotong dari saldo seller
 
         $totalPayout = PayoutRequest::where('seller_id', $seller->id)
             ->whereIn('status', ['approved', 'processed'])
             ->sum('amount');
 
-        $availableBalance = max(0, ($gmv - $platformFee) - $totalPayout);
+        $availableBalance = max(0, $gmv - $totalPayout);
 
         return response()->json([
             'gmv'               => $gmv,

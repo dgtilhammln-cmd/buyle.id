@@ -64,15 +64,18 @@ class CheckoutService
             }
         }
 
-        // Hitung Platform Fee (5% untuk produk bertipe ticket)
+        // Hitung Platform Fee (5% untuk semua produk, ditanggung buyer)
+        $platformFeeRate = 0.05;
         $platformFee = 0;
         foreach ($items as $cartItem) {
-            if ($cartItem->product && $cartItem->product->product_type === 'ticket') {
-                $platformFee += round($cartItem->subtotal * 0.05, 2);
+            if ($cartItem->product) {
+                $platformFee += round($cartItem->subtotal * $platformFeeRate, 2);
             }
         }
+        $platformFee = round($platformFee, 0); // bulatkan ke rupiah
 
-        $total = max(0, $subtotal + $platformFee - $discount);
+        $total = max(0, $subtotal + $platformFee + $shippingCost - $discount);
+
 
         $notes = $data['notes'] ?? null;
 

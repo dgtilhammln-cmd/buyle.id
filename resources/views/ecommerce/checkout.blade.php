@@ -439,6 +439,14 @@ label:focus{outline:none !important;box-shadow:none !important;}
                         <span>Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
                     </div>
 
+                    <div class="summary-row" id="platform-fee-row">
+                        <span style="display:inline-flex;align-items:center;gap:4px;">
+                            Platform Fee (5%)
+                            <span title="Biaya layanan platform buyle.id, ditanggung pembeli" style="cursor:help;font-size:0.75rem;">ⓘ</span>
+                        </span>
+                        <span id="platform-fee-val" style="color:#F59E0B;font-weight:600;">+Rp {{ number_format(round($summary['subtotal'] * 0.05), 0, ',', '.') }}</span>
+                    </div>
+
                     @if($summary['has_physical_product'])
                     <div class="summary-row" id="ongkir-row">
                         <span>Ongkos Kirim</span>
@@ -503,7 +511,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
                     <div class="checkout-sticky-footer" style="margin-top: 1.5rem;">
                         <div class="summary-total" style="margin-top:0; padding-top:1rem;">
                             <span>Total Belanja</span>
-                            <span id="total-row-val">Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
+                            <span id="total-row-val">Rp {{ number_format($summary['subtotal'] + round($summary['subtotal'] * 0.05), 0, ',', '.') }}</span>
                         </div>
                         <button type="submit" class="btn-pay" onclick="prepareSubmit(event)">Pilih Pembayaran</button>
                     </div>
@@ -522,6 +530,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
 <script>
     const subtotal = {{ $summary['subtotal'] }};
     const totalWeight = {{ $summary['total_weight'] > 0 ? $summary['total_weight'] : 100 }};
+    const platformFee = Math.round(subtotal * 0.05); // 5% ditanggung buyer
     
     let selectedCost = 0;
     let allProvinces = [];
@@ -900,7 +909,9 @@ label:focus{outline:none !important;box-shadow:none !important;}
 
         const totalRowVal = document.getElementById('total-row-val');
         if (totalRowVal) {
-            const finalTotal = subtotal + selectedCost;
+            // Grand total = subtotal + platformFee (5%) + ongkir - diskon voucher
+            const discount = (typeof appliedVoucherDiscount !== 'undefined') ? appliedVoucherDiscount : 0;
+            const finalTotal = subtotal + platformFee + selectedCost - discount;
             totalRowVal.innerText = `Rp ${new Intl.NumberFormat('id-ID').format(finalTotal)}`;
         }
     }

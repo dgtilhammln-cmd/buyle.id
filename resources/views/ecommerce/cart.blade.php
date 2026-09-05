@@ -156,14 +156,23 @@ body { background: var(--c-bg); font-family: var(--font); }
         </div>
 
         <div class="cart-sticky-footer">
+            @php $platformFeeCart = round($summary['subtotal'] * 0.05); @endphp
             <div class="footer-row">
                 <span class="footer-row-label">{{ $summary['count'] }} produk dipilih</span>
                 <span class="footer-row-val">Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
             </div>
+            <div class="footer-row">
+                <span class="footer-row-label" style="display:inline-flex;align-items:center;gap:4px;">
+                    Platform Fee (5%)
+                    <span title="Biaya layanan platform buyle.id" style="cursor:help;color:#94A3B8;font-size:0.7rem;">ⓘ</span>
+                </span>
+                <span class="footer-row-val" style="color:#F59E0B;">+Rp {{ number_format($platformFeeCart, 0, ',', '.') }}</span>
+            </div>
             <div class="footer-total-row">
                 <span class="footer-total-label">Total Harga</span>
-                <span class="footer-total-val">Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
+                <span class="footer-total-val">Rp {{ number_format($summary['subtotal'] + $platformFeeCart, 0, ',', '.') }}</span>
             </div>
+
             
             @auth
                 <a href="{{ route('checkout.index') }}" class="btn-checkout" style="width: 100%; border-radius: 999px; background: linear-gradient(135deg, #1eb349, #a5cf37); margin-top: 1rem; text-decoration: none;">

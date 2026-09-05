@@ -18,7 +18,9 @@ class SellerPayoutController extends Controller
         $seller = auth()->user();
 
         // Hitung GMV & Saldo
-        $platformFeeRate = 5; // 5%
+        // Model: Platform fee ditanggung buyer (bukan dipotong dari seller)
+        // Seller menerima full subtotal dari setiap order
+        $platformFeeRate = 5; // 5% (untuk ditampilkan ke seller)
         try {
             $sellerOrders = Order::with(['items' => fn($q) => $q->whereHas('product', fn($p) => $p->where('seller_id', $seller->id))])
                 ->whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
@@ -29,12 +31,14 @@ class SellerPayoutController extends Controller
             $gmv = 0;
         }
 
-        $platformFee = $gmv * ($platformFeeRate / 100);
+        // Platform fee sudah dibayar buyer, tidak dipotong dari saldo seller
+        $platformFee = 0; // untuk display only (buyer sudah bayar terpisah)
 
         $totalPayout = PayoutRequest::where('seller_id', $seller->id)
             ->whereIn('status', ['approved', 'processed'])
             ->sum('amount');
 
+        // Saldo bersih = GMV penuh - total yang sudah dicairkan
         $availableBalance = max(0, $gmv - $totalPayout);
 
         $requests = PayoutRequest::where('seller_id', $seller->id)
