@@ -138,7 +138,7 @@
       <div style="margin-bottom:1.25rem;">
         <label style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:.4rem;">Tab <span style="color:#EF4444;">*</span></label>
         <div style="display:flex;gap:.75rem;">
-          @foreach(['produk' => 'Produk Digital', 'jasa' => 'Jasa Digital'] as $val => $label)
+          @foreach(['produk' => 'Produk Digital', 'jasa' => 'Jasa Digital', 'event' => 'Tiket & Event'] as $val => $label)
           <label style="flex:1;display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border:1.5px solid {{ old('tab', $category?->tab) === $val ? '#1eb349' : '#E2E8F0' }};border-radius:12px;cursor:pointer;background:{{ old('tab', $category?->tab) === $val ? '#F0FDF4' : '#fff' }};">
             <input type="radio" name="tab" value="{{ $val }}" {{ old('tab', $category?->tab ?? 'produk') === $val ? 'checked' : '' }} style="accent-color:#1eb349;">
             <span style="font-size:.9rem;font-weight:600;color:#1E293B;">{{ $label }}</span>

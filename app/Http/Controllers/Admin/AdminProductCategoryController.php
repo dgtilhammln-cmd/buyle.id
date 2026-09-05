@@ -26,7 +26,13 @@ class AdminProductCategoryController extends Controller
             ->orderBy('order')
             ->get();
 
-        return view('admin.product-categories.index', compact('produkCats', 'jasaCats'));
+        $eventCats = ProductCategory::withCount('products')
+            ->with('subCategories')
+            ->where('tab', 'event')
+            ->orderBy('order')
+            ->get();
+
+        return view('admin.product-categories.index', compact('produkCats', 'jasaCats', 'eventCats'));
     }
 
     public function create()
@@ -39,7 +45,7 @@ class AdminProductCategoryController extends Controller
         $request->validate([
             'name'        => 'required|string|max:100',
             'slug'        => 'nullable|string|max:120|unique:product_categories,slug',
-            'tab'         => 'required|in:produk,jasa',
+            'tab'         => 'required|in:produk,jasa,event',
             'badge'       => 'nullable|string|max:50',
             'badge_color' => 'nullable|string|max:50',
             'icon_type'   => 'nullable|in:icon,upload',
@@ -84,7 +90,7 @@ class AdminProductCategoryController extends Controller
         $request->validate([
             'name'        => 'required|string|max:100',
             'slug'        => 'nullable|string|max:120|unique:product_categories,slug,' . $productCategory->id,
-            'tab'         => 'required|in:produk,jasa',
+            'tab'         => 'required|in:produk,jasa,event',
             'badge'       => 'nullable|string|max:50',
             'badge_color' => 'nullable|string|max:50',
             'icon_type'   => 'nullable|in:icon,upload',
