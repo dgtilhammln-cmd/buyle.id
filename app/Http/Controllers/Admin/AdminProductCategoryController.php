@@ -79,14 +79,24 @@ class AdminProductCategoryController extends Controller
             ->with('success', 'Kategori berhasil ditambahkan.');
     }
 
-    public function edit(ProductCategory $productCategory)
+    private function resolveCategory($cat): ProductCategory
     {
+        if ($cat instanceof ProductCategory) {
+            return $cat;
+        }
+        return ProductCategory::where('slug', $cat)->orWhere('id', $cat)->firstOrFail();
+    }
+
+    public function edit($productCategory)
+    {
+        $productCategory = $this->resolveCategory($productCategory);
         $productCategory->load('subCategories');
         return view('admin.product-categories.form', ['category' => $productCategory]);
     }
 
-    public function update(Request $request, ProductCategory $productCategory)
+    public function update(Request $request, $productCategory)
     {
+        $productCategory = $this->resolveCategory($productCategory);
         $request->validate([
             'name'        => 'required|string|max:100',
             'slug'        => 'nullable|string|max:120|unique:product_categories,slug,' . $productCategory->id,

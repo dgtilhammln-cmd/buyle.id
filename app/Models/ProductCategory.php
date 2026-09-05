@@ -30,6 +30,11 @@ class ProductCategory extends Model
         ];
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     // =========================================================================
     // Relationships
     // =========================================================================

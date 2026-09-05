@@ -561,15 +561,17 @@
         </div>
 
         {{-- Social Icons --}}
-        @if(!empty($config['wa']) || !empty($config['ig']) || !empty($config['tiktok']) || !empty($config['youtube']))
+        @if(!empty($profile->store_slug) || !empty($config['wa']) || !empty($config['ig']) || !empty($config['tiktok']) || !empty($config['youtube']))
             <div class="social-row fade-up" style="animation-delay:0.2s">
+                @if(!empty($profile->store_slug)) <a href="{{ route('store.show', $profile->store_slug) }}" target="_blank"
+                class="social-icon" title="Toko Online buyle.id"><i class="fas fa-store"></i></a> @endif
                 @if(!empty($config['wa'])) <a href="https://wa.me/{{ $config['wa'] }}" target="_blank"
-                class="social-icon"><i class="fab fa-whatsapp"></i></a> @endif
+                class="social-icon" title="WhatsApp"><i class="fab fa-whatsapp"></i></a> @endif
                 @if(!empty($config['ig'])) <a href="https://instagram.com/{{ ltrim($config['ig'], '@') }}" target="_blank"
-                class="social-icon"><i class="fab fa-instagram"></i></a> @endif
+                class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a> @endif
                 @if(!empty($config['tiktok'])) <a href="https://tiktok.com/@{{ ltrim($config['tiktok'],'@') }}"
-                target="_blank" class="social-icon"><i class="fab fa-tiktok"></i></a> @endif
-                @if(!empty($config['youtube'])) <a href="{{ $config['youtube'] }}" target="_blank" class="social-icon"><i
+                target="_blank" class="social-icon" title="TikTok"><i class="fab fa-tiktok"></i></a> @endif
+                @if(!empty($config['youtube'])) <a href="{{ $config['youtube'] }}" target="_blank" class="social-icon" title="YouTube"><i
                 class="fab fa-youtube"></i></a> @endif
             </div>
         @endif
