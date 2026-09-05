@@ -20,6 +20,14 @@ class AuthController extends Controller
             if ($role === 'seller') return redirect()->route('creator.dashboard');
             return redirect()->route('account.overview');
         }
+
+        $prev = url()->previous();
+        if ($prev && !session()->has('url.intended')) {
+            if (!Str::contains($prev, ['/login', '/register', '/lupa-password', '/reset-password', '/keluar'])) {
+                session()->put('url.intended', $prev);
+            }
+        }
+
         return view('auth.login');
     }
 
@@ -36,11 +44,18 @@ class AuthController extends Controller
             'password.min'      => 'Kata sandi minimal 6 karakter.',
         ]);
 
-        $credentials = $request->only('email', 'password');
+        $oldSessionId = $request->session()->getId();
+        $credentials  = $request->only('email', 'password');
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
             
+            try {
+                app(\App\Services\CartService::class)->mergeGuestCart(Auth::id(), $oldSessionId);
+            } catch (\Throwable $e) {
+                \Log::warning('Merge guest cart error: ' . $e->getMessage());
+            }
+
             $role = Auth::user()->role;
             $redirectRoute = route('account.overview'); // default (buyer)
             
@@ -75,6 +90,14 @@ class AuthController extends Controller
             if ($role === 'seller') return redirect()->route('creator.dashboard');
             return redirect()->route('account.overview');
         }
+
+        $prev = url()->previous();
+        if ($prev && !session()->has('url.intended')) {
+            if (!Str::contains($prev, ['/login', '/register', '/lupa-password', '/reset-password', '/keluar'])) {
+                session()->put('url.intended', $prev);
+            }
+        }
+
         return view('auth.register');
     }
 
@@ -94,6 +117,8 @@ class AuthController extends Controller
             'password.min'       => 'Kata sandi minimal 6 karakter.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
         ]);
+
+        $oldSessionId = $request->session()->getId();
 
         // Generate unique username from name
         $base     = Str::slug($request->name, '.');
@@ -121,7 +146,20 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('account.overview')
+        try {
+            app(\App\Services\CartService::class)->mergeGuestCart($user->id, $oldSessionId);
+        } catch (\Throwable $e) {
+            \Log::warning('Merge guest cart on register failed: ' . $e->getMessage());
+        }
+
+        $redirectRoute = route('account.overview');
+        if ($user->role === 'super_admin' || $user->role === 'admin') {
+            $redirectRoute = route('admin.dashboard');
+        } elseif ($user->role === 'seller') {
+            $redirectRoute = route('creator.dashboard');
+        }
+
+        return redirect()->intended($redirectRoute)
             ->with('success', 'Akun berhasil dibuat. Selamat datang, ' . $user->name . '!');
     }
 
@@ -148,6 +186,8 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('login')->withErrors(['email' => 'Login Google gagal. Silakan coba lagi.']);
         }
+
+        $oldSessionId = request()->session()->getId();
 
         // Find or create user
         $user = User::where('google_id', $googleUser->getId())
@@ -188,7 +228,20 @@ class AuthController extends Controller
         Auth::login($user, true);
         request()->session()->regenerate();
 
-        return redirect()->intended(route('account.overview'))
+        try {
+            app(\App\Services\CartService::class)->mergeGuestCart($user->id, $oldSessionId);
+        } catch (\Throwable $e) {
+            \Log::warning('Merge guest cart on Google callback failed: ' . $e->getMessage());
+        }
+
+        $redirectRoute = route('account.overview');
+        if ($user->role === 'super_admin' || $user->role === 'admin') {
+            $redirectRoute = route('admin.dashboard');
+        } elseif ($user->role === 'seller') {
+            $redirectRoute = route('creator.dashboard');
+        }
+
+        return redirect()->intended($redirectRoute)
             ->with('success', 'Selamat datang, ' . $user->name . '!');
     }
 

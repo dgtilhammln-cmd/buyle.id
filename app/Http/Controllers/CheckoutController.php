@@ -7,6 +7,10 @@ use App\Models\Courier;
 use App\Models\Order;
 use App\Services\CartService;
 use App\Services\CheckoutService;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
@@ -46,12 +50,51 @@ class CheckoutController extends Controller
         try {
             $data = $request->validated();
             
-            // Only logged in users can reach this point (due to cart redirect logic)
             if (!auth()->check()) {
-                return redirect()->route('login');
+                $oldSessionId = $request->session()->getId();
+
+                $user = User::where('email', $data['guest_email'])->first();
+
+                if ($user) {
+                    if (!Hash::check($data['guest_password'], $user->password)) {
+                        return back()->withInput()->withErrors([
+                            'guest_email' => 'Email ini sudah terdaftar. Silakan masukkan kata sandi yang benar atau login terlebih dahulu.'
+                        ]);
+                    }
+                    Auth::login($user, true);
+                } else {
+                    $base     = Str::slug($data['guest_name'], '.');
+                    $username = $base;
+                    $i        = 1;
+                    while (User::where('username', $username)->exists()) {
+                        $username = $base . $i++;
+                    }
+
+                    $user = User::create([
+                        'name'     => $data['guest_name'],
+                        'email'    => $data['guest_email'],
+                        'phone'    => $data['guest_phone'],
+                        'username' => $username,
+                        'password' => Hash::make($data['guest_password']),
+                        'role'     => 'buyer',
+                    ]);
+
+                    try {
+                        $user->notify(new \App\Notifications\WelcomeNotification());
+                    } catch (\Throwable $e) {
+                        \Log::warning('WelcomeNotification failed on guest checkout: ' . $e->getMessage());
+                    }
+
+                    Auth::login($user, true);
+                }
+
+                $request->session()->regenerate();
+                $this->cartService->mergeGuestCart($user->id, $oldSessionId);
+            } else {
+                $user = auth()->user();
             }
 
-            $order = $this->checkoutService->processCheckout($data, auth()->user());
+            $order = $this->checkoutService->processCheckout($data, $user);
             
             // Redirect ke halaman finish yang akan menampilkan popup Midtrans
             return redirect()->route('checkout.finish', $order->order_number);
