@@ -511,7 +511,10 @@
         @endif
 
         @if(!empty($config['color_btn_text']))
-            .glass-btn .btn-title, .glass-btn .btn-sub, .glass-btn i, .social-icon i {
+            .glass-btn .btn-title, .glass-btn .btn-sub,
+            .glass-btn .btn-icon i, .glass-btn .btn-icon svg,
+            .glass-btn .btn-arrow i, .glass-btn i,
+            .social-icon i {
                 color:
                     {{ $config['color_btn_text'] }}
                     !important;
@@ -635,9 +638,9 @@
                                 <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']) }}"
                                     alt="">
                             @elseif($block->type === 'pdf')
-                                <i class="fas fa-file-pdf" style="color:#ef4444;"></i>
+                                <i class="fas fa-file-pdf"></i>
                             @else
-                                <i class="fas fa-link" style="color:#94a3b8;"></i>
+                                <i class="fas fa-link"></i>
                             @endif
                         </div>
                         <div class="btn-body">
