@@ -105,7 +105,7 @@ class AdminProductCategoryController extends Controller
             'badge_color' => 'nullable|string|max:50',
             'icon_type'   => 'nullable|in:icon,upload',
             'icon_value'  => 'nullable|string',
-            'icon_upload' => 'nullable|image|max:1024',
+            'icon_upload' => 'nullable|image|max:2048',
             'description' => 'nullable|string|max:255',
             'order'       => 'integer|min:0',
         ]);
@@ -113,8 +113,12 @@ class AdminProductCategoryController extends Controller
         $slug = $request->slug ?: Str::slug($request->name);
 
         $iconValue = $request->icon_value;
-        if ($request->icon_type === 'upload' && $request->hasFile('icon_upload')) {
-            $iconValue = $request->file('icon_upload')->store('category-icons', 'public');
+        if ($request->icon_type === 'upload') {
+            if ($request->hasFile('icon_upload')) {
+                $iconValue = $request->file('icon_upload')->store('category-icons', 'public');
+            } else {
+                $iconValue = $productCategory->icon_value;
+            }
         }
 
         $productCategory->update([

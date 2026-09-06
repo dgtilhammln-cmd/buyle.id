@@ -292,15 +292,14 @@ Route::prefix('admin')->group(function () {
         // Kategori Marketplace
         Route::post('product-categories/update-order', [AdminProductCategoryController::class, 'updateOrder'])->name('admin.product-categories.updateOrder');
         Route::post('product-categories/{product_category}/sub', [AdminProductCategoryController::class, 'storeSub'])->name('admin.product-categories.sub.store');
-        Route::post('product-categories/{product_category}', [AdminProductCategoryController::class, 'update']);
+        Route::match(['post', 'put', 'patch'], 'product-categories/{product_category}', [AdminProductCategoryController::class, 'update'])->name('admin.product-categories.update');
         Route::put('product-categories/sub/{sub}', [AdminProductCategoryController::class, 'updateSub'])->name('admin.product-categories.sub.update');
         Route::delete('product-categories/sub/{sub}', [AdminProductCategoryController::class, 'destroySub'])->name('admin.product-categories.sub.destroy');
-        Route::resource('product-categories', AdminProductCategoryController::class)->names([
+        Route::resource('product-categories', AdminProductCategoryController::class)->except(['update'])->names([
             'index'   => 'admin.product-categories.index',
             'create'  => 'admin.product-categories.create',
             'store'   => 'admin.product-categories.store',
             'edit'    => 'admin.product-categories.edit',
-            'update'  => 'admin.product-categories.update',
             'destroy' => 'admin.product-categories.destroy',
         ]);
 
