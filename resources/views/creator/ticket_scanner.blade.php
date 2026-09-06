@@ -4,20 +4,30 @@
 
 @section('styles')
 <style>
+    /* ── Bright Light Gray Scrollbar ── */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-button { display: none !important; width: 0 !important; height: 0 !important; }
+    ::-webkit-scrollbar-corner { background: transparent !important; }
+    ::-webkit-scrollbar-track { background: #f8fafc; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; border: 2px solid #f8fafc; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    * { scrollbar-width: auto; scrollbar-color: #cbd5e1 #f8fafc; }
+
     .bio-layout {
         display: flex;
-        gap: 1.75rem;
+        gap: 1.5rem;
         align-items: flex-start;
+        font-family: 'Montserrat', sans-serif;
     }
 
     .bio-sidebar {
-        width: 280px;
+        width: 260px;
         flex-shrink: 0;
-        background: #fff;
+        background: #ffffff;
         border-radius: 20px;
         padding: 1.25rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-        border: 1px solid #f0fdf4;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        border: 1.5px solid #e2e8f0;
         position: sticky;
         top: 1.5rem;
     }
@@ -28,22 +38,23 @@
         max-width: 100%;
     }
 
+    /* ── TAB BUTTONS (Matching Bio Light Theme) ── */
     .tab-btn {
         width: 100%;
         display: flex;
         align-items: center;
-        gap: 0.8rem;
-        padding: 0.9rem 1.1rem;
-        border: none;
+        gap: 0.75rem;
+        padding: 0.85rem 1.1rem;
+        border: 1.5px solid transparent;
         background: transparent;
         color: #64748b;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.85rem;
+        font-size: 0.83rem;
         font-weight: 600;
         border-radius: 14px;
         cursor: pointer;
         text-align: left;
-        transition: all 0.25s ease;
+        transition: all 0.2s ease;
         margin-bottom: 0.35rem;
         text-decoration: none;
     }
@@ -55,16 +66,17 @@
 
     .tab-btn.active {
         background: linear-gradient(135deg, #1eb349, #a5cf37);
-        color: #fff;
+        color: #ffffff;
         font-weight: 700;
-        box-shadow: 0 6px 18px rgba(30, 179, 73, 0.28);
+        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.3);
     }
 
+    /* ── UNIFORM LIGHT CARDS ── */
     .prof-card {
-        background: #fff;
-        border-radius: 22px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1.5px solid #e2e8f0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
         margin-bottom: 1.5rem;
         overflow: hidden;
         max-width: 100%;
@@ -73,15 +85,15 @@
 
     .prof-card-head {
         padding: 1.25rem 1.5rem;
-        border-bottom: 1px solid #f1f5f9;
-        font-size: 0.95rem;
+        border-bottom: 1.5px solid #f1f5f9;
+        font-size: 0.92rem;
         font-weight: 800;
         color: #0f172a;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 0.75rem;
-        background: #fafdfb;
+        background: #ffffff;
     }
 
     .form-body {
@@ -90,11 +102,11 @@
         box-sizing: border-box;
     }
 
-    /* ── SCANNER SPECIFIC ── */
+    /* ── SCANNER VIEWPORT ── */
     #reader {
         width: 100% !important;
         max-width: 100% !important;
-        border-radius: 20px;
+        border-radius: 18px;
         overflow: hidden !important;
         border: 2px dashed #bbf7d0 !important;
         background: #f8fafc;
@@ -105,24 +117,28 @@
     }
 
     #reader select {
-        height: 46px;
+        height: 44px;
         padding: 0 2rem 0 1rem;
         border-radius: 12px;
-        border: 1.5px solid #cbd5e1 !important;
+        border: 1.5px solid #e2e8f0 !important;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.85rem;
+        font-size: 0.83rem;
         font-weight: 600;
         color: #0f172a;
-        background: #fff;
+        background: #ffffff;
         outline: none;
         margin: 0.5rem 0;
         cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         transition: all 0.2s;
         max-width: 100% !important;
         width: 100% !important;
         box-sizing: border-box !important;
         display: block;
+    }
+
+    #reader select:focus {
+        border-color: #1eb349 !important;
+        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.12);
     }
 
     #reader button {
@@ -134,10 +150,10 @@
         font-family: 'Montserrat', sans-serif;
         font-size: 0.82rem;
         font-weight: 700;
-        color: #fff !important;
+        color: #ffffff !important;
         cursor: pointer;
         margin: 0.5rem auto;
-        box-shadow: 0 4px 14px rgba(30,179,73,0.35) !important;
+        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35) !important;
         transition: all 0.2s;
         display: inline-flex;
         align-items: center;
@@ -158,19 +174,19 @@
         box-sizing: border-box;
     }
 
-    .res-valid { background: #F0FDF4; border: 1.5px solid #86EFAC; color: #166534; }
-    .res-used { background: #FEFCE8; border: 1.5px solid #FDE047; color: #854D0E; }
-    .res-invalid { background: #FEF2F2; border: 1.5px solid #FCA5A5; color: #991B1B; }
+    .res-valid { background: #f0fdf4; border: 1.5px solid #bbf7d0; color: #166534; }
+    .res-used { background: #f8fafc; border: 1.5px solid #e2e8f0; color: #475569; }
+    .res-invalid { background: #fef2f2; border: 1.5px solid #fecaca; color: #991b1b; }
 
     .form-input-code {
-        height: 46px;
+        height: 44px;
         padding: 0 1rem;
         border: 1.5px solid #e2e8f0;
-        border-radius: 14px 0 0 14px;
+        border-radius: 12px 0 0 12px;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.85rem;
+        font-size: 0.83rem;
         color: #0f172a;
-        background: #f8fafc;
+        background: #ffffff;
         outline: none;
         flex: 1;
         min-width: 0;
@@ -180,20 +196,19 @@
 
     .form-input-code:focus {
         border-color: #1eb349;
-        background: #fff;
         box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.12);
     }
 
     .btn-submit-scan {
-        height: 46px;
-        padding: 0 1.35rem;
-        border-radius: 0 14px 14px 0;
+        height: 44px;
+        padding: 0 1.25rem;
+        border-radius: 0 12px 12px 0;
         background: linear-gradient(135deg, #1eb349, #a5cf37);
         border: none;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.85rem;
+        font-size: 0.83rem;
         font-weight: 700;
-        color: #fff;
+        color: #ffffff;
         cursor: pointer;
         transition: all 0.2s;
         display: inline-flex;
@@ -204,9 +219,9 @@
         box-shadow: 0 4px 12px rgba(30, 179, 73, 0.2);
     }
 
-    /* ── FILTER PANEL & CUSTOM CONTROLS ── */
+    /* ── FILTER PANEL ── */
     .filter-panel {
-        background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+        background: #ffffff;
         border: 1.5px solid #e2e8f0;
         border-radius: 18px;
         padding: 1.15rem;
@@ -240,7 +255,7 @@
         height: 44px;
         padding: 0 0.85rem 0 2.5rem;
         border-radius: 12px;
-        border: 1.5px solid #cbd5e1;
+        border: 1.5px solid #e2e8f0;
         font-family: 'Montserrat', sans-serif;
         font-size: 0.83rem;
         font-weight: 600;
@@ -248,10 +263,8 @@
         background: #ffffff;
         outline: none;
         transition: all 0.2s;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
         box-sizing: border-box;
 
-        /* Custom dropdown arrow */
         appearance: none;
         -webkit-appearance: none;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%64748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
@@ -267,7 +280,7 @@
 
     .filter-select:focus, .filter-input:focus {
         border-color: #1eb349;
-        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.15);
+        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.12);
         background-color: #ffffff;
     }
 
@@ -277,7 +290,7 @@
         border-radius: 12px;
         background: linear-gradient(135deg, #1eb349, #a5cf37);
         border: none;
-        color: #fff;
+        color: #ffffff;
         font-family: 'Montserrat', sans-serif;
         font-size: 0.83rem;
         font-weight: 700;
@@ -300,8 +313,8 @@
         padding: 0 0.9rem;
         border-radius: 12px;
         background: #ffffff;
-        border: 1.5px solid #cbd5e1;
-        color: #475569;
+        border: 1.5px solid #e2e8f0;
+        color: #64748b;
         font-family: 'Montserrat', sans-serif;
         font-size: 0.8rem;
         font-weight: 600;
@@ -313,11 +326,11 @@
         flex-shrink: 0;
     }
     .btn-reset:hover {
-        background: #f1f5f9;
+        background: #f8fafc;
         color: #0f172a;
     }
 
-    /* ── STATS GRID (PREMIUM CARDS) ── */
+    /* ── STATS GRID (UNIFORM THEME CARDS) ── */
     .stat-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -326,40 +339,21 @@
     }
 
     .stat-card {
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
         border-radius: 18px;
-        padding: 1.2rem;
-        position: relative;
-        overflow: hidden;
+        padding: 1.25rem;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        transition: all 0.25s;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+        transition: all 0.2s;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
     }
 
     .stat-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
-    }
-
-    .card-blue {
-        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-        border: 1.5px solid #bfdbfe;
-    }
-
-    .card-green {
-        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-        border: 1.5px solid #bbf7d0;
-    }
-
-    .card-amber {
-        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-        border: 1.5px solid #fde68a;
-    }
-
-    .card-red {
-        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-        border: 1.5px solid #fecaca;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+        border-color: #cbd5e1;
     }
 
     .stat-head {
@@ -370,68 +364,50 @@
     }
 
     .stat-icon-bubble {
-        width: 38px;
-        height: 38px;
-        border-radius: 12px;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #fff;
+        background: #f0fdf4;
+        color: #1eb349;
+        border: 1px solid #bbf7d0;
         flex-shrink: 0;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-
-    .card-blue .stat-icon-bubble { background: #3b82f6; }
-    .card-green .stat-icon-bubble { background: #16a34a; }
-    .card-amber .stat-icon-bubble { background: #d97706; }
-    .card-red .stat-icon-bubble { background: #dc2626; }
 
     .stat-title {
         font-size: 0.72rem;
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.05em;
+        color: #64748b;
     }
-
-    .card-blue .stat-title { color: #1e40af; }
-    .card-green .stat-title { color: #166534; }
-    .card-amber .stat-title { color: #92400e; }
-    .card-red .stat-title { color: #991b1b; }
 
     .stat-val {
-        font-size: 1.75rem;
-        font-weight: 900;
+        font-size: 1.65rem;
+        font-weight: 800;
         line-height: 1.1;
         letter-spacing: -0.02em;
+        color: #0f172a;
     }
-
-    .card-blue .stat-val { color: #1e3a8a; }
-    .card-green .stat-val { color: #14532d; }
-    .card-amber .stat-val { color: #78350f; }
-    .card-red .stat-val { color: #7f1d1d; }
 
     .stat-sub {
         font-size: 0.75rem;
         font-weight: 600;
         margin-top: 0.4rem;
-        display: flex;
-        align-items: center;
-        gap: 0.35rem;
+        color: #64748b;
     }
-
-    .card-blue .stat-sub { color: #2563eb; }
-    .card-green .stat-sub { color: #15803d; }
-    .card-amber .stat-sub { color: #b45309; }
-    .card-red .stat-sub { color: #b91c1c; }
 
     .pill-badge {
         display: inline-block;
-        padding: 0.15rem 0.55rem;
+        padding: 0.2rem 0.6rem;
         border-radius: 99px;
-        font-size: 0.7rem;
-        font-weight: 800;
-        background: #ffffff;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        font-size: 0.72rem;
+        font-weight: 700;
+        background: #f0fdf4;
+        color: #166534;
+        border: 1px solid #bbf7d0;
     }
 
     /* ── TABLE DESIGN ── */
@@ -440,7 +416,7 @@
         overflow-x: auto;
         border-radius: 16px;
         border: 1.5px solid #e2e8f0;
-        background: #fff;
+        background: #ffffff;
     }
 
     .custom-table {
@@ -452,18 +428,18 @@
 
     .custom-table th {
         background: #f8fafc;
-        padding: 0.95rem 1.1rem;
+        padding: 0.9rem 1.1rem;
         font-weight: 800;
         color: #475569;
         border-bottom: 1.5px solid #e2e8f0;
         white-space: nowrap;
-        font-size: 0.78rem;
+        font-size: 0.76rem;
         text-transform: uppercase;
         letter-spacing: 0.04em;
     }
 
     .custom-table td {
-        padding: 1rem 1.1rem;
+        padding: 0.95rem 1.1rem;
         border-bottom: 1px solid #f1f5f9;
         vertical-align: middle;
         color: #1e293b;
@@ -474,27 +450,27 @@
     }
 
     .custom-table tr:hover {
-        background: #f0fdf4;
+        background: #f8fafc;
     }
 
     .badge-status {
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
-        padding: 0.35rem 0.85rem;
+        padding: 0.3rem 0.8rem;
         border-radius: 99px;
         font-size: 0.74rem;
         font-weight: 700;
         white-space: nowrap;
     }
 
-    .badge-used { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
-    .badge-valid { background: #fef9c3; color: #a16207; border: 1px solid #fef08a; }
-    .badge-cancelled { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+    .badge-used { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .badge-valid { background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; }
+    .badge-cancelled { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
 
     .btn-action-sm {
         padding: 0.45rem 0.95rem;
-        border-radius: 10px;
+        border-radius: 999px;
         font-size: 0.76rem;
         font-weight: 700;
         border: none;
@@ -508,7 +484,7 @@
 
     .btn-toggle-checkin {
         background: linear-gradient(135deg, #1eb349, #a5cf37);
-        color: #fff;
+        color: #ffffff;
         box-shadow: 0 3px 10px rgba(30,179,73,0.25);
     }
     .btn-toggle-checkin:hover {
@@ -519,19 +495,19 @@
     .btn-toggle-undo {
         background: #ffffff;
         color: #475569;
-        border: 1.5px solid #cbd5e1;
+        border: 1.5px solid #e2e8f0;
     }
     .btn-toggle-undo:hover {
-        background: #f1f5f9;
+        background: #f8fafc;
         color: #0f172a;
     }
 
     .btn-export {
-        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-        border: 1.5px solid #bbf7d0;
-        color: #15803d;
-        padding: 0.55rem 1.1rem;
-        border-radius: 12px;
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        color: #0f172a;
+        padding: 0.5rem 1.1rem;
+        border-radius: 999px;
         font-size: 0.8rem;
         font-weight: 700;
         display: inline-flex;
@@ -540,12 +516,11 @@
         cursor: pointer;
         text-decoration: none;
         transition: all 0.2s;
-        box-shadow: 0 2px 8px rgba(30, 179, 73, 0.1);
     }
     .btn-export:hover {
-        background: #dcfce7;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.2);
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+        color: #1eb349;
     }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -590,12 +565,12 @@
 
     {{-- SUB SIDEBAR NAV --}}
     <div class="bio-sidebar">
-        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem;">
-            <div style="font-size: 0.85rem; font-weight: 800; color: #15803d; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem;">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 1.1rem; margin-bottom: 1.25rem;">
+            <div style="font-size: 0.85rem; font-weight: 800; color: #0f172a; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
+                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
                 Gatekeeper Studio
             </div>
-            <div style="font-size: 0.78rem; color: #166534; line-height: 1.5; font-weight: 500;">
+            <div style="font-size: 0.78rem; color: #64748b; line-height: 1.5; font-weight: 500;">
                 Pemindaian live kamera & pemantauan data kehadiran pengunjung event secara real-time.
             </div>
         </div>
@@ -609,7 +584,7 @@
             Data Kehadiran & Event
         </button>
 
-        <div style="background: #fafdfb; border: 1px solid #e7f0e7; border-radius: 14px; padding: 1rem; font-size: 0.78rem; color: #475569; margin-top: 1.25rem;">
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 1rem; font-size: 0.78rem; color: #64748b; margin-top: 1.25rem;">
             <strong style="color: #0f172a; display: flex; align-items: center; gap: 5px; margin-bottom: 0.4rem;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
                 Tips Verifikasi:
@@ -667,7 +642,7 @@
                             <div style="flex: 1;">
                                 <h5 id="resultTitle" style="font-weight: 800; font-size: 1rem; margin-bottom: 0.25rem;"></h5>
                                 <p id="resultMsg" style="font-size: 0.85rem; margin-bottom: 0.75rem; line-height: 1.4;"></p>
-                                <div id="ticketDetails" style="font-size: 0.8rem; background: rgba(255,255,255,0.8); padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid rgba(0,0,0,0.05); display: none;"></div>
+                                <div id="ticketDetails" style="font-size: 0.8rem; background: #ffffff; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid #e2e8f0; display: none;"></div>
                             </div>
                         </div>
                     </div>
@@ -755,14 +730,14 @@
                         </div>
                     </form>
 
-                    {{-- Premium Stat Cards Grid --}}
+                    {{-- Clean Buyle Theme Stat Cards Grid --}}
                     <div class="stat-grid">
                         {{-- Card 1: Total Tiket --}}
-                        <div class="stat-card card-blue">
+                        <div class="stat-card">
                             <div class="stat-head">
                                 <span class="stat-title">Total Tiket Terbit</span>
                                 <div class="stat-icon-bubble">
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/><path d="M13 5v14"/></svg>
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/><path d="M13 5v14"/></svg>
                                 </div>
                             </div>
                             <div class="stat-val">{{ number_format($stats['total']) }}</div>
@@ -772,25 +747,25 @@
                         </div>
 
                         {{-- Card 2: Checked-In --}}
-                        <div class="stat-card card-green">
+                        <div class="stat-card">
                             <div class="stat-head">
                                 <span class="stat-title">Checked-In (Hadir)</span>
                                 <div class="stat-icon-bubble">
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                                 </div>
                             </div>
                             <div class="stat-val">{{ number_format($stats['checked_in']) }}</div>
                             <div class="stat-sub">
-                                <span class="pill-badge" style="color: #166534;">Tingkat Kehadiran: {{ $stats['rate'] }}%</span>
+                                <span class="pill-badge">Tingkat Kehadiran: {{ $stats['rate'] }}%</span>
                             </div>
                         </div>
 
                         {{-- Card 3: Belum Check-In --}}
-                        <div class="stat-card card-amber">
+                        <div class="stat-card">
                             <div class="stat-head">
                                 <span class="stat-title">Belum Check-In</span>
                                 <div class="stat-icon-bubble">
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                                 </div>
                             </div>
                             <div class="stat-val">{{ number_format($stats['unchecked']) }}</div>
@@ -800,11 +775,11 @@
                         </div>
 
                         {{-- Card 4: Dibatalkan --}}
-                        <div class="stat-card card-red">
+                        <div class="stat-card">
                             <div class="stat-head">
                                 <span class="stat-title">Tiket Dibatalkan</span>
-                                <div class="stat-icon-bubble">
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                                <div class="stat-icon-bubble" style="background:#fef2f2; color:#dc2626; border-color:#fecaca;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                                 </div>
                             </div>
                             <div class="stat-val">{{ number_format($stats['cancelled']) }}</div>
@@ -833,7 +808,7 @@
                                     <tr>
                                         <td>{{ $tickets->firstItem() + $index }}</td>
                                         <td>
-                                            <span style="font-family: monospace; font-weight: 700; font-size: 0.88rem; color: #0f172a; background: #f1f5f9; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                            <span style="font-family: monospace; font-weight: 700; font-size: 0.85rem; color: #0f172a; background: #f8fafc; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
                                                 {{ $ticket->ticket_code }}
                                             </span>
                                         </td>
@@ -861,13 +836,13 @@
                                                 </span>
                                             @else
                                                 <span class="badge-status badge-valid">
-                                                    ⏳ Belum Hadir
+                                                    Belum Hadir
                                                 </span>
                                             @endif
                                         </td>
                                         <td>
                                             @if($ticket->checked_in_at)
-                                                <span style="font-weight: 700; color: #15803d; display: block; font-size: 0.8rem;">
+                                                <span style="font-weight: 700; color: #166534; display: block; font-size: 0.8rem;">
                                                     {{ $ticket->checked_in_at->format('H:i:s WIB') }}
                                                 </span>
                                                 <span style="font-size: 0.73rem; color: #64748b;">
@@ -938,7 +913,7 @@
         <div id="modalDetailsCard" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:1rem; text-align:left; margin-bottom:1.5rem; font-size:0.85rem; display:none;"></div>
 
         {{-- Action Button --}}
-        <button type="button" onclick="closeScanModal()" style="width:100%; padding:0.8rem; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; border:none; border-radius:14px; font-weight:700; font-size:0.95rem; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,0.3); transition:all 0.2s;">
+        <button type="button" onclick="closeScanModal()" style="width:100%; padding:0.8rem; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; border:none; border-radius:999px; font-weight:700; font-size:0.95rem; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,0.3); transition:all 0.2s;">
             Scan Tiket Berikutnya
         </button>
     </div>
@@ -970,7 +945,6 @@
         const config = { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1 };
 
         const doStart = () => {
-            // Always enumerate cameras first — this works on desktop (webcam) AND mobile (front/back)
             Html5Qrcode.getCameras().then(cameras => {
                 if (!cameras || cameras.length === 0) {
                     showCameraError('Tidak ada kamera yang ditemukan di perangkat ini.');
@@ -978,19 +952,15 @@
                     return;
                 }
 
-                // Pick camera: 1 camera = just use it; 2+ cameras = try to pick by facing
                 let cameraId = cameras[0].id;
                 if (cameras.length > 1) {
                     if (facingMode === 'environment') {
-                        // Back camera is usually the last in the list on mobile
                         cameraId = cameras[cameras.length - 1].id;
                     } else {
-                        // Front camera is usually the first
                         cameraId = cameras[0].id;
                     }
                 }
 
-                // Recreate Html5Qrcode instance for clean start (avoids bad state from previous failed start)
                 if (html5QrCode) {
                     try { html5QrCode.clear(); } catch(e) {}
                 }
@@ -1002,7 +972,6 @@
                     })
                     .catch(err => {
                         console.warn('[Scanner] Camera start by ID failed:', err);
-                        // Last resort: try facingMode constraint (works on some mobile browsers)
                         html5QrCode = new Html5Qrcode("reader");
                         html5QrCode.start({ facingMode: facingMode }, config, onScanSuccess, onScanFailure)
                             .then(() => { isCameraSwitching = false; })
@@ -1019,11 +988,9 @@
             });
         };
 
-        // Stop active stream first (if any), then restart
         if (html5QrCode) {
             const stopFn = () => setTimeout(doStart, 350);
             try {
-                // html5QrCode.stop() throws if not scanning — catch it gracefully
                 const maybePromise = html5QrCode.stop();
                 if (maybePromise && typeof maybePromise.then === 'function') {
                     maybePromise.catch(() => {}).finally(stopFn);
@@ -1064,7 +1031,7 @@
     }
 
     function toggleCameraFacing() {
-        if (isCameraSwitching) return; // Prevent double-click
+        if (isCameraSwitching) return;
         isCameraSwitching = true;
 
         currentFacingMode = (currentFacingMode === "environment") ? "user" : "environment";
@@ -1075,12 +1042,12 @@
     }
 
     function onScanSuccess(decodedText, decodedResult) {
-        if (isProcessing) return; // Prevent duplicate scan calls
+        if (isProcessing) return;
         verifyCode(decodedText);
     }
 
     function onScanFailure(error) {
-        // Silently ignore scan failures (normal when no QR is in view)
+        // Silently ignore scan failures
     }
 
     function handleManualSubmit(e) {
@@ -1094,7 +1061,6 @@
         if (isProcessing) return;
         isProcessing = true;
 
-        // Visual feedback: show loading state
         const resultBox = document.getElementById('resultBox');
         if (resultBox) {
             resultBox.className = 'res-box';
@@ -1143,7 +1109,6 @@
             const gain = ctx.createGain();
             osc.type = 'sine';
             if (status === 'valid') {
-                // Double beep for success
                 osc.frequency.setValueAtTime(880, ctx.currentTime);
                 gain.gain.setValueAtTime(0.3, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.1);
@@ -1151,7 +1116,7 @@
                 gain.connect(ctx.destination);
                 osc.start();
                 osc.stop(ctx.currentTime + 0.1);
-                // Second beep
+
                 const osc2 = ctx.createOscillator();
                 const gain2 = ctx.createGain();
                 osc2.type = 'sine';
@@ -1163,7 +1128,6 @@
                 osc2.start(ctx.currentTime + 0.13);
                 osc2.stop(ctx.currentTime + 0.25);
             } else {
-                // Low warning tone for error/duplicate
                 osc.frequency.setValueAtTime(300, ctx.currentTime);
                 gain.gain.setValueAtTime(0.3, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.3);
@@ -1180,10 +1144,8 @@
     function renderResult(data) {
         playScanBeep(data.status);
 
-        // Re-render inline resultBox with proper styling
         const box = document.getElementById('resultBox');
         if (box) {
-            // Reset inline styles that may have been set by loading state
             box.style.background = '';
             box.style.border = '';
             box.className = 'res-box res-' + (data.status === 'used' ? 'used' : (data.status === 'valid' ? 'valid' : 'invalid'));
@@ -1193,14 +1155,14 @@
             if (data.status === 'valid') {
                 iconHtml = `<svg width="36" height="36" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
             } else if (data.status === 'used') {
-                iconHtml = `<svg width="36" height="36" fill="none" stroke="#854D0E" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+                iconHtml = `<svg width="36" height="36" fill="none" stroke="#475569" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
             } else {
                 iconHtml = `<svg width="36" height="36" fill="none" stroke="#991B1B" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
             }
 
             let detailsHtml = '';
             if (data.ticket) {
-                detailsHtml = `<div style="font-size:0.8rem;background:rgba(255,255,255,0.8);padding:0.75rem 1rem;border-radius:10px;border:1px solid rgba(0,0,0,0.05);margin-top:0.5rem;">
+                detailsHtml = `<div style="font-size:0.8rem;background:#ffffff;padding:0.75rem 1rem;border-radius:10px;border:1px solid #e2e8f0;margin-top:0.5rem;">
                     <div><strong>Kode Tiket:</strong> ${data.ticket.code || '-'}</div>
                     <div><strong>Nama Event:</strong> ${data.ticket.event_name || '-'}</div>
                     <div><strong>Pemegang:</strong> ${data.ticket.holder_name || '-'}</div>
@@ -1218,7 +1180,6 @@
             </div>`;
         }
 
-        // Open Mobile-Friendly Popup Modal
         openScanModal(data);
     }
 
@@ -1230,17 +1191,19 @@
         const msgEl   = document.getElementById('modalMsg');
         const card    = document.getElementById('modalDetailsCard');
 
-        // Set icon & color theme
         if (data.status === 'valid') {
-            bubble.style.background = '#DCFCE7';
+            bubble.style.background = '#F0FDF4';
+            bubble.style.border = '1px solid #BBF7D0';
             bubble.innerHTML = `<svg width="40" height="40" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
-            titleEl.style.color = '#15803D';
+            titleEl.style.color = '#166534';
         } else if (data.status === 'used') {
-            bubble.style.background = '#FEF3C7';
-            bubble.innerHTML = `<svg width="40" height="40" fill="none" stroke="#B45309" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
-            titleEl.style.color = '#B45309';
+            bubble.style.background = '#F8FAFC';
+            bubble.style.border = '1px solid #E2E8F0';
+            bubble.innerHTML = `<svg width="40" height="40" fill="none" stroke="#475569" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+            titleEl.style.color = '#0F172A';
         } else {
             bubble.style.background = '#FEE2E2';
+            bubble.style.border = '1px solid #FECACA';
             bubble.innerHTML = `<svg width="40" height="40" fill="none" stroke="#DC2626" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
             titleEl.style.color = '#DC2626';
         }
@@ -1304,11 +1267,10 @@
         box.style.transform     = 'scale(0.9)';
         setTimeout(() => {
             overlay.style.display = 'none';
-            isProcessing = false; // Re-enable scanning after modal closes
+            isProcessing = false;
         }, 250);
     }
 
-    // CSS animation for loading spinner
     const style = document.createElement('style');
     style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
     document.head.appendChild(style);
