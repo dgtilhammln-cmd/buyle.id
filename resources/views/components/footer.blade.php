@@ -16,7 +16,7 @@ www.buyle.id
     .cv-footer-v2 {
         background: #F8FAFC;
         color: #475569;
-        font-family: 'Montserrat', sans-serif;
+        font-family: inherit;
         position: relative;
         overflow: hidden;
     }
@@ -340,8 +340,10 @@ www.buyle.id
                     @if($logo)
                         <img src="{{ asset('storage/' . $logo) }}" alt="Logo">
                     @else
-                        <span
-                            style="font-weight:900;color:#1eb349;font-size:1rem;font-family:'Montserrat',sans-serif;">buyle.id</span>
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="32" height="32" rx="8" fill="#1eb349"/>
+                            <text x="16" y="22" text-anchor="middle" font-family="inherit" font-size="18" font-weight="900" fill="white">B</text>
+                        </svg>
                     @endif
                 </div>
             </a>

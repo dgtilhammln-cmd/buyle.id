@@ -113,8 +113,8 @@
         * { scrollbar-width: auto; scrollbar-color: #cbd5e1 #f8fafc; }
 
         :root {
-            --font-jakarta: 'Montserrat', sans-serif !important;
-            --font-main: 'Montserrat', sans-serif !important;
+            --font-jakarta: 'Montserrat', sans-serif;
+            --font-main: 'Montserrat', sans-serif;
         }
 
         body,
