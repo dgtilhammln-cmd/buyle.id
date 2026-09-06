@@ -33,6 +33,89 @@
 
         strong, b { font-weight: 600 !important; }
 
+        /* ── Premium Sleek Gray Scrollbars ── */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        ::-webkit-scrollbar-button {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+        ::-webkit-scrollbar-corner {
+            background: transparent !important;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b120c;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 10px;
+            border: 2px solid #0b120c;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        * {
+            scrollbar-width: auto;
+            scrollbar-color: #475569 #0b120c;
+        }
+
+        /* Creator Sidebar Scrollbar */
+        .cr-sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .cr-sidebar::-webkit-scrollbar-button {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+        .cr-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            margin: 6px 0;
+        }
+        .cr-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+        }
+        .cr-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.38);
+        }
+        .cr-sidebar {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+
+        /* Creator Main Content Wrapper Scrollbar */
+        .cr-main-wrapper::-webkit-scrollbar {
+            width: 10px;
+        }
+        .cr-main-wrapper::-webkit-scrollbar-button {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+        .cr-main-wrapper::-webkit-scrollbar-track {
+            background: #0b120c;
+            border-radius: 10px;
+        }
+        .cr-main-wrapper::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 10px;
+            border: 2px solid #0b120c;
+        }
+        .cr-main-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        .cr-main-wrapper {
+            scrollbar-width: auto;
+            scrollbar-color: #475569 #0b120c;
+        }
+
         /* ── SIDEBAR (Dark Shell) ── */
         .cr-sidebar {
             width: 240px;
