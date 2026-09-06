@@ -180,6 +180,31 @@ class AccountController extends Controller
         return back()->with('success', 'Pesanan telah dikonfirmasi selesai. Terima kasih telah berbelanja!');
     }
 
+    // ── Download Ticket E-Receipt PDF ──
+    public function downloadTicketReceipt(\App\Models\Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $order->load(['items.product', 'payment', 'ticketPasses.product', 'user']);
+
+        // Make sure ticket passes are generated
+        try {
+            \App\Models\TicketPass::generateForOrder($order);
+            $order->load('ticketPasses.product');
+        } catch (\Throwable $e) {
+            // Continue even if generation fails
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('account.ticket-receipt-pdf', compact('order'));
+        $pdf->setPaper('A4', 'portrait');
+
+        $filename = 'eticket-buyle-' . $order->order_number . '.pdf';
+
+        return $pdf->download($filename);
+    }
+
 
     // ── Addresses ──
     public function addresses()

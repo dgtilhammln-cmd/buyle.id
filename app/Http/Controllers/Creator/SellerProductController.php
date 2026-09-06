@@ -169,6 +169,7 @@ class SellerProductController extends Controller
 
         $data['product_type'] = $request->input('product_type') === 'ticket' ? 'ticket' : 'external_link';
         $data['stock']        = $data['stock'] ?? 0;
+        $isWhitelabel         = false; // Initialize to avoid undefined variable error
 
         if ($data['product_type'] === 'ticket') {
             $data['is_whitelabel'] = false;
