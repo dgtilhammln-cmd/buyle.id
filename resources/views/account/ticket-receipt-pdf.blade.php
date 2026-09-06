@@ -190,7 +190,7 @@
                     </div>
                     <div class="ticket-body">
                         <div class="ticket-qr-col">
-                            <img src="{{ route('qr.code', ['data' => $pass->qr_token]) }}" class="ticket-qr-img" alt="QR">
+                            <img src="{{ \App\Http\Controllers\QrCodeController::generateBase64($pass->qr_token) }}" class="ticket-qr-img" alt="QR">
                             <div class="ticket-code">{{ $pass->ticket_code }}</div>
                         </div>
                         <div class="ticket-info-col">
