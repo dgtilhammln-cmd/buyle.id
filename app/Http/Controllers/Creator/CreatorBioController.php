@@ -86,7 +86,7 @@ class CreatorBioController extends Controller
      */
     public function saveTheme(Request $request)
     {
-        $request->validate(['bio_theme' => 'required|in:theme1,theme2,theme3,theme4']);
+        $request->validate(['bio_theme' => 'required|in:theme1,theme2,theme3,theme4,theme5']);
         $profile = $this->getProfile();
         
         $config = $profile->bio_config ?? [];

@@ -626,6 +626,27 @@
             border: 1px solid #e2e8f0;
             border-radius: 6px;
         }
+
+        /* Theme 5: Landing Page Pro */
+        .theme-mockup.theme5 {
+            background: #f8fafc;
+            border-left: 3px solid #2563eb;
+        }
+
+        .theme-mockup.theme5 .mockup-avatar {
+            background: #2563eb;
+            border: 1px solid #3b82f6;
+        }
+
+        .theme-mockup.theme5 .mockup-title {
+            background: #0f172a;
+        }
+
+        .theme-mockup.theme5 .mockup-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+        }
     </style>
 @endsection
 
@@ -741,7 +762,7 @@
                         <form action="{{ route('creator.bio.save-theme') }}" method="POST">
                             @csrf
                             <div class="theme-grid">
-                                @foreach(['theme1' => 'Gelap Elegan', 'theme2' => 'Minimalis Pro', 'theme3' => 'Gradient Neon', 'theme4' => 'Clean Light'] as $key => $label)
+                                @foreach(['theme1' => 'Gelap Elegan', 'theme2' => 'Minimalis Pro', 'theme3' => 'Gradient Neon', 'theme4' => 'Clean Light', 'theme5' => 'Landing Page Pro'] as $key => $label)
                                     <label class="theme-card {{ $currentTheme === $key ? 'active' : '' }}">
                                         <input type="radio" name="bio_theme" value="{{ $key }}" {{ $currentTheme === $key ? 'checked' : '' }} style="display:none;" onchange="this.closest('form').submit()">
                                         <div class="theme-mockup {{ $key }}">
