@@ -64,11 +64,22 @@
 
 .tr-tl-more { display: inline-block; margin-top: 1rem; color: #16a34a; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-decoration: none; }
 
+.od-body-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 1.75rem;
+}
+@media (max-width: 868px) {
+    .od-body-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+}
 </style>
 
-<div class="mb-4">
-    <a href="{{ route('account.orders') }}" style="background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border-radius: 10px; font-weight: 700; font-size: 0.85rem; padding: 0.6rem 1.25rem; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; box-shadow: 0 4px 14px rgba(30,179,73,0.25); transition: all 0.2s;">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+<div style="margin-bottom: 1.25rem;">
+    <a href="{{ route('account.orders') }}" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; border-radius: 8px; font-weight: 600; font-size: 0.82rem; padding: 0.45rem 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='#e2e8f0';this.style.color='#0f172a'" onmouseout="this.style.background='#f1f5f9';this.style.color='#475569'">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         Kembali ke Daftar Pesanan
     </a>
 </div>
@@ -84,7 +95,7 @@
         </div>
     </div>
     
-    <div class="od-body" style="display: grid; grid-template-columns: 1fr 350px; gap: 2rem;">
+    <div class="od-body od-body-grid">
         
         {{-- KIRI: PRODUK & TRACKING --}}
         <div>
@@ -103,6 +114,8 @@
                     <div class="od-item-price">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</div>
                 </div>
                 @endforeach
+            </div>
+
             @if(isset($order->ticketPasses) && $order->ticketPasses->count() > 0)
                 <div style="margin-top: 2rem;">
                     <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--c-text); display: flex; align-items: center; gap: 0.5rem;">
@@ -172,7 +185,7 @@
             @endif
 
             <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: var(--c-text);">Ringkasan Pembayaran</h3>
-            <div style="margin-bottom: 2rem;">
+            <div style="margin-bottom: 1.5rem;">
                 <div class="summary-row">
                     <span>Total Harga Barang</span>
                     <span>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span>
@@ -203,38 +216,40 @@
                     <span>Total Belanja</span>
                     <span>Rp {{ number_format($order->total, 0, ',', '.') }}</span>
                 </div>
-            </div> <!-- END KANAN -->
+            </div>
+        </div> <!-- END KANAN -->
     </div> <!-- END od-body -->
 </div> <!-- END od-card -->
 
-@if(in_array($order->status->value, ['confirmed', 'processing', 'shipped', 'delivered']))
-<div class="tr-card" style="background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border: none; box-shadow: 0 10px 30px rgba(30,179,73,0.3); display: block;">
-    <div style="padding: 2rem;">
-        <h3 class="tr-title" style="color: #fff; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 1rem; margin-bottom: 1.5rem;">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align: -4px; margin-right: 8px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+@php
+    $hasDigitalResources = $order->items->contains(function($item) {
+        return $item->product && $item->product->product_type !== 'ticket' && !empty($item->product->digital_resource);
+    });
+@endphp
+
+@if($hasDigitalResources && in_array($order->status->value, ['confirmed', 'processing', 'shipped', 'delivered']))
+<div class="tr-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); display: block; margin-bottom: 1.5rem;">
+    <div style="padding: 1.5rem;">
+        <h3 class="tr-title" style="color: #0f172a; font-size: 1.05rem; font-weight: 700; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
             Akses Produk / Layanan Jasa
         </h3>
         
         @foreach($order->items as $item)
-            @if($item->product && $item->product->product_type !== 'ticket' && $item->product->digital_resource)
-                <div style="margin-bottom: 1.25rem;">
-                    <div style="font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem;">{{ $item->product_name }}</div>
-                    <a href="{{ $item->product->digital_resource }}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #1eb349; padding: 0.75rem 1.5rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: transform 0.2s;">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                        Buka Link / Akses Produk
+            @if($item->product && $item->product->product_type !== 'ticket' && !empty($item->product->digital_resource))
+                <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; background: #f8fafc; padding: 1rem; border-radius: 10px; border: 1px solid #e2e8f0;">
+                    <div>
+                        <div style="font-weight: 700; font-size: 0.95rem; color: #0f172a; margin-bottom: 2px;">{{ $item->product_name }}</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">Klik tombol di samping untuk membuka materi / file produk digital.</div>
+                    </div>
+                    <a href="{{ $item->product->digital_resource }}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #1eb349; color: #ffffff; padding: 0.6rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.85rem; transition: background 0.2s;">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                        Buka Link Produk
                     </a>
                 </div>
             @endif
         @endforeach
     </div>
-</div>
-@else
-<div class="tr-card" style="padding: 3rem 2rem; text-align: center; color: var(--c-muted); display: block;">
-    <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom: 1rem; opacity: 0.5;">
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-    </svg>
-    <div style="font-weight: 600; font-size: 1.15rem; color: var(--c-text);">Menunggu Pembayaran</div>
-    <div style="font-size: 0.95rem; margin-top: 0.5rem;">Selesaikan pembayaran Anda untuk mengakses produk atau layanan jasa.</div>
 </div>
 @endif
 

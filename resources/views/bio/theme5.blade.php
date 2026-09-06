@@ -868,7 +868,7 @@
                         </div>
 
                         {{-- Direct Domain Link --}}
-                        <a href="{{ canonical ?? url()->current() }}" class="motia-domain-link">
+                        <a href="{{ $canonical ?? url()->current() }}" class="motia-domain-link">
                             <i class="fas fa-link" style="font-size:11px;"></i>
                             buyle.id/{{ $username }}
                         </a>
