@@ -630,12 +630,13 @@
         /* Theme 5: Landing Page Pro */
         .theme-mockup.theme5 {
             background: #f8fafc;
-            border-left: 3px solid #2563eb;
+            border-left: 3px solid #0f172a;
         }
 
         .theme-mockup.theme5 .mockup-avatar {
-            background: #2563eb;
-            border: 1px solid #3b82f6;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
         }
 
         .theme-mockup.theme5 .mockup-title {

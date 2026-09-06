@@ -7,14 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     @php
-        $roleTitleMap = [
-            'content_creator' => 'Content Creator',
-            'affiliator'      => 'Affiliator',
-            'business'        => 'Business',
-        ];
-        $roleTitle = $roleTitleMap[$profile->bio_role ?? ''] ?? 'Creator';
         $bioName   = $config['name'] ?? $profile->store_name ?? $username;
-        $pageTitle = $bioName . ' - ' . $roleTitle . ' | buyle.id';
+        $pageTitle = $bioName . ' | Official Digital Portal';
     @endphp
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $seoDesc }}">
@@ -34,8 +28,8 @@
 
     @php
         $sameAsLinks = array_values(array_filter([
-            !empty($config['ig']) ? 'https://instagram.com/' . ltrim($config['ig'], '@') : null,
-            !empty($config['tiktok']) ? 'https://tiktok.com/@' . ltrim($config['tiktok'], '@') : null,
+            !empty($config['ig']) ? 'https://instagram.com/' . ltrim(ltrim($config['ig'], '@'), '/') : null,
+            !empty($config['tiktok']) ? 'https://tiktok.com/@' . ltrim(ltrim($config['tiktok'], '@'), '/') : null,
             !empty($config['youtube']) ? $config['youtube'] : null,
             $canonical ?? url()->current(),
         ]));
@@ -70,8 +64,8 @@
 
     <style>
         :root {
-            --accent: #2563eb;
-            --accent-rgb: 37, 99, 235;
+            --accent: #0f172a;
+            --accent-rgb: 15, 23, 42;
             --bg: #f8fafc;
             --card: #ffffff;
             --card-border: #e2e8f0;
@@ -81,12 +75,12 @@
             --btn-text: #ffffff;
             --radius-lg: 24px;
             --radius-md: 16px;
-            --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.03);
-            --shadow-md: 0 12px 28px -6px rgba(15, 23, 42, 0.06);
+            --shadow-sm: 0 4px 14px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 12px 28px -6px rgba(15, 23, 42, 0.08);
             --shadow-hover: 0 20px 36px -8px rgba(15, 23, 42, 0.12);
         }
 
-        /* Custom Scrollbar - Bright Light Gray */
+        /* Scrollbar Abu-Abu Cerah Clean */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -124,27 +118,27 @@
         }
 
         .theme5-wrapper {
-            max-width: 1200px;
+            max-width: 1140px;
             margin: 0 auto;
             padding: 2.5rem 1.5rem 5rem;
         }
 
-        /* Anti-Mainstream Asymmetric Landing Grid */
+        /* Anti-Mainstream Asymmetric Grid Layout */
         .theme5-grid {
             display: grid;
-            grid-template-columns: 360px 1fr;
+            grid-template-columns: 370px 1fr;
             gap: 2rem;
             align-items: start;
         }
 
-        /* Sticky Left Profile Card */
         .left-profile-sticky {
             position: sticky;
             top: 2rem;
             z-index: 20;
         }
 
-        .profile-hero-card {
+        /* Profile Card - Motia Clean Style */
+        .motia-card {
             background: var(--card);
             border: 1px solid var(--card-border);
             border-radius: var(--radius-lg);
@@ -153,230 +147,176 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .profile-hero-card:hover {
+        .motia-card:hover {
             box-shadow: var(--shadow-hover);
         }
 
-        .hero-cover-banner {
-            height: 140px;
-            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+        /* Header Cover Banner */
+        .motia-header-banner {
+            height: 145px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             background-size: cover;
             background-position: center;
             position: relative;
+            padding: 1.25rem 1.25rem 0.75rem;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
         }
 
-        .profile-avatar-container {
+        /* Social Icons inside Header (Motia Style: Clean White Monochrome Vectors) */
+        .motia-header-socials {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(8px);
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .motia-header-socials a {
+            color: #ffffff;
+            opacity: 0.88;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .motia-header-socials a:hover {
+            opacity: 1;
+            transform: scale(1.15);
+        }
+
+        .motia-header-socials svg {
+            width: 18px;
+            height: 18px;
+            fill: #ffffff;
+        }
+
+        /* Avatar: Large Rounded Square Overlapping Header */
+        .motia-avatar-wrap {
             padding: 0 1.5rem;
-            margin-top: -55px;
+            margin-top: -46px;
             position: relative;
             display: flex;
-            justify-content: space-between;
             align-items: flex-end;
+            justify-content: space-between;
         }
 
-        .avatar-ring {
-            width: 104px;
-            height: 104px;
-            border-radius: 50%;
+        .motia-avatar {
+            width: 92px;
+            height: 92px;
+            border-radius: 22px;
             border: 4px solid var(--card);
-            background: #fff;
+            background: #0f172a;
             overflow: hidden;
-            box-shadow: var(--shadow-md);
-            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
             flex-shrink: 0;
         }
 
-        .avatar-ring img {
+        .motia-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .status-badge-online {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #166534;
-            padding: 5px 12px;
-            border-radius: 999px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            margin-bottom: 8px;
+        /* Profile Details Body */
+        .motia-card-body {
+            padding: 1.25rem 1.5rem 1.75rem;
         }
 
-        .status-badge-online .pulse-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #22c55e;
-            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
-            animation: pulseGreen 2s infinite;
-        }
-
-        @keyframes pulseGreen {
-            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-            70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
-        }
-
-        .profile-card-body {
-            padding: 1.25rem 1.5rem 1.5rem;
-        }
-
-        .profile-name-heading {
-            font-size: 1.35rem;
+        .motia-name {
+            font-size: 1.4rem;
             font-weight: 800;
             color: var(--text);
-            line-height: 1.25;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            flex-wrap: wrap;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
         }
 
-        .verified-icon {
-            color: var(--accent);
-            font-size: 1.1rem;
-        }
-
-        .role-pill {
-            display: inline-block;
-            background: rgba(var(--accent-rgb), 0.08);
-            color: var(--accent);
-            font-weight: 700;
-            font-size: 0.72rem;
-            padding: 3px 10px;
-            border-radius: 6px;
-            margin-top: 0.4rem;
-            letter-spacing: 0.02em;
-        }
-
-        .profile-bio-text {
+        .motia-handle {
             font-size: 0.85rem;
             color: var(--text-sub);
-            margin-top: 0.75rem;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .motia-bio {
+            font-size: 0.88rem;
+            color: var(--text-sub);
+            margin-top: 0.85rem;
             line-height: 1.6;
         }
 
-        .location-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.75rem;
-            color: var(--text-sub);
-            margin-top: 0.6rem;
-            background: var(--bg);
-            padding: 4px 10px;
-            border-radius: 8px;
-            border: 1px solid var(--card-border);
-        }
-
-        /* Creator Quick Stats Bar */
-        .creator-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            background: var(--bg);
-            border: 1px solid var(--card-border);
-            border-radius: 14px;
-            padding: 10px;
-            margin-top: 1.25rem;
-            text-align: center;
-        }
-
-        .stat-item-val {
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: var(--text);
-        }
-
-        .stat-item-lbl {
-            font-size: 0.68rem;
-            font-weight: 600;
-            color: var(--text-sub);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Social Row */
-        .social-icons-wrapper {
-            margin-top: 1.25rem;
-            border-top: 1px dashed var(--card-border);
-            padding-top: 1rem;
-        }
-
-        .social-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: var(--bg);
-            border: 1px solid var(--card-border);
+        /* Inline Stats Bar (Motia Clean Style: No Boxes, No Badges) */
+        .motia-stats-row {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--card-border);
+            font-size: 0.88rem;
+            color: var(--text-sub);
+        }
+
+        .motia-stats-row strong {
             color: var(--text);
+            font-weight: 800;
+        }
+
+        /* Direct Domain Link */
+        .motia-domain-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 1rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-sub);
             text-decoration: none;
-            font-size: 1.1rem;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-sm);
+            transition: color 0.2s;
         }
 
-        .social-icon:hover {
-            background: var(--accent);
-            color: #fff !important;
-            border-color: var(--accent);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(var(--accent-rgb), 0.25);
+        .motia-domain-link:hover {
+            color: var(--accent);
         }
 
-        /* Right Content Showcase */
+        /* Right Content Showcase Area */
         .right-showcase-area {
             display: flex;
             flex-direction: column;
             gap: 1.75rem;
         }
 
-        /* Landing Top Bar / Welcome Hero */
+        /* Top Hero Card */
         .landing-top-hero {
             background: var(--card);
             border: 1px solid var(--card-border);
             border-radius: var(--radius-lg);
             padding: 1.5rem 1.75rem;
             box-shadow: var(--shadow-sm);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .landing-top-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 180px;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), 0.05));
-            pointer-events: none;
         }
 
         .hero-welcome-title {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 800;
             color: var(--text);
+            letter-spacing: -0.01em;
         }
 
         .hero-welcome-sub {
-            font-size: 0.83rem;
+            font-size: 0.85rem;
             color: var(--text-sub);
             margin-top: 4px;
+            line-height: 1.5;
         }
 
-        /* Search Bar */
+        /* Clean Search Bar */
         .search-box-landing {
             position: relative;
             width: 100%;
@@ -398,8 +338,8 @@
         }
 
         .search-box-landing input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15);
+            border-color: #94a3b8;
+            box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.15);
         }
 
         .search-box-landing i {
@@ -420,11 +360,11 @@
         }
 
         .section-title-text {
-            font-size: 0.95rem;
+            font-size: 0.88rem;
             font-weight: 800;
             color: var(--text);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -435,11 +375,11 @@
             display: inline-block;
             width: 4px;
             height: 14px;
-            background: var(--accent);
+            background: var(--text);
             border-radius: 999px;
         }
 
-        /* Link Stack - Bento Anti-Mainstream Style */
+        /* Link Stack - Bento Clean Style */
         .bento-link-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -469,14 +409,14 @@
             top: 0;
             bottom: 0;
             width: 4px;
-            background: var(--accent);
+            background: var(--text);
             opacity: 0;
             transition: opacity 0.25s;
         }
 
         .bento-link-card:hover {
             transform: translateX(4px);
-            border-color: rgba(var(--accent-rgb), 0.3);
+            border-color: #cbd5e1;
             box-shadow: var(--shadow-md);
         }
 
@@ -485,8 +425,8 @@
         }
 
         .bento-icon-box {
-            width: 46px;
-            height: 46px;
+            width: 44px;
+            height: 44px;
             border-radius: 12px;
             background: var(--bg);
             border: 1px solid var(--card-border);
@@ -494,8 +434,8 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            color: var(--accent);
-            font-size: 1.25rem;
+            color: var(--text);
+            font-size: 1.2rem;
             overflow: hidden;
         }
 
@@ -511,7 +451,7 @@
         }
 
         .bento-title {
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             font-weight: 700;
             color: var(--text);
             line-height: 1.3;
@@ -527,8 +467,8 @@
         }
 
         .bento-arrow-btn {
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             border-radius: 10px;
             background: var(--bg);
             display: flex;
@@ -541,7 +481,7 @@
         }
 
         .bento-link-card:hover .bento-arrow-btn {
-            background: var(--accent);
+            background: var(--text);
             color: #fff;
             transform: translateX(2px);
         }
@@ -549,7 +489,7 @@
         /* Products Showcase Grid */
         .landing-products-grid {
             display: grid;
-            grid-template-columns: repeat( auto-fill, minmax(220px, 1fr) );
+            grid-template-columns: repeat( auto-fill, minmax(210px, 1fr) );
             gap: 16px;
         }
 
@@ -569,7 +509,7 @@
         .landing-prod-card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-hover);
-            border-color: rgba(var(--accent-rgb), 0.3);
+            border-color: #cbd5e1;
         }
 
         .landing-prod-img {
@@ -638,7 +578,7 @@
         .landing-prod-price {
             font-size: 0.88rem;
             font-weight: 800;
-            color: var(--accent);
+            color: var(--text);
         }
 
         .landing-prod-btn {
@@ -651,7 +591,7 @@
         }
 
         .landing-prod-card:hover .landing-prod-btn {
-            color: var(--accent);
+            color: var(--text);
         }
 
         /* TikTok Highlights Slider */
@@ -747,10 +687,10 @@
         }
 
         .footer-landing a:hover {
-            color: var(--accent);
+            color: var(--text);
         }
 
-        /* Mobile Optimization */
+        /* Mobile Responsive Optimization */
         @media (max-width: 991px) {
             .theme5-wrapper {
                 padding: 1rem 1rem 3rem;
@@ -779,7 +719,7 @@
 
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    {{-- Dynamic Custom Color & Background Overrides --}}
+    {{-- Custom Background & Colors Overrides --}}
     <style>
         @php
             $bgType  = $config['bg_type'] ?? 'color';
@@ -798,10 +738,10 @@
         @endif
 
         @if(!empty($config['color_text']))
-            body, .profile-name-heading, .hero-welcome-title, .bento-title, .landing-prod-title, .section-title-text, .stat-item-val {
+            body, .motia-name, .hero-welcome-title, .bento-title, .landing-prod-title, .section-title-text {
                 color: {{ $config['color_text'] }} !important;
             }
-            .profile-bio-text, .hero-welcome-sub, .bento-desc, .stat-item-lbl, .location-pill {
+            .motia-bio, .motia-handle, .hero-welcome-sub, .bento-desc, .motia-stats-row {
                 color: {{ $config['color_text'] }} !important;
                 opacity: 0.8;
             }
@@ -814,20 +754,20 @@
         @endif
 
         @if(!empty($config['color_card']))
-            .profile-hero-card, .landing-top-hero, .bento-link-card, .landing-prod-card, .map-frame-wrap, .search-box-landing input {
+            .motia-card, .landing-top-hero, .bento-link-card, .landing-prod-card, .map-frame-wrap, .search-box-landing input {
                 background: {{ $config['color_card'] }} !important;
             }
         @endif
 
         @if(!empty($config['color_btn']))
-            .bento-link-card, .social-icon {
+            .bento-link-card {
                 background: {{ $config['color_btn'] }} !important;
                 border-color: transparent !important;
             }
         @endif
 
         @if(!empty($config['color_btn_text']))
-            .bento-title, .bento-desc, .bento-arrow-btn, .social-icon, .social-icon i, .social-icon svg {
+            .bento-title, .bento-desc, .bento-arrow-btn {
                 color: {{ $config['color_btn_text'] }} !important;
             }
         @endif
@@ -837,6 +777,21 @@
 <body>
 
     @php
+        $sl               = $profile->social_links ?? [];
+        $s_wa             = $sl['wa']        ?? $config['wa']        ?? null;
+        $s_ig             = $sl['instagram'] ?? $config['ig']        ?? null;
+        $s_tt             = $sl['tiktok']    ?? $config['tiktok']    ?? null;
+        $s_yt             = $sl['youtube']   ?? $config['youtube']   ?? null;
+        $s_fb             = $sl['facebook']  ?? $config['facebook']  ?? null;
+        $s_x              = $sl['x']        ?? $config['x']         ?? null;
+        $s_li             = $sl['linkedin']  ?? $config['linkedin']  ?? null;
+        $s_web            = $sl['website']   ?? $config['website']   ?? null;
+
+        $ig_url           = !empty($s_ig) ? (Str::startsWith($s_ig, 'http') ? $s_ig : 'https://instagram.com/' . ltrim(ltrim($s_ig, '@'), '/')) : null;
+        $tt_url           = !empty($s_tt) ? (Str::startsWith($s_tt, 'http') ? $s_tt : 'https://tiktok.com/@' . ltrim(ltrim($s_tt, '@'), '/')) : null;
+        $yt_url           = !empty($s_yt) ? (Str::startsWith($s_yt, 'http') ? $s_yt : 'https://youtube.com/@' . ltrim(ltrim($s_yt, '@'), '/')) : null;
+        $wa_url           = !empty($s_wa) ? 'https://wa.me/62' . preg_replace('/^(62|0)/', '', $s_wa) : null;
+
         $linkBlocks       = $blocks->whereIn('type', ['link', 'pdf', 'image']);
         $tiktokBlocks     = $blocks->where('type', 'tiktok');
         $affBlocks        = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
@@ -849,70 +804,74 @@
     <div class="theme5-wrapper">
         <div class="theme5-grid">
             
-            {{-- Left Column: Sticky Profile Card --}}
+            {{-- Left Column: Sticky Motia Profile Card (Matches Image 1) --}}
             <div class="left-profile-sticky">
-                <div class="profile-hero-card">
-                    {{-- Cover Header --}}
-                    <div class="hero-cover-banner" @if(!empty($config['cover'])) style="background-image:url('{{ asset('storage/' . $config['cover']) }}');" @endif></div>
+                <div class="motia-card">
+                    
+                    {{-- Header Cover Banner with Clean Bare Minimalist Vector Social Icons (Motia Style) --}}
+                    <div class="motia-header-banner" @if(!empty($config['cover'])) style="background-image:url('{{ asset('storage/' . $config['cover']) }}');" @endif>
+                        <div class="motia-header-socials">
+                            @if($wa_url)
+                                <a href="{{ $wa_url }}" target="_blank" title="WhatsApp">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.556 4.117 1.528 5.849L0 24l6.335-1.508A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.154-1.422l-.37-.218-3.764.896.924-3.667-.243-.381A9.953 9.953 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/></svg>
+                                </a>
+                            @endif
+                            @if($ig_url)
+                                <a href="{{ $ig_url }}" target="_blank" title="Instagram">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg>
+                                </a>
+                            @endif
+                            @if($tt_url)
+                                <a href="{{ $tt_url }}" target="_blank" title="TikTok">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43 6.2 6.2 0 0 0 1.91-4.42V8.92a8.28 8.28 0 0 0 4.82 1.55v-3.47a4.91 4.91 0 0 1-1-.31z"/></svg>
+                                </a>
+                            @endif
+                            @if($yt_url)
+                                <a href="{{ $yt_url }}" target="_blank" title="YouTube">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+                                </a>
+                            @endif
+                            @if($s_web)
+                                <a href="{{ $s_web }}" target="_blank" title="Website">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
 
-                    {{-- Avatar & Online Badge --}}
-                    <div class="profile-avatar-container">
-                        <div class="avatar-ring">
+                    {{-- Avatar (Large Rounded Square Image Overlapping Header like Motia) --}}
+                    <div class="motia-avatar-wrap">
+                        <div class="motia-avatar">
                             @if(!empty($config['avatar']))
                                 <img src="{{ asset('storage/' . $config['avatar']) }}" alt="{{ $config['name'] ?? '' }}">
                             @else
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg,var(--accent),#3b82f6);display:flex;align-items:center;justify-content:center;font-size:2.4rem;font-weight:900;color:#fff;">
+                                <div style="width:100%;height:100%;background:#0f172a;display:flex;align-items:center;justify-content:center;font-size:2.4rem;font-weight:900;color:#fff;">
                                     {{ strtoupper(substr($config['name'] ?? $username, 0, 1)) }}
                                 </div>
                             @endif
                         </div>
-                        <div class="status-badge-online">
-                            <span class="pulse-dot"></span> Online
-                        </div>
                     </div>
 
-                    {{-- Card Details --}}
-                    <div class="profile-card-body">
-                        <h1 class="profile-name-heading">
-                            {{ $config['name'] ?? $profile->store_name ?? $username }}
-                            <i class="fas fa-check-circle verified-icon" title="Verified Creator"></i>
-                        </h1>
-
-                        <div class="role-pill">
-                            {{ $roleTitleMap[$profile->bio_role ?? ''] ?? 'Official Creator' }}
-                        </div>
+                    {{-- Card Details Body --}}
+                    <div class="motia-card-body">
+                        <h1 class="motia-name">{{ $config['name'] ?? $profile->store_name ?? $username }}</h1>
+                        <div class="motia-handle">{{ '@' . $username }}</div>
 
                         @if(!empty($config['bio']))
-                            <p class="profile-bio-text">{{ $config['bio'] }}</p>
+                            <p class="motia-bio">{{ $config['bio'] }}</p>
                         @endif
 
-                        @if(!empty($config['location']))
-                            <div class="location-pill">
-                                <i class="fas fa-map-marker-alt" style="color:var(--accent); font-size:10px;"></i>
-                                {{ $config['location'] }}
-                            </div>
-                        @endif
-
-                        {{-- Quick Creator Stats Bar --}}
-                        <div class="creator-stats-grid">
-                            <div>
-                                <div class="stat-item-val">{{ $totalLinks }}</div>
-                                <div class="stat-item-lbl">Links</div>
-                            </div>
-                            <div>
-                                <div class="stat-item-val">{{ $totalProds }}</div>
-                                <div class="stat-item-lbl">Produk</div>
-                            </div>
-                            <div>
-                                <div class="stat-item-val"><i class="fas fa-shield-alt" style="color:#22c55e;"></i></div>
-                                <div class="stat-item-lbl">Verified</div>
-                            </div>
+                        {{-- Inline Stats Row (Motia Style: Clean Inline Numbers) --}}
+                        <div class="motia-stats-row">
+                            <div><strong>{{ $totalLinks }}</strong> Links</div>
+                            <div><strong>{{ $totalProds }}</strong> Produk</div>
                         </div>
 
-                        {{-- Social Links Row --}}
-                        <div class="social-icons-wrapper">
-                            @include('bio._social_icons')
-                        </div>
+                        {{-- Direct Domain Link --}}
+                        <a href="{{ canonical ?? url()->current() }}" class="motia-domain-link">
+                            <i class="fas fa-link" style="font-size:11px;"></i>
+                            buyle.id/{{ $username }}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -920,15 +879,13 @@
             {{-- Right Column: Showcase Content Area --}}
             <div class="right-showcase-area">
                 
-                {{-- Welcome Banner --}}
+                {{-- Clean Top Banner Header (NO Emojis) --}}
                 <div class="landing-top-hero">
-                    <div>
-                        <div class="hero-welcome-title">Official Digital Portal 👋</div>
-                        <div class="hero-welcome-sub">Temukan tautan resmi & rekomendasi produk terbaik dari {{ $config['name'] ?? $username }}.</div>
-                    </div>
+                    <div class="hero-welcome-title">Official Digital Portal</div>
+                    <div class="hero-welcome-sub">Temukan tautan resmi & rekomendasi produk terbaik dari {{ $config['name'] ?? $profile->store_name ?? $username }}.</div>
                 </div>
 
-                {{-- Live Search Box --}}
+                {{-- Clean Search Box --}}
                 <div class="search-box-landing">
                     <i class="fas fa-search"></i>
                     <input type="text" id="bioSearchInput" placeholder="Cari link, produk, atau konten..." onkeyup="filterBioItems(this.value)">

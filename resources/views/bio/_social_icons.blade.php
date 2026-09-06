@@ -13,6 +13,10 @@
     $s_tg    = $sl['telegram']  ?? $config['telegram']  ?? null;
     $s_sn    = $sl['snapchat']  ?? $config['snapchat']  ?? null;
     $s_web   = $sl['website']   ?? $config['website']   ?? null;
+
+    $ig_url  = !empty($s_ig) ? (Str::startsWith($s_ig, 'http') ? $s_ig : 'https://instagram.com/' . ltrim(ltrim($s_ig, '@'), '/')) : null;
+    $tt_url  = !empty($s_tt) ? (Str::startsWith($s_tt, 'http') ? $s_tt : 'https://tiktok.com/@' . ltrim(ltrim($s_tt, '@'), '/')) : null;
+
     $hasAny  = !empty($profile->store_slug) || $s_wa || $s_ig || $s_tt || $s_yt || $s_fb || $s_x || $s_li || $s_pin || $s_dsc || $s_thr || $s_tg || $s_sn || $s_web;
 @endphp
 @if($hasAny)
@@ -24,10 +28,10 @@
 <a href="https://wa.me/62{{ preg_replace('/^(62|0)/', '', $s_wa) }}" target="_blank" class="social-icon" title="WhatsApp"><svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.556 4.117 1.528 5.849L0 24l6.335-1.508A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.154-1.422l-.37-.218-3.764.896.924-3.667-.243-.381A9.953 9.953 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/></svg></a>
 @endif
 @if(!empty($s_ig))
-<a href="https://instagram.com/{{ ltrim($s_ig,'@') }}" target="_blank" class="social-icon" title="Instagram"><svg width="20" height="20" viewBox="0 0 24 24"><defs><linearGradient id="ig-g" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="50%" stop-color="#dc2743"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5.5" fill="url(#ig-g)"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="white" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.2" fill="white"/></svg></a>
+<a href="{{ $ig_url }}" target="_blank" class="social-icon" title="Instagram"><svg width="20" height="20" viewBox="0 0 24 24"><defs><linearGradient id="ig-g" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="50%" stop-color="#dc2743"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5.5" fill="url(#ig-g)"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="white" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.2" fill="white"/></svg></a>
 @endif
 @if(!empty($s_tt))
-<a href="https://tiktok.com/@{{ ltrim($s_tt,'@') }}" target="_blank" class="social-icon" title="TikTok"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43 6.2 6.2 0 0 0 1.91-4.42V8.92a8.28 8.28 0 0 0 4.82 1.55v-3.47a4.91 4.91 0 0 1-1-.31z"/></svg></a>
+<a href="{{ $tt_url }}" target="_blank" class="social-icon" title="TikTok"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43 6.2 6.2 0 0 0 1.91-4.42V8.92a8.28 8.28 0 0 0 4.82 1.55v-3.47a4.91 4.91 0 0 1-1-.31z"/></svg></a>
 @endif
 @if(!empty($s_yt))
 <a href="{{ Str::startsWith($s_yt,'http') ? $s_yt : 'https://youtube.com/@'.ltrim($s_yt,'@') }}" target="_blank" class="social-icon" title="YouTube"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z" fill="#FF0000"/></svg></a>
