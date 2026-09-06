@@ -1,4 +1,4 @@
-﻿/* ================================================
+/* ================================================
    buyle.id — buyle.id Non-Electric
    Design System v1.0
    Brand: White Dominant + Light Blue (#38BDF8)
@@ -81,9 +81,13 @@ body {
 /* ================================================
    SCROLLBAR
    ================================================ */
-::-webkit-scrollbar       { width: 4px; }
-::-webkit-scrollbar-track  { background: var(--bg-1); }
-::-webkit-scrollbar-thumb  { background: #0EA5E9; border-radius: 4px; }
+::-webkit-scrollbar       { width: 10px; height: 10px; }
+::-webkit-scrollbar-button { display: none !important; width: 0 !important; height: 0 !important; }
+::-webkit-scrollbar-corner { background: transparent !important; }
+::-webkit-scrollbar-track  { background: #f0fdf4; border-radius: 10px; }
+::-webkit-scrollbar-thumb  { background: linear-gradient(180deg, #1eb349, #16a34a); border-radius: 10px; border: 2px solid #f0fdf4; }
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #16a34a, #15803d); }
+* { scrollbar-width: auto; scrollbar-color: #1eb349 #f0fdf4; }
 
 /* ================================================
    TYPOGRAPHY

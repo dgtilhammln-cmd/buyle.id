@@ -103,6 +103,15 @@
 
     {{-- Dynamic Theme Colors & Global Font Override --}}
     <style>
+        /* ── Premium Global Scrollbar ── */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-button { display: none !important; width: 0 !important; height: 0 !important; }
+        ::-webkit-scrollbar-corner { background: transparent !important; }
+        ::-webkit-scrollbar-track { background: #f0fdf4; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #1eb349, #16a34a); border-radius: 10px; border: 2px solid #f0fdf4; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #16a34a, #15803d); }
+        * { scrollbar-width: auto; scrollbar-color: #1eb349 #f0fdf4; }
+
         :root {
             --font-jakarta: 'Montserrat', sans-serif !important;
             --font-main: 'Montserrat', sans-serif !important;
