@@ -610,7 +610,10 @@
         </button>
 
         <div style="background: #fafdfb; border: 1px solid #e7f0e7; border-radius: 14px; padding: 1rem; font-size: 0.78rem; color: #475569; margin-top: 1.25rem;">
-            <strong style="color: #0f172a; display: block; margin-bottom: 0.4rem;">💡 Tips Verifikasi:</strong>
+            <strong style="color: #0f172a; display: flex; align-items: center; gap: 5px; margin-bottom: 0.4rem;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                Tips Verifikasi:
+            </strong>
             • Izinkan akses kamera browser saat diminta.<br>
             • Pastikan pencahayaan layar pengunjung cukup.<br>
             • Anda dapat menandai check-in manual pada tab Data Kehadiran jika pengunjung tidak membawa QR Code.
@@ -880,7 +883,7 @@
                                                     @csrf
                                                     @if($ticket->status === 'used')
                                                         <button type="submit" class="btn-action-sm btn-toggle-undo" onclick="return confirm('Batalkan status check-in tiket ini?')">
-                                                            ↩️ Batalkan
+                                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:-2px;margin-right:3px;"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg> Batalkan
                                                         </button>
                                                     @else
                                                         <button type="submit" class="btn-action-sm btn-toggle-checkin">
@@ -1040,11 +1043,14 @@
         const reader = document.getElementById('reader');
         if (reader) {
             reader.innerHTML = `<div style="padding:2.5rem 1rem; text-align:center;">
-                <div style="font-size:2rem; margin-bottom:0.75rem;">📷</div>
+                <div style="margin-bottom:0.75rem; display:flex; justify-content:center;">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                </div>
                 <div style="font-size:0.88rem; font-weight:700; color:#991b1b; margin-bottom:0.4rem;">Kamera Tidak Dapat Diakses</div>
                 <div style="font-size:0.78rem; color:#64748b; line-height:1.5; margin-bottom:1rem;">${msg || 'Pastikan izin kamera sudah diberikan di browser Anda.'}</div>
-                <button onclick="retryCamera()" style="background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;padding:0.55rem 1.25rem;border-radius:999px;font-size:0.82rem;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(30,179,73,0.3);">
-                    🔄 Coba Lagi
+                <button onclick="retryCamera()" style="display:inline-flex;align-items:center;gap:0.4rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;padding:0.55rem 1.25rem;border-radius:999px;font-size:0.82rem;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(30,179,73,0.3);">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                    Coba Lagi
                 </button>
             </div>`;
         }

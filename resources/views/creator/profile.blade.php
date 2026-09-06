@@ -482,14 +482,20 @@ select.form-input { cursor: pointer; }
             <div class="prof-card-body">
                 <div class="banner-grid">
                     <div class="banner-slot">
-                        <div class="banner-label">🖼 Slide 1 <span style="font-weight:400;color:#94a3b8;">(Utama)</span></div>
+                        <div class="banner-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            Slide 1 <span style="font-weight:400;color:#94a3b8;">(Utama)</span>
+                        </div>
                         @if($profile->store_banner_1)
                             <img src="{{ asset('storage/' . $profile->store_banner_1) }}" class="banner-preview">
                         @endif
                         <input type="file" name="store_banner_1" class="form-input" style="height:auto;padding:0.5rem;font-size:0.75rem;" accept="image/*" onchange="initImageCropper(this, {aspectRatio: 3, width: 1200, height: 400, title: 'Crop Banner Toko Utama (3:1 Landscape)', previewTarget: '.banner-slot:nth-child(1) .banner-preview'})">
                     </div>
                     <div class="banner-slot">
-                        <div class="banner-label">🖼 Slide 2 <span style="font-weight:400;color:#94a3b8;">(Opsional)</span></div>
+                        <div class="banner-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            Slide 2 <span style="font-weight:400;color:#94a3b8;">(Opsional)</span>
+                        </div>
                         @if($profile->store_banner_2)
                             <img src="{{ asset('storage/' . $profile->store_banner_2) }}" class="banner-preview">
                         @endif
@@ -518,7 +524,10 @@ select.form-input { cursor: pointer; }
                 <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                     <div style="font-size:0.85rem;color:#166534;line-height:1.5;">
-                        <strong style="display:block;margin-bottom:2px;font-size:0.9rem;color:#15803D;">💡 Panduan Tampilan Online Store:</strong>
+                        <strong style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:0.9rem;color:#15803D;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                            Panduan Tampilan Online Store:
+                        </strong>
                         Disarankan mengisi <strong>maksimal 3 sosial media utama</strong> yang paling sering Anda gunakan (contoh: <em>WhatsApp, Instagram, & TikTok</em>). Ikon sosial media ini akan tampil rapi & elegan di header <strong>Online Store</strong> Anda.
                     </div>
                 </div>

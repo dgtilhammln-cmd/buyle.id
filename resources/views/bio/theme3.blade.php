@@ -503,9 +503,10 @@
 
         @if(!empty($config['color_btn_text']))
             .glass-btn .btn-title, .glass-btn .btn-sub,
-            .glass-btn .btn-icon i, .glass-btn .btn-icon svg,
-            .glass-btn .btn-arrow i, .glass-btn i,
-            .social-icon i {
+            .glass-btn .btn-icon, .glass-btn .btn-icon i, .glass-btn .btn-icon svg, .glass-btn .btn-icon *,
+            .glass-btn .btn-arrow, .glass-btn .btn-arrow i, .glass-btn .btn-arrow svg, .glass-btn .btn-arrow *,
+            .glass-btn i, .glass-btn svg, .glass-btn svg *,
+            .social-icon i, .social-icon svg {
                 color:
                     {{ $config['color_btn_text'] }}
                     !important;

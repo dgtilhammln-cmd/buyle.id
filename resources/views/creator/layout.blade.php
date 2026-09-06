@@ -521,7 +521,7 @@
                     <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
                 Overview
-                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.7;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> @endif
             </a>
 
             <a href="{{ $isBuyer ? '#' : route('creator.products.index') }}"
@@ -534,7 +534,7 @@
                     <line x1="10" y1="14" x2="14" y2="14"/>
                 </svg>
                 Produk Digital
-                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.7;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> @endif
             </a>
 
             <a href="{{ $isBuyer ? '#' : route('creator.groups.index') }}"
@@ -544,7 +544,7 @@
                     <path d="M4 6h16M4 12h16M4 18h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
                 </svg>
                 Kelompok Produk
-                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.7;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> @endif
             </a>
 
             <a href="{{ $isBuyer ? route('creator.onboarding') : route('creator.profile.edit') }}"
@@ -564,7 +564,7 @@
                     <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
                 </svg>
                 Link in Bio
-                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.7;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> @endif
             </a>
 
             <a href="{{ $isBuyer ? '#' : route('creator.membership') }}"
@@ -574,7 +574,7 @@
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                 </svg>
                 Membership Seller
-                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.7;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> @endif
             </a>
 
             <a href="{{ $isBuyer ? '#' : route('creator.sales.report') }}"
@@ -584,7 +584,7 @@
                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                 </svg>
                 Laporan Penjualan
-                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.7;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> @endif
             </a>
 
             <a href="{{ $isBuyer ? '#' : route('creator.payout.settings') }}"
@@ -596,7 +596,7 @@
                     <path d="M6 12h.01"/>
                 </svg>
                 Saldo & Pencairan
-                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.7;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> @endif
             </a>
 
             <a href="{{ $isBuyer ? '#' : route('creator.ticket.scanner') }}"
@@ -607,7 +607,7 @@
                     <rect x="7" y="7" width="10" height="10" rx="1"/>
                 </svg>
                 Scan Tiket & Data Kehadiran
-                @if($isBuyer) <span style="margin-left:auto;font-size:0.7rem;">🔒</span> @endif
+                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.7;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> @endif
             </a>
         </nav>
 
@@ -699,7 +699,10 @@
             <div style="width:64px;height:64px;border-radius:50%;background:#F0FDF4;color:#1eb349;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;border:2px solid #BBF7D0;">
                 <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </div>
-            <h3 style="font-size:1.25rem;font-weight:800;color:#0F172A;margin:0 0 0.5rem;font-family:'Montserrat',sans-serif;">Yuk, Jadi Creator Dulu! 🚀</h3>
+            <h3 style="font-size:1.25rem;font-weight:800;color:#0F172A;margin:0 0 0.5rem;font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:center;gap:0.4rem;">
+                Yuk, Jadi Creator Dulu!
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-3.05 11a22.35 22.35 0 0 1-3.95 2z"/></svg>
+            </h3>
             <p style="font-size:0.875rem;color:#64748B;line-height:1.6;margin:0 0 1.5rem;font-family:'Montserrat',sans-serif;">
                 Fitur ini akan <strong style="color:#1eb349;font-weight:700;">langsung terbuka</strong> setelah Anda melengkapi form data toko di halaman ini. Gratis dan hanya butuh 1 menit!
             </p>
@@ -758,7 +761,10 @@
                     <button type="button" onclick="if(cropperObj)cropperObj.zoom(-0.1)" class="crop-btn-tool" title="Zoom Out">🔍-</button>
                     <button type="button" onclick="if(cropperObj)cropperObj.rotate(-45)" class="crop-btn-tool" title="Rotate Left">↺</button>
                     <button type="button" onclick="if(cropperObj)cropperObj.rotate(45)" class="crop-btn-tool" title="Rotate Right">↻</button>
-                    <button type="button" onclick="if(cropperObj)cropperObj.reset()" class="crop-btn-tool" title="Reset">🔄 Reset</button>
+                    <button type="button" onclick="if(cropperObj)cropperObj.reset()" class="crop-btn-tool" title="Reset" style="display:inline-flex;align-items:center;gap:0.25rem;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                        Reset
+                    </button>
                 </div>
                 <div style="display:flex; gap:0.6rem;">
                     <button type="button" onclick="closeCropperModal()" style="padding:0.6rem 1.25rem; border-radius:999px; border:1.5px solid #cbd5e1; background:#fff; color:#64748b; font-weight:700; font-size:0.82rem; cursor:pointer;">Batal</button>

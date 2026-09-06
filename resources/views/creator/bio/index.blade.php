@@ -793,14 +793,20 @@
                                     <label id="bg_mode_card_color" class="bg-mode-card" style="display:flex; align-items:center; gap:0.6rem; padding:0.75rem 1rem; border-radius:10px; border:2px solid {{ $curBgType === 'color' ? '#1eb349' : '#e2e8f0' }}; cursor:pointer; background: {{ $curBgType === 'color' ? '#f0fdf4' : '#fff' }};">
                                         <input type="radio" name="bg_type" value="color" {{ $curBgType === 'color' ? 'checked' : '' }} onchange="toggleBgMode('color')" style="accent-color:#1eb349;">
                                         <div>
-                                            <strong style="display:block; font-size:0.85rem; color:#0f172a;">🎨 Warna Kustom</strong>
+                                            <strong style="display:flex; align-items:center; gap:0.35rem; font-size:0.85rem; color:#0f172a;">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21a9 9 0 1 1 0-18c4.97 0 9 3.58 9 8 0 2.21-1.79 4-4 4h-1.5c-.83 0-1.5.67-1.5 1.5 0 .39.15.74.39 1.01l.21.24c.4.45.65 1.05.65 1.75 0 1.38-1.12 2.5-2.5 2.5z"/><circle cx="7.5" cy="11.5" r="1.5"/><circle cx="12" cy="7.5" r="1.5"/><circle cx="16.5" cy="11.5" r="1.5"/></svg>
+                                                Warna Kustom
+                                            </strong>
                                             <span style="font-size:0.73rem; color:#64748b;">Warna solid / gradasi</span>
                                         </div>
                                     </label>
                                     <label id="bg_mode_card_image" class="bg-mode-card" style="display:flex; align-items:center; gap:0.6rem; padding:0.75rem 1rem; border-radius:10px; border:2px solid {{ $curBgType === 'image' ? '#1eb349' : '#e2e8f0' }}; cursor:pointer; background: {{ $curBgType === 'image' ? '#f0fdf4' : '#fff' }};">
                                         <input type="radio" name="bg_type" value="image" {{ $curBgType === 'image' ? 'checked' : '' }} onchange="toggleBgMode('image')" style="accent-color:#1eb349;">
                                         <div>
-                                            <strong style="display:block; font-size:0.85rem; color:#0f172a;">🖼️ Gambar Custom</strong>
+                                            <strong style="display:flex; align-items:center; gap:0.35rem; font-size:0.85rem; color:#0f172a;">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                                Gambar Custom
+                                            </strong>
                                             <span style="font-size:0.73rem; color:#64748b;">Upload (Auto WebP)</span>
                                         </div>
                                     </label>
@@ -836,7 +842,10 @@
                                     </div>
                                 @endif
                                 <input type="file" name="bio_bg_image" id="bio_bg_image_input" accept="image/*" class="form-input" style="height:auto; padding:0.5rem;" onchange="previewUploadedBgImage(this)">
-                                <span style="font-size:0.72rem; color:#64748b; margin-top:4px; display:block;">✨ Semua format gambar (JPG, PNG, WebP) akan otomatis di-convert ke WebP resolusi tinggi secara ringan & cepat.</span>
+                                <span style="font-size:0.72rem; color:#64748b; margin-top:4px; display:flex; align-items:center; gap:4px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/></svg>
+                                    Semua format gambar (JPG, PNG, WebP) akan otomatis di-convert ke WebP resolusi tinggi secara ringan & cepat.
+                                </span>
                             </div>
 
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
@@ -1877,8 +1886,10 @@
                         onchange="if(this.files.length>3){alert('Maksimal 3 foto!'); this.value=''; return;} previewEditUmkmImages(this)">
                     <div id="editNewImagePreview" style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.5rem;">
                     </div>
-                    <span class="form-hint" style="color:#64748b; font-size:0.72rem;">💡 Klik tombol ✕ pada foto tersimpan
-                        untuk menghapusnya secara permanen dari server.</span>
+                    <span class="form-hint" style="color:#64748b; font-size:0.72rem; display:flex; align-items:center; gap:4px; margin-top:4px;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                        Klik tombol ✕ pada foto tersimpan untuk menghapusnya secara permanen dari server.
+                    </span>
                 </div>
 
                 <div class="form-group">
