@@ -302,6 +302,8 @@
             min-width: 0;
             padding: 1.25rem 0 0 0;
             display: flex;
+            flex-direction: column;
+            align-items: stretch;
             height: 100vh;
             overflow-y: auto;
             overflow-x: hidden;
@@ -316,7 +318,6 @@
             box-shadow: -10px 0 30px rgba(0, 0, 0, 0.12);
             display: flex;
             flex-direction: column;
-            align-self: stretch;
             width: 100%;
         }
 
