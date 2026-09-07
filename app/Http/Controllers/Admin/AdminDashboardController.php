@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AnalyticsEvent;
 use App\Models\Product;
-use App\Models\Article;
-use App\Models\GalleryProject;
-use App\Models\Client;
-use App\Models\Lead;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,95 +15,142 @@ class AdminDashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $now  = now();
-        
+        $now = now();
+
+        $period     = $request->input('period', '30d');
         $start_date = $request->input('start_date');
         $end_date   = $request->input('end_date');
-        
+
         if ($start_date && $end_date) {
-            $from = Carbon::parse($start_date)->startOfDay();
-            $to   = Carbon::parse($end_date)->endOfDay();
-        } else {
-            $from = $now->copy()->subDays(29)->startOfDay();
+            $period = 'custom';
+            $from   = Carbon::parse($start_date)->startOfDay();
+            $to     = Carbon::parse($end_date)->endOfDay();
+        } elseif ($period === '7d') {
+            $from = $now->copy()->subDays(6)->startOfDay();
             $to   = $now->copy()->endOfDay();
+        } elseif ($period === '1y') {
+            $from = $now->copy()->subDays(364)->startOfDay();
+            $to   = $now->copy()->endOfDay();
+        } else {
+            $period = '30d';
+            $from   = $now->copy()->subDays(29)->startOfDay();
+            $to     = $now->copy()->endOfDay();
         }
 
-        // Calculate days diff for chart
         $daysDiff = $from->diffInDays($to);
-        if ($daysDiff > 60) $daysDiff = 60; // Limit chart labels
+        if ($daysDiff > 60) $daysDiff = 60;
 
-        $visitorCount = AnalyticsEvent::ofType('pageview')->whereBetween('created_at',[$from,$to])->count();
-        $waClicks     = AnalyticsEvent::ofType('wa_click')->whereBetween('created_at',[$from,$to])->count();
-        $leadsCount   = Lead::whereBetween('created_at',[$from,$to])->count();
-        $totalBuyers  = User::where('role','buyer')->count();
-        $newBuyers    = User::where('role','buyer')->whereBetween('created_at',[$from,$to])->count();
+        // 1. STAT CARDS
+        // Total Visitor
+        $visitorCount = AnalyticsEvent::ofType('pageview')->whereBetween('created_at', [$from, $to])->count();
+        if ($visitorCount === 0) {
+            $visitorCount = AnalyticsEvent::ofType('pageview')->count();
+        }
+
+        // Total Creators
+        $creatorsCount = User::whereIn('role', ['seller', 'creator'])->count();
+        if ($creatorsCount === 0) {
+            $creatorsCount = User::whereHas('creatorProfile')->count();
+        }
+
+        // Total Transaksi (Count of checkout orders, NOT money)
+        $transactionsCount = Order::whereBetween('created_at', [$from, $to])->count();
+        $allOrdersCount    = Order::count();
+        $displayTransactions = $transactionsCount > 0 ? $transactionsCount : $allOrdersCount;
+
+        // Total Produk Digital (mencakup semua kategori)
+        $totalProductsCount = Product::count();
 
         $stats = [
-            'visitor'     => $visitorCount,
-            'wa_click'    => $waClicks,
-            'leads'       => $leadsCount,
-            'total_buyers'=> $totalBuyers,
-            'new_buyers'  => $newBuyers,
+            'visitor'      => $visitorCount,
+            'creators'     => $creatorsCount,
+            'transactions' => $displayTransactions,
+            'products'     => $totalProductsCount,
         ];
 
-        // Leads daily chart
-        $leadsChart = Lead::whereBetween('created_at',[$from,$to])
-            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
-            ->groupBy('date')->orderBy('date')
-            ->pluck('count','date');
-
-        // Visitor daily chart
+        // 2. DAILY CHART DATA
         $visitorChart = AnalyticsEvent::ofType('pageview')
-            ->whereBetween('created_at',[$from,$to])
+            ->whereBetween('created_at', [$from, $to])
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
             ->groupBy('date')->orderBy('date')
-            ->pluck('count','date');
+            ->pluck('count', 'date');
 
-        // WA click daily chart
-        $waChart = AnalyticsEvent::ofType('wa_click')
-            ->whereBetween('created_at',[$from,$to])
+        $creatorChart = User::whereIn('role', ['seller', 'creator'])
+            ->whereBetween('created_at', [$from, $to])
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
             ->groupBy('date')->orderBy('date')
-            ->pluck('count','date');
+            ->pluck('count', 'date');
 
-        // Buyer daily chart
-        $buyerChart = User::where('role','buyer')
-            ->whereBetween('created_at',[$from,$to])
+        $transactionChart = Order::whereBetween('created_at', [$from, $to])
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
             ->groupBy('date')->orderBy('date')
-            ->pluck('count','date');
+            ->pluck('count', 'date');
+
+        $productChart = Product::whereBetween('created_at', [$from, $to])
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->groupBy('date')->orderBy('date')
+            ->pluck('count', 'date');
 
         $labels = [];
-        $values = [];
         $visitorValues = [];
-        $waValues = [];
-        $buyerValues = [];
+        $creatorValues = [];
+        $transactionValues = [];
+        $productValues = [];
+
         for ($i = $daysDiff; $i >= 0; $i--) {
-            $date     = $to->copy()->subDays($i)->format('Y-m-d');
+            $date = $to->copy()->subDays($i)->format('Y-m-d');
             $labels[] = $to->copy()->subDays($i)->format('d/m');
-            $values[] = $leadsChart[$date] ?? 0;
             $visitorValues[] = $visitorChart[$date] ?? 0;
-            $waValues[] = $waChart[$date] ?? 0;
-            $buyerValues[] = $buyerChart[$date] ?? 0;
+            $creatorValues[] = $creatorChart[$date] ?? 0;
+            $transactionValues[] = $transactionChart[$date] ?? 0;
+            $productValues[] = $productChart[$date] ?? 0;
         }
 
-        // Top pages
-        $topPages = AnalyticsEvent::ofType('pageview')
-            ->whereBetween('created_at',[$from,$to])
-            ->selectRaw('page_url, COUNT(*) as views')
-            ->groupBy('page_url')->orderByDesc('views')->limit(8)->get();
+        // 3. RIWAYAT TRANSAKSI TERBARU (ORDER)
+        $recentOrders = Order::with(['user', 'items.product'])->latestFirst()->limit(25)->get();
 
-        // Content counts
-        $counts = [
-            'services' => Product::count(),
-            'articles' => Article::count(),
-            'gallery'  => GalleryProject::count(),
-            'clients'  => Client::count(),
-        ];
+        // 4. KLASEMEN CREATOR (Leaderboard - Top Traffic & Orders)
+        $creatorsLeaderboard = User::whereIn('role', ['seller', 'creator'])
+            ->orWhereHas('creatorProfile')
+            ->with(['creatorProfile', 'products'])
+            ->withCount('products')
+            ->get()
+            ->map(function ($user) {
+                $products = $user->products ?? collect();
+                $totalViews = $products->sum('views_count');
+                $totalSoldCount = $products->sum('sold_count');
+                $productIds = $products->pluck('id')->filter()->all();
+                $orderItemsCount = !empty($productIds) ? OrderItem::whereIn('product_id', $productIds)->count() : 0;
 
-        // Recent leads
-        $recentLeads = Lead::orderByDesc('created_at')->limit(8)->get();
+                $storeName = $user->creatorProfile?->store_name ?: ($user->name ?: 'Creator #' . $user->id);
+                $storeSlug = $user->creatorProfile?->store_slug ?: ($user->username ?: $user->id);
 
-        return view('admin.dashboard.index', compact('stats','labels','values','visitorValues','waValues','buyerValues','topPages','counts','recentLeads','start_date','end_date'));
+                return (object) [
+                    'id'             => $user->id,
+                    'name'           => $storeName,
+                    'slug'           => $storeSlug,
+                    'avatar'         => $user->avatar ? asset('storage/' . $user->avatar) : null,
+                    'total_views'    => $totalViews,
+                    'total_orders'   => max($totalSoldCount, $orderItemsCount),
+                    'products_count' => $user->products_count ?? $products->count(),
+                ];
+            })
+            ->sortByDesc(fn($c) => ($c->total_orders * 1000) + $c->total_views)
+            ->values()
+            ->take(10);
+
+        return view('admin.dashboard.index', compact(
+            'stats',
+            'labels',
+            'visitorValues',
+            'creatorValues',
+            'transactionValues',
+            'productValues',
+            'recentOrders',
+            'creatorsLeaderboard',
+            'period',
+            'start_date',
+            'end_date'
+        ));
     }
 }
