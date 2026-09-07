@@ -4,56 +4,121 @@
 @section('page_subtitle', $products->count() . ' produk/layanan terdaftar')
 
 @section('topbar_actions')
-  <form action="{{ route('creator.products.index') }}" method="GET"
-    style="display:flex;align-items:center;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.02);">
-    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk/layanan..."
-      style="border:none;outline:none;padding:8px 12px;font-size:0.875rem;width:200px;font-family:'Montserrat',sans-serif;">
-    <button type="submit"
-      style="background:#F1F5F9;border:none;border-radius:8px;padding:8px;cursor:pointer;color:#64748B;display:flex;align-items:center;justify-content:center;">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <circle cx="11" cy="11" r="8" />
-        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-      </svg>
-    </button>
-  </form>
+  <div class="prod-actions-row">
+    <form action="{{ route('creator.products.index') }}" method="GET" class="prod-search-form">
+      <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari..." class="prod-search-input">
+      <button type="submit" class="prod-search-btn">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+      </button>
+    </form>
 
-  <div
-    style="display:flex;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.02);">
-    <button onclick="switchView('list')" id="btn-view-list"
-      style="border:none;background:transparent;border-radius:8px;padding:8px;cursor:pointer;color:#94A3B8;display:flex;align-items:center;justify-content:center;transition:all .2s;"
-      title="List View">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <line x1="8" y1="6" x2="21" y2="6"></line>
-        <line x1="8" y1="12" x2="21" y2="12"></line>
-        <line x1="8" y1="18" x2="21" y2="18"></line>
-        <line x1="3" y1="6" x2="3.01" y2="6"></line>
-        <line x1="3" y1="12" x2="3.01" y2="12"></line>
-        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+    <div class="prod-view-toggle">
+      <button onclick="switchView('list', true)" id="btn-view-list" class="prod-toggle-btn" title="List View">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="8" y1="6" x2="21" y2="6"></line>
+          <line x1="8" y1="12" x2="21" y2="12"></line>
+          <line x1="8" y1="18" x2="21" y2="18"></line>
+          <line x1="3" y1="6" x2="3.01" y2="6"></line>
+          <line x1="3" y1="12" x2="3.01" y2="12"></line>
+          <line x1="3" y1="18" x2="3.01" y2="18"></line>
+        </svg>
+      </button>
+      <button onclick="switchView('grid', true)" id="btn-view-grid" class="prod-toggle-btn" title="Grid View">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+      </button>
+    </div>
+
+    <a href="{{ route('creator.products.create') }}" class="btn-primary prod-add-btn">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
       </svg>
-    </button>
-    <button onclick="switchView('grid')" id="btn-view-grid"
-      style="border:none;background:transparent;border-radius:8px;padding:8px;cursor:pointer;color:#94A3B8;display:flex;align-items:center;justify-content:center;transition:all .2s;"
-      title="Grid View">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <rect x="3" y="3" width="7" height="7"></rect>
-        <rect x="14" y="3" width="7" height="7"></rect>
-        <rect x="14" y="14" width="7" height="7"></rect>
-        <rect x="3" y="14" width="7" height="7"></rect>
-      </svg>
-    </button>
+      <span class="btn-add-text-full">Tambah Produk</span>
+      <span class="btn-add-text-short">Tambah</span>
+    </a>
   </div>
-
-  <a href="{{ route('creator.products.create') }}" class="btn-primary">
-    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-      <line x1="12" y1="5" x2="12" y2="19" />
-      <line x1="5" y1="12" x2="19" y2="12" />
-    </svg>
-    Tambah Produk
-  </a>
 @endsection
 
 @section('styles')
   <style>
+    .prod-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .prod-search-form {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+
+    .prod-search-input {
+      border: none;
+      outline: none;
+      padding: 8px 12px;
+      font-size: 0.875rem;
+      width: 200px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .prod-search-btn {
+      background: #F1F5F9;
+      border: none;
+      border-radius: 8px;
+      padding: 8px;
+      cursor: pointer;
+      color: #64748B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .prod-view-toggle {
+      display: flex;
+      background: #fff;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+
+    .prod-toggle-btn {
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      padding: 8px;
+      cursor: pointer;
+      color: #94A3B8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+    }
+
+    .prod-add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn-add-text-full { display: inline; }
+    .btn-add-text-short { display: none; }
+
     #view-grid {
       grid-template-columns: repeat(7, 1fr) !important;
     }
@@ -74,8 +139,64 @@
     #view-list { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     #view-list table { min-width: 600px; }
 
-    /* Compact list rows on mobile */
+    /* Compact 1-line toolbar on mobile */
     @media (max-width: 768px) {
+      .cr-main-canvas > div:first-child {
+        margin-bottom: 0.75rem !important;
+        gap: 0.5rem !important;
+      }
+
+      .cr-topbar-actions-wrapper {
+        width: 100% !important;
+        gap: 0.35rem !important;
+      }
+      
+      .prod-actions-row {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        width: 100% !important;
+        gap: 0.35rem !important;
+      }
+
+      .prod-search-form {
+        flex: 1 !important;
+        min-width: 0 !important;
+        padding: 2px !important;
+      }
+
+      .prod-search-input {
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 6px 8px !important;
+        font-size: 0.78rem !important;
+      }
+
+      .prod-search-btn {
+        padding: 6px !important;
+        flex-shrink: 0 !important;
+      }
+
+      .prod-view-toggle {
+        flex-shrink: 0 !important;
+        padding: 2px !important;
+      }
+
+      .prod-toggle-btn {
+        padding: 6px !important;
+      }
+
+      .prod-add-btn {
+        flex-shrink: 0 !important;
+        padding: 6px 10px !important;
+        font-size: 0.78rem !important;
+        border-radius: 10px !important;
+      }
+
+      .btn-add-text-full { display: none !important; }
+      .btn-add-text-short { display: inline !important; }
+
       #view-list table { min-width: 520px; font-size: 0.78rem; }
       #view-list td, #view-list th { padding: 0.6rem 0.75rem !important; }
       #view-list td img { width: 40px !important; height: 30px !important; border-radius: 7px !important; }
@@ -343,7 +464,10 @@
   </div>
 
   <script>
-    function switchView(type) {
+    function switchView(type, isUserAction = false) {
+      if (isUserAction) {
+        localStorage.setItem('admin_services_view_user_toggled', 'true');
+      }
       localStorage.setItem('admin_services_view', type);
       document.getElementById('view-list').style.display = type === 'list' ? 'block' : 'none';
       document.getElementById('view-grid').style.display = type === 'grid' ? 'grid' : 'none';
@@ -355,8 +479,17 @@
       document.getElementById('btn-view-grid').style.color = type === 'grid' ? '#fff' : '#94A3B8';
     }
 
-    // Initialize view
-    const savedView = localStorage.getItem('admin_services_view') || 'list';
+    // Initialize view (default to grid on mobile)
+    const isMobile = window.innerWidth <= 768;
+    const userToggled = localStorage.getItem('admin_services_view_user_toggled');
+    let savedView = localStorage.getItem('admin_services_view');
+
+    if (isMobile && !userToggled) {
+      savedView = 'grid';
+    } else if (!savedView) {
+      savedView = isMobile ? 'grid' : 'list';
+    }
+
     switchView(savedView);
   </script>
 
