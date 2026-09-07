@@ -316,7 +316,7 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
             display: flex;
             flex-direction: column;
-            align-self: flex-start;
+            align-self: stretch;
             width: 100%;
         }
 
@@ -472,16 +472,20 @@
                 overflow-x: hidden;
                 overflow-y: visible;
                 box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
             }
 
             .cr-main-canvas {
                 border-radius: 20px;
                 padding: 1rem;
-                min-height: auto;
+                min-height: calc(100vh - 56px - 88px - 1rem);
                 width: 100%;
                 max-width: 100%;
                 box-sizing: border-box;
                 overflow-x: hidden;
+                align-self: stretch;
             }
 
             .cr-nav-link.active::before,
