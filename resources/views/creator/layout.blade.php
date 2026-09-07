@@ -309,7 +309,7 @@
         }
 
         .cr-main-canvas {
-            flex: 1;
+            flex: 1 0 auto;
             background: #ffffff;
             border-radius: 40px 0 0 0;
             padding: 2.75rem 3rem 5rem 3rem;
@@ -318,6 +318,7 @@
             display: flex;
             flex-direction: column;
             width: 100%;
+            box-sizing: border-box;
         }
 
         /* Global button style */
