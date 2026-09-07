@@ -254,6 +254,10 @@ class AdminArticleController extends Controller
 
     protected function clearArticleCache(Article $article)
     {
+        Cache::forget("article.{$article->slug}");
+        Cache::forget("article.related.{$article->id}");
+        Cache::forget("articles.categories");
+        Cache::forget("articles.popular");
         foreach ($this->locales as $locale) {
             Cache::forget("article.{$article->slug}.{$locale}");
             Cache::forget("article.related.{$article->id}.{$locale}");

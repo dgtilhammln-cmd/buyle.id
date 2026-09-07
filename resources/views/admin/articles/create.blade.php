@@ -10,7 +10,7 @@
 <style>
 .premium-card {
     background: #fff; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-    border: 1px solid #E2E8F0; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
+    border: 1px solid #E2E8F0; padding: 1.5rem; margin-bottom: 1.5rem;
 }
 .premium-card-header {
     font-size: 0.85rem; font-weight: 700; color: #1E293B; text-transform: uppercase;
@@ -18,7 +18,7 @@
     border-bottom: 1px solid #F1F5F9; display: flex; justify-content: space-between; align-items: center;
 }
 .form-group { margin-bottom: 1.25rem; }
-.form-label { display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem; }
+.form-label { display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.5rem; }
 .form-label span.req { color: #EF4444; }
 .form-label span.hint { font-weight: 400; color: #94A3B8; font-size: 0.75rem; margin-left: 0.25rem; }
 .form-input, .form-select, .form-textarea {
@@ -29,24 +29,78 @@
 .form-input:focus, .form-select:focus, .form-textarea:focus {
     border-color: #1eb349; background: #fff; box-shadow: 0 0 0 4px rgba(30,179,73,0.1);
 }
-.form-textarea { resize: vertical; min-height: 80px; }
+.form-textarea { resize: vertical; min-height: 85px; }
 .char-count { font-size: 0.75rem; color: #94A3B8; margin-top: 0.35rem; text-align: right; }
+
+/* CMS TABS STYLING */
+.cms-tabs-nav {
+    display: flex; gap: 1.5rem; border-bottom: 2px solid #E2E8F0;
+    margin-bottom: 1.5rem; padding-bottom: 0.25rem;
+}
+.cms-tab-btn {
+    background: none; border: none; padding: 0.65rem 0.25rem; font-size: 0.95rem;
+    font-weight: 700; color: #64748B; cursor: pointer; position: relative;
+    transition: all 0.2s; outline: none; font-family: inherit;
+}
+.cms-tab-btn:hover { color: #1E293B; }
+.cms-tab-btn.active { color: #1eb349; }
+.cms-tab-btn.active::after {
+    content: ''; position: absolute; bottom: -0.35rem; left: 0;
+    width: 100%; height: 3px; background: #1eb349; border-radius: 3px 3px 0 0;
+}
+.cms-tab-pane { display: none; }
+.cms-tab-pane.active { display: block; }
+
+/* PROFESSIONAL TEXT EDITOR STYLING */
+.editor-wrapper {
+    border: 1.5px solid #CBD5E1; border-radius: 14px; overflow: hidden; background: #fff;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.03); transition: border-color 0.2s;
+}
+.editor-wrapper:focus-within { border-color: #1eb349; box-shadow: 0 0 0 4px rgba(30,179,73,0.1); }
 .editor-toolbar {
-    background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px 12px 0 0;
-    border-bottom: none; padding: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.35rem;
+    background: #FAFAFA; border-bottom: 1.5px solid #E2E8F0; padding: 0.65rem 0.85rem;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
 }
+.editor-toolbar-sep { width: 1px; height: 22px; background: #CBD5E1; margin: 0 0.25rem; }
 .editor-btn {
-    padding: 0.35rem 0.6rem; background: #fff; border: 1px solid #E2E8F0; color: #475569;
-    border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s;
-    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.4rem 0.65rem; background: #fff; border: 1px solid #E2E8F0; color: #334155;
+    border-radius: 8px; cursor: pointer; font-size: 0.825rem; font-weight: 700; transition: all 0.15s;
+    display: inline-flex; align-items: center; justify-content: center; min-width: 32px; height: 32px;
+    box-sizing: border-box;
 }
-.editor-btn:hover { background: #F1F5F9; color: #1E293B; border-color: #CBD5E1; }
+.editor-btn:hover { background: #F1F5F9; color: #0F172A; border-color: #94A3B8; }
+.editor-btn.active { background: #E2E8F0; color: #0F172A; border-color: #64748B; }
+
+.editor-select {
+    padding: 0.35rem 0.5rem; background: #fff; border: 1px solid #E2E8F0; color: #334155;
+    border-radius: 8px; font-size: 0.825rem; font-weight: 600; outline: none; cursor: pointer; height: 32px;
+}
+.editor-select:hover { border-color: #94A3B8; }
+
+.editor-mode-toggle {
+    display: flex; background: #E2E8F0; padding: 3px; border-radius: 10px; gap: 2px;
+}
+.editor-mode-btn {
+    border: none; background: transparent; padding: 0.35rem 0.75rem; border-radius: 8px;
+    font-size: 0.785rem; font-weight: 700; color: #64748B; cursor: pointer; transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 0.35rem; font-family: inherit;
+}
+.editor-mode-btn.active { background: #fff; color: #0F172A; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
 .editor-area {
-    border: 1.5px solid #E2E8F0; border-radius: 0 0 12px 12px; min-height: 380px;
-    padding: 1.5rem; font-size: 1rem; line-height: 1.8; color: #1E293B; background: #fff; outline: none;
+    min-height: 380px; padding: 1.5rem; font-size: 0.95rem; line-height: 1.8; color: #1E293B;
+    background: #fff; outline: none; overflow-y: auto; max-height: 600px;
 }
-.editor-area:focus { border-color: #1eb349; }
-.img-preview { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; margin-bottom: 0.75rem; border: 1px solid #E2E8F0; }
+.editor-area[contenteditable="true"]:empty:before {
+    content: attr(placeholder); color: #94A3B8; font-style: italic; pointer-events: none;
+}
+.editor-code-area {
+    display: none; width: 100%; min-height: 380px; padding: 1.25rem; color: #38BDF8;
+    font-size: 0.85rem; line-height: 1.6; font-family: 'Fira Code', Consolas, Monaco, monospace;
+    background: #0F172A; border: none; outline: none; resize: vertical; box-sizing: border-box;
+}
+
+.img-preview { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 10px; margin-bottom: 0.75rem; border: 1px solid #E2E8F0; }
 .btn-primary-new {
     background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border: none; padding: 0.875rem 1.5rem; border-radius: 12px;
     font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center;
@@ -66,10 +120,10 @@
 </style>
 
 <div style="max-width:1080px; margin:0 auto;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
         <div>
             <h1 style="font-size:1.5rem;font-weight:800;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.02em;">{{ $a ? 'Edit Artikel' : 'Tulis Artikel Baru' }}</h1>
-            <p style="font-size:.875rem;color:#94A3B8;margin:0;">Isi konten artikel dalam Bahasa Indonesia.</p>
+            <p style="font-size:.875rem;color:#94A3B8;margin:0;">Kelola konten artikel, media, tags, dan optimasi SEO.</p>
         </div>
         <a href="{{ route('admin.articles.index') }}" class="btn-outline-new" style="width:auto;padding:.5rem 1rem;">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -77,174 +131,267 @@
         </a>
     </div>
 
+    {{-- CMS TABS NAVIGATION --}}
+    <div class="cms-tabs-nav">
+        <button type="button" class="cms-tab-btn active" data-tab="tab-content">Content</button>
+        <button type="button" class="cms-tab-btn" data-tab="tab-media">Media</button>
+        <button type="button" class="cms-tab-btn" data-tab="tab-tags">Tags & Status</button>
+        <button type="button" class="cms-tab-btn" data-tab="tab-seo">SEO</button>
+    </div>
+
     <form method="POST" action="{{ $a ? route('admin.articles.update',$a) : route('admin.articles.store') }}" enctype="multipart/form-data" id="article-form">
     @csrf @if($a) @method('PUT') @endif
 
     <div id="validation-alert" style="display:none;background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;color:#991B1B;font-size:.875rem;line-height:1.6;"></div>
 
-    <div style="display:grid;grid-template-columns:minmax(0, 1fr) 340px;gap:1.5rem;">
+    <div style="display:grid;grid-template-columns:minmax(0, 1fr) 320px;gap:1.5rem;align-items:start;">
 
+        {{-- TAB PANES CONTAINER --}}
         <div>
-            <div class="premium-card">
-                <h3 class="premium-card-header">Konten Artikel <span style="color:#EF4444;font-size:.75rem;font-weight:600;text-transform:none;">Wajib diisi</span></h3>
-                <div class="form-group">
-                    <label class="form-label">Judul Artikel <span class="req">*</span></label>
-                    <input type="text" name="translations[id][title]" id="art-title-id"
-                        value="{{ old('translations.id.title', $t?->title) }}"
-                        class="form-input" required oninput="autoSlug()" placeholder="Judul artikel yang menarik...">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Slug (URL) <span class="hint">Otomatis dari judul jika dikosongkan.</span></label>
-                    <div style="display:flex;align-items:center;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:10px;padding:0 1rem;overflow:hidden;">
-                        <span style="font-size:.85rem;color:#94A3B8;white-space:nowrap;">/articles/</span>
-                        <input type="text" name="slug" id="art-slug" value="{{ old('slug',$a?->slug) }}"
-                            style="border:none;background:transparent;padding:0.75rem 0;width:100%;font-size:.9rem;color:#1E293B;outline:none;" pattern="[a-z0-9\-]*" placeholder="auto-dari-judul">
+            {{-- TAB 1: CONTENT --}}
+            <div id="tab-content" class="cms-tab-pane active">
+                <div class="premium-card">
+                    <h3 class="premium-card-header">Detail Artikel <span style="color:#EF4444;font-size:.75rem;font-weight:600;text-transform:none;">Wajib diisi</span></h3>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Judul Artikel <span class="req">*</span></label>
+                            <input type="text" name="translations[id][title]" id="art-title-id"
+                                value="{{ old('translations.id.title', $t?->title) }}"
+                                class="form-input" required oninput="autoSlug()" placeholder="Judul artikel yang menarik...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Slug (URL) <span class="hint">Otomatis dari judul jika kosong.</span></label>
+                            <div style="display:flex;align-items:center;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:10px;padding:0 1rem;overflow:hidden;">
+                                <span style="font-size:.85rem;color:#94A3B8;white-space:nowrap;">/artikel/</span>
+                                <input type="text" name="slug" id="art-slug" value="{{ old('slug',$a?->slug) }}"
+                                    style="border:none;background:transparent;padding:0.75rem 0;width:100%;font-size:.9rem;color:#1E293B;outline:none;" pattern="[a-z0-9\-]*" placeholder="auto-dari-judul">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Kategori</label>
+                            <input type="text" name="category" value="{{ old('category',$a?->category) }}" class="form-input" placeholder="Tips & Panduan">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Penulis / Author</label>
+                            <select name="author_id" class="form-select">
+                                <option value="">— Pilih Penulis —</option>
+                                @foreach($authors as $auth)
+                                    <option value="{{ $auth->id }}" {{ old('author_id', $a?->author_id) == $auth->id ? 'selected' : '' }}>{{ $auth->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Excerpt / Ringkasan <span class="hint">(max 500 karakter)</span></label>
+                        <textarea name="translations[id][excerpt]" class="form-textarea" rows="2" maxlength="500"
+                            oninput="document.getElementById('exc-cnt').textContent=this.value.length"
+                            placeholder="Ringkasan singkat artikel...">{{ old('translations.id.excerpt', $t?->excerpt) }}</textarea>
+                        <div class="char-count"><span id="exc-cnt">{{ strlen(old('translations.id.excerpt', $t?->excerpt ?? '')) }}</span>/500</div>
                     </div>
                 </div>
-                <div class="form-group" style="margin-bottom:0;">
-                    <label class="form-label">Excerpt / Ringkasan <span class="hint">(max 500 karakter)</span></label>
-                    <textarea name="translations[id][excerpt]" class="form-textarea" rows="2" maxlength="500"
-                        oninput="document.getElementById('exc-cnt').textContent=this.value.length"
-                        placeholder="Ringkasan singkat artikel...">{{ old('translations.id.excerpt', $t?->excerpt) }}</textarea>
-                    <div class="char-count"><span id="exc-cnt">{{ strlen(old('translations.id.excerpt', $t?->excerpt ?? '')) }}</span>/500</div>
-                </div>
-            </div>
 
-            <div class="premium-card" style="padding:0;overflow:hidden;border:none;">
-                <h3 class="premium-card-header" style="padding:1.25rem 1.5rem;margin:0;border:1px solid #E2E8F0;border-bottom:none;border-radius:12px 12px 0 0;">
-                    Isi Artikel <span class="req" style="margin-left:4px;">*</span>
-                </h3>
-                <div class="editor-toolbar">
-                    <button type="button" class="editor-btn" onclick="fmt('bold')" style="font-weight:800;">B</button>
-                    <button type="button" class="editor-btn" onclick="fmt('italic')" style="font-style:italic;">I</button>
-                    <button type="button" class="editor-btn" onclick="fmt('underline')" style="text-decoration:underline;">U</button>
-                    <div style="width:1px;background:#E2E8F0;margin:0 .25rem;"></div>
-                    <button type="button" class="editor-btn" onclick="fmtBlock('h2')">H2</button>
-                    <button type="button" class="editor-btn" onclick="fmtBlock('h3')">H3</button>
-                    <button type="button" class="editor-btn" onclick="fmtBlock('p')">P</button>
-                    <div style="width:1px;background:#E2E8F0;margin:0 .25rem;"></div>
-                    <button type="button" class="editor-btn" onclick="fmt('insertUnorderedList')">UL</button>
-                    <button type="button" class="editor-btn" onclick="fmt('insertOrderedList')">OL</button>
-                    <div style="width:1px;background:#E2E8F0;margin:0 .25rem;"></div>
-                    <button type="button" class="editor-btn" onclick="insertLink()">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-                    </button>
-                    <div style="flex-grow:1;"></div>
-                    <button type="button" class="editor-btn" id="html-btn" onclick="toggleHtml()">HTML</button>
-                </div>
-                <div id="editor-id" class="editor-area" contenteditable="true" oninput="syncContent()">{!! old('translations.id.content', $t?->content) !!}</div>
-                <textarea id="html-editor-id" name="translations[id][content]"
-                    style="display:none;width:100%;min-height:380px;padding:1.5rem;color:#1E293B;font-size:.85rem;line-height:1.6;font-family:monospace;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:0 0 12px 12px;outline:none;resize:vertical;box-sizing:border-box;"
-                    required>{{ old('translations.id.content', $t?->content) }}</textarea>
-            </div>
+                {{-- REVAMPED PROFESSIONAL EDITOR CARD --}}
+                <div class="premium-card" style="padding:1.25rem 1.5rem;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                        <label class="form-label" style="margin:0;font-size:.9rem;">Konten Artikel <span class="req">*</span></label>
+                        <div class="editor-mode-toggle">
+                            <button type="button" class="editor-mode-btn active" id="btn-mode-visual" onclick="setEditorMode('visual')">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                Visual Editor
+                            </button>
+                            <button type="button" class="editor-mode-btn" id="btn-mode-code" onclick="setEditorMode('code')">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                                HTML / Code
+                            </button>
+                        </div>
+                    </div>
 
-            <div class="premium-card">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-                    <h3 style="font-size:.85rem;font-weight:700;color:#1E293B;text-transform:uppercase;letter-spacing:.05em;margin:0;">FAQ (Tanya Jawab)</h3>
-                    <button type="button" onclick="addFaq()" class="editor-btn" style="color:#1eb349;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        Tambah FAQ
-                    </button>
+                    <div class="editor-wrapper">
+                        {{-- Editor Toolbar --}}
+                        <div class="editor-toolbar" id="editor-toolbar-bar">
+                            <select class="editor-select" onchange="fmtBlock(this.value); this.value='';" title="Format Paragraf">
+                                <option value="">Normal</option>
+                                <option value="h2">Heading 2 (H2)</option>
+                                <option value="h3">Heading 3 (H3)</option>
+                                <option value="h4">Heading 4 (H4)</option>
+                                <option value="blockquote">Kutipan (Blockquote)</option>
+                            </select>
+
+                            <div class="editor-toolbar-sep"></div>
+
+                            <button type="button" class="editor-btn" onclick="fmt('bold')" title="Bold (Tebal)"><b>B</b></button>
+                            <button type="button" class="editor-btn" onclick="fmt('italic')" title="Italic (Miring)"><i>I</i></button>
+                            <button type="button" class="editor-btn" onclick="fmt('underline')" title="Underline (Garis Bawah)"><u>U</u></button>
+                            <button type="button" class="editor-btn" onclick="fmt('strikeThrough')" title="Strikethrough (Coret)"><s>S</s></button>
+
+                            <div class="editor-toolbar-sep"></div>
+
+                            <button type="button" class="editor-btn" onclick="fmt('insertUnorderedList')" title="Bullet List">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="fmt('insertOrderedList')" title="Numbered List">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/></svg>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="fmt('justifyLeft')" title="Rata Kiri">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="fmt('justifyCenter')" title="Rata Tengah">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="10" x2="6" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="18" y1="18" x2="6" y2="18"/></svg>
+                            </button>
+
+                            <div class="editor-toolbar-sep"></div>
+
+                            <button type="button" class="editor-btn" onclick="insertLink()" title="Sisipkan Link">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="insertImgUrl()" title="Sisipkan Gambar">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="insertTable()" title="Sisipkan Tabel">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="fmt('removeFormat')" title="Hapus Format (Clear)">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3L7 13l4 4 10-10-4-4z"/><path d="M3 21h18"/></svg>
+                            </button>
+                        </div>
+
+                        {{-- Visual ContentEditable Area --}}
+                        <div id="editor-id" class="editor-area" contenteditable="true" oninput="syncContent()" placeholder="Ketik isi artikel dengan profesional di sini...">{!! old('translations.id.content', $t?->content) !!}</div>
+
+                        {{-- Code / HTML Textarea --}}
+                        <textarea id="html-editor-id" name="translations[id][content]" class="editor-code-area" required>{{ old('translations.id.content', $t?->content) }}</textarea>
+                    </div>
                 </div>
-                <p style="font-size:.8rem;color:#64748B;margin-bottom:1rem;line-height:1.5;">Pertanyaan & jawaban otomatis generate Schema FAQPage untuk SEO.</p>
-                <div id="faq-list-id" style="display:flex;flex-direction:column;gap:1rem;">
-                    @php $faqsData = old('translations.id.faqs', $t?->faqs ?? []); @endphp
-                    @foreach($faqsData as $fi => $faq)
-                    <div class="faq-item" style="background:#F8FAFC;border:1px solid #E2E8F0;padding:1.25rem;border-radius:12px;position:relative;">
-                        <button type="button" onclick="this.closest('.faq-item').remove()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:#94A3B8;cursor:pointer;padding:0;">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+
+                {{-- FAQ Schema Builder --}}
+                <div class="premium-card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                        <h3 style="font-size:.85rem;font-weight:700;color:#1E293B;text-transform:uppercase;letter-spacing:.05em;margin:0;">FAQ Artikel (Tanya Jawab)</h3>
+                        <button type="button" onclick="addFaq()" class="editor-btn" style="color:#1eb349;padding:0.4rem 0.75rem;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Tambah FAQ
                         </button>
-                        <input type="text" name="translations[id][faqs][{{ $fi }}][q]" class="form-input" value="{{ $faq['q'] ?? '' }}" placeholder="Pertanyaan?" style="margin-bottom:.75rem;background:#fff;">
-                        <textarea name="translations[id][faqs][{{ $fi }}][a]" class="form-textarea" rows="2" placeholder="Jawaban..." style="background:#fff;">{{ $faq['a'] ?? '' }}</textarea>
                     </div>
-                    @endforeach
+                    <p style="font-size:.8rem;color:#64748B;margin-bottom:1rem;line-height:1.5;">Pertanyaan & jawaban otomatis generate Schema FAQPage untuk SEO Google.</p>
+                    <div id="faq-list-id" style="display:flex;flex-direction:column;gap:1rem;">
+                        @php $faqsData = old('translations.id.faqs', $t?->faqs ?? []); @endphp
+                        @foreach($faqsData as $fi => $faq)
+                        <div class="faq-item" style="background:#F8FAFC;border:1px solid #E2E8F0;padding:1.25rem;border-radius:12px;position:relative;">
+                            <button type="button" onclick="this.closest('.faq-item').remove()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:#94A3B8;cursor:pointer;padding:0;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                            <input type="text" name="translations[id][faqs][{{ $fi }}][q]" class="form-input" value="{{ $faq['q'] ?? '' }}" placeholder="Pertanyaan?" style="margin-bottom:.75rem;background:#fff;">
+                            <textarea name="translations[id][faqs][{{ $fi }}][a]" class="form-textarea" rows="2" placeholder="Jawaban..." style="background:#fff;">{{ $faq['a'] ?? '' }}</textarea>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
 
-            <div class="premium-card">
-                <h3 class="premium-card-header">SEO & Meta</h3>
-                <div class="form-group">
-                    <label class="form-label">Meta Title <span class="hint">(max 65 karakter)</span></label>
-                    <input type="text" name="translations[id][meta_title]" value="{{ old('translations.id.meta_title', $t?->meta_title) }}" class="form-input" maxlength="65" oninput="document.getElementById('mt-cnt').textContent=this.value.length" placeholder="Otomatis dari judul jika kosong">
-                    <div class="char-count"><span id="mt-cnt">{{ strlen(old('translations.id.meta_title', $t?->meta_title ?? '')) }}</span>/65</div>
+            {{-- TAB 2: MEDIA --}}
+            <div id="tab-media" class="cms-tab-pane">
+                <div class="premium-card">
+                    <h3 class="premium-card-header">Gambar Utama (Thumbnail) <span style="font-size:.72rem;font-weight:400;color:#94A3B8;text-transform:none;">1280x720 WebP</span></h3>
+                    @if($a?->getRawOriginal('image'))
+                        <img src="{{ asset('storage/'.$a->getRawOriginal('image')) }}" id="img-prev" class="img-preview">
+                    @else
+                        <img id="img-prev" class="img-preview" style="display:none;">
+                    @endif
+                    <input type="file" name="image" accept="image/*" class="form-input" style="padding:0.6rem;background:#fff;" onchange="previewImg(this,'img-prev')">
+                    <p style="font-size:.75rem;color:#94A3B8;margin:.75rem 0 1.25rem;line-height:1.5;">Otomatis dikonversi ke format WebP 1280x720 landscape.</p>
+
+                    <div class="form-group" style="margin:0;">
+                        <label class="form-label">Alt Text Gambar Utama <span class="hint">(Aksesibilitas & SEO Gambar)</span></label>
+                        <input type="text" name="translations[id][thumbnail_alt]" value="{{ old('translations.id.thumbnail_alt', $t?->thumbnail_alt) }}" class="form-input" placeholder="Deskripsi teks gambar untuk Google Image & Screen Reader">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Meta Description <span class="hint">(max 160 karakter)</span></label>
-                    <textarea name="translations[id][meta_desc]" class="form-textarea" rows="2" maxlength="160" oninput="document.getElementById('md-cnt').textContent=this.value.length" placeholder="Deskripsi untuk Google (otomatis jika kosong)">{{ old('translations.id.meta_desc', $t?->meta_desc) }}</textarea>
-                    <div class="char-count"><span id="md-cnt">{{ strlen(old('translations.id.meta_desc', $t?->meta_desc ?? '')) }}</span>/160</div>
+
+                <div class="premium-card">
+                    <h3 class="premium-card-header">OG Image (Social Media Preview) <span style="font-size:.72rem;font-weight:400;color:#94A3B8;text-transform:none;">1280x720 WebP</span></h3>
+                    @if($a?->getRawOriginal('og_image'))
+                        <img src="{{ asset('storage/'.$a->getRawOriginal('og_image')) }}" id="og-prev" class="img-preview">
+                    @else
+                        <img id="og-prev" class="img-preview" style="display:none;">
+                    @endif
+                    <input type="file" name="og_image" accept="image/*" class="form-input" style="padding:0.6rem;background:#fff;" onchange="previewImg(this,'og-prev')">
+                    <p style="font-size:.75rem;color:#94A3B8;margin:.75rem 0 0;line-height:1.5;">Opsional. Jika kosong, gambar utama akan otomatis digunakan saat dibagikan ke WhatsApp / Facebook / X.</p>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Meta Keywords <span class="hint">(pisah dengan koma)</span></label>
-                    <input type="text" name="translations[id][meta_keywords]" value="{{ old('translations.id.meta_keywords', $t?->meta_keywords) }}" class="form-input" placeholder="buyle.id, peralatan, tips">
+            </div>
+
+            {{-- TAB 3: TAGS & STATUS --}}
+            <div id="tab-tags" class="cms-tab-pane">
+                <div class="premium-card">
+                    <h3 class="premium-card-header">Status Publikasi & Jadwal</h3>
+                    <div class="form-group">
+                        <label class="switch-label">
+                            <input type="hidden" name="is_published" value="0">
+                            <input type="checkbox" name="is_published" value="1" {{ old('is_published',$a?->is_published ?? true) ? 'checked' : '' }} class="switch-input">
+                            <span class="switch-text">Publish Sekarang</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tanggal Publish <span class="hint">(Otomatis sekarang jika dikosongkan)</span></label>
+                        <input type="datetime-local" name="published_at" value="{{ old('published_at', $a?->published_at?->format('Y-m-d\TH:i')) }}" class="form-input">
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label class="switch-label">
+                            <input type="hidden" name="show_toc" value="0">
+                            <input type="checkbox" name="show_toc" value="1" {{ old('show_toc',$a?->show_toc ?? true) ? 'checked' : '' }} class="switch-input">
+                            <span class="switch-text" style="font-size:.85rem;">Tampilkan Daftar Isi (Table of Contents)</span>
+                        </label>
+                    </div>
                 </div>
-                <div class="form-group" style="margin:0;">
-                    <label class="form-label">Alt Text Gambar <span class="hint">(aksesibilitas & SEO gambar)</span></label>
-                    <input type="text" name="translations[id][thumbnail_alt]" value="{{ old('translations.id.thumbnail_alt', $t?->thumbnail_alt) }}" class="form-input" placeholder="Deskripsi gambar untuk screen reader">
+
+                <div class="premium-card">
+                    <h3 class="premium-card-header">Pengelompokan & Label (Tags)</h3>
+                    <div class="form-group">
+                        <label class="form-label">Tags <span class="hint">(Pisah dengan koma)</span></label>
+                        <input type="text" name="tags" value="{{ old('tags', $a && $a->tags ? implode(', ',$a->tags) : '') }}" class="form-input" placeholder="dapur, tips, hemat, buyle">
+                    </div>
+                </div>
+            </div>
+
+            {{-- TAB 4: SEO --}}
+            <div id="tab-seo" class="cms-tab-pane">
+                <div class="premium-card">
+                    <h3 class="premium-card-header">Optimasi Mesin Pencari (SEO)</h3>
+                    <div class="form-group">
+                        <label class="form-label">Meta Title <span class="hint">(max 65 karakter)</span></label>
+                        <input type="text" name="translations[id][meta_title]" value="{{ old('translations.id.meta_title', $t?->meta_title) }}" class="form-input" maxlength="65" oninput="document.getElementById('mt-cnt').textContent=this.value.length" placeholder="Otomatis dari judul jika dikosongkan">
+                        <div class="char-count"><span id="mt-cnt">{{ strlen(old('translations.id.meta_title', $t?->meta_title ?? '')) }}</span>/65</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Meta Description <span class="hint">(max 160 karakter)</span></label>
+                        <textarea name="translations[id][meta_desc]" class="form-textarea" rows="3" maxlength="160" oninput="document.getElementById('md-cnt').textContent=this.value.length" placeholder="Deskripsi menarik yang akan tampil pada hasil pencarian Google...">{{ old('translations.id.meta_desc', $t?->meta_desc) }}</textarea>
+                        <div class="char-count"><span id="md-cnt">{{ strlen(old('translations.id.meta_desc', $t?->meta_desc ?? '')) }}</span>/160</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Meta Keywords <span class="hint">(Pisah dengan koma)</span></label>
+                        <input type="text" name="translations[id][meta_keywords]" value="{{ old('translations.id.meta_keywords', $t?->meta_keywords) }}" class="form-input" placeholder="buyle.id, peralatan rumah, tips hemat">
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label class="form-label">Featured Snippet / Ringkasan Utama SEO <span class="hint">(Jawaban langsung untuk posisi #1 Google)</span></label>
+                        <textarea name="translations[id][featured_snippet]" class="form-textarea" rows="3" placeholder="Tulis jawaban singkat & padat untuk target snippet Google...">{{ old('translations.id.featured_snippet', $t?->featured_snippet) }}</textarea>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div>
+        {{-- ACTION SIDEBAR (ALWAYS VISIBLE) --}}
+        <div style="position:sticky;top:6rem;">
             <div class="premium-card">
-                <h3 class="premium-card-header">Status Publikasi</h3>
-                <div class="form-group">
-                    <label class="switch-label">
-                        <input type="hidden" name="is_published" value="0">
-                        <input type="checkbox" name="is_published" value="1" {{ old('is_published',$a?->is_published) ? 'checked' : '' }} class="switch-input">
-                        <span class="switch-text">Publish Sekarang</span>
-                    </label>
+                <h3 class="premium-card-header">Aksi Simpan</h3>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <button type="submit" class="btn-primary-new">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                        {{ $a ? 'Simpan Perubahan' : 'Publish Artikel' }}
+                    </button>
+                    <a href="{{ route('admin.articles.index') }}" class="btn-outline-new">Batalkan</a>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Tanggal Publish</label>
-                    <input type="datetime-local" name="published_at" value="{{ old('published_at', $a?->published_at?->format('Y-m-d\TH:i')) }}" class="form-input">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Kategori</label>
-                    <input type="text" name="category" value="{{ old('category',$a?->category) }}" class="form-input" placeholder="Tips & Panduan">
-                </div>
-                <div class="form-group" style="margin:0;">
-                    <label class="form-label">Tags <span class="hint">(pisah dengan koma)</span></label>
-                    <input type="text" name="tags" value="{{ old('tags', $a && $a->tags ? implode(', ',$a->tags) : '') }}" class="form-input" placeholder="dapur, tips, hemat">
-                </div>
-            </div>
-
-            <div class="premium-card">
-                <h3 class="premium-card-header">Gambar Utama <span style="font-size:.72rem;font-weight:400;color:#94A3B8;text-transform:none;">1280x720 otomatis</span></h3>
-                @if($a?->getRawOriginal('image'))
-                    <img src="{{ asset('storage/'.$a->getRawOriginal('image')) }}" id="img-prev" class="img-preview">
-                @else
-                    <img id="img-prev" class="img-preview" style="display:none;">
-                @endif
-                <input type="file" name="image" accept="image/*" class="form-input" style="padding:0.6rem;background:#fff;" onchange="previewImg(this,'img-prev')">
-                <p style="font-size:.75rem;color:#94A3B8;margin:.75rem 0 0;line-height:1.5;">Otomatis dikonversi ke WebP 1280x720 landscape.</p>
-            </div>
-
-            <div class="premium-card">
-                <h3 class="premium-card-header">OG Image <span style="font-size:.72rem;font-weight:400;color:#94A3B8;text-transform:none;">1280x720 otomatis</span></h3>
-                @if($a?->getRawOriginal('og_image'))
-                    <img src="{{ asset('storage/'.$a->getRawOriginal('og_image')) }}" id="og-prev" class="img-preview">
-                @else
-                    <img id="og-prev" class="img-preview" style="display:none;">
-                @endif
-                <input type="file" name="og_image" accept="image/*" class="form-input" style="padding:0.6rem;background:#fff;" onchange="previewImg(this,'og-prev')">
-                <p style="font-size:.75rem;color:#94A3B8;margin:.75rem 0 0;line-height:1.5;">Opsional. Jika kosong, gambar utama akan dipakai.</p>
-            </div>
-
-            <div class="premium-card">
-                <h3 class="premium-card-header">Opsi Lainnya</h3>
-                <label class="switch-label">
-                    <input type="hidden" name="show_toc" value="0">
-                    <input type="checkbox" name="show_toc" value="1" {{ old('show_toc',$a?->show_toc) ? 'checked' : '' }} class="switch-input">
-                    <span class="switch-text" style="font-size:.85rem;">Tampilkan Daftar Isi (TOC)</span>
-                </label>
-            </div>
-
-            <div style="display:flex;flex-direction:column;gap:0.75rem;position:sticky;top:6rem;">
-                <button type="submit" class="btn-primary-new">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
-                    {{ $a ? 'Simpan Perubahan' : 'Publish Artikel' }}
-                </button>
-                <a href="{{ route('admin.articles.index') }}" class="btn-outline-new">Batalkan</a>
             </div>
         </div>
 
@@ -254,49 +401,106 @@
 
 @push('scripts')
 <script>
+// TABS SWITCHING LOGIC
+document.querySelectorAll('.cms-tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.cms-tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.cms-tab-pane').forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+        const tabId = this.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+    });
+});
+
 let slugManual = {{ $a ? 'true' : 'false' }};
-document.getElementById('art-slug').addEventListener('input', () => slugManual = true);
+document.getElementById('art-slug')?.addEventListener('input', () => slugManual = true);
 function autoSlug() {
     if (slugManual) return;
-    document.getElementById('art-slug').value = document.getElementById('art-title-id').value
+    const titleVal = document.getElementById('art-title-id')?.value || '';
+    document.getElementById('art-slug').value = titleVal
         .toLowerCase().replace(/[^a-z0-9\s\-]/g,'').trim().replace(/\s+/g,'-');
 }
 
-let htmlMode = false;
-function fmt(cmd) {
-    if (htmlMode) return;
+// REVAMPED RICH TEXT EDITOR LOGIC
+let currentEditorMode = 'visual';
+
+function setEditorMode(mode) {
+    const visualBtn = document.getElementById('btn-mode-visual');
+    const codeBtn = document.getElementById('btn-mode-code');
+    const toolbar = document.getElementById('editor-toolbar-bar');
+    const visualArea = document.getElementById('editor-id');
+    const codeArea = document.getElementById('html-editor-id');
+
+    currentEditorMode = mode;
+
+    if (mode === 'code') {
+        codeArea.value = visualArea.innerHTML;
+        visualArea.style.display = 'none';
+        codeArea.style.display = 'block';
+        toolbar.style.opacity = '0.4';
+        toolbar.style.pointerEvents = 'none';
+        visualBtn.classList.remove('active');
+        codeBtn.classList.add('active');
+    } else {
+        visualArea.innerHTML = codeArea.value;
+        codeArea.style.display = 'none';
+        visualArea.style.display = 'block';
+        toolbar.style.opacity = '1';
+        toolbar.style.pointerEvents = 'auto';
+        codeBtn.classList.remove('active');
+        visualBtn.classList.add('active');
+    }
+}
+
+function fmt(cmd, val = null) {
+    if (currentEditorMode === 'code') return;
     document.getElementById('editor-id').focus();
-    document.execCommand(cmd, false, null);
+    document.execCommand(cmd, false, val);
     syncContent();
 }
+
 function fmtBlock(tag) {
-    if (htmlMode) return;
+    if (currentEditorMode === 'code' || !tag) return;
     document.getElementById('editor-id').focus();
     document.execCommand('formatBlock', false, tag);
     syncContent();
 }
+
 function insertLink() {
-    if (htmlMode) return;
-    const url = prompt('Masukkan URL:');
-    if (url) { document.getElementById('editor-id').focus(); document.execCommand('createLink', false, url); syncContent(); }
-}
-function toggleHtml() {
-    const editor = document.getElementById('editor-id');
-    const textarea = document.getElementById('html-editor-id');
-    const btn = document.getElementById('html-btn');
-    htmlMode = !htmlMode;
-    if (htmlMode) {
-        textarea.value = editor.innerHTML;
-        editor.style.display = 'none'; textarea.style.display = 'block';
-        btn.style.background = '#1eb349'; btn.style.color = '#fff';
-    } else {
-        editor.innerHTML = textarea.value;
-        textarea.style.display = 'none'; editor.style.display = 'block';
-        btn.style.background = ''; btn.style.color = '#64748B';
+    if (currentEditorMode === 'code') return;
+    const url = prompt('Masukkan URL Link:');
+    if (url) {
+        document.getElementById('editor-id').focus();
+        document.execCommand('createLink', false, url);
+        syncContent();
     }
 }
+
+function insertImgUrl() {
+    if (currentEditorMode === 'code') return;
+    const url = prompt('Masukkan URL Gambar:');
+    if (url) {
+        document.getElementById('editor-id').focus();
+        document.execCommand('insertImage', false, url);
+        syncContent();
+    }
+}
+
+function insertTable() {
+    if (currentEditorMode === 'code') return;
+    const html = `<table style="width:100%;border-collapse:collapse;margin:1rem 0;border:1px solid #E2E8F0;">
+        <thead><tr style="background:#F8FAFC;"><th style="border:1px solid #E2E8F0;padding:8px 12px;">Kolom 1</th><th style="border:1px solid #E2E8F0;padding:8px 12px;">Kolom 2</th></tr></thead>
+        <tbody><tr><td style="border:1px solid #E2E8F0;padding:8px 12px;">Data 1</td><td style="border:1px solid #E2E8F0;padding:8px 12px;">Data 2</td></tr></tbody>
+    </table><p></p>`;
+    document.getElementById('editor-id').focus();
+    document.execCommand('insertHTML', false, html);
+    syncContent();
+}
+
 function syncContent() {
-    if (!htmlMode) document.getElementById('html-editor-id').value = document.getElementById('editor-id').innerHTML;
+    if (currentEditorMode === 'visual') {
+        document.getElementById('html-editor-id').value = document.getElementById('editor-id').innerHTML;
+    }
 }
 
 let faqIdx = {{ count($t?->faqs ?? []) }};
@@ -325,13 +529,19 @@ function previewImg(input, previewId) {
 }
 
 document.getElementById('article-form').addEventListener('submit', function(e) {
-    syncContent();
+    if (currentEditorMode === 'visual') {
+        document.getElementById('html-editor-id').value = document.getElementById('editor-id').innerHTML;
+    } else {
+        document.getElementById('editor-id').innerHTML = document.getElementById('html-editor-id').value;
+    }
+    
     const errors = [];
     const title = document.getElementById('art-title-id')?.value.trim();
     if (!title) errors.push('Judul Artikel wajib diisi.');
     const content = document.getElementById('html-editor-id')?.value.trim() ||
                     document.getElementById('editor-id')?.innerHTML.replace(/<[^>]+>/g,'').trim();
-    if (!content || content.length < 30) errors.push('Isi Artikel wajib diisi minimal 30 karakter.');
+    if (!content || content.length < 10) errors.push('Isi Artikel wajib diisi.');
+    
     if (errors.length > 0) {
         e.preventDefault();
         const box = document.getElementById('validation-alert');

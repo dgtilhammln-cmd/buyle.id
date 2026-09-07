@@ -111,6 +111,7 @@ class AdminFaqController extends Controller
         $locales = $this->locales;
         $authors = Author::all();
         $translations = $faq->translations->keyBy('locale');
+        $article = $faq;
         return view('admin.faqs.edit', compact('article', 'locales', 'translations', 'authors'));
     }
 
@@ -254,9 +255,11 @@ class AdminFaqController extends Controller
 
     protected function clearFaqCache(Faq $faq)
     {
+        Cache::forget("article.{$faq->slug}");
+        Cache::forget("faqs.categories");
+        Cache::forget("faqs.popular");
         foreach ($this->locales as $locale) {
             Cache::forget("article.{$faq->slug}.{$locale}");
-            Cache::forget("article.related.{$faq->id}.{$locale}");
             Cache::forget("faqs.categories.{$locale}");
             Cache::forget("faqs.popular.{$locale}");
         }
