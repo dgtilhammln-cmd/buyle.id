@@ -519,7 +519,7 @@
                 transform: translateX(-50%);
                 width: calc(100% - 28px);
                 max-width: 480px;
-                background: linear-gradient(135deg, rgba(18, 104, 41, 0.97) 0%, rgba(30, 179, 73, 0.97) 100%);
+                background: linear-gradient(135deg, rgba(30, 179, 73, 0.97) 0%, rgba(165, 207, 55, 0.97) 100%);
                 backdrop-filter: blur(20px) saturate(1.8);
                 -webkit-backdrop-filter: blur(20px) saturate(1.8);
                 border: 1.5px solid rgba(255, 255, 255, 0.22);
@@ -594,13 +594,20 @@
                 <span style="color:#fff;font-weight:700;font-size:0.95rem;">buyle.id</span>
             </div>
         @endif
-        <button class="cr-mobile-toggle" id="crMobileToggle" aria-label="Menu">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-        </button>
+        {{-- Profile icon on the right --}}
+        @php $topbarUser = auth()->user(); $topbarCp = $topbarUser->creatorProfile; @endphp
+        <a href="{{ $topbarUser->role === 'buyer' ? route('creator.onboarding') : route('creator.profile.edit') }}"
+           style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.35);overflow:hidden;text-decoration:none;flex-shrink:0;transition:all 0.2s;"
+           title="Profil Saya">
+            @if($topbarCp && $topbarCp->avatar)
+                <img src="{{ asset('storage/' . $topbarCp->avatar) }}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">
+            @else
+                <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M20 21a8 8 0 1 0-16 0"/>
+                </svg>
+            @endif
+        </a>
     </div>
 
 
@@ -858,15 +865,15 @@
             <span>Saldo</span>
         </a>
 
-        {{-- Menu (hamburger for more) --}}
-        <button type="button" class="superapp-nav-item" onclick="document.getElementById('crSidebar').classList.toggle('open'); document.getElementById('crOverlay').classList.toggle('open');">
+        {{-- Laporan Penjualan --}}
+        <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.sales.report') }}"
+           onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+           class="superapp-nav-item {{ request()->routeIs('creator.sales*') ? 'active' : '' }}">
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
             </svg>
-            <span>Menu</span>
-        </button>
+            <span>Laporan</span>
+        </a>
     </nav>
 
     {{-- Interactive Locked Feature Modal for Buyers --}}
