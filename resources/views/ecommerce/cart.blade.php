@@ -156,21 +156,34 @@ body { background: var(--c-bg); font-family: var(--font); }
         </div>
 
         <div class="cart-sticky-footer">
-            @php $platformFeeCart = round($summary['subtotal'] * 0.05); @endphp
+            @php
+                $pfRate = (float)(\App\Models\Setting::get('platform_fee_rate', 5));
+                $afRate = (float)(\App\Models\Setting::get('admin_fee_rate', 5));
+                $platformFeeCart = round($summary['subtotal'] * $pfRate / 100);
+                $adminFeeCart    = round($summary['subtotal'] * $afRate / 100);
+                $estimatedTotal  = $summary['subtotal'] + $platformFeeCart + $adminFeeCart;
+            @endphp
             <div class="footer-row">
                 <span class="footer-row-label">{{ $summary['count'] }} produk dipilih</span>
                 <span class="footer-row-val">Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
             </div>
             <div class="footer-row">
                 <span class="footer-row-label" style="display:inline-flex;align-items:center;gap:4px;">
-                    Platform Fee (5%)
+                    Platform Fee ({{ $pfRate % 1 == 0 ? (int)$pfRate : $pfRate }}%)
                     <span title="Biaya layanan platform buyle.id" style="cursor:help;color:#94A3B8;font-size:0.7rem;">ⓘ</span>
                 </span>
                 <span class="footer-row-val" style="color:#F59E0B;">+Rp {{ number_format($platformFeeCart, 0, ',', '.') }}</span>
             </div>
+            <div class="footer-row">
+                <span class="footer-row-label" style="display:inline-flex;align-items:center;gap:4px;">
+                    Admin Fee ({{ $afRate % 1 == 0 ? (int)$afRate : $afRate }}%)
+                    <span title="Biaya administrasi layanan buyle.id" style="cursor:help;color:#94A3B8;font-size:0.7rem;">ⓘ</span>
+                </span>
+                <span class="footer-row-val" style="color:#F59E0B;">+Rp {{ number_format($adminFeeCart, 0, ',', '.') }}</span>
+            </div>
             <div class="footer-total-row">
-                <span class="footer-total-label">Total Harga</span>
-                <span class="footer-total-val">Rp {{ number_format($summary['subtotal'] + $platformFeeCart, 0, ',', '.') }}</span>
+                <span class="footer-total-label">Estimasi Total</span>
+                <span class="footer-total-val">Rp {{ number_format($estimatedTotal, 0, ',', '.') }}</span>
             </div>
 
             

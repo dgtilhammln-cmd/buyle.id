@@ -234,8 +234,8 @@
                 <div class="editor-wrapper">
                     {{-- Editor Toolbar --}}
                     <div class="editor-toolbar" id="editor-toolbar-bar">
-                        <select class="editor-select" onchange="fmtBlock(this.value); this.value='';" title="Format Paragraf">
-                            <option value="">Normal</option>
+                        <select id="editor-format-select" class="editor-select" onchange="fmtBlock(this.value)" title="Format Paragraf">
+                            <option value="p">Normal</option>
                             <option value="h2">Heading 2 (H2)</option>
                             <option value="h3">Heading 3 (H3)</option>
                             <option value="h4">Heading 4 (H4)</option>
@@ -244,17 +244,17 @@
 
                         <div class="editor-toolbar-sep"></div>
 
-                        <button type="button" class="editor-btn" onclick="fmt('bold')" title="Bold (Tebal)"><b>B</b></button>
-                        <button type="button" class="editor-btn" onclick="fmt('italic')" title="Italic (Miring)"><i>I</i></button>
-                        <button type="button" class="editor-btn" onclick="fmt('underline')" title="Underline (Garis Bawah)"><u>U</u></button>
-                        <button type="button" class="editor-btn" onclick="fmt('strikeThrough')" title="Strikethrough (Coret)"><s>S</s></button>
+                        <button type="button" id="btn-bold" class="editor-btn" onclick="fmt('bold')" title="Bold (Tebal)"><b>B</b></button>
+                        <button type="button" id="btn-italic" class="editor-btn" onclick="fmt('italic')" title="Italic (Miring)"><i>I</i></button>
+                        <button type="button" id="btn-underline" class="editor-btn" onclick="fmt('underline')" title="Underline (Garis Bawah)"><u>U</u></button>
+                        <button type="button" id="btn-strikethrough" class="editor-btn" onclick="fmt('strikeThrough')" title="Strikethrough (Coret)"><s>S</s></button>
 
                         <div class="editor-toolbar-sep"></div>
 
-                        <button type="button" class="editor-btn" onclick="fmt('insertUnorderedList')" title="Bullet List">
+                        <button type="button" id="btn-ul" class="editor-btn" onclick="fmt('insertUnorderedList')" title="Bullet List">
                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
                         </button>
-                        <button type="button" class="editor-btn" onclick="fmt('insertOrderedList')" title="Numbered List">
+                        <button type="button" id="btn-ol" class="editor-btn" onclick="fmt('insertOrderedList')" title="Numbered List">
                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/></svg>
                         </button>
                         <button type="button" class="editor-btn" onclick="fmt('justifyLeft')" title="Rata Kiri">
@@ -266,7 +266,7 @@
 
                         <div class="editor-toolbar-sep"></div>
 
-                        <button type="button" class="editor-btn" onclick="insertLink()" title="Sisipkan Link">
+                        <button type="button" id="btn-link" class="editor-btn" onclick="insertLink()" title="Sisipkan / Edit Link">
                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
                         </button>
                         <button type="button" class="editor-btn" onclick="insertImgUrl()" title="Sisipkan Gambar">
@@ -278,6 +278,20 @@
                         <button type="button" class="editor-btn" onclick="fmt('removeFormat')" title="Hapus Format (Clear)">
                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3L7 13l4 4 10-10-4-4z"/><path d="M3 21h18"/></svg>
                         </button>
+                    </div>
+
+                    {{-- Hyperlink Inspector / Info Bar --}}
+                    <div id="editor-link-info" style="display:none;align-items:center;justify-content:space-between;padding:0.45rem 0.85rem;background:#F0FDF4;border-bottom:1.5px solid #BBF7D0;font-size:0.825rem;color:#166534;">
+                        <div style="display:flex;align-items:center;gap:0.5rem;overflow:hidden;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                            <span>Link Active:</span>
+                            <strong id="editor-link-href" style="color:#15803D;text-decoration:underline;word-break:break-all;">https://...</strong>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:0.35rem;flex-shrink:0;">
+                            <button type="button" onclick="editCurrentLink()" style="padding:0.25rem 0.6rem;background:#fff;border:1px solid #86EFAC;color:#166534;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:700;">Edit Link</button>
+                            <button type="button" onclick="openCurrentLink()" style="padding:0.25rem 0.6rem;background:#fff;border:1px solid #86EFAC;color:#166534;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:700;">Buka ↗</button>
+                            <button type="button" onclick="removeCurrentLink()" style="padding:0.25rem 0.6rem;background:#FEE2E2;border:1px solid #FCA5A5;color:#991B1B;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:700;">Hapus Link</button>
+                        </div>
                     </div>
 
                     {{-- Visual ContentEditable Area --}}
@@ -435,6 +449,83 @@ function autoSlug() {
 
 // REVAMPED RICH TEXT EDITOR LOGIC
 let currentEditorMode = 'visual';
+let currentActiveLink = null;
+
+function updateSelectionState() {
+    if (currentEditorMode !== 'visual') return;
+    const editor = document.getElementById('editor-id');
+    const sel = window.getSelection();
+    if (!sel || !sel.rangeCount) return;
+
+    let node = sel.anchorNode;
+    if (!node) return;
+    if (node.nodeType === 3) node = node.parentNode;
+    if (!editor || !editor.contains(node)) return;
+
+    // 1. Sync format dropdown (Heading / Paragraph / Blockquote)
+    const select = document.getElementById('editor-format-select');
+    if (select) {
+        let blockTag = 'p';
+        let curr = node;
+        while (curr && curr !== editor) {
+            const tag = curr.tagName ? curr.tagName.toLowerCase() : '';
+            if (['h2', 'h3', 'h4', 'blockquote'].includes(tag)) {
+                blockTag = tag;
+                break;
+            }
+            curr = curr.parentNode;
+        }
+        select.value = blockTag;
+    }
+
+    // 2. Sync format buttons active class
+    const btnCmds = {
+        'bold': 'btn-bold',
+        'italic': 'btn-italic',
+        'underline': 'btn-underline',
+        'strikeThrough': 'btn-strikethrough',
+        'insertUnorderedList': 'btn-ul',
+        'insertOrderedList': 'btn-ol'
+    };
+    for (let cmd in btnCmds) {
+        const btn = document.getElementById(btnCmds[cmd]);
+        if (btn) {
+            try {
+                if (document.queryCommandState(cmd)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            } catch(e){}
+        }
+    }
+
+    // 3. Sync Hyperlink Inspector
+    let linkAnchor = null;
+    let curr = node;
+    while (curr && curr !== editor) {
+        if (curr.tagName && curr.tagName.toLowerCase() === 'a') {
+            linkAnchor = curr;
+            break;
+        }
+        curr = curr.parentNode;
+    }
+
+    const linkInfoBar = document.getElementById('editor-link-info');
+    const btnLink = document.getElementById('btn-link');
+    if (linkAnchor) {
+        currentActiveLink = linkAnchor;
+        const href = linkAnchor.getAttribute('href') || '#';
+        const linkTextEl = document.getElementById('editor-link-href');
+        if (linkTextEl) linkTextEl.textContent = href;
+        if (linkInfoBar) linkInfoBar.style.display = 'flex';
+        if (btnLink) btnLink.classList.add('active');
+    } else {
+        currentActiveLink = null;
+        if (linkInfoBar) linkInfoBar.style.display = 'none';
+        if (btnLink) btnLink.classList.remove('active');
+    }
+}
 
 function setEditorMode(mode) {
     const visualBtn = document.getElementById('btn-mode-visual');
@@ -453,6 +544,8 @@ function setEditorMode(mode) {
         toolbar.style.pointerEvents = 'none';
         visualBtn.classList.remove('active');
         codeBtn.classList.add('active');
+        const linkInfoBar = document.getElementById('editor-link-info');
+        if (linkInfoBar) linkInfoBar.style.display = 'none';
     } else {
         visualArea.innerHTML = codeArea.value;
         codeArea.style.display = 'none';
@@ -461,6 +554,7 @@ function setEditorMode(mode) {
         toolbar.style.pointerEvents = 'auto';
         codeBtn.classList.remove('active');
         visualBtn.classList.add('active');
+        updateSelectionState();
     }
 }
 
@@ -469,6 +563,7 @@ function fmt(cmd, val = null) {
     document.getElementById('editor-id').focus();
     document.execCommand(cmd, false, val);
     syncContent();
+    updateSelectionState();
 }
 
 function fmtBlock(tag) {
@@ -476,16 +571,62 @@ function fmtBlock(tag) {
     document.getElementById('editor-id').focus();
     document.execCommand('formatBlock', false, tag);
     syncContent();
+    updateSelectionState();
 }
 
 function insertLink() {
     if (currentEditorMode === 'code') return;
-    const url = prompt('Masukkan URL Link:');
+    if (currentActiveLink) {
+        editCurrentLink();
+        return;
+    }
+    const url = prompt('Masukkan URL Link (misal: https://example.com):');
     if (url) {
         document.getElementById('editor-id').focus();
         document.execCommand('createLink', false, url);
-        syncContent();
+        setTimeout(() => {
+            const sel = window.getSelection();
+            if (sel && sel.anchorNode) {
+                let curr = sel.anchorNode.nodeType === 3 ? sel.anchorNode.parentNode : sel.anchorNode;
+                while (curr && curr.tagName !== 'A' && curr.id !== 'editor-id') curr = curr.parentNode;
+                if (curr && curr.tagName === 'A') {
+                    curr.setAttribute('target', '_blank');
+                    curr.setAttribute('rel', 'noopener');
+                }
+            }
+            syncContent();
+            updateSelectionState();
+        }, 50);
     }
+}
+
+function editCurrentLink() {
+    if (!currentActiveLink) return;
+    const oldUrl = currentActiveLink.getAttribute('href') || '';
+    const newUrl = prompt('Edit URL Link:', oldUrl);
+    if (newUrl !== null && newUrl.trim() !== '') {
+        currentActiveLink.setAttribute('href', newUrl.trim());
+        syncContent();
+        updateSelectionState();
+    }
+}
+
+function openCurrentLink() {
+    if (!currentActiveLink) return;
+    const href = currentActiveLink.getAttribute('href');
+    if (href) window.open(href, '_blank');
+}
+
+function removeCurrentLink() {
+    if (!currentActiveLink) return;
+    const parent = currentActiveLink.parentNode;
+    while (currentActiveLink.firstChild) {
+        parent.insertBefore(currentActiveLink.firstChild, currentActiveLink);
+    }
+    parent.removeChild(currentActiveLink);
+    currentActiveLink = null;
+    syncContent();
+    updateSelectionState();
 }
 
 function insertImgUrl() {
@@ -495,6 +636,7 @@ function insertImgUrl() {
         document.getElementById('editor-id').focus();
         document.execCommand('insertImage', false, url);
         syncContent();
+        updateSelectionState();
     }
 }
 
@@ -507,6 +649,7 @@ function insertTable() {
     document.getElementById('editor-id').focus();
     document.execCommand('insertHTML', false, html);
     syncContent();
+    updateSelectionState();
 }
 
 function syncContent() {
@@ -514,6 +657,21 @@ function syncContent() {
         document.getElementById('html-editor-id').value = document.getElementById('editor-id').innerHTML;
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const editor = document.getElementById('editor-id');
+    if (editor) {
+        ['keyup', 'mouseup', 'click', 'focus', 'input'].forEach(evt => {
+            editor.addEventListener(evt, updateSelectionState);
+        });
+    }
+    document.addEventListener('selectionchange', function() {
+        const ed = document.getElementById('editor-id');
+        if (ed && (document.activeElement === ed || ed.contains(window.getSelection()?.anchorNode))) {
+            updateSelectionState();
+        }
+    });
+});
 
 let faqIdx = {{ count($t?->faqs ?? []) }};
 function addFaq() {
