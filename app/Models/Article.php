@@ -90,7 +90,7 @@ class Article extends Model
         return $query->where('is_published', true)
             ->where(function ($q) {
                 $q->whereNull('published_at')
-                  ->orWhere('published_at', '<=', now()->addHours(12));
+                  ->orWhere('published_at', '<=', now());
             });
     }
 

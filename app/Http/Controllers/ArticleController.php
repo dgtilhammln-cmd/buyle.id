@@ -54,12 +54,22 @@ class ArticleController extends Controller
 
     public function show(string $slug)
     {
-        $article = Cache::remember("article.{$slug}", 3600, function () use ($slug) {
-            return Article::published()
-                ->with(['authorRel'])
+        // Allow admin to preview any article (published or draft)
+        $isAdminPreview = session('admin_logged_in');
+
+        if ($isAdminPreview) {
+            // Bypass cache for admin previews to always show latest content
+            $article = Article::with(['authorRel'])
                 ->where('slug', $slug)
                 ->firstOrFail();
-        });
+        } else {
+            $article = Cache::remember("article.{$slug}", 3600, function () use ($slug) {
+                return Article::published()
+                    ->with(['authorRel'])
+                    ->where('slug', $slug)
+                    ->firstOrFail();
+            });
+        }
 
         $article->incrementViews();
 

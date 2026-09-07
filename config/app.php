@@ -65,6 +65,19 @@ return [
     |
     */
 
+    /*
+    |--------------------------------------------------------------------------
+    | Application Timezone
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the default timezone for your application, which
+    | will be used by the PHP date and date-time functions. We have set
+    | this for Indonesia (WIB/UTC+7).
+    |
+    */
+
+    'timezone' => env('APP_TIMEZONE', 'Asia/Jakarta'),
+
     'locale' => env('APP_LOCALE', 'id'),
 
     /*
