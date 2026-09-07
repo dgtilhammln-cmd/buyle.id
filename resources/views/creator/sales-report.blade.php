@@ -11,19 +11,26 @@
     .stat-c .label { font-size:0.72rem; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem; }
     .stat-c .val { font-size:1.5rem; font-weight:800; color:#0f1f0f; letter-spacing:-0.03em; }
     .section-card { background:#fff; border-radius:16px; border:1px solid #e7f0e7; box-shadow:0 2px 8px rgba(0,0,0,0.04); overflow:hidden; }
-    .section-header { padding:1rem 1.5rem; border-bottom:1px solid #f3f7f3; }
-    .section-header h2 { font-size:0.9rem; font-weight:800; color:#0f1f0f; }
-    .cr-table { width:100%; border-collapse:collapse; }
-    .cr-table th { text-align:left; font-size:0.68rem; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.07em; padding:0.75rem 1.25rem; background:#f9fefb; border-bottom:1.5px solid #e7f0e7; }
-    .cr-table td { padding:0.875rem 1.25rem; font-size:0.82rem; color:#374151; border-bottom:1px solid #f3f7f3; }
+    .section-header { padding:1rem 1.5rem; border-bottom:1px solid #f3f7f3; display:flex; align-items:center; justify-content:space-between; gap:0.5rem; }
+    .section-header h2 { font-size:0.9rem; font-weight:800; color:#0f1f0f; margin:0; }
+    .table-scroll-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+    }
+    .cr-table { width:100%; border-collapse:collapse; min-width: 560px; }
+    .cr-table th { text-align:left; font-size:0.68rem; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.07em; padding:0.75rem 1rem; background:#f9fefb; border-bottom:1.5px solid #e7f0e7; white-space:nowrap; }
+    .cr-table td { padding:0.75rem 1rem; font-size:0.82rem; color:#374151; border-bottom:1px solid #f3f7f3; }
     .cr-table tr:last-child td { border-bottom:none; }
     .cr-table tbody tr:hover td { background:#fafff8; }
     .empty-state { text-align:center; padding:3rem 1rem; color:#94A3B8; }
+    .swipe-hint { display:none; font-size:0.7rem; color:#94A3B8; font-weight:600; align-items:center; gap:0.3rem; }
     @media(max-width:640px) {
         .report-stats { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
         .stat-c { padding: 0.75rem 0.5rem; text-align: center; border-radius: 12px; }
         .stat-c .label { font-size: 0.62rem; margin-bottom: 0.2rem; }
         .stat-c .val { font-size: 0.95rem; }
+        .swipe-hint { display: flex; }
     }
 </style>
 @endsection
@@ -47,9 +54,13 @@
 <div class="section-card">
     <div class="section-header">
         <h2>📊 Semua Penjualan</h2>
+        <span class="swipe-hint">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Geser untuk lihat lebih
+        </span>
     </div>
     @if($sales->count())
-    <div style="overflow-x:auto;">
+    <div class="table-scroll-wrap">
         <table class="cr-table">
             <thead><tr>
                 <th>No. Order</th>
@@ -62,11 +73,11 @@
                 @foreach($sales as $order)
                     @foreach($order->items as $item)
                     <tr>
-                        <td style="font-weight:700;color:#0f1f0f;">#{{ $order->order_number ?? $order->id }}</td>
-                        <td>{{ Str::limit($item->product->name ?? '—', 40) }}</td>
-                        <td style="color:#64748B;">{{ $order->user->name ?? '—' }}</td>
-                        <td style="font-weight:700;color:#1eb349;">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
-                        <td style="color:#94A3B8;">{{ $order->created_at->format('d M Y, H:i') }}</td>
+                        <td style="font-weight:700;color:#0f1f0f;white-space:nowrap;">#{{ $order->order_number ?? $order->id }}</td>
+                        <td style="min-width:160px;">{{ Str::limit($item->product->name ?? '—', 40) }}</td>
+                        <td style="color:#64748B;white-space:nowrap;">{{ $order->user->name ?? '—' }}</td>
+                        <td style="font-weight:700;color:#1eb349;white-space:nowrap;">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
+                        <td style="color:#94A3B8;white-space:nowrap;">{{ $order->created_at->format('d M Y, H:i') }}</td>
                     </tr>
                     @endforeach
                 @endforeach

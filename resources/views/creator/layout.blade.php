@@ -821,6 +821,7 @@
         @php
             $bottomNavIsBuyer = auth()->user()->role === 'buyer';
         @endphp
+
         {{-- Overview --}}
         <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.dashboard') }}"
            onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
@@ -843,14 +844,14 @@
             <span>Produk</span>
         </a>
 
-        {{-- Profil --}}
-        <a href="{{ $bottomNavIsBuyer ? route('creator.onboarding') : route('creator.profile.edit') }}"
-           class="superapp-nav-item {{ request()->routeIs('creator.profile*', 'creator.onboarding') ? 'active' : '' }}">
+        {{-- Laporan Penjualan --}}
+        <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.sales.report') }}"
+           onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+           class="superapp-nav-item {{ request()->routeIs('creator.sales*') ? 'active' : '' }}">
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="4"/>
-                <path d="M20 21a8 8 0 1 0-16 0"/>
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
             </svg>
-            <span>Profil</span>
+            <span>Laporan</span>
         </a>
 
         {{-- Saldo --}}
@@ -863,16 +864,6 @@
                 <path d="M6 12h.01"/>
             </svg>
             <span>Saldo</span>
-        </a>
-
-        {{-- Laporan Penjualan --}}
-        <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.sales.report') }}"
-           onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-           class="superapp-nav-item {{ request()->routeIs('creator.sales*') ? 'active' : '' }}">
-            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-            </svg>
-            <span>Laporan</span>
         </a>
     </nav>
 
