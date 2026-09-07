@@ -47,65 +47,204 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; border: 2px solid #f8fafc; }
 ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 * { scrollbar-width: auto; scrollbar-color: #cbd5e1 #f8fafc; }
-/* ═══════ SIDEBAR PREMIUM ═══════ */
-#sidebar{
-  width:240px;height:100vh;
-  background:linear-gradient(135deg, #1eb349, #a5cf37);
-  position:fixed;top:0;left:0;z-index:200;
-  display:flex;flex-direction:column;
-  transition:transform .3s ease;
-  box-shadow:4px 0 24px rgba(30,179,73,0.25);
+/* ═══════ CAPSULE FLOATING HOVER-EXPAND SIDEBAR ═══════ */
+#sidebar {
+  width: 76px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  padding: 0.85rem 0.65rem;
+  background: #F4F7FE;
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, transform 0.3s ease;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.03);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
-/* Logo area */
-.sb-logo{padding:1.5rem 1.25rem 1.25rem;display:flex;align-items:center;gap:.75rem}
-.sb-logo-badge{min-width:38px;max-width:100px;height:38px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.15);padding:4px 8px}
-.sb-logo-badge img{height:100%;width:auto;max-width:100%;object-fit:contain}
-.sb-logo-text{font-size:.9rem;font-weight:800;color:#fff;line-height:1.15;letter-spacing:-.01em}
-.sb-logo-sub{font-size:.65rem;color:rgba(255,255,255,.6);font-weight:500;margin-top:1px}
-/* Search */
-.sb-search{padding:.5rem 1rem .875rem}
-.sb-search input{width:100%;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.15);border-radius:10px;padding:.5rem .875rem;color:#fff;font-size:.8rem;outline:none;font-family:inherit;transition:all .2s;}
-.sb-search input:focus{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35)}
-.sb-search input::placeholder{color:rgba(255,255,255,.45)}
-/* Nav */
-.sb-nav{flex:1;padding:.25rem 0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.45) rgba(0,0,0,0.12);}
-.sb-nav::-webkit-scrollbar{width:8px}
-.sb-nav::-webkit-scrollbar-button{display:none !important;width:0 !important;height:0 !important;}
-.sb-nav::-webkit-scrollbar-corner{background:transparent !important;}
-.sb-nav::-webkit-scrollbar-track{background:rgba(0,0,0,0.12);border-radius:10px;margin:4px 0}
-.sb-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.45);border-radius:10px;border:1.5px solid rgba(0,0,0,0.05)}
-.sb-nav::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.8);box-shadow:0 0 8px rgba(255,255,255,0.4)}
-.sb-sec{font-size:.575rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.4);padding:.875rem 1.375rem .3rem}
-/* Inactive link */
-.sb-link{
-  display:flex;align-items:center;gap:.75rem;
-  padding:.625rem 1rem;margin:.125rem .875rem;
-  font-size:.8125rem;font-weight:600;color:rgba(255,255,255,.75);
-  border-radius:12px;text-decoration:none;
-  transition:all .2s;cursor:pointer;border:none;background:none;
-  width:calc(100% - 1.75rem);text-align:left;
+#sidebar::-webkit-scrollbar { display: none; }
+#sidebar:hover {
+  width: 250px;
+  box-shadow: 12px 0 35px rgba(0,0,0,0.12);
 }
-.sb-link:hover{background:rgba(255,255,255,.1);color:#fff}
-.sb-link svg{flex-shrink:0;opacity:.75;transition:opacity .2s}
-.sb-link:hover svg{opacity:1}
-/* Active link — white card with cutout style */
-.sb-link.active{
-  background:#fff;
-  color:#1eb349;
-  box-shadow:0 4px 18px rgba(0,0,0,0.12);
-}
-.sb-link.active svg{opacity:1;stroke:#1eb349}
-/* Badge */
-.sb-badge{margin-left:auto;background:#EF4444;color:#fff;font-size:.575rem;font-weight:800;padding:.2rem .5rem;border-radius:100px;line-height:1.4;box-shadow:0 2px 8px rgba(239,68,68,0.4)}
-.sb-link.active .sb-badge{background:#EF4444;color:#fff}
-/* Bottom */
-.sb-bottom{padding:.875rem 1rem;border-top:1px solid rgba(255,255,255,.12)}
-.sb-bottom-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:1rem}
-.sb-bottom-card p{font-size:.7rem;color:rgba(255,255,255,.6);margin:.25rem 0 .75rem;line-height:1.5}
-.sb-bottom-card strong{font-size:.8125rem;color:#fff}
 
-/* MAIN */
-#main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh;min-width:0}
+/* Capsule Section Card */
+.sb-capsule-card {
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 8px 6px;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  transition: padding 0.3s ease;
+}
+#sidebar:hover .sb-capsule-card {
+  align-items: stretch;
+  padding: 10px 8px;
+}
+
+/* Brand Circle Header */
+.sb-brand-circle {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1eb349, #a5cf37);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(30, 179, 73, 0.35);
+  margin-bottom: 4px;
+  flex-shrink: 0;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+.sb-brand-circle:hover { transform: scale(1.05); }
+
+.sb-brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 2px 4px;
+  margin-bottom: 4px;
+  width: 100%;
+}
+
+.sb-brand-info {
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity 0.25s ease, max-width 0.25s ease;
+}
+#sidebar:hover .sb-brand-info {
+  opacity: 1;
+  max-width: 160px;
+}
+.sb-brand-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.2;
+}
+.sb-brand-sub {
+  font-size: 0.68rem;
+  color: #64748B;
+  font-weight: 500;
+}
+
+/* Nav Item Link */
+.sb-link {
+  display: flex;
+  align-items: center;
+  height: 42px;
+  border-radius: 999px;
+  padding: 0;
+  width: 100%;
+  color: #475569;
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  position: relative;
+  text-align: left;
+}
+
+.sb-link-icon {
+  width: 44px;
+  height: 42px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  color: #475569;
+  transition: color 0.2s ease;
+}
+
+.sb-link-text {
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity 0.25s ease, max-width 0.25s ease;
+  color: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+#sidebar:hover .sb-link-text {
+  opacity: 1;
+  max-width: 150px;
+}
+
+/* Hover state for inactive links */
+.sb-link:hover {
+  background: #F0FDF4;
+  color: #1eb349;
+}
+.sb-link:hover .sb-link-icon {
+  color: #1eb349;
+}
+
+/* ACTIVE LINK — Signature Green Gradient Pill */
+.sb-link.active {
+  background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35) !important;
+}
+.sb-link.active .sb-link-icon {
+  color: #ffffff !important;
+}
+.sb-link.active .sb-link-text {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+.sb-link.active svg {
+  stroke: #ffffff !important;
+}
+
+/* Badge overlay */
+.sb-badge {
+  margin-left: auto;
+  margin-right: 8px;
+  background: #EF4444;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 0.15rem 0.45rem;
+  border-radius: 100px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+#sidebar:hover .sb-badge {
+  opacity: 1;
+}
+
+/* MAIN Container Adjust */
+#main {
+  margin-left: 76px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 0;
+  transition: margin-left 0.35s ease;
+}
 #topbar{background:transparent;padding:1.5rem 2rem 0.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
 .topbar-left{display:flex;align-items:center;gap:.75rem}
 .topbar-breadcrumb{font-size:.75rem;color:var(--text3);display:flex;align-items:center;gap:.375rem;font-weight:600;}
@@ -247,146 +386,185 @@ button.btn-primary:hover, a.btn-primary:hover {
 
 <div id="sb-overlay" onclick="closeSb()"></div>
 
-<!-- SIDEBAR -->
+<!-- SIDEBAR CAPSULE HOVER-EXPAND -->
 <aside id="sidebar">
-  {{-- Logo --}}
-  <div class="sb-logo">
-    <div class="sb-logo-badge">
-      @if($adminLogo)
-        <img src="{{ asset('storage/'.$adminLogo) }}" alt="Logo" style="height:28px;width:auto;max-width:100%;object-fit:contain;border-radius:4px;">
-      @else
-        <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-      @endif
+  {{-- CARD 1: BRAND & UTAMA --}}
+  <div class="sb-capsule-card">
+    <div class="sb-brand-wrapper">
+      <a href="{{ route('admin.dashboard') }}" class="sb-brand-circle" title="buyle.id Admin">
+        @if($adminLogo)
+          <img src="{{ asset('storage/'.$adminLogo) }}" alt="Logo" style="height:26px;width:auto;max-width:100%;object-fit:contain;border-radius:4px;">
+        @else
+          <svg width="22" height="22" fill="none" stroke="#ffffff" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        @endif
+      </a>
+      <div class="sb-brand-info">
+        <div class="sb-brand-name">buyle.id</div>
+        <div class="sb-brand-sub">{{ str_ireplace('Cyclevent', 'buyle.id', session('admin_name', 'Admin buyle.id')) }}</div>
+      </div>
     </div>
-    <div>
-      <div class="sb-logo-text">buyle.id</div>
-      <div class="sb-logo-sub">{{ str_ireplace('Cyclevent', 'buyle.id', session('admin_name', 'Admin buyle.id')) }}</div>
-    </div>
+
+    <a href="{{ route('admin.dashboard') }}" class="sb-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" title="Dashboard">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      </div>
+      <span class="sb-link-text">Dashboard</span>
+    </a>
+
+    <a href="{{ route('admin.analytics') }}" class="sb-link {{ request()->routeIs('admin.analytics*') ? 'active' : '' }}" title="Analytics">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <span class="sb-link-text">Analytics</span>
+    </a>
+
+    <a href="{{ route('admin.articles.index') }}" class="sb-link {{ request()->routeIs('admin.articles*') ? 'active' : '' }}" title="Artikel">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+      </div>
+      <span class="sb-link-text">Artikel</span>
+    </a>
+
+    <a href="{{ route('admin.faqs.index') }}" class="sb-link {{ request()->routeIs('admin.faqs*') ? 'active' : '' }}" title="FAQ">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+      </div>
+      <span class="sb-link-text">FAQ</span>
+    </a>
+
+    <a href="{{ route('admin.clients.index') }}" class="sb-link {{ request()->routeIs('admin.clients*') ? 'active' : '' }}" title="Klien">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <span class="sb-link-text">Klien</span>
+    </a>
+
+    <a href="{{ route('admin.testimonials.index') }}" class="sb-link {{ request()->routeIs('admin.testimonials*') ? 'active' : '' }}" title="Testimoni">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <span class="sb-link-text">Testimoni</span>
+    </a>
   </div>
 
-  {{-- Search --}}
-  <div class="sb-search">
-    <input type="text" placeholder="Cari menu..." id="sb-search-input" oninput="sbSearch(this.value)">
-  </div>
-
-  {{-- Navigation --}}
-  <nav class="sb-nav" id="sb-nav">
-    <div class="sb-sec">Main</div>
-    <a href="{{ route('admin.dashboard') }}" class="sb-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
-      Dashboard
-    </a>
-    <a href="{{ route('admin.analytics') }}" class="sb-link {{ request()->routeIs('admin.analytics*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      Analytics
+  {{-- CARD 2: E-COMMERCE & DATA --}}
+  <div class="sb-capsule-card">
+    <a href="{{ route('admin.orders.index') }}" class="sb-link {{ request()->routeIs('admin.orders*') ? 'active' : '' }}" title="Pesanan">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </div>
+      <span class="sb-link-text">Pesanan</span>
     </a>
 
-    <div class="sb-sec">Konten</div>
-    <a href="{{ route('admin.articles.index') }}" class="sb-link {{ request()->routeIs('admin.articles*') ? 'active' : '' }}">
-      <div class="sb-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div>
-      Artikel
-    </a>
-    <a href="{{ route('admin.faqs.index') }}" class="sb-link {{ request()->routeIs('admin.faqs*') ? 'active' : '' }}">
-      <div class="sb-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
-      FAQ
-    </a>
-    <a href="{{ route('admin.clients.index') }}" class="sb-link {{ request()->routeIs('admin.clients*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-      Klien
-    </a>
-    <a href="{{ route('admin.testimonials.index') }}" class="sb-link {{ request()->routeIs('admin.testimonials*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-      Testimoni
-    </a>
-    @php $newLeads = \App\Models\Lead::where('status','new')->count(); @endphp
-    <a href="{{ route('admin.leads.index') }}" class="sb-link {{ request()->routeIs('admin.leads*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      Laporan Chat
-      @if($newLeads > 0)<span class="sb-badge">{{ $newLeads }}</span>@endif
-    </a>
-    @php $pendingReportsCount = \App\Models\Report::where('status', 'pending')->count(); @endphp
-    <a href="{{ route('admin.reports.index') }}" class="sb-link {{ request()->routeIs('admin.reports*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-      Laporan Penyalahgunaan
-      @if($pendingReportsCount > 0)<span class="sb-badge">{{ $pendingReportsCount }}</span>@endif
-    </a>
-    <a href="{{ route('admin.hero_slides.index') }}" class="sb-link {{ request()->routeIs('admin.hero_slides*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
-      Banner Hero
+    <a href="{{ route('admin.coupons.index') }}" class="sb-link {{ request()->routeIs('admin.coupons*') ? 'active' : '' }}" title="Kupon / Voucher">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+      </div>
+      <span class="sb-link-text">Kupon / Voucher</span>
     </a>
 
-    <div class="sb-sec">E-Commerce</div>
     @php $pendingWlCount = \App\Models\Product::where('is_whitelabel', true)->where('whitelabel_approval_status', 'pending')->count(); @endphp
-    <a href="{{ route('admin.whitelabel.index') }}" class="sb-link {{ request()->routeIs('admin.whitelabel*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      Approval White Label
+    <a href="{{ route('admin.whitelabel.index') }}" class="sb-link {{ request()->routeIs('admin.whitelabel*') ? 'active' : '' }}" title="Approval Whitelabel">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <span class="sb-link-text">Approval Whitelabel</span>
       @if($pendingWlCount > 0)<span class="sb-badge">{{ $pendingWlCount }}</span>@endif
     </a>
-    <a href="{{ route('admin.product-categories.index') }}" class="sb-link {{ request()->routeIs('admin.product-categories*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
-      Kategori Marketplace
-    </a>
-    <a href="{{ route('admin.coupons.index') }}" class="sb-link {{ request()->routeIs('admin.coupons*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
-      Kupon / Voucher
-    </a>
-    <a href="{{ route('admin.couriers.index') }}" class="sb-link {{ request()->routeIs('admin.couriers*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-      Pengiriman / Kurir
-    </a>
-    <a href="{{ route('admin.orders.index') }}" class="sb-link {{ request()->routeIs('admin.orders*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      Pesanan
-    </a>
-    <a href="{{ route('admin.users.index') }}" class="sb-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-      Pengguna (Buyer)
+
+    <a href="{{ route('admin.product-categories.index') }}" class="sb-link {{ request()->routeIs('admin.product-categories*') ? 'active' : '' }}" title="Kategori Marketplace">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+      </div>
+      <span class="sb-link-text">Kategori Marketplace</span>
     </a>
 
-    <div class="sb-sec">Tampilan Beranda</div>
-    <a href="{{ route('admin.usp.index') }}" class="sb-link {{ request()->routeIs('admin.usp*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
-      USP Bar
-    </a>
-    <a href="{{ route('admin.promo-sections.index') }}" class="sb-link {{ request()->routeIs('admin.promo-sections*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-      Promo & Deals
+    <a href="{{ route('admin.couriers.index') }}" class="sb-link {{ request()->routeIs('admin.couriers*') ? 'active' : '' }}" title="Pengiriman / Kurir">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      <span class="sb-link-text">Kurir & Pengiriman</span>
     </a>
 
-    <div class="sb-sec">Pengaturan</div>
-    <a href="{{ route('admin.settings') }}" class="sb-link {{ request()->routeIs('admin.settings*') || request()->routeIs('admin.wa*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-      Pengaturan
-    </a>
-    <a href="{{ route('admin.apikeys.index') }}" class="sb-link {{ request()->routeIs('admin.apikeys*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-      API & Integrasi
+    <a href="{{ route('admin.users.index') }}" class="sb-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}" title="Pengguna (Buyer)">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <span class="sb-link-text">Pengguna (Buyer)</span>
     </a>
 
-    <div class="sb-sec">Aksi</div>
-    <a href="{{ url('/') }}" target="_blank" class="sb-link">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      Lihat Website
+    @php $newLeads = \App\Models\Lead::where('status','new')->count(); @endphp
+    <a href="{{ route('admin.leads.index') }}" class="sb-link {{ request()->routeIs('admin.leads*') ? 'active' : '' }}" title="Laporan Chat">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <span class="sb-link-text">Laporan Chat</span>
+      @if($newLeads > 0)<span class="sb-badge">{{ $newLeads }}</span>@endif
     </a>
-    <form method="POST" action="{{ route('admin.logout') }}" style="margin:0" id="logout-form">
+
+    @php $pendingReportsCount = \App\Models\Report::where('status', 'pending')->count(); @endphp
+    <a href="{{ route('admin.reports.index') }}" class="sb-link {{ request()->routeIs('admin.reports*') ? 'active' : '' }}" title="Laporan Penyalahgunaan">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+      </div>
+      <span class="sb-link-text">Laporan Penyalahgunaan</span>
+      @if($pendingReportsCount > 0)<span class="sb-badge">{{ $pendingReportsCount }}</span>@endif
+    </a>
+
+    <a href="{{ route('admin.hero_slides.index') }}" class="sb-link {{ request()->routeIs('admin.hero_slides*') ? 'active' : '' }}" title="Banner Hero">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
+      </div>
+      <span class="sb-link-text">Banner Hero</span>
+    </a>
+
+    <a href="{{ route('admin.usp.index') }}" class="sb-link {{ request()->routeIs('admin.usp*') ? 'active' : '' }}" title="USP Bar">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+      </div>
+      <span class="sb-link-text">USP Bar</span>
+    </a>
+
+    <a href="{{ route('admin.promo-sections.index') }}" class="sb-link {{ request()->routeIs('admin.promo-sections*') ? 'active' : '' }}" title="Promo & Deals">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      </div>
+      <span class="sb-link-text">Promo & Deals</span>
+    </a>
+  </div>
+
+  {{-- CARD 3: PENGATURAN & AKSI --}}
+  <div class="sb-capsule-card" style="margin-top: auto;">
+    <a href="{{ route('admin.settings') }}" class="sb-link {{ request()->routeIs('admin.settings*') || request()->routeIs('admin.wa*') ? 'active' : '' }}" title="Pengaturan">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      </div>
+      <span class="sb-link-text">Pengaturan</span>
+    </a>
+
+    <a href="{{ route('admin.apikeys.index') }}" class="sb-link {{ request()->routeIs('admin.apikeys*') ? 'active' : '' }}" title="API & Integrasi">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+      </div>
+      <span class="sb-link-text">API & Integrasi</span>
+    </a>
+
+    <a href="{{ url('/') }}" target="_blank" class="sb-link" title="Lihat Website">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </div>
+      <span class="sb-link-text">Lihat Website</span>
+    </a>
+
+    <form method="POST" action="{{ route('admin.logout') }}" style="margin:0;width:100%" id="logout-form">
       @csrf
-      <button type="button" class="sb-link" onclick="handleLogoutClick()">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Logout
+      <button type="button" class="sb-link" onclick="handleLogoutClick()" title="Logout">
+        <div class="sb-link-icon">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </div>
+        <span class="sb-link-text">Logout</span>
       </button>
     </form>
-  </nav>
-
-  {{-- Bottom card --}}
-  <div class="sb-bottom">
-    <div class="sb-bottom-card">
-      <strong>buyle.id</strong>
-      <p>Kelola konten & leads bisnis Anda</p>
-      <a href="{{ url('/en/') }}" target="_blank" style="display:inline-flex;align-items:center;gap:.375rem;background:#fff;color:#1eb349;font-size:.75rem;font-weight:700;padding:.4rem .875rem;border-radius:8px;text-decoration:none;transition:all .2s;">
-        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        Preview Website
-      </a>
-    </div>
   </div>
 </aside>
 
