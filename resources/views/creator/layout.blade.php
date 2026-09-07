@@ -23,9 +23,9 @@
             background: linear-gradient(135deg, #126829 0%, #1eb349 50%, #8ebd28 100%);
             background-attachment: fixed;
             color: #0f172a;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
             display: flex;
+            align-items: stretch;
         }
 
         h1, h2, h3, h4, h5, h6 {
@@ -304,8 +304,7 @@
             display: flex;
             flex-direction: column;
             align-items: stretch;
-            height: 100vh;
-            overflow-y: auto;
+            min-height: 100vh;
             overflow-x: hidden;
         }
 
