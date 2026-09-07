@@ -201,7 +201,7 @@
 
         /* Seamless Active Tab Cutout into Canvas */
         .cr-nav-link.active {
-            background: #f8fafc;
+            background: #ffffff;
             color: #1eb349 !important;
             font-weight: 800;
             position: relative;
@@ -222,7 +222,7 @@
             height: 24px;
             background: transparent;
             border-bottom-right-radius: 24px;
-            box-shadow: 10px 10px 0 10px #f8fafc;
+            box-shadow: 10px 10px 0 10px #ffffff;
             pointer-events: none;
         }
 
@@ -235,7 +235,7 @@
             height: 24px;
             background: transparent;
             border-top-right-radius: 24px;
-            box-shadow: 10px -10px 0 10px #f8fafc;
+            box-shadow: 10px -10px 0 10px #ffffff;
             pointer-events: none;
         }
 
@@ -295,12 +295,12 @@
             background: rgba(248, 113, 113, 0.12);
         }
 
-        /* ── MAIN CANVAS (Sleek Rounded Gray Canvas) ── */
+        /* ── MAIN CANVAS (Seamless Full White Canvas to Bottom) ── */
         .cr-main-wrapper {
             margin-left: 240px;
             flex: 1;
             min-width: 0;
-            padding: 1.25rem 1.25rem 1.25rem 0;
+            padding: 1.25rem 0 0 0;
             display: flex;
             height: 100vh;
             overflow-y: auto;
@@ -309,11 +309,11 @@
 
         .cr-main-canvas {
             flex: 1;
-            background: #f8fafc;
-            border-radius: 40px;
-            padding: 2.75rem 3rem;
-            min-height: calc(100vh - 2.5rem);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+            background: #ffffff;
+            border-radius: 40px 0 0 0;
+            padding: 2.75rem 3rem 5rem 3rem;
+            min-height: calc(100vh - 1.25rem);
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.12);
             display: flex;
             flex-direction: column;
             align-self: stretch;
