@@ -30,7 +30,7 @@
 
       <div id="emoji-wrap" style="margin-bottom:1.25rem;{{ old('icon_type', $usp->icon_type ?? 'emoji') === 'upload' ? 'display:none;' : '' }}">
         <label style="font-size:.8rem;font-weight:700;color:#64748B;display:block;margin-bottom:.5rem;">EMOJI / KARAKTER ICON</label>
-        <input type="text" name="icon_emoji" value="{{ old('icon_emoji', $usp->icon_type === 'emoji' ? $usp->icon_value : '') }}" placeholder="Contoh: 🚚 atau ✅" style="width:100%;padding:.75rem 1rem;border:1.5px solid #E2E8F0;border-radius:12px;font-size:1.5rem;outline:none;box-sizing:border-box;">
+        <input type="text" name="icon_emoji" value="{{ old('icon_emoji', (isset($usp) && $usp->icon_type === 'emoji') ? $usp->icon_value : '') }}" placeholder="Contoh: 🚚 atau ✅" style="width:100%;padding:.75rem 1rem;border:1.5px solid #E2E8F0;border-radius:12px;font-size:1.5rem;outline:none;box-sizing:border-box;">
       </div>
 
       <div id="upload-wrap" style="margin-bottom:1.25rem;{{ old('icon_type', $usp->icon_type ?? 'emoji') !== 'upload' ? 'display:none;' : '' }}">

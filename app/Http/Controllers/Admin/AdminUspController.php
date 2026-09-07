@@ -17,7 +17,7 @@ class AdminUspController extends Controller
 
     public function create()
     {
-        return view('admin.usp.form');
+        return view('admin.usp.form', ['usp' => null]);
     }
 
     public function store(Request $request)

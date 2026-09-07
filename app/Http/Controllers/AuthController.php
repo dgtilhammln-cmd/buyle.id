@@ -152,15 +152,15 @@ class AuthController extends Controller
             \Log::warning('Merge guest cart on register failed: ' . $e->getMessage());
         }
 
-        $redirectRoute = route('account.overview');
+        $redirectRoute = route('account.profile');
         if ($user->role === 'super_admin' || $user->role === 'admin') {
             $redirectRoute = route('admin.dashboard');
         } elseif ($user->role === 'seller') {
             $redirectRoute = route('creator.dashboard');
         }
 
-        return redirect()->intended($redirectRoute)
-            ->with('success', 'Akun berhasil dibuat. Selamat datang, ' . $user->name . '!');
+        return redirect()->route($redirectRoute == route('account.profile') ? 'account.profile' : $redirectRoute)
+            ->with('success', 'Akun berhasil dibuat. Selamat datang, ' . $user->name . '! Harap lengkapi profil Anda.');
     }
 
     // ── Logout ──
@@ -188,6 +188,7 @@ class AuthController extends Controller
         }
 
         $oldSessionId = request()->session()->getId();
+        $isNewUser = false;
 
         // Find or create user
         $user = User::where('google_id', $googleUser->getId())
@@ -200,6 +201,7 @@ class AuthController extends Controller
                 $user->update(['google_id' => $googleUser->getId()]);
             }
         } else {
+            $isNewUser = true;
             // Generate unique username
             $base     = Str::slug($googleUser->getName(), '.');
             $username = $base;
@@ -232,6 +234,11 @@ class AuthController extends Controller
             app(\App\Services\CartService::class)->mergeGuestCart($user->id, $oldSessionId);
         } catch (\Throwable $e) {
             \Log::warning('Merge guest cart on Google callback failed: ' . $e->getMessage());
+        }
+
+        if ($isNewUser && $user->role === 'buyer') {
+            return redirect()->route('account.profile')
+                ->with('success', 'Selamat datang, ' . $user->name . '! Harap lengkapi profil Anda.');
         }
 
         $redirectRoute = route('account.overview');
