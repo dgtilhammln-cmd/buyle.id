@@ -523,15 +523,48 @@
         color: #1eb349;
     }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .tab-text-full { display: inline-block; }
+    .tab-text-mob { display: none; }
 
     /* ── RESPONSIVE MOBILE FIXES ── */
     @media (max-width: 991px) {
         .bio-layout { flex-direction: column; width: 100%; gap: 1.25rem; }
-        .bio-sidebar { width: 100%; position: static; box-sizing: border-box; }
+        .bio-sidebar { width: 100%; position: static; box-sizing: border-box; padding: 0.5rem; border-radius: 14px; background: #ffffff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); margin-bottom: 0.5rem; }
         .bio-content { width: 100%; max-width: 100%; box-sizing: border-box; }
         .form-body { padding: 1.15rem 1rem; }
-        
+
+        .sidebar-info-card, .sidebar-tips-card {
+            display: none !important;
+        }
+
+        .bio-tabs-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3px;
+            background: #f8fafc;
+            padding: 3px;
+            border-radius: 12px;
+        }
+
+        .tab-btn {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0.45rem 0.2rem;
+            gap: 3px;
+            border-radius: 8px;
+            margin-bottom: 0;
+            width: 100%;
+        }
+
+        .tab-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .tab-text-full { display: none !important; }
+        .tab-text-mob { display: block !important; font-size: 0.65rem; font-weight: 600; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+
         .filter-grid {
             grid-template-columns: 1fr;
             gap: 0.75rem;
@@ -565,7 +598,7 @@
 
     {{-- SUB SIDEBAR NAV --}}
     <div class="bio-sidebar">
-        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 1.1rem; margin-bottom: 1.25rem;">
+        <div class="sidebar-info-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 1.1rem; margin-bottom: 1.25rem;">
             <div style="font-size: 0.85rem; font-weight: 800; color: #0f172a; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
                 <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
                 Gatekeeper Studio
@@ -575,16 +608,20 @@
             </div>
         </div>
 
-        <button type="button" class="tab-btn {{ $activeTab === 'scanner' ? 'active' : '' }}" onclick="switchTab('tab-scanner', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
-            Live QR Scanner
-        </button>
-        <button type="button" class="tab-btn {{ $activeTab === 'data' ? 'active' : '' }}" onclick="switchTab('tab-data', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            Data Kehadiran & Event
-        </button>
+        <div class="bio-tabs-list">
+            <button type="button" class="tab-btn {{ $activeTab === 'scanner' ? 'active' : '' }}" onclick="switchTab('tab-scanner', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+                <span class="tab-text-full">Live QR Scanner</span>
+                <small class="tab-text-mob">Live Scanner</small>
+            </button>
+            <button type="button" class="tab-btn {{ $activeTab === 'data' ? 'active' : '' }}" onclick="switchTab('tab-data', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span class="tab-text-full">Data Kehadiran & Event</span>
+                <small class="tab-text-mob">Data Kehadiran</small>
+            </button>
+        </div>
 
-        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 1rem; font-size: 0.78rem; color: #64748b; margin-top: 1.25rem;">
+        <div class="sidebar-tips-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 1rem; font-size: 0.78rem; color: #64748b; margin-top: 1.25rem;">
             <strong style="color: #0f172a; display: flex; align-items: center; gap: 5px; margin-bottom: 0.4rem;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
                 Tips Verifikasi:

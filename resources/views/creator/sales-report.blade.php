@@ -19,7 +19,12 @@
     .cr-table tr:last-child td { border-bottom:none; }
     .cr-table tbody tr:hover td { background:#fafff8; }
     .empty-state { text-align:center; padding:3rem 1rem; color:#94A3B8; }
-    @media(max-width:640px) { .report-stats { grid-template-columns:1fr; } }
+    @media(max-width:640px) {
+        .report-stats { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+        .stat-c { padding: 0.75rem 0.5rem; text-align: center; border-radius: 12px; }
+        .stat-c .label { font-size: 0.62rem; margin-bottom: 0.2rem; }
+        .stat-c .val { font-size: 0.95rem; }
+    }
 </style>
 @endsection
 

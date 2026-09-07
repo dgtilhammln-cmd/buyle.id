@@ -280,15 +280,56 @@
         background: #f0fdf4;
     }
 
+    .tab-text-full { display: inline-block; }
+    .tab-text-mob { display: none; }
+
     @media (max-width: 991px) {
         .bio-layout {
             flex-direction: column;
+            gap: 1rem;
         }
 
         .bio-sidebar {
             width: 100%;
             position: static;
+            padding: 0.5rem;
+            border-radius: 14px;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            margin-bottom: 0.5rem;
         }
+
+        .sidebar-balance-card {
+            display: none !important;
+        }
+
+        .bio-tabs-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+            background: #f8fafc;
+            padding: 3px;
+            border-radius: 12px;
+        }
+
+        .tab-btn {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0.45rem 0.2rem;
+            gap: 3px;
+            border-radius: 8px;
+            margin-bottom: 0;
+            width: 100%;
+        }
+
+        .tab-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .tab-text-full { display: none !important; }
+        .tab-text-mob { display: block !important; font-size: 0.65rem; font-weight: 600; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
     }
 </style>
 @endsection
@@ -302,7 +343,7 @@
     {{-- SUB SIDEBAR --}}
     <div class="bio-sidebar">
         {{-- Balance Card --}}
-        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem;">
+        <div class="sidebar-balance-card" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem;">
             <div style="font-size: 0.72rem; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.35rem;">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
                 Saldo Siap Ditarik
@@ -315,18 +356,23 @@
             </div>
         </div>
 
-        <button type="button" class="tab-btn active" onclick="switchPayoutTab('tab-withdraw', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
-            Penarikan Saldo
-        </button>
-        <button type="button" class="tab-btn" onclick="switchPayoutTab('tab-bank', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            Pengaturan Rekening
-        </button>
-        <button type="button" class="tab-btn" onclick="switchPayoutTab('tab-history', this)">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            Riwayat Pencairan
-        </button>
+        <div class="bio-tabs-list">
+            <button type="button" class="tab-btn active" onclick="switchPayoutTab('tab-withdraw', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
+                <span class="tab-text-full">Penarikan Saldo</span>
+                <small class="tab-text-mob">Tarik Saldo</small>
+            </button>
+            <button type="button" class="tab-btn" onclick="switchPayoutTab('tab-bank', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span class="tab-text-full">Pengaturan Rekening</span>
+                <small class="tab-text-mob">Rekening</small>
+            </button>
+            <button type="button" class="tab-btn" onclick="switchPayoutTab('tab-history', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span class="tab-text-full">Riwayat Pencairan</span>
+                <small class="tab-text-mob">Riwayat</small>
+            </button>
+        </div>
     </div>
 
     {{-- CONTENT AREA --}}

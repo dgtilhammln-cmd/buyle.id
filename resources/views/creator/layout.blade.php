@@ -21,6 +21,7 @@
             font-family: 'Montserrat', sans-serif;
             font-weight: 400;
             background: linear-gradient(135deg, #126829 0%, #1eb349 50%, #8ebd28 100%);
+            background-attachment: fixed;
             color: #0f172a;
             height: 100vh;
             overflow: hidden;
@@ -47,20 +48,20 @@
             background: transparent !important;
         }
         ::-webkit-scrollbar-track {
-            background: #126829;
+            background: transparent;
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.4);
             border-radius: 10px;
-            border: 2px solid #126829;
+            border: 2px solid transparent;
         }
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.6);
         }
         * {
             scrollbar-width: auto;
-            scrollbar-color: rgba(255, 255, 255, 0.4) #126829;
+            scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
         }
 
         /* Creator Sidebar Scrollbar */
@@ -73,7 +74,7 @@
             height: 0 !important;
         }
         .cr-sidebar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
+            background: transparent;
             border-radius: 10px;
             margin: 6px 0;
         }
@@ -100,26 +101,26 @@
             height: 0 !important;
         }
         .cr-main-wrapper::-webkit-scrollbar-track {
-            background: #126829;
+            background: transparent;
             border-radius: 10px;
         }
         .cr-main-wrapper::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.4);
             border-radius: 10px;
-            border: 2px solid #126829;
+            border: 2px solid transparent;
         }
         .cr-main-wrapper::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.6);
         }
         .cr-main-wrapper {
             scrollbar-width: auto;
-            scrollbar-color: rgba(255, 255, 255, 0.4) #126829;
+            scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
         }
 
-        /* ── SIDEBAR (Green Gradient Shell) ── */
+        /* ── SIDEBAR (Seamless Transparent over Body Gradient) ── */
         .cr-sidebar {
             width: 240px;
-            background: linear-gradient(180deg, #126829 0%, #1eb349 50%, #8ebd28 100%);
+            background: transparent;
             display: flex;
             flex-direction: column;
             padding: 1.75rem 0 1.75rem 1.25rem;
