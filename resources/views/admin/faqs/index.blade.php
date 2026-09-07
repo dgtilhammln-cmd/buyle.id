@@ -1,19 +1,19 @@
 @extends('layouts.admin')
-@section('title', 'Kelola Artikel')
-@section('page-title', 'Artikel')
+@section('title', 'Kelola FAQ')
+@section('page-title', 'FAQ')
 @section('content')
 
   {{-- PAGE HEADER --}}
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
     <div>
-      <h1 style="font-size:1.5rem;font-weight:800;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.02em;">Kelola Artikel
+      <h1 style="font-size:1.5rem;font-weight:800;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.02em;">Kelola FAQ
       </h1>
       <p style="font-size:.875rem;color:#94A3B8;margin:0;">{{ $faqs->count() }} faq terdaftar</p>
     </div>
     <div style="display:flex;align-items:center;gap:1rem;">
       <form action="{{ route('admin.faqs.index') }}" method="GET"
         style="display:flex;align-items:center;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.02);">
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari artikel..."
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari FAQ..."
           style="border:none;outline:none;padding:8px 12px;font-size:0.875rem;width:200px;font-family:'Montserrat',sans-serif;">
         <button type="submit"
           style="background:#F1F5F9;border:none;border-radius:8px;padding:8px;cursor:pointer;color:#64748B;display:flex;align-items:center;justify-content:center;">
@@ -59,7 +59,7 @@
           <line x1="12" y1="5" x2="12" y2="19" />
           <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
-        Tulis Artikel
+        Tambah FAQ
       </a>
     </div>
   </div>
@@ -79,7 +79,7 @@
       </div>
       <div>
         <div style="font-size:1.5rem;font-weight:800;color:#1E293B;line-height:1;">{{ $faqs->count() }}</div>
-        <div style="font-size:.75rem;color:#94A3B8;font-weight:600;margin-top:.15rem;">Total Artikel</div>
+        <div style="font-size:.75rem;color:#94A3B8;font-weight:600;margin-top:.15rem;">Total FAQ</div>
       </div>
     </div>
     <div
@@ -125,7 +125,7 @@
             Gambar</th>
           <th
             style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
-            Judul & Slug</th>
+            Pertanyaan & Slug</th>
           <th
             style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
             Kategori</th>
@@ -230,7 +230,7 @@
                 </a>
                 {{-- Hapus --}}
                 <form method="POST" action="{{ route('admin.faqs.destroy', $a) }}"
-                  onsubmit="return confirm('Hapus artikel ini? Tindakan tidak dapat dibatalkan.')">
+                  onsubmit="return confirm('Hapus FAQ ini? Tindakan tidak dapat dibatalkan.')">
                   @csrf @method('DELETE')
                   <button type="submit" title="Hapus"
                     style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(239,68,68,0.08);border-radius:8px;color:#EF4444;border:none;cursor:pointer;transition:all .2s;"
@@ -258,8 +258,8 @@
                   <line x1="16" y1="17" x2="8" y2="17" />
                 </svg>
               </div>
-              <div style="font-size:.95rem;font-weight:700;color:#334155;">Belum ada artikel</div>
-              <div style="font-size:.82rem;color:#94A3B8;margin-top:.35rem;">Klik tombol "Tulis Artikel" untuk memulai.
+              <div style="font-size:.95rem;font-weight:700;color:#334155;">Belum ada FAQ</div>
+              <div style="font-size:.82rem;color:#94A3B8;margin-top:.35rem;">Klik tombol "Tambah FAQ" untuk memulai.
               </div>
               <a href="{{ route('admin.faqs.create') }}"
                 style="display:inline-flex;align-items:center;gap:.5rem;margin-top:1.25rem;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;font-size:.85rem;font-weight:700;padding:.625rem 1.25rem;border-radius:10px;text-decoration:none;">
@@ -267,7 +267,7 @@
                   <line x1="12" y1="5" x2="12" y2="19" />
                   <line x1="5" y1="12" x2="19" y2="12" />
                 </svg>
-                Tulis Artikel Pertama
+                Tambah FAQ Pertama
               </a>
             </td>
           </tr>
@@ -372,8 +372,8 @@
             <line x1="16" y1="17" x2="8" y2="17" />
           </svg>
         </div>
-        <div style="font-size:.9rem;font-weight:700;color:#334155;">Belum ada artikel</div>
-        <div style="font-size:.8rem;color:#94A3B8;margin-top:.25rem;">Klik tombol "Tulis Artikel" untuk mulai.</div>
+        <div style="font-size:.9rem;font-weight:700;color:#334155;">Belum ada FAQ</div>
+        <div style="font-size:.8rem;color:#94A3B8;margin-top:.25rem;">Klik tombol "Tambah FAQ" untuk mulai.</div>
       </div>
     @endforelse
   </div>

@@ -556,6 +556,13 @@ button.btn-primary:hover, a.btn-primary:hover {
 
   {{-- CARD 3: PENGATURAN & AKSI --}}
   <div class="sb-capsule-card" style="margin-top: auto;">
+    <a href="{{ route('admin.notifications.index') }}" class="sb-link {{ request()->routeIs('admin.notifications*') ? 'active' : '' }}" title="Notifikasi">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      </div>
+      <span class="sb-link-text">Notifikasi</span>
+    </a>
+
     <a href="{{ route('admin.settings') }}" class="sb-link {{ request()->routeIs('admin.settings*') || request()->routeIs('admin.wa*') ? 'active' : '' }}" title="Pengaturan">
       <div class="sb-link-icon">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
@@ -619,53 +626,85 @@ button.btn-primary:hover, a.btn-primary:hover {
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
       </a>
       @php
-        $newLeadsCount = \App\Models\Lead::where('status', 'new')->count();
-        $recentLeads = \App\Models\Lead::where('status', 'new')->latest()->take(5)->get();
+        // Fetch 4 types of notifications
+        $nUsers = \App\Models\User::latest()->take(3)->get()->map(fn($u) => (object)[
+            'title' => 'Akun Baru: '.$u->name,
+            'subtitle' => $u->email,
+            'time' => $u->created_at,
+            'link' => route('admin.users.show', $u->id),
+            'bg' => '#dcfce7', 'color' => '#1eb349', 'type' => 'user'
+        ]);
+        $nOrders = \App\Models\Order::whereHas('payment', fn($q) => $q->where('status', \App\Enums\PaymentStatus::Success->value))
+            ->with('user')->latest()->take(3)->get()->map(fn($o) => (object)[
+            'title' => 'Pembayaran Sukses #'.($o->order_number ?? $o->id),
+            'subtitle' => 'Rp '.number_format($o->total, 0, ',', '.').' • '.($o->user->name ?? 'Guest'),
+            'time' => $o->created_at,
+            'link' => route('admin.orders.show', $o->id),
+            'bg' => '#e0e7ff', 'color' => '#4f46e5', 'type' => 'payment'
+        ]);
+        $nWls = \App\Models\Product::where('is_whitelabel', true)->where('whitelabel_approval_status', 'pending')
+            ->with('seller')->latest()->take(3)->get()->map(fn($p) => (object)[
+            'title' => 'Approval Whitelabel: '.$p->name,
+            'subtitle' => 'Dari Seller: '.($p->seller->name ?? 'Seller'),
+            'time' => $p->updated_at ?? $p->created_at,
+            'link' => route('admin.whitelabel.index', ['status' => 'pending']),
+            'bg' => '#fef3c7', 'color' => '#d97706', 'type' => 'whitelabel'
+        ]);
+        $nLeads = \App\Models\Lead::where('status', 'new')->latest()->take(3)->get()->map(fn($l) => (object)[
+            'title' => 'Lead Baru: '.$l->name,
+            'subtitle' => 'Produk: '.($l->product ?? 'Inquiry Umum'),
+            'time' => $l->created_at,
+            'link' => route('admin.leads.show', $l->id),
+            'bg' => '#f1f5f9', 'color' => '#475569', 'type' => 'lead'
+        ]);
+
+        $recentNotifs = collect()->concat($nUsers)->concat($nOrders)->concat($nWls)->concat($nLeads)->sortByDesc('time')->take(6);
+        $totalNotifCount = $nUsers->count() + $nOrders->count() + $nWls->count() + $nLeads->count();
       @endphp
       <div style="position:relative;" id="notif-container">
-        <button id="notif-btn" title="{{ $newLeadsCount }} lead baru" onclick="toggleNotif(event)" style="position:relative;width:38px;height:38px;border-radius:12px;border:1.5px solid var(--border,#E4E7F0);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.04);">
+        <button id="notif-btn" title="Notifikasi ({{ $totalNotifCount }})" onclick="toggleNotif(event)" style="position:relative;width:38px;height:38px;border-radius:12px;border:1.5px solid var(--border,#E4E7F0);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.04);">
           <svg width="16" height="16" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
-          @if($newLeadsCount > 0)
-          <span id="notif-badge" style="position:absolute;top:-4px;right:-4px;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;font-size:.55rem;font-weight:800;min-width:16px;height:16px;border-radius:100px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid #F4F7FE;">{{ $newLeadsCount }}</span>
+          @if($totalNotifCount > 0)
+          <span id="notif-badge" style="position:absolute;top:-4px;right:-4px;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;font-size:.55rem;font-weight:800;min-width:16px;height:16px;border-radius:100px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid #F4F7FE;">{{ $totalNotifCount }}</span>
           @endif
         </button>
 
-        {{-- Premium Notification Dropdown --}}
+        {{-- Notification Dropdown --}}
         <div id="notif-dropdown" style="display:none;opacity:0;transform:translateY(-8px);position:absolute;top:calc(100% + 10px);right:0;width:360px;background:#fff;border:1px solid #E2E8F0;border-radius:24px;box-shadow:0 12px 40px rgba(0,0,0,0.06), 0 2px 10px rgba(0,0,0,0.02);z-index:9999;overflow:hidden;transition:opacity .25s,transform .25s;font-family:inherit;">
           {{-- Header --}}
-          <div style="padding:1.25rem 1.25rem .75rem;display:flex;align-items:center;justify-content:space-between;">
-            <div style="font-size:1rem;font-weight:600;color:#0F172A;letter-spacing:-.01em;">Pusat Notifikasi</div>
-          </div>
-
-          {{-- Segmented Tabs --}}
-          <div style="padding:0 1.25rem 1rem;">
-            <div style="display:flex;align-items:center;background:#F1F5F9;padding:.25rem;border-radius:12px;gap:.25rem;" id="notif-tabs">
-              <div onclick="switchNotifTab(this)" class="notif-tab active" style="flex:1;text-align:center;padding:.375rem 0;background:#fff;border-radius:8px;font-size:.7rem;font-weight:600;color:#0F172A;box-shadow:0 1px 2px rgba(0,0,0,0.05);cursor:pointer;transition:all .2s;">Hari Ini</div>
-              <div onclick="switchNotifTab(this)" class="notif-tab" style="flex:1;text-align:center;padding:.375rem 0;font-size:.7rem;font-weight:500;color:#64748B;cursor:pointer;transition:all .2s;">Minggu Ini</div>
-              <div onclick="switchNotifTab(this)" class="notif-tab" style="flex:1;text-align:center;padding:.375rem 0;font-size:.7rem;font-weight:500;color:#64748B;cursor:pointer;transition:all .2s;">Sebelumnya</div>
-            </div>
+          <div style="padding:1.125rem 1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F1F5F9;">
+            <div style="font-size:0.95rem;font-weight:700;color:#0F172A;letter-spacing:-.01em;">Notifikasi Baru</div>
+            <a href="{{ route('admin.notifications.index') }}" style="font-size:0.75rem;font-weight:700;color:#1eb349;text-decoration:none;display:flex;align-items:center;gap:0.25rem;">
+              Lihat Semua
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
           </div>
 
           {{-- Notification Items --}}
           <div style="max-height:350px;overflow-y:auto;" class="notif-scroll">
-            @if($newLeadsCount > 0)
-              @foreach($recentLeads as $lead)
-                <a href="{{ route('admin.leads.show', $lead) }}" style="display:flex;align-items:flex-start;gap:.875rem;padding:1.125rem 1.25rem;border-bottom:1px solid #F1F5F9;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
+            @if($recentNotifs->count() > 0)
+              @foreach($recentNotifs as $notif)
+                <a href="{{ $notif->link }}" style="display:flex;align-items:flex-start;gap:.875rem;padding:0.9rem 1.25rem;border-bottom:1px solid #F1F5F9;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
                   {{-- Icon badge --}}
-                  <div style="width:38px;height:38px;border-radius:50%;background:#fff;border:1.5px solid #F1F5F9;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <svg width="18" height="18" fill="none" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  <div style="width:36px;height:36px;border-radius:10px;background:{{ $notif->bg }};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">
+                    @if($notif->type === 'user')
+                      <svg width="16" height="16" fill="none" stroke="{{ $notif->color }}" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    @elseif($notif->type === 'payment')
+                      <svg width="16" height="16" fill="none" stroke="{{ $notif->color }}" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    @elseif($notif->type === 'whitelabel')
+                      <svg width="16" height="16" fill="none" stroke="{{ $notif->color }}" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                    @else
+                      <svg width="16" height="16" fill="none" stroke="{{ $notif->color }}" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    @endif
                   </div>
                   {{-- Content --}}
-                  <div style="flex:1;min-width:0;padding-top:2px;">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem;">
-                      <div style="display:flex;align-items:center;gap:.375rem;">
-                        <div style="width:5px;height:5px;background:#8B5CF6;border-radius:50%;"></div>
-                        <div style="font-size:.875rem;font-weight:600;color:#0F172A;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;">{{ $lead->name }}</div>
-                      </div>
-                      <div style="font-size:.7rem;font-weight:500;color:#94A3B8;flex-shrink:0;">{{ \Carbon\Carbon::parse($lead->created_at)->locale('id')->diffForHumans(null, true) }} lalu</div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.15rem;">
+                      <div style="font-size:.825rem;font-weight:700;color:#0F172A;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $notif->title }}</div>
+                      <div style="font-size:.675rem;font-weight:500;color:#94A3B8;flex-shrink:0;margin-left:6px;">{{ \Carbon\Carbon::parse($notif->time)->locale('id')->diffForHumans(null, true) }} lalu</div>
                     </div>
-                    <div style="font-size:.75rem;color:#64748B;line-height:1.4;">
-                      Lead dari <strong>{{ $lead->source ?? 'Website' }}</strong>. Tertarik pada: {{ $lead->product ?? 'Inquiry Umum' }}
+                    <div style="font-size:.75rem;color:#64748B;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                      {{ $notif->subtitle }}
                     </div>
                   </div>
                 </a>
@@ -675,21 +714,17 @@ button.btn-primary:hover, a.btn-primary:hover {
                 <div style="width:40px;height:40px;background:#fff;border:1px solid #F1F5F9;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
                   <svg width="18" height="18" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                 </div>
-                <div style="font-size:.875rem;font-weight:500;color:#0F172A;">Semua sudah dibaca</div>
-                <div style="font-size:.75rem;color:#64748B;margin-top:.25rem;">Tidak ada notifikasi baru saat ini.</div>
+                <div style="font-size:.875rem;font-weight:500;color:#0F172A;">Tidak ada notifikasi baru</div>
               </div>
             @endif
           </div>
           
-          {{-- Mark as read action --}}
-          @if($newLeadsCount > 0)
-          <div style="padding:.75rem 1.25rem;background:#F8FAFC;border-top:1px solid #F1F5F9;">
-            <form action="{{ route('admin.leads.mark_read') }}" method="POST" style="margin:0;">
-              @csrf
-              <button type="submit" style="width:100%;background:transparent;border:none;color:#64748B;font-size:.75rem;cursor:pointer;font-weight:500;font-family:inherit;transition:color .2s;" onmouseover="this.style.color='#0F172A'" onmouseout="this.style.color='#64748B'">Tandai semua dibaca</button>
-            </form>
+          {{-- Footer --}}
+          <div style="padding:.75rem 1.25rem;background:#F8FAFC;border-top:1px solid #F1F5F9;text-align:center;">
+            <a href="{{ route('admin.notifications.index') }}" style="display:block;width:100%;color:#1eb349;font-size:.78rem;text-decoration:none;font-weight:700;font-family:inherit;">
+              Lihat Semua Notifikasi ({{ $totalNotifCount }}) &rarr;
+            </a>
           </div>
-          @endif
         </div>
       </div>
       <div class="avatar">{{ strtoupper(substr(session('admin_name','A'),0,1)) }}</div>

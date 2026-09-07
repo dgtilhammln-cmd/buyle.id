@@ -238,6 +238,8 @@ Route::get('/deploy-hostinger', function () {
 | Admin Routes
 |--------------------------------------------------------------------------
 */
+Route::middleware(['admin.auth'])->get('/notifications', [\App\Http\Controllers\Admin\AdminNotificationController::class, 'index']);
+
 Route::prefix('admin')->group(function () {
     Route::get('/login',  [AdminAuthController::class, 'showLogin'])->name('admin.login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.post');
@@ -245,6 +247,7 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware(['admin.auth'])->group(function () {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+        Route::get('/notifications', [\App\Http\Controllers\Admin\AdminNotificationController::class, 'index'])->name('admin.notifications.index');
 
         Route::get('/analytics',              [AdminAnalyticsController::class, 'index'])->name('admin.analytics');
         Route::get('/analytics/data',         [AdminAnalyticsController::class, 'data'])->name('admin.analytics.data');

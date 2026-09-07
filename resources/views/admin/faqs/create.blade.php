@@ -1,6 +1,6 @@
 @extends('layouts.admin')
-@section('title', isset($article) ? 'Edit Artikel' : 'Tulis Artikel')
-@section('page-title', isset($article) ? 'Edit Artikel' : 'Tulis Artikel Baru')
+@section('title', isset($article) ? 'Edit FAQ' : 'Tambah FAQ')
+@section('page-title', isset($article) ? 'Edit FAQ' : 'Tambah FAQ Baru')
 @section('content')
 @php
     $a = $article ?? null;
@@ -48,28 +48,30 @@
 .editor-area:focus { border-color: #1eb349; }
 .img-preview { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; margin-bottom: 0.75rem; border: 1px solid #E2E8F0; }
 .btn-primary-new {
-    background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border: none; padding: 0.875rem 1.5rem; border-radius: 12px;
-    font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center;
-    justify-content: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 4px 14px rgba(30,179,73,0.3); width: 100%;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; font-weight: 700;
+    padding: 0.75rem 1.5rem; border-radius: 12px; border: none; cursor: pointer;
+    font-size: 0.9rem; transition: all 0.2s; box-shadow: 0 4px 14px rgba(30,179,73,0.35); text-decoration: none;
+    width: 100%;
 }
-.btn-primary-new:hover { background: #1eb349; transform: translateY(-2px); }
+.btn-primary-new:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(30,179,73,0.45); }
 .btn-outline-new {
-    background: #fff; color: #64748B; border: 1.5px solid #E2E8F0; padding: 0.875rem 1.5rem;
-    border-radius: 12px; font-weight: 600; font-size: 0.9rem; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-    transition: all 0.2s; width: 100%; text-decoration: none;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    background: #fff; color: #475569; font-weight: 600; padding: 0.75rem 1.5rem;
+    border-radius: 12px; border: 1.5px solid #E2E8F0; cursor: pointer; font-size: 0.9rem;
+    transition: all 0.2s; text-decoration: none; width: 100%;
 }
-.btn-outline-new:hover { background: #F8FAFC; color: #1E293B; }
+.btn-outline-new:hover { background: #F8FAFC; color: #1E293B; border-color: #CBD5E1; }
 .switch-label { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
-.switch-input { width: 20px; height: 20px; accent-color: #1eb349; cursor: pointer; }
+.switch-input { width: 18px; height: 18px; accent-color: #1eb349; cursor: pointer; }
 .switch-text { font-size: 0.9rem; font-weight: 600; color: #334155; }
 </style>
 
 <div style="max-width:1080px; margin:0 auto;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
         <div>
-            <h1 style="font-size:1.5rem;font-weight:800;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.02em;">{{ $a ? 'Edit Artikel' : 'Tulis Artikel Baru' }}</h1>
-            <p style="font-size:.875rem;color:#94A3B8;margin:0;">Isi konten artikel dalam Bahasa Indonesia.</p>
+            <h1 style="font-size:1.5rem;font-weight:800;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.02em;">{{ $a ? 'Edit FAQ' : 'Tambah FAQ Baru' }}</h1>
+            <p style="font-size:.875rem;color:#94A3B8;margin:0;">Isi pertanyaan dan jawaban FAQ dalam Bahasa Indonesia.</p>
         </div>
         <a href="{{ route('admin.faqs.index') }}" class="btn-outline-new" style="width:auto;padding:.5rem 1rem;">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -86,12 +88,12 @@
 
         <div>
             <div class="premium-card">
-                <h3 class="premium-card-header">Konten Artikel <span style="color:#EF4444;font-size:.75rem;font-weight:600;text-transform:none;">Wajib diisi</span></h3>
+                <h3 class="premium-card-header">Detail FAQ <span style="color:#EF4444;font-size:.75rem;font-weight:600;text-transform:none;">Wajib diisi</span></h3>
                 <div class="form-group">
-                    <label class="form-label">Judul Artikel <span class="req">*</span></label>
+                    <label class="form-label">Pertanyaan FAQ <span class="req">*</span></label>
                     <input type="text" name="translations[id][title]" id="art-title-id"
                         value="{{ old('translations.id.title', $t?->title) }}"
-                        class="form-input" required oninput="autoSlug()" placeholder="Judul artikel yang menarik...">
+                        class="form-input" required oninput="autoSlug()" placeholder="Pertanyaan FAQ...">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Slug (URL) <span class="hint">Otomatis dari judul jika dikosongkan.</span></label>
@@ -102,17 +104,17 @@
                     </div>
                 </div>
                 <div class="form-group" style="margin-bottom:0;">
-                    <label class="form-label">Excerpt / Ringkasan <span class="hint">(max 500 karakter)</span></label>
+                    <label class="form-label">Excerpt / Ringkasan Jawaban <span class="hint">(max 500 karakter)</span></label>
                     <textarea name="translations[id][excerpt]" class="form-textarea" rows="2" maxlength="500"
                         oninput="document.getElementById('exc-cnt').textContent=this.value.length"
-                        placeholder="Ringkasan singkat artikel...">{{ old('translations.id.excerpt', $t?->excerpt) }}</textarea>
+                        placeholder="Ringkasan singkat jawaban...">{{ old('translations.id.excerpt', $t?->excerpt) }}</textarea>
                     <div class="char-count"><span id="exc-cnt">{{ strlen(old('translations.id.excerpt', $t?->excerpt ?? '')) }}</span>/500</div>
                 </div>
             </div>
 
             <div class="premium-card" style="padding:0;overflow:hidden;border:none;">
                 <h3 class="premium-card-header" style="padding:1.25rem 1.5rem;margin:0;border:1px solid #E2E8F0;border-bottom:none;border-radius:12px 12px 0 0;">
-                    Isi Artikel <span class="req" style="margin-left:4px;">*</span>
+                    Jawaban / Penjelasan Lengkap <span class="req" style="margin-left:4px;">*</span>
                 </h3>
                 <div class="editor-toolbar">
                     <button type="button" class="editor-btn" onclick="fmt('bold')" style="font-weight:800;">B</button>
@@ -242,7 +244,7 @@
             <div style="display:flex;flex-direction:column;gap:0.75rem;position:sticky;top:6rem;">
                 <button type="submit" class="btn-primary-new">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
-                    {{ $a ? 'Simpan Perubahan' : 'Publish Artikel' }}
+                    {{ $a ? 'Simpan Perubahan' : 'Publish FAQ' }}
                 </button>
                 <a href="{{ route('admin.faqs.index') }}" class="btn-outline-new">Batalkan</a>
             </div>
@@ -328,10 +330,10 @@ document.getElementById('article-form').addEventListener('submit', function(e) {
     syncContent();
     const errors = [];
     const title = document.getElementById('art-title-id')?.value.trim();
-    if (!title) errors.push('Judul Artikel wajib diisi.');
+    if (!title) errors.push('Pertanyaan FAQ wajib diisi.');
     const content = document.getElementById('html-editor-id')?.value.trim() ||
                     document.getElementById('editor-id')?.innerHTML.replace(/<[^>]+>/g,'').trim();
-    if (!content || content.length < 30) errors.push('Isi Artikel wajib diisi minimal 30 karakter.');
+    if (!content || content.length < 30) errors.push('Jawaban FAQ wajib diisi minimal 30 karakter.');
     if (errors.length > 0) {
         e.preventDefault();
         const box = document.getElementById('validation-alert');

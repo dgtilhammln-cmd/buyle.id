@@ -136,6 +136,8 @@
     padding: 1.25rem 1.5rem;
     border: 1px solid #e2e8f0;
     box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+    min-width: 0;
+    overflow: hidden;
 }
 .metric-card.dark {
     background: linear-gradient(135deg, #0b120c, #1a2744);
@@ -143,7 +145,7 @@
 }
 .metric-label { font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
 .metric-card.dark .metric-label { color: #94a3b8; }
-.metric-value { font-size: 1.6rem; font-weight: 800; color: #0f172a; line-height: 1.1; }
+.metric-value { font-size: 1.4rem; font-weight: 800; color: #0f172a; line-height: 1.1; word-break: break-word; }
 .metric-card.dark .metric-value { color: #fff; }
 
 /* ── Traffic Wave Chart Card ─────────────────────────────── */
@@ -154,6 +156,8 @@
     border: 1px solid #f1f5f9;
     box-shadow: 0 4px 20px rgba(0,0,0,0.04);
     margin-bottom: 1.5rem;
+    min-width: 0;
+    overflow: hidden;
 }
 .wave-header {
     display: flex;
@@ -184,7 +188,7 @@
     0%, 100% { opacity: 1; transform: scale(1); }
     50%       { opacity: 0.5; transform: scale(1.3); }
 }
-.chart-wrap { position: relative; height: 140px; }
+.chart-wrap { position: relative; height: 140px; min-width: 0; width: 100%; }
 
 /* ── Content Grid ────────────────────────────────────────── */
 .main-grid {
@@ -192,6 +196,7 @@
     grid-template-columns: 1fr 320px;
     gap: 1.5rem;
     align-items: start;
+    min-width: 0;
 }
 
 /* ── Panel Card ──────────────────────────────────────────── */
@@ -201,6 +206,8 @@
     padding: 1.5rem;
     border: 1px solid #f1f5f9;
     box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    min-width: 0;
+    overflow: hidden;
 }
 .panel-head {
     display: flex;
@@ -290,11 +297,16 @@
     .metrics-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 600px) {
-    .metrics-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+    .metric-card { padding: 0.85rem 1rem; }
+    .metric-value { font-size: 1.05rem; }
     .rp-title { font-size: 1.3rem; }
     .filter-bar { gap: 0.25rem; }
-    .data-table { display: block; overflow-x: auto; }
+    .data-table { width: 100%; }
     .wave-card { padding: 1rem; }
+}
+@media (max-width: 420px) {
+    .metrics-grid { grid-template-columns: 1fr; }
 }
 </style>
 @endsection
