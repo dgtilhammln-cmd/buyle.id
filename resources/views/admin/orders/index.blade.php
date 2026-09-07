@@ -1,1058 +1,639 @@
 @extends('layouts.admin')
-@section('title', 'Pesanan Saya')
+@section('title', 'Manajemen Pesanan')
 @section('page-title', 'Manajemen Pesanan')
 @section('content')
 
-    <style>
-        /* ── Premium Orders Page ── */
-        .opage {
-            font-family: 'Montserrat', sans-serif;
-        }
+<style>
+    /* ── Minimalist Orders Page System ── */
+    .opage {
+        font-family: 'Montserrat', sans-serif;
+    }
 
-        /* Page Header */
-        .opage-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.75rem;
-            flex-wrap: wrap;
-        }
+    /* Page Header */
+    .opage-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
 
-        .opage-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #0F172A;
-            letter-spacing: -.03em;
-            margin: 0 0 .2rem;
-        }
+    .opage-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #0F172A;
+        letter-spacing: -.03em;
+        margin: 0 0 .25rem;
+    }
 
-        .opage-sub {
-            font-size: .8rem;
-            color: #94A3B8;
-            margin: 0;
-            font-weight: 500;
-        }
+    .opage-sub {
+        font-size: .8125rem;
+        color: #64748B;
+        margin: 0;
+        font-weight: 500;
+    }
 
-        .opage-sub strong {
-            color: #EF4444;
-        }
+    /* Period Filter Pills & Inputs */
+    .filter-btn {
+        padding: 0.45rem 0.95rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        border-radius: 50px;
+        border: 1.5px solid #E2E8F0;
+        background: #fff;
+        color: #64748B;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.15s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .filter-btn:hover, .filter-btn.active {
+        background: #f0fdf4;
+        border-color: #1eb349;
+        color: #1eb349;
+    }
 
-        /* Tabs Header */
-        .o-tabs-wrap {
-            display: flex;
-            gap: .75rem;
-            overflow-x: auto;
-            margin-bottom: 1.75rem;
-            padding: .25rem 0 .5rem 0;
-            /* Fixed cut-off */
-        }
+    /* 5 Stat Cards in 1 Row */
+    .stat-5-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    @media (max-width: 1200px) {
+        .stat-5-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 768px) {
+        .stat-5-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+        .stat-5-grid { grid-template-columns: 1fr; }
+    }
 
-        .o-tab {
-            padding: .6rem 1.25rem;
-            font-size: .8rem;
-            font-weight: 700;
-            color: #64748B;
-            background: #fff;
-            border: 1.5px solid #E2E8F0;
-            border-radius: 99px;
-            text-decoration: none;
-            white-space: nowrap;
-            transition: all .2s;
-            display: flex;
-            align-items: center;
-            gap: .5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-        }
+    .dash-card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        padding: 1.15rem 1.25rem;
+        transition: all 0.2s ease;
+    }
+    .dash-card:hover {
+        box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+        border-color: #CBD5E1;
+    }
 
-        .o-tab:hover {
-            background: #F8FAFC;
-            border-color: #CBD5E1;
-            color: #0F172A;
-            transform: translateY(-1px);
-        }
+    /* Tabs Header */
+    .o-tabs-wrap {
+        display: flex;
+        gap: .5rem;
+        overflow-x: auto;
+        margin-bottom: 1.25rem;
+        padding-bottom: .25rem;
+    }
 
-        .o-tab.active {
-            background: #f0fdf4;
-            border-color: #bbf7d0;
-            color: #16a34a;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-        }
+    .o-tab {
+        padding: .5rem 1.1rem;
+        font-size: .8rem;
+        font-weight: 700;
+        color: #64748B;
+        background: #fff;
+        border: 1.5px solid #E2E8F0;
+        border-radius: 99px;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: all .2s;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+    }
 
-        .o-tab-count {
-            background: #F1F5F9;
-            color: #64748B;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: .7rem;
-            transition: all .2s;
-        }
+    .o-tab:hover {
+        background: #F8FAFC;
+        border-color: #CBD5E1;
+        color: #0F172A;
+    }
 
-        .o-tab.active .o-tab-count {
-            background: #1eb349;
-            color: #fff;
-        }
+    .o-tab.active {
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+        color: #166534;
+    }
 
-        /* Search & Filter Bar */
-        .o-filter-bar {
-            display: flex;
-            gap: .75rem;
-            align-items: center;
-            margin-bottom: 1.75rem;
-            flex-wrap: wrap;
-            background: #fff;
-            padding: 1rem;
-            border-radius: 16px;
-            border: 1.5px solid #F1F5F9;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-        }
+    .o-tab-count {
+        background: #F1F5F9;
+        color: #64748B;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-size: .7rem;
+        transition: all .2s;
+    }
 
-        .o-search-input {
-            flex: 1;
-            min-width: 250px;
-            padding: .6rem 1rem;
-            border: 1.5px solid #E2E8F0;
-            border-radius: 12px;
-            font-size: .8rem;
-            outline: none;
-            font-family: 'Montserrat', sans-serif;
-            background: #F8FAFC;
-            transition: all .2s;
-            color: #0F172A;
-        }
+    .o-tab.active .o-tab-count {
+        background: #1eb349;
+        color: #fff;
+    }
 
-        .o-search-input:focus {
-            border-color: #FCA5A5;
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
-        }
+    /* Search & Filter Bar */
+    .o-filter-bar {
+        display: flex;
+        gap: .75rem;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        background: #fff;
+        padding: 0.85rem 1rem;
+        border-radius: 14px;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
 
-        .o-btn {
-            background: #0F172A;
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            padding: .6rem 1.25rem;
-            font-size: .8rem;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            transition: all .2s;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-        }
+    .o-search-input {
+        flex: 1;
+        min-width: 220px;
+        padding: .55rem .9rem;
+        border: 1.5px solid #E2E8F0;
+        border-radius: 10px;
+        font-size: .82rem;
+        outline: none;
+        font-family: 'Montserrat', sans-serif;
+        background: #F8FAFC;
+        transition: all .2s;
+        color: #0F172A;
+    }
 
-        .o-btn:hover {
-            background: #1E293B;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
-        }
+    .o-search-input:focus {
+        border-color: #1eb349;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.1);
+    }
 
-        .o-btn-outline {
-            background: #fff;
-            color: #475569;
-            border: 1.5px solid #E2E8F0;
-        }
+    .o-btn-submit {
+        background: #1eb349;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: .55rem 1.15rem;
+        font-size: .8rem;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: 'Montserrat', sans-serif;
+        transition: all .2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
 
-        .o-btn-outline:hover {
-            background: #F8FAFC;
-            box-shadow: none;
-            transform: none;
-        }
+    .o-btn-submit:hover {
+        background: #166534;
+    }
 
-        /* Order Cards (Premium Style) */
-        .o-card {
-            background: #fff;
-            border-radius: 20px;
-            border: 1.5px solid #F1F5F9;
-            margin-bottom: 1.25rem;
-            overflow: hidden;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
-            transition: all .25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+    .o-btn-reset {
+        background: #F1F5F9;
+        color: #475569;
+        border: 1px solid #E2E8F0;
+        border-radius: 10px;
+        padding: .55rem 1rem;
+        font-size: .8rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all .2s;
+    }
+    .o-btn-reset:hover {
+        background: #E2E8F0;
+    }
 
-        .o-card:hover {
-            border-color: #FECACA;
-            box-shadow: 0 12px 30px rgba(239, 68, 68, 0.08);
-            transform: translateY(-4px);
-        }
+    /* Minimalist Order Cards */
+    .o-card {
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid #E2E8F0;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        transition: all .2s;
+    }
 
-        .o-card-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.25rem 1.75rem;
-            border-bottom: 1.5px dashed #E2E8F0;
-            background: #FAFAF9;
-        }
+    .o-card:hover {
+        border-color: #CBD5E1;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    }
 
-        .o-card-user {
-            display: flex;
-            align-items: center;
-            gap: .85rem;
-            font-weight: 800;
-            font-size: .95rem;
-            color: #0F172A;
-        }
+    .o-card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.9rem 1.25rem;
+        border-bottom: 1px solid #F1F5F9;
+        background: #FAFBFA;
+        font-size: 0.82rem;
+    }
 
-        .o-card-user svg {
-            color: #94A3B8;
-        }
+    .o-card-user {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        font-weight: 700;
+        color: #0F172A;
+    }
 
-        .o-card-ordernum {
-            font-size: .75rem;
-            font-weight: 700;
-            padding: .35rem .85rem;
-            background: #F1F5F9;
-            color: #475569;
-            border-radius: 8px;
-            letter-spacing: .02em;
-        }
+    .o-card-ordernum {
+        font-size: .75rem;
+        font-weight: 800;
+        padding: .25rem .65rem;
+        background: #F1F5F9;
+        color: #475569;
+        border-radius: 6px;
+        font-family: monospace;
+    }
 
+    .o-card-body {
+        display: grid;
+        grid-template-columns: 2.2fr 1fr 1fr 0.8fr;
+        padding: 1.15rem 1.25rem;
+        gap: 1.25rem;
+        align-items: center;
+    }
+
+    @media(max-width: 992px) {
         .o-card-body {
-            display: grid;
-            grid-template-columns: 2.5fr 1fr 1fr 1fr;
-            padding: 1.5rem 1.75rem;
-            gap: 1.5rem;
-            align-items: center;
-        }
-
-        @media(max-width: 992px) {
-            .o-card-body {
-                grid-template-columns: 1fr;
-                gap: 1.25rem;
-            }
-        }
-
-        /* Item Column */
-        .o-item-col {
-            display: flex;
-            gap: 1.25rem;
-            align-items: center;
-        }
-
-        .o-item-img {
-            width: 65px;
-            height: 65px;
-            border-radius: 12px;
-            object-fit: cover;
-            border: 1.5px solid #E2E8F0;
-            flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .o-item-info {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .o-item-title {
-            font-weight: 800;
-            font-size: .9rem;
-            color: #1E293B;
-            line-height: 1.4;
-            margin-bottom: .35rem;
-        }
-
-        .o-item-var {
-            font-size: .75rem;
-            color: #64748B;
-            margin-bottom: .35rem;
-            font-weight: 600;
-        }
-
-        .o-item-qty {
-            font-weight: 700;
-            font-size: .7rem;
-            color: #0F172A;
-            background: #F1F5F9;
-            padding: .15rem .5rem;
-            border-radius: 6px;
-            display: inline-block;
-            width: max-content;
-        }
-
-        /* Total Column */
-        .o-col-title {
-            font-size: .7rem;
-            font-weight: 700;
-            color: #94A3B8;
-            text-transform: uppercase;
-            margin-bottom: .5rem;
-            letter-spacing: .03em;
-        }
-
-        .o-total-price {
-            font-weight: 800;
-            color: #EF4444;
-            font-size: 1.1rem;
-        }
-
-        .o-pay-method {
-            font-size: .75rem;
-            color: #64748B;
-            margin-top: .35rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: .3rem;
-        }
-
-        /* Status Column */
-        .o-status-text {
-            font-weight: 800;
-            font-size: .85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: .4rem;
-        }
-
-        .o-status-text::before {
-            content: "";
-            display: block;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: currentColor;
-        }
-
-        .o-ship-name {
-            font-weight: 700;
-            font-size: .85rem;
-            color: #1E293B;
-        }
-
-        .o-ship-type {
-            font-size: .75rem;
-            color: #64748B;
-            margin-top: .35rem;
-            font-weight: 500;
-        }
-
-        /* Action Column */
-        .o-action-col {
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-            gap: .5rem;
-            align-items: flex-end;
-        }
-
-        .o-action-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: .5rem;
-            font-size: .8rem;
-            font-weight: 700;
-            color: #fff;
-            background: #EF4444;
-            text-decoration: none;
-            padding: .65rem 1.25rem;
-            transition: all .2s;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
-        }
-
-        .o-action-btn:hover {
-            background: #DC2626;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 14px rgba(239, 68, 68, 0.3);
-        }
-
-        /* Empty state */
-        .o-empty {
-            text-align: center;
-            padding: 5rem 2rem;
-            background: #fff;
-            border-radius: 20px;
-            border: 1.5px dashed #CBD5E1;
-        }
-
-        .o-empty-icon {
-            width: 80px;
-            height: 80px;
-            opacity: 0.2;
-            margin-bottom: 1.25rem;
-            color: #94A3B8;
-            display: inline-block;
-        }
-
-        .o-empty-text {
-            color: #475569;
-            font-size: 1.1rem;
-            font-weight: 800;
-            margin-bottom: .5rem;
-        }
-
-        .o-empty-sub {
-            color: #94A3B8;
-            font-size: .85rem;
-            font-weight: 500;
-        }
-
-        /* Modal Download Laporan */
-        .rm-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(15, 23, 42, 0.4);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .25s ease;
-            backdrop-filter: blur(4px);
-        }
-
-        .rm-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .rm-modal {
-            background: #fff;
-            width: 90%;
-            max-width: 450px;
-            border-radius: 24px;
-            padding: 2rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            transform: translateY(20px);
-            transition: all .3s ease;
-        }
-
-        .rm-overlay.show .rm-modal {
-            transform: translateY(0);
-        }
-
-        .rm-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .rm-title {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: #0F172A;
-        }
-
-        .rm-close {
-            background: transparent;
-            border: none;
-            font-size: 1.5rem;
-            color: #94A3B8;
-            cursor: pointer;
-        }
-
-        .rm-close:hover {
-            color: #EF4444;
-        }
-
-        .rm-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .rm-label {
-            display: block;
-            font-size: .8rem;
-            font-weight: 800;
-            color: #475569;
-            margin-bottom: .5rem;
-        }
-
-        .rm-presets {
-            display: flex;
-            gap: .5rem;
-            margin-bottom: 1rem;
-        }
-
-        .rm-preset-btn {
-            flex: 1;
-            padding: .5rem;
-            font-size: .75rem;
-            font-weight: 700;
-            color: #1eb349;
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all .2s;
-        }
-
-        .rm-preset-btn:hover {
-            background: #dcfce7;
-        }
-
-        .rm-preset-btn.active {
-            background: #1eb349;
-            color: #fff;
-            border-color: #1eb349;
-        }
-
-        .rm-date-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 1rem;
         }
+    }
 
-        .rm-input,
-        .rm-select {
-            width: 100%;
-            padding: .75rem 1rem;
-            border: 1.5px solid #E2E8F0;
-            border-radius: 12px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: .85rem;
-            outline: none;
-            background: #F8FAFC;
-            color: #0F172A;
-        }
+    .o-item-col {
+        display: flex;
+        gap: 0.85rem;
+        align-items: center;
+    }
 
-        .rm-input:focus,
-        .rm-select:focus {
-            border-color: #1eb349;
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
+    .o-item-img {
+        width: 52px;
+        height: 52px;
+        border-radius: 10px;
+        object-fit: cover;
+        border: 1px solid #E2E8F0;
+        flex-shrink: 0;
+        background: #F8FAFC;
+    }
 
-        /* Grid View */
-        .o-grid-view {
-            display: none;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.25rem;
-        }
+    .o-item-title {
+        font-weight: 700;
+        font-size: .85rem;
+        color: #1E293B;
+        line-height: 1.35;
+        margin-bottom: .2rem;
+    }
 
-        .o-grid-card {
-            background: #fff;
-            border-radius: 20px;
-            border: 1.5px solid #F1F5F9;
-            overflow: hidden;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
-            transition: all .25s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-        }
+    .o-col-title {
+        font-size: .68rem;
+        font-weight: 700;
+        color: #94A3B8;
+        text-transform: uppercase;
+        margin-bottom: .3rem;
+        letter-spacing: .04em;
+    }
 
-        .o-grid-card:hover {
-            border-color: #FECACA;
-            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.08);
-            transform: translateY(-4px);
-        }
-    </style>
+    .o-total-price {
+        font-weight: 800;
+        color: #1eb349;
+        font-size: 1.05rem;
+    }
 
-    <div class="opage">
+    /* Action Minimalist Buttons */
+    .o-btn-action {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        font-size: .78rem;
+        font-weight: 700;
+        color: #1eb349;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        text-decoration: none;
+        padding: .45rem .85rem;
+        transition: all .2s;
+        border-radius: 8px;
+    }
 
-        {{-- Page Header --}}
-        <div class="opage-head">
-            <div>
-                <h1 class="opage-title">Data Pesanan</h1>
-                <p class="opage-sub">Manajemen seluruh pesanan. <strong>{{ $orders->total() }}</strong> pesanan ditemukan.
-                </p>
-            </div>
-            <div style="display:flex;align-items:center;gap:.75rem;">
-                {{-- VIEW TOGGLE --}}
-                <div
-                    style="display:flex;background:#fff;border:1.5px solid #E2E8F0;border-radius:12px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,0.02);">
-                    <button onclick="switchView('list')" id="btn-view-list"
-                        style="border:none;background:transparent;border-radius:8px;padding:8px 10px;cursor:pointer;color:#94A3B8;display:flex;align-items:center;transition:all .2s;"
-                        title="List View">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <line x1="8" y1="6" x2="21" y2="6"></line>
-                            <line x1="8" y1="12" x2="21" y2="12"></line>
-                            <line x1="8" y1="18" x2="21" y2="18"></line>
-                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
-                        </svg>
-                    </button>
-                    <button onclick="switchView('grid')" id="btn-view-grid"
-                        style="border:none;background:transparent;border-radius:8px;padding:8px 10px;cursor:pointer;color:#94A3B8;display:flex;align-items:center;transition:all .2s;"
-                        title="Grid View">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <rect x="3" y="3" width="7" height="7"></rect>
-                            <rect x="14" y="3" width="7" height="7"></rect>
-                            <rect x="14" y="14" width="7" height="7"></rect>
-                            <rect x="3" y="14" width="7" height="7"></rect>
-                        </svg>
-                    </button>
-                </div>
-                <button type="button" class="o-btn" onclick="openReportModal()"
-                    style="background:#1eb349; box-shadow:0 4px 12px rgba(30,179,73,0.2); display:flex; align-items:center; gap:.5rem;">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                        stroke-linejoin="round" viewBox="0 0 24 24">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                        <polyline points="7 10 12 15 17 10" />
-                        <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                    Unduh Laporan
-                </button>
-            </div>
+    .o-btn-action:hover {
+        background: #1eb349;
+        color: #fff;
+        border-color: #1eb349;
+    }
+
+    /* Modal Download Laporan */
+    .rm-overlay {
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(4px);
+        display: none; align-items: center; justify-content: center;
+        z-index: 99999; padding: 1rem;
+    }
+
+    .rm-modal {
+        background: #fff; border-radius: 20px; width: 100%; max-width: 480px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2); overflow: hidden;
+        animation: rmPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes rmPop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+    .rm-head {
+        padding: 1.25rem 1.5rem; border-bottom: 1px solid #F1F5F9;
+        display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .rm-body { padding: 1.5rem; }
+</style>
+
+<div class="opage">
+
+    {{-- Page Header --}}
+    <div class="opage-head">
+        <div>
+            <h1 class="opage-title">Manajemen Pesanan</h1>
+            <p class="opage-sub">Ringkasan transaksi konsumen buyle.id &bull; <strong>{{ $orders->total() }}</strong> pesanan ditemukan</p>
         </div>
 
-        {{-- Premium Tabs --}}
-        <div class="o-tabs-wrap">
-            @foreach($tabs as $k => $t)
-                <a href="{{ route('admin.orders.index', ['tab' => $k]) }}" class="o-tab {{ $tab == $k ? 'active' : '' }}">
-                    {{ $t['label'] }} <span class="o-tab-count">{{ $counts[$k] ?? 0 }}</span>
-                </a>
-            @endforeach
-        </div>
-
-        {{-- Search Bar --}}
-        <form class="o-filter-bar" method="GET" action="{{ route('admin.orders.index') }}">
+        {{-- Filter Periode Header Form --}}
+        <form method="GET" action="{{ route('admin.orders.index') }}" style="display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;">
             <input type="hidden" name="tab" value="{{ $tab }}">
+            <input type="hidden" name="q" value="{{ $q }}">
 
-            <svg width="20" height="20" fill="none" stroke="#94A3B8" stroke-width="2.5" viewBox="0 0 24 24"
-                style="margin-left:.5rem;">
-                <circle cx="11" cy="11" r="8" />
-                <path d="M21 21l-4.35-4.35" />
-            </svg>
-            <input type="text" name="q" class="o-search-input" placeholder="Cari nomor pesanan atau nama pembeli..."
-                value="{{ $q }}">
+            <a href="{{ route('admin.orders.index', ['tab' => $tab, 'q' => $q, 'period' => '7d']) }}" class="filter-btn {{ $period === '7d' ? 'active' : '' }}">7 Hari</a>
+            <a href="{{ route('admin.orders.index', ['tab' => $tab, 'q' => $q, 'period' => '30d']) }}" class="filter-btn {{ $period === '30d' ? 'active' : '' }}">30 Hari</a>
+            <a href="{{ route('admin.orders.index', ['tab' => $tab, 'q' => $q, 'period' => '1y']) }}" class="filter-btn {{ $period === '1y' ? 'active' : '' }}">1 Tahun</a>
 
-            <button type="submit" class="o-btn">Terapkan Pencarian</button>
-            @if($q)
-                <a href="{{ route('admin.orders.index', ['tab' => $tab]) }}" class="o-btn o-btn-outline">Reset</a>
-            @endif
+            <div style="width: 1px; height: 20px; background: #CBD5E1; margin: 0 0.2rem;"></div>
+
+            <input type="date" name="start_date" value="{{ $start_date }}" style="padding: 0.4rem 0.65rem; font-size: 0.78rem; background: #fff; border: 1.5px solid #E2E8F0; border-radius: 50px; color: #1E293B; outline: none; font-family: inherit; font-weight: 600;">
+            <span style="color: #94A3B8; font-weight: 600; font-size: 0.78rem;">s/d</span>
+            <input type="date" name="end_date" value="{{ $end_date }}" style="padding: 0.4rem 0.65rem; font-size: 0.78rem; background: #fff; border: 1.5px solid #E2E8F0; border-radius: 50px; color: #1E293B; outline: none; font-family: inherit; font-weight: 600;">
+
+            <button type="submit" class="filter-btn active" style="background: #1eb349; color: #fff; border-color: #1eb349;">
+                Filter
+            </button>
+
+            <button type="button" class="filter-btn" onclick="openReportModal()" style="margin-left: 0.25rem;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Laporan
+            </button>
         </form>
+    </div>
 
-        {{-- Abandoned Carts Section (Khusus tab Belum Bayar & Semua) --}}
-        @if(in_array($tab, ['pending', 'all']) && $abandonedCarts->count() > 0)
-            <div style="margin-bottom: 2rem;">
-                <div
-                    style="display:flex; align-items:center; gap:.5rem; margin-bottom:1rem; padding-bottom:.5rem; border-bottom:1px solid #E2E8F0;">
-                    <svg width="18" height="18" fill="none" stroke="#F59E0B" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                        <line x1="3" y1="6" x2="21" y2="6" />
-                        <path d="M16 10a4 4 0 0 1-8 0" />
-                    </svg>
-                    <h2 style="font-size:.95rem; font-weight:700; color:#1E293B; margin:0;">Keranjang Belum Checkout (Follow Up)
-                    </h2>
+    {{-- 5 STAT CARDS IN 1 ROW --}}
+    <div class="stat-5-grid">
+        {{-- Card 1: Total Order --}}
+        <div class="dash-card">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div style="background:rgba(30, 179, 73, 0.1);border-radius:12px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                 </div>
-
-                <div id="abandoned-view-list">
-                    @foreach($abandonedCarts as $u)
-                        <div
-                            style="background:#fff; padding:1rem 1.25rem; border-radius:16px; border:1.5px solid #F1F5F9; box-shadow:0 2px 10px rgba(0,0,0,0.02); margin-bottom:1rem; transition:all .25s;">
-                            <div
-                                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; padding-bottom:1rem; border-bottom:1.5px dashed #F1F5F9;">
-                                <div style="display:flex; align-items:center; gap:.75rem;">
-                                    <img src="{{ $u->avatar ? asset('storage/' . $u->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($u->name) . '&background=E2E8F0&color=475569' }}"
-                                        style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
-                                    <div>
-                                        <div style="font-weight:700; color:#0F172A; font-size:.9rem;">{{ $u->name }}</div>
-                                        @if($u->username)
-                                        <div style="font-size:.75rem; color:#64748B;">{{ '@' . $u->username }}</div> @endif
-                                    </div>
-                                </div>
-                                <div
-                                    style="color:#F59E0B; font-weight:700; font-size:.75rem; background:#FFFBEB; padding:.3rem .75rem; border-radius:20px;">
-                                    Abandoned Cart</div>
-                            </div>
-                            <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
-                                <div style="flex:1; min-width:250px;">
-                                    @foreach($u->carts->take(2) as $cart)
-                                        <div
-                                            style="display:flex; align-items:center; gap:.75rem; {{ !$loop->last ? 'margin-bottom:.75rem;' : '' }}">
-                                            <img src="{{ $cart->product && $cart->product->image ? asset('storage/' . $cart->product->image) : asset('img/no-image.jpg') }}"
-                                                style="width:48px;height:48px;border-radius:4px;object-fit:cover;border:1px solid #E2E8F0;"
-                                                onerror="this.src='https://via.placeholder.com/50?text=Img'">
-                                            <div>
-                                                <div style="font-size:.85rem; font-weight:600; color:#1E293B; margin-bottom:.15rem;">
-                                                    {{ Str::limit($cart->product->name ?? 'Produk Dihapus', 50) }}</div>
-                                                <div style="font-size:.75rem; color:#64748B;">Qty: {{ $cart->qty }}</div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                    @if($u->carts->count() > 2)
-                                        <div
-                                            style="font-size:.75rem; color:#64748B; margin-top:.5rem; font-weight:700; background:#F8FAFC; padding:.3rem .75rem; border-radius:6px; display:inline-block;">
-                                            + {{ $u->carts->count() - 2 }} produk lainnya</div>
-                                    @endif
-                                </div>
-                                <div style="text-align:right; min-width:120px;">
-                                    <div
-                                        style="font-size:.75rem; color:#64748B; margin-bottom:.25rem; font-weight:700; text-transform:uppercase;">
-                                        Estimasi Total</div>
-                                    <div style="font-size:1.1rem; font-weight:800; color:#EF4444;">Rp
-                                        {{ number_format($u->carts->sum('subtotal'), 0, ',', '.') }}</div>
-                                </div>
-                                <div style="min-width:140px; text-align:right;">
-                                    @php
-                                        $waText = "Halo Kak {$u->name}, kami melihat ada produk di keranjang Anda yang belum dicheckout nih. Apakah ada kendala saat pemesanan? 😊";
-                                        $waUrl = "https://wa.me/" . preg_replace('/[^0-9]/', '', $u->addresses->first()->phone ?? '') . "?text=" . urlencode($waText);
-                                    @endphp
-                                    <a href="{{ $waUrl }}" target="_blank"
-                                        style="display:inline-flex; align-items:center; justify-content:center; gap:.4rem; padding:.6rem 1.25rem; font-size:.8rem; font-weight:700; color:#fff; background:#10B981; text-decoration:none; border-radius:10px; transition:all .2s; box-shadow:0 4px 12px rgba(16,185,129,0.2);"
-                                        onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10B981'">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                                        </svg>
-                                        Chat Follow Up
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <div id="abandoned-view-grid" class="o-grid-view">
-                    @foreach($abandonedCarts as $u)
-                        <div class="o-grid-card">
-                            <div
-                                style="padding:1rem 1.25rem;background:#FFFBEB;border-bottom:1.5px dashed #FDE68A;display:flex;justify-content:space-between;align-items:center;">
-                                <div style="display:flex;align-items:center;gap:.75rem;">
-                                    <img src="{{ $u->avatar ? asset('storage/' . $u->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($u->name) . '&background=E2E8F0&color=475569' }}"
-                                        style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-                                    <div>
-                                        <div style="font-weight:800;font-size:.88rem;color:#0F172A;">{{ $u->name }}</div>
-                                        @if($u->username)
-                                        <div style="font-size:.7rem;color:#64748B;">{{ '@' . $u->username }}</div> @endif
-                                    </div>
-                                </div>
-                                <div
-                                    style="font-size:.7rem;font-weight:700;padding:.3rem .75rem;background:#F59E0B;color:#fff;border-radius:8px;">
-                                    Cart</div>
-                            </div>
-                            <div style="padding:1rem 1.25rem;flex:1;">
-                                @foreach($u->carts->take(2) as $cart)
-                                    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;">
-                                        <img src="{{ $cart->product && $cart->product->image ? asset('storage/' . $cart->product->image) : asset('img/no-image.jpg') }}"
-                                            style="width:52px;height:52px;border-radius:10px;object-fit:cover;border:1.5px solid #E2E8F0;flex-shrink:0;"
-                                            onerror="this.src='https://via.placeholder.com/52?text=Img'">
-                                        <div>
-                                            <div style="font-weight:700;font-size:.85rem;color:#1E293B;line-height:1.3;">
-                                                {{ Str::limit($cart->product->name ?? 'Produk Dihapus', 40) }}</div>
-                                            <div style="font-size:.72rem;color:#94A3B8;margin-top:.2rem;">Qty: {{ $cart->qty }}</div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                                @if($u->carts->count() > 2)
-                                    <div
-                                        style="font-size:.72rem;color:#64748B;background:#F8FAFC;padding:.25rem .5rem;border-radius:6px;display:inline-block;margin-bottom:.75rem;font-weight:700;">
-                                        + {{ $u->carts->count() - 2 }} produk lainnya</div>
-                                @endif
-                                <div
-                                    style="display:flex;justify-content:space-between;align-items:center;padding-top:.75rem;border-top:1px solid #F1F5F9;">
-                                    <div>
-                                        <div
-                                            style="font-size:.68rem;color:#94A3B8;font-weight:700;text-transform:uppercase;margin-bottom:.2rem;">
-                                            Estimasi Total</div>
-                                        <div style="font-weight:800;color:#EF4444;font-size:1rem;">Rp
-                                            {{ number_format($u->carts->sum('subtotal'), 0, ',', '.') }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="padding:.875rem 1.25rem;border-top:1.5px solid #F1F5F9;">
-                                @php
-                                    $waText = "Halo Kak {$u->name}, kami melihat ada produk di keranjang Anda yang belum dicheckout nih. Apakah ada kendala saat pemesanan? 😊";
-                                    $waUrl = "https://wa.me/" . preg_replace('/[^0-9]/', '', $u->addresses->first()->phone ?? '') . "?text=" . urlencode($waText);
-                                @endphp
-                                <a href="{{ $waUrl }}" target="_blank"
-                                    style="display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.6rem;font-size:.8rem;font-weight:700;color:#fff;background:#10B981;text-decoration:none;border-radius:10px;transition:all .2s;box-shadow:0 4px 10px rgba(16,185,129,0.2);"
-                                    onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10B981'">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                        <path
-                                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                                    </svg>
-                                    Chat Follow Up
-                                </a>
-                            </div>
-                        </div>
-                    @endforeach
+                <div>
+                    <div style="font-size:0.75rem;color:#64748B;font-weight:600;margin-bottom:0.15rem;">Total Transaksi</div>
+                    <div style="font-size:1.35rem;font-weight:800;color:#0F172A;line-height:1.1;">{{ number_format($stats['total']) }}</div>
                 </div>
             </div>
+        </div>
 
-            <div
-                style="display:flex; align-items:center; gap:.5rem; margin-bottom:1rem; margin-top: 1rem; padding-bottom:.5rem; border-bottom:1px solid #E2E8F0;">
-                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                    <line x1="16" y1="2" x2="16" y2="6" />
-                    <line x1="8" y1="2" x2="8" y2="6" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                <h2 style="font-size:.95rem; font-weight:700; color:#1E293B; margin:0;">Pesanan Menunggu Pembayaran</h2>
+        {{-- Card 2: Perlu Dikirim --}}
+        <div class="dash-card">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div style="background:rgba(5, 150, 105, 0.1);border-radius:12px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="22" height="22" fill="none" stroke="#059669" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:0.75rem;color:#64748B;font-weight:600;margin-bottom:0.15rem;">Perlu Dikirim</div>
+                    <div style="font-size:1.35rem;font-weight:800;color:#0F172A;line-height:1.1;">{{ number_format($stats['processing']) }}</div>
+                </div>
             </div>
+        </div>
+
+        {{-- Card 3: Sedang Dikirim --}}
+        <div class="dash-card">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div style="background:rgba(16, 185, 129, 0.1);border-radius:12px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="22" height="22" fill="none" stroke="#10B981" stroke-width="2.2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:0.75rem;color:#64748B;font-weight:600;margin-bottom:0.15rem;">Sedang Dikirim</div>
+                    <div style="font-size:1.35rem;font-weight:800;color:#0F172A;line-height:1.1;">{{ number_format($stats['shipped']) }}</div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Card 4: Order Selesai --}}
+        <div class="dash-card">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div style="background:rgba(22, 101, 52, 0.1);border-radius:12px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="22" height="22" fill="none" stroke="#166534" stroke-width="2.2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:0.75rem;color:#64748B;font-weight:600;margin-bottom:0.15rem;">Order Selesai</div>
+                    <div style="font-size:1.35rem;font-weight:800;color:#0F172A;line-height:1.1;">{{ number_format($stats['completed']) }}</div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Card 5: Total Omset --}}
+        <div class="dash-card">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div style="background:rgba(142, 189, 40, 0.12);border-radius:12px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="22" height="22" fill="none" stroke="#8ebd28" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:0.75rem;color:#64748B;font-weight:600;margin-bottom:0.15rem;">Total Omset</div>
+                    <div style="font-size:1.15rem;font-weight:800;color:#166534;line-height:1.1;">Rp {{ number_format($stats['revenue'], 0, ',', '.') }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Tabs Filter Header --}}
+    <div class="o-tabs-wrap">
+        @foreach($tabs as $k => $t)
+            <a href="{{ route('admin.orders.index', ['tab' => $k, 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}" class="o-tab {{ $tab == $k ? 'active' : '' }}">
+                {{ $t['label'] }} <span class="o-tab-count">{{ $counts[$k] ?? 0 }}</span>
+            </a>
+        @endforeach
+    </div>
+
+    {{-- Search Form --}}
+    <form class="o-filter-bar" method="GET" action="{{ route('admin.orders.index') }}">
+        <input type="hidden" name="tab" value="{{ $tab }}">
+        <input type="hidden" name="period" value="{{ $period }}">
+        <input type="hidden" name="start_date" value="{{ $start_date }}">
+        <input type="hidden" name="end_date" value="{{ $end_date }}">
+
+        <svg width="18" height="18" fill="none" stroke="#94A3B8" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" name="q" class="o-search-input" placeholder="Cari no. pesanan, nama/email pembeli, toko creator, atau produk..." value="{{ $q }}">
+
+        <button type="submit" class="o-btn-submit">
+            Cari
+        </button>
+        @if($q)
+            <a href="{{ route('admin.orders.index', ['tab' => $tab, 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date]) }}" class="o-btn-reset">Reset</a>
         @endif
+    </form>
 
-        {{-- Order List (LIST VIEW) --}}
-        <div id="view-list">
-            @forelse($orders as $o)
-                <div class="o-card">
-                    {{-- Header --}}
-                    <div class="o-card-head">
-                        <div class="o-card-user">
-                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
-                            </svg>
-                            {{ $o->user->name ?? 'User Terhapus' }}
-                        </div>
-                        <div class="o-card-ordernum">ORD #{{ $o->order_number }}</div>
-                    </div>
-
-                    {{-- Body --}}
-                    <div class="o-card-body">
-
-                        {{-- Product(s) Info --}}
+    {{-- Order List --}}
+    <div id="view-list">
+        @forelse($orders as $o)
+            <div class="o-card">
+                {{-- Card Header --}}
+                <div class="o-card-head">
+                    <div class="o-card-user">
+                        @php
+                            $userAvatar = $o->user->avatar ?? null;
+                            $userName = $o->user->name ?? $o->receiver_name ?? 'Konsumen';
+                        @endphp
+                        @if($userAvatar)
+                            <img src="{{ asset('storage/' . $userAvatar) }}" loading="lazy" style="width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid #E2E8F0;flex-shrink:0;">
+                        @else
+                            <div style="width:28px;height:28px;border-radius:50%;background:#F1F5F9;color:#64748B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.75rem;flex-shrink:0;border:1px solid #E2E8F0;">
+                                {{ strtoupper(substr($userName, 0, 1)) }}
+                            </div>
+                        @endif
                         <div>
-                            @foreach($o->items->take(2) as $item)
-                                <div class="o-item-col" style="{{ !$loop->last ? 'margin-bottom:1.25rem;' : '' }}">
-                                    <img src="{{ $item->product && $item->product->image ? asset('storage/' . $item->product->image) : asset('img/no-image.jpg') }}"
-                                        class="o-item-img" onerror="this.src='https://via.placeholder.com/70?text=No+Img'">
-                                    <div class="o-item-info">
-                                        <div class="o-item-title">{{ Str::limit($item->product_name, 50) }}</div>
-                                        @if($item->variant_name)
-                                            <div class="o-item-var">Varian: {{ $item->variant_name }}</div>
-                                        @endif
-                                        <div class="o-item-qty">Qty: {{ $item->qty }}</div>
-                                    </div>
-                                </div>
-                            @endforeach
-                            @if($o->items->count() > 2)
-                                <div
-                                    style="font-size:.75rem;color:#64748B;margin-top:.75rem;font-weight:700;background:#F8FAFC;padding:.3rem .75rem;border-radius:6px;display:inline-block;">
-                                    + {{ $o->items->count() - 2 }} produk lainnya
-                                </div>
+                            <span>{{ $userName }}</span>
+                            @if($o->user && $o->user->email)
+                                <span style="font-size:0.75rem;color:#94A3B8;font-weight:500;margin-left:0.25rem;">({{ $o->user->email }})</span>
                             @endif
                         </div>
-
-                        {{-- Status & Ekspedisi --}}
-                        <div>
-                            <div class="o-col-title">Status Pesanan</div>
-                            <div class="o-status-text"
-                                style="color: {{ $o->status->color() === 'red' ? '#EF4444' : ($o->status->color() === 'green' ? '#10B981' : ($o->status->color() === 'yellow' ? '#F59E0B' : '#1eb349')) }};">
-                                {{ $o->status->label() }}
-                            </div>
-
-                            <div class="o-col-title" style="margin-top:1.25rem;">Kurir Kirim</div>
-                            <div class="o-ship-name">{{ $o->shipment->courier_name ?? 'Reguler' }}</div>
-                            <div class="o-ship-type">Resi: {{ $o->shipment->tracking_number ?? 'Belum ada resi' }}</div>
-                        </div>
-
-                        {{-- Total Pembayaran --}}
-                        <div>
-                            <div class="o-col-title">Total Belanja</div>
-                            <div class="o-total-price">Rp {{ number_format($o->total, 0, ',', '.') }}</div>
-                            <div class="o-pay-method">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <rect x="2" y="5" width="20" height="14" rx="2" />
-                                    <line x1="2" y1="10" x2="22" y2="10" />
-                                </svg>
-                                {{ $o->payment->method ?? 'Transfer Bank' }}
-                            </div>
-                        </div>
-
-                        {{-- Action --}}
-                        <div class="o-action-col">
-                            <a href="{{ route('admin.orders.show', $o) }}" class="o-action-btn">
-                                Lihat Rincian
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
-                                    <path d="M5 12h14M12 5l7 7-7 7" />
-                                </svg>
-                            </a>
-                        </div>
-
                     </div>
+                    <div class="o-card-ordernum">#{{ $o->order_number }}</div>
                 </div>
-            @empty
-                {{-- Empty state --}}
-                @if(empty($abandonedCarts) || $abandonedCarts->count() === 0)
-                    <div class="o-empty">
-                        <svg class="o-empty-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path
-                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                            <line x1="12" y1="22.08" x2="12" y2="12" />
-                        </svg>
-                        <div class="o-empty-text">Pesanan Tidak Ditemukan</div>
-                        <div class="o-empty-sub">Belum ada transaksi di tab ini atau kata kunci tidak cocok.</div>
-                    </div>
-                @endif
-            @endforelse
-        </div>{{-- /view-list --}}
 
-        {{-- GRID VIEW --}}
-        <div id="view-grid" class="o-grid-view">
-            @forelse($orders as $o)
-                <div class="o-grid-card">
-                    <div
-                        style="padding:1rem 1.25rem;background:#FAFAF9;border-bottom:1.5px dashed #E2E8F0;display:flex;justify-content:space-between;align-items:center;">
-                        <div style="font-weight:800;font-size:.88rem;color:#0F172A;display:flex;align-items:center;gap:.5rem;">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
-                            </svg>
-                            {{ $o->user->name ?? 'User Terhapus' }}
-                        </div>
-                        <div
-                            style="font-size:.7rem;font-weight:700;padding:.3rem .75rem;background:#F1F5F9;color:#475569;border-radius:8px;">
-                            #{{ $o->order_number }}</div>
-                    </div>
-                    <div style="padding:1rem 1.25rem;flex:1;">
-                        @foreach($o->items->take(1) as $item)
-                            <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;">
-                                <img src="{{ $item->product && $item->product->image ? asset('storage/' . $item->product->image) : asset('img/no-image.jpg') }}"
-                                    style="width:52px;height:52px;border-radius:10px;object-fit:cover;border:1.5px solid #E2E8F0;flex-shrink:0;"
-                                    onerror="this.src='https://via.placeholder.com/52?text=Img'">
+                {{-- Card Body --}}
+                <div class="o-card-body">
+
+                    {{-- Products Column --}}
+                    <div>
+                        @foreach($o->items->take(2) as $item)
+                            <div class="o-item-col" style="{{ !$loop->last ? 'margin-bottom:0.75rem;' : '' }}">
+                                <img src="{{ $item->product && $item->product->image ? asset('storage/' . $item->product->image) : asset('img/no-image.jpg') }}" loading="lazy" class="o-item-img" onerror="this.src='https://via.placeholder.com/60?text=No+Img'">
                                 <div>
-                                    <div style="font-weight:700;font-size:.85rem;color:#1E293B;line-height:1.3;">
-                                        {{ Str::limit($item->product_name, 40) }}</div>
-                                    <div style="font-size:.72rem;color:#94A3B8;margin-top:.2rem;">Qty: {{ $item->qty }}</div>
+                                    <div class="o-item-title">{{ Str::limit($item->product_name ?? ($item->product->name ?? 'Produk'), 50) }}</div>
+                                    @if($item->product && $item->product->user)
+                                        <div style="font-size:0.72rem;color:#059669;font-weight:600;margin-bottom:0.2rem;">Toko: {{ $item->product->user->store_name ?? $item->product->user->name }}</div>
+                                    @endif
+                                    <div style="font-size:0.72rem;color:#64748B;font-weight:600;">Qty: {{ $item->qty }} &bull; Rp {{ number_format($item->price, 0, ',', '.') }}</div>
                                 </div>
                             </div>
                         @endforeach
-                        @if($o->items->count() > 1)
-                            <div
-                                style="font-size:.72rem;color:#64748B;background:#F8FAFC;padding:.25rem .5rem;border-radius:6px;display:inline-block;margin-bottom:.75rem;">
-                                + {{ $o->items->count() - 1 }} produk lainnya</div>
+                        @if($o->items->count() > 2)
+                            <div style="font-size:0.72rem;color:#64748B;margin-top:0.4rem;font-weight:600;background:#F8FAFC;padding:.2rem .5rem;border-radius:4px;display:inline-block;">
+                                + {{ $o->items->count() - 2 }} produk lainnya
+                            </div>
                         @endif
-                        <div
-                            style="display:flex;justify-content:space-between;align-items:center;padding-top:.75rem;border-top:1px solid #F1F5F9;">
-                            <div>
-                                <div
-                                    style="font-size:.68rem;color:#94A3B8;font-weight:700;text-transform:uppercase;margin-bottom:.2rem;">
-                                    Total</div>
-                                <div style="font-weight:800;color:#EF4444;font-size:1rem;">Rp
-                                    {{ number_format($o->total, 0, ',', '.') }}</div>
-                            </div>
-                            <div style="text-align:right;">
-                                <div
-                                    style="font-size:.68rem;color:#94A3B8;font-weight:700;text-transform:uppercase;margin-bottom:.2rem;">
-                                    Status</div>
-                                <div
-                                    style="font-weight:800;font-size:.8rem;color:{{ $o->status->color() === 'red' ? '#EF4444' : ($o->status->color() === 'green' ? '#10B981' : ($o->status->color() === 'yellow' ? '#F59E0B' : '#1eb349')) }};">
-                                    {{ $o->status->label() }}
-                                </div>
-                            </div>
+                    </div>
+
+                    {{-- Status & Courier --}}
+                    <div>
+                        <div class="o-col-title">Status Pesanan</div>
+                        @php
+                            $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
+                            $stBadge = match($statusVal) {
+                                'confirmed', 'processing' => ['#059669', '#E6F4EA', 'Perlu Dikirim'],
+                                'shipped'                 => ['#047857', '#D1E7DD', 'Dikirim'],
+                                'completed', 'delivered'  => ['#166534', '#DCFCE7', 'Selesai'],
+                                default                   => ['#475569', '#F1F5F9', ucfirst($statusVal)]
+                            };
+                        @endphp
+                        <span style="font-size:0.72rem;font-weight:700;color:{{ $stBadge[0] }};background:{{ $stBadge[1] }};padding:0.25rem 0.6rem;border-radius:50px;display:inline-block;">
+                            {{ $stBadge[2] }}
+                        </span>
+
+                        <div class="o-col-title" style="margin-top:0.85rem;">Ekspedisi / Resi</div>
+                        <div style="font-size:0.8rem;font-weight:700;color:#1E293B;">{{ $o->shipment->courier_name ?? 'Pengiriman Digital / Reguler' }}</div>
+                        <div style="font-size:0.72rem;color:#64748B;margin-top:0.15rem;">Resi: {{ $o->shipment->tracking_number ?? 'Belum ada resi' }}</div>
+                    </div>
+
+                    {{-- Total Amount --}}
+                    <div>
+                        <div class="o-col-title">Total Pembayaran</div>
+                        <div class="o-total-price">Rp {{ number_format($o->total, 0, ',', '.') }}</div>
+                        <div style="font-size:0.72rem;color:#64748B;margin-top:0.25rem;font-weight:600;">
+                            {{ $o->payment->method ?? 'Payment Gateway' }}
                         </div>
                     </div>
-                    <div style="padding:.875rem 1.25rem;border-top:1.5px solid #F1F5F9;">
-                        <a href="{{ route('admin.orders.show', $o) }}"
-                            style="display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.6rem;font-size:.8rem;font-weight:700;color:#fff;background:#EF4444;text-decoration:none;border-radius:10px;transition:all .2s;box-shadow:0 4px 10px rgba(239,68,68,0.2);"
-                            onmouseover="this.style.background='#DC2626'" onmouseout="this.style.background='#EF4444'">
-                            Lihat Rincian <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
-                                <path d="M5 12h14M12 5l7 7-7 7" />
-                            </svg>
+
+                    {{-- Action Minimalist Button --}}
+                    <div style="text-align:right;">
+                        <a href="{{ route('admin.orders.show', $o) }}" class="o-btn-action">
+                            Rincian
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </a>
                     </div>
-                </div>
-            @empty
-                <div
-                    style="grid-column:1/-1;text-align:center;padding:4rem;background:#fff;border-radius:20px;border:1.5px dashed #CBD5E1;">
-                    <div style="font-size:1rem;font-weight:800;color:#334155;">Pesanan Tidak Ditemukan</div>
-                </div>
-            @endforelse
-        </div>{{-- /view-grid --}}
 
-        @if($orders->hasPages())
-            <div style="display:flex;justify-content:flex-end;margin-top:2rem;">
-                {{ $orders->links() }}
+                </div>
             </div>
-        @endif
-
-    </div>
-
-    {{-- Report Modal --}}
-    <div class="rm-overlay" id="reportModal">
-        <div class="rm-modal">
-            <div class="rm-head">
-                <div class="rm-title">Unduh Laporan</div>
-                <button class="rm-close" onclick="closeReportModal()">×</button>
+        @empty
+            <div style="text-align:center;padding:4rem 1rem;background:#fff;border-radius:16px;border:1.5px dashed #CBD5E1;">
+                <svg width="60" height="60" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:1rem;opacity:0.5;">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                </svg>
+                <div style="font-size:1rem;font-weight:700;color:#334155;margin-bottom:0.25rem;">Tidak Ada Pesanan</div>
+                <div style="font-size:0.8rem;color:#94A3B8;">Belum ada pesanan pada filter periode atau tab ini.</div>
             </div>
-            <form action="{{ route('admin.orders.export') }}" method="GET">
-                <div class="rm-group">
-                    <label class="rm-label">Pilih Periode Cepat</label>
-                    <div class="rm-presets">
-                        <button type="button" class="rm-preset-btn" onclick="setPreset(7, this)">7 Hari</button>
-                        <button type="button" class="rm-preset-btn active" onclick="setPreset(30, this)">30 Hari</button>
-                        <button type="button" class="rm-preset-btn" onclick="setPreset(365, this)">1 Tahun</button>
-                    </div>
-                </div>
-                <div class="rm-group rm-date-inputs">
-                    <div>
-                        <label class="rm-label">Dari Tanggal</label>
-                        <input type="date" name="start_date" id="start_date" class="rm-input" required>
-                    </div>
-                    <div>
-                        <label class="rm-label">Sampai Tanggal</label>
-                        <input type="date" name="end_date" id="end_date" class="rm-input" required>
-                    </div>
-                </div>
-                <div class="rm-group">
-                    <label class="rm-label">Format File</label>
-                    <select name="format" class="rm-select">
-                        <option value="xlsx">Excel (.xlsx)</option>
-                        <option value="csv">CSV (.csv)</option>
-                        <option value="pdf">PDF (.pdf)</option>
-                    </select>
-                </div>
-                <button type="submit" class="o-btn"
-                    style="width:100%; background:#10B981; margin-top:1rem; box-shadow:0 4px 12px rgba(16,185,129,0.2);">Download
-                    Sekarang</button>
-            </form>
+        @endforelse
+
+        {{-- Pagination --}}
+        <div style="margin-top:1.5rem;">
+            {{ $orders->links() }}
         </div>
     </div>
 
-    <script>
-        function openReportModal() {
-            document.getElementById('reportModal').classList.add('show');
-            // Default 30 days
-            document.querySelector('.rm-preset-btn.active')?.click();
-        }
-        function closeReportModal() {
-            document.getElementById('reportModal').classList.remove('show');
-        }
-        function setPreset(days, btn) {
-            // Update active class
-            document.querySelectorAll('.rm-preset-btn').forEach(el => el.classList.remove('active'));
-            btn.classList.add('active');
+</div>
 
-            // Calculate dates
-            const end = new Date();
-            const start = new Date();
-            start.setDate(end.getDate() - days);
+{{-- MODAL DOWNLOAD LAPORAN --}}
+<div id="reportModal" class="rm-overlay">
+    <div class="rm-modal">
+        <div class="rm-head">
+            <div style="font-weight:800;font-size:1.05rem;color:#0F172A;">Unduh Laporan Pesanan</div>
+            <button type="button" onclick="closeReportModal()" style="background:none;border:none;color:#94A3B8;cursor:pointer;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <form action="{{ route('admin.orders.export') }}" method="GET" class="rm-body">
+            <div style="margin-bottom:1.25rem;">
+                <label style="font-size:0.8rem;font-weight:700;color:#475569;display:block;margin-bottom:0.4rem;">Format File</label>
+                <select name="format" style="width:100%;padding:0.6rem 0.85rem;border:1.5px solid #E2E8F0;border-radius:10px;font-family:inherit;font-size:0.82rem;outline:none;">
+                    <option value="xlsx">Excel (.xlsx)</option>
+                    <option value="csv">CSV (.csv)</option>
+                    <option value="pdf">PDF Document (.pdf)</option>
+                </select>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;margin-bottom:1.5rem;">
+                <div>
+                    <label style="font-size:0.8rem;font-weight:700;color:#475569;display:block;margin-bottom:0.4rem;">Dari Tanggal</label>
+                    <input type="date" name="start_date" value="{{ now()->subDays(30)->format('Y-m-d') }}" style="width:100%;padding:0.6rem 0.85rem;border:1.5px solid #E2E8F0;border-radius:10px;font-family:inherit;font-size:0.82rem;outline:none;">
+                </div>
+                <div>
+                    <label style="font-size:0.8rem;font-weight:700;color:#475569;display:block;margin-bottom:0.4rem;">Sampai Tanggal</label>
+                    <input type="date" name="end_date" value="{{ now()->format('Y-m-d') }}" style="width:100%;padding:0.6rem 0.85rem;border:1.5px solid #E2E8F0;border-radius:10px;font-family:inherit;font-size:0.82rem;outline:none;">
+                </div>
+            </div>
+            <button type="submit" style="width:100%;padding:0.75rem;background:#1eb349;color:#fff;border:none;border-radius:12px;font-weight:700;font-size:0.85rem;cursor:pointer;font-family:inherit;">
+                Download File Laporan
+            </button>
+        </form>
+    </div>
+</div>
 
-            document.getElementById('end_date').value = end.toISOString().split('T')[0];
-            document.getElementById('start_date').value = start.toISOString().split('T')[0];
-        }
-
-        // Ensure clicking outside modal closes it
-        document.getElementById('reportModal').addEventListener('click', function (e) {
-            if (e.target === this) closeReportModal();
-        });
-
-        // View Toggle
-        function switchView(type) {
-            localStorage.setItem('admin_orders_view', type);
-            document.getElementById('view-list').style.display = type === 'list' ? 'block' : 'none';
-            document.getElementById('view-grid').style.display = type === 'grid' ? 'grid' : 'none';
-
-            let abl = document.getElementById('abandoned-view-list');
-            let abg = document.getElementById('abandoned-view-grid');
-            if (abl) abl.style.display = type === 'list' ? 'block' : 'none';
-            if (abg) abg.style.display = type === 'grid' ? 'grid' : 'none';
-
-            document.getElementById('btn-view-list').style.background = type === 'list' ? 'linear-gradient(135deg, #1eb349, #a5cf37)' : 'transparent';
-            document.getElementById('btn-view-list').style.color = type === 'list' ? '#fff' : '#94A3B8';
-            document.getElementById('btn-view-grid').style.background = type === 'grid' ? 'linear-gradient(135deg, #1eb349, #a5cf37)' : 'transparent';
-            document.getElementById('btn-view-grid').style.color = type === 'grid' ? '#fff' : '#94A3B8';
-        }
-        const savedOrderView = localStorage.getItem('admin_orders_view') || 'list';
-        switchView(savedOrderView);
-    </script>
+@push('scripts')
+<script>
+function openReportModal() {
+    document.getElementById('reportModal').style.display = 'flex';
+}
+function closeReportModal() {
+    document.getElementById('reportModal').style.display = 'none';
+}
+</script>
+@endpush
 
 @endsection
