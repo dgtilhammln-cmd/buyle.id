@@ -10,7 +10,7 @@
     .stat-c { background:#fff; border-radius:14px; border:1px solid #e7f0e7; padding:1.25rem; box-shadow:0 2px 8px rgba(0,0,0,0.03); }
     .stat-c .label { font-size:0.72rem; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem; }
     .stat-c .val { font-size:1.5rem; font-weight:800; color:#0f1f0f; letter-spacing:-0.03em; }
-    .section-card { background:#fff; border-radius:16px; border:1px solid #e7f0e7; box-shadow:0 2px 8px rgba(0,0,0,0.04); overflow:hidden; }
+    .section-card { background:#fff; border-radius:16px; border:1px solid #e7f0e7; box-shadow:0 2px 8px rgba(0,0,0,0.04); overflow:visible; }
     .section-header { padding:1rem 1.5rem; border-bottom:1px solid #f3f7f3; display:flex; align-items:center; justify-content:space-between; gap:0.5rem; }
     .section-header h2 { font-size:0.9rem; font-weight:800; color:#0f1f0f; margin:0; }
     .table-scroll-wrap {

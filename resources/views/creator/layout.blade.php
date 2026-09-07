@@ -865,6 +865,17 @@
             </svg>
             <span>Saldo</span>
         </a>
+
+        {{-- Menu (open sidebar drawer) --}}
+        <button type="button" class="superapp-nav-item"
+                onclick="document.getElementById('crSidebar').classList.toggle('open'); document.getElementById('crOverlay').classList.toggle('open');">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+            <span>Menu</span>
+        </button>
     </nav>
 
     {{-- Interactive Locked Feature Modal for Buyers --}}
