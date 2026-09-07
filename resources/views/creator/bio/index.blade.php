@@ -567,6 +567,10 @@
                 display: none !important;
             }
 
+            .bio-mockup-wrapper {
+                display: none !important;
+            }
+
             .theme-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.75rem;
@@ -799,7 +803,7 @@
 
             {{-- Mobile Preview Mockup --}}
             @if($bioUrl)
-                <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7;">
+                <div class="bio-mockup-wrapper" style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7;">
                     <div
                         style="font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:1rem; text-align:center;">
                         Live Preview</div>

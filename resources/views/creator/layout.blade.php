@@ -20,7 +20,7 @@
         body {
             font-family: 'Montserrat', sans-serif;
             font-weight: 400;
-            background: #0b120c;
+            background: linear-gradient(135deg, #126829 0%, #1eb349 50%, #8ebd28 100%);
             color: #0f172a;
             height: 100vh;
             overflow: hidden;
@@ -47,20 +47,20 @@
             background: transparent !important;
         }
         ::-webkit-scrollbar-track {
-            background: #0b120c;
+            background: #126829;
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb {
-            background: #475569;
+            background: rgba(255, 255, 255, 0.4);
             border-radius: 10px;
-            border: 2px solid #0b120c;
+            border: 2px solid #126829;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
+            background: rgba(255, 255, 255, 0.6);
         }
         * {
             scrollbar-width: auto;
-            scrollbar-color: #475569 #0b120c;
+            scrollbar-color: rgba(255, 255, 255, 0.4) #126829;
         }
 
         /* Creator Sidebar Scrollbar */
@@ -73,21 +73,21 @@
             height: 0 !important;
         }
         .cr-sidebar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
             margin: 6px 0;
         }
         .cr-sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 10px;
-            border: 1px solid rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
         .cr-sidebar::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.38);
+            background: rgba(255, 255, 255, 0.5);
         }
         .cr-sidebar {
             scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+            scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
         }
 
         /* Creator Main Content Wrapper Scrollbar */
@@ -100,26 +100,26 @@
             height: 0 !important;
         }
         .cr-main-wrapper::-webkit-scrollbar-track {
-            background: #0b120c;
+            background: #126829;
             border-radius: 10px;
         }
         .cr-main-wrapper::-webkit-scrollbar-thumb {
-            background: #475569;
+            background: rgba(255, 255, 255, 0.4);
             border-radius: 10px;
-            border: 2px solid #0b120c;
+            border: 2px solid #126829;
         }
         .cr-main-wrapper::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
+            background: rgba(255, 255, 255, 0.6);
         }
         .cr-main-wrapper {
             scrollbar-width: auto;
-            scrollbar-color: #475569 #0b120c;
+            scrollbar-color: rgba(255, 255, 255, 0.4) #126829;
         }
 
-        /* ── SIDEBAR (Dark Shell) ── */
+        /* ── SIDEBAR (Green Gradient Shell) ── */
         .cr-sidebar {
             width: 240px;
-            background: #0b120c;
+            background: linear-gradient(180deg, #126829 0%, #1eb349 50%, #8ebd28 100%);
             display: flex;
             flex-direction: column;
             padding: 1.75rem 0 1.75rem 1.25rem;
@@ -186,28 +186,29 @@
             padding: 0.85rem 1.25rem;
             font-size: 0.82rem;
             font-weight: 600;
-            color: #7e8d81;
+            color: rgba(255, 255, 255, 0.88);
             text-decoration: none;
             border-radius: 30px 0 0 30px;
-            transition: color 0.2s;
+            transition: all 0.2s;
             position: relative;
         }
 
         .cr-nav-link:hover {
-            color: #fff;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
         }
 
         /* Seamless Active Tab Cutout into White Canvas */
         .cr-nav-link.active {
             background: #ffffff;
-            color: #0b120c !important;
+            color: #1eb349 !important;
             font-weight: 800;
             position: relative;
             z-index: 10;
         }
 
         .cr-nav-link.active svg {
-            stroke: #0b120c !important;
+            stroke: #1eb349 !important;
             stroke-width: 2.2;
         }
 
@@ -374,7 +375,7 @@
         /* ── RESPONSIVE MOBILE ── */
         .cr-mobile-bar {
             display: none;
-            background: #0b120c;
+            background: linear-gradient(90deg, #126829 0%, #1eb349 60%, #8ebd28 100%);
             padding: 1rem 1.25rem;
             align-items: center;
             justify-content: space-between;
@@ -384,8 +385,8 @@
         }
 
         .cr-mobile-toggle {
-            background: #111a13;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             color: #fff;
             border-radius: 12px;
             width: 40px;
@@ -406,9 +407,10 @@
 
         @media (max-width: 1024px) {
             body {
-                flex-direction: row;
-                height: 100vh;
-                overflow: hidden;
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+                overflow-x: hidden;
             }
 
             .cr-mobile-bar {
@@ -439,14 +441,23 @@
 
             .cr-main-wrapper {
                 margin-left: 0 !important;
-                padding: 0.75rem;
-                padding-top: calc(56px + 0.75rem);
+                padding: 0.5rem;
+                padding-top: calc(56px + 0.5rem);
+                height: auto;
+                min-height: calc(100vh - 56px);
+                max-width: 100vw;
+                overflow-x: hidden;
+                box-sizing: border-box;
             }
 
             .cr-main-canvas {
-                border-radius: 28px;
-                padding: 1.5rem;
+                border-radius: 20px;
+                padding: 1rem;
                 min-height: auto;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
             }
 
             .cr-nav-link.active::before,
