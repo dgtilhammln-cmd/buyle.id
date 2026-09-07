@@ -52,6 +52,26 @@ class MidtransService
             ];
         }
 
+        // Platform Fee
+        if ($order->platform_fee > 0) {
+            $itemDetails[] = [
+                'id'       => 'PLATFORM_FEE',
+                'price'    => (int) $order->platform_fee,
+                'quantity' => 1,
+                'name'     => 'Biaya Layanan',
+            ];
+        }
+
+        // Admin Fee
+        if ($order->admin_fee > 0) {
+            $itemDetails[] = [
+                'id'       => 'ADMIN_FEE',
+                'price'    => (int) $order->admin_fee,
+                'quantity' => 1,
+                'name'     => 'Biaya Administrasi',
+            ];
+        }
+
         // Jika ada diskon
         if ($order->discount > 0) {
             $itemDetails[] = [

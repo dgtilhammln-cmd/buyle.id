@@ -10,6 +10,7 @@ use App\Models\Coupon;
 use App\Models\CouponUsage;
 use App\Models\User;
 use App\Models\Address;
+use App\Models\Setting;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
 use Illuminate\Support\Facades\DB;
@@ -64,17 +65,29 @@ class CheckoutService
             }
         }
 
-        // Hitung Platform Fee (5% untuk semua produk, ditanggung buyer)
-        $platformFeeRate = 0.05;
+        // Baca rate fee dari Setting (dapat diubah di Admin → Fee & Biaya)
+        $platformFeeRate = (float) (Setting::get('platform_fee_rate', 5)) / 100;
+        $adminFeeRate    = (float) (Setting::get('admin_fee_rate', 5))    / 100;
+
+        // Hitung Platform Fee — biaya layanan platform, ditanggung buyer
         $platformFee = 0;
         foreach ($items as $cartItem) {
             if ($cartItem->product) {
                 $platformFee += round($cartItem->subtotal * $platformFeeRate, 2);
             }
         }
-        $platformFee = round($platformFee, 0); // bulatkan ke rupiah
+        $platformFee = round($platformFee, 0);
 
-        $total = max(0, $subtotal + $platformFee + $shippingCost - $discount);
+        // Hitung Admin Fee — biaya administrasi, ditanggung buyer
+        $adminFee = 0;
+        foreach ($items as $cartItem) {
+            if ($cartItem->product) {
+                $adminFee += round($cartItem->subtotal * $adminFeeRate, 2);
+            }
+        }
+        $adminFee = round($adminFee, 0);
+
+        $total = max(0, $subtotal + $platformFee + $adminFee + $shippingCost - $discount);
 
 
         $notes = $data['notes'] ?? null;
@@ -90,6 +103,7 @@ class CheckoutService
                 'subtotal'         => $subtotal,
                 'shipping_cost'    => $shippingCost,
                 'platform_fee'     => $platformFee,
+                'admin_fee'        => $adminFee,
                 'discount'         => $discount,
                 'total'            => $total,
                 'shipping_address' => [],

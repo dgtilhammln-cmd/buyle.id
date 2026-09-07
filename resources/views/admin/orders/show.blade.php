@@ -356,6 +356,18 @@
                             <span>Ongkos Kirim</span>
                             <span>Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
                         </div>
+                        @if($order->platform_fee > 0)
+                        <div class="od-total-row" style="color:#F59E0B;">
+                            <span>Platform Fee (5%)</span>
+                            <span>+ Rp {{ number_format($order->platform_fee, 0, ',', '.') }}</span>
+                        </div>
+                        @endif
+                        @if(isset($order->admin_fee) && $order->admin_fee > 0)
+                        <div class="od-total-row" style="color:#F59E0B;">
+                            <span>Admin Fee (5%)</span>
+                            <span>+ Rp {{ number_format($order->admin_fee, 0, ',', '.') }}</span>
+                        </div>
+                        @endif
                         @if($order->discount > 0)
                             <div class="od-total-row" style="color:#10B981;">
                                 <span>Diskon / Voucher</span>

@@ -499,8 +499,14 @@
                     </div>
                     @if($order->platform_fee > 0)
                         <div class="summary-row">
-                            <span>Platform Fee (5%)</span>
+                            <span>Platform Fee</span>
                             <span>Rp {{ number_format($order->platform_fee, 0, ',', '.') }}</span>
+                        </div>
+                    @endif
+                    @if(isset($order->admin_fee) && $order->admin_fee > 0)
+                        <div class="summary-row">
+                            <span>Admin Fee</span>
+                            <span>Rp {{ number_format($order->admin_fee, 0, ',', '.') }}</span>
                         </div>
                     @endif
                     @if($order->discount > 0)

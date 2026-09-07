@@ -234,6 +234,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       'seo'     => ['SEO', 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'],
       'hero'    => ['Hero & Konten', 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'],
       'contact' => ['Kontak', 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z'],
+      'fee'     => ['Fee & Biaya', 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z'],
       'api'     => ['Integrasi API', 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4'],
       'ads'     => ['Space Iklan / Banner', 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z'],
       'email'   => ['Pengaturan Email (SMTP)', 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'],
@@ -901,6 +902,89 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data" style="display:none;"></form>
     </div>
   </div>
+</div>
+
+{{-- ======== TAB: FEE & BIAYA ======== --}}
+<div id="tab-fee" class="tab-section" style="display:none;">
+  <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data">
+    @csrf @method('POST')
+    <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+      {{-- Fee Settings Card --}}
+      <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
+          <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Konfigurasi Fee Transaksi</div>
+        </div>
+        <p style="font-size:.75rem;color:#94A3B8;margin-bottom:1.5rem;line-height:1.6;">Atur persentase biaya platform dan biaya administrasi yang dibebankan kepada pembeli pada setiap transaksi. Kedua fee dihitung dari subtotal harga produk (sebelum ongkir &amp; diskon).</p>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+
+          {{-- Platform Fee --}}
+          <div style="background:#FFF9EC;border:1.5px solid #FDE68A;border-radius:10px;padding:1.25rem;">
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+              <svg width="18" height="18" fill="none" stroke="#F59E0B" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              <span style="font-size:.85rem;font-weight:700;color:#92400E;">Platform Fee</span>
+            </div>
+            <p style="font-size:.72rem;color:#92400E;margin-bottom:1rem;line-height:1.5;">Biaya layanan platform buyle.id, ditanggung oleh pembeli. Dihitung dari subtotal harga produk.</p>
+            <label class="form-label" style="color:#92400E;">Persentase Platform Fee (%)</label>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <input
+                type="number"
+                name="platform_fee_rate"
+                class="form-input"
+                style="max-width:120px;font-size:1.1rem;font-weight:700;text-align:center;"
+                value="{{ $settings['platform_fee_rate'] ?? 5 }}"
+                min="0" max="100" step="0.5"
+                placeholder="5"
+              >
+              <span style="font-size:1.25rem;font-weight:800;color:#92400E;">%</span>
+            </div>
+            <p style="font-size:.7rem;color:#B45309;margin-top:.5rem;">Contoh: nilai <strong>5</strong> = Platform Fee 5% dari subtotal</p>
+          </div>
+
+          {{-- Admin Fee --}}
+          <div style="background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:10px;padding:1.25rem;">
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+              <svg width="18" height="18" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+              <span style="font-size:.85rem;font-weight:700;color:#1E40AF;">Admin Fee</span>
+            </div>
+            <p style="font-size:.72rem;color:#1E40AF;margin-bottom:1rem;line-height:1.5;">Biaya administrasi layanan buyle.id, ditanggung oleh pembeli. Dihitung dari subtotal harga produk.</p>
+            <label class="form-label" style="color:#1E40AF;">Persentase Admin Fee (%)</label>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <input
+                type="number"
+                name="admin_fee_rate"
+                class="form-input"
+                style="max-width:120px;font-size:1.1rem;font-weight:700;text-align:center;"
+                value="{{ $settings['admin_fee_rate'] ?? 5 }}"
+                min="0" max="100" step="0.5"
+                placeholder="5"
+              >
+              <span style="font-size:1.25rem;font-weight:800;color:#1E40AF;">%</span>
+            </div>
+            <p style="font-size:.7rem;color:#1D4ED8;margin-top:.5rem;">Contoh: nilai <strong>5</strong> = Admin Fee 5% dari subtotal</p>
+          </div>
+        </div>
+
+        {{-- Info Box --}}
+        <div style="margin-top:1.5rem;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:1rem;">
+          <div style="display:flex;align-items:flex-start;gap:.5rem;">
+            <svg width="16" height="16" fill="none" stroke="#16A34A" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:2px;"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div style="font-size:.72rem;color:#166534;line-height:1.6;">
+              <strong>Cara Kerja Fee:</strong> Total yang dibayar pembeli = Subtotal Produk + Platform Fee + Admin Fee + Ongkos Kirim &minus; Diskon.<br>
+              Fee yang baru akan langsung berlaku untuk semua transaksi baru setelah disimpan. Transaksi lama tidak terpengaruh.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem;text-align:right;">
+          <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;">Simpan Pengaturan Fee</button>
+        </div>
+      </div>
+
+    </div>
+  </form>
 </div>
 
 {{-- ======== TAB: API ======== --}}

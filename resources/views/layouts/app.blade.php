@@ -264,10 +264,14 @@
     @stack('head')
 </head>
 
-<body style="overflow-x: hidden; margin: 0; padding: 0; background-color: #ffffff;">
+<body class="cv-preloader-active" style="overflow-x: hidden; margin: 0; padding: 0; background-color: #ffffff;">
 
     {{-- Global Skeleton Loader --}}
     <style>
+        html.cv-preloader-active, body.cv-preloader-active {
+            overflow: hidden !important;
+            height: 100% !important;
+        }
         #cv-app-preloader {
             position: fixed; inset: 0; z-index: 999999;
             background: #F8FAFC;
@@ -427,7 +431,17 @@
     <script>
         window.addEventListener('load', function() {
             const s = document.getElementById('cv-app-preloader');
-            if(s) { s.classList.add('fade-out'); setTimeout(() => { s.remove(); }, 400); }
+            if(s) { 
+                s.classList.add('fade-out'); 
+                setTimeout(() => { 
+                    s.remove(); 
+                    document.body.classList.remove('cv-preloader-active');
+                    document.documentElement.classList.remove('cv-preloader-active');
+                }, 400); 
+            } else {
+                document.body.classList.remove('cv-preloader-active');
+                document.documentElement.classList.remove('cv-preloader-active');
+            }
         });
     </script>
 

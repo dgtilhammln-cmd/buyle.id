@@ -255,8 +255,14 @@
             @endif
             @if($order->platform_fee > 0)
             <tr>
-                <td>Biaya Platform</td>
+                <td>Platform Fee</td>
                 <td class="right">Rp {{ number_format($order->platform_fee, 0, ',', '.') }}</td>
+            </tr>
+            @endif
+            @if(isset($order->admin_fee) && $order->admin_fee > 0)
+            <tr>
+                <td>Admin Fee</td>
+                <td class="right">Rp {{ number_format($order->admin_fee, 0, ',', '.') }}</td>
             </tr>
             @endif
             @if($order->discount > 0)
