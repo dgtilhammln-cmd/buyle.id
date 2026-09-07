@@ -90,58 +90,75 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
   padding: 10px 8px;
 }
 
-/* Brand Circle Header */
-.sb-brand-circle {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #1eb349, #a5cf37);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-weight: 800;
-  box-shadow: 0 4px 12px rgba(30, 179, 73, 0.35);
-  margin-bottom: 4px;
-  flex-shrink: 0;
-  text-decoration: none;
-  transition: transform 0.2s ease;
-}
-.sb-brand-circle:hover { transform: scale(1.05); }
-
+/* Brand Header Box */
 .sb-brand-wrapper {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 2px 4px;
-  margin-bottom: 4px;
+  justify-content: center;
   width: 100%;
+  margin-bottom: 6px;
+  padding: 4px;
 }
 
-.sb-brand-info {
+.sb-brand-box {
   display: flex;
-  flex-direction: column;
-  opacity: 0;
-  max-width: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #E2E8F0;
+  text-decoration: none;
   overflow: hidden;
-  white-space: nowrap;
-  transition: opacity 0.25s ease, max-width 0.25s ease;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 4px;
 }
-#sidebar:hover .sb-brand-info {
-  opacity: 1;
-  max-width: 160px;
+
+.sb-logo-favicon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
+  transition: opacity 0.2s ease;
 }
-.sb-brand-name {
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: #0F172A;
-  line-height: 1.2;
+
+.sb-logo-full {
+  height: 30px;
+  width: auto;
+  max-width: 150px;
+  object-fit: contain;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
 }
-.sb-brand-sub {
-  font-size: 0.68rem;
-  color: #64748B;
-  font-weight: 500;
+
+.sb-logo-fallback-badge {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+#sidebar:hover .sb-brand-box {
+  width: 100%;
+  height: 48px;
+  border-radius: 16px;
+  padding: 6px 14px;
+  justify-content: center;
+}
+
+#sidebar:hover .sb-logo-favicon {
+  display: none !important;
+}
+
+#sidebar:hover .sb-logo-full {
+  display: block !important;
+  opacity: 1 !important;
+}
+
+#sidebar:hover .sb-logo-fallback-badge {
+  display: flex !important;
 }
 
 /* Nav Item Link */
@@ -235,7 +252,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
   opacity: 1;
 }
 
-/* MAIN Container Adjust */
+/* MAIN Container Adjust & Smooth Shift on Sidebar Hover */
 #main {
   margin-left: 76px;
   flex: 1;
@@ -243,7 +260,11 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
   flex-direction: column;
   min-height: 100vh;
   min-width: 0;
-  transition: margin-left 0.35s ease;
+  transition: margin-left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#sidebar:hover ~ #main {
+  margin-left: 250px !important;
 }
 #topbar{background:transparent;padding:1.5rem 2rem 0.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
 .topbar-left{display:flex;align-items:center;gap:.75rem}
@@ -391,17 +412,17 @@ button.btn-primary:hover, a.btn-primary:hover {
   {{-- CARD 1: BRAND & UTAMA --}}
   <div class="sb-capsule-card">
     <div class="sb-brand-wrapper">
-      <a href="{{ route('admin.dashboard') }}" class="sb-brand-circle" title="buyle.id Admin">
+      <a href="{{ route('admin.dashboard') }}" class="sb-brand-box" title="buyle.id Admin">
+        <img src="{{ asset('favicon.png') }}?v=3" alt="Favicon" class="sb-logo-favicon">
         @if($adminLogo)
-          <img src="{{ asset('storage/'.$adminLogo) }}" alt="Logo" style="height:26px;width:auto;max-width:100%;object-fit:contain;border-radius:4px;">
+          <img src="{{ asset('storage/'.$adminLogo) }}" alt="Logo" class="sb-logo-full">
         @else
-          <svg width="22" height="22" fill="none" stroke="#ffffff" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          <div class="sb-logo-fallback-badge">
+            <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            <span style="font-weight:800;font-size:1rem;color:#1eb349;font-family:'Montserrat',sans-serif;">buyle.id</span>
+          </div>
         @endif
       </a>
-      <div class="sb-brand-info">
-        <div class="sb-brand-name">buyle.id</div>
-        <div class="sb-brand-sub">{{ str_ireplace('Cyclevent', 'buyle.id', session('admin_name', 'Admin buyle.id')) }}</div>
-      </div>
     </div>
 
     <a href="{{ route('admin.dashboard') }}" class="sb-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" title="Dashboard">
