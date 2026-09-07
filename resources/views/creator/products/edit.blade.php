@@ -10,7 +10,7 @@
     .prof-layout { display:flex; gap:2rem; align-items:flex-start; }
     .prof-sidebar {
         width: 250px; flex-shrink:0; background:#fff; border-radius:20px;
-        padding:1.25rem; box-shadow:0 4px 12px rgba(0,0,0,0.03); border:1px solid #f0fdf4;
+        padding:1.25rem; box-shadow:0 4px 12px rgba(0,0,0,0.03); border:1px solid #e2e8f0;
         position:sticky; top:1.5rem;
     }
     .prof-content { flex:1; min-width:0; }
@@ -32,7 +32,7 @@
     @keyframes fadeIn { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
 
     .prof-card {
-        background:#fff; border-radius:20px; border:1px solid #f0fdf4;
+        background:#fff; border-radius:20px; border:1px solid #e2e8f0;
         box-shadow:0 4px 20px rgba(0,0,0,0.03); margin-bottom:1.5rem; overflow:hidden;
     }
     .prof-card-head {

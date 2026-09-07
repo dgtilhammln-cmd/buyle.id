@@ -90,7 +90,7 @@
 
         {{-- Judul & Slug --}}
         <td style="padding:1.25rem 1.5rem;max-width:300px;">
-          <div style="font-size:.9rem;font-weight:700;color:#1E293B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ $a->title }}</div>
+          <div style="font-size:.9rem;font-weight:500;color:#1E293B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ $a->title }}</div>
           <code style="font-size:.72rem;background:#F1F5F9;color:#1eb349;padding:.2rem .5rem;border-radius:5px;font-family:'Courier New',monospace;margin-top:.25rem;display:inline-block;">/{{ $a->slug }}</code>
         </td>
 
@@ -186,7 +186,7 @@
       </div>
       <img src="{{ $a->image_url }}" alt="{{ $a->title }}" style="width:100%;height:160px;object-fit:cover;border-bottom:1px solid #F1F5F9;">
       <div style="padding:1.25rem;flex:1;display:flex;flex-direction:column;">
-          <div style="font-size:1rem;font-weight:800;color:#1E293B;margin-bottom:.35rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $a->title }}</div>
+          <div style="font-size:1rem;font-weight:500;color:#1E293B;margin-bottom:.35rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $a->title }}</div>
           <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
             @if($a->category)
                 <span style="font-size:.7rem;font-weight:600;padding:.2rem .5rem;border-radius:6px;background:#F1F5F9;color:#475569;">{{ $a->category }}</span>

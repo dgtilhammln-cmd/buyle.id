@@ -148,8 +148,8 @@ $currentPeriod = $period ?? '30d';
   {{-- Card 2: Total Creators --}}
   <div class="dash-card">
     <div style="display:flex;align-items:center;gap:1rem;">
-      <div style="background:rgba(139, 92, 246, 0.1);border-radius:14px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-        <svg width="26" height="26" fill="none" stroke="#8B5CF6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+      <div style="background:rgba(5, 150, 105, 0.1);border-radius:14px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="26" height="26" fill="none" stroke="#059669" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
           <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
         </svg>
       </div>
@@ -163,8 +163,8 @@ $currentPeriod = $period ?? '30d';
   {{-- Card 3: Total Transaksi (Checkout Count) --}}
   <div class="dash-card">
     <div style="display:flex;align-items:center;gap:1rem;">
-      <div style="background:rgba(245, 158, 11, 0.1);border-radius:14px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-        <svg width="26" height="26" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+      <div style="background:rgba(16, 185, 129, 0.1);border-radius:14px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="26" height="26" fill="none" stroke="#10B981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
           <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
         </svg>
       </div>
@@ -178,8 +178,8 @@ $currentPeriod = $period ?? '30d';
   {{-- Card 4: Total Produk Digital --}}
   <div class="dash-card">
     <div style="display:flex;align-items:center;gap:1rem;">
-      <div style="background:rgba(59, 130, 246, 0.1);border-radius:14px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-        <svg width="26" height="26" fill="none" stroke="#3B82F6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+      <div style="background:rgba(142, 189, 40, 0.12);border-radius:14px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="26" height="26" fill="none" stroke="#8ebd28" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
           <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
         </svg>
       </div>
@@ -200,9 +200,9 @@ $currentPeriod = $period ?? '30d';
     </div>
     <div style="display:flex;gap:.75rem;align-items:center;padding:.5rem .875rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:100px;flex-wrap:wrap;">
       <div style="display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;color:#334155;"><span style="display:inline-block;width:10px;height:3px;background:#1eb349;border-radius:2px;"></span>Total Visitor</div>
-      <div style="display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;color:#334155;"><span style="display:inline-block;width:10px;height:3px;background:#8B5CF6;border-radius:2px;"></span>Total Creators</div>
-      <div style="display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;color:#334155;"><span style="display:inline-block;width:10px;height:3px;background:#F59E0B;border-radius:2px;"></span>Total Transaksi</div>
-      <div style="display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;color:#334155;"><span style="display:inline-block;width:10px;height:3px;background:#3B82F6;border-radius:2px;"></span>Produk Baru</div>
+      <div style="display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;color:#334155;"><span style="display:inline-block;width:10px;height:3px;background:#059669;border-radius:2px;"></span>Total Creators</div>
+      <div style="display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;color:#334155;"><span style="display:inline-block;width:10px;height:3px;background:#10B981;border-radius:2px;"></span>Total Transaksi</div>
+      <div style="display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;color:#334155;"><span style="display:inline-block;width:10px;height:3px;background:#8ebd28;border-radius:2px;"></span>Produk Baru</div>
     </div>
   </div>
   <canvas id="main-analytics-chart" height="110"></canvas>
@@ -250,7 +250,7 @@ $currentPeriod = $period ?? '30d';
               <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               {{ number_format($c->total_views) }}
             </span>
-            <span style="font-size:0.75rem;font-weight:700;background:#FEF3C7;color:#92400E;padding:0.3rem 0.6rem;border-radius:8px;border:1px solid #FDE68A;display:inline-flex;align-items:center;gap:3px;">
+            <span style="font-size:0.75rem;font-weight:700;background:#F0FDF4;color:#15803D;padding:0.3rem 0.6rem;border-radius:8px;border:1px solid #BBF7D0;display:inline-flex;align-items:center;gap:3px;">
               <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
               {{ number_format($c->total_orders) }} Order
             </span>
@@ -279,10 +279,10 @@ $currentPeriod = $period ?? '30d';
         @php
           $statusVal = is_object($ord->status) ? $ord->status->value : (string)$ord->status;
           $st = match($statusVal) {
-            'pending'   => ['#D97706', '#FEF3C7', 'Pending'],
-            'confirmed' => ['#2563EB', '#EFF6FF', 'Terkonfirmasi'],
-            'processing'=> ['#7C3AED', '#F3E8FF', 'Diproses'],
-            'shipped'   => ['#0284C7', '#E0F2FE', 'Dikirim'],
+            'pending'   => ['#475569', '#F1F5F9', 'Pending'],
+            'confirmed' => ['#15803D', '#F0FDF4', 'Terkonfirmasi'],
+            'processing'=> ['#059669', '#E6F4EA', 'Diproses'],
+            'shipped'   => ['#047857', '#D1E7DD', 'Dikirim'],
             'completed' => ['#166534', '#DCFCE7', 'Selesai'],
             'cancelled' => ['#991B1B', '#FEE2E2', 'Batal'],
             default     => ['#475569', '#F1F5F9', ucfirst($statusVal)]
@@ -344,16 +344,16 @@ gVisitor.addColorStop(0, 'rgba(30,179,73,0.20)');
 gVisitor.addColorStop(1, 'rgba(30,179,73,0.00)');
 
 const gCreator = ctx.createLinearGradient(0, 0, 0, 280);
-gCreator.addColorStop(0, 'rgba(139,92,246,0.20)');
-gCreator.addColorStop(1, 'rgba(139,92,246,0.00)');
+gCreator.addColorStop(0, 'rgba(5,150,105,0.20)');
+gCreator.addColorStop(1, 'rgba(5,150,105,0.00)');
 
 const gTx = ctx.createLinearGradient(0, 0, 0, 280);
-gTx.addColorStop(0, 'rgba(245,158,11,0.20)');
-gTx.addColorStop(1, 'rgba(245,158,11,0.00)');
+gTx.addColorStop(0, 'rgba(16,185,129,0.20)');
+gTx.addColorStop(1, 'rgba(16,185,129,0.00)');
 
 const gProd = ctx.createLinearGradient(0, 0, 0, 280);
-gProd.addColorStop(0, 'rgba(59,130,246,0.20)');
-gProd.addColorStop(1, 'rgba(59,130,246,0.00)');
+gProd.addColorStop(0, 'rgba(142,189,40,0.20)');
+gProd.addColorStop(1, 'rgba(142,189,40,0.00)');
 
 new Chart(ctx, {
   type: 'line',
@@ -377,7 +377,7 @@ new Chart(ctx, {
       {
         label: 'Total Creators',
         data: {!! json_encode($creatorValues) !!},
-        borderColor: '#8B5CF6',
+        borderColor: '#059669',
         backgroundColor: gCreator,
         borderWidth: 2.5,
         tension: 0.4,
@@ -385,13 +385,13 @@ new Chart(ctx, {
         pointRadius: 0,
         pointHoverRadius: 6,
         pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: '#8B5CF6',
+        pointHoverBorderColor: '#059669',
         pointHoverBorderWidth: 2.5,
       },
       {
         label: 'Total Transaksi',
         data: {!! json_encode($transactionValues) !!},
-        borderColor: '#F59E0B',
+        borderColor: '#10B981',
         backgroundColor: gTx,
         borderWidth: 2.5,
         tension: 0.4,
@@ -399,13 +399,13 @@ new Chart(ctx, {
         pointRadius: 0,
         pointHoverRadius: 6,
         pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: '#F59E0B',
+        pointHoverBorderColor: '#10B981',
         pointHoverBorderWidth: 2.5,
       },
       {
         label: 'Produk Baru',
         data: {!! json_encode($productValues) !!},
-        borderColor: '#3B82F6',
+        borderColor: '#8ebd28',
         backgroundColor: gProd,
         borderWidth: 2.5,
         tension: 0.4,
@@ -413,7 +413,7 @@ new Chart(ctx, {
         pointRadius: 0,
         pointHoverRadius: 6,
         pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: '#3B82F6',
+        pointHoverBorderColor: '#8ebd28',
         pointHoverBorderWidth: 2.5,
       }
     ]

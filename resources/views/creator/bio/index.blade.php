@@ -32,7 +32,7 @@
             border-radius: 20px;
             padding: 1.25rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-            border: 1px solid #f0fdf4;
+            border: 1px solid #e2e8f0;
             position: sticky;
             top: 1.5rem;
             max-height: calc(100vh - 3rem);
@@ -112,7 +112,7 @@
         .prof-card {
             background: #fff;
             border-radius: 20px;
-            border: 1px solid #f0fdf4;
+            border: 1px solid #e2e8f0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
             margin-bottom: 1.5rem;
             overflow: hidden;

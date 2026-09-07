@@ -91,20 +91,23 @@
 .editor-area {
     min-height: 380px; padding: 1.5rem; font-size: 0.975rem; line-height: 1.85; color: #1E293B;
     background: #fff; outline: none; overflow-y: auto; max-height: 600px;
+    /* Reset browser default font-weight for all children */
+    font-weight: 400;
 }
-.editor-area p { margin-top: 0; margin-bottom: 1.25rem; line-height: 1.85; }
-.editor-area h2 { font-size: 1.5rem; font-weight: 800; color: #0F172A; margin-top: 1.75rem; margin-bottom: 0.85rem; line-height: 1.35; }
-.editor-area h3 { font-size: 1.25rem; font-weight: 700; color: #0F172A; margin-top: 1.5rem; margin-bottom: 0.75rem; line-height: 1.4; }
-.editor-area h4 { font-size: 1.1rem; font-weight: 700; color: #0F172A; margin-top: 1.25rem; margin-bottom: 0.65rem; line-height: 1.45; }
+.editor-area p { margin-top: 0; margin-bottom: 1.25rem; line-height: 1.85; font-weight: 400; }
+.editor-area h2 { font-size: 1.4rem; font-weight: 600 !important; color: #0F172A; margin-top: 1.75rem; margin-bottom: 0.85rem; line-height: 1.35; }
+.editor-area h3 { font-size: 1.2rem; font-weight: 600 !important; color: #0F172A; margin-top: 1.5rem; margin-bottom: 0.75rem; line-height: 1.4; }
+.editor-area h4 { font-size: 1.1rem; font-weight: 600 !important; color: #0F172A; margin-top: 1.25rem; margin-bottom: 0.65rem; line-height: 1.45; }
 .editor-area ul, .editor-area ol { margin-top: 0; margin-bottom: 1.25rem; padding-left: 1.5rem; }
-.editor-area li { margin-bottom: 0.5rem; line-height: 1.75; }
+.editor-area li { margin-bottom: 0.5rem; line-height: 1.75; font-weight: 400; }
 .editor-area blockquote {
     margin: 1.25rem 0; padding: 0.85rem 1.25rem; border-left: 4px solid #1eb349;
-    background: #F8FAFC; color: #475569; font-style: italic; border-radius: 0 8px 8px 0;
+    background: #F8FAFC; color: #475569; font-style: italic; border-radius: 0 8px 8px 0; font-weight: 400;
 }
+.editor-area b, .editor-area strong { font-weight: 700; }
 
 .editor-area[contenteditable="true"]:empty:before {
-    content: attr(placeholder); color: #94A3B8; font-style: italic; pointer-events: none;
+    content: attr(placeholder); color: #94A3B8; font-style: italic; pointer-events: none; font-weight: 400;
 }
 
 /* LIGHT THEME FOR HTML/CODE EDITOR */
@@ -422,6 +425,45 @@
         </div>
     </div>
 
+    {{-- INTERACTIVE HYPERLINK MODAL POPUP --}}
+    <div id="hyperlink-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.45);backdrop-filter:blur(4px);z-index:99999;align-items:center;justify-content:center;">
+      <div style="background:#fff;border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,0.15);width:90%;max-width:480px;padding:1.75rem;border:1px solid #E2E8F0;position:relative;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+          <h3 id="hl-modal-title" style="font-size:1.1rem;font-weight:700;color:#0F172A;margin:0;">Sisipkan Hyperlink</h3>
+          <button type="button" onclick="closeLinkModal()" style="background:none;border:none;color:#94A3B8;cursor:pointer;padding:4px;" onmouseover="this.style.color='#0F172A'" onmouseout="this.style.color='#94A3B8'">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label style="display:block;font-size:0.8rem;font-weight:700;color:#475569;margin-bottom:0.35rem;">URL Target Link <span style="color:#EF4444">*</span></label>
+          <input type="url" id="hl-input-url" placeholder="https://buyle.id/..." class="form-input" style="background:#F8FAFC;">
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label style="display:block;font-size:0.8rem;font-weight:700;color:#475569;margin-bottom:0.35rem;">Teks Link</label>
+          <input type="text" id="hl-input-text" placeholder="Teks yang diklik..." class="form-input" style="background:#F8FAFC;">
+        </div>
+
+        <div style="margin-bottom:1.5rem;">
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.85rem;color:#334155;font-weight:600;">
+            <input type="checkbox" id="hl-input-blank" checked style="width:16px;height:16px;accent-color:#1eb349;">
+            Buka di tab baru (target="_blank")
+          </label>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;border-top:1px solid #F1F5F9;padding-top:1rem;">
+          <div id="hl-modal-extra-btns" style="display:flex;gap:0.35rem;">
+            <button type="button" id="hl-btn-delete" onclick="removeCurrentLink(); closeLinkModal();" style="display:none;padding:0.5rem 0.85rem;background:#FEF2F2;color:#EF4444;border:1px solid #FCA5A5;border-radius:10px;font-size:0.8rem;font-weight:700;cursor:pointer;">Hapus Link</button>
+          </div>
+          <div style="display:flex;gap:0.5rem;margin-left:auto;">
+            <button type="button" onclick="closeLinkModal()" class="btn-outline-new" style="padding:0.5rem 1rem;font-size:0.825rem;">Batal</button>
+            <button type="button" onclick="saveLinkModal()" class="btn-primary-new" style="padding:0.5rem 1.25rem;font-size:0.825rem;">Simpan Link</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     </form>
 </div>
 
@@ -574,41 +616,119 @@ function fmtBlock(tag) {
     updateSelectionState();
 }
 
-function insertLink() {
-    if (currentEditorMode === 'code') return;
-    if (currentActiveLink) {
-        editCurrentLink();
+// Saved selection range for restoring after modal
+let _savedRange = null;
+
+function saveSelection() {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+        _savedRange = sel.getRangeAt(0).cloneRange();
+    }
+}
+
+function restoreSelection() {
+    if (_savedRange) {
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(_savedRange);
+    }
+}
+
+function openLinkModal(isEdit) {
+    const modal = document.getElementById('hyperlink-modal');
+    const titleEl = document.getElementById('hl-modal-title');
+    const urlInput = document.getElementById('hl-input-url');
+    const textInput = document.getElementById('hl-input-text');
+    const blankCb = document.getElementById('hl-input-blank');
+    const delBtn = document.getElementById('hl-btn-delete');
+
+    if (isEdit && currentActiveLink) {
+        titleEl.textContent = 'Edit Hyperlink';
+        urlInput.value = currentActiveLink.getAttribute('href') || '';
+        textInput.value = currentActiveLink.textContent || '';
+        blankCb.checked = currentActiveLink.getAttribute('target') === '_blank';
+        if (delBtn) delBtn.style.display = 'inline-flex';
+    } else {
+        titleEl.textContent = 'Sisipkan Hyperlink';
+        urlInput.value = '';
+        const sel = window.getSelection();
+        textInput.value = (sel && sel.rangeCount > 0) ? sel.toString() : '';
+        blankCb.checked = true;
+        if (delBtn) delBtn.style.display = 'none';
+    }
+
+    modal.style.display = 'flex';
+    setTimeout(() => urlInput.focus(), 50);
+}
+
+function closeLinkModal() {
+    const modal = document.getElementById('hyperlink-modal');
+    modal.style.display = 'none';
+    _savedRange = null;
+}
+
+function saveLinkModal() {
+    const url = document.getElementById('hl-input-url').value.trim();
+    const text = document.getElementById('hl-input-text').value.trim();
+    const openBlank = document.getElementById('hl-input-blank').checked;
+
+    if (!url) {
+        document.getElementById('hl-input-url').focus();
+        document.getElementById('hl-input-url').style.borderColor = '#EF4444';
+        setTimeout(() => document.getElementById('hl-input-url').style.borderColor = '', 1500);
         return;
     }
-    const url = prompt('Masukkan URL Link (misal: https://example.com):');
-    if (url) {
-        document.getElementById('editor-id').focus();
-        document.execCommand('createLink', false, url);
-        setTimeout(() => {
-            const sel = window.getSelection();
-            if (sel && sel.anchorNode) {
-                let curr = sel.anchorNode.nodeType === 3 ? sel.anchorNode.parentNode : sel.anchorNode;
-                while (curr && curr.tagName !== 'A' && curr.id !== 'editor-id') curr = curr.parentNode;
-                if (curr && curr.tagName === 'A') {
-                    curr.setAttribute('target', '_blank');
-                    curr.setAttribute('rel', 'noopener');
-                }
-            }
-            syncContent();
-            updateSelectionState();
-        }, 50);
+
+    const editor = document.getElementById('editor-id');
+    editor.focus();
+
+    if (currentActiveLink) {
+        currentActiveLink.setAttribute('href', url);
+        if (text) currentActiveLink.textContent = text;
+        currentActiveLink.setAttribute('target', openBlank ? '_blank' : '_self');
+        currentActiveLink.setAttribute('rel', openBlank ? 'noopener' : '');
+    } else {
+        if (_savedRange) restoreSelection();
+
+        const sel = window.getSelection();
+        const selectedText = (sel && sel.rangeCount > 0 && !sel.isCollapsed) ? sel.toString() : (text || url);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.textContent = selectedText;
+        if (openBlank) { a.target = '_blank'; a.rel = 'noopener'; }
+
+        if (sel && sel.rangeCount > 0) {
+            const range = sel.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(a);
+            range.setStartAfter(a);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+        } else {
+            editor.appendChild(a);
+        }
+    }
+
+    syncContent();
+    updateSelectionState();
+    closeLinkModal();
+}
+
+function insertLink() {
+    if (currentEditorMode === 'code') return;
+    saveSelection();
+    if (currentActiveLink) {
+        openLinkModal(true);
+    } else {
+        openLinkModal(false);
     }
 }
 
 function editCurrentLink() {
-    if (!currentActiveLink) return;
-    const oldUrl = currentActiveLink.getAttribute('href') || '';
-    const newUrl = prompt('Edit URL Link:', oldUrl);
-    if (newUrl !== null && newUrl.trim() !== '') {
-        currentActiveLink.setAttribute('href', newUrl.trim());
-        syncContent();
-        updateSelectionState();
-    }
+    saveSelection();
+    openLinkModal(true);
 }
 
 function openCurrentLink() {

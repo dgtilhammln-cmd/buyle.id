@@ -199,9 +199,9 @@
             background: rgba(255, 255, 255, 0.12);
         }
 
-        /* Seamless Active Tab Cutout into White Canvas */
+        /* Seamless Active Tab Cutout into Canvas */
         .cr-nav-link.active {
-            background: #ffffff;
+            background: #f8fafc;
             color: #1eb349 !important;
             font-weight: 800;
             position: relative;
@@ -222,7 +222,7 @@
             height: 24px;
             background: transparent;
             border-bottom-right-radius: 24px;
-            box-shadow: 10px 10px 0 10px #ffffff;
+            box-shadow: 10px 10px 0 10px #f8fafc;
             pointer-events: none;
         }
 
@@ -235,7 +235,7 @@
             height: 24px;
             background: transparent;
             border-top-right-radius: 24px;
-            box-shadow: 10px -10px 0 10px #ffffff;
+            box-shadow: 10px -10px 0 10px #f8fafc;
             pointer-events: none;
         }
 
@@ -295,7 +295,7 @@
             background: rgba(248, 113, 113, 0.12);
         }
 
-        /* ── MAIN CANVAS (Large White Rounded Card) ── */
+        /* ── MAIN CANVAS (Sleek Rounded Gray Canvas) ── */
         .cr-main-wrapper {
             margin-left: 240px;
             flex: 1;
@@ -309,7 +309,7 @@
 
         .cr-main-canvas {
             flex: 1;
-            background: #ffffff;
+            background: #f8fafc;
             border-radius: 40px;
             padding: 2.75rem 3rem;
             min-height: calc(100vh - 2.5rem);

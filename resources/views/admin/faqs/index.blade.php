@@ -157,7 +157,7 @@
             {{-- Judul & Slug --}}
             <td style="padding:1.25rem 1.5rem;max-width:300px;">
               <div
-                style="font-size:.9rem;font-weight:700;color:#1E293B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                style="font-size:.9rem;font-weight:500;color:#1E293B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                 {{ $a->title }}</div>
               <code
                 style="font-size:.72rem;background:#F1F5F9;color:#1eb349;padding:.2rem .5rem;border-radius:5px;font-family:'Courier New',monospace;margin-top:.25rem;display:inline-block;">/{{ $a->slug }}</code>
