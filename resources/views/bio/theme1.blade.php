@@ -108,15 +108,16 @@
             background-size: cover;
             background-position: center;
             position: relative;
-            width: 100vw;
-            margin-left: calc(-50vw + 50%);
+            width: 100%;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
         }
 
         @media (max-width: 500px) {
             .cover-area {
                 height: 44vw;
-                margin-left: 0;
-                width: 100%;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
             }
         }
 

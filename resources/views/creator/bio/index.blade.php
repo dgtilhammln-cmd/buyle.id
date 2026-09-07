@@ -80,6 +80,14 @@
             box-shadow: 0 4px 12px rgba(30, 179, 73, 0.2);
         }
 
+        .tab-text-full {
+            display: inline-block;
+        }
+
+        .tab-text-mob {
+            display: none;
+        }
+
         .tab-pane {
             display: none;
             animation: fadeIn 0.3s;
@@ -493,16 +501,75 @@
 
         @media(max-width:768px) {
             .bio-layout {
-                flex-direction: column
+                flex-direction: column;
+                gap: 1rem;
             }
 
             .bio-sidebar {
                 width: 100%;
-                position: static
+                position: static;
+                padding: 0.5rem;
+                border-radius: 14px;
+                background: #ffffff;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            }
+
+            .bio-tabs-list {
+                display: grid;
+                grid-template-columns: repeat(6, 1fr);
+                gap: 3px;
+                background: #f8fafc;
+                padding: 3px;
+                border-radius: 12px;
+                overflow-x: auto;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .bio-tabs-list::-webkit-scrollbar {
+                display: none;
+            }
+
+            .tab-btn {
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 0.4rem 0.15rem;
+                gap: 3px;
+                border-radius: 8px;
+                margin-bottom: 0;
+                width: 100%;
+                min-width: 0;
+            }
+
+            .tab-btn svg {
+                width: 17px;
+                height: 17px;
+            }
+
+            .tab-text-full {
+                display: none !important;
+            }
+
+            .tab-text-mob {
+                display: block !important;
+                font-size: 0.62rem;
+                font-weight: 600;
+                line-height: 1;
+                text-align: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+            }
+
+            .sidebar-extra-info {
+                display: none !important;
             }
 
             .theme-grid {
-                grid-template-columns: 1fr
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
             }
         }
 
@@ -663,61 +730,64 @@
 
         {{-- Sidebar Nav --}}
         <div class="bio-sidebar">
-            <button class="tab-btn active" data-tab="tab-theme">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="3" />
-                    <path
-                        d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-                </svg>
-                Tampilan & Tema
-            </button>
-            <button class="tab-btn" data-tab="tab-profile">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="8" r="4" />
-                    <path d="M20 21a8 8 0 1 0-16 0" />
-                </svg>
-                Pengaturan Profil
-            </button>
-            <button class="tab-btn" data-tab="tab-social">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M22 12A10 10 0 1 0 12 22a10 10 0 0 0 10-10zM8 12a4 4 0 1 0 8 0 4 4 0 0 0-8 0z" />
-                </svg>
-                Social Links
-            </button>
-            <button class="tab-btn" data-tab="tab-blocks">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <rect x="3" y="3" width="7" height="7" />
-                    <rect x="14" y="3" width="7" height="7" />
-                    <rect x="14" y="14" width="7" height="7" />
-                    <rect x="3" y="14" width="7" height="7" />
-                </svg>
-                Kelola Block
-            </button>
-            <button class="tab-btn" data-tab="tab-catalog">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <path d="M16 10a4 4 0 0 1-8 0" />
-                </svg>
-                Katalog & Affiliate
-            </button>
-            <button class="tab-btn" data-tab="tab-embed">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                </svg>
-                Lokasi / Map
-            </button>
+            <div class="bio-tabs-list">
+                <button class="tab-btn active" data-tab="tab-theme">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                    </svg>
+                    <span class="tab-text-full">Tampilan & Tema</span>
+                    <small class="tab-text-mob">Tema</small>
+                </button>
+                <button class="tab-btn" data-tab="tab-profile">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M20 21a8 8 0 1 0-16 0" />
+                    </svg>
+                    <span class="tab-text-full">Pengaturan Profil</span>
+                    <small class="tab-text-mob">Profil</small>
+                </button>
+                <button class="tab-btn" data-tab="tab-social">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M22 12A10 10 0 1 0 12 22a10 10 0 0 0 10-10zM8 12a4 4 0 1 0 8 0 4 4 0 0 0-8 0z" />
+                    </svg>
+                    <span class="tab-text-full">Social Links</span>
+                    <small class="tab-text-mob">Social</small>
+                </button>
+                <button class="tab-btn" data-tab="tab-blocks">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                    </svg>
+                    <span class="tab-text-full">Kelola Block</span>
+                    <small class="tab-text-mob">Block</small>
+                </button>
+                <button class="tab-btn" data-tab="tab-catalog">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg>
+                    <span class="tab-text-full">Katalog & Affiliate</span>
+                    <small class="tab-text-mob">Katalog</small>
+                </button>
+                <button class="tab-btn" data-tab="tab-embed">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                    </svg>
+                    <span class="tab-text-full">Lokasi / Map</span>
+                    <small class="tab-text-mob">Lokasi</small>
+                </button>
+            </div>
 
-            <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7;">
-                <div
-                    style="font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.5rem;">
-                    Tipe Profil</div>
-                <div style="font-size:0.82rem; font-weight:700; color:#1eb349;">{{ $roleLabels[$profile->bio_role] ?? '-' }}
-                </div>
+            <div class="sidebar-extra-info" style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid #e7f0e7;">
+                <div style="font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem;">Tipe Profil</div>
+                <div style="font-size:0.82rem; font-weight:700; color:#1eb349;">{{ $roleLabels[$profile->bio_role] ?? '-' }}</div>
                 @if($bioUrl)
-                    <a href="{{ $bioUrl }}" target="_blank"
-                        style="display:flex; align-items:center; gap:0.4rem; margin-top:0.75rem; font-size:0.72rem; color:#64748b; text-decoration:none; word-break:break-all;">
+                    <a href="{{ $bioUrl }}" target="_blank" style="display:flex; align-items:center; gap:0.4rem; margin-top:0.5rem; font-size:0.72rem; color:#64748b; text-decoration:none; word-break:break-all;">
                         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke-linecap="round" />
                             <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke-linecap="round" />
