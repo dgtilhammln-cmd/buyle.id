@@ -406,12 +406,19 @@
             z-index: 90;
         }
 
+        /* ── Super App Mobile Bottom Capsule Navigation ── */
+        .superapp-bottom-nav {
+            display: none;
+        }
+
         @media (max-width: 1024px) {
             body {
                 flex-direction: column;
                 height: auto;
                 min-height: 100vh;
                 overflow-x: hidden;
+                overflow-y: auto;
+                padding-bottom: 88px;
             }
 
             .cr-mobile-bar {
@@ -422,18 +429,33 @@
                 right: 0;
                 z-index: 80;
                 height: 56px;
+                background: linear-gradient(90deg, #126829 0%, #1eb349 60%, #8ebd28 100%) !important;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            }
+
+            /* Hide hamburger from top bar since bottom nav has Menu button */
+            .cr-mobile-toggle {
+                display: none;
             }
 
             .cr-sidebar {
+                width: 280px;
+                background: linear-gradient(180deg, #126829 0%, #179b3e 60%, #8ebd28 100%) !important;
                 transform: translateX(-100%);
                 transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-                z-index: 100;
-                box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+                z-index: 10000;
+                box-shadow: 10px 0 40px rgba(0, 0, 0, 0.4);
                 height: 100vh;
+                padding-right: 1.25rem;
             }
 
             .cr-sidebar.open {
                 transform: translateX(0);
+            }
+
+            .cr-overlay {
+                backdrop-filter: blur(6px);
+                z-index: 9999;
             }
 
             .cr-overlay.open {
@@ -445,9 +467,10 @@
                 padding: 0.5rem;
                 padding-top: calc(56px + 0.5rem);
                 height: auto;
-                min-height: calc(100vh - 56px);
+                min-height: calc(100vh - 56px - 88px);
                 max-width: 100vw;
                 overflow-x: hidden;
+                overflow-y: visible;
                 box-sizing: border-box;
             }
 
@@ -467,8 +490,85 @@
             }
 
             .cr-nav-link {
-                border-radius: 16px;
+                border-radius: 14px;
                 margin-right: 1.25rem;
+                color: rgba(255, 255, 255, 0.95);
+            }
+
+            .cr-nav-link.active {
+                background: #ffffff !important;
+                color: #1eb349 !important;
+                font-weight: 800;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            }
+
+            .cr-nav-link.active svg {
+                stroke: #1eb349 !important;
+            }
+
+            /* ── Super App Floating Capsule Bottom Nav ── */
+            .superapp-bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 14px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: calc(100% - 28px);
+                max-width: 480px;
+                background: linear-gradient(135deg, rgba(18, 104, 41, 0.97) 0%, rgba(30, 179, 73, 0.97) 100%);
+                backdrop-filter: blur(20px) saturate(1.8);
+                -webkit-backdrop-filter: blur(20px) saturate(1.8);
+                border: 1.5px solid rgba(255, 255, 255, 0.22);
+                border-radius: 999px;
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(18, 104, 41, 0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+                z-index: 9998;
+                padding: 8px 16px;
+                justify-content: space-around;
+                align-items: center;
+            }
+
+            .superapp-nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                color: rgba(255, 255, 255, 0.65);
+                font-size: 0.6rem;
+                font-weight: 600;
+                letter-spacing: 0.02em;
+                gap: 3px;
+                padding: 0.4rem 0.6rem;
+                border-radius: 999px;
+                transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                font-family: 'Montserrat', sans-serif;
+                min-width: 48px;
+            }
+
+            .superapp-nav-item:hover,
+            .superapp-nav-item:active {
+                color: #ffffff;
+                transform: translateY(-2px);
+            }
+
+            .superapp-nav-item.active {
+                color: #ffffff;
+                background: rgba(255, 255, 255, 0.18);
+                font-weight: 700;
+                box-shadow: 0 2px 12px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.2);
+            }
+
+            .superapp-nav-item svg {
+                stroke-width: 2;
+                transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+
+            .superapp-nav-item.active svg {
+                stroke-width: 2.5;
+                transform: scale(1.1);
             }
         }
     </style>
@@ -704,6 +804,66 @@
             @yield('content')
         </main>
     </div>
+
+    {{-- ── Super App Bottom Navigation (Mobile Only) ── --}}
+    <nav class="superapp-bottom-nav" id="superappBottomNav">
+        @php
+            $bottomNavIsBuyer = auth()->user()->role === 'buyer';
+        @endphp
+        {{-- Overview --}}
+        <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.dashboard') }}"
+           onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+           class="superapp-nav-item {{ request()->routeIs('creator.dashboard') ? 'active' : '' }}">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+            <span>Overview</span>
+        </a>
+
+        {{-- Produk --}}
+        <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.products.index') }}"
+           onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+           class="superapp-nav-item {{ request()->routeIs('creator.products*') ? 'active' : '' }}">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="2" y="7" width="20" height="14" rx="2"/>
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+            <span>Produk</span>
+        </a>
+
+        {{-- Profil --}}
+        <a href="{{ $bottomNavIsBuyer ? route('creator.onboarding') : route('creator.profile.edit') }}"
+           class="superapp-nav-item {{ request()->routeIs('creator.profile*', 'creator.onboarding') ? 'active' : '' }}">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M20 21a8 8 0 1 0-16 0"/>
+            </svg>
+            <span>Profil</span>
+        </a>
+
+        {{-- Saldo --}}
+        <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.payout.settings') }}"
+           onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+           class="superapp-nav-item {{ request()->routeIs('creator.payout*') ? 'active' : '' }}">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="2" y="6" width="20" height="12" rx="2"/>
+                <circle cx="16" cy="12" r="2"/>
+                <path d="M6 12h.01"/>
+            </svg>
+            <span>Saldo</span>
+        </a>
+
+        {{-- Menu (hamburger for more) --}}
+        <button type="button" class="superapp-nav-item" onclick="document.getElementById('crSidebar').classList.toggle('open'); document.getElementById('crOverlay').classList.toggle('open');">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+            <span>Menu</span>
+        </button>
+    </nav>
 
     {{-- Interactive Locked Feature Modal for Buyers --}}
     <div id="lockedFeatureModal" style="display:none;position:fixed;inset:0;background:rgba(11,18,12,0.7);backdrop-filter:blur(6px);z-index:9999;align-items:center;justify-content:center;padding:1rem;">
