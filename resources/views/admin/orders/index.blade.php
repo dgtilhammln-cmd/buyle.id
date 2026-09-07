@@ -518,8 +518,8 @@
                                 <img src="{{ $item->product && $item->product->image ? asset('storage/' . $item->product->image) : asset('img/no-image.jpg') }}" loading="lazy" class="o-item-img" onerror="this.src='https://via.placeholder.com/60?text=No+Img'">
                                 <div>
                                     <div class="o-item-title">{{ Str::limit($item->product_name ?? ($item->product->name ?? 'Produk'), 50) }}</div>
-                                    @if($item->product && $item->product->user)
-                                        <div style="font-size:0.72rem;color:#059669;font-weight:600;margin-bottom:0.2rem;">Toko: {{ $item->product->user->store_name ?? $item->product->user->name }}</div>
+                                    @if($item->product && $item->product->seller)
+                                        <div style="font-size:0.72rem;color:#059669;font-weight:600;margin-bottom:0.2rem;">Toko: {{ $item->product->seller->store_name ?? $item->product->seller->name }}</div>
                                     @endif
                                     <div style="font-size:0.72rem;color:#64748B;font-weight:600;">Qty: {{ $item->qty }} &bull; Rp {{ number_format($item->price, 0, ',', '.') }}</div>
                                 </div>

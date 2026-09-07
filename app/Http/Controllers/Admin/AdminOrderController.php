@@ -28,7 +28,7 @@ class AdminOrderController extends Controller
         $startDate = $request->get('start_date');
         $endDate   = $request->get('end_date');
 
-        $query = Order::with(['user', 'items.product.user', 'payment', 'shipment'])
+        $query = Order::with(['user', 'items.product.seller', 'payment', 'shipment'])
             ->orderByDesc('created_at');
 
         // Date / Period Filter
@@ -58,8 +58,9 @@ class AdminOrderController extends Controller
                     ->orWhereHas('user', fn($u) => $u->where('name', 'like', "%{$q}%")
                         ->orWhere('email', 'like', "%{$q}%")
                         ->orWhere('username', 'like', "%{$q}%"))
-                    ->orWhereHas('items.product', fn($p) => $p->where('title', 'like', "%{$q}%"))
-                    ->orWhereHas('items.product.user', fn($cu) => $cu->where('name', 'like', "%{$q}%")
+                    ->orWhereHas('items.product', fn($p) => $p->where('name', 'like', "%{$q}%")
+                        ->orWhere('slug', 'like', "%{$q}%"))
+                    ->orWhereHas('items.product.seller', fn($cu) => $cu->where('name', 'like', "%{$q}%")
                         ->orWhere('email', 'like', "%{$q}%")
                         ->orWhere('store_name', 'like', "%{$q}%")
                         ->orWhere('store_slug', 'like', "%{$q}%"));
