@@ -1050,7 +1050,14 @@
                                         <div class="landing-prod-info">
                                             <h3 class="landing-prod-title">{{ $prod->name }}</h3>
                                             <div class="landing-prod-footer">
-                                                <span class="landing-prod-price">Rp {{ number_format($prod->price, 0, ',', '.') }}</span>
+                                                <span class="landing-prod-price">
+                                                    @if($prod->is_on_sale)
+                                                        <span style="text-decoration:line-through; opacity:0.55; font-size:0.72rem; margin-right:0.25rem; font-weight:500;">Rp {{ number_format($prod->price, 0, ',', '.') }}</span>
+                                                        Rp {{ number_format($prod->sale_price, 0, ',', '.') }}
+                                                    @else
+                                                        Rp {{ number_format($prod->effective_price, 0, ',', '.') }}
+                                                    @endif
+                                                </span>
                                                 <span class="landing-prod-btn">Beli <i class="fas fa-chevron-right"></i></span>
                                             </div>
                                         </div>

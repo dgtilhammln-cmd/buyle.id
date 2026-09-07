@@ -195,9 +195,9 @@
         }
 
         .social-icon:hover {
-            background: var(--accent);
-            color: #fff;
-            border-color: var(--accent);
+            background: #f1f5f9;
+            color: #0f172a;
+            border-color: #cbd5e1;
             transform: translateY(-2px);
         }
 
@@ -344,7 +344,7 @@
 
         .prod-price {
             font-size: 0.75rem;
-            color: var(--accent);
+            color: #0f172a;
             font-weight: 800;
             margin-top: auto;
         }
@@ -732,7 +732,14 @@
                             </div>
                             <div class="prod-info">
                                 <h3 class="prod-title">{{ $prod->name }}</h3>
-                                <div class="prod-price">Rp {{ number_format($prod->price, 0, ',', '.') }}</div>
+                                <div class="prod-price">
+                                    @if($prod->is_on_sale)
+                                        <span style="text-decoration:line-through; opacity:0.55; font-size:0.72rem; margin-right:0.25rem; font-weight:500;">Rp {{ number_format($prod->price, 0, ',', '.') }}</span>
+                                        <span>Rp {{ number_format($prod->sale_price, 0, ',', '.') }}</span>
+                                    @else
+                                        <span>Rp {{ number_format($prod->effective_price, 0, ',', '.') }}</span>
+                                    @endif
+                                </div>
                             </div>
                         </a>
                     @endif
