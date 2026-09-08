@@ -88,7 +88,7 @@ class AdminOrderController extends Controller
             'processing' => (clone $statsBase)->whereIn('status', ['confirmed', 'processing'])->count(),
             'shipped'    => (clone $statsBase)->whereIn('status', ['shipped'])->count(),
             'completed'  => (clone $statsBase)->whereIn('status', ['completed', 'delivered'])->count(),
-            'revenue'    => (clone $statsBase)->whereIn('status', ['completed', 'delivered', 'shipped', 'processing'])->sum('total'),
+            'revenue'    => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('total'),
         ];
 
         // Tab counts

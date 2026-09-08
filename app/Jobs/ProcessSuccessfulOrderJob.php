@@ -50,10 +50,21 @@ class ProcessSuccessfulOrderJob implements ShouldQueue
 
         $wasNewlyCreated = $user->wasRecentlyCreated;
 
-        // 2. Tautkan order ke buyer dan update status ke 'confirmed'
+        // 2. Tautkan order ke buyer dan tentukan status berdasarkan jenis produk
+        // Produk digital (external_link) tidak butuh pengiriman fisik — langsung Delivered
+        $order->load('items.product');
+        $allDigital = $order->items->every(function ($item) {
+            $type = $item->product?->product_type ?? $item->product?->type ?? '';
+            return in_array($type, ['external_link', 'digital', 'file']);
+        });
+
+        $newStatus = $allDigital
+            ? \App\Enums\OrderStatus::Delivered
+            : \App\Enums\OrderStatus::Confirmed;
+
         $order->update([
             'user_id' => $user->id,
-            'status'  => \App\Enums\OrderStatus::Confirmed,
+            'status'  => $newStatus,
         ]);
 
         // Generate E-Ticket Pass jika terdapat produk tipe ticket
