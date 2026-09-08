@@ -348,6 +348,71 @@
     }
 
     .rm-body { padding: 1.5rem; }
+
+    /* ── View Toggle ── */
+    .view-toggle-wrap {
+        display: flex;
+        background: #F8FAFC;
+        border: 1.5px solid #E2E8F0;
+        border-radius: 10px;
+        padding: 3px;
+        gap: 2px;
+        flex-shrink: 0;
+    }
+    .view-toggle-btn {
+        width: 34px; height: 34px;
+        border: none; background: transparent;
+        border-radius: 7px; cursor: pointer;
+        color: #94A3B8;
+        display: flex; align-items: center; justify-content: center;
+        transition: all .18s;
+    }
+    .view-toggle-btn.active {
+        background: #fff;
+        color: #1eb349;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    /* ── Grid View ── */
+    .o-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 1rem;
+    }
+    @media(max-width: 1400px) { .o-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media(max-width: 1024px) { .o-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media(max-width: 640px)  { .o-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .o-gcard {
+        background: #fff;
+        border: 1px solid #E2E8F0;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        transition: all .2s;
+        display: flex; flex-direction: column;
+    }
+    .o-gcard:hover {
+        border-color: #bbf7d0;
+        box-shadow: 0 6px 18px rgba(30,179,73,0.08);
+        transform: translateY(-2px);
+    }
+    .o-gcard-img {
+        width: 100%; aspect-ratio: 1/1;
+        object-fit: cover;
+        background: #F8FAFC;
+        border-bottom: 1px solid #F1F5F9;
+    }
+    .o-gcard-body { padding: .75rem; flex: 1; display: flex; flex-direction: column; gap: .3rem; }
+    .o-gcard-order { font-size: .68rem; font-weight: 800; color: #94A3B8; font-family: monospace; }
+    .o-gcard-name { font-size: .78rem; font-weight: 700; color: #1E293B; line-height: 1.3; }
+    .o-gcard-email { font-size: .68rem; color: #94A3B8; font-weight: 500; }
+    .o-gcard-price { font-size: .85rem; font-weight: 800; color: #1eb349; margin-top: .15rem; }
+    .o-gcard-foot {
+        padding: .5rem .75rem;
+        border-top: 1px solid #F1F5F9;
+        display: flex; align-items: center; justify-content: space-between;
+    }
 </style>
 
 <div class="opage">
@@ -478,6 +543,16 @@
         @if($q)
             <a href="{{ route('admin.orders.index', ['tab' => $tab, 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date]) }}" class="o-btn-reset">Reset</a>
         @endif
+
+        {{-- View Toggle --}}
+        <div class="view-toggle-wrap" style="margin-left:auto;">
+            <button type="button" class="view-toggle-btn active" id="btn-list-view" onclick="setView('list')" title="List View">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+            <button type="button" class="view-toggle-btn" id="btn-grid-view" onclick="setView('grid')" title="Grid View">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </button>
+        </div>
     </form>
 
     {{-- Order List --}}
@@ -588,6 +663,53 @@
         </div>
     </div>
 
+    {{-- Grid View --}}
+    <div id="view-grid" style="display:none;">
+        <div class="o-grid">
+        @forelse($orders as $o)
+            @php
+                $firstItem = $o->items->first();
+                $firstImg  = $firstItem && $firstItem->product && $firstItem->product->image
+                    ? asset('storage/' . $firstItem->product->image)
+                    : asset('img/no-image.jpg');
+                $userName = $o->user->name ?? $o->receiver_name ?? 'Konsumen';
+                $userEmail = $o->user->email ?? '—';
+                $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
+                $stBadge = match($statusVal) {
+                    'confirmed','processing' => ['#059669', '#E6F4EA', 'Proses'],
+                    'shipped'                => ['#047857', '#D1E7DD', 'Kirim'],
+                    'completed','delivered'  => ['#166534', '#DCFCE7', 'Selesai'],
+                    default                  => ['#475569', '#F1F5F9', ucfirst($statusVal)]
+                };
+            @endphp
+            <div class="o-gcard">
+                <img src="{{ $firstImg }}" class="o-gcard-img" loading="lazy" onerror="this.src='https://via.placeholder.com/200?text=Produk'">
+                <div class="o-gcard-body">
+                    <div class="o-gcard-order">#{{ $o->order_number }}</div>
+                    <div class="o-gcard-name">{{ Str::limit($userName, 22) }}</div>
+                    <div class="o-gcard-email">{{ Str::limit($userEmail, 24) }}</div>
+                    <div class="o-gcard-price">Rp {{ number_format($o->total, 0, ',', '.') }}</div>
+                </div>
+                <div class="o-gcard-foot">
+                    <span style="font-size:.65rem;font-weight:700;color:{{ $stBadge[0] }};background:{{ $stBadge[1] }};padding:.2rem .55rem;border-radius:50px;">
+                        {{ $stBadge[2] }}
+                    </span>
+                    <a href="{{ route('admin.orders.show', $o) }}" style="display:flex;align-items:center;gap:.25rem;font-size:.72rem;font-weight:700;color:#1eb349;text-decoration:none;">
+                        Detail
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </div>
+        @empty
+            <div style="grid-column:1/-1;text-align:center;padding:4rem 1rem;background:#fff;border-radius:16px;border:1.5px dashed #CBD5E1;">
+                <div style="font-size:1rem;font-weight:700;color:#334155;">Tidak Ada Pesanan</div>
+                <div style="font-size:0.8rem;color:#94A3B8;">Belum ada pesanan pada filter ini.</div>
+            </div>
+        @endforelse
+        </div>
+        <div style="margin-top:1.5rem;">{{ $orders->links() }}</div>
+    </div>
+
 </div>
 
 {{-- MODAL DOWNLOAD LAPORAN --}}
@@ -633,6 +755,32 @@ function openReportModal() {
 function closeReportModal() {
     document.getElementById('reportModal').style.display = 'none';
 }
+
+function setView(type) {
+    const listEl = document.getElementById('view-list');
+    const gridEl = document.getElementById('view-grid');
+    const btnList = document.getElementById('btn-list-view');
+    const btnGrid = document.getElementById('btn-grid-view');
+
+    if (type === 'grid') {
+        listEl.style.display = 'none';
+        gridEl.style.display = 'block';
+        btnList.classList.remove('active');
+        btnGrid.classList.add('active');
+    } else {
+        listEl.style.display = 'block';
+        gridEl.style.display = 'none';
+        btnList.classList.add('active');
+        btnGrid.classList.remove('active');
+    }
+    localStorage.setItem('admin_orders_view', type);
+}
+
+// Restore saved view preference
+document.addEventListener('DOMContentLoaded', function() {
+    const saved = localStorage.getItem('admin_orders_view') || 'list';
+    setView(saved);
+});
 </script>
 @endpush
 
