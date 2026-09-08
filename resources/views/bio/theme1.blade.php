@@ -757,7 +757,15 @@
 
         {{-- Footer --}}
         <div class="footer-bio">
-            <a href="{{ url('/') }}" target="_blank">Powered by buyle.id</a>
+            <a href="{{ url('/') }}" target="_blank">
+                @php $footerLogo = \App\Models\Setting::get('logo'); @endphp
+                @if($footerLogo)
+                    <img src="{{ asset('storage/' . $footerLogo) }}" alt="buyle.id"
+                         style="height:30px; width:auto; object-fit:contain;">
+                @else
+                    <span style="font-weight:600; color:var(--text);">buyle.id</span>
+                @endif
+            </a>
         </div>
     </div>
 
