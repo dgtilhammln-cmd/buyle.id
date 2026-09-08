@@ -1261,7 +1261,7 @@
                     </div>
                     <div class="card-body">
                         @php
-                            $typeBlocks = $blocks->whereIn('type', ['link', 'pdf', 'tiktok']);
+                            $typeBlocks = $blocks;
                         @endphp
                         @forelse($typeBlocks as $block)
                             <div class="block-item" style="{{ !$block->is_active ? 'opacity:0.5;' : '' }}">
