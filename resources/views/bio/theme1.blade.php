@@ -806,7 +806,7 @@
                         utm_campaign:urlParams.get('utm_campaign') || null,
                         utm_content: urlParams.get('utm_content') || null,
                     };
-                    navigator.sendBeacon('{{ url('/track/bio-click') }}', new Blob([JSON.stringify(payload)], {type:'application/json'}));
+                    navigator.sendBeacon('{{ url('/track-bio') }}', new Blob([JSON.stringify(payload)], {type:'application/json'}));
                 }, { passive: true });
             });
         });

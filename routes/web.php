@@ -183,9 +183,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-// Tracking endpoints
+// Tracking endpoints — bio-click HARUS di atas wildcard {type}
+Route::post('/track-bio', [TrackingController::class, 'bioClick'])->name('track.bio-click');
 Route::post('/track/{type}', [TrackingController::class, 'track'])->name('track');
-Route::post('/track/bio-click', [TrackingController::class, 'bioClick'])->name('track.bio-click');
 
 // Webhook Midtrans — DEDICATED controller, reply < 1 detik, proses di queue
 // (Route ini dikecualikan dari CSRF di bootstrap/app.php)

@@ -21,29 +21,34 @@ class TrackingController extends Controller
     }
 
     /**
-     * Record a bio link block click event (AJAX, public).
+     * Record a bio link block click event (AJAX via sendBeacon, public).
+     * sendBeacon sends Content-Type: application/json — must decode manually.
      */
     public function bioClick(Request $request)
     {
-        $validated = $request->validate([
-            'block_id'    => 'nullable|integer',
-            'creator_id'  => 'nullable|integer',
-            'url'         => 'nullable|string|max:2000',
-            'title'       => 'nullable|string|max:255',
-            'utm_source'  => 'nullable|string|max:100',
-            'utm_medium'  => 'nullable|string|max:100',
-            'utm_campaign'=> 'nullable|string|max:200',
-            'utm_content' => 'nullable|string|max:200',
-        ]);
+        // sendBeacon POSTs raw JSON — merge into request so validate() can read it
+        if ($request->isJson() || str_contains($request->header('Content-Type', ''), 'application/json')) {
+            $json = json_decode($request->getContent(), true) ?? [];
+            $request->merge($json);
+        }
 
-        AnalyticsEvent::record('bio_link_click', $validated['url'] ?? request()->header('referer'), [
-            'page_title'    => $validated['title'] ?? null,
-            'bio_block_id'  => $validated['block_id'] ?? null,
-            'bio_creator_id'=> $validated['creator_id'] ?? null,
-            'utm_source'    => $validated['utm_source'] ?? null,
-            'utm_medium'    => $validated['utm_medium'] ?? null,
-            'utm_campaign'  => $validated['utm_campaign'] ?? null,
-            'utm_content'   => $validated['utm_content'] ?? null,
+        $blockId    = $request->input('block_id');
+        $creatorId  = $request->input('creator_id');
+        $url        = $request->input('url');
+        $title      = $request->input('title');
+        $utmSource  = $request->input('utm_source');
+        $utmMedium  = $request->input('utm_medium');
+        $utmCampaign= $request->input('utm_campaign');
+        $utmContent = $request->input('utm_content');
+
+        AnalyticsEvent::record('bio_link_click', $url ?? request()->header('referer'), [
+            'page_title'     => $title,
+            'bio_block_id'   => $blockId  ? (int) $blockId  : null,
+            'bio_creator_id' => $creatorId ? (int) $creatorId : null,
+            'utm_source'     => $utmSource,
+            'utm_medium'     => $utmMedium,
+            'utm_campaign'   => $utmCampaign,
+            'utm_content'    => $utmContent,
         ]);
 
         return response()->json(['ok' => true]);
