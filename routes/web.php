@@ -413,6 +413,14 @@ Route::prefix('admin')->group(function () {
         Route::get('/whitelabel-approval',                      [\App\Http\Controllers\Admin\AdminWhiteLabelController::class, 'index'])->name('admin.whitelabel.index');
         Route::post('/whitelabel-approval/{product}/approve',    [\App\Http\Controllers\Admin\AdminWhiteLabelController::class, 'approve'])->name('admin.whitelabel.approve');
         Route::post('/whitelabel-approval/{product}/reject',     [\App\Http\Controllers\Admin\AdminWhiteLabelController::class, 'reject'])->name('admin.whitelabel.reject');
+
+        // Admin Accounts & Permissions (Manajemen Akun Admin)
+        Route::get('/admin-users',                               [\App\Http\Controllers\Admin\AdminAdminUserController::class, 'index'])->name('admin.admin-users.index');
+        Route::post('/admin-users',                              [\App\Http\Controllers\Admin\AdminAdminUserController::class, 'store'])->name('admin.admin-users.store');
+        Route::put('/admin-users/{adminUser}',                   [\App\Http\Controllers\Admin\AdminAdminUserController::class, 'update'])->name('admin.admin-users.update');
+        Route::post('/admin-users/{adminUser}/password',          [\App\Http\Controllers\Admin\AdminAdminUserController::class, 'updatePassword'])->name('admin.admin-users.password');
+        Route::post('/admin-users/{adminUser}/toggle',            [\App\Http\Controllers\Admin\AdminAdminUserController::class, 'toggleActive'])->name('admin.admin-users.toggle');
+        Route::delete('/admin-users/{adminUser}',                [\App\Http\Controllers\Admin\AdminAdminUserController::class, 'destroy'])->name('admin.admin-users.destroy');
     });
 });
 

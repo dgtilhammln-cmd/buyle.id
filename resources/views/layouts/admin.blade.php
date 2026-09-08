@@ -407,8 +407,11 @@ button.btn-primary:hover, a.btn-primary:hover {
 
 <div id="sb-overlay" onclick="closeSb()"></div>
 
-<!-- SIDEBAR CAPSULE HOVER-EXPAND -->
+  <!-- SIDEBAR CAPSULE HOVER-EXPAND -->
 <aside id="sidebar">
+  @php
+    $uPerm = auth()->user();
+  @endphp
   {{-- CARD 1: BRAND & UTAMA --}}
   <div class="sb-capsule-card">
     <div class="sb-brand-wrapper">
@@ -425,6 +428,7 @@ button.btn-primary:hover, a.btn-primary:hover {
       </a>
     </div>
 
+    @if(!$uPerm || $uPerm->hasMenuPermission('dashboard'))
     <a href="{{ route('admin.dashboard') }}" class="sb-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" title="Dashboard">
       <div class="sb-link-icon">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
@@ -438,7 +442,9 @@ button.btn-primary:hover, a.btn-primary:hover {
       </div>
       <span class="sb-link-text">Analytics</span>
     </a>
+    @endif
 
+    @if(!$uPerm || $uPerm->hasMenuPermission('articles'))
     <a href="{{ route('admin.articles.index') }}" class="sb-link {{ request()->routeIs('admin.articles*') ? 'active' : '' }}" title="Artikel">
       <div class="sb-link-icon">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
@@ -466,17 +472,21 @@ button.btn-primary:hover, a.btn-primary:hover {
       </div>
       <span class="sb-link-text">Testimoni</span>
     </a>
+    @endif
   </div>
 
   {{-- CARD 2: E-COMMERCE & DATA --}}
   <div class="sb-capsule-card">
+    @if(!$uPerm || $uPerm->hasMenuPermission('orders'))
     <a href="{{ route('admin.orders.index') }}" class="sb-link {{ request()->routeIs('admin.orders*') ? 'active' : '' }}" title="Pesanan">
       <div class="sb-link-icon">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
       </div>
       <span class="sb-link-text">Pesanan</span>
     </a>
+    @endif
 
+    @if(!$uPerm || $uPerm->hasMenuPermission('products'))
     <a href="{{ route('admin.coupons.index') }}" class="sb-link {{ request()->routeIs('admin.coupons*') ? 'active' : '' }}" title="Kupon / Voucher">
       <div class="sb-link-icon">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
@@ -506,14 +516,18 @@ button.btn-primary:hover, a.btn-primary:hover {
       </div>
       <span class="sb-link-text">Kurir & Pengiriman</span>
     </a>
+    @endif
 
+    @if(!$uPerm || $uPerm->hasMenuPermission('buyers'))
     <a href="{{ route('admin.users.index') }}" class="sb-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}" title="Pengguna (Buyer)">
       <div class="sb-link-icon">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
       </div>
       <span class="sb-link-text">Pengguna (Buyer)</span>
     </a>
+    @endif
 
+    @if(!$uPerm || $uPerm->hasMenuPermission('leads'))
     @php $newLeads = \App\Models\Lead::where('status','new')->count(); @endphp
     <a href="{{ route('admin.leads.index') }}" class="sb-link {{ request()->routeIs('admin.leads*') ? 'active' : '' }}" title="Laporan Chat">
       <div class="sb-link-icon">
@@ -522,7 +536,9 @@ button.btn-primary:hover, a.btn-primary:hover {
       <span class="sb-link-text">Laporan Chat</span>
       @if($newLeads > 0)<span class="sb-badge">{{ $newLeads }}</span>@endif
     </a>
+    @endif
 
+    @if(!$uPerm || $uPerm->hasMenuPermission('reports'))
     @php $pendingReportsCount = \App\Models\Report::where('status', 'pending')->count(); @endphp
     <a href="{{ route('admin.reports.index') }}" class="sb-link {{ request()->routeIs('admin.reports*') ? 'active' : '' }}" title="Laporan Penyalahgunaan">
       <div class="sb-link-icon">
@@ -531,7 +547,9 @@ button.btn-primary:hover, a.btn-primary:hover {
       <span class="sb-link-text">Laporan Penyalahgunaan</span>
       @if($pendingReportsCount > 0)<span class="sb-badge">{{ $pendingReportsCount }}</span>@endif
     </a>
+    @endif
 
+    @if(!$uPerm || $uPerm->hasMenuPermission('banners'))
     <a href="{{ route('admin.hero_slides.index') }}" class="sb-link {{ request()->routeIs('admin.hero_slides*') ? 'active' : '' }}" title="Banner Hero">
       <div class="sb-link-icon">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
@@ -552,10 +570,12 @@ button.btn-primary:hover, a.btn-primary:hover {
       </div>
       <span class="sb-link-text">Promo & Deals</span>
     </a>
+    @endif
   </div>
 
   {{-- CARD 3: PENGATURAN & AKSI --}}
   <div class="sb-capsule-card" style="margin-top: auto;">
+    @if(!$uPerm || $uPerm->hasMenuPermission('settings'))
     <a href="{{ route('admin.notifications.index') }}" class="sb-link {{ request()->routeIs('admin.notifications*') ? 'active' : '' }}" title="Notifikasi">
       <div class="sb-link-icon">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
@@ -576,6 +596,16 @@ button.btn-primary:hover, a.btn-primary:hover {
       </div>
       <span class="sb-link-text">API & Integrasi</span>
     </a>
+    @endif
+
+    @if(!$uPerm || $uPerm->hasMenuPermission('admin_users'))
+    <a href="{{ route('admin.admin-users.index') }}" class="sb-link {{ request()->routeIs('admin.admin-users*') ? 'active' : '' }}" title="Akun Admin & Akses">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+      </div>
+      <span class="sb-link-text">Akun Admin & Akses</span>
+    </a>
+    @endif
 
     <a href="{{ url('/') }}" target="_blank" class="sb-link" title="Lihat Website">
       <div class="sb-link-icon">

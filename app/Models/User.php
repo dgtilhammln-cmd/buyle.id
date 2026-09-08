@@ -13,7 +13,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    protected $fillable = ['name', 'email', 'password', 'username', 'phone', 'avatar', 'google_id', 'role', 'is_active', 'last_seen_at'];
+    protected $fillable = ['name', 'email', 'password', 'username', 'phone', 'avatar', 'google_id', 'role', 'menu_permissions', 'is_active', 'last_seen_at'];
     protected $hidden = ['password', 'remember_token'];
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -22,6 +22,24 @@ class User extends Authenticatable
     {
         return \Illuminate\Support\Facades\Cache::has('user-is-online-' . $this->id);
     }
+
+    /**
+     * Cek apakah user admin memiliki izin akses ke menu tertentu.
+     */
+    public function hasMenuPermission(string $menuKey): bool
+    {
+        if (in_array($this->role, ['super_admin', 'admin_super'])) {
+            return true;
+        }
+        if (!in_array($this->role, ['admin', 'super_admin'])) {
+            return false;
+        }
+        if (is_null($this->menu_permissions)) {
+            return true; // Default full access jika belum di-set terbatas
+        }
+        return in_array($menuKey, (array) $this->menu_permissions);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -33,6 +51,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
             'last_seen_at'      => 'datetime',
+            'menu_permissions'  => 'array',
         ];
     }
 
