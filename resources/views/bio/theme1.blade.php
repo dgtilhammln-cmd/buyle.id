@@ -73,12 +73,20 @@
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=3">
 
     <style>
-        :root {
-            --accent: #a1ff5a;
-            --glass: rgba(255, 255, 255, 0.06);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --side: 24px;
-        }
+:root {
+    --accent: #a1ff5a;
+    --glass: rgba(255, 255, 255, 0.06);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --side: 24px;
+    /* Tab styling variables */
+    --tab-bg: var(--glass);
+    --tab-active-bg: var(--accent);
+    --tab-text: #64748b;
+    --tab-active-text: #fff;
+    --tab-border: var(--glass-border);
+    --tab-radius: 12px;
+    --tab-padding: 0.85rem 1rem;
+}
 
         *,
         *::before,

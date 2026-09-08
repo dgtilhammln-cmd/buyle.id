@@ -54,14 +54,14 @@
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            padding: 0.85rem 1rem;
+            padding: var(--tab-padding);
             border: none;
-            background: transparent;
-            color: #64748b;
+            background: var(--tab-bg);
+            color: var(--tab-text);
             font-family: 'Montserrat', sans-serif;
             font-size: 0.85rem;
             font-weight: 600;
-            border-radius: 12px;
+            border-radius: var(--tab-radius);
             cursor: pointer;
             text-align: left;
             transition: all 0.2s;
@@ -70,12 +70,12 @@
 
         .tab-btn:hover {
             background: #f8fafc;
-            color: #1eb349;
+            color: var(--accent);
         }
 
         .tab-btn.active {
-            background: linear-gradient(135deg, #1eb349, #a5cf37);
-            color: #fff;
+            background: var(--tab-active-bg);
+            color: var(--tab-active-text);
             font-weight: 700;
             box-shadow: 0 4px 12px rgba(30, 179, 73, 0.2);
         }
