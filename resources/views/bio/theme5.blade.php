@@ -948,7 +948,7 @@
                         </div>
                         <div class="tiktok-highlights-wrap">
                             @foreach($tiktokBlocks as $b)
-                                <a href="{{ $b->url }}" target="_blank" class="tiktok-card-item tt-fetch search-item" data-title="TikTok Video" data-url="{{ $b->url }}">
+                                <a href="{{ $b->url }}" target="_blank" class="tiktok-card-item tt-fetch search-item bio-track-link" data-title="TikTok Video" data-url="{{ $b->url }}" data-bio-block="{{ $b->id }}" data-bio-creator="{{ $profile->id }}">
                                     <img src="" alt="TikTok" class="tt-thumb" style="opacity:0; transition:opacity 0.3s;">
                                     <div class="tiktok-card-overlay">
                                         <span class="tt-brand-icon"><i class="fab fa-tiktok"></i></span>
@@ -1110,6 +1110,24 @@
                         if (data.thumbnail_url) { img.src = data.thumbnail_url; img.style.opacity = '1'; }
                     })
                     .catch(() => { img.src = 'https://placehold.co/140x220/111/fff?text=TikTok'; img.style.opacity = '1'; });
+            });
+
+            // Bio Link Click Tracker
+            document.querySelectorAll('.bio-track-link').forEach(function(el) {
+                el.addEventListener('click', function() {
+                    var urlParams = new URLSearchParams(window.location.search);
+                    var payload = {
+                        block_id:    this.dataset.bioBlock || null,
+                        creator_id:  this.dataset.bioCreator || null,
+                        url:         this.href || null,
+                        title:       this.dataset.title || null,
+                        utm_source:  urlParams.get('utm_source') || null,
+                        utm_medium:  urlParams.get('utm_medium') || null,
+                        utm_campaign:urlParams.get('utm_campaign') || null,
+                        utm_content: urlParams.get('utm_content') || null,
+                    };
+                    navigator.sendBeacon(window.location.origin + '/track/bio-click', new Blob([JSON.stringify(payload)], {type:'application/json'}));
+                }, { passive: true });
             });
         });
     </script>

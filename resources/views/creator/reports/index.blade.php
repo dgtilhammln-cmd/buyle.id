@@ -123,7 +123,7 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-/* ── Metric Cards ────────────────────────────────────────── */
+/* ── Metric Cards ──────────────────────────────────── */
 .metrics-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -295,9 +295,11 @@
 @media (max-width: 1100px) {
     .main-grid { grid-template-columns: 1fr; }
     .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    .metrics-grid .dark[style*="span 4"] { grid-column: span 2 !important; }
 }
 @media (max-width: 600px) {
     .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+    .metrics-grid .dark[style*="span 4"] { grid-column: span 2 !important; }
     .metric-card { padding: 0.85rem 1rem; }
     .metric-value { font-size: 1.05rem; }
     .rp-title { font-size: 1.3rem; }
@@ -307,6 +309,7 @@
 }
 @media (max-width: 420px) {
     .metrics-grid { grid-template-columns: 1fr; }
+    .metrics-grid .dark[style*="span 4"] { grid-column: span 1 !important; }
 }
 </style>
 @endsection
@@ -372,7 +375,11 @@
         <div class="metric-label">Total Transaksi</div>
         <div class="metric-value">{{ number_format($totalOrders) }}</div>
     </div>
-    <div class="metric-card dark">
+    <div class="metric-card">
+        <div class="metric-label">Link Klik Bio</div>
+        <div class="metric-value">{{ number_format($totalBioClicks) }}</div>
+    </div>
+    <div class="metric-card dark" style="grid-column: span 4;">
         <div class="metric-label">Total Penjualan</div>
         <div class="metric-value">Rp {{ number_format($totalSales, 0, ',', '.') }}</div>
     </div>
@@ -471,9 +478,38 @@
             @endforelse
         </div>
 
-        {{-- UTM Sources --}}
+        {{-- Top Bio Link Clicks --}}
+        <div class="panel-card side-panel">
+            <h3 class="panel-title" style="margin-bottom:1rem;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                Klik Link Bio
+            </h3>
+            @forelse($topBioLinks as $link)
+                <div class="list-row">
+                    <div class="list-name">{{ Str::limit($link->page_title ?? 'Block #'.$link->bio_block_id, 32) }}</div>
+                    <div class="list-stat">{{ number_format($link->click_count) }} klik</div>
+                </div>
+            @empty
+                <p style="font-size:0.82rem; color:#94a3b8; margin:0;">Belum ada klik link bio tercatat.</p>
+            @endforelse
+        </div>
+
+        {{-- Bio UTM Sources --}}
+        @if($bioUtmSources->isNotEmpty())
+        <div class="panel-card side-panel">
+            <h3 class="panel-title" style="margin-bottom:1rem;">Sumber Trafik Bio</h3>
+            @foreach($bioUtmSources as $utm)
+                <div class="list-row">
+                    <div class="list-name">{{ $utm->utm_source }}</div>
+                    <div class="list-stat">{{ number_format($utm->count) }} klik</div>
+                </div>
+            @endforeach
+        </div>
+        @endif
+
+        {{-- UTM Sources (orders) --}}
         <div class="panel-card">
-            <h3 class="panel-title" style="margin-bottom:1rem;">Sumber Trafik</h3>
+            <h3 class="panel-title" style="margin-bottom:1rem;">Sumber Trafik Order</h3>
             @forelse($utmSources as $utm)
                 <div class="list-row">
                     <div class="list-name">{{ $utm->utm_source }}</div>

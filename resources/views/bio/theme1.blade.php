@@ -621,7 +621,7 @@
             <span class="section-label fade-up" style="animation-delay:0.25s">Highlights</span>
             <div class="slider-wrap fade-up" style="animation-delay:0.3s">
                 @foreach($tiktokBlocks as $b)
-                    <a href="{{ $b->url }}" target="_blank" class="video-card tt-fetch search-item" data-title="TikTok Video" data-url="{{ $b->url }}">
+                    <a href="{{ $b->url }}" target="_blank" class="video-card tt-fetch search-item bio-track-link" data-title="TikTok Video" data-url="{{ $b->url }}" data-bio-block="{{ $b->id }}" data-bio-creator="{{ $profile->id }}">
                         <img src="" alt="TikTok" class="tt-thumb" style="opacity:0; transition:opacity 0.3s;">
                         <span class="tt-icon"><i class="fab fa-tiktok" style="font-size:16px;"></i></span>
                         <span class="watch-label">Watch Video</span>
@@ -635,7 +635,8 @@
             <span class="section-label fade-up" style="animation-delay:0.3s">Links</span>
             <div class="link-stack">
                 @foreach($linkBlocks as $i => $block)
-                    <a href="{{ $block->url }}" target="_blank" class="glass-btn fade-up search-item" data-title="{{ $block->title }}"
+                    <a href="{{ $block->url }}" target="_blank" class="glass-btn fade-up search-item bio-track-link" data-title="{{ $block->title }}"
+                        data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}"
                         style="animation-delay:{{ 0.35 + $i * 0.05 }}s">
                         <div class="btn-icon">
                             @if(!empty($block->data_json['icon_class']))
@@ -665,7 +666,7 @@
             <span class="section-label fade-up" style="animation-delay:0.4s">Produk Rekomendasi</span>
             <div class="product-grid fade-up" style="animation-delay:0.45s">
                 @foreach($affBlocks as $index => $block)
-                    <a href="{{ $block->url }}" target="_blank" class="prod-card search-item" data-title="{{ $block->title }}">
+                    <a href="{{ $block->url }}" target="_blank" class="prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
                         <div class="prod-img-wrap">
                             <div class="prod-number">{{ sprintf('%02d', $index + 1) }}</div>
 
@@ -700,7 +701,7 @@
                         $price = $block->data_json['price'] ?? 0;
                         $origPrice = $block->data_json['original_price'] ?? null;
                     @endphp
-                    <a href="{{ $prodUrl }}" class="prod-card search-item" data-title="{{ $block->title }} {{ $price }} {{ $config['wa'] ?? '' }}">
+                    <a href="{{ $prodUrl }}" class="prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
                         <div class="prod-img-wrap">
                             <img src="{{ $img }}" alt="{{ $block->title }}">
                         </div>
@@ -725,7 +726,7 @@
                 @foreach($buyleBlocks as $i => $block)
                     @php $prod = $products[$block->data_json['product_id'] ?? 0] ?? null; @endphp
                     @if($prod)
-                        <a href="{{ $block->url }}" target="_blank" class="prod-card fade-up search-item" data-title="{{ $prod->name }}"
+                        <a href="{{ $block->url }}" target="_blank" class="prod-card fade-up search-item bio-track-link" data-title="{{ $prod->name }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}"
                             style="animation-delay:{{ 0.55 + $i * 0.05 }}s">
                             <div class="prod-img-wrap">
 
@@ -789,6 +790,24 @@
                     .then(data => {                        if (data.thumbnail_url) { img.src = data.thumbnail_url; img.style.opacity = '1'; }
                     })
                     .catch(() => { img.src = 'https://placehold.co/130x200/111/fff?text=TikTok'; img.style.opacity = '1'; });
+            });
+
+            // Bio Link Click Tracker
+            document.querySelectorAll('.bio-track-link').forEach(function(el) {
+                el.addEventListener('click', function() {
+                    var urlParams = new URLSearchParams(window.location.search);
+                    var payload = {
+                        block_id:    this.dataset.bioBlock || null,
+                        creator_id:  this.dataset.bioCreator || null,
+                        url:         this.href || null,
+                        title:       this.dataset.title || null,
+                        utm_source:  urlParams.get('utm_source') || null,
+                        utm_medium:  urlParams.get('utm_medium') || null,
+                        utm_campaign:urlParams.get('utm_campaign') || null,
+                        utm_content: urlParams.get('utm_content') || null,
+                    };
+                    navigator.sendBeacon('{{ url('/track/bio-click') }}', new Blob([JSON.stringify(payload)], {type:'application/json'}));
+                }, { passive: true });
             });
         });
     </script>

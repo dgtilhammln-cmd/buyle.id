@@ -20,6 +20,7 @@ return $builder->withMiddleware(function (Middleware $middleware): void {
         // Kecualikan webhook Midtrans dari CSRF (Midtrans POST tanpa CSRF token)
         $middleware->validateCsrfTokens(except: [
             'payment/callback',
+            'track/bio-click',
         ]);
 
         // Register custom middleware aliases

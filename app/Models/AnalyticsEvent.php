@@ -9,7 +9,9 @@ class AnalyticsEvent extends Model
 {
     protected $fillable = [
         'event_type', 'page_url', 'page_title', 'referrer',
-        'user_agent', 'ip_address', 'country', 'device_type'
+        'user_agent', 'ip_address', 'country', 'device_type',
+        'bio_block_id', 'bio_creator_id',
+        'utm_source', 'utm_medium', 'utm_campaign', 'utm_content',
     ];
 
     protected $casts = [

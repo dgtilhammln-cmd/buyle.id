@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Creator;
 
 use App\Http\Controllers\Controller;
 use App\Enums\PaymentStatus;
+use App\Models\AnalyticsEvent;
+use App\Models\CreatorProfile;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVisit;
@@ -131,10 +133,48 @@ class SellerReportController extends Controller
         // ── 5. Buyers list ─────────────────────────────────────────────────────
         $buyers = $allOrders;
 
+        // ── 6. Bio Link Click Stats ────────────────────────────────────────────
+        $totalBioClicks = 0;
+        $topBioLinks    = collect();
+        $bioUtmSources  = collect();
+        if (Schema::hasColumn('analytics_events', 'bio_creator_id')) {
+            // Get creator profile to find ID
+            $creatorProfile = CreatorProfile::where('user_id', $seller->id)->first();
+            if ($creatorProfile) {
+                $bioBase = AnalyticsEvent::where('event_type', 'bio_link_click')
+                    ->where('bio_creator_id', $creatorProfile->id)
+                    ->whereBetween('created_at', [$startDate, $endDate]);
+
+                $totalBioClicks = (clone $bioBase)->count();
+
+                // Top clicked blocks
+                $topBioLinks = (clone $bioBase)
+                    ->select('bio_block_id', 'page_title', DB::raw('COUNT(*) as click_count'))
+                    ->groupBy('bio_block_id', 'page_title')
+                    ->orderByDesc('click_count')
+                    ->limit(10)
+                    ->get();
+
+                // UTM sources for bio clicks
+                $bioUtmSources = (clone $bioBase)
+                    ->select('utm_source', DB::raw('COUNT(*) as count'))
+                    ->groupBy('utm_source')
+                    ->orderByDesc('count')
+                    ->get()
+                    ->map(function ($row) {
+                        $row->utm_source = ($row->utm_source && $row->utm_source !== '')
+                            ? $row->utm_source
+                            : 'Organic / Direct';
+                        return $row;
+                    });
+            }
+        }
+
         return view('creator.reports.index', compact(
             'filter', 'startDate', 'endDate',
             'totalSales', 'totalOrders', 'totalVisitors', 'uniqueVisitors',
-            'topProducts', 'utmSources', 'buyers', 'visitorsByDate'
+            'topProducts', 'utmSources', 'buyers', 'visitorsByDate',
+            'totalBioClicks', 'topBioLinks', 'bioUtmSources'
         ));
     }
 
