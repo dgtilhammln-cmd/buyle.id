@@ -6,7 +6,7 @@
     <style>
         /* ── Compact, Minimal & Proportional Order Detail ── */
         .od-page {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Montserrat', sans-serif;
             color: #1E293B;
         }
 

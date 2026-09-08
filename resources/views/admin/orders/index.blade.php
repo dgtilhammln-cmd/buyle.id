@@ -6,7 +6,7 @@
 <style>
     /* ── Minimalist Orders Page System ── */
     .opage {
-        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        font-family: 'Montserrat', sans-serif;
     }
 
     /* Page Header */
