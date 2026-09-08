@@ -14,9 +14,10 @@ class AdminOrderController extends Controller
     // Tab config: [label, status values or null for all, key]
     private array $tabs = [
         'all'        => ['label' => 'Semua',         'statuses' => null],
-        'processing' => ['label' => 'Perlu Dikirim', 'statuses' => ['confirmed','processing']],
+        'processing' => ['label' => 'Perlu Dikirim', 'statuses' => ['processing']],
         'shipped'    => ['label' => 'Dikirim',       'statuses' => ['shipped']],
-        'completed'  => ['label' => 'Selesai',       'statuses' => ['completed','delivered']],
+        'completed'  => ['label' => 'Selesai',       'statuses' => ['confirmed','completed','delivered']],
+        'omset'      => ['label' => 'Riwayat Omset & Keuangan', 'statuses' => null],
     ];
 
     public function index(Request $request)
@@ -29,6 +30,7 @@ class AdminOrderController extends Controller
         $endDate   = $request->get('end_date');
 
         $query = Order::with(['user', 'items.product.seller', 'payment', 'shipment'])
+            ->where('status', '!=', OrderStatus::Pending)
             ->orderByDesc('created_at');
 
         // Date / Period Filter
@@ -70,7 +72,7 @@ class AdminOrderController extends Controller
         $orders = $query->paginate(20)->withQueryString();
 
         // Stats calculation for 5 top cards (filtered by period/dates)
-        $statsBase = Order::query();
+        $statsBase = Order::query()->where('status', '!=', OrderStatus::Pending);
         if ($startDate && $endDate) {
             $statsBase->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
         } else {
@@ -85,10 +87,18 @@ class AdminOrderController extends Controller
 
         $stats = [
             'total'      => (clone $statsBase)->count(),
-            'processing' => (clone $statsBase)->whereIn('status', ['confirmed', 'processing'])->count(),
+            'processing' => (clone $statsBase)->whereIn('status', ['processing'])->count(),
             'shipped'    => (clone $statsBase)->whereIn('status', ['shipped'])->count(),
-            'completed'  => (clone $statsBase)->whereIn('status', ['completed', 'delivered'])->count(),
+            'completed'  => (clone $statsBase)->whereIn('status', ['confirmed', 'completed', 'delivered'])->count(),
             'revenue'    => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('total'),
+        ];
+
+        $revenueStats = [
+            'gross'        => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('total'),
+            'subtotal'     => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('subtotal'),
+            'admin_fee'    => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('admin_fee'),
+            'platform_fee' => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('platform_fee'),
+            'profit'       => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->selectRaw('SUM(COALESCE(admin_fee,0) + COALESCE(platform_fee,0)) as profit')->value('profit') ?? 0,
         ];
 
         // Tab counts
@@ -102,15 +112,16 @@ class AdminOrderController extends Controller
         }
 
         return view('admin.orders.index', [
-            'orders'     => $orders,
-            'tab'        => $tab,
-            'tabs'       => $this->tabs,
-            'counts'     => $counts,
-            'stats'      => $stats,
-            'q'          => $q ?? '',
-            'period'     => $period,
-            'start_date' => $startDate ?? '',
-            'end_date'   => $endDate ?? '',
+            'orders'       => $orders,
+            'tab'          => $tab,
+            'tabs'         => $this->tabs,
+            'counts'       => $counts,
+            'stats'        => $stats,
+            'revenueStats' => $revenueStats,
+            'q'            => $q ?? '',
+            'period'       => $period,
+            'start_date'   => $startDate ?? '',
+            'end_date'     => $endDate ?? '',
         ]);
     }
 

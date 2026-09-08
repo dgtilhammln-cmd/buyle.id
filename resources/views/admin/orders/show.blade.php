@@ -4,9 +4,10 @@
 @section('content')
 
     <style>
-        /* ── Premium Order Detail Page ── */
+        /* ── Compact, Minimal & Proportional Order Detail ── */
         .od-page {
-            font-family: 'Montserrat', sans-serif;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #1E293B;
         }
 
         /* Top Navigation */
@@ -14,51 +15,48 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.25rem;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .od-back {
             display: inline-flex;
             align-items: center;
-            gap: .5rem;
-            color: #64748B;
+            gap: 0.4rem;
+            color: #475569;
             text-decoration: none;
-            font-size: .85rem;
-            font-weight: 800;
-            transition: all .2s;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            transition: all .15s ease;
             background: #fff;
-            padding: .65rem 1.25rem;
-            border-radius: 99px;
-            border: 1.5px solid #E2E8F0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+            padding: 0.45rem 0.85rem;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
         }
 
         .od-back:hover {
             color: #0F172A;
             border-color: #CBD5E1;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            background: #F8FAFC;
         }
 
         /* Status Pill Header */
         .od-status-pill {
-            padding: .5rem 1.25rem;
+            padding: 0.35rem 0.85rem;
             border-radius: 99px;
-            font-size: .85rem;
-            font-weight: 800;
+            font-size: 0.775rem;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
-            gap: .5rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            gap: 0.4rem;
         }
 
         /* Grids */
         .od-grid {
             display: grid;
-            grid-template-columns: 2fr 1.2fr;
-            gap: 1.75rem;
+            grid-template-columns: 1.8fr 1.2fr;
+            gap: 1.25rem;
             align-items: start;
         }
 
@@ -71,23 +69,23 @@
         /* Cards */
         .od-card {
             background: #fff;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03);
-            border: 1.5px solid #F1F5F9;
-            margin-bottom: 1.75rem;
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+            border: 1px solid #E2E8F0;
+            margin-bottom: 1.25rem;
         }
 
         .od-card-title {
-            font-size: 1.1rem;
-            font-weight: 800;
+            font-size: 0.875rem;
+            font-weight: 600;
             color: #0F172A;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            gap: .65rem;
-            border-bottom: 2px dashed #F1F5F9;
-            padding-bottom: 1rem;
+            gap: 0.5rem;
+            border-bottom: 1px solid #F1F5F9;
+            padding-bottom: 0.65rem;
         }
 
         /* Product Table */
@@ -98,18 +96,18 @@
 
         .od-table th {
             text-align: left;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #F1F5F9;
-            color: #94A3B8;
-            font-size: .75rem;
+            padding-bottom: 0.65rem;
+            border-bottom: 1px solid #F1F5F9;
+            color: #64748B;
+            font-size: 0.725rem;
             text-transform: uppercase;
-            font-weight: 800;
-            letter-spacing: .05em;
+            font-weight: 600;
+            letter-spacing: 0.03em;
         }
 
         .od-table td {
-            padding: 1.25rem 0;
-            border-bottom: 1px dashed #F1F5F9;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #F8FAFC;
             vertical-align: middle;
         }
 
@@ -120,155 +118,149 @@
 
         .od-prod {
             display: flex;
-            gap: 1.25rem;
+            gap: 0.75rem;
             align-items: center;
         }
 
         .od-prod-img {
-            width: 64px;
-            height: 64px;
-            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
             object-fit: cover;
-            border: 1.5px solid #E2E8F0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #E2E8F0;
         }
 
         .od-prod-title {
-            font-weight: 800;
-            font-size: .9rem;
+            font-weight: 600;
+            font-size: 0.8375rem;
             color: #0F172A;
-            line-height: 1.4;
+            line-height: 1.35;
         }
 
         .od-prod-var {
-            font-size: .75rem;
+            font-size: 0.725rem;
             color: #64748B;
-            margin-top: .35rem;
-            font-weight: 600;
+            margin-top: 0.15rem;
+            font-weight: 500;
         }
 
         .od-qty {
-            font-weight: 800;
-            font-size: .85rem;
-            color: #475569;
+            font-weight: 500;
+            font-size: 0.8125rem;
+            color: #64748B;
         }
 
         .od-price {
-            font-weight: 800;
-            font-size: .9rem;
+            font-weight: 600;
+            font-size: 0.8375rem;
             color: #0F172A;
             text-align: right;
         }
 
         /* Totals Box */
         .od-totals {
-            margin-top: 2rem;
+            margin-top: 1.25rem;
             background: #F8FAFC;
-            padding: 1.5rem;
-            border-radius: 16px;
-            border: 1.5px dashed #CBD5E1;
+            padding: 0.85rem 1rem;
+            border-radius: 10px;
+            border: 1px solid #E2E8F0;
         }
 
         .od-total-row {
             display: flex;
             justify-content: space-between;
-            font-size: .85rem;
-            font-weight: 600;
+            font-size: 0.8125rem;
+            font-weight: 500;
             color: #475569;
-            margin-bottom: .75rem;
+            margin-bottom: 0.45rem;
         }
 
         .od-total-row:last-child {
             margin-bottom: 0;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 2px solid #E2E8F0;
-            font-size: 1.2rem;
-            color: #EF4444;
-            font-weight: 800;
+            margin-top: 0.65rem;
+            padding-top: 0.65rem;
+            border-top: 1px solid #E2E8F0;
+            font-size: 0.875rem;
+            color: #0F172A;
+            font-weight: 700;
         }
 
         /* Info Lists */
         .od-info-list {
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
+            gap: 0.75rem;
         }
 
         .od-info-item {
             display: flex;
             flex-direction: column;
-            gap: .3rem;
+            gap: 0.15rem;
         }
 
         .od-info-lbl {
-            font-size: .75rem;
-            color: #94A3B8;
-            font-weight: 700;
+            font-size: 0.7rem;
+            color: #64748B;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: .02em;
+            letter-spacing: 0.03em;
         }
 
         .od-info-val {
-            font-size: .9rem;
-            font-weight: 700;
-            color: #1E293B;
-            line-height: 1.5;
+            font-size: 0.8375rem;
+            font-weight: 500;
+            color: #0F172A;
+            line-height: 1.4;
         }
 
         /* Forms */
         .od-form-group {
-            margin-bottom: 1.25rem;
+            margin-bottom: 0.85rem;
         }
 
         .od-label {
             display: block;
-            font-size: .8rem;
-            font-weight: 800;
+            font-size: 0.775rem;
+            font-weight: 600;
             color: #475569;
-            margin-bottom: .5rem;
+            margin-bottom: 0.35rem;
         }
 
         .od-select,
         .od-input {
             width: 100%;
-            padding: .85rem 1rem;
-            border: 1.5px solid #E2E8F0;
-            border-radius: 12px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: .85rem;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            font-size: 0.8125rem;
             outline: none;
-            background: #F8FAFC;
-            font-weight: 600;
-            transition: all .2s;
+            background: #fff;
+            font-weight: 500;
+            transition: all 0.15s ease;
             color: #0F172A;
         }
 
         .od-select:focus,
         .od-input:focus {
-            border-color: #1eb349;
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(30, 179, 73, 0.1);
+            border-color: #10B981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
         }
 
         .od-btn {
             width: 100%;
-            padding: .85rem;
+            padding: 0.55rem 0.85rem;
             background: #0F172A;
             color: #fff;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 800;
-            font-size: .9rem;
+            font-weight: 600;
+            font-size: 0.8125rem;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all .2s;
+            transition: all 0.15s ease;
         }
 
         .od-btn:hover {
             background: #1E293B;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
         }
     </style>
 
@@ -276,15 +268,15 @@
 
         <div class="od-top">
             <a href="{{ route('admin.orders.index') }}" class="od-back">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" viewBox="0 0 24 24">
                     <path d="M19 12H5M12 19l-7-7 7-7" />
                 </svg>
                 Kembali
             </a>
             <div class="od-status-pill"
-                style="background:{{ $order->status->color() === 'red' ? '#FEF2F2' : ($order->status->color() === 'green' ? '#F0FDF4' : ($order->status->color() === 'yellow' ? '#FFFBEB' : '#f0fdf4')) }};color:{{ $order->status->color() === 'red' ? '#DC2626' : ($order->status->color() === 'green' ? '#16A34A' : ($order->status->color() === 'yellow' ? '#D97706' : '#1eb349')) }}; border: 1px solid currentColor;">
-                <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                style="background:{{ $order->status->color() === 'red' ? '#FEF2F2' : ($order->status->color() === 'green' ? '#F0FDF4' : ($order->status->color() === 'yellow' ? '#FFFBEB' : '#F0FDF4')) }};color:{{ $order->status->color() === 'red' ? '#DC2626' : ($order->status->color() === 'green' ? '#16A34A' : ($order->status->color() === 'yellow' ? '#D97706' : '#16A34A')) }}; border: 1px solid currentColor;">
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                     <circle cx="8" cy="8" r="8" />
                 </svg>
                 Status: {{ $order->status->label() }}
@@ -293,13 +285,13 @@
 
         @if(session('success'))
             <div
-                style="background:#F0FDF4;color:#15803D;padding:1rem 1.5rem;border-radius:16px;margin-bottom:2rem;border:1.5px solid #BBF7D0;font-size:.85rem;font-weight:700;box-shadow:0 2px 10px rgba(21,128,61,0.05);">
+                style="background:#F0FDF4;color:#15803D;padding:0.75rem 1rem;border-radius:8px;margin-bottom:1.25rem;border:1px solid #BBF7D0;font-size:.8125rem;font-weight:600;">
                 ✓ {{ session('success') }}
             </div>
         @endif
         @if(session('error'))
             <div
-                style="background:#FEF2F2;color:#DC2626;padding:1rem 1.5rem;border-radius:16px;margin-bottom:2rem;border:1.5px solid #FECACA;font-size:.85rem;font-weight:700;box-shadow:0 2px 10px rgba(220,38,38,0.05);">
+                style="background:#FEF2F2;color:#DC2626;padding:0.75rem 1rem;border-radius:8px;margin-bottom:1.25rem;border:1px solid #FECACA;font-size:.8125rem;font-weight:600;">
                 ! {{ session('error') }}
             </div>
         @endif
@@ -310,7 +302,7 @@
             <div>
                 <div class="od-card">
                     <div class="od-card-title">
-                        <svg width="24" height="24" fill="none" stroke="#EF4444" stroke-width="2.5" viewBox="0 0 24 24">
+                        <svg width="18" height="18" fill="none" stroke="#64748B" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z M3 6h18 M16 10a4 4 0 0 1-8 0" />
                         </svg>
                         Daftar Produk Dipesan
@@ -357,13 +349,13 @@
                             <span>Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
                         </div>
                         @if($order->platform_fee > 0)
-                        <div class="od-total-row" style="color:#F59E0B;">
+                        <div class="od-total-row" style="color:#D97706;">
                             <span>Platform Fee (5%)</span>
                             <span>+ Rp {{ number_format($order->platform_fee, 0, ',', '.') }}</span>
                         </div>
                         @endif
                         @if(isset($order->admin_fee) && $order->admin_fee > 0)
-                        <div class="od-total-row" style="color:#F59E0B;">
+                        <div class="od-total-row" style="color:#D97706;">
                             <span>Admin Fee (5%)</span>
                             <span>+ Rp {{ number_format($order->admin_fee, 0, ',', '.') }}</span>
                         </div>
@@ -385,14 +377,14 @@
                 {{-- Shipping Address --}}
                 <div class="od-card">
                     <div class="od-card-title">
-                        <svg width="24" height="24" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
+                        <svg width="18" height="18" fill="none" stroke="#64748B" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
                         </svg>
                         Informasi Pengiriman
                     </div>
                     @if($order->shipping_address)
                         <div class="od-info-list"
-                            style="background:#F8FAFC;padding:1.5rem;border-radius:12px;border:1px solid #E2E8F0;">
+                            style="background:#F8FAFC;padding:1rem;border-radius:10px;border:1px solid #E2E8F0;">
                             <div class="od-info-item">
                                 <span class="od-info-lbl">Penerima</span>
                                 <span class="od-info-val">{{ $order->shipping_address['receiver_name'] ?? '-' }}</span>
@@ -406,7 +398,7 @@
                                 <span class="od-info-val" style="color:#334155;">
                                     {{ $order->shipping_address['full_address'] ?? '-' }}
                                     @if(!empty($order->shipping_address['postal_code']))
-                                        <br><span style="color:#64748B;font-size:.8rem;">Kode Pos:
+                                        <br><span style="color:#64748B;font-size:.75rem;">Kode Pos:
                                             {{ $order->shipping_address['postal_code'] }}</span>
                                     @endif
                                 </span>
@@ -414,7 +406,7 @@
                         </div>
                     @else
                         <div
-                            style="font-size:.85rem;color:#94A3B8;padding:2rem;text-align:center;background:#F8FAFC;border-radius:12px;border:1px dashed #CBD5E1;">
+                            style="font-size:.8125rem;color:#94A3B8;padding:1.25rem;text-align:center;background:#F8FAFC;border-radius:10px;border:1px dashed #CBD5E1;">
                             Tidak ada informasi alamat pengiriman.</div>
                     @endif
                 </div>
@@ -428,13 +420,13 @@
                 @if($order->status === \App\Enums\OrderStatus::Pending)
                     <div class="od-card">
                         <div class="od-card-title">
-                            <svg width="24" height="24" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
+                            <svg width="18" height="18" fill="none" stroke="#64748B" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                             </svg>
                             Kalkulasi Ongkos Kirim
                         </div>
                         <div
-                            style="background:#f0fdf4; padding:1rem; border-radius:10px; font-size:.8rem; color:#1E3A8A; margin-bottom:1.25rem;">
+                            style="background:#F0FDF4; padding:0.75rem; border-radius:8px; font-size:.775rem; color:#166534; margin-bottom:1rem; border: 1px solid #BBF7D0;">
                             Pesanan ini belum dibayar dan ongkos kirim saat ini adalah Rp
                             {{ number_format($order->shipping_cost, 0, ',', '.') }}. Update ongkir di sini sebelum pembeli
                             menyelesaikan pembayaran.
@@ -447,8 +439,7 @@
                                     value="{{ $order->shipping_cost > 0 ? $order->shipping_cost : '' }}" required min="0">
                             </div>
                             <button type="submit" class="od-btn"
-                                style="background:#1eb349;box-shadow:0 4px 12px rgba(30,179,73,0.2);">Simpan Ongkir
-                                Baru</button>
+                                style="background:#10B981;">Simpan Ongkir Baru</button>
                         </form>
                     </div>
                 @endif
@@ -456,7 +447,7 @@
                 {{-- Status Update Form --}}
                 <div class="od-card">
                     <div class="od-card-title">
-                        <svg width="24" height="24" fill="none" stroke="#F59E0B" stroke-width="2.5" viewBox="0 0 24 24">
+                        <svg width="18" height="18" fill="none" stroke="#64748B" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                         </svg>
                         Ubah Status Pesanan
@@ -476,7 +467,7 @@
                         </form>
                     @else
                         <div
-                            style="padding:1rem;background:#F8FAFC;border-radius:12px;font-size:.85rem;color:#64748B;font-weight:600;text-align:center;border:1px dashed #CBD5E1;">
+                            style="padding:0.75rem;background:#F8FAFC;border-radius:8px;font-size:.8125rem;color:#64748B;font-weight:500;text-align:center;border:1px dashed #CBD5E1;">
                             Pesanan ini sudah selesai atau dibatalkan. Status tidak dapat diubah lagi.
                         </div>
                     @endif
@@ -486,7 +477,7 @@
                 @if(in_array($order->status, [\App\Enums\OrderStatus::Processing, \App\Enums\OrderStatus::Shipped]))
                     <div class="od-card">
                         <div class="od-card-title">
-                            <svg width="24" height="24" fill="none" stroke="#10B981" stroke-width="2.5" viewBox="0 0 24 24">
+                            <svg width="18" height="18" fill="none" stroke="#64748B" stroke-width="2" viewBox="0 0 24 24">
                                 <rect x="1" y="3" width="15" height="13" />
                                 <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
                                 <circle cx="5.5" cy="18.5" r="2.5" />
@@ -498,12 +489,12 @@
                         {{-- Info kurir dari checkout buyer (read-only) --}}
                         @if($order->shipment && $order->shipment->courier_name)
                             <div
-                                style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:0.85rem 1.1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.6rem;font-size:0.85rem;">
-                                <svg width="16" height="16" fill="none" stroke="#16A34A" stroke-width="2" viewBox="0 0 24 24">
+                                style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:0.65rem 0.85rem;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;font-size:0.8125rem;">
+                                <svg width="14" height="14" fill="none" stroke="#16A34A" stroke-width="2" viewBox="0 0 24 24">
                                     <path d="M5 13l4 4L19 7" />
                                 </svg>
-                                <span style="color:#15803D;font-weight:700;">Kurir dari Buyer:</span>
-                                <span style="color:#166534;font-weight:800;">{{ strtoupper($order->shipment->courier_name) }}
+                                <span style="color:#15803D;font-weight:600;">Kurir:</span>
+                                <span style="color:#166534;font-weight:700;">{{ strtoupper($order->shipment->courier_name) }}
                                     {{ strtoupper($order->shipment->courier_service ?? '') }}</span>
                             </div>
                         @endif
@@ -514,11 +505,10 @@
                                 <label class="od-label">Nomor Resi / Pelacakan</label>
                                 <input type="text" name="tracking_number" class="od-input" placeholder="Masukkan nomor resi..."
                                     value="{{ $order->shipment->tracking_number ?? '' }}"
-                                    style="font-size:1rem;font-weight:700;letter-spacing:0.05em;" autofocus>
+                                    style="font-size:0.875rem;font-weight:600;letter-spacing:0.03em;" autofocus>
                             </div>
                             <button type="submit" class="od-btn"
-                                style="background:#10B981;box-shadow:0 4px 12px rgba(16,185,129,0.2);">Simpan Nomor
-                                Resi</button>
+                                style="background:#10B981;">Simpan Nomor Resi</button>
                         </form>
                     </div>
                 @endif
@@ -539,7 +529,7 @@
                         <div class="od-info-item">
                             <span class="od-info-lbl">Catatan Pembeli</span>
                             <span class="od-info-val"
-                                style="color:{{ $order->notes ? '#0F172A' : '#94A3B8' }};font-weight:{{ $order->notes ? '700' : '500' }};background:#F8FAFC;padding:1rem;border-radius:12px;margin-top:.3rem;border:1px dashed #E2E8F0;">
+                                style="color:{{ $order->notes ? '#0F172A' : '#94A3B8' }};font-weight:500;background:#F8FAFC;padding:0.75rem;border-radius:8px;margin-top:.2rem;border:1px dashed #E2E8F0;">
                                 {{ $order->notes ?: 'Tidak ada catatan.' }}
                             </span>
                         </div>
