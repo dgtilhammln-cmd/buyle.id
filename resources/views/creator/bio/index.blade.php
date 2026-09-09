@@ -64,20 +64,30 @@
             border-radius: var(--tab-radius);
             cursor: pointer;
             text-align: left;
-            transition: all 0.2s;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
             margin-bottom: 0.2rem;
+            position: relative;
         }
 
         .tab-btn:hover {
-            background: #f8fafc;
-            color: var(--accent);
+            background: #f0fdf4;
+            color: #1eb349;
+            transform: translateY(-1px);
+        }
+
+        .tab-btn:active {
+            transform: scale(0.98);
         }
 
         .tab-btn.active {
-            background: var(--tab-active-bg);
-            color: var(--tab-active-text);
+            background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
+            color: #ffffff !important;
             font-weight: 700;
-            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.2);
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+        }
+
+        .tab-btn.active svg {
+            stroke: #ffffff !important;
         }
 
         .tab-text-full {
@@ -231,12 +241,14 @@
             align-items: center;
             gap: 0.75rem;
             margin-bottom: 0.65rem;
-            transition: all 0.2s;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .block-item:hover {
             border-color: #1eb349;
-            background: #f0fdf4;
+            background: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.12);
         }
 
         .block-icon {

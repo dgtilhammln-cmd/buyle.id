@@ -395,12 +395,13 @@ Route::prefix('admin')->group(function () {
         Route::post('/couriers/{courier}/toggle',    [AdminCourierController::class, 'toggleActive'])->name('admin.couriers.toggle');
         Route::delete('/couriers/{courier}',         [AdminCourierController::class, 'destroy'])->name('admin.couriers.destroy');
 
-        // User Management (Buyers)
+        // User Management (Buyers & Creators)
         Route::get('/users',                                    [AdminUserController::class, 'index'])->name('admin.users.index');
         Route::get('/users/{user}',                             [AdminUserController::class, 'show'])->name('admin.users.show');
         Route::post('/users/{user}/password',                   [AdminUserController::class, 'updatePassword'])->name('admin.users.password');
         Route::post('/users/{user}/toggle',                     [AdminUserController::class, 'toggleActive'])->name('admin.users.toggle');
         Route::delete('/users/{user}/addresses/{address}',      [AdminUserController::class, 'destroyAddress'])->name('admin.users.addresses.destroy');
+        Route::get('/creator-resources',                        [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'index'])->name('admin.creator-resources.index');
 
         // Order Management
         Route::get('/orders/export',                            [\App\Http\Controllers\Admin\AdminOrderController::class, 'export'])->name('admin.orders.export');
