@@ -972,7 +972,7 @@ document.addEventListener('DOMContentLoaded', function () {
             badge.innerHTML=html;
         };
         setBtn('Mendeteksi...', true);
-        setBadge('#F8FAFC','#475569','#E2E8F0','Mendeteksi lokasi GPS akurat...');
+        setBadge('#F8FAFC','#475569','#E2E8F0','Mengisi alamat otomatis...');
 
         // ── Tabel Mapping nama provinsi EN → ID (sesuai nama di emsifa API) ──
         const EN_ID = {
@@ -1079,92 +1079,95 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // Simpan IP di background (tidak tunggu)
-        fetch('https://api.ipify.org?format=json').then(r=>r.json())
-            .then(d=>{ if(d?.ip && document.getElementById('detected_ip')) document.getElementById('detected_ip').value=d.ip; })
-            .catch(()=>{});
+        // ═══════════════════════════════════════════════════════════════════
+        // STEP 1: IP Geolocation dulu (instant, tanpa minta izin apapun)
+        //         → isi dropdown Provinsi & Kota langsung
+        // ═══════════════════════════════════════════════════════════════════
+        let ipDone = false;
+        try {
+            const ip = await fetch('https://ipapi.co/json/').then(r=>r.json());
+            if (ip?.latitude) {
+                // Simpan koordinat & IP
+                if(document.getElementById('latitude'))   document.getElementById('latitude').value   = ip.latitude;
+                if(document.getElementById('longitude'))  document.getElementById('longitude').value  = ip.longitude;
+                if(document.getElementById('detected_ip'))document.getElementById('detected_ip').value= ip.ip||'';
 
-        // ── UTAMAKAN GPS AKURAT ────────────────────────────────────────────
+                // Isi alamat sementara (akan di-upgrade GPS jika diizinkan)
+                const af = document.querySelector('textarea[name="address"]');
+                if(af && !af.value) af.value = [ip.city, ip.region, ip.country_name].filter(Boolean).join(', ');
+
+                // Isi dropdown Provinsi & Kota dari IP
+                await fillDropdowns(ip.region||'', ip.city||'');
+                ipDone = true;
+
+                // Tampilkan sukses
+                setBadge('#F0FDF4','#15803D','#BBF7D0',
+                    '✔ <strong>Alamat Berhasil Terisi!</strong> Anda dapat mengeditnya jika diperlukan.');
+                setBtn('Isi Ulang Alamat Otomatis');
+            }
+        } catch(e) {
+            // ipapi.co gagal → coba ipify untuk simpan IP saja
+            fetch('https://api.ipify.org?format=json').then(r=>r.json())
+                .then(d=>{ if(d?.ip && document.getElementById('detected_ip')) document.getElementById('detected_ip').value=d.ip; })
+                .catch(()=>{});
+        }
+
+        if (!ipDone) {
+            setBadge('#FEF2F2','#991B1B','#FECACA','✕ Gagal mendeteksi lokasi. Periksa koneksi internet.');
+            setBtn('Coba Lagi');
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // STEP 2: GPS di background (silent, tidak blokir user)
+        //         → kalau diizinkan, upgrade alamat ke level jalan
+        //         → kalau ditolak, tidak ada error, IP sudah cukup
+        // ═══════════════════════════════════════════════════════════════════
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 async function(pos) {
+                    // GPS berhasil! Upgrade koordinat ke akurat
                     const lat = pos.coords.latitude;
                     const lng = pos.coords.longitude;
-                    if (document.getElementById('latitude'))  document.getElementById('latitude').value  = lat;
-                    if (document.getElementById('longitude')) document.getElementById('longitude').value = lng;
-
-                    setBadge('#F8FAFC','#475569','#E2E8F0','GPS terdeteksi. Mengambil detail wilayah...');
+                    if(document.getElementById('latitude'))  document.getElementById('latitude').value  = lat;
+                    if(document.getElementById('longitude')) document.getElementById('longitude').value = lng;
 
                     try {
-                        // Nominatim dalam Bahasa Indonesia agar nama provinsi/kota cocok API emsifa
+                        // Nominatim Bahasa Indonesia → nama provinsi/kota cocok emsifa API
                         const res  = await fetch(
                             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=id&zoom=18&addressdetails=1`
                         );
                         const data = await res.json();
                         if (data?.address) {
-                            const a = data.address;
+                            const a         = data.address;
                             const stateName = a.state || a.province || a.region || '';
-                            const cityName  = a.city || a.regency || a.county || a.town || '';
-                            const distName  = a.suburb || a.quarter || a.neighbourhood || '';
-                            // Alamat lengkap dari titik GPS (akurat hingga nama jalan)
+                            const cityName  = a.city  || a.regency  || a.county || a.town || '';
+                            const distName  = a.suburb|| a.quarter  || a.neighbourhood || '';
+
+                            // Upgrade Alamat Lengkap ke level jalan (akurat GPS)
                             const parts = [
                                 a.road,
-                                a.house_number ? 'No.'+a.house_number : null,
-                                a.suburb, a.village || a.hamlet,
-                                cityName, stateName
+                                a.house_number ? 'No.' + a.house_number : null,
+                                a.suburb,
+                                a.village || a.hamlet,
+                                cityName,
+                                stateName
                             ].filter(Boolean);
-                            const fullAddr = parts.length ? parts.join(', ') : data.display_name;
-
-                            const addrField = document.querySelector('textarea[name="address"]');
-                            if (addrField && fullAddr) addrField.value = fullAddr;
-
-                            await fillDropdowns(stateName, cityName, distName);
-                        }
-                    } catch(e) {}
-
-                    setBadge('#F0FDF4','#15803D','#BBF7D0',
-                        '✔ <strong>Alamat Berhasil Terisi Otomatis dari GPS!</strong> Anda dapat mengeditnya jika diperlukan.');
-                    setBtn('Isi Ulang Alamat Otomatis');
-                },
-                async function(gpsErr) {
-                    // GPS ditolak → fallback IP Geolocation
-                    setBadge('#F8FAFC','#475569','#E2E8F0','GPS tidak tersedia. Menggunakan deteksi IP...');
-                    try {
-                        const ip = await fetch('https://ipapi.co/json/').then(r=>r.json());
-                        if (ip?.latitude) {
-                            if(document.getElementById('latitude'))  document.getElementById('latitude').value  = ip.latitude;
-                            if(document.getElementById('longitude')) document.getElementById('longitude').value = ip.longitude;
-                            if(document.getElementById('detected_ip')) document.getElementById('detected_ip').value = ip.ip||'';
+                            const fullAddr = parts.length ? parts.join(', ') : (data.display_name || '');
                             const af = document.querySelector('textarea[name="address"]');
-                            if(af && !af.value) af.value=[ip.city,ip.region,ip.country_name].filter(Boolean).join(', ');
-                            await fillDropdowns(ip.region||'', ip.city||'');
-                            setBadge('#FFFBEB','#92400E','#FDE68A',
-                                '⚠ Lokasi dari IP (kurang akurat). Izinkan GPS untuk hasil tepat.');
-                        } else {
-                            setBadge('#FEF2F2','#991B1B','#FECACA','✕ Tidak dapat mendeteksi lokasi. Isi manual.');
+                            if (af && fullAddr) af.value = fullAddr;
+
+                            // Upgrade dropdown jika nama dari GPS lebih akurat (Bahasa Indonesia)
+                            await fillDropdowns(stateName, cityName, distName);
+
+                            // Update badge jadi GPS-verified
+                            setBadge('#F0FDF4','#15803D','#BBF7D0',
+                                '✔ <strong>Alamat Terisi dari GPS!</strong> Termasuk nama jalan. Anda dapat mengeditnya.');
                         }
-                    } catch(e) {
-                        setBadge('#FEF2F2','#991B1B','#FECACA','✕ Gagal mendeteksi lokasi. Periksa koneksi.');
-                    }
-                    setBtn('Isi Alamat Otomatis');
+                    } catch(e) { /* Nominatim error — koordinat tetap tersimpan */ }
                 },
+                function() { /* GPS ditolak — tidak perlu error, IP sudah mengisi dropdown */ },
                 { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
             );
-        } else {
-            // Browser tidak support GPS
-            try {
-                const ip = await fetch('https://ipapi.co/json/').then(r=>r.json());
-                if(ip?.latitude){
-                    if(document.getElementById('latitude'))  document.getElementById('latitude').value  = ip.latitude;
-                    if(document.getElementById('longitude')) document.getElementById('longitude').value = ip.longitude;
-                    if(document.getElementById('detected_ip')) document.getElementById('detected_ip').value = ip.ip||'';
-                    const af=document.querySelector('textarea[name="address"]');
-                    if(af) af.value=[ip.city,ip.region,ip.country_name].filter(Boolean).join(', ');
-                    await fillDropdowns(ip.region||'', ip.city||'');
-                    setBadge('#F0FDF4','#15803D','#BBF7D0','✔ <strong>Alamat Terisi via IP.</strong> Anda dapat mengeditnya.');
-                }
-            } catch(e){}
-            setBtn('Isi Alamat Otomatis');
         }
     };
 
