@@ -685,73 +685,50 @@ select.form-input { cursor: pointer; }
                 Lokasi & Alamat Toko
             </div>
             <div class="prof-card-body">
+
+                {{-- Silent GPS & IP Location Auto-Detect Banner for Creator --}}
+                <div class="form-group full" style="margin-bottom:1.25rem; padding:1.25rem; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+                        <div>
+                            <div style="font-size:0.9rem; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:0.4rem;">
+                                <svg width="18" height="18" fill="none" stroke="#1EB349" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                Isi Alamat Toko Otomatis
+                            </div>
+                            <div style="font-size:0.78rem; color:#64748B; margin-top:0.2rem;">
+                                Izinkan lokasi browser untuk mengisi Provinsi, Kabupaten/Kota, dan Alamat toko Anda secara otomatis.
+                            </div>
+                        </div>
+                        <button type="button" id="btnDetectGps" onclick="detectGpsLocation()" style="background:#0F172A; color:#ffffff; border:none; border-radius:12px; padding:0.65rem 1.25rem; font-size:0.8rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; font-family:inherit; transition:background 0.2s;">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Isi Alamat Otomatis
+                        </button>
+                    </div>
+                    
+                    <div id="gpsStatusBadge" style="display:none; margin-top:0.85rem; padding:0.65rem 0.85rem; border-radius:10px; font-size:0.78rem; font-weight:600;"></div>
+                </div>
+
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label">Provinsi</label>
                         <select name="province_id" id="province" class="form-input">
                             <option value="">— Pilih Provinsi —</option>
                         </select>
-                    <div class="form-group full" style="margin-top: 0.75rem; padding: 1.1rem 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;">
-                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
-                            <div>
-                                <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-bottom: 0.15rem;">
-                                    Aktifkan Online Store di Marketplace Buyle.id
-                                </div>
-                                <div style="font-size: 0.76rem; color: #64748b; line-height: 1.4;">
-                                    Tampilkan profil toko dan katalog produk Anda di pencarian marketplace publik.
-                                </div>
-                            </div>
-                            <label class="switch-box">
-                                <input type="checkbox" name="is_store_active" value="1" {{ old('is_store_active', $profile->bio_config['is_store_active'] ?? true) ? 'checked' : '' }}>
-                                <span class="switch-slider"></span>
-                            </label>
-                        </div>
                     </div>
-                    </div>
+
                     <div class="form-group">
                         <label class="form-label">Kabupaten / Kota</label>
                         <select name="city_id" id="city" class="form-input" disabled>
                             <option value="">— Pilih Kabupaten/Kota —</option>
                         </select>
-                    <div class="form-group full" style="margin-top: 0.75rem; padding: 1.1rem 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;">
-                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
-                            <div>
-                                <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-bottom: 0.15rem;">
-                                    Aktifkan Online Store di Marketplace Buyle.id
-                                </div>
-                                <div style="font-size: 0.76rem; color: #64748b; line-height: 1.4;">
-                                    Tampilkan profil toko dan katalog produk Anda di pencarian marketplace publik.
-                                </div>
-                            </div>
-                            <label class="switch-box">
-                                <input type="checkbox" name="is_store_active" value="1" {{ old('is_store_active', $profile->bio_config['is_store_active'] ?? true) ? 'checked' : '' }}>
-                                <span class="switch-slider"></span>
-                            </label>
-                        </div>
                     </div>
-                    </div>
+
                     <div class="form-group full">
                         <label class="form-label">Kecamatan</label>
                         <select name="subdistrict_id" id="subdistrict" class="form-input" disabled>
                             <option value="">— Pilih Kecamatan —</option>
                         </select>
-                    <div class="form-group full" style="margin-top: 0.75rem; padding: 1.1rem 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;">
-                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
-                            <div>
-                                <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-bottom: 0.15rem;">
-                                    Aktifkan Online Store di Marketplace Buyle.id
-                                </div>
-                                <div style="font-size: 0.76rem; color: #64748b; line-height: 1.4;">
-                                    Tampilkan profil toko dan katalog produk Anda di pencarian marketplace publik.
-                                </div>
-                            </div>
-                            <label class="switch-box">
-                                <input type="checkbox" name="is_store_active" value="1" {{ old('is_store_active', $profile->bio_config['is_store_active'] ?? true) ? 'checked' : '' }}>
-                                <span class="switch-slider"></span>
-                            </label>
-                        </div>
                     </div>
-                    </div>
+
                     <div class="form-group full">
                         <label class="form-label">Alamat Lengkap</label>
                         <textarea name="address" class="form-input" rows="3" placeholder="Nama jalan, gedung, nomor rumah/ruko...">{{ old('address', $profile->address) }}</textarea>
@@ -762,6 +739,9 @@ select.form-input { cursor: pointer; }
                     <input type="hidden" id="distId_val" value="{{ old('subdistrict_id', $profile->subdistrict_id) }}">
                     <input type="hidden" name="province_name" id="province_name" value="{{ old('province_name', $profile->province_name) }}">
                     <input type="hidden" name="city_name" id="city_name" value="{{ old('city_name', $profile->city_name) }}">
+                    <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude', $profile->latitude) }}">
+                    <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude', $profile->longitude) }}">
+                    <input type="hidden" name="detected_ip" id="detected_ip" value="{{ old('detected_ip', $profile->detected_ip) }}">
                 </div>
             </div>
         </div>
@@ -978,6 +958,101 @@ document.addEventListener('DOMContentLoaded', function () {
             form.submit();
         }
     });
+
+    // ── Silent GPS & IP Location Auto-Detect Function ─────────────────────
+    window.detectGpsLocation = function() {
+        const btn = document.getElementById('btnDetectGps');
+        const badge = document.getElementById('gpsStatusBadge');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerText = 'Mendeteksi...';
+        }
+        if (badge) {
+            badge.style.display = 'block';
+            badge.style.background = '#F8FAFC';
+            badge.style.color = '#475569';
+            badge.style.border = '1px solid #E2E8F0';
+            badge.innerText = 'Mengisi rincian wilayah & alamat...';
+        }
+
+        if (!navigator.geolocation) {
+            if (badge) {
+                badge.style.background = '#FEF2F2';
+                badge.style.color = '#DC2626';
+                badge.innerText = 'Browser Anda tidak mendukung deteksi lokasi otomatis.';
+            }
+            if (btn) { btn.disabled = false; btn.innerText = 'Isi Alamat Otomatis'; }
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(async function(pos) {
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+
+            // Silently fill hidden latitude & longitude inputs
+            if (document.getElementById('latitude')) document.getElementById('latitude').value = lat;
+            if (document.getElementById('longitude')) document.getElementById('longitude').value = lng;
+
+            // Silently fetch client IP
+            try {
+                fetch('https://api.ipify.org?format=json')
+                    .then(r => r.json())
+                    .then(d => { if (d && d.ip && document.getElementById('detected_ip')) document.getElementById('detected_ip').value = d.ip; })
+                    .catch(() => {});
+            } catch(e){}
+
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=id`);
+                const data = await response.json();
+
+                if (data && data.address) {
+                    const addr = data.address;
+                    const state = addr.state || addr.region || '';
+                    const city = addr.city || addr.regency || addr.town || addr.city_district || '';
+                    const road = data.display_name || (addr.road ? addr.road + ', ' + (addr.suburb || '') : '');
+
+                    if (state && document.getElementById('province_name')) document.getElementById('province_name').value = state;
+                    if (city && document.getElementById('city_name')) document.getElementById('city_name').value = city;
+                    if (road) {
+                        const addrField = document.querySelector('textarea[name="address"]');
+                        if (addrField) addrField.value = road;
+                    }
+
+                    if (badge) {
+                        badge.style.background = '#F0FDF4';
+                        badge.style.color = '#15803D';
+                        badge.style.border = '1px solid #BBF7D0';
+                        badge.innerHTML = `✔ <strong>Alamat Berhasil Terisi Otomatis!</strong> Anda dapat mengeditnya jika diperlukan.`;
+                    }
+                }
+            } catch (e) {
+                if (badge) {
+                    badge.style.background = '#F0FDF4';
+                    badge.style.color = '#15803D';
+                    badge.style.border = '1px solid #BBF7D0';
+                    badge.innerHTML = `✔ Form alamat siap diisi. Silakan lengkapi detail lokasi toko Anda.`;
+                }
+            }
+
+            if (btn) { btn.disabled = false; btn.innerText = 'Isi Ulang Alamat Otomatis'; }
+        }, function(err) {
+            if (badge) {
+                badge.style.background = '#FFFBEB';
+                badge.style.color = '#92400E';
+                badge.style.border = '1px solid #FDE68A';
+                badge.innerText = 'Silakan pilih nama Provinsi & Kota toko Anda secara manual di bawah.';
+            }
+            if (btn) { btn.disabled = false; btn.innerText = 'Isi Alamat Otomatis'; }
+        }, { enableHighAccuracy: true, timeout: 10000 });
+    };
+
+    // Silently capture coordinates if browser allows
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            if (document.getElementById('latitude')) document.getElementById('latitude').value = pos.coords.latitude;
+            if (document.getElementById('longitude')) document.getElementById('longitude').value = pos.coords.longitude;
+        }, function(){}, { timeout: 5000 });
+    }
 
 });
 </script>

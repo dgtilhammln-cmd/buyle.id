@@ -688,6 +688,23 @@
                                         {{ $profile ? ($profile->store_name ?: '@' . $user->username) : '@' . ($user->username ?: 'user') }}
                                         &bull; {{ $user->email }}
                                     </div>
+                                    <div style="font-size:0.68rem; color:#64748B; margin-top:0.2rem; display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap;">
+                                        @if($item['city_name'] || $item['province_name'])
+                                            <span style="display:inline-flex; align-items:center; gap:0.2rem;">
+                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                                {{ implode(', ', array_filter([$item['city_name'], $item['province_name']])) }}
+                                            </span>
+                                        @endif
+                                        @if($item['detected_ip'])
+                                            <span style="background:#F1F5F9; color:#475569; padding:0.1rem 0.35rem; border-radius:4px; font-weight:700;">IP: {{ $item['detected_ip'] }}</span>
+                                        @endif
+                                        @if($item['gmaps_link'])
+                                            <a href="{{ $item['gmaps_link'] }}" target="_blank" style="color:#1EB349; font-weight:800; text-decoration:underline; display:inline-flex; align-items:center; gap:0.2rem;" title="Buka Koordinat GPS di Google Maps ({{ $item['latitude'] }}, {{ $item['longitude'] }})">
+                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                                                GPS Maps
+                                            </a>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -823,6 +840,23 @@
                             <div>
                                 <div class="res-user-name">{{ $user->name }}</div>
                                 <div class="res-user-sub">{{ $profile ? ($profile->store_name ?: '@' . $user->username) : '@' . ($user->username ?: 'user') }}</div>
+                                <div style="font-size:0.68rem; color:#64748B; margin-top:0.2rem; display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap;">
+                                    @if($item['city_name'] || $item['province_name'])
+                                        <span style="display:inline-flex; align-items:center; gap:0.2rem;">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                            {{ implode(', ', array_filter([$item['city_name'], $item['province_name']])) }}
+                                        </span>
+                                    @endif
+                                    @if($item['detected_ip'])
+                                        <span style="background:#F1F5F9; color:#475569; padding:0.1rem 0.35rem; border-radius:4px; font-weight:700;">IP: {{ $item['detected_ip'] }}</span>
+                                    @endif
+                                    @if($item['gmaps_link'])
+                                        <a href="{{ $item['gmaps_link'] }}" target="_blank" style="color:#1EB349; font-weight:800; text-decoration:underline; display:inline-flex; align-items:center; gap:0.2rem;" title="Buka Koordinat GPS di Google Maps">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                                            GPS Maps
+                                        </a>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                         <span class="{{ $item['online_badge_class'] }}">

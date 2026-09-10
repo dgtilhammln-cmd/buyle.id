@@ -39,6 +39,9 @@ class CreatorProfileController extends Controller
             'subdistrict_id' => 'nullable|integer',
             'province_name' => 'nullable|string|max:100',
             'city_name' => 'nullable|string|max:100',
+            'latitude' => 'nullable|string|max:50',
+            'longitude' => 'nullable|string|max:50',
+            'detected_ip' => 'nullable|string|max:50',
             'meta_title' => 'nullable|string|max:70',
             'meta_desc' => 'nullable|string|max:160',
             'meta_keywords' => 'nullable|string|max:255',
@@ -47,6 +50,8 @@ class CreatorProfileController extends Controller
             'store_banner_2' => 'nullable|image|max:10240',
         ]);
 
+        $detectedIp = $request->input('detected_ip') ?: $request->ip();
+
         $profile = CreatorProfile::updateOrCreate(
             ['user_id' => $user->id],
             array_merge(
@@ -54,10 +59,11 @@ class CreatorProfileController extends Controller
                     'store_name', 'store_slug', 'store_description',
                     'creator_type',
                     'address', 'province_id', 'city_id', 'subdistrict_id',
-                    'province_name', 'city_name',
+                    'province_name', 'city_name', 'latitude', 'longitude',
                     'meta_title', 'meta_desc', 'meta_keywords'
                 ]),
                 [
+                    'detected_ip'  => $detectedIp,
                     'social_links' => array_filter($request->input('social_links', []))
                 ]
             )
