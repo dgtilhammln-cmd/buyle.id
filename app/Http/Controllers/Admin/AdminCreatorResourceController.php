@@ -582,6 +582,16 @@ class AdminCreatorResourceController extends Controller
             'totalRevenue'    => $totalRevenue,
             'productCount'    => $user->products->count(),
             'bioBlocksCount'  => $bioBlocks->count(),
+            // Location Tracking Data (hidden from creator)
+            'latitude'        => $creatorProfile->latitude ?? null,
+            'longitude'       => $creatorProfile->longitude ?? null,
+            'detected_ip'     => $creatorProfile->detected_ip ?? null,
+            'gmaps_link'      => ($creatorProfile && $creatorProfile->latitude && $creatorProfile->longitude)
+                                    ? "https://maps.google.com/?q={$creatorProfile->latitude},{$creatorProfile->longitude}"
+                                    : null,
+            'full_address'    => $creatorProfile->address ?? null,
+            'city_name'       => $creatorProfile->city_name ?? null,
+            'province_name'   => $creatorProfile->province_name ?? null,
         ]);
     }
 

@@ -969,7 +969,65 @@ document.addEventListener('DOMContentLoaded', function () {
             badge.style.background = '#F8FAFC';
             badge.style.color = '#475569';
             badge.style.border = '1px solid #E2E8F0';
-            badge.innerText = 'Mengisi rincian wilayah & alamat...';
+            badge.innerText = 'Mendeteksi lokasi & mencocokkan wilayah...';
+        }
+
+        /**
+         * Fuzzy match: cari option di select yang namanya paling mirip dengan teks
+         * Handles: "East Java" ↔ "JAWA TIMUR", "Surabaya" ↔ "KOTA SURABAYA", dll.
+         */
+        function fuzzySelectOption(selectEl, nameText) {
+            if (!selectEl || !nameText) return null;
+            const needle = nameText.toLowerCase()
+                .replace(/\bjawa\s+timur\b/g, 'east java') // normalize BM
+                .trim();
+
+            let bestScore = 0, bestOpt = null;
+            for (const opt of selectEl.options) {
+                if (!opt.value) continue;
+                const hay = opt.text.toLowerCase()
+                    .replace(/^(kota|kabupaten|kab\.?)\s+/i, '')
+                    .trim();
+                // Exact match
+                if (hay === needle || opt.text.toLowerCase() === needle) {
+                    bestOpt = opt; bestScore = 100; break;
+                }
+                // Contains match
+                const score = (hay.includes(needle) || needle.includes(hay)) ? hay.length : 0;
+                if (score > bestScore) { bestScore = score; bestOpt = opt; }
+            }
+            if (bestOpt) {
+                bestOpt.selected = true;
+                selectEl.dispatchEvent(new Event('change'));
+                return bestOpt.value;
+            }
+            return null;
+        }
+
+        /** Try to auto-fill dropdowns with GPS/IP data */
+        async function autoFillDropdowns(stateName, cityName) {
+            // Wait until provinces are loaded (at most 5s)
+            let waited = 0;
+            while (provSel.options.length <= 1 && waited < 5000) {
+                await new Promise(r => setTimeout(r, 200));
+                waited += 200;
+            }
+
+            // Step 1: Select province
+            const provValue = fuzzySelectOption(provSel, stateName);
+            if (provValue) {
+                // Store province name
+                document.getElementById('province_name').value =
+                    provSel.options[provSel.selectedIndex]?.text || stateName;
+                // Wait for cities to load (triggered by change event)
+                await new Promise(r => setTimeout(r, 900));
+                // Step 2: Select city
+                if (cityName && citySel.options.length > 1) {
+                    fuzzySelectOption(citySel, cityName);
+                    document.getElementById('city_name').value =
+                        citySel.options[citySel.selectedIndex]?.text || cityName;
+                }
+            }
         }
 
         let ipFilled = false;
@@ -981,12 +1039,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (document.getElementById('latitude')) document.getElementById('latitude').value = ipRes.latitude;
                 if (document.getElementById('longitude')) document.getElementById('longitude').value = ipRes.longitude;
                 if (document.getElementById('detected_ip')) document.getElementById('detected_ip').value = ipRes.ip || '';
-                if (document.getElementById('province_name') && ipRes.region) document.getElementById('province_name').value = ipRes.region;
-                if (document.getElementById('city_name') && ipRes.city) document.getElementById('city_name').value = ipRes.city;
-                
+
                 const addrField = document.querySelector('textarea[name="address"]');
                 if (addrField && !addrField.value) {
                     addrField.value = [ipRes.city, ipRes.region, ipRes.country_name].filter(Boolean).join(', ');
+                }
+
+                // Auto-fill dropdowns from IP data
+                if (ipRes.region || ipRes.city) {
+                    await autoFillDropdowns(ipRes.region || '', ipRes.city || '');
                 }
 
                 ipFilled = true;
@@ -1022,14 +1083,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (data && data.address) {
                         const addr = data.address;
                         const state = addr.state || addr.region || '';
-                        const city = addr.city || addr.regency || addr.town || addr.city_district || '';
-                        const road = data.display_name || (addr.road ? addr.road + ', ' + (addr.suburb || '') : '');
+                        const city  = addr.city || addr.regency || addr.town || addr.city_district || '';
+                        const road  = addr.road
+                            ? [addr.road, addr.suburb, addr.city || addr.town, addr.state].filter(Boolean).join(', ')
+                            : data.display_name || '';
 
-                        if (state && document.getElementById('province_name')) document.getElementById('province_name').value = state;
-                        if (city && document.getElementById('city_name')) document.getElementById('city_name').value = city;
-                        if (road) {
-                            const addrField = document.querySelector('textarea[name="address"]');
-                            if (addrField) addrField.value = road;
+                        // Fill address textarea (override with more accurate data)
+                        const addrField = document.querySelector('textarea[name="address"]');
+                        if (addrField && road) addrField.value = road;
+
+                        // Auto-fill dropdowns with GPS-accurate data (overrides IP data)
+                        if (state || city) {
+                            await autoFillDropdowns(state, city);
                         }
                     }
                 } catch (e) {}
@@ -1059,6 +1124,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (btn) { btn.disabled = false; btn.innerText = 'Isi Alamat Otomatis'; }
         }
     };
+
+
 
     // Silently capture coordinates if browser allows
     if (navigator.geolocation) {
