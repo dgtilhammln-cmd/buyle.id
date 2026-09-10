@@ -159,8 +159,7 @@ class AdminCreatorResourceController extends Controller
             $totalRevenue = OrderItem::whereHas('product', function ($q) use ($user) {
                 $q->where('seller_id', $user->id);
             })->whereHas('order', function ($q) {
-                $q->whereIn('payment_status', ['paid', 'settlement', 'success'])
-                  ->orWhereIn('status', ['paid', 'processing', 'completed', 'shipped', 'delivered']);
+                $q->whereNotIn('status', ['pending', 'cancelled', 'refunded', 'failed', 'expired']);
             })->sum('subtotal');
 
             // Format Avatar URL
@@ -420,8 +419,7 @@ class AdminCreatorResourceController extends Controller
         $totalRevenue = OrderItem::whereHas('product', function ($q) use ($user) {
             $q->where('seller_id', $user->id);
         })->whereHas('order', function ($q) {
-            $q->whereIn('payment_status', ['paid', 'settlement', 'success'])
-              ->orWhereIn('status', ['paid', 'processing', 'completed', 'shipped', 'delivered']);
+            $q->whereNotIn('status', ['pending', 'cancelled', 'refunded', 'failed', 'expired']);
         })->sum('subtotal');
 
         return view('admin.creator-resources.show', [
