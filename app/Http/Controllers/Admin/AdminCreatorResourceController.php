@@ -167,14 +167,49 @@ class AdminCreatorResourceController extends Controller
             // Potensi Abandoned Cart (Keranjang Belanja Tertunda Pembeli)
             $abandonedCartCount = 0;
             $abandonedCartValue = 0;
+            $abandonedCartItems = [];
             try {
-                $cartItems = \App\Models\Cart::whereHas('product', function ($q) use ($user) {
-                    $q->where('seller_id', $user->id);
-                })->get();
-                $abandonedCartCount = $cartItems->sum('qty');
-                $abandonedCartValue = $cartItems->sum(function ($item) {
+                $cartRecords = \App\Models\Cart::with(['user', 'product'])
+                    ->whereHas('product', function ($q) use ($user) {
+                        $q->where('seller_id', $user->id);
+                    })->get();
+                
+                $abandonedCartCount = $cartRecords->sum('qty');
+                $abandonedCartValue = $cartRecords->sum(function ($item) {
                     return $item->subtotal;
                 });
+
+                $abandonedCartItems = $cartRecords->map(function ($c) use ($user, $creatorProfile) {
+                    $bUser = $c->user;
+                    $bName = $bUser->name ?? 'Pembeli Guest';
+                    $bEmail = $bUser->email ?? null;
+                    $bPhone = $bUser->phone ?? null;
+                    $pName = $c->product->name ?? 'Produk Digital';
+                    $pImg = self::getStorageUrl($c->product->image ?? null);
+
+                    $waLink = null;
+                    if (!empty($bPhone)) {
+                        $cleanP = preg_replace('/[^0-9]/', '', $bPhone);
+                        if (Str::startsWith($cleanP, '0')) $cleanP = '62' . substr($cleanP, 1);
+                        if (!Str::startsWith($cleanP, '62') && strlen($cleanP) >= 9) $cleanP = '62' . $cleanP;
+                        $storeName = $creatorProfile->store_name ?? $user->name;
+                        $msg = urlencode("Halo kak {$bName}, produk '{$pName}' masih tersimpan di keranjang belanja kamu di toko {$storeName} (buyle.id). Selesaikan pembelianmu sekarang sebelum kehabisan!");
+                        $waLink = "https://wa.me/{$cleanP}?text={$msg}";
+                    }
+
+                    return [
+                        'id'            => $c->id,
+                        'buyer_name'    => $bName,
+                        'buyer_email'   => $bEmail,
+                        'buyer_phone'   => $bPhone,
+                        'buyer_wa_link' => $waLink,
+                        'product_name'  => $pName,
+                        'product_img'   => $pImg,
+                        'qty'           => $c->qty,
+                        'subtotal'      => $c->subtotal,
+                        'time_ago'      => $c->created_at ? $c->created_at->diffForHumans() : '-',
+                    ];
+                })->values()->toArray();
             } catch (\Exception $e) {
                 // Ignore if cart query fails
             }
@@ -240,6 +275,7 @@ class AdminCreatorResourceController extends Controller
                 'total_revenue'        => $totalRevenue,
                 'abandoned_cart_count' => $abandonedCartCount,
                 'abandoned_cart_value' => $abandonedCartValue,
+                'abandoned_cart_items' => $abandonedCartItems,
                 'is_online_now'        => $isOnlineNow,
                 'is_active_today'      => $isActiveToday,
                 'is_active_week'       => $isActiveWeek,
@@ -783,9 +819,21 @@ class AdminCreatorResourceController extends Controller
 
             if (!isset($usedPathsSet[$file])) {
                 $size = Storage::disk('public')->size($file);
+                $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                $isImage = in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg']);
+                $dir = dirname($file);
+                $fullUrl = self::getStorageUrl($file);
+
                 $orphanFiles[] = [
-                    'path' => $file,
-                    'size' => $size,
+                    'path'           => $file,
+                    'directory'      => $dir === '.' ? 'root/storage' : 'storage/' . $dir,
+                    'filename'       => basename($file),
+                    'size'           => $size,
+                    'size_formatted' => $size > (1024 * 1024) ? round($size / (1024 * 1024), 2) . ' MB' : round($size / 1024, 1) . ' KB',
+                    'extension'      => strtoupper($ext),
+                    'is_image'       => $isImage,
+                    'full_url'       => $fullUrl,
+                    'risk_impact'    => 'Aman Dihapus (100% Bebas Risiko). Berkas ini tidak terdaftar di database produk, bio block, atau profil user.'
                 ];
                 $totalOrphanBytes += $size;
             }
@@ -821,6 +869,52 @@ class AdminCreatorResourceController extends Controller
 
         return redirect()->back()->with('success', "Pembersihan berkas sampah berhasil! Berhasil menghapus {$deletedCount} berkas tak terpakai dan membebaskan {$freedText} disk server.");
     }
+
+    /**
+     * Kirim email pengingat keranjang belanja (Abandoned Cart Reminder) ke pembeli
+     */
+    public function sendCartReminderEmail(Request $request)
+    {
+        $email = trim($request->input('buyer_email'));
+        $buyerName = trim($request->input('buyer_name', 'Pelanggan Setia'));
+        $productName = trim($request->input('product_name', 'Produk Digital'));
+        $creatorName = trim($request->input('creator_name', 'Creator Buyle.id'));
+
+        if (empty($email)) {
+            return redirect()->back()->with('error', 'Alamat email pembeli tidak ditemukan atau pembeli adalah guest tanpa akun.');
+        }
+
+        try {
+            \App\Services\MailConfigService::apply();
+
+            $subject = "🛒 Keranjang Belanjamu Menunggu: {$productName}";
+            $htmlContent = "
+                <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 16px; background: #ffffff;'>
+                    <h2 style='color: #0f172a; margin-top: 0;'>Halo {$buyerName},</h2>
+                    <p style='color: #475569; font-size: 15px; line-height: 1.6;'>
+                        Produk digital <strong>{$productName}</strong> dari toko <strong>{$creatorName}</strong> masih tersimpan di keranjang belanja kamu di <strong>buyle.id</strong>.
+                    </p>
+                    <p style='color: #475569; font-size: 15px; line-height: 1.6;'>
+                        Selesaikan transaksi pesananmu sekarang agar kamu bisa langsung mengakses berkas/resource digital ini secara instant!
+                    </p>
+                    <div style='text-align: center; margin: 30px 0;'>
+                        <a href='" . url('/cart') . "' style='background: #1eb349; color: #ffffff; padding: 14px 32px; border-radius: 10px; font-weight: bold; text-decoration: none; display: inline-block; font-size: 16px;'>Selesaikan Pesanan Sekarang →</a>
+                    </div>
+                    <hr style='border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;'>
+                    <p style='font-size: 12px; color: #94a3b8; text-align: center;'>Email ini dikirim oleh sistem buyle.id untuk membantu mengingatkan pesanan yang tertunda.</p>
+                </div>
+            ";
+
+            \Illuminate\Support\Facades\Mail::html($htmlContent, function ($message) use ($email, $subject) {
+                $message->to($email)->subject($subject);
+            });
+
+            return redirect()->back()->with('success', "Email reminder keranjang belanja berhasil terkirim ke {$email}!");
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal mengirim email pengingat: ' . $e->getMessage());
+        }
+    }
 }
+
 
 
