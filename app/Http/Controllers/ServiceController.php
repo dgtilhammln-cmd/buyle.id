@@ -25,7 +25,9 @@ class ServiceController extends Controller
             // Search for Creators
             $tokens = array_filter(explode(' ', strtolower(preg_replace('/[^a-z0-9]/', ' ', $rawQ))));
             
-            $creatorQuery = CreatorProfile::with(['user.products' => function($q) {
+            $creatorQuery = CreatorProfile::whereHas('user.products', function($q) {
+                                    $q->where('is_active', true);
+                                })->with(['user.products' => function($q) {
                                     $q->active()->ordered()->take(4);
                                 }]);
             

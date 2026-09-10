@@ -53,41 +53,53 @@
             width: 100%;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            padding: var(--tab-padding);
-            border: none;
-            background: var(--tab-bg);
-            color: var(--tab-text);
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid transparent;
+            background: #ffffff;
+            color: #475569;
             font-family: 'Montserrat', sans-serif;
             font-size: 0.85rem;
             font-weight: 600;
-            border-radius: var(--tab-radius);
+            border-radius: 14px;
             cursor: pointer;
             text-align: left;
-            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-            margin-bottom: 0.2rem;
+            transition: all 0.2s ease;
+            margin-bottom: 0.35rem;
             position: relative;
         }
 
         .tab-btn:hover {
-            background: #f0fdf4;
-            color: #1eb349;
-            transform: translateY(-1px);
+            background: #F8FAFC;
+            color: #0F172A;
+            border-color: #E2E8F0;
+            transform: translateX(2px);
         }
 
         .tab-btn:active {
-            transform: scale(0.98);
+            transform: scale(0.99);
         }
 
         .tab-btn.active {
-            background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
+            background: #0F172A !important;
             color: #ffffff !important;
             font-weight: 700;
-            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+            border-color: #0F172A !important;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.18);
         }
 
         .tab-btn.active svg {
             stroke: #ffffff !important;
+        }
+
+        .tab-btn svg {
+            transition: stroke 0.2s ease;
+            flex-shrink: 0;
+            stroke: #64748B;
+        }
+
+        .tab-btn:hover svg {
+            stroke: #0F172A;
         }
 
         .tab-text-full {
