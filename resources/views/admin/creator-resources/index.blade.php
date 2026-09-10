@@ -9,7 +9,7 @@
 /* Stat Cards */
 .res-stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
     gap: 1.25rem;
     margin-bottom: 1.75rem;
 }
@@ -45,8 +45,9 @@
 .res-stat-icon.blue  { background: rgba(59, 130, 246, 0.12); color: #3b82f6; }
 .res-stat-icon.purple{ background: rgba(139, 92, 246, 0.12); color: #8b5cf6; }
 .res-stat-icon.amber { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+.res-stat-icon.emerald{ background: rgba(16, 185, 129, 0.12); color: #10b981; }
 
-.res-stat-val { font-size: 1.35rem; font-weight: 800; color: #0F172A; line-height: 1.2; }
+.res-stat-val { font-size: 1.3rem; font-weight: 800; color: #0F172A; line-height: 1.2; }
 .res-stat-lbl { font-size: 0.75rem; font-weight: 600; color: #64748B; margin-top: 0.15rem; }
 
 /* Filter & Search Bar */
@@ -165,9 +166,16 @@
     gap: 0.75rem;
 }
 
+.res-avatar-wrap {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+}
+
 .res-avatar {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     object-fit: cover;
     background: linear-gradient(135deg, #1eb349, #a5cf37);
@@ -177,7 +185,6 @@
     justify-content: center;
     font-weight: 800;
     font-size: 0.85rem;
-    flex-shrink: 0;
 }
 
 .res-user-name {
@@ -202,17 +209,45 @@
     gap: 0.3rem;
 }
 
-.res-badge.normal { background: #F0FDF4; color: #16A34A; border: 1px solid #DCFCE7; }
-.res-badge.warning{ background: #FFFBEB; color: #D97706; border: 1px solid #FEF3C7; }
-.res-badge.danger { background: #FEF2F2; color: #DC2626; border: 1px solid #FEE2E2; }
+.res-badge.high-roi { background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0; }
+.res-badge.normal   { background: #F0FDF4; color: #16A34A; border: 1px solid #DCFCE7; }
+.res-badge.warning  { background: #FFFBEB; color: #D97706; border: 1px solid #FEF3C7; }
+.res-badge.danger   { background: #FEF2F2; color: #DC2626; border: 1px solid #FEE2E2; }
+
+.btn-detail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 10px;
+    background: #F0FDF4;
+    color: #1eb349;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid #DCFCE7;
+}
+
+.btn-detail:hover {
+    background: #1eb349;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(30, 179, 73, 0.25);
+}
 
 @media(max-width: 768px) {
     .res-table-card { overflow-x: auto; }
-    .res-table { min-width: 650px; }
+    .res-table { min-width: 800px; }
 }
 </style>
 
 <div class="res-page">
+    @if(session('success'))
+        <div style="background:#F0FDF4;color:#15803D;padding:.875rem 1.25rem;border-radius:14px;margin-bottom:1.5rem;border:1px solid #BBF7D0;font-size:.825rem;font-weight:600;">
+            ✓ {{ session('success') }}
+        </div>
+    @endif
+
     {{-- Header stats --}}
     <div class="res-stats-grid">
         <div class="res-stat-card">
@@ -222,6 +257,16 @@
             <div>
                 <div class="res-stat-val">{{ $totalStorageMbOverall }} MB</div>
                 <div class="res-stat-lbl">Total Disk Storage</div>
+            </div>
+        </div>
+
+        <div class="res-stat-card">
+            <div class="res-stat-icon emerald">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div>
+                <div class="res-stat-val">Rp {{ number_format($totalRevenueOverall, 0, ',', '.') }}</div>
+                <div class="res-stat-lbl">Total Omset Penjualan</div>
             </div>
         </div>
 
@@ -268,6 +313,7 @@
             <select name="sort_by" onchange="this.form.submit()" class="res-select">
                 <option value="storage_desc"  {{ $sortBy === 'storage_desc'  ? 'selected' : '' }}>Storage Terbesar (Boros)</option>
                 <option value="storage_asc"   {{ $sortBy === 'storage_asc'   ? 'selected' : '' }}>Storage Terkecil</option>
+                <option value="revenue_desc"  {{ $sortBy === 'revenue_desc'  ? 'selected' : '' }}>Omset Penjualan Terbanyak</option>
                 <option value="products_desc" {{ $sortBy === 'products_desc' ? 'selected' : '' }}>Jumlah Produk Terbanyak</option>
                 <option value="blocks_desc"   {{ $sortBy === 'blocks_desc'   ? 'selected' : '' }}>Jumlah Block Bio Terbanyak</option>
                 <option value="assets_desc"   {{ $sortBy === 'assets_desc'   ? 'selected' : '' }}>Jumlah File Media Terbanyak</option>
@@ -281,11 +327,11 @@
             <thead>
                 <tr>
                     <th>Creator / Toko</th>
-                    <th>Total Storage</th>
-                    <th>Jumlah File</th>
-                    <th>Produk</th>
-                    <th>Bio Blocks</th>
-                    <th>Status Penggunaan</th>
+                    <th>Storage Size</th>
+                    <th>Est. Biaya Server</th>
+                    <th>Omset (Revenue)</th>
+                    <th>Produk / Block</th>
+                    <th>Status ROI & Storage</th>
                     <th style="text-align: right;">Aksi</th>
                 </tr>
             </thead>
@@ -295,15 +341,20 @@
                         $user = $item['user'];
                         $profile = $item['creator_profile'];
                         $mb = $item['total_size_mb'];
+                        $rev = $item['total_revenue'];
+                        $cost = $item['est_monthly_cost'];
                     @endphp
                     <tr>
                         <td>
                             <div class="res-user-info">
-                                @if($user->avatar)
-                                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" class="res-avatar">
-                                @else
-                                    <div class="res-avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
-                                @endif
+                                <div class="res-avatar-wrap">
+                                    @if($item['avatar_url'])
+                                        <img src="{{ $item['avatar_url'] }}" alt="{{ $user->name }}" class="res-avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                        <div class="res-avatar" style="display:none;">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+                                    @else
+                                        <div class="res-avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+                                    @endif
+                                </div>
                                 <div>
                                     <div class="res-user-name">{{ $user->name }}</div>
                                     <div class="res-user-sub">
@@ -315,38 +366,44 @@
                         </td>
                         <td>
                             <strong style="font-size:0.95rem; color:#0F172A;">{{ $mb }} MB</strong>
+                            <div style="font-size:0.72rem; color:#64748B; margin-top:0.1rem;">{{ number_format($item['asset_file_count']) }} berkas</div>
                         </td>
                         <td>
-                            <span>{{ number_format($item['asset_file_count']) }} berkas</span>
+                            <span style="font-size:0.85rem; font-weight:700; color:#475569;">
+                                Rp {{ number_format($cost, 0, ',', '.') }}/bln
+                            </span>
                         </td>
                         <td>
-                            <span>{{ number_format($item['product_count']) }} produk</span>
+                            <strong style="font-size:0.92rem; color:{{ $rev > 0 ? '#10B981' : '#64748B' }};">
+                                Rp {{ number_format($rev, 0, ',', '.') }}
+                            </strong>
                         </td>
                         <td>
-                            <span>{{ number_format($item['bio_blocks_count']) }} block</span>
+                            <span style="font-size:0.8rem; font-weight:600; color:#1E293B;">
+                                {{ number_format($item['product_count']) }} produk &bull; {{ number_format($item['bio_blocks_count']) }} block
+                            </span>
                         </td>
                         <td>
-                            @if($mb > 100)
-                                <span class="res-badge danger">Kapasitas Tinggi (&gt;100MB)</span>
-                            @elseif($mb > 30)
-                                <span class="res-badge warning">Penggunaan Sedang (&gt;30MB)</span>
+                            @if($rev > 0)
+                                <span class="res-badge high-roi">High ROI (Omset Aktif)</span>
+                            @elseif($mb > 50)
+                                <span class="res-badge danger">Zero Revenue - High Storage</span>
+                            @elseif($mb > 20)
+                                <span class="res-badge warning">Penggunaan Sedang</span>
                             @else
                                 <span class="res-badge normal">Penggunaan Normal</span>
                             @endif
                         </td>
                         <td style="text-align: right;">
-                            @if($profile && $profile->store_slug)
-                                <a href="{{ url('/' . $profile->store_slug) }}" target="_blank" style="color:#1eb349; font-weight:700; text-decoration:none; font-size:0.8rem;">
-                                    Lihat Bio
-                                </a>
-                            @else
-                                <span style="color:#94A3B8; font-size:0.8rem;">-</span>
-                            @endif
+                            <a href="{{ route('admin.creator-resources.show', $user->id) }}" class="btn-detail">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                Lihat Detail
+                            </a>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" style="text-align:center; padding:2rem; color:#64748B;">
+                        <td colspan="7" style="text-align:center; padding:2.5rem; color:#64748B;">
                             Tidak ada data creator yang ditemukan.
                         </td>
                     </tr>

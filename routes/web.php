@@ -402,6 +402,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/users/{user}/toggle',                     [AdminUserController::class, 'toggleActive'])->name('admin.users.toggle');
         Route::delete('/users/{user}/addresses/{address}',      [AdminUserController::class, 'destroyAddress'])->name('admin.users.addresses.destroy');
         Route::get('/creator-resources',                        [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'index'])->name('admin.creator-resources.index');
+        Route::get('/creator-resources/{user}',                  [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'show'])->name('admin.creator-resources.show');
+        Route::post('/creator-resources/{user}/impersonate',     [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'impersonate'])->name('admin.creator-resources.impersonate');
 
         // Order Management
         Route::get('/orders/export',                            [\App\Http\Controllers\Admin\AdminOrderController::class, 'export'])->name('admin.orders.export');
