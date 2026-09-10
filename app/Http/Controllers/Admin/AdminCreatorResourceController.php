@@ -914,6 +914,35 @@ class AdminCreatorResourceController extends Controller
             return redirect()->back()->with('error', 'Gagal mengirim email pengingat: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Hapus single item keranjang tertunda
+     */
+    public function deleteCartItem(Request $request)
+    {
+        $cartId = $request->input('cart_id');
+        if ($cartId) {
+            \App\Models\Cart::where('id', $cartId)->delete();
+            return redirect()->back()->with('success', 'Item keranjang tertunda berhasil dihapus dari sistem!');
+        }
+        return redirect()->back()->with('error', 'ID keranjang tidak ditemukan.');
+    }
+
+    /**
+     * Kosongkan seluruh item keranjang tertunda untuk creator tertentu
+     */
+    public function clearCreatorAbandonedCarts(Request $request)
+    {
+        $creatorId = $request->input('creator_id');
+        if ($creatorId) {
+            \App\Models\Cart::whereHas('product', function ($q) use ($creatorId) {
+                $q->where('seller_id', $creatorId);
+            })->delete();
+
+            return redirect()->back()->with('success', 'Seluruh item keranjang tertunda milik creator ini berhasil dibersihkan!');
+        }
+        return redirect()->back()->with('error', 'Creator ID tidak valid.');
+    }
 }
 
 

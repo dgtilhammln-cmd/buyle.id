@@ -177,17 +177,46 @@
     border-color: #CBD5E1;
 }
 
-/* Table Container */
+/* Table Container - Enable Swipe & Drag Scroll */
 .res-table-card {
     background: #ffffff;
     border-radius: 20px;
     border: 1.5px solid #F1F5F9;
     box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+    user-select: none;
+    scrollbar-width: thin;
+}
+
+.res-table-card:active {
+    cursor: grabbing;
+}
+
+.res-table-card::-webkit-scrollbar,
+.res-stats-grid-10::-webkit-scrollbar {
+    height: 8px;
+}
+.res-table-card::-webkit-scrollbar-track,
+.res-stats-grid-10::-webkit-scrollbar-track {
+    background: #F1F5F9;
+    border-radius: 10px;
+}
+.res-table-card::-webkit-scrollbar-thumb,
+.res-stats-grid-10::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 10px;
+}
+.res-table-card::-webkit-scrollbar-thumb:hover,
+.res-stats-grid-10::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
 }
 
 .res-table {
     width: 100%;
+    min-width: 1150px;
     border-collapse: collapse;
     font-size: 0.85rem;
 }
@@ -693,7 +722,7 @@
                         </td>
                         <td>
                             @if($item['abandoned_cart_count'] > 0)
-                                <div style="cursor:pointer;" onclick="openCartModal({{ json_encode($item['abandoned_cart_items']) }}, '{{ addslashes($user->name) }}')">
+                                <div style="cursor:pointer;" onclick="openCartModal({{ json_encode($item['abandoned_cart_items']) }}, '{{ addslashes($user->name) }}', {{ $user->id }})">
                                     <span style="font-size:0.825rem; font-weight:700; color:#D97706; text-decoration:underline;" title="Klik untuk rincian pembeli yang menunda keranjang">
                                         Rp {{ number_format($abandoned, 0, ',', '.') }}
                                     </span>
@@ -809,7 +838,7 @@
                         <div>
                             <div style="color:#64748B; font-size:0.7rem; font-weight:700;">CART PENDING</div>
                             @if($item['abandoned_cart_count'] > 0)
-                                <div style="font-weight:800; color:#D97706; font-size:0.9rem; cursor:pointer;" onclick="openCartModal({{ json_encode($item['abandoned_cart_items']) }}, '{{ addslashes($user->name) }}')">
+                                <div style="font-weight:800; color:#D97706; font-size:0.9rem; cursor:pointer;" onclick="openCartModal({{ json_encode($item['abandoned_cart_items']) }}, '{{ addslashes($user->name) }}', {{ $user->id }})">
                                     Rp {{ number_format($abandoned, 0, ',', '.') }} &rsaquo;
                                 </div>
                             @else
@@ -981,7 +1010,7 @@ function closeGhostModal() {
     document.getElementById('ghostModal').style.display = 'none';
 }
 
-function openCartModal(items, creatorName) {
+function openCartModal(items, creatorName, creatorId) {
     document.getElementById('cartModalCreatorName').innerText = creatorName;
     const container = document.getElementById('cartModalListContainer');
     
@@ -989,6 +1018,22 @@ function openCartModal(items, creatorName) {
         container.innerHTML = `<div style="text-align:center; padding:2rem; color:#64748B;">Tidak ada item keranjang belanja tertunda untuk creator ini.</div>`;
     } else {
         let html = `
+            <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:0.75rem 1rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                <div style="font-size:0.78rem; color:#92400E; font-weight:600;">
+                    Total <strong>${items.length} item</strong> keranjang tertunda tersimpan di database.
+                </div>
+                ${creatorId ? `
+                <form action="{{ route('admin.creator-resources.clear-cart-items') }}" method="POST" style="margin:0;" onsubmit="return confirm('Kosongkan SELURUH item keranjang tertunda milik creator ${creatorName}? Data di database akan dibersihkan.')">
+                    @csrf
+                    <input type="hidden" name="creator_id" value="${creatorId}">
+                    <button type="submit" style="background:#EF4444; color:#fff; border:none; border-radius:8px; padding:0.4rem 0.85rem; font-size:0.725rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        Kosongkan Semua Cart Creator Ini
+                    </button>
+                </form>
+                ` : ''}
+            </div>
+
             <div style="max-height:350px; overflow-y:auto; border:1px solid #E2E8F0; border-radius:12px; margin-bottom:1rem;">
                 <table style="width:100%; border-collapse:collapse; font-size:0.78rem;">
                     <thead style="background:#F8FAFC; border-bottom:1px solid #E2E8F0;">
@@ -997,7 +1042,7 @@ function openCartModal(items, creatorName) {
                             <th style="padding:0.6rem 0.85rem; text-align:left; color:#475569;">Produk Tertunda</th>
                             <th style="padding:0.6rem 0.85rem; text-align:center; color:#475569;">Qty</th>
                             <th style="padding:0.6rem 0.85rem; text-align:right; color:#475569;">Subtotal</th>
-                            <th style="padding:0.6rem 0.85rem; text-align:right; color:#475569;">Aksi Reminder</th>
+                            <th style="padding:0.6rem 0.85rem; text-align:right; color:#475569;">Aksi Management</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1008,7 +1053,7 @@ function openCartModal(items, creatorName) {
             
             let waBtn = '';
             if (item.buyer_wa_link) {
-                waBtn = `<a href="${item.buyer_wa_link}" target="_blank" class="btn-wa-nudge" style="padding:0.3rem 0.6rem; font-size:0.7rem;">WA Nudge</a>`;
+                waBtn = `<a href="${item.buyer_wa_link}" target="_blank" class="btn-wa-nudge" style="padding:0.3rem 0.6rem; font-size:0.7rem;" title="Nudge via WhatsApp">WA Nudge</a>`;
             }
 
             let emailBtn = '';
@@ -1027,6 +1072,16 @@ function openCartModal(items, creatorName) {
                 `;
             }
 
+            let deleteBtn = `
+                <form action="{{ route('admin.creator-resources.delete-cart-item') }}" method="POST" style="display:inline; margin:0;" onsubmit="return confirm('Hapus item keranjang tertunda milik ${item.buyer_name} dari database?')">
+                    @csrf
+                    <input type="hidden" name="cart_id" value="${item.id}">
+                    <button type="submit" style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; border-radius:8px; padding:0.3rem 0.6rem; font-size:0.7rem; font-weight:700; cursor:pointer;" title="Hapus item keranjang ini">
+                        Hapus
+                    </button>
+                </form>
+            `;
+
             html += `
                 <tr style="border-bottom:1px solid #F1F5F9;">
                     <td style="padding:0.6rem 0.85rem;">
@@ -1044,9 +1099,10 @@ function openCartModal(items, creatorName) {
                         ${subtotalFormatted}
                     </td>
                     <td style="padding:0.6rem 0.85rem; text-align:right;">
-                        <div style="display:flex; gap:0.25rem; justify-content:flex-end;">
+                        <div style="display:flex; gap:0.25rem; justify-content:flex-end; align-items:center;">
                             ${waBtn}
                             ${emailBtn}
+                            ${deleteBtn}
                         </div>
                     </td>
                 </tr>
@@ -1067,6 +1123,40 @@ function openCartModal(items, creatorName) {
 function closeCartModal() {
     document.getElementById('cartModal').style.display = 'none';
 }
+
+// Mouse Drag-to-Scroll & Touch Swipe handler for Table and Stats Grid
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollables = document.querySelectorAll('.res-table-card, .res-stats-grid-10');
+    scrollables.forEach(slider => {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            if (e.target.closest('a, button, input, select, form')) return;
+            isDown = true;
+            slider.classList.add('active');
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+
+        slider.addEventListener('mouseleave', () => {
+            isDown = false;
+        });
+
+        slider.addEventListener('mouseup', () => {
+            isDown = false;
+        });
+
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 1.5;
+            slider.scrollLeft = scrollLeft - walk;
+        });
+    });
+});
 </script>
 
 @endsection
