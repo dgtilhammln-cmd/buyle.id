@@ -34,12 +34,13 @@ class AdminCreatorResourceController extends Controller
     }
 
     /**
-     * Tampilkan daftar audit penggunaan resource & storage creator.
+     * Tampilkan daftar audit penggunaan resource, revenue & aktivitas online creator.
      */
     public function index(Request $request)
     {
         $search = trim($request->input('search', ''));
         $sortBy = $request->input('sort_by', 'storage_desc');
+        $onlineFilter = $request->input('online_status', 'all');
 
         // Ambil semua pengguna bertipe creator (Kecuali Admin / Super Admin)
         $query = User::query()
@@ -56,6 +57,7 @@ class AdminCreatorResourceController extends Controller
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
                   ->orWhere('username', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
                   ->orWhereHas('creatorProfile', function ($cp) use ($search) {
                       $cp->where('store_name', 'like', "%{$search}%")
                          ->where('store_slug', 'like', "%{$search}%");
@@ -65,7 +67,7 @@ class AdminCreatorResourceController extends Controller
 
         $users = $query->get();
 
-        // Hitung rincian resource & revenue untuk setiap creator
+        // Hitung rincian resource, online history, & revenue untuk setiap creator
         $creatorResources = $users->map(function ($user) {
             $productCount = $user->products->count();
             $creatorProfile = $user->creatorProfile;
@@ -162,26 +164,105 @@ class AdminCreatorResourceController extends Controller
                 $q->whereNotIn('status', ['pending', 'cancelled', 'refunded', 'failed', 'expired']);
             })->sum('subtotal');
 
-            // Format Avatar URL & Activity Log
+            // Potensi Abandoned Cart (Keranjang Belanja Tertunda Pembeli)
+            $abandonedCartCount = 0;
+            $abandonedCartValue = 0;
+            try {
+                $cartItems = \App\Models\Cart::whereHas('product', function ($q) use ($user) {
+                    $q->where('seller_id', $user->id);
+                })->get();
+                $abandonedCartCount = $cartItems->sum('qty');
+                $abandonedCartValue = $cartItems->sum(function ($item) {
+                    return $item->subtotal;
+                });
+            } catch (\Exception $e) {
+                // Ignore if cart query fails
+            }
+
+            // Riwayat Online Status Breakdown
+            $lastSeen = $user->last_seen_at;
+            $isOnlineNow = $lastSeen && $lastSeen->gt(now()->subMinutes(15));
+            $isActiveToday = $lastSeen && $lastSeen->gt(now()->subHours(24));
+            $isActiveWeek = $lastSeen && $lastSeen->gt(now()->subDays(7));
+
+            if ($isOnlineNow) {
+                $onlineStatusCode = 'online_now';
+                $onlineStatusLabel = 'Online Sekarang';
+                $onlineBadgeClass = 'online-badge-now';
+            } elseif ($isActiveToday) {
+                $onlineStatusCode = 'active_today';
+                $onlineStatusLabel = 'Aktif Hari Ini';
+                $onlineBadgeClass = 'online-badge-today';
+            } elseif ($isActiveWeek) {
+                $onlineStatusCode = 'active_week';
+                $onlineStatusLabel = 'Aktif Minggu Ini';
+                $onlineBadgeClass = 'online-badge-week';
+            } else {
+                $onlineStatusCode = 'inactive';
+                $onlineStatusLabel = 'Inaktif (> 7 hr)';
+                $onlineBadgeClass = 'online-badge-inactive';
+            }
+
+            $lastSeenText = $lastSeen ? $lastSeen->diffForHumans() : 'Belum Aktif';
+            $lastSeenFull = $lastSeen ? $lastSeen->translatedFormat('d M Y H:i:s') : 'Belum Pernah Login';
+
+            // Direct WhatsApp Link Generator
+            $waNumber = null;
+            $waLink = null;
+            $rawPhone = $user->phone ?? ($creatorProfile->phone ?? null);
+            if (!empty($rawPhone)) {
+                $cleanPhone = preg_replace('/[^0-9]/', '', $rawPhone);
+                if (Str::startsWith($cleanPhone, '0')) {
+                    $cleanPhone = '62' . substr($cleanPhone, 1);
+                }
+                if (!Str::startsWith($cleanPhone, '62') && strlen($cleanPhone) >= 9) {
+                    $cleanPhone = '62' . $cleanPhone;
+                }
+                $waNumber = $cleanPhone;
+                $storeTitle = $creatorProfile->store_name ?? $user->name;
+                $msg = urlencode("Halo kak {$user->name} ({$storeTitle}), kami dari tim Buyle.id ingin menyapa & membantu optimasi toko online kamu agar omset penjualan makin meningkat! 🚀");
+                $waLink = "https://wa.me/{$cleanPhone}?text={$msg}";
+            }
+
+            // Format Avatar URL
             $avatarUrl = self::getStorageUrl($user->avatar);
-            $isOnlineNow = $user->last_seen_at && $user->last_seen_at->gt(now()->subMinutes(15));
-            $lastSeenText = $user->last_seen_at ? $user->last_seen_at->diffForHumans() : 'Belum Aktif';
 
             return [
-                'user'               => $user,
-                'creator_profile'    => $creatorProfile,
-                'avatar_url'         => $avatarUrl,
-                'product_count'      => $productCount,
-                'bio_blocks_count'   => $bioBlocksCount,
-                'asset_file_count'   => $existingFileCount,
-                'total_size_bytes'   => $totalSizeBytes,
-                'total_size_mb'      => $totalSizeMb,
-                'est_monthly_cost'   => $estMonthlyCost,
-                'total_revenue'      => $totalRevenue,
-                'is_online_now'      => $isOnlineNow,
-                'last_seen_text'     => $lastSeenText,
+                'user'                 => $user,
+                'creator_profile'      => $creatorProfile,
+                'avatar_url'           => $avatarUrl,
+                'product_count'        => $productCount,
+                'bio_blocks_count'     => $bioBlocksCount,
+                'asset_file_count'     => $existingFileCount,
+                'total_size_bytes'     => $totalSizeBytes,
+                'total_size_mb'        => $totalSizeMb,
+                'est_monthly_cost'     => $estMonthlyCost,
+                'total_revenue'        => $totalRevenue,
+                'abandoned_cart_count' => $abandonedCartCount,
+                'abandoned_cart_value' => $abandonedCartValue,
+                'is_online_now'        => $isOnlineNow,
+                'is_active_today'      => $isActiveToday,
+                'is_active_week'       => $isActiveWeek,
+                'online_status_code'   => $onlineStatusCode,
+                'online_status_label'  => $onlineStatusLabel,
+                'online_badge_class'   => $onlineBadgeClass,
+                'last_seen_text'       => $lastSeenText,
+                'last_seen_full'       => $lastSeenFull,
+                'wa_number'            => $waNumber,
+                'wa_link'              => $waLink,
             ];
         });
+
+        // Filter berdasarkan Status Online
+        if ($onlineFilter !== 'all') {
+            $creatorResources = $creatorResources->filter(function ($item) use ($onlineFilter) {
+                if ($onlineFilter === 'online_now') return $item['is_online_now'];
+                if ($onlineFilter === 'active_today') return $item['is_active_today'];
+                if ($onlineFilter === 'active_week') return $item['is_active_week'];
+                if ($onlineFilter === 'inactive') return !$item['is_active_week'];
+                return true;
+            });
+        }
 
         // Sorting
         if ($sortBy === 'storage_desc') {
@@ -190,38 +271,47 @@ class AdminCreatorResourceController extends Controller
             $creatorResources = $creatorResources->sortBy('total_size_bytes');
         } elseif ($sortBy === 'revenue_desc') {
             $creatorResources = $creatorResources->sortByDesc('total_revenue');
+        } elseif ($sortBy === 'abandoned_desc') {
+            $creatorResources = $creatorResources->sortByDesc('abandoned_cart_value');
         } elseif ($sortBy === 'products_desc') {
             $creatorResources = $creatorResources->sortByDesc('product_count');
         } elseif ($sortBy === 'blocks_desc') {
             $creatorResources = $creatorResources->sortByDesc('bio_blocks_count');
         } elseif ($sortBy === 'assets_desc') {
             $creatorResources = $creatorResources->sortByDesc('asset_file_count');
+        } elseif ($sortBy === 'online_recent') {
+            $creatorResources = $creatorResources->sortByDesc(function ($item) {
+                return $item['user']->last_seen_at ? $item['user']->last_seen_at->timestamp : 0;
+            });
         }
 
-        // 10 Statistik Keseluruhan
-        $totalCreatorsCount       = $creatorResources->count();
-        $onlineCreatorsCount      = $creatorResources->where('is_online_now', true)->count();
+        // 10 Statistik Keseluruhan (Grid 1 Baris 10 Card)
+        $totalCreatorsCount       = $users->count();
+        $onlineCreatorsCount      = $users->filter(fn($u) => $u->last_seen_at && $u->last_seen_at->gt(now()->subMinutes(15)))->count();
         $totalStorageBytesOverall = $creatorResources->sum('total_size_bytes');
         $totalStorageMbOverall    = round($totalStorageBytesOverall / (1024 * 1024), 2);
         $estServerCostOverall     = $creatorResources->sum('est_monthly_cost');
         $totalRevenueOverall      = $creatorResources->sum('total_revenue');
+        $totalAbandonedOverall    = $creatorResources->sum('abandoned_cart_value');
         $avgLtvPerMb              = $totalStorageMbOverall > 0 ? round($totalRevenueOverall / $totalStorageMbOverall, 0) : 0;
         $totalProductsOverall     = $creatorResources->sum('product_count');
         $totalBlocksOverall       = $creatorResources->sum('bio_blocks_count');
         $totalAssetsOverall       = $creatorResources->sum('asset_file_count');
 
-        // Scan Orphan / Ghost Files (File Sampah)
+        // Scan Orphan / Ghost Files (File Sampah Terbuang)
         $orphanData = self::getOrphanFiles();
 
         return view('admin.creator-resources.index', [
             'creatorResources'        => $creatorResources,
             'search'                  => $search,
             'sortBy'                  => $sortBy,
+            'onlineFilter'            => $onlineFilter,
             'totalCreatorsCount'      => $totalCreatorsCount,
             'onlineCreatorsCount'     => $onlineCreatorsCount,
             'totalStorageMbOverall'   => $totalStorageMbOverall,
             'estServerCostOverall'    => $estServerCostOverall,
             'totalRevenueOverall'     => $totalRevenueOverall,
+            'totalAbandonedOverall'  => $totalAbandonedOverall,
             'avgLtvPerMb'             => $avgLtvPerMb,
             'totalProductsOverall'    => $totalProductsOverall,
             'totalBlocksOverall'      => $totalBlocksOverall,

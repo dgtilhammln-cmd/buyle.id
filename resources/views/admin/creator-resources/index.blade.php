@@ -4,14 +4,14 @@
 
 @section('content')
 <style>
-.res-page { font-family: 'Montserrat', sans-serif; }
+.res-page { font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; }
 
-/* Stat Cards Grid - 1 Baris 10 Card */
+/* Stat Cards Grid - Exactly 1 Baris 10 Card */
 .res-stats-grid-10 {
     display: grid;
-    grid-template-columns: repeat(10, minmax(130px, 1fr));
-    gap: 0.75rem;
-    margin-bottom: 1.75rem;
+    grid-template-columns: repeat(10, minmax(120px, 1fr));
+    gap: 0.65rem;
+    margin-bottom: 1.5rem;
     overflow-x: auto;
     padding-bottom: 0.5rem;
     scrollbar-width: thin;
@@ -21,41 +21,42 @@
     background: #ffffff;
     border: 1.5px solid #F1F5F9;
     border-radius: 16px;
-    padding: 1rem 0.85rem;
+    padding: 0.85rem 0.75rem;
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 100px;
+    min-height: 96px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .res-stat-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
 }
 
 .res-stat-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.35rem;
 }
 
 .res-stat-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: rgba(30, 179, 73, 0.08);
     color: #1eb349;
     border: 1px solid rgba(30, 179, 73, 0.15);
+    flex-shrink: 0;
 }
 
-.res-stat-val { font-size: 1.1rem; font-weight: 800; color: #0F172A; line-height: 1.2; }
-.res-stat-lbl { font-size: 0.68rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 0.1rem; }
+.res-stat-val { font-size: 1.05rem; font-weight: 800; color: #0F172A; line-height: 1.2; word-break: break-word; }
+.res-stat-lbl { font-size: 0.65rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.03em; }
 
 /* Filter & Search Bar */
 .res-filter-box {
@@ -86,7 +87,7 @@
     font-size: 0.8125rem;
     outline: none;
     width: 100%;
-    font-family: 'Montserrat', sans-serif;
+    font-family: inherit;
     background: #F8FAFC;
     color: #0F172A;
     transition: all 0.2s;
@@ -104,7 +105,7 @@
     border-radius: 12px;
     font-size: 0.8125rem;
     outline: none;
-    font-family: 'Montserrat', sans-serif;
+    font-family: inherit;
     background: #F8FAFC;
     color: #0F172A;
     cursor: pointer;
@@ -119,7 +120,7 @@
     font-size: 0.8125rem;
     font-weight: 700;
     cursor: pointer;
-    font-family: 'Montserrat', sans-serif;
+    font-family: inherit;
     transition: background 0.2s;
 }
 
@@ -142,18 +143,18 @@
 
 .res-table th {
     background: #F8FAFC;
-    padding: 0.9rem 1.25rem;
+    padding: 0.9rem 1.1rem;
     text-align: left;
     font-weight: 700;
     color: #475569;
-    font-size: 0.75rem;
+    font-size: 0.725rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     border-bottom: 1.5px solid #E2E8F0;
 }
 
 .res-table td {
-    padding: 1rem 1.25rem;
+    padding: 0.95rem 1.1rem;
     border-bottom: 1px solid #F1F5F9;
     color: #1E293B;
     vertical-align: middle;
@@ -190,27 +191,82 @@
     font-size: 0.85rem;
 }
 
-.res-online-dot {
+/* Online Indicator Glowing Animation */
+.res-online-pulse {
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 12px;
-    height: 12px;
+    width: 13px;
+    height: 13px;
     border-radius: 50%;
     background: #10B981;
     border: 2px solid #ffffff;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.4);
+    animation: pulse-ring 2s infinite;
+}
+
+@keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+    70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
 .res-user-name {
     font-weight: 700;
     color: #0F172A;
     font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
 }
 
 .res-user-sub {
     font-size: 0.75rem;
     color: #64748B;
     margin-top: 0.1rem;
+}
+
+.online-badge-now {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #10B981;
+    background: #ECFDF5;
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    border: 1px solid #A7F3D0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.online-badge-today {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #D97706;
+    background: #FFFBEB;
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    border: 1px solid #FDE68A;
+}
+
+.online-badge-week {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #2563EB;
+    background: #EFF6FF;
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    border: 1px solid #BFDBFE;
+}
+
+.online-badge-inactive {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #64748B;
+    background: #F8FAFC;
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    border: 1px solid #E2E8F0;
 }
 
 .res-badge {
@@ -231,13 +287,13 @@
 .btn-detail {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.45rem 0.85rem;
+    gap: 0.3rem;
+    padding: 0.4rem 0.75rem;
     border-radius: 10px;
     background: #F8FAFC;
     color: #0F172A;
     font-weight: 700;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     text-decoration: none;
     transition: all 0.2s;
     border: 1.5px solid #E2E8F0;
@@ -251,13 +307,13 @@
 .btn-compress-sm {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    padding: 0.45rem 0.75rem;
+    gap: 0.25rem;
+    padding: 0.4rem 0.65rem;
     border-radius: 10px;
     background: #F0FDF4;
     color: #1eb349;
     font-weight: 700;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     border: 1px solid #DCFCE7;
     cursor: pointer;
     transition: all 0.2s;
@@ -268,17 +324,37 @@
     color: #ffffff;
 }
 
+.btn-wa-nudge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.4rem 0.65rem;
+    border-radius: 10px;
+    background: #25D366;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-wa-nudge:hover {
+    background: #128C7E;
+    color: #ffffff;
+}
+
 .btn-clean-orphan {
     background: #FEF2F2;
     color: #DC2626;
     border: 1px solid #FEE2E2;
     border-radius: 8px;
-    padding: 0.2rem 0.5rem;
+    padding: 0.25rem 0.5rem;
     font-size: 0.65rem;
     font-weight: 700;
     cursor: pointer;
     margin-top: 0.25rem;
     transition: all 0.2s;
+    width: 100%;
 }
 
 .btn-clean-orphan:hover {
@@ -286,13 +362,52 @@
     color: #ffffff;
 }
 
+/* Ghost Modal */
+.res-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.res-modal-card {
+    background: #ffffff;
+    border-radius: 20px;
+    max-width: 650px;
+    width: 100%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+
+.res-modal-header {
+    padding: 1.25rem 1.5rem;
+    background: #F8FAFC;
+    border-bottom: 1px solid #E2E8F0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.res-modal-body {
+    padding: 1.25rem 1.5rem;
+    overflow-y: auto;
+}
+
 @media(max-width: 1200px) {
-    .res-stats-grid-10 { grid-template-columns: repeat(5, minmax(130px, 1fr)); }
+    .res-stats-grid-10 { grid-template-columns: repeat(5, minmax(120px, 1fr)); }
 }
 @media(max-width: 768px) {
-    .res-stats-grid-10 { grid-template-columns: repeat(2, minmax(130px, 1fr)); }
+    .res-stats-grid-10 { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
     .res-table-card { overflow-x: auto; }
-    .res-table { min-width: 900px; }
+    .res-table { min-width: 950px; }
 }
 </style>
 
@@ -315,7 +430,7 @@
             <div class="res-stat-top">
                 <div class="res-stat-lbl">Creators</div>
                 <div class="res-stat-icon">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
             </div>
             <div class="res-stat-val">{{ number_format($totalCreatorsCount) }}</div>
@@ -326,10 +441,10 @@
             <div class="res-stat-top">
                 <div class="res-stat-lbl">Online</div>
                 <div class="res-stat-icon">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 </div>
             </div>
-            <div class="res-stat-val">{{ number_format($onlineCreatorsCount) }}</div>
+            <div class="res-stat-val" style="color:#10B981;">{{ number_format($onlineCreatorsCount) }}</div>
         </div>
 
         {{-- Card 3: Disk Storage --}}
@@ -337,7 +452,7 @@
             <div class="res-stat-top">
                 <div class="res-stat-lbl">Storage</div>
                 <div class="res-stat-icon">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 </div>
             </div>
             <div class="res-stat-val">{{ $totalStorageMbOverall }} MB</div>
@@ -348,7 +463,7 @@
             <div class="res-stat-top">
                 <div class="res-stat-lbl">Biaya Server</div>
                 <div class="res-stat-icon">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
                 </div>
             </div>
             <div class="res-stat-val">Rp {{ number_format($estServerCostOverall, 0, ',', '.') }}</div>
@@ -357,97 +472,115 @@
         {{-- Card 5: Total Omset --}}
         <div class="res-stat-card">
             <div class="res-stat-top">
-                <div class="res-stat-lbl">Omset</div>
+                <div class="res-stat-lbl">Total Omset</div>
                 <div class="res-stat-icon">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 </div>
             </div>
-            <div class="res-stat-val">Rp {{ number_format($totalRevenueOverall, 0, ',', '.') }}</div>
+            <div class="res-stat-val" style="color:#16A34A;">Rp {{ number_format($totalRevenueOverall, 0, ',', '.') }}</div>
         </div>
 
-        {{-- Card 6: Efficiency (LTV/MB) --}}
+        {{-- Card 6: Abandoned Cart Potential (Omset Tertunda) --}}
+        <div class="res-stat-card">
+            <div class="res-stat-top">
+                <div class="res-stat-lbl">Cart Pending</div>
+                <div class="res-stat-icon" style="background:rgba(217, 119, 6, 0.08); color:#D97706; border-color:rgba(217, 119, 6, 0.15);">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                </div>
+            </div>
+            <div class="res-stat-val" style="color:#D97706;">Rp {{ number_format($totalAbandonedOverall, 0, ',', '.') }}</div>
+        </div>
+
+        {{-- Card 7: Efficiency (LTV/MB) --}}
         <div class="res-stat-card">
             <div class="res-stat-top">
                 <div class="res-stat-lbl">LTV / MB</div>
                 <div class="res-stat-icon">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                 </div>
             </div>
             <div class="res-stat-val">Rp {{ number_format($avgLtvPerMb, 0, ',', '.') }}</div>
         </div>
 
-        {{-- Card 7: Total Produk --}}
+        {{-- Card 8: Total Produk --}}
         <div class="res-stat-card">
             <div class="res-stat-top">
                 <div class="res-stat-lbl">Produk</div>
                 <div class="res-stat-icon">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
                 </div>
             </div>
             <div class="res-stat-val">{{ number_format($totalProductsOverall) }}</div>
         </div>
 
-        {{-- Card 8: Total Blocks --}}
-        <div class="res-stat-card">
-            <div class="res-stat-top">
-                <div class="res-stat-lbl">Bio Blocks</div>
-                <div class="res-stat-icon">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
-                </div>
-            </div>
-            <div class="res-stat-val">{{ number_format($totalBlocksOverall) }}</div>
-        </div>
-
         {{-- Card 9: Total Assets --}}
         <div class="res-stat-card">
             <div class="res-stat-top">
-                <div class="res-stat-lbl">Assets</div>
+                <div class="res-stat-lbl">File Media</div>
                 <div class="res-stat-icon">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 </div>
             </div>
             <div class="res-stat-val">{{ number_format($totalAssetsOverall) }}</div>
         </div>
 
-        {{-- Card 10: Berkas Sampah (Orphan Cleaner) --}}
-        <div class="res-stat-card">
+        {{-- Card 10: Berkas Sampah Terbuang (Orphan Cleaner) --}}
+        <div class="res-stat-card" style="border-color:{{ $orphanData['count'] > 0 ? '#FECACA' : '#F1F5F9' }};">
             <div class="res-stat-top">
-                <div class="res-stat-lbl">Ghost Files</div>
+                <div class="res-stat-lbl" style="color:{{ $orphanData['count'] > 0 ? '#DC2626' : '#64748B' }};">Ghost Files</div>
                 <div class="res-stat-icon" style="background:rgba(220, 38, 38, 0.08); color:#DC2626; border-color:rgba(220, 38, 38, 0.15);">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                 </div>
             </div>
-            <div class="res-stat-val" style="color:{{ $orphanData['count'] > 0 ? '#DC2626' : '#0F172A' }};">
-                {{ $orphanData['count'] }} <span style="font-size:0.7rem; font-weight:600; color:#64748B;">({{ $orphanData['total_mb'] }} MB)</span>
+            <div class="res-stat-val" style="color:{{ $orphanData['count'] > 0 ? '#DC2626' : '#0F172A' }}; cursor:pointer;" onclick="openGhostModal()">
+                {{ $orphanData['count'] }} <span style="font-size:0.68rem; font-weight:600; color:#64748B;">({{ $orphanData['total_mb'] }} MB)</span>
             </div>
             @if($orphanData['count'] > 0)
                 <form action="{{ route('admin.creator-resources.clean-orphans') }}" method="POST" style="margin:0;">
                     @csrf
-                    <button type="submit" class="btn-clean-orphan" onclick="return confirm('Hapus {{ $orphanData['count'] }} berkas sampah terbuang ({{ $orphanData['total_mb'] }} MB) secara permanen?')">
+                    <button type="submit" class="btn-clean-orphan" onclick="return confirm('Hapus {{ $orphanData['count'] }} berkas sampah terbuang ({{ $orphanData['total_mb'] }} MB) secara permanen dari server public storage?')">
                         Bersihkan Sampah
                     </button>
                 </form>
+            @else
+                <div style="font-size:0.65rem; color:#10B981; font-weight:700;">✓ Bersih (0 Ghost)</div>
             @endif
         </div>
     </div>
 
-    {{-- Filter / Search --}}
+    {{-- Filter / Search Bar --}}
     <form method="GET" action="{{ route('admin.creator-resources.index') }}" class="res-filter-box">
         <div class="res-search-group">
-            <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama, email, username, atau nama toko creator..." class="res-input">
+            <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama, email, username, telepon, atau toko creator..." class="res-input">
             <button type="submit" class="res-btn">Cari</button>
         </div>
 
-        <div style="display:flex; align-items:center; gap:0.5rem;">
-            <label style="font-size:0.75rem; font-weight:700; color:#64748B;">URUTKAN:</label>
-            <select name="sort_by" onchange="this.form.submit()" class="res-select">
-                <option value="storage_desc"  {{ $sortBy === 'storage_desc'  ? 'selected' : '' }}>Storage Terbesar (Boros)</option>
-                <option value="storage_asc"   {{ $sortBy === 'storage_asc'   ? 'selected' : '' }}>Storage Terkecil</option>
-                <option value="revenue_desc"  {{ $sortBy === 'revenue_desc'  ? 'selected' : '' }}>Omset Penjualan Terbanyak</option>
-                <option value="products_desc" {{ $sortBy === 'products_desc' ? 'selected' : '' }}>Jumlah Produk Terbanyak</option>
-                <option value="blocks_desc"   {{ $sortBy === 'blocks_desc'   ? 'selected' : '' }}>Jumlah Block Bio Terbanyak</option>
-                <option value="assets_desc"   {{ $sortBy === 'assets_desc'   ? 'selected' : '' }}>Jumlah File Media Terbanyak</option>
-            </select>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+            {{-- Filter Status Online --}}
+            <div style="display:flex; align-items:center; gap:0.3rem;">
+                <label style="font-size:0.75rem; font-weight:700; color:#64748B;">STATUS ONLINE:</label>
+                <select name="online_status" onchange="this.form.submit()" class="res-select">
+                    <option value="all"           {{ $onlineFilter === 'all'           ? 'selected' : '' }}>Semua Creator</option>
+                    <option value="online_now"    {{ $onlineFilter === 'online_now'    ? 'selected' : '' }}>🟢 Online Sekarang</option>
+                    <option value="active_today"  {{ $onlineFilter === 'active_today'  ? 'selected' : '' }}>🟡 Aktif Hari Ini</option>
+                    <option value="active_week"   {{ $onlineFilter === 'active_week'   ? 'selected' : '' }}>🔵 Aktif Minggu Ini</option>
+                    <option value="inactive"      {{ $onlineFilter === 'inactive'      ? 'selected' : '' }}>⚪ Inaktif (> 7 Hari)</option>
+                </select>
+            </div>
+
+            {{-- Filter Urutan --}}
+            <div style="display:flex; align-items:center; gap:0.3rem;">
+                <label style="font-size:0.75rem; font-weight:700; color:#64748B;">URUTKAN:</label>
+                <select name="sort_by" onchange="this.form.submit()" class="res-select">
+                    <option value="storage_desc"    {{ $sortBy === 'storage_desc'    ? 'selected' : '' }}>Storage Terbesar (Boros)</option>
+                    <option value="storage_asc"     {{ $sortBy === 'storage_asc'     ? 'selected' : '' }}>Storage Terkecil</option>
+                    <option value="revenue_desc"    {{ $sortBy === 'revenue_desc'    ? 'selected' : '' }}>Omset Penjualan Terbanyak</option>
+                    <option value="abandoned_desc"  {{ $sortBy === 'abandoned_desc'  ? 'selected' : '' }}>Potensi Cart Tertunda</option>
+                    <option value="online_recent"   {{ $sortBy === 'online_recent'   ? 'selected' : '' }}>Aktivitas Online Terbaru</option>
+                    <option value="products_desc"   {{ $sortBy === 'products_desc'   ? 'selected' : '' }}>Jumlah Produk Terbanyak</option>
+                    <option value="blocks_desc"     {{ $sortBy === 'blocks_desc'     ? 'selected' : '' }}>Jumlah Bio Block Terbanyak</option>
+                </select>
+            </div>
         </div>
     </form>
 
@@ -457,13 +590,14 @@
             <thead>
                 <tr>
                     <th>Creator / Toko</th>
-                    <th>Status Aktivitas</th>
+                    <th>Riwayat Online</th>
                     <th>Storage Size</th>
                     <th>Est. Biaya Server</th>
-                    <th>Omset (Revenue)</th>
-                    <th>Produk / Block</th>
-                    <th>Status ROI & Storage</th>
-                    <th style="text-align: right;">Aksi</th>
+                    <th>Total Omset</th>
+                    <th>Cart Tertunda</th>
+                    <th>Katalog & Block</th>
+                    <th>Status ROI & Health</th>
+                    <th style="text-align: right;">Aksi Canggih</th>
                 </tr>
             </thead>
             <tbody>
@@ -474,6 +608,7 @@
                         $mb = $item['total_size_mb'];
                         $rev = $item['total_revenue'];
                         $cost = $item['est_monthly_cost'];
+                        $abandoned = $item['abandoned_cart_value'];
                     @endphp
                     <tr>
                         <td>
@@ -487,11 +622,13 @@
                                     @endif
 
                                     @if($item['is_online_now'])
-                                        <div class="res-online-dot" title="Online Sekarang"></div>
+                                        <div class="res-online-pulse" title="Online Sekarang (Sedang Aktif)"></div>
                                     @endif
                                 </div>
                                 <div>
-                                    <div class="res-user-name">{{ $user->name }}</div>
+                                    <div class="res-user-name">
+                                        {{ $user->name }}
+                                    </div>
                                     <div class="res-user-sub">
                                         {{ $profile ? ($profile->store_name ?: '@' . $user->username) : '@' . ($user->username ?: 'user') }}
                                         &bull; {{ $user->email }}
@@ -500,65 +637,89 @@
                             </div>
                         </td>
                         <td>
-                            @if($item['is_online_now'])
-                                <span style="font-size:0.75rem; font-weight:700; color:#10B981; background:#ECFDF5; padding:0.2rem 0.55rem; border-radius:100px; border:1px solid #A7F3D0;">
-                                    Online Sekarang
+                            <div title="Terakhir aktif: {{ $item['last_seen_full'] }}">
+                                <span class="{{ $item['online_badge_class'] }}">
+                                    @if($item['is_online_now'])
+                                        ● Online Now
+                                    @else
+                                        {{ $item['online_status_label'] }}
+                                    @endif
                                 </span>
-                            @else
-                                <span style="font-size:0.75rem; font-weight:600; color:#64748B;">
+                                <div style="font-size:0.7rem; color:#64748B; margin-top:0.2rem;">
                                     {{ $item['last_seen_text'] }}
-                                </span>
-                            @endif
+                                </div>
+                            </div>
                         </td>
                         <td>
-                            <strong style="font-size:0.95rem; color:#0F172A;">{{ $mb }} MB</strong>
+                            <strong style="font-size:0.92rem; color:#0F172A;">{{ $mb }} MB</strong>
                             <div style="font-size:0.72rem; color:#64748B; margin-top:0.1rem;">{{ number_format($item['asset_file_count']) }} berkas</div>
                         </td>
                         <td>
-                            <span style="font-size:0.85rem; font-weight:700; color:#475569;">
+                            <span style="font-size:0.825rem; font-weight:700; color:#475569;">
                                 Rp {{ number_format($cost, 0, ',', '.') }}/bln
                             </span>
                         </td>
                         <td>
-                            <strong style="font-size:0.92rem; color:#0F172A;">
+                            <strong style="font-size:0.92rem; color:#16A34A;">
                                 Rp {{ number_format($rev, 0, ',', '.') }}
                             </strong>
                         </td>
                         <td>
-                            <span style="font-size:0.8rem; font-weight:600; color:#1E293B;">
+                            @if($item['abandoned_cart_count'] > 0)
+                                <span style="font-size:0.825rem; font-weight:700; color:#D97706;" title="{{ $item['abandoned_cart_count'] }} barang tertunda di cart pembeli">
+                                    Rp {{ number_format($abandoned, 0, ',', '.') }}
+                                </span>
+                                <div style="font-size:0.7rem; color:#D97706;">{{ $item['abandoned_cart_count'] }} item di cart</div>
+                            @else
+                                <span style="font-size:0.78rem; color:#94A3B8;">Rp 0</span>
+                            @endif
+                        </td>
+                        <td>
+                            <span style="font-size:0.78rem; font-weight:600; color:#1E293B;">
                                 {{ number_format($item['product_count']) }} produk &bull; {{ number_format($item['bio_blocks_count']) }} block
                             </span>
                         </td>
                         <td>
                             @if($rev > 0)
-                                <span class="res-badge high-roi">High ROI (Omset Aktif)</span>
+                                <span class="res-badge high-roi">✓ High Revenue</span>
                             @elseif($mb > 50)
-                                <span class="res-badge danger">Zero Revenue - High Storage</span>
-                            @elseif($mb > 20)
-                                <span class="res-badge warning">Penggunaan Sedang</span>
+                                <span class="res-badge danger">⚠ High Storage Zero Revenue</span>
+                            @elseif($abandoned > 0)
+                                <span class="res-badge warning">⚡ High Potential Cart</span>
                             @else
                                 <span class="res-badge normal">Penggunaan Normal</span>
                             @endif
                         </td>
                         <td style="text-align: right;">
-                            <div style="display:inline-flex; gap:0.4rem; align-items:center;">
+                            <div style="display:inline-flex; gap:0.35rem; align-items:center; flex-wrap:nowrap;">
+                                {{-- Direct WA Nudge Button --}}
+                                @if($item['wa_link'])
+                                    <a href="{{ $item['wa_link'] }}" target="_blank" class="btn-wa-nudge" title="Kirim Pesan WhatsApp Sapaan & Support Revenue ke Creator Ini">
+                                        <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.385 0 0 5.385 0 12.031c0 2.124.553 4.197 1.604 6.014L0 24l6.138-1.611a11.97 11.97 0 005.893 1.541h.005c6.645 0 12.03-5.386 12.03-12.032C24.066 5.385 18.676 0 12.031 0zm0 22.033h-.004a9.98 9.98 0 01-5.09-1.396l-.365-.217-3.784.993 1.01-3.69-.238-.379a9.95 9.95 0 01-1.528-5.312c0-5.513 4.486-10 10-10 2.671 0 5.182 1.04 7.07 2.93 1.888 1.888 2.927 4.4 2.927 7.07 0 5.514-4.486 10-10 10z"/></svg>
+                                        Nudge WA
+                                    </a>
+                                @endif
+
+                                {{-- Compress Media --}}
                                 <form action="{{ route('admin.creator-resources.compress-all', $user->id) }}" method="POST" style="margin:0;">
                                     @csrf
-                                    <button type="submit" class="btn-compress-sm" title="Kompresi Maksimal Semua Berkas Creator Ini" onclick="return confirm('Kompresi semua gambar milik {{ addslashes($user->name) }}?')">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M4 20l7-7"/></svg>
+                                    <button type="submit" class="btn-compress-sm" title="Kompresi Maksimal Berkas Media Creator Ini" onclick="return confirm('Kompresi semua gambar milik {{ addslashes($user->name) }}?')">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M4 20l7-7"/></svg>
                                         Compress
                                     </button>
                                 </form>
+
+                                {{-- Lihat Detail --}}
                                 <a href="{{ route('admin.creator-resources.show', $user->id) }}" class="btn-detail">
-                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                                    Lihat Detail
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    Detail
                                 </a>
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" style="text-align:center; padding:2.5rem; color:#64748B;">
+                        <td colspan="9" style="text-align:center; padding:2.5rem; color:#64748B;">
                             Tidak ada data creator yang ditemukan.
                         </td>
                     </tr>
@@ -567,5 +728,73 @@
         </table>
     </div>
 </div>
+
+{{-- Ghost Files Details Modal --}}
+<div id="ghostModal" class="res-modal-overlay">
+    <div class="res-modal-card">
+        <div class="res-modal-header">
+            <div>
+                <h3 style="font-size:1.05rem; font-weight:800; color:#0F172A; margin:0;">Pembersih Berkas Sampah Terbuang (Ghost Files)</h3>
+                <p style="font-size:0.75rem; color:#64748B; margin:0.15rem 0 0 0;">Scan otomatis file fisik di public storage yang tidak lagi direferensikan oleh database produk/bio/user.</p>
+            </div>
+            <button onclick="closeGhostModal()" style="border:none; background:none; font-size:1.25rem; cursor:pointer; color:#64748B;">&times;</button>
+        </div>
+        <div class="res-modal-body">
+            <div style="background:#FEF2F2; border:1px solid #FEE2E2; padding:0.85rem 1rem; border-radius:12px; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-size:0.85rem; font-weight:700; color:#991B1B;">Ditemukan {{ $orphanData['count'] }} Ghost Files</div>
+                    <div style="font-size:0.75rem; color:#7F1D1D;">Total ukuran berkas tak terpakai: <strong>{{ $orphanData['total_mb'] }} MB</strong></div>
+                </div>
+                @if($orphanData['count'] > 0)
+                    <form action="{{ route('admin.creator-resources.clean-orphans') }}" method="POST" style="margin:0;">
+                        @csrf
+                        <button type="submit" class="res-btn" style="background:#DC2626; color:#ffffff; font-size:0.75rem; padding:0.5rem 1rem;" onclick="return confirm('Hapus seluruh {{ $orphanData['count'] }} berkas sampah terbuang ({{ $orphanData['total_mb'] }} MB) secara permanen?')">
+                            Hapus Semua Sampah
+                        </button>
+                    </form>
+                @endif
+            </div>
+
+            @if($orphanData['count'] > 0)
+                <div style="max-height:300px; overflow-y:auto; border:1px solid #E2E8F0; border-radius:12px;">
+                    <table style="width:100%; border-collapse:collapse; font-size:0.78rem;">
+                        <thead style="background:#F8FAFC; border-bottom:1px solid #E2E8F0;">
+                            <tr>
+                                <th style="padding:0.6rem 0.85rem; text-align:left; color:#475569;">Path File</th>
+                                <th style="padding:0.6rem 0.85rem; text-align:right; color:#475569;">Ukuran</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(array_slice($orphanData['files'], 0, 50) as $f)
+                                <tr style="border-bottom:1px solid #F1F5F9;">
+                                    <td style="padding:0.5rem 0.85rem; font-family:monospace; color:#334155; word-break:break-all;">{{ $f['path'] }}</td>
+                                    <td style="padding:0.5rem 0.85rem; text-align:right; font-weight:700; color:#64748B;">{{ round($f['size'] / 1024, 1) }} KB</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @if($orphanData['count'] > 50)
+                    <div style="font-size:0.72rem; color:#64748B; margin-top:0.5rem; text-align:center;">
+                        Menampilkan 50 dari {{ $orphanData['count'] }} file sampah.
+                    </div>
+                @endif
+            @else
+                <div style="text-align:center; padding:2rem; color:#10B981; font-weight:700; font-size:0.9rem;">
+                    ✓ Server bersih! Tidak ada berkas sampah terbuang yang terdeteksi.
+                </div>
+            @endif
+        </div>
+    </div>
+</div>
+
+<script>
+function openGhostModal() {
+    document.getElementById('ghostModal').style.display = 'flex';
+}
+function closeGhostModal() {
+    document.getElementById('ghostModal').style.display = 'none';
+}
+</script>
 
 @endsection
