@@ -404,6 +404,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/creator-resources',                        [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'index'])->name('admin.creator-resources.index');
         Route::get('/creator-resources/{user}',                  [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'show'])->name('admin.creator-resources.show');
         Route::post('/creator-resources/{user}/impersonate',     [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'impersonate'])->name('admin.creator-resources.impersonate');
+        Route::post('/creator-resources/{user}/compress-asset',  [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'compressAsset'])->name('admin.creator-resources.compress-asset');
+        Route::post('/creator-resources/{user}/compress-all',    [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'compressAll'])->name('admin.creator-resources.compress-all');
+        Route::post('/creator-resources/clean-orphans',          [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'cleanOrphans'])->name('admin.creator-resources.clean-orphans');
 
         // Order Management
         Route::get('/orders/export',                            [\App\Http\Controllers\Admin\AdminOrderController::class, 'export'])->name('admin.orders.export');

@@ -162,8 +162,10 @@ class AdminCreatorResourceController extends Controller
                 $q->whereNotIn('status', ['pending', 'cancelled', 'refunded', 'failed', 'expired']);
             })->sum('subtotal');
 
-            // Format Avatar URL
+            // Format Avatar URL & Activity Log
             $avatarUrl = self::getStorageUrl($user->avatar);
+            $isOnlineNow = $user->last_seen_at && $user->last_seen_at->gt(now()->subMinutes(15));
+            $lastSeenText = $user->last_seen_at ? $user->last_seen_at->diffForHumans() : 'Belum Aktif';
 
             return [
                 'user'               => $user,
@@ -176,6 +178,8 @@ class AdminCreatorResourceController extends Controller
                 'total_size_mb'      => $totalSizeMb,
                 'est_monthly_cost'   => $estMonthlyCost,
                 'total_revenue'      => $totalRevenue,
+                'is_online_now'      => $isOnlineNow,
+                'last_seen_text'     => $lastSeenText,
             ];
         });
 
@@ -194,23 +198,35 @@ class AdminCreatorResourceController extends Controller
             $creatorResources = $creatorResources->sortByDesc('asset_file_count');
         }
 
-        // Statistik Keseluruhan
+        // 10 Statistik Keseluruhan
+        $totalCreatorsCount       = $creatorResources->count();
+        $onlineCreatorsCount      = $creatorResources->where('is_online_now', true)->count();
         $totalStorageBytesOverall = $creatorResources->sum('total_size_bytes');
         $totalStorageMbOverall    = round($totalStorageBytesOverall / (1024 * 1024), 2);
+        $estServerCostOverall     = $creatorResources->sum('est_monthly_cost');
         $totalRevenueOverall      = $creatorResources->sum('total_revenue');
-        $totalProductsOverall      = $creatorResources->sum('product_count');
-        $totalBlocksOverall        = $creatorResources->sum('bio_blocks_count');
-        $totalAssetsOverall        = $creatorResources->sum('asset_file_count');
+        $avgLtvPerMb              = $totalStorageMbOverall > 0 ? round($totalRevenueOverall / $totalStorageMbOverall, 0) : 0;
+        $totalProductsOverall     = $creatorResources->sum('product_count');
+        $totalBlocksOverall       = $creatorResources->sum('bio_blocks_count');
+        $totalAssetsOverall       = $creatorResources->sum('asset_file_count');
+
+        // Scan Orphan / Ghost Files (File Sampah)
+        $orphanData = self::getOrphanFiles();
 
         return view('admin.creator-resources.index', [
             'creatorResources'        => $creatorResources,
             'search'                  => $search,
             'sortBy'                  => $sortBy,
+            'totalCreatorsCount'      => $totalCreatorsCount,
+            'onlineCreatorsCount'     => $onlineCreatorsCount,
             'totalStorageMbOverall'   => $totalStorageMbOverall,
+            'estServerCostOverall'    => $estServerCostOverall,
             'totalRevenueOverall'     => $totalRevenueOverall,
-            'totalProductsOverall'     => $totalProductsOverall,
-            'totalBlocksOverall'       => $totalBlocksOverall,
-            'totalAssetsOverall'       => $totalAssetsOverall,
+            'avgLtvPerMb'             => $avgLtvPerMb,
+            'totalProductsOverall'    => $totalProductsOverall,
+            'totalBlocksOverall'      => $totalBlocksOverall,
+            'totalAssetsOverall'      => $totalAssetsOverall,
+            'orphanData'              => $orphanData,
         ]);
     }
 
@@ -452,4 +468,269 @@ class AdminCreatorResourceController extends Controller
 
         return redirect()->route('creator.dashboard')->with('success', "Berhasil masuk ke dashboard creator as {$user->name}.");
     }
+
+    /**
+     * Helper untuk mengompres berkas gambar lokal (JPG, PNG, WEBP)
+     */
+    public static function compressImageFile(string $filePath, int $quality = 70): array
+    {
+        if (empty($filePath) || Str::startsWith($filePath, ['http://', 'https://'])) {
+            return ['success' => false, 'message' => 'Bukan berkas lokal.'];
+        }
+
+        $cleanPath = preg_replace('#^/?(storage/)?#i', '', $filePath);
+        $fullPath = null;
+
+        if (Storage::disk('public')->exists($cleanPath)) {
+            $fullPath = Storage::disk('public')->path($cleanPath);
+        } elseif (file_exists(public_path($filePath))) {
+            $fullPath = public_path($filePath);
+        } elseif (file_exists(public_path('storage/' . $cleanPath))) {
+            $fullPath = public_path('storage/' . $cleanPath);
+        }
+
+        if (!$fullPath || !file_exists($fullPath)) {
+            return ['success' => false, 'message' => 'Berkas tidak ditemukan di storage server.'];
+        }
+
+        $origSize = filesize($fullPath);
+        if ($origSize === 0) {
+            return ['success' => false, 'message' => 'Ukuran berkas 0 byte.'];
+        }
+
+        $info = @getimagesize($fullPath);
+        if (!$info) {
+            return ['success' => false, 'message' => 'Format berkas bukan gambar (misal PDF atau Zip).'];
+        }
+
+        $mime = $info['mime'];
+        $image = null;
+
+        switch ($mime) {
+            case 'image/jpeg':
+            case 'image/jpg':
+                $image = @imagecreatefromjpeg($fullPath);
+                break;
+            case 'image/png':
+                $image = @imagecreatefrompng($fullPath);
+                break;
+            case 'image/webp':
+                $image = @imagecreatefromwebp($fullPath);
+                break;
+            default:
+                return ['success' => false, 'message' => "Format {$mime} tidak didukung untuk kompresi."];
+        }
+
+        if (!$image) {
+            return ['success' => false, 'message' => 'Gagal membaca berkas gambar.'];
+        }
+
+        // Simpan versi terkompresi dengan optimal alpha handling
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+
+        if ($mime === 'image/jpeg' || $mime === 'image/jpg') {
+            imagejpeg($image, $fullPath, $quality);
+        } elseif ($mime === 'image/png') {
+            imagepng($image, $fullPath, 9);
+        } elseif ($mime === 'image/webp') {
+            imagewebp($image, $fullPath, $quality);
+        }
+
+        imagedestroy($image);
+        clearstatcache(true, $fullPath);
+
+        $newSize = filesize($fullPath);
+        $savedBytes = max(0, $origSize - $newSize);
+        $savedKb = round($savedBytes / 1024, 1);
+
+        return [
+            'success'     => true,
+            'orig_size'   => $origSize,
+            'new_size'    => $newSize,
+            'saved_bytes' => $savedBytes,
+            'saved_kb'    => $savedKb,
+        ];
+    }
+
+    /**
+     * Kompresi 1 Aset Berkas
+     */
+    public function compressAsset(Request $request, $id)
+    {
+        $rawPath = $request->input('raw_path');
+        if (empty($rawPath)) {
+            return redirect()->back()->with('error', 'Path berkas tidak valid.');
+        }
+
+        $res = self::compressImageFile($rawPath, 70);
+
+        if (!$res['success']) {
+            return redirect()->back()->with('error', $res['message']);
+        }
+
+        if ($res['saved_bytes'] > 0) {
+            $origMb = round($res['orig_size'] / 1024, 1) . ' KB';
+            $newMb  = round($res['new_size'] / 1024, 1) . ' KB';
+            return redirect()->back()->with('success', "Berkas berhasil dikompresi maksimal dari {$origMb} menjadi {$newMb} (Hemat {$res['saved_kb']} KB)!");
+        }
+
+        return redirect()->back()->with('success', 'Berkas sudah dalam tingkat kompresi paling optimal.');
+    }
+
+    /**
+     * Kompresi Semua Aset Milik Creator Ini
+     */
+    public function compressAll(Request $request, $id)
+    {
+        $user = User::with(['creatorProfile', 'products'])->findOrFail($id);
+
+        $creatorProfile = $user->creatorProfile;
+        $bioBlocks = $creatorProfile ? CreatorBioBlock::where('creator_id', $creatorProfile->id)->get() : collect();
+
+        $filePaths = [];
+        if (!empty($user->avatar)) {
+            $filePaths[] = $user->avatar;
+        }
+        if ($creatorProfile) {
+            if (!empty($creatorProfile->store_banner_1)) $filePaths[] = $creatorProfile->store_banner_1;
+            if (!empty($creatorProfile->store_banner_2)) $filePaths[] = $creatorProfile->store_banner_2;
+        }
+        foreach ($user->products as $product) {
+            if (!empty($product->image)) $filePaths[] = $product->image;
+            if (!empty($product->brochure)) $filePaths[] = $product->brochure;
+            if (!empty($product->og_image)) $filePaths[] = $product->og_image;
+            if (!empty($product->digital_resource)) $filePaths[] = $product->digital_resource;
+            if (is_array($product->gallery)) {
+                foreach ($product->gallery as $g) {
+                    if (!empty($g)) $filePaths[] = $g;
+                }
+            }
+        }
+        foreach ($bioBlocks as $block) {
+            $json = $block->data_json ?? [];
+            if (is_array($json)) {
+                foreach (['image', 'thumb', 'pdf_file', 'file', 'file_path', 'avatar'] as $key) {
+                    if (!empty($json[$key]) && is_string($json[$key])) {
+                        $filePaths[] = $json[$key];
+                    }
+                }
+            }
+        }
+
+        $filePaths = array_unique(array_filter($filePaths));
+        $totalSavedBytes = 0;
+        $compressedCount = 0;
+
+        foreach ($filePaths as $path) {
+            $res = self::compressImageFile($path, 70);
+            if ($res['success']) {
+                $compressedCount++;
+                $totalSavedBytes += $res['saved_bytes'];
+            }
+        }
+
+        $savedMb = round($totalSavedBytes / (1024 * 1024), 2);
+        $savedKb = round($totalSavedBytes / 1024, 1);
+        $savedText = $savedMb > 0 ? "{$savedMb} MB" : "{$savedKb} KB";
+
+        return redirect()->back()->with('success', "Proses kompresi maksimal selesai! Berhasil memproses {$compressedCount} berkas media. Total ruang terhemat: {$savedText}.");
+    }
+
+    /**
+     * Pindai & Deteksi Berkas Yatim / Sampah (Orphan Files) di storage
+     */
+    public static function getOrphanFiles(): array
+    {
+        $usedPaths = [];
+
+        // Users avatar
+        foreach (User::whereNotNull('avatar')->pluck('avatar') as $av) {
+            if ($av) $usedPaths[] = preg_replace('#^/?(storage/)?#i', '', $av);
+        }
+
+        // Banners
+        foreach (CreatorProfile::all() as $cp) {
+            if ($cp->store_banner_1) $usedPaths[] = preg_replace('#^/?(storage/)?#i', '', $cp->store_banner_1);
+            if ($cp->store_banner_2) $usedPaths[] = preg_replace('#^/?(storage/)?#i', '', $cp->store_banner_2);
+        }
+
+        // Products
+        foreach (Product::all() as $p) {
+            if ($p->image) $usedPaths[] = preg_replace('#^/?(storage/)?#i', '', $p->image);
+            if ($p->brochure) $usedPaths[] = preg_replace('#^/?(storage/)?#i', '', $p->brochure);
+            if ($p->og_image) $usedPaths[] = preg_replace('#^/?(storage/)?#i', '', $p->og_image);
+            if ($p->digital_resource) $usedPaths[] = preg_replace('#^/?(storage/)?#i', '', $p->digital_resource);
+            if (is_array($p->gallery)) {
+                foreach ($p->gallery as $g) {
+                    if ($g) $usedPaths[] = preg_replace('#^/?(storage/)?#i', '', $g);
+                }
+            }
+        }
+
+        // Bio Blocks
+        foreach (CreatorBioBlock::all() as $b) {
+            $json = $b->data_json ?? [];
+            if (is_array($json)) {
+                foreach (['image', 'thumb', 'pdf_file', 'file', 'file_path', 'avatar'] as $key) {
+                    if (!empty($json[$key]) && is_string($json[$key])) {
+                        $usedPaths[] = preg_replace('#^/?(storage/)?#i', '', $json[$key]);
+                    }
+                }
+            }
+        }
+
+        $usedPathsSet = array_flip(array_unique(array_filter($usedPaths)));
+
+        $allPhysicalFiles = Storage::disk('public')->allFiles();
+        $orphanFiles = [];
+        $totalOrphanBytes = 0;
+
+        foreach ($allPhysicalFiles as $file) {
+            if (Str::startsWith($file, ['settings/', '.git', 'system/']) || basename($file) === '.gitignore') {
+                continue;
+            }
+
+            if (!isset($usedPathsSet[$file])) {
+                $size = Storage::disk('public')->size($file);
+                $orphanFiles[] = [
+                    'path' => $file,
+                    'size' => $size,
+                ];
+                $totalOrphanBytes += $size;
+            }
+        }
+
+        return [
+            'files'       => $orphanFiles,
+            'count'       => count($orphanFiles),
+            'total_bytes' => $totalOrphanBytes,
+            'total_mb'    => round($totalOrphanBytes / (1024 * 1024), 2),
+        ];
+    }
+
+    /**
+     * Hapus Seluruh Berkas Sampah Terbuang (Orphan / Ghost Files)
+     */
+    public function cleanOrphans(Request $request)
+    {
+        $scan = self::getOrphanFiles();
+        $deletedCount = 0;
+        $deletedBytes = 0;
+
+        foreach ($scan['files'] as $orphan) {
+            if (Storage::disk('public')->exists($orphan['path'])) {
+                Storage::disk('public')->delete($orphan['path']);
+                $deletedCount++;
+                $deletedBytes += $orphan['size'];
+            }
+        }
+
+        $freedMb = round($deletedBytes / (1024 * 1024), 2);
+        $freedText = $freedMb > 0 ? "{$freedMb} MB" : round($deletedBytes / 1024, 1) . " KB";
+
+        return redirect()->back()->with('success', "Pembersihan berkas sampah berhasil! Berhasil menghapus {$deletedCount} berkas tak terpakai dan membebaskan {$freedText} disk server.");
+    }
 }
+
+

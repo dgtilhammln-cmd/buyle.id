@@ -32,7 +32,7 @@
     height: 64px;
     border-radius: 18px;
     object-fit: cover;
-    background: linear-gradient(135deg, #1eb349, #a5cf37);
+    background: #1eb349;
     color: #ffffff;
     display: flex;
     align-items: center;
@@ -40,7 +40,6 @@
     font-weight: 800;
     font-size: 1.5rem;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(30,179,73,0.2);
 }
 
 .res-creator-title {
@@ -68,7 +67,7 @@
 }
 
 .btn-impersonate {
-    background: linear-gradient(135deg, #1eb349 0%, #15803D 100%);
+    background: #0F172A;
     color: #ffffff;
     border: none;
     border-radius: 12px;
@@ -81,12 +80,30 @@
     gap: 0.5rem;
     text-decoration: none;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 14px rgba(30, 179, 73, 0.25);
 }
 
 .btn-impersonate:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(30, 179, 73, 0.35);
+    background: #1E293B;
+    color: #ffffff;
+}
+
+.btn-compress-all {
+    background: #F0FDF4;
+    color: #1eb349;
+    border: 1.5px solid #DCFCE7;
+    border-radius: 12px;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn-compress-all:hover {
+    background: #1eb349;
     color: #ffffff;
 }
 
@@ -113,7 +130,7 @@
 /* Metric Cards */
 .res-metrics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1.25rem;
     margin-bottom: 1.75rem;
 }
@@ -121,29 +138,13 @@
 .res-metric-card {
     background: #ffffff;
     border: 1.5px solid #F1F5F9;
-    border-radius: 20px;
-    padding: 1.35rem 1.5rem;
+    border-radius: 18px;
+    padding: 1.25rem 1.4rem;
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-    position: relative;
-    overflow: hidden;
 }
-
-.res-metric-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-}
-
-.res-metric-card.green::before  { background: #1eb349; }
-.res-metric-card.blue::before   { background: #3b82f6; }
-.res-metric-card.purple::before { background: #8b5cf6; }
-.res-metric-card.amber::before  { background: #f59e0b; }
 
 .res-metric-label {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -155,7 +156,7 @@
 }
 
 .res-metric-value {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     font-weight: 800;
     color: #0F172A;
     line-height: 1.2;
@@ -164,7 +165,7 @@
 .res-metric-desc {
     font-size: 0.78rem;
     color: #64748B;
-    margin-top: 0.4rem;
+    margin-top: 0.35rem;
 }
 
 /* Analysis Box (ROI & Hog Detector) */
@@ -323,11 +324,10 @@
     border-radius: 100px;
     font-size: 0.75rem;
     font-weight: 700;
+    background: #F8FAFC;
+    color: #334155;
+    border: 1px solid #E2E8F0;
 }
-
-.traffic-badge.high { background: #FEF2F2; color: #DC2626; border: 1px solid #FEE2E2; }
-.traffic-badge.med  { background: #FFFBEB; color: #D97706; border: 1px solid #FEF3C7; }
-.traffic-badge.low  { background: #F0FDF4; color: #16A34A; border: 1px solid #DCFCE7; }
 
 .btn-open-link {
     display: inline-flex;
@@ -348,9 +348,34 @@
     background: #0F172A;
     color: #ffffff;
 }
+
+.btn-compress-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    background: #F0FDF4;
+    color: #1eb349;
+    font-weight: 700;
+    font-size: 0.75rem;
+    border: 1px solid #DCFCE7;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-compress-item:hover {
+    background: #1eb349;
+    color: #ffffff;
+}
 </style>
 
 <div class="res-detail-page">
+    @if(session('success'))
+        <div style="background:#F0FDF4;color:#15803D;padding:.875rem 1.25rem;border-radius:14px;margin-bottom:1.5rem;border:1px solid #BBF7D0;font-size:.825rem;font-weight:600;">
+            ✓ {{ session('success') }}
+        </div>
+    @endif
     @if(session('error'))
         <div style="background:#FEF2F2;color:#991B1B;padding:.875rem 1.25rem;border-radius:14px;margin-bottom:1.5rem;border:1px solid #FECACA;font-size:.825rem;font-weight:600;">
             ✕ {{ session('error') }}
@@ -386,10 +411,18 @@
                 Kembali
             </a>
 
+            <form action="{{ route('admin.creator-resources.compress-all', $user->id) }}" method="POST" style="margin:0;">
+                @csrf
+                <button type="submit" class="btn-compress-all" onclick="return confirm('Kompresi maksimal seluruh berkas milik {{ addslashes($user->name) }}?')">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M4 20l7-7"/></svg>
+                    Compress Semua Aset
+                </button>
+            </form>
+
             <form action="{{ route('admin.creator-resources.impersonate', $user->id) }}" method="POST" style="margin:0;">
                 @csrf
                 <button type="submit" class="btn-impersonate" onclick="return confirm('Anda akan masuk ke Dashboard Creator sebagai {{ addslashes($user->name) }}. Lanjutkan?')">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                     Masuk ke Dashboard Creator
                 </button>
             </form>
@@ -398,37 +431,37 @@
 
     {{-- Metric Cards --}}
     <div class="res-metrics-grid">
-        <div class="res-metric-card green">
+        <div class="res-metric-card">
             <div class="res-metric-label">
                 <span>Total Disk Storage</span>
-                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <svg width="18" height="18" fill="none" stroke="#475569" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             </div>
             <div class="res-metric-value">{{ $totalSizeMb }} MB</div>
             <div class="res-metric-desc">Total {{ $totalAssets }} berkas media tersimpan</div>
         </div>
 
-        <div class="res-metric-card blue">
+        <div class="res-metric-card">
             <div class="res-metric-label">
                 <span>Est. Biaya Server</span>
-                <svg width="18" height="18" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                <svg width="18" height="18" fill="none" stroke="#475569" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
             </div>
             <div class="res-metric-value">Rp {{ number_format($estMonthlyCost, 0, ',', '.') }}<span style="font-size:0.8rem; font-weight:600; color:#64748B;">/bln</span></div>
             <div class="res-metric-desc">Kapasitas media di server cloud</div>
         </div>
 
-        <div class="res-metric-card purple">
+        <div class="res-metric-card">
             <div class="res-metric-label">
                 <span>Omset Penjualan</span>
-                <svg width="18" height="18" fill="none" stroke="#8b5cf6" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <svg width="18" height="18" fill="none" stroke="#475569" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
             <div class="res-metric-value">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</div>
             <div class="res-metric-desc">Total akumulasi transaksi berhasil</div>
         </div>
 
-        <div class="res-metric-card amber">
+        <div class="res-metric-card">
             <div class="res-metric-label">
                 <span>Jumlah Konten</span>
-                <svg width="18" height="18" fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+                <svg width="18" height="18" fill="none" stroke="#475569" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
             </div>
             <div class="res-metric-value">{{ $productCount }} <span style="font-size:0.85rem; font-weight:600; color:#64748B;">Produk</span> &bull; {{ $bioBlocksCount }} <span style="font-size:0.85rem; font-weight:600; color:#64748B;">Blocks</span></div>
             <div class="res-metric-desc">Aktif di toko & bio link</div>
@@ -440,7 +473,7 @@
         {{-- Storage Cost vs Revenue Impact --}}
         <div class="res-analysis-card">
             <div class="res-analysis-title">
-                <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                <svg width="20" height="20" fill="none" stroke="#0F172A" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                 Storage Cost vs Revenue Impact (ROI Meter)
             </div>
             <div class="res-analysis-box">
@@ -449,7 +482,7 @@
                 @endphp
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
                     <span style="font-size:0.825rem; font-weight:700; color:#475569;">LTV-to-Storage Cost Ratio:</span>
-                    <strong style="font-size:1.1rem; color:{{ $totalRevenue > 0 ? '#10B981' : '#DC2626' }};">
+                    <strong style="font-size:1.1rem; color:#0F172A;">
                         {{ $ratio }}x
                     </strong>
                 </div>
@@ -468,7 +501,7 @@
         {{-- Bandwidth Hog Detector --}}
         <div class="res-analysis-card">
             <div class="res-analysis-title">
-                <svg width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                <svg width="20" height="20" fill="none" stroke="#0F172A" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                 Bandwidth Hog & Traffic Detector
             </div>
             <div class="res-analysis-box">
@@ -478,7 +511,7 @@
                 @endphp
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
                     <span style="font-size:0.825rem; font-weight:700; color:#475569;">Total Traffic Hits / Views:</span>
-                    <strong style="font-size:1.1rem; color:#3B82F6;">
+                    <strong style="font-size:1.1rem; color:#0F172A;">
                         {{ number_format($totalHits) }} hits
                     </strong>
                 </div>
@@ -560,23 +593,28 @@
                             @endforeach
                         </td>
                         <td>
-                            @if($asset['hits_count'] > 100)
-                                <span class="traffic-badge high">{{ number_format($asset['hits_count']) }} hits (Tinggi)</span>
-                            @elseif($asset['hits_count'] > 0)
-                                <span class="traffic-badge med">{{ number_format($asset['hits_count']) }} hits</span>
-                            @else
-                                <span class="traffic-badge low">0 hits</span>
-                            @endif
+                            <span class="traffic-badge">{{ number_format($asset['hits_count']) }} hits</span>
                         </td>
                         <td style="text-align: right;">
-                            @if($asset['url'])
-                                <a href="{{ $asset['url'] }}" target="_blank" class="btn-open-link">
-                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                                    Buka File
-                                </a>
-                            @else
-                                <span style="font-size:0.75rem; color:#94A3B8;">-</span>
-                            @endif
+                            <div style="display:inline-flex; gap:0.4rem; align-items:center;">
+                                @if($isImg && $asset['exists'])
+                                    <form action="{{ route('admin.creator-resources.compress-asset', $user->id) }}" method="POST" style="margin:0;">
+                                        @csrf
+                                        <input type="hidden" name="raw_path" value="{{ $asset['raw_path'] }}">
+                                        <button type="submit" class="btn-compress-item" title="Kompresi Maksimal Berkas Ini">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M4 20l7-7"/></svg>
+                                            Compress
+                                        </button>
+                                    </form>
+                                @endif
+
+                                @if($asset['url'])
+                                    <a href="{{ $asset['url'] }}" target="_blank" class="btn-open-link">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                        Buka File
+                                    </a>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                 @empty
