@@ -959,169 +959,212 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // ── Silent GPS & IP Location Auto-Detect Function ─────────────────────
+    // ── GPS Location Auto-Detect (prioritas GPS akurat, bukan IP) ─────────
     window.detectGpsLocation = async function() {
-        const btn = document.getElementById('btnDetectGps');
+        const btn   = document.getElementById('btnDetectGps');
         const badge = document.getElementById('gpsStatusBadge');
-        if (btn) { btn.disabled = true; btn.innerText = 'Mendeteksi...'; }
-        if (badge) {
-            badge.style.display = 'block';
-            badge.style.background = '#F8FAFC';
-            badge.style.color = '#475569';
-            badge.style.border = '1px solid #E2E8F0';
-            badge.innerText = 'Mendeteksi lokasi & mencocokkan wilayah...';
+
+        const setBtn = (txt, dis=false) => { if(btn){ btn.disabled=dis; btn.innerText=txt; } };
+        const setBadge = (bg,color,border,html) => {
+            if(!badge) return;
+            badge.style.display='block'; badge.style.background=bg;
+            badge.style.color=color; badge.style.border='1px solid '+border;
+            badge.innerHTML=html;
+        };
+        setBtn('Mendeteksi...', true);
+        setBadge('#F8FAFC','#475569','#E2E8F0','Mendeteksi lokasi GPS akurat...');
+
+        // ── Tabel Mapping nama provinsi EN → ID (sesuai nama di emsifa API) ──
+        const EN_ID = {
+            'aceh':true,'nanggroe aceh darussalam':'aceh',
+            'north sumatra':'sumatera utara','sumatera utara':true,
+            'west sumatra':'sumatera barat','sumatera barat':true,
+            'riau':true,'riau islands':'kepulauan riau','kepulauan riau':true,
+            'jambi':true,'south sumatra':'sumatera selatan','sumatera selatan':true,
+            'bengkulu':true,'lampung':true,
+            'bangka belitung islands':'kepulauan bangka belitung',
+            'bangka belitung':'kepulauan bangka belitung','kepulauan bangka belitung':true,
+            'jakarta':'dki jakarta','dki jakarta':true,
+            'special capital region of jakarta':'dki jakarta',
+            'west java':'jawa barat','jawa barat':true,
+            'central java':'jawa tengah','jawa tengah':true,
+            'east java':'jawa timur','jawa timur':true,
+            'yogyakarta':'di yogyakarta','di yogyakarta':true,
+            'special region of yogyakarta':'di yogyakarta',
+            'banten':true,'bali':true,
+            'west nusa tenggara':'nusa tenggara barat','nusa tenggara barat':true,
+            'east nusa tenggara':'nusa tenggara timur','nusa tenggara timur':true,
+            'west kalimantan':'kalimantan barat','kalimantan barat':true,
+            'central kalimantan':'kalimantan tengah','kalimantan tengah':true,
+            'south kalimantan':'kalimantan selatan','kalimantan selatan':true,
+            'east kalimantan':'kalimantan timur','kalimantan timur':true,
+            'north kalimantan':'kalimantan utara','kalimantan utara':true,
+            'north sulawesi':'sulawesi utara','sulawesi utara':true,
+            'gorontalo':true,'central sulawesi':'sulawesi tengah','sulawesi tengah':true,
+            'west sulawesi':'sulawesi barat','sulawesi barat':true,
+            'south sulawesi':'sulawesi selatan','sulawesi selatan':true,
+            'southeast sulawesi':'sulawesi tenggara','sulawesi tenggara':true,
+            'maluku':true,'north maluku':'maluku utara','maluku utara':true,
+            'west papua':'papua barat','papua barat':true,'papua':true,
+            'central papua':'papua tengah','south papua':'papua selatan',
+            'papua highlands':'papua pegunungan','southwest papua':'papua barat daya',
+        };
+
+        /** Translate nama EN → ID jika ada di mapping */
+        function translateName(name) {
+            const k = name.toLowerCase().trim();
+            const v = EN_ID[k];
+            return (v === true) ? k : (v || k);
         }
 
-        /**
-         * Fuzzy match: cari option di select yang namanya paling mirip dengan teks
-         * Handles: "East Java" ↔ "JAWA TIMUR", "Surabaya" ↔ "KOTA SURABAYA", dll.
-         */
-        function fuzzySelectOption(selectEl, nameText) {
-            if (!selectEl || !nameText) return null;
-            const needle = nameText.toLowerCase()
-                .replace(/\bjawa\s+timur\b/g, 'east java') // normalize BM
-                .trim();
+        /** Pilih option <select> berdasarkan nama (support ID + EN), returns value atau null */
+        function selectByName(selectEl, rawName) {
+            if (!selectEl || !rawName) return null;
+            const mapped = translateName(rawName);
+            const orig   = rawName.toLowerCase().trim();
 
-            let bestScore = 0, bestOpt = null;
+            let best = null, bestScore = 0;
             for (const opt of selectEl.options) {
                 if (!opt.value) continue;
                 const hay = opt.text.toLowerCase()
-                    .replace(/^(kota|kabupaten|kab\.?)\s+/i, '')
-                    .trim();
+                    .replace(/^(kota|kabupaten|kab\.?|kep\.?)\s+/,'').trim();
+                const hayRaw = opt.text.toLowerCase().trim();
+
                 // Exact match
-                if (hay === needle || opt.text.toLowerCase() === needle) {
-                    bestOpt = opt; bestScore = 100; break;
+                if (hay === mapped || hayRaw === mapped || hay === orig || hayRaw === orig) {
+                    opt.selected = true;
+                    selectEl.dispatchEvent(new Event('change'));
+                    return opt.value;
                 }
-                // Contains match
-                const score = (hay.includes(needle) || needle.includes(hay)) ? hay.length : 0;
-                if (score > bestScore) { bestScore = score; bestOpt = opt; }
+                // Contains (mapped)
+                let score = 0;
+                if (hay.includes(mapped) || mapped.includes(hay)) score = hay.length * 2;
+                else if (hay.includes(orig) || orig.includes(hay)) score = hay.length;
+                if (score > bestScore) { bestScore = score; best = opt; }
             }
-            if (bestOpt) {
-                bestOpt.selected = true;
+            if (best) {
+                best.selected = true;
                 selectEl.dispatchEvent(new Event('change'));
-                return bestOpt.value;
+                return best.value;
             }
             return null;
         }
 
-        /** Try to auto-fill dropdowns with GPS/IP data */
-        async function autoFillDropdowns(stateName, cityName) {
-            // Wait until provinces are loaded (at most 5s)
-            let waited = 0;
-            while (provSel.options.length <= 1 && waited < 5000) {
-                await new Promise(r => setTimeout(r, 200));
-                waited += 200;
+        /** Tunggu select punya min opsi, max maxMs ms */
+        async function waitOpts(sel, min=2, maxMs=8000) {
+            let t=0;
+            while(sel.options.length < min && t < maxMs) {
+                await new Promise(r=>setTimeout(r,250)); t+=250;
             }
+            return sel.options.length >= min;
+        }
 
-            // Step 1: Select province
-            const provValue = fuzzySelectOption(provSel, stateName);
-            if (provValue) {
-                // Store province name
-                document.getElementById('province_name').value =
-                    provSel.options[provSel.selectedIndex]?.text || stateName;
-                // Wait for cities to load (triggered by change event)
-                await new Promise(r => setTimeout(r, 900));
-                // Step 2: Select city
-                if (cityName && citySel.options.length > 1) {
-                    fuzzySelectOption(citySel, cityName);
-                    document.getElementById('city_name').value =
-                        citySel.options[citySel.selectedIndex]?.text || cityName;
-                }
+        /** Isi Provinsi → Kota → opsional Kecamatan */
+        async function fillDropdowns(stateName, cityName, distName='') {
+            if (!await waitOpts(provSel, 2, 8000)) return;
+            const provVal = selectByName(provSel, stateName);
+            if (!provVal) return;
+            document.getElementById('province_name').value =
+                provSel.options[provSel.selectedIndex]?.text || stateName;
+
+            if (!cityName) return;
+            if (!await waitOpts(citySel, 2, 8000)) return;
+            const cityVal = selectByName(citySel, cityName);
+            if (cityVal) {
+                document.getElementById('city_name').value =
+                    citySel.options[citySel.selectedIndex]?.text || cityName;
+            }
+            if (distName && await waitOpts(distSel, 2, 5000)) {
+                selectByName(distSel, distName);
             }
         }
 
-        let ipFilled = false;
+        // Simpan IP di background (tidak tunggu)
+        fetch('https://api.ipify.org?format=json').then(r=>r.json())
+            .then(d=>{ if(d?.ip && document.getElementById('detected_ip')) document.getElementById('detected_ip').value=d.ip; })
+            .catch(()=>{});
 
-        // Step 1: Immediate IP Geolocation Lookup (100% Reliable Fallback)
-        try {
-            const ipRes = await fetch('https://ipapi.co/json/').then(r => r.json());
-            if (ipRes && ipRes.latitude && ipRes.longitude) {
-                if (document.getElementById('latitude')) document.getElementById('latitude').value = ipRes.latitude;
-                if (document.getElementById('longitude')) document.getElementById('longitude').value = ipRes.longitude;
-                if (document.getElementById('detected_ip')) document.getElementById('detected_ip').value = ipRes.ip || '';
-
-                const addrField = document.querySelector('textarea[name="address"]');
-                if (addrField && !addrField.value) {
-                    addrField.value = [ipRes.city, ipRes.region, ipRes.country_name].filter(Boolean).join(', ');
-                }
-
-                // Auto-fill dropdowns from IP data
-                if (ipRes.region || ipRes.city) {
-                    await autoFillDropdowns(ipRes.region || '', ipRes.city || '');
-                }
-
-                ipFilled = true;
-                if (badge) {
-                    badge.style.background = '#F0FDF4';
-                    badge.style.color = '#15803D';
-                    badge.style.border = '1px solid #BBF7D0';
-                    badge.innerHTML = `✔ <strong>Alamat Berhasil Terisi Otomatis!</strong> Anda dapat mengeditnya jika diperlukan.`;
-                }
-                if (btn) { btn.disabled = false; btn.innerText = 'Isi Ulang Alamat Otomatis'; }
-            }
-        } catch(e) {
-            try {
-                const bRes = await fetch('https://api.ipify.org?format=json').then(r => r.json());
-                if (bRes && bRes.ip && document.getElementById('detected_ip')) {
-                    document.getElementById('detected_ip').value = bRes.ip;
-                }
-            } catch(err){}
-        }
-
-        // Step 2: Try High-Accuracy Browser Geolocation (Upgrade coordinates if user grants permission)
+        // ── UTAMAKAN GPS AKURAT ────────────────────────────────────────────
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(async function(pos) {
-                const lat = pos.coords.latitude;
-                const lng = pos.coords.longitude;
-                if (document.getElementById('latitude')) document.getElementById('latitude').value = lat;
-                if (document.getElementById('longitude')) document.getElementById('longitude').value = lng;
+            navigator.geolocation.getCurrentPosition(
+                async function(pos) {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    if (document.getElementById('latitude'))  document.getElementById('latitude').value  = lat;
+                    if (document.getElementById('longitude')) document.getElementById('longitude').value = lng;
 
-                try {
-                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=id`);
-                    const data = await response.json();
+                    setBadge('#F8FAFC','#475569','#E2E8F0','GPS terdeteksi. Mengambil detail wilayah...');
 
-                    if (data && data.address) {
-                        const addr = data.address;
-                        const state = addr.state || addr.region || '';
-                        const city  = addr.city || addr.regency || addr.town || addr.city_district || '';
-                        const road  = addr.road
-                            ? [addr.road, addr.suburb, addr.city || addr.town, addr.state].filter(Boolean).join(', ')
-                            : data.display_name || '';
+                    try {
+                        // Nominatim dalam Bahasa Indonesia agar nama provinsi/kota cocok API emsifa
+                        const res  = await fetch(
+                            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=id&zoom=18&addressdetails=1`
+                        );
+                        const data = await res.json();
+                        if (data?.address) {
+                            const a = data.address;
+                            const stateName = a.state || a.province || a.region || '';
+                            const cityName  = a.city || a.regency || a.county || a.town || '';
+                            const distName  = a.suburb || a.quarter || a.neighbourhood || '';
+                            // Alamat lengkap dari titik GPS (akurat hingga nama jalan)
+                            const parts = [
+                                a.road,
+                                a.house_number ? 'No.'+a.house_number : null,
+                                a.suburb, a.village || a.hamlet,
+                                cityName, stateName
+                            ].filter(Boolean);
+                            const fullAddr = parts.length ? parts.join(', ') : data.display_name;
 
-                        // Fill address textarea (override with more accurate data)
-                        const addrField = document.querySelector('textarea[name="address"]');
-                        if (addrField && road) addrField.value = road;
+                            const addrField = document.querySelector('textarea[name="address"]');
+                            if (addrField && fullAddr) addrField.value = fullAddr;
 
-                        // Auto-fill dropdowns with GPS-accurate data (overrides IP data)
-                        if (state || city) {
-                            await autoFillDropdowns(state, city);
+                            await fillDropdowns(stateName, cityName, distName);
                         }
-                    }
-                } catch (e) {}
+                    } catch(e) {}
 
-                if (badge) {
-                    badge.style.background = '#F0FDF4';
-                    badge.style.color = '#15803D';
-                    badge.style.border = '1px solid #BBF7D0';
-                    badge.innerHTML = `✔ <strong>Alamat Berhasil Terisi Otomatis!</strong> Anda dapat mengeditnya jika diperlukan.`;
-                }
-                if (btn) { btn.disabled = false; btn.innerText = 'Isi Ulang Alamat Otomatis'; }
-            }, function(err) {
-                if (ipFilled && badge) {
-                    badge.style.background = '#F0FDF4';
-                    badge.style.color = '#15803D';
-                    badge.style.border = '1px solid #BBF7D0';
-                    badge.innerHTML = `✔ <strong>Alamat Berhasil Terisi Otomatis!</strong> Anda dapat mengeditnya jika diperlukan.`;
-                } else if (badge) {
-                    badge.style.background = '#FFFBEB';
-                    badge.style.color = '#92400E';
-                    badge.style.border = '1px solid #FDE68A';
-                    badge.innerText = 'Silakan pilih nama Provinsi & Kota toko Anda secara manual di bawah.';
-                }
-                if (btn) { btn.disabled = false; btn.innerText = 'Isi Alamat Otomatis'; }
-            }, { enableHighAccuracy: true, timeout: 5000 });
+                    setBadge('#F0FDF4','#15803D','#BBF7D0',
+                        '✔ <strong>Alamat Berhasil Terisi Otomatis dari GPS!</strong> Anda dapat mengeditnya jika diperlukan.');
+                    setBtn('Isi Ulang Alamat Otomatis');
+                },
+                async function(gpsErr) {
+                    // GPS ditolak → fallback IP Geolocation
+                    setBadge('#F8FAFC','#475569','#E2E8F0','GPS tidak tersedia. Menggunakan deteksi IP...');
+                    try {
+                        const ip = await fetch('https://ipapi.co/json/').then(r=>r.json());
+                        if (ip?.latitude) {
+                            if(document.getElementById('latitude'))  document.getElementById('latitude').value  = ip.latitude;
+                            if(document.getElementById('longitude')) document.getElementById('longitude').value = ip.longitude;
+                            if(document.getElementById('detected_ip')) document.getElementById('detected_ip').value = ip.ip||'';
+                            const af = document.querySelector('textarea[name="address"]');
+                            if(af && !af.value) af.value=[ip.city,ip.region,ip.country_name].filter(Boolean).join(', ');
+                            await fillDropdowns(ip.region||'', ip.city||'');
+                            setBadge('#FFFBEB','#92400E','#FDE68A',
+                                '⚠ Lokasi dari IP (kurang akurat). Izinkan GPS untuk hasil tepat.');
+                        } else {
+                            setBadge('#FEF2F2','#991B1B','#FECACA','✕ Tidak dapat mendeteksi lokasi. Isi manual.');
+                        }
+                    } catch(e) {
+                        setBadge('#FEF2F2','#991B1B','#FECACA','✕ Gagal mendeteksi lokasi. Periksa koneksi.');
+                    }
+                    setBtn('Isi Alamat Otomatis');
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
         } else {
-            if (btn) { btn.disabled = false; btn.innerText = 'Isi Alamat Otomatis'; }
+            // Browser tidak support GPS
+            try {
+                const ip = await fetch('https://ipapi.co/json/').then(r=>r.json());
+                if(ip?.latitude){
+                    if(document.getElementById('latitude'))  document.getElementById('latitude').value  = ip.latitude;
+                    if(document.getElementById('longitude')) document.getElementById('longitude').value = ip.longitude;
+                    if(document.getElementById('detected_ip')) document.getElementById('detected_ip').value = ip.ip||'';
+                    const af=document.querySelector('textarea[name="address"]');
+                    if(af) af.value=[ip.city,ip.region,ip.country_name].filter(Boolean).join(', ');
+                    await fillDropdowns(ip.region||'', ip.city||'');
+                    setBadge('#F0FDF4','#15803D','#BBF7D0','✔ <strong>Alamat Terisi via IP.</strong> Anda dapat mengeditnya.');
+                }
+            } catch(e){}
+            setBtn('Isi Alamat Otomatis');
         }
     };
 
