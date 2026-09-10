@@ -69,6 +69,25 @@ class CreatorProfileController extends Controller
             )
         );
 
+        // Server-side IP Geolocation fallback if lat/lon is missing
+        if (empty($profile->latitude) || empty($profile->longitude)) {
+            $userIp = $detectedIp;
+            if (!empty($userIp) && $userIp !== '127.0.0.1') {
+                try {
+                    $ipResponse = \Illuminate\Support\Facades\Http::timeout(3)->get("http://ip-api.com/json/{$userIp}")->json();
+                    if ($ipResponse && isset($ipResponse['status']) && $ipResponse['status'] === 'success') {
+                        $profile->latitude = (string)($ipResponse['lat'] ?? '');
+                        $profile->longitude = (string)($ipResponse['lon'] ?? '');
+                        if (empty($profile->city_name)) $profile->city_name = $ipResponse['city'] ?? null;
+                        if (empty($profile->province_name)) $profile->province_name = $ipResponse['regionName'] ?? null;
+                        $profile->save();
+                    }
+                } catch (\Exception $e) {
+                    // Ignore background IP lookup errors
+                }
+            }
+        }
+
         // Handle is_store_active toggle setting in bio_config
         $bioConfig = $profile->bio_config ?? [];
         $bioConfig['is_store_active'] = $request->has('is_store_active') ? $request->boolean('is_store_active') : false;

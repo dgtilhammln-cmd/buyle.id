@@ -960,13 +960,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ── Silent GPS & IP Location Auto-Detect Function ─────────────────────
-    window.detectGpsLocation = function() {
+    window.detectGpsLocation = async function() {
         const btn = document.getElementById('btnDetectGps');
         const badge = document.getElementById('gpsStatusBadge');
-        if (btn) {
-            btn.disabled = true;
-            btn.innerText = 'Mendeteksi...';
-        }
+        if (btn) { btn.disabled = true; btn.innerText = 'Mendeteksi...'; }
         if (badge) {
             badge.style.display = 'block';
             badge.style.background = '#F8FAFC';
@@ -975,75 +972,92 @@ document.addEventListener('DOMContentLoaded', function () {
             badge.innerText = 'Mengisi rincian wilayah & alamat...';
         }
 
-        if (!navigator.geolocation) {
-            if (badge) {
-                badge.style.background = '#FEF2F2';
-                badge.style.color = '#DC2626';
-                badge.innerText = 'Browser Anda tidak mendukung deteksi lokasi otomatis.';
-            }
-            if (btn) { btn.disabled = false; btn.innerText = 'Isi Alamat Otomatis'; }
-            return;
-        }
+        let ipFilled = false;
 
-        navigator.geolocation.getCurrentPosition(async function(pos) {
-            const lat = pos.coords.latitude;
-            const lng = pos.coords.longitude;
-
-            // Silently fill hidden latitude & longitude inputs
-            if (document.getElementById('latitude')) document.getElementById('latitude').value = lat;
-            if (document.getElementById('longitude')) document.getElementById('longitude').value = lng;
-
-            // Silently fetch client IP
-            try {
-                fetch('https://api.ipify.org?format=json')
-                    .then(r => r.json())
-                    .then(d => { if (d && d.ip && document.getElementById('detected_ip')) document.getElementById('detected_ip').value = d.ip; })
-                    .catch(() => {});
-            } catch(e){}
-
-            try {
-                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=id`);
-                const data = await response.json();
-
-                if (data && data.address) {
-                    const addr = data.address;
-                    const state = addr.state || addr.region || '';
-                    const city = addr.city || addr.regency || addr.town || addr.city_district || '';
-                    const road = data.display_name || (addr.road ? addr.road + ', ' + (addr.suburb || '') : '');
-
-                    if (state && document.getElementById('province_name')) document.getElementById('province_name').value = state;
-                    if (city && document.getElementById('city_name')) document.getElementById('city_name').value = city;
-                    if (road) {
-                        const addrField = document.querySelector('textarea[name="address"]');
-                        if (addrField) addrField.value = road;
-                    }
-
-                    if (badge) {
-                        badge.style.background = '#F0FDF4';
-                        badge.style.color = '#15803D';
-                        badge.style.border = '1px solid #BBF7D0';
-                        badge.innerHTML = `✔ <strong>Alamat Berhasil Terisi Otomatis!</strong> Anda dapat mengeditnya jika diperlukan.`;
-                    }
+        // Step 1: Immediate IP Geolocation Lookup (100% Reliable Fallback)
+        try {
+            const ipRes = await fetch('https://ipapi.co/json/').then(r => r.json());
+            if (ipRes && ipRes.latitude && ipRes.longitude) {
+                if (document.getElementById('latitude')) document.getElementById('latitude').value = ipRes.latitude;
+                if (document.getElementById('longitude')) document.getElementById('longitude').value = ipRes.longitude;
+                if (document.getElementById('detected_ip')) document.getElementById('detected_ip').value = ipRes.ip || '';
+                if (document.getElementById('province_name') && ipRes.region) document.getElementById('province_name').value = ipRes.region;
+                if (document.getElementById('city_name') && ipRes.city) document.getElementById('city_name').value = ipRes.city;
+                
+                const addrField = document.querySelector('textarea[name="address"]');
+                if (addrField && !addrField.value) {
+                    addrField.value = [ipRes.city, ipRes.region, ipRes.country_name].filter(Boolean).join(', ');
                 }
-            } catch (e) {
+
+                ipFilled = true;
                 if (badge) {
                     badge.style.background = '#F0FDF4';
                     badge.style.color = '#15803D';
                     badge.style.border = '1px solid #BBF7D0';
-                    badge.innerHTML = `✔ Form alamat siap diisi. Silakan lengkapi detail lokasi toko Anda.`;
+                    badge.innerHTML = `✔ <strong>Alamat Berhasil Terisi Otomatis!</strong> Anda dapat mengeditnya jika diperlukan.`;
                 }
+                if (btn) { btn.disabled = false; btn.innerText = 'Isi Ulang Alamat Otomatis'; }
             }
+        } catch(e) {
+            try {
+                const bRes = await fetch('https://api.ipify.org?format=json').then(r => r.json());
+                if (bRes && bRes.ip && document.getElementById('detected_ip')) {
+                    document.getElementById('detected_ip').value = bRes.ip;
+                }
+            } catch(err){}
+        }
 
-            if (btn) { btn.disabled = false; btn.innerText = 'Isi Ulang Alamat Otomatis'; }
-        }, function(err) {
-            if (badge) {
-                badge.style.background = '#FFFBEB';
-                badge.style.color = '#92400E';
-                badge.style.border = '1px solid #FDE68A';
-                badge.innerText = 'Silakan pilih nama Provinsi & Kota toko Anda secara manual di bawah.';
-            }
+        // Step 2: Try High-Accuracy Browser Geolocation (Upgrade coordinates if user grants permission)
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async function(pos) {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                if (document.getElementById('latitude')) document.getElementById('latitude').value = lat;
+                if (document.getElementById('longitude')) document.getElementById('longitude').value = lng;
+
+                try {
+                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=id`);
+                    const data = await response.json();
+
+                    if (data && data.address) {
+                        const addr = data.address;
+                        const state = addr.state || addr.region || '';
+                        const city = addr.city || addr.regency || addr.town || addr.city_district || '';
+                        const road = data.display_name || (addr.road ? addr.road + ', ' + (addr.suburb || '') : '');
+
+                        if (state && document.getElementById('province_name')) document.getElementById('province_name').value = state;
+                        if (city && document.getElementById('city_name')) document.getElementById('city_name').value = city;
+                        if (road) {
+                            const addrField = document.querySelector('textarea[name="address"]');
+                            if (addrField) addrField.value = road;
+                        }
+                    }
+                } catch (e) {}
+
+                if (badge) {
+                    badge.style.background = '#F0FDF4';
+                    badge.style.color = '#15803D';
+                    badge.style.border = '1px solid #BBF7D0';
+                    badge.innerHTML = `✔ <strong>Alamat Berhasil Terisi Otomatis!</strong> Anda dapat mengeditnya jika diperlukan.`;
+                }
+                if (btn) { btn.disabled = false; btn.innerText = 'Isi Ulang Alamat Otomatis'; }
+            }, function(err) {
+                if (ipFilled && badge) {
+                    badge.style.background = '#F0FDF4';
+                    badge.style.color = '#15803D';
+                    badge.style.border = '1px solid #BBF7D0';
+                    badge.innerHTML = `✔ <strong>Alamat Berhasil Terisi Otomatis!</strong> Anda dapat mengeditnya jika diperlukan.`;
+                } else if (badge) {
+                    badge.style.background = '#FFFBEB';
+                    badge.style.color = '#92400E';
+                    badge.style.border = '1px solid #FDE68A';
+                    badge.innerText = 'Silakan pilih nama Provinsi & Kota toko Anda secara manual di bawah.';
+                }
+                if (btn) { btn.disabled = false; btn.innerText = 'Isi Alamat Otomatis'; }
+            }, { enableHighAccuracy: true, timeout: 5000 });
+        } else {
             if (btn) { btn.disabled = false; btn.innerText = 'Isi Alamat Otomatis'; }
-        }, { enableHighAccuracy: true, timeout: 10000 });
+        }
     };
 
     // Silently capture coordinates if browser allows
