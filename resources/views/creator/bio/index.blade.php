@@ -775,7 +775,8 @@
                 <button class="tab-btn active" data-tab="tab-theme">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="3" />
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                        <path
+                            d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
                     </svg>
                     <span class="tab-text-full">Tampilan & Tema</span>
                     <small class="tab-text-mob">Tema</small>
@@ -825,10 +826,14 @@
             </div>
 
             <div class="sidebar-extra-info" style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid #e7f0e7;">
-                <div style="font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem;">Tipe Profil</div>
-                <div style="font-size:0.82rem; font-weight:700; color:#1eb349;">{{ $roleLabels[$profile->bio_role] ?? '-' }}</div>
+                <div
+                    style="font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem;">
+                    Tipe Profil</div>
+                <div style="font-size:0.82rem; font-weight:700; color:#1eb349;">{{ $roleLabels[$profile->bio_role] ?? '-' }}
+                </div>
                 @if($bioUrl)
-                    <a href="{{ $bioUrl }}" target="_blank" style="display:flex; align-items:center; gap:0.4rem; margin-top:0.5rem; font-size:0.72rem; color:#64748b; text-decoration:none; word-break:break-all;">
+                    <a href="{{ $bioUrl }}" target="_blank"
+                        style="display:flex; align-items:center; gap:0.4rem; margin-top:0.5rem; font-size:0.72rem; color:#64748b; text-decoration:none; word-break:break-all;">
                         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke-linecap="round" />
                             <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke-linecap="round" />
@@ -901,10 +906,12 @@
                 <div class="prof-card" style="margin-top:0;">
                     <div class="prof-card-head">
                         <span>Kustomisasi Background & Warna</span>
-                        <span style="font-size:0.72rem; font-weight:600; color:#64748b;">Override tema (Warna Kustom / Gambar WebP)</span>
+                        <span style="font-size:0.72rem; font-weight:600; color:#64748b;">Override tema (Warna Kustom /
+                            Gambar WebP)</span>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('creator.bio.save-profile') }}" method="POST" id="colorForm" enctype="multipart/form-data">
+                        <form action="{{ route('creator.bio.save-profile') }}" method="POST" id="colorForm"
+                            enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="bio_name" value="{{ $cfg['name'] ?? '' }}">
                             <input type="hidden" name="bio_bio" value="{{ $cfg['bio'] ?? '' }}">
@@ -913,31 +920,49 @@
                             <input type="hidden" name="bio_ig" value="{{ $cfg['ig'] ?? '' }}">
                             <input type="hidden" name="bio_tiktok" value="{{ $cfg['tiktok'] ?? '' }}">
                             <input type="hidden" name="bio_youtube" value="{{ $cfg['youtube'] ?? '' }}">
-                            
+
                             @php
                                 $curBgType = $cfg['bg_type'] ?? 'color';
-                                $curBgImg  = $cfg['bg_image'] ?? null;
+                                $curBgImg = $cfg['bg_image'] ?? null;
                             @endphp
 
                             {{-- 2 Opsi Background --}}
                             <div style="margin-bottom: 1.25rem;">
-                                <label class="form-label" style="font-weight:700; margin-bottom:0.5rem; display:block;">Pilih Tipe Background</label>
+                                <label class="form-label"
+                                    style="font-weight:700; margin-bottom:0.5rem; display:block;">Pilih Tipe
+                                    Background</label>
                                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-                                    <label id="bg_mode_card_color" class="bg-mode-card" style="display:flex; align-items:center; gap:0.6rem; padding:0.75rem 1rem; border-radius:10px; border:2px solid {{ $curBgType === 'color' ? '#1eb349' : '#e2e8f0' }}; cursor:pointer; background: {{ $curBgType === 'color' ? '#f0fdf4' : '#fff' }};">
+                                    <label id="bg_mode_card_color" class="bg-mode-card"
+                                        style="display:flex; align-items:center; gap:0.6rem; padding:0.75rem 1rem; border-radius:10px; border:2px solid {{ $curBgType === 'color' ? '#1eb349' : '#e2e8f0' }}; cursor:pointer; background: {{ $curBgType === 'color' ? '#f0fdf4' : '#fff' }};">
                                         <input type="radio" name="bg_type" value="color" {{ $curBgType === 'color' ? 'checked' : '' }} onchange="toggleBgMode('color')" style="accent-color:#1eb349;">
                                         <div>
-                                            <strong style="display:flex; align-items:center; gap:0.35rem; font-size:0.85rem; color:#0f172a;">
-                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21a9 9 0 1 1 0-18c4.97 0 9 3.58 9 8 0 2.21-1.79 4-4 4h-1.5c-.83 0-1.5.67-1.5 1.5 0 .39.15.74.39 1.01l.21.24c.4.45.65 1.05.65 1.75 0 1.38-1.12 2.5-2.5 2.5z"/><circle cx="7.5" cy="11.5" r="1.5"/><circle cx="12" cy="7.5" r="1.5"/><circle cx="16.5" cy="11.5" r="1.5"/></svg>
+                                            <strong
+                                                style="display:flex; align-items:center; gap:0.35rem; font-size:0.85rem; color:#0f172a;">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2">
+                                                    <path
+                                                        d="M12 21a9 9 0 1 1 0-18c4.97 0 9 3.58 9 8 0 2.21-1.79 4-4 4h-1.5c-.83 0-1.5.67-1.5 1.5 0 .39.15.74.39 1.01l.21.24c.4.45.65 1.05.65 1.75 0 1.38-1.12 2.5-2.5 2.5z" />
+                                                    <circle cx="7.5" cy="11.5" r="1.5" />
+                                                    <circle cx="12" cy="7.5" r="1.5" />
+                                                    <circle cx="16.5" cy="11.5" r="1.5" />
+                                                </svg>
                                                 Warna Kustom
                                             </strong>
                                             <span style="font-size:0.73rem; color:#64748b;">Warna solid / gradasi</span>
                                         </div>
                                     </label>
-                                    <label id="bg_mode_card_image" class="bg-mode-card" style="display:flex; align-items:center; gap:0.6rem; padding:0.75rem 1rem; border-radius:10px; border:2px solid {{ $curBgType === 'image' ? '#1eb349' : '#e2e8f0' }}; cursor:pointer; background: {{ $curBgType === 'image' ? '#f0fdf4' : '#fff' }};">
+                                    <label id="bg_mode_card_image" class="bg-mode-card"
+                                        style="display:flex; align-items:center; gap:0.6rem; padding:0.75rem 1rem; border-radius:10px; border:2px solid {{ $curBgType === 'image' ? '#1eb349' : '#e2e8f0' }}; cursor:pointer; background: {{ $curBgType === 'image' ? '#f0fdf4' : '#fff' }};">
                                         <input type="radio" name="bg_type" value="image" {{ $curBgType === 'image' ? 'checked' : '' }} onchange="toggleBgMode('image')" style="accent-color:#1eb349;">
                                         <div>
-                                            <strong style="display:flex; align-items:center; gap:0.35rem; font-size:0.85rem; color:#0f172a;">
-                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                            <strong
+                                                style="display:flex; align-items:center; gap:0.35rem; font-size:0.85rem; color:#0f172a;">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2">
+                                                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                                    <polyline points="21 15 16 10 5 21" />
+                                                </svg>
                                                 Gambar Custom
                                             </strong>
                                             <span style="font-size:0.73rem; color:#64748b;">Upload (Auto WebP)</span>
@@ -947,8 +972,11 @@
                             </div>
 
                             {{-- Sub-panel Warna Background --}}
-                            <div id="bg_color_panel" style="display: {{ $curBgType === 'color' ? 'block' : 'none' }}; margin-bottom:1rem; background:#f8fafc; padding:0.85rem; border-radius:10px; border:1px solid #e2e8f0;">
-                                <label class="form-label" style="font-weight:600; margin-bottom:0.4rem; display:block;">Pilih Warna Background</label>
+                            <div id="bg_color_panel"
+                                style="display: {{ $curBgType === 'color' ? 'block' : 'none' }}; margin-bottom:1rem; background:#f8fafc; padding:0.85rem; border-radius:10px; border:1px solid #e2e8f0;">
+                                <label class="form-label"
+                                    style="font-weight:600; margin-bottom:0.4rem; display:block;">Pilih Warna
+                                    Background</label>
                                 <div style="display:flex; gap:0.5rem; align-items:center;">
                                     <input type="color" name="color_bg" id="color_bg_picker"
                                         value="{{ $cfg['color_bg'] ?? '#0b120c' }}"
@@ -961,23 +989,40 @@
                             </div>
 
                             {{-- Sub-panel Gambar Background --}}
-                            <div id="bg_image_panel" style="display: {{ $curBgType === 'image' ? 'block' : 'none' }}; margin-bottom:1rem; background:#f8fafc; padding:0.85rem; border-radius:10px; border:1px solid #e2e8f0;">
-                                <label class="form-label" style="font-weight:600; margin-bottom:0.4rem; display:block;">Upload Gambar Background (Otomatis Konversi WebP)</label>
+                            <div id="bg_image_panel"
+                                style="display: {{ $curBgType === 'image' ? 'block' : 'none' }}; margin-bottom:1rem; background:#f8fafc; padding:0.85rem; border-radius:10px; border:1px solid #e2e8f0;">
+                                <label class="form-label"
+                                    style="font-weight:600; margin-bottom:0.4rem; display:block;">Upload Gambar Background
+                                    (Otomatis Konversi WebP)</label>
                                 @if(!empty($curBgImg))
-                                    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; background:#fff; padding:0.5rem 0.75rem; border-radius:8px; border:1px solid #e2e8f0;">
-                                        <img src="{{ asset('storage/' . $curBgImg) }}" id="bg_image_thumb" style="width:50px; height:50px; object-fit:cover; border-radius:6px;">
+                                    <div
+                                        style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; background:#fff; padding:0.5rem 0.75rem; border-radius:8px; border:1px solid #e2e8f0;">
+                                        <img src="{{ asset('storage/' . $curBgImg) }}" id="bg_image_thumb"
+                                            style="width:50px; height:50px; object-fit:cover; border-radius:6px;">
                                         <div style="flex:1;">
-                                            <span style="font-size:0.78rem; color:#475569; display:block; font-weight:600;">Gambar Terpasang (.webp)</span>
-                                            <label style="font-size:0.75rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin-top:2px;">
-                                                <input type="checkbox" name="delete_bg_image" value="1" onchange="previewBgDelete(this)"> Hapus Gambar
+                                            <span
+                                                style="font-size:0.78rem; color:#475569; display:block; font-weight:600;">Gambar
+                                                Terpasang (.webp)</span>
+                                            <label
+                                                style="font-size:0.75rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin-top:2px;">
+                                                <input type="checkbox" name="delete_bg_image" value="1"
+                                                    onchange="previewBgDelete(this)"> Hapus Gambar
                                             </label>
                                         </div>
                                     </div>
                                 @endif
-                                <input type="file" name="bio_bg_image" id="bio_bg_image_input" accept="image/*" class="form-input" style="height:auto; padding:0.5rem;" onchange="previewUploadedBgImage(this)">
-                                <span style="font-size:0.72rem; color:#64748b; margin-top:4px; display:flex; align-items:center; gap:4px;">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/></svg>
-                                    Semua format gambar (JPG, PNG, WebP) akan otomatis di-convert ke WebP resolusi tinggi secara ringan & cepat.
+                                <input type="file" name="bio_bg_image" id="bio_bg_image_input" accept="image/*"
+                                    class="form-input" style="height:auto; padding:0.5rem;"
+                                    onchange="previewUploadedBgImage(this)">
+                                <span
+                                    style="font-size:0.72rem; color:#64748b; margin-top:4px; display:flex; align-items:center; gap:4px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1eb349"
+                                        stroke-width="2">
+                                        <path
+                                            d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z" />
+                                    </svg>
+                                    Semua format gambar (JPG, PNG, WebP) akan otomatis di-convert ke WebP resolusi tinggi
+                                    secara ringan & cepat.
                                 </span>
                             </div>
 
@@ -1164,109 +1209,191 @@
                                 {{-- WhatsApp --}}
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366" style="vertical-align:middle;margin-right:4px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.556 4.117 1.528 5.849L0 24l6.335-1.508A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.154-1.422l-.37-.218-3.764.896.924-3.667-.243-.381A9.953 9.953 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366"
+                                            style="vertical-align:middle;margin-right:4px">
+                                            <path
+                                                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                                            <path
+                                                d="M12 0C5.373 0 0 5.373 0 12c0 2.124.556 4.117 1.528 5.849L0 24l6.335-1.508A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.154-1.422l-.37-.218-3.764.896.924-3.667-.243-.381A9.953 9.953 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z" />
+                                        </svg>
                                         WhatsApp
                                     </label>
-                                    <input type="text" name="bio_wa" value="{{ old('bio_wa', $cfg['wa'] ?? '') }}" class="form-input" placeholder="628xxxxxxxxx">
+                                    <input type="text" name="bio_wa" value="{{ old('bio_wa', $cfg['wa'] ?? '') }}"
+                                        class="form-input" placeholder="628xxxxxxxxx">
                                 </div>
 
                                 {{-- Instagram --}}
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px"><defs><linearGradient id="ig2" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="50%" stop-color="#dc2743"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5.5" fill="url(#ig2)"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="white" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.2" fill="white"/></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24"
+                                            style="vertical-align:middle;margin-right:4px">
+                                            <defs>
+                                                <linearGradient id="ig2" x1="0%" y1="100%" x2="100%" y2="0%">
+                                                    <stop offset="0%" stop-color="#f09433" />
+                                                    <stop offset="50%" stop-color="#dc2743" />
+                                                    <stop offset="100%" stop-color="#bc1888" />
+                                                </linearGradient>
+                                            </defs>
+                                            <rect x="2" y="2" width="20" height="20" rx="5.5" fill="url(#ig2)" />
+                                            <circle cx="12" cy="12" r="4.5" fill="none" stroke="white" stroke-width="1.8" />
+                                            <circle cx="17.5" cy="6.5" r="1.2" fill="white" />
+                                        </svg>
                                         Instagram
                                     </label>
-                                    <input type="text" name="bio_ig" value="{{ old('bio_ig', $cfg['ig'] ?? '') }}" class="form-input" placeholder="@username">
+                                    <input type="text" name="bio_ig" value="{{ old('bio_ig', $cfg['ig'] ?? '') }}"
+                                        class="form-input" placeholder="@username">
                                 </div>
 
                                 {{-- TikTok --}}
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43 6.2 6.2 0 0 0 1.91-4.42V8.92a8.28 8.28 0 0 0 4.82 1.55v-3.47a4.91 4.91 0 0 1-1-.31z"/></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"
+                                            style="vertical-align:middle;margin-right:4px">
+                                            <path
+                                                d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43 6.2 6.2 0 0 0 1.91-4.42V8.92a8.28 8.28 0 0 0 4.82 1.55v-3.47a4.91 4.91 0 0 1-1-.31z" />
+                                        </svg>
                                         TikTok
                                     </label>
-                                    <input type="text" name="bio_tiktok" value="{{ old('bio_tiktok', $cfg['tiktok'] ?? '') }}" class="form-input" placeholder="@username">
+                                    <input type="text" name="bio_tiktok"
+                                        value="{{ old('bio_tiktok', $cfg['tiktok'] ?? '') }}" class="form-input"
+                                        placeholder="@username">
                                 </div>
 
                                 {{-- YouTube --}}
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z" fill="#FF0000"/></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24"
+                                            style="vertical-align:middle;margin-right:4px">
+                                            <path
+                                                d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"
+                                                fill="#FF0000" />
+                                        </svg>
                                         YouTube
                                     </label>
-                                    <input type="text" name="bio_youtube" value="{{ old('bio_youtube', $cfg['youtube'] ?? '') }}" class="form-input" placeholder="@channel atau URL">
+                                    <input type="text" name="bio_youtube"
+                                        value="{{ old('bio_youtube', $cfg['youtube'] ?? '') }}" class="form-input"
+                                        placeholder="@channel atau URL">
                                 </div>
 
                                 {{-- Facebook --}}
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#1877F2" style="vertical-align:middle;margin-right:4px"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.428c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.234 2.686.234v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#1877F2"
+                                            style="vertical-align:middle;margin-right:4px">
+                                            <path
+                                                d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.428c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.234 2.686.234v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" />
+                                        </svg>
                                         Facebook
                                     </label>
-                                    <input type="text" name="bio_facebook" value="{{ old('bio_facebook', $cfg['facebook'] ?? '') }}" class="form-input" placeholder="username atau URL">
+                                    <input type="text" name="bio_facebook"
+                                        value="{{ old('bio_facebook', $cfg['facebook'] ?? '') }}" class="form-input"
+                                        placeholder="username atau URL">
                                 </div>
 
                                 {{-- X / Twitter --}}
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"
+                                            style="vertical-align:middle;margin-right:4px">
+                                            <path
+                                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                        </svg>
                                         X / Twitter
                                     </label>
-                                    <input type="text" name="bio_x" value="{{ old('bio_x', $cfg['x'] ?? '') }}" class="form-input" placeholder="@username">
+                                    <input type="text" name="bio_x" value="{{ old('bio_x', $cfg['x'] ?? '') }}"
+                                        class="form-input" placeholder="@username">
                                 </div>
 
                                 {{-- Threads --}}
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.5 12.068c0-3.507.857-6.355 2.49-8.414C5.845 1.348 8.6.166 12.18.142h.014c2.746.019 5.037.744 6.811 2.154 1.828 1.454 3.02 3.552 3.547 6.236l-2.937.578c-.39-2.013-1.252-3.59-2.565-4.684-1.266-1.055-2.985-1.601-5.114-1.609-2.468.017-4.39.763-5.714 2.219C4.886 6.484 4.217 8.677 4.217 12.07c0 3.4.665 5.59 1.997 7.038 1.327 1.455 3.252 2.2 5.725 2.218 1.832-.011 3.38-.419 4.6-1.213 1.332-.867 2.093-2.14 2.261-3.785.17-1.65-.22-2.985-.937-3.76-.607-.657-1.485-1.032-2.523-1.087-.164 2.044-.741 3.51-1.717 4.366a4.06 4.06 0 0 1-2.757.974c-1.072 0-2.006-.341-2.703-1.007-.742-.706-1.12-1.712-1.062-2.833.11-2.152 1.792-3.676 4.382-3.676.5 0 .978.046 1.43.135a9.1 9.1 0 0 0-.014-.613c-.105-1.52-.885-2.314-2.316-2.361a3.43 3.43 0 0 0-.238-.008c-.921 0-1.76.341-2.375.96l-2.036-2.036C8.26 5.54 9.715 4.94 11.424 4.85a9.92 9.92 0 0 1 .388-.007c2.698 0 4.576 1.46 4.762 4.314.033.502.045 1.017.037 1.535a7.7 7.7 0 0 1 2.085.903c1.404.906 2.175 2.319 2.147 3.963-.005.26-.023.525-.055.793-.366 3.16-1.878 5.282-4.494 6.307-1.196.473-2.564.72-4.108.742z"/></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"
+                                            style="vertical-align:middle;margin-right:4px">
+                                            <path
+                                                d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.5 12.068c0-3.507.857-6.355 2.49-8.414C5.845 1.348 8.6.166 12.18.142h.014c2.746.019 5.037.744 6.811 2.154 1.828 1.454 3.02 3.552 3.547 6.236l-2.937.578c-.39-2.013-1.252-3.59-2.565-4.684-1.266-1.055-2.985-1.601-5.114-1.609-2.468.017-4.39.763-5.714 2.219C4.886 6.484 4.217 8.677 4.217 12.07c0 3.4.665 5.59 1.997 7.038 1.327 1.455 3.252 2.2 5.725 2.218 1.832-.011 3.38-.419 4.6-1.213 1.332-.867 2.093-2.14 2.261-3.785.17-1.65-.22-2.985-.937-3.76-.607-.657-1.485-1.032-2.523-1.087-.164 2.044-.741 3.51-1.717 4.366a4.06 4.06 0 0 1-2.757.974c-1.072 0-2.006-.341-2.703-1.007-.742-.706-1.12-1.712-1.062-2.833.11-2.152 1.792-3.676 4.382-3.676.5 0 .978.046 1.43.135a9.1 9.1 0 0 0-.014-.613c-.105-1.52-.885-2.314-2.316-2.361a3.43 3.43 0 0 0-.238-.008c-.921 0-1.76.341-2.375.96l-2.036-2.036C8.26 5.54 9.715 4.94 11.424 4.85a9.92 9.92 0 0 1 .388-.007c2.698 0 4.576 1.46 4.762 4.314.033.502.045 1.017.037 1.535a7.7 7.7 0 0 1 2.085.903c1.404.906 2.175 2.319 2.147 3.963-.005.26-.023.525-.055.793-.366 3.16-1.878 5.282-4.494 6.307-1.196.473-2.564.72-4.108.742z" />
+                                        </svg>
                                         Threads
                                     </label>
-                                    <input type="text" name="bio_threads" value="{{ old('bio_threads', $cfg['threads'] ?? '') }}" class="form-input" placeholder="@username">
+                                    <input type="text" name="bio_threads"
+                                        value="{{ old('bio_threads', $cfg['threads'] ?? '') }}" class="form-input"
+                                        placeholder="@username">
                                 </div>
 
                                 {{-- LinkedIn --}}
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#0A66C2" style="vertical-align:middle;margin-right:4px"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#0A66C2"
+                                            style="vertical-align:middle;margin-right:4px">
+                                            <path
+                                                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                                        </svg>
                                         LinkedIn
                                     </label>
-                                    <input type="text" name="bio_linkedin" value="{{ old('bio_linkedin', $cfg['linkedin'] ?? '') }}" class="form-input" placeholder="username atau URL">
+                                    <input type="text" name="bio_linkedin"
+                                        value="{{ old('bio_linkedin', $cfg['linkedin'] ?? '') }}" class="form-input"
+                                        placeholder="username atau URL">
                                 </div>
 
                                 {{-- Pinterest --}}
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#E60023" style="vertical-align:middle;margin-right:4px"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#E60023"
+                                            style="vertical-align:middle;margin-right:4px">
+                                            <path
+                                                d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" />
+                                        </svg>
                                         Pinterest
                                     </label>
-                                    <input type="text" name="bio_pinterest" value="{{ old('bio_pinterest', $cfg['pinterest'] ?? '') }}" class="form-input" placeholder="username">
+                                    <input type="text" name="bio_pinterest"
+                                        value="{{ old('bio_pinterest', $cfg['pinterest'] ?? '') }}" class="form-input"
+                                        placeholder="username">
                                 </div>
 
                                 {{-- Telegram --}}
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#26A5E4" style="vertical-align:middle;margin-right:4px"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#26A5E4"
+                                            style="vertical-align:middle;margin-right:4px">
+                                            <path
+                                                d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                                        </svg>
                                         Telegram
                                     </label>
-                                    <input type="text" name="bio_telegram" value="{{ old('bio_telegram', $cfg['telegram'] ?? '') }}" class="form-input" placeholder="@username atau group">
+                                    <input type="text" name="bio_telegram"
+                                        value="{{ old('bio_telegram', $cfg['telegram'] ?? '') }}" class="form-input"
+                                        placeholder="@username atau group">
                                 </div>
 
                                 {{-- Discord --}}
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#5865F2" style="vertical-align:middle;margin-right:4px"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.054a19.824 19.824 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#5865F2"
+                                            style="vertical-align:middle;margin-right:4px">
+                                            <path
+                                                d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.054a19.824 19.824 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
+                                        </svg>
                                         Discord
                                     </label>
-                                    <input type="text" name="bio_discord" value="{{ old('bio_discord', $cfg['discord'] ?? '') }}" class="form-input" placeholder="https://discord.gg/...">
+                                    <input type="text" name="bio_discord"
+                                        value="{{ old('bio_discord', $cfg['discord'] ?? '') }}" class="form-input"
+                                        placeholder="https://discord.gg/...">
                                 </div>
 
                                 {{-- Snapchat --}}
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="12" fill="#FFFC00"/><path d="M12.206 5.293c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c.053.022.11.03.171.03.317 0 .68-.13 1.038-.325.134-.073.36-.159.587-.159.14 0 .519.032.703.386.132.26.05.542-.23.77-.11.09-.699.51-1.599.933.12.343.25.7.42 1.035.49 1.013 1.244 1.814 2.298 2.404a.93.93 0 0 1-.24 1.742c-.374.062-.744.103-1.117.145-.49.055-.988.112-1.47.195-.5.087-.962.273-1.37.554-.415.286-.836.71-.836 1.436 0 .38.081.681.152.897-.137.12-.31.17-.484.17-.225 0-.44-.07-.62-.161-.376-.19-.739-.296-1.107-.296a3.02 3.02 0 0 0-.734.087c-.396.098-.792.302-1.213.54-.394.224-.809.462-1.306.548a2.8 2.8 0 0 1-.442.036c-.464 0-.9-.114-1.28-.319-.426-.23-.786-.42-1.163-.507a3.11 3.11 0 0 0-.728-.083c-.367 0-.73.104-1.102.292-.177.09-.383.16-.59.16-.186 0-.374-.054-.52-.18-.232-.196-.152-.432-.054-.725.074-.217.156-.518.156-.9 0-.71-.41-1.13-.817-1.417a4.45 4.45 0 0 0-1.361-.558c-.48-.088-.976-.146-1.463-.202a11.7 11.7 0 0 1-1.14-.148.935.935 0 0 1-.23-1.744c1.053-.591 1.809-1.392 2.297-2.405.172-.333.3-.694.42-1.035-.905-.425-1.492-.842-1.6-.932-.28-.228-.36-.51-.23-.77.184-.355.563-.387.703-.387.225 0 .455.086.587.16.353.193.712.323 1.027.323.064 0 .124-.009.18-.032l-.033-.569c-.104-1.628-.23-3.655.299-4.847C7.86 5.57 11.217 5.294 12.206 5.293z" fill="#000"/></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24"
+                                            style="vertical-align:middle;margin-right:4px">
+                                            <circle cx="12" cy="12" r="12" fill="#FFFC00" />
+                                            <path
+                                                d="M12.206 5.293c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c.053.022.11.03.171.03.317 0 .68-.13 1.038-.325.134-.073.36-.159.587-.159.14 0 .519.032.703.386.132.26.05.542-.23.77-.11.09-.699.51-1.599.933.12.343.25.7.42 1.035.49 1.013 1.244 1.814 2.298 2.404a.93.93 0 0 1-.24 1.742c-.374.062-.744.103-1.117.145-.49.055-.988.112-1.47.195-.5.087-.962.273-1.37.554-.415.286-.836.71-.836 1.436 0 .38.081.681.152.897-.137.12-.31.17-.484.17-.225 0-.44-.07-.62-.161-.376-.19-.739-.296-1.107-.296a3.02 3.02 0 0 0-.734.087c-.396.098-.792.302-1.213.54-.394.224-.809.462-1.306.548a2.8 2.8 0 0 1-.442.036c-.464 0-.9-.114-1.28-.319-.426-.23-.786-.42-1.163-.507a3.11 3.11 0 0 0-.728-.083c-.367 0-.73.104-1.102.292-.177.09-.383.16-.59.16-.186 0-.374-.054-.52-.18-.232-.196-.152-.432-.054-.725.074-.217.156-.518.156-.9 0-.71-.41-1.13-.817-1.417a4.45 4.45 0 0 0-1.361-.558c-.48-.088-.976-.146-1.463-.202a11.7 11.7 0 0 1-1.14-.148.935.935 0 0 1-.23-1.744c1.053-.591 1.809-1.392 2.297-2.405.172-.333.3-.694.42-1.035-.905-.425-1.492-.842-1.6-.932-.28-.228-.36-.51-.23-.77.184-.355.563-.387.703-.387.225 0 .455.086.587.16.353.193.712.323 1.027.323.064 0 .124-.009.18-.032l-.033-.569c-.104-1.628-.23-3.655.299-4.847C7.86 5.57 11.217 5.294 12.206 5.293z"
+                                                fill="#000" />
+                                        </svg>
                                         Snapchat
                                     </label>
-                                    <input type="text" name="bio_snapchat" value="{{ old('bio_snapchat', $cfg['snapchat'] ?? '') }}" class="form-input" placeholder="username">
+                                    <input type="text" name="bio_snapchat"
+                                        value="{{ old('bio_snapchat', $cfg['snapchat'] ?? '') }}" class="form-input"
+                                        placeholder="username">
                                 </div>
 
                             </div>
@@ -1274,10 +1401,17 @@
                             {{-- Website - full width --}}
                             <div class="form-group" style="margin-top:0.75rem;">
                                 <label class="form-label">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2" style="vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1eb349"
+                                        stroke-width="2" style="vertical-align:middle;margin-right:4px">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="2" y1="12" x2="22" y2="12" />
+                                        <path
+                                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                                    </svg>
                                     Website / Portofolio / Linktree
                                 </label>
-                                <input type="url" name="bio_website" value="{{ old('bio_website', $cfg['website'] ?? '') }}" class="form-input" placeholder="https://portofolio-anda.com">
+                                <input type="url" name="bio_website" value="{{ old('bio_website', $cfg['website'] ?? '') }}"
+                                    class="form-input" placeholder="https://portofolio-anda.com">
                             </div>
 
                             <div style="display:flex; justify-content:flex-end; margin-top:1.25rem;">
@@ -1311,8 +1445,8 @@
                                             <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
                                                 stroke-linecap="round" />
                                         </svg>
-                                    @elseif($block->type === 'pdf') <svg width="18" height="18" fill="none" stroke="currentColor"
-                                            stroke-width="2" viewBox="0 0 24 24">
+                                    @elseif($block->type === 'pdf') <svg width="18" height="18" fill="none"
+                                            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                                             <polyline points="14 2 14 8 20 8" />
                                         </svg>
@@ -1441,29 +1575,49 @@
             <div class="tab-pane" id="tab-catalog">
 
                 {{-- 1. Affiliate buyle.id --}}
-                <div class="prof-card" style="border: 1px solid #E2E8F0; background: #ffffff; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.03); margin-bottom:1.5rem; overflow:hidden;">
-                    <div style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; background:#F8FAFC; border-bottom:1px solid #F1F5F9; flex-wrap:wrap; gap:0.75rem;">
+                <div class="prof-card"
+                    style="border: 1px solid #E2E8F0; background: #ffffff; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.03); margin-bottom:1.5rem; overflow:hidden;">
+                    <div
+                        style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; background:#F8FAFC; border-bottom:1px solid #F1F5F9; flex-wrap:wrap; gap:0.75rem;">
                         <div style="display:flex; align-items:center; gap:0.75rem;">
-                            <div style="width:38px; height:38px; border-radius:10px; background:#F1F5F9; color:#334155; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            <div
+                                style="width:38px; height:38px; border-radius:10px; background:#F1F5F9; color:#334155; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                                 </svg>
                             </div>
                             <div>
-                                <h3 style="font-size:0.95rem; font-weight:800; color:#0F172A; margin:0;">Katalog Produk Affiliate buyle.id</h3>
-                                <p style="font-size:0.78rem; color:#64748B; margin:0.15rem 0 0;">Tampilkan produk affiliate buyle.id milik creator lain & dapatkan komisi penjualan.</p>
+                                <h3 style="font-size:0.95rem; font-weight:800; color:#0F172A; margin:0;">Katalog Produk
+                                    Affiliate buyle.id</h3>
+                                <p style="font-size:0.78rem; color:#64748B; margin:0.15rem 0 0;">Tampilkan produk affiliate
+                                    buyle.id milik creator lain & dapatkan komisi penjualan.</p>
                             </div>
                         </div>
-                        <button type="button" onclick="document.getElementById('affiliateCatalogModal').classList.add('open')"
-                            class="btn-submit-sm" style="background:#1eb349; color:#fff; border:none; padding:0.5rem 1.15rem; border-radius:10px; font-weight:700; font-size:0.825rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 12px rgba(30,179,73,0.25);">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <button type="button"
+                            onclick="document.getElementById('affiliateCatalogModal').classList.add('open')"
+                            class="btn-submit-sm"
+                            style="background:#1eb349; color:#fff; border:none; padding:0.5rem 1.15rem; border-radius:10px; font-weight:700; font-size:0.825rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 12px rgba(30,179,73,0.25);">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
                             Cari & Tambah Affiliate
                         </button>
                     </div>
                     <div class="card-body" style="padding:1.25rem;">
-                        <p style="font-size:0.8rem; color:#475569; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.75rem 1rem; margin-bottom:1.25rem; line-height:1.45; display:flex; align-items:flex-start; gap:0.5rem;">
-                            <svg width="16" height="16" fill="none" stroke="#64748B" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                            <span><strong>Peluang Affiliate:</strong> Klik <strong>"Cari & Tambah Affiliate"</strong> untuk membuka katalog pop-up. Pilih produk buyle.id creator lain untuk ditampilkan di Bio Page Anda dan dapatkan komisi dalam Rupiah!</span>
+                        <p
+                            style="font-size:0.8rem; color:#475569; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.75rem 1rem; margin-bottom:1.25rem; line-height:1.45; display:flex; align-items:flex-start; gap:0.5rem;">
+                            <svg width="16" height="16" fill="none" stroke="#64748B" stroke-width="2.5" viewBox="0 0 24 24"
+                                style="flex-shrink:0; margin-top:2px;">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg>
+                            <span><strong>Peluang Affiliate:</strong> Klik <strong>"Cari & Tambah Affiliate"</strong> untuk
+                                membuka katalog pop-up. Pilih produk buyle.id creator lain untuk ditampilkan di Bio Page
+                                Anda dan dapatkan komisi dalam Rupiah!</span>
                         </p>
 
                         @php
@@ -1474,11 +1628,13 @@
                         @forelse($addedAffBlocks as $affBlock)
                             @php
                                 $affProdId = $affBlock->data_json['product_id'] ?? null;
-                                $affProd   = $affiliateProducts->firstWhere('id', $affProdId);
+                                $affProd = $affiliateProducts->firstWhere('id', $affProdId);
                             @endphp
-                            <div style="background:#fff; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
+                            <div
+                                style="background:#fff; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
                                 @if($affProd)
-                                    <img src="{{ $affProd->main_image }}" style="width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
+                                    <img src="{{ $affProd->main_image }}"
+                                        style="width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
                                 @endif
                                 <div style="flex:1; min-width:200px;">
                                     <div style="font-weight:700; font-size:0.875rem; color:#0F172A;">
@@ -1486,51 +1642,83 @@
                                     </div>
                                     <div style="font-size:0.75rem; color:#64748B; margin-top:0.2rem;">
                                         @if($affProd)
-                                            Oleh: <strong style="color:#334155;">{{ $affProd->seller->name ?? 'Creator' }}</strong> &middot; Harga: <span style="color:#0F172A; font-weight:700;">Rp {{ number_format($affProd->sale_price ?? $affProd->price, 0, ',', '.') }}</span>
-                                            &middot; Komisi: <span style="color:#166534; font-weight:700;">{{ $affProd->affiliate_commission_rate ?? 10 }}% (Rp {{ number_format(round((($affProd->sale_price ?? $affProd->price) * ($affProd->affiliate_commission_rate ?? 10))/100), 0, ',', '.') }})</span>
+                                            Oleh: <strong style="color:#334155;">{{ $affProd->seller->name ?? 'Creator' }}</strong>
+                                            &middot; Harga: <span style="color:#0F172A; font-weight:700;">Rp
+                                                {{ number_format($affProd->sale_price ?? $affProd->price, 0, ',', '.') }}</span>
+                                            &middot; Komisi: <span
+                                                style="color:#166534; font-weight:700;">{{ $affProd->affiliate_commission_rate ?? 10 }}%
+                                                (Rp
+                                                {{ number_format(round((($affProd->sale_price ?? $affProd->price) * ($affProd->affiliate_commission_rate ?? 10)) / 100), 0, ',', '.') }})</span>
                                         @else
                                             Produk Affiliate buyle.id
                                         @endif
                                     </div>
                                 </div>
-                                <form action="{{ route('creator.bio.blocks.destroy', $affBlock) }}" method="POST" class="form-delete-block" style="margin-left:auto;">
+                                <form action="{{ route('creator.bio.blocks.destroy', $affBlock) }}" method="POST"
+                                    class="form-delete-block" style="margin-left:auto;">
                                     @csrf @method('DELETE')
-                                    <button type="button" class="btn-delete-block" style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                                    <button type="button" class="btn-delete-block"
+                                        style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <polyline points="3 6 5 6 21 6" />
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                        </svg>
                                         Hapus dari Bio
                                     </button>
                                 </form>
                             </div>
                         @empty
-                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0; margin:0;">Belum ada produk affiliate yang ditambahkan. Klik tombol di atas untuk memilih produk.</p>
+                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0; margin:0;">Belum
+                                ada produk affiliate yang ditambahkan. Klik tombol di atas untuk memilih produk.</p>
                         @endforelse
                     </div>
                 </div>
 
                 {{-- 2. Produk White Label & Resell --}}
-                <div class="prof-card" style="border: 1px solid #E2E8F0; background: #ffffff; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.03); margin-bottom:1.5rem; overflow:hidden;">
-                    <div style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; background:#F8FAFC; border-bottom:1px solid #F1F5F9; flex-wrap:wrap; gap:0.75rem;">
+                <div class="prof-card"
+                    style="border: 1px solid #E2E8F0; background: #ffffff; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.03); margin-bottom:1.5rem; overflow:hidden;">
+                    <div
+                        style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; background:#F8FAFC; border-bottom:1px solid #F1F5F9; flex-wrap:wrap; gap:0.75rem;">
                         <div style="display:flex; align-items:center; gap:0.75rem;">
-                            <div style="width:38px; height:38px; border-radius:10px; background:#F1F5F9; color:#334155; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            <div
+                                style="width:38px; height:38px; border-radius:10px; background:#F1F5F9; color:#334155; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                                 </svg>
                             </div>
                             <div>
-                                <h3 style="font-size:0.95rem; font-weight:800; color:#0F172A; margin:0;">Katalog Produk White Label & Resell</h3>
-                                <p style="font-size:0.78rem; color:#64748B; margin:0.15rem 0 0;">Bebas lisensi watermark & disetujui Tim Buyle. Tentukan harga jual (markup) sendiri di Bio Page Anda!</p>
+                                <h3 style="font-size:0.95rem; font-weight:800; color:#0F172A; margin:0;">Katalog Produk
+                                    White Label & Resell</h3>
+                                <p style="font-size:0.78rem; color:#64748B; margin:0.15rem 0 0;">Bebas lisensi &Tentukan
+                                    harga jual (markup) sendiri!</p>
                             </div>
                         </div>
-                        <button type="button" onclick="document.getElementById('whitelabelCatalogModal').classList.add('open')"
-                            class="btn-submit-sm" style="background:#1eb349; color:#fff; border:none; padding:0.5rem 1.15rem; border-radius:10px; font-weight:700; font-size:0.825rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 12px rgba(30,179,73,0.25);">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <button type="button"
+                            onclick="document.getElementById('whitelabelCatalogModal').classList.add('open')"
+                            class="btn-submit-sm"
+                            style="background:#1eb349; color:#fff; border:none; padding:0.5rem 1.15rem; border-radius:10px; font-weight:700; font-size:0.825rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 12px rgba(30,179,73,0.25);">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
                             Cari & Tambah White Label
                         </button>
                     </div>
                     <div class="card-body" style="padding:1.25rem;">
-                        <p style="font-size:0.8rem; color:#475569; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.75rem 1rem; margin-bottom:1.25rem; line-height:1.45; display:flex; align-items:flex-start; gap:0.5rem;">
-                            <svg width="16" height="16" fill="none" stroke="#64748B" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                            <span><strong>Peluang Reseller & Re-brand:</strong> Produk White Label bebas watermark dan disetujui Tim Buyle. Anda dapat memasukkannya ke Bio Link Anda dan menentukan harga jual (markup) sendiri!</span>
+                        <p
+                            style="font-size:0.8rem; color:#475569; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.75rem 1rem; margin-bottom:1.25rem; line-height:1.45; display:flex; align-items:flex-start; gap:0.5rem;">
+                            <svg width="16" height="16" fill="none" stroke="#64748B" stroke-width="2.5" viewBox="0 0 24 24"
+                                style="flex-shrink:0; margin-top:2px;">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg>
+                            <span><strong>Peluang Reseller & Re-brand:</strong> Produk White Label bebas watermark dan
+                                disetujui Tim Buyle. Anda dapat memasukkannya ke Bio Link Anda dan menentukan harga jual
+                                (markup) sendiri!</span>
                         </p>
 
                         @php
@@ -1541,11 +1729,13 @@
                         @forelse($addedWlBlocks as $wlBlock)
                             @php
                                 $wlProdId = $wlBlock->data_json['product_id'] ?? null;
-                                $wlProd   = $whitelabelProducts->firstWhere('id', $wlProdId);
+                                $wlProd = $whitelabelProducts->firstWhere('id', $wlProdId);
                             @endphp
-                            <div style="background:#fff; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
+                            <div
+                                style="background:#fff; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
                                 @if($wlProd)
-                                    <img src="{{ $wlProd->main_image }}" style="width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
+                                    <img src="{{ $wlProd->main_image }}"
+                                        style="width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
                                 @endif
                                 <div style="flex:1; min-width:200px;">
                                     <div style="font-weight:700; font-size:0.875rem; color:#0F172A;">
@@ -1555,23 +1745,32 @@
                                         @if($wlProd)
                                             Oleh: <strong style="color:#334155;">{{ $wlProd->seller->name ?? 'Creator' }}</strong>
                                             @if($wlProd->whitelabel_price)
-                                                &middot; Min. Resell: <span style="color:#0F172A; font-weight:700;">Rp {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}</span>
+                                                &middot; Min. Resell: <span style="color:#0F172A; font-weight:700;">Rp
+                                                    {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}</span>
                                             @else
-                                                &middot; Harga Asli: <span style="color:#0F172A; font-weight:700;">Rp {{ number_format($wlProd->price, 0, ',', '.') }}</span>
+                                                &middot; Harga Asli: <span style="color:#0F172A; font-weight:700;">Rp
+                                                    {{ number_format($wlProd->price, 0, ',', '.') }}</span>
                                             @endif
                                         @endif
                                     </div>
                                 </div>
-                                <form action="{{ route('creator.bio.blocks.destroy', $wlBlock) }}" method="POST" class="form-delete-block" style="margin-left:auto;">
+                                <form action="{{ route('creator.bio.blocks.destroy', $wlBlock) }}" method="POST"
+                                    class="form-delete-block" style="margin-left:auto;">
                                     @csrf @method('DELETE')
-                                    <button type="button" class="btn-delete-block" style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                                    <button type="button" class="btn-delete-block"
+                                        style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <polyline points="3 6 5 6 21 6" />
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                        </svg>
                                         Hapus dari Bio
                                     </button>
                                 </form>
                             </div>
                         @empty
-                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0; margin:0;">Belum ada produk White Label yang ditambahkan ke Bio.</p>
+                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0; margin:0;">Belum
+                                ada produk White Label yang ditambahkan ke Bio.</p>
                         @endforelse
                     </div>
                 </div>
@@ -1632,7 +1831,9 @@
                                 </div>
                             </div>
                         @empty
-                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0;">Belum ada link eksternal (Shopee/Tokopedia). Masukkan link Shopee dan sistem akan mengambil gambar otomatis.</p>
+                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0;">Belum ada link
+                                eksternal (Shopee/Tokopedia). Masukkan link Shopee dan sistem akan mengambil gambar otomatis.
+                            </p>
                         @endforelse
                     </div>
                 </div>
@@ -1653,68 +1854,71 @@
                     </div>
                     <div class="card-body">
                         @forelse($blocks->where('type', 'custom_product') as $block)
-                            <div class="aff-card">
-                                @php $imgs = $block->data_json['images'] ?? []; @endphp
-                                @if(!empty($imgs[0]))
-                                    <img src="{{ asset('storage/' . $imgs[0]) }}" class="aff-img" onerror="this.style.display='none'">
-                                @endif
-                                <div class="aff-info">
-                                    <div class="aff-title">{{ $block->title }}</div>
-                                    <div class="aff-sub">
-                                        @if(!empty($block->data_json['original_price']) && $block->data_json['original_price'] > ($block->data_json['price'] ?? 0))
-                                            <span style="text-decoration:line-through; color:#94a3b8; margin-right:0.35rem;">Rp
-                                                {{ number_format($block->data_json['original_price'], 0, ',', '.') }}</span>
-                                        @endif
-                                        <strong style="color:#1eb349;">Rp
-                                            {{ number_format($block->data_json['price'] ?? 0, 0, ',', '.') }}</strong> &middot;
-                                        {{ ($block->data_json['payment_method'] ?? 'wa') === 'wa' ? 'Beli via WA' : 'Beli via Web' }}
-                                    </div>
-                                </div>
-                                <div style="padding:0.75rem; display:flex; align-items:center; gap:0.4rem;">
-                                    @if(!empty($profile->store_slug))
-                                        <a href="{{ route('bio.product.show', [$profile->store_slug, $block->data_json['slug'] ?? $block->id]) }}"
-                                            target="_blank" class="btn-icon-sm" style="background:#f0fdf4; color:#1eb349;"
-                                            title="Lihat Halaman Produk (SEO)">
-                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                viewBox="0 0 24 24">
-                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                                                <polyline points="15 3 21 3 21 9" />
-                                                <line x1="10" y1="14" x2="21" y2="3" />
-                                            </svg>
-                                        </a>
-                                    @endif
-                                    <button type="button" onclick="editUmkmProduct({{ json_encode([
-                                        'id' => $block->id,
-                                        'title' => $block->title,
-                                        'price' => $block->data_json['price'] ?? 0,
-                                        'original_price' => $block->data_json['original_price'] ?? '',
-                                        'payment_method' => $block->data_json['payment_method'] ?? 'wa',
-                                        'description' => $block->data_json['description'] ?? '',
-                                        'wa_text' => $block->data_json['wa_text'] ?? '',
-                                        'url' => $block->url ?? ''
-                                    ]) }})" class="btn-icon-sm" style="background:#eff6ff; color:#2563eb;" title="Edit Produk">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                        </svg>
-                                    </button>
-                                    <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST"
-                                        class="form-delete-block">
-                                        @csrf @method('DELETE')
-                                        <button type="button" class="btn-icon-sm btn-delete-block"
-                                            style="background:#fef2f2; color:#ef4444;" title="Hapus Produk">
-                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                viewBox="0 0 24 24">
-                                                <polyline points="3 6 5 6 21 6" />
-                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                                            </svg>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
+                                            <div class="aff-card">
+                                                @php $imgs = $block->data_json['images'] ?? []; @endphp
+                                                @if(!empty($imgs[0]))
+                                                    <img src="{{ asset('storage/' . $imgs[0]) }}" class="aff-img"
+                                                        onerror="this.style.display='none'">
+                                                @endif
+                                                <div class="aff-info">
+                                                    <div class="aff-title">{{ $block->title }}</div>
+                                                    <div class="aff-sub">
+                                                        @if(!empty($block->data_json['original_price']) && $block->data_json['original_price'] > ($block->data_json['price'] ?? 0))
+                                                            <span style="text-decoration:line-through; color:#94a3b8; margin-right:0.35rem;">Rp
+                                                                {{ number_format($block->data_json['original_price'], 0, ',', '.') }}</span>
+                                                        @endif
+                                                        <strong style="color:#1eb349;">Rp
+                                                            {{ number_format($block->data_json['price'] ?? 0, 0, ',', '.') }}</strong> &middot;
+                                                        {{ ($block->data_json['payment_method'] ?? 'wa') === 'wa' ? 'Beli via WA' : 'Beli via Web' }}
+                                                    </div>
+                                                </div>
+                                                <div style="padding:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+                                                    @if(!empty($profile->store_slug))
+                                                        <a href="{{ route('bio.product.show', [$profile->store_slug, $block->data_json['slug'] ?? $block->id]) }}"
+                                                            target="_blank" class="btn-icon-sm" style="background:#f0fdf4; color:#1eb349;"
+                                                            title="Lihat Halaman Produk (SEO)">
+                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                                viewBox="0 0 24 24">
+                                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                                                <polyline points="15 3 21 3 21 9" />
+                                                                <line x1="10" y1="14" x2="21" y2="3" />
+                                                            </svg>
+                                                        </a>
+                                                    @endif
+                                                    <button type="button" onclick="editUmkmProduct({{ json_encode([
+                                'id' => $block->id,
+                                'title' => $block->title,
+                                'price' => $block->data_json['price'] ?? 0,
+                                'original_price' => $block->data_json['original_price'] ?? '',
+                                'payment_method' => $block->data_json['payment_method'] ?? 'wa',
+                                'description' => $block->data_json['description'] ?? '',
+                                'wa_text' => $block->data_json['wa_text'] ?? '',
+                                'url' => $block->url ?? ''
+                            ]) }})" class="btn-icon-sm" style="background:#eff6ff; color:#2563eb;"
+                                                        title="Edit Produk">
+                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                            viewBox="0 0 24 24">
+                                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                                        </svg>
+                                                    </button>
+                                                    <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST"
+                                                        class="form-delete-block">
+                                                        @csrf @method('DELETE')
+                                                        <button type="button" class="btn-icon-sm btn-delete-block"
+                                                            style="background:#fef2f2; color:#ef4444;" title="Hapus Produk">
+                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                                viewBox="0 0 24 24">
+                                                                <polyline points="3 6 5 6 21 6" />
+                                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                                            </svg>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
                         @empty
-                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0;">Belum ada produk fisik/UMKM. Klik "+ Tambah Produk" untuk menambahkan.</p>
+                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0;">Belum ada produk
+                                fisik/UMKM. Klik "+ Tambah Produk" untuk menambahkan.</p>
                         @endforelse
                     </div>
                 </div>
@@ -1745,9 +1949,11 @@
                                 <div style="flex:1; min-width:0;">
                                     <div
                                         style="font-weight:700; font-size:0.82rem; color:#0b120c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                        {{ $product->name }}</div>
+                                        {{ $product->name }}
+                                    </div>
                                     <div style="font-size:0.72rem; color:#64748b;">Rp
-                                        {{ number_format($product->price, 0, ',', '.') }}</div>
+                                        {{ number_format($product->price, 0, ',', '.') }}
+                                    </div>
                                 </div>
                                 @if($alreadyAdded)
                                     <span
@@ -1765,8 +1971,9 @@
                                 @endif
                             </div>
                         @empty
-                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0;">Belum ada produk milik Anda sendiri. <a
-                                    href="{{ route('creator.products.create') }}" style="color:#1eb349;">Tambah Produk →</a></p>
+                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0;">Belum ada produk
+                                milik Anda sendiri. <a href="{{ route('creator.products.create') }}"
+                                    style="color:#1eb349;">Tambah Produk →</a></p>
                         @endforelse
                     </div>
                 </div>
@@ -2082,8 +2289,14 @@
                         onchange="if(this.files.length>3){alert('Maksimal 3 foto!'); this.value=''; return;} previewEditUmkmImages(this)">
                     <div id="editNewImagePreview" style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.5rem;">
                     </div>
-                    <span class="form-hint" style="color:#64748b; font-size:0.72rem; display:flex; align-items:center; gap:4px; margin-top:4px;">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                    <span class="form-hint"
+                        style="color:#64748b; font-size:0.72rem; display:flex; align-items:center; gap:4px; margin-top:4px;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.7 1.3 1.5 1.5 2.5" />
+                            <path d="M9 18h6" />
+                            <path d="M10 22h4" />
+                        </svg>
                         Klik tombol ✕ pada foto tersimpan untuk menghapusnya secara permanen dari server.
                     </span>
                 </div>
@@ -2592,10 +2805,14 @@
     {{-- ── Modal Wide: Katalog Affiliate buyle.id ── --}}
     <div class="modal-overlay" id="affiliateCatalogModal" onclick="if(event.target===this)this.classList.remove('open')">
         <div class="modal-box-wide" style="border: 1px solid #E2E8F0;">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #F1F5F9;">
+            <div
+                style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #F1F5F9;">
                 <div>
-                    <h3 style="font-size:1.1rem; font-weight:800; color:#0F172A; font-family:'Montserrat',sans-serif; margin:0; display:flex; align-items:center; gap:0.5rem;">
-                        <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <h3
+                        style="font-size:1.1rem; font-weight:800; color:#0F172A; font-family:'Montserrat',sans-serif; margin:0; display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                        </svg>
                         Katalog Produk Affiliate buyle.id
                     </h3>
                     <p style="font-size:0.78rem; color:#64748B; margin:0.25rem 0 0;">
@@ -2609,14 +2826,20 @@
             {{-- Search Bar --}}
             <div style="position:relative; margin-bottom:1rem;">
                 <span style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); pointer-events:none;">
-                    <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
                 </span>
-                <input type="text" id="searchAffiliateModalInput" onkeyup="filterModalCatalog('affiliateModalItem', this.value)"
-                    class="form-input" placeholder="Cari nama produk atau creator..." style="height:44px; padding-left:2.5rem; font-size:0.875rem; border-radius:12px; border:1.5px solid #E2E8F0; background:#FAFAFA;">
+                <input type="text" id="searchAffiliateModalInput"
+                    onkeyup="filterModalCatalog('affiliateModalItem', this.value)" class="form-input"
+                    placeholder="Cari nama produk atau creator..."
+                    style="height:44px; padding-left:2.5rem; font-size:0.875rem; border-radius:12px; border:1.5px solid #E2E8F0; background:#FAFAFA;">
             </div>
 
             {{-- Scrollable Product List --}}
-            <div style="max-height:55vh; overflow-y:auto; padding-right:0.35rem; display:flex; flex-direction:column; gap:0.75rem;">
+            <div
+                style="max-height:55vh; overflow-y:auto; padding-right:0.35rem; display:flex; flex-direction:column; gap:0.75rem;">
                 @php
                     $addedProductIds = $blocks->whereIn('type', ['buyle_product', 'buyle_affiliate'])->pluck('data_json.product_id')->filter()->toArray();
                 @endphp
@@ -2625,26 +2848,33 @@
                     @php
                         $effPrice = $affProduct->sale_price ?? $affProduct->price;
                         $commRate = $affProduct->affiliate_commission_rate ?? 10;
-                        $commRp   = round(($effPrice * $commRate) / 100);
-                        $isAdded  = in_array($affProduct->id, $addedProductIds);
+                        $commRp = round(($effPrice * $commRate) / 100);
+                        $isAdded = in_array($affProduct->id, $addedProductIds);
                         $matchingBlock = $blocks->first(fn($b) => ($b->data_json['product_id'] ?? null) == $affProduct->id);
                     @endphp
-                    <div class="affiliateModalItem" data-search="{{ strtolower($affProduct->name . ' ' . ($affProduct->seller->name ?? '')) }}"
+                    <div class="affiliateModalItem"
+                        data-search="{{ strtolower($affProduct->name . ' ' . ($affProduct->seller->name ?? '')) }}"
                         style="background:#fff; border:1.5px solid #E2E8F0; border-radius:14px; padding:0.85rem 1rem; display:flex; align-items:center; gap:1rem; transition:all 0.2s; flex-wrap:wrap;">
-                        <img src="{{ $affProduct->main_image }}" style="width:60px; height:60px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
+                        <img src="{{ $affProduct->main_image }}"
+                            style="width:60px; height:60px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
                         <div style="flex:1; min-width:200px;">
                             <div style="font-weight:700; font-size:0.88rem; color:#0F172A;">
                                 {{ $affProduct->name }}
                             </div>
                             <div style="font-size:0.75rem; color:#64748B; margin-top:0.15rem;">
-                                Oleh: <strong style="color:#334155;">{{ $affProduct->seller->name ?? 'Creator buyle.id' }}</strong>
+                                Oleh: <strong
+                                    style="color:#334155;">{{ $affProduct->seller->name ?? 'Creator buyle.id' }}</strong>
                             </div>
                             <div style="display:flex; align-items:center; gap:0.6rem; margin-top:0.35rem; flex-wrap:wrap;">
                                 <span style="font-size:0.8rem; color:#0F172A; font-weight:700;">
                                     Harga: Rp {{ number_format($effPrice, 0, ',', '.') }}
                                 </span>
-                                <span style="font-size:0.75rem; font-weight:700; color:#166534; background:#ECFDF5; border:1px solid #A7F3D0; padding:0.15rem 0.55rem; border-radius:6px; display:inline-flex; align-items:center; gap:0.25rem;">
-                                    <svg width="12" height="12" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                                <span
+                                    style="font-size:0.75rem; font-weight:700; color:#166534; background:#ECFDF5; border:1px solid #A7F3D0; padding:0.15rem 0.55rem; border-radius:6px; display:inline-flex; align-items:center; gap:0.25rem;">
+                                    <svg width="12" height="12" fill="none" stroke="#166534" stroke-width="2.5"
+                                        viewBox="0 0 24 24">
+                                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                    </svg>
                                     Komisi {{ $commRate }}% &middot; Rp {{ number_format($commRp, 0, ',', '.') }}
                                 </span>
                             </div>
@@ -2654,8 +2884,13 @@
                             @if($isAdded && $matchingBlock)
                                 <form action="{{ route('creator.bio.blocks.destroy', $matchingBlock) }}" method="POST">
                                     @csrf @method('DELETE')
-                                    <button type="submit" style="border:1px solid #FCA5A5; color:#DC2626; background:#FEF2F2; font-size:0.75rem; padding:0.4rem 0.85rem; border-radius:8px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                                    <button type="submit"
+                                        style="border:1px solid #FCA5A5; color:#DC2626; background:#FEF2F2; font-size:0.75rem; padding:0.4rem 0.85rem; border-radius:8px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <polyline points="3 6 5 6 21 6" />
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                        </svg>
                                         Hapus dari Bio
                                     </button>
                                 </form>
@@ -2666,7 +2901,8 @@
                                     <input type="hidden" name="title" value="{{ $affProduct->name }}">
                                     <input type="hidden" name="url" value="{{ route('products.show', $affProduct->slug) }}">
                                     <input type="hidden" name="product_id" value="{{ $affProduct->id }}">
-                                    <button type="submit" class="btn-submit-sm" style="background:#1eb349; color:#fff; font-size:0.75rem; padding:0.4rem 0.9rem; height:36px; border-radius:8px; font-weight:700; cursor:pointer;">
+                                    <button type="submit" class="btn-submit-sm"
+                                        style="background:#1eb349; color:#fff; font-size:0.75rem; padding:0.4rem 0.9rem; height:36px; border-radius:8px; font-weight:700; cursor:pointer;">
                                         + Tambah ke Bio
                                     </button>
                                 </form>
@@ -2685,10 +2921,14 @@
     {{-- ── Modal Wide: Katalog White Label buyle.id ── --}}
     <div class="modal-overlay" id="whitelabelCatalogModal" onclick="if(event.target===this)this.classList.remove('open')">
         <div class="modal-box-wide" style="border: 1px solid #E2E8F0;">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #F1F5F9;">
+            <div
+                style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #F1F5F9;">
                 <div>
-                    <h3 style="font-size:1.15rem; font-weight:800; color:#0F172A; font-family:'Montserrat',sans-serif; margin:0; display:flex; align-items:center; gap:0.5rem;">
-                        <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    <h3
+                        style="font-size:1.15rem; font-weight:800; color:#0F172A; font-family:'Montserrat',sans-serif; margin:0; display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                        </svg>
                         Katalog Produk White Label buyle.id
                     </h3>
                     <p style="font-size:0.78rem; color:#64748B; margin:0.25rem 0 0;">
@@ -2702,22 +2942,30 @@
             {{-- Search Bar --}}
             <div style="position:relative; margin-bottom:1rem;">
                 <span style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); pointer-events:none;">
-                    <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
                 </span>
-                <input type="text" id="searchWhitelabelModalInput" onkeyup="filterModalCatalog('whitelabelModalItem', this.value)"
-                    class="form-input" placeholder="Cari nama produk white label, creator, atau lisensi..." style="height:44px; padding-left:2.5rem; font-size:0.875rem; border-radius:12px; border:1.5px solid #E2E8F0; background:#FAFAFA;">
+                <input type="text" id="searchWhitelabelModalInput"
+                    onkeyup="filterModalCatalog('whitelabelModalItem', this.value)" class="form-input"
+                    placeholder="Cari nama produk white label, creator, atau lisensi..."
+                    style="height:44px; padding-left:2.5rem; font-size:0.875rem; border-radius:12px; border:1.5px solid #E2E8F0; background:#FAFAFA;">
             </div>
 
             {{-- Scrollable Product List --}}
-            <div style="max-height:55vh; overflow-y:auto; padding-right:0.35rem; display:flex; flex-direction:column; gap:0.75rem;">
+            <div
+                style="max-height:55vh; overflow-y:auto; padding-right:0.35rem; display:flex; flex-direction:column; gap:0.75rem;">
                 @forelse($whitelabelProducts as $wlProd)
                     @php
-                        $isAddedWl       = in_array($wlProd->id, $addedProductIds);
+                        $isAddedWl = in_array($wlProd->id, $addedProductIds);
                         $matchingWlBlock = $blocks->first(fn($b) => ($b->data_json['product_id'] ?? null) == $wlProd->id);
                     @endphp
-                    <div class="whitelabelModalItem" data-search="{{ strtolower($wlProd->name . ' ' . ($wlProd->seller->name ?? '') . ' ' . ($wlProd->whitelabel_terms ?? '')) }}"
+                    <div class="whitelabelModalItem"
+                        data-search="{{ strtolower($wlProd->name . ' ' . ($wlProd->seller->name ?? '') . ' ' . ($wlProd->whitelabel_terms ?? '')) }}"
                         style="background:#fff; border:1.5px solid #E2E8F0; border-radius:14px; padding:0.85rem 1rem; display:flex; align-items:center; gap:1rem; transition:all 0.2s; flex-wrap:wrap;">
-                        <img src="{{ $wlProd->main_image }}" style="width:60px; height:60px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
+                        <img src="{{ $wlProd->main_image }}"
+                            style="width:60px; height:60px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
                         <div style="flex:1; min-width:200px;">
                             <div style="font-weight:700; font-size:0.88rem; color:#0F172A;">
                                 {{ $wlProd->name }}
@@ -2725,14 +2973,21 @@
                             <div style="font-size:0.75rem; color:#64748B; margin-top:0.15rem;">
                                 Oleh: <strong style="color:#334155;">{{ $wlProd->seller->name ?? 'Creator buyle.id' }}</strong>
                                 @if($wlProd->whitelabel_price)
-                                    &middot; Min. Resell: <span style="color:#166534; font-weight:700;">Rp {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}</span>
+                                    &middot; Min. Resell: <span style="color:#166534; font-weight:700;">Rp
+                                        {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}</span>
                                 @else
-                                    &middot; Harga Asli: <span style="color:#166534; font-weight:700;">Rp {{ number_format($wlProd->price, 0, ',', '.') }}</span>
+                                    &middot; Harga Asli: <span style="color:#166534; font-weight:700;">Rp
+                                        {{ number_format($wlProd->price, 0, ',', '.') }}</span>
                                 @endif
                             </div>
                             @if($wlProd->whitelabel_terms)
-                                <div style="font-size:0.72rem; color:#64748b; margin-top:0.2rem; display:flex; align-items:flex-start; gap:0.25rem;">
-                                    <svg width="11" height="11" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                <div
+                                    style="font-size:0.72rem; color:#64748b; margin-top:0.2rem; display:flex; align-items:flex-start; gap:0.25rem;">
+                                    <svg width="11" height="11" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"
+                                        style="flex-shrink:0;margin-top:1px;">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                        <polyline points="14 2 14 8 20 8" />
+                                    </svg>
                                     <span>Lisensi: {{ Str::limit($wlProd->whitelabel_terms, 70) }}</span>
                                 </div>
                             @endif
@@ -2742,8 +2997,13 @@
                             @if($isAddedWl && $matchingWlBlock)
                                 <form action="{{ route('creator.bio.blocks.destroy', $matchingWlBlock) }}" method="POST">
                                     @csrf @method('DELETE')
-                                    <button type="submit" style="border:1px solid #FCA5A5; color:#DC2626; background:#FEF2F2; font-size:0.75rem; padding:0.4rem 0.85rem; border-radius:8px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                                    <button type="submit"
+                                        style="border:1px solid #FCA5A5; color:#DC2626; background:#FEF2F2; font-size:0.75rem; padding:0.4rem 0.85rem; border-radius:8px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <polyline points="3 6 5 6 21 6" />
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                        </svg>
                                         Hapus dari Bio
                                     </button>
                                 </form>
@@ -2754,7 +3014,8 @@
                                     <input type="hidden" name="title" value="{{ $wlProd->name }}">
                                     <input type="hidden" name="url" value="{{ route('products.show', $wlProd->slug) }}">
                                     <input type="hidden" name="product_id" value="{{ $wlProd->id }}">
-                                    <button type="submit" class="btn-submit-sm" style="background:#1eb349; color:#fff; font-size:0.75rem; padding:0.4rem 0.9rem; height:36px; border-radius:8px; font-weight:700; cursor:pointer;">
+                                    <button type="submit" class="btn-submit-sm"
+                                        style="background:#1eb349; color:#fff; font-size:0.75rem; padding:0.4rem 0.9rem; height:36px; border-radius:8px; font-weight:700; cursor:pointer;">
                                         + Tambah ke Bio
                                     </button>
                                 </form>
