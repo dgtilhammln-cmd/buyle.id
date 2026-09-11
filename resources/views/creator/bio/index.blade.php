@@ -1441,24 +1441,29 @@
             <div class="tab-pane" id="tab-catalog">
 
                 {{-- 1. Affiliate buyle.id --}}
-                <div class="prof-card" style="border: 2px solid #BBF7D0; background: #F0FDF4;">
-                    <div class="prof-card-head" style="background: linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%);">
-                        <span style="display:flex; align-items:center; gap:0.5rem; color:#166534; font-weight:800;">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                            </svg>
-                            Katalog Produk Affiliate buyle.id
-                        </span>
+                <div class="prof-card" style="border: 1px solid #E2E8F0; background: #ffffff; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.03); margin-bottom:1.5rem; overflow:hidden;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; background:#F8FAFC; border-bottom:1px solid #F1F5F9; flex-wrap:wrap; gap:0.75rem;">
+                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                            <div style="width:38px; height:38px; border-radius:10px; background:#F1F5F9; color:#334155; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 style="font-size:0.95rem; font-weight:800; color:#0F172A; margin:0;">Katalog Produk Affiliate buyle.id</h3>
+                                <p style="font-size:0.78rem; color:#64748B; margin:0.15rem 0 0;">Tampilkan produk affiliate buyle.id milik creator lain & dapatkan komisi penjualan.</p>
+                            </div>
+                        </div>
                         <button type="button" onclick="document.getElementById('affiliateCatalogModal').classList.add('open')"
-                            class="btn-submit-sm" style="background:#166534; color:#fff; border:none; padding:0.4rem 1rem;">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            class="btn-submit-sm" style="background:#1eb349; color:#fff; border:none; padding:0.5rem 1.15rem; border-radius:10px; font-weight:700; font-size:0.825rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 12px rgba(30,179,73,0.25);">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                             Cari & Tambah Affiliate
                         </button>
                     </div>
-                    <div class="card-body">
-                        <p style="font-size:0.8rem; color:#15803D; margin-bottom:1.25rem; line-height:1.4; display:flex; align-items:flex-start; gap:0.4rem;">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                            <span><strong>Peluang Affiliate:</strong> Klik <strong>"Cari & Tambah Affiliate"</strong> untuk membuka katalog pop-up lebar. Pilih produk buyle.id creator lain untuk ditampilkan di Bio Page Anda dan dapatkan komisi dalam Rupiah!</span>
+                    <div class="card-body" style="padding:1.25rem;">
+                        <p style="font-size:0.8rem; color:#475569; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.75rem 1rem; margin-bottom:1.25rem; line-height:1.45; display:flex; align-items:flex-start; gap:0.5rem;">
+                            <svg width="16" height="16" fill="none" stroke="#64748B" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            <span><strong>Peluang Affiliate:</strong> Klik <strong>"Cari & Tambah Affiliate"</strong> untuk membuka katalog pop-up. Pilih produk buyle.id creator lain untuk ditampilkan di Bio Page Anda dan dapatkan komisi dalam Rupiah!</span>
                         </p>
 
                         @php
@@ -1471,56 +1476,61 @@
                                 $affProdId = $affBlock->data_json['product_id'] ?? null;
                                 $affProd   = $affiliateProducts->firstWhere('id', $affProdId);
                             @endphp
-                            <div style="background:#fff; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem;">
+                            <div style="background:#fff; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
                                 @if($affProd)
                                     <img src="{{ $affProd->main_image }}" style="width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
                                 @endif
-                                <div style="flex:1; min-width:0;">
-                                    <div style="font-weight:700; font-size:0.85rem; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                <div style="flex:1; min-width:200px;">
+                                    <div style="font-weight:700; font-size:0.875rem; color:#0F172A;">
                                         {{ $affBlock->title }}
                                     </div>
-                                    <div style="font-size:0.75rem; color:#64748B; margin-top:0.15rem;">
+                                    <div style="font-size:0.75rem; color:#64748B; margin-top:0.2rem;">
                                         @if($affProd)
-                                            Oleh: <strong>{{ $affProd->seller->name ?? 'Creator' }}</strong> · Harga: <span style="color:#0F172A; font-weight:700;">Rp {{ number_format($affProd->sale_price ?? $affProd->price, 0, ',', '.') }}</span>
-                                            · Komisi: <span style="color:#047857; font-weight:700;">{{ $affProd->affiliate_commission_rate ?? 10 }}% (Rp {{ number_format(round((($affProd->sale_price ?? $affProd->price) * ($affProd->affiliate_commission_rate ?? 10))/100), 0, ',', '.') }})</span>
+                                            Oleh: <strong style="color:#334155;">{{ $affProd->seller->name ?? 'Creator' }}</strong> &middot; Harga: <span style="color:#0F172A; font-weight:700;">Rp {{ number_format($affProd->sale_price ?? $affProd->price, 0, ',', '.') }}</span>
+                                            &middot; Komisi: <span style="color:#166534; font-weight:700;">{{ $affProd->affiliate_commission_rate ?? 10 }}% (Rp {{ number_format(round((($affProd->sale_price ?? $affProd->price) * ($affProd->affiliate_commission_rate ?? 10))/100), 0, ',', '.') }})</span>
                                         @else
                                             Produk Affiliate buyle.id
                                         @endif
                                     </div>
                                 </div>
-                                <form action="{{ route('creator.bio.blocks.destroy', $affBlock) }}" method="POST" class="form-delete-block">
+                                <form action="{{ route('creator.bio.blocks.destroy', $affBlock) }}" method="POST" class="form-delete-block" style="margin-left:auto;">
                                     @csrf @method('DELETE')
-                                    <button type="button" class="btn-delete-block" style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.35rem 0.75rem; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                    <button type="button" class="btn-delete-block" style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
                                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
                                         Hapus dari Bio
                                     </button>
                                 </form>
                             </div>
                         @empty
-                            <p style="color:#94a3b8; font-size:0.83rem; text-align:center; padding:1.25rem 0;">Belum ada produk affiliate yang ditambahkan. Klik tombol di atas untuk memilih produk.</p>
+                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0; margin:0;">Belum ada produk affiliate yang ditambahkan. Klik tombol di atas untuk memilih produk.</p>
                         @endforelse
                     </div>
                 </div>
 
-                {{-- 2. Produk White Label (Siap Jual Kembali / Resell) --}}
-                <div class="prof-card" style="border: 2px solid #BAE6FD; background: #F0F9FF;">
-                    <div class="prof-card-head" style="background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);">
-                        <span style="display:flex; align-items:center; gap:0.5rem; color:#0369A1; font-weight:800;">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                            </svg>
-                            Katalog Produk White Label (Siap Jual Kembali / Makelar)
-                        </span>
+                {{-- 2. Produk White Label & Resell --}}
+                <div class="prof-card" style="border: 1px solid #E2E8F0; background: #ffffff; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.03); margin-bottom:1.5rem; overflow:hidden;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; background:#F8FAFC; border-bottom:1px solid #F1F5F9; flex-wrap:wrap; gap:0.75rem;">
+                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                            <div style="width:38px; height:38px; border-radius:10px; background:#F1F5F9; color:#334155; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 style="font-size:0.95rem; font-weight:800; color:#0F172A; margin:0;">Katalog Produk White Label & Resell</h3>
+                                <p style="font-size:0.78rem; color:#64748B; margin:0.15rem 0 0;">Bebas lisensi watermark & disetujui Tim Buyle. Tentukan harga jual (markup) sendiri di Bio Page Anda!</p>
+                            </div>
+                        </div>
                         <button type="button" onclick="document.getElementById('whitelabelCatalogModal').classList.add('open')"
-                            class="btn-submit-sm" style="background:#0284C7; color:#fff; border:none; padding:0.4rem 1rem;">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            class="btn-submit-sm" style="background:#1eb349; color:#fff; border:none; padding:0.5rem 1.15rem; border-radius:10px; font-weight:700; font-size:0.825rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 12px rgba(30,179,73,0.25);">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                             Cari & Tambah White Label
                         </button>
                     </div>
-                    <div class="card-body">
-                        <p style="font-size:0.8rem; color:#0369A1; margin-bottom:1.25rem; line-height:1.4; display:flex; align-items:flex-start; gap:0.4rem;">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                            <span><strong>Peluang Reseller / Makelar:</strong> Produk White Label bebas watermark dan disetujui Tim Buyle. Anda dapat memasukkannya ke Bio Link Anda dan menentukan harga jual (markup) sendiri!</span>
+                    <div class="card-body" style="padding:1.25rem;">
+                        <p style="font-size:0.8rem; color:#475569; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.75rem 1rem; margin-bottom:1.25rem; line-height:1.45; display:flex; align-items:flex-start; gap:0.5rem;">
+                            <svg width="16" height="16" fill="none" stroke="#64748B" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            <span><strong>Peluang Reseller & Re-brand:</strong> Produk White Label bebas watermark dan disetujui Tim Buyle. Anda dapat memasukkannya ke Bio Link Anda dan menentukan harga jual (markup) sendiri!</span>
                         </p>
 
                         @php
@@ -1533,35 +1543,35 @@
                                 $wlProdId = $wlBlock->data_json['product_id'] ?? null;
                                 $wlProd   = $whitelabelProducts->firstWhere('id', $wlProdId);
                             @endphp
-                            <div style="background:#fff; border:1px solid #e7f0e7; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem;">
+                            <div style="background:#fff; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
                                 @if($wlProd)
                                     <img src="{{ $wlProd->main_image }}" style="width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
                                 @endif
-                                <div style="flex:1; min-width:0;">
-                                    <div style="font-weight:700; font-size:0.85rem; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                <div style="flex:1; min-width:200px;">
+                                    <div style="font-weight:700; font-size:0.875rem; color:#0F172A;">
                                         {{ $wlBlock->title }}
                                     </div>
-                                    <div style="font-size:0.75rem; color:#64748B; margin-top:0.15rem;">
+                                    <div style="font-size:0.75rem; color:#64748B; margin-top:0.2rem;">
                                         @if($wlProd)
-                                            Oleh: <strong>{{ $wlProd->seller->name ?? 'Creator' }}</strong>
+                                            Oleh: <strong style="color:#334155;">{{ $wlProd->seller->name ?? 'Creator' }}</strong>
                                             @if($wlProd->whitelabel_price)
-                                                · Min. Resell: <span style="color:#0284C7; font-weight:700;">Rp {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}</span>
+                                                &middot; Min. Resell: <span style="color:#0F172A; font-weight:700;">Rp {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}</span>
                                             @else
-                                                · Harga Asli: <span style="color:#0284C7; font-weight:700;">Rp {{ number_format($wlProd->price, 0, ',', '.') }}</span>
+                                                &middot; Harga Asli: <span style="color:#0F172A; font-weight:700;">Rp {{ number_format($wlProd->price, 0, ',', '.') }}</span>
                                             @endif
                                         @endif
                                     </div>
                                 </div>
-                                <form action="{{ route('creator.bio.blocks.destroy', $wlBlock) }}" method="POST" class="form-delete-block">
+                                <form action="{{ route('creator.bio.blocks.destroy', $wlBlock) }}" method="POST" class="form-delete-block" style="margin-left:auto;">
                                     @csrf @method('DELETE')
-                                    <button type="button" class="btn-delete-block" style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.35rem 0.75rem; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                    <button type="button" class="btn-delete-block" style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
                                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
                                         Hapus dari Bio
                                     </button>
                                 </form>
                             </div>
                         @empty
-                            <p style="color:#94a3b8; font-size:0.83rem; text-align:center; padding:1.25rem 0;">Belum ada produk White Label yang ditambahkan ke Bio.</p>
+                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0; margin:0;">Belum ada produk White Label yang ditambahkan ke Bio.</p>
                         @endforelse
                     </div>
                 </div>
@@ -2581,8 +2591,8 @@
 
     {{-- ── Modal Wide: Katalog Affiliate buyle.id ── --}}
     <div class="modal-overlay" id="affiliateCatalogModal" onclick="if(event.target===this)this.classList.remove('open')">
-        <div class="modal-box-wide">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #e7f0e7;">
+        <div class="modal-box-wide" style="border: 1px solid #E2E8F0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #F1F5F9;">
                 <div>
                     <h3 style="font-size:1.1rem; font-weight:800; color:#0F172A; font-family:'Montserrat',sans-serif; margin:0; display:flex; align-items:center; gap:0.5rem;">
                         <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
@@ -2602,7 +2612,7 @@
                     <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 </span>
                 <input type="text" id="searchAffiliateModalInput" onkeyup="filterModalCatalog('affiliateModalItem', this.value)"
-                    class="form-input" placeholder="Cari nama produk atau creator..." style="height:44px; padding-left:2.5rem; font-size:0.875rem; border-radius:12px; border:1.5px solid #e7f0e7; background:#f9fefb;">
+                    class="form-input" placeholder="Cari nama produk atau creator..." style="height:44px; padding-left:2.5rem; font-size:0.875rem; border-radius:12px; border:1.5px solid #E2E8F0; background:#FAFAFA;">
             </div>
 
             {{-- Scrollable Product List --}}
@@ -2620,10 +2630,10 @@
                         $matchingBlock = $blocks->first(fn($b) => ($b->data_json['product_id'] ?? null) == $affProduct->id);
                     @endphp
                     <div class="affiliateModalItem" data-search="{{ strtolower($affProduct->name . ' ' . ($affProduct->seller->name ?? '')) }}"
-                        style="background:#fff; border:1.5px solid #E2E8F0; border-radius:14px; padding:0.85rem 1rem; display:flex; align-items:center; gap:1rem; transition:all 0.2s;">
+                        style="background:#fff; border:1.5px solid #E2E8F0; border-radius:14px; padding:0.85rem 1rem; display:flex; align-items:center; gap:1rem; transition:all 0.2s; flex-wrap:wrap;">
                         <img src="{{ $affProduct->main_image }}" style="width:60px; height:60px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
-                        <div style="flex:1; min-width:0;">
-                            <div style="font-weight:700; font-size:0.88rem; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        <div style="flex:1; min-width:200px;">
+                            <div style="font-weight:700; font-size:0.88rem; color:#0F172A;">
                                 {{ $affProduct->name }}
                             </div>
                             <div style="font-size:0.75rem; color:#64748B; margin-top:0.15rem;">
@@ -2633,14 +2643,14 @@
                                 <span style="font-size:0.8rem; color:#0F172A; font-weight:700;">
                                     Harga: Rp {{ number_format($effPrice, 0, ',', '.') }}
                                 </span>
-                                <span style="font-size:0.75rem; font-weight:700; color:#047857; background:#ECFDF5; border:1px solid #A7F3D0; padding:0.15rem 0.55rem; border-radius:6px; display:inline-flex; align-items:center; gap:0.25rem;">
-                                    <svg width="12" height="12" fill="none" stroke="#047857" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                                <span style="font-size:0.75rem; font-weight:700; color:#166534; background:#ECFDF5; border:1px solid #A7F3D0; padding:0.15rem 0.55rem; border-radius:6px; display:inline-flex; align-items:center; gap:0.25rem;">
+                                    <svg width="12" height="12" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                                     Komisi {{ $commRate }}% &middot; Rp {{ number_format($commRp, 0, ',', '.') }}
                                 </span>
                             </div>
                         </div>
 
-                        <div>
+                        <div style="margin-left:auto;">
                             @if($isAdded && $matchingBlock)
                                 <form action="{{ route('creator.bio.blocks.destroy', $matchingBlock) }}" method="POST">
                                     @csrf @method('DELETE')
@@ -2674,25 +2684,28 @@
 
     {{-- ── Modal Wide: Katalog White Label buyle.id ── --}}
     <div class="modal-overlay" id="whitelabelCatalogModal" onclick="if(event.target===this)this.classList.remove('open')">
-        <div class="modal-box-wide" style="border: 2px solid #BAE6FD;">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #E0F2FE;">
+        <div class="modal-box-wide" style="border: 1px solid #E2E8F0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #F1F5F9;">
                 <div>
-                    <h3 style="font-size:1.15rem; font-weight:800; color:#0369A1; font-family:'Montserrat',sans-serif; margin:0; display:flex; align-items:center; gap:0.5rem;">
-                        <svg width="20" height="20" fill="none" stroke="#0369A1" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    <h3 style="font-size:1.15rem; font-weight:800; color:#0F172A; font-family:'Montserrat',sans-serif; margin:0; display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
                         Katalog Produk White Label buyle.id
                     </h3>
-                    <p style="font-size:0.78rem; color:#0284C7; margin:0.25rem 0 0;">
+                    <p style="font-size:0.78rem; color:#64748B; margin:0.25rem 0 0;">
                         Bebas watermark & disetujui Tim Buyle. Tentukan harga jual (markup) sendiri di Bio Page Anda!
                     </p>
                 </div>
                 <button type="button" onclick="document.getElementById('whitelabelCatalogModal').classList.remove('open')"
-                    style="background:#E0F2FE; border:none; width:34px; height:34px; border-radius:50%; font-size:1.2rem; cursor:pointer; color:#0369A1; display:flex; align-items:center; justify-content:center;">&times;</button>
+                    style="background:#f1f5f9; border:none; width:34px; height:34px; border-radius:50%; font-size:1.2rem; cursor:pointer; color:#64748B; display:flex; align-items:center; justify-content:center;">&times;</button>
             </div>
 
             {{-- Search Bar --}}
             <div style="position:relative; margin-bottom:1rem;">
+                <span style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); pointer-events:none;">
+                    <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </span>
                 <input type="text" id="searchWhitelabelModalInput" onkeyup="filterModalCatalog('whitelabelModalItem', this.value)"
-                    class="form-input" placeholder="🔍 Cari nama produk white label, creator, atau lisensi..." style="height:44px; padding-left:1rem; font-size:0.875rem; border-radius:12px; border:1.5px solid #BAE6FD; background:#F0F9FF;">
+                    class="form-input" placeholder="Cari nama produk white label, creator, atau lisensi..." style="height:44px; padding-left:2.5rem; font-size:0.875rem; border-radius:12px; border:1.5px solid #E2E8F0; background:#FAFAFA;">
             </div>
 
             {{-- Scrollable Product List --}}
@@ -2703,18 +2716,18 @@
                         $matchingWlBlock = $blocks->first(fn($b) => ($b->data_json['product_id'] ?? null) == $wlProd->id);
                     @endphp
                     <div class="whitelabelModalItem" data-search="{{ strtolower($wlProd->name . ' ' . ($wlProd->seller->name ?? '') . ' ' . ($wlProd->whitelabel_terms ?? '')) }}"
-                        style="background:#fff; border:1.5px solid #e7f0e7; border-radius:14px; padding:0.85rem 1rem; display:flex; align-items:center; gap:1rem; transition:all 0.2s;">
+                        style="background:#fff; border:1.5px solid #E2E8F0; border-radius:14px; padding:0.85rem 1rem; display:flex; align-items:center; gap:1rem; transition:all 0.2s; flex-wrap:wrap;">
                         <img src="{{ $wlProd->main_image }}" style="width:60px; height:60px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
-                        <div style="flex:1; min-width:0;">
-                            <div style="font-weight:700; font-size:0.88rem; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        <div style="flex:1; min-width:200px;">
+                            <div style="font-weight:700; font-size:0.88rem; color:#0F172A;">
                                 {{ $wlProd->name }}
                             </div>
                             <div style="font-size:0.75rem; color:#64748B; margin-top:0.15rem;">
                                 Oleh: <strong style="color:#334155;">{{ $wlProd->seller->name ?? 'Creator buyle.id' }}</strong>
                                 @if($wlProd->whitelabel_price)
-                                    · Min. Resell: <span style="color:#0284C7; font-weight:700;">Rp {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}</span>
+                                    &middot; Min. Resell: <span style="color:#166534; font-weight:700;">Rp {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}</span>
                                 @else
-                                    · Harga Asli: <span style="color:#0284C7; font-weight:700;">Rp {{ number_format($wlProd->price, 0, ',', '.') }}</span>
+                                    &middot; Harga Asli: <span style="color:#166534; font-weight:700;">Rp {{ number_format($wlProd->price, 0, ',', '.') }}</span>
                                 @endif
                             </div>
                             @if($wlProd->whitelabel_terms)
@@ -2725,7 +2738,7 @@
                             @endif
                         </div>
 
-                        <div>
+                        <div style="margin-left:auto;">
                             @if($isAddedWl && $matchingWlBlock)
                                 <form action="{{ route('creator.bio.blocks.destroy', $matchingWlBlock) }}" method="POST">
                                     @csrf @method('DELETE')
@@ -2741,7 +2754,7 @@
                                     <input type="hidden" name="title" value="{{ $wlProd->name }}">
                                     <input type="hidden" name="url" value="{{ route('products.show', $wlProd->slug) }}">
                                     <input type="hidden" name="product_id" value="{{ $wlProd->id }}">
-                                    <button type="submit" class="btn-submit-sm" style="font-size:0.75rem; padding:0.4rem 0.9rem; height:36px; border-radius:8px;">
+                                    <button type="submit" class="btn-submit-sm" style="background:#1eb349; color:#fff; font-size:0.75rem; padding:0.4rem 0.9rem; height:36px; border-radius:8px; font-weight:700; cursor:pointer;">
                                         + Tambah ke Bio
                                     </button>
                                 </form>

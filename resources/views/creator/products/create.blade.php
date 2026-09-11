@@ -362,7 +362,7 @@
                 <div class="prof-card" style="border: 2px solid #E2E8F0; transition: border-color 0.2s;" id="whitelabelCard">
                     <div class="prof-card-head" style="background: linear-gradient(135deg, #F8FAFC 0%, #F0FDF4 100%); display:flex; align-items:center; gap:0.5rem;">
                         <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                        <span style="color:#1E293B; font-weight:800;">Fitur White Label & Lisensi Jual Kembali (Reseller / Makelar)</span>
+                        <span style="color:#1E293B; font-weight:800;">Fitur White Label & Lisensi Jual Kembali (Lisensi Resell & Re-Brand)</span>
                     </div>
                     <div class="form-body">
                         <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">

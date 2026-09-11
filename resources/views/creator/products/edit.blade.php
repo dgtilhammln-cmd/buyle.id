@@ -383,7 +383,7 @@
                     <div class="prof-card-head" style="background: linear-gradient(135deg, #F8FAFC 0%, #F0FDF4 100%); display:flex; justify-content:space-between; align-items:center;">
                         <div style="display:flex; align-items:center; gap:0.5rem;">
                             <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                            <span style="color:#1E293B; font-weight:800;">Fitur White Label & Lisensi Jual Kembali (Reseller / Makelar)</span>
+                            <span style="color:#1E293B; font-weight:800;">Fitur White Label & Lisensi Jual Kembali (Lisensi Resell & Re-Brand)</span>
                         </div>
 
                         @if($product->is_whitelabel)
