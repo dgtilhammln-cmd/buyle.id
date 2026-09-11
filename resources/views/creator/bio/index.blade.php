@@ -338,13 +338,13 @@
 
         .modal-box-wide {
             background: #fff;
-            border-radius: 24px;
-            max-width: 880px;
-            width: calc(100% - 2rem);
+            border-radius: 20px;
+            max-width: min(1280px, calc(100vw - 2rem));
+            width: calc(100vw - 2rem);
             padding: 1.75rem 2rem;
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
             animation: fadeIn 0.25s;
-            max-height: 85vh;
+            max-height: 88vh;
             display: flex;
             flex-direction: column;
         }
@@ -1497,7 +1497,7 @@
                                 </form>
                             </div>
                         @empty
-                            <p style="color:#15803D; font-size:0.83rem; text-align:center; padding:1.25rem 0;">Belum ada produk affiliate buyle.id yang ditambahkan. Klik tombol di atas untuk memilih produk.</p>
+                            <p style="color:#94a3b8; font-size:0.83rem; text-align:center; padding:1.25rem 0;">Belum ada produk affiliate yang ditambahkan. Klik tombol di atas untuk memilih produk.</p>
                         @endforelse
                     </div>
                 </div>
@@ -1533,7 +1533,7 @@
                                 $wlProdId = $wlBlock->data_json['product_id'] ?? null;
                                 $wlProd   = $whitelabelProducts->firstWhere('id', $wlProdId);
                             @endphp
-                            <div style="background:#fff; border:1px solid #BAE6FD; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem;">
+                            <div style="background:#fff; border:1px solid #e7f0e7; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem;">
                                 @if($wlProd)
                                     <img src="{{ $wlProd->main_image }}" style="width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
                                 @endif
@@ -1561,7 +1561,7 @@
                                 </form>
                             </div>
                         @empty
-                            <p style="color:#0369A1; font-size:0.83rem; text-align:center; padding:1.25rem 0;">Belum ada produk White Label yang ditambahkan ke Bio.</p>
+                            <p style="color:#94a3b8; font-size:0.83rem; text-align:center; padding:1.25rem 0;">Belum ada produk White Label yang ditambahkan ke Bio.</p>
                         @endforelse
                     </div>
                 </div>
@@ -2582,24 +2582,27 @@
     {{-- ── Modal Wide: Katalog Affiliate buyle.id ── --}}
     <div class="modal-overlay" id="affiliateCatalogModal" onclick="if(event.target===this)this.classList.remove('open')">
         <div class="modal-box-wide">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #F1F5F9;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #e7f0e7;">
                 <div>
-                    <h3 style="font-size:1.15rem; font-weight:800; color:#0F172A; font-family:'Montserrat',sans-serif; margin:0; display:flex; align-items:center; gap:0.5rem;">
-                        <svg width="20" height="20" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <h3 style="font-size:1.1rem; font-weight:800; color:#0F172A; font-family:'Montserrat',sans-serif; margin:0; display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                         Katalog Produk Affiliate buyle.id
                     </h3>
                     <p style="font-size:0.78rem; color:#64748B; margin:0.25rem 0 0;">
-                        Promosikan produk creator buyle.id di Bio Page Anda dan dapatkan komisi dalam Rupiah!
+                        Pilih produk dari creator buyle.id lain dan dapatkan komisi setiap penjualan.
                     </p>
                 </div>
                 <button type="button" onclick="document.getElementById('affiliateCatalogModal').classList.remove('open')"
-                    style="background:#F1F5F9; border:none; width:34px; height:34px; border-radius:50%; font-size:1.2rem; cursor:pointer; color:#64748B; display:flex; align-items:center; justify-content:center;">&times;</button>
+                    style="background:#f1f5f9; border:none; width:34px; height:34px; border-radius:50%; font-size:1.2rem; cursor:pointer; color:#64748B; display:flex; align-items:center; justify-content:center;">&times;</button>
             </div>
 
             {{-- Search Bar --}}
             <div style="position:relative; margin-bottom:1rem;">
+                <span style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); pointer-events:none;">
+                    <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </span>
                 <input type="text" id="searchAffiliateModalInput" onkeyup="filterModalCatalog('affiliateModalItem', this.value)"
-                    class="form-input" placeholder="🔍 Cari nama produk, creator, atau kata kunci..." style="height:44px; padding-left:1rem; font-size:0.875rem; border-radius:12px; border:1.5px solid #CBD5E1; background:#F8FAFC;">
+                    class="form-input" placeholder="Cari nama produk atau creator..." style="height:44px; padding-left:2.5rem; font-size:0.875rem; border-radius:12px; border:1.5px solid #e7f0e7; background:#f9fefb;">
             </div>
 
             {{-- Scrollable Product List --}}
@@ -2631,7 +2634,8 @@
                                     Harga: Rp {{ number_format($effPrice, 0, ',', '.') }}
                                 </span>
                                 <span style="font-size:0.75rem; font-weight:700; color:#047857; background:#ECFDF5; border:1px solid #A7F3D0; padding:0.15rem 0.55rem; border-radius:6px; display:inline-flex; align-items:center; gap:0.25rem;">
-                                    💰 Komisi {{ $commRate }}% (Rp {{ number_format($commRp, 0, ',', '.') }})
+                                    <svg width="12" height="12" fill="none" stroke="#047857" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                                    Komisi {{ $commRate }}% &middot; Rp {{ number_format($commRp, 0, ',', '.') }}
                                 </span>
                             </div>
                         </div>
@@ -2661,7 +2665,7 @@
                     </div>
                 @empty
                     <div style="text-align:center; padding:2.5rem; color:#94A3B8; font-size:0.85rem;">
-                        Belum ada produk affiliate buyle.id yang tersedia saat ini.
+                        Belum ada produk affiliate yang tersedia saat ini.
                     </div>
                 @endforelse
             </div>
@@ -2699,7 +2703,7 @@
                         $matchingWlBlock = $blocks->first(fn($b) => ($b->data_json['product_id'] ?? null) == $wlProd->id);
                     @endphp
                     <div class="whitelabelModalItem" data-search="{{ strtolower($wlProd->name . ' ' . ($wlProd->seller->name ?? '') . ' ' . ($wlProd->whitelabel_terms ?? '')) }}"
-                        style="background:#fff; border:1.5px solid #BAE6FD; border-radius:14px; padding:0.85rem 1rem; display:flex; align-items:center; gap:1rem; transition:all 0.2s;">
+                        style="background:#fff; border:1.5px solid #e7f0e7; border-radius:14px; padding:0.85rem 1rem; display:flex; align-items:center; gap:1rem; transition:all 0.2s;">
                         <img src="{{ $wlProd->main_image }}" style="width:60px; height:60px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
                         <div style="flex:1; min-width:0;">
                             <div style="font-weight:700; font-size:0.88rem; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
@@ -2714,8 +2718,9 @@
                                 @endif
                             </div>
                             @if($wlProd->whitelabel_terms)
-                                <div style="font-size:0.72rem; color:#0369A1; margin-top:0.2rem; font-style:italic;">
-                                    📜 Lisensi: {{ Str::limit($wlProd->whitelabel_terms, 70) }}
+                                <div style="font-size:0.72rem; color:#64748b; margin-top:0.2rem; display:flex; align-items:flex-start; gap:0.25rem;">
+                                    <svg width="11" height="11" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                    <span>Lisensi: {{ Str::limit($wlProd->whitelabel_terms, 70) }}</span>
                                 </div>
                             @endif
                         </div>
@@ -2736,7 +2741,7 @@
                                     <input type="hidden" name="title" value="{{ $wlProd->name }}">
                                     <input type="hidden" name="url" value="{{ route('products.show', $wlProd->slug) }}">
                                     <input type="hidden" name="product_id" value="{{ $wlProd->id }}">
-                                    <button type="submit" class="btn-submit-sm" style="background:#0284C7; color:#fff; border:none; font-size:0.75rem; padding:0.4rem 0.9rem; height:36px; border-radius:8px; font-weight:700; cursor:pointer;">
+                                    <button type="submit" class="btn-submit-sm" style="font-size:0.75rem; padding:0.4rem 0.9rem; height:36px; border-radius:8px;">
                                         + Tambah ke Bio
                                     </button>
                                 </form>
@@ -2744,8 +2749,8 @@
                         </div>
                     </div>
                 @empty
-                    <div style="text-align:center; padding:2.5rem; color:#0369A1; font-size:0.85rem;">
-                        Belum ada produk White Label disetujui yang tersedia saat ini.
+                    <div style="text-align:center; padding:2.5rem; color:#94a3b8; font-size:0.85rem;">
+                        Belum ada produk White Label yang tersedia saat ini.
                     </div>
                 @endforelse
             </div>
