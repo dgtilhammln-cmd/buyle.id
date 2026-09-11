@@ -667,18 +667,22 @@
             $hasBuyle      = $buyleBlocks->isNotEmpty();
             $hasAnyProduct = $hasAff || $hasCustom || $hasBuyle;
             $totalAll      = $affBlocks->count() + $customProdBlocks->count() + $buyleBlocks->count();
-        @endphp
+        @endphp
 
-        @if($hasAnyProduct)
+
+        @if($hasAnyProduct)
+
 
         <style>
         .cat-tabs-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:12px 0 10px;}
         .cat-tabs-wrap::-webkit-scrollbar{display:none;}
         .cat-tabs{display:flex;flex-wrap:nowrap;gap:8px;padding:0 var(--side,16px) 2px;}
-        .cat-tab{flex:0 0 auto;white-space:nowrap;padding:6px 14px;border-radius:999px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1.5px solid var(--glass-border,rgba(255,255,255,0.15));background:transparent;color:var(--text);transition:all .2s;user-select:none;}
-        .cat-tab.active{background:var(--accent,#6C63FF);border-color:var(--accent,#6C63FF);color:#fff;}
+        .cat-tab{flex:0 0 auto;white-space:nowrap;padding:6px 16px;border-radius:999px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1.5px solid #d1fae5;background:#f0fdf4;color:#166534;transition:all .2s;user-select:none;box-shadow:0 1px 3px rgba(30,179,73,0.08);}
+        .cat-tab.active{background:#1eb349;border-color:#1eb349;color:#fff;box-shadow:0 2px 8px rgba(30,179,73,0.3);}
+        .cat-tab:not(.active):hover{border-color:#1eb349;background:#dcfce7;}
         .cat-panel{display:none;}.cat-panel.active{display:block;}
-        </style>
+        </style>
+
 
         <div class="cat-tabs-wrap fade-up" style="animation-delay:0.38s">
             <div class="cat-tabs" id="catTabs2">
@@ -687,7 +691,8 @@
                 @if($hasCustom)<div class="cat-tab" data-tab="fis" onclick="switchTab2('fis',this)">Fisik <span style="opacity:.6;font-size:.72rem;">{{ $customProdBlocks->count() }}</span></div>@endif
                 @if($hasBuyle)<div class="cat-tab" data-tab="dig" onclick="switchTab2('dig',this)">Digital <span style="opacity:.6;font-size:.72rem;">{{ $buyleBlocks->count() }}</span></div>@endif
             </div>
-        </div>
+        </div>
+
 
         <div class="cat-panel active" id="tab2-all">
             <div class="product-grid">
@@ -716,7 +721,8 @@
                     @endif
                 @endforeach
             </div>
-        </div>
+        </div>
+
 
         @if($hasAff)
         <div class="cat-panel" id="tab2-rek">
@@ -729,7 +735,8 @@
                 @endforeach
             </div>
         </div>
-        @endif
+        @endif
+
 
         @if($hasCustom)
         <div class="cat-panel" id="tab2-fis">
@@ -743,7 +750,8 @@
                 @endforeach
             </div>
         </div>
-        @endif
+        @endif
+
 
         @if($hasBuyle)
         <div class="cat-panel" id="tab2-dig">
@@ -759,7 +767,8 @@
                 @endforeach
             </div>
         </div>
-        @endif
+        @endif
+
 
         <script>
         function switchTab2(tab, el) {
@@ -769,8 +778,10 @@
             document.getElementById('tab2-' + tab).classList.add('active');
         }
         </script>
-        @endif
-
+        @endif
+
+
+
                 {{-- Embed Map / Lokasi --}}
         @if(!empty($config['embed_location']))
             <span class="section-label fade-up" style="animation-delay:0.6s">Lokasi Kami</span>

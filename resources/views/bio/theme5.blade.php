@@ -973,9 +973,10 @@
                 <style>
                 .cat-tabs-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:12px 0 10px;}
                 .cat-tabs-wrap::-webkit-scrollbar{display:none;}
-                .cat-tabs{display:flex;flex-wrap:nowrap;gap:8px;padding:0 0 2px;}
-                .cat-tab{flex:0 0 auto;white-space:nowrap;padding:6px 14px;border-radius:999px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1.5px solid rgba(255,255,255,0.2);background:transparent;color:var(--text-primary,#fff);transition:all .2s;user-select:none;}
-                .cat-tab.active{background:var(--accent,#6C63FF);border-color:var(--accent,#6C63FF);color:#fff;}
+                .cat-tabs{display:flex;flex-wrap:nowrap;gap:6px;padding:0 0 2px;}
+                .cat-tab{flex:0 0 auto;white-space:nowrap;padding:6px 16px;border-radius:6px;font-size:0.77rem;font-weight:600;cursor:pointer;border:1px solid #cbd5e1;background:#f8fafc;color:#475569;transition:all .2s;user-select:none;}
+                .cat-tab.active{background:#0f172a;border-color:#0f172a;color:#fff;box-shadow:0 2px 8px rgba(15,23,42,0.2);}
+                .cat-tab:not(.active):hover{border-color:#94a3b8;background:#f1f5f9;}
                 .cat-panel{display:none;}.cat-panel.active{display:block;}
                 </style>
 
