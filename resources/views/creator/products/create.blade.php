@@ -272,6 +272,18 @@
                             </div>
 
                             <div class="form-group full">
+                                <label class="form-label">Komisi Affiliate (%) <span>*</span></label>
+                                <div style="position:relative; display:flex; align-items:center;">
+                                    <input type="number" name="affiliate_commission_rate" id="affiliate_commission_rate" value="{{ old('affiliate_commission_rate', 10) }}" class="form-input" min="5" max="100" step="0.5" placeholder="10" required style="padding-right:2.5rem;">
+                                    <span style="position:absolute; right:1rem; font-weight:700; color:#64748B;">%</span>
+                                </div>
+                                <span class="form-hint" style="color:#0284C7; font-weight:600; margin-top:0.35rem; display:inline-flex; align-items:center; gap:0.35rem;">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                    Minimum 5%, rekomendasi 10% untuk mendorong penjualan.
+                                </span>
+                            </div>
+
+                            <div class="form-group full">
                                 <label class="form-label">Deskripsi Singkat (Exerp) <span>*</span></label>
                                 <textarea name="short_desc" class="form-input" rows="2" placeholder="Deskripsi singkat maksimal 160 karakter" maxlength="160" required>{{ old('short_desc') }}</textarea>
                                 <span class="form-hint">Digunakan sebagai meta description SEO jika mode advanced dimatikan.</span>

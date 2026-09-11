@@ -27,7 +27,9 @@ class Product extends Model
         // Event / Ticket fields
         'event_date', 'event_time', 'event_location', 'event_type',
         // Kolom White Label & Reseller
-        'is_whitelabel', 'whitelabel_price', 'whitelabel_terms', 'whitelabel_approval_status', 'whitelabel_rejection_reason'
+        'is_whitelabel', 'whitelabel_price', 'whitelabel_terms', 'whitelabel_approval_status', 'whitelabel_rejection_reason',
+        // Affiliate Commission
+        'affiliate_commission_rate'
     ];
 
     protected $casts = [
@@ -50,8 +52,9 @@ class Product extends Model
         'rating'         => 'decimal:1',
         'event_date'     => 'date',
         // White Label casts
-        'is_whitelabel'    => 'boolean',
-        'whitelabel_price' => 'decimal:2',
+        'is_whitelabel'             => 'boolean',
+        'whitelabel_price'          => 'decimal:2',
+        'affiliate_commission_rate' => 'decimal:2',
     ];
 
     protected static function boot()

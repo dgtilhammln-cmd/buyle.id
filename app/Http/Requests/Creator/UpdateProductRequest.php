@@ -44,28 +44,31 @@ class UpdateProductRequest extends FormRequest
 
             'is_active'           => ['boolean'],
             'is_featured'         => ['boolean'],
-            'is_whitelabel'       => ['nullable', 'boolean'],
-            'whitelabel_price'    => ['nullable', 'numeric', 'min:0'],
-            'whitelabel_terms'    => ['nullable', 'string', 'max:2000'],
-            'meta_title'          => ['nullable', 'string', 'max:70'],
-            'meta_desc'           => ['nullable', 'string', 'max:160'],
-            'meta_keywords'       => ['nullable', 'string', 'max:255'],
-            'faqs'                => ['nullable', 'array'],
-            'faqs.*.question'     => ['nullable', 'string', 'max:500'],
-            'faqs.*.answer'       => ['nullable', 'string'],
+            'is_whitelabel'             => ['nullable', 'boolean'],
+            'whitelabel_price'          => ['nullable', 'numeric', 'min:0'],
+            'whitelabel_terms'          => ['nullable', 'string', 'max:2000'],
+            'affiliate_commission_rate' => ['nullable', 'numeric', 'min:5', 'max:100'],
+            'meta_title'                => ['nullable', 'string', 'max:70'],
+            'meta_desc'                 => ['nullable', 'string', 'max:160'],
+            'meta_keywords'             => ['nullable', 'string', 'max:255'],
+            'faqs'                      => ['nullable', 'array'],
+            'faqs.*.question'           => ['nullable', 'string', 'max:500'],
+            'faqs.*.answer'             => ['nullable', 'string'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required'            => 'Nama produk wajib diisi.',
-            'price.required'           => 'Harga produk wajib diisi.',
-            'sale_price.lt'            => 'Harga diskon harus lebih kecil dari harga normal.',
-            'image.max'                => 'Ukuran thumbnail maksimal 10MB.',
-            'gallery.*.max'            => 'Ukuran masing-masing gambar galeri maksimal 10MB.',
-            'gallery.*.mimes'          => 'Format gambar galeri harus berupa JPG, JPEG, PNG, atau WEBP.',
-            'digital_resource.required'=> 'Link produk digital wajib diisi.',
+            'name.required'                  => 'Nama produk wajib diisi.',
+            'price.required'                 => 'Harga produk wajib diisi.',
+            'sale_price.lt'                  => 'Harga diskon harus lebih kecil dari harga normal.',
+            'affiliate_commission_rate.min'  => 'Komisi affiliate minimal 5%.',
+            'affiliate_commission_rate.max'  => 'Komisi affiliate maksimal 100%.',
+            'image.max'                      => 'Ukuran thumbnail maksimal 10MB.',
+            'gallery.*.max'                  => 'Ukuran masing-masing gambar galeri maksimal 10MB.',
+            'gallery.*.mimes'                => 'Format gambar galeri harus berupa JPG, JPEG, PNG, atau WEBP.',
+            'digital_resource.required'      => 'Link produk digital wajib diisi.',
         ];
     }
 
@@ -75,6 +78,11 @@ class UpdateProductRequest extends FormRequest
             'is_active'   => $this->boolean('is_active', true),
             'is_featured' => $this->boolean('is_featured', false),
         ];
+
+        if ($this->has('affiliate_commission_rate') && $this->input('affiliate_commission_rate') !== null) {
+            $val = (float) $this->input('affiliate_commission_rate');
+            $merge['affiliate_commission_rate'] = $val < 5 ? 5.00 : $val;
+        }
 
         // Map external_link → digital_resource (form uses external_link)
         if ($this->has('external_link') && $this->input('external_link')) {

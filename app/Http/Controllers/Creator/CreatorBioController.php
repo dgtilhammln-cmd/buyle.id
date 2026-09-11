@@ -40,8 +40,13 @@ class CreatorBioController extends Controller
             ->with('seller:id,name')
             ->orderBy('name')
             ->get(['id', 'name', 'price', 'whitelabel_price', 'whitelabel_terms', 'image', 'slug', 'seller_id']);
+        $affiliateProducts = Product::where('is_active', true)
+            ->where('seller_id', '!=', auth()->id())
+            ->with('seller:id,name')
+            ->orderBy('name')
+            ->get(['id', 'name', 'price', 'sale_price', 'affiliate_commission_rate', 'image', 'slug', 'seller_id']);
 
-        return view('creator.bio.index', compact('profile', 'blocks', 'myProducts', 'whitelabelProducts'));
+        return view('creator.bio.index', compact('profile', 'blocks', 'myProducts', 'whitelabelProducts', 'affiliateProducts'));
     }
 
     /**
