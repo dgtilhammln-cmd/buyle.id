@@ -83,6 +83,52 @@
     document.getElementById(id).focus();
     document.execCommand('insertHTML',false,'<a href="'+url+'" target="_blank" rel="noopener">'+text+'</a>');
   };
+  function compressImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.82) {
+    return new Promise((resolve) => {
+        if (!file || !file.type.startsWith('image/')) {
+            resolve(file);
+            return;
+        }
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function(e) {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = function() {
+                let width = img.width;
+                let height = img.height;
+                if (width > maxWidth || height > maxHeight) {
+                    if (width / height > maxWidth / maxHeight) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    } else {
+                        width = Math.round((width * maxHeight) / height);
+                        height = maxHeight;
+                    }
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                canvas.toBlob(function(blob) {
+                    if (!blob) {
+                        resolve(file);
+                        return;
+                    }
+                    const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
+                        type: 'image/webp',
+                        lastModified: Date.now()
+                    });
+                    resolve(compressedFile);
+                }, 'image/webp', quality);
+            };
+            img.onerror = function() { resolve(file); };
+        };
+        reader.onerror = function() { resolve(file); };
+    });
+  }
+
   window['edImage'] = function(id) {
     const input = document.createElement('input');
     input.type = 'file';
@@ -93,28 +139,30 @@
         const ed = document.getElementById(id);
         ed.focus();
         const loadingId = 'img-loading-' + Date.now();
-        document.execCommand('insertHTML', false, `<span id="${loadingId}" style="color:var(--yellow);font-style:italic;">[Mengupload gambar...]</span>`);
+        document.execCommand('insertHTML', false, `<span id="${loadingId}" style="color:var(--yellow);font-style:italic;">[Mengompresi & mengunggah gambar...]</span>`);
         
-        const fd = new FormData();
-        fd.append('image', file);
-        fd.append('_token', '{{ csrf_token() }}');
-        
-        @php $uploadRoute = (auth()->check() && auth()->user()->role === 'seller') ? route('creator.upload.image') : route('admin.upload.image'); @endphp
-        fetch('{{ $uploadRoute }}', { method: 'POST', body: fd })
-        .then(res => res.json())
-        .then(data => {
-            const loadingEl = document.getElementById(loadingId);
-            if(data.url) {
-                const imgHtml = `<img src="${data.url}" style="max-width:100%; border-radius:8px; margin:1rem 0;">`;
-                if(loadingEl) loadingEl.outerHTML = imgHtml;
-                else { ed.focus(); document.execCommand('insertHTML', false, imgHtml); }
-            } else {
-                if(loadingEl) loadingEl.outerHTML = `<span style="color:red;">[Gagal upload]</span>`;
-            }
-        })
-        .catch(err => {
-            const loadingEl = document.getElementById(loadingId);
-            if(loadingEl) loadingEl.outerHTML = `<span style="color:red;">[Error upload]</span>`;
+        compressImage(file).then(compressedFile => {
+            const fd = new FormData();
+            fd.append('image', compressedFile);
+            fd.append('_token', '{{ csrf_token() }}');
+            
+            @php $uploadRoute = (auth()->check() && auth()->user()->role === 'seller') ? route('creator.upload.image') : route('admin.upload.image'); @endphp
+            fetch('{{ $uploadRoute }}', { method: 'POST', body: fd })
+            .then(res => res.json())
+            .then(data => {
+                const loadingEl = document.getElementById(loadingId);
+                if(data.url) {
+                    const imgHtml = `<img src="${data.url}" style="max-width:100%; height:auto; border-radius:8px; margin:1rem 0; display:block;">`;
+                    if(loadingEl) loadingEl.outerHTML = imgHtml;
+                    else { ed.focus(); document.execCommand('insertHTML', false, imgHtml); }
+                } else {
+                    if(loadingEl) loadingEl.outerHTML = `<span style="color:red;">[Gagal upload]</span>`;
+                }
+            })
+            .catch(err => {
+                const loadingEl = document.getElementById(loadingId);
+                if(loadingEl) loadingEl.outerHTML = `<span style="color:red;">[Error upload]</span>`;
+            });
         });
     };
     input.click();

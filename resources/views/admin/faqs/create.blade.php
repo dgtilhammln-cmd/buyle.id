@@ -749,15 +749,98 @@ function removeCurrentLink() {
     updateSelectionState();
 }
 
+function compressImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.82) {
+    return new Promise((resolve) => {
+        if (!file || !file.type.startsWith('image/')) {
+            resolve(file);
+            return;
+        }
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function(e) {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = function() {
+                let width = img.width;
+                let height = img.height;
+                if (width > maxWidth || height > maxHeight) {
+                    if (width / height > maxWidth / maxHeight) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    } else {
+                        width = Math.round((width * maxHeight) / height);
+                        height = maxHeight;
+                    }
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                canvas.toBlob(function(blob) {
+                    if (!blob) {
+                        resolve(file);
+                        return;
+                    }
+                    const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
+                        type: 'image/webp',
+                        lastModified: Date.now()
+                    });
+                    resolve(compressedFile);
+                }, 'image/webp', quality);
+            };
+            img.onerror = function() { resolve(file); };
+        };
+        reader.onerror = function() { resolve(file); };
+    });
+}
+
 function insertImgUrl() {
     if (currentEditorMode === 'code') return;
-    const url = prompt('Masukkan URL Gambar:');
-    if (url) {
-        document.getElementById('editor-id').focus();
-        document.execCommand('insertImage', false, url);
-        syncContent();
-        updateSelectionState();
-    }
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const editor = document.getElementById('editor-id');
+        editor.focus();
+        const loadingId = 'img-loading-' + Date.now();
+        document.execCommand('insertHTML', false, `<span id="${loadingId}" style="color:#1eb349;font-weight:600;font-style:italic;">[Mengompresi & mengunggah gambar...]</span>`);
+
+        compressImage(file).then(compressedFile => {
+            const fd = new FormData();
+            fd.append('image', compressedFile);
+            fd.append('_token', '{{ csrf_token() }}');
+
+            fetch('{{ route("admin.upload.image") }}', { method: 'POST', body: fd })
+            .then(res => res.json())
+            .then(data => {
+                const loadingEl = document.getElementById(loadingId);
+                if (data.url) {
+                    const imgHtml = `<img src="${data.url}" alt="Gambar FAQ" style="max-width:100%; height:auto; border-radius:8px; margin:1rem 0; display:block;">`;
+                    if (loadingEl) {
+                        loadingEl.outerHTML = imgHtml;
+                    } else {
+                        editor.focus();
+                        document.execCommand('insertHTML', false, imgHtml);
+                    }
+                } else {
+                    if (loadingEl) loadingEl.outerHTML = `<span style="color:red;">[Gagal mengunggah gambar]</span>`;
+                }
+                syncContent();
+                updateSelectionState();
+            })
+            .catch(err => {
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.outerHTML = `<span style="color:red;">[Error mengunggah gambar]</span>`;
+                syncContent();
+                updateSelectionState();
+            });
+        });
+    };
+    input.click();
 }
 
 function insertTable() {

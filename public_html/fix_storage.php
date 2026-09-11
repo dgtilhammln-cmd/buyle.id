@@ -95,6 +95,27 @@ foreach (['settings', 'avatars', 'hero_slides', 'products'] as $dir) {
     }
 }
 
+// Reset OPcache and clear compiled view files
+out("\n--- Clearing view & OPcache cache ---");
+if (function_exists('opcache_reset')) {
+    if (@opcache_reset()) {
+        out("OK: OPcache reset successfully");
+    } else {
+        out("NOTICE: opcache_reset() called");
+    }
+}
+$viewsDir = $appRoot . '/storage/framework/views';
+if (is_dir($viewsDir)) {
+    $files = glob($viewsDir . '/*.php');
+    $cnt = 0;
+    if ($files) {
+        foreach ($files as $f) {
+            if (@unlink($f)) $cnt++;
+        }
+    }
+    out("OK: Cleared $cnt compiled view file(s) from storage/framework/views");
+}
+
 out("\n=== Done! ===");
 
 if (!$isCli) {
