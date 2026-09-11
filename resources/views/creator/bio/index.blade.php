@@ -339,14 +339,71 @@
         .modal-box-wide {
             background: #fff;
             border-radius: 20px;
-            max-width: min(1280px, calc(100vw - 2rem));
-            width: calc(100vw - 2rem);
-            padding: 1.75rem 2rem;
+            max-width: 1440px;
+            width: 96vw;
+            padding: 1.5rem 1.75rem;
             box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
             animation: fadeIn 0.25s;
-            max-height: 88vh;
+            max-height: 90vh;
             display: flex;
             flex-direction: column;
+        }
+
+        .modal-catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 0.85rem;
+            max-height: 65vh;
+            overflow-y: auto;
+            padding: 0.35rem;
+        }
+
+        .modal-card-item {
+            background: #ffffff;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 14px;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+        }
+
+        .modal-card-item:hover {
+            border-color: #CBD5E1;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 1550px) {
+            .modal-catalog-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .modal-catalog-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 850px) {
+            .modal-catalog-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 550px) {
+            .modal-box-wide {
+                width: 95vw;
+                padding: 1rem;
+            }
+
+            .modal-catalog-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
         }
 
         .btn-submit-sm {
@@ -1596,8 +1653,7 @@
                         </div>
                         <button type="button"
                             onclick="document.getElementById('affiliateCatalogModal').classList.add('open')"
-                            class="btn-submit-sm"
-                            style="background:#1eb349; color:#fff; border:none; padding:0.5rem 1.15rem; border-radius:10px; font-weight:700; font-size:0.825rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 12px rgba(30,179,73,0.25);">
+                            class="btn-submit-sm">
                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
                                 viewBox="0 0 24 24">
                                 <circle cx="11" cy="11" r="8" />
@@ -1607,18 +1663,6 @@
                         </button>
                     </div>
                     <div class="card-body" style="padding:1.25rem;">
-                        <p
-                            style="font-size:0.8rem; color:#475569; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.75rem 1rem; margin-bottom:1.25rem; line-height:1.45; display:flex; align-items:flex-start; gap:0.5rem;">
-                            <svg width="16" height="16" fill="none" stroke="#64748B" stroke-width="2.5" viewBox="0 0 24 24"
-                                style="flex-shrink:0; margin-top:2px;">
-                                <circle cx="12" cy="12" r="10" />
-                                <line x1="12" y1="16" x2="12" y2="12" />
-                                <line x1="12" y1="8" x2="12.01" y2="8" />
-                            </svg>
-                            <span><strong>Peluang Affiliate:</strong> Klik <strong>"Cari & Tambah Affiliate"</strong> untuk
-                                membuka katalog pop-up. Pilih produk buyle.id creator lain untuk ditampilkan di Bio Page
-                                Anda dan dapatkan komisi dalam Rupiah!</span>
-                        </p>
 
                         @php
                             $affiliateBlockIds = $affiliateProducts->pluck('id')->toArray();
@@ -1697,8 +1741,7 @@
                         </div>
                         <button type="button"
                             onclick="document.getElementById('whitelabelCatalogModal').classList.add('open')"
-                            class="btn-submit-sm"
-                            style="background:#1eb349; color:#fff; border:none; padding:0.5rem 1.15rem; border-radius:10px; font-weight:700; font-size:0.825rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 12px rgba(30,179,73,0.25);">
+                            class="btn-submit-sm">
                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
                                 viewBox="0 0 24 24">
                                 <circle cx="11" cy="11" r="8" />
@@ -1706,647 +1749,634 @@
                             </svg>
                             Cari & Tambah White Label
                         </button>
-                    </div>
-                    <div class="card-body" style="padding:1.25rem;">
-                        <p
-                            style="font-size:0.8rem; color:#475569; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.75rem 1rem; margin-bottom:1.25rem; line-height:1.45; display:flex; align-items:flex-start; gap:0.5rem;">
-                            <svg width="16" height="16" fill="none" stroke="#64748B" stroke-width="2.5" viewBox="0 0 24 24"
-                                style="flex-shrink:0; margin-top:2px;">
-                                <circle cx="12" cy="12" r="10" />
-                                <line x1="12" y1="16" x2="12" y2="12" />
-                                <line x1="12" y1="8" x2="12.01" y2="8" />
-                            </svg>
-                            <span><strong>Peluang Reseller & Re-brand:</strong> Produk White Label bebas watermark dan
-                                disetujui Tim Buyle. Anda dapat memasukkannya ke Bio Link Anda dan menentukan harga jual
-                                (markup) sendiri!</span>
-                        </p>
+                        </div>
+                        <div class="card-body" style="padding:1.25rem;">
 
-                        @php
-                            $wlBlockIds = $whitelabelProducts->pluck('id')->toArray();
-                            $addedWlBlocks = $blocks->where('type', 'buyle_product')->filter(fn($b) => in_array($b->data_json['product_id'] ?? null, $wlBlockIds));
-                        @endphp
-
-                        @forelse($addedWlBlocks as $wlBlock)
                             @php
-                                $wlProdId = $wlBlock->data_json['product_id'] ?? null;
-                                $wlProd = $whitelabelProducts->firstWhere('id', $wlProdId);
+                                $wlBlockIds = $whitelabelProducts->pluck('id')->toArray();
+                                $addedWlBlocks = $blocks->where('type', 'buyle_product')->filter(fn($b) => in_array($b->data_json['product_id'] ?? null, $wlBlockIds));
                             @endphp
-                            <div
-                                style="background:#fff; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
-                                @if($wlProd)
-                                    <img src="{{ $wlProd->main_image }}"
-                                        style="width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
-                                @endif
-                                <div style="flex:1; min-width:200px;">
-                                    <div style="font-weight:700; font-size:0.875rem; color:#0F172A;">
-                                        {{ $wlBlock->title }}
-                                    </div>
-                                    <div style="font-size:0.75rem; color:#64748B; margin-top:0.2rem;">
-                                        @if($wlProd)
-                                            Oleh: <strong style="color:#334155;">{{ $wlProd->seller->name ?? 'Creator' }}</strong>
-                                            @if($wlProd->whitelabel_price)
-                                                &middot; Min. Resell: <span style="color:#0F172A; font-weight:700;">Rp
-                                                    {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}</span>
-                                            @else
-                                                &middot; Harga Asli: <span style="color:#0F172A; font-weight:700;">Rp
-                                                    {{ number_format($wlProd->price, 0, ',', '.') }}</span>
-                                            @endif
-                                        @endif
-                                    </div>
-                                </div>
-                                <form action="{{ route('creator.bio.blocks.destroy', $wlBlock) }}" method="POST"
-                                    class="form-delete-block" style="margin-left:auto;">
-                                    @csrf @method('DELETE')
-                                    <button type="button" class="btn-delete-block"
-                                        style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <polyline points="3 6 5 6 21 6" />
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                                        </svg>
-                                        Hapus dari Bio
-                                    </button>
-                                </form>
-                            </div>
-                        @empty
-                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0; margin:0;">Belum
-                                ada produk White Label yang ditambahkan ke Bio.</p>
-                        @endforelse
-                    </div>
-                </div>
 
-                {{-- 3. Shopee Affiliate / Produk Eksternal --}}
-                <div class="prof-card">
-                    <div class="prof-card-head">
-                        <span style="display:flex; align-items:center; gap:0.5rem;">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
-                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                                <line x1="3" y1="6" x2="21" y2="6" />
-                                <path d="M16 10a4 4 0 0 1-8 0" />
-                            </svg>
-                            Tambah Link Produk Eksternal (Shopee / Tokopedia)
-                        </span>
-                        <button onclick="document.getElementById('addAffModal').classList.add('open')"
-                            class="btn-submit-sm">+ Tambah Link</button>
-                    </div>
-                    <div class="card-body">
-                        @forelse($blocks->whereIn('type', ['shopee', 'affiliate']) as $block)
-                            <div class="aff-card">
-                                @if(!empty($block->data_json['image']))
-                                    @php
-                                        $affImgPath = $block->data_json['image'];
-                                        $affImgUrl = \Illuminate\Support\Str::startsWith($affImgPath, 'http') ? $affImgPath : asset('storage/' . ltrim($affImgPath, '/'));
-                                    @endphp
-                                    <img src="{{ $affImgUrl }}" class="aff-img" onerror="this.style.display='none'">
-                                @endif
-                                <div class="aff-info">
-                                    <div class="aff-title">{{ $block->title }}</div>
-                                    <div class="aff-sub">{{ Str::limit($block->url, 50) }}</div>
-                                </div>
-                                <div style="padding:0.75rem; display:flex; align-items:center; gap:0.4rem;">
-                                    <button type="button" class="btn-icon-sm btn-edit-block" data-id="{{ $block->id }}"
-                                        data-title="{{ addslashes($block->title) }}"
-                                        data-url="{{ addslashes($block->url ?? '') }}"
-                                        data-icon="{{ $block->data_json['icon_class'] ?? '' }}"
-                                        style="background:#e0f2fe; color:#0284c7;" title="Edit">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                        </svg>
-                                    </button>
-                                    <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST"
-                                        class="form-delete-block">
+                            @forelse($addedWlBlocks as $wlBlock)
+                                @php
+                                    $wlProdId = $wlBlock->data_json['product_id'] ?? null;
+                                    $wlProd = $whitelabelProducts->firstWhere('id', $wlProdId);
+                                @endphp
+                                <div
+                                    style="background:#fff; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
+                                    @if($wlProd)
+                                        <img src="{{ $wlProd->main_image }}"
+                                            style="width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
+                                    @endif
+                                    <div style="flex:1; min-width:200px;">
+                                        <div style="font-weight:700; font-size:0.875rem; color:#0F172A;">
+                                            {{ $wlBlock->title }}
+                                        </div>
+                                        <div style="font-size:0.75rem; color:#64748B; margin-top:0.2rem;">
+                                            @if($wlProd)
+                                                Oleh: <strong style="color:#334155;">{{ $wlProd->seller->name ?? 'Creator' }}</strong>
+                                                @if($wlProd->whitelabel_price)
+                                                    &middot; Min. Resell: <span style="color:#0F172A; font-weight:700;">Rp
+                                                        {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}</span>
+                                                @else
+                                                    &middot; Harga Asli: <span style="color:#0F172A; font-weight:700;">Rp
+                                                        {{ number_format($wlProd->price, 0, ',', '.') }}</span>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <form action="{{ route('creator.bio.blocks.destroy', $wlBlock) }}" method="POST"
+                                        class="form-delete-block" style="margin-left:auto;">
                                         @csrf @method('DELETE')
-                                        <button type="button" class="btn-icon-sm btn-delete-block"
-                                            style="background:#fef2f2; color:#ef4444;">
-                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        <button type="button" class="btn-delete-block"
+                                            style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
                                                 viewBox="0 0 24 24">
                                                 <polyline points="3 6 5 6 21 6" />
                                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
                                             </svg>
+                                            Hapus dari Bio
                                         </button>
                                     </form>
                                 </div>
-                            </div>
-                        @empty
-                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0;">Belum ada link
-                                eksternal (Shopee/Tokopedia). Masukkan link Shopee dan sistem akan mengambil gambar otomatis.
-                            </p>
-                        @endforelse
+                            @empty
+                                <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0; margin:0;">Belum
+                                    ada produk White Label yang ditambahkan ke Bio.</p>
+                            @endforelse
+                        </div>
                     </div>
-                </div>
 
-                {{-- 4. Produk Fisik / UMKM --}}
-                <div class="prof-card">
-                    <div class="prof-card-head">
-                        <span style="display:flex; align-items:center; gap:0.5rem;">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                                <polyline points="9 22 9 12 15 12 15 22" />
-                            </svg>
-                            Produk Fisik / UMKM
-                        </span>
-                        <button onclick="document.getElementById('addUmkmModal').classList.add('open')"
-                            class="btn-submit-sm">+ Tambah Produk</button>
-                    </div>
-                    <div class="card-body">
-                        @forelse($blocks->where('type', 'custom_product') as $block)
-                                            <div class="aff-card">
-                                                @php $imgs = $block->data_json['images'] ?? []; @endphp
-                                                @if(!empty($imgs[0]))
-                                                    <img src="{{ asset('storage/' . $imgs[0]) }}" class="aff-img"
-                                                        onerror="this.style.display='none'">
-                                                @endif
-                                                <div class="aff-info">
-                                                    <div class="aff-title">{{ $block->title }}</div>
-                                                    <div class="aff-sub">
-                                                        @if(!empty($block->data_json['original_price']) && $block->data_json['original_price'] > ($block->data_json['price'] ?? 0))
-                                                            <span style="text-decoration:line-through; color:#94a3b8; margin-right:0.35rem;">Rp
-                                                                {{ number_format($block->data_json['original_price'], 0, ',', '.') }}</span>
-                                                        @endif
-                                                        <strong style="color:#1eb349;">Rp
-                                                            {{ number_format($block->data_json['price'] ?? 0, 0, ',', '.') }}</strong> &middot;
-                                                        {{ ($block->data_json['payment_method'] ?? 'wa') === 'wa' ? 'Beli via WA' : 'Beli via Web' }}
-                                                    </div>
-                                                </div>
-                                                <div style="padding:0.75rem; display:flex; align-items:center; gap:0.4rem;">
-                                                    @if(!empty($profile->store_slug))
-                                                        <a href="{{ route('bio.product.show', [$profile->store_slug, $block->data_json['slug'] ?? $block->id]) }}"
-                                                            target="_blank" class="btn-icon-sm" style="background:#f0fdf4; color:#1eb349;"
-                                                            title="Lihat Halaman Produk (SEO)">
-                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                                viewBox="0 0 24 24">
-                                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                                                                <polyline points="15 3 21 3 21 9" />
-                                                                <line x1="10" y1="14" x2="21" y2="3" />
-                                                            </svg>
-                                                        </a>
-                                                    @endif
-                                                    <button type="button" onclick="editUmkmProduct({{ json_encode([
-                                'id' => $block->id,
-                                'title' => $block->title,
-                                'price' => $block->data_json['price'] ?? 0,
-                                'original_price' => $block->data_json['original_price'] ?? '',
-                                'payment_method' => $block->data_json['payment_method'] ?? 'wa',
-                                'description' => $block->data_json['description'] ?? '',
-                                'wa_text' => $block->data_json['wa_text'] ?? '',
-                                'url' => $block->url ?? ''
-                            ]) }})" class="btn-icon-sm" style="background:#eff6ff; color:#2563eb;"
-                                                        title="Edit Produk">
-                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                            viewBox="0 0 24 24">
-                                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                                        </svg>
-                                                    </button>
-                                                    <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST"
-                                                        class="form-delete-block">
-                                                        @csrf @method('DELETE')
-                                                        <button type="button" class="btn-icon-sm btn-delete-block"
-                                                            style="background:#fef2f2; color:#ef4444;" title="Hapus Produk">
-                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                                viewBox="0 0 24 24">
-                                                                <polyline points="3 6 5 6 21 6" />
-                                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                                                            </svg>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                        @empty
-                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0;">Belum ada produk
-                                fisik/UMKM. Klik "+ Tambah Produk" untuk menambahkan.</p>
-                        @endforelse
-                    </div>
-                </div>
-
-                {{-- 5. Produk Buyle Saya --}}
-                <div class="prof-card">
-                    <div class="prof-card-head">
-                        <span style="display:flex; align-items:center; gap:0.5rem;">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
-                                <path
-                                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                                <line x1="12" y1="22.08" x2="12" y2="12" />
-                            </svg>
-                            Tampilkan Produk Buyle Saya
-                        </span>
-                    </div>
-                    <div class="card-body">
-                        @forelse($myProducts as $product)
-                            @php $alreadyAdded = $blocks->where('type', 'buyle_product')->contains(fn($b) => ($b->data_json['product_id'] ?? null) == $product->id); @endphp
-                            <div
-                                style="display:flex; align-items:center; gap:0.75rem; padding:0.65rem 0; border-bottom:1px solid #f3f7f3;">
-                                @if($product->image)
-                                    <img src="{{ asset('storage/' . $product->image) }}"
-                                        style="width:48px; height:48px; border-radius:8px; object-fit:cover; flex-shrink:0;">
-                                @endif
-                                <div style="flex:1; min-width:0;">
-                                    <div
-                                        style="font-weight:700; font-size:0.82rem; color:#0b120c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                        {{ $product->name }}
+                    {{-- 3. Shopee Affiliate / Produk Eksternal --}}
+                    <div class="prof-card">
+                        <div class="prof-card-head">
+                            <span style="display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                                    <line x1="3" y1="6" x2="21" y2="6" />
+                                    <path d="M16 10a4 4 0 0 1-8 0" />
+                                </svg>
+                                Tambah Produk Affiliate (Shopee / Tokopedia)
+                            </span>
+                            <button onclick="document.getElementById('addAffModal').classList.add('open')"
+                                class="btn-submit-sm">+ Tambah</button>
+                        </div>
+                        <div class="card-body">
+                            @forelse($blocks->whereIn('type', ['shopee', 'affiliate']) as $block)
+                                <div class="aff-card">
+                                    @if(!empty($block->data_json['image']))
+                                        @php
+                                            $affImgPath = $block->data_json['image'];
+                                            $affImgUrl = \Illuminate\Support\Str::startsWith($affImgPath, 'http') ? $affImgPath : asset('storage/' . ltrim($affImgPath, '/'));
+                                        @endphp
+                                        <img src="{{ $affImgUrl }}" class="aff-img" onerror="this.style.display='none'">
+                                    @endif
+                                    <div class="aff-info">
+                                        <div class="aff-title">{{ $block->title }}</div>
+                                        <div class="aff-sub">{{ Str::limit($block->url, 50) }}</div>
                                     </div>
-                                    <div style="font-size:0.72rem; color:#64748b;">Rp
-                                        {{ number_format($product->price, 0, ',', '.') }}
+                                    <div style="padding:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+                                        <button type="button" class="btn-icon-sm btn-edit-block" data-id="{{ $block->id }}"
+                                            data-title="{{ addslashes($block->title) }}"
+                                            data-url="{{ addslashes($block->url ?? '') }}"
+                                            data-icon="{{ $block->data_json['icon_class'] ?? '' }}"
+                                            style="background:#e0f2fe; color:#0284c7;" title="Edit">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                viewBox="0 0 24 24">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                            </svg>
+                                        </button>
+                                        <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST"
+                                            class="form-delete-block">
+                                            @csrf @method('DELETE')
+                                            <button type="button" class="btn-icon-sm btn-delete-block"
+                                                style="background:#fef2f2; color:#ef4444;">
+                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                    viewBox="0 0 24 24">
+                                                    <polyline points="3 6 5 6 21 6" />
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                                </svg>
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
-                                @if($alreadyAdded)
-                                    <span
-                                        style="font-size:0.72rem; font-weight:700; color:#1eb349; background:#f0fdf4; padding:0.25rem 0.6rem; border-radius:6px;">Ditampilkan</span>
-                                @else
-                                    <form action="{{ route('creator.bio.blocks.store') }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        <input type="hidden" name="type" value="buyle_product">
-                                        <input type="hidden" name="title" value="{{ $product->name }}">
-                                        <input type="hidden" name="url" value="{{ route('products.show', $product->slug) }}">
-                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                        <button type="submit" class="btn-submit-sm" style="font-size:0.75rem; height:34px;">+
-                                            Tampilkan</button>
-                                    </form>
-                                @endif
+                            @empty
+                                <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0;">Belum ada link
+                                    eksternal (Shopee/Tokopedia). Masukkan link Shopee dan sistem akan mengambil gambar otomatis.
+                                </p>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    {{-- 4. Produk Fisik / UMKM --}}
+                    <div class="prof-card">
+                        <div class="prof-card-head">
+                            <span style="display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                    <polyline points="9 22 9 12 15 12 15 22" />
+                                </svg>
+                                Produk Fisik / UMKM
+                            </span>
+                            <button onclick="document.getElementById('addUmkmModal').classList.add('open')"
+                                class="btn-submit-sm">+ Tambah</button>
+                        </div>
+                        <div class="card-body">
+                            @forelse($blocks->where('type', 'custom_product') as $block)
+                                                                        <div class="aff-card">
+                                                                            @php $imgs = $block->data_json['images'] ?? []; @endphp
+                                                                            @if(!empty($imgs[0]))
+                                                                                <img src="{{ asset('storage/' . $imgs[0]) }}" class="aff-img"
+                                                                                    onerror="this.style.display='none'">
+                                                                            @endif
+                                                                            <div class="aff-info">
+                                                                                <div class="aff-title">{{ $block->title }}</div>
+                                                                                <div class="aff-sub">
+                                                                                    @if(!empty($block->data_json['original_price']) && $block->data_json['original_price'] > ($block->data_json['price'] ?? 0))
+                                                                                        <span style="text-decoration:line-through; color:#94a3b8; margin-right:0.35rem;">Rp
+                                                                                            {{ number_format($block->data_json['original_price'], 0, ',', '.') }}</span>
+                                                                                    @endif
+                                                                                    <strong style="color:#1eb349;">Rp
+                                                                                        {{ number_format($block->data_json['price'] ?? 0, 0, ',', '.') }}</strong> &middot;
+                                                                                    {{ ($block->data_json['payment_method'] ?? 'wa') === 'wa' ? 'Beli via WA' : 'Beli via Web' }}
+                                                                                </div>
+                                                                            </div>
+                                                                            <div style="padding:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+                                                                                @if(!empty($profile->store_slug))
+                                                                                    <a href="{{ route('bio.product.show', [$profile->store_slug, $block->data_json['slug'] ?? $block->id]) }}"
+                                                                                        target="_blank" class="btn-icon-sm" style="background:#f0fdf4; color:#1eb349;"
+                                                                                        title="Lihat Halaman Produk (SEO)">
+                                                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                                                            viewBox="0 0 24 24">
+                                                                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                                                                            <polyline points="15 3 21 3 21 9" />
+                                                                                            <line x1="10" y1="14" x2="21" y2="3" />
+                                                                                        </svg>
+                                                                                    </a>
+                                                                                @endif
+                                                                                <button type="button" onclick="editUmkmProduct({{ json_encode([
+                                    'id' => $block->id,
+                                    'title' => $block->title,
+                                    'price' => $block->data_json['price'] ?? 0,
+                                    'original_price' => $block->data_json['original_price'] ?? '',
+                                    'payment_method' => $block->data_json['payment_method'] ?? 'wa',
+                                    'description' => $block->data_json['description'] ?? '',
+                                    'wa_text' => $block->data_json['wa_text'] ?? '',
+                                    'url' => $block->url ?? ''
+                                ]) }})" class="btn-icon-sm" style="background:#eff6ff; color:#2563eb;" title="Edit Produk">
+                                                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                                                        viewBox="0 0 24 24">
+                                                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                                                                    </svg>
+                                                                                </button>
+                                                                                <form action="{{ route('creator.bio.blocks.destroy', $block) }}" method="POST"
+                                                                                    class="form-delete-block">
+                                                                                    @csrf @method('DELETE')
+                                                                                    <button type="button" class="btn-icon-sm btn-delete-block"
+                                                                                        style="background:#fef2f2; color:#ef4444;" title="Hapus Produk">
+                                                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                                                            viewBox="0 0 24 24">
+                                                                                            <polyline points="3 6 5 6 21 6" />
+                                                                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                                                                        </svg>
+                                                                                    </button>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                            @empty
+                                <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0;">Belum ada produk
+                                    fisik/UMKM. Klik "+ Tambah Produk" untuk menambahkan.</p>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    {{-- 5. Produk Buyle Saya --}}
+                    <div class="prof-card">
+                        <div class="prof-card-head">
+                            <span style="display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                                </svg>
+                                Tampilkan Produk Buyle Saya
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            @forelse($myProducts as $product)
+                                @php $alreadyAdded = $blocks->where('type', 'buyle_product')->contains(fn($b) => ($b->data_json['product_id'] ?? null) == $product->id); @endphp
+                                <div
+                                    style="display:flex; align-items:center; gap:0.75rem; padding:0.65rem 0; border-bottom:1px solid #f3f7f3;">
+                                    @if($product->image)
+                                        <img src="{{ asset('storage/' . $product->image) }}"
+                                            style="width:48px; height:48px; border-radius:8px; object-fit:cover; flex-shrink:0;">
+                                    @endif
+                                    <div style="flex:1; min-width:0;">
+                                        <div
+                                            style="font-weight:700; font-size:0.82rem; color:#0b120c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                            {{ $product->name }}
+                                        </div>
+                                        <div style="font-size:0.72rem; color:#64748b;">Rp
+                                            {{ number_format($product->price, 0, ',', '.') }}
+                                        </div>
+                                    </div>
+                                    @if($alreadyAdded)
+                                        <span
+                                            style="font-size:0.72rem; font-weight:700; color:#1eb349; background:#f0fdf4; padding:0.25rem 0.6rem; border-radius:6px;">Ditampilkan</span>
+                                    @else
+                                        <form action="{{ route('creator.bio.blocks.store') }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            <input type="hidden" name="type" value="buyle_product">
+                                            <input type="hidden" name="title" value="{{ $product->name }}">
+                                            <input type="hidden" name="url" value="{{ route('products.show', $product->slug) }}">
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                            <button type="submit" class="btn-submit-sm" style="font-size:0.75rem; height:34px;">+
+                                                Tampilkan</button>
+                                        </form>
+                                    @endif
+                                </div>
+                            @empty
+                                <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0;">Belum ada produk
+                                    milik Anda sendiri. <a href="{{ route('creator.products.create') }}"
+                                        style="color:#1eb349;">Tambah Produk →</a></p>
+                            @endforelse
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>{{-- /bio-content --}}
+        </div>{{-- /bio-layout --}}
+
+        {{-- ── Modal: Tambah Block Biasa ── --}}
+        <div class="modal-overlay" id="addBlockModal" onclick="if(event.target===this)this.classList.remove('open')">
+            <div class="modal-box">
+                <h3
+                    style="font-size:1.1rem; font-weight:800; margin:0 0 1.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
+                    Tambah Block Baru</h3>
+                <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group">
+                        <label class="form-label">Tipe Block</label>
+                        <select name="type" class="form-input" id="blockType" onchange="handleTypeChange(this.value)">
+                            <option value="link">Custom Link / Button</option>
+                            <option value="pdf">File / Dokumen PDF</option>
+                            <option value="tiktok">TikTok Video</option>
+                            <option value="image">Gambar / Banner (Poster)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Judul / Label Tombol</label>
+                        <input type="text" name="title" class="form-input" placeholder="Contoh: Download Portfolio"
+                            maxlength="150" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">URL / Link</label>
+                        <input type="url" name="url" class="form-input" placeholder="https://" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ikon (Pilih dari Galeri ATAU Upload)</label>
+                        <div style="display:flex; gap:0.5rem; align-items:center;">
+                            <button type="button" class="btn-primary"
+                                style="background:#f8fafc; color:#1e293b; border:1.5px solid #cbd5e1; height:44px; padding:0 1rem; border-radius:10px; font-weight:600; display:flex; gap:0.5rem; align-items:center;"
+                                onclick="openIconPicker('addBlockIconClass', 'addBlockIconPreview')">
+                                <i class="ph ph-squares-four" style="font-size:1.2rem;"></i> Pilih Ikon
+                            </button>
+                            <div id="addBlockIconPreview"
+                                style="display:none; font-size:24px; color:#1eb349; width:44px; height:44px; align-items:center; justify-content:center; border:1.5px solid #1eb349; border-radius:10px; background:#f0fdf4;">
                             </div>
-                        @empty
-                            <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0;">Belum ada produk
-                                milik Anda sendiri. <a href="{{ route('creator.products.create') }}"
-                                    style="color:#1eb349;">Tambah Produk →</a></p>
-                        @endforelse
+                            <div style="flex:1;">
+                                <input type="file" name="block_image" accept="image/*" class="form-input"
+                                    style="height:44px; padding:0.5rem; width:100%;">
+                            </div>
+                        </div>
+                        <input type="hidden" name="icon_class" id="addBlockIconClass">
                     </div>
-                </div>
-
+                    <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
+                        <button type="button" onclick="document.getElementById('addBlockModal').classList.remove('open')"
+                            style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                        <button type="submit" class="btn-submit-sm">Tambah Block</button>
+                    </div>
+                </form>
             </div>
-
-        </div>{{-- /bio-content --}}
-    </div>{{-- /bio-layout --}}
-
-    {{-- ── Modal: Tambah Block Biasa ── --}}
-    <div class="modal-overlay" id="addBlockModal" onclick="if(event.target===this)this.classList.remove('open')">
-        <div class="modal-box">
-            <h3
-                style="font-size:1.1rem; font-weight:800; margin:0 0 1.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
-                Tambah Block Baru</h3>
-            <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="form-group">
-                    <label class="form-label">Tipe Block</label>
-                    <select name="type" class="form-input" id="blockType" onchange="handleTypeChange(this.value)">
-                        <option value="link">Custom Link / Button</option>
-                        <option value="pdf">File / Dokumen PDF</option>
-                        <option value="tiktok">TikTok Video</option>
-                        <option value="image">Gambar / Banner (Poster)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Judul / Label Tombol</label>
-                    <input type="text" name="title" class="form-input" placeholder="Contoh: Download Portfolio"
-                        maxlength="150" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">URL / Link</label>
-                    <input type="url" name="url" class="form-input" placeholder="https://" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Ikon (Pilih dari Galeri ATAU Upload)</label>
-                    <div style="display:flex; gap:0.5rem; align-items:center;">
-                        <button type="button" class="btn-primary"
-                            style="background:#f8fafc; color:#1e293b; border:1.5px solid #cbd5e1; height:44px; padding:0 1rem; border-radius:10px; font-weight:600; display:flex; gap:0.5rem; align-items:center;"
-                            onclick="openIconPicker('addBlockIconClass', 'addBlockIconPreview')">
-                            <i class="ph ph-squares-four" style="font-size:1.2rem;"></i> Pilih Ikon
-                        </button>
-                        <div id="addBlockIconPreview"
-                            style="display:none; font-size:24px; color:#1eb349; width:44px; height:44px; align-items:center; justify-content:center; border:1.5px solid #1eb349; border-radius:10px; background:#f0fdf4;">
-                        </div>
-                        <div style="flex:1;">
-                            <input type="file" name="block_image" accept="image/*" class="form-input"
-                                style="height:44px; padding:0.5rem; width:100%;">
-                        </div>
-                    </div>
-                    <input type="hidden" name="icon_class" id="addBlockIconClass">
-                </div>
-                <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
-                    <button type="button" onclick="document.getElementById('addBlockModal').classList.remove('open')"
-                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
-                    <button type="submit" class="btn-submit-sm">Tambah Block</button>
-                </div>
-            </form>
         </div>
-    </div>
 
-    {{-- ── Modal: Tambah Affiliate / Shopee ── --}}
-    <div class="modal-overlay" id="addAffModal" onclick="if(event.target===this)this.classList.remove('open')">
-        <div class="modal-box">
-            <h3
-                style="font-size:1.1rem; font-weight:800; margin:0 0 0.5rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
-                Tambah Produk Affiliate</h3>
-            <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Tempel link Shopee/Tokopedia — sistem akan
-                ambil gambar otomatis. Atau upload manual.</p>
+        {{-- ── Modal: Tambah Affiliate / Shopee ── --}}
+        <div class="modal-overlay" id="addAffModal" onclick="if(event.target===this)this.classList.remove('open')">
+            <div class="modal-box">
+                <h3
+                    style="font-size:1.1rem; font-weight:800; margin:0 0 0.5rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
+                    Tambah Produk Affiliate</h3>
+                <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Tempel link Shopee/Tokopedia — sistem akan
+                    ambil gambar otomatis. Atau upload manual.</p>
 
-            <div id="scrapePreview"
-                style="display:none; background:#f0fdf4; border-radius:12px; padding:1rem; margin-bottom:1rem; display:none; align-items:center; gap:0.75rem;">
-                <img id="scrapeImg" style="width:60px; height:60px; border-radius:8px; object-fit:cover;" src=""
-                    onerror="this.src='https://placehold.co/60x60/fff/cbd5e1?text=Img'">
-                <div>
-                    <div id="scrapeTitle"
-                        style="font-weight:700; font-size:0.82rem; color:#0b120c; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+                <div id="scrapePreview"
+                    style="display:none; background:#f0fdf4; border-radius:12px; padding:1rem; margin-bottom:1rem; display:none; align-items:center; gap:0.75rem;">
+                    <img id="scrapeImg" style="width:60px; height:60px; border-radius:8px; object-fit:cover;" src=""
+                        onerror="this.src='https://placehold.co/60x60/fff/cbd5e1?text=Img'">
+                    <div>
+                        <div id="scrapeTitle"
+                            style="font-weight:700; font-size:0.82rem; color:#0b120c; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+                        </div>
+                        <div style="font-size:0.7rem; color:#1eb349;">✓ Info berhasil ditemukan</div>
                     </div>
-                    <div style="font-size:0.7rem; color:#1eb349;">✓ Info berhasil ditemukan</div>
+                </div>
+
+                <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data" id="affForm">
+                    @csrf
+                    <input type="hidden" name="type" value="shopee">
+                    <input type="hidden" name="scraped_image" id="affScrapedImage">
+                    <div class="form-group">
+                        <label class="form-label">Link Produk (Shopee / Tokopedia / dll)</label>
+                        <div style="display:flex; gap:0.5rem; align-items:center;">
+                            <input type="url" name="url" id="affUrl" class="form-input" placeholder="https://shopee.co.id/..."
+                                style="flex:1;">
+                            <button type="button" id="btnScrape"
+                                onclick="scrapeUrl(document.getElementById('affUrl').value, true)"
+                                style="height:44px; padding:0 1.1rem; border-radius:10px; background:linear-gradient(135deg,#1eb349,#a5cf37); border:none; color:#fff; font-weight:700; font-size:0.82rem; cursor:pointer; display:flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0;">
+                                <svg id="scrapeSpinner" width="14" height="14" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" viewBox="0 0 24 24" style="display:none;">
+                                    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                                </svg>
+                                <svg id="scrapeIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <path d="M1 4v6h6" />
+                                    <path d="M23 20v-6h-6" />
+                                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
+                                </svg>
+                                Scrape
+                            </button>
+                        </div>
+                        <span class="form-hint" id="scrapeStatus">Klik "Scrape" untuk mengambil gambar & judul otomatis dari
+                            link</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Judul Produk</label>
+                        <input type="text" name="title" id="affTitle" class="form-input" placeholder="Nama produk..."
+                            maxlength="150" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Upload Gambar Manual (jika scrape gagal)</label>
+                        <input type="file" name="block_image" accept="image/*" class="form-input"
+                            style="height:auto; padding:0.5rem;">
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
+                        <button type="button" onclick="document.getElementById('addAffModal').classList.remove('open')"
+                            style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                        <button type="submit" class="btn-submit-sm">Tambah Produk</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- ── Modal: Edit Block ── --}}
+        <div class="modal-overlay" id="editBlockModal" onclick="if(event.target===this)this.classList.remove('open')">
+            <div class="modal-box">
+                <h3
+                    style="font-size:1.1rem; font-weight:800; margin:0 0 1.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
+                    Edit Block</h3>
+                <form action="" method="POST" enctype="multipart/form-data" id="editBlockForm">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-group">
+                        <label class="form-label">Judul / Label</label>
+                        <input type="text" name="title" id="editBlockTitle" class="form-input" maxlength="150" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">URL / Link</label>
+                        <input type="url" name="url" id="editBlockUrl" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ganti Ikon (Pilih dari Galeri ATAU Upload)</label>
+                        <div style="display:flex; gap:0.5rem; align-items:center;">
+                            <button type="button" class="btn-primary"
+                                style="background:#f8fafc; color:#1e293b; border:1.5px solid #cbd5e1; height:44px; padding:0 1rem; border-radius:10px; font-weight:600; display:flex; gap:0.5rem; align-items:center;"
+                                onclick="openIconPicker('editBlockIconClass', 'editBlockIconPreview')">
+                                <i class="ph ph-squares-four" style="font-size:1.2rem;"></i> Pilih Ikon
+                            </button>
+                            <div id="editBlockIconPreview"
+                                style="display:none; font-size:24px; color:#1eb349; width:44px; height:44px; align-items:center; justify-content:center; border:1.5px solid #1eb349; border-radius:10px; background:#f0fdf4;">
+                            </div>
+                            <div style="flex:1;">
+                                <input type="file" name="block_image" accept="image/*" class="form-input"
+                                    style="height:44px; padding:0.5rem; width:100%;">
+                            </div>
+                        </div>
+                        <input type="hidden" name="icon_class" id="editBlockIconClass">
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
+                        <button type="button" onclick="document.getElementById('editBlockModal').classList.remove('open')"
+                            style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                        <button type="submit" class="btn-submit-sm">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- ── Modal: Icon Picker ── --}}
+        <div class="modal-overlay" id="iconPickerModal" onclick="if(event.target===this)this.classList.remove('open')"
+            style="z-index: 1050;">
+            <div class="modal-box">
+                <h3
+                    style="font-size:1.1rem; font-weight:800; margin:0 0 1rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
+                    Pilih Ikon</h3>
+                <p style="font-size:0.75rem; color:#64748b; margin-bottom:1rem;">Pilih salah satu ikon di bawah ini untuk
+                    ditampilkan di tombol Anda.</p>
+
+                <div class="icon-grid" id="iconGrid">
+                    <!-- Icons injected via JS -->
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.5rem;">
+                    <button type="button" onclick="document.getElementById('iconPickerModal').classList.remove('open')"
+                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Tutup</button>
                 </div>
             </div>
+        </div>
 
-            <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data" id="affForm">
-                @csrf
-                <input type="hidden" name="type" value="shopee">
-                <input type="hidden" name="scraped_image" id="affScrapedImage">
-                <div class="form-group">
-                    <label class="form-label">Link Produk (Shopee / Tokopedia / dll)</label>
-                    <div style="display:flex; gap:0.5rem; align-items:center;">
-                        <input type="url" name="url" id="affUrl" class="form-input" placeholder="https://shopee.co.id/..."
-                            style="flex:1;">
-                        <button type="button" id="btnScrape"
-                            onclick="scrapeUrl(document.getElementById('affUrl').value, true)"
-                            style="height:44px; padding:0 1.1rem; border-radius:10px; background:linear-gradient(135deg,#1eb349,#a5cf37); border:none; color:#fff; font-weight:700; font-size:0.82rem; cursor:pointer; display:flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0;">
-                            <svg id="scrapeSpinner" width="14" height="14" fill="none" stroke="currentColor"
-                                stroke-width="2.5" viewBox="0 0 24 24" style="display:none;">
-                                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+        {{-- ── Modal: Tambah Produk UMKM / Fisik ── --}}
+        <div class="modal-overlay" id="addUmkmModal" onclick="if(event.target===this)this.classList.remove('open')">
+            <div class="modal-box" style="max-width:540px; max-height:90vh; overflow-y:auto;">
+                <h3
+                    style="font-size:1.1rem; font-weight:800; margin:0 0 0.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
+                    Tambah Produk Fisik / UMKM</h3>
+                <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Produk ini akan dibuatkan halaman detail produk
+                    SEO tersendiri.</p>
+                <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="type" value="custom_product">
+                    <div class="form-group">
+                        <label class="form-label">Nama Produk *</label>
+                        <input type="text" name="title" class="form-input" placeholder="Contoh: Tas Kulit Handmade"
+                            maxlength="150" required>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                        <div class="form-group">
+                            <label class="form-label">Harga Jual (Rp / IDR) *</label>
+                            <input type="text" name="price" id="umkmPrice" class="form-input" placeholder="150.000"
+                                oninput="formatRupiahInput(this)" required>
+                            <span class="form-hint" style="color:#1eb349; font-size:0.7rem;">Otomatis dengan titik (contoh:
+                                3.355.555 IDR)</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Harga Coret (Rp / IDR) <span
+                                    style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
+                            <input type="text" name="original_price" id="umkmOriginalPrice" class="form-input"
+                                placeholder="200.000" oninput="formatRupiahInput(this)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deskripsi Produk</label>
+                        <textarea name="description" class="form-input" style="height:80px; padding:0.75rem;"
+                            placeholder="Ceritakan produk Anda..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Foto Produk</label>
+                        <input type="file" name="custom_images[]" accept="image/*" multiple class="form-input"
+                            style="height:auto; padding:0.5rem;"
+                            onchange="if(this.files.length>3){alert('Maksimal 3 foto!'); this.value=''; return;} previewUmkmImages(this)">
+                        <div id="umkmImagePreview" style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.5rem;"></div>
+                        <span class="form-hint">Format: JPG, PNG, WEBP. Maksimal 5MB per foto.</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Metode Pembelian</label>
+                        <div style="display:flex; gap:0.75rem; margin-top:0.25rem;">
+                            <label
+                                style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
+                                <input type="radio" name="payment_method" value="wa" checked> Beli via WhatsApp
+                            </label>
+                            <label
+                                style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
+                                <input type="radio" name="payment_method" value="web"> Beli via Web (Buyle)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">URL / Link (Opsional - isi jika ada halaman produk eksternal)</label>
+                        <input type="text" name="url" class="form-input"
+                            placeholder="https://shopee.co.id/... (kosongkan untuk pakai halaman otomatis)">
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
+                        <button type="button" onclick="document.getElementById('addUmkmModal').classList.remove('open')"
+                            style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                        <button type="submit" class="btn-submit-sm">Simpan Produk</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- ── Modal: Edit Produk UMKM / Fisik ── --}}
+        <div class="modal-overlay" id="editUmkmModal" onclick="if(event.target===this)this.classList.remove('open')">
+            <div class="modal-box" style="max-width:540px; max-height:90vh; overflow-y:auto;">
+                <h3
+                    style="font-size:1.1rem; font-weight:800; margin:0 0 0.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
+                    Edit Produk Fisik / UMKM</h3>
+                <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Perbarui data produk fisik Anda di bawah ini.
+                </p>
+                <form action="" method="POST" enctype="multipart/form-data" id="editUmkmForm">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-group">
+                        <label class="form-label">Nama Produk *</label>
+                        <input type="text" name="title" id="edit_title" class="form-input" maxlength="150" required>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                        <div class="form-group">
+                            <label class="form-label">Harga Jual (Rp / IDR) *</label>
+                            <input type="text" name="price" id="edit_price" class="form-input" oninput="formatRupiahInput(this)"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Harga Coret (Rp / IDR) <span
+                                    style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
+                            <input type="text" name="original_price" id="edit_original_price" class="form-input"
+                                oninput="formatRupiahInput(this)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deskripsi Produk</label>
+                        <textarea name="description" id="edit_description" class="form-input"
+                            style="height:80px; padding:0.75rem;"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Foto Produk Tersimpan & Preview (Maks 3 foto)</label>
+                        {{-- Container for saved images with Delete ✕ button --}}
+                        <div id="editSavedImagesContainer"
+                            style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.5rem;"></div>
+                        <div id="deleteExistingImagesInputs"></div>
+
+                        <label
+                            style="font-size:0.75rem; font-weight:600; color:#64748b; margin-top:0.5rem; display:block;">Tambah
+                            / Ganti Foto Baru:</label>
+                        <input type="file" name="custom_images[]" accept="image/*" multiple class="form-input"
+                            style="height:auto; padding:0.5rem;"
+                            onchange="if(this.files.length>3){alert('Maksimal 3 foto!'); this.value=''; return;} previewEditUmkmImages(this)">
+                        <div id="editNewImagePreview" style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.5rem;">
+                        </div>
+                        <span class="form-hint"
+                            style="color:#64748b; font-size:0.72rem; display:flex; align-items:center; gap:4px; margin-top:4px;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path
+                                    d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.7 1.3 1.5 1.5 2.5" />
+                                <path d="M9 18h6" />
+                                <path d="M10 22h4" />
                             </svg>
-                            <svg id="scrapeIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
-                                <path d="M1 4v6h6" />
-                                <path d="M23 20v-6h-6" />
-                                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
-                            </svg>
-                            Scrape
-                        </button>
+                            Klik tombol ✕ pada foto tersimpan untuk menghapusnya secara permanen dari server.
+                        </span>
                     </div>
-                    <span class="form-hint" id="scrapeStatus">Klik "Scrape" untuk mengambil gambar & judul otomatis dari
-                        link</span>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Judul Produk</label>
-                    <input type="text" name="title" id="affTitle" class="form-input" placeholder="Nama produk..."
-                        maxlength="150" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Upload Gambar Manual (jika scrape gagal)</label>
-                    <input type="file" name="block_image" accept="image/*" class="form-input"
-                        style="height:auto; padding:0.5rem;">
-                </div>
-                <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
-                    <button type="button" onclick="document.getElementById('addAffModal').classList.remove('open')"
-                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
-                    <button type="submit" class="btn-submit-sm">Tambah Produk</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
-    {{-- ── Modal: Edit Block ── --}}
-    <div class="modal-overlay" id="editBlockModal" onclick="if(event.target===this)this.classList.remove('open')">
-        <div class="modal-box">
-            <h3
-                style="font-size:1.1rem; font-weight:800; margin:0 0 1.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
-                Edit Block</h3>
-            <form action="" method="POST" enctype="multipart/form-data" id="editBlockForm">
-                @csrf
-                @method('PUT')
-                <div class="form-group">
-                    <label class="form-label">Judul / Label</label>
-                    <input type="text" name="title" id="editBlockTitle" class="form-input" maxlength="150" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">URL / Link</label>
-                    <input type="url" name="url" id="editBlockUrl" class="form-input">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Ganti Ikon (Pilih dari Galeri ATAU Upload)</label>
-                    <div style="display:flex; gap:0.5rem; align-items:center;">
-                        <button type="button" class="btn-primary"
-                            style="background:#f8fafc; color:#1e293b; border:1.5px solid #cbd5e1; height:44px; padding:0 1rem; border-radius:10px; font-weight:600; display:flex; gap:0.5rem; align-items:center;"
-                            onclick="openIconPicker('editBlockIconClass', 'editBlockIconPreview')">
-                            <i class="ph ph-squares-four" style="font-size:1.2rem;"></i> Pilih Ikon
-                        </button>
-                        <div id="editBlockIconPreview"
-                            style="display:none; font-size:24px; color:#1eb349; width:44px; height:44px; align-items:center; justify-content:center; border:1.5px solid #1eb349; border-radius:10px; background:#f0fdf4;">
-                        </div>
-                        <div style="flex:1;">
-                            <input type="file" name="block_image" accept="image/*" class="form-input"
-                                style="height:44px; padding:0.5rem; width:100%;">
+                    <div class="form-group">
+                        <label class="form-label">Metode Pembelian</label>
+                        <div style="display:flex; gap:0.75rem; margin-top:0.25rem;">
+                            <label
+                                style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
+                                <input type="radio" name="payment_method" id="edit_pm_wa" value="wa"> Beli via WhatsApp
+                            </label>
+                            <label
+                                style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
+                                <input type="radio" name="payment_method" id="edit_pm_web" value="web"> Beli via Web (Buyle)
+                            </label>
                         </div>
                     </div>
-                    <input type="hidden" name="icon_class" id="editBlockIconClass">
-                </div>
-                <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
-                    <button type="button" onclick="document.getElementById('editBlockModal').classList.remove('open')"
-                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
-                    <button type="submit" class="btn-submit-sm">Simpan Perubahan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    {{-- ── Modal: Icon Picker ── --}}
-    <div class="modal-overlay" id="iconPickerModal" onclick="if(event.target===this)this.classList.remove('open')"
-        style="z-index: 1050;">
-        <div class="modal-box">
-            <h3
-                style="font-size:1.1rem; font-weight:800; margin:0 0 1rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
-                Pilih Ikon</h3>
-            <p style="font-size:0.75rem; color:#64748b; margin-bottom:1rem;">Pilih salah satu ikon di bawah ini untuk
-                ditampilkan di tombol Anda.</p>
-
-            <div class="icon-grid" id="iconGrid">
-                <!-- Icons injected via JS -->
-            </div>
-
-            <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.5rem;">
-                <button type="button" onclick="document.getElementById('iconPickerModal').classList.remove('open')"
-                    style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Tutup</button>
+                    <div class="form-group">
+                        <label class="form-label">URL / Link (Opsional)</label>
+                        <input type="text" name="url" id="edit_url" class="form-input">
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
+                        <button type="button" onclick="document.getElementById('editUmkmModal').classList.remove('open')"
+                            style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                        <button type="submit" class="btn-submit-sm">Simpan Perubahan</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
 
-    {{-- ── Modal: Tambah Produk UMKM / Fisik ── --}}
-    <div class="modal-overlay" id="addUmkmModal" onclick="if(event.target===this)this.classList.remove('open')">
-        <div class="modal-box" style="max-width:540px; max-height:90vh; overflow-y:auto;">
-            <h3
-                style="font-size:1.1rem; font-weight:800; margin:0 0 0.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
-                Tambah Produk Fisik / UMKM</h3>
-            <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Produk ini akan dibuatkan halaman detail produk
-                SEO tersendiri.</p>
-            <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <input type="hidden" name="type" value="custom_product">
-                <div class="form-group">
-                    <label class="form-label">Nama Produk *</label>
-                    <input type="text" name="title" class="form-input" placeholder="Contoh: Tas Kulit Handmade"
-                        maxlength="150" required>
+        {{-- ── Modal: Custom Confirm / Delete ── --}}
+        <div class="confirm-modal-overlay" id="confirmModal">
+            <div class="confirm-modal-box">
+                <div class="confirm-modal-icon" id="confirmIcon" style="background:#fef2f2;">
+                    <svg width="26" height="26" fill="none" stroke="#ef4444" stroke-width="2.5" viewBox="0 0 24 24">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                        <path d="M10 11v6M14 11v6" />
+                        <path d="M9 6V4h6v2" />
+                    </svg>
                 </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-                    <div class="form-group">
-                        <label class="form-label">Harga Jual (Rp / IDR) *</label>
-                        <input type="text" name="price" id="umkmPrice" class="form-input" placeholder="150.000"
-                            oninput="formatRupiahInput(this)" required>
-                        <span class="form-hint" style="color:#1eb349; font-size:0.7rem;">Otomatis dengan titik (contoh:
-                            3.355.555 IDR)</span>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Harga Coret (Rp / IDR) <span
-                                style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
-                        <input type="text" name="original_price" id="umkmOriginalPrice" class="form-input"
-                            placeholder="200.000" oninput="formatRupiahInput(this)">
-                    </div>
+                <div class="confirm-modal-title" id="confirmTitle">Hapus Block Ini?</div>
+                <div class="confirm-modal-desc" id="confirmDesc">Block yang dihapus tidak bisa dikembalikan. Pastikan Anda sudah
+                    yakin.</div>
+                <div class="confirm-modal-actions">
+                    <button class="confirm-btn-cancel" onclick="closeConfirmModal()">Batal</button>
+                    <button class="confirm-btn-danger" id="confirmOkBtn" onclick="doConfirmAction()">Ya, Hapus</button>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Deskripsi Produk</label>
-                    <textarea name="description" class="form-input" style="height:80px; padding:0.75rem;"
-                        placeholder="Ceritakan produk Anda..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Foto Produk</label>
-                    <input type="file" name="custom_images[]" accept="image/*" multiple class="form-input"
-                        style="height:auto; padding:0.5rem;"
-                        onchange="if(this.files.length>3){alert('Maksimal 3 foto!'); this.value=''; return;} previewUmkmImages(this)">
-                    <div id="umkmImagePreview" style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.5rem;"></div>
-                    <span class="form-hint">Format: JPG, PNG, WEBP. Maksimal 5MB per foto.</span>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Metode Pembelian</label>
-                    <div style="display:flex; gap:0.75rem; margin-top:0.25rem;">
-                        <label
-                            style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
-                            <input type="radio" name="payment_method" value="wa" checked> Beli via WhatsApp
-                        </label>
-                        <label
-                            style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
-                            <input type="radio" name="payment_method" value="web"> Beli via Web (Buyle)
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">URL / Link (Opsional - isi jika ada halaman produk eksternal)</label>
-                    <input type="text" name="url" class="form-input"
-                        placeholder="https://shopee.co.id/... (kosongkan untuk pakai halaman otomatis)">
-                </div>
-                <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
-                    <button type="button" onclick="document.getElementById('addUmkmModal').classList.remove('open')"
-                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
-                    <button type="submit" class="btn-submit-sm">Simpan Produk</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    {{-- ── Modal: Edit Produk UMKM / Fisik ── --}}
-    <div class="modal-overlay" id="editUmkmModal" onclick="if(event.target===this)this.classList.remove('open')">
-        <div class="modal-box" style="max-width:540px; max-height:90vh; overflow-y:auto;">
-            <h3
-                style="font-size:1.1rem; font-weight:800; margin:0 0 0.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
-                Edit Produk Fisik / UMKM</h3>
-            <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Perbarui data produk fisik Anda di bawah ini.
-            </p>
-            <form action="" method="POST" enctype="multipart/form-data" id="editUmkmForm">
-                @csrf
-                @method('PUT')
-                <div class="form-group">
-                    <label class="form-label">Nama Produk *</label>
-                    <input type="text" name="title" id="edit_title" class="form-input" maxlength="150" required>
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-                    <div class="form-group">
-                        <label class="form-label">Harga Jual (Rp / IDR) *</label>
-                        <input type="text" name="price" id="edit_price" class="form-input" oninput="formatRupiahInput(this)"
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Harga Coret (Rp / IDR) <span
-                                style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
-                        <input type="text" name="original_price" id="edit_original_price" class="form-input"
-                            oninput="formatRupiahInput(this)">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Deskripsi Produk</label>
-                    <textarea name="description" id="edit_description" class="form-input"
-                        style="height:80px; padding:0.75rem;"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Foto Produk Tersimpan & Preview (Maks 3 foto)</label>
-                    {{-- Container for saved images with Delete ✕ button --}}
-                    <div id="editSavedImagesContainer"
-                        style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.5rem;"></div>
-                    <div id="deleteExistingImagesInputs"></div>
-
-                    <label
-                        style="font-size:0.75rem; font-weight:600; color:#64748b; margin-top:0.5rem; display:block;">Tambah
-                        / Ganti Foto Baru:</label>
-                    <input type="file" name="custom_images[]" accept="image/*" multiple class="form-input"
-                        style="height:auto; padding:0.5rem;"
-                        onchange="if(this.files.length>3){alert('Maksimal 3 foto!'); this.value=''; return;} previewEditUmkmImages(this)">
-                    <div id="editNewImagePreview" style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.5rem;">
-                    </div>
-                    <span class="form-hint"
-                        style="color:#64748b; font-size:0.72rem; display:flex; align-items:center; gap:4px; margin-top:4px;">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path
-                                d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.7 1.3 1.5 1.5 2.5" />
-                            <path d="M9 18h6" />
-                            <path d="M10 22h4" />
-                        </svg>
-                        Klik tombol ✕ pada foto tersimpan untuk menghapusnya secara permanen dari server.
-                    </span>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Metode Pembelian</label>
-                    <div style="display:flex; gap:0.75rem; margin-top:0.25rem;">
-                        <label
-                            style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
-                            <input type="radio" name="payment_method" id="edit_pm_wa" value="wa"> Beli via WhatsApp
-                        </label>
-                        <label
-                            style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
-                            <input type="radio" name="payment_method" id="edit_pm_web" value="web"> Beli via Web (Buyle)
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">URL / Link (Opsional)</label>
-                    <input type="text" name="url" id="edit_url" class="form-input">
-                </div>
-                <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
-                    <button type="button" onclick="document.getElementById('editUmkmModal').classList.remove('open')"
-                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
-                    <button type="submit" class="btn-submit-sm">Simpan Perubahan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    {{-- ── Modal: Custom Confirm / Delete ── --}}
-    <div class="confirm-modal-overlay" id="confirmModal">
-        <div class="confirm-modal-box">
-            <div class="confirm-modal-icon" id="confirmIcon" style="background:#fef2f2;">
-                <svg width="26" height="26" fill="none" stroke="#ef4444" stroke-width="2.5" viewBox="0 0 24 24">
-                    <polyline points="3 6 5 6 21 6" />
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                    <path d="M10 11v6M14 11v6" />
-                    <path d="M9 6V4h6v2" />
-                </svg>
-            </div>
-            <div class="confirm-modal-title" id="confirmTitle">Hapus Block Ini?</div>
-            <div class="confirm-modal-desc" id="confirmDesc">Block yang dihapus tidak bisa dikembalikan. Pastikan Anda sudah
-                yakin.</div>
-            <div class="confirm-modal-actions">
-                <button class="confirm-btn-cancel" onclick="closeConfirmModal()">Batal</button>
-                <button class="confirm-btn-danger" id="confirmOkBtn" onclick="doConfirmAction()">Ya, Hapus</button>
             </div>
         </div>
-    </div>
 
 @endsection
 
@@ -2837,9 +2867,8 @@
                     style="height:44px; padding-left:2.5rem; font-size:0.875rem; border-radius:12px; border:1.5px solid #E2E8F0; background:#FAFAFA;">
             </div>
 
-            {{-- Scrollable Product List --}}
-            <div
-                style="max-height:55vh; overflow-y:auto; padding-right:0.35rem; display:flex; flex-direction:column; gap:0.75rem;">
+            {{-- Grid Product List --}}
+            <div class="modal-catalog-grid">
                 @php
                     $addedProductIds = $blocks->whereIn('type', ['buyle_product', 'buyle_affiliate'])->pluck('data_json.product_id')->filter()->toArray();
                 @endphp
@@ -2852,65 +2881,91 @@
                         $isAdded = in_array($affProduct->id, $addedProductIds);
                         $matchingBlock = $blocks->first(fn($b) => ($b->data_json['product_id'] ?? null) == $affProduct->id);
                     @endphp
-                    <div class="affiliateModalItem"
-                        data-search="{{ strtolower($affProduct->name . ' ' . ($affProduct->seller->name ?? '')) }}"
-                        style="background:#fff; border:1.5px solid #E2E8F0; border-radius:14px; padding:0.85rem 1rem; display:flex; align-items:center; gap:1rem; transition:all 0.2s; flex-wrap:wrap;">
-                        <img src="{{ $affProduct->main_image }}"
-                            style="width:60px; height:60px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
-                        <div style="flex:1; min-width:200px;">
-                            <div style="font-weight:700; font-size:0.88rem; color:#0F172A;">
-                                {{ $affProduct->name }}
+                    <div class="affiliateModalItem modal-card-item"
+                        data-search="{{ strtolower($affProduct->name . ' ' . ($affProduct->seller->name ?? '')) }}">
+
+                        {{-- 1:1 Aspect Ratio Photo --}}
+                        <div
+                            style="position:relative; width:100%; aspect-ratio:1/1; border-radius:10px; overflow:hidden; background:#F8FAFC; border:1px solid #E2E8F0;">
+                            <img src="{{ $affProduct->main_image }}"
+                                style="width:100%; height:100%; object-fit:cover; display:block;">
+                        </div>
+
+                        {{-- Details --}}
+                        <div
+                            style="display:flex; flex-direction:column; flex:1; justify-content:space-between; gap:0.4rem; margin-top:0.5rem;">
+                            <div>
+                                <div style="font-weight:700; font-size:0.8rem; color:#0F172A; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"
+                                    title="{{ $affProduct->name }}">
+                                    {{ $affProduct->name }}
+                                </div>
+                                <div
+                                    style="font-size:0.7rem; color:#64748B; margin-top:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                    Oleh: <strong
+                                        style="color:#334155;">{{ $affProduct->seller->name ?? 'Creator buyle.id' }}</strong>
+                                </div>
                             </div>
-                            <div style="font-size:0.75rem; color:#64748B; margin-top:0.15rem;">
-                                Oleh: <strong
-                                    style="color:#334155;">{{ $affProduct->seller->name ?? 'Creator buyle.id' }}</strong>
-                            </div>
-                            <div style="display:flex; align-items:center; gap:0.6rem; margin-top:0.35rem; flex-wrap:wrap;">
-                                <span style="font-size:0.8rem; color:#0F172A; font-weight:700;">
-                                    Harga: Rp {{ number_format($effPrice, 0, ',', '.') }}
-                                </span>
-                                <span
-                                    style="font-size:0.75rem; font-weight:700; color:#166534; background:#ECFDF5; border:1px solid #A7F3D0; padding:0.15rem 0.55rem; border-radius:6px; display:inline-flex; align-items:center; gap:0.25rem;">
-                                    <svg width="12" height="12" fill="none" stroke="#166534" stroke-width="2.5"
+
+                            <div>
+                                <div style="font-size:0.82rem; color:#0F172A; font-weight:800;">
+                                    Rp {{ number_format($effPrice, 0, ',', '.') }}
+                                </div>
+                                <div
+                                    style="font-size:0.68rem; font-weight:700; color:#166534; background:#ECFDF5; border:1px solid #A7F3D0; padding:0.15rem 0.4rem; border-radius:6px; margin-top:0.2rem; display:flex; align-items:center; gap:0.2rem;">
+                                    <svg width="10" height="10" fill="none" stroke="#166534" stroke-width="2.5"
                                         viewBox="0 0 24 24">
                                         <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                                     </svg>
-                                    Komisi {{ $commRate }}% &middot; Rp {{ number_format($commRp, 0, ',', '.') }}
-                                </span>
+                                    <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Komisi
+                                        {{ $commRate }}%: Rp {{ number_format($commRp, 0, ',', '.') }}</span>
+                                </div>
                             </div>
-                        </div>
 
-                        <div style="margin-left:auto;">
-                            @if($isAdded && $matchingBlock)
-                                <form action="{{ route('creator.bio.blocks.destroy', $matchingBlock) }}" method="POST">
-                                    @csrf @method('DELETE')
-                                    <button type="submit"
-                                        style="border:1px solid #FCA5A5; color:#DC2626; background:#FEF2F2; font-size:0.75rem; padding:0.4rem 0.85rem; border-radius:8px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <polyline points="3 6 5 6 21 6" />
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                                        </svg>
-                                        Hapus dari Bio
-                                    </button>
-                                </form>
-                            @else
-                                <form action="{{ route('creator.bio.blocks.store') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="type" value="buyle_product">
-                                    <input type="hidden" name="title" value="{{ $affProduct->name }}">
-                                    <input type="hidden" name="url" value="{{ route('products.show', $affProduct->slug) }}">
-                                    <input type="hidden" name="product_id" value="{{ $affProduct->id }}">
-                                    <button type="submit" class="btn-submit-sm"
-                                        style="background:#1eb349; color:#fff; font-size:0.75rem; padding:0.4rem 0.9rem; height:36px; border-radius:8px; font-weight:700; cursor:pointer;">
-                                        + Tambah ke Bio
-                                    </button>
-                                </form>
-                            @endif
+                            {{-- Action Buttons --}}
+                            <div style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.35rem;">
+                                <a href="{{ route('products.show', $affProduct->slug) }}" target="_blank"
+                                    style="display:flex; align-items:center; justify-content:center; gap:0.25rem; font-size:0.72rem; font-weight:700; color:#475569; background:#F1F5F9; border:1px solid #CBD5E1; padding:0.35rem 0.4rem; border-radius:8px; text-decoration:none; transition:all 0.15s;">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                        <polyline points="15 3 21 3 21 9"></polyline>
+                                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                                    </svg>
+                                    Lihat Detail
+                                </a>
+
+                                @if($isAdded && $matchingBlock)
+                                    <form action="{{ route('creator.bio.blocks.destroy', $matchingBlock) }}" method="POST"
+                                        style="margin:0;">
+                                        @csrf @method('DELETE')
+                                        <button type="submit"
+                                            style="width:100%; border:1px solid #FCA5A5; color:#DC2626; background:#FEF2F2; font-size:0.72rem; padding:0.35rem 0.4rem; border-radius:8px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
+                                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                viewBox="0 0 24 24">
+                                                <polyline points="3 6 5 6 21 6" />
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                            </svg>
+                                            Hapus dari Bio
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('creator.bio.blocks.store') }}" method="POST" style="margin:0;">
+                                        @csrf
+                                        <input type="hidden" name="type" value="buyle_product">
+                                        <input type="hidden" name="title" value="{{ $affProduct->name }}">
+                                        <input type="hidden" name="url" value="{{ route('products.show', $affProduct->slug) }}">
+                                        <input type="hidden" name="product_id" value="{{ $affProduct->id }}">
+                                        <button type="submit"
+                                            style="width:100%; background:#1eb349; color:#fff; font-size:0.72rem; padding:0.35rem 0.4rem; height:32px; border-radius:8px; font-weight:700; cursor:pointer; border:none; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
+                                            + Tambah ke Bio
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @empty
-                    <div style="text-align:center; padding:2.5rem; color:#94A3B8; font-size:0.85rem;">
+                    <div style="grid-column: 1 / -1; text-align:center; padding:2.5rem; color:#94A3B8; font-size:0.85rem;">
                         Belum ada produk affiliate yang tersedia saat ini.
                     </div>
                 @endforelse
@@ -2953,77 +3008,108 @@
                     style="height:44px; padding-left:2.5rem; font-size:0.875rem; border-radius:12px; border:1.5px solid #E2E8F0; background:#FAFAFA;">
             </div>
 
-            {{-- Scrollable Product List --}}
-            <div
-                style="max-height:55vh; overflow-y:auto; padding-right:0.35rem; display:flex; flex-direction:column; gap:0.75rem;">
+            {{-- Grid Product List --}}
+            <div class="modal-catalog-grid">
                 @forelse($whitelabelProducts as $wlProd)
                     @php
                         $isAddedWl = in_array($wlProd->id, $addedProductIds);
                         $matchingWlBlock = $blocks->first(fn($b) => ($b->data_json['product_id'] ?? null) == $wlProd->id);
                     @endphp
-                    <div class="whitelabelModalItem"
-                        data-search="{{ strtolower($wlProd->name . ' ' . ($wlProd->seller->name ?? '') . ' ' . ($wlProd->whitelabel_terms ?? '')) }}"
-                        style="background:#fff; border:1.5px solid #E2E8F0; border-radius:14px; padding:0.85rem 1rem; display:flex; align-items:center; gap:1rem; transition:all 0.2s; flex-wrap:wrap;">
-                        <img src="{{ $wlProd->main_image }}"
-                            style="width:60px; height:60px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
-                        <div style="flex:1; min-width:200px;">
-                            <div style="font-weight:700; font-size:0.88rem; color:#0F172A;">
-                                {{ $wlProd->name }}
-                            </div>
-                            <div style="font-size:0.75rem; color:#64748B; margin-top:0.15rem;">
-                                Oleh: <strong style="color:#334155;">{{ $wlProd->seller->name ?? 'Creator buyle.id' }}</strong>
-                                @if($wlProd->whitelabel_price)
-                                    &middot; Min. Resell: <span style="color:#166534; font-weight:700;">Rp
-                                        {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}</span>
-                                @else
-                                    &middot; Harga Asli: <span style="color:#166534; font-weight:700;">Rp
-                                        {{ number_format($wlProd->price, 0, ',', '.') }}</span>
-                                @endif
-                            </div>
-                            @if($wlProd->whitelabel_terms)
-                                <div
-                                    style="font-size:0.72rem; color:#64748b; margin-top:0.2rem; display:flex; align-items:flex-start; gap:0.25rem;">
-                                    <svg width="11" height="11" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"
-                                        style="flex-shrink:0;margin-top:1px;">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                        <polyline points="14 2 14 8 20 8" />
-                                    </svg>
-                                    <span>Lisensi: {{ Str::limit($wlProd->whitelabel_terms, 70) }}</span>
-                                </div>
-                            @endif
+                    <div class="whitelabelModalItem modal-card-item"
+                        data-search="{{ strtolower($wlProd->name . ' ' . ($wlProd->seller->name ?? '') . ' ' . ($wlProd->whitelabel_terms ?? '')) }}">
+
+                        {{-- 1:1 Aspect Ratio Photo --}}
+                        <div
+                            style="position:relative; width:100%; aspect-ratio:1/1; border-radius:10px; overflow:hidden; background:#F8FAFC; border:1px solid #E2E8F0;">
+                            <img src="{{ $wlProd->main_image }}"
+                                style="width:100%; height:100%; object-fit:cover; display:block;">
                         </div>
 
-                        <div style="margin-left:auto;">
-                            @if($isAddedWl && $matchingWlBlock)
-                                <form action="{{ route('creator.bio.blocks.destroy', $matchingWlBlock) }}" method="POST">
-                                    @csrf @method('DELETE')
-                                    <button type="submit"
-                                        style="border:1px solid #FCA5A5; color:#DC2626; background:#FEF2F2; font-size:0.75rem; padding:0.4rem 0.85rem; border-radius:8px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <polyline points="3 6 5 6 21 6" />
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                        {{-- Details --}}
+                        <div
+                            style="display:flex; flex-direction:column; flex:1; justify-content:space-between; gap:0.4rem; margin-top:0.5rem;">
+                            <div>
+                                <div style="font-weight:700; font-size:0.8rem; color:#0F172A; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"
+                                    title="{{ $wlProd->name }}">
+                                    {{ $wlProd->name }}
+                                </div>
+                                <div
+                                    style="font-size:0.7rem; color:#64748B; margin-top:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                    Oleh: <strong
+                                        style="color:#334155;">{{ $wlProd->seller->name ?? 'Creator buyle.id' }}</strong>
+                                </div>
+                            </div>
+
+                            <div>
+                                @if($wlProd->whitelabel_price)
+                                    <div style="font-size:0.68rem; color:#64748B;">Min. Resell:</div>
+                                    <div style="font-size:0.82rem; color:#166534; font-weight:800;">
+                                        Rp {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}
+                                    </div>
+                                @else
+                                    <div style="font-size:0.68rem; color:#64748B;">Harga Asli:</div>
+                                    <div style="font-size:0.82rem; color:#166534; font-weight:800;">
+                                        Rp {{ number_format($wlProd->price, 0, ',', '.') }}
+                                    </div>
+                                @endif
+                                @if($wlProd->whitelabel_terms)
+                                    <div
+                                        style="font-size:0.65rem; color:#64748b; margin-top:0.2rem; display:flex; align-items:center; gap:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                        <svg width="10" height="10" fill="none" stroke="#94a3b8" stroke-width="2"
+                                            viewBox="0 0 24 24" style="flex-shrink:0;">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                            <polyline points="14 2 14 8 20 8" />
                                         </svg>
-                                        Hapus dari Bio
-                                    </button>
-                                </form>
-                            @else
-                                <form action="{{ route('creator.bio.blocks.store') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="type" value="buyle_product">
-                                    <input type="hidden" name="title" value="{{ $wlProd->name }}">
-                                    <input type="hidden" name="url" value="{{ route('products.show', $wlProd->slug) }}">
-                                    <input type="hidden" name="product_id" value="{{ $wlProd->id }}">
-                                    <button type="submit" class="btn-submit-sm"
-                                        style="background:#1eb349; color:#fff; font-size:0.75rem; padding:0.4rem 0.9rem; height:36px; border-radius:8px; font-weight:700; cursor:pointer;">
-                                        + Tambah ke Bio
-                                    </button>
-                                </form>
-                            @endif
+                                        <span>Lisensi: {{ Str::limit($wlProd->whitelabel_terms, 25) }}</span>
+                                    </div>
+                                @endif
+                            </div>
+
+                            {{-- Action Buttons --}}
+                            <div style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.35rem;">
+                                <a href="{{ route('products.show', $wlProd->slug) }}" target="_blank"
+                                    style="display:flex; align-items:center; justify-content:center; gap:0.25rem; font-size:0.72rem; font-weight:700; color:#475569; background:#F1F5F9; border:1px solid #CBD5E1; padding:0.35rem 0.4rem; border-radius:8px; text-decoration:none; transition:all 0.15s;">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                        <polyline points="15 3 21 3 21 9"></polyline>
+                                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                                    </svg>
+                                    Lihat Detail
+                                </a>
+
+                                @if($isAddedWl && $matchingWlBlock)
+                                    <form action="{{ route('creator.bio.blocks.destroy', $matchingWlBlock) }}" method="POST"
+                                        style="margin:0;">
+                                        @csrf @method('DELETE')
+                                        <button type="submit"
+                                            style="width:100%; border:1px solid #FCA5A5; color:#DC2626; background:#FEF2F2; font-size:0.72rem; padding:0.35rem 0.4rem; border-radius:8px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
+                                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                viewBox="0 0 24 24">
+                                                <polyline points="3 6 5 6 21 6" />
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                            </svg>
+                                            Hapus dari Bio
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('creator.bio.blocks.store') }}" method="POST" style="margin:0;">
+                                        @csrf
+                                        <input type="hidden" name="type" value="buyle_product">
+                                        <input type="hidden" name="title" value="{{ $wlProd->name }}">
+                                        <input type="hidden" name="url" value="{{ route('products.show', $wlProd->slug) }}">
+                                        <input type="hidden" name="product_id" value="{{ $wlProd->id }}">
+                                        <button type="submit"
+                                            style="width:100%; background:#1eb349; color:#fff; font-size:0.72rem; padding:0.35rem 0.4rem; height:32px; border-radius:8px; font-weight:700; cursor:pointer; border:none; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
+                                            + Tambah ke Bio
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @empty
-                    <div style="text-align:center; padding:2.5rem; color:#94a3b8; font-size:0.85rem;">
+                    <div style="grid-column: 1 / -1; text-align:center; padding:2.5rem; color:#94a3b8; font-size:0.85rem;">
                         Belum ada produk White Label yang tersedia saat ini.
                     </div>
                 @endforelse
