@@ -350,7 +350,8 @@
 <div class="login-wrapper">
     <div class="login-glass-panel">
         {{-- Left Side: Text & Welcome --}}
-            <div style="margin-top: 2rem; margin-bottom: 1.5rem;">
+        <div class="login-left">
+            <div style="margin-top: 1rem; margin-bottom: 1.5rem;">
                 @php $logo = $layoutSettings['logo'] ?? null; @endphp
                 @if($logo)
                     <a href="{{ url('/') }}" style="display:inline-flex;align-items:center;text-decoration:none;">
