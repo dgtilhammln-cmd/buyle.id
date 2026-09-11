@@ -290,9 +290,16 @@ class AuthController extends Controller
             ->first();
 
         if ($user) {
-            // Update google_id if not yet saved
+            // Update google_id & avatar if not yet saved
+            $updates = [];
             if (!$user->google_id) {
-                $user->update(['google_id' => $googleUser->getId()]);
+                $updates['google_id'] = $googleUser->getId();
+            }
+            if (!$user->avatar && $googleUser->getAvatar()) {
+                $updates['avatar'] = $googleUser->getAvatar();
+            }
+            if (!empty($updates)) {
+                $user->update($updates);
             }
         } else {
             $isNewUser = true;

@@ -3115,10 +3115,14 @@
 
             {{-- Grid Product List --}}
             <div class="modal-catalog-grid">
+                @php
+                    $addedWlProductIds = $blocks->where('type', 'buyle_product')->pluck('data_json.product_id')->filter()->toArray();
+                @endphp
+
                 @forelse($whitelabelProducts as $wlProd)
                     @php
-                        $isAddedWl = in_array($wlProd->id, $addedProductIds);
-                        $matchingWlBlock = $blocks->first(fn($b) => ($b->data_json['product_id'] ?? null) == $wlProd->id);
+                        $isAddedWl = in_array($wlProd->id, $addedWlProductIds);
+                        $matchingWlBlock = $blocks->where('type', 'buyle_product')->first(fn($b) => ($b->data_json['product_id'] ?? null) == $wlProd->id);
                     @endphp
                     <div class="whitelabelModalItem modal-card-item"
                         data-search="{{ strtolower($wlProd->name . ' ' . ($wlProd->seller->name ?? '') . ' ' . ($wlProd->whitelabel_terms ?? '')) }}">

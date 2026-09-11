@@ -764,7 +764,52 @@ button.btn-primary:hover, a.btn-primary:hover {
           </div>
         </div>
       </div>
-      <div class="avatar">{{ strtoupper(substr(session('admin_name','A'),0,1)) }}</div>
+      {{-- Profile Avatar Dropdown --}}
+      <div style="position:relative;" id="admin-profile-container">
+        <button id="admin-profile-btn" onclick="toggleAdminProfile(event)" type="button" style="border:none;background:none;padding:0;cursor:pointer;display:flex;align-items:center;outline:none;" title="Profil Admin">
+          @php
+            $adminUser = auth()->user();
+            $adminAvatar = $adminUser->avatar ?? null;
+            $adminAvatarUrl = null;
+            if ($adminAvatar) {
+                $adminAvatarUrl = \Illuminate\Support\Str::startsWith($adminAvatar, ['http://', 'https://']) ? $adminAvatar : asset('storage/' . $adminAvatar);
+            }
+          @endphp
+          <div class="avatar" style="overflow:hidden;">
+            @if($adminAvatarUrl)
+              <img src="{{ $adminAvatarUrl }}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">
+            @else
+              {{ strtoupper(substr(session('admin_name', $adminUser->name ?? 'A'), 0, 1)) }}
+            @endif
+          </div>
+        </button>
+
+        {{-- Profile Dropdown --}}
+        <div id="admin-profile-dropdown" style="display:none;opacity:0;transform:translateY(-8px);position:absolute;top:calc(100% + 10px);right:0;width:230px;background:#fff;border:1px solid #E2E8F0;border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,0.08), 0 2px 10px rgba(0,0,0,0.02);z-index:9999;overflow:hidden;transition:opacity .2s,transform .2s;padding:0.5rem 0;font-family:inherit;">
+          <div style="padding:0.75rem 1rem;border-bottom:1px solid #F1F5F9;">
+            <div style="font-size:0.875rem;font-weight:700;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+              {{ session('admin_name', $adminUser->name ?? 'Admin') }}
+            </div>
+            <div style="font-size:0.75rem;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;">
+              {{ $adminUser->email ?? 'admin@buyle.id' }}
+            </div>
+          </div>
+          <div style="padding:0.35rem 0;">
+            <a href="{{ route('admin.settings') }}" style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#334155;font-size:0.825rem;font-weight:600;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+              Pengaturan Akun
+            </a>
+            <div style="border-top:1px solid #F1F5F9;margin:0.25rem 0;"></div>
+            <form method="POST" action="{{ route('admin.logout') }}" style="margin:0;">
+              @csrf
+              <button type="submit" style="width:100%;display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#DC2626;background:none;border:none;font-size:0.825rem;font-weight:600;cursor:pointer;text-align:left;transition:background 0.15s;" onmouseover="this.style.background='#FEF2F2'" onmouseout="this.style.background='transparent'">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Logout
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -812,6 +857,8 @@ function toggleNotif(e) {
   e.stopPropagation();
   const dropdown = document.getElementById('notif-dropdown');
   const btn = document.getElementById('notif-btn');
+  const profDd = document.getElementById('admin-profile-dropdown');
+  if (profDd) { profDd.style.opacity = '0'; profDd.style.transform = 'translateY(-8px)'; setTimeout(() => { profDd.style.display = 'none'; }, 200); }
   const isHidden = dropdown.style.display === 'none' || dropdown.style.display === '';
   if (isHidden) {
     dropdown.style.display = 'block';
@@ -829,6 +876,30 @@ function toggleNotif(e) {
     btn.style.borderColor = 'var(--border, #E4E7F0)';
   }
 }
+
+function toggleAdminProfile(e) {
+  e.stopPropagation();
+  const dropdown = document.getElementById('admin-profile-dropdown');
+  const notifDropdown = document.getElementById('notif-dropdown');
+  if (notifDropdown) {
+    notifDropdown.style.opacity = '0';
+    notifDropdown.style.transform = 'translateY(-8px)';
+    setTimeout(() => { notifDropdown.style.display = 'none'; }, 200);
+  }
+  const isHidden = dropdown.style.display === 'none' || dropdown.style.display === '';
+  if (isHidden) {
+    dropdown.style.display = 'block';
+    requestAnimationFrame(() => {
+      dropdown.style.opacity = '1';
+      dropdown.style.transform = 'translateY(0)';
+    });
+  } else {
+    dropdown.style.opacity = '0';
+    dropdown.style.transform = 'translateY(-8px)';
+    setTimeout(() => { dropdown.style.display = 'none'; }, 200);
+  }
+}
+
 window.addEventListener('click', function(e) {
   const dropdown = document.getElementById('notif-dropdown');
   const btn = document.getElementById('notif-btn');
@@ -837,6 +908,12 @@ window.addEventListener('click', function(e) {
     dropdown.style.transform = 'translateY(-8px)';
     setTimeout(() => { dropdown.style.display = 'none'; }, 200);
     if (btn) { btn.style.background = '#fff'; btn.style.borderColor = 'var(--border, #E4E7F0)'; }
+  }
+  const profDropdown = document.getElementById('admin-profile-dropdown');
+  if (profDropdown && !e.target.closest('#admin-profile-container')) {
+    profDropdown.style.opacity = '0';
+    profDropdown.style.transform = 'translateY(-8px)';
+    setTimeout(() => { profDropdown.style.display = 'none'; }, 200);
   }
 });
 </script>

@@ -777,6 +777,62 @@
                 </div>
                 <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
                     @yield('topbar_actions')
+
+                    @php
+                        $crUser = auth()->user();
+                        $crAvatar = $crUser->avatar ?? ($crUser->creatorProfile->avatar ?? null);
+                        $crAvatarUrl = null;
+                        if ($crAvatar) {
+                            $crAvatarUrl = \Illuminate\Support\Str::startsWith($crAvatar, ['http://', 'https://']) ? $crAvatar : asset('storage/' . $crAvatar);
+                        }
+                    @endphp
+
+                    {{-- Creator Desktop Profile Dropdown --}}
+                    <div style="position:relative;" id="creator-profile-container">
+                        <button id="creator-profile-btn" onclick="toggleCreatorProfile(event)" type="button"
+                                style="border:none;background:none;padding:0;cursor:pointer;display:flex;align-items:center;outline:none;" title="Profil Saya">
+                            <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg, #1eb349, #a5cf37);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:0.9rem;flex-shrink:0;box-shadow:0 2px 8px rgba(30,179,73,0.25);overflow:hidden;border:2px solid #fff;">
+                                @if($crAvatarUrl)
+                                    <img src="{{ $crAvatarUrl }}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">
+                                @else
+                                    {{ strtoupper(substr($crUser->name ?? 'C', 0, 1)) }}
+                                @endif
+                            </div>
+                        </button>
+
+                        <div id="creator-profile-dropdown" style="display:none;opacity:0;transform:translateY(-8px);position:absolute;top:calc(100% + 10px);right:0;width:240px;background:#fff;border:1px solid #E2E8F0;border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,0.08), 0 2px 10px rgba(0,0,0,0.02);z-index:9999;overflow:hidden;transition:opacity .2s,transform .2s;padding:0.5rem 0;font-family:inherit;">
+                            <div style="padding:0.75rem 1rem;border-bottom:1px solid #F1F5F9;">
+                                <div style="font-size:0.875rem;font-weight:700;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                    {{ $crUser->name }}
+                                </div>
+                                <div style="font-size:0.75rem;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;">
+                                    {{ $crUser->email }}
+                                </div>
+                            </div>
+                            <div style="padding:0.35rem 0;">
+                                <a href="{{ route('creator.profile.edit') }}" style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#334155;font-size:0.825rem;font-weight:600;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+                                    Profil & Toko
+                                </a>
+                                <a href="{{ route('creator.bio.index') }}" style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#334155;font-size:0.825rem;font-weight:600;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                    Link in Bio
+                                </a>
+                                <a href="{{ route('creator.payout.settings') }}" style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#334155;font-size:0.825rem;font-weight:600;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/></svg>
+                                    Saldo & Pencairan
+                                </a>
+                                <div style="border-top:1px solid #F1F5F9;margin:0.25rem 0;"></div>
+                                <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                                    @csrf
+                                    <button type="submit" style="width:100%;display:flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;color:#DC2626;background:none;border:none;font-size:0.825rem;font-weight:600;cursor:pointer;text-align:left;transition:background 0.15s;" onmouseover="this.style.background='#FEF2F2'" onmouseout="this.style.background='transparent'">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                        Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1041,6 +1097,33 @@
             cropperObj = null;
         }
     }
+
+    function toggleCreatorProfile(e) {
+        e.stopPropagation();
+        const dropdown = document.getElementById('creator-profile-dropdown');
+        if (!dropdown) return;
+        const isHidden = dropdown.style.display === 'none' || dropdown.style.display === '';
+        if (isHidden) {
+            dropdown.style.display = 'block';
+            requestAnimationFrame(() => {
+                dropdown.style.opacity = '1';
+                dropdown.style.transform = 'translateY(0)';
+            });
+        } else {
+            dropdown.style.opacity = '0';
+            dropdown.style.transform = 'translateY(-8px)';
+            setTimeout(() => { dropdown.style.display = 'none'; }, 200);
+        }
+    }
+
+    window.addEventListener('click', function(e) {
+        const profDropdown = document.getElementById('creator-profile-dropdown');
+        if (profDropdown && !e.target.closest('#creator-profile-container')) {
+            profDropdown.style.opacity = '0';
+            profDropdown.style.transform = 'translateY(-8px)';
+            setTimeout(() => { profDropdown.style.display = 'none'; }, 200);
+        }
+    });
     </script>
     @yield('scripts')
 </body>

@@ -59,70 +59,42 @@
 
         .login-wrapper {
             width: 100%;
-            max-width: 960px;
+            max-width: 460px;
             margin: auto;
             position: relative;
             z-index: 10;
         }
 
         .login-glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 0.75rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            box-shadow: 0 20px 45px rgba(30, 179, 73, 0.08), 0 4px 15px rgba(0,0,0,0.03);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            min-height: 520px;
-        }
-
-        .login-left {
-            padding: 3rem 2.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .login-right {
             background: #ffffff;
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+            border-radius: 24px;
+            padding: 2.25rem 2rem;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-        }
-
-        .hero-desc {
-            font-size: 0.9rem;
-            color: #64748B;
-            line-height: 1.6;
-            margin-top: 1rem;
-            margin-bottom: 1.75rem;
-            font-weight: 500;
-        }
-
-        .feature-badge-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            margin-bottom: 2rem;
-        }
-
-        .feature-badge-item {
-            display: flex;
             align-items: center;
-            gap: 0.6rem;
-            font-size: 0.8125rem;
-            color: #334155;
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 0.5rem 0.85rem;
-            border-radius: 10px;
+            box-shadow: 0 20px 45px rgba(30, 179, 73, 0.08), 0 4px 15px rgba(0,0,0,0.03);
             border: 1px solid #E2E8F0;
-            width: fit-content;
+        }
+
+        .logo-center-wrap {
+            margin-bottom: 1.25rem;
+            text-align: center;
+        }
+        .logo-center-wrap img {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+        }
+
+        .auth-content-wrap {
+            width: 100%;
         }
 
         .back-link {
@@ -133,8 +105,10 @@
             transition: color 0.2s;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 0.5rem;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
+            width: 100%;
         }
         .back-link:hover {
             color: #1eb349;
@@ -142,16 +116,18 @@
 
         .auth-title {
             font-size: 1.4rem;
-            font-weight: 600;
+            font-weight: 700;
             color: #0F172A;
-            margin: 0 0 0.5rem;
+            margin: 0 0 0.4rem;
             letter-spacing: -0.01em;
+            text-align: center;
         }
         .auth-subtitle {
             font-size: 0.8125rem;
             color: #94A3B8;
             margin: 0 0 1.5rem;
             font-weight: 500;
+            text-align: center;
         }
         .auth-subtitle a { color: #1eb349; text-decoration: none; font-weight: 600; }
         .auth-subtitle a:hover { text-decoration: underline; }
@@ -209,6 +185,26 @@
             transition: color 0.2s;
         }
         .input-icon:hover { color: #1eb349; }
+
+        .remember-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+        }
+        .remember-label {
+            color: #64748B;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            cursor: pointer;
+        }
+        .forgot-link {
+            color: #1eb349;
+            text-decoration: none;
+            font-weight: 600;
+        }
 
         .btn-primary {
             background: #1eb349;
@@ -289,34 +285,10 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        /* Mobile Responsive Breakpoint */
-        @media (max-width: 768px) {
+        @media (max-width: 480px) {
             .login-glass-panel {
-                grid-template-columns: 1fr;
-                padding: 0;
-                min-height: auto;
-            }
-            .login-left {
-                padding: 1.75rem 1.5rem 1.25rem;
-                text-align: center;
-                align-items: center;
-            }
-            .feature-badge-list {
-                display: none;
-            }
-            .hero-desc {
-                margin-top: 0.5rem;
-                margin-bottom: 0.75rem;
-                font-size: 0.8125rem;
-            }
-            .back-link {
-                margin-top: 0.5rem;
-            }
-            .login-right {
-                border-radius: 0 0 24px 24px;
-                padding: 1.75rem 1.5rem 2rem;
-                box-shadow: none;
-                border-top: 1px solid #E2E8F0;
+                padding: 1.75rem 1.25rem;
+                border-radius: 20px;
             }
         }
     </style>
@@ -328,50 +300,22 @@
 
 <div class="login-wrapper">
     <div class="login-glass-panel">
-        {{-- Left Side: Branding & Info --}}
-        <div class="login-left">
-            <div>
-                @php $logo = $layoutSettings['logo'] ?? null; @endphp
-                @if($logo)
-                    <a href="{{ url('/') }}" style="display:inline-flex;align-items:center;text-decoration:none;">
-                        <div style="height:50px;padding:0.35rem 0.9rem;border-radius:14px;overflow:hidden;background:rgba(255,255,255,0.95);box-shadow:0 4px 16px rgba(0,0,0,0.06),0 1px 3px rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:center;">
-                            <img src="{{ asset('storage/'.$logo) }}" alt="buyle.id" style="height:36px;width:auto;object-fit:contain;display:block;">
-                        </div>
-                    </a>
-                @else
-                    <a href="{{ url('/') }}" style="text-decoration:none;font-size:2rem;font-weight:700;color:#0F172A;letter-spacing:-0.02em;">
-                        buyle<span style="color:#1eb349;">.id</span>
-                    </a>
-                @endif
-
-                <p class="hero-desc">
-                    Platform Bio Link, Produk Digital & Marketplace Terlengkap untuk Bisnis dan Kreator Indonesia.
-                </p>
-
-                <div class="feature-badge-list">
-                    <div class="feature-badge-item">
-                        <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                        <span>Bio Link & Katalog Produk</span>
-                    </div>
-                    <div class="feature-badge-item">
-                        <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-                        <span>Produk Digital & E-Course</span>
-                    </div>
-                    <div class="feature-badge-item">
-                        <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                        <span>Pembayaran Instant (QRIS & E-Wallet)</span>
-                    </div>
-                </div>
-            </div>
-
-            <a href="{{ url('/') }}" class="back-link">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                Kembali ke Beranda
-            </a>
+        {{-- Logo Only (Plain PNG, No card/shape wrapper) --}}
+        <div class="logo-center-wrap">
+            @php $logo = $layoutSettings['logo'] ?? null; @endphp
+            @if($logo)
+                <a href="{{ url('/') }}" style="text-decoration:none;">
+                    <img src="{{ asset('storage/'.$logo) }}" alt="buyle.id">
+                </a>
+            @else
+                <a href="{{ url('/') }}" style="text-decoration:none;font-size:2.2rem;font-weight:800;color:#0F172A;letter-spacing:-0.02em;">
+                    buyle<span style="color:#1eb349;">.id</span>
+                </a>
+            @endif
         </div>
 
-        {{-- Right Side: Login / Register Form --}}
-        <div class="login-right">
+        {{-- Form Content Area --}}
+        <div class="auth-content-wrap">
             @if(session('success'))
                 <div class="alert-error" style="background:#F0FDF4; border-color:#BBF7D0; color:#15803D;">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -388,6 +332,12 @@
 
             @yield('content')
         </div>
+
+        {{-- Back to home link --}}
+        <a href="{{ url('/') }}" class="back-link">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Kembali ke Beranda
+        </a>
     </div>
 </div>
 
