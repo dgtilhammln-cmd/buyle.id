@@ -230,7 +230,7 @@ class CreatorBioController extends Controller
     public function storeBlock(Request $request)
     {
         $request->validate([
-            'type'  => 'required|in:link,pdf,tiktok,affiliate,shopee,buyle_product,image,custom_product',
+            'type'  => 'required|in:link,pdf,tiktok,affiliate,shopee,buyle_product,buyle_affiliate,image,custom_product',
             'title' => 'required|string|max:150',
             'url'   => 'nullable|string|max:2000',
             'block_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',

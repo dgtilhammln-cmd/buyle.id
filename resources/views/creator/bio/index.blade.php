@@ -406,6 +406,75 @@
             }
         }
 
+        /* Uniform card action buttons */
+        .modal-card-btn-detail,
+        .modal-card-btn-add,
+        .modal-card-btn-remove {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            border-radius: 8px;
+            height: 32px;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: opacity 0.15s;
+        }
+
+        .modal-card-btn-detail {
+            color: #475569;
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1 !important;
+        }
+
+        .modal-card-btn-detail:hover { background: #E2E8F0; }
+
+        .modal-card-btn-add {
+            color: #fff;
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
+        }
+
+        .modal-card-btn-add:hover { opacity: 0.9; }
+
+        .modal-card-btn-remove {
+            color: #DC2626;
+            background: #FEF2F2;
+            border: 1px solid #FCA5A5 !important;
+        }
+
+        .modal-card-btn-remove:hover { background: #FEE2E2; }
+
+        /* Filter sort buttons */
+        .modal-filter-btn {
+            height: 44px;
+            padding: 0 0.85rem;
+            border-radius: 10px;
+            border: 1.5px solid #E2E8F0;
+            background: #FAFAFA;
+            color: #64748B;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s;
+        }
+
+        .modal-filter-btn:hover {
+            border-color: #94A3B8;
+            background: #F1F5F9;
+            color: #334155;
+        }
+
+        .modal-filter-btn.active {
+            border-color: #1eb349;
+            background: #F0FDF4;
+            color: #166534;
+        }
+
         .btn-submit-sm {
             height: 40px;
             padding: 0 1.25rem;
@@ -1666,7 +1735,7 @@
 
                         @php
                             $affiliateBlockIds = $affiliateProducts->pluck('id')->toArray();
-                            $addedAffBlocks = $blocks->whereIn('type', ['buyle_product', 'buyle_affiliate'])->filter(fn($b) => in_array($b->data_json['product_id'] ?? null, $affiliateBlockIds));
+                            $addedAffBlocks = $blocks->where('type', 'buyle_affiliate')->filter(fn($b) => in_array($b->data_json['product_id'] ?? null, $affiliateBlockIds));
                         @endphp
 
                         @forelse($addedAffBlocks as $affBlock)
@@ -1754,7 +1823,7 @@
 
                         @php
                             $wlBlockIds = $whitelabelProducts->pluck('id')->toArray();
-                            $addedWlBlocks = $blocks->where('type', 'buyle_product')->filter(fn($b) => in_array($b->data_json['product_id'] ?? null, $wlBlockIds));
+                            $addedWlBlocks = $blocks->where('type', 'buyle_product')->filter(fn($b) => in_array($b->data_json['product_id'] ?? null, $wlBlockIds) && ($b->data_json['product_source'] ?? 'whitelabel') !== 'affiliate');
                         @endphp
 
                         @forelse($addedWlBlocks as $wlBlock)
@@ -2818,17 +2887,53 @@
             });
         }
 
-        function filterModalCatalog(className, query) {
-            const q = query.toLowerCase().trim();
-            const items = document.getElementsByClassName(className);
-            for (let item of items) {
+        function filterModalCatalog(className, query, sortKey) {
+            const q = (query || '').toLowerCase().trim();
+            const grid = document.querySelector('.' + className + '-grid');
+            const items = Array.from(document.getElementsByClassName(className));
+
+            // Show/hide based on search
+            items.forEach(item => {
                 const searchText = item.getAttribute('data-search') || '';
-                if (!q || searchText.includes(q)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
+                item.style.display = (!q || searchText.includes(q)) ? '' : 'none';
+            });
+
+            // Sort
+            if (sortKey && grid) {
+                const visible = items.filter(i => i.style.display !== 'none');
+                visible.sort((a, b) => {
+                    const av = parseFloat(a.getAttribute('data-' + sortKey) || 0);
+                    const bv = parseFloat(b.getAttribute('data-' + sortKey) || 0);
+                    if (sortKey === 'date') return bv - av; // newest first by default, toggle via button
+                    return bv - av; // descending for price/clicks
+                });
+                visible.forEach(el => grid.appendChild(el));
             }
+        }
+
+        function setCatalogSort(className, sortKey, btn) {
+            // Toggle direction
+            const currentDir = btn.getAttribute('data-dir') || 'desc';
+            const newDir = currentDir === 'desc' ? 'asc' : 'desc';
+            btn.setAttribute('data-dir', newDir);
+
+            // Update active state
+            const allBtns = btn.closest('.modal-filter-row').querySelectorAll('.modal-filter-btn[data-sort]');
+            allBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const grid = document.querySelector('.' + className + '-grid');
+            if (!grid) return;
+
+            const items = Array.from(document.getElementsByClassName(className));
+            const visible = items.filter(i => i.style.display !== 'none');
+
+            visible.sort((a, b) => {
+                const av = parseFloat(a.getAttribute('data-' + sortKey) || 0);
+                const bv = parseFloat(b.getAttribute('data-' + sortKey) || 0);
+                return newDir === 'desc' ? bv - av : av - bv;
+            });
+            visible.forEach(el => grid.appendChild(el));
         }
     </script>
 
@@ -2870,7 +2975,7 @@
             {{-- Grid Product List --}}
             <div class="modal-catalog-grid">
                 @php
-                    $addedProductIds = $blocks->whereIn('type', ['buyle_product', 'buyle_affiliate'])->pluck('data_json.product_id')->filter()->toArray();
+                    $addedAffProductIds = $blocks->where('type', 'buyle_affiliate')->pluck('data_json.product_id')->filter()->toArray();
                 @endphp
 
                 @forelse($affiliateProducts as $affProduct)
@@ -2878,8 +2983,8 @@
                         $effPrice = $affProduct->sale_price ?? $affProduct->price;
                         $commRate = $affProduct->affiliate_commission_rate ?? 10;
                         $commRp = round(($effPrice * $commRate) / 100);
-                        $isAdded = in_array($affProduct->id, $addedProductIds);
-                        $matchingBlock = $blocks->first(fn($b) => ($b->data_json['product_id'] ?? null) == $affProduct->id);
+                        $isAdded = in_array($affProduct->id, $addedAffProductIds);
+                        $matchingBlock = $blocks->where('type', 'buyle_affiliate')->first(fn($b) => ($b->data_json['product_id'] ?? null) == $affProduct->id);
                     @endphp
                     <div class="affiliateModalItem modal-card-item"
                         data-search="{{ strtolower($affProduct->name . ' ' . ($affProduct->seller->name ?? '')) }}">
@@ -2951,7 +3056,7 @@
                                 @else
                                     <form action="{{ route('creator.bio.blocks.store') }}" method="POST" style="margin:0;">
                                         @csrf
-                                        <input type="hidden" name="type" value="buyle_product">
+                                        <input type="hidden" name="type" value="buyle_affiliate">
                                         <input type="hidden" name="title" value="{{ $affProduct->name }}">
                                         <input type="hidden" name="url" value="{{ route('products.show', $affProduct->slug) }}">
                                         <input type="hidden" name="product_id" value="{{ $affProduct->id }}">
