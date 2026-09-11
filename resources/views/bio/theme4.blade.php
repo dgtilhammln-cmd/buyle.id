@@ -655,99 +655,118 @@
             </div>
         @endif
 
-        {{-- Affiliate / Shopee Products --}}
-        @if($affBlocks->isNotEmpty())
-            <span class="section-label fade-up" style="animation-delay:0.4s">Produk Rekomendasi</span>
-            <div class="product-grid fade-up" style="animation-delay:0.45s">
-                @foreach($affBlocks as $index => $block)
-                    <a href="{{ $block->url }}" target="_blank" class="prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
-                        <div class="prod-img-wrap">
-                            <div class="prod-number">{{ sprintf('%02d', $index + 1) }}</div>
+        {{-- Product Catalog with Tabs --}}
+        @php
+            $hasAff        = $affBlocks->isNotEmpty();
+            $hasCustom     = $customProdBlocks->isNotEmpty();
+            $hasBuyle      = $buyleBlocks->isNotEmpty();
+            $hasAnyProduct = $hasAff || $hasCustom || $hasBuyle;
+            $totalAll      = $affBlocks->count() + $customProdBlocks->count() + $buyleBlocks->count();
+        @endphp
 
-                            @if(!empty($block->data_json['icon_class']))
-                                <i class="{{ $block->data_json['icon_class'] }}" style="font-size:24px;"></i>
-                            @elseif(!empty($block->data_json['image']))
-                                <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']) }}"
-                                    alt="{{ $block->title }}"
-                                    onerror="this.src='https://placehold.co/400x400/fff/cbd5e1?text=Product'">
-                            @else
-                                <img src="https://placehold.co/400x400/fff/cbd5e1?text=Product" alt="No Image">
-                            @endif
-                        </div>
-                        <div class="prod-info">
-                            <h3 class="prod-title">{{ $block->title }}</h3>
-                            <div class="prod-price"> →</div>
-                        </div>
-                    </a>
-                @endforeach
+        @if($hasAnyProduct)
+
+        <style>
+        .cat-tabs-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:12px 0 10px;}
+        .cat-tabs-wrap::-webkit-scrollbar{display:none;}
+        .cat-tabs{display:flex;flex-wrap:nowrap;gap:8px;padding:0 var(--side,16px) 2px;}
+        .cat-tab{flex:0 0 auto;white-space:nowrap;padding:6px 14px;border-radius:999px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1.5px solid var(--glass-border,rgba(255,255,255,0.15));background:transparent;color:var(--text);transition:all .2s;user-select:none;}
+        .cat-tab.active{background:var(--accent,#6C63FF);border-color:var(--accent,#6C63FF);color:#fff;}
+        .cat-panel{display:none;}.cat-panel.active{display:block;}
+        </style>
+
+        <div class="cat-tabs-wrap fade-up" style="animation-delay:0.38s">
+            <div class="cat-tabs" id="catTabs4">
+                <div class="cat-tab active" data-tab="all" onclick="switchTab4('all',this)">Semua <span style="opacity:.6;font-size:.72rem;">{{ $totalAll }}</span></div>
+                @if($hasAff)<div class="cat-tab" data-tab="rek" onclick="switchTab4('rek',this)">Rekomendasi <span style="opacity:.6;font-size:.72rem;">{{ $affBlocks->count() }}</span></div>@endif
+                @if($hasCustom)<div class="cat-tab" data-tab="fis" onclick="switchTab4('fis',this)">Fisik <span style="opacity:.6;font-size:.72rem;">{{ $customProdBlocks->count() }}</span></div>@endif
+                @if($hasBuyle)<div class="cat-tab" data-tab="dig" onclick="switchTab4('dig',this)">Digital <span style="opacity:.6;font-size:.72rem;">{{ $buyleBlocks->count() }}</span></div>@endif
             </div>
-        @endif
+        </div>
 
-                {{-- Custom Physical / UMKM Products --}}
-        @if($customProdBlocks->isNotEmpty())
-            <span class="section-label fade-up" style="animation-delay:0.48s">Produk {{ $config['name'] ?? $profile->store_name ?? $username }}</span>
-            <div class="product-grid fade-up" style="animation-delay:0.52s">
-                @foreach($customProdBlocks as $i => $block)
-                    @php 
-                        $imgs = $block->data_json['images'] ?? []; 
-                        $img = !empty($imgs[0]) ? asset('storage/' . $imgs[0]) : (!empty($block->data_json['image']) ? asset('storage/' . $block->data_json['image']) : 'https://placehold.co/400x400/222/555?text=Product');
-                        $prodUrl = route('bio.product.show', [$username, $block->data_json['slug'] ?? $block->id]);
-                        $price = $block->data_json['price'] ?? 0;
-                        $origPrice = $block->data_json['original_price'] ?? null;
-                    @endphp
-                    <a href="{{ $prodUrl }}" class="prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
-                        <div class="prod-img-wrap">
-                            <img src="{{ $img }}" alt="{{ $block->title }}">
-                        </div>
-                        <div class="prod-info">
-                            <h3 class="prod-title">{{ $block->title }}</h3>
-                            <div class="prod-price">
-                                @if(!empty($origPrice) && $origPrice > $price)
-                                    <span style="text-decoration:line-through; opacity:0.5; font-size:0.75rem; margin-right:0.2rem;">Rp {{ number_format($origPrice, 0, ',', '.') }}</span>
-                                @endif
-                                Rp {{ number_format($price, 0, ',', '.') }} IDR
-                            </div>
-                        </div>
-                    </a>
-                @endforeach
-            </div>
-        @endif
-
-        {{-- Buyle Products --}}
-        @if($buyleBlocks->isNotEmpty())
-            <span class="section-label fade-up" style="animation-delay:0.5s">Produk Digital Saya</span>
+        <div class="cat-panel active" id="tab4-all">
             <div class="product-grid">
-                @foreach($buyleBlocks as $i => $block)
-                    @php $prod = $products[$block->data_json['product_id'] ?? 0] ?? null; @endphp
+                @php $allNum = 0; @endphp
+                @foreach($affBlocks as $block)
+                    @php $allNum++; @endphp
+                    <a href="{{ $block->url }}" target="_blank" class="prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
+                        <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$allNum) }}</div>@if(!empty($block->data_json['image']))<img src="{{ Str::startsWith($block->data_json['image'],'http')?$block->data_json['image']:asset('storage/'.$block->data_json['image']) }}" alt="{{ $block->title }}" onerror="this.src='https://placehold.co/400x400/222/555?text=Produk'">@else<img src="https://placehold.co/400x400/222/555?text=Produk" alt="No Image">@endif</div>
+                        <div class="prod-info"><h3 class="prod-title">{{ $block->title }}</h3><div class="prod-price">Lihat &rarr;</div></div>
+                    </a>
+                @endforeach
+                @foreach($customProdBlocks as $block)
+                    @php $allNum++; $imgs=$block->data_json['images']??[]; $img=!empty($imgs[0])?asset('storage/'.$imgs[0]):(!empty($block->data_json['image'])?asset('storage/'.$block->data_json['image']):'https://placehold.co/400x400/222/555?text=Produk'); $prodUrl=route('bio.product.show',[$username,$block->data_json['slug']??$block->id]); $price=$block->data_json['price']??0; $origPrice=$block->data_json['original_price']??null; @endphp
+                    <a href="{{ $prodUrl }}" class="prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
+                        <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$allNum) }}</div><img src="{{ $img }}" alt="{{ $block->title }}"></div>
+                        <div class="prod-info"><h3 class="prod-title">{{ $block->title }}</h3><div class="prod-price">@if(!empty($origPrice)&&$origPrice>$price)<span style="text-decoration:line-through;opacity:.5;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</span> @endif Rp {{ number_format($price,0,',','.') }}</div></div>
+                    </a>
+                @endforeach
+                @foreach($buyleBlocks as $block)
+                    @php $allNum++; $prod=$products[$block->data_json['product_id']??0]??null; @endphp
                     @if($prod)
-                        <a href="{{ $block->url }}" target="_blank" class="prod-card fade-up search-item bio-track-link" data-title="{{ $prod->name }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}"
-                            style="animation-delay:{{ 0.55 + $i * 0.05 }}s">
-                            <div class="prod-img-wrap">
-
-                                @if($prod->image)
-                                    <img src="{{ asset('storage/' . $prod->image) }}" alt="{{ $prod->name }}">
-                                @else
-                                    <img src="https://placehold.co/400x400/fff/cbd5e1?text=Product" alt="No Image">
-                                @endif
-                            </div>
-                            <div class="prod-info">
-                                <h3 class="prod-title">{{ $prod->name }}</h3>
-                                <div class="prod-price">
-                                    @if($prod->is_on_sale)
-                                        <span style="text-decoration:line-through; opacity:0.55; font-size:0.72rem; margin-right:0.25rem; font-weight:500;">Rp {{ number_format($prod->price, 0, ',', '.') }}</span>
-                                        <span>Rp {{ number_format($prod->sale_price, 0, ',', '.') }}</span>
-                                    @else
-                                        <span>Rp {{ number_format($prod->effective_price, 0, ',', '.') }}</span>
-                                    @endif
-                                </div>
-                            </div>
-                        </a>
+                    <a href="{{ $block->url }}" target="_blank" class="prod-card search-item bio-track-link" data-title="{{ $prod->name }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
+                        <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$allNum) }}</div>@if($prod->image)<img src="{{ asset('storage/'.$prod->image) }}" alt="{{ $prod->name }}">@else<img src="https://placehold.co/400x400/222/555?text=Produk" alt="No Image">@endif</div>
+                        <div class="prod-info"><h3 class="prod-title">{{ $prod->name }}</h3><div class="prod-price">@if($prod->is_on_sale)<span style="text-decoration:line-through;opacity:.55;font-size:.72rem;">Rp {{ number_format($prod->price,0,',','.') }}</span> Rp {{ number_format($prod->sale_price,0,',','.') }}@else Rp {{ number_format($prod->effective_price,0,',','.') }}@endif</div></div>
+                    </a>
                     @endif
                 @endforeach
             </div>
-        @endif
+        </div>
 
-        {{-- Embed Map / Lokasi --}}
+        @if($hasAff)
+        <div class="cat-panel" id="tab4-rek">
+            <div class="product-grid">
+                @foreach($affBlocks as $i => $block)
+                    <a href="{{ $block->url }}" target="_blank" class="prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
+                        <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$i+1) }}</div>@if(!empty($block->data_json['image']))<img src="{{ Str::startsWith($block->data_json['image'],'http')?$block->data_json['image']:asset('storage/'.$block->data_json['image']) }}" alt="{{ $block->title }}" onerror="this.src='https://placehold.co/400x400/222/555?text=Produk'">@else<img src="https://placehold.co/400x400/222/555?text=Produk" alt="No Image">@endif</div>
+                        <div class="prod-info"><h3 class="prod-title">{{ $block->title }}</h3><div class="prod-price">Lihat &rarr;</div></div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        @if($hasCustom)
+        <div class="cat-panel" id="tab4-fis">
+            <div class="product-grid">
+                @foreach($customProdBlocks as $i => $block)
+                    @php $imgs=$block->data_json['images']??[]; $img=!empty($imgs[0])?asset('storage/'.$imgs[0]):(!empty($block->data_json['image'])?asset('storage/'.$block->data_json['image']):'https://placehold.co/400x400/222/555?text=Produk'); $prodUrl=route('bio.product.show',[$username,$block->data_json['slug']??$block->id]); $price=$block->data_json['price']??0; $origPrice=$block->data_json['original_price']??null; @endphp
+                    <a href="{{ $prodUrl }}" class="prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
+                        <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$i+1) }}</div><img src="{{ $img }}" alt="{{ $block->title }}"></div>
+                        <div class="prod-info"><h3 class="prod-title">{{ $block->title }}</h3><div class="prod-price">@if(!empty($origPrice)&&$origPrice>$price)<span style="text-decoration:line-through;opacity:.5;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</span> @endif Rp {{ number_format($price,0,',','.') }}</div></div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        @if($hasBuyle)
+        <div class="cat-panel" id="tab4-dig">
+            <div class="product-grid">
+                @foreach($buyleBlocks as $i => $block)
+                    @php $prod=$products[$block->data_json['product_id']??0]??null; @endphp
+                    @if($prod)
+                    <a href="{{ $block->url }}" target="_blank" class="prod-card search-item bio-track-link" data-title="{{ $prod->name }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
+                        <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$i+1) }}</div>@if($prod->image)<img src="{{ asset('storage/'.$prod->image) }}" alt="{{ $prod->name }}">@else<img src="https://placehold.co/400x400/222/555?text=Produk" alt="No Image">@endif</div>
+                        <div class="prod-info"><h3 class="prod-title">{{ $prod->name }}</h3><div class="prod-price">@if($prod->is_on_sale)<span style="text-decoration:line-through;opacity:.55;font-size:.72rem;">Rp {{ number_format($prod->price,0,',','.') }}</span> Rp {{ number_format($prod->sale_price,0,',','.') }}@else Rp {{ number_format($prod->effective_price,0,',','.') }}@endif</div></div>
+                    </a>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        <script>
+        function switchTab4(tab, el) {
+            document.querySelectorAll('#catTabs4 .cat-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('[id^="tab4-"]').forEach(p => p.classList.remove('active'));
+            document.getElementById('tab4-' + tab).classList.add('active');
+        }
+        </script>
+        @endif
+
+                {{-- Embed Map / Lokasi --}}
         @if(!empty($config['embed_location']))
             <span class="section-label fade-up" style="animation-delay:0.6s">Lokasi Kami</span>
             <div class="map-container fade-up" style="animation-delay:0.65s; padding: 0 var(--side); margin-bottom: 20px;">
