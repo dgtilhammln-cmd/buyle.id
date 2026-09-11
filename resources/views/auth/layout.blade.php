@@ -105,11 +105,11 @@
         }
 
         .hero-title {
-            font-size: 2rem;
-            font-weight: 800;
+            font-size: 1.75rem;
+            font-weight: 600;
             color: #0F172A;
-            line-height: 1.2;
-            letter-spacing: -0.03em;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
             margin-bottom: 1rem;
         }
         
@@ -136,11 +136,11 @@
         }
 
         .auth-title {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.4rem;
+            font-weight: 600;
             color: #0F172A;
             margin: 0 0 0.5rem;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.01em;
         }
         .auth-subtitle {
             font-size: 0.8125rem;
@@ -350,20 +350,22 @@
 <div class="login-wrapper">
     <div class="login-glass-panel">
         {{-- Left Side: Text & Welcome --}}
-        <div class="login-left">
-            @php $logo = $layoutSettings['logo'] ?? null; @endphp
-            @if($logo)
-                <a href="{{ url('/') }}" style="display:inline-flex;align-items:center;text-decoration:none;margin-bottom:2rem;align-self:flex-start;">
-                    <div style="height:44px;padding:0.25rem 0.75rem;border-radius:999px;overflow:hidden;background:rgba(255,255,255,0.95);box-shadow:0 4px 20px rgba(0,0,0,0.08),0 1px 4px rgba(0,0,0,0.05);display:flex;align-items:center;justify-content:center;">
-                        <img src="{{ asset('storage/'.$logo) }}" alt="Logo" style="height:32px;width:auto;object-fit:contain;border-radius:0;display:block;">
-                    </div>
-                </a>
-            @else
-                <div class="logo-placeholder">AR</div>
-            @endif
-            
-            <h1 class="hero-title">Belanja<br>buyle.id</h1>
-            <p class="hero-desc">Temukan segala kebutuhan rumah tangga Anda dalam satu tempat dengan harga terbaik.</p>
+            <div style="margin-top: 2rem; margin-bottom: 1.5rem;">
+                @php $logo = $layoutSettings['logo'] ?? null; @endphp
+                @if($logo)
+                    <a href="{{ url('/') }}" style="display:inline-flex;align-items:center;text-decoration:none;">
+                        <div style="height:54px;padding:0.35rem 1rem;border-radius:16px;overflow:hidden;background:rgba(255,255,255,0.95);box-shadow:0 4px 20px rgba(0,0,0,0.08),0 1px 4px rgba(0,0,0,0.05);display:flex;align-items:center;justify-content:center;">
+                            <img src="{{ asset('storage/'.$logo) }}" alt="buyle.id" style="height:40px;width:auto;object-fit:contain;display:block;">
+                        </div>
+                    </a>
+                @else
+                    <a href="{{ url('/') }}" style="text-decoration:none;font-size:2.25rem;font-weight:700;color:#0F172A;letter-spacing:-0.02em;">
+                        buyle<span style="color:#1eb349;">.id</span>
+                    </a>
+                @endif
+            </div>
+
+            <p class="hero-desc">Platform Bio Link, Produk Digital & Marketplace Terlengkap untuk Bisnis dan Kreator Indonesia.</p>
             
             <a href="{{ url('/') }}" class="back-link">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>

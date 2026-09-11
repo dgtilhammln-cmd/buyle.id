@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\OtpVerificationNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -101,7 +102,7 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    // ── Process Register ──
+    // ── Process Register (Step 1: Save Draft & Send OTP) ──
     public function register(Request $request)
     {
         $request->validate([
@@ -118,10 +119,70 @@ class AuthController extends Controller
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
         ]);
 
-        $oldSessionId = $request->session()->getId();
+        $otpCode = (string) rand(100000, 999999);
+        $expiresAt = time() + 60; // berlaku 1 menit (60 detik)
 
-        // Generate unique username from name
-        $base     = Str::slug($request->name, '.');
+        session()->put('pending_register', [
+            'name'           => $request->name,
+            'email'          => $request->email,
+            'phone'          => $request->phone,
+            'password'       => $request->password,
+            'old_session_id' => $request->session()->getId(),
+            'otp_code'       => $otpCode,
+            'otp_expires_at' => $expiresAt,
+        ]);
+
+        session()->put('otp_expires_at', $expiresAt);
+        session()->put('otp_email', $request->email);
+
+        try {
+            \Illuminate\Support\Facades\Notification::route('mail', $request->email)
+                ->notify(new OtpVerificationNotification($otpCode, $request->name));
+        } catch (\Throwable $e) {
+            \Log::error('Kirim OTP Email Gagal: ' . $e->getMessage());
+        }
+
+        return redirect()->route('otp.verify')
+            ->with('success', 'Kode OTP verifikasi telah dikirimkan ke email ' . $request->email . '. Silakan periksa kotak masuk/spam Anda.');
+    }
+
+    // ── Show Verify OTP Form ──
+    public function showVerifyOtp()
+    {
+        if (!session()->has('pending_register')) {
+            return redirect()->route('register')->with('error', 'Sesi pendaftaran telah berakhir. Silakan isi kembali formulir pendaftaran.');
+        }
+
+        return view('auth.verify-otp');
+    }
+
+    // ── Submit OTP Verification & Create User ──
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required|string|size:6',
+        ], [
+            'otp.required' => 'Kode OTP wajib diisi.',
+            'otp.size'     => 'Kode OTP harus berjumlah 6 digit.',
+        ]);
+
+        $pending = session('pending_register');
+        if (!$pending) {
+            return redirect()->route('register')->with('error', 'Sesi pendaftaran tidak ditemukan. Silakan daftar kembali.');
+        }
+
+        // Cek kadaluarsa OTP (1 menit)
+        if (time() > $pending['otp_expires_at']) {
+            return redirect()->route('otp.verify')->with('error', 'Kode OTP telah kadaluarsa. Silakan klik "Kirim Ulang Kode OTP".');
+        }
+
+        // Cek keakuratan OTP
+        if (trim($request->otp) !== (string) $pending['otp_code']) {
+            return redirect()->route('otp.verify')->with('error', 'Kode OTP yang Anda masukkan salah. Mohon periksa kembali.');
+        }
+
+        // OTP Valid -> Buat User di Database
+        $base     = Str::slug($pending['name'], '.');
         $username = $base;
         $i        = 1;
         while (User::where('username', $username)->exists()) {
@@ -129,12 +190,13 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'phone'    => $request->phone,
+            'name'     => $pending['name'],
+            'email'    => $pending['email'],
+            'phone'    => $pending['phone'],
             'username' => $username,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($pending['password']),
             'role'     => 'buyer',
+            'email_verified_at' => now(),
         ]);
 
         try {
@@ -143,13 +205,18 @@ class AuthController extends Controller
             \Log::warning('WelcomeNotification failed: ' . $e->getMessage());
         }
 
+        $oldSessionId = $pending['old_session_id'] ?? null;
+        session()->forget(['pending_register', 'otp_expires_at', 'otp_email']);
+
         Auth::login($user);
         $request->session()->regenerate();
 
-        try {
-            app(\App\Services\CartService::class)->mergeGuestCart($user->id, $oldSessionId);
-        } catch (\Throwable $e) {
-            \Log::warning('Merge guest cart on register failed: ' . $e->getMessage());
+        if ($oldSessionId) {
+            try {
+                app(\App\Services\CartService::class)->mergeGuestCart($user->id, $oldSessionId);
+            } catch (\Throwable $e) {
+                \Log::warning('Merge guest cart on register failed: ' . $e->getMessage());
+            }
         }
 
         $redirectRoute = route('account.profile');
@@ -159,8 +226,35 @@ class AuthController extends Controller
             $redirectRoute = route('creator.dashboard');
         }
 
-        return redirect()->route($redirectRoute == route('account.profile') ? 'account.profile' : $redirectRoute)
-            ->with('success', 'Akun berhasil dibuat. Selamat datang, ' . $user->name . '! Harap lengkapi profil Anda.');
+        return redirect()->to($redirectRoute)
+            ->with('success', 'Verifikasi berhasil! Akun Anda telah aktif. Selamat datang di buyle.id, ' . $user->name . '!');
+    }
+
+    // ── Resend OTP ──
+    public function resendOtp(Request $request)
+    {
+        $pending = session('pending_register');
+        if (!$pending) {
+            return redirect()->route('register')->with('error', 'Sesi pendaftaran tidak ditemukan. Silakan daftar kembali.');
+        }
+
+        $newOtpCode = (string) rand(100000, 999999);
+        $expiresAt  = time() + 60; // 1 menit baru
+
+        $pending['otp_code']       = $newOtpCode;
+        $pending['otp_expires_at'] = $expiresAt;
+        session()->put('pending_register', $pending);
+        session()->put('otp_expires_at', $expiresAt);
+
+        try {
+            \Illuminate\Support\Facades\Notification::route('mail', $pending['email'])
+                ->notify(new OtpVerificationNotification($newOtpCode, $pending['name']));
+        } catch (\Throwable $e) {
+            \Log::error('Resend OTP Email Gagal: ' . $e->getMessage());
+        }
+
+        return redirect()->route('otp.verify')
+            ->with('success', 'Kode OTP baru berhasil dikirim ke ' . $pending['email'] . '. Silakan cek email Anda.');
     }
 
     // ── Logout ──

@@ -141,6 +141,11 @@ Route::middleware(['guest'])->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register',[AuthController::class, 'register'])->name('register.submit');
 
+    // Email OTP Verification Routes
+    Route::get('/verify-otp',  [AuthController::class, 'showVerifyOtp'])->name('otp.verify');
+    Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('otp.verify.submit');
+    Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('otp.resend');
+
     // Password Reset Routes
     Route::get('/lupa-password',          [AuthController::class, 'showForgotPassword'])->name('password.request');
     Route::post('/lupa-password',         [AuthController::class, 'sendResetLink'])->name('password.email');
