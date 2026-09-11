@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Masuk') – buyle.id</title>
-    <meta name="description" content="@yield('meta_desc', 'Masuk atau daftar akun buyle.id untuk belanja lebih mudah.')">
+    <meta name="description" content="@yield('meta_desc', 'Masuk atau daftar akun buyle.id untuk platform digital creator dan marketplace.')">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     @php $layoutSettings = \App\Models\Setting::getAllAsArray(); @endphp
     @if(file_exists(public_path('build/assets')) && count(glob(public_path('build/assets/*.css'))) > 0)
@@ -25,23 +25,24 @@
             color: #0F172A;
             display: flex;
             flex-direction: column;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 2rem 1rem;
+            padding: 1.5rem 1rem;
             box-sizing: border-box;
             position: relative;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.2) 0px, transparent 50%),
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.18) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(30, 179, 73, 0.15) 0px, transparent 50%);
         }
         
-        /* Ornamental Blobs */
         .blob-1 {
             position: absolute;
             top: -100px; left: -100px;
             width: 400px; height: 400px;
-            background: rgba(30, 179, 73, 0.2);
+            background: rgba(30, 179, 73, 0.15);
             filter: blur(80px);
             border-radius: 50%;
             z-index: -1;
@@ -58,66 +59,70 @@
 
         .login-wrapper {
             width: 100%;
-            max-width: 1000px;
+            max-width: 960px;
             margin: auto;
             position: relative;
             z-index: 10;
         }
 
         .login-glass-panel {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-radius: 24px;
-            padding: 1rem;
+            padding: 0.75rem;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            box-shadow: 0 24px 50px rgba(30, 179, 73, 0.08), 0 4px 15px rgba(0,0,0,0.03);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            min-height: 500px;
+            box-shadow: 0 20px 45px rgba(30, 179, 73, 0.08), 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            min-height: 520px;
         }
 
         .login-left {
-            padding: 4rem 3rem;
+            padding: 3rem 2.5rem;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
         }
 
         .login-right {
             background: #ffffff;
             border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
-        .logo-placeholder {
-            width: 50px; height: 50px;
-            background: linear-gradient(135deg, #1eb349, #a5cf37);
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 800; color: #fff; font-size: 1.125rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(30, 179, 73, 0.25);
+        .hero-desc {
+            font-size: 0.9rem;
+            color: #64748B;
+            line-height: 1.6;
+            margin-top: 1rem;
+            margin-bottom: 1.75rem;
+            font-weight: 500;
+        }
+
+        .feature-badge-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
             margin-bottom: 2rem;
         }
 
-        .hero-title {
-            font-size: 1.75rem;
+        .feature-badge-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.8125rem;
+            color: #334155;
             font-weight: 600;
-            color: #0F172A;
-            line-height: 1.3;
-            letter-spacing: -0.01em;
-            margin-bottom: 1rem;
-        }
-        
-        .hero-desc {
-            font-size: 0.9375rem;
-            color: #64748B;
-            line-height: 1.6;
-            margin-bottom: 3rem;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 0.5rem 0.85rem;
+            border-radius: 10px;
+            border: 1px solid #E2E8F0;
+            width: fit-content;
         }
 
         .back-link {
@@ -129,7 +134,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            margin-top: auto;
+            margin-top: 1rem;
         }
         .back-link:hover {
             color: #1eb349;
@@ -145,21 +150,21 @@
         .auth-subtitle {
             font-size: 0.8125rem;
             color: #94A3B8;
-            margin: 0 0 2rem;
+            margin: 0 0 1.5rem;
             font-weight: 500;
         }
         .auth-subtitle a { color: #1eb349; text-decoration: none; font-weight: 600; }
         .auth-subtitle a:hover { text-decoration: underline; }
 
         .form-group {
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.15rem;
         }
 
         .form-label {
             color: #475569;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             font-size: 0.75rem;
-            font-weight: 700;
+            font-weight: 600;
             display: block;
         }
         .form-label span { color: #EF4444; margin-left: 2px; }
@@ -187,15 +192,6 @@
         }
         .form-input.is-invalid { border-color: #EF4444; }
 
-        .form-error {
-            font-size: 0.75rem;
-            color: #EF4444;
-            margin-top: 0.35rem;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
         .input-wrap { position: relative; }
         .input-icon {
             position: absolute;
@@ -217,17 +213,17 @@
         .btn-primary {
             background: #1eb349;
             color: #fff;
-            font-weight: 700;
+            font-weight: 600;
             font-family: 'Montserrat', sans-serif;
             border: none;
             cursor: pointer;
             width: 100%;
-            padding: 0.875rem;
+            padding: 0.85rem;
             font-size: 0.9rem;
             border-radius: 10px;
-            transition: all 0.3s;
-            margin-top: 1rem;
-            box-shadow: 0 8px 16px rgba(30, 179, 73, 0.2);
+            transition: all 0.25s;
+            margin-top: 0.75rem;
+            box-shadow: 0 6px 14px rgba(30, 179, 73, 0.2);
             text-align: center;
             display: flex;
             align-items: center;
@@ -235,17 +231,14 @@
         }
         .btn-primary:hover {
             background: #16a34a;
-            transform: translateY(-2px);
-            box-shadow: 0 12px 20px rgba(30, 179, 73, 0.3);
-        }
-        .btn-primary:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 18px rgba(30, 179, 73, 0.28);
         }
 
         .alert-error {
             background: #FEF2F2;
             border: 1px solid #FCA5A5;
-            padding: 0.875rem 1rem;
+            padding: 0.75rem 1rem;
             margin-bottom: 1.25rem;
             color: #EF4444;
             font-size: 0.8125rem;
@@ -256,32 +249,13 @@
             gap: 0.5rem;
         }
 
-        .remember-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-        .remember-label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.8rem;
-            color: #374151;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        .remember-label input[type="checkbox"] { width: 16px; height: 16px; accent-color: #1eb349; }
-        .forgot-link { font-size: 0.8rem; color: #1eb349; text-decoration: none; font-weight: 600; }
-        .forgot-link:hover { text-decoration: underline; }
-
         .divider {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            margin: 1.5rem 0;
+            margin: 1.25rem 0;
             color: #94A3B8;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 500;
         }
         .divider::before, .divider::after {
@@ -290,18 +264,19 @@
             height: 1px;
             background: #E2E8F0;
         }
+
         .btn-google {
             width: 100%;
-            height: 52px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.75rem;
             background: #fff;
             border: 1.5px solid #E2E8F0;
-            border-radius: 12px;
+            border-radius: 10px;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             font-weight: 600;
             color: #374151;
             cursor: pointer;
@@ -311,33 +286,37 @@
         .btn-google:hover {
             border-color: #CBD5E1;
             background: #F8FAFC;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        /* Mobile Responsive */
-        @media (max-width: 800px) {
+        /* Mobile Responsive Breakpoint */
+        @media (max-width: 768px) {
             .login-glass-panel {
                 grid-template-columns: 1fr;
                 padding: 0;
-                overflow: hidden;
+                min-height: auto;
             }
             .login-left {
-                padding: 2.5rem 2rem 2rem;
+                padding: 1.75rem 1.5rem 1.25rem;
                 text-align: center;
+                align-items: center;
             }
-            .logo-placeholder {
-                margin: 0 auto 1.5rem;
+            .feature-badge-list {
+                display: none;
+            }
+            .hero-desc {
+                margin-top: 0.5rem;
+                margin-bottom: 0.75rem;
+                font-size: 0.8125rem;
             }
             .back-link {
-                margin-top: 1.5rem;
-                justify-content: center;
+                margin-top: 0.5rem;
             }
             .login-right {
                 border-radius: 0 0 24px 24px;
-                padding: 2rem;
+                padding: 1.75rem 1.5rem 2rem;
                 box-shadow: none;
-                border-top: 1px solid rgba(30, 179, 73, 0.1);
+                border-top: 1px solid #E2E8F0;
             }
         }
     </style>
@@ -349,32 +328,49 @@
 
 <div class="login-wrapper">
     <div class="login-glass-panel">
-        {{-- Left Side: Text & Welcome --}}
+        {{-- Left Side: Branding & Info --}}
         <div class="login-left">
-            <div style="margin-top: 1rem; margin-bottom: 1.5rem;">
+            <div>
                 @php $logo = $layoutSettings['logo'] ?? null; @endphp
                 @if($logo)
                     <a href="{{ url('/') }}" style="display:inline-flex;align-items:center;text-decoration:none;">
-                        <div style="height:54px;padding:0.35rem 1rem;border-radius:16px;overflow:hidden;background:rgba(255,255,255,0.95);box-shadow:0 4px 20px rgba(0,0,0,0.08),0 1px 4px rgba(0,0,0,0.05);display:flex;align-items:center;justify-content:center;">
-                            <img src="{{ asset('storage/'.$logo) }}" alt="buyle.id" style="height:40px;width:auto;object-fit:contain;display:block;">
+                        <div style="height:50px;padding:0.35rem 0.9rem;border-radius:14px;overflow:hidden;background:rgba(255,255,255,0.95);box-shadow:0 4px 16px rgba(0,0,0,0.06),0 1px 3px rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:center;">
+                            <img src="{{ asset('storage/'.$logo) }}" alt="buyle.id" style="height:36px;width:auto;object-fit:contain;display:block;">
                         </div>
                     </a>
                 @else
-                    <a href="{{ url('/') }}" style="text-decoration:none;font-size:2.25rem;font-weight:700;color:#0F172A;letter-spacing:-0.02em;">
+                    <a href="{{ url('/') }}" style="text-decoration:none;font-size:2rem;font-weight:700;color:#0F172A;letter-spacing:-0.02em;">
                         buyle<span style="color:#1eb349;">.id</span>
                     </a>
                 @endif
+
+                <p class="hero-desc">
+                    Platform Bio Link, Produk Digital & Marketplace Terlengkap untuk Bisnis dan Kreator Indonesia.
+                </p>
+
+                <div class="feature-badge-list">
+                    <div class="feature-badge-item">
+                        <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        <span>Bio Link & Katalog Produk</span>
+                    </div>
+                    <div class="feature-badge-item">
+                        <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                        <span>Produk Digital & E-Course</span>
+                    </div>
+                    <div class="feature-badge-item">
+                        <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                        <span>Pembayaran Instant (QRIS & E-Wallet)</span>
+                    </div>
+                </div>
             </div>
 
-            <p class="hero-desc">Platform Bio Link, Produk Digital & Marketplace Terlengkap untuk Bisnis dan Kreator Indonesia.</p>
-            
             <a href="{{ url('/') }}" class="back-link">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                 Kembali ke Beranda
             </a>
         </div>
 
-        {{-- Right Side: Login Form --}}
+        {{-- Right Side: Login / Register Form --}}
         <div class="login-right">
             @if(session('success'))
                 <div class="alert-error" style="background:#F0FDF4; border-color:#BBF7D0; color:#15803D;">
