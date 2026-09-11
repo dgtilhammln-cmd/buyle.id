@@ -194,13 +194,34 @@
                 </div>
 
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                    {{-- Kategori: Datalist dropdown + tambah baru --}}
                     <div class="form-group">
-                        <label class="form-label">Kategori</label>
-                        <input type="text" name="category" value="{{ old('category',$a?->category) }}" class="form-input" placeholder="Tips & Panduan">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                            <label class="form-label" style="margin:0;">Kategori</label>
+                            <button type="button" onclick="openCatModal()" style="display:flex;align-items:center;gap:4px;font-size:.78rem;color:#1eb349;background:none;border:none;cursor:pointer;font-weight:600;padding:0;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Kategori Baru
+                            </button>
+                        </div>
+                        <input type="text" name="category" id="art-category" value="{{ old('category', $a?->category) }}"
+                            class="form-input" placeholder="— Ketik atau pilih kategori —"
+                            list="cat-list" autocomplete="off">
+                        <datalist id="cat-list">
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat }}">
+                            @endforeach
+                        </datalist>
                     </div>
+                    {{-- Penulis / Author: Dropdown + tambah baru --}}
                     <div class="form-group">
-                        <label class="form-label">Penulis / Author</label>
-                        <select name="author_id" class="form-select">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                            <label class="form-label" style="margin:0;">Penulis / Author</label>
+                            <button type="button" onclick="openAuthorModal()" style="display:flex;align-items:center;gap:4px;font-size:.78rem;color:#1eb349;background:none;border:none;cursor:pointer;font-weight:600;padding:0;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Penulis Baru
+                            </button>
+                        </div>
+                        <select name="author_id" id="art-author-select" class="form-select">
                             <option value="">— Pilih Penulis —</option>
                             @foreach($authors as $auth)
                                 <option value="{{ $auth->id }}" {{ old('author_id', $a?->author_id) == $auth->id ? 'selected' : '' }}>{{ $auth->name }}</option>
@@ -208,6 +229,119 @@
                         </select>
                     </div>
                 </div>
+
+                {{-- ── Modal: Kategori Baru ── --}}
+                <div id="modal-cat" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;">
+                    <div style="background:#fff;border-radius:16px;padding:1.75rem 2rem;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.2);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
+                            <h3 style="font-size:1rem;font-weight:700;color:#1E293B;margin:0;">Tambah Kategori</h3>
+                            <button type="button" onclick="closeCatModal()" style="background:none;border:none;cursor:pointer;color:#94A3B8;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
+                        <label style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:.5rem;">Nama Kategori <span style="color:#DC2626;">*</span></label>
+                        <input type="text" id="new-cat-input" placeholder="Contoh: Tips & Panduan"
+                            style="width:100%;border:1.5px solid #E2E8F0;border-radius:10px;padding:.65rem .9rem;font-size:.9rem;outline:none;box-sizing:border-box;"
+                            onkeydown="if(event.key==='Enter'){event.preventDefault();saveCat();}">
+                        <div id="cat-modal-err" style="color:#DC2626;font-size:.8rem;margin-top:.4rem;display:none;"></div>
+                        <div style="display:flex;gap:.75rem;margin-top:1.25rem;">
+                            <button type="button" onclick="saveCat()"
+                                style="flex:1;background:#1eb349;color:#fff;border:none;border-radius:10px;padding:.65rem 1rem;font-weight:700;cursor:pointer;font-size:.9rem;">
+                                Simpan Kategori
+                            </button>
+                            <button type="button" onclick="closeCatModal()"
+                                style="padding:.65rem 1rem;border:1.5px solid #E2E8F0;border-radius:10px;background:#fff;cursor:pointer;font-size:.9rem;color:#64748B;font-weight:600;">
+                                Batal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ── Modal: Author Baru ── --}}
+                <div id="modal-author" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;">
+                    <div style="background:#fff;border-radius:16px;padding:1.75rem 2rem;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.2);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
+                            <h3 style="font-size:1rem;font-weight:700;color:#1E293B;margin:0;">Tambah Penulis</h3>
+                            <button type="button" onclick="closeAuthorModal()" style="background:none;border:none;cursor:pointer;color:#94A3B8;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
+                        <label style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:.5rem;">Nama Penulis <span style="color:#DC2626;">*</span></label>
+                        <input type="text" id="new-author-input" placeholder="Contoh: Budi Santoso"
+                            style="width:100%;border:1.5px solid #E2E8F0;border-radius:10px;padding:.65rem .9rem;font-size:.9rem;outline:none;box-sizing:border-box;"
+                            onkeydown="if(event.key==='Enter'){event.preventDefault();saveAuthor();}">
+                        <div id="author-modal-err" style="color:#DC2626;font-size:.8rem;margin-top:.4rem;display:none;"></div>
+                        <div style="display:flex;gap:.75rem;margin-top:1.25rem;">
+                            <button type="button" onclick="saveAuthor()" id="author-save-btn"
+                                style="flex:1;background:#1eb349;color:#fff;border:none;border-radius:10px;padding:.65rem 1rem;font-weight:700;cursor:pointer;font-size:.9rem;">
+                                Simpan Penulis
+                            </button>
+                            <button type="button" onclick="closeAuthorModal()"
+                                style="padding:.65rem 1rem;border:1.5px solid #E2E8F0;border-radius:10px;background:#fff;cursor:pointer;font-size:.9rem;color:#64748B;font-weight:600;">
+                                Batal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                // ── Category Modal ──
+                function openCatModal()  { const m=document.getElementById('modal-cat'); m.style.display='flex'; document.getElementById('new-cat-input').focus(); }
+                function closeCatModal() { document.getElementById('modal-cat').style.display='none'; document.getElementById('new-cat-input').value=''; document.getElementById('cat-modal-err').style.display='none'; }
+                function saveCat() {
+                    const val = document.getElementById('new-cat-input').value.trim();
+                    const err = document.getElementById('cat-modal-err');
+                    if (!val) { err.textContent = 'Nama kategori tidak boleh kosong.'; err.style.display='block'; return; }
+                    // Set value directly (category is a free-text field)
+                    document.getElementById('art-category').value = val;
+                    // Also add to datalist
+                    const dl = document.getElementById('cat-list');
+                    const exists = Array.from(dl.options).some(o => o.value.toLowerCase() === val.toLowerCase());
+                    if (!exists) { const opt = document.createElement('option'); opt.value = val; dl.appendChild(opt); }
+                    closeCatModal();
+                }
+
+                // ── Author Modal ──
+                function openAuthorModal()  { const m=document.getElementById('modal-author'); m.style.display='flex'; document.getElementById('new-author-input').focus(); }
+                function closeAuthorModal() { document.getElementById('modal-author').style.display='none'; document.getElementById('new-author-input').value=''; document.getElementById('author-modal-err').style.display='none'; }
+                function saveAuthor() {
+                    const name = document.getElementById('new-author-input').value.trim();
+                    const err  = document.getElementById('author-modal-err');
+                    const btn  = document.getElementById('author-save-btn');
+                    if (!name) { err.textContent = 'Nama penulis tidak boleh kosong.'; err.style.display='block'; return; }
+                    err.style.display = 'none';
+                    btn.disabled = true; btn.textContent = 'Menyimpan...';
+
+                    fetch('{{ route("admin.authors.quick-create") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                        },
+                        body: JSON.stringify({ name })
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Add to select dropdown
+                            const sel = document.getElementById('art-author-select');
+                            const opt = document.createElement('option');
+                            opt.value = data.id; opt.textContent = data.name; opt.selected = true;
+                            sel.appendChild(opt);
+                            closeAuthorModal();
+                        } else {
+                            err.textContent = data.message || 'Gagal menyimpan penulis.'; err.style.display='block';
+                        }
+                    })
+                    .catch(() => { err.textContent = 'Terjadi kesalahan. Coba lagi.'; err.style.display='block'; })
+                    .finally(() => { btn.disabled = false; btn.textContent = 'Simpan Penulis'; });
+                }
+
+                // Close modals on backdrop click
+                document.getElementById('modal-cat').addEventListener('click', function(e){ if(e.target===this) closeCatModal(); });
+                document.getElementById('modal-author').addEventListener('click', function(e){ if(e.target===this) closeAuthorModal(); });
+                </script>
 
                 <div class="form-group" style="margin-bottom:0;">
                     <label class="form-label">Excerpt / Ringkasan <span class="hint">(max 500 karakter)</span></label>

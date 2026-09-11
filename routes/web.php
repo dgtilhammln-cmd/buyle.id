@@ -346,6 +346,10 @@ Route::prefix('admin')->group(function () {
             'edit'    => 'admin.authors.edit',    'update'  => 'admin.authors.update',
             'destroy' => 'admin.authors.destroy',
         ]);
+        // Quick-create Author via AJAX (popup di artikel)
+        Route::post('/authors/quick-create', [\App\Http\Controllers\Admin\AdminAuthorController::class, 'quickCreate'])->name('admin.authors.quick-create');
+        // Daftar kategori artikel unik (untuk dropdown)
+        Route::get('/articles/categories', [AdminArticleController::class, 'categories'])->name('admin.articles.categories');
 
         Route::resource('clients', AdminClientController::class)->names([
             'index'   => 'admin.clients.index',   'create'  => 'admin.clients.create',

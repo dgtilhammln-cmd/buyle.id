@@ -39,8 +39,18 @@ class AdminArticleController extends Controller
     public function create()
     {
         $locales = $this->locales;
-        $authors = Author::all();
-        return view('admin.articles.create', compact('locales', 'authors'));
+        $authors = Author::orderBy('name')->get();
+        $categories = Article::select('category')->whereNotNull('category')->where('category', '!=', '')->distinct()->orderBy('category')->pluck('category');
+        return view('admin.articles.create', compact('locales', 'authors', 'categories'));
+    }
+
+    /**
+     * Return list of unique article categories as JSON (for quick-add dropdown)
+     */
+    public function categories()
+    {
+        $cats = Article::select('category')->whereNotNull('category')->where('category', '!=', '')->distinct()->orderBy('category')->pluck('category');
+        return response()->json($cats);
     }
 
     public function store(Request $request)
@@ -109,9 +119,10 @@ class AdminArticleController extends Controller
     public function edit(Article $article)
     {
         $locales = $this->locales;
-        $authors = Author::all();
+        $authors = Author::orderBy('name')->get();
         $translations = $article->translations->keyBy('locale');
-        return view('admin.articles.edit', compact('article', 'locales', 'translations', 'authors'));
+        $categories = Article::select('category')->whereNotNull('category')->where('category', '!=', '')->distinct()->orderBy('category')->pluck('category');
+        return view('admin.articles.edit', compact('article', 'locales', 'translations', 'authors', 'categories'));
     }
 
     public function update(Request $request, Article $article)

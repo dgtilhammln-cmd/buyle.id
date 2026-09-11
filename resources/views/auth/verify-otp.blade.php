@@ -9,20 +9,6 @@
     <strong style="color: #0F172A;">{{ session('register_data.email') ?? session('otp_email') ?? 'email Anda' }}</strong>
 </p>
 
-@if(session('success'))
-    <div class="alert-error" style="background:#F0FDF4; border-color:#BBF7D0; color:#15803D;">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        {{ session('success') }}
-    </div>
-@endif
-
-@if(session('error'))
-    <div class="alert-error" style="background:#FEF2F2; border-color:#FCA5A5; color:#DC2626;">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        {{ session('error') }}
-    </div>
-@endif
-
 @if($errors->any())
     <div class="alert-error">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>

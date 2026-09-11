@@ -98,6 +98,34 @@ class AdminAuthorController extends Controller
         return redirect()->route('admin.authors.index')->with('success', 'Author berhasil diperbarui.');
     }
 
+    /**
+     * Quick-create author via AJAX from article editor popup
+     */
+    public function quickCreate(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|max:100',
+        ]);
+
+        $name = trim($request->input('name'));
+        $slug = Str::slug($name);
+        $base = $slug; $i = 1;
+        while (Author::where('slug', $slug)->exists()) { $slug = $base . '-' . $i++; }
+
+        $author = Author::create([
+            'name'         => $name,
+            'slug'         => $slug,
+            'photo'        => null,
+            'social_links' => null,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'id'      => $author->id,
+            'name'    => $author->name,
+        ]);
+    }
+
     public function destroy(Author $author)
     {
         $this->deleteStorageFile($author->getRawOriginal('photo'));

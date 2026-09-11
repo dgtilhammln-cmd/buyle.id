@@ -20,7 +20,15 @@ class TrackPageView
             && !$request->ajax()
             && !$request->expectsJson()
         ) {
-            AnalyticsEvent::record('pageview', $request->fullUrl());
+            // Dedup: only count 1 pageview per session per 10 minutes per path
+            // Prevents browser prefetch, page reloads, & minor redirects from inflating count
+            $sessionKey = 'pv_tracked_' . md5($request->getPathInfo());
+            $lastTracked = session($sessionKey, 0);
+
+            if ((time() - $lastTracked) > 600) {
+                session([$sessionKey => time()]);
+                AnalyticsEvent::record('pageview', $request->fullUrl());
+            }
         }
 
         return $response;
