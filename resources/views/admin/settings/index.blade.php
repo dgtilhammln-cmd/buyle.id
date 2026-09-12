@@ -1246,6 +1246,28 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       </div>
     </div>
 
+
+      <div style="grid-column:1 / -1; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:1.25rem; margin-top:0.5rem;">
+        <div style="font-size:0.8rem; font-weight:700; color:#1E293B; margin-bottom:0.75rem;">Upload Gambar Banner Custom (Opsional / Pengganti Iklan Google)</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; align-items:center;">
+          <div>
+            @if(!empty($settings['adsense_custom_image']))
+              <div style="margin-bottom:0.5rem;">
+                <img src="{{ asset('storage/'.$settings['adsense_custom_image']) }}" alt="Custom Banner" style="max-height:90px; border-radius:8px; object-fit:contain; border:1px solid #E2E8F0;">
+              </div>
+            @endif
+            <label class="form-label">Upload Gambar Banner Custom</label>
+            <input type="file" name="adsense_custom_image" class="form-input" accept="image/*">
+            <p style="font-size:0.75rem; color:#94A3B8; margin-top:0.25rem;">Upload gambar banner/promosi manual (PNG/JPG/WebP). Jika diisi, banner ini akan tampil di pop-up modal.</p>
+          </div>
+          <div>
+            <label class="form-label">Link Target Banner Custom</label>
+            <input type="url" name="adsense_custom_url" class="form-input" value="{{ old('adsense_custom_url', $settings['adsense_custom_url'] ?? '') }}" placeholder="https://domain.com/promo">
+            <p style="font-size:0.75rem; color:#94A3B8; margin-top:0.25rem;">URL yang akan dibuka saat pengunjung mengeklik gambar banner custom.</p>
+          </div>
+        </div>
+      </div>
+
     <div style="margin-top:1.25rem;">
       <label class="form-label">Script Custom AdSense / Auto-Ads Tag <span>(Opsional Tag Script Lengkap)</span></label>
       <textarea name="adsense_script_code" class="form-input" rows="4" style="font-family:monospace;font-size:0.8rem;" placeholder='<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8031682064726767" crossorigin="anonymous"></script>'>{{ old('adsense_script_code', $settings['adsense_script_code'] ?? '') }}</textarea>

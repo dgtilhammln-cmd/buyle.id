@@ -2,6 +2,8 @@
     $adsenseEnabled = \App\Models\Setting::get('adsense_status', 'enabled') === 'enabled';
     $pubId = \App\Models\Setting::get('adsense_publisher_id', 'ca-pub-8031682064726767');
     $scriptCode = \App\Models\Setting::get('adsense_script_code', '');
+    $customImage = \App\Models\Setting::get('adsense_custom_image', '');
+    $customUrl = \App\Models\Setting::get('adsense_custom_url', '');
     $interstitialEnabled = \App\Models\Setting::get('adsense_bio_interstitial_status', 'enabled') === 'enabled';
     $interstitialDelay = (int) \App\Models\Setting::get('adsense_interstitial_delay', 3);
 @endphp
@@ -26,7 +28,11 @@
 
             {{-- Clean Minimal Ad Box Container --}}
             <div style="min-height:180px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; margin-bottom:1.25rem; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; padding:0.5rem;">
-                @if(!empty($pubId))
+                @if(!empty($customImage))
+                    <a href="{{ $customUrl ?: '#' }}" target="_blank" style="display:block; width:100%; text-decoration:none;">
+                        <img src="{{ asset('storage/' . $customImage) }}" alt="Sponsor" style="width:100%; max-height:220px; object-fit:contain; border-radius:10px; display:block;">
+                    </a>
+                @elseif(!empty($pubId))
                     <ins class="adsbygoogle"
                          style="display:block; width:100%; height:180px;"
                          data-ad-client="{{ $pubId }}"

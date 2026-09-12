@@ -238,7 +238,7 @@
 
         .prod-name {
             font-size: 1.1rem;
-            font-weight: 800;
+            font-weight: 600;
             line-height: 1.35;
             color:
                 {{ $text }}
@@ -255,7 +255,7 @@
 
         .prod-price {
             font-size: 1.2rem;
-            font-weight: 800;
+            font-weight: 600;
             color:
                 {{ $accent }}
             ;
@@ -272,6 +272,20 @@
         }
 
         .prod-desc {
+            font-size: 0.85rem;
+            font-weight: 400;
+            line-height: 1.65;
+            color: {{ $text }};
+            opacity: 0.85;
+            margin-top: 0.85rem;
+            padding-top: 0.85rem;
+            border-top: 1px solid {{ $border }};
+        }
+        .prod-desc p, .prod-desc span, .prod-desc div {
+            font-size: inherit !important;
+            line-height: inherit !important;
+        }
+        .prod-desc-old {
             font-size: 0.82rem;
             line-height: 1.6;
             color:
@@ -322,7 +336,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 800;
+            font-weight: 600;
             font-size: 1rem;
             color: #000;
             flex-shrink: 0;
@@ -334,7 +348,7 @@
         }
 
         .seller-name {
-            font-weight: 800;
+            font-weight: 600;
             font-size: 0.85rem;
             color:
                 {{ $text }}
@@ -382,7 +396,7 @@
             ;
             font-family: 'Montserrat', sans-serif;
             font-size: 0.92rem;
-            font-weight: 800;
+            font-weight: 600;
             text-align: center;
             text-decoration: none;
             border: none;
@@ -439,7 +453,7 @@
                 <span class="prod-price">Rp {{ number_format($price, 0, ',', '.') }} IDR</span>
             </div>
             @if(!empty($rawDesc))
-                <div class="prod-desc">{!! nl2br(e($rawDesc)) !!}</div>
+                <div class="prod-desc">{!! $rawDesc !!}</div>
             @endif
         </div>
 
@@ -466,6 +480,15 @@
                 target="_blank" class="btn-buy">
                 <i class="fab fa-whatsapp" style="font-size:1.1rem;"></i> Beli via WhatsApp
             </a>
+        @elseif($product || !empty($block->data_json['product_id']))
+            <form action="{{ route('cart.add') }}" method="POST" style="width:100%;">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $product ? $product->id : ($block->data_json['product_id'] ?? '') }}">
+                <input type="hidden" name="qty" value="1">
+                <button type="submit" class="btn-buy" style="border:none; cursor:pointer;">
+                    <i class="fas fa-shopping-bag"></i> Beli Sekarang (Payment Gateway)
+                </button>
+            </form>
         @elseif($block->url)
             <a href="{{ $block->url }}" target="_blank" class="btn-buy">
                 <i class="fas fa-shopping-cart"></i> Beli Sekarang
