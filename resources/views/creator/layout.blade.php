@@ -439,6 +439,11 @@
                 display: none;
             }
 
+            /* Hide canvas desktop profile button on mobile so avatar stays only at top-right mobile bar */
+            #creator-profile-container {
+                display: none !important;
+            }
+
             .cr-sidebar {
                 width: 280px;
                 background: linear-gradient(180deg, #1eb349 0%, #a5cf37 100%) !important;
