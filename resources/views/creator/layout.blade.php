@@ -20,7 +20,7 @@
         body {
             font-family: 'Montserrat', sans-serif;
             font-weight: 400;
-            background: linear-gradient(135deg, #126829 0%, #1eb349 50%, #8ebd28 100%);
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             background-attachment: fixed;
             color: #0f172a;
             min-height: 100vh;
@@ -377,7 +377,7 @@
         /* ── RESPONSIVE MOBILE ── */
         .cr-mobile-bar {
             display: none;
-            background: linear-gradient(90deg, #126829 0%, #1eb349 60%, #8ebd28 100%);
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             padding: 1rem 1.25rem;
             align-items: center;
             justify-content: space-between;
@@ -430,7 +430,7 @@
                 right: 0;
                 z-index: 80;
                 height: 56px;
-                background: linear-gradient(90deg, #126829 0%, #1eb349 60%, #8ebd28 100%) !important;
+                background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
                 box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
             }
 
@@ -441,7 +441,7 @@
 
             .cr-sidebar {
                 width: 280px;
-                background: linear-gradient(180deg, #126829 0%, #179b3e 60%, #8ebd28 100%) !important;
+                background: linear-gradient(180deg, #1eb349 0%, #a5cf37 100%) !important;
                 transform: translateX(-100%);
                 transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
                 z-index: 10000;
