@@ -1186,6 +1186,25 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     </div>
   </div>
 
+  {{-- Card Tes Kirim Email --}}
+  <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
+      <svg width="18" height="18" fill="none" stroke="#2563EB" stroke-width="2" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+      <div style="font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#2563EB;">Uji Coba Pengiriman Email (Test SMTP Connection)</div>
+    </div>
+
+    <p style="font-size:0.85rem;color:#64748B;margin-bottom:1rem;line-height:1.5;">
+      Kirim email pengujian untuk memastikan server Hostinger Anda terhubung dengan baik tanpa error.
+    </p>
+
+    <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;max-width:600px;">
+      <input type="email" id="test_email_input" placeholder="Masukkan email tujuan tes (misal: email@anda.com)" value="{{ old('test_email', $settings['mail_from_address'] ?? 'hai@buyle.id') }}" class="form-input" style="flex:1;">
+      <button type="button" onclick="submitTestEmail()" style="display:inline-flex;align-items:center;gap:.375rem;padding:.625rem 1.25rem;font-size:.85rem;font-weight:700;background:#2563EB;color:#ffffff;border:none;border-radius:8px;cursor:pointer;transition:all .2s;">
+        🚀 Kirim Email Tes
+      </button>
+    </div>
+  </div>
+</div>
 
 {{-- ======== TAB: MONETISASI ADSENSE ======== --}}
 <div class="tab-section" id="tab-adsense" style="display:none;">
@@ -1235,26 +1254,6 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
 
     <div style="margin-top:1.5rem;text-align:right;">
       <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;">Simpan Pengaturan AdSense</button>
-    </div>
-  </div>
-</div>
-
-  {{-- Card Tes Kirim Email --}}
-  <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
-    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-      <svg width="18" height="18" fill="none" stroke="#2563EB" stroke-width="2" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-      <div style="font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#2563EB;">Uji Coba Pengiriman Email (Test SMTP Connection)</div>
-    </div>
-
-    <p style="font-size:0.85rem;color:#64748B;margin-bottom:1rem;line-height:1.5;">
-      Kirim email pengujian untuk memastikan server Hostinger Anda terhubung dengan baik tanpa error.
-    </p>
-
-    <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;max-width:600px;">
-      <input type="email" id="test_email_input" placeholder="Masukkan email tujuan tes (misal: email@anda.com)" value="{{ old('test_email', $settings['mail_from_address'] ?? 'hai@buyle.id') }}" class="form-input" style="flex:1;">
-      <button type="button" onclick="submitTestEmail()" style="display:inline-flex;align-items:center;gap:.375rem;padding:.625rem 1.25rem;font-size:.85rem;font-weight:700;background:#2563EB;color:#ffffff;border:none;border-radius:8px;cursor:pointer;transition:all .2s;">
-        🚀 Kirim Email Tes
-      </button>
     </div>
   </div>
 </div>
