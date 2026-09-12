@@ -16,7 +16,7 @@
         $prodTitle = !empty($block->title) ? $block->title : ($product->name ?? 'Produk');
         $price = $block->data_json['price'] ?? $block->data_json['custom_price'] ?? ($product ? ($product->is_on_sale ? $product->sale_price : $product->effective_price) : 0);
         $origPrice = $block->data_json['original_price'] ?? ($product && $product->is_on_sale ? $product->price : null);
-        $paymentMethod = $block->data_json['payment_method'] ?? 'wa';
+        $paymentMethod = $block->data_json['payment_method'] ?? ($block->type === 'buyle_product' ? 'web' : 'wa');
         $waText = $block->data_json['wa_text'] ?? '';
         $waNumber = $config['wa'] ?? '';
         $waMessage = 'Halo, saya mendapatkan nomor dari buyle.id. ' . ($waText ?: 'Saya tertarik dengan produk *' . $prodTitle . '* (Rp ' . number_format($price, 0, ',', '.') . ' IDR). Apakah masih tersedia?');
@@ -475,7 +475,7 @@
     </div>
 
     <div class="cta-bar">
-        @if($paymentMethod === 'wa' && $waNumber)
+        @if($paymentMethod === 'wa' && $block->type !== 'buyle_product' && $waNumber)
             <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $waNumber) }}?text={{ urlencode($waMessage) }}"
                 target="_blank" class="btn-buy">
                 <i class="fab fa-whatsapp" style="font-size:1.1rem;"></i> Beli via WhatsApp

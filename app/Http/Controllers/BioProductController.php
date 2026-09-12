@@ -13,7 +13,7 @@ class BioProductController extends Controller
     {
         $profile = CreatorProfile::where('store_slug', $username)->firstOrFail();
 
-        // Search by block ID or slug inside data_json
+        // Search by block ID, slug in data_json, or matching product slug
         $block = CreatorBioBlock::where('creator_id', $profile->id)
             ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])
             ->where('is_active', true)
@@ -25,7 +25,37 @@ class BioProductController extends Controller
                           ->orWhere('id', $identifier);
                 }
             })
-            ->firstOrFail();
+            ->first();
+
+        if (!$block) {
+            // Fallback: search by product slug or title slug
+            $blocks = CreatorBioBlock::where('creator_id', $profile->id)
+                ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])
+                ->where('is_active', true)
+                ->get();
+
+            foreach ($blocks as $b) {
+                $bSlug = $b->data_json['slug'] ?? null;
+                if (!$bSlug && !empty($b->data_json['product_id'])) {
+                    $p = Product::find($b->data_json['product_id']);
+                    if ($p && $p->slug === $identifier) {
+                        $block = $b;
+                        break;
+                    }
+                }
+                if (!$bSlug) {
+                    $bSlug = \Illuminate\Support\Str::slug($b->title);
+                }
+                if ($bSlug === $identifier) {
+                    $block = $b;
+                    break;
+                }
+            }
+        }
+
+        if (!$block) {
+            abort(404);
+        }
 
         $product = null;
         if (!empty($block->data_json['product_id'])) {
