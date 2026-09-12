@@ -612,18 +612,49 @@
                     : asset('storage/' . $topbarRawAvatar);
             }
         @endphp
-        <a href="{{ $topbarUser->role === 'buyer' ? route('creator.onboarding') : route('creator.profile.edit') }}"
-           style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.35);overflow:hidden;text-decoration:none;flex-shrink:0;transition:all 0.2s;"
-           title="Profil Saya">
-            @if($topbarAvatarUrl)
-                <img src="{{ $topbarAvatarUrl }}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">
-            @else
-                <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="8" r="4"/>
-                    <path d="M20 21a8 8 0 1 0-16 0"/>
-                </svg>
-            @endif
-        </a>
+        <div style="position:relative;">
+            <button type="button" onclick="toggleMobileProfileDropdown(event)"
+               style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.35);overflow:hidden;cursor:pointer;flex-shrink:0;transition:all 0.2s;padding:0;"
+               title="Profil Saya">
+                @if($topbarAvatarUrl)
+                    <img src="{{ $topbarAvatarUrl }}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">
+                @else
+                    <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M20 21a8 8 0 1 0-16 0"/>
+                    </svg>
+                @endif
+            </button>
+            {{-- Mobile Profile Dropdown --}}
+            <div id="mobile-profile-dropdown" style="display:none;opacity:0;transform:translateY(-8px);position:absolute;top:calc(100% + 10px);right:0;width:220px;background:#fff;border:1px solid #E2E8F0;border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,0.15);z-index:99999;overflow:hidden;transition:opacity .2s,transform .2s;padding:0.5rem 0;font-family:inherit;">
+                <div style="padding:0.65rem 1rem;border-bottom:1px solid #F1F5F9;">
+                    <div style="font-size:0.82rem;font-weight:700;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ auth()->user()->name }}</div>
+                    <div style="font-size:0.72rem;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;">{{ auth()->user()->email }}</div>
+                </div>
+                <div style="padding:0.25rem 0;">
+                    <a href="{{ route('creator.profile.edit') }}" style="display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1rem;color:#334155;font-size:0.8rem;font-weight:600;text-decoration:none;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+                        Profil &amp; Toko
+                    </a>
+                    <a href="{{ route('creator.bio.index') }}" style="display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1rem;color:#334155;font-size:0.8rem;font-weight:600;text-decoration:none;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        Link in Bio
+                    </a>
+                    <a href="{{ route('creator.payout.settings') }}" style="display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1rem;color:#334155;font-size:0.8rem;font-weight:600;text-decoration:none;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/></svg>
+                        Saldo &amp; Pencairan
+                    </a>
+                    <div style="border-top:1px solid #F1F5F9;margin:0.2rem 0;"></div>
+                    <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                        @csrf
+                        <button type="submit" style="width:100%;display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1rem;color:#DC2626;background:none;border:none;font-size:0.8rem;font-weight:600;cursor:pointer;text-align:left;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -978,23 +1009,49 @@
         const toggle = document.getElementById('crMobileToggle');
         const sidebar = document.getElementById('crSidebar');
         const overlay = document.getElementById('crOverlay');
+
+        // Toggle button (hamburger) - may not exist on mobile
         if(toggle) {
             toggle.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
+        }
+
+        // Overlay always closes sidebar regardless of toggle existence
+        if(overlay) {
             overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
         }
+
+        // Mobile topbar profile dropdown
+        function toggleMobileProfileDropdown(e) {
+            e.stopPropagation();
+            const dd = document.getElementById('mobile-profile-dropdown');
+            if (!dd) return;
+            const isHidden = dd.style.display === 'none' || dd.style.display === '';
+            if (isHidden) {
+                dd.style.display = 'block';
+                requestAnimationFrame(() => { dd.style.opacity = '1'; dd.style.transform = 'translateY(0)'; });
+            } else {
+                dd.style.opacity = '0'; dd.style.transform = 'translateY(-8px)';
+                setTimeout(() => { dd.style.display = 'none'; }, 200);
+            }
+        }
+
+        // Close mobile dropdown on outside click
+        window.addEventListener('click', function(e) {
+            const mdd = document.getElementById('mobile-profile-dropdown');
+            if (mdd && !e.target.closest('.cr-mobile-bar')) {
+                mdd.style.opacity = '0'; mdd.style.transform = 'translateY(-8px)';
+                setTimeout(() => { mdd.style.display = 'none'; }, 200);
+            }
+        });
 
         function showLockedModal(e) {
             if(e) e.preventDefault();
             const modal = document.getElementById('lockedFeatureModal');
-            if(modal) {
-                modal.style.display = 'flex';
-            }
+            if(modal) { modal.style.display = 'flex'; }
         }
         function closeLockedModal() {
             const modal = document.getElementById('lockedFeatureModal');
-            if(modal) {
-                modal.style.display = 'none';
-            }
+            if(modal) { modal.style.display = 'none'; }
             const firstInput = document.querySelector('#profileForm input[name="store_name"]');
             if(firstInput) firstInput.focus();
         }
