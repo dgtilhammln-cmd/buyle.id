@@ -33,6 +33,15 @@ class BioPageController extends Controller
         $config = $profile->bio_config ?? [];
         $blocks = $profile->bioBlocks;
 
+        // Auto-populate bio avatar from user's Google/profile avatar if not set
+        if (empty($config['avatar']) && $profile->user) {
+            $userAvatar = $profile->user->avatar ?? null;
+            if ($userAvatar) {
+                // Google avatars are full URLs, local ones are relative paths
+                $config['_user_avatar'] = $userAvatar;
+            }
+        }
+
         // Resolve Buyle products linked in blocks
         $productIds = $blocks->where('type', 'buyle_product')
             ->pluck('data_json')->flatten()->filter(fn($v) => is_array($v) && isset($v['product_id']))
@@ -57,7 +66,16 @@ class BioPageController extends Controller
         $bioName   = $config['name'] ?? $profile->store_name ?? $username;
         $seoTitle  = $bioName . ' - ' . $roleTitle . ' | buyle.id';
         $seoDesc   = !empty($config['bio']) ? $config['bio'] : (!empty($profile->store_description) ? $profile->store_description : 'Temukan berbagai produk digital, rekomendasi affiliate, dan informasi resmi dari ' . $bioName . ' di buyle.id.');
-        $ogImage   = !empty($config['avatar']) ? asset('storage/' . $config['avatar']) : asset('images/buyle-og.png');
+
+        // OG image: bio avatar > user avatar > default
+        $ogImage = asset('images/buyle-og.png');
+        if (!empty($config['avatar'])) {
+            $ogImage = asset('storage/' . $config['avatar']);
+        } elseif (!empty($config['_user_avatar'])) {
+            $userAv = $config['_user_avatar'];
+            $ogImage = \Illuminate\Support\Str::startsWith($userAv, ['http://', 'https://']) ? $userAv : asset('storage/' . $userAv);
+        }
+
         $canonical = url('/' . $username);
 
         return view("bio.{$theme}", compact(

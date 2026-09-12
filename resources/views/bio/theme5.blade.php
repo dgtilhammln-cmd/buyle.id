@@ -842,8 +842,17 @@
                     {{-- Avatar (Large Rounded Square Image Overlapping Header like Motia) --}}
                     <div class="motia-avatar-wrap">
                         <div class="motia-avatar">
-                            @if(!empty($config['avatar']))
-                                <img src="{{ asset('storage/' . $config['avatar']) }}" alt="{{ $config['name'] ?? '' }}">
+                            @php
+                                $bioAvatarSrc = null;
+                                if (!empty($config['avatar'])) {
+                                    $bioAvatarSrc = asset('storage/' . $config['avatar']);
+                                } elseif (!empty($config['_user_avatar'])) {
+                                    $ua = $config['_user_avatar'];
+                                    $bioAvatarSrc = \Illuminate\Support\Str::startsWith($ua, ['http://', 'https://']) ? $ua : asset('storage/' . $ua);
+                                }
+                            @endphp
+                            @if($bioAvatarSrc)
+                                <img src="{{ $bioAvatarSrc }}" alt="{{ $config['name'] ?? '' }}">
                             @else
                                 <div style="width:100%;height:100%;background:#0f172a;display:flex;align-items:center;justify-content:center;font-size:2.4rem;font-weight:900;color:#fff;">
                                     {{ strtoupper(substr($config['name'] ?? $username, 0, 1)) }}

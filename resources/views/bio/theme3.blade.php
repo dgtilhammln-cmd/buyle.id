@@ -550,8 +550,17 @@
         {{-- Profile Header --}}
         <div class="profile-container fade-up" style="animation-delay:0.1s">
             <div class="avatar-wrap">
-                @if(!empty($config['avatar']))
-                    <img src="{{ asset('storage/' . $config['avatar']) }}" alt="{{ $config['name'] ?? '' }}">
+                @php
+                    $bioAvatarSrc = null;
+                    if (!empty($config['avatar'])) {
+                        $bioAvatarSrc = asset('storage/' . $config['avatar']);
+                    } elseif (!empty($config['_user_avatar'])) {
+                        $ua = $config['_user_avatar'];
+                        $bioAvatarSrc = \Illuminate\Support\Str::startsWith($ua, ['http://', 'https://']) ? $ua : asset('storage/' . $ua);
+                    }
+                @endphp
+                @if($bioAvatarSrc)
+                    <img src="{{ $bioAvatarSrc }}" alt="{{ $config['name'] ?? '' }}">
                 @else
                     <div
                         style="width:100%;height:100%;background:linear-gradient(135deg,#1eb349,#a5cf37);display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:900;color:#fff;">
