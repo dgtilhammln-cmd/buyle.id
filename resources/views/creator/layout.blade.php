@@ -601,12 +601,22 @@
             </div>
         @endif
         {{-- Profile icon on the right --}}
-        @php $topbarUser = auth()->user(); $topbarCp = $topbarUser->creatorProfile; @endphp
+        @php
+            $topbarUser = auth()->user();
+            $topbarCp = $topbarUser->creatorProfile;
+            $topbarRawAvatar = $topbarCp?->avatar ?? $topbarUser->avatar ?? null;
+            $topbarAvatarUrl = null;
+            if ($topbarRawAvatar) {
+                $topbarAvatarUrl = \Illuminate\Support\Str::startsWith($topbarRawAvatar, ['http://', 'https://'])
+                    ? $topbarRawAvatar
+                    : asset('storage/' . $topbarRawAvatar);
+            }
+        @endphp
         <a href="{{ $topbarUser->role === 'buyer' ? route('creator.onboarding') : route('creator.profile.edit') }}"
            style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.35);overflow:hidden;text-decoration:none;flex-shrink:0;transition:all 0.2s;"
            title="Profil Saya">
-            @if($topbarCp && $topbarCp->avatar)
-                <img src="{{ asset('storage/' . $topbarCp->avatar) }}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">
+            @if($topbarAvatarUrl)
+                <img src="{{ $topbarAvatarUrl }}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">
             @else
                 <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24">
                     <circle cx="12" cy="8" r="4"/>
