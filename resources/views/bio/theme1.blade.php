@@ -621,8 +621,8 @@
             $linkBlocks = $blocks->whereIn('type', ['link', 'pdf', 'image']);
             $tiktokBlocks = $blocks->where('type', 'tiktok');
             $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
-            $buyleBlocks = $blocks->where('type', 'buyle_product');
-            $customProdBlocks = $blocks->where('type', 'custom_product');
+            $buyleBlocks = $blocks->where('type', 'buyle_product')->values();
+            $customProdBlocks = $blocks->where('type', 'custom_product')->values();
         @endphp
 
         {{-- TikTok Slider --}}
