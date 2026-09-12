@@ -1020,11 +1020,11 @@
                             </a>
                         @endforeach
                         @foreach($buyleBlocks as $block)
-                            @php $num5++; $prod=$products[$block->data_json['product_id']??0]??null; @endphp
+                            @php $num5++; $prod=$products[$block->data_json['product_id']??0]??null; $prodUrl=route('bio.product.show',[$username,$block->data_json['slug']??$block->id]); $displayTitle=!empty($block->title)?$block->title:($prod->name??''); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); @endphp
                             @if($prod)
-                            <a href="{{ $block->url }}" target="_blank" class="landing-prod-card search-item bio-track-link" data-title="{{ $prod->name }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
+                            <a href="{{ $prodUrl }}" class="landing-prod-card search-item bio-track-link" data-title="{{ $displayTitle }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
                                 <div class="landing-prod-img"><div class="prod-badge-num">#{{ sprintf('%02d',$num5) }}</div>@if($prod->image)<img src="{{ asset('storage/'.$prod->image) }}" alt="{{ $prod->name }}">@else<img src="https://placehold.co/400x400/fff/cbd5e1?text=Digital" alt="No Image">@endif</div>
-                                <div class="landing-prod-info"><h3 class="landing-prod-title">{{ $prod->name }}</h3><div class="landing-prod-footer"><span class="landing-prod-price">@if($prod->is_on_sale)<s style="opacity:.55;font-size:.72rem;">Rp {{ number_format($prod->price,0,',','.') }}</s> Rp {{ number_format($prod->sale_price,0,',','.') }}@else Rp {{ number_format($prod->effective_price,0,',','.') }}@endif</span><span class="landing-prod-btn">Beli <i class="fas fa-chevron-right"></i></span></div></div>
+                                <div class="landing-prod-info"><h3 class="landing-prod-title">{{ $displayTitle }}</h3><div class="landing-prod-footer"><span class="landing-prod-price">@if(!empty($origPrice)&&$origPrice>$price)<s style="opacity:.55;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</s> @endif Rp {{ number_format($price,0,',','.') }}</span><span class="landing-prod-btn">Beli <i class="fas fa-chevron-right"></i></span></div></div>
                             </a>
                             @endif
                         @endforeach
@@ -1062,11 +1062,11 @@
                 <div class="cat-panel" id="tab5-dig">
                     <div class="landing-products-grid">
                         @foreach($buyleBlocks as $i => $block)
-                            @php $prod=$products[$block->data_json['product_id']??0]??null; @endphp
+                            @php $prod=$products[$block->data_json['product_id']??0]??null; $prodUrl=route('bio.product.show',[$username,$block->data_json['slug']??$block->id]); $displayTitle=!empty($block->title)?$block->title:($prod->name??''); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); @endphp
                             @if($prod)
-                            <a href="{{ $block->url }}" target="_blank" class="landing-prod-card search-item bio-track-link" data-title="{{ $prod->name }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
+                            <a href="{{ $prodUrl }}" class="landing-prod-card search-item bio-track-link" data-title="{{ $displayTitle }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
                                 <div class="landing-prod-img"><div class="prod-badge-num">#{{ sprintf('%02d',$i+1) }}</div>@if($prod->image)<img src="{{ asset('storage/'.$prod->image) }}" alt="{{ $prod->name }}">@else<img src="https://placehold.co/400x400/fff/cbd5e1?text=Digital" alt="No Image">@endif</div>
-                                <div class="landing-prod-info"><h3 class="landing-prod-title">{{ $prod->name }}</h3><div class="landing-prod-footer"><span class="landing-prod-price">@if($prod->is_on_sale)<s style="opacity:.55;font-size:.72rem;">Rp {{ number_format($prod->price,0,',','.') }}</s> Rp {{ number_format($prod->sale_price,0,',','.') }}@else Rp {{ number_format($prod->effective_price,0,',','.') }}@endif</span><span class="landing-prod-btn">Beli <i class="fas fa-chevron-right"></i></span></div></div>
+                                <div class="landing-prod-info"><h3 class="landing-prod-title">{{ $displayTitle }}</h3><div class="landing-prod-footer"><span class="landing-prod-price">@if(!empty($origPrice)&&$origPrice>$price)<s style="opacity:.55;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</s> @endif Rp {{ number_format($price,0,',','.') }}</span><span class="landing-prod-btn">Beli <i class="fas fa-chevron-right"></i></span></div></div>
                             </a>
                             @endif
                         @endforeach

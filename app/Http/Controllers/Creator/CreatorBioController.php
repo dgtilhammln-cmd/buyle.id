@@ -265,7 +265,7 @@ class CreatorBioController extends Controller
         if ($request->filled('icon_class'))  $data['icon_class']  = $request->icon_class;
         
         // Handle custom product specific fields
-        if ($request->type === 'custom_product') {
+        if (in_array($request->type, ['custom_product', 'buyle_product'])) {
             if ($request->filled('price')) $data['price'] = $request->price;
             if ($request->filled('original_price')) $data['original_price'] = $request->original_price;
             if ($request->filled('payment_method')) $data['payment_method'] = $request->payment_method;
@@ -365,7 +365,7 @@ class CreatorBioController extends Controller
         if ($request->has('description')) $data['description'] = $request->description;
         if ($request->has('icon_class'))  $data['icon_class']  = $request->icon_class;
         
-        if ($block->type === 'custom_product') {
+        if (in_array($block->type, ['custom_product', 'buyle_product'])) {
             if ($request->has('price')) $data['price'] = $request->price;
             if ($request->has('original_price')) $data['original_price'] = $request->original_price;
             if ($request->has('payment_method')) $data['payment_method'] = $request->payment_method;

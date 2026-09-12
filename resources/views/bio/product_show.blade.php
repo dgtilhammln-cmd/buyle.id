@@ -5,17 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     @php
+        $product = $product ?? null;
         $images = $block->data_json['images'] ?? [];
-        $price = $block->data_json['price'] ?? 0;
-        $origPrice = $block->data_json['original_price'] ?? null;
+        if (empty($images) && !empty($block->data_json['image'])) {
+            $images = [$block->data_json['image']];
+        }
+        if (empty($images) && $product && $product->image) {
+            $images = [$product->image];
+        }
+        $prodTitle = !empty($block->title) ? $block->title : ($product->name ?? 'Produk');
+        $price = $block->data_json['price'] ?? $block->data_json['custom_price'] ?? ($product ? ($product->is_on_sale ? $product->sale_price : $product->effective_price) : 0);
+        $origPrice = $block->data_json['original_price'] ?? ($product && $product->is_on_sale ? $product->price : null);
         $paymentMethod = $block->data_json['payment_method'] ?? 'wa';
         $waText = $block->data_json['wa_text'] ?? '';
         $waNumber = $config['wa'] ?? '';
-        $waMessage = 'Halo, saya mendapatkan nomor dari buyle.id. ' . ($waText ?: 'Saya tertarik dengan produk *' . $block->title . '* (Rp ' . number_format($price, 0, ',', '.') . ' IDR). Apakah masih tersedia?');
-        $firstImage = !empty($images[0]) ? asset('storage/' . $images[0]) : asset('images/buyle-og.png');
-        $pageTitle = $block->title . ' - ' . ($config['name'] ?? $username) . ' | buyle.id';
-        $rawDesc  = $block->data_json['description'] ?? '';
-        $pageDesc = !empty($rawDesc) ? Str::limit(strip_tags($rawDesc), 160) : 'Beli ' . $block->title . ' berkualitas dengan harga terbaik dari ' . ($config['name'] ?? $username) . ' di buyle.id.';
+        $waMessage = 'Halo, saya mendapatkan nomor dari buyle.id. ' . ($waText ?: 'Saya tertarik dengan produk *' . $prodTitle . '* (Rp ' . number_format($price, 0, ',', '.') . ' IDR). Apakah masih tersedia?');
+        $firstImage = !empty($images[0]) ? (Str::startsWith($images[0], 'http') ? $images[0] : asset('storage/' . $images[0])) : asset('images/buyle-og.png');
+        $pageTitle = $prodTitle . ' - ' . ($config['name'] ?? $username) . ' | buyle.id';
+        $rawDesc  = $block->data_json['description'] ?? ($product ? $product->description : '');
+        $pageDesc = !empty($rawDesc) ? Str::limit(strip_tags($rawDesc), 160) : 'Beli ' . $prodTitle . ' berkualitas dengan harga terbaik dari ' . ($config['name'] ?? $username) . ' di buyle.id.';
     @endphp
 
     <title>{{ $pageTitle }}</title>
@@ -423,15 +431,15 @@
         </div>
 
         <div class="prod-info-box">
-            <h1 class="prod-name">{{ $block->title }}</h1>
+            <h1 class="prod-name">{{ $prodTitle }}</h1>
             <div class="prod-price-wrap">
                 @if(!empty($origPrice) && $origPrice > $price)
                     <span class="prod-orig-price">Rp {{ number_format($origPrice, 0, ',', '.') }}</span>
                 @endif
                 <span class="prod-price">Rp {{ number_format($price, 0, ',', '.') }} IDR</span>
             </div>
-            @if(!empty($block->data_json['description']))
-                <div class="prod-desc">{{ $block->data_json['description'] }}</div>
+            @if(!empty($rawDesc))
+                <div class="prod-desc">{!! nl2br(e($rawDesc)) !!}</div>
             @endif
         </div>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CreatorBioBlock;
 use App\Models\CreatorProfile;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class BioProductController extends Controller
@@ -14,7 +15,7 @@ class BioProductController extends Controller
 
         // Search by block ID or slug inside data_json
         $block = CreatorBioBlock::where('creator_id', $profile->id)
-            ->where('type', 'custom_product')
+            ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])
             ->where('is_active', true)
             ->where(function ($query) use ($identifier) {
                 if (is_numeric($identifier)) {
@@ -26,9 +27,14 @@ class BioProductController extends Controller
             })
             ->firstOrFail();
 
+        $product = null;
+        if (!empty($block->data_json['product_id'])) {
+            $product = Product::find($block->data_json['product_id']);
+        }
+
         $config = $profile->bio_config ?? [];
         $theme  = $profile->bio_theme ?? 'theme1';
 
-        return view('bio.product_show', compact('profile', 'block', 'config', 'theme', 'username'));
+        return view('bio.product_show', compact('profile', 'block', 'config', 'theme', 'username', 'product'));
     }
 }

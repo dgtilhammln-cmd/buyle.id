@@ -716,11 +716,11 @@
                     </a>
                 @endforeach
                 @foreach($buyleBlocks as $block)
-                    @php $allNum++; $prod=$products[$block->data_json['product_id']??0]??null; @endphp
+                    @php $allNum++; $prod=$products[$block->data_json['product_id']??0]??null; $prodUrl=route('bio.product.show',[$username,$block->data_json['slug']??$block->id]); $displayTitle=!empty($block->title)?$block->title:($prod->name??''); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); @endphp
                     @if($prod)
-                    <a href="{{ $block->url }}" target="_blank" class="prod-card search-item bio-track-link" data-title="{{ $prod->name }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
+                    <a href="{{ $prodUrl }}" class="prod-card search-item bio-track-link" data-title="{{ $displayTitle }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
                         <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$allNum) }}</div>@if($prod->image)<img src="{{ asset('storage/'.$prod->image) }}" alt="{{ $prod->name }}">@else<img src="https://placehold.co/400x400/222/555?text=Produk" alt="No Image">@endif</div>
-                        <div class="prod-info"><h3 class="prod-title">{{ $prod->name }}</h3><div class="prod-price">@if($prod->is_on_sale)<span style="text-decoration:line-through;opacity:.55;font-size:.72rem;">Rp {{ number_format($prod->price,0,',','.') }}</span> Rp {{ number_format($prod->sale_price,0,',','.') }}@else Rp {{ number_format($prod->effective_price,0,',','.') }}@endif</div></div>
+                        <div class="prod-info"><h3 class="prod-title">{{ $displayTitle }}</h3><div class="prod-price">@if(!empty($origPrice)&&$origPrice>$price)<span style="text-decoration:line-through;opacity:.55;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</span> @endif Rp {{ number_format($price,0,',','.') }}</div></div>
                     </a>
                     @endif
                 @endforeach
@@ -761,11 +761,11 @@
         <div class="cat-panel" id="tab4-dig">
             <div class="product-grid">
                 @foreach($buyleBlocks as $i => $block)
-                    @php $prod=$products[$block->data_json['product_id']??0]??null; @endphp
+                    @php $prod=$products[$block->data_json['product_id']??0]??null; $prodUrl=route('bio.product.show',[$username,$block->data_json['slug']??$block->id]); $displayTitle=!empty($block->title)?$block->title:($prod->name??''); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); @endphp
                     @if($prod)
-                    <a href="{{ $block->url }}" target="_blank" class="prod-card search-item bio-track-link" data-title="{{ $prod->name }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
+                    <a href="{{ $prodUrl }}" class="prod-card search-item bio-track-link" data-title="{{ $displayTitle }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
                         <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$i+1) }}</div>@if($prod->image)<img src="{{ asset('storage/'.$prod->image) }}" alt="{{ $prod->name }}">@else<img src="https://placehold.co/400x400/222/555?text=Produk" alt="No Image">@endif</div>
-                        <div class="prod-info"><h3 class="prod-title">{{ $prod->name }}</h3><div class="prod-price">@if($prod->is_on_sale)<span style="text-decoration:line-through;opacity:.55;font-size:.72rem;">Rp {{ number_format($prod->price,0,',','.') }}</span> Rp {{ number_format($prod->sale_price,0,',','.') }}@else Rp {{ number_format($prod->effective_price,0,',','.') }}@endif</div></div>
+                        <div class="prod-info"><h3 class="prod-title">{{ $displayTitle }}</h3><div class="prod-price">@if(!empty($origPrice)&&$origPrice>$price)<span style="text-decoration:line-through;opacity:.55;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</span> @endif Rp {{ number_format($price,0,',','.') }}</div></div>
                     </a>
                     @endif
                 @endforeach
