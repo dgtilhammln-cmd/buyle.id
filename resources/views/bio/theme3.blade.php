@@ -837,6 +837,7 @@
             });
         });
     </script>
+    @include('partials.adsense_modal')
     @include('partials.report_modal', ['reportType' => 'link_in_bio', 'targetName' => $config['name'] ?? $profile->store_name ?? $username])
 </body>
 

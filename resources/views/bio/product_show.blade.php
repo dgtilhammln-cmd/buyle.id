@@ -497,6 +497,7 @@
             });
         }
     </script>
+    @include('partials.adsense_modal')
     @include('partials.report_modal', ['reportType' => 'product', 'targetName' => $block->title ?? 'Produk Digital'])
 </body>
 
