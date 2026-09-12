@@ -2290,7 +2290,7 @@
                         <input type="text" name="price" id="umkmPrice" class="form-input" placeholder="150.000"
                             oninput="formatRupiahInput(this)" required>
                         <span class="form-hint" style="color:#1eb349; font-size:0.7rem;">Otomatis dengan titik (contoh:
-                            3.355.555 IDR)</span>
+                            3.355.555)</span>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Harga Coret (Rp / IDR) <span

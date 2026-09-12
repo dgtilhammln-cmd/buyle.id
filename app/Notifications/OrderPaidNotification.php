@@ -35,6 +35,10 @@ class OrderPaidNotification extends Notification
         $ticketPasses = \App\Models\TicketPass::where('order_id', $this->order->id)->with('product')->get();
         // Deteksi jenis transaksi (Ticketing vs Produk Digital)
         $hasTickets = $ticketPasses->isNotEmpty() || $this->order->items->contains(fn($i) => $i->product?->product_type === 'ticket');
+        $hasPhysical = $this->order->items->contains(function ($i) {
+            $type = $i->product?->product_type ?? $i->product?->type ?? '';
+            return in_array($type, ['physical', 'product', 'fisik', 'umkm']);
+        });
 
         // Render item list table
         $itemsHtml = '
@@ -125,6 +129,15 @@ class OrderPaidNotification extends Notification
             $ctaText          = 'Buka & Simpan E-Ticket Saya';
             $promptMsg        = "Silakan simpan email ini atau tunjukkan QR Code di atas saat proses check-in di lokasi acara:";
             $footerNote       = 'Ada kendala terkait lokasi, jadwal event, atau tiket? Balas email ini aja, tim kami siap bantu!';
+        } elseif ($hasPhysical) {
+            $subject          = "Pembayaran Berhasil! Pesanan Produk #{$orderNumber} Sedang Diproses | buyle.id";
+            $badgeText        = 'PRODUK FISIK DIPROSES';
+            $title            = 'Pembayaran Produk Fisik Berhasil!';
+            $subtitle         = "Pesanan kamu sudah diterima dan sedang disiapkan oleh penjual #{$orderNumber}";
+            $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih banyak telah memesan produk di <strong>buyle.id</strong>. Pembayaran kamu untuk pesanan produk fisik <strong>#{$orderNumber}</strong> telah kami terima dan terverifikasi:";
+            $ctaText          = 'Lihat Detail & Status Pesanan';
+            $promptMsg        = "Penjual/UMKM sedang menyiapkan pesanan kamu. Kamu dapat memantau status pesanan dan rincian pengiriman melalui tombol di bawah ini:";
+            $footerNote       = 'Ada pertanyaan terkait pengiriman atau produk fisik ini? Balas email ini aja, tim kami siap membantu!';
         } else {
             $subject          = "Pembayaran Berhasil! File Akses Produk Digital #{$orderNumber} Ready | buyle.id";
             $badgeText        = 'DIGITAL PRODUCT READY';

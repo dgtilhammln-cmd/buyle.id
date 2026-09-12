@@ -19,7 +19,7 @@
         $paymentMethod = $block->data_json['payment_method'] ?? ($block->type === 'buyle_product' ? 'web' : 'wa');
         $waText = $block->data_json['wa_text'] ?? '';
         $waNumber = $config['wa'] ?? '';
-        $waMessage = 'Halo, saya mendapatkan nomor dari buyle.id. ' . ($waText ?: 'Saya tertarik dengan produk *' . $prodTitle . '* (Rp ' . number_format($price, 0, ',', '.') . ' IDR). Apakah masih tersedia?');
+        $waMessage = 'Halo, saya mendapatkan nomor dari buyle.id. ' . ($waText ?: 'Saya tertarik dengan produk *' . $prodTitle . '* (Rp ' . number_format($price, 0, ',', '.') . '). Apakah masih tersedia?');
         $firstImage = !empty($images[0]) ? (Str::startsWith($images[0], 'http') ? $images[0] : asset('storage/' . $images[0])) : asset('images/buyle-og.png');
         $pageTitle = $prodTitle . ' - ' . ($config['name'] ?? $username) . ' | buyle.id';
         $rawDesc  = $block->data_json['description'] ?? ($product ? $product->description : '');
@@ -450,7 +450,7 @@
                 @if(!empty($origPrice) && $origPrice > $price)
                     <span class="prod-orig-price">Rp {{ number_format($origPrice, 0, ',', '.') }}</span>
                 @endif
-                <span class="prod-price">Rp {{ number_format($price, 0, ',', '.') }} IDR</span>
+                <span class="prod-price">Rp {{ number_format($price, 0, ',', '.') }}</span>
             </div>
             @if(!empty($rawDesc))
                 <div class="prod-desc">{!! $rawDesc !!}</div>

@@ -156,8 +156,12 @@ body { background-color: #F8FAFC !important; }
     
     @php
         $isPaid = ($order->payment && $order->payment->status?->value === 'success')
-            || in_array($order->status?->value, ['confirmed', 'completed', 'processing']);
+            || in_array($order->status?->value, ['confirmed', 'completed', 'processing', 'delivered']);
         $isPending = !$isPaid && $order->payment && $order->payment->status?->value === 'pending';
+        $hasPhysical = $order->items->contains(function ($i) {
+            $type = $i->product?->product_type ?? $i->product?->type ?? '';
+            return in_array($type, ['physical', 'product', 'fisik', 'umkm']);
+        });
     @endphp
 
     @if($isPaid)
@@ -170,14 +174,25 @@ body { background-color: #F8FAFC !important; }
                     html: `
                         <div style="font-size:0.9rem; color:#334155; line-height:1.6; text-align:left; margin-top:0.5rem;">
                             <p style="margin-bottom:0.75rem;">Terima kasih! Pembayaran Anda telah kami terima.</p>
-                            <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
-                                <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                                <div><strong>Cek Email Anda:</strong> Link akses & detail produk telah otomatis dikirim ke <u>{{ $order->user->email ?? 'email Anda' }}</u>.</div>
-                            </div>
-                            <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
-                                <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-                                <div><strong>Cek Dashboard Akun:</strong> Anda juga bisa mengakses file/link produk kapan saja di menu Pesanan Akun Anda.</div>
-                            </div>
+                            @if($hasPhysical)
+                                <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
+                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                    <div><strong>Cek Email Anda:</strong> Konfirmasi pesanan & detail pengiriman telah otomatis dikirim ke <u>{{ $order->user->email ?? 'email Anda' }}</u>.</div>
+                                </div>
+                                <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
+                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                                    <div><strong>Cek Dashboard Akun:</strong> Anda dapat memantau status pesanan dan nomor resi kapan saja di menu Pesanan Akun Anda.</div>
+                                </div>
+                            @else
+                                <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:0.75rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
+                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                    <div><strong>Cek Email Anda:</strong> Link akses & detail produk telah otomatis dikirim ke <u>{{ $order->user->email ?? 'email Anda' }}</u>.</div>
+                                </div>
+                                <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; font-size:0.83rem; color:#166534; display:flex; gap:10px; align-items:flex-start;">
+                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                                    <div><strong>Cek Dashboard Akun:</strong> Anda juga bisa mengakses file/link produk kapan saja di menu Pesanan Akun Anda.</div>
+                                </div>
+                            @endif
                         </div>
                     `,
                     confirmButtonColor: '#1eb349',
@@ -216,25 +231,39 @@ body { background-color: #F8FAFC !important; }
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                         </svg>
                     </div>
-                    <p class="fin-sub">
-                        Terima kasih sudah berbelanja di buyle.id.<br>
-                        Akses produk digital atau jasa Anda melalui link di bawah ini.
-                    </p>
+                    @if($hasPhysical)
+                        <p class="fin-sub">
+                            Terima kasih sudah berbelanja produk UMKM di buyle.id.<br>
+                            Pesanan Anda telah dikonfirmasi dan sedang disiapkan oleh penjual untuk dikirim.
+                        </p>
 
-                    <div style="background: linear-gradient(135deg, #1eb349, #a5cf37); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; color: #fff; text-align: left; box-shadow: 0 10px 30px rgba(30,179,73,0.3);">
-                        <h4 style="margin-bottom: 1rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 0.5rem;">Akses Produk / Jasa</h4>
-                        @foreach($order->items as $item)
-                            @if($item->product && $item->product->digital_resource)
-                                <div style="margin-bottom: 0.75rem;">
-                                    <strong style="display:block; font-size: 0.9rem; margin-bottom: 0.25rem;">{{ $item->product_name }}</strong>
-                                    <a href="{{ $item->product->digital_resource }}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #1eb349; padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem;">
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                                        Buka Link / WhatsApp
-                                    </a>
-                                </div>
-                            @endif
-                        @endforeach
-                    </div>
+                        <div style="background: linear-gradient(135deg, #1eb349, #a5cf37); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; color: #fff; text-align: left; box-shadow: 0 10px 30px rgba(30,179,73,0.3);">
+                            <h4 style="margin-bottom: 0.75rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 0.5rem;">Status Pengiriman Produk Fisik</h4>
+                            <p style="font-size: 0.9rem; margin: 0; opacity: 0.95; line-height: 1.5;">
+                                Penjual sedang menyiapkan barang pesanan Anda. Anda dapat mengecek pembaruan nomor resi dan melacak status pengiriman melalui menu <strong>Riwayat Pesanan</strong>.
+                            </p>
+                        </div>
+                    @else
+                        <p class="fin-sub">
+                            Terima kasih sudah berbelanja di buyle.id.<br>
+                            Akses produk digital atau jasa Anda melalui link di bawah ini.
+                        </p>
+
+                        <div style="background: linear-gradient(135deg, #1eb349, #a5cf37); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; color: #fff; text-align: left; box-shadow: 0 10px 30px rgba(30,179,73,0.3);">
+                            <h4 style="margin-bottom: 1rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 0.5rem;">Akses Produk / Jasa</h4>
+                            @foreach($order->items as $item)
+                                @if($item->product && $item->product->digital_resource)
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <strong style="display:block; font-size: 0.9rem; margin-bottom: 0.25rem;">{{ $item->product_name }}</strong>
+                                        <a href="{{ $item->product->digital_resource }}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #1eb349; padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem;">
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                                            Buka Link / WhatsApp
+                                        </a>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    @endif
 
                     <div>
                         <a href="{{ route('account.orders') }}" class="btn-pay" style="background: #0f1f0f;">
