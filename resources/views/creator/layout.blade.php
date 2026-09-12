@@ -691,7 +691,8 @@
                 @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.7;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> @endif
             </a>
 
-            <a href="{{ $isBuyer ? '#' : route('creator.membership') }}"
+{{-- Hidden temporarily --}}
+            {{-- <a href="{{ $isBuyer ? '#' : route('creator.membership') }}"
                 onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.membership') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -699,7 +700,7 @@
                 </svg>
                 Membership Seller
                 @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.7;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> @endif
-            </a>
+            </a> --}}
 
             <a href="{{ $isBuyer ? '#' : route('creator.sales.report') }}"
                 onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
