@@ -1,6 +1,25 @@
 @extends('creator.layout')
 
 @section('title', 'Laporan Penjualan – Creator Studio')
+@section('page_title', 'Laporan Penjualan')
+@section('page_subtitle', 'Pantau trafik visitor, sumber klik, dan data pembelian produkmu.')
+
+@section('topbar_actions')
+    <div class="filter-bar">
+        <a href="{{ route('creator.sales.report', ['filter' => '7']) }}"  class="filter-btn {{ $filter === '7'  ? 'active' : '' }}">7 Hari</a>
+        <a href="{{ route('creator.sales.report', ['filter' => '30']) }}" class="filter-btn {{ $filter === '30' ? 'active' : '' }}">30 Hari</a>
+        <a href="{{ route('creator.sales.report', ['filter' => '90']) }}" class="filter-btn {{ $filter === '90' ? 'active' : '' }}">90 Hari</a>
+        <div class="filter-divider"></div>
+        <button type="button" class="filter-custom-btn {{ $filter === 'custom' ? 'active' : '' }}" id="btnOpenCustomDate">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            @if($filter === 'custom')
+                {{ \Carbon\Carbon::parse($startDate)->format('d M') }} – {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}
+            @else
+                Custom
+            @endif
+        </button>
+    </div>
+@endsection
 
 @section('styles')
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -315,29 +334,6 @@
 @endsection
 
 @section('content')
-
-{{-- ── Header + Filters ──────────────────────────────────────────── --}}
-<div class="rp-header">
-    <div>
-        <h1 class="rp-title">Laporan Penjualan</h1>
-        <p class="rp-sub">Pantau trafik visitor, sumber klik, dan data pembelian produkmu.</p>
-    </div>
-
-    <div class="filter-bar">
-        <a href="{{ route('creator.sales.report', ['filter' => '7']) }}"  class="filter-btn {{ $filter === '7'  ? 'active' : '' }}">7 Hari</a>
-        <a href="{{ route('creator.sales.report', ['filter' => '30']) }}" class="filter-btn {{ $filter === '30' ? 'active' : '' }}">30 Hari</a>
-        <a href="{{ route('creator.sales.report', ['filter' => '90']) }}" class="filter-btn {{ $filter === '90' ? 'active' : '' }}">90 Hari</a>
-        <div class="filter-divider"></div>
-        <button type="button" class="filter-custom-btn {{ $filter === 'custom' ? 'active' : '' }}" id="btnOpenCustomDate">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            @if($filter === 'custom')
-                {{ \Carbon\Carbon::parse($startDate)->format('d M') }} – {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}
-            @else
-                Custom
-            @endif
-        </button>
-    </div>
-</div>
 
 {{-- ── Custom Date Modal ──────────────────────────────────────────── --}}
 <div class="date-modal-overlay" id="customDateModal">

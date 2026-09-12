@@ -312,7 +312,7 @@
             flex: 1 0 auto;
             background: #ffffff;
             border-radius: 40px 0 0 0;
-            padding: 2.75rem 3rem 5rem 3rem;
+            padding: 1.75rem 2.25rem 4rem 2.25rem;
             min-height: calc(100vh - 1.25rem);
             box-shadow: -10px 0 30px rgba(0, 0, 0, 0.12);
             display: flex;
@@ -764,8 +764,7 @@
     <div class="cr-main-wrapper">
         <main class="cr-main-canvas">
             {{-- Header Area: Title & Actions --}}
-                        {{-- Header Area: Title & Actions --}}
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
                 <div>
                     <h1 style="font-size: 1.5rem; font-weight: 800; color: #0b120c; margin: 0 0 0.25rem; font-family: 'Montserrat', sans-serif;">
                         @yield('page_title', 'Dashboard')
