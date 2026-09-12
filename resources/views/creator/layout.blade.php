@@ -429,9 +429,10 @@
                 left: 0;
                 right: 0;
                 z-index: 80;
-                height: 56px;
+                height: 64px;
                 background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
-                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+                border-radius: 0 0 24px 24px;
             }
 
             /* Hide hamburger from top bar since bottom nav has Menu button */
@@ -470,10 +471,10 @@
 
             .cr-main-wrapper {
                 margin-left: 0 !important;
-                padding: 0.5rem;
-                padding-top: calc(56px + 0.5rem);
+                padding: 0;
+                padding-top: 54px;
                 height: auto;
-                min-height: calc(100vh - 56px - 88px);
+                min-height: calc(100vh - 64px - 88px);
                 max-width: 100vw;
                 overflow-x: hidden;
                 overflow-y: visible;
@@ -481,12 +482,14 @@
                 display: flex;
                 flex-direction: column;
                 align-items: stretch;
+                background: transparent;
             }
 
             .cr-main-canvas {
-                border-radius: 20px;
-                padding: 1rem;
-                min-height: calc(100vh - 56px - 88px - 1rem);
+                border-radius: 20px 20px 20px 20px;
+                padding: 1rem 1rem 1rem;
+                margin: 0;
+                min-height: calc(100vh - 64px - 88px);
                 width: 100%;
                 max-width: 100%;
                 box-sizing: border-box;
