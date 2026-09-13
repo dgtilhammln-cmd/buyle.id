@@ -606,7 +606,7 @@
             display: flex;
             gap: 14px;
             overflow-x: auto;
-            padding-bottom: 0.75rem;
+            padding: 4px 14px 0.75rem 14px;
             scrollbar-width: thin;
             scroll-snap-type: x mandatory;
         }
@@ -821,7 +821,7 @@
             /* TikTok & Reels Slider Mobile */
             .tiktok-highlights-wrap {
                 gap: 10px;
-                padding-bottom: 0.5rem;
+                padding: 4px 14px 0.5rem 14px;
             }
 
             .tiktok-card-item {
@@ -1525,7 +1525,6 @@
                 @endif
 
                 {{-- Footer --}}
-                @if($profile->isStoreActive())
                 <div class="footer-landing">
                     <a href="{{ url('/') }}" target="_blank">
                         @php $footerLogo = \App\Models\Setting::get('logo'); @endphp
@@ -1537,7 +1536,6 @@
                         @endif
                     </a>
                 </div>
-                @endif
 
             </div>
         </div>

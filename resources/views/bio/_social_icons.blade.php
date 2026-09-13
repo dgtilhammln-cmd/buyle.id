@@ -17,11 +17,12 @@
     $ig_url  = !empty($s_ig) ? (Str::startsWith($s_ig, 'http') ? $s_ig : 'https://instagram.com/' . ltrim(ltrim($s_ig, '@'), '/')) : null;
     $tt_url  = !empty($s_tt) ? (Str::startsWith($s_tt, 'http') ? $s_tt : 'https://tiktok.com/@' . ltrim(ltrim($s_tt, '@'), '/')) : null;
 
-    $hasAny  = !empty($profile->store_slug) || $s_wa || $s_ig || $s_tt || $s_yt || $s_fb || $s_x || $s_li || $s_pin || $s_dsc || $s_thr || $s_tg || $s_sn || $s_web;
+    $hasStore = !empty($profile->store_slug) && $profile->isStoreActive();
+    $hasAny  = $hasStore || $s_wa || $s_ig || $s_tt || $s_yt || $s_fb || $s_x || $s_li || $s_pin || $s_dsc || $s_thr || $s_tg || $s_sn || $s_web;
 @endphp
 @if($hasAny)
 <div class="social-row fade-up" style="animation-delay:0.2s;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0.5rem;margin:0.8rem 0.5rem;">
-@if(!empty($profile->store_slug))
+@if($hasStore)
 <a href="{{ route('store.show', $profile->store_slug) }}" target="_blank" class="social-icon" title="Online Store buyle.id"><img src="{{ asset('favicon.png') }}" alt="Store" style="width:1.1rem;height:1.1rem;object-fit:contain;display:block;"></a>
 @endif
 @if(!empty($s_wa))

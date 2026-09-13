@@ -827,7 +827,6 @@
         @endif
 
         {{-- Footer --}}
-        @if($profile->isStoreActive())
         <div class="footer-bio">
             <a href="{{ url('/') }}" target="_blank">
                 @php $footerLogo = \App\Models\Setting::get('logo'); @endphp
@@ -839,7 +838,6 @@
                 @endif
             </a>
         </div>
-        @endif
     </div>
 
     <script>
