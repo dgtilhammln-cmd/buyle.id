@@ -720,7 +720,7 @@
             }
 
             .motia-header-banner {
-                height: 105px;
+                height: 145px;
                 padding: 0.85rem 1rem;
             }
 
@@ -836,8 +836,9 @@
             }
 
             .banner-poster-item img {
-                max-height: 200px;
-                object-fit: cover;
+                width: 100%;
+                height: auto;
+                display: block;
             }
 
             /* Products Grid Mobile */
@@ -986,14 +987,18 @@
         $yt_url = !empty($s_yt) ? (Str::startsWith($s_yt, 'http') ? $s_yt : 'https://youtube.com/@' . ltrim(ltrim($s_yt, '@'), '/')) : null;
         $wa_url = !empty($s_wa) ? 'https://wa.me/62' . preg_replace('/^(62|0)/', '', $s_wa) : null;
 
+        // Semua video (tiktok+reels) dikumpul jadi 1 slider di atas
+        $videoBlocks = $blocks->whereIn('type', ['tiktok', 'reels'])->values();
+        // Non-video dirender urut sesuai sort_order user
+        $nonVideoBlocks = $blocks->whereNotIn('type', ['tiktok', 'reels'])->values();
+
+        // Kelompokkan non-video berurutan untuk render
         $groupedBlocks = [];
         $currentGroup = [];
         $currentCategory = null;
 
-        foreach ($blocks as $block) {
-            if (in_array($block->type, ['tiktok', 'reels'])) {
-                $cat = 'video';
-            } elseif ($block->type === 'image') {
+        foreach ($nonVideoBlocks as $block) {
+            if ($block->type === 'image') {
                 $cat = 'image';
             } elseif (in_array($block->type, ['link', 'pdf'])) {
                 $cat = 'link';
@@ -1147,36 +1152,39 @@
                     }
                 </script>
 
-                {{-- Consecutive Block Groups (Preserves Exact User Order) --}}
-                @foreach($groupedBlocks as $group)
-                    @if($group['category'] === 'video')
-                        <div class="tiktok-highlights-wrap" style="margin-top: 4px; margin-bottom: 4px;">
-                            @foreach($group['items'] as $b)
-                                @php
-                                    $customThumb = !empty($b->data_json['image'])
-                                        ? (Str::startsWith($b->data_json['image'], 'http') ? $b->data_json['image'] : asset('storage/' . $b->data_json['image']))
-                                        : (!empty($b->image) ? asset('storage/' . $b->image) : null);
-                                @endphp
-                                <a href="{{ $b->url }}" target="_blank" class="tiktok-card-item video-fetch search-item bio-track-link"
-                                    data-type="{{ $b->type }}" data-url="{{ $b->url }}" data-title="{{ $b->title ?? ($b->type === 'reels' ? 'Instagram Reel' : 'TikTok Video') }}"
-                                    data-bio-block="{{ $b->id }}" data-bio-creator="{{ $profile->id }}">
-                                    <img src="{{ $customThumb ?? '' }}" alt="{{ $b->type === 'reels' ? 'Reels' : 'TikTok' }}" class="video-thumb" style="{{ $customThumb ? 'opacity:1;' : 'opacity:0;' }} transition:opacity 0.3s; width:100%; height:100%; object-fit:cover;">
-                                    <div class="tiktok-card-overlay">
-                                        <span style="background:rgba(0,0,0,0.5); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px;">
-                                            @if($b->type === 'reels')
-                                                <i class="fab fa-instagram"></i>
-                                            @else
-                                                <i class="fab fa-tiktok"></i>
-                                            @endif
-                                        </span>
-                                        <div style="color:#fff; font-size:0.75rem; font-weight:600; text-shadow:0 1px 3px rgba(0,0,0,0.8); overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">
-                                            {{ $b->title ?? ($b->type === 'reels' ? 'Reels' : 'TikTok') }}
-                                        </div>
+                {{-- ONE single video slider: ALL tiktok+reels cards together --}}
+                @if($videoBlocks->isNotEmpty())
+                    <div class="tiktok-highlights-wrap" style="margin-top: 4px; margin-bottom: 4px;">
+                        @foreach($videoBlocks as $b)
+                            @php
+                                $customThumb = !empty($b->data_json['image'])
+                                    ? (Str::startsWith($b->data_json['image'], 'http') ? $b->data_json['image'] : asset('storage/' . $b->data_json['image']))
+                                    : (!empty($b->image) ? asset('storage/' . $b->image) : null);
+                            @endphp
+                            <a href="{{ $b->url }}" target="_blank" class="tiktok-card-item video-fetch search-item bio-track-link"
+                                data-type="{{ $b->type }}" data-url="{{ $b->url }}" data-title="{{ $b->title ?? ($b->type === 'reels' ? 'Instagram Reel' : 'TikTok Video') }}"
+                                data-bio-block="{{ $b->id }}" data-bio-creator="{{ $profile->id }}">
+                                <img src="{{ $customThumb ?? '' }}" alt="{{ $b->type === 'reels' ? 'Reels' : 'TikTok' }}" class="video-thumb" style="{{ $customThumb ? 'opacity:1;' : 'opacity:0;' }} transition:opacity 0.3s; width:100%; height:100%; object-fit:cover;">
+                                <div class="tiktok-card-overlay">
+                                    <span style="background:rgba(0,0,0,0.5); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px;">
+                                        @if($b->type === 'reels')
+                                            <i class="fab fa-instagram"></i>
+                                        @else
+                                            <i class="fab fa-tiktok"></i>
+                                        @endif
+                                    </span>
+                                    <div style="color:#fff; font-size:0.75rem; font-weight:600; text-shadow:0 1px 3px rgba(0,0,0,0.8); overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">
+                                        {{ $b->title ?? ($b->type === 'reels' ? 'Reels' : 'TikTok') }}
                                     </div>
-                                </a>
-                            @endforeach
-                        </div>
-                    @elseif($group['category'] === 'image')
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                @endif
+
+                {{-- Non-video blocks: links, images in original sort order --}}
+                @foreach($groupedBlocks as $group)
+                    @if($group['category'] === 'image')
                         <div class="image-banner-wrap" style="display:flex; flex-direction:column; gap:0.85rem;">
                             @foreach($group['items'] as $block)
                                 @php
@@ -1189,7 +1197,7 @@
                                         @if(!empty($block->url))
                                             <a href="{{ $block->url }}" target="_blank" class="bio-track-link" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}" style="display:block; text-decoration:none;">
                                         @endif
-                                        <img src="{{ $bannerImg }}" alt="{{ $block->title }}" style="width:100%; max-height:240px; object-fit:cover; display:block;">
+                                        <img src="{{ $bannerImg }}" alt="{{ $block->title }}" style="width:100%; height:auto; display:block;">
                                         @if(!empty($block->url))
                                             </a>
                                         @endif
