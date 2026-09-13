@@ -17,40 +17,42 @@
     @endif
 
     @if($interstitialEnabled)
-    {{-- Minimalist Interstitial Pop-up Modal --}}
-    <div id="adsenseInterstitialModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.65); z-index:999999; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1.25rem;">
-        <div style="background:#ffffff; max-width:380px; width:100%; border-radius:20px; padding:1.5rem; text-align:center; box-shadow:0 20px 40px -10px rgba(0,0,0,0.15); position:relative; overflow:hidden; border:1px solid #E2E8F0; font-family:'Montserrat', sans-serif;">
+    {{-- Flexible Interstitial Pop-up Modal --}}
+    <div id="adsenseInterstitialModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.7); z-index:999999; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1rem;">
+        <div style="background:#ffffff; max-width:440px; width:92%; max-height:90vh; overflow-y:auto; border-radius:20px; padding:1.25rem; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); position:relative; border:1px solid #E2E8F0; font-family:'Montserrat', sans-serif;">
             
             {{-- Minimal Header Badge --}}
-            <div style="font-size:0.7rem; font-weight:700; color:#94A3B8; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:1rem; display:flex; align-items:center; justify-content:center; gap:0.35rem;">
+            <div style="font-size:0.7rem; font-weight:700; color:#94A3B8; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:0.75rem; display:flex; align-items:center; justify-content:center; gap:0.35rem;">
                 <span style="display:inline-block; width:6px; height:6px; background:#1eb349; border-radius:50%;"></span> Sponsor / Iklan
             </div>
 
-            {{-- Clean Minimal Ad Box Container --}}
-            <div style="min-height:180px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; margin-bottom:1.25rem; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; padding:0.5rem;">
+            {{-- Flexible Ad Box Container (Adapts naturally to image aspect ratio) --}}
+            <div style="width:100%; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; margin-bottom:1rem; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; padding:0;">
                 @if(!empty($customImage))
                     <a href="{{ $customUrl ?: '#' }}" target="_blank" style="display:block; width:100%; text-decoration:none;">
-                        <img src="{{ asset('storage/' . $customImage) }}" alt="Sponsor" style="width:100%; max-height:220px; object-fit:contain; border-radius:10px; display:block;">
+                        <img src="{{ asset('storage/' . $customImage) }}" alt="Sponsor" style="width:100%; height:auto; max-height:60vh; object-fit:contain; border-radius:12px; display:block; margin:0 auto;">
                     </a>
                 @elseif(!empty($pubId))
-                    <ins class="adsbygoogle"
-                         style="display:block; width:100%; height:180px;"
-                         data-ad-client="{{ $pubId }}"
-                         data-ad-slot="auto"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    <script>
-                         (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
+                    <div style="width:100%; padding:0.5rem; min-height:180px; display:flex; align-items:center; justify-content:center;">
+                        <ins class="adsbygoogle"
+                             style="display:block; width:100%; height:180px;"
+                             data-ad-client="{{ $pubId }}"
+                             data-ad-slot="auto"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        <script>
+                             (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
                 @else
-                    <div style="font-size:0.8rem; color:#94A3B8; font-weight:600;">
+                    <div style="font-size:0.8rem; color:#94A3B8; font-weight:600; padding:2rem 1rem;">
                         Iklan Google AdSense
                     </div>
                 @endif
             </div>
 
             {{-- Minimal Timer Text --}}
-            <p style="font-size:0.82rem; color:#475569; font-weight:600; margin-bottom:1.15rem;" id="adsenseTimerText">
+            <p style="font-size:0.82rem; color:#475569; font-weight:600; margin-bottom:1rem;" id="adsenseTimerText">
                 Mengarahkan ke link dalam <strong style="color:#1eb349; font-weight:800; font-size:0.95rem;" id="adsenseCountdown">{{ $interstitialDelay }}</strong> detik...
             </p>
 
