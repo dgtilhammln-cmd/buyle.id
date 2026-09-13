@@ -16,7 +16,7 @@ class CreatorStoreController extends Controller
             ->firstOrFail();
 
         $seller = $profile->user;
-        if (!$seller || $seller->role !== 'seller') {
+        if (!$seller || $seller->role !== 'seller' || !$profile->isStoreActive()) {
             abort(404);
         }
 

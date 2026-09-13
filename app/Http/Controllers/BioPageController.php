@@ -27,6 +27,9 @@ class BioPageController extends Controller
 
         // Auto-redirect to /c/{slug} if no bio setup yet
         if (!$profile->bio_role) {
+            if (!$profile->isStoreActive()) {
+                abort(404);
+            }
             return redirect()->route('store.show', $profile->store_slug);
         }
 

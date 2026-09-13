@@ -38,6 +38,15 @@ class CreatorProfile extends Model
         'bio_config'   => 'array',
     ];
 
+    public function isStoreActive(): bool
+    {
+        $config = $this->bio_config;
+        if (is_array($config) && isset($config['is_store_active'])) {
+            return (bool) $config['is_store_active'];
+        }
+        return true;
+    }
+
     public static function getOrCreateForUser($user)
     {
         if (!$user) return null;

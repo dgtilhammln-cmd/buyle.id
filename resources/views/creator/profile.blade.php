@@ -416,7 +416,7 @@ select.form-input { cursor: pointer; }
                             @endforeach
                         </select>
                     <div class="form-group full" style="margin-top: 0.75rem; padding: 1.1rem 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;">
-                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem;">
                             <div>
                                 <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-bottom: 0.15rem;">
                                     Aktifkan Online Store di Marketplace Buyle.id
@@ -429,6 +429,14 @@ select.form-input { cursor: pointer; }
                                 <input type="checkbox" name="is_store_active" value="1" {{ old('is_store_active', $profile->bio_config['is_store_active'] ?? true) ? 'checked' : '' }}>
                                 <span class="switch-slider"></span>
                             </label>
+                        </div>
+
+                        {{-- Catatan Khusus Produk Digital / UMKM --}}
+                        <div style="background: #fffbeb; border: 1px solid #fcd34d; padding: 0.75rem 0.9rem; border-radius: 10px; font-size: 0.76rem; color: #92400e; display: flex; align-items: flex-start; gap: 0.55rem; line-height: 1.5;">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px; color:#d97706;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            <div>
+                                <strong>Catatan Penting Khusus Produk Digital & Kreator:</strong> Fitur Online Store ini dirancang khusus untuk etalase publik **Produk Digital, E-Book, Lisensi, & Jasa Digital**. Bagi UMKM produk fisik atau akun yang belum siap membuka toko publik, <em>mohon jangan asal mengaktifkan toggle ini</em> agar etalase toko Anda tidak muncul secara publik di pencarian marketplace.
+                            </div>
                         </div>
                     </div>
                         @error('creator_type')<span class="form-error">{{ $message }}</span>@enderror
