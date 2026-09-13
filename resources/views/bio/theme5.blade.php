@@ -297,7 +297,7 @@
         .right-showcase-area {
             display: flex;
             flex-direction: column;
-            gap: 1.75rem;
+            gap: 0.85rem;
         }
 
         /* Top Hero Card */
@@ -963,12 +963,17 @@
 
                 {{-- Video Cards Slider (TikTok & Reels - No Headline) --}}
                 @if($videoBlocks->isNotEmpty())
-                    <div class="tiktok-highlights-wrap" style="margin-top: 14px; margin-bottom: 20px;">
+                    <div class="tiktok-highlights-wrap" style="margin-top: 4px; margin-bottom: 4px;">
                         @foreach($videoBlocks as $b)
+                            @php
+                                $customThumb = !empty($b->data_json['image'])
+                                    ? (Str::startsWith($b->data_json['image'], 'http') ? $b->data_json['image'] : asset('storage/' . $b->data_json['image']))
+                                    : (!empty($b->image) ? asset('storage/' . $b->image) : null);
+                            @endphp
                             <a href="{{ $b->url }}" target="_blank" class="tiktok-card-item video-fetch search-item bio-track-link"
                                 data-type="{{ $b->type }}" data-url="{{ $b->url }}" data-title="{{ $b->title ?? ($b->type === 'reels' ? 'Instagram Reel' : 'TikTok Video') }}"
                                 data-bio-block="{{ $b->id }}" data-bio-creator="{{ $profile->id }}">
-                                <img src="" alt="{{ $b->type === 'reels' ? 'Reels' : 'TikTok' }}" class="video-thumb" style="opacity:0; transition:opacity 0.3s; width:100%; height:100%; object-fit:cover;">
+                                <img src="{{ $customThumb ?? '' }}" alt="{{ $b->type === 'reels' ? 'Reels' : 'TikTok' }}" class="video-thumb" style="{{ $customThumb ? 'opacity:1;' : 'opacity:0;' }} transition:opacity 0.3s; width:100%; height:100%; object-fit:cover;">
                                 <div class="tiktok-card-overlay">
                                     <span style="background:rgba(0,0,0,0.5); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px;">
                                         @if($b->type === 'reels')
@@ -1329,7 +1334,14 @@
                 const url = card.dataset.url;
                 const type = card.dataset.type || (url && url.includes('instagram.com') ? 'reels' : 'tiktok');
                 const img = card.querySelector('.video-thumb, .tt-thumb');
-                if (!url || !img) return;
+                if (!img) return;
+
+                const currentSrc = img.getAttribute('src');
+                if (currentSrc && currentSrc.trim() !== '' && !currentSrc.endsWith('/')) {
+                    img.style.opacity = '1';
+                    return;
+                }
+                if (!url) return;
 
                 if (type === 'reels' || (url && url.includes('instagram.com'))) {
                     // Use server-side proxy to fetch og:image (bypasses CORS)

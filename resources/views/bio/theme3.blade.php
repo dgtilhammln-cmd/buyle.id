@@ -618,8 +618,13 @@
             <span class="section-label fade-up" style="animation-delay:0.25s">Highlights</span>
             <div class="slider-wrap fade-up" style="animation-delay:0.3s">
                 @foreach($videoBlocks as $b)
+                    @php
+                        $customThumb = !empty($b->data_json['image'])
+                            ? (Str::startsWith($b->data_json['image'], 'http') ? $b->data_json['image'] : asset('storage/' . $b->data_json['image']))
+                            : (!empty($b->image) ? asset('storage/' . $b->image) : null);
+                    @endphp
                     <a href="{{ $b->url }}" target="_blank" class="video-card tt-fetch search-item bio-track-link" data-type="{{ $b->type }}" data-title="{{ $b->title ?? ($b->type === 'reels' ? 'Instagram Reel' : 'TikTok Video') }}" data-url="{{ $b->url }}" data-bio-block="{{ $b->id }}" data-bio-creator="{{ $profile->id }}">
-                        <img src="" alt="{{ $b->type === 'reels' ? 'Reels' : 'TikTok' }}" class="tt-thumb" style="opacity:0; transition:opacity 0.3s;">
+                        <img src="{{ $customThumb ?? '' }}" alt="{{ $b->type === 'reels' ? 'Reels' : 'TikTok' }}" class="tt-thumb" style="{{ $customThumb ? 'opacity:1;' : 'opacity:0;' }} transition:opacity 0.3s;">
                         <span class="tt-icon">
                             @if($b->type === 'reels')
                                 <i class="fab fa-instagram" style="font-size:16px;"></i>
@@ -817,7 +822,14 @@
                 const url = card.dataset.url;
                 const type = card.dataset.type || (url && url.includes('instagram.com') ? 'reels' : 'tiktok');
                 const img = card.querySelector('.video-thumb, .tt-thumb');
-                if (!url || !img) return;
+                if (!img) return;
+
+                const currentSrc = img.getAttribute('src');
+                if (currentSrc && currentSrc.trim() !== '' && !currentSrc.endsWith('/')) {
+                    img.style.opacity = '1';
+                    return;
+                }
+                if (!url) return;
 
                 if (type === 'reels' || (url && url.includes('instagram.com'))) {
                     fetch(`/api/ig-thumb?url=${encodeURIComponent(url)}`)

@@ -204,32 +204,55 @@ Route::get('/api/ig-thumb', function (\Illuminate\Http\Request $request) {
     $shortcode = $m[1];
 
     try {
-        // Fetch Instagram page and extract og:image
-        $response = \Illuminate\Support\Facades\Http::timeout(8)
+        // Method 1: Fetch Instagram embed page with Mobile User Agent
+        $embedResponse = \Illuminate\Support\Facades\Http::timeout(6)
+            ->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Mobile/15E148 Safari/604.1',
+                'Accept' => 'text/html,application/xhtml+xml',
+            ])
+            ->get("https://www.instagram.com/p/{$shortcode}/embed/captioned/");
+
+        if ($embedResponse->ok()) {
+            $html = $embedResponse->body();
+            if (preg_match_all('#https?:\\\\?/\\\\?/[^"\'\s>]*(?:fbcdn|scontent|cdninstagram)[^"\'\s>]*\.jpg[^"\'\s>]*#i', $html, $matches)) {
+                foreach ($matches[0] as $match) {
+                    $clean = stripslashes(html_entity_decode($match));
+                    if (strpos($clean, 'profile_pic') === false && strpos($clean, 's100x100') === false) {
+                        if (strpos($clean, 't51.82787-15') !== false || strpos($clean, 'CLIPS') !== false || strpos($clean, 'cover_frame') !== false || strpos($clean, 's320x320') !== false || strpos($clean, 's640x640') !== false) {
+                            return response()->json(['thumbnail_url' => $clean])
+                                ->header('Cache-Control', 'public, max-age=86400')
+                                ->header('Access-Control-Allow-Origin', '*');
+                        }
+                    }
+                }
+                foreach ($matches[0] as $match) {
+                    $clean = stripslashes(html_entity_decode($match));
+                    if (strpos($clean, 'profile_pic') === false && strpos($clean, 's100x100') === false && strpos($clean, 'rsrc.php') === false) {
+                        return response()->json(['thumbnail_url' => $clean])
+                            ->header('Cache-Control', 'public, max-age=86400')
+                            ->header('Access-Control-Allow-Origin', '*');
+                    }
+                }
+            }
+        }
+
+        // Method 2: Googlebot User-Agent og:image
+        $response = \Illuminate\Support\Facades\Http::timeout(6)
             ->withHeaders([
                 'User-Agent' => 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
-                'Accept' => 'text/html,application/xhtml+xml',
-                'Accept-Language' => 'en-US,en;q=0.9',
             ])
             ->get("https://www.instagram.com/p/{$shortcode}/");
 
         if ($response->ok()) {
             $html = $response->body();
-            // Extract og:image
             if (preg_match('/<meta[^>]+property=["\']og:image["\'][^>]+content=["\'](https?:[^"\']+)["\']/', $html, $img)) {
                 return response()->json(['thumbnail_url' => $img[1]])
-                    ->header('Cache-Control', 'public, max-age=3600')
-                    ->header('Access-Control-Allow-Origin', '*');
-            }
-            // Try alternate pattern
-            if (preg_match('/<meta[^>]+content=["\'](https?:[^"\']+)["\'][^>]+property=["\']og:image["\']/', $html, $img)) {
-                return response()->json(['thumbnail_url' => $img[1]])
-                    ->header('Cache-Control', 'public, max-age=3600')
+                    ->header('Cache-Control', 'public, max-age=86400')
                     ->header('Access-Control-Allow-Origin', '*');
             }
         }
     } catch (\Exception $e) {
-        // Fall through to fallback
+        // Fallback below
     }
 
     // Fallback: return weserv proxy URL
