@@ -827,7 +827,7 @@
         $wa_url = !empty($s_wa) ? 'https://wa.me/62' . preg_replace('/^(62|0)/', '', $s_wa) : null;
 
         $linkBlocks = $blocks->whereIn('type', ['link', 'pdf', 'image']);
-        $tiktokBlocks = $blocks->where('type', 'tiktok');
+        $videoBlocks = $blocks->whereIn('type', ['tiktok', 'reels']);
         $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
         $buyleBlocks = $blocks->where('type', 'buyle_product')->values();
         $customProdBlocks = $blocks->where('type', 'custom_product')->values();
@@ -939,12 +939,6 @@
             {{-- Right Column: Showcase Content Area --}}
             <div class="right-showcase-area">
 
-                {{-- Clean Top Banner Header (NO Emojis) --}}
-                <div class="landing-top-hero">
-                    <div class="hero-welcome-title">Official Digital Store</div>
-                    <div class="hero-welcome-sub">Temukan tautan resmi & rekomendasi produk terbaik dari
-                        {{ $config['name'] ?? $profile->store_name ?? $username }}.</div>
-                </div>
 
                 {{-- Clean Search Box --}}
                 <div class="search-box-landing">
@@ -967,12 +961,34 @@
                     }
                 </script>
 
+                {{-- Video Cards Slider (TikTok & Reels - No Headline) --}}
+                @if($videoBlocks->isNotEmpty())
+                    <div class="tiktok-highlights-wrap" style="margin-top: 14px; margin-bottom: 20px;">
+                        @foreach($videoBlocks as $b)
+                            <a href="{{ $b->url }}" target="_blank" class="tiktok-card-item video-fetch search-item bio-track-link"
+                                data-type="{{ $b->type }}" data-url="{{ $b->url }}" data-title="{{ $b->title ?? ($b->type === 'reels' ? 'Instagram Reel' : 'TikTok Video') }}"
+                                data-bio-block="{{ $b->id }}" data-bio-creator="{{ $profile->id }}">
+                                <img src="" alt="{{ $b->type === 'reels' ? 'Reels' : 'TikTok' }}" class="video-thumb" style="opacity:0; transition:opacity 0.3s; width:100%; height:100%; object-fit:cover;">
+                                <div class="tiktok-card-overlay">
+                                    <span style="background:rgba(0,0,0,0.5); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px;">
+                                        @if($b->type === 'reels')
+                                            <i class="fab fa-instagram"></i>
+                                        @else
+                                            <i class="fab fa-tiktok"></i>
+                                        @endif
+                                    </span>
+                                    <div style="color:#fff; font-size:0.75rem; font-weight:600; text-shadow:0 1px 3px rgba(0,0,0,0.8); overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">
+                                        {{ $b->title ?? ($b->type === 'reels' ? 'Reels' : 'TikTok') }}
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                @endif
+
                 {{-- Custom Links Bento Section --}}
                 @if($linkBlocks->isNotEmpty())
                     <div>
-                        <div class="section-header-landing">
-                            <span class="section-title-text">Featured Links & Content</span>
-                        </div>
                         <div class="bento-link-grid">
                             @foreach($linkBlocks as $block)
                                 <a href="{{ $block->url }}" target="_blank" class="bento-link-card search-item"
@@ -1308,17 +1324,41 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // TikTok Thumbnail Fetcher via oEmbed
-            document.querySelectorAll('.tt-fetch').forEach(card => {
+            // TikTok & Instagram Reels Thumbnail Fetcher
+            document.querySelectorAll('.video-fetch, .tt-fetch').forEach(card => {
                 const url = card.dataset.url;
-                const img = card.querySelector('.tt-thumb');
-                if (!url) return;
-                fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`)
-                    .then(r => r.json())
-                    .then(data => {
-                        if (data.thumbnail_url) { img.src = data.thumbnail_url; img.style.opacity = '1'; }
-                    })
-                    .catch(() => { img.src = 'https://placehold.co/140x220/111/fff?text=TikTok'; img.style.opacity = '1'; });
+                const type = card.dataset.type || (url && url.includes('instagram.com') ? 'reels' : 'tiktok');
+                const img = card.querySelector('.video-thumb, .tt-thumb');
+                if (!url || !img) return;
+
+                if (type === 'reels' || (url && url.includes('instagram.com'))) {
+                    const match = url.match(/instagram\.com\/(?:reel|reels|p)\/([A-Za-z0-9_-]+)/i);
+                    if (match && match[1]) {
+                        const shortcode = match[1];
+                        const proxiedUrl = `https://images.weserv.nl/?url=${encodeURIComponent(`https://www.instagram.com/p/${shortcode}/media/?size=l`)}`;
+                        img.src = proxiedUrl;
+                        img.onload = () => { img.style.opacity = '1'; };
+                        img.onerror = () => {
+                            img.src = `https://images.weserv.nl/?url=${encodeURIComponent(`https://www.instagram.com/p/${shortcode}/media/?size=m`)}`;
+                            img.onload = () => { img.style.opacity = '1'; };
+                            img.onerror = () => {
+                                img.src = 'https://placehold.co/140x220/db2777/fff?text=Reels';
+                                img.style.opacity = '1';
+                            };
+                        };
+                    } else {
+                        img.src = 'https://placehold.co/140x220/db2777/fff?text=Reels';
+                        img.style.opacity = '1';
+                    }
+                } else {
+                    fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.thumbnail_url) { img.src = data.thumbnail_url; img.style.opacity = '1'; }
+                            else { img.src = 'https://placehold.co/140x220/111/fff?text=TikTok'; img.style.opacity = '1'; }
+                        })
+                        .catch(() => { img.src = 'https://placehold.co/140x220/111/fff?text=TikTok'; img.style.opacity = '1'; });
+                }
             });
 
             // Bio Link Click Tracker

@@ -619,20 +619,26 @@
 
         @php
             $linkBlocks = $blocks->whereIn('type', ['link', 'pdf', 'image']);
-            $tiktokBlocks = $blocks->where('type', 'tiktok');
+            $videoBlocks = $blocks->whereIn('type', ['tiktok', 'reels']);
             $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
             $buyleBlocks = $blocks->where('type', 'buyle_product')->values();
             $customProdBlocks = $blocks->where('type', 'custom_product')->values();
         @endphp
 
-        {{-- TikTok Slider --}}
-        @if($tiktokBlocks->isNotEmpty())
+        {{-- TikTok & Reels Slider --}}
+        @if($videoBlocks->isNotEmpty())
             <span class="section-label fade-up" style="animation-delay:0.25s">Highlights</span>
             <div class="slider-wrap fade-up" style="animation-delay:0.3s">
-                @foreach($tiktokBlocks as $b)
-                    <a href="{{ $b->url }}" target="_blank" class="video-card tt-fetch search-item bio-track-link" data-title="TikTok Video" data-url="{{ $b->url }}" data-bio-block="{{ $b->id }}" data-bio-creator="{{ $profile->id }}">
-                        <img src="" alt="TikTok" class="tt-thumb" style="opacity:0; transition:opacity 0.3s;">
-                        <span class="tt-icon"><i class="fab fa-tiktok" style="font-size:16px;"></i></span>
+                @foreach($videoBlocks as $b)
+                    <a href="{{ $b->url }}" target="_blank" class="video-card tt-fetch search-item bio-track-link" data-type="{{ $b->type }}" data-title="{{ $b->title ?? ($b->type === 'reels' ? 'Instagram Reel' : 'TikTok Video') }}" data-url="{{ $b->url }}" data-bio-block="{{ $b->id }}" data-bio-creator="{{ $profile->id }}">
+                        <img src="" alt="{{ $b->type === 'reels' ? 'Reels' : 'TikTok' }}" class="tt-thumb" style="opacity:0; transition:opacity 0.3s;">
+                        <span class="tt-icon">
+                            @if($b->type === 'reels')
+                                <i class="fab fa-instagram" style="font-size:16px;"></i>
+                            @else
+                                <i class="fab fa-tiktok" style="font-size:16px;"></i>
+                            @endif
+                        </span>
                         <span class="watch-label">Watch Video</span>
                     </a>
                 @endforeach
