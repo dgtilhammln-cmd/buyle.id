@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class AiVisionService
 {
-    public const DEFAULT_GROQ_MODEL = 'llama-3.2-11b-vision-preview';
+    public const DEFAULT_GROQ_MODEL = 'llama-3.2-11b-vision-instruct';
 
     /**
      * Get configured AI Provider ('groq', 'openrouter', 'openai', 'gemini')

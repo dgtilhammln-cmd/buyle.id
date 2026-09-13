@@ -1338,9 +1338,9 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
         <label class="form-label">Nama Model Vision AI <span>(Model Pembaca Gambar)</span></label>
         <input type="text" name="ai_model" id="ai_model_input" class="form-input" 
                value="{{ old('ai_model', $settings['ai_model'] ?? \App\Services\AiVisionService::DEFAULT_GROQ_MODEL) }}" 
-               placeholder="llama-3.2-11b-vision-preview">
+               placeholder="llama-3.2-11b-vision-instruct">
         <div style="display:flex; gap:0.35rem; margin-top:0.5rem; flex-wrap:wrap;">
-          <button type="button" class="badge-chip" onclick="setModelInput('llama-3.2-11b-vision-preview')">llama-3.2-11b-vision (Groq)</button>
+          <button type="button" class="badge-chip" onclick="setModelInput('llama-3.2-11b-vision-instruct')">llama-3.2-11b-instruct (Groq)</button>
           <button type="button" class="badge-chip" onclick="setModelInput('meta-llama/llama-3.2-11b-vision-instruct')">llama-3.2-11b (OpenRouter)</button>
           <button type="button" class="badge-chip" onclick="setModelInput('gemini-1.5-flash')">gemini-1.5-flash (Gemini)</button>
         </div>
@@ -1412,7 +1412,7 @@ function setModelInput(modelName) {
 function updateDefaultModel(provider) {
   const modelInput = document.getElementById('ai_model_input');
   if (provider === 'groq') {
-    modelInput.value = 'llama-3.2-11b-vision-preview';
+    modelInput.value = 'llama-3.2-11b-vision-instruct';
   } else if (provider === 'openrouter') {
     modelInput.value = 'meta-llama/llama-3.2-11b-vision-instruct';
   } else if (provider === 'gemini') {
