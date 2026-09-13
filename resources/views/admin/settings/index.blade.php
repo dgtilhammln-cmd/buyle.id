@@ -1341,8 +1341,9 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
                placeholder="llama-3.2-11b-vision-instruct">
         <div style="display:flex; gap:0.35rem; margin-top:0.5rem; flex-wrap:wrap;">
           <button type="button" class="badge-chip" onclick="setModelInput('llama-3.2-11b-vision-instruct')">llama-3.2-11b-instruct (Groq)</button>
+          <button type="button" class="badge-chip" onclick="setModelInput('google/gemini-2.5-flash')">gemini-2.5-flash (OpenRouter)</button>
           <button type="button" class="badge-chip" onclick="setModelInput('meta-llama/llama-3.2-11b-vision-instruct')">llama-3.2-11b (OpenRouter)</button>
-          <button type="button" class="badge-chip" onclick="setModelInput('gemini-1.5-flash')">gemini-1.5-flash (Gemini)</button>
+          <button type="button" class="badge-chip" onclick="setModelInput('gemini-2.5-flash')">gemini-2.5-flash (Gemini Direct)</button>
         </div>
       </div>
 
@@ -1366,7 +1367,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       <button type="button" onclick="testAiConnection()" id="btn-test-ai"
               style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.65rem 1.25rem; font-size:0.85rem; font-weight:700; background:#0F172A; color:#FFFFFF; border:none; border-radius:10px; cursor:pointer; transition:all 0.2s;">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-        <span>🧪 Test Koneksi AI Realtime</span>
+        <span><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-2px;margin-right:2px;"><path d="M9 3h6v2H9zm3 4v8m-3 0h6l1 4H8l1-4z"/><circle cx="10" cy="11" r="1" fill="currentColor"/><circle cx="14" cy="13" r="1" fill="currentColor"/></svg> Test Koneksi AI</span>
       </button>
 
       <button type="submit" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.65rem 1.5rem; font-size:0.875rem; font-weight:700; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; border:none; border-radius:10px; cursor:pointer; transition:all 0.2s; font-family:'Montserrat',sans-serif;">
@@ -1414,9 +1415,9 @@ function updateDefaultModel(provider) {
   if (provider === 'groq') {
     modelInput.value = 'llama-3.2-11b-vision-instruct';
   } else if (provider === 'openrouter') {
-    modelInput.value = 'meta-llama/llama-3.2-11b-vision-instruct';
+    modelInput.value = 'google/gemini-2.5-flash';
   } else if (provider === 'gemini') {
-    modelInput.value = 'gemini-1.5-flash';
+    modelInput.value = 'gemini-2.5-flash';
   } else if (provider === 'openai') {
     modelInput.value = 'gpt-4o-mini';
   }
@@ -1454,27 +1455,27 @@ function testAiConnection() {
   .then(res => res.json())
   .then(data => {
     btn.disabled = false;
-    btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> <span>🧪 Test Koneksi AI Realtime</span>`;
+    btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> <span><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-2px;margin-right:2px;"><path d="M9 3h6v2H9zm3 4v8m-3 0h6l1 4H8l1-4z"/><circle cx="10" cy="11" r="1" fill="currentColor"/><circle cx="14" cy="13" r="1" fill="currentColor"/></svg> Test Koneksi AI</span>`;
 
     if (data.success) {
       resultDiv.style.background = '#F0FDF4';
       resultDiv.style.color = '#166534';
       resultDiv.style.border = '1px solid #86EFAC';
-      resultDiv.innerHTML = `✅ <strong>SUKSES!</strong> ${data.message}`;
+      resultDiv.innerHTML = `<svg width="16" height="16" fill="none" stroke="#16A34A" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-3px;margin-right:4px;"><path d="M20 6L9 17l-5-5"/></svg> <strong>SUKSES!</strong> ${data.message}`;
     } else {
       resultDiv.style.background = '#FEF2F2';
       resultDiv.style.color = '#991B1B';
       resultDiv.style.border = '1px solid #FCA5A5';
-      resultDiv.innerHTML = `❌ <strong>GAGAL:</strong> ${data.message}`;
+      resultDiv.innerHTML = `<svg width="16" height="16" fill="none" stroke="#DC2626" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-3px;margin-right:4px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> <strong>GAGAL:</strong> ${data.message}`;
     }
   })
   .catch(err => {
     btn.disabled = false;
-    btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> <span>🧪 Test Koneksi AI Realtime</span>`;
+    btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> <span><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-2px;margin-right:2px;"><path d="M9 3h6v2H9zm3 4v8m-3 0h6l1 4H8l1-4z"/><circle cx="10" cy="11" r="1" fill="currentColor"/><circle cx="14" cy="13" r="1" fill="currentColor"/></svg> Test Koneksi AI</span>`;
     resultDiv.style.background = '#FEF2F2';
     resultDiv.style.color = '#991B1B';
     resultDiv.style.border = '1px solid #FCA5A5';
-    resultDiv.innerHTML = `❌ <strong>ERROR:</strong> Gagal terhubung ke server local: ${err.message}`;
+    resultDiv.innerHTML = `<svg width="16" height="16" fill="none" stroke="#DC2626" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-3px;margin-right:4px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> <strong>ERROR:</strong> Gagal terhubung ke server local: ${err.message}`;
   });
 }
 </script>

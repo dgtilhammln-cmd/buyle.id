@@ -44,8 +44,8 @@ class AiVisionService
 
         return match ($provider) {
             'groq' => self::DEFAULT_GROQ_MODEL,
-            'openrouter' => 'meta-llama/llama-3.2-11b-vision-instruct',
-            'gemini' => 'gemini-1.5-flash',
+            'openrouter' => 'google/gemini-2.5-flash',
+            'gemini' => 'gemini-2.5-flash',
             default => 'gpt-4o-mini',
         };
     }

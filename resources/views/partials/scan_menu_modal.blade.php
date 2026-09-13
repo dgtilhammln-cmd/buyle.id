@@ -11,7 +11,7 @@
           <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 01-2 2h-4a2 2 0 01-2-2v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
         </div>
         <div>
-          <h3 style="font-size:1.05rem; font-weight:800; color:#0F172A; margin:0; line-height:1.2;">✨ Scan Menu Buku AI</h3>
+          <h3 style="font-size:1.05rem; font-weight:800; color:#0F172A; margin:0; line-height:1.2;">Scan Menu Buku AI</h3>
           <p style="font-size:0.75rem; color:#64748B; margin:0;">Upload foto daftar menu resto/kafe untuk mengekstrak nama, harga, & deskripsi jualan otomatis.</p>
         </div>
       </div>

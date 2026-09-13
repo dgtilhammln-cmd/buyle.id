@@ -2079,7 +2079,7 @@
                         <div style="display:flex; gap:0.5rem; align-items:center;">
                             <button type="button" onclick="openScanMenuModal()" class="btn-submit-sm" style="background:linear-gradient(135deg, #0f172a, #1e293b); color:#fff; border:none; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.78rem; cursor:pointer;">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 01-2 2h-4a2 2 0 01-2-2v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-                                ✨ Scan Menu AI
+                                Scan Menu AI
                             </button>
                             <button onclick="document.getElementById('addUmkmModal').classList.add('open')"
                                 class="btn-submit-sm">+ Tambah</button>
