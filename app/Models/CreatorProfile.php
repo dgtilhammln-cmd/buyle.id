@@ -38,6 +38,30 @@ class CreatorProfile extends Model
         'bio_config'   => 'array',
     ];
 
+    public static function getOrCreateForUser($user)
+    {
+        if (!$user) return null;
+        
+        $profile = static::where('user_id', $user->id)->first();
+        if (!$profile) {
+            $baseSlug = \Illuminate\Support\Str::slug($user->name ?: 'creator');
+            if (empty($baseSlug)) {
+                $baseSlug = 'creator-' . $user->id;
+            }
+            $slug = $baseSlug;
+            $i = 1;
+            while (static::where('store_slug', $slug)->exists()) {
+                $slug = $baseSlug . '-' . $i++;
+            }
+            $profile = static::create([
+                'user_id'    => $user->id,
+                'store_name' => $user->name ?: 'Creator Store',
+                'store_slug' => $slug,
+            ]);
+        }
+        return $profile;
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

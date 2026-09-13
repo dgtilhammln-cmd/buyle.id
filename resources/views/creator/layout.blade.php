@@ -432,7 +432,7 @@
                 height: 64px;
                 background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-                border-radius: 0 0 24px 24px;
+                border-radius: 0;
             }
 
             /* Hide hamburger from top bar since bottom nav has Menu button */
@@ -486,8 +486,8 @@
             }
 
             .cr-main-canvas {
-                border-radius: 20px 20px 20px 20px;
-                padding: 1rem 1rem 1rem;
+                border-radius: 0;
+                padding: 0.75rem;
                 margin: 0;
                 min-height: calc(100vh - 64px - 88px);
                 width: 100%;

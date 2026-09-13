@@ -15,10 +15,7 @@ class CreatorBioController extends Controller
 {
     private function getProfile(): CreatorProfile
     {
-        return CreatorProfile::firstOrCreate(
-            ['user_id' => auth()->id()],
-            ['store_name' => auth()->user()->name, 'store_slug' => '']
-        );
+        return CreatorProfile::getOrCreateForUser(auth()->user());
     }
 
     /**

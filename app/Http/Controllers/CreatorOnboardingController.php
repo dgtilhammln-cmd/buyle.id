@@ -19,10 +19,7 @@ class CreatorOnboardingController extends Controller
             $user->save();
         }
 
-        $profile = $user->creatorProfile ?? CreatorProfile::firstOrCreate(
-            ['user_id' => $user->id],
-            ['store_name' => $user->name, 'store_slug' => '']
-        );
+        $profile = CreatorProfile::getOrCreateForUser($user);
 
         if (!$profile->bio_role) {
             return view('creator.bio.role_picker', compact('profile'));
