@@ -618,9 +618,34 @@
         </script>
 
         @php
-            $linkBlocks = $blocks->whereIn('type', ['link', 'pdf']);
-            $imageBlocks = $blocks->where('type', 'image');
-            $videoBlocks = $blocks->whereIn('type', ['tiktok', 'reels']);
+            $groupedBlocks = [];
+            $currentGroup = [];
+            $currentCategory = null;
+
+            foreach ($blocks as $block) {
+                if (in_array($block->type, ['tiktok', 'reels'])) {
+                    $cat = 'video';
+                } elseif ($block->type === 'image') {
+                    $cat = 'image';
+                } elseif (in_array($block->type, ['link', 'pdf'])) {
+                    $cat = 'link';
+                } else {
+                    $cat = 'product';
+                }
+
+                if ($cat !== $currentCategory && !empty($currentGroup)) {
+                    $groupedBlocks[] = ['category' => $currentCategory, 'items' => $currentGroup];
+                    $currentGroup = [];
+                }
+
+                $currentCategory = $cat;
+                $currentGroup[] = $block;
+            }
+
+            if (!empty($currentGroup)) {
+                $groupedBlocks[] = ['category' => $currentCategory, 'items' => $currentGroup];
+            }
+
             $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
             $buyleBlocks = $blocks->where('type', 'buyle_product')->values();
             $customProdBlocks = $blocks->where('type', 'custom_product')->values();

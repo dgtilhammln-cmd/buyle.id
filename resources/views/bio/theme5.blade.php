@@ -698,15 +698,15 @@
             color: var(--text);
         }
 
-        /* Mobile Responsive Optimization */
+        /* ══ Mobile Responsive Optimization ══ */
         @media (max-width: 991px) {
             .theme5-wrapper {
-                padding: 1rem 1rem 3rem;
+                padding: 0.75rem 0.75rem 3rem;
             }
 
             .theme5-grid {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
+                gap: 1rem;
             }
 
             .left-profile-sticky {
@@ -714,13 +714,173 @@
                 top: 0;
             }
 
+            /* Compact Mobile Motia Profile Card */
+            .motia-card {
+                border-radius: 18px;
+            }
+
+            .motia-header-banner {
+                height: 105px;
+                padding: 0.85rem 1rem;
+            }
+
+            .motia-header-socials {
+                padding: 4px 10px;
+                gap: 0.5rem;
+            }
+
+            .motia-header-socials a, .motia-header-socials i {
+                font-size: 0.88rem;
+            }
+
+            .motia-avatar-wrap {
+                padding: 0 1rem;
+                margin-top: -36px;
+            }
+
+            .motia-avatar {
+                width: 72px;
+                height: 72px;
+                border-radius: 18px;
+                border-width: 3px;
+            }
+
+            .motia-card-body {
+                padding: 0.85rem 1rem 1.15rem;
+            }
+
+            .motia-name {
+                font-size: 1.18rem;
+            }
+
+            .motia-handle {
+                font-size: 0.8rem;
+            }
+
+            .motia-bio {
+                font-size: 0.82rem;
+                margin-top: 0.5rem;
+                line-height: 1.5;
+            }
+
+            .motia-stats-row {
+                gap: 1rem;
+                margin-top: 0.85rem;
+                padding-top: 0.75rem;
+                font-size: 0.8rem;
+            }
+
+            .motia-domain-link {
+                font-size: 0.78rem;
+                margin-top: 0.75rem;
+            }
+
+            .right-showcase-area {
+                gap: 0.75rem;
+            }
+
+            .search-box-landing input {
+                padding: 0.65rem 1rem 0.65rem 2.4rem;
+                font-size: 0.82rem;
+                border-radius: 12px;
+            }
+
+            .search-box-landing i {
+                font-size: 0.85rem;
+                left: 0.85rem;
+            }
+
+            /* Bento Link Cards Mobile */
+            .bento-link-card {
+                padding: 0.75rem 0.85rem;
+                gap: 0.75rem;
+                border-radius: 12px;
+            }
+
+            .bento-icon-box {
+                width: 38px;
+                height: 38px;
+                border-radius: 10px;
+                font-size: 17px;
+            }
+
+            .bento-title {
+                font-size: 0.88rem;
+            }
+
+            .bento-desc {
+                font-size: 0.75rem;
+            }
+
+            .bento-arrow-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 11px;
+            }
+
+            /* TikTok & Reels Slider Mobile */
+            .tiktok-highlights-wrap {
+                gap: 10px;
+                padding-bottom: 0.5rem;
+            }
+
+            .tiktok-card-item {
+                width: 125px;
+                height: 195px;
+                border-radius: 12px;
+            }
+
+            /* Banner Poster Image Mobile */
+            .banner-poster-item {
+                border-radius: 12px;
+            }
+
+            .banner-poster-item img {
+                max-height: 200px;
+                object-fit: cover;
+            }
+
+            /* Products Grid Mobile */
             .landing-products-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
+                gap: 8px;
+            }
+
+            .landing-prod-card {
+                border-radius: 12px;
+                padding: 0.65rem;
+            }
+
+            .landing-prod-title {
+                font-size: 0.78rem;
+                line-height: 1.3;
+            }
+
+            .landing-prod-price {
+                font-size: 0.82rem;
             }
 
             .landing-top-hero {
-                padding: 1.25rem;
+                padding: 1rem;
+                border-radius: 14px;
+            }
+
+            .hero-welcome-title {
+                font-size: 1.05rem;
+            }
+
+            .hero-welcome-sub {
+                font-size: 0.78rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .theme5-wrapper {
+                padding: 0.5rem 0.4rem 2rem;
+            }
+
+            .landing-products-grid {
+                gap: 6px;
             }
         }
     </style>
@@ -826,13 +986,38 @@
         $yt_url = !empty($s_yt) ? (Str::startsWith($s_yt, 'http') ? $s_yt : 'https://youtube.com/@' . ltrim(ltrim($s_yt, '@'), '/')) : null;
         $wa_url = !empty($s_wa) ? 'https://wa.me/62' . preg_replace('/^(62|0)/', '', $s_wa) : null;
 
-        $linkBlocks = $blocks->whereIn('type', ['link', 'pdf']);
-        $imageBlocks = $blocks->where('type', 'image');
-        $videoBlocks = $blocks->whereIn('type', ['tiktok', 'reels']);
+        $groupedBlocks = [];
+        $currentGroup = [];
+        $currentCategory = null;
+
+        foreach ($blocks as $block) {
+            if (in_array($block->type, ['tiktok', 'reels'])) {
+                $cat = 'video';
+            } elseif ($block->type === 'image') {
+                $cat = 'image';
+            } elseif (in_array($block->type, ['link', 'pdf'])) {
+                $cat = 'link';
+            } else {
+                $cat = 'product';
+            }
+
+            if ($cat !== $currentCategory && !empty($currentGroup)) {
+                $groupedBlocks[] = ['category' => $currentCategory, 'items' => $currentGroup];
+                $currentGroup = [];
+            }
+
+            $currentCategory = $cat;
+            $currentGroup[] = $block;
+        }
+
+        if (!empty($currentGroup)) {
+            $groupedBlocks[] = ['category' => $currentCategory, 'items' => $currentGroup];
+        }
+
         $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
         $buyleBlocks = $blocks->where('type', 'buyle_product')->values();
         $customProdBlocks = $blocks->where('type', 'custom_product')->values();
-        $totalLinks = $linkBlocks->count();
+        $totalLinks = $blocks->whereIn('type', ['link', 'pdf'])->count();
         $totalProds = $affBlocks->count() + $buyleBlocks->count() + $customProdBlocks->count();
     @endphp
 
@@ -962,93 +1147,89 @@
                     }
                 </script>
 
-                {{-- Video Cards Slider (TikTok & Reels - No Headline) --}}
-                @if($videoBlocks->isNotEmpty())
-                    <div class="tiktok-highlights-wrap" style="margin-top: 4px; margin-bottom: 4px;">
-                        @foreach($videoBlocks as $b)
-                            @php
-                                $customThumb = !empty($b->data_json['image'])
-                                    ? (Str::startsWith($b->data_json['image'], 'http') ? $b->data_json['image'] : asset('storage/' . $b->data_json['image']))
-                                    : (!empty($b->image) ? asset('storage/' . $b->image) : null);
-                            @endphp
-                            <a href="{{ $b->url }}" target="_blank" class="tiktok-card-item video-fetch search-item bio-track-link"
-                                data-type="{{ $b->type }}" data-url="{{ $b->url }}" data-title="{{ $b->title ?? ($b->type === 'reels' ? 'Instagram Reel' : 'TikTok Video') }}"
-                                data-bio-block="{{ $b->id }}" data-bio-creator="{{ $profile->id }}">
-                                <img src="{{ $customThumb ?? '' }}" alt="{{ $b->type === 'reels' ? 'Reels' : 'TikTok' }}" class="video-thumb" style="{{ $customThumb ? 'opacity:1;' : 'opacity:0;' }} transition:opacity 0.3s; width:100%; height:100%; object-fit:cover;">
-                                <div class="tiktok-card-overlay">
-                                    <span style="background:rgba(0,0,0,0.5); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px;">
-                                        @if($b->type === 'reels')
-                                            <i class="fab fa-instagram"></i>
-                                        @else
-                                            <i class="fab fa-tiktok"></i>
-                                        @endif
-                                    </span>
-                                    <div style="color:#fff; font-size:0.75rem; font-weight:600; text-shadow:0 1px 3px rgba(0,0,0,0.8); overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">
-                                        {{ $b->title ?? ($b->type === 'reels' ? 'Reels' : 'TikTok') }}
-                                    </div>
-                                </div>
-                            </a>
-                        @endforeach
-                    </div>
-                @endif
-
-                {{-- Banner Poster Images --}}
-                @if($imageBlocks->isNotEmpty())
-                    <div class="image-banner-wrap" style="display:flex; flex-direction:column; gap:0.85rem;">
-                        @foreach($imageBlocks as $block)
-                            @php
-                                $bannerImg = !empty($block->data_json['image'])
-                                    ? (Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']))
-                                    : (!empty($block->image) ? asset('storage/' . $block->image) : null);
-                            @endphp
-                            @if($bannerImg)
-                                <div class="banner-poster-item search-item" data-title="{{ $block->title }}" style="border-radius: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); background: var(--card);">
-                                    @if(!empty($block->url))
-                                        <a href="{{ $block->url }}" target="_blank" class="bio-track-link" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}" style="display:block; text-decoration:none;">
-                                    @endif
-                                    <img src="{{ $bannerImg }}" alt="{{ $block->title }}" style="width:100%; height:auto; display:block; object-fit:cover;">
-                                    @if(!empty($block->url))
-                                        </a>
-                                    @endif
-                                </div>
-                            @endif
-                        @endforeach
-                    </div>
-                @endif
-
-                {{-- Custom Links Bento Section --}}
-                @if($linkBlocks->isNotEmpty())
-                    <div>
-                        <div class="bento-link-grid">
-                            @foreach($linkBlocks as $block)
-                                <a href="{{ $block->url }}" target="_blank" class="bento-link-card search-item"
-                                    data-title="{{ $block->title }}">
-                                    <div class="bento-icon-box">
-                                        @if(!empty($block->data_json['icon_class']))
-                                            <i class="{{ $block->data_json['icon_class'] }}"></i>
-                                        @elseif(!empty($block->data_json['image']))
-                                            <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']) }}"
-                                                alt="">
-                                        @elseif($block->type === 'pdf')
-                                            <i class="fas fa-file-pdf"></i>
-                                        @else
-                                            <i class="fas fa-link"></i>
-                                        @endif
-                                    </div>
-                                    <div class="bento-body">
-                                        <div class="bento-title">{{ $block->title }}</div>
-                                        @if(!empty($block->data_json['description']))
-                                            <div class="bento-desc">{{ Str::limit($block->data_json['description'], 65) }}</div>
-                                        @endif
-                                    </div>
-                                    <div class="bento-arrow-btn">
-                                        <i class="fas fa-arrow-right"></i>
+                {{-- Consecutive Block Groups (Preserves Exact User Order) --}}
+                @foreach($groupedBlocks as $group)
+                    @if($group['category'] === 'video')
+                        <div class="tiktok-highlights-wrap" style="margin-top: 4px; margin-bottom: 4px;">
+                            @foreach($group['items'] as $b)
+                                @php
+                                    $customThumb = !empty($b->data_json['image'])
+                                        ? (Str::startsWith($b->data_json['image'], 'http') ? $b->data_json['image'] : asset('storage/' . $b->data_json['image']))
+                                        : (!empty($b->image) ? asset('storage/' . $b->image) : null);
+                                @endphp
+                                <a href="{{ $b->url }}" target="_blank" class="tiktok-card-item video-fetch search-item bio-track-link"
+                                    data-type="{{ $b->type }}" data-url="{{ $b->url }}" data-title="{{ $b->title ?? ($b->type === 'reels' ? 'Instagram Reel' : 'TikTok Video') }}"
+                                    data-bio-block="{{ $b->id }}" data-bio-creator="{{ $profile->id }}">
+                                    <img src="{{ $customThumb ?? '' }}" alt="{{ $b->type === 'reels' ? 'Reels' : 'TikTok' }}" class="video-thumb" style="{{ $customThumb ? 'opacity:1;' : 'opacity:0;' }} transition:opacity 0.3s; width:100%; height:100%; object-fit:cover;">
+                                    <div class="tiktok-card-overlay">
+                                        <span style="background:rgba(0,0,0,0.5); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px;">
+                                            @if($b->type === 'reels')
+                                                <i class="fab fa-instagram"></i>
+                                            @else
+                                                <i class="fab fa-tiktok"></i>
+                                            @endif
+                                        </span>
+                                        <div style="color:#fff; font-size:0.75rem; font-weight:600; text-shadow:0 1px 3px rgba(0,0,0,0.8); overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">
+                                            {{ $b->title ?? ($b->type === 'reels' ? 'Reels' : 'TikTok') }}
+                                        </div>
                                     </div>
                                 </a>
                             @endforeach
                         </div>
-                    </div>
-                @endif
+                    @elseif($group['category'] === 'image')
+                        <div class="image-banner-wrap" style="display:flex; flex-direction:column; gap:0.85rem;">
+                            @foreach($group['items'] as $block)
+                                @php
+                                    $bannerImg = !empty($block->data_json['image'])
+                                        ? (Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']))
+                                        : (!empty($block->image) ? asset('storage/' . $block->image) : null);
+                                @endphp
+                                @if($bannerImg)
+                                    <div class="banner-poster-item search-item" data-title="{{ $block->title }}" style="border-radius: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); background: var(--card);">
+                                        @if(!empty($block->url))
+                                            <a href="{{ $block->url }}" target="_blank" class="bio-track-link" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}" style="display:block; text-decoration:none;">
+                                        @endif
+                                        <img src="{{ $bannerImg }}" alt="{{ $block->title }}" style="width:100%; max-height:240px; object-fit:cover; display:block;">
+                                        @if(!empty($block->url))
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    @elseif($group['category'] === 'link')
+                        <div>
+                            <div class="bento-link-grid">
+                                @foreach($group['items'] as $block)
+                                    <a href="{{ $block->url }}" target="_blank" class="bento-link-card search-item"
+                                        data-title="{{ $block->title }}">
+                                        <div class="bento-icon-box">
+                                            @if(!empty($block->data_json['icon_class']))
+                                                <i class="{{ $block->data_json['icon_class'] }}"></i>
+                                            @elseif(!empty($block->data_json['image']))
+                                                <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']) }}"
+                                                    alt="">
+                                            @elseif($block->type === 'pdf')
+                                                <i class="fas fa-file-pdf"></i>
+                                            @else
+                                                <i class="fas fa-link"></i>
+                                            @endif
+                                        </div>
+                                        <div class="bento-body">
+                                            <div class="bento-title">{{ $block->title }}</div>
+                                            @if(!empty($block->data_json['description']))
+                                                <div class="bento-desc">{{ Str::limit($block->data_json['description'], 65) }}</div>
+                                            @endif
+                                        </div>
+                                        <div class="bento-arrow-btn">
+                                            <i class="fas fa-arrow-right"></i>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
 
 
 
