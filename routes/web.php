@@ -192,6 +192,53 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/track-bio', [TrackingController::class, 'bioClick'])->name('track.bio-click');
 Route::post('/track/{type}', [TrackingController::class, 'track'])->name('track');
 
+// Instagram Reels thumbnail proxy (server-side fetch to bypass CORS)
+Route::get('/api/ig-thumb', function (\Illuminate\Http\Request $request) {
+    $url = $request->query('url');
+    if (!$url) return response()->json(['error' => 'no url'], 400);
+
+    // Extract shortcode from Instagram URL
+    if (!preg_match('/instagram\.com\/(?:reel|reels|p)\/([A-Za-z0-9_-]+)/i', $url, $m)) {
+        return response()->json(['error' => 'invalid url'], 400);
+    }
+    $shortcode = $m[1];
+
+    try {
+        // Fetch Instagram page and extract og:image
+        $response = \Illuminate\Support\Facades\Http::timeout(8)
+            ->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+                'Accept' => 'text/html,application/xhtml+xml',
+                'Accept-Language' => 'en-US,en;q=0.9',
+            ])
+            ->get("https://www.instagram.com/p/{$shortcode}/");
+
+        if ($response->ok()) {
+            $html = $response->body();
+            // Extract og:image
+            if (preg_match('/<meta[^>]+property=["\']og:image["\'][^>]+content=["\'](https?:[^"\']+)["\']/', $html, $img)) {
+                return response()->json(['thumbnail_url' => $img[1]])
+                    ->header('Cache-Control', 'public, max-age=3600')
+                    ->header('Access-Control-Allow-Origin', '*');
+            }
+            // Try alternate pattern
+            if (preg_match('/<meta[^>]+content=["\'](https?:[^"\']+)["\'][^>]+property=["\']og:image["\']/', $html, $img)) {
+                return response()->json(['thumbnail_url' => $img[1]])
+                    ->header('Cache-Control', 'public, max-age=3600')
+                    ->header('Access-Control-Allow-Origin', '*');
+            }
+        }
+    } catch (\Exception $e) {
+        // Fall through to fallback
+    }
+
+    // Fallback: return weserv proxy URL
+    $proxied = 'https://images.weserv.nl/?url=' . urlencode("https://www.instagram.com/p/{$shortcode}/media/?size=l");
+    return response()->json(['thumbnail_url' => $proxied])
+        ->header('Cache-Control', 'public, max-age=1800')
+        ->header('Access-Control-Allow-Origin', '*');
+})->name('api.ig-thumb');
+
 // Webhook Midtrans — DEDICATED controller, reply < 1 detik, proses di queue
 // (Route ini dikecualikan dari CSRF di bootstrap/app.php)
 Route::post('/payment/callback', [\App\Http\Controllers\PaymentWebhookController::class, 'midtrans'])->name('payment.callback');

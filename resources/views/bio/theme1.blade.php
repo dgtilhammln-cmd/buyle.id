@@ -821,16 +821,36 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // TikTok Thumbnail Fetcher via oEmbed
-            document.querySelectorAll('.tt-fetch').forEach(card => {
+            // TikTok & Instagram Reels Thumbnail Fetcher
+            document.querySelectorAll('.video-fetch, .tt-fetch').forEach(card => {
                 const url = card.dataset.url;
-                const img = card.querySelector('.tt-thumb');
-                if (!url) return;
-                fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`)
-                    .then(r => r.json())
-                    .then(data => {                        if (data.thumbnail_url) { img.src = data.thumbnail_url; img.style.opacity = '1'; }
-                    })
-                    .catch(() => { img.src = 'https://placehold.co/130x200/111/fff?text=TikTok'; img.style.opacity = '1'; });
+                const type = card.dataset.type || (url && url.includes('instagram.com') ? 'reels' : 'tiktok');
+                const img = card.querySelector('.video-thumb, .tt-thumb');
+                if (!url || !img) return;
+
+                if (type === 'reels' || (url && url.includes('instagram.com'))) {
+                    fetch(`/api/ig-thumb?url=${encodeURIComponent(url)}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.thumbnail_url) {
+                                img.src = data.thumbnail_url;
+                                img.onload = () => { img.style.opacity = '1'; };
+                                img.onerror = () => { img.src = 'https://placehold.co/130x200/db2777/fff?text=Reels'; img.style.opacity = '1'; };
+                            } else {
+                                img.src = 'https://placehold.co/130x200/db2777/fff?text=Reels';
+                                img.style.opacity = '1';
+                            }
+                        })
+                        .catch(() => { img.src = 'https://placehold.co/130x200/db2777/fff?text=Reels'; img.style.opacity = '1'; });
+                } else {
+                    fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.thumbnail_url) { img.src = data.thumbnail_url; img.style.opacity = '1'; }
+                            else { img.src = 'https://placehold.co/130x200/111/fff?text=TikTok'; img.style.opacity = '1'; }
+                        })
+                        .catch(() => { img.src = 'https://placehold.co/130x200/111/fff?text=TikTok'; img.style.opacity = '1'; });
+                }
             });
 
             // Bio Link Click Tracker

@@ -1332,24 +1332,26 @@
                 if (!url || !img) return;
 
                 if (type === 'reels' || (url && url.includes('instagram.com'))) {
-                    const match = url.match(/instagram\.com\/(?:reel|reels|p)\/([A-Za-z0-9_-]+)/i);
-                    if (match && match[1]) {
-                        const shortcode = match[1];
-                        const proxiedUrl = `https://images.weserv.nl/?url=${encodeURIComponent(`https://www.instagram.com/p/${shortcode}/media/?size=l`)}`;
-                        img.src = proxiedUrl;
-                        img.onload = () => { img.style.opacity = '1'; };
-                        img.onerror = () => {
-                            img.src = `https://images.weserv.nl/?url=${encodeURIComponent(`https://www.instagram.com/p/${shortcode}/media/?size=m`)}`;
-                            img.onload = () => { img.style.opacity = '1'; };
-                            img.onerror = () => {
+                    // Use server-side proxy to fetch og:image (bypasses CORS)
+                    fetch(`/api/ig-thumb?url=${encodeURIComponent(url)}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.thumbnail_url) {
+                                img.src = data.thumbnail_url;
+                                img.onload = () => { img.style.opacity = '1'; };
+                                img.onerror = () => {
+                                    img.src = 'https://placehold.co/140x220/db2777/fff?text=Reels';
+                                    img.style.opacity = '1';
+                                };
+                            } else {
                                 img.src = 'https://placehold.co/140x220/db2777/fff?text=Reels';
                                 img.style.opacity = '1';
-                            };
-                        };
-                    } else {
-                        img.src = 'https://placehold.co/140x220/db2777/fff?text=Reels';
-                        img.style.opacity = '1';
-                    }
+                            }
+                        })
+                        .catch(() => {
+                            img.src = 'https://placehold.co/140x220/db2777/fff?text=Reels';
+                            img.style.opacity = '1';
+                        });
                 } else {
                     fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`)
                         .then(r => r.json())
