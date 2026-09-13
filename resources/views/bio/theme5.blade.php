@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     @php
-        $bioName   = $config['name'] ?? $profile->store_name ?? $username;
+        $bioName = $config['name'] ?? $profile->store_name ?? $username;
         $pageTitle = $bioName . ' | Official Digital Portal';
     @endphp
     <title>{{ $pageTitle }}</title>
@@ -56,7 +56,9 @@
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=3">
@@ -85,16 +87,20 @@
             width: 8px;
             height: 8px;
         }
+
         ::-webkit-scrollbar-track {
             background: transparent;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 999px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+
         * {
             scrollbar-width: thin;
             scrollbar-color: #cbd5e1 transparent;
@@ -178,9 +184,9 @@
 
         .motia-header-socials a {
             color: #ffffff;
-            opacity: 0.88;
-            font-size: 1.05rem;
-            display: flex;
+            opacity: 0.9;
+            font-size: 1rem;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
@@ -190,12 +196,13 @@
         .motia-header-socials a:hover {
             opacity: 1;
             transform: scale(1.15);
+            color: #ffffff;
         }
 
-        .motia-header-socials svg {
-            width: 18px;
-            height: 18px;
-            fill: #ffffff;
+        .motia-header-socials i {
+            font-size: 1rem;
+            color: #ffffff;
+            line-height: 1;
         }
 
         /* Avatar: Large Rounded Square Overlapping Header */
@@ -215,7 +222,7 @@
             border: 4px solid var(--card);
             background: #0f172a;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
             flex-shrink: 0;
         }
 
@@ -489,7 +496,7 @@
         /* Products Showcase Grid */
         .landing-products-grid {
             display: grid;
-            grid-template-columns: repeat( auto-fill, minmax(210px, 1fr) );
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
             gap: 16px;
         }
 
@@ -642,7 +649,7 @@
 
         .tt-brand-icon {
             font-size: 1.1rem;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
         }
 
         .tt-play-lbl {
@@ -663,6 +670,7 @@
             box-shadow: var(--shadow-sm);
             background: var(--card);
         }
+
         .map-frame-wrap iframe {
             width: 100% !important;
             display: block;
@@ -722,8 +730,8 @@
     {{-- Custom Background & Colors Overrides --}}
     <style>
         @php
-            $bgType  = $config['bg_type'] ?? 'color';
-            $bgImg   = $config['bg_image'] ?? null;
+            $bgType = $config['bg_type'] ?? 'color';
+            $bgImg = $config['bg_image'] ?? null;
             $colorBg = $config['color_bg'] ?? null;
         @endphp
 
@@ -731,45 +739,71 @@
             body {
                 background: url("{{ asset('storage/' . $bgImg) }}") center center / cover no-repeat fixed !important;
             }
+
         @elseif(!empty($colorBg))
             body {
-                background: {{ $colorBg }} !important;
+                background:
+                    {{ $colorBg }}
+                    !important;
             }
+
         @endif
 
         @if(!empty($config['color_text']))
             body, .motia-name, .hero-welcome-title, .bento-title, .landing-prod-title, .section-title-text {
-                color: {{ $config['color_text'] }} !important;
+                color:
+                    {{ $config['color_text'] }}
+                    !important;
             }
-            .motia-bio, .motia-handle, .hero-welcome-sub, .bento-desc, .motia-stats-row {
-                color: {{ $config['color_text'] }} !important;
+
+            .motia-bio,
+            .motia-handle,
+            .hero-welcome-sub,
+            .bento-desc,
+            .motia-stats-row {
+                color:
+                    {{ $config['color_text'] }}
+                    !important;
                 opacity: 0.8;
             }
+
         @endif
 
         @if(!empty($config['color_accent']))
             :root {
-                --accent: {{ $config['color_accent'] }} !important;
+                --accent:
+                    {{ $config['color_accent'] }}
+                    !important;
             }
+
         @endif
 
         @if(!empty($config['color_card']))
             .motia-card, .landing-top-hero, .bento-link-card, .landing-prod-card, .map-frame-wrap, .search-box-landing input {
-                background: {{ $config['color_card'] }} !important;
+                background:
+                    {{ $config['color_card'] }}
+                    !important;
             }
+
         @endif
 
         @if(!empty($config['color_btn']))
             .bento-link-card {
-                background: {{ $config['color_btn'] }} !important;
+                background:
+                    {{ $config['color_btn'] }}
+                    !important;
                 border-color: transparent !important;
             }
+
         @endif
 
         @if(!empty($config['color_btn_text']))
             .bento-title, .bento-desc, .bento-arrow-btn {
-                color: {{ $config['color_btn_text'] }} !important;
+                color:
+                    {{ $config['color_btn_text'] }}
+                    !important;
             }
+
         @endif
     </style>
 </head>
@@ -777,63 +811,79 @@
 <body>
 
     @php
-        $sl               = $profile->social_links ?? [];
-        $s_wa             = $sl['wa']        ?? $config['wa']        ?? null;
-        $s_ig             = $sl['instagram'] ?? $config['ig']        ?? null;
-        $s_tt             = $sl['tiktok']    ?? $config['tiktok']    ?? null;
-        $s_yt             = $sl['youtube']   ?? $config['youtube']   ?? null;
-        $s_fb             = $sl['facebook']  ?? $config['facebook']  ?? null;
-        $s_x              = $sl['x']        ?? $config['x']         ?? null;
-        $s_li             = $sl['linkedin']  ?? $config['linkedin']  ?? null;
-        $s_web            = $sl['website']   ?? $config['website']   ?? null;
+        $sl = $profile->social_links ?? [];
+        $s_wa = $sl['wa'] ?? $config['wa'] ?? null;
+        $s_ig = $sl['instagram'] ?? $config['ig'] ?? null;
+        $s_tt = $sl['tiktok'] ?? $config['tiktok'] ?? null;
+        $s_yt = $sl['youtube'] ?? $config['youtube'] ?? null;
+        $s_fb = $sl['facebook'] ?? $config['facebook'] ?? null;
+        $s_x = $sl['x'] ?? $config['x'] ?? null;
+        $s_li = $sl['linkedin'] ?? $config['linkedin'] ?? null;
+        $s_web = $sl['website'] ?? $config['website'] ?? null;
 
-        $ig_url           = !empty($s_ig) ? (Str::startsWith($s_ig, 'http') ? $s_ig : 'https://instagram.com/' . ltrim(ltrim($s_ig, '@'), '/')) : null;
-        $tt_url           = !empty($s_tt) ? (Str::startsWith($s_tt, 'http') ? $s_tt : 'https://tiktok.com/@' . ltrim(ltrim($s_tt, '@'), '/')) : null;
-        $yt_url           = !empty($s_yt) ? (Str::startsWith($s_yt, 'http') ? $s_yt : 'https://youtube.com/@' . ltrim(ltrim($s_yt, '@'), '/')) : null;
-        $wa_url           = !empty($s_wa) ? 'https://wa.me/62' . preg_replace('/^(62|0)/', '', $s_wa) : null;
+        $ig_url = !empty($s_ig) ? (Str::startsWith($s_ig, 'http') ? $s_ig : 'https://instagram.com/' . ltrim(ltrim($s_ig, '@'), '/')) : null;
+        $tt_url = !empty($s_tt) ? (Str::startsWith($s_tt, 'http') ? $s_tt : 'https://tiktok.com/@' . ltrim(ltrim($s_tt, '@'), '/')) : null;
+        $yt_url = !empty($s_yt) ? (Str::startsWith($s_yt, 'http') ? $s_yt : 'https://youtube.com/@' . ltrim(ltrim($s_yt, '@'), '/')) : null;
+        $wa_url = !empty($s_wa) ? 'https://wa.me/62' . preg_replace('/^(62|0)/', '', $s_wa) : null;
 
-        $linkBlocks       = $blocks->whereIn('type', ['link', 'pdf', 'image']);
-        $tiktokBlocks     = $blocks->where('type', 'tiktok');
-        $affBlocks        = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
-        $buyleBlocks      = $blocks->where('type', 'buyle_product')->values();
+        $linkBlocks = $blocks->whereIn('type', ['link', 'pdf', 'image']);
+        $tiktokBlocks = $blocks->where('type', 'tiktok');
+        $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
+        $buyleBlocks = $blocks->where('type', 'buyle_product')->values();
         $customProdBlocks = $blocks->where('type', 'custom_product')->values();
-        $totalLinks       = $linkBlocks->count();
-        $totalProds       = $affBlocks->count() + $buyleBlocks->count() + $customProdBlocks->count();
+        $totalLinks = $linkBlocks->count();
+        $totalProds = $affBlocks->count() + $buyleBlocks->count() + $customProdBlocks->count();
     @endphp
 
     <div class="theme5-wrapper">
         <div class="theme5-grid">
-            
+
             {{-- Left Column: Sticky Motia Profile Card (Matches Image 1) --}}
             <div class="left-profile-sticky">
                 <div class="motia-card">
-                    
+
                     {{-- Header Cover Banner with Clean Bare Minimalist Vector Social Icons (Motia Style) --}}
-                    <div class="motia-header-banner" @if(!empty($config['cover'])) style="background-image:url('{{ asset('storage/' . $config['cover']) }}');" @endif>
+                    <div class="motia-header-banner" @if(!empty($config['cover']))
+                    style="background-image:url('{{ asset('storage/' . $config['cover']) }}');" @endif>
                         <div class="motia-header-socials">
                             @if($wa_url)
                                 <a href="{{ $wa_url }}" target="_blank" title="WhatsApp">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.556 4.117 1.528 5.849L0 24l6.335-1.508A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.154-1.422l-.37-.218-3.764.896.924-3.667-.243-.381A9.953 9.953 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/></svg>
+                                    <i class="fab fa-whatsapp"></i>
                                 </a>
                             @endif
                             @if($ig_url)
                                 <a href="{{ $ig_url }}" target="_blank" title="Instagram">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg>
+                                    <i class="fab fa-instagram"></i>
                                 </a>
                             @endif
                             @if($tt_url)
                                 <a href="{{ $tt_url }}" target="_blank" title="TikTok">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43 6.2 6.2 0 0 0 1.91-4.42V8.92a8.28 8.28 0 0 0 4.82 1.55v-3.47a4.91 4.91 0 0 1-1-.31z"/></svg>
+                                    <i class="fab fa-tiktok"></i>
                                 </a>
                             @endif
                             @if($yt_url)
                                 <a href="{{ $yt_url }}" target="_blank" title="YouTube">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+                                    <i class="fab fa-youtube"></i>
+                                </a>
+                            @endif
+                            @if(!empty($s_fb))
+                                <a href="{{ Str::startsWith($s_fb, 'http') ? $s_fb : 'https://facebook.com/' . $s_fb }}" target="_blank" title="Facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                            @endif
+                            @if(!empty($s_x))
+                                <a href="{{ Str::startsWith($s_x, 'http') ? $s_x : 'https://x.com/' . $s_x }}" target="_blank" title="X (Twitter)">
+                                    <i class="fab fa-x-twitter"></i>
+                                </a>
+                            @endif
+                            @if(!empty($s_li))
+                                <a href="{{ Str::startsWith($s_li, 'http') ? $s_li : 'https://linkedin.com/in/' . $s_li }}" target="_blank" title="LinkedIn">
+                                    <i class="fab fa-linkedin"></i>
                                 </a>
                             @endif
                             @if($s_web)
-                                <a href="{{ $s_web }}" target="_blank" title="Website">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                <a href="{{ Str::startsWith($s_web, 'http') ? $s_web : 'https://' . $s_web }}" target="_blank" title="Website">
+                                    <i class="fas fa-globe"></i>
                                 </a>
                             @endif
                         </div>
@@ -854,7 +904,8 @@
                             @if($bioAvatarSrc)
                                 <img src="{{ $bioAvatarSrc }}" alt="{{ $config['name'] ?? '' }}">
                             @else
-                                <div style="width:100%;height:100%;background:#0f172a;display:flex;align-items:center;justify-content:center;font-size:2.4rem;font-weight:900;color:#fff;">
+                                <div
+                                    style="width:100%;height:100%;background:#0f172a;display:flex;align-items:center;justify-content:center;font-size:2.4rem;font-weight:900;color:#fff;">
                                     {{ strtoupper(substr($config['name'] ?? $username, 0, 1)) }}
                                 </div>
                             @endif
@@ -887,31 +938,33 @@
 
             {{-- Right Column: Showcase Content Area --}}
             <div class="right-showcase-area">
-                
+
                 {{-- Clean Top Banner Header (NO Emojis) --}}
                 <div class="landing-top-hero">
-                    <div class="hero-welcome-title">Official Digital Portal</div>
-                    <div class="hero-welcome-sub">Temukan tautan resmi & rekomendasi produk terbaik dari {{ $config['name'] ?? $profile->store_name ?? $username }}.</div>
+                    <div class="hero-welcome-title">Official Digital Store</div>
+                    <div class="hero-welcome-sub">Temukan tautan resmi & rekomendasi produk terbaik dari
+                        {{ $config['name'] ?? $profile->store_name ?? $username }}.</div>
                 </div>
 
                 {{-- Clean Search Box --}}
                 <div class="search-box-landing">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="bioSearchInput" placeholder="Cari link, produk, atau konten..." onkeyup="filterBioItems(this.value)">
+                    <input type="text" id="bioSearchInput" placeholder="Cari link, produk, atau konten..."
+                        onkeyup="filterBioItems(this.value)">
                 </div>
 
                 <script>
-                function filterBioItems(query) {
-                    const q = query.toLowerCase().trim();
-                    document.querySelectorAll('.search-item').forEach(item => {
-                        const text = (item.innerText + ' ' + (item.dataset.title || '') + ' ' + (item.dataset.url || '')).toLowerCase();
-                        if (!q || text.includes(q)) {
-                            item.style.display = '';
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
-                }
+                    function filterBioItems(query) {
+                        const q = query.toLowerCase().trim();
+                        document.querySelectorAll('.search-item').forEach(item => {
+                            const text = (item.innerText + ' ' + (item.dataset.title || '') + ' ' + (item.dataset.url || '')).toLowerCase();
+                            if (!q || text.includes(q)) {
+                                item.style.display = '';
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        });
+                    }
                 </script>
 
                 {{-- Custom Links Bento Section --}}
@@ -922,12 +975,14 @@
                         </div>
                         <div class="bento-link-grid">
                             @foreach($linkBlocks as $block)
-                                <a href="{{ $block->url }}" target="_blank" class="bento-link-card search-item" data-title="{{ $block->title }}">
+                                <a href="{{ $block->url }}" target="_blank" class="bento-link-card search-item"
+                                    data-title="{{ $block->title }}">
                                     <div class="bento-icon-box">
                                         @if(!empty($block->data_json['icon_class']))
                                             <i class="{{ $block->data_json['icon_class'] }}"></i>
                                         @elseif(!empty($block->data_json['image']))
-                                            <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']) }}" alt="">
+                                            <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']) }}"
+                                                alt="">
                                         @elseif($block->type === 'pdf')
                                             <i class="fas fa-file-pdf"></i>
                                         @else
@@ -949,139 +1004,277 @@
                     </div>
                 @endif
 
-                {{-- TikTok Highlights Slider --}}
-                @if($tiktokBlocks->isNotEmpty())
-                    <div>
-                        <div class="section-header-landing">
-                            <span class="section-title-text">TikTok Highlights</span>
-                        </div>
-                        <div class="tiktok-highlights-wrap">
-                            @foreach($tiktokBlocks as $b)
-                                <a href="{{ $b->url }}" target="_blank" class="tiktok-card-item tt-fetch search-item bio-track-link" data-title="TikTok Video" data-url="{{ $b->url }}" data-bio-block="{{ $b->id }}" data-bio-creator="{{ $profile->id }}">
-                                    <img src="" alt="TikTok" class="tt-thumb" style="opacity:0; transition:opacity 0.3s;">
-                                    <div class="tiktok-card-overlay">
-                                        <span class="tt-brand-icon"><i class="fab fa-tiktok"></i></span>
-                                        <span class="tt-play-lbl"><i class="fas fa-play" style="font-size:9px;"></i> Tonton</span>
-                                    </div>
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
+
 
                 {{-- Product Catalog with Tabs --}}
                 @php
-                    $hasAff5       = $affBlocks->isNotEmpty();
-                    $hasCustom5    = $customProdBlocks->isNotEmpty();
-                    $hasBuyle5     = $buyleBlocks->isNotEmpty();
-                    $hasAnyProd5   = $hasAff5 || $hasCustom5 || $hasBuyle5;
-                    $totalAll5     = $affBlocks->count() + $customProdBlocks->count() + $buyleBlocks->count();
+                    $hasAff5 = $affBlocks->isNotEmpty();
+                    $hasCustom5 = $customProdBlocks->isNotEmpty();
+                    $hasBuyle5 = $buyleBlocks->isNotEmpty();
+                    $hasAnyProd5 = $hasAff5 || $hasCustom5 || $hasBuyle5;
+                    $totalAll5 = $affBlocks->count() + $customProdBlocks->count() + $buyleBlocks->count();
                 @endphp
 
                 @if($hasAnyProd5)
-                <style>
-                .cat-tabs-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:12px 0 10px;}
-                .cat-tabs-wrap::-webkit-scrollbar{display:none;}
-                .cat-tabs{display:flex;flex-wrap:nowrap;gap:6px;padding:0 0 2px;}
-                .cat-tab{flex:0 0 auto;white-space:nowrap;padding:6px 16px;border-radius:6px;font-size:0.77rem;font-weight:600;cursor:pointer;border:1px solid #cbd5e1;background:#f8fafc;color:#475569;transition:all .2s;user-select:none;}
-                .cat-tab.active{background:#0f172a;border-color:#0f172a;color:#fff;box-shadow:0 2px 8px rgba(15,23,42,0.2);}
-                .cat-tab:not(.active):hover{border-color:#94a3b8;background:#f1f5f9;}
-                .cat-panel{display:none;}.cat-panel.active{display:block;}
-                </style>
+                    <style>
+                        .cat-tabs-wrap {
+                            width: 100%;
+                            overflow-x: auto;
+                            -webkit-overflow-scrolling: touch;
+                            scrollbar-width: none;
+                            margin: 12px 0 10px;
+                        }
 
-                <div class="cat-tabs-wrap" style="margin-bottom:4px;">
-                    <div class="cat-tabs" id="catTabs5">
-                        <div class="cat-tab active" data-tab="all" onclick="switchTab5('all',this)">Semua <span style="opacity:.6;font-size:.72rem;">{{ $totalAll5 }}</span></div>
-                        @if($hasAff5)<div class="cat-tab" data-tab="rek" onclick="switchTab5('rek',this)">Rekomendasi <span style="opacity:.6;font-size:.72rem;">{{ $affBlocks->count() }}</span></div>@endif
-                        @if($hasCustom5)<div class="cat-tab" data-tab="fis" onclick="switchTab5('fis',this)">Fisik <span style="opacity:.6;font-size:.72rem;">{{ $customProdBlocks->count() }}</span></div>@endif
-                        @if($hasBuyle5)<div class="cat-tab" data-tab="dig" onclick="switchTab5('dig',this)">Digital <span style="opacity:.6;font-size:.72rem;">{{ $buyleBlocks->count() }}</span></div>@endif
+                        .cat-tabs-wrap::-webkit-scrollbar {
+                            display: none;
+                        }
+
+                        .cat-tabs {
+                            display: flex;
+                            flex-wrap: nowrap;
+                            gap: 6px;
+                            padding: 0 0 2px;
+                        }
+
+                        .cat-tab {
+                            flex: 0 0 auto;
+                            white-space: nowrap;
+                            padding: 6px 16px;
+                            border-radius: 6px;
+                            font-size: 0.77rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                            border: 1px solid #cbd5e1;
+                            background: #f8fafc;
+                            color: #475569;
+                            transition: all .2s;
+                            user-select: none;
+                        }
+
+                        .cat-tab.active {
+                            background: #0f172a;
+                            border-color: #0f172a;
+                            color: #fff;
+                            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+                        }
+
+                        .cat-tab:not(.active):hover {
+                            border-color: #94a3b8;
+                            background: #f1f5f9;
+                        }
+
+                        .cat-panel {
+                            display: none;
+                        }
+
+                        .cat-panel.active {
+                            display: block;
+                        }
+                    </style>
+
+                    <div class="cat-tabs-wrap" style="margin-bottom:4px;">
+                        <div class="cat-tabs" id="catTabs5">
+                            <div class="cat-tab active" data-tab="all" onclick="switchTab5('all',this)">Semua <span
+                                    style="opacity:.6;font-size:.72rem;">{{ $totalAll5 }}</span></div>
+                            @if($hasAff5)
+                                <div class="cat-tab" data-tab="rek" onclick="switchTab5('rek',this)">Rekomendasi <span
+                            style="opacity:.6;font-size:.72rem;">{{ $affBlocks->count() }}</span></div>@endif
+                            @if($hasCustom5)
+                                <div class="cat-tab" data-tab="fis" onclick="switchTab5('fis',this)">Fisik <span
+                            style="opacity:.6;font-size:.72rem;">{{ $customProdBlocks->count() }}</span></div>@endif
+                            @if($hasBuyle5)
+                                <div class="cat-tab" data-tab="dig" onclick="switchTab5('dig',this)">Digital <span
+                            style="opacity:.6;font-size:.72rem;">{{ $buyleBlocks->count() }}</span></div>@endif
+                        </div>
                     </div>
-                </div>
 
-                {{-- Tab: Semua --}}
-                <div class="cat-panel active" id="tab5-all">
-                    <div class="landing-products-grid">
-                        @php $num5 = 0; @endphp
-                        @foreach($affBlocks as $block)
-                            @php $num5++; @endphp
-                            <a href="{{ $block->url }}" target="_blank" class="landing-prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
-                                <div class="landing-prod-img">
-                                    <div class="prod-badge-num">#{{ sprintf('%02d',$num5) }}</div>
-                                    @if(!empty($block->data_json['image']))<img src="{{ Str::startsWith($block->data_json['image'],'http')?$block->data_json['image']:asset('storage/'.$block->data_json['image']) }}" alt="{{ $block->title }}" onerror="this.src='https://placehold.co/400x400/fff/cbd5e1?text=Produk'">@else<img src="https://placehold.co/400x400/fff/cbd5e1?text=Produk" alt="No Image">@endif
-                                </div>
-                                <div class="landing-prod-info"><h3 class="landing-prod-title">{{ $block->title }}</h3><div class="landing-prod-footer"><span class="landing-prod-price">Cek Detail</span><span class="landing-prod-btn">Beli <i class="fas fa-arrow-right"></i></span></div></div>
-                            </a>
-                        @endforeach
-                        @foreach($customProdBlocks as $block)
-                            @php $num5++; $imgs=$block->data_json['images']??[]; $img=!empty($imgs[0])?asset('storage/'.$imgs[0]):(!empty($block->data_json['image'])?asset('storage/'.$block->data_json['image']):'https://placehold.co/400x400/222/555?text=Produk'); $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $prodUrl=route('bio.product.show',[$username,$blockSlug]); $price=$block->data_json['price']??0; $origPrice=$block->data_json['original_price']??null; @endphp
-                            <a href="{{ $prodUrl }}" class="landing-prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
-                                <div class="landing-prod-img"><div class="prod-badge-num">#{{ sprintf('%02d',$num5) }}</div><img src="{{ $img }}" alt="{{ $block->title }}"></div>
-                                <div class="landing-prod-info"><h3 class="landing-prod-title">{{ $block->title }}</h3><div class="landing-prod-footer"><span class="landing-prod-price">@if(!empty($origPrice)&&$origPrice>$price)<s style="opacity:.5;font-size:.7rem;">Rp {{ number_format($origPrice,0,',','.') }}</s> @endif Rp {{ number_format($price,0,',','.') }}</span><span class="landing-prod-btn">Pesan <i class="fas fa-chevron-right"></i></span></div></div>
-                            </a>
-                        @endforeach
-                        @foreach($buyleBlocks as $block)
-                            @php $num5++; $prod=$products[$block->data_json['product_id']??0]??null; $displayTitle=!empty($block->title)?$block->title:($prod->name??''); $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $prodUrl=route('bio.product.show',[$username,$blockSlug]); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); @endphp
-                            @if($prod)
-                            <a href="{{ $prodUrl }}" class="landing-prod-card search-item bio-track-link" data-title="{{ $displayTitle }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
-                                <div class="landing-prod-img"><div class="prod-badge-num">#{{ sprintf('%02d',$num5) }}</div>@if($prod->image)<img src="{{ asset('storage/'.$prod->image) }}" alt="{{ $prod->name }}">@else<img src="https://placehold.co/400x400/fff/cbd5e1?text=Digital" alt="No Image">@endif</div>
-                                <div class="landing-prod-info"><h3 class="landing-prod-title">{{ $displayTitle }}</h3><div class="landing-prod-footer"><span class="landing-prod-price">@if(!empty($origPrice)&&$origPrice>$price)<s style="opacity:.55;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</s> @endif Rp {{ number_format($price,0,',','.') }}</span><span class="landing-prod-btn">Beli <i class="fas fa-chevron-right"></i></span></div></div>
-                            </a>
-                            @endif
-                        @endforeach
+                    {{-- Tab: Semua --}}
+                    <div class="cat-panel active" id="tab5-all">
+                        <div class="landing-products-grid">
+                            @php $num5 = 0; @endphp
+                            @foreach($affBlocks as $block)
+                                @php $num5++; @endphp
+                                <a href="{{ $block->url }}" target="_blank" class="landing-prod-card search-item bio-track-link"
+                                    data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}"
+                                    data-bio-creator="{{ $profile->id }}">
+                                    <div class="landing-prod-img">
+                                        <div class="prod-badge-num">#{{ sprintf('%02d', $num5) }}</div>
+                                        @if(!empty($block->data_json['image']))<img
+                                            src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']) }}"
+                                            alt="{{ $block->title }}"
+                                        onerror="this.src='https://placehold.co/400x400/fff/cbd5e1?text=Produk'">@else<img
+                                            src="https://placehold.co/400x400/fff/cbd5e1?text=Produk" alt="No Image">@endif
+                                    </div>
+                                    <div class="landing-prod-info">
+                                        <h3 class="landing-prod-title">{{ $block->title }}</h3>
+                                        <div class="landing-prod-footer"><span class="landing-prod-price">Cek Detail</span><span
+                                                class="landing-prod-btn">Beli <i class="fas fa-arrow-right"></i></span></div>
+                                    </div>
+                                </a>
+                            @endforeach
+                            @foreach($customProdBlocks as $block)
+                                @php $num5++;
+                                    $imgs = $block->data_json['images'] ?? [];
+                                    $img = !empty($imgs[0]) ? asset('storage/' . $imgs[0]) : (!empty($block->data_json['image']) ? asset('storage/' . $block->data_json['image']) : 'https://placehold.co/400x400/222/555?text=Produk');
+                                    $displayTitle = $block->title ?? '';
+                                    $blockSlug = !empty($block->data_json['slug']) ? $block->data_json['slug'] : \Illuminate\Support\Str::slug($displayTitle ?: 'produk-' . $block->id);
+                                    $prodUrl = route('bio.product.show', [$username, $blockSlug]);
+                                    $price = $block->data_json['price'] ?? 0;
+                                $origPrice = $block->data_json['original_price'] ?? null; @endphp
+                                <a href="{{ $prodUrl }}" class="landing-prod-card search-item bio-track-link"
+                                    data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}"
+                                    data-bio-creator="{{ $profile->id }}">
+                                    <div class="landing-prod-img">
+                                        <div class="prod-badge-num">#{{ sprintf('%02d', $num5) }}</div><img src="{{ $img }}"
+                                            alt="{{ $block->title }}">
+                                    </div>
+                                    <div class="landing-prod-info">
+                                        <h3 class="landing-prod-title">{{ $block->title }}</h3>
+                                        <div class="landing-prod-footer"><span
+                                                class="landing-prod-price">@if(!empty($origPrice) && $origPrice > $price)<s
+                                                    style="opacity:.5;font-size:.7rem;">Rp
+                                                {{ number_format($origPrice, 0, ',', '.') }}</s> @endif Rp
+                                                {{ number_format($price, 0, ',', '.') }}</span><span class="landing-prod-btn">Pesan
+                                                <i class="fas fa-chevron-right"></i></span></div>
+                                    </div>
+                                </a>
+                            @endforeach
+                            @foreach($buyleBlocks as $block)
+                                @php $num5++;
+                                    $prod = $products[$block->data_json['product_id'] ?? 0] ?? null;
+                                    $displayTitle = !empty($block->title) ? $block->title : ($prod->name ?? '');
+                                    $displayTitle = $block->title ?? '';
+                                    $blockSlug = !empty($block->data_json['slug']) ? $block->data_json['slug'] : \Illuminate\Support\Str::slug($displayTitle ?: 'produk-' . $block->id);
+                                    $prodUrl = route('bio.product.show', [$username, $blockSlug]);
+                                    $price = $block->data_json['price'] ?? $block->data_json['custom_price'] ?? ($prod ? ($prod->is_on_sale ? $prod->sale_price : $prod->effective_price) : 0);
+                                $origPrice = $block->data_json['original_price'] ?? ($prod && $prod->is_on_sale ? $prod->price : null); @endphp
+                                @if($prod)
+                                    <a href="{{ $prodUrl }}" class="landing-prod-card search-item bio-track-link"
+                                        data-title="{{ $displayTitle }}" data-bio-block="{{ $block->id }}"
+                                        data-bio-creator="{{ $profile->id }}">
+                                        <div class="landing-prod-img">
+                                            <div class="prod-badge-num">#{{ sprintf('%02d', $num5) }}</div>@if($prod->image)<img
+                                            src="{{ asset('storage/' . $prod->image) }}" alt="{{ $prod->name }}">@else<img
+                                                src="https://placehold.co/400x400/fff/cbd5e1?text=Digital" alt="No Image">@endif
+                                        </div>
+                                        <div class="landing-prod-info">
+                                            <h3 class="landing-prod-title">{{ $displayTitle }}</h3>
+                                            <div class="landing-prod-footer"><span
+                                                    class="landing-prod-price">@if(!empty($origPrice) && $origPrice > $price)<s
+                                                        style="opacity:.55;font-size:.72rem;">Rp
+                                                    {{ number_format($origPrice, 0, ',', '.') }}</s> @endif Rp
+                                                    {{ number_format($price, 0, ',', '.') }}</span><span class="landing-prod-btn">Beli
+                                                    <i class="fas fa-chevron-right"></i></span></div>
+                                        </div>
+                                    </a>
+                                @endif
+                            @endforeach
+                        </div>
                     </div>
-                </div>
 
-                @if($hasAff5)
-                <div class="cat-panel" id="tab5-rek">
-                    <div class="landing-products-grid">
-                        @foreach($affBlocks as $i => $block)
-                            <a href="{{ $block->url }}" target="_blank" class="landing-prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
-                                <div class="landing-prod-img"><div class="prod-badge-num">#{{ sprintf('%02d',$i+1) }}</div>@if(!empty($block->data_json['image']))<img src="{{ Str::startsWith($block->data_json['image'],'http')?$block->data_json['image']:asset('storage/'.$block->data_json['image']) }}" alt="{{ $block->title }}" onerror="this.src='https://placehold.co/400x400/fff/cbd5e1?text=Produk'">@else<img src="https://placehold.co/400x400/fff/cbd5e1?text=Produk" alt="No Image">@endif</div>
-                                <div class="landing-prod-info"><h3 class="landing-prod-title">{{ $block->title }}</h3><div class="landing-prod-footer"><span class="landing-prod-price">Cek Detail</span><span class="landing-prod-btn">Beli <i class="fas fa-arrow-right"></i></span></div></div>
-                            </a>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
+                    @if($hasAff5)
+                        <div class="cat-panel" id="tab5-rek">
+                            <div class="landing-products-grid">
+                                @foreach($affBlocks as $i => $block)
+                                    <a href="{{ $block->url }}" target="_blank" class="landing-prod-card search-item bio-track-link"
+                                        data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}"
+                                        data-bio-creator="{{ $profile->id }}">
+                                        <div class="landing-prod-img">
+                                            <div class="prod-badge-num">#{{ sprintf('%02d', $i + 1) }}</div>
+                                            @if(!empty($block->data_json['image']))<img
+                                                src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']) }}"
+                                                alt="{{ $block->title }}"
+                                            onerror="this.src='https://placehold.co/400x400/fff/cbd5e1?text=Produk'">@else<img
+                                                src="https://placehold.co/400x400/fff/cbd5e1?text=Produk" alt="No Image">@endif
+                                        </div>
+                                        <div class="landing-prod-info">
+                                            <h3 class="landing-prod-title">{{ $block->title }}</h3>
+                                            <div class="landing-prod-footer"><span class="landing-prod-price">Cek Detail</span><span
+                                                    class="landing-prod-btn">Beli <i class="fas fa-arrow-right"></i></span></div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
-                @if($hasCustom5)
-                <div class="cat-panel" id="tab5-fis">
-                    <div class="landing-products-grid">
-                        @foreach($customProdBlocks as $i => $block)
-                            @php $imgs=$block->data_json['images']??[]; $img=!empty($imgs[0])?asset('storage/'.$imgs[0]):(!empty($block->data_json['image'])?asset('storage/'.$block->data_json['image']):'https://placehold.co/400x400/222/555?text=Produk'); $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $prodUrl=route('bio.product.show',[$username,$blockSlug]); $price=$block->data_json['price']??0; $origPrice=$block->data_json['original_price']??null; @endphp
-                            <a href="{{ $prodUrl }}" class="landing-prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
-                                <div class="landing-prod-img"><div class="prod-badge-num">#{{ sprintf('%02d',$i+1) }}</div><img src="{{ $img }}" alt="{{ $block->title }}"></div>
-                                <div class="landing-prod-info"><h3 class="landing-prod-title">{{ $block->title }}</h3><div class="landing-prod-footer"><span class="landing-prod-price">@if(!empty($origPrice)&&$origPrice>$price)<s style="opacity:.5;font-size:.7rem;">Rp {{ number_format($origPrice,0,',','.') }}</s> @endif Rp {{ number_format($price,0,',','.') }}</span><span class="landing-prod-btn">Pesan <i class="fas fa-chevron-right"></i></span></div></div>
-                            </a>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
+                    @if($hasCustom5)
+                        <div class="cat-panel" id="tab5-fis">
+                            <div class="landing-products-grid">
+                                @foreach($customProdBlocks as $i => $block)
+                                    @php $imgs = $block->data_json['images'] ?? [];
+                                        $img = !empty($imgs[0]) ? asset('storage/' . $imgs[0]) : (!empty($block->data_json['image']) ? asset('storage/' . $block->data_json['image']) : 'https://placehold.co/400x400/222/555?text=Produk');
+                                        $displayTitle = $block->title ?? '';
+                                        $blockSlug = !empty($block->data_json['slug']) ? $block->data_json['slug'] : \Illuminate\Support\Str::slug($displayTitle ?: 'produk-' . $block->id);
+                                        $prodUrl = route('bio.product.show', [$username, $blockSlug]);
+                                        $price = $block->data_json['price'] ?? 0;
+                                    $origPrice = $block->data_json['original_price'] ?? null; @endphp
+                                    <a href="{{ $prodUrl }}" class="landing-prod-card search-item bio-track-link"
+                                        data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}"
+                                        data-bio-creator="{{ $profile->id }}">
+                                        <div class="landing-prod-img">
+                                            <div class="prod-badge-num">#{{ sprintf('%02d', $i + 1) }}</div><img src="{{ $img }}"
+                                                alt="{{ $block->title }}">
+                                        </div>
+                                        <div class="landing-prod-info">
+                                            <h3 class="landing-prod-title">{{ $block->title }}</h3>
+                                            <div class="landing-prod-footer"><span
+                                                    class="landing-prod-price">@if(!empty($origPrice) && $origPrice > $price)<s
+                                                        style="opacity:.5;font-size:.7rem;">Rp
+                                                    {{ number_format($origPrice, 0, ',', '.') }}</s> @endif Rp
+                                                    {{ number_format($price, 0, ',', '.') }}</span><span class="landing-prod-btn">Pesan
+                                                    <i class="fas fa-chevron-right"></i></span></div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
-                @if($hasBuyle5)
-                <div class="cat-panel" id="tab5-dig">
-                    <div class="landing-products-grid">
-                        @foreach($buyleBlocks as $i => $block)
-                            @php $prod=$products[$block->data_json['product_id']??0]??null; $displayTitle=!empty($block->title)?$block->title:($prod->name??''); $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $prodUrl=route('bio.product.show',[$username,$blockSlug]); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); @endphp
-                            @if($prod)
-                            <a href="{{ $prodUrl }}" class="landing-prod-card search-item bio-track-link" data-title="{{ $displayTitle }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
-                                <div class="landing-prod-img"><div class="prod-badge-num">#{{ sprintf('%02d',$i+1) }}</div>@if($prod->image)<img src="{{ asset('storage/'.$prod->image) }}" alt="{{ $prod->name }}">@else<img src="https://placehold.co/400x400/fff/cbd5e1?text=Digital" alt="No Image">@endif</div>
-                                <div class="landing-prod-info"><h3 class="landing-prod-title">{{ $displayTitle }}</h3><div class="landing-prod-footer"><span class="landing-prod-price">@if(!empty($origPrice)&&$origPrice>$price)<s style="opacity:.55;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</s> @endif Rp {{ number_format($price,0,',','.') }}</span><span class="landing-prod-btn">Beli <i class="fas fa-chevron-right"></i></span></div></div>
-                            </a>
-                            @endif
-                        @endforeach
-                    </div>
-                </div>
-                @endif
+                    @if($hasBuyle5)
+                        <div class="cat-panel" id="tab5-dig">
+                            <div class="landing-products-grid">
+                                @foreach($buyleBlocks as $i => $block)
+                                    @php $prod = $products[$block->data_json['product_id'] ?? 0] ?? null;
+                                        $displayTitle = !empty($block->title) ? $block->title : ($prod->name ?? '');
+                                        $displayTitle = $block->title ?? '';
+                                        $blockSlug = !empty($block->data_json['slug']) ? $block->data_json['slug'] : \Illuminate\Support\Str::slug($displayTitle ?: 'produk-' . $block->id);
+                                        $prodUrl = route('bio.product.show', [$username, $blockSlug]);
+                                        $price = $block->data_json['price'] ?? $block->data_json['custom_price'] ?? ($prod ? ($prod->is_on_sale ? $prod->sale_price : $prod->effective_price) : 0);
+                                    $origPrice = $block->data_json['original_price'] ?? ($prod && $prod->is_on_sale ? $prod->price : null); @endphp
+                                    @if($prod)
+                                        <a href="{{ $prodUrl }}" class="landing-prod-card search-item bio-track-link"
+                                            data-title="{{ $displayTitle }}" data-bio-block="{{ $block->id }}"
+                                            data-bio-creator="{{ $profile->id }}">
+                                            <div class="landing-prod-img">
+                                                <div class="prod-badge-num">#{{ sprintf('%02d', $i + 1) }}</div>@if($prod->image)<img
+                                                src="{{ asset('storage/' . $prod->image) }}" alt="{{ $prod->name }}">@else<img
+                                                    src="https://placehold.co/400x400/fff/cbd5e1?text=Digital" alt="No Image">@endif
+                                            </div>
+                                            <div class="landing-prod-info">
+                                                <h3 class="landing-prod-title">{{ $displayTitle }}</h3>
+                                                <div class="landing-prod-footer"><span
+                                                        class="landing-prod-price">@if(!empty($origPrice) && $origPrice > $price)<s
+                                                            style="opacity:.55;font-size:.72rem;">Rp
+                                                        {{ number_format($origPrice, 0, ',', '.') }}</s> @endif Rp
+                                                        {{ number_format($price, 0, ',', '.') }}</span><span class="landing-prod-btn">Beli
+                                                        <i class="fas fa-chevron-right"></i></span></div>
+                                            </div>
+                                        </a>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
-                <script>
-                function switchTab5(tab, el) {
-                    document.querySelectorAll('#catTabs5 .cat-tab').forEach(t => t.classList.remove('active'));
-                    el.classList.add('active');
-                    document.querySelectorAll('[id^="tab5-"]').forEach(p => p.classList.remove('active'));
-                    document.getElementById('tab5-' + tab).classList.add('active');
-                }
-                </script>
+                    <script>
+                        function switchTab5(tab, el) {
+                            document.querySelectorAll('#catTabs5 .cat-tab').forEach(t => t.classList.remove('active'));
+                            el.classList.add('active');
+                            document.querySelectorAll('[id^="tab5-"]').forEach(p => p.classList.remove('active'));
+                            document.getElementById('tab5-' + tab).classList.add('active');
+                        }
+                    </script>
                 @endif
 
                 {{-- Embed Map / Location Section --}}
@@ -1102,7 +1295,7 @@
                         @php $footerLogo = \App\Models\Setting::get('logo'); @endphp
                         @if($footerLogo)
                             <img src="{{ asset('storage/' . $footerLogo) }}" alt="buyle.id"
-                                 style="height:30px; width:auto; object-fit:contain;">
+                                style="height:30px; width:auto; object-fit:contain;">
                         @else
                             <span style="font-weight:600; color:var(--text);">buyle.id</span>
                         @endif
@@ -1129,20 +1322,20 @@
             });
 
             // Bio Link Click Tracker
-            document.querySelectorAll('.bio-track-link').forEach(function(el) {
-                el.addEventListener('click', function() {
+            document.querySelectorAll('.bio-track-link').forEach(function (el) {
+                el.addEventListener('click', function () {
                     var urlParams = new URLSearchParams(window.location.search);
                     var payload = {
-                        block_id:    this.dataset.bioBlock || null,
-                        creator_id:  this.dataset.bioCreator || null,
-                        url:         this.href || null,
-                        title:       this.dataset.title || null,
-                        utm_source:  urlParams.get('utm_source') || null,
-                        utm_medium:  urlParams.get('utm_medium') || null,
-                        utm_campaign:urlParams.get('utm_campaign') || null,
+                        block_id: this.dataset.bioBlock || null,
+                        creator_id: this.dataset.bioCreator || null,
+                        url: this.href || null,
+                        title: this.dataset.title || null,
+                        utm_source: urlParams.get('utm_source') || null,
+                        utm_medium: urlParams.get('utm_medium') || null,
+                        utm_campaign: urlParams.get('utm_campaign') || null,
                         utm_content: urlParams.get('utm_content') || null,
                     };
-                    navigator.sendBeacon(window.location.origin + '/track-bio', new Blob([JSON.stringify(payload)], {type:'application/json'}));
+                    navigator.sendBeacon(window.location.origin + '/track-bio', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
                 }, { passive: true });
             });
         });
