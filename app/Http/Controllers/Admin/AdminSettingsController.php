@@ -116,6 +116,13 @@ class AdminSettingsController extends Controller
                 continue;
             }
 
+            if ($key === 'adsense_custom_image') {
+                // NO AUTO-CROP: preserve 100% full original aspect ratio for custom ad banners/posters
+                $path = $this->storeWebPNoCrop($file, 'settings', 2000, 2000, 95);
+                Setting::set($key, $path, 'image');
+                continue;
+            }
+
             if ($key === 'coverage_map') {
                 $path = $this->storeWebP($file, 'settings', 2400, 1200, 90);
                 Setting::set($key, $path, 'image');

@@ -30,7 +30,7 @@
             <div style="width:100%; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; margin-bottom:1rem; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; padding:0;">
                 @if(!empty($customImage))
                     <a href="{{ $customUrl ?: '#' }}" target="_blank" style="display:block; width:100%; text-decoration:none;">
-                        <img src="{{ asset('storage/' . $customImage) }}" alt="Sponsor" style="width:100%; height:auto; max-height:60vh; object-fit:contain; border-radius:12px; display:block; margin:0 auto;">
+                        <img src="{{ asset('storage/' . $customImage) }}" alt="Sponsor" style="width:100%; height:auto; display:block; border-radius:12px; margin:0 auto;">
                     </a>
                 @elseif(!empty($pubId))
                     <div style="width:100%; padding:0.5rem; min-height:180px; display:flex; align-items:center; justify-content:center;">
