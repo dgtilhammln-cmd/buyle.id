@@ -389,6 +389,16 @@ select.form-input { cursor: pointer; }
                     </div>
 
                     <div class="form-group full">
+                        <label class="form-label">Custom Domain Toko / Bio Page (Opsional)</label>
+                        <div class="slug-wrap">
+                            <span class="slug-prefix">https://</span>
+                            <input type="text" name="custom_domain" class="slug-input" value="{{ old('custom_domain', $profile->custom_domain) }}" placeholder="domainkreator.com">
+                        </div>
+                        <span class="form-hint">Isi jika kreator menggunakan domain sendiri (contoh: <code>domainkamu.com</code> atau <code>bio.domainkamu.com</code>). Cukup A Record ke IP Server Buyle.id.</span>
+                        @error('custom_domain')<span class="form-error">{{ $message }}</span>@enderror
+                    </div>
+
+                    <div class="form-group full">
                         <label class="form-label">Tipe / Peran Creator</label>
                         @php
                             $creatorTypes = [

@@ -236,6 +236,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       'contact' => ['Kontak', 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z'],
       'fee'     => ['Fee & Biaya', 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z'],
       'api'     => ['Integrasi API', 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4'],
+      'ai'      => ['Pengaturan AI (Groq / OpenRouter)', 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 01-2 2h-4a2 2 0 01-2-2v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z'],
       'ads'     => ['Space Iklan / Banner', 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z'],
       'adsense' => ['Monetisasi AdSense', 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
       'email'   => ['Pengaturan Email (SMTP)', 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'],
@@ -1280,6 +1281,208 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
   </div>
 </div>
 
+{{-- ======== TAB: PENGATURAN AI (GROQ / OPENROUTER / GEMINI) ======== --}}
+<div id="tab-ai" class="tab-section" style="display:none;">
+  <div style="background:#FFFFFF; border-radius:20px; padding:1.75rem; box-shadow:0 4px 20px rgba(0,0,0,0.03); border:1px solid #F8FAFC;">
+    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1.5rem;">
+      <svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="padding:8px; background:rgba(30,179,73,0.1); border-radius:10px; color:#1eb349;"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 01-2 2h-4a2 2 0 01-2-2v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+      <div>
+        <div style="font-size:1.05rem; font-weight:800; color:#1E293B;">Pengaturan AI Vision (Scan Menu to Catalog)</div>
+        <div style="font-size:0.78rem; color:#64748B;">Konfigurasi API AI untuk membaca foto menu & mengenerate katalog produk otomatis secara fleksibel.</div>
+      </div>
+    </div>
+
+    {{-- Live Test Status Banner --}}
+    <div id="ai-test-result" style="display:none; margin-bottom:1.5rem; padding:1rem 1.25rem; border-radius:12px; font-size:0.85rem; font-weight:600; transition:all 0.3s;"></div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+      <div>
+        <label class="form-label">Provider API AI <span>(GROQ / OpenRouter / Gemini)</span></label>
+        @php $currentProvider = old('ai_provider', $settings['ai_provider'] ?? 'groq'); @endphp
+        <select name="ai_provider" id="ai_provider_select" class="form-input" onchange="updateDefaultModel(this.value)">
+          <option value="groq" {{ $currentProvider === 'groq' ? 'selected' : '' }}>GROQ API AI (Rekomendasi - Super Cepat & Gratis/Murah)</option>
+          <option value="openrouter" {{ $currentProvider === 'openrouter' ? 'selected' : '' }}>OpenRouter.ai (Multiprovider Aggregator)</option>
+          <option value="gemini" {{ $currentProvider === 'gemini' ? 'selected' : '' }}>Google Gemini API Direct</option>
+          <option value="openai" {{ $currentProvider === 'openai' ? 'selected' : '' }}>OpenAI API Direct (GPT-4o Vision)</option>
+        </select>
+        <p style="font-size:0.75rem; color:#94A3B8; margin-top:0.35rem;">Pilih provider AI yang ingin digunakan. Mendukung switching ke OpenRouter/Gemini kapan saja.</p>
+      </div>
+
+      <div>
+        <label class="form-label">Status Fitur Scan Menu AI</label>
+        @php $aiEnabled = old('ai_scan_enabled', $settings['ai_scan_enabled'] ?? '1'); @endphp
+        <select name="ai_scan_enabled" class="form-input">
+          <option value="1" {{ $aiEnabled == '1' ? 'selected' : '' }}>Aktif (Memberi Akses Scan Menu AI untuk Kreator)</option>
+          <option value="0" {{ $aiEnabled == '0' ? 'selected' : '' }}>Nonaktif (Matikan Tombol Scan Menu)</option>
+        </select>
+        <p style="font-size:0.75rem; color:#94A3B8; margin-top:0.35rem;">Aktifkan untuk memberikan fitur otomatisasi scan menu pada dashboard katalog produk kreator.</p>
+      </div>
+
+      <div style="grid-column: 1 / -1;">
+        <label class="form-label">API Key AI <span>(Groq / OpenRouter / Gemini API Key)</span></label>
+        <div style="position:relative; display:flex; align-items:center;">
+          <input type="password" name="ai_api_key" id="ai_api_key_input" class="form-input" style="padding-right: 5rem !important;"
+                 value="{{ old('ai_api_key', $settings['ai_api_key'] ?? env('GROQ_API_KEY', '')) }}"
+                 placeholder="gsk_xxxxxxxxxxxxxxxxxxxxxxxx">
+          <button type="button" onclick="togglePasswordVisibility('ai_api_key_input')" 
+                  style="position:absolute; right:10px; background:transparent; border:none; color:#64748B; font-size:0.75rem; cursor:pointer; font-weight:700;">
+            Lihat Key
+          </button>
+        </div>
+        <p style="font-size:0.75rem; color:#94A3B8; margin-top:0.35rem;">
+          Masukkan API Key Groq Anda (<code>gsk_...</code>) atau OpenRouter (<code>sk-or-v1-...</code>).
+        </p>
+      </div>
+
+      <div>
+        <label class="form-label">Nama Model Vision AI <span>(Model Pembaca Gambar)</span></label>
+        <input type="text" name="ai_model" id="ai_model_input" class="form-input" 
+               value="{{ old('ai_model', $settings['ai_model'] ?? \App\Services\AiVisionService::DEFAULT_GROQ_MODEL) }}" 
+               placeholder="llama-3.2-11b-vision-preview">
+        <div style="display:flex; gap:0.35rem; margin-top:0.5rem; flex-wrap:wrap;">
+          <button type="button" class="badge-chip" onclick="setModelInput('llama-3.2-11b-vision-preview')">llama-3.2-11b-vision (Groq)</button>
+          <button type="button" class="badge-chip" onclick="setModelInput('meta-llama/llama-3.2-11b-vision-instruct')">llama-3.2-11b (OpenRouter)</button>
+          <button type="button" class="badge-chip" onclick="setModelInput('gemini-1.5-flash')">gemini-1.5-flash (Gemini)</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="form-label">Batas Cooldown Scan <span>(Hari Jeda per Kreator)</span></label>
+        <input type="number" name="ai_scan_cooldown_days" class="form-input" 
+               value="{{ old('ai_scan_cooldown_days', $settings['ai_scan_cooldown_days'] ?? '7') }}" min="0" max="90">
+        <p style="font-size:0.75rem; color:#94A3B8; margin-top:0.35rem;">Jeda minimal dalam satuan HARI antar-scan agar token tidak dispam. (Isi 0 jika tanpa jeda hari).</p>
+      </div>
+
+      <div>
+        <label class="form-label">Kuota Maksimal Bulanan <span>(Scan per Bulan)</span></label>
+        <input type="number" name="ai_scan_monthly_limit" class="form-input" 
+               value="{{ old('ai_scan_monthly_limit', $settings['ai_scan_monthly_limit'] ?? '3') }}" min="1" max="500">
+        <p style="font-size:0.75rem; color:#94A3B8; margin-top:0.35rem;">Jumlah maksimal scan menu yang diizinkan untuk 1 kreator dalam 1 bulan kalender.</p>
+      </div>
+    </div>
+
+    {{-- Action Bar (Test Connection & Save) --}}
+    <div style="margin-top:2rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid #F1F5F9; padding-top:1.25rem;">
+      <button type="button" onclick="testAiConnection()" id="btn-test-ai"
+              style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.65rem 1.25rem; font-size:0.85rem; font-weight:700; background:#0F172A; color:#FFFFFF; border:none; border-radius:10px; cursor:pointer; transition:all 0.2s;">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <span>🧪 Test Koneksi AI Realtime</span>
+      </button>
+
+      <button type="submit" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.65rem 1.5rem; font-size:0.875rem; font-weight:700; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; border:none; border-radius:10px; cursor:pointer; transition:all 0.2s; font-family:'Montserrat',sans-serif;">
+        Simpan Pengaturan AI
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+.badge-chip {
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #475569;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.badge-chip:hover {
+  background: #1eb349;
+  color: #fff;
+  border-color: #1eb349;
+}
+</style>
+
+<script>
+function togglePasswordVisibility(inputId) {
+  const el = document.getElementById(inputId);
+  if (el.type === 'password') {
+    el.type = 'text';
+  } else {
+    el.type = 'password';
+  }
+}
+
+function setModelInput(modelName) {
+  document.getElementById('ai_model_input').value = modelName;
+}
+
+function updateDefaultModel(provider) {
+  const modelInput = document.getElementById('ai_model_input');
+  if (provider === 'groq') {
+    modelInput.value = 'llama-3.2-11b-vision-preview';
+  } else if (provider === 'openrouter') {
+    modelInput.value = 'meta-llama/llama-3.2-11b-vision-instruct';
+  } else if (provider === 'gemini') {
+    modelInput.value = 'gemini-1.5-flash';
+  } else if (provider === 'openai') {
+    modelInput.value = 'gpt-4o-mini';
+  }
+}
+
+function testAiConnection() {
+  const btn = document.getElementById('btn-test-ai');
+  const resultDiv = document.getElementById('ai-test-result');
+  const provider = document.getElementById('ai_provider_select').value;
+  const apiKey = document.getElementById('ai_api_key_input').value;
+  const model = document.getElementById('ai_model_input').value;
+
+  btn.disabled = true;
+  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="spin-anim"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg> Menguji Koneksi...`;
+
+  resultDiv.style.display = 'block';
+  resultDiv.style.background = '#F1F5F9';
+  resultDiv.style.color = '#475569';
+  resultDiv.style.border = '1px solid #CBD5E1';
+  resultDiv.innerHTML = `Mengirimkan request pengujian ke API <strong>${provider.toUpperCase()}</strong> (${model})...`;
+
+  fetch("{{ route('admin.settings.test-ai') }}", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': "{{ csrf_token() }}",
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      ai_provider: provider,
+      ai_api_key: apiKey,
+      ai_model: model
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> <span>🧪 Test Koneksi AI Realtime</span>`;
+
+    if (data.success) {
+      resultDiv.style.background = '#F0FDF4';
+      resultDiv.style.color = '#166534';
+      resultDiv.style.border = '1px solid #86EFAC';
+      resultDiv.innerHTML = `✅ <strong>SUKSES!</strong> ${data.message}`;
+    } else {
+      resultDiv.style.background = '#FEF2F2';
+      resultDiv.style.color = '#991B1B';
+      resultDiv.style.border = '1px solid #FCA5A5';
+      resultDiv.innerHTML = `❌ <strong>GAGAL:</strong> ${data.message}`;
+    }
+  })
+  .catch(err => {
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> <span>🧪 Test Koneksi AI Realtime</span>`;
+    resultDiv.style.background = '#FEF2F2';
+    resultDiv.style.color = '#991B1B';
+    resultDiv.style.border = '1px solid #FCA5A5';
+    resultDiv.innerHTML = `❌ <strong>ERROR:</strong> Gagal terhubung ke server local: ${err.message}`;
+  });
+}
+</script>
+<style>
+.spin-anim { animation: spin 1s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+</style>
+</div>
 </div>
 
 </form>

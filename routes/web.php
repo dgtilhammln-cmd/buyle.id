@@ -334,6 +334,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/settings',  [AdminSettingsController::class, 'index'])->name('admin.settings');
         Route::post('/settings', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
         Route::post('/settings/test-email', [AdminSettingsController::class, 'testEmail'])->name('admin.settings.test-email');
+        Route::post('/settings/test-ai', [AdminSettingsController::class, 'testAi'])->name('admin.settings.test-ai');
         Route::post('upload-image', [\App\Http\Controllers\Admin\AdminUploadController::class, 'uploadImage'])->name('admin.upload.image');
 
         // ⚡ Secret license management page (tidak ada di sidebar)
@@ -534,6 +535,8 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     // CRUD Produk
     Route::patch('/products/{product}/stock', [\App\Http\Controllers\Creator\SellerProductController::class, 'updateStock'])->name('products.stock');
     Route::patch('/products/{product}/order', [\App\Http\Controllers\Creator\SellerProductController::class, 'updateOrder'])->name('products.order');
+    Route::post('/products/scan-menu', [\App\Http\Controllers\Creator\MenuScanController::class, 'scan'])->name('products.scan-menu');
+    Route::post('/products/bulk-import-scanned', [\App\Http\Controllers\Creator\MenuScanController::class, 'bulkImport'])->name('products.bulk-import');
     Route::resource('products', \App\Http\Controllers\Creator\SellerProductController::class);
 
     // AJAX: Validasi URL produk

@@ -30,6 +30,10 @@ return $builder->withMiddleware(function (Middleware $middleware): void {
             'role'           => \App\Http\Middleware\RoleMiddleware::class,
         ]);
 
+        $middleware->web(prepend: [
+            \App\Http\Middleware\HandleCustomDomain::class,
+        ]);
+
         $middleware->web(append: [
             \App\Http\Middleware\SecuritySanitizerMiddleware::class,
             \App\Http\Middleware\UpdateUserLastSeen::class,

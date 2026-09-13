@@ -10,6 +10,7 @@ class CreatorProfile extends Model
         'user_id',
         'store_name',
         'store_slug',
+        'custom_domain',
         'store_description',
         'creator_type',
         'social_links',
@@ -31,11 +32,17 @@ class CreatorProfile extends Model
         'bio_role',
         'bio_theme',
         'bio_config',
+        // AI Scan Metadata
+        'last_menu_scan_at',
+        'monthly_scan_count',
+        'scan_count_reset_at',
     ];
 
     protected $casts = [
         'social_links' => 'array',
         'bio_config'   => 'array',
+        'last_menu_scan_at' => 'datetime',
+        'scan_count_reset_at' => 'datetime',
     ];
 
     public function isStoreActive(): bool

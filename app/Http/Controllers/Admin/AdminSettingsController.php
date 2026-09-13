@@ -224,5 +224,23 @@ class AdminSettingsController extends Controller
 
         return back()->with('success', $msg);
     }
+
+    public function testAi(Request $request, \App\Services\AiVisionService $aiService)
+    {
+        $provider = $request->input('ai_provider');
+        $apiKey   = $request->input('ai_api_key');
+        $model    = $request->input('ai_model');
+
+        $result = $aiService->testConnection($provider, $apiKey, $model);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json($result);
+        }
+
+        if ($result['success']) {
+            return back()->with('success', $result['message']);
+        }
+        return back()->with('error', $result['message']);
+    }
 }
 
