@@ -1212,11 +1212,11 @@
                                     <a href="{{ $block->url }}" target="_blank" class="bento-link-card search-item"
                                         data-title="{{ $block->title }}">
                                         <div class="bento-icon-box">
-                                            @if(!empty($block->data_json['icon_class']))
-                                                <i class="{{ $block->data_json['icon_class'] }}"></i>
-                                            @elseif(!empty($block->data_json['image']))
+                                            @if(!empty($block->data_json['image']))
                                                 <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']) }}"
                                                     alt="">
+                                            @elseif(!empty($block->data_json['icon_class']))
+                                                <i class="{{ $block->data_json['icon_class'] }}"></i>
                                             @elseif($block->type === 'pdf')
                                                 <i class="fas fa-file-pdf"></i>
                                             @else
@@ -1525,6 +1525,7 @@
                 @endif
 
                 {{-- Footer --}}
+                @if($profile->isStoreActive())
                 <div class="footer-landing">
                     <a href="{{ url('/') }}" target="_blank">
                         @php $footerLogo = \App\Models\Setting::get('logo'); @endphp
@@ -1536,6 +1537,7 @@
                         @endif
                     </a>
                 </div>
+                @endif
 
             </div>
         </div>

@@ -648,7 +648,7 @@
 
         {{-- Banner Poster Images --}}
         @if($imageBlocks->isNotEmpty())
-            <div class="image-banner-stack fade-up" style="display:flex; flex-direction:column; gap:12px; margin-top:14px; margin-bottom:14px; animation-delay:0.3s">
+            <div class="image-banner-stack fade-up" style="display:flex; flex-direction:column; gap:12px; margin-top:14px; margin-bottom:14px; animation-delay:0.3s; padding: 0 var(--side)">
                 @foreach($imageBlocks as $block)
                     @php
                         $bannerImg = !empty($block->data_json['image'])
@@ -678,11 +678,11 @@
                     <a href="{{ $block->url }}" target="_blank" class="glass-btn fade-up search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}"
                         style="animation-delay:{{ 0.35 + $i * 0.05 }}s">
                         <div class="btn-icon">
-                            @if(!empty($block->data_json['icon_class']))
-                                <i class="{{ $block->data_json['icon_class'] }}" style="font-size:24px;"></i>
-                            @elseif(!empty($block->data_json['image']))
+                            @if(!empty($block->data_json['image']))
                                 <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']) }}"
                                     alt="">
+                            @elseif(!empty($block->data_json['icon_class']))
+                                <i class="{{ $block->data_json['icon_class'] }}" style="font-size:24px;"></i>
                             @elseif($block->type === 'pdf')
                                 <i class="fas fa-file-pdf"></i>
                             @else
@@ -834,6 +834,7 @@
         @endif
 
         {{-- Footer --}}
+        @if($profile->isStoreActive())
         <div class="footer-bio">
             <a href="{{ url('/') }}" target="_blank">
                 @php $footerLogo = \App\Models\Setting::get('logo'); @endphp
@@ -845,6 +846,7 @@
                 @endif
             </a>
         </div>
+        @endif
     </div>
 
     <script>

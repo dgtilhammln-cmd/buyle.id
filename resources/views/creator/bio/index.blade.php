@@ -1684,7 +1684,11 @@
                                 </div>
                                 <div class="block-icon"
                                     style="background:{{ ['link' => '#f0fdf4', 'pdf' => '#fef2f2', 'tiktok' => '#1a1a1a', 'reels' => '#fdf2f8'][$block->type] ?? '#f8fafc' }}; color:{{ ['link' => '#1eb349', 'pdf' => '#ef4444', 'tiktok' => '#fff', 'reels' => '#db2777'][$block->type] ?? '#64748b' }};">
-                                    @if($block->type === 'link') <svg width="18" height="18" fill="none" stroke="currentColor"
+                                    @if(!empty($block->data_json['image']))
+                                        <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']) }}" style="width:100%; height:100%; object-fit:cover; border-radius:6px;">
+                                    @elseif(!empty($block->data_json['icon_class']))
+                                        <i class="{{ $block->data_json['icon_class'] }}" style="font-size:18px;"></i>
+                                    @elseif($block->type === 'link') <svg width="18" height="18" fill="none" stroke="currentColor"
                                             stroke-width="2" viewBox="0 0 24 24">
                                             <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
                                                 stroke-linecap="round" />
@@ -2842,7 +2846,11 @@
 
                 iconGroup.style.display  = 'none';
                 bannerGroup.style.display = 'block';
-                if (bannerUpload) bannerUpload.setAttribute('required', 'required');
+                if (bannerUpload) {
+                    bannerUpload.disabled = false;
+                    bannerUpload.setAttribute('required', 'required');
+                }
+                if (iconUpload) iconUpload.disabled = true;
 
             } else if (type === 'tiktok' || type === 'reels') {
                 // Video: judul opsional, url wajib, ikon disembunyikan
@@ -2857,6 +2865,8 @@
 
                 iconGroup.style.display  = 'none';
                 bannerGroup.style.display = 'none';
+                if (bannerUpload) bannerUpload.disabled = true;
+                if (iconUpload) iconUpload.disabled = true;
 
             } else if (type === 'pdf') {
                 // PDF: judul wajib, url wajib, ikon tampil, banner disembunyikan
@@ -2872,6 +2882,8 @@
 
                 iconGroup.style.display  = 'block';
                 bannerGroup.style.display = 'none';
+                if (bannerUpload) bannerUpload.disabled = true;
+                if (iconUpload) iconUpload.disabled = false;
 
             } else {
                 // link (default): judul wajib, url wajib, ikon tampil, banner disembunyikan
@@ -2887,6 +2899,8 @@
 
                 iconGroup.style.display  = 'block';
                 bannerGroup.style.display = 'none';
+                if (bannerUpload) bannerUpload.disabled = true;
+                if (iconUpload) iconUpload.disabled = false;
             }
         }
 

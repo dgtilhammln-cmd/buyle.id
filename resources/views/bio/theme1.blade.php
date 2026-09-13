@@ -686,11 +686,11 @@
                         data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}"
                         style="animation-delay:{{ 0.35 + $i * 0.05 }}s">
                         <div class="btn-icon">
-                            @if(!empty($block->data_json['icon_class']))
-                                <i class="{{ $block->data_json['icon_class'] }}" style="font-size:24px;"></i>
-                            @elseif(!empty($block->data_json['image']))
+                            @if(!empty($block->data_json['image']))
                                 <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']) }}"
                                     alt="{{ $block->title }}" onerror="this.src='https://placehold.co/400x400/222/555?text=Link'">
+                            @elseif(!empty($block->data_json['icon_class']))
+                                <i class="{{ $block->data_json['icon_class'] }}" style="font-size:24px;"></i>
                             @elseif($block->type === 'pdf')
                                 <i class="fas fa-file-pdf"></i>
                             @else
@@ -838,6 +838,7 @@
         @endif
 
         {{-- Footer --}}
+        @if($profile->isStoreActive())
         <div class="footer-bio">
             <a href="{{ url('/') }}" target="_blank">
                 @php $footerLogo = \App\Models\Setting::get('logo'); @endphp
@@ -849,6 +850,7 @@
                 @endif
             </a>
         </div>
+        @endif
     </div>
 
     <script>
