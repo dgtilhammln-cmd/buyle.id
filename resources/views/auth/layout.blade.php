@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>@yield('title', 'Masuk') – buyle.id</title>
     <meta name="description" content="@yield('meta_desc', 'Masuk atau daftar akun buyle.id untuk platform digital creator dan marketplace.')">
 
@@ -19,42 +19,40 @@
 
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            background-color: #F0F9FF;
+            overflow-x: hidden;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #F0F9FF;
             color: #0F172A;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            min-height: 100dvh;
+            width: 100%;
             margin: 0;
             padding: 1.5rem 1rem;
             box-sizing: border-box;
             position: relative;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.18) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(30, 179, 73, 0.15) 0px, transparent 50%);
         }
-        
-        .blob-1 {
-            position: absolute;
-            top: -100px; left: -100px;
-            width: 400px; height: 400px;
-            background: rgba(30, 179, 73, 0.15);
-            filter: blur(80px);
-            border-radius: 50%;
-            z-index: -1;
-        }
-        .blob-2 {
-            position: absolute;
-            bottom: -150px; right: -50px;
-            width: 500px; height: 500px;
-            background: rgba(56, 189, 248, 0.15);
-            filter: blur(100px);
-            border-radius: 50%;
-            z-index: -1;
+
+        .auth-bg-decor {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: 
+                radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.25) 0%, transparent 55%),
+                radial-gradient(circle at 100% 100%, rgba(30, 179, 73, 0.20) 0%, transparent 55%);
         }
 
         .login-wrapper {
@@ -295,8 +293,7 @@
 </head>
 <body>
 
-<div class="blob-1"></div>
-<div class="blob-2"></div>
+<div class="auth-bg-decor"></div>
 
 <div class="login-wrapper">
     <div class="login-glass-panel">

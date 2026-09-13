@@ -81,25 +81,30 @@
         }
 
         .tab-btn.active {
-            background: #0F172A !important;
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
             color: #ffffff !important;
             font-weight: 700;
-            border-color: #0F172A !important;
-            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.18);
+            border-color: transparent !important;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.32);
         }
 
-        .tab-btn.active svg {
+        .tab-btn.active svg,
+        .tab-btn.active i {
             stroke: #ffffff !important;
+            color: #ffffff !important;
         }
 
-        .tab-btn svg {
-            transition: stroke 0.2s ease;
+        .tab-btn svg,
+        .tab-btn i {
+            transition: stroke 0.2s ease, color 0.2s ease;
             flex-shrink: 0;
             stroke: #64748B;
         }
 
-        .tab-btn:hover svg {
-            stroke: #0F172A;
+        .tab-btn:hover svg,
+        .tab-btn:hover i {
+            stroke: #1eb349;
+            color: #1eb349;
         }
 
         .tab-text-full {
@@ -665,21 +670,25 @@
         @media(max-width:768px) {
             .bio-layout {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 0.75rem;
             }
 
             .bio-sidebar {
                 width: 100%;
-                position: static;
-                padding: 0.5rem;
-                border-radius: 14px;
+                position: sticky;
+                top: 60px;
+                z-index: 80;
+                padding: 0.35rem;
+                border-radius: 16px;
                 background: #ffffff;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+                border: 1px solid #e2e8f0;
+                margin-bottom: 0.25rem;
             }
 
             .bio-tabs-list {
-                display: grid;
-                grid-template-columns: repeat(6, 1fr);
+                display: flex;
+                align-items: center;
                 gap: 3px;
                 background: #f8fafc;
                 padding: 3px;
@@ -694,20 +703,22 @@
             }
 
             .tab-btn {
+                flex: 1 0 auto;
+                min-width: 52px;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                padding: 0.4rem 0.15rem;
-                gap: 3px;
-                border-radius: 8px;
+                padding: 0.45rem 0.25rem;
+                gap: 2px;
+                border-radius: 9px;
                 margin-bottom: 0;
-                width: 100%;
-                min-width: 0;
+                border: none;
             }
 
-            .tab-btn svg {
-                width: 17px;
-                height: 17px;
+            .tab-btn svg,
+            .tab-btn i {
+                width: 16px;
+                height: 16px;
             }
 
             .tab-text-full {
@@ -718,25 +729,104 @@
                 display: block !important;
                 font-size: 0.62rem;
                 font-weight: 600;
-                line-height: 1;
+                line-height: 1.1;
                 text-align: center;
                 white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 100%;
             }
 
-            .sidebar-extra-info {
-                display: none !important;
-            }
-
+            .sidebar-extra-info,
             .bio-mockup-wrapper {
                 display: none !important;
             }
 
+            /* Compact Mobile Cards & Form Elements */
+            .prof-card {
+                border-radius: 16px;
+                margin-bottom: 1rem;
+            }
+
+            .prof-card-head {
+                padding: 0.85rem 1rem;
+                font-size: 0.875rem;
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
+
+            .form-group {
+                gap: 0.35rem;
+                margin-bottom: 0.85rem;
+            }
+
+            .form-label {
+                font-size: 0.76rem;
+            }
+
+            .form-input {
+                height: 40px;
+                padding: 0 0.75rem;
+                font-size: 0.82rem;
+                border-radius: 8px;
+            }
+
+            textarea.form-input {
+                padding: 0.6rem 0.75rem;
+                min-height: 70px;
+            }
+
             .theme-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 0.75rem;
+                gap: 0.6rem;
+            }
+
+            .theme-mockup {
+                height: 110px;
+                padding-top: 1rem;
+            }
+
+            .theme-label {
+                padding: 0.45rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .block-item {
+                padding: 0.65rem 0.75rem;
+                gap: 0.5rem;
+                border-radius: 10px;
+                margin-bottom: 0.5rem;
+            }
+
+            .block-icon {
+                width: 32px;
+                height: 32px;
+                border-radius: 8px;
+            }
+
+            .block-title {
+                font-size: 0.8rem;
+            }
+
+            .block-sub {
+                font-size: 0.68rem;
+            }
+
+            .aff-card {
+                border-radius: 10px;
+                margin-bottom: 0.65rem;
+            }
+
+            .aff-img {
+                width: 65px;
+                height: 65px;
+            }
+
+            .aff-info {
+                padding: 0.5rem;
+            }
+
+            .aff-title {
+                font-size: 0.78rem;
             }
         }
 
