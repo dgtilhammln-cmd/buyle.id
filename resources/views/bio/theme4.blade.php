@@ -613,12 +613,12 @@
         </script>
 
         @php
-            $linkBlocks = $blocks->whereIn('type', ['link', 'pdf']);
-            $imageBlocks = $blocks->where('type', 'image');
-            $videoBlocks = $blocks->whereIn('type', ['tiktok', 'reels']);
+            $linkBlocks = $blocks->whereIn('type', ['link', 'pdf'])->sortBy('order')->values();
+            $imageBlocks = $blocks->where('type', 'image')->sortBy('order')->values();
+            $videoBlocks = $blocks->whereIn('type', ['tiktok', 'reels'])->sortBy('order')->values();
             $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
-            $buyleBlocks = $blocks->where('type', 'buyle_product')->values();
-            $customProdBlocks = $blocks->where('type', 'custom_product')->values();
+            $buyleBlocks = $blocks->where('type', 'buyle_product')->sortBy('order')->values();
+            $customProdBlocks = $blocks->where('type', 'custom_product')->sortBy('order')->values();
         @endphp
 
         {{-- TikTok & Reels Slider --}}

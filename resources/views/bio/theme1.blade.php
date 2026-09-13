@@ -618,37 +618,14 @@
         </script>
 
         @php
-            $groupedBlocks = [];
-            $currentGroup = [];
-            $currentCategory = null;
-
-            foreach ($blocks as $block) {
-                if (in_array($block->type, ['tiktok', 'reels'])) {
-                    $cat = 'video';
-                } elseif ($block->type === 'image') {
-                    $cat = 'image';
-                } elseif (in_array($block->type, ['link', 'pdf'])) {
-                    $cat = 'link';
-                } else {
-                    $cat = 'product';
-                }
-
-                if ($cat !== $currentCategory && !empty($currentGroup)) {
-                    $groupedBlocks[] = ['category' => $currentCategory, 'items' => $currentGroup];
-                    $currentGroup = [];
-                }
-
-                $currentCategory = $cat;
-                $currentGroup[] = $block;
-            }
-
-            if (!empty($currentGroup)) {
-                $groupedBlocks[] = ['category' => $currentCategory, 'items' => $currentGroup];
-            }
+            // ALL video cards → ONE slider
+            $videoBlocks = $blocks->whereIn('type', ['tiktok', 'reels'])->sortBy('order')->values();
+            $imageBlocks = $blocks->where('type', 'image')->sortBy('order')->values();
+            $linkBlocks  = $blocks->whereIn('type', ['link', 'pdf'])->sortBy('order')->values();
 
             $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
-            $buyleBlocks = $blocks->where('type', 'buyle_product')->values();
-            $customProdBlocks = $blocks->where('type', 'custom_product')->values();
+            $buyleBlocks = $blocks->where('type', 'buyle_product')->sortBy('order')->values();
+            $customProdBlocks = $blocks->where('type', 'custom_product')->sortBy('order')->values();
         @endphp
 
         {{-- TikTok & Reels Slider --}}
@@ -678,7 +655,7 @@
 
         {{-- Banner Poster Images --}}
         @if($imageBlocks->isNotEmpty())
-            <div class="image-banner-stack fade-up" style="display:flex; flex-direction:column; gap:12px; margin-top:14px; margin-bottom:14px; animation-delay:0.3s">
+            <div class="image-banner-stack fade-up" style="display:flex; flex-direction:column; gap:12px; margin-top:14px; margin-bottom:14px; animation-delay:0.3s; padding: 0 var(--side)">
                 @foreach($imageBlocks as $block)
                     @php
                         $bannerImg = !empty($block->data_json['image'])

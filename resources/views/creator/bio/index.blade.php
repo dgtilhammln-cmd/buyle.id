@@ -2223,16 +2223,22 @@
                         <option value="image">Gambar / Banner (Poster)</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Judul / Label Tombol</label>
-                    <input type="text" name="title" class="form-input" placeholder="Contoh: Download Portfolio"
-                        maxlength="150" required>
+
+                {{-- Judul --}}
+                <div class="form-group" id="addBlock-title-group">
+                    <label class="form-label" id="addBlock-title-label">Judul / Label Tombol</label>
+                    <input type="text" name="title" id="addBlock-title-input" class="form-input"
+                        placeholder="Contoh: Download Portfolio" maxlength="150">
                 </div>
-                <div class="form-group">
-                    <label class="form-label">URL / Link</label>
-                    <input type="url" name="url" class="form-input" placeholder="https://" required>
+
+                {{-- URL --}}
+                <div class="form-group" id="addBlock-url-group">
+                    <label class="form-label" id="addBlock-url-label">URL / Link</label>
+                    <input type="url" name="url" id="addBlock-url-input" class="form-input" placeholder="https://...">
                 </div>
-                <div class="form-group">
+
+                {{-- Ikon (hanya untuk link/pdf) --}}
+                <div class="form-group" id="addBlock-icon-group">
                     <label class="form-label">Ikon (Pilih dari Galeri ATAU Upload)</label>
                     <div style="display:flex; gap:0.5rem; align-items:center;">
                         <button type="button" class="btn-primary"
@@ -2245,11 +2251,22 @@
                         </div>
                         <div style="flex:1;">
                             <input type="file" name="block_image" accept="image/*" class="form-input"
+                                id="addBlock-icon-upload"
                                 style="height:44px; padding:0.5rem; width:100%;">
                         </div>
                     </div>
                     <input type="hidden" name="icon_class" id="addBlockIconClass">
                 </div>
+
+                {{-- Upload gambar banner (hanya untuk image) --}}
+                <div class="form-group" id="addBlock-banner-group" style="display:none;">
+                    <label class="form-label">Upload Gambar Banner / Poster <span style="color:#ef4444;">*</span></label>
+                    <input type="file" name="block_image" accept="image/*" class="form-input"
+                        id="addBlock-banner-upload"
+                        style="height:44px; padding:0.5rem; width:100%;" required>
+                    <div style="font-size:0.75rem; color:#64748b; margin-top:4px;">Upload gambar poster/banner yang akan ditampilkan. URL klik opsional.</div>
+                </div>
+
                 <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
                     <button type="button" onclick="document.getElementById('addBlockModal').classList.remove('open')"
                         style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
@@ -2258,6 +2275,7 @@
             </form>
         </div>
     </div>
+
 
     {{-- ── Modal: Tambah Affiliate / Shopee ── --}}
     <div class="modal-overlay" id="addAffModal" onclick="if(event.target===this)this.classList.remove('open')">
@@ -2791,6 +2809,89 @@
         document.querySelectorAll('.btn-edit-block').forEach(btn => {
             btn.addEventListener('click', function () { editBlock(this); });
         });
+
+        // ── handleTypeChange: show/hide fields based on selected block type ──
+        function handleTypeChange(type) {
+            const titleGroup  = document.getElementById('addBlock-title-group');
+            const titleLabel  = document.getElementById('addBlock-title-label');
+            const titleInput  = document.getElementById('addBlock-title-input');
+            const urlGroup    = document.getElementById('addBlock-url-group');
+            const urlLabel    = document.getElementById('addBlock-url-label');
+            const urlInput    = document.getElementById('addBlock-url-input');
+            const iconGroup   = document.getElementById('addBlock-icon-group');
+            const bannerGroup = document.getElementById('addBlock-banner-group');
+            const bannerUpload = document.getElementById('addBlock-banner-upload');
+            const iconUpload  = document.getElementById('addBlock-icon-upload');
+
+            // Reset all required states
+            titleInput.removeAttribute('required');
+            urlInput.removeAttribute('required');
+            if (bannerUpload) bannerUpload.removeAttribute('required');
+            if (iconUpload) iconUpload.removeAttribute('required');
+
+            if (type === 'image') {
+                // Gambar/Banner: judul opsional, url opsional, ikon disembunyikan, banner upload tampil
+                titleGroup.style.display = 'block';
+                titleLabel.textContent   = 'Judul Gambar (Opsional)';
+                titleInput.placeholder   = 'Contoh: Promo Ramadan';
+
+                urlGroup.style.display   = 'block';
+                urlLabel.textContent     = 'URL Link (Opsional, jika gambar bisa diklik)';
+                urlInput.placeholder     = 'https://... (opsional)';
+                urlInput.removeAttribute('required');
+
+                iconGroup.style.display  = 'none';
+                bannerGroup.style.display = 'block';
+                if (bannerUpload) bannerUpload.setAttribute('required', 'required');
+
+            } else if (type === 'tiktok' || type === 'reels') {
+                // Video: judul opsional, url wajib, ikon disembunyikan
+                titleGroup.style.display = 'block';
+                titleLabel.textContent   = 'Judul Video (Opsional)';
+                titleInput.placeholder   = 'Contoh: Tutorial Masak';
+
+                urlGroup.style.display   = 'block';
+                urlLabel.textContent     = 'URL Video';
+                urlInput.placeholder     = type === 'reels' ? 'https://www.instagram.com/reel/...' : 'https://www.tiktok.com/@.../video/...';
+                urlInput.setAttribute('required', 'required');
+
+                iconGroup.style.display  = 'none';
+                bannerGroup.style.display = 'none';
+
+            } else if (type === 'pdf') {
+                // PDF: judul wajib, url wajib, ikon tampil, banner disembunyikan
+                titleGroup.style.display = 'block';
+                titleLabel.textContent   = 'Judul Dokumen';
+                titleInput.placeholder   = 'Contoh: Portfolio 2024';
+                titleInput.setAttribute('required', 'required');
+
+                urlGroup.style.display   = 'block';
+                urlLabel.textContent     = 'URL File PDF';
+                urlInput.placeholder     = 'https://...';
+                urlInput.setAttribute('required', 'required');
+
+                iconGroup.style.display  = 'block';
+                bannerGroup.style.display = 'none';
+
+            } else {
+                // link (default): judul wajib, url wajib, ikon tampil, banner disembunyikan
+                titleGroup.style.display = 'block';
+                titleLabel.textContent   = 'Judul / Label Tombol';
+                titleInput.placeholder   = 'Contoh: Download Portfolio';
+                titleInput.setAttribute('required', 'required');
+
+                urlGroup.style.display   = 'block';
+                urlLabel.textContent     = 'URL / Link';
+                urlInput.placeholder     = 'https://...';
+                urlInput.setAttribute('required', 'required');
+
+                iconGroup.style.display  = 'block';
+                bannerGroup.style.display = 'none';
+            }
+        }
+
+        // Init on page load (default: link)
+        handleTypeChange('link');
 
         // Initialize Sortable for interactive block reordering
         document.addEventListener('DOMContentLoaded', () => {
