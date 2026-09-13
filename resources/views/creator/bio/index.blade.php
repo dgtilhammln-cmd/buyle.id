@@ -18,6 +18,7 @@
 
 @section('styles')
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <style>
         .bio-layout {
             display: flex;
@@ -1668,12 +1669,19 @@
                         <button onclick="document.getElementById('addBlockModal').classList.add('open')"
                             class="btn-submit-sm">+ Tambah Block</button>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" id="sortable-blocks">
                         @php
                             $typeBlocks = $blocks;
                         @endphp
                         @forelse($typeBlocks as $block)
-                            <div class="block-item" style="{{ !$block->is_active ? 'opacity:0.5;' : '' }}">
+                            <div class="block-item" data-id="{{ $block->id }}" style="{{ !$block->is_active ? 'opacity:0.5;' : '' }}">
+                                <div class="drag-handle" style="cursor:grab; padding:0 0.5rem; color:#94a3b8; display:flex; align-items:center; touch-action:none;" title="Geser urutan block">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/>
+                                        <circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/>
+                                        <circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/>
+                                    </svg>
+                                </div>
                                 <div class="block-icon"
                                     style="background:{{ ['link' => '#f0fdf4', 'pdf' => '#fef2f2', 'tiktok' => '#1a1a1a', 'reels' => '#fdf2f8'][$block->type] ?? '#f8fafc' }}; color:{{ ['link' => '#1eb349', 'pdf' => '#ef4444', 'tiktok' => '#fff', 'reels' => '#db2777'][$block->type] ?? '#64748b' }};">
                                     @if($block->type === 'link') <svg width="18" height="18" fill="none" stroke="currentColor"
@@ -2782,6 +2790,35 @@
         // Attach edit block listeners
         document.querySelectorAll('.btn-edit-block').forEach(btn => {
             btn.addEventListener('click', function () { editBlock(this); });
+        });
+
+        // Initialize Sortable for interactive block reordering
+        document.addEventListener('DOMContentLoaded', () => {
+            const sortableEl = document.getElementById('sortable-blocks');
+            if (sortableEl && typeof Sortable !== 'undefined') {
+                new Sortable(sortableEl, {
+                    handle: '.drag-handle',
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    onEnd: function () {
+                        const ids = Array.from(sortableEl.querySelectorAll('.block-item')).map(el => el.dataset.id);
+                        fetch('{{ route("creator.bio.blocks.reorder") }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ ids: ids })
+                        }).then(r => r.json()).then(data => {
+                            if (data.ok) {
+                                console.log('Urutan block berhasil disimpan');
+                            }
+                        }).catch(err => {
+                            console.error('Reorder error:', err);
+                        });
+                    }
+                });
+            }
         });
 
         // Custom confirm modal

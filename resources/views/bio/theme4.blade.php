@@ -613,7 +613,8 @@
         </script>
 
         @php
-            $linkBlocks = $blocks->whereIn('type', ['link', 'pdf', 'image']);
+            $linkBlocks = $blocks->whereIn('type', ['link', 'pdf']);
+            $imageBlocks = $blocks->where('type', 'image');
             $videoBlocks = $blocks->whereIn('type', ['tiktok', 'reels']);
             $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
             $buyleBlocks = $blocks->where('type', 'buyle_product')->values();
@@ -641,6 +642,30 @@
                         </span>
                         <span class="watch-label">Watch Video</span>
                     </a>
+                @endforeach
+            </div>
+        @endif
+
+        {{-- Banner Poster Images --}}
+        @if($imageBlocks->isNotEmpty())
+            <div class="image-banner-stack fade-up" style="display:flex; flex-direction:column; gap:12px; margin-top:14px; margin-bottom:14px; animation-delay:0.3s">
+                @foreach($imageBlocks as $block)
+                    @php
+                        $bannerImg = !empty($block->data_json['image'])
+                            ? (Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']))
+                            : (!empty($block->image) ? asset('storage/' . $block->image) : null);
+                    @endphp
+                    @if($bannerImg)
+                        <div class="banner-poster-item search-item" data-title="{{ $block->title }}" style="border-radius: 16px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.08); width:100%;">
+                            @if(!empty($block->url))
+                                <a href="{{ $block->url }}" target="_blank" class="bio-track-link" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}" style="display:block; text-decoration:none;">
+                            @endif
+                            <img src="{{ $bannerImg }}" alt="{{ $block->title }}" style="width:100%; height:auto; display:block; object-fit:cover;">
+                            @if(!empty($block->url))
+                                </a>
+                            @endif
+                        </div>
+                    @endif
                 @endforeach
             </div>
         @endif

@@ -826,7 +826,8 @@
         $yt_url = !empty($s_yt) ? (Str::startsWith($s_yt, 'http') ? $s_yt : 'https://youtube.com/@' . ltrim(ltrim($s_yt, '@'), '/')) : null;
         $wa_url = !empty($s_wa) ? 'https://wa.me/62' . preg_replace('/^(62|0)/', '', $s_wa) : null;
 
-        $linkBlocks = $blocks->whereIn('type', ['link', 'pdf', 'image']);
+        $linkBlocks = $blocks->whereIn('type', ['link', 'pdf']);
+        $imageBlocks = $blocks->where('type', 'image');
         $videoBlocks = $blocks->whereIn('type', ['tiktok', 'reels']);
         $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
         $buyleBlocks = $blocks->where('type', 'buyle_product')->values();
@@ -987,6 +988,30 @@
                                     </div>
                                 </div>
                             </a>
+                        @endforeach
+                    </div>
+                @endif
+
+                {{-- Banner Poster Images --}}
+                @if($imageBlocks->isNotEmpty())
+                    <div class="image-banner-wrap" style="display:flex; flex-direction:column; gap:0.85rem;">
+                        @foreach($imageBlocks as $block)
+                            @php
+                                $bannerImg = !empty($block->data_json['image'])
+                                    ? (Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']))
+                                    : (!empty($block->image) ? asset('storage/' . $block->image) : null);
+                            @endphp
+                            @if($bannerImg)
+                                <div class="banner-poster-item search-item" data-title="{{ $block->title }}" style="border-radius: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); background: var(--card);">
+                                    @if(!empty($block->url))
+                                        <a href="{{ $block->url }}" target="_blank" class="bio-track-link" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}" style="display:block; text-decoration:none;">
+                                    @endif
+                                    <img src="{{ $bannerImg }}" alt="{{ $block->title }}" style="width:100%; height:auto; display:block; object-fit:cover;">
+                                    @if(!empty($block->url))
+                                        </a>
+                                    @endif
+                                </div>
+                            @endif
                         @endforeach
                     </div>
                 @endif
