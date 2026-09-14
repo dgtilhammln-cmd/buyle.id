@@ -240,6 +240,14 @@
             object-fit: cover;
         }
 
+        .product-placeholder-wrap svg {
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .product-card:hover .product-placeholder-wrap svg {
+            transform: scale(1.18) rotate(-5deg);
+        }
+
         .product-name {
             font-size: 0.85rem;
             font-weight: 700;
@@ -718,8 +726,9 @@
                         @forelse($products as $prod)
                             @php
                                 $prodPrice = (float) ($prod->sale_price ?: $prod->price);
+                                $nameLower = strtolower($prod->name);
                                 $imgUrl = null;
-                                if (isset($prod->image_url) && !empty($prod->image_url)) {
+                                if (isset($prod->image_url) && !empty($prod->image_url) && !str_contains($prod->image_url, 'service-default')) {
                                     $imgUrl = $prod->image_url;
                                 } elseif (!empty($prod->image) && strlen(trim($prod->image)) > 1) {
                                     $rawImg = trim($prod->image);
@@ -731,15 +740,68 @@
                                         $imgUrl = asset('storage/' . ltrim($rawImg, '/'));
                                     }
                                 }
-                                $fallbackAvatar = 'https://ui-avatars.com/api/?name=' . urlencode($prod->name) . '&background=f0fdf4&color=1eb349&size=128&font-size=0.4';
+
+                                // Interactive Theme & SVG Icons based on product keywords
+                                $themeBg = 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)';
+                                $themeColor = '#166534';
+                                $themeBorder = '#bbf7d0';
+                                $badgeText = 'MENU';
+                                $iconType = 'food';
+
+                                if (\Illuminate\Support\Str::contains($nameLower, ['es', 'kopi', 'teh', 'jus', 'air', 'boba', 'drink', 'minuman', 'jeruk', 'lemon', 'syrup', 'coffee', 'tea', 'milk', 'susu', 'soda', 'alpukat'])) {
+                                    $themeBg = 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)';
+                                    $themeColor = '#0369a1';
+                                    $themeBorder = '#bae6fd';
+                                    $badgeText = 'MINUMAN';
+                                    $iconType = 'drink';
+                                } elseif (\Illuminate\Support\Str::contains($nameLower, ['roti', 'kue', 'donut', 'snack', 'pisang', 'toast', 'cake', 'waffle', 'pancake', 'keju', 'cokelat', 'crepes', 'martabak'])) {
+                                    $themeBg = 'linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%)';
+                                    $themeColor = '#be185d';
+                                    $themeBorder = '#fbcfe8';
+                                    $badgeText = 'SNACK';
+                                    $iconType = 'snack';
+                                } elseif (\Illuminate\Support\Str::contains($nameLower, ['nasi', 'mie', 'ayam', 'bebek', 'daging', 'ikan', 'sate', 'bakso', 'soto', 'gudeg', 'bento', 'dimsum', 'burger', 'pizza', 'seafood', 'makanan'])) {
+                                    $themeBg = 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)';
+                                    $themeColor = '#b45309';
+                                    $themeBorder = '#fde68a';
+                                    $badgeText = 'MAKANAN';
+                                    $iconType = 'dish';
+                                }
                             @endphp
                             <div class="product-card" data-id="{{ $prod->id }}" data-name="{{ strtolower($prod->name) }}"
                                 data-price="{{ $prodPrice }}"
                                 onclick="addToCart({{ $prod->id }}, '{{ addslashes($prod->name) }}', {{ $prodPrice }})">
                                 <div class="product-qty-badge d-none" id="badge-qty-{{ $prod->id }}">0</div>
-                                <div class="product-img-wrapper">
-                                    <img src="{{ $imgUrl ?: $fallbackAvatar }}" alt="{{ $prod->name }}" class="product-img" loading="lazy"
-                                        onerror="this.onerror=null; this.src='{{ $fallbackAvatar }}';">
+                                <div class="product-img-wrapper" style="@if(!$imgUrl) background: {{ $themeBg }}; border: 1px solid {{ $themeBorder }}; @endif">
+                                    @if($imgUrl)
+                                        <img src="{{ $imgUrl }}" alt="{{ $prod->name }}" class="product-img" loading="lazy"
+                                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="product-placeholder-wrap" style="display:none; background: {{ $themeBg }}; width:100%; height:100%; align-items:center; justify-content:center; flex-direction:column; gap:4px;">
+                                            @if($iconType === 'drink')
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+                                            @elseif($iconType === 'snack')
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                            @elseif($iconType === 'dish')
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a1 1 0 0 1 1 1v1a8 8 0 0 1-8 8H10a8 8 0 0 1-8-8v-1a1 1 0 0 1 1-1z"/><path d="M12 2a5 5 0 0 0-5 5h10a5 5 0 0 0-5-5z"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
+                                            @else
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                                            @endif
+                                            <span style="font-size:0.62rem; font-weight:800; color:{{ $themeColor }}; letter-spacing:0.05em; text-transform:uppercase;">{{ $badgeText }}</span>
+                                        </div>
+                                    @else
+                                        <div class="product-placeholder-wrap" style="display:flex; background: {{ $themeBg }}; width:100%; height:100%; align-items:center; justify-content:center; flex-direction:column; gap:4px;">
+                                            @if($iconType === 'drink')
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+                                            @elseif($iconType === 'snack')
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                            @elseif($iconType === 'dish')
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a1 1 0 0 1 1 1v1a8 8 0 0 1-8 8H10a8 8 0 0 1-8-8v-1a1 1 0 0 1 1-1z"/><path d="M12 2a5 5 0 0 0-5 5h10a5 5 0 0 0-5-5z"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
+                                            @else
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                                            @endif
+                                            <span style="font-size:0.62rem; font-weight:800; color:{{ $themeColor }}; letter-spacing:0.05em; text-transform:uppercase;">{{ $badgeText }}</span>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="product-name">{{ $prod->name }}</div>
                                 <div class="product-price">Rp {{ number_format($prodPrice, 0, ',', '.') }}</div>
