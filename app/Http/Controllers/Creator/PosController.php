@@ -279,7 +279,7 @@ class PosController extends Controller
                     'product_id'   => $product->id,
                     'product_name' => $product->name,
                     'price'        => $price,
-                    'quantity'     => $qty,
+                    'qty'          => $qty,
                     'subtotal'     => $itemSub,
                 ];
             }
@@ -337,13 +337,20 @@ class PosController extends Controller
             // Save Order Items
             foreach ($orderItemsData as $itemRow) {
                 $itemRow['order_id'] = $order->id;
-                OrderItem::create($itemRow);
+                OrderItem::create([
+                    'order_id'     => $order->id,
+                    'product_id'   => $itemRow['product_id'],
+                    'product_name' => $itemRow['product_name'],
+                    'price'        => $itemRow['price'],
+                    'qty'          => $itemRow['qty'],
+                    'subtotal'     => $itemRow['subtotal'],
+                ]);
 
                 // Kurangi stok jika produk memiliki stok terhitung
                 $p = Product::find($itemRow['product_id']);
                 if ($p && $p->stock !== null) {
-                    $p->decrement('stock', $itemRow['quantity']);
-                    $p->increment('sold_count', $itemRow['quantity']);
+                    $p->decrement('stock', $itemRow['qty']);
+                    $p->increment('sold_count', $itemRow['qty']);
                 }
             }
 

@@ -70,4 +70,12 @@ class OrderItem extends Model
 
         return $this->product_name;
     }
+
+    /**
+     * Alias accessor quantity untuk qty.
+     */
+    public function getQuantityAttribute(): int
+    {
+        return (int) $this->qty;
+    }
 }
