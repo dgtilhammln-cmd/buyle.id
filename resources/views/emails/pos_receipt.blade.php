@@ -5,8 +5,7 @@
     $addr = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
     $paymentMethodLabel = match($addr['payment_method'] ?? 'cash') {
         'cash' => 'Tunai',
-        'transfer' => 'Transfer Bank',
-        'qris' => 'QRIS Midtrans',
+        'cashless', 'transfer', 'qris' => 'Non-Tunai (QRIS / Transfer)',
         default => 'Tunai'
     };
 @endphp
