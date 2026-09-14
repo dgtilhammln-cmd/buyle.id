@@ -67,7 +67,11 @@
                                 <!-- Main Body HTML -->
                                 <tr>
                                     <td style="font-size: 14px; color: #334155; line-height: 1.7; font-weight: 400;">
-                                        {!! $content !!}
+                                        @if(isset($content))
+                                            {!! $content !!}
+                                        @else
+                                            @yield('content')
+                                        @endif
                                     </td>
                                 </tr>
 
