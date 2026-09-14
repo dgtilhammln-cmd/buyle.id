@@ -2102,31 +2102,46 @@
                     </div>
                     <div class="card-body">
                         @forelse($blocks->where('type', 'custom_product')->sortBy(fn($b) => [$b->order ?? 0, $b->id]) as $block)
-                                            <div class="aff-card">
-                                                @php $imgs = $block->data_json['images'] ?? []; @endphp
+                                            @php $imgs = $block->data_json['images'] ?? []; @endphp
+                                            <div class="aff-card" style="display:flex; align-items:center; gap:0; padding:0; border-radius:14px; overflow:hidden; border:1px solid #e8f0e8; background:#fff; margin-bottom:0.6rem; box-shadow:0 1px 4px rgba(0,0,0,0.04);">
+                                                {{-- Thumbnail foto produk --}}
                                                 @if(!empty($imgs[0]))
-                                                    <img src="{{ asset('storage/' . $imgs[0]) }}" class="aff-img"
-                                                        onerror="this.style.display='none'">
+                                                    <div style="width:72px; height:72px; flex-shrink:0; overflow:hidden; background:#f1f5f9;">
+                                                        <img src="{{ asset('storage/' . $imgs[0]) }}"
+                                                            style="width:72px; height:72px; object-fit:cover; display:block;"
+                                                            onerror="this.parentElement.innerHTML='<div style=&quot;width:72px;height:72px;display:flex;align-items:center;justify-content:center;background:#f1f5f9;&quot;><svg width=\'28\' height=\'28\' fill=\'none\' stroke=\'#cbd5e1\' stroke-width=\'1.5\' viewBox=\'0 0 24 24\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><polyline points=\'21 15 16 10 5 21\'/></svg></div>'">
+                                                    </div>
+                                                @else
+                                                    <div style="width:72px; height:72px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:#f8fafc; border-right:1px solid #e8f0e8;">
+                                                        <svg width="26" height="26" fill="none" stroke="#cbd5e1" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                                    </div>
                                                 @endif
-                                                <div class="aff-info">
-                                                    <div class="aff-title">{{ $block->title }}</div>
-                                                    <div class="aff-sub">
+                                                <div class="aff-info" style="flex:1; min-width:0; padding:0.55rem 0.75rem;">
+                                                    <div class="aff-title" style="font-size:0.83rem; font-weight:700; color:#0b120c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.2rem;">{{ $block->title }}</div>
+                                                    <div class="aff-sub" style="font-size:0.72rem; color:#64748b;">
                                                         @if(!empty($block->data_json['original_price']) && $block->data_json['original_price'] > ($block->data_json['price'] ?? 0))
-                                                            <span style="text-decoration:line-through; color:#94a3b8; margin-right:0.35rem;">Rp
-                                                                {{ number_format($block->data_json['original_price'], 0, ',', '.') }}</span>
+                                                            <span style="text-decoration:line-through; color:#94a3b8; margin-right:0.3rem;">Rp {{ number_format($block->data_json['original_price'], 0, ',', '.') }}</span>
                                                         @endif
-                                                        <strong style="color:#1eb349;">Rp
-                                                            {{ number_format($block->data_json['price'] ?? 0, 0, ',', '.') }}</strong> &middot;
-                                                        {{ ($block->data_json['payment_method'] ?? 'wa') === 'wa' ? 'Beli via WA' : 'Beli via Web' }}
+                                                        <strong style="color:#1eb349;">Rp {{ number_format($block->data_json['price'] ?? 0, 0, ',', '.') }}</strong>
+                                                        &middot; {{ ($block->data_json['payment_method'] ?? 'wa') === 'wa' ? 'Beli via WA' : 'Beli via Web' }}
+                                                        @if(!empty($block->data_json['category']))
+                                                            &middot; <span style="background:#f0fdf4;color:#1eb349;padding:1px 6px;border-radius:4px;font-size:0.68rem;font-weight:600;">{{ $block->data_json['category'] }}</span>
+                                                        @endif
+                                                        @if(isset($block->data_json['stock']) && $block->data_json['stock'] !== null)
+                                                            @if($block->data_json['stock'] == 0)
+                                                                &middot; <span style="color:#ef4444;font-weight:700;">Habis</span>
+                                                            @else
+                                                                &middot; <span style="color:#64748b;">Stok: {{ $block->data_json['stock'] }}</span>
+                                                            @endif
+                                                        @endif
                                                     </div>
                                                 </div>
-                                                <div style="padding:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+                                                <div style="padding:0.5rem 0.6rem; display:flex; align-items:center; gap:0.35rem; flex-shrink:0;">
                                                     @if(!empty($profile->store_slug))
                                                         <a href="{{ route('bio.product.show', [$profile->store_slug, $block->data_json['slug'] ?? $block->id]) }}"
                                                             target="_blank" class="btn-icon-sm" style="background:#f0fdf4; color:#1eb349;"
-                                                            title="Lihat Halaman Produk (SEO)">
-                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                                viewBox="0 0 24 24">
+                                                            title="Lihat Halaman Produk">
+                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                                                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                                                                 <polyline points="15 3 21 3 21 9" />
                                                                 <line x1="10" y1="14" x2="21" y2="3" />
@@ -2143,7 +2158,8 @@
                                 'payment_method' => $block->data_json['payment_method'] ?? 'wa',
                                 'description' => $block->data_json['description'] ?? '',
                                 'wa_text' => $block->data_json['wa_text'] ?? '',
-                                'url' => $block->url ?? ''
+                                'url' => $block->url ?? '',
+                                'images' => $block->data_json['images'] ?? []
                             ]) }})" class="btn-icon-sm" style="background:#eff6ff; color:#2563eb;" title="Edit Produk">
                                                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
                                                             viewBox="0 0 24 24">
