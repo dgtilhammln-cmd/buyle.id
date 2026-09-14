@@ -90,11 +90,16 @@ class PosController extends Controller
                             $slug = $baseSlug . '-' . \Illuminate\Support\Str::random(4);
                         }
                         $stock   = isset($data['stock']) && $data['stock'] !== '' && $data['stock'] !== null ? (int)$data['stock'] : null;
+                        // Ambil harga dari data_json — coba price dulu, fallback ke original_price
+                        $bioCreatePrice = (float)($data['price'] ?? 0);
+                        if ($bioCreatePrice <= 0) {
+                            $bioCreatePrice = (float)($data['original_price'] ?? 0);
+                        }
                         $product = Product::create([
                             'seller_id'    => $sellerId,
                             'name'         => $block->title,
                             'slug'         => $slug,
-                            'price'        => $data['price'] ?? 0,
+                            'price'        => $bioCreatePrice,
                             'stock'        => $stock,
                             'description'  => $data['description'] ?? '',
                             'image'        => !empty($data['images'][0]) ? $data['images'][0] : ($data['image'] ?? null),
@@ -109,8 +114,16 @@ class PosController extends Controller
                     }
 
                     // Terapkan metadata nama, harga, & gambar terbaru dari bio block
+                    // Gunakan || (bukan ??) supaya nilai 0 juga fallback ke harga tersimpan di Product
                     $product->name  = $block->title;
-                    $product->price = (float)($data['price'] ?? $product->price);
+                    $bioPrice = (float)($data['price'] ?? 0);
+                    if ($bioPrice > 0) {
+                        $product->price = $bioPrice;
+                    }
+                    // Jika product->price masih 0, coba original_price dari bio block
+                    if ($product->price <= 0 && !empty($data['original_price'])) {
+                        $product->price = (float)$data['original_price'];
+                    }
                     if (!empty($data['images'][0])) {
                         $product->image = $data['images'][0];
                     } elseif (!empty($data['image'])) {

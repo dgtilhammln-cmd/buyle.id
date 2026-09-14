@@ -1037,20 +1037,32 @@
         });
     });
 
-    // Filter produk live
+    // Filter produk live (instant, tanpa debounce, tanpa Bootstrap d-none)
     function filterProducts() {
         const query = document.getElementById('posProductSearch').value.toLowerCase().trim();
         const cards = document.querySelectorAll('.product-card');
+        let visibleCount = 0;
 
         cards.forEach(card => {
-            const name = card.getAttribute('data-name');
-            if (name.includes(query)) {
-                card.classList.remove('d-none');
-            } else {
-                card.classList.add('d-none');
-            }
+            const name = (card.getAttribute('data-name') || '').toLowerCase();
+            const matches = !query || name.includes(query);
+            card.style.display = matches ? '' : 'none';
+            if (matches) visibleCount++;
         });
+
+        // Update badge jumlah menu tersedia
+        const badge = document.getElementById('posMenuCountBadge');
+        if (badge) badge.textContent = visibleCount + ' Menu Tersedia';
     }
+
+    // Pastikan event listener terpasang setelah DOM siap
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('posProductSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', filterProducts);
+            searchInput.addEventListener('keyup', filterProducts);
+        }
+    });
 
     // Add product to cart
     function addToCart(id, name, price) {
