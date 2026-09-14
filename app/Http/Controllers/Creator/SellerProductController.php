@@ -293,6 +293,27 @@ class SellerProductController extends Controller
     }
 
     /**
+     * Hapus semua produk digital milik seller yang sedang login.
+     */
+    public function destroyAll()
+    {
+        $sellerId = auth()->id();
+        $products = Product::where('seller_id', $sellerId)->get();
+
+        foreach ($products as $product) {
+            if ($product->image && !Str::startsWith($product->image, 'http')) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $product->delete();
+        }
+
+        Cache::forget('catalog_main');
+        Cache::forget("seller_products_{$sellerId}");
+
+        return back()->with('success', 'Berhasil menghapus semua produk digital!');
+    }
+
+    /**
      * Pastikan produk milik seller yang sedang login.
      */
     private function authorizeProduct(Product $product): void

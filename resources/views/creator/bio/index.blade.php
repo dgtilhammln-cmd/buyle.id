@@ -1861,7 +1861,11 @@
                     <div class="card-body" style="padding:1.25rem;">
 
                         @php
-                            $addedAffBlocks = $blocks->where('type', 'buyle_affiliate');
+                            $affiliateBlockIds = $affiliateProducts->pluck('id')->toArray();
+                            $addedAffBlocks = $blocks->where('type', 'buyle_affiliate')->filter(function($b) use ($affiliateBlockIds) {
+                                $pId = $b->data_json['product_id'] ?? null;
+                                return $pId && in_array((int)$pId, $affiliateBlockIds);
+                            });
                         @endphp
 
                         @forelse($addedAffBlocks as $affBlock)
@@ -1948,7 +1952,11 @@
                     <div class="card-body" style="padding:1.25rem;">
 
                         @php
-                            $addedWlBlocks = $blocks->where('type', 'buyle_product');
+                            $wlBlockIds = $whitelabelProducts->pluck('id')->toArray();
+                            $addedWlBlocks = $blocks->where('type', 'buyle_product')->filter(function($b) use ($wlBlockIds) {
+                                $pId = $b->data_json['product_id'] ?? null;
+                                return $pId && in_array((int)$pId, $wlBlockIds);
+                            });
                         @endphp
 
                         @forelse($addedWlBlocks as $wlBlock)
@@ -2075,6 +2083,15 @@
                             Produk Fisik / UMKM
                         </span>
                         <div style="display:flex; gap:0.5rem; align-items:center;">
+                            @if($blocks->where('type', 'custom_product')->count() > 0)
+                                <form action="{{ route('creator.bio.blocks.destroy-all-custom-products') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus SEMUA produk fisik/UMKM dari Link Bio Anda?');" style="margin:0;">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" style="background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; font-weight:700; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.75rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                                        Hapus Semua
+                                    </button>
+                                </form>
+                            @endif
                             <button type="button" onclick="openScanMenuModal()" class="btn-submit-sm" style="background:linear-gradient(135deg, #0f172a, #1e293b); color:#fff; border:none; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.78rem; cursor:pointer;">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 01-2 2h-4a2 2 0 01-2-2v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
                                 Scan Menu AI

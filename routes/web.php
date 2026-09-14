@@ -533,6 +533,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/upload-image', [\App\Http\Controllers\Admin\AdminUploadController::class, 'uploadImage'])->name('upload.image');
 
     // CRUD Produk
+    Route::delete('/products/destroy-all', [\App\Http\Controllers\Creator\SellerProductController::class, 'destroyAll'])->name('products.destroy-all');
     Route::patch('/products/{product}/stock', [\App\Http\Controllers\Creator\SellerProductController::class, 'updateStock'])->name('products.stock');
     Route::patch('/products/{product}/order', [\App\Http\Controllers\Creator\SellerProductController::class, 'updateOrder'])->name('products.order');
     Route::post('/products/scan-menu', [\App\Http\Controllers\Creator\MenuScanController::class, 'scan'])->name('products.scan-menu');
@@ -578,6 +579,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/bio/profile', [\App\Http\Controllers\Creator\CreatorBioController::class, 'saveProfile'])->name('bio.save-profile');
     Route::post('/bio/blocks',  [\App\Http\Controllers\Creator\CreatorBioController::class, 'storeBlock'])->name('bio.blocks.store');
     Route::put('/bio/blocks/{block}', [\App\Http\Controllers\Creator\CreatorBioController::class, 'updateBlock'])->name('bio.blocks.update');
+    Route::delete('/bio/blocks/destroy-all-custom-products', [\App\Http\Controllers\Creator\CreatorBioController::class, 'destroyAllCustomProducts'])->name('bio.blocks.destroy-all-custom-products');
     Route::delete('/bio/blocks/{block}', [\App\Http\Controllers\Creator\CreatorBioController::class, 'destroyBlock'])->name('bio.blocks.destroy');
     Route::patch('/bio/blocks/{block}/toggle', [\App\Http\Controllers\Creator\CreatorBioController::class, 'toggleBlock'])->name('bio.blocks.toggle');
     Route::post('/bio/blocks/reorder', [\App\Http\Controllers\Creator\CreatorBioController::class, 'reorderBlocks'])->name('bio.blocks.reorder');

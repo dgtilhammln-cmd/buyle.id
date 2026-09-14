@@ -36,7 +36,16 @@
       </button>
     </div>
 
-
+    @if($products->count() > 0)
+      <form action="{{ route('creator.products.destroy-all') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus SEMUA {{ $products->count() }} produk digital Anda? Data yang dihapus tidak dapat dikembalikan.');" style="display:inline;">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn-danger-sm" style="background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; font-weight:700; padding:0.5rem 0.85rem; border-radius:8px; font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>
+          Hapus Semua Produk
+        </button>
+      </form>
+    @endif
 
     <a href="{{ route('creator.products.create') }}" class="btn-primary prod-add-btn">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">

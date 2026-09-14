@@ -325,6 +325,30 @@ class CreatorBioController extends Controller
     }
 
     /**
+     * Delete all custom products (Produk Fisik UMKM) for creator.
+     */
+    public function destroyAllCustomProducts()
+    {
+        $profile = $this->getProfile();
+        $blocks = CreatorBioBlock::where('creator_id', $profile->id)
+            ->where('type', 'custom_product')
+            ->get();
+
+        foreach ($blocks as $block) {
+            if (!empty($block->data_json['images']) && is_array($block->data_json['images'])) {
+                foreach ($block->data_json['images'] as $imgFile) {
+                    if (!empty($imgFile) && !Str::startsWith($imgFile, 'http')) {
+                        Storage::disk('public')->delete($imgFile);
+                    }
+                }
+            }
+            $block->delete();
+        }
+
+        return back()->with('success', 'Semua Produk Fisik / UMKM berhasil dihapus dari Link Bio!');
+    }
+
+    /**
      * Update a block.
      */
     public function updateBlock(Request $request, CreatorBioBlock $block)
