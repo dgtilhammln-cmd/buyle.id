@@ -2512,9 +2512,14 @@
                     <label class="form-label">Foto Produk</label>
                     <input type="file" name="custom_images[]" accept="image/*" multiple class="form-input"
                         style="height:auto; padding:0.5rem;"
-                        onchange="if(this.files.length>3){alert('Maksimal 3 foto!'); this.value=''; return;} previewUmkmImages(this)">
+                        id="addUmkmImages"
+                        onchange="validateUmkmImages(this, 'umkmImagePreview')">
                     <div id="umkmImagePreview" style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.5rem;"></div>
-                    <span class="form-hint">Format: JPG, PNG, WEBP. Maksimal 5MB per foto.</span>
+                    <span class="form-hint" style="color:#64748b; font-size:0.72rem;">
+                        Format: JPG, PNG, WEBP &middot; <strong>Maks 1 MB per foto.</strong>
+                        Jika foto terlalu besar, kompres dulu di
+                        <a href="https://tinypng.com" target="_blank" rel="noopener" style="color:#1eb349; font-weight:700; text-decoration:underline;">TinyPNG.com</a>
+                    </span>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Metode Pembelian</label>
@@ -2605,7 +2610,8 @@
                         / Ganti Foto Baru:</label>
                     <input type="file" name="custom_images[]" accept="image/*" multiple class="form-input"
                         style="height:auto; padding:0.5rem;"
-                        onchange="if(this.files.length>3){alert('Maksimal 3 foto!'); this.value=''; return;} previewEditUmkmImages(this)">
+                        id="editUmkmImages"
+                        onchange="validateUmkmImages(this, 'editNewImagePreview')">
                     <div id="editNewImagePreview" style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.5rem;">
                     </div>
                     <span class="form-hint"
@@ -2616,7 +2622,9 @@
                             <path d="M9 18h6" />
                             <path d="M10 22h4" />
                         </svg>
-                        Klik tombol ✕ pada foto tersimpan untuk menghapusnya secara permanen dari server.
+                        <strong>Maks 1 MB per foto.</strong>&nbsp;Jika terlalu besar, kompres dulu di&nbsp;
+                        <a href="https://tinypng.com" target="_blank" rel="noopener" style="color:#1eb349; font-weight:700;">TinyPNG.com</a>
+                        &middot; Klik ✕ pada foto tersimpan untuk menghapus permanen.
                     </span>
                 </div>
 
@@ -3104,10 +3112,32 @@
             if (el) el.style.display = show ? '' : 'none';
         }
 
-        function previewUmkmImages(input) {
-            const preview = document.getElementById('umkmImagePreview');
+        function validateUmkmImages(input, previewId) {
+            const MAX_FILES = 3;
+            const MAX_SIZE  = 1 * 1024 * 1024; // 1 MB
+            const preview   = document.getElementById(previewId);
             preview.innerHTML = '';
-            Array.from(input.files).slice(0, 3).forEach(file => {
+
+            const files = Array.from(input.files);
+
+            // Check count
+            if (files.length > MAX_FILES) {
+                alert('Maksimal 3 foto!');
+                input.value = '';
+                return;
+            }
+
+            // Check individual file sizes
+            const oversized = files.filter(f => f.size > MAX_SIZE);
+            if (oversized.length > 0) {
+                const names = oversized.map(f => `• ${f.name} (${(f.size/1024/1024).toFixed(2)} MB)`).join('\n');
+                alert(`⚠️ Foto berikut melebihi batas 1 MB:\n${names}\n\nHarap kompres terlebih dahulu di:\nhttps://tinypng.com`);
+                input.value = '';
+                return;
+            }
+
+            // Show preview
+            files.slice(0, MAX_FILES).forEach(file => {
                 const reader = new FileReader();
                 reader.onload = e => {
                     const img = document.createElement('img');
@@ -3118,6 +3148,11 @@
                 reader.readAsDataURL(file);
             });
         }
+
+        // Keep old aliases for backward compatibility
+        function previewUmkmImages(input) { validateUmkmImages(input, 'umkmImagePreview'); }
+        function previewEditUmkmImages(input) { validateUmkmImages(input, 'editNewImagePreview'); }
+
 
         function formatRupiahInput(el) {
             let val = el.value.replace(/[^0-9]/g, '');
