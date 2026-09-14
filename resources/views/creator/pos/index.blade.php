@@ -796,18 +796,26 @@
 
             <!-- Cash Calculator Panel -->
             <div id="cashCalcPanel" style="background:#f8fafc; border-radius:12px; border:1.5px solid #cbd5e1; padding:0.85rem; margin-bottom:0.6rem;">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <label style="font-size:0.72rem; font-weight:700; color:#166534; margin:0;">Nominal Uang Diterima (Rp)</label>
-                    <span style="font-size:0.73rem; color:#475569;">Kembalian: <strong style="color:#1eb349; font-size:0.9rem;" id="cashChangeDisplay">Rp 0</strong></span>
+                <label style="font-size:0.75rem; font-weight:700; color:#166534; display:block; margin-bottom:4px;">Nominal Uang Diterima</label>
+                
+                <div style="position:relative; margin-bottom:0.5rem;">
+                    <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.9rem; color:#334155;">Rp</span>
+                    <input type="text" id="cashPaidDisplayInput" class="form-input" style="padding-left:36px; height:42px; font-size:1rem; font-weight:800; color:#0f172a; border-radius:10px;" placeholder="0" oninput="handleCashInput(this)">
+                    <input type="hidden" id="cashPaidInput" value="0">
                 </div>
-                <input type="number" id="cashPaidInput" class="form-input mb-2" style="height:38px; font-size:0.9rem; font-weight:700;" placeholder="0" oninput="calculateCashChange()">
                 
                 <!-- Quick Cash Buttons -->
-                <div class="d-flex flex-wrap gap-1">
+                <div class="d-flex flex-wrap gap-1 mb-2">
                     <button type="button" class="btn-quick-cash" onclick="setQuickCash('exact')">Uang Pas</button>
-                    <button type="button" class="btn-quick-cash" onclick="setQuickCash(20000)">20rb</button>
-                    <button type="button" class="btn-quick-cash" onclick="setQuickCash(50000)">50rb</button>
-                    <button type="button" class="btn-quick-cash" onclick="setQuickCash(100000)">100rb</button>
+                    <button type="button" class="btn-quick-cash" onclick="setQuickCash(20000)">20.000</button>
+                    <button type="button" class="btn-quick-cash" onclick="setQuickCash(50000)">50.000</button>
+                    <button type="button" class="btn-quick-cash" onclick="setQuickCash(100000)">100.000</button>
+                </div>
+
+                <!-- Kembalian Card -->
+                <div style="background:#ffffff; border:1px dashed #bbf7d0; border-radius:8px; padding:6px 12px; display:flex; align-items:center; justify-content:space-between;">
+                    <span style="font-size:0.78rem; font-weight:700; color:#475569;">Kembalian Kasir:</span>
+                    <strong style="font-size:1.05rem; font-weight:900; color:#1eb349;" id="cashChangeDisplay">Rp 0</strong>
                 </div>
             </div>
 
@@ -1313,6 +1321,8 @@
         
         const grandTotal = getGrandTotalVal();
         document.getElementById('cashPaidInput').value = grandTotal;
+        const displayInput = document.getElementById('cashPaidDisplayInput');
+        if (displayInput) displayInput.value = grandTotal > 0 ? formatRupiah(grandTotal) : '';
         calculateCashChange();
 
         openModal('posPaymentModal');
@@ -1344,13 +1354,31 @@
         }
     }
 
+    // Live Cash Input Formatting with Dots (Rp X.XXX)
+    function handleCashInput(el) {
+        let raw = el.value.replace(/[^0-9]/g, '');
+        let val = parseFloat(raw) || 0;
+        document.getElementById('cashPaidInput').value = val;
+        
+        if (val > 0) {
+            el.value = formatRupiah(val);
+        } else {
+            el.value = '';
+        }
+        calculateCashChange();
+    }
+
     // Quick Cash Buttons
     function setQuickCash(val) {
+        let numVal = 0;
         if (val === 'exact') {
-            document.getElementById('cashPaidInput').value = getGrandTotalVal();
+            numVal = getGrandTotalVal();
         } else {
-            document.getElementById('cashPaidInput').value = val;
+            numVal = parseFloat(val) || 0;
         }
+        document.getElementById('cashPaidInput').value = numVal;
+        const displayInput = document.getElementById('cashPaidDisplayInput');
+        if (displayInput) displayInput.value = numVal > 0 ? formatRupiah(numVal) : '';
         calculateCashChange();
     }
 
