@@ -312,7 +312,7 @@ class PosController extends Controller
             $order = Order::create([
                 'order_number'    => Order::generateOrderNumber(),
                 'user_id'         => $seller->id,
-                'status'          => $isPaid ? OrderStatus::Completed : OrderStatus::Pending,
+                'status'          => $isPaid ? OrderStatus::Confirmed : OrderStatus::Pending,
                 'subtotal'        => $subtotal,
                 'shipping_cost'   => 0,
                 'platform_fee'    => $platformFee,
@@ -356,8 +356,10 @@ class PosController extends Controller
 
             // Create Payment record
             $payment = Payment::create([
+                'payment_number' => Payment::generatePaymentNumber(),
                 'order_id'       => $order->id,
-                'payment_method' => $paymentMethod,
+                'method'         => $paymentMethod,
+                'gateway'        => $paymentMethod === 'qris' ? 'midtrans' : 'direct',
                 'amount'         => $total,
                 'status'         => $isPaid ? PaymentStatus::Success : PaymentStatus::Pending,
                 'paid_at'        => $isPaid ? now() : null,

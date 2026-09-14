@@ -96,7 +96,7 @@
         /* ── Link in Bio Signature Green Buttons ──────────────────────────── */
         .btn-submit-green {
             background: linear-gradient(135deg, #1eb349, #a5cf37);
-            border-radius: 999px;
+            border-radius: 999px !important;
             font-family: 'Montserrat', sans-serif;
             font-weight: 800;
             color: #ffffff;
@@ -139,7 +139,7 @@
             font-weight: 700;
             font-size: 0.8rem;
             padding: 0.5rem 1.25rem;
-            border-radius: 999px;
+            border-radius: 999px !important;
             cursor: pointer;
             transition: all 0.2s ease;
             display: inline-flex;
@@ -326,7 +326,7 @@
         .btn-qty {
             width: 30px;
             height: 30px;
-            border-radius: 8px;
+            border-radius: 999px;
             border: 1.5px solid #cbd5e1;
             background: #ffffff;
             color: #0f172a;
@@ -383,17 +383,19 @@
         .disc-toggle {
             display: flex;
             border: 1.5px solid #cbd5e1;
-            border-radius: 8px;
+            border-radius: 999px;
             overflow: hidden;
             background: #fff;
+            padding: 2px;
         }
 
         .disc-btn {
-            padding: 3px 10px;
+            padding: 3px 12px;
             font-size: 0.72rem;
             font-weight: 800;
             border: none;
-            background: #transparent;
+            border-radius: 999px;
+            background: transparent;
             color: #64748b;
             cursor: pointer;
             transition: all 0.2s;
@@ -566,8 +568,8 @@
             color: #1e293b;
             font-weight: 700;
             font-size: 0.72rem;
-            padding: 4px 12px;
-            border-radius: 999px;
+            padding: 5px 14px;
+            border-radius: 999px !important;
             cursor: pointer;
             transition: all 0.15s ease;
         }
@@ -876,13 +878,13 @@
     <!-- CUSTOM OVERLAY MODAL: Interactive Alert Popup -->
     <div class="pos-modal-overlay" id="posAlertModal" style="z-index: 100000;">
         <div class="pos-modal-card" style="max-width: 360px; padding: 1.5rem 1.25rem; text-align: center;">
-            <div id="posAlertIconWrap" class="d-flex justify-content-center mb-3"></div>
-            <h5 id="posAlertTitle" style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.4rem;">
+            <div id="posAlertIconWrap" style="display: flex !important; justify-content: center !important; align-items: center !important; width: 100% !important; margin: 0 auto 0.75rem auto !important; text-align: center !important;"></div>
+            <h5 id="posAlertTitle" style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.4rem; text-align: center;">
                 Perhatian</h5>
             <div id="posAlertMessage"
-                style="font-size: 0.83rem; color: #475569; line-height: 1.45; margin-bottom: 1.25rem;">-</div>
+                style="font-size: 0.83rem; color: #475569; line-height: 1.45; margin-bottom: 1.25rem; text-align: center;">-</div>
             <button type="button" class="btn-submit-green"
-                style="width: 100%; margin: 0; padding: 0.65rem 1rem; font-size: 0.85rem;"
+                style="width: 100%; margin: 0; padding: 0.65rem 1rem; font-size: 0.85rem; border-radius: 999px !important;"
                 onclick="closeModal('posAlertModal')">
                 Oke, Saya Mengerti
             </button>
@@ -1242,11 +1244,11 @@
 
             let iconSvg = '';
             if (type === 'error') {
-                iconSvg = `<div style="width:48px; height:48px; border-radius:50%; background:#fef2f2; display:flex; align-items:center; justify-content:center; color:#ef4444;"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>`;
+                iconSvg = `<div style="width:52px; height:52px; border-radius:50%; background:#fef2f2; display:flex; align-items:center; justify-content:center; margin:0 auto; color:#ef4444;"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>`;
             } else if (type === 'success') {
-                iconSvg = `<div style="width:48px; height:48px; border-radius:50%; background:#f0fdf4; display:flex; align-items:center; justify-content:center; color:#1eb349;"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>`;
+                iconSvg = `<div style="width:52px; height:52px; border-radius:50%; background:#f0fdf4; display:flex; align-items:center; justify-content:center; margin:0 auto; color:#1eb349;"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>`;
             } else {
-                iconSvg = `<div style="width:48px; height:48px; border-radius:50%; background:#fffbe6; display:flex; align-items:center; justify-content:center; color:#d97706;"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>`;
+                iconSvg = `<div style="width:52px; height:52px; border-radius:50%; background:#fffbe6; display:flex; align-items:center; justify-content:center; margin:0 auto; color:#d97706;"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>`;
             }
 
             if (iconWrap) iconWrap.innerHTML = iconSvg;
