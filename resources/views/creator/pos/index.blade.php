@@ -503,6 +503,13 @@
 </style>
 @endsection
 
+@section('topbar_actions')
+<button type="button" class="btn-outline-bio" onclick="openModal('posHistoryModal')">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    Riwayat Transaksi Hari Ini
+</button>
+@endsection
+
 @section('content')
 @php
     $midtransClientKey = \App\Models\Setting::get('midtrans_client_key', config('services.midtrans.client_key'));
@@ -517,17 +524,6 @@
 @if($midtransClientKey)
     <script src="{{ $snapUrl }}" data-client-key="{{ $midtransClientKey }}"></script>
 @endif
-
-<!-- Top Bar Information & Action Row -->
-<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-    <div style="font-size:0.85rem; color:#64748b; font-weight:500;">
-        Toko: <strong style="color:#0f172a;">{{ $storeName }}</strong> &bull; Auto-sync Makanan dari Link in Bio
-    </div>
-    <button type="button" class="btn-outline-bio" onclick="openModal('posHistoryModal')">
-        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        Riwayat Transaksi Hari Ini
-    </button>
-</div>
 
 <!-- POS Main Grid Wrapper -->
 <div class="pos-wrapper">
@@ -616,12 +612,21 @@
                 <div class="form-grid">
                     <div class="form-group mb-0">
                         <label class="form-label">No. Meja / Antrean</label>
-                        <input type="text" id="posTableNumber" class="form-input" placeholder="Meja 04">
+                        <input type="text" id="posTableNumber" class="form-input" placeholder="Meja 04 (Opsional)">
                     </div>
                     <div class="form-group mb-0">
-                        <label class="form-label">No. HP Pelanggan</label>
+                        <label class="form-label">No. HP / WA Pelanggan</label>
                         <input type="text" id="posCustomerPhone" class="form-input" placeholder="08xxx (Opsional)">
                     </div>
+                </div>
+
+                <!-- Form Email Pelanggan (Wajib jika ingin kirim E-Receipt via email) -->
+                <div class="form-group mt-2 mb-0">
+                    <label class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>Email Pelanggan</span>
+                        <span style="font-size:0.68rem; font-weight:500; color:#166534; background:#f0fdf4; padding:1px 6px; border-radius:4px; border:1px solid #bbf7d0;">Wajib jika ingin E-Receipt Email</span>
+                    </label>
+                    <input type="email" id="posCartCustomerEmail" class="form-input" placeholder="contoh@gmail.com (Opsional)" oninput="syncCustomerEmail(this.value)">
                 </div>
 
                 <hr style="border-top:1.5px dashed #e2e8f0; margin: 1.25rem 0;">
@@ -1140,6 +1145,11 @@
         document.getElementById('mobileCartTotal').innerText = 'Rp ' + formatRupiah(grandTotal);
     }
 
+    function syncCustomerEmail(val) {
+        const target = document.getElementById('posCustomerEmail');
+        if (target) target.value = val;
+    }
+
     // Open Payment Modal
     function openPaymentModal() {
         const custName = document.getElementById('posCustomerName').value.trim();
@@ -1152,6 +1162,12 @@
         if (cart.length === 0) {
             alert('Keranjang POS masih kosong!');
             return;
+        }
+
+        // Sync email from cart input if set
+        const cartEmail = (document.getElementById('posCartCustomerEmail')?.value || '').trim();
+        if (cartEmail) {
+            document.getElementById('posCustomerEmail').value = cartEmail;
         }
 
         const grandTotalText = document.getElementById('displayGrandTotal').innerText;
@@ -1213,7 +1229,7 @@
         const custName = document.getElementById('posCustomerName').value.trim();
         const tableNum = document.getElementById('posTableNumber').value.trim();
         const custPhone = document.getElementById('posCustomerPhone').value.trim();
-        const custEmail = document.getElementById('posCustomerEmail').value.trim();
+        const custEmail = (document.getElementById('posCartCustomerEmail')?.value || document.getElementById('posCustomerEmail')?.value || '').trim();
 
         const payMethod = document.querySelector('input[name="pay_method"]:checked').value;
         const cashPaid = parseFloat(document.getElementById('cashPaidInput').value) || 0;
