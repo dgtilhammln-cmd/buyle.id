@@ -282,6 +282,20 @@ class CreatorBioController extends Controller
                 }
                 $data['images'] = $images;
             }
+            // Auto-create Product entry in products table for Payment Gateway checkout
+            if (($data['payment_method'] ?? 'web') === 'web' && empty($data['product_id'])) {
+                $product = \App\Models\Product::create([
+                    'seller_id'    => auth()->id(),
+                    'name'         => $request->title,
+                    'slug'         => $data['slug'] . '-' . time(),
+                    'price'        => $data['price'] ?? 0,
+                    'description'  => $data['description'] ?? '',
+                    'image'        => !empty($data['images'][0]) ? $data['images'][0] : ($data['image'] ?? null),
+                    'is_active'    => true,
+                    'product_type' => 'external_link',
+                ]);
+                $data['product_id'] = $product->id;
+            }
         }
 
         $maxOrder = CreatorBioBlock::where('creator_id', $profile->id)->max('order');

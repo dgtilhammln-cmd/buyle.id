@@ -475,13 +475,17 @@
     </div>
 
     <div class="cta-bar">
-        @if($product || !empty($block->data_json['product_id']))
+        @if($paymentMethod === 'wa' && $waNumber)
+            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $waNumber) }}?text={{ urlencode($waMessage) }}" target="_blank" class="btn-buy" style="width:100%; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
+                <i class="fab fa-whatsapp" style="font-size:1.15rem;"></i> Beli via WhatsApp
+            </a>
+        @elseif($product || !empty($block->data_json['product_id']))
             <form action="{{ route('cart.add') }}" method="POST" style="width:100%;">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product ? $product->id : ($block->data_json['product_id'] ?? '') }}">
                 <input type="hidden" name="qty" value="1">
                 <button type="submit" class="btn-buy" style="border:none; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
-                    <i class="fas fa-shopping-bag"></i> Beli Sekarang (Checkout)
+                    <i class="fas fa-shopping-bag"></i> Beli Sekarang (Checkout via Buyle)
                 </button>
             </form>
         @elseif($block->url)

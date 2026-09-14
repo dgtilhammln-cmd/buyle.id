@@ -129,6 +129,17 @@ class MenuScanController extends Controller
 
             $lastOrder++;
 
+            // Create Product entry for Buyle Payment Gateway checkout
+            $product = \App\Models\Product::create([
+                'seller_id'    => $user->id,
+                'name'         => $name,
+                'slug'         => $slug,
+                'price'        => $price,
+                'description'  => $desc,
+                'is_active'    => true,
+                'product_type' => 'external_link',
+            ]);
+
             CreatorBioBlock::create([
                 'creator_id' => $profile->id,
                 'type'       => 'custom_product',
@@ -139,6 +150,7 @@ class MenuScanController extends Controller
                     'payment_method' => 'web', // Otomatis checkout via Buyle
                     'description'    => $desc,
                     'slug'           => $slug,
+                    'product_id'     => $product->id,
                 ],
                 'order'      => $lastOrder,
                 'is_active'  => true,
