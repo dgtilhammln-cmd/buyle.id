@@ -182,51 +182,43 @@ class CartService
 
             if ($item->product) {
                 $p = $item->product;
-                $pType   = strtolower($p->product_type ?? $p->type ?? 'digital');
+                $pType   = strtolower($p->product_type ?? $p->type ?? 'external_link');
                 $catName = strtolower($p->category->name ?? '');
-                $pName   = strtolower($p->name ?? '');
-                $pDesc   = strtolower($p->short_desc ?? '');
 
                 // Check block category if product belongs to bio block
                 $blockCat = '';
-                if (isset($p->bioBlock->data_json['category'])) {
-                    $blockCat = strtolower($p->bioBlock->data_json['category']);
+                if (isset($p->bioBlock) && is_array($p->bioBlock->data_json)) {
+                    $blockCat = strtolower($p->bioBlock->data_json['category'] ?? '');
                 }
 
-                // Digital keywords detection in name, desc, category
-                $digitalKeywords = ['digital', 'cbt', 'aplikasi', 'app', 'e-book', 'ebook', 'pdf', 'course', 'kursus', 'webinar', 'tiket', 'ticket', 'voucher', 'lisensi', 'license', 'software', 'membership', 'akun', 'script', 'source code', 'template', 'file', 'download', 'e-learning'];
-                $isDigitalByName = false;
-                foreach ($digitalKeywords as $kw) {
-                    if (str_contains($pName, $kw) || str_contains($catName, $kw) || str_contains($pDesc, $kw)) {
-                        $isDigitalByName = true;
-                        break;
-                    }
-                }
+                // IMAGE 1: Tipe Produk -> "Produk Digital / Link Access" (external_link) & "Tiket Event / Wisata / Webinar" (ticket)
+                $isDigitalFromImage1 = in_array($pType, ['external_link', 'ticket', 'digital', 'download', 'course', 'ebook', 'virtual', 'file', 'link']) 
+                                       && $blockCat !== 'barang' 
+                                       && $pType !== 'physical' 
+                                       && $catName !== 'barang';
 
-                // Food / Service keywords detection
-                $foodServiceKeywords = ['makanan', 'kuliner', 'food', 'minuman', 'catering', 'katering', 'snack', 'jasa', 'service', 'layanan', 'servis', 'pemasangan', 'booking', 'reservasi', 'cuci', 'repair', 'perbaikan'];
-                $isFoodOrServiceCategory = false;
-                foreach ($foodServiceKeywords as $kw) {
-                    if (str_contains($pName, $kw) || str_contains($catName, $kw) || str_contains($blockCat, $kw) || str_contains($pDesc, $kw)) {
-                        $isFoodOrServiceCategory = true;
-                        break;
-                    }
-                }
+                // IMAGE 2: Kategori Produk -> "Makanan / Minuman / Kuliner" (makanan) & "Jasa / Layanan / Service" (jasa/service)
+                $isFoodOrServiceFromImage2 = ($blockCat === 'makanan' 
+                                              || $blockCat === 'jasa' 
+                                              || $pType === 'service' 
+                                              || $pType === 'makanan' 
+                                              || in_array($catName, ['makanan', 'jasa', 'food', 'culinary', 'service', 'layanan', 'booking & jasa layanan online', 'booking']));
 
-                // 1. Digital product check
-                if (in_array($pType, ['digital', 'ticket', 'download', 'course', 'ebook', 'virtual', 'file']) 
-                    || !empty($p->digital_resource) 
-                    || !empty($p->file_type) 
-                    || $isDigitalByName) {
-                    // Digital item — No physical shipping form
-                } 
-                // 2. Food or Service product check
-                elseif ($pType === 'service' || $blockCat === 'jasa' || $blockCat === 'makanan' || $isFoodOrServiceCategory) {
+                // IMAGE 2: Kategori Produk -> "Barang / Produk Fisik" (barang)
+                $isGoodsFromImage2 = ($blockCat === 'barang' 
+                                      || $pType === 'physical' 
+                                      || $pType === 'barang' 
+                                      || in_array($catName, ['barang', 'produk fisik', 'umkm', 'peralatan dapur', 'kebersihan', 'kamar tidur', 'kamar mandi', 'elektronik', 'taman & outdoor', 'perkakas', 'laundry', 'penyimpanan', 'pengiriman kilat']));
+
+                // Classification:
+                if ($isDigitalFromImage1 && !$isGoodsFromImage2 && !$isFoodOrServiceFromImage2) {
+                    // Produk Digital (Image 1) -> Form Simpel Data Pembeli (Nama, Email, WA)
+                } elseif ($isFoodOrServiceFromImage2 && !$isGoodsFromImage2) {
+                    // Produk Makanan / Jasa (Image 2) -> Form Simpel Alamat / Patokan tanpa kurir ekspedisi
                     $hasFoodOrService = true;
                     $hasDigitalOnly   = false;
-                } 
-                // 3. Physical Goods product check (Barang)
-                else {
+                } else {
+                    // Produk Barang / Produk Fisik (Image 2) -> Form Pengiriman Lengkap (Alamat, GPS, Kurir JNE/J&T, Ongkir)
                     $hasGoodsShipping = true;
                     $hasDigitalOnly   = false;
                 }

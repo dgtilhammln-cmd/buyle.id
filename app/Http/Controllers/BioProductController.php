@@ -80,7 +80,7 @@ class BioProductController extends Controller
                 'description'  => $block->data_json['description'] ?? '',
                 'image'        => !empty($block->data_json['images'][0]) ? $block->data_json['images'][0] : ($block->data_json['image'] ?? null),
                 'is_active'    => true,
-                'product_type' => 'physical',
+                'product_type' => ($block->data_json['category'] ?? '') === 'Barang' ? 'physical' : ((($block->data_json['category'] ?? '') === 'Jasa') ? 'service' : ((($block->data_json['category'] ?? '') === 'Makanan') ? 'makanan' : 'external_link')),
             ]);
             $data = $block->data_json ?? [];
             $data['product_id'] = $product->id;
