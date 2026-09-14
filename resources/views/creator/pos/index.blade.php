@@ -96,7 +96,7 @@
         /* ── Link in Bio Signature Green Buttons ──────────────────────────── */
         .btn-submit-green {
             background: linear-gradient(135deg, #1eb349, #a5cf37);
-            border-radius: 12px;
+            border-radius: 999px;
             font-family: 'Montserrat', sans-serif;
             font-weight: 800;
             color: #ffffff;
@@ -138,8 +138,8 @@
             color: #1eb349;
             font-weight: 700;
             font-size: 0.8rem;
-            padding: 0.5rem 1rem;
-            border-radius: 10px;
+            padding: 0.5rem 1.25rem;
+            border-radius: 999px;
             cursor: pointer;
             transition: all 0.2s ease;
             display: inline-flex;
