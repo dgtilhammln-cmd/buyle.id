@@ -66,11 +66,13 @@ class BioProductController extends Controller
         if (!$product && in_array($block->type, ['custom_product', 'buyle_product'])) {
             $sellerId = $profile->user_id ?? ($profile->user ? $profile->user->id : (auth()->id() ?? 1));
             $slug = ($block->data_json['slug'] ?? \Illuminate\Support\Str::slug($block->title)) . '-' . time();
+            $stock = isset($block->data_json['stock']) && $block->data_json['stock'] !== '' && $block->data_json['stock'] !== null ? (int)$block->data_json['stock'] : null;
             $product = Product::create([
                 'seller_id'    => $sellerId,
                 'name'         => $block->title,
                 'slug'         => $slug,
                 'price'        => $block->data_json['price'] ?? 0,
+                'stock'        => $stock,
                 'description'  => $block->data_json['description'] ?? '',
                 'image'        => !empty($block->data_json['images'][0]) ? $block->data_json['images'][0] : ($block->data_json['image'] ?? null),
                 'is_active'    => true,

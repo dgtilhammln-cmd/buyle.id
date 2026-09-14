@@ -2138,6 +2138,8 @@
                                 'title' => $block->title,
                                 'price' => $block->data_json['price'] ?? 0,
                                 'original_price' => $block->data_json['original_price'] ?? '',
+                                'category' => $block->data_json['category'] ?? 'Makanan',
+                                'stock' => $block->data_json['stock'] ?? '',
                                 'payment_method' => $block->data_json['payment_method'] ?? 'wa',
                                 'description' => $block->data_json['description'] ?? '',
                                 'wa_text' => $block->data_json['wa_text'] ?? '',
@@ -2466,6 +2468,22 @@
                             placeholder="200.000" oninput="formatRupiahInput(this)">
                     </div>
                 </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                    <div class="form-group">
+                        <label class="form-label">Kategori Produk *</label>
+                        <select name="category" class="form-input" required style="padding:0.6rem;">
+                            <option value="Makanan">Makanan / Minuman / Kuliner</option>
+                            <option value="Barang">Barang / Produk Fisik</option>
+                            <option value="Jasa">Jasa / Layanan / Service</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Jumlah Stok <span style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
+                        <input type="number" name="stock" class="form-input" placeholder="Kosongkan jika Unlimited (0 = Habis)">
+                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Kosongkan jika unlimited (stok tidak terbatas). Isi 0 jika habis.</span>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="form-label">Deskripsi Produk</label>
                     <textarea name="description" class="form-input" style="height:80px; padding:0.75rem;"
@@ -2532,6 +2550,22 @@
                                 style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
                         <input type="text" name="original_price" id="edit_original_price" class="form-input"
                             oninput="formatRupiahInput(this)">
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                    <div class="form-group">
+                        <label class="form-label">Kategori Produk *</label>
+                        <select name="category" id="edit_category" class="form-input" required style="padding:0.6rem;">
+                            <option value="Makanan">Makanan / Minuman / Kuliner</option>
+                            <option value="Barang">Barang / Produk Fisik</option>
+                            <option value="Jasa">Jasa / Layanan / Service</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Jumlah Stok <span style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
+                        <input type="number" name="stock" id="edit_stock" class="form-input" placeholder="Kosongkan jika Unlimited (0 = Habis)">
+                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Kosongkan jika unlimited (stok tidak terbatas). Isi 0 jika habis.</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -3092,6 +3126,8 @@
             document.getElementById('edit_price').value = data.price ? new Intl.NumberFormat('id-ID').format(data.price) : '';
             document.getElementById('edit_original_price').value = data.original_price ? new Intl.NumberFormat('id-ID').format(data.original_price) : '';
             document.getElementById('edit_description').value = data.description || '';
+            document.getElementById('edit_category').value = data.category || 'Makanan';
+            document.getElementById('edit_stock').value = (data.stock !== undefined && data.stock !== null && data.stock !== '') ? data.stock : '';
             document.getElementById('edit_url').value = data.url || '';
 
             if (data.payment_method === 'web') {

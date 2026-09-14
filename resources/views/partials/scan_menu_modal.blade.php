@@ -70,9 +70,11 @@
             <thead style="background:#F8FAFC; border-bottom:1px solid #E2E8F0; position:sticky; top:0; z-index:5;">
               <tr>
                 <th style="padding:0.75rem; width:35px; text-align:center;">#</th>
-                <th style="padding:0.75rem; min-width:140px;">Nama Menu</th>
-                <th style="padding:0.75rem; width:110px;">Harga (Rp)</th>
-                <th style="padding:0.75rem; min-width:220px;">Deskripsi Jualan AI</th>
+                <th style="padding:0.75rem; min-width:130px;">Nama Menu</th>
+                <th style="padding:0.75rem; width:115px;">Kategori</th>
+                <th style="padding:0.75rem; width:100px;">Harga (Rp)</th>
+                <th style="padding:0.75rem; width:120px;">Stok (Kosong=∞)</th>
+                <th style="padding:0.75rem; min-width:180px;">Deskripsi Jualan AI</th>
               </tr>
             </thead>
             <tbody id="scan-items-tbody">
@@ -169,21 +171,36 @@ function renderScanItemsTable() {
   document.getElementById('scan-result-count').innerHTML = `Daftar Menu Terdeteksi (<strong>${detectedMenuItems.length} item</strong>):`;
 
   detectedMenuItems.forEach((item, idx) => {
+    const cat = item.category || 'Makanan';
+    const stockVal = (item.stock !== undefined && item.stock !== null) ? item.stock : '';
     const tr = document.createElement('tr');
     tr.style.borderBottom = '1px solid #F1F5F9';
     tr.innerHTML = `
       <td style="padding:0.75rem; text-align:center;">
         <input type="checkbox" class="scan-item-chk" data-index="${idx}" checked onchange="updateImportBtnCount()">
       </td>
-      <td style="padding:0.5rem 0.75rem;">
+      <td style="padding:0.5rem 0.5rem;">
         <input type="text" value="${escapeHtml(item.name)}" class="scan-input-name" data-index="${idx}"
                style="width:100%; padding:0.4rem 0.6rem; border:1px solid #E2E8F0; border-radius:6px; font-weight:600; font-size:0.8rem;">
       </td>
-      <td style="padding:0.5rem 0.75rem;">
+      <td style="padding:0.5rem 0.5rem;">
+        <select class="scan-input-category" data-index="${idx}"
+                style="width:100%; padding:0.4rem 0.4rem; border:1px solid #E2E8F0; border-radius:6px; font-size:0.78rem; font-weight:600; background:#FFF;">
+          <option value="Makanan" ${cat === 'Makanan' ? 'selected' : ''}>Makanan</option>
+          <option value="Barang" ${cat === 'Barang' ? 'selected' : ''}>Barang</option>
+          <option value="Jasa" ${cat === 'Jasa' ? 'selected' : ''}>Jasa</option>
+          <option value="Lainnya" ${cat === 'Lainnya' ? 'selected' : ''}>Lainnya</option>
+        </select>
+      </td>
+      <td style="padding:0.5rem 0.5rem;">
         <input type="number" value="${item.price}" class="scan-input-price" data-index="${idx}"
                style="width:100%; padding:0.4rem 0.6rem; border:1px solid #E2E8F0; border-radius:6px; font-size:0.8rem;">
       </td>
-      <td style="padding:0.5rem 0.75rem;">
+      <td style="padding:0.5rem 0.5rem;">
+        <input type="number" value="${stockVal}" class="scan-input-stock" data-index="${idx}" placeholder="∞ (0=Habis)"
+               style="width:100%; padding:0.4rem 0.6rem; border:1px solid #E2E8F0; border-radius:6px; font-size:0.78rem;">
+      </td>
+      <td style="padding:0.5rem 0.5rem;">
         <textarea class="scan-input-desc" data-index="${idx}" rows="2"
                   style="width:100%; padding:0.4rem 0.6rem; border:1px solid #E2E8F0; border-radius:6px; font-size:0.78rem; font-family:sans-serif;">${escapeHtml(item.description)}</textarea>
       </td>
@@ -223,12 +240,15 @@ function submitBulkImportScanned() {
     const name = document.querySelector(`.scan-input-name[data-index="${idx}"]`).value;
     const price = document.querySelector(`.scan-input-price[data-index="${idx}"]`).value;
     const desc = document.querySelector(`.scan-input-desc[data-index="${idx}"]`).value;
+    const category = document.querySelector(`.scan-input-category[data-index="${idx}"]`).value;
+    const stock = document.querySelector(`.scan-input-stock[data-index="${idx}"]`).value;
 
     selectedItems.push({
       name: name,
       price: price,
       description: desc,
-      category: 'Makanan'
+      category: category,
+      stock: stock
     });
   });
 

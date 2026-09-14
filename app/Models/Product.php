@@ -322,7 +322,16 @@ class Product extends Model
      */
     public function getIsAvailableAttribute(): bool
     {
-        return $this->type === 'service' || $this->stock > 0;
+        if (!$this->is_active) {
+            return false;
+        }
+        if ($this->type === 'service') {
+            return true;
+        }
+        if ($this->stock === null) {
+            return true;
+        }
+        return (int)$this->stock > 0;
     }
 
     /**

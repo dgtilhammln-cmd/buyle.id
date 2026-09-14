@@ -124,11 +124,13 @@ class CheckoutService
                 }
 
                 // Proteksi race condition pada stok tiket & produk
-                if ($product->product_type === 'ticket' || $product->type === 'product') {
-                    if ($product->stock < $cartItem->qty) {
-                        throw new Exception("Stok tiket / produk \"{$product->name}\" tidak mencukupi (Sisa: {$product->stock}).");
+                if ($product->product_type === 'ticket' || $product->type === 'product' || $product->product_type === 'external_link') {
+                    if ($product->stock !== null) {
+                        if ((int)$product->stock < $cartItem->qty) {
+                            throw new Exception("Stok tiket / produk \"{$product->name}\" tidak mencukupi (Sisa: {$product->stock}).");
+                        }
+                        $product->decrement('stock', $cartItem->qty);
                     }
-                    $product->decrement('stock', $cartItem->qty);
                 }
                 $product->increment('sold_count', $cartItem->qty);
 

@@ -200,16 +200,17 @@ class AiVisionService
         $base64Image = $this->compressAndEncodeImage($imagePath);
 
         $prompt = <<<PROMPT
-Anda adalah asisten AI kasir dan pakar kuliner profesional.
-Tugas Anda adalah membaca gambar daftar menu makanan/minuman/produk berikut.
+Anda adalah asisten AI kasir dan pakar produk profesional.
+Tugas Anda adalah membaca gambar daftar menu/katalog produk/layanan berikut.
 
 EKSTRAK & HASILKAN DATA DALAM FORMAT JSON RIGID:
-Buat array objek JSON berisi daftar item produk yang ada di menu.
+Buat array objek JSON berisi daftar item produk/layanan yang ada di menu.
 Tiap objek HARUS memiliki field berikut:
 1. "name": Nama produk (Singkat, jelas, kapitalisasi rapi).
 2. "price": Harga dalam nominal angka murni integer tanpa 'Rp' atau titik/koma (Contoh: 25000 untuk 25k/Rp 25.000). Jika tidak ada harga, isi 0.
-3. "category": Kategori (Pilih salah satu: "Makanan", "Minuman", "Camilan / Dessert", atau "Lainnya").
-4. "description": Deskripsi jualan menggiurkan singkat (1-2 kalimat menarik yang menggugah selera untuk mempromosikan menu ini).
+3. "category": Kategori (Wajib pilih salah satu: "Makanan", "Barang", "Jasa", atau "Lainnya").
+4. "stock": Null jika unlimited/tidak ditulis, atau isi angka kuantitas jika ada informasi stok.
+5. "description": Deskripsi jualan menggiurkan singkat (1-2 kalimat menarik untuk mempromosikan menu ini).
 
 PENTING:
 - Keluarkan HANYA string JSON valid murni (JSON Array `[...]`).
@@ -356,10 +357,24 @@ PROMPT;
             if (!is_array($row) || empty($row['name'])) continue;
 
             $price = isset($row['price']) ? (int) preg_replace('/[^\d]/', '', (string)$row['price']) : 0;
+            $catRaw = trim($row['category'] ?? 'Makanan');
+            $cat = match (strtolower($catRaw)) {
+                'barang' => 'Barang',
+                'jasa'   => 'Jasa',
+                'lainnya' => 'Lainnya',
+                default  => 'Makanan',
+            };
+
+            $stock = null;
+            if (isset($row['stock']) && $row['stock'] !== '' && $row['stock'] !== null && is_numeric($row['stock'])) {
+                $stock = (int)$row['stock'];
+            }
+
             $items[] = [
                 'name'        => trim($row['name']),
                 'price'       => $price,
-                'category'    => trim($row['category'] ?? 'Makanan'),
+                'category'    => $cat,
+                'stock'       => $stock,
                 'description' => trim($row['description'] ?? ''),
             ];
         }

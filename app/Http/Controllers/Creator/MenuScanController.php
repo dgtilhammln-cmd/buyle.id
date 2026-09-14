@@ -121,6 +121,16 @@ class MenuScanController extends Controller
 
             $price = (int) ($item['price'] ?? 0);
             $desc  = trim($item['description'] ?? '');
+            $catRaw = trim($item['category'] ?? 'Makanan');
+            $category = match (strtolower($catRaw)) {
+                'barang' => 'Barang',
+                'jasa'   => 'Jasa',
+                'lainnya' => 'Lainnya',
+                default  => 'Makanan',
+            };
+
+            $stockVal = $item['stock'] ?? null;
+            $stock = ($stockVal === '' || $stockVal === null || $stockVal === 'unlimited') ? null : (int)$stockVal;
 
             // Smart slug logic
             $cleanTitle = Str::limit($name, 45, '');
@@ -135,6 +145,7 @@ class MenuScanController extends Controller
                 'name'         => $name,
                 'slug'         => $slug,
                 'price'        => $price,
+                'stock'        => $stock,
                 'description'  => $desc,
                 'is_active'    => true,
                 'product_type' => 'external_link',
@@ -147,6 +158,8 @@ class MenuScanController extends Controller
                 'url'        => null,
                 'data_json'  => [
                     'price'          => $price,
+                    'category'       => $category,
+                    'stock'          => $stock,
                     'payment_method' => 'web', // Otomatis checkout via Buyle
                     'description'    => $desc,
                     'slug'           => $slug,

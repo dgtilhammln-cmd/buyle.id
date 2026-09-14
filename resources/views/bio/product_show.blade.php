@@ -20,6 +20,11 @@
         $waText = $block->data_json['wa_text'] ?? '';
         $waNumber = $config['wa'] ?? '';
         $waMessage = 'Halo, saya mendapatkan nomor dari buyle.id. ' . ($waText ?: 'Saya tertarik dengan produk *' . $prodTitle . '* (Rp ' . number_format($price, 0, ',', '.') . '). Apakah masih tersedia?');
+        $category = $block->data_json['category'] ?? ($product && $product->category ? $product->category->name : 'Makanan');
+        $stock = isset($block->data_json['stock']) && $block->data_json['stock'] !== '' && $block->data_json['stock'] !== null 
+            ? (int)$block->data_json['stock'] 
+            : ($product ? $product->stock : null);
+        $isOutOfStock = ($stock !== null && $stock <= 0);
         $firstImage = !empty($images[0]) ? (Str::startsWith($images[0], 'http') ? $images[0] : asset('storage/' . $images[0])) : asset('images/buyle-og.png');
         $pageTitle = $prodTitle . ' - ' . ($config['name'] ?? $username) . ' | buyle.id';
         $rawDesc  = $block->data_json['description'] ?? ($product ? $product->description : '');
@@ -461,6 +466,16 @@
         @endif
 
         <div class="prod-info-box">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem; flex-wrap:wrap;">
+                <span style="font-size:0.72rem; font-weight:700; background:rgba(30,179,73,0.12); color:{{ $accent }}; padding:0.25rem 0.65rem; border-radius:6px; text-transform:uppercase; letter-spacing:0.5px;">{{ $category }}</span>
+                @if($stock === null)
+                    <span style="font-size:0.72rem; font-weight:700; color:#10B981;">• Stok Unlimited</span>
+                @elseif($stock > 0)
+                    <span style="font-size:0.72rem; font-weight:700; color:#10B981;">• Sisa {{ $stock }} unit</span>
+                @else
+                    <span style="font-size:0.72rem; font-weight:700; color:#EF4444;">• Stok Habis</span>
+                @endif
+            </div>
             <h1 class="prod-name">{{ $prodTitle }}</h1>
             <div class="prod-price-wrap">
                 @if(!empty($origPrice) && $origPrice > $price)
@@ -491,7 +506,11 @@
     </div>
 
     <div class="cta-bar">
-        @if($paymentMethod === 'wa' && $waNumber)
+        @if($isOutOfStock)
+            <button type="button" class="btn-buy" disabled style="background:#CBD5E1; color:#64748B; cursor:not-allowed; border:none; width:100%; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
+                <i class="fas fa-ban"></i> Stok Habis
+            </button>
+        @elseif($paymentMethod === 'wa' && $waNumber)
             <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $waNumber) }}?text={{ urlencode($waMessage) }}" target="_blank" class="btn-buy" style="width:100%; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
                 <i class="fab fa-whatsapp" style="font-size:1.15rem;"></i> Beli via WhatsApp
             </a>

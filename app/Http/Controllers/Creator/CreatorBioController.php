@@ -267,8 +267,19 @@ class CreatorBioController extends Controller
             if ($request->filled('original_price')) $data['original_price'] = $request->original_price;
             if ($request->filled('payment_method')) $data['payment_method'] = $request->payment_method;
             if ($request->filled('wa_text')) $data['wa_text'] = $request->wa_text;
+
+            $catRaw = trim($request->category ?? 'Makanan');
+            $data['category'] = match (strtolower($catRaw)) {
+                'barang' => 'Barang',
+                'jasa'   => 'Jasa',
+                'lainnya' => 'Lainnya',
+                default  => 'Makanan',
+            };
+
+            $stockVal = $request->stock ?? null;
+            $data['stock'] = ($stockVal === '' || $stockVal === null || $stockVal === 'unlimited') ? null : (int)$stockVal;
             
-                        // Smart slug logic: limit title length intelligently for clean URLs
+            // Smart slug logic: limit title length intelligently for clean URLs
             $cleanTitle = Str::limit($request->title, 45, '');
             $baseSlug   = rtrim(Str::slug($cleanTitle), '-');
             $data['slug'] = $baseSlug ?: 'produk-' . time();
@@ -289,6 +300,7 @@ class CreatorBioController extends Controller
                     'name'         => $request->title,
                     'slug'         => $data['slug'] . '-' . time(),
                     'price'        => $data['price'] ?? 0,
+                    'stock'        => $data['stock'],
                     'description'  => $data['description'] ?? '',
                     'image'        => !empty($data['images'][0]) ? $data['images'][0] : ($data['image'] ?? null),
                     'is_active'    => true,
@@ -405,6 +417,20 @@ class CreatorBioController extends Controller
             if ($request->has('price')) $data['price'] = $request->price;
             if ($request->has('original_price')) $data['original_price'] = $request->original_price;
             if ($request->has('payment_method')) $data['payment_method'] = $request->payment_method;
+
+            if ($request->has('category')) {
+                $catRaw = trim($request->category ?? 'Makanan');
+                $data['category'] = match (strtolower($catRaw)) {
+                    'barang' => 'Barang',
+                    'jasa'   => 'Jasa',
+                    'lainnya' => 'Lainnya',
+                    default  => 'Makanan',
+                };
+            }
+            if ($request->has('stock')) {
+                $sVal = $request->stock;
+                $data['stock'] = ($sVal === null || $sVal === '' || $sVal === 'unlimited') ? null : (int)$sVal;
+            }
             
             if (empty($data['slug']) || $block->title !== $request->title) {
                 $cleanTitle = Str::limit($request->title, 45, '');
@@ -435,6 +461,20 @@ class CreatorBioController extends Controller
             }
 
             $data['images'] = array_slice($currentImages, 0, 3);
+
+            // Sync with Product table entry if product_id exists
+            if (!empty($data['product_id'])) {
+                $p = \App\Models\Product::find($data['product_id']);
+                if ($p) {
+                    $p->update([
+                        'name'        => $request->title,
+                        'price'       => $data['price'] ?? 0,
+                        'stock'       => $data['stock'] ?? null,
+                        'description' => $data['description'] ?? '',
+                        'image'       => !empty($data['images'][0]) ? $data['images'][0] : ($data['image'] ?? $p->image),
+                    ]);
+                }
+            }
         }
 
         if ($request->filled('icon_class')) {
