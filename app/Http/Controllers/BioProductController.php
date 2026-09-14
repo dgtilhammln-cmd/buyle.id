@@ -69,8 +69,9 @@ class BioProductController extends Controller
             while (Product::where('slug', $slug)->exists()) {
                 $slug = $baseSlug . '-' . \Illuminate\Support\Str::random(4);
             }
-            $stock = isset($block->data_json['stock']) && $block->data_json['stock'] !== '' && $block->data_json['stock'] !== null ? (int)$block->data_json['stock'] : null;
-            $product = Product::create([
+            $stock    = isset($block->data_json['stock']) && $block->data_json['stock'] !== '' && $block->data_json['stock'] !== null ? (int)$block->data_json['stock'] : null;
+            $sellerId = $profile->user_id;
+            $product  = Product::create([
                 'seller_id'    => $sellerId,
                 'name'         => $block->title,
                 'slug'         => $slug,

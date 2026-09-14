@@ -2102,12 +2102,15 @@
                     </div>
                     <div class="card-body">
                         @forelse($blocks->where('type', 'custom_product')->sortBy(fn($b) => [$b->order ?? 0, $b->id]) as $block)
-                                            @php $imgs = $block->data_json['images'] ?? []; @endphp
+                                            @php
+                                                $imgs = $block->data_json['images'] ?? [];
+                                                $firstImg = !empty($imgs[0]) ? $imgs[0] : ($block->data_json['image'] ?? null);
+                                            @endphp
                                             <div class="aff-card" style="display:flex; align-items:center; gap:0; padding:0; border-radius:14px; overflow:hidden; border:1px solid #e8f0e8; background:#fff; margin-bottom:0.6rem; box-shadow:0 1px 4px rgba(0,0,0,0.04);">
                                                 {{-- Thumbnail foto produk --}}
-                                                @if(!empty($imgs[0]))
+                                                @if(!empty($firstImg))
                                                     <div style="width:72px; height:72px; flex-shrink:0; overflow:hidden; background:#f1f5f9;">
-                                                        <img src="{{ asset('storage/' . $imgs[0]) }}"
+                                                        <img src="{{ Str::startsWith($firstImg, 'http') ? $firstImg : asset('storage/' . $firstImg) }}"
                                                             style="width:72px; height:72px; object-fit:cover; display:block;"
                                                             onerror="this.parentElement.innerHTML='<div style=&quot;width:72px;height:72px;display:flex;align-items:center;justify-content:center;background:#f1f5f9;&quot;><svg width=\'28\' height=\'28\' fill=\'none\' stroke=\'#cbd5e1\' stroke-width=\'1.5\' viewBox=\'0 0 24 24\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><polyline points=\'21 15 16 10 5 21\'/></svg></div>'">
                                                     </div>

@@ -308,7 +308,12 @@ class CreatorBioController extends Controller
                         if ($path) $images[] = $path;
                     }
                 }
-                if (!empty($images)) $data['images'] = $images;
+                if (!empty($images)) {
+                    $data['images'] = $images;
+                    $data['image']  = $images[0];
+                }
+            } elseif (!empty($data['image'])) {
+                $data['images'] = [$data['image']];
             }
             // Auto-create Product entry in products table for Payment Gateway checkout
             if (($data['payment_method'] ?? 'web') === 'web' && empty($data['product_id'])) {
@@ -495,6 +500,11 @@ class CreatorBioController extends Controller
             }
 
             $data['images'] = array_slice($currentImages, 0, 3);
+            if (!empty($data['images'][0])) {
+                $data['image'] = $data['images'][0];
+            } elseif (!empty($data['image'])) {
+                $data['images'] = [$data['image']];
+            }
 
             // Sync with Product table entry if product_id exists
             if (!empty($data['product_id'])) {
