@@ -385,18 +385,42 @@ label:focus{outline:none !important;box-shadow:none !important;}
                 </div>
 
                 @elseif($summary['checkout_type'] === 'food_service')
-                {{-- B. FORM SIMPLE ALAMAT / LOKASI (PRODUK MAKANAN ATAU JASA) --}}
-                <div class="co-section" style="margin-bottom:1.5rem; background:#F8FAFC; border:1px solid #E2E8F0;">
-                    <div class="co-section-title" style="color:#0F172A;">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                        Alamat Pengantaran / Lokasi (Makanan / Jasa)
+                {{-- B. FORM MULTIFUNGSI F&B (RESTO, CAFE, KULINER & JASA) --}}
+                <div class="co-section" style="margin-bottom:1.5rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:1.25rem;">
+                    <div class="co-section-title" style="color:#0F172A; display:flex; align-items:center; gap:0.5rem; font-weight:700;">
+                        <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        Pilihan Layanan & Pengantaran (FnB / Resto / Jasa)
                     </div>
-                    <div style="font-size:0.82rem; color:#64748B; margin-bottom:1rem; line-height:1.4;">
-                        Untuk transaksi <strong>Makanan & Jasa</strong>, pengiriman dilakukan secara langsung / instant / pengerjaan tempat tanpa perlu memilih ekspedisi kargo.
+                    <div style="font-size:0.82rem; color:#64748B; margin-bottom:1.25rem; line-height:1.45;">
+                        Pilih jenis layanan pesanan Anda (Makan di tempat / Delivery / Takeaway):
                     </div>
-                    <div class="form-group mb-0">
-                        <label class="form-label">Alamat Lengkap / Patokan Lokasi Pengerjaan</label>
-                        <textarea name="new_address_full" class="form-input" rows="3" placeholder="Tuliskan detail alamat pengantaran makanan atau deskripsi lokasi pengerjaan jasa..."></textarea>
+
+                    {{-- Dropdown Pilih Tipe Layanan FnB --}}
+                    <div class="form-group mb-3">
+                        <label class="form-label" style="font-weight:700; color:#0F172A;">Opsi Pesanan / Pengantaran <span style="color:#EF4444;">*</span></label>
+                        <select name="fnb_service_type" id="fnb_service_type_select" class="form-input" onchange="toggleFnbFields(this.value)" style="font-weight:600; color:#0F172A; font-size:0.92rem;" required>
+                            <option value="dine_in">🍽️ Makan di Tempat (Dine-In / Antar ke Meja)</option>
+                            <option value="delivery" selected>🛵 Delivery / Antar ke Alamat (Rumah / Kantor)</option>
+                            <option value="takeaway">🛍️ Takeaway / Ambil Sendiri di Toko</option>
+                        </select>
+                    </div>
+
+                    {{-- Field Dynamic 1: Dine In (Nomor Meja) --}}
+                    <div id="fnb_field_dine_in" style="display:none; margin-top:1rem;" class="form-group mb-0">
+                        <label class="form-label" style="font-weight:700;">Nomor Meja / Area Duduk <span style="color:#EF4444;">*</span></label>
+                        <input type="text" name="fnb_table_number" id="fnb_table_number_input" class="form-input" placeholder="Contoh: Meja No. 05 / Area Outdoor lantai 2">
+                    </div>
+
+                    {{-- Field Dynamic 2: Delivery Alamat (Antar Alamat) --}}
+                    <div id="fnb_field_delivery" style="margin-top:1rem;" class="form-group mb-0">
+                        <label class="form-label" style="font-weight:700;">Alamat Pengantaran Lengkap & Patokan <span style="color:#EF4444;">*</span></label>
+                        <textarea name="new_address_full" id="fnb_delivery_address_input" class="form-input" rows="3" placeholder="Contoh: Jl. Raya Kebon Jeruk No. 12 (Seberang Indomaret, pagar hitam, rumah cat hijau)..."></textarea>
+                    </div>
+
+                    {{-- Field Dynamic 3: Takeaway (Waktu Pengambilan) --}}
+                    <div id="fnb_field_takeaway" style="display:none; margin-top:1rem;" class="form-group mb-0">
+                        <label class="form-label" style="font-weight:700;">Estimasi Jam Pengambilan / Pick-Up</label>
+                        <input type="text" name="fnb_pickup_time" id="fnb_pickup_time_input" class="form-input" placeholder="Contoh: Diambil jam 13:30 WIB / Ditinggal di meja kasir">
                     </div>
                 </div>
                 @endif
@@ -774,6 +798,18 @@ label:focus{outline:none !important;box-shadow:none !important;}
     // ────────────────────────────────────────────
     // KURIR: Same trigger for both flows
     // ────────────────────────────────────────────
+    // F&B MULTIFUNGSI SERVICE TYPE TOGGLE
+    // ────────────────────────────────────────────
+    function toggleFnbFields(type) {
+        const dineInBox   = document.getElementById('fnb_field_dine_in');
+        const deliveryBox = document.getElementById('fnb_field_delivery');
+        const takeawayBox = document.getElementById('fnb_field_takeaway');
+
+        if (dineInBox) dineInBox.style.display = (type === 'dine_in') ? 'block' : 'none';
+        if (deliveryBox) deliveryBox.style.display = (type === 'delivery') ? 'block' : 'none';
+        if (takeawayBox) takeawayBox.style.display = (type === 'takeaway') ? 'block' : 'none';
+    }
+
     document.getElementById('courier_name_select')?.addEventListener('change', function() {
         const cityId = getActiveCityId();
         if (cityId && this.value) {

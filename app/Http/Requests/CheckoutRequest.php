@@ -29,6 +29,9 @@ class CheckoutRequest extends FormRequest
             'new_address_full'     => 'nullable|string|max:1000',
             'courier_name'         => 'nullable|string|max:50',
             'courier_service'      => 'nullable|string|max:50',
+            'fnb_service_type'     => 'nullable|string|max:50',
+            'fnb_table_number'     => 'nullable|string|max:100',
+            'fnb_pickup_time'      => 'nullable|string|max:100',
         ];
 
         if (!auth()->check()) {

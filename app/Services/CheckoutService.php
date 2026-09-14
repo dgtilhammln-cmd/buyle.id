@@ -92,9 +92,40 @@ class CheckoutService
 
         $notes = $data['notes'] ?? null;
 
-        // Form Alamat Pengiriman untuk produk fisik
+        // Form Alamat Pengiriman untuk produk barang & Makanan/Jasa
         $shippingAddressArray = [];
-        if ($summary['has_physical_product']) {
+
+        if ($summary['has_food_or_service']) {
+            $fnbType = $data['fnb_service_type'] ?? 'delivery';
+            $fnbReceiver = $data['guest_name'] ?? $user->name ?? 'Pembeli';
+            $fnbPhone    = $data['guest_phone'] ?? $user->phone ?? '';
+
+            if ($fnbType === 'dine_in') {
+                $tableNo = !empty($data['fnb_table_number']) ? $data['fnb_table_number'] : 'Meja Kasir / Bebas';
+                $shippingAddressArray = [
+                    'receiver_name' => $fnbReceiver,
+                    'phone'         => $fnbPhone,
+                    'address'       => '🍽️ Makan di Tempat (Dine-In / Antar ke Meja) — No. Meja/Area: ' . $tableNo,
+                    'label'         => 'Dine-In',
+                ];
+            } elseif ($fnbType === 'takeaway') {
+                $pickupTime = !empty($data['fnb_pickup_time']) ? $data['fnb_pickup_time'] : 'Segera Diproses';
+                $shippingAddressArray = [
+                    'receiver_name' => $fnbReceiver,
+                    'phone'         => $fnbPhone,
+                    'address'       => '🛍️ Takeaway / Ambil Sendiri di Toko — Estimasi Jam: ' . $pickupTime,
+                    'label'         => 'Takeaway',
+                ];
+            } else {
+                $deliveryAddr = !empty($data['new_address_full']) ? $data['new_address_full'] : ($data['notes'] ?? 'Delivery Alamat');
+                $shippingAddressArray = [
+                    'receiver_name' => $fnbReceiver,
+                    'phone'         => $fnbPhone,
+                    'address'       => '🛵 Delivery / Antar ke Alamat: ' . $deliveryAddr,
+                    'label'         => 'Delivery',
+                ];
+            }
+        } elseif ($summary['has_physical_product']) {
             if (!empty($data['address_id']) && $data['address_id'] !== 'new') {
                 $addrObj = Address::find($data['address_id']);
                 if ($addrObj) {
