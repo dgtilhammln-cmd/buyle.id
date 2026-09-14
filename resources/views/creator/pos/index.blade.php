@@ -615,18 +615,38 @@
             }
 
             #printablePosReceiptArea {
-                position: absolute !important;
+                position: fixed !important;
                 left: 0 !important;
                 top: 0 !important;
-                width: 100% !important;
+                width: 80mm !important;
                 max-width: 80mm !important;
-                padding: 0 !important;
+                padding: 4mm !important;
                 margin: 0 !important;
+                overflow: visible !important;
             }
 
             .no-print {
                 display: none !important;
             }
+
+            * {
+                overflow: visible !important;
+            }
+        }
+
+        /* ── Midtrans Privacy Blur Overlay ───────────────────────────────── */
+        #midtransBlurOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 99998;
+        }
+
+        #midtransBlurOverlay.active {
+            display: block;
         }
     </style>
 @endsection
@@ -872,22 +892,18 @@
 
     <!-- Floating Toast Notification Container -->
     <div id="posToastContainer"
-        style="position: fixed; top: 24px; right: 24px; z-index: 100001; display: flex; flex-direction: column; gap: 8px; pointer-events: none;">
-    </div>
+        style="position: fixed; top: 24px; right: 24px; z-index: 100001; display: flex; flex-direction: column; gap: 8px; pointer-events: none;"></div>
 
-    <!-- CUSTOM OVERLAY MODAL: Interactive Alert Popup -->
+    <!-- Privacy Blur Overlay for Midtrans -->
+    <div id="midtransBlurOverlay"></div>
+
+    <!-- CUSTOM OVERLAY MODAL: Alert Modal -->
     <div class="pos-modal-overlay" id="posAlertModal" style="z-index: 100000;">
         <div class="pos-modal-card" style="max-width: 360px; padding: 1.5rem 1.25rem; text-align: center;">
-            <div id="posAlertIconWrap" style="display: flex !important; justify-content: center !important; align-items: center !important; width: 100% !important; margin: 0 auto 0.75rem auto !important; text-align: center !important;"></div>
-            <h5 id="posAlertTitle" style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.4rem; text-align: center;">
-                Perhatian</h5>
-            <div id="posAlertMessage"
-                style="font-size: 0.83rem; color: #475569; line-height: 1.45; margin-bottom: 1.25rem; text-align: center;">-</div>
-            <button type="button" class="btn-submit-green"
-                style="width: 100%; margin: 0; padding: 0.65rem 1rem; font-size: 0.85rem; border-radius: 999px !important;"
-                onclick="closeModal('posAlertModal')">
-                Oke, Saya Mengerti
-            </button>
+            <div id="posAlertIconWrap" style="display:flex !important; justify-content:center !important; align-items:center !important; width:100% !important; margin:0 auto 0.75rem auto !important;"></div>
+            <h5 id="posAlertTitle" style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:0.4rem; text-align:center;">Perhatian</h5>
+            <div id="posAlertMessage" style="font-size:0.83rem; color:#475569; line-height:1.45; margin-bottom:1.25rem; text-align:center;">-</div>
+            <button type="button" class="btn-submit-green" style="width:100%; margin:0; padding:0.65rem 1rem; font-size:0.85rem; border-radius:999px !important;" onclick="closeModal('posAlertModal')">Oke, Saya Mengerti</button>
         </div>
     </div>
 
@@ -900,106 +916,77 @@
             </div>
             <div class="pos-modal-body">
                 <!-- Total Banner Hero -->
-                <div
-                    style="background: linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; padding:0.85rem 1.25rem; border-radius:14px; text-align:center; margin-bottom:1rem; box-shadow:0 4px 14px rgba(30,179,73,0.35);">
-                    <div
-                        style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; opacity:0.95;">
-                        Total Tagihan</div>
-                    <div style="font-size:1.6rem; font-weight:900; line-height:1.1; margin-top:2px;" id="modalPayTotal">Rp 0
-                    </div>
+                <div style="background: linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; padding:0.85rem 1.25rem; border-radius:14px; text-align:center; margin-bottom:1.25rem; box-shadow:0 4px 14px rgba(30,179,73,0.35);">
+                    <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; opacity:0.9;">Total Tagihan</div>
+                    <div style="font-size:1.75rem; font-weight:900; line-height:1.1; margin-top:3px; letter-spacing:-0.02em;" id="modalPayTotal">Rp 0</div>
                 </div>
 
-                <!-- Tunai / Cash Option -->
+                <!-- Opsi 1: Tunai (Cash) -->
                 <div class="pay-option-card selected" id="optCash" onclick="selectPaymentMethod('cash')">
                     <input type="radio" name="pay_method" value="cash" checked style="accent-color:#1eb349;">
-                    <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24">
-                        <rect x="2" y="6" width="20" height="12" rx="2" />
-                        <circle cx="12" cy="12" r="2" />
-                    </svg>
+                    <div style="width:38px; height:38px; border-radius:50%; background:#f0fdf4; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="2" y="6" width="20" height="12" rx="2" />
+                            <circle cx="12" cy="12" r="2" />
+                        </svg>
+                    </div>
                     <div style="flex:1;">
-                        <div style="font-size:0.85rem; font-weight:700; color:#0f172a; line-height:1.2;">Tunai (Cash)</div>
-                        <div style="font-size:0.72rem; color:#64748b;">Bayar langsung di tempat</div>
+                        <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Tunai (Cash)</div>
+                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Bayar & hitung kembalian langsung</div>
                     </div>
                 </div>
 
                 <!-- Cash Calculator Panel -->
-                <div id="cashCalcPanel"
-                    style="background:#f8fafc; border-radius:12px; border:1.5px solid #cbd5e1; padding:0.85rem; margin-bottom:0.6rem;">
-                    <label
-                        style="font-size:0.75rem; font-weight:700; color:#166534; display:block; margin-bottom:4px;">Nominal
-                        Uang Diterima</label>
-
+                <div id="cashCalcPanel" style="background:#f8fafc; border-radius:12px; border:1.5px solid #cbd5e1; padding:0.85rem; margin-bottom:0.75rem;">
+                    <label style="font-size:0.75rem; font-weight:700; color:#166534; display:block; margin-bottom:6px;">Nominal Uang Diterima</label>
                     <div style="position:relative; margin-bottom:0.5rem;">
-                        <span
-                            style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.9rem; color:#334155;">Rp</span>
+                        <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.9rem; color:#334155;">Rp.</span>
                         <input type="text" id="cashPaidDisplayInput" class="form-input"
-                            style="padding-left:36px; height:42px; font-size:1rem; font-weight:800; color:#0f172a; border-radius:10px;"
+                            style="padding-left:40px; height:44px; font-size:1.05rem; font-weight:800; color:#0f172a; border-radius:10px;"
                             placeholder="0" oninput="handleCashInput(this)">
                         <input type="hidden" id="cashPaidInput" value="0">
                     </div>
-
-                    <!-- Quick Cash Buttons -->
                     <div class="d-flex flex-wrap gap-1 mb-2">
                         <button type="button" class="btn-quick-cash" onclick="setQuickCash('exact')">Uang Pas</button>
-                        <button type="button" class="btn-quick-cash" onclick="setQuickCash(20000)">20.000</button>
-                        <button type="button" class="btn-quick-cash" onclick="setQuickCash(50000)">50.000</button>
-                        <button type="button" class="btn-quick-cash" onclick="setQuickCash(100000)">100.000</button>
+                        <button type="button" class="btn-quick-cash" onclick="setQuickCash(20000)">Rp. 20.000</button>
+                        <button type="button" class="btn-quick-cash" onclick="setQuickCash(50000)">Rp. 50.000</button>
+                        <button type="button" class="btn-quick-cash" onclick="setQuickCash(100000)">Rp. 100.000</button>
                     </div>
-
-                    <!-- Kembalian Card -->
-                    <div
-                        style="background:#ffffff; border:1px dashed #bbf7d0; border-radius:8px; padding:6px 12px; display:flex; align-items:center; justify-content:space-between;">
+                    <div style="background:#ffffff; border:1px dashed #bbf7d0; border-radius:8px; padding:7px 12px; display:flex; align-items:center; justify-content:space-between;">
                         <span style="font-size:0.78rem; font-weight:700; color:#475569;">Kembalian Kasir:</span>
-                        <strong style="font-size:1.05rem; font-weight:900; color:#1eb349;" id="cashChangeDisplay">Rp
-                            0</strong>
+                        <strong style="font-size:1.05rem; font-weight:900; color:#1eb349;" id="cashChangeDisplay">Rp. 0</strong>
                     </div>
                 </div>
 
-                <!-- Transfer Direct Option -->
-                <div class="pay-option-card" id="optTransfer" onclick="selectPaymentMethod('transfer')">
-                    <input type="radio" name="pay_method" value="transfer" style="accent-color:#1eb349;">
-                    <svg width="20" height="20" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M17 9V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
-                        <rect x="9" y="11" width="12" height="8" rx="2" />
-                    </svg>
-                    <div style="flex:1;">
-                        <div style="font-size:0.85rem; font-weight:700; color:#0f172a; line-height:1.2;">Transfer Bank
-                            Direct</div>
-                        <div style="font-size:0.72rem; color:#64748b;">Transfer langsung ke rekening toko</div>
+                <!-- Opsi 2: Cashless (Midtrans) -->
+                <div class="pay-option-card" id="optCashless" onclick="selectPaymentMethod('cashless')">
+                    <input type="radio" name="pay_method" value="cashless" style="accent-color:#7c3aed;">
+                    <div style="width:38px; height:38px; border-radius:50%; background:#f5f3ff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="20" height="20" fill="none" stroke="#7c3aed" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="7" height="7" />
+                            <rect x="14" y="3" width="7" height="7" />
+                            <rect x="14" y="14" width="7" height="7" />
+                            <rect x="3" y="14" width="7" height="7" />
+                        </svg>
                     </div>
-                </div>
-
-                <!-- QRIS Midtrans Option -->
-                <div class="pay-option-card" id="optQris" onclick="selectPaymentMethod('qris')">
-                    <input type="radio" name="pay_method" value="qris" style="accent-color:#1eb349;">
-                    <svg width="20" height="20" fill="none" stroke="#7c3aed" stroke-width="2" viewBox="0 0 24 24">
-                        <rect x="3" y="3" width="7" height="7" />
-                        <rect x="14" y="3" width="7" height="7" />
-                        <rect x="14" y="14" width="7" height="7" />
-                        <rect x="3" y="14" width="7" height="7" />
-                    </svg>
                     <div style="flex:1;">
-                        <div style="font-size:0.85rem; font-weight:700; color:#0f172a; line-height:1.2;">QRIS Dynamic</div>
-                        <div style="font-size:0.72rem; color:#64748b;">Scan QRIS otomatis terverifikasi</div>
+                        <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Cashless / Non-Tunai</div>
+                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">QRIS, GoPay, Transfer - pilih di popup Midtrans</div>
                     </div>
+                    <span style="font-size:0.65rem; font-weight:800; color:#7c3aed; background:#f5f3ff; border:1px solid #ddd6fe; border-radius:20px; padding:2px 8px; white-space:nowrap;">via Midtrans</span>
                 </div>
 
                 <!-- Optional E-Receipt Email Input -->
-                <div class="mt-2 mb-0">
-                    <label class="form-label mb-1" style="font-size:0.73rem; color:#64748b; font-weight:600;">Email Pembeli
-                        (Kirim E-Receipt Struk - Opsional)</label>
-                    <input type="email" id="posCustomerEmail" class="form-input" style="height:36px; font-size:0.78rem;"
-                        placeholder="contoh@gmail.com">
+                <div class="mt-3 mb-0">
+                    <label class="form-label mb-1" style="font-size:0.73rem; color:#64748b; font-weight:600;">Email Pembeli (E-Receipt - Opsional)</label>
+                    <input type="email" id="posCustomerEmail" class="form-input" style="height:36px; font-size:0.78rem;" placeholder="contoh@gmail.com">
                 </div>
             </div>
 
             <div class="pos-modal-foot">
-                <button type="button" class="btn-outline-bio"
-                    style="border-color:#e2e8f0; color:#64748b; font-weight:700; padding:0.6rem 1.1rem; font-size:0.82rem;"
-                    onclick="closeModal('posPaymentModal')">Batal</button>
-                <button type="button" class="btn-submit-green" id="btnSubmitOrder" onclick="processOrderCheckout()"
-                    style="flex:1; margin:0; padding:0.6rem 1.1rem; font-size:0.85rem;">
-                    Konfirmasi & Bayar
+                <button type="button" class="btn-outline-bio" style="border-color:#e2e8f0; color:#64748b; padding:0.6rem 1rem; font-size:0.8rem; flex-shrink:0; border-radius:999px !important;" onclick="closeModal('posPaymentModal')">Batal</button>
+                <button type="button" class="btn-submit-green" id="btnSubmitOrder" onclick="processOrderCheckout()" style="flex:1; margin:0; padding:0.6rem 1rem; font-size:0.82rem; white-space:nowrap; border-radius:999px !important;">
+                    Konfirmasi &amp; Bayar
                 </button>
             </div>
         </div>
@@ -1121,18 +1108,18 @@
                 </div>
             </div>
 
-            <div class="pos-modal-foot no-print">
-                <button type="button" class="btn-outline-bio" onclick="window.print()">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <div class="pos-modal-foot no-print" style="gap:0.5rem; padding: 0.85rem 1.25rem;">
+                <button type="button" class="btn-outline-bio" style="flex-shrink:0; padding:0.55rem 0.9rem; font-size:0.75rem; border-radius:999px !important; white-space:nowrap;" onclick="printPosReceipt()">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <polyline points="6 9 6 2 18 2 18 9" />
                         <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
                         <rect x="6" y="14" width="12" height="8" />
                     </svg>
-                    Cetak Thermal Struk
+                    Cetak Struk
                 </button>
-                <button type="button" class="btn-submit-green" style="width:auto;"
+                <button type="button" class="btn-submit-green" style="flex:1; margin:0; padding:0.55rem 0.9rem; font-size:0.78rem; border-radius:999px !important; white-space:nowrap;"
                     onclick="closeModal('posReceiptModal'); resetPOS();">
-                    Selesai & Transaksi Baru
+                    Selesai &amp; Baru
                 </button>
             </div>
         </div>
@@ -1504,7 +1491,7 @@
             return Math.max(0, subtotal - discountAmount + serviceFee + systemFees);
         }
 
-        // Select Payment Method
+        // Select Payment Method (cash | cashless)
         function selectPaymentMethod(method) {
             document.querySelectorAll('.pay-option-card').forEach(c => c.classList.remove('selected'));
             const rad = document.querySelector(`input[name="pay_method"][value="${method}"]`);
@@ -1514,11 +1501,7 @@
             if (card) card.classList.add('selected');
 
             const cashPanel = document.getElementById('cashCalcPanel');
-            if (method === 'cash') {
-                cashPanel.style.display = 'block';
-            } else {
-                cashPanel.style.display = 'none';
-            }
+            cashPanel.style.display = method === 'cash' ? 'block' : 'none';
         }
 
         // Live Cash Input Formatting with Dots (Rp X.XXX)
@@ -1564,11 +1547,13 @@
             const custPhone = document.getElementById('posCustomerPhone').value.trim();
             const custEmail = (document.getElementById('posCartCustomerEmail')?.value || document.getElementById('posCustomerEmail')?.value || '').trim();
 
-            const payMethod = document.querySelector('input[name="pay_method"]:checked').value;
+            const payMethodRaw = document.querySelector('input[name="pay_method"]:checked').value;
+            // Map UI choice: 'cashless' => 'qris' for backend
+            const payMethodBackend = payMethodRaw === 'cashless' ? 'qris' : payMethodRaw;
             const cashPaid = parseFloat(document.getElementById('cashPaidInput').value) || 0;
             const grandTotal = getGrandTotalVal();
 
-            if (payMethod === 'cash' && cashPaid < grandTotal) {
+            if (payMethodRaw === 'cash' && cashPaid < grandTotal) {
                 showPosAlert('Jumlah uang tunai yang diterima kurang dari total tagihan!', 'Nominal Uang Kurang', 'warning');
                 return;
             }
@@ -1587,7 +1572,7 @@
                 discount_type: discountType,
                 discount_val: parseFloat(document.getElementById('posDiscountInput').value) || 0,
                 service_fee: parseFloat(document.getElementById('posServiceFeeInput').value) || 0,
-                payment_method: payMethod,
+                payment_method: payMethodBackend,
                 cash_paid: cashPaid,
                 cash_change: Math.max(0, cashPaid - grandTotal)
             };
@@ -1608,18 +1593,24 @@
                     if (data.success) {
                         closeModal('posPaymentModal');
 
-                        if (payMethod === 'qris' && data.snap_token && typeof window.snap !== 'undefined') {
+                        if (payMethodRaw === 'cashless' && data.snap_token && typeof window.snap !== 'undefined') {
+                            // Show blur overlay for privacy behind Midtrans popup
+                            document.getElementById('midtransBlurOverlay').classList.add('active');
                             window.snap.pay(data.snap_token, {
                                 onSuccess: function (result) {
+                                    document.getElementById('midtransBlurOverlay').classList.remove('active');
                                     showReceiptModal(data.order);
                                 },
                                 onPending: function (result) {
+                                    document.getElementById('midtransBlurOverlay').classList.remove('active');
                                     showReceiptModal(data.order);
                                 },
                                 onError: function (result) {
-                                    showPosAlert('Pembayaran QRIS Gagal atau dibatalkan oleh pengguna.', 'Gagal Pembayaran QRIS', 'error');
+                                    document.getElementById('midtransBlurOverlay').classList.remove('active');
+                                    showPosAlert('Pembayaran gagal atau dibatalkan.', 'Gagal Pembayaran', 'error');
                                 },
                                 onClose: function () {
+                                    document.getElementById('midtransBlurOverlay').classList.remove('active');
                                     showReceiptModal(data.order);
                                 }
                             });
@@ -1655,21 +1646,23 @@
 
             const payMethodLabel = {
                 'cash': 'Tunai',
-                'transfer': 'Transfer Direct',
-                'qris': 'QRIS Midtrans'
+                'cashless': 'Cashless (Midtrans)',
+                'transfer': 'Cashless (Midtrans)',
+                'qris': 'Cashless (Midtrans)'
             }[addr.payment_method || 'cash'] || 'Tunai';
 
             document.getElementById('recPayMethod').innerText = payMethodLabel;
 
             let itemsHtml = '';
             (order.items || []).forEach(item => {
+                const itemQty = item.qty ?? item.quantity ?? 1;
                 itemsHtml += `
                     <tr>
                         <td class="text-start" style="font-weight:700;">
                             ${escapeHtml(item.product_name)}
                             <div style="font-size:10px; font-weight:normal; color:#444;">@ Rp ${formatRupiah(item.price)}</div>
                         </td>
-                        <td class="text-center" style="vertical-align:top;">${item.quantity}</td>
+                        <td class="text-center" style="vertical-align:top;">${itemQty}</td>
                         <td class="text-end" style="font-weight:700; vertical-align:top;">Rp ${formatRupiah(item.subtotal)}</td>
                     </tr>
                 `;
@@ -1775,6 +1768,42 @@
         function formatDate(dateStr) {
             const d = new Date(dateStr);
             return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function printPosReceipt() {
+            const receiptElement = document.getElementById('printablePosReceiptArea');
+            if (!receiptElement) return;
+            const content = receiptElement.innerHTML;
+            const printWin = window.open('', '_blank', 'width=400,height=600');
+            if (!printWin) {
+                showPosAlert('Pop-up terblokir oleh browser. Izinkan pop-up untuk mencetak struk.', 'Pop-up Terblokir', 'warning');
+                return;
+            }
+            printWin.document.write(`<!DOCTYPE html>
+<html>
+<head>
+    <title>Struk POS</title>
+    <style>
+        @page { size: 80mm auto; margin: 0; }
+        body { font-family: 'Courier New', monospace; font-size: 11px; color: #000; margin: 0; padding: 5mm; width: 70mm; background: #fff; }
+        table { width: 100%; border-collapse: collapse; }
+        .text-end { text-align: right; }
+        .text-center { text-align: center; }
+        .text-start { text-align: left; }
+        .no-print { display: none !important; }
+        img { display: none !important; }
+    </style>
+</head>
+<body>
+    ${content}
+</body>
+</html>`);
+            printWin.document.close();
+            printWin.focus();
+            setTimeout(() => {
+                printWin.print();
+                printWin.close();
+            }, 350);
         }
 
         function escapeHtml(str) {
