@@ -414,39 +414,92 @@
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Tanggal</th>
+                        <th>Tanggal & ID</th>
                         <th>Pembeli</th>
                         <th>Produk</th>
                         <th>Total</th>
-                        <th>UTM Source</th>
+                        <th>Status Pesanan</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($buyers as $order)
+                        @php
+                            $statusVal = is_object($order->status) ? $order->status->value : (string)$order->status;
+                            $statusLabel = is_object($order->status) && method_exists($order->status, 'label') ? $order->status->label() : ucfirst($statusVal);
+                            $statusBadgeStyle = match($statusVal) {
+                                'completed' => 'background:#dcfce7;color:#166534;border:1px solid #bbf7d0;',
+                                'shipped'   => 'background:#e0e7ff;color:#3730a3;border:1px solid #c7d2fe;',
+                                'processing' => 'background:#fef3c7;color:#92400e;border:1px solid #fde68a;',
+                                'cancelled'  => 'background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;',
+                                default      => 'background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;',
+                            };
+                            $shipment = $order->shipment;
+                            $addr = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
+                        @endphp
                         <tr>
-                            <td style="white-space:nowrap; color:#64748b; font-size:0.78rem;">{{ $order->created_at->format('d M Y') }}</td>
+                            <td style="white-space:nowrap; color:#64748b; font-size:0.75rem;">
+                                <div style="font-weight:700;color:#0f172a;">#{{ $order->order_number ?? ('ORD-' . $order->id) }}</div>
+                                <div>{{ $order->created_at->format('d M Y H:i') }}</div>
+                            </td>
                             <td class="td-user">
-                                <div class="name">{{ $order->user?->name ?? 'Guest' }}</div>
-                                <div class="email">{{ $order->user?->email ?? '' }}</div>
-                                <div class="phone">{{ $order->user?->phone ?? '' }}</div>
+                                <div class="name" style="font-weight:700; color:#0f172a;">{{ $addr['name'] ?? $order->user?->name ?? 'Pembeli' }}</div>
+                                @if(!empty($addr['phone']) || !empty($order->user?->phone))
+                                    <div class="phone" style="font-size:0.75rem;color:#1eb349;font-weight:600;">{{ $addr['phone'] ?? $order->user?->phone }}</div>
+                                @endif
+                                <div class="email" style="font-size:0.72rem;color:#94a3b8;">{{ $order->user?->email ?? '' }}</div>
                             </td>
                             <td>
                                 @foreach($order->items as $item)
-                                    <span class="badge">{{ Str::limit($item->product_name, 28) }}</span>
+                                    <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;">
+                                        <span class="badge" style="font-weight:600;">{{ Str::limit($item->product_name, 28) }}</span>
+                                        <span style="font-size:0.68rem;color:#64748b;">(x{{ $item->quantity }})</span>
+                                    </div>
                                 @endforeach
                             </td>
-                            <td style="font-weight:700; white-space:nowrap;">Rp {{ number_format($order->items->sum('subtotal'), 0, ',', '.') }}</td>
+                            <td style="font-weight:800; white-space:nowrap; color:#0f172a;">Rp {{ number_format($order->items->sum('subtotal'), 0, ',', '.') }}</td>
                             <td>
-                                @if(!empty($order->utm_source))
-                                    <span class="badge green">{{ $order->utm_source }}</span>
+                                <span id="badge-status-{{ $order->id }}" class="badge" style="{{ $statusBadgeStyle }} font-weight:700; padding:3px 8px; border-radius:6px; font-size:0.72rem;">
+                                    {{ $statusLabel }}
+                                </span>
+                                @if(!empty($shipment?->tracking_number))
+                                    <div id="resi-text-{{ $order->id }}" style="font-size:0.7rem; color:#2563eb; font-weight:700; margin-top:3px;">
+                                        <i class="fas fa-truck"></i> {{ $shipment->tracking_number }}
+                                    </div>
                                 @else
-                                    <span style="color:#cbd5e1; font-size:0.75rem;">—</span>
+                                    <div id="resi-text-{{ $order->id }}" style="font-size:0.68rem; color:#94a3b8; margin-top:2px;">Belum ada resi</div>
                                 @endif
+                            </td>
+                            <td>
+                                <button type="button" onclick="openOrderModal({{ json_encode([
+                                    'id' => $order->id,
+                                    'order_number' => $order->order_number ?? ('ORD-' . $order->id),
+                                    'date' => $order->created_at->format('d M Y H:i'),
+                                    'status' => $statusVal,
+                                    'status_label' => $statusLabel,
+                                    'user_name' => $addr['name'] ?? $order->user?->name ?? 'Pembeli',
+                                    'phone' => $addr['phone'] ?? $order->user?->phone ?? '',
+                                    'email' => $order->user?->email ?? '',
+                                    'shipping_address' => $addr,
+                                    'items' => $order->items->map(fn($i) => [
+                                        'name' => $i->product_name,
+                                        'quantity' => $i->quantity,
+                                        'price' => $i->price,
+                                        'subtotal' => $i->subtotal,
+                                    ])->values(),
+                                    'total' => $order->items->sum('subtotal'),
+                                    'courier_name' => $shipment?->courier_name ?? '',
+                                    'tracking_number' => $shipment?->tracking_number ?? '',
+                                    'update_url' => route('creator.sales.report.update_order', $order->id),
+                                ]) }})" class="btn-export" style="background:#0f172a; color:#fff; border:none; padding:0.4rem 0.75rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:3px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    Detail & Edit
+                                </button>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" style="text-align:center; padding: 2.5rem; color:#94a3b8; font-size:0.85rem;">
+                            <td colspan="6" style="text-align:center; padding: 2.5rem; color:#94a3b8; font-size:0.85rem;">
                                 Belum ada data pembeli di rentang waktu ini.
                             </td>
                         </tr>
@@ -596,8 +649,239 @@ const modal    = document.getElementById('customDateModal');
 const btnOpen  = document.getElementById('btnOpenCustomDate');
 const btnClose = document.getElementById('btnCloseModal');
 
-btnOpen.addEventListener('click', () => modal.classList.add('show'));
-btnClose.addEventListener('click', () => modal.classList.remove('show'));
-modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
+if (btnOpen && modal) {
+    btnOpen.addEventListener('click', () => modal.classList.add('show'));
+    btnClose.addEventListener('click', () => modal.classList.remove('show'));
+    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
+}
+
+// ── Order Detail & Edit Management Modal ────────────────────────────────
+let currentOrderData = null;
+
+function openOrderModal(data) {
+    currentOrderData = data;
+    document.getElementById('od_title').innerText = 'Detail Pesanan #' + data.order_number;
+    document.getElementById('od_date').innerText = 'Tanggal Transaksi: ' + data.date;
+    document.getElementById('od_user_name').innerText = data.user_name;
+    
+    let contactInfo = [];
+    if (data.phone) contactInfo.push('📱 ' + data.phone);
+    if (data.email) contactInfo.push('✉️ ' + data.email);
+    document.getElementById('od_user_contact').innerText = contactInfo.join('  •  ');
+
+    // WA Button link
+    const waBtn = document.getElementById('od_wa_btn');
+    if (data.phone) {
+        let cleanPhone = data.phone.replace(/[^0-9]/g, '');
+        if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.substring(1);
+        const waText = encodeURIComponent(`Halo ${data.user_name}, mengenai pesanan #${data.order_number} di buyle.id...`);
+        waBtn.href = `https://wa.me/${cleanPhone}?text=${waText}`;
+        waBtn.style.display = 'inline-flex';
+    } else {
+        waBtn.style.display = 'none';
+    }
+
+    // Shipping Address Box
+    const addrBox = document.getElementById('od_address_box');
+    const addrContent = document.getElementById('od_address_content');
+    const sa = data.shipping_address || {};
+    if (sa.address || sa.city || sa.province || sa.district) {
+        let lines = [];
+        if (sa.name) lines.push(`<strong>Penerima:</strong> ${sa.name} (${sa.phone || ''})`);
+        if (sa.address) lines.push(sa.address);
+        let locParts = [sa.district, sa.city, sa.province, sa.postal_code].filter(Boolean);
+        if (locParts.length) lines.push(locParts.join(', '));
+        if (sa.notes) lines.push(`<em>Catatan: ${sa.notes}</em>`);
+
+        addrContent.innerHTML = lines.join('<br>');
+        addrBox.style.display = 'block';
+    } else {
+        addrBox.style.display = 'none';
+    }
+
+    // Render Ordered Items
+    const itemsList = document.getElementById('od_items_list');
+    let itemsHtml = '';
+    (data.items || []).forEach(item => {
+        itemsHtml += `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0.85rem; border-bottom:1px solid #f1f5f9; font-size:0.82rem;">
+                <div>
+                    <strong style="color:#0f172a;">${item.name}</strong>
+                    <div style="font-size:0.72rem; color:#64748b;">Rp ${Number(item.price).toLocaleString('id-ID')} x ${item.quantity}</div>
+                </div>
+                <div style="font-weight:700; color:#0f172a;">Rp ${Number(item.subtotal).toLocaleString('id-ID')}</div>
+            </div>
+        `;
+    });
+    itemsList.innerHTML = itemsHtml;
+    document.getElementById('od_total_price').innerText = 'Rp ' + Number(data.total).toLocaleString('id-ID');
+
+    // Set Form values
+    document.getElementById('od_order_id').value = data.id;
+    document.getElementById('od_update_url').value = data.update_url;
+    document.getElementById('od_input_status').value = data.status || 'processing';
+    document.getElementById('od_input_courier').value = data.courier_name || '';
+    document.getElementById('od_input_resi').value = data.tracking_number || '';
+
+    document.getElementById('orderDetailModal').classList.add('show');
+}
+
+function closeOrderModal() {
+    document.getElementById('orderDetailModal').classList.remove('show');
+}
+
+function saveOrderData(e) {
+    e.preventDefault();
+    const btn = document.getElementById('od_btn_save');
+    const orderId = document.getElementById('od_order_id').value;
+    const url = document.getElementById('od_update_url').value;
+    const statusVal = document.getElementById('od_input_status').value;
+    const courierVal = document.getElementById('od_input_courier').value;
+    const resiVal = document.getElementById('od_input_resi').value;
+
+    btn.disabled = true;
+    btn.innerText = '⏳ Menyimpan...';
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            order_status: statusVal,
+            courier_name: courierVal,
+            tracking_number: resiVal
+        })
+    })
+    .then(res => res.json())
+    .then(res => {
+        btn.disabled = false;
+        btn.innerText = '💾 Simpan Perubahan Status & Resi';
+        if (res.success) {
+            // Update table row badges live
+            const badge = document.getElementById('badge-status-' + orderId);
+            const resiText = document.getElementById('resi-text-' + orderId);
+
+            if (badge) {
+                badge.innerText = res.status_label;
+                const bgStyles = {
+                    'completed': 'background:#dcfce7;color:#166534;border:1px solid #bbf7d0;',
+                    'shipped': 'background:#e0e7ff;color:#3730a3;border:1px solid #c7d2fe;',
+                    'processing': 'background:#fef3c7;color:#92400e;border:1px solid #fde68a;',
+                    'cancelled': 'background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;',
+                };
+                badge.style.cssText = (bgStyles[res.status] || 'background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;') + ' font-weight:700; padding:3px 8px; border-radius:6px; font-size:0.72rem;';
+            }
+
+            if (resiText) {
+                if (res.tracking_number) {
+                    resiText.innerHTML = `<i class="fas fa-truck"></i> ${res.tracking_number}`;
+                    resiText.style.color = '#2563eb';
+                    resiText.style.fontWeight = '700';
+                } else {
+                    resiText.innerText = 'Belum ada resi';
+                    resiText.style.color = '#94a3b8';
+                }
+            }
+
+            closeOrderModal();
+            alert('🎉 ' + res.message);
+        } else {
+            alert('❌ Gagal memperbarui: ' + (res.message || 'Terjadi kesalahan'));
+        }
+    })
+    .catch(err => {
+        btn.disabled = false;
+        btn.innerText = '💾 Simpan Perubahan Status & Resi';
+        alert('❌ Terjadi kesalahan jaringan!');
+    });
+}
 </script>
+
+<!-- Modal Order Detail & Manajemen Pesanan -->
+<div class="date-modal-overlay" id="orderDetailModal">
+    <div class="date-modal" style="width:580px; max-width:95vw; border-radius:24px; padding:1.75rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; border-bottom:1px solid #f1f5f9; padding-bottom:0.85rem;">
+            <div>
+                <h4 style="font-size:1.1rem; font-weight:800; color:#0f172a; margin:0;" id="od_title">Detail Pesanan</h4>
+                <div style="font-size:0.75rem; color:#64748b; margin-top:2px;" id="od_date"></div>
+            </div>
+            <button type="button" class="btn-cancel" onclick="closeOrderModal()" style="padding:0.35rem 0.75rem; border-radius:8px;">✕</button>
+        </div>
+
+        <div style="max-height:75vh; overflow-y:auto; padding-right:4px;">
+            <!-- Customer Info & WA Chat Button -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1rem; margin-bottom:1rem;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <div style="font-size:0.72rem; font-weight:800; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px;">Informasi Pembeli</div>
+                        <div style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-top:2px;" id="od_user_name"></div>
+                        <div style="font-size:0.8rem; color:#475569; margin-top:1px;" id="od_user_contact"></div>
+                    </div>
+                    <a id="od_wa_btn" href="#" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#25d366; color:#fff; padding:0.45rem 0.85rem; border-radius:10px; text-decoration:none; font-size:0.78rem; font-weight:700; box-shadow:0 2px 6px rgba(37,211,102,0.3);">
+                        <i class="fab fa-whatsapp" style="font-size:14px;"></i> Hubungi WA
+                    </a>
+                </div>
+            </div>
+
+            <!-- Shipping Address (if available) -->
+            <div id="od_address_box" style="display:none; background:#fff; border:1px dashed #cbd5e1; border-radius:14px; padding:1rem; margin-bottom:1rem;">
+                <div style="font-size:0.72rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">
+                    📍 Alamat Pengiriman
+                </div>
+                <div id="od_address_content" style="font-size:0.82rem; color:#1e293b; line-height:1.5;"></div>
+            </div>
+
+            <!-- Products List -->
+            <div style="margin-bottom:1.25rem;">
+                <div style="font-size:0.72rem; font-weight:800; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.5rem;">Produk Dipesan</div>
+                <div id="od_items_list" style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden;"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem 1rem; background:#f8fafc; border-top:1px solid #e2e8f0; font-weight:800; font-size:0.9rem; color:#0f172a;">
+                    <span>Total Pembayaran</span>
+                    <span id="od_total_price" style="color:#1eb349;"></span>
+                </div>
+            </div>
+
+            <!-- Form Edit Status & Resi -->
+            <form id="od_form" onsubmit="saveOrderData(event)">
+                <input type="hidden" id="od_order_id">
+                <input type="hidden" id="od_update_url">
+
+                <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.1rem; box-shadow:0 4px 14px rgba(0,0,0,0.03);">
+                    <div style="font-size:0.85rem; font-weight:800; color:#0f172a; margin-bottom:0.85rem; display:flex; align-items:center; gap:6px;">
+                        ✏️ Manajemen Status & Pengiriman
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:0.85rem;">
+                        <div>
+                            <label style="display:block; font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.3rem;">Status Pesanan</label>
+                            <select id="od_input_status" style="width:100%; padding:0.55rem 0.75rem; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; font-weight:600; outline:none; font-family:'Montserrat',sans-serif;">
+                                <option value="pending">Menunggu Pembayaran</option>
+                                <option value="processing">Diproses (Menyiapkan Barang)</option>
+                                <option value="shipped">Dikirim (Dalam Pengiriman)</option>
+                                <option value="completed">Selesai</option>
+                                <option value="cancelled">Dibatalkan</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.3rem;">Ekspedisi / Kurir</label>
+                            <input type="text" id="od_input_courier" placeholder="Misal: J&T, JNE, SiCepat, Express" style="width:100%; padding:0.55rem 0.75rem; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; outline:none; font-family:'Montserrat',sans-serif;">
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom:1rem;">
+                        <label style="display:block; font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.3rem;">Nomor Resi Pengiriman (AWB)</label>
+                        <input type="text" id="od_input_resi" placeholder="Masukkan No Resi... (contoh: JY1241520391)" style="width:100%; padding:0.6rem 0.8rem; border:1.5px solid #94a3b8; border-radius:10px; font-size:0.85rem; font-weight:700; color:#0f172a; outline:none; font-family:monospace;">
+                    </div>
+
+                    <button type="submit" id="od_btn_save" style="width:100%; padding:0.75rem; background:linear-gradient(135deg,#0f172a,#1e293b); color:#fff; border:none; border-radius:12px; font-size:0.85rem; font-weight:800; cursor:pointer; font-family:'Montserrat',sans-serif; transition:all 0.2s; box-shadow:0 4px 12px rgba(15,23,42,0.2);">
+                        💾 Simpan Perubahan Status & Resi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection

@@ -63,7 +63,10 @@ class SellerReportController extends Controller
         $allOrders = $this->paidOrdersBaseQuery($seller->id, $startDate, $endDate)
             ->with([
                 'user',
+                'payment',
+                'shipment',
                 'items' => fn($q) => $q->whereHas('product', fn($p) => $p->where('seller_id', $seller->id)),
+                'items.product',
             ])
             ->orderByDesc('created_at')
             ->get();
@@ -246,5 +249,67 @@ class SellerReportController extends Controller
 
         $html .= '</table>';
         return $html;
+    }
+
+    /**
+     * Update status pesanan dan nomor resi pengiriman oleh Creator.
+     */
+    public function updateOrder(Request $request, Order $order)
+    {
+        $seller = auth()->user();
+
+        // Pastikan order memiliki produk milik creator ini
+        $hasProduct = $order->items()->whereHas('product', fn($q) => $q->where('seller_id', $seller->id))->exists();
+        if (!$hasProduct && $seller->role !== 'admin') {
+            return response()->json(['success' => false, 'message' => 'Anda tidak memiliki akses ke pesanan ini.'], 403);
+        }
+
+        $request->validate([
+            'order_status'    => 'nullable|string|in:pending,processing,shipped,completed,cancelled',
+            'tracking_number' => 'nullable|string|max:100',
+            'courier_name'    => 'nullable|string|max:100',
+        ]);
+
+        if ($request->filled('order_status')) {
+            $order->status = $request->order_status;
+            $order->save();
+        }
+
+        if ($request->has('tracking_number') || $request->has('courier_name')) {
+            $shipment = $order->shipment ?: new \App\Models\Shipment(['order_id' => $order->id]);
+            if ($request->filled('tracking_number')) {
+                $shipment->tracking_number = trim($request->tracking_number);
+                $shipment->shipped_at = $shipment->shipped_at ?: now();
+            }
+            if ($request->filled('courier_name')) {
+                $shipment->courier_name = trim($request->courier_name);
+            }
+            if ($request->filled('order_status')) {
+                if ($request->order_status === 'shipped') {
+                    $shipment->status = \App\Enums\ShipmentStatus::InTransit;
+                } elseif ($request->order_status === 'completed') {
+                    $shipment->status = \App\Enums\ShipmentStatus::Delivered;
+                } elseif ($request->order_status === 'cancelled') {
+                    $shipment->status = \App\Enums\ShipmentStatus::Cancelled;
+                }
+            }
+            $shipment->save();
+        }
+
+        $statusStr = is_object($order->status) ? $order->status->value : (string)$order->status;
+        $statusLabel = is_object($order->status) && method_exists($order->status, 'label') ? $order->status->label() : ucfirst($statusStr);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success'         => true,
+                'message'         => 'Status pesanan & resi berhasil diperbarui!',
+                'status'          => $statusStr,
+                'status_label'    => $statusLabel,
+                'tracking_number' => $order->shipment?->tracking_number ?? '',
+                'courier_name'    => $order->shipment?->courier_name ?? '',
+            ]);
+        }
+
+        return back()->with('success', 'Status pesanan & resi berhasil diperbarui.');
     }
 }

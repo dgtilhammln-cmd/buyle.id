@@ -555,9 +555,10 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/payout-settings/bank', [\App\Http\Controllers\Creator\SellerPayoutController::class, 'updateBank'])->name('payout.bank.update');
     Route::post('/payout-request', [\App\Http\Controllers\Creator\SellerPayoutController::class, 'requestPayout'])->name('payout.request');
 
-    // Laporan Penjualan
+    // Laporan Penjualan & Manajemen Pesanan
     Route::get('/sales-report', [\App\Http\Controllers\Creator\SellerReportController::class, 'index'])->name('sales.report');
     Route::get('/sales-report/export', [\App\Http\Controllers\Creator\SellerReportController::class, 'export'])->name('sales.report.export');
+    Route::post('/sales-report/orders/{order}/update', [\App\Http\Controllers\Creator\SellerReportController::class, 'updateOrder'])->name('sales.report.update_order');
 
     // Realtime Stats API (AJAX polling for dashboard)
     Route::get('/stats/realtime', [\App\Http\Controllers\Creator\SellerController::class, 'realtimeStats'])->name('stats.realtime');
