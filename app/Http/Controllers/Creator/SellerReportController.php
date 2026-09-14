@@ -73,6 +73,10 @@ class SellerReportController extends Controller
 
         $totalOrders = $allOrders->count();
         $totalSales  = $allOrders->sum(fn($o) => $o->items->sum('subtotal'));
+        $salesByDate = $allOrders
+            ->groupBy(fn($o) => $o->created_at->format('Y-m-d'))
+            ->map(fn($group) => (float)$group->sum(fn($o) => $o->items->sum('subtotal')))
+            ->toArray();
 
         // ── 2. Visitor Stats ────────────────────────────────────────────────────
         // Guard: tabel product_visits mungkin belum ada di server lama
@@ -176,7 +180,7 @@ class SellerReportController extends Controller
         return view('creator.reports.index', compact(
             'filter', 'startDate', 'endDate',
             'totalSales', 'totalOrders', 'totalVisitors', 'uniqueVisitors',
-            'topProducts', 'utmSources', 'buyers', 'visitorsByDate',
+            'topProducts', 'utmSources', 'buyers', 'visitorsByDate', 'salesByDate',
             'totalBioClicks', 'topBioLinks', 'bioUtmSources'
         ));
     }

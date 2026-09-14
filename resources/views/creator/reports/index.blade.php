@@ -168,6 +168,19 @@
 .metric-card.dark .metric-value { color: #fff; }
 
 /* ── Traffic Wave Chart Card ─────────────────────────────── */
+/* ── Charts Grid (2 Cards) ─────────────────────────────────── */
+.charts-wave-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+@media (max-width: 900px) {
+    .charts-wave-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .wave-card {
     background: #fff;
     border-radius: 20px;
@@ -381,14 +394,28 @@
     </div>
 </div>
 
-{{-- ── Traffic Wave Chart ──────────────────────────────────────────── --}}
-<div class="wave-card">
-    <div class="wave-header">
-        <span class="wave-title">TRAFFIC WAVE</span>
-        <span class="wave-live-badge"><span class="wave-live-dot"></span> LIVE</span>
+{{-- ── 2 Wave Cards Grid: Visitors Wave & Sales Wave ──────────────── --}}
+<div class="charts-wave-grid">
+    {{-- Card Kiri: Grafik Wave Visitor --}}
+    <div class="wave-card" style="margin-bottom:0;">
+        <div class="wave-header">
+            <span class="wave-title">GRAFIK WAVE VISITOR</span>
+            <span class="wave-live-badge"><span class="wave-live-dot"></span> LIVE</span>
+        </div>
+        <div class="chart-wrap">
+            <canvas id="trafficChart"></canvas>
+        </div>
     </div>
-    <div class="chart-wrap">
-        <canvas id="trafficChart"></canvas>
+
+    {{-- Card Kanan: Grafik Wave Penjualan --}}
+    <div class="wave-card" style="margin-bottom:0;">
+        <div class="wave-header">
+            <span class="wave-title">GRAFIK WAVE PENJUALAN</span>
+            <span class="wave-live-badge" style="background:#e0e7ff; color:#3730a3;"><span class="wave-live-dot" style="background:#4338ca;"></span> RP</span>
+        </div>
+        <div class="chart-wrap">
+            <canvas id="salesChart"></canvas>
+        </div>
     </div>
 </div>
 
@@ -639,6 +666,72 @@
             scales: {
                 x: { grid: { display: false }, ticks: { font: { family: 'Montserrat', size: 11 }, color: '#94a3b8' } },
                 y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { family: 'Montserrat', size: 11 }, color: '#94a3b8', precision: 0 } }
+            }
+        }
+    });
+})();
+
+// ── Sales Wave Chart (Card Kanan) ────────────────────────────────────
+(function() {
+    const filter = @json($filter);
+    const days   = filter === '7' ? 7 : (filter === '90' ? 90 : 30);
+    const labels = [];
+    const now    = new Date();
+    for (let i = days - 1; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(d.getDate() - i);
+        labels.push(days <= 7
+            ? d.toLocaleDateString('id-ID', { weekday: 'short' })
+            : d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })
+        );
+    }
+    const rawSales = @json($salesByDate ?? []);
+    const data = labels.map((_, idx) => {
+        const d = new Date(now);
+        d.setDate(d.getDate() - (days - 1 - idx));
+        const key = d.toISOString().split('T')[0];
+        return rawSales[key] ?? 0;
+    });
+
+    const ctx = document.getElementById('salesChart');
+    if (!ctx) return;
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                data,
+                borderColor: '#2563eb',
+                backgroundColor: (context) => {
+                    const g = context.chart.ctx.createLinearGradient(0, 0, 0, 130);
+                    g.addColorStop(0, 'rgba(37,99,235,0.25)');
+                    g.addColorStop(1, 'rgba(37,99,235,0)');
+                    return g;
+                },
+                borderWidth: 2.5,
+                tension: 0.45,
+                fill: true,
+                pointRadius: days <= 7 ? 5 : 3,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#2563eb',
+                pointBorderWidth: 2,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => ` Rp ${Number(ctx.parsed.y).toLocaleString('id-ID')}`
+                    }
+                }
+            },
+            scales: {
+                x: { grid: { display: false }, ticks: { font: { family: 'Montserrat', size: 11 }, color: '#94a3b8' } },
+                y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { family: 'Montserrat', size: 11 }, color: '#94a3b8', precision: 0, callback: v => 'Rp ' + Number(v).toLocaleString('id-ID') } }
             }
         }
     });
