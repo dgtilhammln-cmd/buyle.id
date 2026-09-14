@@ -53,12 +53,21 @@ label:focus{outline:none !important;box-shadow:none !important;}
     .co-section-title{font-size:0.95rem;margin-bottom:0.85rem;}
     .form-group{margin-bottom:0.85rem;}
     .form-label{font-size:0.8rem;}
-    .form-input{font-size:0.95rem;padding:0.8rem 0.85rem;border-radius:8px;}
-    select.form-input{font-size:0.95rem;}
+    .form-input{font-size:1rem;padding:0.85rem 1rem;border-radius:10px;min-height:48px;}
+    select.form-input{font-size:1rem;}
+    textarea.form-input{min-height:80px;}
     .summary-item{gap:0.75rem;}
     .summary-img{width:48px;height:48px;}
     .summary-title{font-size:0.85rem;}
-    
+
+    /* Collapse 2-col grids to 1-col on mobile */
+    [style*="grid-template-columns:1fr 1fr"],
+    div[style*="grid-template-columns:1fr 1fr"]{
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0 !important;
+    }
+
     /* Hide floating chat widget on checkout page */
     .fc-widget { display: none !important; }
     .summary-meta,.summary-price{font-size:0.78rem;}
@@ -89,6 +98,9 @@ label:focus{outline:none !important;box-shadow:none !important;}
     }
     .secure-badge { display: none !important; }
     #courier_service_container label{padding:0.85rem !important;border-radius:8px !important;gap:0.75rem !important;}
+
+    /* Guest benefit card: stack on mobile */
+    .co-left > div[style*="max-width:180px"] { max-width: 100% !important; }
 }
 
 /* SweetAlert2 custom theme */
@@ -197,17 +209,17 @@ label:focus{outline:none !important;box-shadow:none !important;}
                 </div>
                 @else
                 {{-- LOGGED IN BUYER INFO --}}
-                <div class="co-section" style="margin-bottom:1.5rem; background:#F0FDF4; border:1.5px solid #BBF7D0;">
-                    <div class="co-section-title" style="color:#166534; margin-bottom:0.5rem;">
+                <div class="co-section" style="margin-bottom:1.5rem;">
+                    <div class="co-section-title">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                         Data Pembeli (Sudah Login)
                     </div>
-                    <div style="font-size:0.95rem; color:#15803D; font-weight:800;">
-                        {{ auth()->user()->name }} <span style="font-weight:500; color:#4B5563; font-size:0.85rem;">({{ auth()->user()->email }})</span>
+                    <div style="font-size:0.95rem; color:#0F172A; font-weight:800;">
+                        {{ auth()->user()->name }} <span style="font-weight:500; color:#64748B; font-size:0.85rem;">({{ auth()->user()->email }})</span>
                     </div>
-                    <div style="font-size:0.8rem; color:#166534; margin-top:0.35rem; display:flex; align-items:center; gap:0.4rem;">
+                    <div style="font-size:0.8rem; color:#64748B; margin-top:0.35rem; display:flex; align-items:center; gap:0.4rem;">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                        Akses produk digital akan dikirim ke email & otomatis tersimpan di Dashboard Akun kamu.
+                        Pesanan Anda akan diproses & tersimpan otomatis di Dashboard Akun Anda.
                     </div>
                 </div>
                 @endauth
@@ -384,41 +396,37 @@ label:focus{outline:none !important;box-shadow:none !important;}
                     </div>
                 </div>
 
-                @elseif($summary['checkout_type'] === 'food_service')
-                {{-- B. FORM MULTIFUNGSI F&B (RESTO, CAFE, KULINER & JASA) --}}
-                <div class="co-section" style="margin-bottom:1.5rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:1.25rem;">
-                    <div class="co-section-title" style="color:#0F172A; display:flex; align-items:center; gap:0.5rem; font-weight:700;">
-                        <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                        Pilihan Layanan & Pengantaran (FnB / Resto / Jasa)
+                @else
+                {{-- B. FORM MULTIFUNGSI F&B (RESTO, CAFE, KULINER & JASA) & DIGITAL --}}
+                <div class="co-section" style="margin-bottom:1.5rem;">
+                    <div class="co-section-title">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        Pilihan Layanan & Pengantaran
                     </div>
                     <div style="font-size:0.82rem; color:#64748B; margin-bottom:1.25rem; line-height:1.45;">
-                        Pilih jenis layanan pesanan Anda (Makan di tempat / Delivery / Takeaway):
+                        Pilih jenis layanan pesanan Anda:
                     </div>
 
-                    {{-- Dropdown Pilih Tipe Layanan FnB --}}
-                    <div class="form-group mb-3">
+                    <div class="form-group">
                         <label class="form-label" style="font-weight:700; color:#0F172A;">Opsi Pesanan / Pengantaran <span style="color:#EF4444;">*</span></label>
-                        <select name="fnb_service_type" id="fnb_service_type_select" class="form-input" onchange="toggleFnbFields(this.value)" style="font-weight:600; color:#0F172A; font-size:0.92rem;" required>
-                            <option value="dine_in">🍽️ Makan di Tempat (Dine-In / Antar ke Meja)</option>
-                            <option value="delivery" selected>🛵 Delivery / Antar ke Alamat (Rumah / Kantor)</option>
-                            <option value="takeaway">🛍️ Takeaway / Ambil Sendiri di Toko</option>
+                        <select name="fnb_service_type" id="fnb_service_type_select" class="form-input" onchange="toggleFnbFields(this.value)" required>
+                            <option value="dine_in">Makan di Tempat (Dine-In / Antar ke Meja)</option>
+                            <option value="delivery" selected>Delivery / Antar ke Alamat</option>
+                            <option value="takeaway">Takeaway / Ambil Sendiri di Toko</option>
                         </select>
                     </div>
 
-                    {{-- Field Dynamic 1: Dine In (Nomor Meja) --}}
-                    <div id="fnb_field_dine_in" style="display:none; margin-top:1rem;" class="form-group mb-0">
+                    <div id="fnb_field_dine_in" style="display:none;" class="form-group mb-0">
                         <label class="form-label" style="font-weight:700;">Nomor Meja / Area Duduk <span style="color:#EF4444;">*</span></label>
                         <input type="text" name="fnb_table_number" id="fnb_table_number_input" class="form-input" placeholder="Contoh: Meja No. 05 / Area Outdoor lantai 2">
                     </div>
 
-                    {{-- Field Dynamic 2: Delivery Alamat (Antar Alamat) --}}
-                    <div id="fnb_field_delivery" style="margin-top:1rem;" class="form-group mb-0">
+                    <div id="fnb_field_delivery" class="form-group mb-0">
                         <label class="form-label" style="font-weight:700;">Alamat Pengantaran Lengkap & Patokan <span style="color:#EF4444;">*</span></label>
                         <textarea name="new_address_full" id="fnb_delivery_address_input" class="form-input" rows="3" placeholder="Contoh: Jl. Raya Kebon Jeruk No. 12 (Seberang Indomaret, pagar hitam, rumah cat hijau)..."></textarea>
                     </div>
 
-                    {{-- Field Dynamic 3: Takeaway (Waktu Pengambilan) --}}
-                    <div id="fnb_field_takeaway" style="display:none; margin-top:1rem;" class="form-group mb-0">
+                    <div id="fnb_field_takeaway" style="display:none;" class="form-group mb-0">
                         <label class="form-label" style="font-weight:700;">Estimasi Jam Pengambilan / Pick-Up</label>
                         <input type="text" name="fnb_pickup_time" id="fnb_pickup_time_input" class="form-input" placeholder="Contoh: Diambil jam 13:30 WIB / Ditinggal di meja kasir">
                     </div>

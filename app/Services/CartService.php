@@ -182,7 +182,8 @@ class CartService
 
             if ($item->product) {
                 $p = $item->product;
-                $pType   = strtolower($p->product_type ?? $p->type ?? 'external_link');
+                $pName   = strtolower($p->name ?? '');
+                $pType   = strtolower($p->product_type ?? $p->type ?? '');
                 $catName = strtolower($p->category->name ?? '');
 
                 // Check block category if product belongs to bio block
@@ -191,18 +192,24 @@ class CartService
                     $blockCat = strtolower($p->bioBlock->data_json['category'] ?? '');
                 }
 
-                // IMAGE 1: Tipe Produk -> "Produk Digital / Link Access" (external_link) & "Tiket Event / Wisata / Webinar" (ticket)
-                $isDigitalFromImage1 = in_array($pType, ['external_link', 'ticket', 'digital', 'download', 'course', 'ebook', 'virtual', 'file', 'link']) 
-                                       && $blockCat !== 'barang' 
-                                       && $pType !== 'physical' 
-                                       && $catName !== 'barang';
+                // FnB & Service keywords in product name or category
+                $foodKeywords = ['nasi', 'mie', 'ayam', 'bebek', 'daging', 'ikan', 'es', 'kopi', 'makanan', 'minuman', 'kuliner', 'food', 'drink', 'resto', 'cafe', 'menu', 'paket', 'porsi', 'jus', 'teh', 'bakso', 'soto', 'gudeg', 'sate', 'bento', 'snack', 'kue', 'roti', 'donut', 'pizza', 'burger', 'seafood', 'dimsum', 'coffe', 'tea', 'boba', 'manja', 'jasa', 'service', 'layanan', 'booking', 'cuci', 'repair', 'cleaning', 'spa', 'barber', 'potong'];
+                $isFoodName = false;
+                foreach ($foodKeywords as $kw) {
+                    if (str_contains($pName, $kw)) {
+                        $isFoodName = true;
+                        break;
+                    }
+                }
 
                 // IMAGE 2: Kategori Produk -> "Makanan / Minuman / Kuliner" (makanan) & "Jasa / Layanan / Service" (jasa/service)
-                $isFoodOrServiceFromImage2 = ($blockCat === 'makanan' 
+                $isFoodOrServiceFromImage2 = ($isFoodName 
+                                              || $blockCat === 'makanan' 
                                               || $blockCat === 'jasa' 
                                               || $pType === 'service' 
                                               || $pType === 'makanan' 
-                                              || in_array($catName, ['makanan', 'jasa', 'food', 'culinary', 'service', 'layanan', 'booking & jasa layanan online', 'booking']));
+                                              || $pType === 'fnb'
+                                              || in_array($catName, ['makanan', 'jasa', 'food', 'culinary', 'service', 'layanan', 'booking & jasa layanan online', 'booking', 'kuliner', 'resto', 'fnb']));
 
                 // IMAGE 2: Kategori Produk -> "Barang / Produk Fisik" (barang)
                 $isGoodsFromImage2 = ($blockCat === 'barang' 
@@ -210,16 +217,16 @@ class CartService
                                       || $pType === 'barang' 
                                       || in_array($catName, ['barang', 'produk fisik', 'umkm', 'peralatan dapur', 'kebersihan', 'kamar tidur', 'kamar mandi', 'elektronik', 'taman & outdoor', 'perkakas', 'laundry', 'penyimpanan', 'pengiriman kilat']));
 
+                // IMAGE 1: Tipe Produk -> "Produk Digital / Link Access" (digital)
+                $isDigitalFromImage1 = in_array($pType, ['digital', 'download', 'course', 'ebook', 'virtual', 'file']) 
+                                       || (!empty($p->digital_resource) && !$isFoodOrServiceFromImage2 && !$isGoodsFromImage2);
+
                 // Classification:
-                if ($isDigitalFromImage1 && !$isGoodsFromImage2 && !$isFoodOrServiceFromImage2) {
-                    // Produk Digital (Image 1) -> Form Simpel Data Pembeli (Nama, Email, WA)
-                } elseif ($isFoodOrServiceFromImage2 && !$isGoodsFromImage2) {
-                    // Produk Makanan / Jasa (Image 2) -> Form Simpel Alamat / Patokan tanpa kurir ekspedisi
-                    $hasFoodOrService = true;
-                    $hasDigitalOnly   = false;
-                } else {
-                    // Produk Barang / Produk Fisik (Image 2) -> Form Pengiriman Lengkap (Alamat, GPS, Kurir JNE/J&T, Ongkir)
+                if ($isGoodsFromImage2) {
                     $hasGoodsShipping = true;
+                    $hasDigitalOnly   = false;
+                } elseif ($isFoodOrServiceFromImage2 || !$isDigitalFromImage1) {
+                    $hasFoodOrService = true;
                     $hasDigitalOnly   = false;
                 }
             }
