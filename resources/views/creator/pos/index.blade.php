@@ -1,28 +1,109 @@
 @extends('creator.layout')
 
 @section('title', 'Kasir Digital (POS)')
+@section('page_title', 'Kasir Digital (POS)')
+@section('page_subtitle', 'Kasir digital cepat & praktis. Auto-sync menu Makanan dari Link in Bio toko Anda.')
 
-@section('content')
-@php
-    $midtransClientKey = \App\Models\Setting::get('midtrans_client_key', config('services.midtrans.client_key'));
-    $midtransIsProd   = (bool) \App\Models\Setting::get('midtrans_is_production', config('services.midtrans.is_production', false));
-    $snapUrl           = $midtransIsProd ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js';
-    $siteLogo          = \App\Models\Setting::get('logo');
-    $siteLogoUrl       = $siteLogo ? url('storage/' . $siteLogo) : null;
-    $storeName         = $profile->store_name ?? auth()->user()->name ?? 'Toko Saya';
-@endphp
-
-{{-- Midtrans Snap JS --}}
-@if($midtransClientKey)
-    <script src="{{ $snapUrl }}" data-client-key="{{ $midtransClientKey }}"></script>
-@endif
-
+@section('styles')
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-    /* POS Container Layout */
+    * { font-family: 'Montserrat', sans-serif; }
+
+    /* ── Card Styling (Sama dengan Profil & Store) ───────────────────── */
+    .prof-card {
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        overflow: hidden;
+        margin-bottom: 1.25rem;
+    }
+    .prof-card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #f1f5f9;
+        background: #fafbfa;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+    .prof-card-head svg { color: #1eb349; }
+    .prof-card-body { padding: 1.5rem; }
+
+    /* ── Form Inputs ──────────────────────────────────────────────────── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    .form-label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #475569;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .form-input {
+        height: 42px;
+        padding: 0 0.9rem;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: #0f172a;
+        background: #f8fafc;
+        outline: none;
+        transition: all 0.2s;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .form-input:focus {
+        border-color: #1eb349;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.1);
+    }
+
+    /* ── Primary Action Buttons ───────────────────────────────────────── */
+    .btn-submit-green {
+        background: linear-gradient(135deg, #1eb349, #16963c);
+        border-radius: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        color: #ffffff;
+        font-size: 0.88rem;
+        padding: 0.75rem 1.4rem;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.25);
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+    }
+    .btn-submit-green:hover {
+        background: linear-gradient(135deg, #16963c, #0f762e);
+        box-shadow: 0 6px 16px rgba(30, 179, 73, 0.35);
+        transform: translateY(-1px);
+    }
+    .btn-submit-green:disabled {
+        background: #cbd5e1;
+        box-shadow: none;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* ── POS Layout ───────────────────────────────────────────────────── */
     .pos-wrapper {
         display: grid;
-        grid-template-columns: 1fr 400px;
-        gap: 20px;
+        grid-template-columns: 1fr 380px;
+        gap: 1.25rem;
         align-items: start;
     }
     @media (max-width: 991px) {
@@ -31,35 +112,39 @@
         }
     }
 
-    /* Card Panels */
-    .pos-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 14px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-        padding: 20px;
-        margin-bottom: 20px;
+    /* ── Search Bar ──────────────────────────────────────────────────── */
+    .search-input-wrap {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+    .search-input-wrap svg {
+        position: absolute;
+        left: 12px;
+        top: 13px;
+        color: #94a3b8;
+    }
+    .search-input-wrap input {
+        padding-left: 38px;
     }
 
-    /* Product Grid */
+    /* ── Product Grid ────────────────────────────────────────────────── */
     .product-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 14px;
-        margin-top: 16px;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
     }
     @media (max-width: 576px) {
         .product-grid {
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 0.75rem;
         }
     }
 
     .product-card {
         background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 10px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 0.75rem;
         cursor: pointer;
         transition: all 0.2s ease;
         position: relative;
@@ -69,19 +154,20 @@
     }
     .product-card:hover {
         border-color: #1eb349;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(30, 179, 73, 0.12);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(30, 179, 73, 0.12);
     }
     .product-card:active {
         transform: scale(0.98);
     }
+
     .product-img-wrapper {
         width: 100%;
-        height: 110px;
-        border-radius: 8px;
+        height: 115px;
+        border-radius: 10px;
         overflow: hidden;
         background: #f8fafc;
-        margin-bottom: 8px;
+        margin-bottom: 0.6rem;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -92,11 +178,11 @@
         object-fit: cover;
     }
     .product-name {
-        font-size: 0.88rem;
+        font-size: 0.84rem;
         font-weight: 700;
         color: #0f172a;
-        line-height: 1.25;
-        margin-bottom: 4px;
+        line-height: 1.3;
+        margin-bottom: 0.35rem;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -110,58 +196,55 @@
     }
     .product-qty-badge {
         position: absolute;
-        top: 6px;
-        right: 6px;
-        background: #1eb349;
+        top: 10px;
+        right: 10px;
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
         color: #ffffff;
         font-size: 0.72rem;
         font-weight: 800;
-        padding: 2px 8px;
+        padding: 3px 10px;
         border-radius: 20px;
-        box-shadow: 0 2px 6px rgba(30, 179, 73, 0.3);
+        box-shadow: 0 3px 8px rgba(30, 179, 73, 0.3);
     }
 
-    /* Cart Right Sidebar */
-    .cart-panel {
-        position: sticky;
-        top: 80px;
-    }
+    /* ── Cart Items List ─────────────────────────────────────────────── */
     .cart-items-container {
-        max-height: 280px;
+        max-height: 260px;
         overflow-y: auto;
         padding-right: 4px;
-        margin-bottom: 16px;
+        margin-bottom: 1rem;
     }
     .cart-item-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 10px 0;
+        padding: 0.75rem 0;
         border-bottom: 1px dashed #e2e8f0;
     }
     .cart-item-info {
         flex: 1;
-        padding-right: 8px;
+        padding-right: 0.5rem;
     }
     .cart-item-title {
         font-weight: 700;
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         color: #0f172a;
-        line-height: 1.2;
+        line-height: 1.25;
     }
     .cart-item-unit-price {
-        font-size: 0.75rem;
+        font-size: 0.73rem;
         color: #64748b;
+        margin-top: 2px;
     }
     .cart-qty-ctrl {
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 0.35rem;
     }
     .btn-qty {
         width: 28px;
         height: 28px;
-        border-radius: 6px;
+        border-radius: 8px;
         border: 1px solid #cbd5e1;
         background: #f8fafc;
         color: #0f172a;
@@ -179,87 +262,80 @@
     }
     .qty-num {
         font-weight: 700;
-        font-size: 0.85rem;
+        font-size: 0.84rem;
         min-width: 20px;
         text-align: center;
     }
 
-    /* Summary Breakdown */
+    /* ── Summary & Calculator ────────────────────────────────────────── */
+    .summary-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
     .summary-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 8px;
-        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.82rem;
         color: #475569;
     }
     .summary-total {
-        font-size: 1.15rem;
+        font-size: 1.1rem;
         font-weight: 800;
         color: #0f172a;
-        border-top: 2px solid #e2e8f0;
-        padding-top: 10px;
-        margin-top: 10px;
+        border-top: 2px dashed #cbd5e1;
+        padding-top: 0.75rem;
+        margin-top: 0.75rem;
     }
 
-    /* Custom Form Inputs */
-    .pos-input {
-        width: 100%;
-        padding: 9px 12px;
+    /* ── Discount Type Toggle ────────────────────────────────────────── */
+    .disc-toggle {
+        display: flex;
         border: 1px solid #cbd5e1;
-        border-radius: 8px;
-        font-size: 0.85rem;
-        outline: none;
-        transition: border-color 0.2s;
+        border-radius: 6px;
+        overflow: hidden;
     }
-    .pos-input:focus {
-        border-color: #1eb349;
-        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.12);
-    }
-
-    /* Buttons */
-    .btn-pos-primary {
-        width: 100%;
-        padding: 13px;
-        background: #1eb349;
-        color: #ffffff;
+    .disc-btn {
+        padding: 2px 8px;
+        font-size: 0.7rem;
+        font-weight: 700;
         border: none;
-        border-radius: 10px;
-        font-weight: 800;
-        font-size: 0.95rem;
+        background: #fff;
+        color: #64748b;
         cursor: pointer;
-        transition: background 0.2s, transform 0.1s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
     }
-    .btn-pos-primary:hover {
-        background: #16963c;
-    }
-    .btn-pos-primary:disabled {
-        background: #94a3b8;
-        cursor: not-allowed;
+    .disc-btn.active {
+        background: #1eb349;
+        color: #fff;
     }
 
-    /* Radio Payment Selector */
+    /* ── Payment Options Radio Cards ─────────────────────────────────── */
     .pay-option-card {
-        border: 1.5px solid #cbd5e1;
-        border-radius: 10px;
-        padding: 12px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 0.85rem 1rem;
         cursor: pointer;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 0.75rem;
         transition: all 0.2s;
-        margin-bottom: 8px;
+        margin-bottom: 0.6rem;
+        background: #fff;
+    }
+    .pay-option-card:hover {
+        border-color: #1eb349;
     }
     .pay-option-card.selected {
         border-color: #1eb349;
         background: #f0fdf4;
+        box-shadow: 0 0 0 1px #1eb349;
     }
 
-    /* Mobile Sticky Bar */
+    /* ── Mobile Sticky Bottom Bar ────────────────────────────────────── */
     .mobile-cart-bar {
         display: none;
         position: fixed;
@@ -268,11 +344,12 @@
         right: 0;
         background: #0f172a;
         color: #ffffff;
-        padding: 12px 16px;
-        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
+        padding: 0.85rem 1.25rem;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
         z-index: 99;
         align-items: center;
         justify-content: space-between;
+        border-radius: 16px 16px 0 0;
     }
     @media (max-width: 991px) {
         .mobile-cart-bar {
@@ -280,14 +357,10 @@
         }
     }
 
-    /* Thermal Receipt Print Styles */
+    /* ── Print Thermal Receipts ──────────────────────────────────────── */
     @media print {
-        body * {
-            visibility: hidden !important;
-        }
-        #posReceiptModalContent, #posReceiptModalContent * {
-            visibility: visible !important;
-        }
+        body * { visibility: hidden !important; }
+        #posReceiptModalContent, #posReceiptModalContent * { visibility: visible !important; }
         #posReceiptModalContent {
             position: absolute !important;
             left: 0 !important;
@@ -299,67 +372,66 @@
             box-shadow: none !important;
             border: none !important;
         }
-        .no-print {
-            display: none !important;
-        }
+        .no-print { display: none !important; }
     }
 </style>
+@endsection
 
-<div class="container-fluid px-0">
-    <!-- Header Title Banner -->
-    <div class="pos-card mb-4" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff;">
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-            <div>
-                <div class="d-flex align-items-center gap-2 mb-1">
-                    <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
+@section('content')
+@php
+    $midtransClientKey = \App\Models\Setting::get('midtrans_client_key', config('services.midtrans.client_key'));
+    $midtransIsProd   = (bool) \App\Models\Setting::get('midtrans_is_production', config('services.midtrans.is_production', false));
+    $snapUrl           = $midtransIsProd ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js';
+    $siteLogo          = \App\Models\Setting::get('logo');
+    $siteLogoUrl       = $siteLogo ? url('storage/' . $siteLogo) : null;
+    $storeName         = $profile->store_name ?? auth()->user()->name ?? 'Toko Saya';
+@endphp
+
+{{-- Midtrans Snap JS --}}
+@if($midtransClientKey)
+    <script src="{{ $snapUrl }}" data-client-key="{{ $midtransClientKey }}"></script>
+@endif
+
+<!-- Top Bar Action Row -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div style="font-size:0.85rem; color:#64748b; font-weight:500;">
+        Toko: <strong style="color:#0f172a;">{{ $storeName }}</strong> &bull; Sync dari Link in Bio (Makanan)
+    </div>
+    <button type="button" class="btn btn-sm btn-outline-secondary font-weight-bold d-flex align-items-center gap-1" style="border-radius:8px; font-size:0.78rem;" onclick="openHistoryModal()">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Riwayat Transaksi Hari Ini
+    </button>
+</div>
+
+<!-- POS Main Grid Wrapper -->
+<div class="pos-wrapper">
+    <!-- LEFT COLUMN: Product Search & Food Menu Grid -->
+    <div>
+        <div class="prof-card">
+            <div class="prof-card-head">
+                <div class="d-flex align-items-center gap-2">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <rect x="4" y="3" width="16" height="18" rx="2"/>
                         <line x1="8" y1="7" x2="16" y2="7"/>
                         <line x1="8" y1="11" x2="10" y2="11"/>
-                        <line x1="14" y1="11" x2="16" y2="11"/>
-                        <line x1="8" y1="15" x2="10" y2="15"/>
-                        <line x1="14" y1="15" x2="16" y2="15"/>
                     </svg>
-                    <h4 class="m-0 font-weight-bold" style="letter-spacing: -0.02em; color: #ffffff;">
-                        Kasir Digital (POS)
-                    </h4>
+                    PILIH MENU MAKANAN
                 </div>
-                <div class="text-muted" style="font-size: 0.82rem; color: #94a3b8 !important;">
-                    Toko: <strong>{{ $storeName }}</strong> &bull; Auto-sync menu Makanan dari Link in Bio
-                </div>
+                <span class="badge" style="background:#ecfdf5; color:#059669; font-weight:700; padding:4px 10px; border-radius:6px; font-size:0.72rem;">
+                    {{ count($products) }} Menu Tersedia
+                </span>
             </div>
 
-            <div class="d-flex align-items-center gap-2">
-                <button class="btn btn-sm btn-outline-light d-flex align-items-center gap-1" onclick="openHistoryModal()">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    Riwayat Transaksi Hari Ini
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- POS Main Grid Wrapper -->
-    <div class="pos-wrapper">
-        <!-- LEFT COLUMN: Product Search + Menu Grid -->
-        <div>
-            <!-- Search Bar & Filters -->
-            <div class="pos-card">
-                <div class="row g-2 align-items-center">
-                    <div class="col-md-7">
-                        <div class="position-relative">
-                            <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24" style="position:absolute;left:12px;top:11px;">
-                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                            </svg>
-                            <input type="text" id="posProductSearch" class="pos-input" style="padding-left: 36px;" placeholder="Cari nama produk / menu makanan..." oninput="filterProducts()">
-                        </div>
-                    </div>
-                    <div class="col-md-5 text-end">
-                        <span class="badge" style="background:#ecfdf5; color:#059669; font-weight:700; padding:6px 12px; border-radius:6px; font-size:0.78rem;">
-                            {{ count($products) }} Menu Makanan Tersedia
-                        </span>
-                    </div>
+            <div class="prof-card-body">
+                <!-- Search Input Bar -->
+                <div class="search-input-wrap">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input type="text" id="posProductSearch" class="form-input" placeholder="Cari nama produk / menu makanan..." oninput="filterProducts()">
                 </div>
 
-                <!-- Products Grid -->
+                <!-- Products Cards Grid -->
                 <div class="product-grid" id="productGridContainer">
                     @forelse($products as $prod)
                         @php
@@ -380,53 +452,63 @@
                             <div class="product-price">Rp {{ number_format($prodPrice, 0, ',', '.') }}</div>
                         </div>
                     @empty
-                        <div class="col-12 text-center py-5 text-muted">
+                        <div class="col-12 text-center py-5 text-muted" style="font-size:0.85rem;">
                             Belum ada produk kategori makanan yang aktif di Link in Bio Anda.
                         </div>
                     @endforelse
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- RIGHT COLUMN: Order Cart & Calculator -->
-        <div class="cart-panel" id="cartPanel">
-            <div class="pos-card">
-                <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-                    <h5 class="m-0 font-weight-bold" style="color: #0f172a;">Keranjang POS</h5>
-                    <button class="btn btn-sm text-danger p-0 font-weight-bold" onclick="clearCart()" style="font-size:0.8rem;">
-                        Kosongkan
-                    </button>
+    <!-- RIGHT COLUMN: Order Cart & Calculator -->
+    <div id="cartPanel">
+        <div class="prof-card">
+            <div class="prof-card-head">
+                <div class="d-flex align-items-center gap-2">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    KERANJANG TRANSAKSI
                 </div>
+                <button type="button" class="btn btn-sm text-danger p-0 font-weight-bold" onclick="clearCart()" style="font-size:0.75rem; border:none; background:none;">
+                    Kosongkan
+                </button>
+            </div>
 
+            <div class="prof-card-body">
                 <!-- Form Atas Nama Pelanggan (Mandatory) -->
-                <div class="mb-3">
-                    <label class="form-label font-weight-bold mb-1" style="font-size: 0.8rem; color: #334155;">
+                <div class="form-group">
+                    <label class="form-label">
                         Atas Nama Pelanggan <span class="text-danger">*</span>
                     </label>
-                    <input type="text" id="posCustomerName" class="pos-input" placeholder="Masukkan nama pelanggan" required>
+                    <input type="text" id="posCustomerName" class="form-input" placeholder="Masukkan nama pelanggan" required>
                 </div>
 
-                <!-- Optional Meja & Contacts -->
-                <div class="row g-2 mb-3">
-                    <div class="col-6">
-                        <label class="form-label mb-1" style="font-size: 0.75rem; color: #64748b;">No. Meja / Antrean</label>
-                        <input type="text" id="posTableNumber" class="pos-input" placeholder="Contoh: Meja 04">
+                <!-- Form Grid: Meja & Phone -->
+                <div class="form-grid">
+                    <div class="form-group mb-0">
+                        <label class="form-label">No. Meja / Antrean</label>
+                        <input type="text" id="posTableNumber" class="form-input" placeholder="Meja 04">
                     </div>
-                    <div class="col-6">
-                        <label class="form-label mb-1" style="font-size: 0.75rem; color: #64748b;">No. HP Pelanggan</label>
-                        <input type="text" id="posCustomerPhone" class="pos-input" placeholder="08xxx (Opsional)">
+                    <div class="form-group mb-0">
+                        <label class="form-label">No. HP Pelanggan</label>
+                        <input type="text" id="posCustomerPhone" class="form-input" placeholder="08xxx (Opsional)">
                     </div>
                 </div>
 
-                <!-- Cart Items List -->
+                <hr style="border-top:1px dashed #e2e8f0; margin: 1rem 0;">
+
+                <!-- Cart Items Container -->
                 <div class="cart-items-container" id="cartItemsContainer">
-                    <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.85rem;">
+                    <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.82rem;">
                         Keranjang masih kosong.<br>Tap menu makanan di sebelah kiri untuk menambah.
                     </div>
                 </div>
 
-                <!-- Calculator & Discount Controls -->
-                <div class="border-top pt-3">
+                <!-- Summary Box & Fees Calculator -->
+                <div class="summary-box">
                     <!-- Subtotal Row -->
                     <div class="summary-row">
                         <span>Subtotal</span>
@@ -437,134 +519,132 @@
                     <div class="summary-row">
                         <div class="d-flex align-items-center gap-1">
                             <span>Diskon</span>
-                            <div class="btn-group btn-group-sm" role="group">
-                                <button type="button" class="btn btn-outline-secondary py-0 px-1 btn-discount-type active" id="btnDiscNominal" onclick="setDiscountType('nominal')" style="font-size:0.7rem;">Rp</button>
-                                <button type="button" class="btn btn-outline-secondary py-0 px-1 btn-discount-type" id="btnDiscPercent" onclick="setDiscountType('percent')" style="font-size:0.7rem;">%</button>
+                            <div class="disc-toggle">
+                                <button type="button" class="disc-btn active" id="btnDiscNominal" onclick="setDiscountType('nominal')">Rp</button>
+                                <button type="button" class="disc-btn" id="btnDiscPercent" onclick="setDiscountType('percent')">%</button>
                             </div>
                         </div>
-                        <div style="width: 110px;">
-                            <input type="number" id="posDiscountInput" class="pos-input text-end py-1" placeholder="0" min="0" oninput="calculateTotals()">
+                        <div style="width: 100px;">
+                            <input type="number" id="posDiscountInput" class="form-input text-end" style="height:32px; padding:0 8px; font-size:0.78rem;" placeholder="0" min="0" oninput="calculateTotals()">
                         </div>
                     </div>
 
                     <!-- Service Fee Field -->
                     <div class="summary-row">
                         <span>Biaya Layanan Toko</span>
-                        <div style="width: 110px;">
-                            <input type="number" id="posServiceFeeInput" class="pos-input text-end py-1" placeholder="0" min="0" oninput="calculateTotals()">
+                        <div style="width: 100px;">
+                            <input type="number" id="posServiceFeeInput" class="form-input text-end" style="height:32px; padding:0 8px; font-size:0.78rem;" placeholder="0" min="0" oninput="calculateTotals()">
                         </div>
                     </div>
 
-                    <!-- Platform & Admin Fee Transparent Breakdown -->
-                    <div class="summary-row" style="font-size:0.75rem; color:#94a3b8;">
+                    <!-- Platform (5%) & Admin (5%) Transparent Breakdown -->
+                    <div class="summary-row" style="font-size:0.73rem; color:#94a3b8;">
                         <span>Biaya Platform ({{ $platformFeeRate }}%) & Admin ({{ $adminFeeRate }}%)</span>
                         <span id="displaySystemFees">Rp 0</span>
                     </div>
 
-                    <!-- Total Amount -->
+                    <!-- Grand Total -->
                     <div class="summary-total summary-row">
                         <span>Total Bayar</span>
                         <span style="color:#1eb349;" id="displayGrandTotal">Rp 0</span>
                     </div>
-
-                    <!-- Checkout Button -->
-                    <button class="btn-pos-primary mt-3" id="btnCheckout" onclick="openPaymentModal()" disabled>
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                        Proses Pembayaran
-                    </button>
                 </div>
+
+                <!-- Checkout Button -->
+                <button type="button" class="btn-submit-green" id="btnCheckout" onclick="openPaymentModal()" disabled>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                    Proses Pembayaran
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Mobile Fixed Bottom Drawer Bar -->
+<!-- Mobile Fixed Bottom Bar -->
 <div class="mobile-cart-bar" id="mobileCartBar">
     <div>
         <div style="font-size:0.75rem; color:#94a3b8;" id="mobileCartCount">0 Items</div>
         <div style="font-size:1.05rem; font-weight:800; color:#ffffff;" id="mobileCartTotal">Rp 0</div>
     </div>
-    <button class="btn btn-sm btn-success font-weight-bold px-3 py-2" onclick="scrollToCartPanel()">
+    <button class="btn btn-sm btn-success font-weight-bold px-3 py-2" onclick="scrollToCartPanel()" style="border-radius:10px; background:linear-gradient(135deg,#1eb349,#16963c);">
         Lihat Keranjang
     </button>
 </div>
 
-<!-- MODAL 1: Payment Method & Calculator -->
+<!-- MODAL 1: Payment Method Selection -->
 <div class="modal fade" id="posPaymentModal" tabindex="-1" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden;">
-            <div class="modal-header border-0 pb-0" style="background:#0f172a; color:#ffffff;">
-                <h5 class="modal-title font-weight-bold" style="color:#ffffff;">Pilih Metode Pembayaran</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content" style="border-radius: 20px; border: none; overflow: hidden;">
+            <div class="modal-header border-0 pb-0" style="background:#fafbfa; border-bottom:1px solid #f1f5f9; padding: 1.25rem 1.5rem;">
+                <h5 class="modal-title font-weight-bold" style="color:#0f172a; font-size:1.1rem;">Pilih Metode Pembayaran</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
-                <div class="text-center mb-4 p-3" style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
-                    <div style="font-size: 0.8rem; color: #64748b;">Total Tagihan</div>
+                <div class="text-center mb-4 p-3" style="background: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0;">
+                    <div style="font-size: 0.78rem; color: #64748b; font-weight: 500;">Total Tagihan</div>
                     <div style="font-size: 1.6rem; font-weight: 800; color: #1eb349;" id="modalPayTotal">Rp 0</div>
                 </div>
 
-                <!-- Payment Options Radio -->
-                <label class="form-label font-weight-bold mb-2" style="font-size: 0.85rem;">Metode Pembayaran</label>
-                
-                <!-- Tunai / Cash -->
+                <label class="form-label mb-2">Metode Pembayaran</label>
+
+                <!-- Tunai (Cash) -->
                 <div class="pay-option-card selected" id="optCash" onclick="selectPaymentMethod('cash')">
                     <input type="radio" name="pay_method" value="cash" checked>
                     <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
                     <div>
-                        <strong style="font-size:0.9rem; color:#0f172a;">Tunai (Cash)</strong>
-                        <div style="font-size:0.75rem; color:#64748b;">Bayar langsung dengan uang tunai</div>
+                        <strong style="font-size:0.88rem; color:#0f172a;">Tunai (Cash)</strong>
+                        <div style="font-size:0.73rem; color:#64748b;">Bayar langsung dengan uang tunai</div>
                     </div>
                 </div>
 
-                <!-- Cash Nominal & Change Calculator Panel -->
-                <div id="cashCalcPanel" class="p-3 mb-3" style="background:#f0fdf4; border-radius:10px; border:1px solid #bbf7d0;">
-                    <label class="form-label font-weight-bold mb-1" style="font-size:0.78rem; color:#166534;">Nominal Uang Diterima (Rp)</label>
-                    <input type="number" id="cashPaidInput" class="pos-input mb-2" placeholder="Masukkan jumlah uang" oninput="calculateCashChange()">
+                <!-- Cash Calculator Box -->
+                <div id="cashCalcPanel" class="p-3 mb-3" style="background:#f0fdf4; border-radius:12px; border:1px solid #bbf7d0;">
+                    <label class="form-label mb-1" style="color:#166534;">Nominal Uang Diterima (Rp)</label>
+                    <input type="number" id="cashPaidInput" class="form-input mb-2" placeholder="Masukkan jumlah uang" oninput="calculateCashChange()">
                     
-                    <!-- Quick Nominal Buttons -->
                     <div class="d-flex flex-wrap gap-1 mb-2">
-                        <button type="button" class="btn btn-xs btn-outline-success font-weight-bold" onclick="setQuickCash('exact')">Uang Pas</button>
-                        <button type="button" class="btn btn-xs btn-outline-success font-weight-bold" onclick="setQuickCash(20000)">20.000</button>
-                        <button type="button" class="btn btn-xs btn-outline-success font-weight-bold" onclick="setQuickCash(50000)">50.000</button>
-                        <button type="button" class="btn btn-xs btn-outline-success font-weight-bold" onclick="setQuickCash(100000)">100.000</button>
+                        <button type="button" class="btn btn-xs btn-outline-success font-weight-bold" style="border-radius:6px; font-size:0.72rem;" onclick="setQuickCash('exact')">Uang Pas</button>
+                        <button type="button" class="btn btn-xs btn-outline-success font-weight-bold" style="border-radius:6px; font-size:0.72rem;" onclick="setQuickCash(20000)">20.000</button>
+                        <button type="button" class="btn btn-xs btn-outline-success font-weight-bold" style="border-radius:6px; font-size:0.72rem;" onclick="setQuickCash(50000)">50.000</button>
+                        <button type="button" class="btn btn-xs btn-outline-success font-weight-bold" style="border-radius:6px; font-size:0.72rem;" onclick="setQuickCash(100000)">100.000</button>
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center pt-2 border-top border-emerald-200">
-                        <span style="font-size:0.85rem; font-weight:700; color:#166534;">Kembalian:</span>
+                        <span style="font-size:0.82rem; font-weight:700; color:#166534;">Kembalian:</span>
                         <strong style="font-size:1.1rem; color:#15803d;" id="cashChangeDisplay">Rp 0</strong>
                     </div>
                 </div>
 
-                <!-- Transfer Bank -->
+                <!-- Transfer Direct -->
                 <div class="pay-option-card" id="optTransfer" onclick="selectPaymentMethod('transfer')">
                     <input type="radio" name="pay_method" value="transfer">
                     <svg width="20" height="20" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><path d="M17 9V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><rect x="9" y="11" width="12" height="8" rx="2"/></svg>
                     <div>
-                        <strong style="font-size:0.9rem; color:#0f172a;">Transfer Bank Direct</strong>
-                        <div style="font-size:0.75rem; color:#64748b;">Transfer ke rekening bank toko</div>
+                        <strong style="font-size:0.88rem; color:#0f172a;">Transfer Bank Direct</strong>
+                        <div style="font-size:0.73rem; color:#64748b;">Transfer ke rekening bank toko</div>
                     </div>
                 </div>
 
-                <!-- QRIS (Midtrans) -->
+                <!-- QRIS Midtrans -->
                 <div class="pay-option-card" id="optQris" onclick="selectPaymentMethod('qris')">
                     <input type="radio" name="pay_method" value="qris">
                     <svg width="20" height="20" fill="none" stroke="#7c3aed" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                     <div>
-                        <strong style="font-size:0.9rem; color:#0f172a;">QRIS Dynamic (Midtrans)</strong>
-                        <div style="font-size:0.75rem; color:#64748b;">Scan QRIS otomatis terverifikasi via Midtrans</div>
+                        <strong style="font-size:0.88rem; color:#0f172a;">QRIS Dynamic (Midtrans)</strong>
+                        <div style="font-size:0.73rem; color:#64748b;">Scan QRIS otomatis via Midtrans</div>
                     </div>
                 </div>
 
-                <!-- E-Receipt Email (Optional) -->
-                <div class="mt-3">
-                    <label class="form-label font-weight-bold mb-1" style="font-size: 0.78rem; color: #475569;">Email Pembeli (Kirim E-Receipt Struk)</label>
-                    <input type="email" id="posCustomerEmail" class="pos-input" placeholder="contoh@gmail.com (Opsional)">
+                <!-- Optional E-Receipt Email -->
+                <div class="form-group mt-3 mb-0">
+                    <label class="form-label">Email Pembeli (Kirim E-Receipt Struk)</label>
+                    <input type="email" id="posCustomerEmail" class="form-input" placeholder="contoh@gmail.com (Opsional)">
                 </div>
             </div>
 
-            <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-light font-weight-bold" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn-pos-primary" id="btnSubmitOrder" onclick="processOrderCheckout()" style="width:auto; padding:10px 24px;">
+            <div class="modal-footer border-0 pt-0 px-4 pb-4">
+                <button type="button" class="btn btn-light font-weight-bold" style="border-radius:10px;" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn-submit-green" id="btnSubmitOrder" onclick="processOrderCheckout()" style="width:auto; padding:0.65rem 1.6rem;">
                     Konfirmasi & Bayar
                 </button>
             </div>
@@ -575,20 +655,20 @@
 <!-- MODAL 2: Receipt Preview & Thermal Print -->
 <div class="modal fade" id="posReceiptModal" tabindex="-1" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
-        <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden;">
-            <div class="modal-header border-0 pb-0 no-print">
-                <h5 class="modal-title font-weight-bold" style="color:#0f172a;">Struk Transaksi</h5>
+        <div class="modal-content" style="border-radius: 20px; border: none; overflow: hidden;">
+            <div class="modal-header border-0 pb-0 no-print" style="padding:1.25rem 1.5rem 0.5rem;">
+                <h5 class="modal-title font-weight-bold" style="color:#0f172a; font-size:1.05rem;">Struk Transaksi</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="resetPOS()"></button>
             </div>
 
             <div class="modal-body p-4" id="posReceiptModalContent">
-                <!-- Printable Receipt Template (58mm / 80mm friendly) -->
+                <!-- Thermal Struk Template -->
                 <div style="font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #000000; line-height: 1.3;" id="printablePosReceiptArea">
                     <div class="text-center mb-3">
                         @if($siteLogoUrl)
                             <img src="{{ $siteLogoUrl }}" alt="buyle.id" style="height: 28px; width: auto; margin-bottom: 4px;" class="no-print">
                         @endif
-                        <div style="font-weight: 900; font-size: 16px; text-transform: uppercase;">{{ $storeName }}</div>
+                        <div style="font-weight: 900; font-size: 15px; text-transform: uppercase;">{{ $storeName }}</div>
                         <div style="font-size: 11px;">buyle.id POS</div>
                         <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
                     </div>
@@ -618,7 +698,6 @@
 
                     <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
 
-                    <!-- Receipt Items -->
                     <table style="width: 100%; font-size: 11px; margin-bottom: 8px;" id="recItemsTable">
                         <thead>
                             <tr style="border-bottom: 1px solid #000;">
@@ -627,14 +706,11 @@
                                 <th class="text-end">Subtotal</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- Item Rows Injected via JS -->
-                        </tbody>
+                        <tbody></tbody>
                     </table>
 
                     <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
 
-                    <!-- Totals Breakdown -->
                     <table style="width: 100%; font-size: 11px;">
                         <tr>
                             <td>Subtotal:</td>
@@ -677,21 +753,21 @@
                     </div>
                 </div>
 
-                <!-- E-Receipt Email Input Section (no-print) -->
+                <!-- E-Receipt Email (no-print) -->
                 <div class="no-print mt-4 pt-3 border-top">
-                    <label class="form-label font-weight-bold mb-1" style="font-size:0.78rem;">Kirim E-Receipt ke Email</label>
+                    <label class="form-label mb-1">Kirim E-Receipt ke Email</label>
                     <div class="input-group">
-                        <input type="email" id="recSendEmailInput" class="pos-input" placeholder="email@pembeli.com">
-                        <button class="btn btn-success font-weight-bold px-3" onclick="sendEReceiptEmail()">Kirim</button>
+                        <input type="email" id="recSendEmailInput" class="form-input" style="border-top-right-radius:0; border-bottom-right-radius:0;" placeholder="email@pembeli.com">
+                        <button class="btn btn-success font-weight-bold px-3" style="border-top-right-radius:10px; border-bottom-right-radius:10px; background:#1eb349;" onclick="sendEReceiptEmail()">Kirim</button>
                     </div>
                 </div>
             </div>
 
-            <div class="modal-footer border-0 pt-0 no-print">
-                <button type="button" class="btn btn-outline-secondary font-weight-bold" onclick="resetPOS()" data-bs-dismiss="modal">
+            <div class="modal-footer border-0 pt-0 px-4 pb-4 no-print">
+                <button type="button" class="btn btn-outline-secondary font-weight-bold" style="border-radius:10px;" onclick="resetPOS()" data-bs-dismiss="modal">
                     Transaksi Baru
                 </button>
-                <button type="button" class="btn btn-primary font-weight-bold d-flex align-items-center gap-1" onclick="window.print()">
+                <button type="button" class="btn-submit-green" style="width:auto; padding:0.6rem 1.2rem;" onclick="window.print()">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
                     Print Struk Thermal
                 </button>
@@ -700,25 +776,25 @@
     </div>
 </div>
 
-<!-- MODAL 3: Today's Transactions History -->
+<!-- MODAL 3: History Modal -->
 <div class="modal fade" id="posHistoryModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden;">
-            <div class="modal-header" style="background:#0f172a; color:#ffffff;">
-                <h5 class="modal-title font-weight-bold" style="color:#ffffff;">Riwayat Transaksi POS Hari Ini</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content" style="border-radius: 20px; border: none; overflow: hidden;">
+            <div class="modal-header" style="background:#fafbfa; border-bottom:1px solid #f1f5f9; padding: 1.25rem 1.5rem;">
+                <h5 class="modal-title font-weight-bold" style="color:#0f172a; font-size:1.1rem;">Riwayat Transaksi POS Hari Ini</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0" style="font-size:0.85rem;">
-                        <thead class="bg-light">
+                    <table class="table table-hover align-middle mb-0" style="font-size:0.83rem;">
+                        <thead style="background:#f8fafc; color:#64748b; font-size:0.75rem; text-transform:uppercase;">
                             <tr>
-                                <th>No. Order / Waktu</th>
+                                <th class="ps-4">No. Order / Waktu</th>
                                 <th>Pelanggan</th>
                                 <th>Metode Bayar</th>
                                 <th>Total</th>
                                 <th>Status</th>
-                                <th class="text-end">Aksi</th>
+                                <th class="text-end pe-4">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -728,27 +804,27 @@
                                     $tPayMethod = $tAddr['payment_method'] ?? ($tOrd->payment?->payment_method ?? 'cash');
                                 @endphp
                                 <tr>
-                                    <td>
+                                    <td class="ps-4">
                                         <strong style="color:#0f172a;">#{{ $tOrd->order_number }}</strong>
-                                        <div style="font-size:0.75rem; color:#64748b;">{{ $tOrd->created_at->format('H:i') }} WIB</div>
+                                        <div style="font-size:0.73rem; color:#64748b;">{{ $tOrd->created_at->format('H:i') }} WIB</div>
                                     </td>
                                     <td>
-                                        <div style="font-weight:700;">{{ $tAddr['name'] ?? 'Pelanggan' }}</div>
+                                        <div style="font-weight:700; color:#0f172a;">{{ $tAddr['name'] ?? 'Pelanggan' }}</div>
                                         @if(!empty($tOrd->notes))
-                                            <div style="font-size:0.75rem; color:#64748b;">{{ $tOrd->notes }}</div>
+                                            <div style="font-size:0.73rem; color:#64748b;">{{ $tOrd->notes }}</div>
                                         @endif
                                     </td>
                                     <td>
-                                        <span class="badge bg-secondary" style="text-transform:uppercase;">{{ $tPayMethod }}</span>
+                                        <span class="badge bg-secondary" style="text-transform:uppercase; font-weight:700;">{{ $tPayMethod }}</span>
                                     </td>
                                     <td class="font-weight-bold" style="color:#1eb349;">
                                         Rp {{ number_format($tOrd->total, 0, ',', '.') }}
                                     </td>
                                     <td>
-                                        <span class="badge bg-success">Berhasil</span>
+                                        <span class="badge" style="background:#dcfce7; color:#166534; font-weight:700;">Berhasil</span>
                                     </td>
-                                    <td class="text-end">
-                                        <button class="btn btn-xs btn-outline-primary font-weight-bold" onclick="reprintPastReceipt({{ json_encode($tOrd) }})">
+                                    <td class="text-end pe-4">
+                                        <button class="btn btn-xs btn-outline-primary font-weight-bold" style="border-radius:6px;" onclick="reprintPastReceipt({{ json_encode($tOrd) }})">
                                             Cetak Struk
                                         </button>
                                     </td>
@@ -775,11 +851,6 @@
     let platformFeeRate = {{ $platformFeeRate }};
     let adminFeeRate = {{ $adminFeeRate }};
     let currentCompletedOrder = null;
-
-    // Toast Notification helper
-    function showToast(msg, isError = false) {
-        alert(msg);
-    }
 
     // Filter produk live
     function filterProducts() {
@@ -835,7 +906,6 @@
     function renderCart() {
         const container = document.getElementById('cartItemsContainer');
         
-        // Reset all product badges
         document.querySelectorAll('.product-qty-badge').forEach(b => {
             b.classList.add('d-none');
             b.innerText = '0';
@@ -843,7 +913,7 @@
 
         if (cart.length === 0) {
             container.innerHTML = `
-                <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.85rem;">
+                <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.82rem;">
                     Keranjang masih kosong.<br>Tap menu makanan di sebelah kiri untuk menambah.
                 </div>
             `;
@@ -858,7 +928,6 @@
         cart.forEach(item => {
             const itemSub = item.price * item.qty;
             
-            // Update badge on product card
             const badge = document.getElementById(`badge-qty-${item.id}`);
             if (badge) {
                 badge.innerText = `x${item.qty}`;
@@ -917,12 +986,10 @@
 
         const grandTotal = Math.max(0, subtotal - discountAmount + serviceFee + systemFees);
 
-        // Update displays
         document.getElementById('displaySubtotal').innerText = 'Rp ' + formatRupiah(subtotal);
         document.getElementById('displaySystemFees').innerText = 'Rp ' + formatRupiah(systemFees);
         document.getElementById('displayGrandTotal').innerText = 'Rp ' + formatRupiah(grandTotal);
 
-        // Mobile Bar Update
         const totalItemsCount = cart.reduce((sum, item) => sum + item.qty, 0);
         document.getElementById('mobileCartCount').innerText = `${totalItemsCount} Items`;
         document.getElementById('mobileCartTotal').innerText = 'Rp ' + formatRupiah(grandTotal);
@@ -945,7 +1012,6 @@
         const grandTotalText = document.getElementById('displayGrandTotal').innerText;
         document.getElementById('modalPayTotal').innerText = grandTotalText;
         
-        // Auto fill cash paid input with exact amount by default
         const grandTotal = getGrandTotalVal();
         document.getElementById('cashPaidInput').value = grandTotal;
         calculateCashChange();
@@ -963,7 +1029,7 @@
         return Math.max(0, subtotal - discountAmount + serviceFee + systemFees);
     }
 
-    // Payment Option Switch
+    // Select Payment Method
     function selectPaymentMethod(method) {
         document.querySelectorAll('.pay-option-card').forEach(c => c.classList.remove('selected'));
         const rad = document.querySelector(`input[name="pay_method"][value="${method}"]`);
@@ -980,7 +1046,7 @@
         }
     }
 
-    // Quick Cash Nominals
+    // Quick Cash Buttons
     function setQuickCash(val) {
         if (val === 'exact') {
             document.getElementById('cashPaidInput').value = getGrandTotalVal();
@@ -998,7 +1064,7 @@
         document.getElementById('cashChangeDisplay').innerText = 'Rp ' + formatRupiah(change);
     }
 
-    // Submit Order Checkout via AJAX
+    // Submit Order Checkout
     function processOrderCheckout() {
         const custName = document.getElementById('posCustomerName').value.trim();
         const tableNum = document.getElementById('posTableNumber').value.trim();
@@ -1047,12 +1113,10 @@
             btnSubmit.innerText = 'Konfirmasi & Bayar';
 
             if (data.success) {
-                // Close payment modal
                 const payModalEl = document.getElementById('posPaymentModal');
                 const payModal = bootstrap.Modal.getInstance(payModalEl);
                 if (payModal) payModal.hide();
 
-                // If QRIS & Midtrans Snap Token available
                 if (payMethod === 'qris' && data.snap_token && typeof window.snap !== 'undefined') {
                     window.snap.pay(data.snap_token, {
                         onSuccess: function(result) {
@@ -1082,7 +1146,7 @@
         });
     }
 
-    // Render & Open Receipt Modal
+    // Show Receipt Modal
     function showReceiptModal(order) {
         currentCompletedOrder = order;
         const addr = order.shipping_address || {};
@@ -1106,7 +1170,6 @@
 
         document.getElementById('recPayMethod').innerText = payMethodLabel;
 
-        // Render Items Table
         let itemsHtml = '';
         (order.items || []).forEach(item => {
             itemsHtml += `
@@ -1122,7 +1185,6 @@
         });
         document.querySelector('#recItemsTable tbody').innerHTML = itemsHtml;
 
-        // Breakdown Totals
         document.getElementById('recSubtotal').innerText = 'Rp ' + formatRupiah(order.subtotal);
 
         if (order.discount > 0) {
@@ -1221,7 +1283,6 @@
         document.getElementById('cartPanel').scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Helper Utils
     function formatRupiah(num) {
         return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
