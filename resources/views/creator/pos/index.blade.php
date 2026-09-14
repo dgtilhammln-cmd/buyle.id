@@ -755,6 +755,21 @@
     </button>
 </div>
 
+<!-- Floating Toast Notification Container -->
+<div id="posToastContainer" style="position: fixed; top: 24px; right: 24px; z-index: 100001; display: flex; flex-direction: column; gap: 8px; pointer-events: none;"></div>
+
+<!-- CUSTOM OVERLAY MODAL: Interactive Alert Popup -->
+<div class="pos-modal-overlay" id="posAlertModal" style="z-index: 100000;">
+    <div class="pos-modal-card" style="max-width: 360px; padding: 1.5rem 1.25rem; text-align: center;">
+        <div id="posAlertIconWrap" class="d-flex justify-content-center mb-3"></div>
+        <h5 id="posAlertTitle" style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.4rem;">Perhatian</h5>
+        <div id="posAlertMessage" style="font-size: 0.83rem; color: #475569; line-height: 1.45; margin-bottom: 1.25rem;">-</div>
+        <button type="button" class="btn-submit-green" style="width: 100%; margin: 0; padding: 0.65rem 1rem; font-size: 0.85rem;" onclick="closeModal('posAlertModal')">
+            Oke, Saya Mengerti
+        </button>
+    </div>
+</div>
+
 <!-- CUSTOM OVERLAY MODAL 1: Payment Method Selection -->
 <div class="pos-modal-overlay" id="posPaymentModal">
     <div class="pos-modal-card">
@@ -1043,6 +1058,66 @@
         }
     }
 
+    // Custom Interactive Alert & Toast Helpers
+    function showPosAlert(message, title = 'Perhatian', type = 'warning') {
+        const iconWrap = document.getElementById('posAlertIconWrap');
+        const titleEl = document.getElementById('posAlertTitle');
+        const msgEl = document.getElementById('posAlertMessage');
+
+        if (titleEl) titleEl.innerText = title;
+        if (msgEl) msgEl.innerText = message;
+
+        let iconSvg = '';
+        if (type === 'error') {
+            iconSvg = `<div style="width:48px; height:48px; border-radius:50%; background:#fef2f2; display:flex; align-items:center; justify-content:center; color:#ef4444;"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>`;
+        } else if (type === 'success') {
+            iconSvg = `<div style="width:48px; height:48px; border-radius:50%; background:#f0fdf4; display:flex; align-items:center; justify-content:center; color:#1eb349;"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>`;
+        } else {
+            iconSvg = `<div style="width:48px; height:48px; border-radius:50%; background:#fffbe6; display:flex; align-items:center; justify-content:center; color:#d97706;"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>`;
+        }
+
+        if (iconWrap) iconWrap.innerHTML = iconSvg;
+        openModal('posAlertModal');
+    }
+
+    function showPosToast(message, type = 'info') {
+        const container = document.getElementById('posToastContainer');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            background: #0f172a;
+            color: #ffffff;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: auto;
+        `;
+
+        let iconColor = type === 'success' ? '#1eb349' : (type === 'error' ? '#ef4444' : '#3b82f6');
+        toast.innerHTML = `<span style="color:${iconColor}; font-weight:800;">●</span> <span>${escapeHtml(message)}</span>`;
+
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateY(0)';
+        }, 10);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-10px)';
+            setTimeout(() => toast.remove(), 250);
+        }, 3000);
+    }
+
     // Close Modal when clicking backdrop overlay
     document.querySelectorAll('.pos-modal-overlay').forEach(overlay => {
         overlay.addEventListener('click', function(e) {
@@ -1088,6 +1163,7 @@
             cart.push({ id, name, price, qty: 1 });
         }
         renderCart();
+        showPosToast(`+ ${name} ditambahkan`, 'success');
     }
 
     // Update Item Qty
@@ -1216,13 +1292,13 @@
     function openPaymentModal() {
         const custName = document.getElementById('posCustomerName').value.trim();
         if (!custName) {
-            alert('Silakan isi Form Atas Nama Pelanggan terlebih dahulu!');
+            showPosAlert('Silakan isi Form Atas Nama Pelanggan terlebih dahulu!', 'Nama Pelanggan Wajib', 'warning');
             document.getElementById('posCustomerName').focus();
             return;
         }
 
         if (cart.length === 0) {
-            alert('Keranjang POS masih kosong!');
+            showPosAlert('Keranjang POS Anda masih kosong. Silakan pilih menu makanan terlebih dahulu.', 'Keranjang Kosong', 'warning');
             return;
         }
 
@@ -1298,7 +1374,7 @@
         const grandTotal = getGrandTotalVal();
 
         if (payMethod === 'cash' && cashPaid < grandTotal) {
-            alert('Jumlah uang tunai yang diterima kurang dari total tagihan!');
+            showPosAlert('Jumlah uang tunai yang diterima kurang dari total tagihan!', 'Nominal Uang Kurang', 'warning');
             return;
         }
 
@@ -1346,7 +1422,7 @@
                             showReceiptModal(data.order);
                         },
                         onError: function(result) {
-                            alert('Pembayaran QRIS Gagal atau dibatalkan.');
+                            showPosAlert('Pembayaran QRIS Gagal atau dibatalkan oleh pengguna.', 'Gagal Pembayaran QRIS', 'error');
                         },
                         onClose: function() {
                             showReceiptModal(data.order);
@@ -1356,13 +1432,13 @@
                     showReceiptModal(data.order);
                 }
             } else {
-                alert(data.message || 'Gagal memproses transaksi.');
+                showPosAlert(data.message || 'Gagal memproses transaksi.', 'Gagal Transaksi', 'error');
             }
         })
         .catch(err => {
             btnSubmit.disabled = false;
             btnSubmit.innerText = 'Konfirmasi & Bayar';
-            alert('Terjadi kesalahan jaringan/server: ' + err.message);
+            showPosAlert('Terjadi kesalahan jaringan/server: ' + err.message, 'Kesalahan Koneksi', 'error');
         });
     }
 
@@ -1447,7 +1523,7 @@
         if (!currentCompletedOrder) return;
         const email = document.getElementById('recSendEmailInput').value.trim();
         if (!email) {
-            alert('Silakan masukkan alamat email tujuan!');
+            showPosAlert('Silakan masukkan alamat email tujuan!', 'Email Diperlukan', 'warning');
             return;
         }
 
@@ -1464,10 +1540,14 @@
         })
         .then(res => res.json())
         .then(data => {
-            alert(data.message);
+            if (data.success) {
+                showPosToast(data.message || 'E-Receipt berhasil dikirim!', 'success');
+            } else {
+                showPosAlert(data.message || 'Gagal mengirim E-Receipt.', 'Gagal Pengiriman', 'error');
+            }
         })
         .catch(err => {
-            alert('Gagal mengirim E-Receipt: ' + err.message);
+            showPosAlert('Gagal mengirim E-Receipt: ' + err.message, 'Gagal Pengiriman', 'error');
         });
     }
 
