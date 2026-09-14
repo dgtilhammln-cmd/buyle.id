@@ -56,6 +56,7 @@ class DatabaseSeeder extends Seeder
         // =====================================================================
         $this->call([
             ProductCategorySeeder::class,
+            CourierSeeder::class,
         ]);
     }
 }

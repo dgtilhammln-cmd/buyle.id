@@ -212,12 +212,14 @@ label:focus{outline:none !important;box-shadow:none !important;}
                 </div>
                 @endauth
 
-                {{-- ALAMAT PENGIRIMAN --}}
-                @if($summary['has_physical_product'])
+                {{-- CONDITIONAL CHECKOUT FORM BY PRODUCT CATEGORY / TYPE --}}
+
+                @if($summary['checkout_type'] === 'goods')
+                {{-- A. FORM PENGIRIMAN LENGKAP (PRODUK KATEGORI BARANG) --}}
                 <div class="co-section" style="margin-bottom:1.5rem;">
                     <div class="co-section-title">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                        Alamat Pengiriman
+                        Alamat Pengiriman (Produk Barang)
                     </div>
                     
                     @if(auth()->check() && $addresses->count() > 0)
@@ -345,39 +347,26 @@ label:focus{outline:none !important;box-shadow:none !important;}
                         </div>
                     </div>
                 </div>
-                @endif
 
-                {{-- ALAMAT JASA --}}
-                @if($summary['has_service'])
-                <div class="co-section" style="margin-bottom:1.5rem;">
-                    <div class="co-section-title">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 9.36l-7.1 7.1a1 1 0 0 1-1.4 0l-2.8-2.8a1 1 0 0 1 0-1.4l7.1-7.1a6 6 0 0 1 9.36-7.94l-3.77 3.77z"/></svg>
-                        Lokasi Pengerjaan Jasa
-                    </div>
-                    <div class="form-group mb-0">
-                        <label class="form-label">Deskripsikan lokasi selengkap-lengkapnya</label>
-                        <textarea name="service_address" class="form-input" rows="3" placeholder="Contoh: Gedung A lantai 2, ruang meeting..." {{ $summary['has_physical_product'] ? '' : 'required' }}></textarea>
-                    </div>
-                </div>
-                @endif
-
-                {{-- METODE PENGIRIMAN --}}
-                @if($summary['has_physical_product'])
+                {{-- METODE PENGIRIMAN EKSPEDISI BARANG --}}
                 <div class="co-section" style="margin-bottom:1.5rem;">
                     <div class="co-section-title">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                        Pilih Metode Pengiriman
+                        Pilih Metode Pengiriman (Kurir)
                     </div>
                     <div class="form-group mb-0">
-                        <label class="form-label">Pilih Kurir</label>
+                        <label class="form-label">Pilih Kurir Ekspedisi</label>
                         <select name="courier_name" id="courier_name_select" class="form-input" required>
                             <option value="">Pilih kurir pengiriman...</option>
                             @forelse($couriers ?? [] as $courier)
                                 <option value="{{ $courier->code }}">{{ $courier->name }}</option>
                             @empty
-                                <option value="jne">JNE</option>
+                                <option value="jne">JNE Reguler</option>
+                                <option value="jnt">J&T Express</option>
+                                <option value="sicepat">SiCepat Express</option>
                                 <option value="pos">POS Indonesia</option>
                                 <option value="tiki">TIKI</option>
+                                <option value="custom">Kurir Toko (Manual)</option>
                             @endforelse
                         </select>
 
@@ -396,6 +385,22 @@ label:focus{outline:none !important;box-shadow:none !important;}
 
                         <!-- Hidden input required for form submission -->
                         <input type="hidden" name="courier_service" id="courier_service_hidden" required>
+                    </div>
+                </div>
+
+                @elseif($summary['checkout_type'] === 'food_service')
+                {{-- B. FORM SIMPLE ALAMAT / LOKASI (PRODUK MAKANAN ATAU JASA) --}}
+                <div class="co-section" style="margin-bottom:1.5rem; background:#F8FAFC; border:1px solid #E2E8F0;">
+                    <div class="co-section-title" style="color:#0F172A;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                        Alamat Pengantaran / Lokasi (Makanan / Jasa)
+                    </div>
+                    <div style="font-size:0.82rem; color:#64748B; margin-bottom:1rem; line-height:1.4;">
+                        Untuk transaksi <strong>Makanan & Jasa</strong>, pengiriman dilakukan secara langsung / instant / pengerjaan tempat tanpa perlu memilih ekspedisi kargo.
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="form-label">Alamat Lengkap / Patokan Lokasi Pengerjaan</label>
+                        <textarea name="new_address_full" class="form-input" rows="3" placeholder="Tuliskan detail alamat pengantaran makanan atau deskripsi lokasi pengerjaan jasa..."></textarea>
                     </div>
                 </div>
                 @endif
@@ -1138,7 +1143,8 @@ label:focus{outline:none !important;box-shadow:none !important;}
 
 
     function prepareSubmit(e) {
-        const hasPhysicalProduct = @json($summary['has_physical_product']);
+        const checkoutType = @json($summary['checkout_type']);
+        const hasGoodsShipping = (checkoutType === 'goods');
         const isGuest = @json(auth()->guest());
 
         // Validate guest contact info
@@ -1160,8 +1166,8 @@ label:focus{outline:none !important;box-shadow:none !important;}
             }
         }
 
-        // Validate physical shipping address & courier ONLY IF there is physical product
-        if (hasPhysicalProduct) {
+        // Validate physical shipping address & courier ONLY IF checkoutType is goods
+        if (hasGoodsShipping) {
             const select = document.getElementById('address_id_select');
             const isNewAddress = (!select || select.value === 'new');
 

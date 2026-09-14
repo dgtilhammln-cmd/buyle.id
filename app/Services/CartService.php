@@ -171,28 +171,42 @@ class CartService
         $items = $this->getItems();
         $subtotal = 0;
         $totalWeight = 0;
-        $hasPhysicalProduct = false;
-        $hasService = false;
+        
+        $hasGoodsShipping = false;
+        $hasFoodOrService = false;
+        $hasDigitalOnly   = true;
 
         foreach ($items as $item) {
             $subtotal += $item->subtotal;
             $totalWeight += ($item->product->weight ?? 0) * $item->qty;
 
             if ($item->product) {
-                $pType = strtolower($item->product->product_type ?? $item->product->type ?? 'digital');
+                $pType   = strtolower($item->product->product_type ?? $item->product->type ?? 'digital');
                 $catName = strtolower($item->product->category->name ?? '');
 
-                if (in_array($pType, ['physical', 'external_link', 'custom_product', 'barang']) || in_array($catName, ['barang', 'makanan', 'produk fisik', 'umkm', 'kuliner', 'jasa'])) {
-                    if ($pType !== 'ticket' && $pType !== 'digital') {
-                        $hasPhysicalProduct = true;
-                    }
-                }
-                if ($pType === 'physical') {
-                    $hasPhysicalProduct = true;
-                } elseif ($pType === 'service') {
-                    $hasService = true;
+                // Check category from product or category model
+                $isFoodOrServiceCategory = (
+                    in_array($catName, ['makanan', 'jasa', 'food', 'culinary', 'service', 'layanan', 'booking & jasa layanan online', 'booking'])
+                );
+
+                if (in_array($pType, ['digital', 'ticket', 'download', 'course', 'ebook']) || in_array($catName, ['digital', 'tiket', 'e-book', 'course', 'file'])) {
+                    // Digital item
+                } elseif ($pType === 'service' || $isFoodOrServiceCategory) {
+                    $hasFoodOrService = true;
+                    $hasDigitalOnly   = false;
+                } else {
+                    // Goods item (requires full expedition shipping)
+                    $hasGoodsShipping = true;
+                    $hasDigitalOnly   = false;
                 }
             }
+        }
+
+        $checkoutType = 'digital';
+        if ($hasGoodsShipping) {
+            $checkoutType = 'goods';
+        } elseif ($hasFoodOrService) {
+            $checkoutType = 'food_service';
         }
 
         return [
@@ -200,8 +214,12 @@ class CartService
             'count'                => $items->sum('qty'),
             'subtotal'             => $subtotal,
             'total_weight'         => $totalWeight,
-            'has_physical_product' => $hasPhysicalProduct,
-            'has_service'          => $hasService,
+            'checkout_type'        => $checkoutType,
+            'has_goods_shipping'   => ($checkoutType === 'goods'),
+            'has_food_or_service'  => ($checkoutType === 'food_service'),
+            'has_digital_only'     => ($checkoutType === 'digital'),
+            'has_physical_product' => ($checkoutType === 'goods'),
+            'has_service'          => ($checkoutType === 'food_service'),
         ];
     }
 }
