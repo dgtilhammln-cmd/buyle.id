@@ -181,21 +181,52 @@ class CartService
             $totalWeight += ($item->product->weight ?? 0) * $item->qty;
 
             if ($item->product) {
-                $pType   = strtolower($item->product->product_type ?? $item->product->type ?? 'digital');
-                $catName = strtolower($item->product->category->name ?? '');
+                $p = $item->product;
+                $pType   = strtolower($p->product_type ?? $p->type ?? 'digital');
+                $catName = strtolower($p->category->name ?? '');
+                $pName   = strtolower($p->name ?? '');
+                $pDesc   = strtolower($p->short_desc ?? '');
 
-                // Check category from product or category model
-                $isFoodOrServiceCategory = (
-                    in_array($catName, ['makanan', 'jasa', 'food', 'culinary', 'service', 'layanan', 'booking & jasa layanan online', 'booking'])
-                );
+                // Check block category if product belongs to bio block
+                $blockCat = '';
+                if (isset($p->bioBlock->data_json['category'])) {
+                    $blockCat = strtolower($p->bioBlock->data_json['category']);
+                }
 
-                if (in_array($pType, ['digital', 'ticket', 'download', 'course', 'ebook']) || in_array($catName, ['digital', 'tiket', 'e-book', 'course', 'file'])) {
-                    // Digital item
-                } elseif ($pType === 'service' || $isFoodOrServiceCategory) {
+                // Digital keywords detection in name, desc, category
+                $digitalKeywords = ['digital', 'cbt', 'aplikasi', 'app', 'e-book', 'ebook', 'pdf', 'course', 'kursus', 'webinar', 'tiket', 'ticket', 'voucher', 'lisensi', 'license', 'software', 'membership', 'akun', 'script', 'source code', 'template', 'file', 'download', 'e-learning'];
+                $isDigitalByName = false;
+                foreach ($digitalKeywords as $kw) {
+                    if (str_contains($pName, $kw) || str_contains($catName, $kw) || str_contains($pDesc, $kw)) {
+                        $isDigitalByName = true;
+                        break;
+                    }
+                }
+
+                // Food / Service keywords detection
+                $foodServiceKeywords = ['makanan', 'kuliner', 'food', 'minuman', 'catering', 'katering', 'snack', 'jasa', 'service', 'layanan', 'servis', 'pemasangan', 'booking', 'reservasi', 'cuci', 'repair', 'perbaikan'];
+                $isFoodOrServiceCategory = false;
+                foreach ($foodServiceKeywords as $kw) {
+                    if (str_contains($pName, $kw) || str_contains($catName, $kw) || str_contains($blockCat, $kw) || str_contains($pDesc, $kw)) {
+                        $isFoodOrServiceCategory = true;
+                        break;
+                    }
+                }
+
+                // 1. Digital product check
+                if (in_array($pType, ['digital', 'ticket', 'download', 'course', 'ebook', 'virtual', 'file']) 
+                    || !empty($p->digital_resource) 
+                    || !empty($p->file_type) 
+                    || $isDigitalByName) {
+                    // Digital item — No physical shipping form
+                } 
+                // 2. Food or Service product check
+                elseif ($pType === 'service' || $blockCat === 'jasa' || $blockCat === 'makanan' || $isFoodOrServiceCategory) {
                     $hasFoodOrService = true;
                     $hasDigitalOnly   = false;
-                } else {
-                    // Goods item (requires full expedition shipping)
+                } 
+                // 3. Physical Goods product check (Barang)
+                else {
                     $hasGoodsShipping = true;
                     $hasDigitalOnly   = false;
                 }
