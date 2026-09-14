@@ -346,19 +346,19 @@
         color: #fff;
     }
 
-    /* ── CUSTOM MODAL OVERLAY SYSTEM (Fix Unhidden Modals Bug) ───────── */
+    /* ── CUSTOM MODAL OVERLAY SYSTEM (Ultra Compact & Minimalist) ──── */
     .pos-modal-overlay {
         display: none;
         position: fixed;
         inset: 0;
-        background: rgba(15, 23, 42, 0.65);
-        backdrop-filter: blur(6px);
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(8px);
         z-index: 99999;
         align-items: center;
         justify-content: center;
         padding: 1rem;
         opacity: 0;
-        transition: opacity 0.25s ease;
+        transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .pos-modal-overlay.show {
         display: flex;
@@ -366,14 +366,16 @@
     }
     .pos-modal-card {
         background: #ffffff;
-        border-radius: 24px;
+        border-radius: 20px;
         width: 100%;
-        max-width: 480px;
-        max-height: 90vh;
-        overflow-y: auto;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        transform: scale(0.95);
-        transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        max-width: 440px;
+        max-height: 88vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.25);
+        transform: scale(0.96);
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .pos-modal-overlay.show .pos-modal-card {
         transform: scale(1);
@@ -382,16 +384,32 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 1.25rem 1.5rem;
-        border-bottom: 1.5px solid #f1f5f9;
-        background: #fafbfa;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid #f1f5f9;
+        background: #ffffff;
+        flex-shrink: 0;
     }
     .pos-modal-head h5 {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
         font-weight: 800;
         color: #0f172a;
         margin: 0;
+        letter-spacing: -0.01em;
     }
+    .pos-modal-body {
+        padding: 1.25rem;
+        overflow-y: auto;
+        flex: 1;
+    }
+    .pos-modal-foot {
+        padding: 0.85rem 1.25rem 1.25rem;
+        display: flex;
+        gap: 0.6rem;
+        background: #ffffff;
+        border-top: 1px solid #f1f5f9;
+        flex-shrink: 0;
+    }
+
     /* ── Custom Table Styles (Independent from Bootstrap) ───────────── */
     .pos-table-wrap {
         width: 100%;
@@ -410,12 +428,12 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        padding: 14px 18px;
+        padding: 12px 16px;
         border-bottom: 1.5px solid #e2e8f0;
         white-space: nowrap;
     }
     .pos-table td {
-        padding: 14px 18px;
+        padding: 12px 16px;
         border-bottom: 1px solid #f1f5f9;
         font-size: 0.83rem;
         vertical-align: middle;
@@ -428,8 +446,8 @@
     .pos-modal-close {
         background: #f1f5f9;
         border: none;
-        width: 34px;
-        height: 34px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -445,57 +463,46 @@
         color: #dc2626;
         transform: rotate(90deg);
     }
-    .pos-modal-body {
-        padding: 1.5rem;
-    }
-    .pos-modal-foot {
-        padding: 1rem 1.5rem 1.5rem;
-        display: flex;
-        gap: 0.75rem;
-        justify-content: flex-end;
-    }
 
-    /* ── Payment Options Cards ───────────────────────────────────────── */
+    /* ── Payment Options Cards (Minimalist Compact) ──────────────────── */
     .pay-option-card {
-        border: 2px solid #e2e8f0;
-        border-radius: 14px;
-        padding: 1rem;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 0.75rem 0.9rem;
         cursor: pointer;
         display: flex;
         align-items: center;
-        gap: 0.85rem;
+        gap: 0.75rem;
         transition: all 0.2s ease;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
         background: #ffffff;
     }
     .pay-option-card:hover {
         border-color: #1eb349;
-        background: #fafbfa;
+        background: #f8fafc;
     }
     .pay-option-card.selected {
         border-color: #1eb349;
         background: #f0fdf4;
-        box-shadow: 0 0 0 2px rgba(30, 179, 73, 0.2);
+        box-shadow: 0 0 0 1px #1eb349;
     }
 
     /* ── Quick Money Pill Buttons ────────────────────────────────────── */
     .btn-quick-cash {
         background: #ffffff;
-        border: 1.5px solid #86efac;
-        color: #166534;
+        border: 1px solid #cbd5e1;
+        color: #1e293b;
         font-weight: 700;
-        font-size: 0.78rem;
-        padding: 6px 14px;
-        border-radius: 20px;
+        font-size: 0.72rem;
+        padding: 4px 10px;
+        border-radius: 16px;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.15s ease;
     }
     .btn-quick-cash:hover {
         background: #1eb349;
         color: #ffffff;
         border-color: #1eb349;
-        transform: translateY(-1px);
-        box-shadow: 0 3px 8px rgba(30, 179, 73, 0.25);
     }
 
     /* ── Mobile Fixed Bottom Drawer Bar ──────────────────────────────── */
@@ -752,76 +759,73 @@
 <div class="pos-modal-overlay" id="posPaymentModal">
     <div class="pos-modal-card">
         <div class="pos-modal-head">
-            <h5>Pilih Metode Pembayaran</h5>
+            <h5>Metode Pembayaran</h5>
             <button type="button" class="pos-modal-close" onclick="closeModal('posPaymentModal')">&times;</button>
         </div>
         <div class="pos-modal-body">
-            <div class="text-center mb-4 p-3" style="background: #f0fdf4; border-radius: 16px; border: 1.5px solid #bbf7d0;">
-                <div style="font-size: 0.78rem; color: #166534; font-weight: 600;">Total Tagihan</div>
-                <div style="font-size: 1.7rem; font-weight: 800; color: #1eb349;" id="modalPayTotal">Rp 0</div>
+            <!-- Total Banner Hero -->
+            <div style="background: linear-gradient(135deg, #1eb349, #15803d); color:#ffffff; padding:0.85rem 1.25rem; border-radius:14px; text-align:center; margin-bottom:1rem; box-shadow:0 4px 12px rgba(30,179,73,0.2);">
+                <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; opacity:0.9;">Total Tagihan</div>
+                <div style="font-size:1.6rem; font-weight:900; line-height:1.1; margin-top:2px;" id="modalPayTotal">Rp 0</div>
             </div>
 
-            <label class="form-label mb-2">Pilih Metode Pembayaran</label>
-
-            <!-- Tunai / Cash -->
+            <!-- Tunai / Cash Option -->
             <div class="pay-option-card selected" id="optCash" onclick="selectPaymentMethod('cash')">
                 <input type="radio" name="pay_method" value="cash" checked style="accent-color:#1eb349;">
-                <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
-                <div>
-                    <strong style="font-size:0.9rem; color:#0f172a;">Tunai (Cash)</strong>
-                    <div style="font-size:0.75rem; color:#64748b;">Bayar langsung dengan uang tunai</div>
+                <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+                <div style="flex:1;">
+                    <div style="font-size:0.85rem; font-weight:700; color:#0f172a; line-height:1.2;">Tunai (Cash)</div>
+                    <div style="font-size:0.72rem; color:#64748b;">Bayar langsung di tempat</div>
                 </div>
             </div>
 
             <!-- Cash Calculator Panel -->
-            <div id="cashCalcPanel" class="p-3 mb-3" style="background:#fafbfa; border-radius:14px; border:1.5px solid #e2e8f0;">
-                <label class="form-label mb-1" style="color:#166534;">Nominal Uang Diterima (Rp)</label>
-                <input type="number" id="cashPaidInput" class="form-input mb-2" placeholder="Masukkan jumlah uang" oninput="calculateCashChange()">
+            <div id="cashCalcPanel" style="background:#f8fafc; border-radius:12px; border:1.5px solid #cbd5e1; padding:0.85rem; margin-bottom:0.6rem;">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label style="font-size:0.72rem; font-weight:700; color:#166534; margin:0;">Nominal Uang Diterima (Rp)</label>
+                    <span style="font-size:0.73rem; color:#475569;">Kembalian: <strong style="color:#1eb349; font-size:0.9rem;" id="cashChangeDisplay">Rp 0</strong></span>
+                </div>
+                <input type="number" id="cashPaidInput" class="form-input mb-2" style="height:38px; font-size:0.9rem; font-weight:700;" placeholder="0" oninput="calculateCashChange()">
                 
                 <!-- Quick Cash Buttons -->
-                <div class="d-flex flex-wrap gap-2 mb-3">
+                <div class="d-flex flex-wrap gap-1">
                     <button type="button" class="btn-quick-cash" onclick="setQuickCash('exact')">Uang Pas</button>
-                    <button type="button" class="btn-quick-cash" onclick="setQuickCash(20000)">20.000</button>
-                    <button type="button" class="btn-quick-cash" onclick="setQuickCash(50000)">50.000</button>
-                    <button type="button" class="btn-quick-cash" onclick="setQuickCash(100000)">100.000</button>
-                </div>
-
-                <div class="d-flex justify-content-between align-items-center pt-2 border-top border-slate-200">
-                    <span style="font-size:0.85rem; font-weight:700; color:#0f172a;">Kembalian:</span>
-                    <strong style="font-size:1.15rem; color:#1eb349;" id="cashChangeDisplay">Rp 0</strong>
+                    <button type="button" class="btn-quick-cash" onclick="setQuickCash(20000)">20rb</button>
+                    <button type="button" class="btn-quick-cash" onclick="setQuickCash(50000)">50rb</button>
+                    <button type="button" class="btn-quick-cash" onclick="setQuickCash(100000)">100rb</button>
                 </div>
             </div>
 
-            <!-- Transfer Direct -->
+            <!-- Transfer Direct Option -->
             <div class="pay-option-card" id="optTransfer" onclick="selectPaymentMethod('transfer')">
                 <input type="radio" name="pay_method" value="transfer" style="accent-color:#1eb349;">
-                <svg width="22" height="22" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><path d="M17 9V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><rect x="9" y="11" width="12" height="8" rx="2"/></svg>
-                <div>
-                    <strong style="font-size:0.9rem; color:#0f172a;">Transfer Bank Direct</strong>
-                    <div style="font-size:0.75rem; color:#64748b;">Transfer ke rekening bank toko</div>
+                <svg width="20" height="20" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><path d="M17 9V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><rect x="9" y="11" width="12" height="8" rx="2"/></svg>
+                <div style="flex:1;">
+                    <div style="font-size:0.85rem; font-weight:700; color:#0f172a; line-height:1.2;">Transfer Bank Direct</div>
+                    <div style="font-size:0.72rem; color:#64748b;">Transfer langsung ke rekening toko</div>
                 </div>
             </div>
 
-            <!-- QRIS Midtrans -->
+            <!-- QRIS Midtrans Option -->
             <div class="pay-option-card" id="optQris" onclick="selectPaymentMethod('qris')">
                 <input type="radio" name="pay_method" value="qris" style="accent-color:#1eb349;">
-                <svg width="22" height="22" fill="none" stroke="#7c3aed" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                <div>
-                    <strong style="font-size:0.9rem; color:#0f172a;">QRIS Dynamic (Midtrans)</strong>
-                    <div style="font-size:0.75rem; color:#64748b;">Scan QRIS otomatis terverifikasi via Midtrans</div>
+                <svg width="20" height="20" fill="none" stroke="#7c3aed" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                <div style="flex:1;">
+                    <div style="font-size:0.85rem; font-weight:700; color:#0f172a; line-height:1.2;">QRIS Dynamic (Midtrans)</div>
+                    <div style="font-size:0.72rem; color:#64748b;">Scan QRIS otomatis terverifikasi</div>
                 </div>
             </div>
 
-            <!-- Optional E-Receipt Email -->
-            <div class="form-group mt-3 mb-0">
-                <label class="form-label">Email Pembeli (Kirim E-Receipt Struk)</label>
-                <input type="email" id="posCustomerEmail" class="form-input" placeholder="contoh@gmail.com (Opsional)">
+            <!-- Optional E-Receipt Email Input -->
+            <div class="mt-2 mb-0">
+                <label class="form-label mb-1" style="font-size:0.73rem; color:#64748b; font-weight:600;">Email Pembeli (Kirim E-Receipt Struk - Opsional)</label>
+                <input type="email" id="posCustomerEmail" class="form-input" style="height:36px; font-size:0.78rem;" placeholder="contoh@gmail.com">
             </div>
         </div>
 
         <div class="pos-modal-foot">
-            <button type="button" class="btn-outline-bio" style="border-color:#cbd5e1; color:#64748b;" onclick="closeModal('posPaymentModal')">Batal</button>
-            <button type="button" class="btn-submit-green" id="btnSubmitOrder" onclick="processOrderCheckout()" style="width:auto;">
+            <button type="button" class="btn-outline-bio" style="border-color:#e2e8f0; color:#64748b; font-weight:700; padding:0.6rem 1.1rem; font-size:0.82rem;" onclick="closeModal('posPaymentModal')">Batal</button>
+            <button type="button" class="btn-submit-green" id="btnSubmitOrder" onclick="processOrderCheckout()" style="flex:1; margin:0; padding:0.6rem 1.1rem; font-size:0.85rem;">
                 Konfirmasi & Bayar
             </button>
         </div>
