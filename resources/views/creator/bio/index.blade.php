@@ -1671,7 +1671,7 @@
                     </div>
                     <div class="card-body" id="sortable-blocks">
                         @php
-                            $typeBlocks = $blocks;
+                            $typeBlocks = $blocks->reject(fn($b) => in_array($b->type, ['buyle_product', 'buyle_affiliate', 'custom_product']));
                         @endphp
                         @forelse($typeBlocks as $block)
                             <div class="block-item" data-id="{{ $block->id }}" style="{{ !$block->is_active ? 'opacity:0.5;' : '' }}">
