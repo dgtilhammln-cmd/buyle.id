@@ -2086,7 +2086,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        @forelse($blocks->where('type', 'custom_product') as $block)
+                        @forelse($blocks->where('type', 'custom_product')->sortBy(fn($b) => [$b->order ?? 0, $b->id]) as $block)
                                             <div class="aff-card">
                                                 @php $imgs = $block->data_json['images'] ?? []; @endphp
                                                 @if(!empty($imgs[0]))

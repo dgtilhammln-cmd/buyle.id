@@ -284,7 +284,8 @@ class CreatorBioController extends Controller
             }
         }
 
-        $lastOrder = $profile->bioBlocks()->max('order') ?? 0;
+        $maxOrder = CreatorBioBlock::where('creator_id', $profile->id)->max('order');
+        $lastOrder = ($maxOrder !== null && $maxOrder !== false) ? (int)$maxOrder : 0;
 
         CreatorBioBlock::create([
             'creator_id' => $profile->id,

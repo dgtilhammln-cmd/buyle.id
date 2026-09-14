@@ -610,8 +610,8 @@
             $imageBlocks = $blocks->where('type', 'image')->sortBy('order')->values();
             $videoBlocks = $blocks->whereIn('type', ['tiktok', 'reels'])->sortBy('order')->values();
             $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
-            $buyleBlocks = $blocks->where('type', 'buyle_product')->sortBy('order')->values();
-            $customProdBlocks = $blocks->where('type', 'custom_product')->sortBy('order')->values();
+            $buyleBlocks = $blocks->where('type', 'buyle_product')->sortBy(fn($b) => [$b->order ?? 0, $b->id])->values();
+            $customProdBlocks = $blocks->where('type', 'custom_product')->sortBy(fn($b) => [$b->order ?? 0, $b->id])->values();
         @endphp
 
         {{-- TikTok & Reels Slider --}}

@@ -112,7 +112,8 @@ class MenuScanController extends Controller
         $importedCount = 0;
 
         // Get the current max order for proper ordering (oldest = lowest order = first)
-        $lastOrder = $profile->bioBlocks()->max('order') ?? 0;
+        $maxOrder = CreatorBioBlock::where('creator_id', $profile->id)->max('order');
+        $lastOrder = ($maxOrder !== null && $maxOrder !== false) ? (int)$maxOrder : 0;
 
         foreach ($request->input('items') as $item) {
             $name = trim($item['name']);

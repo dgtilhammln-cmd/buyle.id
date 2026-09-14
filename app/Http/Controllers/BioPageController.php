@@ -22,7 +22,7 @@ class BioPageController extends Controller
         }
 
         $profile = CreatorProfile::with(['user', 'bioBlocks' => function ($q) {
-            $q->where('is_active', true)->orderBy('order');
+            $q->where('is_active', true)->orderBy('order', 'asc')->orderBy('id', 'asc');
         }])->where('store_slug', $username)->firstOrFail();
 
         // Auto-redirect to /c/{slug} if no bio setup yet

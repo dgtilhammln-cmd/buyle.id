@@ -1020,8 +1020,8 @@
         }
 
         $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
-        $buyleBlocks = $blocks->where('type', 'buyle_product')->values();
-        $customProdBlocks = $blocks->where('type', 'custom_product')->sortBy('order')->values();
+        $buyleBlocks = $blocks->where('type', 'buyle_product')->sortBy(fn($b) => [$b->order ?? 0, $b->id])->values();
+        $customProdBlocks = $blocks->where('type', 'custom_product')->sortBy(fn($b) => [$b->order ?? 0, $b->id])->values();
         $totalLinks = $blocks->whereIn('type', ['link', 'pdf'])->count();
         $totalProds = $affBlocks->count() + $buyleBlocks->count() + $customProdBlocks->count();
     @endphp

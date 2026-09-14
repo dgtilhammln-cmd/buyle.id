@@ -85,6 +85,6 @@ class CreatorProfile extends Model
 
     public function bioBlocks()
     {
-        return $this->hasMany(CreatorBioBlock::class, 'creator_id')->orderBy('order');
+        return $this->hasMany(CreatorBioBlock::class, 'creator_id')->orderBy('order', 'asc')->orderBy('id', 'asc');
     }
 }
