@@ -62,9 +62,9 @@ class BioProductController extends Controller
             $product = Product::find($block->data_json['product_id']);
         }
 
-        // Auto-heal: If custom_product has payment_method 'web' but missing product_id, create Product entry now
-        if (!$product && $block->type === 'custom_product' && ($block->data_json['payment_method'] ?? 'web') === 'web') {
-            $sellerId = $profile->user_id ?? ($profile->user->id ?? auth()->id());
+        // Auto-heal: If custom_product missing product_id or product model, create Product entry now
+        if (!$product && in_array($block->type, ['custom_product', 'buyle_product'])) {
+            $sellerId = $profile->user_id ?? ($profile->user ? $profile->user->id : (auth()->id() ?? 1));
             $slug = ($block->data_json['slug'] ?? \Illuminate\Support\Str::slug($block->title)) . '-' . time();
             $product = Product::create([
                 'seller_id'    => $sellerId,

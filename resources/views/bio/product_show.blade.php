@@ -444,6 +444,22 @@
             @endif
         </div>
 
+        @if(session('error'))
+            <div style="background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; padding:0.75rem 1rem; border-radius:12px; font-size:0.85rem; margin-bottom:1rem; font-weight:600;">
+                {{ session('error') }}
+            </div>
+        @endif
+        @if(session('success'))
+            <div style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; padding:0.75rem 1rem; border-radius:12px; font-size:0.85rem; margin-bottom:1rem; font-weight:600;">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if($errors->any())
+            <div style="background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; padding:0.75rem 1rem; border-radius:12px; font-size:0.85rem; margin-bottom:1rem; font-weight:600;">
+                {{ $errors->first() }}
+            </div>
+        @endif
+
         <div class="prod-info-box">
             <h1 class="prod-name">{{ $prodTitle }}</h1>
             <div class="prod-price-wrap">
