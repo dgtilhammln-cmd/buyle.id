@@ -566,8 +566,8 @@
             color: #1e293b;
             font-weight: 700;
             font-size: 0.72rem;
-            padding: 4px 10px;
-            border-radius: 16px;
+            padding: 4px 12px;
+            border-radius: 999px;
             cursor: pointer;
             transition: all 0.15s ease;
         }
