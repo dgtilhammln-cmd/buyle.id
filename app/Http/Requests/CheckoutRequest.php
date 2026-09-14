@@ -15,9 +15,20 @@ class CheckoutRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'coupon_code'   => 'nullable|string|exists:coupons,code',
-            'notes'         => 'nullable|string',
-            'shipping_cost' => 'nullable|numeric|min:0',
+            'coupon_code'          => 'nullable|string|exists:coupons,code',
+            'notes'                => 'nullable|string',
+            'shipping_cost'        => 'nullable|numeric|min:0',
+            'address_id'           => 'nullable|string',
+            'new_address_receiver' => 'nullable|string|max:100',
+            'new_address_phone'    => 'nullable|string|max:20',
+            'new_address_province' => 'nullable|string|max:100',
+            'new_address_city'     => 'nullable|string|max:100',
+            'new_address_district' => 'nullable|string|max:100',
+            'new_address_postal'   => 'nullable|string|max:20',
+            'new_address_label'    => 'nullable|string|max:50',
+            'new_address_full'     => 'nullable|string|max:1000',
+            'courier_name'         => 'nullable|string|max:50',
+            'courier_service'      => 'nullable|string|max:50',
         ];
 
         if (!auth()->check()) {

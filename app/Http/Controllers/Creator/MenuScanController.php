@@ -157,7 +157,7 @@ class MenuScanController extends Controller
                 'stock'        => $stock,
                 'description'  => $desc,
                 'is_active'    => true,
-                'product_type' => 'external_link',
+                'product_type' => 'physical',
             ]);
 
             CreatorBioBlock::create([

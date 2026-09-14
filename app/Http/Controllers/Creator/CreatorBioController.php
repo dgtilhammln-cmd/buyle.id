@@ -326,7 +326,7 @@ class CreatorBioController extends Controller
                     'description'  => $data['description'] ?? '',
                     'image'        => !empty($data['images'][0]) ? $data['images'][0] : ($data['image'] ?? null),
                     'is_active'    => true,
-                    'product_type' => 'external_link',
+                    'product_type' => 'physical',
                 ]);
                 $data['product_id'] = $product->id;
             }

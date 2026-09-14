@@ -2456,6 +2456,40 @@
         </div>
     </div>
 
+    {{-- ── Modal Interactive: Error Upload Foto Oversized / Terlalu Besar ── --}}
+    <div class="modal-overlay" id="imgOversizedModal" style="z-index:99999;" onclick="if(event.target===this)this.classList.remove('open')">
+        <div class="modal-box" style="max-width:420px; border-radius:20px; padding:1.75rem; text-align:center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+            <div style="width:60px; height:60px; border-radius:50%; background:#FEF2F2; color:#EF4444; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+            </div>
+            <h3 style="font-size:1.15rem; font-weight:800; color:#0F172A; margin:0 0 0.5rem; font-family:'Montserrat',sans-serif;" id="imgOversizedTitle">
+                Ukuran Foto Melebihi Batas
+            </h3>
+            <p style="font-size:0.83rem; color:#64748B; margin:0 0 1rem; line-height:1.5;" id="imgOversizedDesc">
+                Maksimal ukuran foto adalah <strong>1 MB per file</strong>. Silakan kurangi ukuran foto Anda terlebih dahulu.
+            </p>
+            <div id="imgOversizedFileList" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:0.75rem 1rem; font-size:0.8rem; color:#334155; text-align:left; margin-bottom:1.25rem; max-height:120px; overflow-y:auto; font-weight:600;">
+            </div>
+            <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                <a href="https://tinypng.com" target="_blank" rel="noopener" class="btn-submit-sm" style="display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; width:100%; height:44px; font-size:0.88rem; font-weight:700; text-decoration:none; background:#1eb349; color:#fff; border-radius:999px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    Kompres di TinyPNG.com
+                </a>
+                <button type="button" onclick="document.getElementById('imgOversizedModal').classList.remove('open')" style="height:40px; width:100%; border-radius:999px; border:1.5px solid #E2E8F0; background:#fff; color:#64748B; font-weight:700; font-size:0.85rem; cursor:pointer;">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
     {{-- ── Modal: Tambah Produk UMKM / Fisik ── --}}
     <div class="modal-overlay" id="addUmkmModal" onclick="if(event.target===this)this.classList.remove('open')">
         <div class="modal-box" style="max-width:540px; max-height:90vh; overflow-y:auto;">
@@ -3122,7 +3156,10 @@
 
             // Check count
             if (files.length > MAX_FILES) {
-                alert('Maksimal 3 foto!');
+                document.getElementById('imgOversizedTitle').innerText = 'Jumlah Foto Melebihi Batas';
+                document.getElementById('imgOversizedDesc').innerHTML = 'Maksimal <strong>3 foto</strong> per produk.';
+                document.getElementById('imgOversizedFileList').innerHTML = `<div style="color:#EF4444;">Anda memilih ${files.length} foto. Silakan pilih maksimal 3 foto.</div>`;
+                document.getElementById('imgOversizedModal').classList.add('open');
                 input.value = '';
                 return;
             }
@@ -3130,8 +3167,18 @@
             // Check individual file sizes
             const oversized = files.filter(f => f.size > MAX_SIZE);
             if (oversized.length > 0) {
-                const names = oversized.map(f => `• ${f.name} (${(f.size/1024/1024).toFixed(2)} MB)`).join('\n');
-                alert(`⚠️ Foto berikut melebihi batas 1 MB:\n${names}\n\nHarap kompres terlebih dahulu di:\nhttps://tinypng.com`);
+                document.getElementById('imgOversizedTitle').innerText = 'Ukuran Foto Melebihi Batas 1 MB';
+                document.getElementById('imgOversizedDesc').innerHTML = 'Foto berikut melebihi batas <strong>1 MB per file</strong>. Harap kompres terlebih dahulu.';
+                
+                const listHtml = oversized.map(f => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
+                        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
+                        <span style="color:#EF4444; font-weight:700;">${(f.size/1024/1024).toFixed(2)} MB</span>
+                    </div>
+                `).join('');
+                
+                document.getElementById('imgOversizedFileList').innerHTML = listHtml;
+                document.getElementById('imgOversizedModal').classList.add('open');
                 input.value = '';
                 return;
             }

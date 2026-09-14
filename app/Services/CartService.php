@@ -179,7 +179,14 @@ class CartService
             $totalWeight += ($item->product->weight ?? 0) * $item->qty;
 
             if ($item->product) {
-                $pType = $item->product->product_type ?? $item->product->type ?? 'digital';
+                $pType = strtolower($item->product->product_type ?? $item->product->type ?? 'digital');
+                $catName = strtolower($item->product->category->name ?? '');
+
+                if (in_array($pType, ['physical', 'external_link', 'custom_product', 'barang']) || in_array($catName, ['barang', 'makanan', 'produk fisik', 'umkm', 'kuliner', 'jasa'])) {
+                    if ($pType !== 'ticket' && $pType !== 'digital') {
+                        $hasPhysicalProduct = true;
+                    }
+                }
                 if ($pType === 'physical') {
                     $hasPhysicalProduct = true;
                 } elseif ($pType === 'service') {

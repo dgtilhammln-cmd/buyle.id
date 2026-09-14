@@ -92,6 +92,58 @@ class CheckoutService
 
         $notes = $data['notes'] ?? null;
 
+        // Form Alamat Pengiriman untuk produk fisik
+        $shippingAddressArray = [];
+        if ($summary['has_physical_product']) {
+            if (!empty($data['address_id']) && $data['address_id'] !== 'new') {
+                $addrObj = Address::find($data['address_id']);
+                if ($addrObj) {
+                    $shippingAddressArray = [
+                        'receiver_name' => $addrObj->receiver_name,
+                        'phone'         => $addrObj->phone,
+                        'province'      => $addrObj->province,
+                        'city'          => $addrObj->city,
+                        'district'      => $addrObj->district,
+                        'postal_code'   => $addrObj->postal_code,
+                        'address'       => $addrObj->address,
+                        'label'         => $addrObj->label,
+                    ];
+                }
+            }
+            
+            if (empty($shippingAddressArray)) {
+                $shippingAddressArray = [
+                    'receiver_name' => $data['new_address_receiver'] ?? ($data['guest_name'] ?? $user->name ?? ''),
+                    'phone'         => $data['new_address_phone'] ?? ($data['guest_phone'] ?? $user->phone ?? ''),
+                    'province'      => $data['new_address_province'] ?? '',
+                    'city'          => $data['new_address_city'] ?? '',
+                    'district'      => $data['new_address_district'] ?? '',
+                    'postal_code'   => $data['new_address_postal'] ?? '',
+                    'address'       => $data['new_address_full'] ?? '',
+                    'label'         => $data['new_address_label'] ?? 'Rumah',
+                ];
+
+                if ($user->id) {
+                    try {
+                        Address::create([
+                            'user_id'       => $user->id,
+                            'label'         => $shippingAddressArray['label'],
+                            'receiver_name' => $shippingAddressArray['receiver_name'],
+                            'phone'         => $shippingAddressArray['phone'],
+                            'province'      => $shippingAddressArray['province'],
+                            'city'          => $shippingAddressArray['city'],
+                            'district'      => $shippingAddressArray['district'],
+                            'postal_code'   => $shippingAddressArray['postal_code'],
+                            'address'       => $shippingAddressArray['address'],
+                            'is_default'    => ($user->addresses()->count() === 0),
+                        ]);
+                    } catch (\Exception $ex) {
+                        \Log::warning('Failed saving user address: ' . $ex->getMessage());
+                    }
+                }
+            }
+        }
+
         DB::beginTransaction();
 
         try {
@@ -106,7 +158,7 @@ class CheckoutService
                 'admin_fee'        => $adminFee,
                 'discount'         => $discount,
                 'total'            => $total,
-                'shipping_address' => [],
+                'shipping_address' => $shippingAddressArray,
                 'notes'            => $notes,
                 'utm_source'       => session('utm_source'),
                 'utm_medium'       => session('utm_medium'),
@@ -124,10 +176,10 @@ class CheckoutService
                 }
 
                 // Proteksi race condition pada stok tiket & produk
-                if ($product->product_type === 'ticket' || $product->type === 'product' || $product->product_type === 'external_link') {
+                if (in_array($product->product_type, ['ticket', 'physical', 'external_link']) || $product->type === 'product') {
                     if ($product->stock !== null) {
                         if ((int)$product->stock < $cartItem->qty) {
-                            throw new Exception("Stok tiket / produk \"{$product->name}\" tidak mencukupi (Sisa: {$product->stock}).");
+                            throw new Exception("Stok produk \"{$product->name}\" tidak mencukupi (Sisa: {$product->stock}).");
                         }
                         $product->decrement('stock', $cartItem->qty);
                     }
@@ -143,6 +195,16 @@ class CheckoutService
                     'price'            => $cartItem->unit_price,
                     'qty'              => $cartItem->qty,
                     'subtotal'         => $cartItem->subtotal,
+                ]);
+            }
+
+            // 3. Buat Shipment jika ada pengiriman fisik
+            if ($summary['has_physical_product'] && !empty($data['courier_name'])) {
+                Shipment::create([
+                    'order_id'        => $order->id,
+                    'courier_name'    => strtoupper($data['courier_name']),
+                    'courier_service' => strtoupper($data['courier_service'] ?? 'REG'),
+                    'status'          => \App\Enums\ShipmentStatus::Pending,
                 ]);
             }
 
