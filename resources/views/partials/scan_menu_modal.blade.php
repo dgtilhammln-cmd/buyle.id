@@ -99,8 +99,18 @@
   </div>
 </div>
 
+{{-- Interactive Alert/Popup Modal --}}
+<div id="ai-popup-modal" class="modal-backdrop" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.7); backdrop-filter:blur(8px); z-index:999999; justify-content:center; align-items:center; padding:1.5rem; box-sizing:border-box;">
+  <div style="background:#FFFFFF; border-radius:24px; max-width:420px; width:100%; text-align:center; padding:2rem 1.75rem; box-shadow:0 25px 50px -12px rgba(0,0,0,0.35); border:1px solid #E2E8F0; animation:modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+    <div id="ai-popup-icon-wrap" style="width:64px; height:64px; border-radius:50%; margin:0 auto 1.25rem; display:flex; align-items:center; justify-content:center;"></div>
+    <h3 id="ai-popup-title" style="font-size:1.15rem; font-weight:800; color:#0F172A; margin:0 0 0.5rem; font-family:'Montserrat',sans-serif;">Pemberitahuan</h3>
+    <p id="ai-popup-message" style="font-size:0.85rem; color:#475569; margin:0 0 1.5rem; line-height:1.5; font-family:'Montserrat',sans-serif; word-break:break-word;"></p>
+    <button type="button" id="ai-popup-btn" style="width:100%; padding:0.75rem; font-size:0.875rem; font-weight:700; border:none; border-radius:12px; cursor:pointer; color:#FFF; transition:all 0.2s; font-family:'Montserrat',sans-serif;">Oke, Mengerti</button>
+  </div>
+</div>
+
 <style>
-@keyframes modalPop { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+@keyframes modalPop { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
 .ai-pulse-loader { animation: pulseGlow 1.8s ease-in-out infinite; }
 @keyframes pulseGlow { 0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(30,179,73,0.3); } 50% { transform: scale(1.06); box-shadow: 0 0 35px rgba(30,179,73,0.6); } }
 .spin-anim { animation: spin 1s linear infinite; }
@@ -109,6 +119,51 @@
 
 <script>
 let detectedMenuItems = [];
+
+function showAiPopup(type, title, message, onConfirm = null) {
+  const modal = document.getElementById('ai-popup-modal');
+  const iconWrap = document.getElementById('ai-popup-icon-wrap');
+  const titleEl = document.getElementById('ai-popup-title');
+  const msgEl = document.getElementById('ai-popup-message');
+  const btnEl = document.getElementById('ai-popup-btn');
+
+  if (!modal) return;
+
+  titleEl.textContent = title || 'Pemberitahuan';
+  msgEl.textContent = message || '';
+
+  if (type === 'success') {
+    iconWrap.style.background = '#DCFCE7';
+    iconWrap.style.color = '#166534';
+    iconWrap.innerHTML = '<svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>';
+    btnEl.style.background = 'linear-gradient(135deg, #1eb349, #a5cf37)';
+    btnEl.style.boxShadow = '0 4px 14px rgba(30,179,73,0.35)';
+  } else if (type === 'error') {
+    iconWrap.style.background = '#FEE2E2';
+    iconWrap.style.color = '#991B1B';
+    iconWrap.innerHTML = '<svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+    btnEl.style.background = '#EF4444';
+    btnEl.style.boxShadow = '0 4px 14px rgba(239,68,68,0.35)';
+  } else {
+    iconWrap.style.background = '#E0F2FE';
+    iconWrap.style.color = '#075985';
+    iconWrap.innerHTML = '<svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+    btnEl.style.background = '#0284C7';
+    btnEl.style.boxShadow = '0 4px 14px rgba(2,132,199,0.35)';
+  }
+
+  btnEl.onclick = function() {
+    closeAiPopupModal();
+    if (typeof onConfirm === 'function') onConfirm();
+  };
+
+  modal.style.display = 'flex';
+}
+
+function closeAiPopupModal() {
+  const modal = document.getElementById('ai-popup-modal');
+  if (modal) modal.style.display = 'none';
+}
 
 function openScanMenuModal() {
   document.getElementById('scan-menu-modal').style.display = 'flex';
@@ -126,6 +181,7 @@ function resetScanModalState() {
   document.getElementById('btn-import-scanned').style.display = 'none';
   document.getElementById('menu_file_input').value = '';
   detectedMenuItems = [];
+  restoreImportBtn();
 }
 
 function handleMenuFileSelected(file) {
@@ -153,13 +209,14 @@ function handleMenuFileSelected(file) {
       document.getElementById('scan-step-loading').style.display = 'none';
       document.getElementById('scan-step-result').style.display = 'block';
       document.getElementById('btn-import-scanned').style.display = 'inline-flex';
+      restoreImportBtn();
     } else {
-      alert(data.message || 'Gagal mengekstrak menu. Coba gunakan foto yang lebih jelas.');
+      showAiPopup('error', 'Gagal Membaca Menu', data.message || 'Gagal mengekstrak menu. Coba gunakan foto yang lebih terang dan jelas.');
       resetScanModalState();
     }
   })
   .catch(err => {
-    alert('Terjadi kesalahan saat memproses gambar menu: ' + err.message);
+    showAiPopup('error', 'Kendala Sistem', 'Terjadi kesalahan saat memproses gambar menu: ' + err.message);
     resetScanModalState();
   });
 }
@@ -208,7 +265,7 @@ function renderScanItemsTable() {
     tbody.appendChild(tr);
   });
 
-  updateImportBtnCount();
+  restoreImportBtn();
 }
 
 function escapeHtml(text) {
@@ -223,7 +280,21 @@ function selectAllScanItems(checked) {
 
 function updateImportBtnCount() {
   const checkedCount = document.querySelectorAll('.scan-item-chk:checked').length;
-  document.getElementById('btn-import-text').textContent = `Impor ${checkedCount} Menu ke Produk Fisik`;
+  const txtEl = document.getElementById('btn-import-text');
+  if (txtEl) {
+    txtEl.textContent = `Impor ${checkedCount} Menu ke Produk Fisik`;
+  }
+}
+
+function restoreImportBtn() {
+  const btn = document.getElementById('btn-import-scanned');
+  if (!btn) return;
+  btn.disabled = false;
+  btn.innerHTML = `
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    <span id="btn-import-text">Impor ke Produk Fisik</span>
+  `;
+  updateImportBtnCount();
 }
 
 function submitBulkImportScanned() {
@@ -231,7 +302,7 @@ function submitBulkImportScanned() {
   const chks = document.querySelectorAll('.scan-item-chk:checked');
 
   if (chks.length === 0) {
-    alert('Pilih minimal 1 menu untuk diimpor ke katalog.');
+    showAiPopup('info', 'Pilih Produk', 'Pilih minimal 1 menu untuk diimpor ke katalog.');
     return;
   }
 
@@ -268,18 +339,17 @@ function submitBulkImportScanned() {
   .then(res => res.json())
   .then(data => {
     if (data.success) {
-      alert(data.message);
-      window.location.reload();
+      showAiPopup('success', 'Berhasil Diimpor! 🎉', data.message, function() {
+        window.location.reload();
+      });
     } else {
-      alert(data.message || 'Gagal mengimpor produk.');
-      btn.disabled = false;
-      updateImportBtnCount();
+      showAiPopup('error', 'Gagal Mengimpor', data.message || 'Terjadi kesalahan saat menyimpan produk.');
+      restoreImportBtn();
     }
   })
   .catch(err => {
-    alert('Error saat impor produk: ' + err.message);
-    btn.disabled = false;
-    updateImportBtnCount();
+    showAiPopup('error', 'Kendala Server', 'Gagal mengimpor produk: ' + err.message);
+    restoreImportBtn();
   });
 }
 </script>

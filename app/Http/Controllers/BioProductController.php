@@ -64,8 +64,11 @@ class BioProductController extends Controller
 
         // Auto-heal: If custom_product missing product_id or product model, create Product entry now
         if (!$product && in_array($block->type, ['custom_product', 'buyle_product'])) {
-            $sellerId = $profile->user_id ?? ($profile->user ? $profile->user->id : (auth()->id() ?? 1));
-            $slug = ($block->data_json['slug'] ?? \Illuminate\Support\Str::slug($block->title)) . '-' . time();
+            $baseSlug = ($block->data_json['slug'] ?? \Illuminate\Support\Str::slug($block->title)) ?: 'produk';
+            $slug     = $baseSlug;
+            while (Product::where('slug', $slug)->exists()) {
+                $slug = $baseSlug . '-' . \Illuminate\Support\Str::random(4);
+            }
             $stock = isset($block->data_json['stock']) && $block->data_json['stock'] !== '' && $block->data_json['stock'] !== null ? (int)$block->data_json['stock'] : null;
             $product = Product::create([
                 'seller_id'    => $sellerId,

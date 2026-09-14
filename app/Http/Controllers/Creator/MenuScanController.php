@@ -132,10 +132,19 @@ class MenuScanController extends Controller
             $stockVal = $item['stock'] ?? null;
             $stock = ($stockVal === '' || $stockVal === null || $stockVal === 'unlimited') ? null : (int)$stockVal;
 
-            // Smart slug logic
-            $cleanTitle = Str::limit($name, 45, '');
-            $baseSlug   = rtrim(Str::slug($cleanTitle), '-');
-            $slug = $baseSlug ?: 'produk-' . time() . '-' . $importedCount;
+            // Smart unique slug logic to prevent 1062 Duplicate entry SQL errors
+            $cleanTitle = Str::limit($name, 40, '');
+            $baseSlug   = rtrim(Str::slug($cleanTitle), '-') ?: 'produk';
+            $slug       = $baseSlug;
+            $attempt    = 1;
+            while (\App\Models\Product::where('slug', $slug)->exists()) {
+                $slug = $baseSlug . '-' . Str::random(4);
+                $attempt++;
+                if ($attempt > 10) {
+                    $slug = $baseSlug . '-' . time() . '-' . rand(100, 999);
+                    break;
+                }
+            }
 
             $lastOrder++;
 
