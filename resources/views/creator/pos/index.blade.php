@@ -593,12 +593,23 @@
                     @forelse($products as $prod)
                         @php
                             $prodPrice = (float) ($prod->sale_price ?: $prod->price);
+                            $imgUrl = null;
+                            if (!empty($prod->image) && strlen(trim($prod->image)) > 1) {
+                                $rawImg = trim($prod->image);
+                                if (\Illuminate\Support\Str::startsWith($rawImg, ['http://', 'https://'])) {
+                                    $imgUrl = $rawImg;
+                                } elseif (\Illuminate\Support\Str::startsWith($rawImg, ['storage/', '/storage/'])) {
+                                    $imgUrl = asset(ltrim($rawImg, '/'));
+                                } else {
+                                    $imgUrl = asset('storage/' . ltrim($rawImg, '/'));
+                                }
+                            }
                         @endphp
                         <div class="product-card" data-id="{{ $prod->id }}" data-name="{{ strtolower($prod->name) }}" data-price="{{ $prodPrice }}" onclick="addToCart({{ $prod->id }}, '{{ addslashes($prod->name) }}', {{ $prodPrice }})">
                             <div class="product-qty-badge d-none" id="badge-qty-{{ $prod->id }}">0</div>
                             <div class="product-img-wrapper">
-                                @if(!empty($prod->image))
-                                    <img src="{{ asset('storage/' . $prod->image) }}" alt="{{ $prod->name }}" class="product-img">
+                                @if($imgUrl)
+                                    <img src="{{ $imgUrl }}" alt="{{ $prod->name }}" class="product-img" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<svg width=\'32\' height=\'32\' fill=\'none\' stroke=\'#cbd5e1\' stroke-width=\'1.5\' viewBox=\'0 0 24 24\'><path d=\'M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9\'/><path d=\'M13.73 21a2 2 0 0 1-3.46 0\'/></svg>';">
                                 @else
                                     <svg width="32" height="32" fill="none" stroke="#cbd5e1" stroke-width="1.5" viewBox="0 0 24 24">
                                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>

@@ -35,6 +35,51 @@ class PosController extends Controller
             'seafood', 'dimsum', 'coffe', 'tea', 'boba', 'manja'
         ];
 
+        $parsePrice = function ($val) {
+            if (is_null($val) || $val === '' || $val === false) return 0.0;
+            if (is_numeric($val)) return (float) $val;
+            if (is_string($val)) {
+                $clean = preg_replace('/[^0-9]/', '', $val);
+                return (float) $clean;
+            }
+            return 0.0;
+        };
+
+        $extractImage = function ($data) {
+            if (empty($data) || !is_array($data)) return null;
+
+            $candidates = [];
+
+            if (!empty($data['images'])) {
+                if (is_array($data['images'])) {
+                    foreach ($data['images'] as $img) {
+                        if (is_string($img) && strlen(trim($img)) > 1) {
+                            $candidates[] = trim($img);
+                        }
+                    }
+                } elseif (is_string($data['images'])) {
+                    $decoded = json_decode($data['images'], true);
+                    if (is_array($decoded)) {
+                        foreach ($decoded as $img) {
+                            if (is_string($img) && strlen(trim($img)) > 1) {
+                                $candidates[] = trim($img);
+                            }
+                        }
+                    } elseif (strlen(trim($data['images'])) > 1 && !str_starts_with(trim($data['images']), '[')) {
+                        $candidates[] = trim($data['images']);
+                    }
+                }
+            }
+
+            foreach (['image', 'scraped_image', 'thumbnail', 'thumb', 'photo', 'cover', 'block_image'] as $key) {
+                if (!empty($data[$key]) && is_string($data[$key]) && strlen(trim($data[$key])) > 1) {
+                    $candidates[] = trim($data[$key]);
+                }
+            }
+
+            return !empty($candidates) ? $candidates[0] : null;
+        };
+
         $posProducts = collect();
 
         if ($profile) {
@@ -43,7 +88,6 @@ class PosController extends Controller
                 ->get();
 
             foreach ($bioBlocks as $block) {
-                // Periksa apakah blok aktif (dukung boolean true, integer 1, atau string '1')
                 $isActive = ($block->is_active === true || $block->is_active == 1 || $block->is_active === '1');
                 if (!$isActive) {
                     continue;
@@ -53,12 +97,10 @@ class PosController extends Controller
                 $cat   = strtolower(trim($data['category'] ?? 'makanan'));
                 $title = strtolower(trim($block->title ?? ''));
 
-                // Jika dikategorikan tegas sebagai Barang atau Jasa, KECUALIKAN dari POS
                 if ($cat === 'barang' || $cat === 'jasa') {
                     continue;
                 }
 
-                // Cek kategori makanan atau kata kunci nama produk
                 $isFoodCat = in_array($cat, ['makanan', 'food', 'kuliner', 'fnb', 'resto', 'minuman', 'drink', 'snack', 'kue', 'cafe', '']);
                 $isFoodKeyword = false;
                 foreach ($foodKeywords as $kw) {
@@ -76,12 +118,21 @@ class PosController extends Controller
                         $product = Product::find($pId);
                     }
 
-                    // Jika entri Product di DB belum ada / terhapus, cari berdasarkan nama atau buat baru (auto-heal)
                     if (!$product) {
                         $product = Product::where('seller_id', $sellerId)
                             ->where('name', $block->title)
                             ->first();
                     }
+
+                    $extractedPrice = $parsePrice($data['price'] ?? 0);
+                    if ($extractedPrice <= 0) {
+                        $extractedPrice = $parsePrice($data['original_price'] ?? 0);
+                    }
+                    if ($extractedPrice <= 0) {
+                        $extractedPrice = $parsePrice($data['harga'] ?? 0);
+                    }
+
+                    $extractedImg = $extractImage($data);
 
                     if (!$product) {
                         $baseSlug = ($data['slug'] ?? \Illuminate\Support\Str::slug($block->title)) ?: 'produk';
@@ -90,44 +141,40 @@ class PosController extends Controller
                             $slug = $baseSlug . '-' . \Illuminate\Support\Str::random(4);
                         }
                         $stock   = isset($data['stock']) && $data['stock'] !== '' && $data['stock'] !== null ? (int)$data['stock'] : null;
-                        // Ambil harga dari data_json — coba price dulu, fallback ke original_price
-                        $bioCreatePrice = (float)($data['price'] ?? 0);
-                        if ($bioCreatePrice <= 0) {
-                            $bioCreatePrice = (float)($data['original_price'] ?? 0);
-                        }
+
                         $product = Product::create([
                             'seller_id'    => $sellerId,
                             'name'         => $block->title,
                             'slug'         => $slug,
-                            'price'        => $bioCreatePrice,
+                            'price'        => $extractedPrice,
                             'stock'        => $stock,
                             'description'  => $data['description'] ?? '',
-                            'image'        => !empty($data['images'][0]) ? $data['images'][0] : ($data['image'] ?? null),
+                            'image'        => $extractedImg,
                             'is_active'    => true,
                             'product_type' => 'makanan',
                         ]);
 
-                        // Simpan product_id kembali ke data_json blok
                         $data['product_id'] = $product->id;
                         $block->data_json   = $data;
                         $block->save();
-                    }
+                    } else {
+                        $product->name = $block->title;
 
-                    // Terapkan metadata nama, harga, & gambar terbaru dari bio block
-                    // Gunakan || (bukan ??) supaya nilai 0 juga fallback ke harga tersimpan di Product
-                    $product->name  = $block->title;
-                    $bioPrice = (float)($data['price'] ?? 0);
-                    if ($bioPrice > 0) {
-                        $product->price = $bioPrice;
-                    }
-                    // Jika product->price masih 0, coba original_price dari bio block
-                    if ($product->price <= 0 && !empty($data['original_price'])) {
-                        $product->price = (float)$data['original_price'];
-                    }
-                    if (!empty($data['images'][0])) {
-                        $product->image = $data['images'][0];
-                    } elseif (!empty($data['image'])) {
-                        $product->image = $data['image'];
+                        if ($extractedPrice > 0) {
+                            $product->price = $extractedPrice;
+                        } elseif ((float)$product->price <= 0 && (float)$product->sale_price > 0) {
+                            $product->price = (float)$product->sale_price;
+                        }
+
+                        if (!empty($extractedImg)) {
+                            if (empty($product->image) || strlen($product->image) <= 1) {
+                                $product->image = $extractedImg;
+                            }
+                        }
+
+                        if ($product->isDirty(['price', 'name', 'image'])) {
+                            $product->save();
+                        }
                     }
 
                     $posProducts->push($product);
@@ -135,7 +182,6 @@ class PosController extends Controller
             }
         }
 
-        // Fallback: Jika bio blocks belum ada, ambil produk fisik/makanan langsung dari tabel products
         if ($posProducts->isEmpty()) {
             $posProducts = Product::where('seller_id', $sellerId)
                 ->where('is_active', true)
