@@ -1173,9 +1173,6 @@
     @if($categoryItems->count())
     <section class="cv-cats-section" aria-label="Kategori Produk">
         <div class="cv-cats-inner" style="flex-direction: column; align-items: flex-start; padding: 1rem 1.5rem 1.25rem;">
-            <h2 style="font-size:1.15rem; font-weight:600; color:#1E293B; margin:0 0 1rem 0; font-family:'Montserrat', sans-serif;">
-                Kategori Pilihan
-            </h2>
             <div class="swiper cats-swiper hidden md:block" id="catsSwiperDesktop" style="width: 100%;">
                 <div class="swiper-wrapper">
                     @foreach($categoryItems as $cat)
