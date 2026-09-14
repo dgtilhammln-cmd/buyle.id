@@ -226,6 +226,14 @@ class CreatorBioController extends Controller
      */
     public function storeBlock(Request $request)
     {
+        // Strip rupiah formatting (dots) from price fields before validation
+        if ($request->has('price')) {
+            $request->merge(['price' => preg_replace('/[^0-9]/', '', $request->price ?? '')]);
+        }
+        if ($request->has('original_price')) {
+            $request->merge(['original_price' => preg_replace('/[^0-9]/', '', $request->original_price ?? '') ?: null]);
+        }
+
         $request->validate([
             'type'  => 'required|in:link,pdf,tiktok,reels,affiliate,shopee,buyle_product,buyle_affiliate,image,custom_product',
             'title' => 'required|string|max:150',
@@ -263,8 +271,8 @@ class CreatorBioController extends Controller
         
         // Handle custom product specific fields
         if (in_array($request->type, ['custom_product', 'buyle_product'])) {
-            if ($request->filled('price')) $data['price'] = $request->price;
-            if ($request->filled('original_price')) $data['original_price'] = $request->original_price;
+            if ($request->filled('price')) $data['price'] = (int)$request->price;
+            if ($request->filled('original_price')) $data['original_price'] = (int)$request->original_price;
             if ($request->filled('payment_method')) $data['payment_method'] = $request->payment_method;
             if ($request->filled('wa_text')) $data['wa_text'] = $request->wa_text;
 
@@ -284,14 +292,23 @@ class CreatorBioController extends Controller
             $baseSlug   = rtrim(Str::slug($cleanTitle), '-');
             $data['slug'] = $baseSlug ?: 'produk-' . time();
             
+            // Ensure bio/blocks directory exists on hosting
+            $bioBlocksDir = storage_path('app/public/bio/blocks');
+            if (!is_dir($bioBlocksDir)) {
+                @mkdir($bioBlocksDir, 0755, true);
+            }
+
             // Handle multiple images
             if ($request->hasFile('custom_images')) {
                 $images = [];
                 $files = array_slice($request->file('custom_images'), 0, 3); // Max 3
                 foreach ($files as $file) {
-                    $images[] = $file->store('bio/blocks', 'public');
+                    if ($file->isValid()) {
+                        $path = $file->store('bio/blocks', 'public');
+                        if ($path) $images[] = $path;
+                    }
                 }
-                $data['images'] = $images;
+                if (!empty($images)) $data['images'] = $images;
             }
             // Auto-create Product entry in products table for Payment Gateway checkout
             if (($data['payment_method'] ?? 'web') === 'web' && empty($data['product_id'])) {
@@ -382,6 +399,14 @@ class CreatorBioController extends Controller
         $profile = $this->getProfile();
         if ($block->creator_id !== $profile->id) abort(403);
 
+        // Strip rupiah formatting before validation
+        if ($request->has('price')) {
+            $request->merge(['price' => preg_replace('/[^0-9]/', '', $request->price ?? '')]);
+        }
+        if ($request->has('original_price')) {
+            $request->merge(['original_price' => preg_replace('/[^0-9]/', '', $request->original_price ?? '') ?: null]);
+        }
+
         $request->validate([
             'title' => 'required|string|max:150',
             'url'   => 'nullable|string|max:2000',
@@ -414,8 +439,8 @@ class CreatorBioController extends Controller
         if ($request->has('icon_class'))  $data['icon_class']  = $request->icon_class;
         
         if (in_array($block->type, ['custom_product', 'buyle_product'])) {
-            if ($request->has('price')) $data['price'] = $request->price;
-            if ($request->has('original_price')) $data['original_price'] = $request->original_price;
+            if ($request->has('price')) $data['price'] = (int)$request->price;
+            if ($request->has('original_price')) $data['original_price'] = (int)$request->original_price;
             if ($request->has('payment_method')) $data['payment_method'] = $request->payment_method;
 
             if ($request->has('category')) {
@@ -451,12 +476,21 @@ class CreatorBioController extends Controller
                 $currentImages = array_values($currentImages);
             }
 
+            // Ensure bio/blocks directory exists
+            $bioBlocksDir = storage_path('app/public/bio/blocks');
+            if (!is_dir($bioBlocksDir)) {
+                @mkdir($bioBlocksDir, 0755, true);
+            }
+
             // Append new uploaded images up to max 3
             if ($request->hasFile('custom_images')) {
                 $maxAllow = max(0, 3 - count($currentImages));
                 $newFiles = array_slice($request->file('custom_images'), 0, $maxAllow);
                 foreach ($newFiles as $file) {
-                    $currentImages[] = $file->store('bio/blocks', 'public');
+                    if ($file->isValid()) {
+                        $path = $file->store('bio/blocks', 'public');
+                        if ($path) $currentImages[] = $path;
+                    }
                 }
             }
 
