@@ -361,12 +361,8 @@ label:focus{outline:none !important;box-shadow:none !important;}
                             @forelse($couriers ?? [] as $courier)
                                 <option value="{{ $courier->code }}">{{ $courier->name }}</option>
                             @empty
-                                <option value="jne">JNE Reguler</option>
+                                <option value="jne">JNE Express</option>
                                 <option value="jnt">J&T Express</option>
-                                <option value="sicepat">SiCepat Express</option>
-                                <option value="pos">POS Indonesia</option>
-                                <option value="tiki">TIKI</option>
-                                <option value="custom">Kurir Toko (Manual)</option>
                             @endforelse
                         </select>
 
