@@ -12,7 +12,7 @@
         </div>
         <div>
           <h3 style="font-size:1.05rem; font-weight:800; color:#0F172A; margin:0; line-height:1.2;">Scan Menu Buku AI</h3>
-          <p style="font-size:0.75rem; color:#64748B; margin:0;">Upload foto daftar menu resto/kafe untuk mengekstrak nama, harga, & deskripsi jualan otomatis.</p>
+          <p style="font-size:0.75rem; color:#64748B; margin:0;">Upload foto daftar menu resto/kafe untuk mengekstrak nama, harga, & deskripsi jualan otomatis ke Produk Fisik Link Bio.</p>
         </div>
       </div>
       <button type="button" onclick="closeScanMenuModal()" style="background:none; border:none; color:#94A3B8; cursor:pointer; padding:0.25rem; border-radius:8px;" onmouseover="this.style.color='#0F172A'">
@@ -90,7 +90,7 @@
 
       <button type="button" id="btn-import-scanned" onclick="submitBulkImportScanned()" style="display:none; align-items:center; gap:0.5rem; padding:0.65rem 1.5rem; font-size:0.875rem; font-weight:700; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#FFFFFF; border:none; border-radius:10px; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,0.3);">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        <span id="btn-import-text">Impor Produk Terpilih</span>
+        <span id="btn-import-text">Impor ke Produk Fisik</span>
       </button>
     </div>
 
@@ -206,7 +206,7 @@ function selectAllScanItems(checked) {
 
 function updateImportBtnCount() {
   const checkedCount = document.querySelectorAll('.scan-item-chk:checked').length;
-  document.getElementById('btn-import-text').textContent = `Impor ${checkedCount} Menu ke Katalog`;
+  document.getElementById('btn-import-text').textContent = `Impor ${checkedCount} Menu ke Produk Fisik`;
 }
 
 function submitBulkImportScanned() {

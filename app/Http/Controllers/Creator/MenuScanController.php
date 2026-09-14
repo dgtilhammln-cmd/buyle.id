@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Creator;
 
 use App\Http\Controllers\Controller;
+use App\Models\CreatorBioBlock;
 use App\Models\CreatorProfile;
-use App\Models\Product;
-use App\Models\ProductCategory;
 use App\Services\AiVisionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -15,7 +14,7 @@ class MenuScanController extends Controller
     public function scan(Request $request, AiVisionService $aiService)
     {
         $user = auth()->user();
-        $profile = $user->creatorProfile;
+        $profile = CreatorProfile::getOrCreateForUser($user);
 
         if (!$profile) {
             return response()->json([
@@ -94,6 +93,10 @@ class MenuScanController extends Controller
         }
     }
 
+    /**
+     * Bulk import scanned menu items as Produk Fisik (custom_product) bio blocks.
+     * All items auto-set to checkout via Buyle (payment_method = 'web').
+     */
     public function bulkImport(Request $request)
     {
         $request->validate([
@@ -105,11 +108,11 @@ class MenuScanController extends Controller
         ]);
 
         $user = auth()->user();
+        $profile = CreatorProfile::getOrCreateForUser($user);
         $importedCount = 0;
 
-        // Default category fallback
-        $defaultCat = ProductCategory::first();
-        $defaultCatId = $defaultCat?->id ?? 1;
+        // Get the current max order for proper ordering (oldest = lowest order = first)
+        $lastOrder = $profile->bioBlocks()->max('order') ?? 0;
 
         foreach ($request->input('items') as $item) {
             $name = trim($item['name']);
@@ -118,24 +121,26 @@ class MenuScanController extends Controller
             $price = (int) ($item['price'] ?? 0);
             $desc  = trim($item['description'] ?? '');
 
-            // Unique slug generator
-            $slug = Str::slug($name);
-            $origSlug = $slug;
-            $counter = 1;
-            while (Product::where('slug', $slug)->exists()) {
-                $slug = $origSlug . '-' . $counter++;
-            }
+            // Smart slug logic
+            $cleanTitle = Str::limit($name, 45, '');
+            $baseSlug   = rtrim(Str::slug($cleanTitle), '-');
+            $slug = $baseSlug ?: 'produk-' . time() . '-' . $importedCount;
 
-            Product::create([
-                'seller_id'   => $user->id,
-                'category_id' => $defaultCatId,
-                'name'        => $name,
-                'slug'        => $slug,
-                'price'       => $price,
-                'description' => $desc,
-                'product_type'=> 'external_link',
-                'is_active'   => true,
-                'stock'       => 999,
+            $lastOrder++;
+
+            CreatorBioBlock::create([
+                'creator_id' => $profile->id,
+                'type'       => 'custom_product',
+                'title'      => $name,
+                'url'        => null,
+                'data_json'  => [
+                    'price'          => $price,
+                    'payment_method' => 'web', // Otomatis checkout via Buyle
+                    'description'    => $desc,
+                    'slug'           => $slug,
+                ],
+                'order'      => $lastOrder,
+                'is_active'  => true,
             ]);
 
             $importedCount++;
@@ -143,7 +148,7 @@ class MenuScanController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => "Berhasil mengimpor {$importedCount} produk ke katalog Anda!",
+            'message' => "Berhasil mengimpor {$importedCount} produk fisik ke Link Bio Anda! (Checkout via Buyle)",
             'imported_count' => $importedCount
         ]);
     }
