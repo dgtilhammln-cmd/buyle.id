@@ -655,8 +655,13 @@ label:focus{outline:none !important;box-shadow:none !important;}
             distSelect.innerHTML = '<option value="">Pilih Kota Dulu</option>';
             return;
         }
+        
+        const citySelect = document.getElementById('city_select');
+        const cityName = citySelect?.options[citySelect.selectedIndex]?.text || '';
+        const provId   = document.getElementById('province_select')?.value || '';
+
         distSelect.innerHTML = '<option value="">Memuat kecamatan...</option>';
-        fetch(`{{ url('/api/rajaongkir/districts') }}/${cityId}`)
+        fetch(`{{ url('/api/rajaongkir/districts') }}/${cityId}?city_name=${encodeURIComponent(cityName)}&province_id=${provId}`)
             .then(res => res.json())
             .then(data => {
                 distSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
@@ -667,7 +672,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
                         distSelect.add(opt);
                     });
                 } else {
-                    distSelect.innerHTML = '<option value="">Tidak ada data kecamatan</option>';
+                    distSelect.innerHTML = '<option value="">Pilih Kecamatan (Kosong / Manual)</option>';
                 }
             })
             .catch(err => {

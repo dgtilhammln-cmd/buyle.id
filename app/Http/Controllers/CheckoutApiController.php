@@ -289,11 +289,14 @@ class CheckoutApiController extends Controller
     }
 
     // =========================================================
-    // DISTRICTS (Kecamatan) — try API with fallback
+    // DISTRICTS (Kecamatan) — try API with EMSIFA fallback
     // =========================================================
-    public function districts($cityId)
+    public function districts(Request $request, $cityId)
     {
-        $cacheKey = 'rajaongkir_districts_' . $cityId;
+        $cityName   = $request->query('city_name');
+        $provinceId = $request->query('province_id');
+
+        $cacheKey = 'rajaongkir_districts_' . $cityId . '_' . md5($cityName ?? '');
         $cached = Cache::get($cacheKey);
         if ($cached) {
             return response()->json($cached);
@@ -307,7 +310,7 @@ class CheckoutApiController extends Controller
                 if ($isLive) {
                     $response = Http::withoutVerifying()
                                     ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
-                                    ->timeout(8)
+                                    ->timeout(6)
                                     ->withHeaders([
                                         'x-api-key'  => $apiKey,
                                         'Accept'     => 'application/json',
@@ -320,7 +323,7 @@ class CheckoutApiController extends Controller
                 } else {
                     $response = Http::withoutVerifying()
                                     ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
-                                    ->timeout(8)
+                                    ->timeout(6)
                                     ->withHeaders([
                                         'key'        => $apiKey,
                                         'User-Agent' => 'Mozilla/5.0',
@@ -347,24 +350,94 @@ class CheckoutApiController extends Controller
             }
         }
 
-        // Fallback: try KangLerian API
-        try {
-            $response = Http::timeout(6)->get("https://kanglerian.github.io/api-wilayah-indonesia/api/districts/{$cityId}.json");
-            if ($response->successful() && is_array($response->json())) {
-                $results = array_map(function($item) {
-                    return [
-                        'district_id'   => $item['id'],
-                        'district_name' => $item['name'],
-                        'postal_code'   => '',
-                    ];
-                }, $response->json());
-                return response()->json($results);
-            }
-        } catch (\Exception $e) {
-            Log::warning('KangLerian Districts API fallback error: ' . $e->getMessage());
+        // Fallback: EMSIFA API (https://www.emsifa.com/api-wilayah-indonesia)
+        $emsifaData = $this->resolveEmsifaDistricts($cityId, $cityName, $provinceId);
+        if (!empty($emsifaData)) {
+            $results = array_map(function($item) {
+                return [
+                    'district_id'   => $item['id'],
+                    'district_name' => ucwords(strtolower($item['name'])),
+                    'postal_code'   => '',
+                ];
+            }, $emsifaData);
+
+            Cache::put($cacheKey, $results, now()->addHours(24));
+            return response()->json($results);
         }
 
         return response()->json([]);
+    }
+
+    private function resolveEmsifaDistricts($cityId, $cityName = null, $provinceId = null): array
+    {
+        // 1. Direct try with $cityId
+        try {
+            $resDirect = Http::timeout(5)->get("https://www.emsifa.com/api-wilayah-indonesia/api/districts/{$cityId}.json");
+            if ($resDirect->successful() && is_array($resDirect->json()) && count($resDirect->json()) > 0) {
+                return $resDirect->json();
+            }
+        } catch (\Exception $e) {}
+
+        // 2. Map RajaOngkir province IDs to EMSIFA province IDs
+        $provMap = [
+            '1'  => '51', // Bali
+            '2'  => '19', // Bangka Belitung
+            '3'  => '36', // Banten
+            '4'  => '17', // Bengkulu
+            '5'  => '34', // DI Yogyakarta
+            '6'  => '31', // DKI Jakarta
+            '7'  => '75', // Gorontalo
+            '8'  => '15', // Jambi
+            '9'  => '32', // Jawa Barat
+            '10' => '33', // Jawa Tengah
+            '11' => '35', // Jawa Timur
+            '12' => '61', // Kalbar
+            '13' => '63', // Kalsel
+            '14' => '62', // Kalteng
+            '15' => '64', // Kaltim
+            '16' => '65', // Kaltara
+            '17' => '21', // Kepulauan Riau
+            '18' => '18', // Lampung
+            '19' => '81', // Maluku
+            '20' => '82', // Maluku Utara
+            '21' => '52', // NTB
+            '22' => '53', // NTT
+            '23' => '91', // Papua
+            '24' => '92', // Papua Barat
+            '25' => '14', // Riau
+            '26' => '76', // Sulbar
+            '27' => '73', // Sulsel
+            '28' => '72', // Sulteng
+            '29' => '74', // Sultra
+            '30' => '71', // Sulut
+            '31' => '13', // Sumbar
+            '32' => '16', // Sumsel
+            '33' => '12', // Sumut
+            '34' => '11', // Aceh
+        ];
+
+        $emsifaProvId = $provMap[(string)$provinceId] ?? null;
+        $searchProvinces = $emsifaProvId ? [$emsifaProvId] : array_values($provMap);
+        $cleanCityName = trim(preg_replace('/^(kota|kabupaten|kab\.)\s+/i', '', $cityName ?? ''));
+
+        foreach ($searchProvinces as $emsProv) {
+            try {
+                $resReg = Http::timeout(5)->get("https://www.emsifa.com/api-wilayah-indonesia/api/regencies/{$emsProv}.json");
+                if ($resReg->successful() && is_array($resReg->json())) {
+                    foreach ($resReg->json() as $reg) {
+                        $cleanRegName = trim(preg_replace('/^(kota|kabupaten|kab\.)\s+/i', '', $reg['name']));
+                        if ($cleanCityName && (strcasecmp($cleanRegName, $cleanCityName) === 0 || stristr($cleanRegName, $cleanCityName) || stristr($cleanCityName, $cleanRegName))) {
+                            $resDist = Http::timeout(5)->get("https://www.emsifa.com/api-wilayah-indonesia/api/districts/{$reg['id']}.json");
+                            if ($resDist->successful() && is_array($resDist->json()) && count($resDist->json()) > 0) {
+                                return $resDist->json();
+                            }
+                        }
+                    }
+                }
+            } catch (\Exception $e) {}
+        }
+
+        return [];
     }
 
     // =========================================================
@@ -379,12 +452,12 @@ class CheckoutApiController extends Controller
         }
 
         try {
-            $response = Http::timeout(6)->get("https://kanglerian.github.io/api-wilayah-indonesia/api/villages/{$districtId}.json");
+            $response = Http::timeout(6)->get("https://www.emsifa.com/api-wilayah-indonesia/api/villages/{$districtId}.json");
             if ($response->successful() && is_array($response->json())) {
                 $results = array_map(function($item) {
                     return [
                         'village_id'   => $item['id'],
-                        'village_name' => $item['name'],
+                        'village_name' => ucwords(strtolower($item['name'])),
                         'district_id'  => $item['district_id'] ?? '',
                     ];
                 }, $response->json());
