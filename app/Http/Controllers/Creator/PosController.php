@@ -416,48 +416,48 @@ class PosController extends Controller
         $seller = auth()->user();
         $order  = Order::where('id', $request->order_id)
             ->where('source', 'pos')
-            ->whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
+            ->where('user_id', $seller->id)
             ->with(['items', 'payment'])
-            ->firstOrFail();
+            ->first();
 
-        $success = $this->dispatchReceiptEmail($order, $request->email);
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Transaksi POS tidak ditemukan.',
+            ], 404);
+        }
 
-        if ($success) {
+        try {
+            $this->dispatchReceiptEmail($order, $request->email);
             return response()->json([
                 'success' => true,
                 'message' => 'E-Receipt berhasil dikirim ke ' . $request->email,
             ]);
+        } catch (Exception $e) {
+            Log::error('POS Dispatch Receipt Email Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengirim email E-Receipt: ' . $e->getMessage(),
+            ], 500);
         }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Gagal mengirim email E-Receipt. Periksa konfigurasi email SMTP server.',
-        ], 500);
     }
 
     /**
      * Helper privat kirim HTML email E-Receipt.
      */
-    private function dispatchReceiptEmail(Order $order, string $email): bool
+    private function dispatchReceiptEmail(Order $order, string $email): void
     {
-        try {
-            $profile = CreatorProfile::where('user_id', auth()->id())->first();
-            $storeName = $profile->store_name ?? auth()->user()->name ?? 'buyle.id Store';
+        $profile = CreatorProfile::where('user_id', auth()->id())->first();
+        $storeName = $profile->store_name ?? auth()->user()->name ?? 'buyle.id Store';
 
-            Mail::send('emails.pos_receipt', [
-                'order'     => $order,
-                'profile'   => $profile,
-                'storeName' => $storeName,
-                'subject'   => 'Struk Pembayaran - ' . $storeName . ' (' . $order->order_number . ')',
-            ], function ($message) use ($email, $order, $storeName) {
-                $message->to($email)
-                    ->subject('Struk Pembayaran - ' . $storeName . ' (' . $order->order_number . ')');
-            });
-
-            return true;
-        } catch (Exception $e) {
-            Log::error('POS Dispatch Receipt Email Error: ' . $e->getMessage());
-            return false;
-        }
+        Mail::send('emails.pos_receipt', [
+            'order'     => $order,
+            'profile'   => $profile,
+            'storeName' => $storeName,
+            'subject'   => 'Struk Pembayaran - ' . $storeName . ' (' . $order->order_number . ')',
+        ], function ($message) use ($email, $order, $storeName) {
+            $message->to($email)
+                ->subject('Struk Pembayaran - ' . $storeName . ' (' . $order->order_number . ')');
+        });
     }
 }

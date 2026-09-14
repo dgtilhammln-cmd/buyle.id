@@ -1604,19 +1604,21 @@
                                     window.snap.pay(data.snap_token, {
                                         onSuccess: function (result) {
                                             document.getElementById('midtransBlurOverlay').classList.remove('active');
+                                            showPosToast('Pembayaran berhasil dikonfirmasi!', 'success');
                                             showReceiptModal(data.order);
                                         },
                                         onPending: function (result) {
                                             document.getElementById('midtransBlurOverlay').classList.remove('active');
+                                            showPosToast('Menunggu pembayaran dari pelanggan. Cek di Riwayat Transaksi.', 'info');
                                             showReceiptModal(data.order);
                                         },
                                         onError: function (result) {
                                             document.getElementById('midtransBlurOverlay').classList.remove('active');
-                                            showPosAlert('Pembayaran gagal atau dibatalkan.', 'Gagal Pembayaran', 'error');
+                                            showPosAlert('Pembayaran gagal atau terjadi kesalahan.', 'Gagal Pembayaran', 'error');
                                         },
                                         onClose: function () {
                                             document.getElementById('midtransBlurOverlay').classList.remove('active');
-                                            showReceiptModal(data.order);
+                                            showPosAlert('Pop-up pembayaran ditutup. Pembayaran belum diselesaikan.', 'Pembayaran Ditunda', 'warning');
                                         }
                                     });
                                 } catch (e) {
