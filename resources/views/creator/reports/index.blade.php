@@ -343,6 +343,36 @@
     .metrics-grid { grid-template-columns: 1fr; }
     .metrics-grid .dark[style*="span 4"] { grid-column: span 1 !important; }
 }
+
+/* ── Print Receipt Styles ────────────────────────────────────────── */
+#printableReceiptArea {
+    display: none;
+}
+@media print {
+    body * {
+        visibility: hidden !important;
+    }
+    #printableReceiptArea, #printableReceiptArea * {
+        visibility: visible !important;
+    }
+    #printableReceiptArea {
+        display: block !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        max-width: 480px !important;
+        margin: 0 auto !important;
+        padding: 24px !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif !important;
+        box-sizing: border-box !important;
+    }
+    .date-modal-overlay, .sidebar, .topbar, header, footer, .main-grid, .metrics-grid, .charts-wave-grid {
+        display: none !important;
+    }
+}
 </style>
 @endsection
 
@@ -498,30 +528,46 @@
                                 @endif
                             </td>
                             <td>
-                                <button type="button" onclick="openOrderModal({{ json_encode([
-                                    'id' => $order->id,
-                                    'order_number' => $order->order_number ?? ('ORD-' . $order->id),
-                                    'date' => $order->created_at->format('d M Y H:i'),
-                                    'status' => $statusVal,
-                                    'status_label' => $statusLabel,
-                                    'user_name' => $addr['name'] ?? $order->user?->name ?? 'Pembeli',
-                                    'phone' => $addr['phone'] ?? $order->user?->phone ?? '',
-                                    'email' => $order->user?->email ?? '',
-                                    'shipping_address' => $addr,
-                                    'items' => $order->items->map(fn($i) => [
-                                        'name' => $i->product_name,
-                                        'quantity' => $i->quantity,
-                                        'price' => $i->price,
-                                        'subtotal' => $i->subtotal,
-                                    ])->values(),
-                                    'total' => $order->items->sum('subtotal'),
-                                    'courier_name' => $shipment?->courier_name ?? '',
-                                    'tracking_number' => $shipment?->tracking_number ?? '',
-                                    'update_url' => route('creator.sales.report.update_order', $order->id),
-                                ]) }})" class="btn-export" style="background:#0f172a; color:#fff; border:none; padding:0.4rem 0.75rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap;">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:3px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                                    Detail & Edit
-                                </button>
+                                @php
+                                    $orderDataJson = json_encode([
+                                        'id' => $order->id,
+                                        'order_number' => $order->order_number ?? ('ORD-' . $order->id),
+                                        'date' => $order->created_at->format('d M Y H:i'),
+                                        'status' => $statusVal,
+                                        'status_label' => $statusLabel,
+                                        'user_name' => $addr['name'] ?? $order->user?->name ?? 'Pembeli',
+                                        'phone' => $addr['phone'] ?? $order->user?->phone ?? '',
+                                        'email' => $order->user?->email ?? '',
+                                        'shipping_address' => $addr,
+                                        'items' => $order->items->map(fn($i) => [
+                                            'name' => $i->product_name,
+                                            'quantity' => $i->quantity,
+                                            'price' => $i->price,
+                                            'subtotal' => $i->subtotal,
+                                        ])->values(),
+                                        'subtotal' => $order->items->sum('subtotal'),
+                                        'shipping_cost' => (float)($order->shipping_cost ?? 0),
+                                        'platform_fee' => (float)($order->platform_fee ?? 0),
+                                        'admin_fee' => (float)($order->admin_fee ?? 0),
+                                        'discount' => (float)($order->discount ?? 0),
+                                        'grand_total' => (float)($order->total ?? $order->items->sum('subtotal')),
+                                        'total' => (float)($order->total ?? $order->items->sum('subtotal')),
+                                        'seller_name' => auth()->user()->name ?? 'Kreator buyle.id',
+                                        'courier_name' => $shipment?->courier_name ?? '',
+                                        'tracking_number' => $shipment?->tracking_number ?? '',
+                                        'update_url' => route('creator.sales.report.update_order', $order->id),
+                                    ]);
+                                @endphp
+                                <div style="display:flex; align-items:center; gap:0.4rem;">
+                                    <button type="button" onclick="openOrderModal({{ $orderDataJson }})" class="btn-export" style="background:#0f172a; color:#fff; border:none; padding:0.4rem 0.65rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap;">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:3px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                        Detail & Edit
+                                    </button>
+                                    <button type="button" onclick="printReceipt({{ $orderDataJson }})" class="btn-export" style="background:#1eb349; color:#fff; border:none; padding:0.4rem 0.65rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap;" title="Cetak / Download Struk Pesanan">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:3px;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                        Struk
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     @empty
@@ -891,6 +937,123 @@ function saveOrderData(e) {
         alert('❌ Terjadi kesalahan jaringan!');
     });
 }
+
+function printReceipt(data) {
+    if (!data) return;
+
+    document.getElementById('pr_seller_name').innerText = data.seller_name || 'Kreator buyle.id';
+    document.getElementById('pr_order_number').innerText = '#' + (data.order_number || ('ORD-' + data.id));
+    document.getElementById('pr_order_date').innerText = data.date || '';
+
+    document.getElementById('pr_customer_name').innerText = data.user_name || 'Pembeli';
+    
+    const phoneRow = document.getElementById('pr_phone_row');
+    if (data.phone) {
+        document.getElementById('pr_customer_phone').innerText = data.phone;
+        phoneRow.style.display = 'flex';
+    } else {
+        phoneRow.style.display = 'none';
+    }
+
+    const emailRow = document.getElementById('pr_email_row');
+    if (data.email) {
+        document.getElementById('pr_customer_email').innerText = data.email;
+        emailRow.style.display = 'flex';
+    } else {
+        emailRow.style.display = 'none';
+    }
+
+    // Fulfillment & Address Details
+    const fulBox = document.getElementById('pr_fulfillment_box');
+    const fulTitle = document.getElementById('pr_fulfillment_title');
+    const fulDetail = document.getElementById('pr_fulfillment_detail');
+    const sa = data.shipping_address || {};
+
+    if (sa.fnb_service_type || sa.table_number || sa.pickup_time || sa.delivery_address || sa.address) {
+        fulBox.style.display = 'block';
+        if (sa.fnb_service_type === 'dine_in' || sa.table_number) {
+            fulTitle.innerText = '🍽️ Layanan FnB / Resto: DINE-IN (Makan di Tempat)';
+            fulDetail.innerHTML = `<strong>Nomor Meja:</strong> Meja #${sa.table_number || '-'} ${sa.notes ? '<br><em>Catatan: ' + sa.notes + '</em>' : ''}`;
+        } else if (sa.fnb_service_type === 'takeaway' || sa.pickup_time) {
+            fulTitle.innerText = '🛍️ Layanan FnB / Resto: TAKEAWAY (Ambil Sendiri)';
+            fulDetail.innerHTML = `<strong>Waktu Pengambilan:</strong> ${sa.pickup_time || '-'} ${sa.notes ? '<br><em>Catatan: ' + sa.notes + '</em>' : ''}`;
+        } else if (sa.fnb_service_type === 'delivery') {
+            fulTitle.innerText = '🛵 Layanan FnB / Resto: DELIVERY (Antar ke Rumah)';
+            fulDetail.innerHTML = `<strong>Alamat Pengantaran:</strong> ${sa.delivery_address || sa.address || '-'} ${sa.notes ? '<br><em>Catatan: ' + sa.notes + '</em>' : ''}`;
+        } else {
+            fulTitle.innerText = '📦 Pengiriman Ekspedisi Fisik:';
+            let addrStr = [sa.name ? 'Penerima: ' + sa.name : null, sa.address, sa.district, sa.city, sa.province, sa.postal_code].filter(Boolean).join(', ');
+            if (data.courier_name || data.tracking_number) {
+                addrStr += `<br><strong>Kurir:</strong> ${data.courier_name || '-'} (Resi: ${data.tracking_number || '-'})`;
+            }
+            fulDetail.innerHTML = addrStr;
+        }
+    } else {
+        fulBox.style.display = 'block';
+        fulTitle.innerText = '⚡ Akses / Produk Digital:';
+        fulDetail.innerText = 'Produk digital / tiket dikirimkan otomatis secara sistem.';
+    }
+
+    // Items list
+    const itemsBody = document.getElementById('pr_items_body');
+    let itemsHtml = '';
+    (data.items || []).forEach(item => {
+        itemsHtml += `
+            <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:8px 0; color:#0f172a; font-weight:600;">${item.name}</td>
+                <td style="padding:8px 0; text-align:center; color:#475569;">${item.quantity}</td>
+                <td style="padding:8px 0; text-align:right; color:#64748b;">Rp ${Number(item.price).toLocaleString('id-ID')}</td>
+                <td style="padding:8px 0; text-align:right; color:#0f172a; font-weight:700;">Rp ${Number(item.subtotal).toLocaleString('id-ID')}</td>
+            </tr>
+        `;
+    });
+    itemsBody.innerHTML = itemsHtml;
+
+    // Financials
+    document.getElementById('pr_subtotal').innerText = 'Rp ' + Number(data.subtotal || 0).toLocaleString('id-ID');
+    
+    const shipRow = document.getElementById('pr_shipping_row');
+    if (data.shipping_cost > 0) {
+        document.getElementById('pr_shipping_cost').innerText = 'Rp ' + Number(data.shipping_cost).toLocaleString('id-ID');
+        shipRow.style.display = 'flex';
+    } else {
+        shipRow.style.display = 'none';
+    }
+
+    const adminRow = document.getElementById('pr_admin_fee_row');
+    const feeSum = (data.platform_fee || 0) + (data.admin_fee || 0);
+    if (feeSum > 0) {
+        document.getElementById('pr_admin_fee').innerText = 'Rp ' + Number(feeSum).toLocaleString('id-ID');
+        adminRow.style.display = 'flex';
+    } else {
+        adminRow.style.display = 'none';
+    }
+
+    const discRow = document.getElementById('pr_discount_row');
+    if (data.discount > 0) {
+        document.getElementById('pr_discount').innerText = '- Rp ' + Number(data.discount).toLocaleString('id-ID');
+        discRow.style.display = 'flex';
+    } else {
+        discRow.style.display = 'none';
+    }
+
+    document.getElementById('pr_grand_total').innerText = 'Rp ' + Number(data.grand_total || data.total || 0).toLocaleString('id-ID');
+
+    // Status badge
+    const statusBadge = document.getElementById('pr_status_badge');
+    const statusVal = data.status || 'processing';
+    statusBadge.innerText = (data.status_label || statusVal).toUpperCase();
+    if (statusVal === 'completed') {
+        statusBadge.style.cssText = 'display:inline-block; padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:800; background:#dcfce7; color:#166534; border:1px solid #bbf7d0;';
+    } else if (statusVal === 'shipped' || statusVal === 'processing') {
+        statusBadge.style.cssText = 'display:inline-block; padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:800; background:#e0e7ff; color:#3730a3; border:1px solid #c7d2fe;';
+    } else {
+        statusBadge.style.cssText = 'display:inline-block; padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:800; background:#f1f5f9; color:#475569; border:1px solid #e2e8f0;';
+    }
+
+    // Trigger Print
+    window.print();
+}
 </script>
 
 <!-- Modal Order Detail & Manajemen Pesanan -->
@@ -901,7 +1064,12 @@ function saveOrderData(e) {
                 <h4 style="font-size:1.1rem; font-weight:800; color:#0f172a; margin:0;" id="od_title">Detail Pesanan</h4>
                 <div style="font-size:0.75rem; color:#64748b; margin-top:2px;" id="od_date"></div>
             </div>
-            <button type="button" class="btn-cancel" onclick="closeOrderModal()" style="padding:0.35rem 0.75rem; border-radius:8px;">✕</button>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+                <button type="button" onclick="printReceipt(currentOrderData)" style="background:#1eb349; color:#fff; border:none; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.78rem; font-weight:700; cursor:pointer;" title="Cetak / Download Struk">
+                    🖨️ Cetak Struk
+                </button>
+                <button type="button" class="btn-cancel" onclick="closeOrderModal()" style="padding:0.35rem 0.75rem; border-radius:8px;">✕</button>
+            </div>
         </div>
 
         <div style="max-height:75vh; overflow-y:auto; padding-right:4px;">
@@ -975,6 +1143,104 @@ function saveOrderData(e) {
                 </div>
             </form>
         </div>
+    </div>
+</div>
+
+@php
+    $logoSetting = \App\Models\Setting::get('logo');
+    $siteLogoUrl = $logoSetting ? Storage::url($logoSetting) : null;
+@endphp
+
+<!-- Printable Receipt Template Container (Clean White Dominant Header & Footer buyle.id) -->
+<div id="printableReceiptArea" style="background:#ffffff; color:#0f172a; border:1px solid #e2e8f0; border-radius:16px; padding:24px; font-family:'Montserrat', sans-serif;">
+    <!-- Receipt Header with buyle.id Logo -->
+    <div style="text-align:center; padding-bottom:16px; border-bottom:2px dashed #e2e8f0; margin-bottom:16px;">
+        @if($siteLogoUrl)
+            <img src="{{ asset($siteLogoUrl) }}" alt="buyle.id" style="max-height:48px; width:auto; margin-bottom:6px; display:inline-block;">
+        @else
+            <div style="font-weight:900; font-size:1.6rem; color:#0f172a; letter-spacing:-0.5px; margin-bottom:4px;">
+                buyle<span style="color:#1eb349;">.id</span>
+            </div>
+        @endif
+        <div style="font-size:0.75rem; color:#64748b; font-weight:600; text-transform:uppercase; letter-spacing:1px;" id="pr_seller_name">
+            {{ auth()->user()->name ?? 'Kreator buyle.id' }}
+        </div>
+        <div style="font-size:1.1rem; font-weight:800; color:#0f172a; margin-top:8px;">STRUK PENJUALAN</div>
+        <div style="font-size:0.8rem; font-weight:700; color:#1eb349; margin-top:2px;" id="pr_order_number">#ORD-0000</div>
+        <div style="font-size:0.72rem; color:#94a3b8; margin-top:2px;" id="pr_order_date">15 Sep 2026 00:00</div>
+    </div>
+
+    <!-- Order Metadata / Buyer Info -->
+    <div style="margin-bottom:16px; font-size:0.8rem; line-height:1.6; border-bottom:1px solid #f1f5f9; padding-bottom:14px;">
+        <div style="display:flex; justify-content:space-between;">
+            <span style="color:#64748b;">Pembeli:</span>
+            <strong style="color:#0f172a;" id="pr_customer_name">-</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between;" id="pr_phone_row">
+            <span style="color:#64748b;">No. HP / WA:</span>
+            <span style="color:#0f172a; font-weight:600;" id="pr_customer_phone">-</span>
+        </div>
+        <div style="display:flex; justify-content:space-between;" id="pr_email_row">
+            <span style="color:#64748b;">Email:</span>
+            <span style="color:#0f172a;" id="pr_customer_email">-</span>
+        </div>
+        <div style="margin-top:8px; background:#f8fafc; padding:8px 10px; border-radius:8px; border:1px solid #e2e8f0; font-size:0.75rem;" id="pr_fulfillment_box">
+            <div style="font-weight:700; color:#475569; margin-bottom:2px;" id="pr_fulfillment_title">Tipe Layanan / Pengiriman:</div>
+            <div style="color:#0f172a;" id="pr_fulfillment_detail">-</div>
+        </div>
+    </div>
+
+    <!-- Itemized List Table -->
+    <div style="margin-bottom:16px;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+            <thead>
+                <tr style="border-bottom:1.5px solid #0f172a; text-align:left; color:#475569;">
+                    <th style="padding:6px 0; font-weight:700;">Item / Produk</th>
+                    <th style="padding:6px 0; text-align:center; font-weight:700;">Qty</th>
+                    <th style="padding:6px 0; text-align:right; font-weight:700;">Harga</th>
+                    <th style="padding:6px 0; text-align:right; font-weight:700;">Total</th>
+                </tr>
+            </thead>
+            <tbody id="pr_items_body">
+                <!-- Dynamically populated -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Financial Summary Breakdown -->
+    <div style="border-top:1.5px solid #0f172a; padding-top:12px; margin-bottom:20px; font-size:0.82rem; line-height:1.8;">
+        <div style="display:flex; justify-content:space-between;">
+            <span style="color:#64748b;">Subtotal Produk:</span>
+            <span style="font-weight:600; color:#0f172a;" id="pr_subtotal">Rp 0</span>
+        </div>
+        <div style="display:flex; justify-content:space-between;" id="pr_shipping_row">
+            <span style="color:#64748b;">Ongkos Kirim:</span>
+            <span style="font-weight:600; color:#0f172a;" id="pr_shipping_cost">Rp 0</span>
+        </div>
+        <div style="display:flex; justify-content:space-between;" id="pr_admin_fee_row">
+            <span style="color:#64748b;">Biaya Layanan / Penanganan:</span>
+            <span style="font-weight:600; color:#0f172a;" id="pr_admin_fee">Rp 0</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; color:#dc2626;" id="pr_discount_row">
+            <span>Diskon:</span>
+            <span style="font-weight:600;" id="pr_discount">- Rp 0</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; border-top:2px solid #0f172a; padding-top:8px; margin-top:6px; font-size:1rem; font-weight:800; color:#0f172a;">
+            <span>TOTAL BAYAR:</span>
+            <span style="color:#1eb349;" id="pr_grand_total">Rp 0</span>
+        </div>
+        <div style="margin-top:10px; text-align:center;">
+            <span id="pr_status_badge" style="display:inline-block; padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:800; background:#dcfce7; color:#166534; border:1px solid #bbf7d0;">
+                LUNAS
+            </span>
+        </div>
+    </div>
+
+    <!-- Footer buyle.id Branding -->
+    <div style="text-align:center; border-top:2px dashed #e2e8f0; padding-top:16px; font-size:0.72rem; color:#64748b; line-height:1.5;">
+        <div style="font-weight:700; color:#0f172a; margin-bottom:2px;">Terima kasih atas pesanan Anda!</div>
+        <div>Bukti transaksi resmi yang diterbitkan via <strong style="color:#1eb349;">buyle.id</strong></div>
+        <div style="font-size:0.68rem; color:#94a3b8; margin-top:4px;">https://buyle.id • Platform Toko Online & Serba Ada</div>
     </div>
 </div>
 @endsection
