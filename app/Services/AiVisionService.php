@@ -203,18 +203,30 @@ class AiVisionService
 Anda adalah asisten AI kasir dan pakar produk profesional.
 Tugas Anda adalah membaca gambar daftar menu/katalog produk/layanan berikut.
 
-EKSTRAK & HASILKAN DATA DALAM FORMAT JSON RIGID:
-Buat array objek JSON berisi daftar item produk/layanan yang ada di menu.
-Tiap objek HARUS memiliki field berikut:
+EKSTRAK & HASILKAN DATA DALAM FORMAT JSON OBJECT RIGID DENGAN KEY "items":
+Contoh format output wajib:
+{
+  "items": [
+    {
+      "name": "Nasi Goreng Spesial",
+      "price": 25000,
+      "category": "Makanan",
+      "stock": null,
+      "description": "Nasi goreng lezat dengan bumbu rempah khas yang menggugah selera."
+    }
+  ]
+}
+
+Aturan tiap item di dalam array "items":
 1. "name": Nama produk (Singkat, jelas, kapitalisasi rapi).
 2. "price": Harga dalam nominal angka murni integer tanpa 'Rp' atau titik/koma (Contoh: 25000 untuk 25k/Rp 25.000). Jika tidak ada harga, isi 0.
 3. "category": Kategori (Wajib pilih salah satu: "Makanan", "Barang", "Jasa", atau "Lainnya").
-4. "stock": Null jika unlimited/tidak ditulis, atau isi angka kuantitas jika ada informasi stok.
+4. "stock": Null jika unlimited/tidak ditulis di menu, atau isi angka kuantitas jika ada informasi stok.
 5. "description": Deskripsi jualan menggiurkan singkat (1-2 kalimat menarik untuk mempromosikan menu ini).
 
 PENTING:
-- Keluarkan HANYA string JSON valid murni (JSON Array `[...]`).
-- Jangan tambahkan teks intro, outro, atau markdown pembungkus di luar JSON jika tidak perlu.
+- Keluarkan HANYA string JSON object valid murni `{"items": [...]}`.
+- Jangan tambahkan teks intro, outro, atau penjelasan di luar JSON.
 PROMPT;
 
         try {
@@ -332,23 +344,35 @@ PROMPT;
     protected function parseJsonItems(string $rawText): array
     {
         $cleanJson = trim($rawText);
-        // Strip markdown ```json ... ``` wrapper if present
-        $cleanJson = preg_replace('/^```(?:json)?\s*/i', '', $cleanJson);
-        $cleanJson = preg_replace('/\s*```$/i', '', $cleanJson);
+
+        // Robust JSON extraction using regex
+        if (preg_match('/(\[.*\]|\{.*\})/s', $cleanJson, $matches)) {
+            $cleanJson = $matches[1];
+        }
 
         $data = json_decode($cleanJson, true);
 
-        // If JSON wrapped in root object (e.g. {"items": [...]})
+        // If JSON root is an object (e.g. {"items": [...]}, {"products": [...]}, {"data": [...]})
         if (is_array($data) && !isset($data[0])) {
-            foreach (['items', 'products', 'menu', 'data'] as $key) {
+            foreach (['items', 'products', 'menu', 'data', 'katalog', 'daftar_menu', 'result'] as $key) {
                 if (isset($data[$key]) && is_array($data[$key])) {
                     $data = $data[$key];
                     break;
                 }
             }
+            // Fallback: search for first array inside the root object
+            if (is_array($data) && !isset($data[0])) {
+                foreach ($data as $val) {
+                    if (is_array($val) && (isset($val[0]) || empty($val))) {
+                        $data = $val;
+                        break;
+                    }
+                }
+            }
         }
 
         if (!is_array($data)) {
+            Log::error("AI Menu Scan Invalid JSON Raw Output: " . $rawText);
             throw new \Exception("Output dari AI bukan format JSON daftar menu yang valid.");
         }
 
