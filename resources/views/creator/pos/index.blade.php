@@ -634,19 +634,24 @@
             }
         }
 
-        /* ── Midtrans Privacy Blur Overlay ───────────────────────────────── */
+        /* ── Privacy Blur Overlay ───────────────────────────────── */
         #midtransBlurOverlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            z-index: 99998;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 9990;
         }
 
         #midtransBlurOverlay.active {
             display: block;
+        }
+
+        /* Force Payment Gateway Snap iframe / modal on top of backdrop blur */
+        #snap-container, iframe[src*="midtrans"], iframe[id*="snap"], .snap-modal, #snap-midtrans {
+            z-index: 999999 !important;
         }
     </style>
 @endsection
@@ -958,7 +963,7 @@
                     </div>
                 </div>
 
-                <!-- Opsi 2: Cashless (Midtrans) -->
+                <!-- Opsi 2: Non-Tunai / Cashless -->
                 <div class="pay-option-card" id="optCashless" onclick="selectPaymentMethod('cashless')">
                     <input type="radio" name="pay_method" value="cashless" style="accent-color:#7c3aed;">
                     <div style="width:38px; height:38px; border-radius:50%; background:#f5f3ff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
@@ -970,10 +975,9 @@
                         </svg>
                     </div>
                     <div style="flex:1;">
-                        <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Cashless / Non-Tunai</div>
-                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">QRIS, GoPay, Transfer - pilih di popup Midtrans</div>
+                        <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Non-Tunai / Cashless</div>
+                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">QRIS, Transfer Bank, E-Wallet (GoPay, ShopeePay)</div>
                     </div>
-                    <span style="font-size:0.65rem; font-weight:800; color:#7c3aed; background:#f5f3ff; border:1px solid #ddd6fe; border-radius:20px; padding:2px 8px; white-space:nowrap;">via Midtrans</span>
                 </div>
 
                 <!-- Optional E-Receipt Email Input -->
@@ -1593,27 +1597,36 @@
                     if (data.success) {
                         closeModal('posPaymentModal');
 
-                        if (payMethodRaw === 'cashless' && data.snap_token && typeof window.snap !== 'undefined') {
-                            // Show blur overlay for privacy behind Midtrans popup
-                            document.getElementById('midtransBlurOverlay').classList.add('active');
-                            window.snap.pay(data.snap_token, {
-                                onSuccess: function (result) {
-                                    document.getElementById('midtransBlurOverlay').classList.remove('active');
-                                    showReceiptModal(data.order);
-                                },
-                                onPending: function (result) {
-                                    document.getElementById('midtransBlurOverlay').classList.remove('active');
-                                    showReceiptModal(data.order);
-                                },
-                                onError: function (result) {
-                                    document.getElementById('midtransBlurOverlay').classList.remove('active');
-                                    showPosAlert('Pembayaran gagal atau dibatalkan.', 'Gagal Pembayaran', 'error');
-                                },
-                                onClose: function () {
+                        if (payMethodRaw === 'cashless') {
+                            if (data.snap_token && typeof window.snap !== 'undefined') {
+                                document.getElementById('midtransBlurOverlay').classList.add('active');
+                                try {
+                                    window.snap.pay(data.snap_token, {
+                                        onSuccess: function (result) {
+                                            document.getElementById('midtransBlurOverlay').classList.remove('active');
+                                            showReceiptModal(data.order);
+                                        },
+                                        onPending: function (result) {
+                                            document.getElementById('midtransBlurOverlay').classList.remove('active');
+                                            showReceiptModal(data.order);
+                                        },
+                                        onError: function (result) {
+                                            document.getElementById('midtransBlurOverlay').classList.remove('active');
+                                            showPosAlert('Pembayaran gagal atau dibatalkan.', 'Gagal Pembayaran', 'error');
+                                        },
+                                        onClose: function () {
+                                            document.getElementById('midtransBlurOverlay').classList.remove('active');
+                                            showReceiptModal(data.order);
+                                        }
+                                    });
+                                } catch (e) {
                                     document.getElementById('midtransBlurOverlay').classList.remove('active');
                                     showReceiptModal(data.order);
                                 }
-                            });
+                            } else {
+                                document.getElementById('midtransBlurOverlay').classList.remove('active');
+                                showReceiptModal(data.order);
+                            }
                         } else {
                             showReceiptModal(data.order);
                         }
@@ -1646,9 +1659,9 @@
 
             const payMethodLabel = {
                 'cash': 'Tunai',
-                'cashless': 'Cashless (Midtrans)',
-                'transfer': 'Cashless (Midtrans)',
-                'qris': 'Cashless (Midtrans)'
+                'cashless': 'Non-Tunai (QRIS / Transfer)',
+                'transfer': 'Non-Tunai (QRIS / Transfer)',
+                'qris': 'Non-Tunai (QRIS / Transfer)'
             }[addr.payment_method || 'cash'] || 'Tunai';
 
             document.getElementById('recPayMethod').innerText = payMethodLabel;
