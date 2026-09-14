@@ -510,12 +510,21 @@ class CreatorBioController extends Controller
             if (!empty($data['product_id'])) {
                 $p = \App\Models\Product::find($data['product_id']);
                 if ($p) {
+                    $catName = strtolower(trim($data['category'] ?? 'makanan'));
+                    $productType = match ($catName) {
+                        'barang' => 'physical',
+                        'jasa'   => 'service',
+                        'makanan' => 'makanan',
+                        default  => 'makanan',
+                    };
+
                     $p->update([
-                        'name'        => $request->title,
-                        'price'       => $data['price'] ?? 0,
-                        'stock'       => $data['stock'] ?? null,
-                        'description' => $data['description'] ?? '',
-                        'image'       => !empty($data['images'][0]) ? $data['images'][0] : ($data['image'] ?? $p->image),
+                        'name'         => $request->title,
+                        'price'        => $data['price'] ?? 0,
+                        'stock'        => $data['stock'] ?? null,
+                        'description'  => $data['description'] ?? '',
+                        'image'        => !empty($data['images'][0]) ? $data['images'][0] : ($data['image'] ?? $p->image),
+                        'product_type' => $productType,
                     ]);
                 }
             }

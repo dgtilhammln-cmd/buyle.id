@@ -21,6 +21,115 @@ use Illuminate\Support\Facades\Mail;
 class PosController extends Controller
 {
     /**
+     * Helper privat mengambil produk Makanan dari Link in Bio.
+     */
+    private function getPosFoodProducts(int $sellerId)
+    {
+        $profile = CreatorProfile::where('user_id', $sellerId)->first();
+        
+        $foodKeywords = [
+            'nasi', 'mie', 'ayam', 'bebek', 'daging', 'ikan', 'es', 'kopi', 
+            'makanan', 'minuman', 'kuliner', 'food', 'drink', 'resto', 'cafe', 
+            'menu', 'paket', 'porsi', 'jus', 'teh', 'bakso', 'soto', 'gudeg', 
+            'sate', 'bento', 'snack', 'kue', 'roti', 'donut', 'pizza', 'burger', 
+            'seafood', 'dimsum', 'coffe', 'tea', 'boba', 'manja'
+        ];
+
+        $productIdsToInclude = collect();
+        $excludedProductIds  = collect();
+        $blockDataMap        = [];
+
+        if ($profile) {
+            $bioBlocks = \App\Models\CreatorBioBlock::where('creator_id', $profile->id)
+                ->whereIn('type', ['custom_product', 'buyle_product'])
+                ->where('is_active', true)
+                ->get();
+
+            foreach ($bioBlocks as $block) {
+                $data = $block->data_json ?? [];
+                $pId  = $data['product_id'] ?? null;
+                $cat  = strtolower(trim($data['category'] ?? ''));
+                $title = strtolower(trim($block->title ?? ''));
+
+                if ($pId) {
+                    $blockDataMap[$pId] = [
+                        'name'  => $block->title,
+                        'price' => $data['price'] ?? null,
+                        'image' => !empty($data['images'][0]) ? $data['images'][0] : ($data['image'] ?? null),
+                        'cat'   => $cat,
+                    ];
+                }
+
+                // Jika dikategorikan tegas sebagai Barang atau Jasa, KECUALIKAN dari POS
+                if ($cat === 'barang' || $cat === 'jasa') {
+                    if ($pId) $excludedProductIds->push($pId);
+                    continue;
+                }
+
+                // Jika dikategorikan Makanan / FnB atau judul memiliki kata kunci makanan
+                $isFoodCat = in_array($cat, ['makanan', 'food', 'kuliner', 'fnb', 'resto', 'minuman', 'drink', 'snack', 'kue', 'cafe']);
+                $isFoodKeyword = false;
+                foreach ($foodKeywords as $kw) {
+                    if (str_contains($title, strtolower($kw))) {
+                        $isFoodKeyword = true;
+                        break;
+                    }
+                }
+
+                if ($isFoodCat || $isFoodKeyword || empty($cat)) {
+                    if ($pId) $productIdsToInclude->push($pId);
+                }
+            }
+        }
+
+        // Query tabel products
+        $query = Product::where('seller_id', $sellerId)
+            ->where('is_active', true);
+
+        // Jangan sertakan produk digital, tiket, external_link, service, atau yang dikategorikan Barang
+        $query->whereNotIn('product_type', ['digital', 'ticket', 'external_link', 'service']);
+
+        if ($excludedProductIds->isNotEmpty()) {
+            $query->whereNotIn('id', $excludedProductIds);
+        }
+
+        if ($productIdsToInclude->isNotEmpty()) {
+            $query->where(function ($q) use ($productIdsToInclude, $foodKeywords) {
+                $q->whereIn('id', $productIdsToInclude)
+                  ->orWhere('product_type', 'makanan')
+                  ->orWhere(function ($q2) use ($foodKeywords) {
+                      foreach ($foodKeywords as $kw) {
+                          $q2->orWhere(DB::raw('LOWER(name)'), 'LIKE', '%' . strtolower($kw) . '%');
+                      }
+                  });
+            });
+        } else {
+            $query->where(function ($q) use ($foodKeywords) {
+                $q->where('product_type', 'makanan')
+                  ->orWhere(function ($q2) use ($foodKeywords) {
+                      foreach ($foodKeywords as $kw) {
+                          $q2->orWhere(DB::raw('LOWER(name)'), 'LIKE', '%' . strtolower($kw) . '%');
+                      }
+                  });
+            });
+        }
+
+        $products = $query->with('category')->orderBy('name', 'asc')->get();
+
+        // Overwrite name, price & image dari data bio block jika ada
+        foreach ($products as $prod) {
+            if (isset($blockDataMap[$prod->id])) {
+                $bMeta = $blockDataMap[$prod->id];
+                if (!empty($bMeta['name']))  $prod->name  = $bMeta['name'];
+                if ($bMeta['price'] !== null) $prod->price = (float)$bMeta['price'];
+                if (!empty($bMeta['image'])) $prod->image = $bMeta['image'];
+            }
+        }
+
+        return $products;
+    }
+
+    /**
      * Tampilkan antarmuka Kasir Digital (POS).
      */
     public function index(Request $request)
@@ -30,44 +139,8 @@ class PosController extends Controller
         // 1. Ambil profil toko creator
         $profile = CreatorProfile::where('user_id', $seller->id)->first();
 
-        // 2. Keyword kategori makanan / FnB
-        $foodKeywords = [
-            'nasi', 'mie', 'ayam', 'bebek', 'daging', 'ikan', 'es', 'kopi', 
-            'makanan', 'minuman', 'kuliner', 'food', 'drink', 'resto', 'cafe', 
-            'menu', 'paket', 'porsi', 'jus', 'teh', 'bakso', 'soto', 'gudeg', 
-            'sate', 'bento', 'snack', 'kue', 'roti', 'donut', 'pizza', 'burger', 
-            'seafood', 'dimsum', 'coffe', 'tea', 'boba', 'manja'
-        ];
-
-        // Query produk aktif seller yang berkategori Makanan dari Link in Bio
-        $products = Product::where('seller_id', $seller->id)
-            ->where('is_active', true)
-            ->where(function ($q) use ($foodKeywords) {
-                // Berdasarkan relasi kategori
-                $q->whereHas('category', function ($catQ) {
-                    $catQ->whereIn(DB::raw('LOWER(name)'), [
-                        'makanan', 'food', 'kuliner', 'fnb', 'resto', 
-                        'minuman', 'drink', 'snack', 'kue', 'cafe'
-                    ]);
-                });
-
-                // Atau berdasarkan keyword nama produk
-                foreach ($foodKeywords as $kw) {
-                    $q->orWhere(DB::raw('LOWER(name)'), 'LIKE', '%' . strtolower($kw) . '%');
-                }
-            })
-            ->with('category')
-            ->orderBy('name', 'asc')
-            ->get();
-
-        // Fallback: Jika tidak ada produk yang cocok dengan keyword makanan, tampilkan produk aktif creator agar POS tidak kosong
-        if ($products->isEmpty()) {
-            $products = Product::where('seller_id', $seller->id)
-                ->where('is_active', true)
-                ->with('category')
-                ->orderBy('name', 'asc')
-                ->get();
-        }
+        // 2. Ambil produk makanan untuk POS
+        $products = $this->getPosFoodProducts($seller->id);
 
         // 3. Transaksi POS hari ini
         $todayOrders = Order::where('source', 'pos')
@@ -96,40 +169,7 @@ class PosController extends Controller
     public function products(Request $request)
     {
         $seller = auth()->user();
-
-        $foodKeywords = [
-            'nasi', 'mie', 'ayam', 'bebek', 'daging', 'ikan', 'es', 'kopi', 
-            'makanan', 'minuman', 'kuliner', 'food', 'drink', 'resto', 'cafe', 
-            'menu', 'paket', 'porsi', 'jus', 'teh', 'bakso', 'soto', 'gudeg', 
-            'sate', 'bento', 'snack', 'kue', 'roti', 'donut', 'pizza', 'burger', 
-            'seafood', 'dimsum', 'coffe', 'tea', 'boba', 'manja'
-        ];
-
-        $products = Product::where('seller_id', $seller->id)
-            ->where('is_active', true)
-            ->where(function ($q) use ($foodKeywords) {
-                $q->whereHas('category', function ($catQ) {
-                    $catQ->whereIn(DB::raw('LOWER(name)'), [
-                        'makanan', 'food', 'kuliner', 'fnb', 'resto', 
-                        'minuman', 'drink', 'snack', 'kue', 'cafe'
-                    ]);
-                });
-
-                foreach ($foodKeywords as $kw) {
-                    $q->orWhere(DB::raw('LOWER(name)'), 'LIKE', '%' . strtolower($kw) . '%');
-                }
-            })
-            ->with('category')
-            ->orderBy('name', 'asc')
-            ->get();
-
-        if ($products->isEmpty()) {
-            $products = Product::where('seller_id', $seller->id)
-                ->where('is_active', true)
-                ->with('category')
-                ->orderBy('name', 'asc')
-                ->get();
-        }
+        $products = $this->getPosFoodProducts($seller->id);
 
         return response()->json([
             'success'  => true,
