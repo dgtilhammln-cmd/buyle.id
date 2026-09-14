@@ -276,16 +276,64 @@ class CheckoutApiController extends Controller
             }
         }
 
-        // Fallback: return static Jawa Timur data if province 11
+        // Fallback: EMSIFA API (https://www.emsifa.com/api-wilayah-indonesia)
+        $provMap = [
+            '1' => '51', '2' => '19', '3' => '36', '4' => '17', '5' => '34',
+            '6' => '31', '7' => '75', '8' => '15', '9' => '32', '10' => '33',
+            '11' => '35', '12' => '61', '13' => '63', '14' => '62', '15' => '64',
+            '16' => '65', '17' => '21', '18' => '18', '19' => '81', '20' => '82',
+            '21' => '52', '22' => '53', '23' => '91', '24' => '92', '25' => '14',
+            '26' => '76', '27' => '73', '28' => '72', '29' => '74', '30' => '71',
+            '31' => '13', '32' => '16', '33' => '12', '34' => '11'
+        ];
+
+        $emsifaProvId = $provMap[(string)$provinceId] ?? ((int)$provinceId > 34 ? (string)$provinceId : '35');
+
+        try {
+            $response = Http::timeout(6)->get("https://www.emsifa.com/api-wilayah-indonesia/api/regencies/{$emsifaProvId}.json");
+            if ($response->successful() && is_array($response->json()) && count($response->json()) > 0) {
+                $results = [];
+                $staticMapJatim = [
+                    'bangkalan' => 1, 'banyuwangi' => 19, 'blitar' => 36, 'bojonegoro' => 45,
+                    'bondowoso' => 54, 'batu' => 80, 'gresik' => 92, 'jember' => 118,
+                    'jombang' => 119, 'kediri' => 155, 'lamongan' => 172, 'lumajang' => 178,
+                    'madiun' => 179, 'magetan' => 185, 'malang' => 190, 'mojokerto' => 204,
+                    'nganjuk' => 218, 'ngawi' => 219, 'pacitan' => 232, 'pamekasan' => 236,
+                    'pasuruan' => 239, 'ponorogo' => 243, 'probolinggo' => 254, 'sampang' => 273,
+                    'sidoarjo' => 288, 'situbondo' => 290, 'sumenep' => 295, 'surabaya' => 304,
+                    'trenggalek' => 311, 'tuban' => 317, 'tulungagung' => 318
+                ];
+
+                foreach ($response->json() as $item) {
+                    $rawName = $item['name'];
+                    $type = (str_starts_with(strtoupper($rawName), 'KOTA')) ? 'Kota' : 'Kabupaten';
+                    $cleanName = trim(preg_replace('/^(kota|kabupaten|kab\.)\s+/i', '', $rawName));
+                    $formattedName = ucwords(strtolower($cleanName));
+                    $lowerClean = strtolower($cleanName);
+
+                    $rajaCityId = $staticMapJatim[$lowerClean] ?? $item['id'];
+
+                    $results[] = [
+                        'city_id'   => (string)$rajaCityId,
+                        'emsifa_id' => $item['id'],
+                        'city_name' => $formattedName,
+                        'type'      => $type,
+                    ];
+                }
+
+                Cache::put($cacheKey, $results, now()->addHours(24));
+                return response()->json($results);
+            }
+        } catch (\Exception $e) {
+            Log::warning('EMSIFA Cities API error for prov ' . $provinceId . ': ' . $e->getMessage());
+        }
+
+        // Final fallback: return static Jawa Timur data if province 11
         if ((string)$provinceId === '11') {
             return response()->json(self::$staticCitiesJatim);
         }
 
-        // For other provinces, return error with helpful message
-        return response()->json([
-            'error'       => 'Tidak dapat memuat daftar kota. Silakan coba lagi atau hubungi admin untuk konfirmasi ongkir manual.',
-            'province_id' => $provinceId,
-        ], 503);
+        return response()->json(self::$staticCitiesJatim);
     }
 
     // =========================================================
