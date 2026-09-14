@@ -95,7 +95,7 @@
 
         /* ── Link in Bio Signature Green Buttons ──────────────────────────── */
         .btn-submit-green {
-            background: linear-gradient(135deg, #1eb349, #16963c);
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
             border-radius: 12px;
             font-family: 'Montserrat', sans-serif;
             font-weight: 800;
@@ -104,7 +104,7 @@
             padding: 0.8rem 1.5rem;
             border: none;
             cursor: pointer;
-            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.3);
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
             transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
@@ -115,7 +115,7 @@
         }
 
         .btn-submit-green:hover {
-            background: linear-gradient(135deg, #16963c, #0f762e);
+            background: linear-gradient(135deg, #16963c, #8cb82b);
             box-shadow: 0 6px 20px rgba(30, 179, 73, 0.45);
             transform: translateY(-2px);
             color: #ffffff;
@@ -899,9 +899,9 @@
             <div class="pos-modal-body">
                 <!-- Total Banner Hero -->
                 <div
-                    style="background: linear-gradient(135deg, #1eb349, #15803d); color:#ffffff; padding:0.85rem 1.25rem; border-radius:14px; text-align:center; margin-bottom:1rem; box-shadow:0 4px 12px rgba(30,179,73,0.2);">
+                    style="background: linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; padding:0.85rem 1.25rem; border-radius:14px; text-align:center; margin-bottom:1rem; box-shadow:0 4px 14px rgba(30,179,73,0.35);">
                     <div
-                        style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; opacity:0.9;">
+                        style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; opacity:0.95;">
                         Total Tagihan</div>
                     <div style="font-size:1.6rem; font-weight:900; line-height:1.1; margin-top:2px;" id="modalPayTotal">Rp 0
                     </div>
