@@ -392,23 +392,58 @@
         color: #0f172a;
         margin: 0;
     }
+    /* ── Custom Table Styles (Independent from Bootstrap) ───────────── */
+    .pos-table-wrap {
+        width: 100%;
+        overflow-x: auto;
+    }
+    .pos-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Montserrat', sans-serif;
+        text-align: left;
+    }
+    .pos-table th {
+        background: #fafbfa;
+        color: #475569;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 14px 18px;
+        border-bottom: 1.5px solid #e2e8f0;
+        white-space: nowrap;
+    }
+    .pos-table td {
+        padding: 14px 18px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.83rem;
+        vertical-align: middle;
+    }
+    .pos-table tr:hover td {
+        background: #f8fafc;
+    }
+
+    /* ── Close Button ────────────────────────────────────────────────── */
     .pos-modal-close {
         background: #f1f5f9;
         border: none;
-        width: 32px;
-        height: 32px;
+        width: 34px;
+        height: 34px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #64748b;
         cursor: pointer;
+        font-size: 1.1rem;
         font-weight: 700;
-        transition: all 0.2s;
+        transition: all 0.2s ease;
     }
     .pos-modal-close:hover {
         background: #fee2e2;
         color: #dc2626;
+        transform: rotate(90deg);
     }
     .pos-modal-body {
         padding: 1.5rem;
@@ -882,23 +917,23 @@
                 </div>
             </div>
 
-            <!-- E-Receipt Email (no-print) -->
-            <div class="no-print mt-4 pt-3 border-top">
-                <label class="form-label mb-1">Kirim E-Receipt ke Email</label>
+            <!-- E-Receipt Email Input (no-print) -->
+            <div class="no-print mt-3 pt-3" style="border-top:1.5px dashed #cbd5e1;">
+                <label class="form-label mb-1" style="font-size:0.78rem;">Kirim E-Receipt Struk via Email</label>
                 <div class="d-flex gap-2">
-                    <input type="email" id="recSendEmailInput" class="form-input" placeholder="email@pembeli.com">
-                    <button class="btn-submit-green" style="width:auto; padding:0 1.25rem; font-size:0.82rem;" onclick="sendEReceiptEmail()">Kirim</button>
+                    <input type="email" id="recSendEmailInput" class="form-input" placeholder="email.pelanggan@gmail.com" style="height:40px; font-size:0.8rem;">
+                    <button type="button" class="btn-outline-bio" style="white-space:nowrap; padding:0 14px; font-size:0.78rem;" onclick="sendEReceiptEmail()">Kirim</button>
                 </div>
             </div>
         </div>
 
         <div class="pos-modal-foot no-print">
-            <button type="button" class="btn-outline-bio" style="border-color:#cbd5e1; color:#64748b;" onclick="closeModal('posReceiptModal'); resetPOS();">
-                Transaksi Baru
+            <button type="button" class="btn-outline-bio" onclick="window.print()">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Cetak Thermal Struk
             </button>
-            <button type="button" class="btn-submit-green" style="width:auto;" onclick="window.print()">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                Print Struk Thermal
+            <button type="button" class="btn-submit-green" style="width:auto;" onclick="closeModal('posReceiptModal'); resetPOS();">
+                Selesai & Transaksi Baru
             </button>
         </div>
     </div>
@@ -906,22 +941,22 @@
 
 <!-- CUSTOM OVERLAY MODAL 3: History Modal -->
 <div class="pos-modal-overlay" id="posHistoryModal">
-    <div class="pos-modal-card" style="max-width: 720px;">
+    <div class="pos-modal-card" style="max-width: 840px; width: 95vw;">
         <div class="pos-modal-head">
             <h5>Riwayat Transaksi POS Hari Ini</h5>
             <button type="button" class="pos-modal-close" onclick="closeModal('posHistoryModal')">&times;</button>
         </div>
         <div class="pos-modal-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0" style="font-size:0.83rem; width:100%;">
-                    <thead style="background:#fafbfa; color:#64748b; font-size:0.75rem; text-transform:uppercase;">
+            <div class="pos-table-wrap">
+                <table class="pos-table">
+                    <thead>
                         <tr>
-                            <th class="ps-4">No. Order / Waktu</th>
+                            <th style="padding-left:1.5rem;">No. Order / Waktu</th>
                             <th>Pelanggan</th>
                             <th>Metode Bayar</th>
                             <th>Total</th>
                             <th>Status</th>
-                            <th class="text-end pe-4">Aksi</th>
+                            <th style="text-align:right; padding-right:1.5rem;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -931,7 +966,7 @@
                                 $tPayMethod = $tAddr['payment_method'] ?? ($tOrd->payment?->payment_method ?? 'cash');
                             @endphp
                             <tr>
-                                <td class="ps-4">
+                                <td style="padding-left:1.5rem;">
                                     <strong style="color:#0f172a;">#{{ $tOrd->order_number }}</strong>
                                     <div style="font-size:0.73rem; color:#64748b;">{{ $tOrd->created_at->format('H:i') }} WIB</div>
                                 </td>
@@ -942,23 +977,23 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <span class="badge" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; text-transform:uppercase; font-weight:700;">{{ $tPayMethod }}</span>
+                                    <span class="badge" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; text-transform:uppercase; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem;">{{ $tPayMethod }}</span>
                                 </td>
-                                <td class="font-weight-bold" style="color:#1eb349;">
+                                <td style="font-weight:800; color:#1eb349;">
                                     Rp {{ number_format($tOrd->total, 0, ',', '.') }}
                                 </td>
                                 <td>
-                                    <span class="badge" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-weight:700;">Berhasil</span>
+                                    <span class="badge" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem;">Berhasil</span>
                                 </td>
-                                <td class="text-end pe-4">
-                                    <button class="btn-outline-bio py-1 px-2" style="font-size:0.75rem;" onclick="reprintPastReceipt({{ json_encode($tOrd) }})">
+                                <td style="text-align:right; padding-right:1.5rem;">
+                                    <button type="button" class="btn-outline-bio" style="padding:4px 10px; font-size:0.75rem;" onclick="reprintPastReceipt({{ json_encode($tOrd) }})">
                                         Cetak Struk
                                     </button>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-5 text-muted">
+                                <td colspan="6" style="text-align:center; padding:3rem 1rem; color:#94a3b8; font-size:0.85rem;">
                                     Belum ada transaksi POS hari ini.
                                 </td>
                             </tr>
