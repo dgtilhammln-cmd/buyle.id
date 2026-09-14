@@ -1861,14 +1861,13 @@
                     <div class="card-body" style="padding:1.25rem;">
 
                         @php
-                            $affiliateBlockIds = $affiliateProducts->pluck('id')->toArray();
-                            $addedAffBlocks = $blocks->where('type', 'buyle_affiliate')->filter(fn($b) => in_array($b->data_json['product_id'] ?? null, $affiliateBlockIds));
+                            $addedAffBlocks = $blocks->where('type', 'buyle_affiliate');
                         @endphp
 
                         @forelse($addedAffBlocks as $affBlock)
                             @php
                                 $affProdId = $affBlock->data_json['product_id'] ?? null;
-                                $affProd = $affiliateProducts->firstWhere('id', $affProdId);
+                                $affProd = $affiliateProducts->firstWhere('id', $affProdId) ?? ($affProdId ? \App\Models\Product::with('seller:id,name')->find($affProdId) : null);
                             @endphp
                             <div
                                 style="background:#fff; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
@@ -1949,14 +1948,13 @@
                     <div class="card-body" style="padding:1.25rem;">
 
                         @php
-                            $wlBlockIds = $whitelabelProducts->pluck('id')->toArray();
-                            $addedWlBlocks = $blocks->where('type', 'buyle_product')->filter(fn($b) => in_array($b->data_json['product_id'] ?? null, $wlBlockIds) && ($b->data_json['product_source'] ?? 'whitelabel') !== 'affiliate');
+                            $addedWlBlocks = $blocks->where('type', 'buyle_product');
                         @endphp
 
                         @forelse($addedWlBlocks as $wlBlock)
                             @php
                                 $wlProdId = $wlBlock->data_json['product_id'] ?? null;
-                                $wlProd = $whitelabelProducts->firstWhere('id', $wlProdId);
+                                $wlProd = $whitelabelProducts->firstWhere('id', $wlProdId) ?? ($wlProdId ? \App\Models\Product::with('seller:id,name')->find($wlProdId) : null);
                             @endphp
                             <div
                                 style="background:#fff; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
