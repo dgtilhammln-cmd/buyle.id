@@ -75,10 +75,10 @@
 
     <style>
         :root {
-            --accent: #1eb349;
+            --accent: #0f172a;
             --glass: #fff;
-            --glass-border: #e7f0e7;
-            --text: #0b120c;
+            --glass-border: #e2e8f0;
+            --text: #0f172a;
             --text-sub: #64748b;
             --side: 24px;
         }
@@ -92,7 +92,7 @@
         }
 
         body {
-            background: #f9fefb;
+            background: #f8fafc;
             color: var(--text);
             font-family: 'Montserrat', sans-serif;
             min-height: 100vh;
@@ -107,11 +107,11 @@
         /* Cover & Avatar */
         .cover-area {
             height: 200px;
-            background: linear-gradient(135deg, #e7f0e7, #f0fdf4);
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
             background-size: cover;
             background-position: center;
             position: relative;
-            border-bottom: 1px solid #e7f0e7;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         @media (max-width: 500px) {
@@ -532,13 +532,14 @@
             position: absolute;
             top: 8px;
             left: 8px;
-            background: var(--accent);
-            color: #000;
+            background: #0f172a;
+            color: #ffffff;
             font-size: 0.65rem;
             font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 2px 7px;
+            border-radius: 6px;
             z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
         /* Fix map iframe responsive */
@@ -575,7 +576,7 @@
                     <img src="{{ $bioAvatarSrc }}" alt="{{ $config['name'] ?? '' }}">
                 @else
                     <div
-                        style="width:100%;height:100%;background:linear-gradient(135deg,#1eb349,#a5cf37);display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:900;color:#fff;">
+                        style="width:100%;height:100%;background:linear-gradient(135deg,#334155,#0f172a);display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:900;color:#fff;">
                         {{ strtoupper(substr($config['name'] ?? $username, 0, 1)) }}</div>
                 @endif
             </div>
@@ -622,7 +623,13 @@
             $imageBlocks = $blocks->where('type', 'image')->sortBy('order')->values();
             $videoBlocks = $blocks->whereIn('type', ['tiktok', 'reels'])->sortBy('order')->values();
             $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
-            $buyleBlocks = $blocks->whereIn('type', ['buyle_product', 'buyle_affiliate'])->sortBy(fn($b) => [$b->order ?? 0, $b->id])->values();
+            $buyleBlocks = $blocks->whereIn('type', ['buyle_product', 'buyle_affiliate'])->filter(function($b) use ($products) {
+                if ($b->type === 'buyle_product') {
+                    $pid = $b->data_json['product_id'] ?? 0;
+                    return isset($products[$pid]);
+                }
+                return true;
+            })->sortBy(fn($b) => [$b->order ?? 0, $b->id])->values();
             $customProdBlocks = $blocks->where('type', 'custom_product')->sortBy(fn($b) => [$b->order ?? 0, $b->id])->values();
         @endphp
 
@@ -722,9 +729,9 @@
         .cat-tabs-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:12px 0 10px;}
         .cat-tabs-wrap::-webkit-scrollbar{display:none;}
         .cat-tabs{display:flex;flex-wrap:nowrap;gap:8px;padding:0 var(--side,16px) 2px;}
-        .cat-tab{flex:0 0 auto;white-space:nowrap;padding:6px 16px;border-radius:999px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1.5px solid #d1fae5;background:#f0fdf4;color:#166534;transition:all .2s;user-select:none;box-shadow:0 1px 3px rgba(30,179,73,0.08);}
-        .cat-tab.active{background:#1eb349;border-color:#1eb349;color:#fff;box-shadow:0 2px 8px rgba(30,179,73,0.3);}
-        .cat-tab:not(.active):hover{border-color:#1eb349;background:#dcfce7;}
+        .cat-tab{flex:0 0 auto;white-space:nowrap;padding:6px 16px;border-radius:999px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;transition:all .2s;user-select:none;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+        .cat-tab.active{background:#0f172a;border-color:#0f172a;color:#fff;box-shadow:0 2px 8px rgba(15,23,42,0.2);}
+        .cat-tab:not(.active):hover{border-color:#cbd5e1;background:#f1f5f9;color:#0f172a;}
         .cat-panel{display:none;}.cat-panel.active{display:block;}
         </style>
 

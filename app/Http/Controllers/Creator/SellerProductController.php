@@ -216,6 +216,11 @@ class SellerProductController extends Controller
             Storage::disk('public')->delete($product->image);
         }
 
+        // Clean up linked bio blocks
+        \App\Models\CreatorBioBlock::where('type', 'buyle_product')
+            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(data_json, '$.product_id')) = ?", [(string)$product->id])
+            ->delete();
+
         $product->delete();
 
         Cache::forget('catalog_main');
@@ -304,6 +309,11 @@ class SellerProductController extends Controller
             if ($product->image && !Str::startsWith($product->image, 'http')) {
                 Storage::disk('public')->delete($product->image);
             }
+            // Clean up linked bio blocks
+            \App\Models\CreatorBioBlock::where('type', 'buyle_product')
+                ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(data_json, '$.product_id')) = ?", [(string)$product->id])
+                ->delete();
+
             $product->delete();
         }
 
