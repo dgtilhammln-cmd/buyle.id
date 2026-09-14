@@ -562,6 +562,12 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::get('/sales-report/export', [\App\Http\Controllers\Creator\SellerReportController::class, 'export'])->name('sales.report.export');
     Route::post('/sales-report/orders/{order}/update', [\App\Http\Controllers\Creator\SellerReportController::class, 'updateOrder'])->name('sales.report.update_order');
 
+    // Simple POS (Kasir Digital)
+    Route::get('/pos', [\App\Http\Controllers\Creator\PosController::class, 'index'])->name('pos.index');
+    Route::get('/pos/products', [\App\Http\Controllers\Creator\PosController::class, 'products'])->name('pos.products');
+    Route::post('/pos/store', [\App\Http\Controllers\Creator\PosController::class, 'store'])->name('pos.store');
+    Route::post('/pos/send-receipt', [\App\Http\Controllers\Creator\PosController::class, 'sendReceipt'])->name('pos.send-receipt');
+
     // Realtime Stats API (AJAX polling for dashboard)
     Route::get('/stats/realtime', [\App\Http\Controllers\Creator\SellerController::class, 'realtimeStats'])->name('stats.realtime');
 

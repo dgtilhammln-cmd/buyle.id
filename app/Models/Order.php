@@ -27,6 +27,7 @@ class Order extends Model
         'total',
         'shipping_address',
         'notes',
+        'source',
         'utm_source',
         'utm_medium',
         'utm_campaign',

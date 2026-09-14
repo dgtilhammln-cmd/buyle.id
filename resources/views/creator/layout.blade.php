@@ -761,6 +761,21 @@
                 @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.7;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> @endif
             </a>
 
+            <a href="{{ $isBuyer ? '#' : route('creator.pos.index') }}"
+                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
+                class="cr-nav-link {{ request()->routeIs('creator.pos*') ? 'active' : '' }}">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="4" y="3" width="16" height="18" rx="2"/>
+                    <line x1="8" y1="7" x2="16" y2="7"/>
+                    <line x1="8" y1="11" x2="10" y2="11"/>
+                    <line x1="14" y1="11" x2="16" y2="11"/>
+                    <line x1="8" y1="15" x2="10" y2="15"/>
+                    <line x1="14" y1="15" x2="16" y2="15"/>
+                </svg>
+                Kasir Digital (POS)
+                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;opacity:0.7;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> @endif
+            </a>
+
             <a href="{{ $isBuyer ? '#' : route('creator.payout.settings') }}"
                 onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.payout*') ? 'active' : '' }}">
@@ -958,6 +973,21 @@
                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
             </svg>
             <span>Laporan</span>
+        </a>
+
+        {{-- Kasir POS --}}
+        <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.pos.index') }}"
+           onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
+           class="superapp-nav-item {{ request()->routeIs('creator.pos*') ? 'active' : '' }}">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="4" y="3" width="16" height="18" rx="2"/>
+                <line x1="8" y1="7" x2="16" y2="7"/>
+                <line x1="8" y1="11" x2="10" y2="11"/>
+                <line x1="14" y1="11" x2="16" y2="11"/>
+                <line x1="8" y1="15" x2="10" y2="15"/>
+                <line x1="14" y1="15" x2="16" y2="15"/>
+            </svg>
+            <span>Kasir</span>
         </a>
 
         {{-- Saldo --}}

@@ -496,7 +496,14 @@
                         @endphp
                         <tr>
                             <td style="white-space:nowrap; color:#64748b; font-size:0.75rem;">
-                                <div style="font-weight:700;color:#0f172a;">#{{ $order->order_number ?? ('ORD-' . $order->id) }}</div>
+                                <div style="display:flex;align-items:center;gap:6px;">
+                                    <span style="font-weight:700;color:#0f172a;">#{{ $order->order_number ?? ('ORD-' . $order->id) }}</span>
+                                    @if(($order->source ?? '') === 'pos')
+                                        <span style="background:#e0e7ff;color:#3730a3;font-size:0.65rem;padding:1px 6px;border-radius:4px;font-weight:700;">POS</span>
+                                    @else
+                                        <span style="background:#f1f5f9;color:#475569;font-size:0.65rem;padding:1px 6px;border-radius:4px;font-weight:600;">Bio</span>
+                                    @endif
+                                </div>
                                 <div>{{ $order->created_at->format('d M Y H:i') }}</div>
                             </td>
                             <td class="td-user">
