@@ -291,32 +291,43 @@ label:focus{outline:none !important;box-shadow:none !important;}
                             </div>
                         </div>
 
-                        {{-- Indo Regions API --}}
+                        {{-- Indo Regions & RajaOngkir API --}}
                         <input type="hidden" name="new_address_province" id="province_name">
                         <input type="hidden" name="new_address_city" id="city_name">
+                        <input type="hidden" name="new_address_district" id="district_name">
 
                         <div class="form-group">
-                            <label class="form-label">Provinsi</label>
+                            <label class="form-label">Provinsi <span style="color:#EF4444;">*</span></label>
                             <select id="province_select" class="form-input">
                                 <option value="">Loading Provinsi...</option>
                             </select>
                         </div>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
                             <div class="form-group">
-                                <label class="form-label">Kota / Kabupaten</label>
+                                <label class="form-label">Kota / Kabupaten <span style="color:#EF4444;">*</span></label>
                                 <select id="city_select" class="form-input">
                                     <option value="">Pilih Provinsi Dulu</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Kecamatan</label>
-                                <input type="text" name="new_address_district" id="district_name" class="form-input" placeholder="Nama kecamatan">
+                                <label class="form-label">Kecamatan <span style="color:#EF4444;">*</span></label>
+                                <select id="district_select" class="form-input">
+                                    <option value="">Pilih Kota Dulu</option>
+                                </select>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Kode Pos</label>
-                            <input type="text" name="new_address_postal" id="new_addr_postal" class="form-input" placeholder="Kode Pos">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Kelurahan / Desa <span style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
+                                <select id="subdistrict_select" class="form-input">
+                                    <option value="">Pilih Kecamatan Dulu</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Kode Pos <span style="color:#EF4444;">*</span></label>
+                                <input type="text" name="new_address_postal" id="new_addr_postal" class="form-input" placeholder="Kode Pos (contoh: 60111)">
+                            </div>
                         </div>
 
                         <div class="form-group mb-0">
@@ -605,13 +616,89 @@ label:focus{outline:none !important;box-shadow:none !important;}
     });
 
     document.getElementById('city_select')?.addEventListener('change', function() {
-        const text = this.options[this.selectedIndex].text;
+        const text = this.options[this.selectedIndex]?.text || '';
         document.getElementById('city_name').value = this.value ? text : '';
+        loadDistrictsInto('district_select', this.value);
         resetShipping();
         if (this.value && document.getElementById('courier_name_select')?.value) {
             checkCost();
         }
     });
+
+    document.getElementById('district_select')?.addEventListener('change', function() {
+        const text = this.options[this.selectedIndex]?.text || '';
+        const selectedOpt = this.options[this.selectedIndex];
+        document.getElementById('district_name').value = this.value ? text : '';
+        
+        // Auto fill postal code if returned from district API
+        const postal = selectedOpt?.getAttribute('data-postal') || '';
+        if (postal) {
+            document.getElementById('new_addr_postal').value = postal;
+        }
+
+        loadSubdistrictsInto('subdistrict_select', this.value);
+    });
+
+    document.getElementById('subdistrict_select')?.addEventListener('change', function() {
+        const text = this.options[this.selectedIndex]?.text || '';
+        const postalInput = document.getElementById('new_addr_postal');
+        const selectedOpt = this.options[this.selectedIndex];
+        if (selectedOpt?.getAttribute('data-postal')) {
+            postalInput.value = selectedOpt.getAttribute('data-postal');
+        }
+    });
+
+    function loadDistrictsInto(selectId, cityId) {
+        const distSelect = document.getElementById(selectId);
+        if (!distSelect) return;
+        if (!cityId) {
+            distSelect.innerHTML = '<option value="">Pilih Kota Dulu</option>';
+            return;
+        }
+        distSelect.innerHTML = '<option value="">Memuat kecamatan...</option>';
+        fetch(`{{ url('/api/rajaongkir/districts') }}/${cityId}`)
+            .then(res => res.json())
+            .then(data => {
+                distSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+                if (Array.isArray(data) && data.length > 0) {
+                    data.forEach(dist => {
+                        const opt = new Option(dist.district_name, dist.district_id);
+                        if (dist.postal_code) opt.setAttribute('data-postal', dist.postal_code);
+                        distSelect.add(opt);
+                    });
+                } else {
+                    distSelect.innerHTML = '<option value="">Tidak ada data kecamatan</option>';
+                }
+            })
+            .catch(err => {
+                console.error('Districts API Error:', err);
+                distSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+            });
+    }
+
+    function loadSubdistrictsInto(selectId, districtId) {
+        const subSelect = document.getElementById(selectId);
+        if (!subSelect) return;
+        if (!districtId) {
+            subSelect.innerHTML = '<option value="">Pilih Kecamatan Dulu</option>';
+            return;
+        }
+        subSelect.innerHTML = '<option value="">Memuat kelurahan...</option>';
+        fetch(`{{ url('/api/rajaongkir/subdistricts') }}/${districtId}`)
+            .then(res => res.json())
+            .then(data => {
+                subSelect.innerHTML = '<option value="">Pilih Kelurahan / Desa</option>';
+                if (Array.isArray(data) && data.length > 0) {
+                    data.forEach(sub => {
+                        const opt = new Option(sub.village_name, sub.village_id);
+                        subSelect.add(opt);
+                    });
+                }
+            })
+            .catch(err => {
+                subSelect.innerHTML = '<option value="">Pilih Kelurahan / Desa (Opsional)</option>';
+            });
+    }
 
     // ────────────────────────────────────────────
     // SAVED-ADDRESS FLOW: Province → City

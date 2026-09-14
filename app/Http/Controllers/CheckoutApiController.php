@@ -289,6 +289,116 @@ class CheckoutApiController extends Controller
     }
 
     // =========================================================
+    // DISTRICTS (Kecamatan) — try API with fallback
+    // =========================================================
+    public function districts($cityId)
+    {
+        $cacheKey = 'rajaongkir_districts_' . $cityId;
+        $cached = Cache::get($cacheKey);
+        if ($cached) {
+            return response()->json($cached);
+        }
+
+        $apiKey = $this->getTariffApiKey();
+        $isLive = $this->isLiveMode();
+
+        if ($apiKey) {
+            try {
+                if ($isLive) {
+                    $response = Http::withoutVerifying()
+                                    ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
+                                    ->timeout(8)
+                                    ->withHeaders([
+                                        'x-api-key'  => $apiKey,
+                                        'Accept'     => 'application/json',
+                                        'User-Agent' => 'Mozilla/5.0',
+                                    ])
+                                    ->get('https://api.collaborator.komerce.id/tariff/api/v1/destination', [
+                                        'city_id' => $cityId,
+                                        'type'    => 'subdistrict',
+                                    ]);
+                } else {
+                    $response = Http::withoutVerifying()
+                                    ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
+                                    ->timeout(8)
+                                    ->withHeaders([
+                                        'key'        => $apiKey,
+                                        'User-Agent' => 'Mozilla/5.0',
+                                    ])
+                                    ->get('https://rajaongkir.komerce.id/api/v1/destination/subdistrict/' . $cityId);
+                }
+
+                $json = $response->json();
+
+                if ($response->successful() && isset($json['data']) && count($json['data']) > 0) {
+                    $results = array_map(function($item) {
+                        return [
+                            'district_id'   => $item['id'] ?? $item['subdistrict_id'] ?? $item['district_id'] ?? '',
+                            'district_name' => $item['name'] ?? $item['subdistrict_name'] ?? $item['district_name'] ?? '',
+                            'postal_code'   => $item['postal_code'] ?? $item['zip_code'] ?? '',
+                        ];
+                    }, $json['data']);
+
+                    Cache::put($cacheKey, $results, now()->addHours(24));
+                    return response()->json($results);
+                }
+            } catch (\Exception $e) {
+                Log::warning('Komerce Districts API error for city ' . $cityId . ': ' . $e->getMessage());
+            }
+        }
+
+        // Fallback: try KangLerian API
+        try {
+            $response = Http::timeout(6)->get("https://kanglerian.github.io/api-wilayah-indonesia/api/districts/{$cityId}.json");
+            if ($response->successful() && is_array($response->json())) {
+                $results = array_map(function($item) {
+                    return [
+                        'district_id'   => $item['id'],
+                        'district_name' => $item['name'],
+                        'postal_code'   => '',
+                    ];
+                }, $response->json());
+                return response()->json($results);
+            }
+        } catch (\Exception $e) {
+            Log::warning('KangLerian Districts API fallback error: ' . $e->getMessage());
+        }
+
+        return response()->json([]);
+    }
+
+    // =========================================================
+    // SUBDISTRICTS / VILLAGES (Kelurahan / Desa & Kode Pos)
+    // =========================================================
+    public function subdistricts($districtId)
+    {
+        $cacheKey = 'rajaongkir_subdistricts_' . $districtId;
+        $cached = Cache::get($cacheKey);
+        if ($cached) {
+            return response()->json($cached);
+        }
+
+        try {
+            $response = Http::timeout(6)->get("https://kanglerian.github.io/api-wilayah-indonesia/api/villages/{$districtId}.json");
+            if ($response->successful() && is_array($response->json())) {
+                $results = array_map(function($item) {
+                    return [
+                        'village_id'   => $item['id'],
+                        'village_name' => $item['name'],
+                        'district_id'  => $item['district_id'] ?? '',
+                    ];
+                }, $response->json());
+                Cache::put($cacheKey, $results, now()->addHours(24));
+                return response()->json($results);
+            }
+        } catch (\Exception $e) {
+            Log::warning('Subdistricts API error for district ' . $districtId . ': ' . $e->getMessage());
+        }
+
+        return response()->json([]);
+    }
+
+    // =========================================================
     // COST — try API, graceful fallback with manual cost option
     // =========================================================
     public function cost(Request $request)

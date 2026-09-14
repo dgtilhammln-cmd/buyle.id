@@ -103,9 +103,11 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::post('/checkout',               [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/checkout/selesai/{order}',[CheckoutController::class, 'finish'])->name('checkout.finish');
 
-    // API RajaOngkir untuk Checkout
+    // API RajaOngkir & Wilayah untuk Checkout
     Route::get('/api/rajaongkir/provinces', [\App\Http\Controllers\CheckoutApiController::class, 'provinces'])->name('api.rajaongkir.provinces');
     Route::get('/api/rajaongkir/cities/{province}', [\App\Http\Controllers\CheckoutApiController::class, 'cities'])->name('api.rajaongkir.cities');
+    Route::get('/api/rajaongkir/districts/{city}', [\App\Http\Controllers\CheckoutApiController::class, 'districts'])->name('api.rajaongkir.districts');
+    Route::get('/api/rajaongkir/subdistricts/{district}', [\App\Http\Controllers\CheckoutApiController::class, 'subdistricts'])->name('api.rajaongkir.subdistricts');
     Route::post('/api/rajaongkir/cost', [\App\Http\Controllers\CheckoutApiController::class, 'cost'])->name('api.rajaongkir.cost');
 
     // Coupon / Voucher API
