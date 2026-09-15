@@ -312,7 +312,16 @@ class CreatorBioController extends Controller
                     $data['images'] = $images;
                     $data['image']  = $images[0];
                 }
-            } elseif (!empty($data['image'])) {
+            }
+
+            // If no uploaded images, try scrape_image_url (from Shopee/Tokopedia scraper)
+            if (empty($data['images']) && $request->filled('scrape_image_url')) {
+                $remoteImg = $this->saveRemoteImageLocally($request->scrape_image_url);
+                if ($remoteImg) {
+                    $data['images'] = [$remoteImg];
+                    $data['image']  = $remoteImg;
+                }
+            } elseif (!empty($data['image']) && empty($data['images'])) {
                 $data['images'] = [$data['image']];
             }
             // Auto-create Product entry in products table for Payment Gateway checkout
@@ -789,5 +798,127 @@ class CreatorBioController extends Controller
 
         // Fallback if GD fails or WebP not created
         return $file->store($relativeDir, 'public');
+    }
+
+    /**
+     * Scrape product data from Shopee / Tokopedia URL.
+     * Returns JSON: { title, price, original_price, description, image }
+     */
+    public function scrapeUrl(Request $request)
+    {
+        $url = trim($request->input('url', ''));
+
+        if (!$url || !filter_var($url, FILTER_VALIDATE_URL)) {
+            return response()->json(['error' => 'URL tidak valid.'], 422);
+        }
+
+        // Only allow Shopee & Tokopedia
+        $host = strtolower(parse_url($url, PHP_URL_HOST) ?? '');
+        $allowed = ['shopee.co.id', 'shp.ee', 'tokopedia.com', 'tokpe.da', 'm.tokopedia.com', 'www.tokopedia.com', 'www.shopee.co.id'];
+        $isAllowed = false;
+        foreach ($allowed as $domain) {
+            if (str_contains($host, $domain) || str_contains($host, str_replace('www.', '', $domain))) {
+                $isAllowed = true;
+                break;
+            }
+        }
+        if (!$isAllowed && !str_contains($host, 'shopee') && !str_contains($host, 'tokopedia') && !str_contains($host, 'shp.ee')) {
+            return response()->json(['error' => 'Hanya URL dari Shopee atau Tokopedia yang didukung.'], 422);
+        }
+
+        try {
+            // Follow redirects (for short links like shp.ee)
+            $response = \Illuminate\Support\Facades\Http::withHeaders([
+                'User-Agent'      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language' => 'id-ID,id;q=0.9,en;q=0.8',
+                'Cache-Control'   => 'no-cache',
+            ])->timeout(15)->get($url);
+
+            if (!$response->successful()) {
+                return response()->json(['error' => 'Gagal mengambil halaman produk (status ' . $response->status() . ').'], 422);
+            }
+
+            $html = $response->body();
+
+            // --- Helper: extract meta tag content ---
+            $getMeta = function (string $prop) use ($html): string {
+                // Try og:, name=, property=
+                foreach (['property="' . $prop . '"', 'property=\'' . $prop . '\'', 'name="' . $prop . '"', 'name=\'' . $prop . '\''] as $attr) {
+                    if (preg_match('/<meta[^>]+' . preg_quote($attr, '/') . '[^>]+content=["\']([^"\']+)["\'][^>]*>/i', $html, $m) ||
+                        preg_match('/<meta[^>]+content=["\']([^"\']+)["\'][^>]+' . preg_quote($attr, '/') . '[^>]*>/i', $html, $m)) {
+                        return trim(html_entity_decode($m[1], ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                    }
+                }
+                return '';
+            };
+
+            $title       = $getMeta('og:title') ?: $getMeta('title');
+            $description = $getMeta('og:description') ?: $getMeta('description');
+            $image       = $getMeta('og:image');
+
+            // Price: try product:price:amount meta first
+            $price    = (float) preg_replace('/[^0-9]/', '', $getMeta('product:price:amount'));
+            $origPrice = 0.0;
+
+            // Tokopedia JSON-LD approach
+            if (str_contains($host, 'tokopedia') && (!$title || !$price)) {
+                if (preg_match('/<script[^>]+type=["\']application\/ld\+json["\'][^>]*>(.*?)<\/script>/is', $html, $jsonMatch)) {
+                    $ld = @json_decode($jsonMatch[1], true);
+                    if (is_array($ld)) {
+                        $title       = $title ?: ($ld['name'] ?? '');
+                        $description = $description ?: ($ld['description'] ?? '');
+                        $image       = $image ?: (is_array($ld['image'] ?? null) ? ($ld['image'][0] ?? '') : ($ld['image'] ?? ''));
+                        if (!$price && isset($ld['offers']['price'])) {
+                            $price = (float) preg_replace('/[^0-9]/', '', $ld['offers']['price']);
+                        }
+                    }
+                }
+            }
+
+            // Shopee: price regex fallback from JSON embedded in page
+            if (str_contains($host, 'shopee') && !$price) {
+                // Shopee embeds price in window.__PRE_FETCHED_DATA__ or similar
+                if (preg_match('/"price"\s*:\s*(\d+)/', $html, $pm)) {
+                    // Shopee prices are in cents (x100000)
+                    $rawPrice = (int) $pm[1];
+                    $price = $rawPrice > 1000000 ? round($rawPrice / 100000) : $rawPrice;
+                }
+                if (preg_match('/"price_before_discount"\s*:\s*(\d+)/', $html, $pm)) {
+                    $rawOrig = (int) $pm[1];
+                    $origPrice = $rawOrig > 1000000 ? round($rawOrig / 100000) : $rawOrig;
+                }
+            }
+
+            // Tokopedia price fallback
+            if (str_contains($host, 'tokopedia') && !$price) {
+                if (preg_match('/"price"\s*:\s*(\d+)/', $html, $pm)) {
+                    $price = (float) $pm[1];
+                }
+            }
+
+            // Clean up title (remove site suffix)
+            $title = preg_replace('/\s*[-|]\s*(Shopee|Tokopedia|shopee\.co\.id|tokopedia\.com).*$/i', '', $title);
+            $title = trim($title);
+
+            // Truncate description
+            if (strlen($description) > 500) {
+                $description = substr($description, 0, 500) . '…';
+            }
+
+            if (!$title && !$image && !$price) {
+                return response()->json(['error' => 'Tidak dapat mengambil data produk. Pastikan URL produk valid dan bisa diakses publik.'], 422);
+            }
+
+            return response()->json([
+                'title'          => $title,
+                'price'          => (int) $price,
+                'original_price' => (int) $origPrice,
+                'description'    => $description,
+                'image'          => $image,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Gagal scrape: ' . $e->getMessage()], 500);
+        }
     }
 }

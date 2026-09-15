@@ -2073,7 +2073,7 @@
 
                 {{-- 4. Produk Fisik / UMKM --}}
                 <div class="prof-card">
-                    <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
                         <span style="display:flex; align-items:center; gap:0.5rem;">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24">
@@ -2082,31 +2082,49 @@
                             </svg>
                             Produk Fisik / UMKM
                         </span>
-                        <div style="display:flex; gap:0.5rem; align-items:center;">
+                        <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+                            {{-- Search --}}
+                            <div style="position:relative; display:flex; align-items:center;">
+                                <svg width="13" height="13" fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24" style="position:absolute; left:0.55rem; pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                <input type="text" id="umkmSearch" placeholder="Cari produk..." oninput="filterUmkmProducts()" style="height:32px; padding:0 0.75rem 0 2rem; border-radius:8px; border:1.5px solid #e2e8f0; font-size:0.75rem; background:#f8fafc; color:#1e293b; outline:none; width:150px;">
+                            </div>
+                            {{-- Sort --}}
+                            <div style="display:flex; gap:0.25rem;">
+                                <button id="sortTerbaru" onclick="sortUmkmProducts('terbaru')" title="Terbaru" style="height:32px; padding:0 0.65rem; border-radius:8px 0 0 8px; border:1.5px solid #e2e8f0; border-right:none; background:#0f172a; color:#fff; font-size:0.72rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                                    Terbaru
+                                </button>
+                                <button id="sortTerlama" onclick="sortUmkmProducts('terlama')" title="Terlama" style="height:32px; padding:0 0.65rem; border-radius:0 8px 8px 0; border:1.5px solid #e2e8f0; background:#f8fafc; color:#64748b; font-size:0.72rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+                                    Terlama
+                                </button>
+                            </div>
                             @if($blocks->where('type', 'custom_product')->count() > 0)
                                 <form action="{{ route('creator.bio.blocks.destroy-all-custom-products') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus SEMUA produk fisik/UMKM dari Link Bio Anda?');" style="margin:0;">
                                     @csrf @method('DELETE')
-                                    <button type="submit" style="background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; font-weight:700; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.75rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                    <button type="submit" style="background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; font-weight:700; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.75rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem; height:32px;">
                                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
                                         Hapus Semua
                                     </button>
                                 </form>
                             @endif
-                            <button type="button" onclick="openScanMenuModal()" class="btn-submit-sm" style="background:linear-gradient(135deg, #0f172a, #1e293b); color:#fff; border:none; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.78rem; cursor:pointer;">
+                            <button type="button" onclick="openScanMenuModal()" style="background:linear-gradient(135deg, #0f172a, #1e293b); color:#fff; border:none; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.78rem; cursor:pointer; height:32px;">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 01-2 2h-4a2 2 0 01-2-2v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
                                 Scan Menu AI
                             </button>
-                            <button onclick="document.getElementById('addUmkmModal').classList.add('open')"
-                                class="btn-submit-sm">+ Tambah</button>
+                            <button onclick="document.getElementById('addUmkmModal').classList.add('open')" style="background:linear-gradient(135deg, #1eb349, #16a34a); color:#fff; border:none; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.78rem; cursor:pointer; height:32px;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Tambah
+                            </button>
                         </div>
                     </div>
-                    <div class="card-body">
-                        @forelse($blocks->where('type', 'custom_product')->sortBy(fn($b) => [$b->order ?? 0, $b->id]) as $block)
+                    <div class="card-body" id="umkmProductList">
+                        @forelse($blocks->where('type', 'custom_product')->sortByDesc('id') as $block)
                                             @php
                                                 $imgs = $block->data_json['images'] ?? [];
                                                 $firstImg = !empty($imgs[0]) ? $imgs[0] : ($block->data_json['image'] ?? null);
                                             @endphp
-                                            <div class="aff-card" style="display:flex; align-items:center; gap:0; padding:0; border-radius:14px; overflow:hidden; border:1px solid #e8f0e8; background:#fff; margin-bottom:0.6rem; box-shadow:0 1px 4px rgba(0,0,0,0.04);">
+                                            <div class="aff-card" data-id="{{ $block->id }}" style="display:flex; align-items:center; gap:0; padding:0; border-radius:14px; overflow:hidden; border:1px solid #e8f0e8; background:#fff; margin-bottom:0.6rem; box-shadow:0 1px 4px rgba(0,0,0,0.04);">
                                                 {{-- Thumbnail foto produk --}}
                                                 @if(!empty($firstImg))
                                                     <div style="width:72px; height:72px; flex-shrink:0; overflow:hidden; background:#f1f5f9;">
@@ -2492,18 +2510,45 @@
 
     {{-- ── Modal: Tambah Produk UMKM / Fisik ── --}}
     <div class="modal-overlay" id="addUmkmModal" onclick="if(event.target===this)this.classList.remove('open')">
-        <div class="modal-box" style="max-width:540px; max-height:90vh; overflow-y:auto;">
+        <div class="modal-box" style="max-width:560px; max-height:90vh; overflow-y:auto;">
             <h3
                 style="font-size:1.1rem; font-weight:800; margin:0 0 0.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
                 Tambah Produk Fisik / UMKM</h3>
-            <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Produk ini akan dibuatkan halaman detail produk
-                SEO tersendiri.</p>
-            <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data">
+            <p style="font-size:0.78rem; color:#64748b; margin:0 0 1rem;">Produk ini akan dibuatkan halaman detail produk SEO tersendiri.</p>
+
+            {{-- ── Scrape Shopee / Tokopedia ── --}}
+            <div id="scrapePanel" style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+                    <svg width="16" height="16" fill="none" stroke="#0f172a" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <span style="font-size:0.8rem; font-weight:700; color:#0f172a;">Auto Import dari Shopee / Tokopedia</span>
+                </div>
+                <p style="font-size:0.73rem; color:#64748b; margin:0 0 0.75rem; line-height:1.5;">Tempel link produk Shopee atau Tokopedia — sistem akan otomatis mengambil nama, harga, deskripsi, dan foto produk.</p>
+                <div style="display:flex; gap:0.5rem; align-items:flex-start;">
+                    <div style="flex:1;">
+                        <input type="text" id="scrapeUrlInput" placeholder="https://shopee.co.id/... atau https://tokopedia.com/..." style="width:100%; height:38px; padding:0 0.75rem; border-radius:8px; border:1.5px solid #cbd5e1; font-size:0.8rem; background:#fff; color:#1e293b; outline:none; box-sizing:border-box;">
+                    </div>
+                    <button type="button" onclick="doScrapeProduct()" id="scrapeBtn" style="height:38px; padding:0 1rem; border-radius:8px; background:linear-gradient(135deg, #0f172a, #1e293b); color:#fff; border:none; font-weight:700; font-size:0.78rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0;">
+                        <svg id="scrapeBtnIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        <span id="scrapeBtnText">Ambil Data</span>
+                    </button>
+                </div>
+                <div id="scrapeStatus" style="margin-top:0.5rem; font-size:0.75rem; display:none;"></div>
+                <div id="scrapePreview" style="display:none; margin-top:0.75rem; background:#fff; border:1.5px solid #d1fae5; border-radius:10px; padding:0.75rem; display:flex; gap:0.75rem; align-items:flex-start;">
+                    <img id="scrapePreviewImg" src="" alt="" style="width:60px; height:60px; object-fit:cover; border-radius:8px; flex-shrink:0; border:1px solid #e2e8f0; display:none;">
+                    <div style="flex:1; min-width:0;">
+                        <div id="scrapePreviewTitle" style="font-size:0.82rem; font-weight:700; color:#0f172a; margin-bottom:0.2rem;"></div>
+                        <div id="scrapePreviewPrice" style="font-size:0.78rem; color:#1eb349; font-weight:700;"></div>
+                    </div>
+                </div>
+                <input type="hidden" id="scrapeImageUrl" name="scrape_image_url" value="">
+            </div>
+
+            <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data" id="addUmkmForm">
                 @csrf
                 <input type="hidden" name="type" value="custom_product">
                 <div class="form-group">
                     <label class="form-label">Nama Produk *</label>
-                    <input type="text" name="title" class="form-input" placeholder="Contoh: Tas Kulit Handmade"
+                    <input type="text" name="title" id="umkmTitle" class="form-input" placeholder="Contoh: Tas Kulit Handmade"
                         maxlength="150" required>
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
@@ -2539,11 +2584,20 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Deskripsi Produk</label>
-                    <textarea name="description" class="form-input" style="height:80px; padding:0.75rem;"
+                    <textarea name="description" id="umkmDescription" class="form-input" style="height:80px; padding:0.75rem;"
                         placeholder="Ceritakan produk Anda..."></textarea>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Foto Produk</label>
+                    {{-- Preview foto dari scrape --}}
+                    <div id="scrapeImgPreviewBox" style="display:none; margin-bottom:0.6rem; align-items:center; gap:0.75rem; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:10px; padding:0.6rem 0.75rem;">
+                        <img id="scrapeImgThumb" src="" alt="" style="width:48px; height:48px; object-fit:cover; border-radius:8px; border:1px solid #d1fae5;">
+                        <div style="flex:1; min-width:0;">
+                            <div style="font-size:0.75rem; font-weight:700; color:#1eb349; margin-bottom:0.1rem;">Foto dari Shopee/Tokopedia</div>
+                            <div id="scrapeImgUrl" style="font-size:0.7rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px;"></div>
+                        </div>
+                        <button type="button" onclick="clearScrapeImage()" style="flex-shrink:0; border:none; background:none; color:#ef4444; cursor:pointer; font-size:1rem; line-height:1;" title="Hapus">&times;</button>
+                    </div>
                     <input type="file" name="custom_images[]" accept="image/*" multiple class="form-input"
                         style="height:auto; padding:0.5rem;"
                         id="addUmkmImages"
@@ -2574,7 +2628,7 @@
                         placeholder="https://shopee.co.id/... (kosongkan untuk pakai halaman otomatis)">
                 </div>
                 <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
-                    <button type="button" onclick="document.getElementById('addUmkmModal').classList.remove('open')"
+                    <button type="button" onclick="closeAddUmkmModal()"
                         style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
                     <button type="submit" class="btn-submit-sm">Simpan Produk</button>
                 </div>
@@ -3361,6 +3415,191 @@
             });
             visible.forEach(el => grid.appendChild(el));
         }
+        // ── UMKM: Search / Filter ──────────────────────────────────────────
+        function filterUmkmProducts() {
+            const q = (document.getElementById('umkmSearch')?.value || '').toLowerCase().trim();
+            const items = document.querySelectorAll('#umkmProductList .aff-card');
+            items.forEach(item => {
+                const title = (item.querySelector('.aff-title')?.textContent || '').toLowerCase();
+                item.style.display = (!q || title.includes(q)) ? '' : 'none';
+            });
+        }
+
+        // ── UMKM: Sort Terbaru / Terlama ──────────────────────────────────
+        let umkmSortDir = 'terbaru'; // default newest first (highest id first)
+        function sortUmkmProducts(dir) {
+            umkmSortDir = dir;
+            const list = document.getElementById('umkmProductList');
+            if (!list) return;
+
+            const items = Array.from(list.querySelectorAll('.aff-card'));
+            items.sort((a, b) => {
+                const ai = parseInt(a.getAttribute('data-id') || 0, 10);
+                const bi = parseInt(b.getAttribute('data-id') || 0, 10);
+                return dir === 'terbaru' ? bi - ai : ai - bi;
+            });
+            items.forEach(el => list.appendChild(el));
+
+            // Update button states
+            const btnTerbaru = document.getElementById('sortTerbaru');
+            const btnTerlama = document.getElementById('sortTerlama');
+            if (dir === 'terbaru') {
+                btnTerbaru.style.background = '#0f172a';
+                btnTerbaru.style.color = '#fff';
+                btnTerbaru.style.border = '1.5px solid #0f172a';
+                btnTerlama.style.background = '#f8fafc';
+                btnTerlama.style.color = '#64748b';
+                btnTerlama.style.border = '1.5px solid #e2e8f0';
+            } else {
+                btnTerlama.style.background = '#0f172a';
+                btnTerlama.style.color = '#fff';
+                btnTerlama.style.border = '1.5px solid #0f172a';
+                btnTerbaru.style.background = '#f8fafc';
+                btnTerbaru.style.color = '#64748b';
+                btnTerbaru.style.border = '1.5px solid #0f172a';
+            }
+        }
+
+        // ── UMKM: Scrape Shopee / Tokopedia ───────────────────────────────
+        let _scrapeImageUrl = '';
+
+        function doScrapeProduct() {
+            const url = (document.getElementById('scrapeUrlInput')?.value || '').trim();
+            if (!url) {
+                showScrapeStatus('Masukkan URL produk terlebih dahulu.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('scrapeBtn');
+            const btnText = document.getElementById('scrapeBtnText');
+            const btnIcon = document.getElementById('scrapeBtnIcon');
+
+            // Loading state
+            btn.disabled = true;
+            btnText.textContent = 'Mengambil...';
+            btnIcon.innerHTML = '<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10" style="animation:spin 1s linear infinite;transform-origin:center;"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/></circle>';
+            hideScrapePreview();
+            showScrapeStatus('Mengambil data dari ' + (url.includes('shopee') ? 'Shopee' : 'Tokopedia') + '...', 'info');
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+                            || document.querySelector('input[name="_token"]')?.value || '';
+
+            fetch('{{ route("creator.bio.scrape-url") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ url })
+            })
+            .then(res => res.json().then(data => ({ ok: res.ok, data })))
+            .then(({ ok, data }) => {
+                btn.disabled = false;
+                btnText.textContent = 'Ambil Data';
+                btnIcon.innerHTML = '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>';
+
+                if (!ok || data.error) {
+                    showScrapeStatus((data.error || 'Gagal mengambil data produk.'), 'error');
+                    return;
+                }
+
+                // Fill form fields
+                const titleEl = document.getElementById('umkmTitle');
+                const priceEl = document.querySelector('#addUmkmForm input[name="price"]');
+                const origPriceEl = document.querySelector('#addUmkmForm input[name="original_price"]');
+                const descEl = document.getElementById('umkmDescription');
+
+                if (titleEl && data.title) titleEl.value = data.title;
+                if (priceEl && data.price) priceEl.value = new Intl.NumberFormat('id-ID').format(data.price);
+                if (origPriceEl && data.original_price) origPriceEl.value = new Intl.NumberFormat('id-ID').format(data.original_price);
+                if (descEl && data.description) descEl.value = data.description;
+
+                // Handle image
+                _scrapeImageUrl = data.image || '';
+                document.getElementById('scrapeImageUrl').value = _scrapeImageUrl;
+
+                if (_scrapeImageUrl) {
+                    const box = document.getElementById('scrapeImgPreviewBox');
+                    const thumb = document.getElementById('scrapeImgThumb');
+                    const urlLabel = document.getElementById('scrapeImgUrl');
+                    if (box) { box.style.display = 'flex'; }
+                    if (thumb) { thumb.src = _scrapeImageUrl; thumb.onerror = () => { box.style.display = 'none'; }; }
+                    if (urlLabel) { urlLabel.textContent = _scrapeImageUrl; }
+                }
+
+                // Show inline preview in scrape panel
+                showScrapePreview(data);
+                showScrapeStatus('Data berhasil diambil! Cek form di bawah.', 'success');
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btnText.textContent = 'Ambil Data';
+                btnIcon.innerHTML = '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>';
+                showScrapeStatus('Gagal koneksi: ' + err.message, 'error');
+            });
+        }
+
+        function showScrapeStatus(msg, type) {
+            const el = document.getElementById('scrapeStatus');
+            if (!el) return;
+            const colors = { error: '#ef4444', success: '#1eb349', info: '#64748b' };
+            el.style.color = colors[type] || '#64748b';
+            el.style.fontWeight = type !== 'info' ? '700' : '500';
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function showScrapePreview(data) {
+            const box = document.getElementById('scrapePreview');
+            if (!box) return;
+            box.style.display = 'flex';
+            const img = document.getElementById('scrapePreviewImg');
+            const titleEl = document.getElementById('scrapePreviewTitle');
+            const priceEl = document.getElementById('scrapePreviewPrice');
+            if (img && data.image) { img.src = data.image; img.style.display = 'block'; img.onerror = () => { img.style.display = 'none'; }; }
+            if (titleEl) titleEl.textContent = data.title || '';
+            if (priceEl) {
+                let priceText = data.price ? 'Rp ' + new Intl.NumberFormat('id-ID').format(data.price) : '';
+                if (data.original_price && data.original_price > data.price) {
+                    priceText = 'Rp ' + new Intl.NumberFormat('id-ID').format(data.price) + ' (coret: Rp ' + new Intl.NumberFormat('id-ID').format(data.original_price) + ')';
+                }
+                priceEl.textContent = priceText;
+            }
+        }
+
+        function hideScrapePreview() {
+            const box = document.getElementById('scrapePreview');
+            if (box) box.style.display = 'none';
+        }
+
+        function clearScrapeImage() {
+            _scrapeImageUrl = '';
+            document.getElementById('scrapeImageUrl').value = '';
+            const box = document.getElementById('scrapeImgPreviewBox');
+            if (box) box.style.display = 'none';
+        }
+
+        function closeAddUmkmModal() {
+            document.getElementById('addUmkmModal').classList.remove('open');
+            // Reset scrape state
+            const urlInput = document.getElementById('scrapeUrlInput');
+            if (urlInput) urlInput.value = '';
+            hideScrapePreview();
+            const statusEl = document.getElementById('scrapeStatus');
+            if (statusEl) { statusEl.textContent = ''; statusEl.style.display = 'none'; }
+            clearScrapeImage();
+        }
+
+        // Enter key triggers scrape
+        document.addEventListener('DOMContentLoaded', function () {
+            const scrapeInput = document.getElementById('scrapeUrlInput');
+            if (scrapeInput) {
+                scrapeInput.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') { e.preventDefault(); doScrapeProduct(); }
+                });
+            }
+        });
     </script>
 
     {{-- ── Modal Wide: Katalog Affiliate buyle.id ── --}}
