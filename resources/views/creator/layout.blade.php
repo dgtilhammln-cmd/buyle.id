@@ -472,7 +472,7 @@
             .cr-main-wrapper {
                 margin-left: 0 !important;
                 padding: 0;
-                padding-top: 64px !important;
+                padding-top: 54px;
                 height: auto;
                 min-height: calc(100vh - 64px - 88px);
                 max-width: 100vw;
