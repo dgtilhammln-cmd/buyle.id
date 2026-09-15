@@ -741,23 +741,15 @@ class CreatorBioController extends Controller
     {
         $url = trim($request->input('url', ''));
 
-        if (!$url || !filter_var($url, FILTER_VALIDATE_URL)) {
-            return response()->json(['error' => 'URL tidak valid.'], 422);
+        // Lenient check — Shopee URLs often have () chars that fail filter_var
+        if (!$url || !preg_match('#^https?://#i', $url)) {
+            return response()->json(['error' => 'URL tidak valid. Pastikan dimulai dengan https://'], 422);
         }
 
-        // Only allow Shopee & Tokopedia
+        // Clean URL: remove tracking params that break some parsers
+        $url = preg_replace('/[\x00-\x1F\x7F]/', '', $url);
+
         $host = strtolower(parse_url($url, PHP_URL_HOST) ?? '');
-        $allowed = ['shopee.co.id', 'shp.ee', 'tokopedia.com', 'tokpe.da', 'm.tokopedia.com', 'www.tokopedia.com', 'www.shopee.co.id'];
-        $isAllowed = false;
-        foreach ($allowed as $domain) {
-            if (str_contains($host, $domain) || str_contains($host, str_replace('www.', '', $domain))) {
-                $isAllowed = true;
-                break;
-            }
-        }
-        if (!$isAllowed && !str_contains($host, 'shopee') && !str_contains($host, 'tokopedia') && !str_contains($host, 'shp.ee')) {
-            return response()->json(['error' => 'Hanya URL dari Shopee atau Tokopedia yang didukung.'], 422);
-        }
 
         try {
             // Follow redirects (for short links like shp.ee)
@@ -839,19 +831,33 @@ class CreatorBioController extends Controller
                 $description = substr($description, 0, 500) . '…';
             }
 
+            // Fallback: try Microlink.io when direct scrape returns nothing
             if (!$title && !$image && !$price) {
-                return response()->json(['error' => 'Tidak dapat mengambil data produk. Pastikan URL produk valid dan bisa diakses publik.'], 422);
+                try {
+                    $ml = \Illuminate\Support\Facades\Http::timeout(12)->get('https://api.microlink.io', [
+                        'url'  => $url,
+                        'meta' => 'true',
+                    ]);
+                    if ($ml->successful()) {
+                        $d = $ml->json('data', []);
+                        $title       = $title ?: ($d['title'] ?? '');
+                        $description = $description ?: ($d['description'] ?? '');
+                        $image       = $image ?: ($d['image']['url'] ?? $d['logo']['url'] ?? '');
+                    }
+                } catch (\Throwable $e) {}
             }
 
+            // Return partial data — even title-only is useful to the user
             return response()->json([
-                'title'          => $title,
+                'title'          => $title ?: null,
                 'price'          => (int) $price,
                 'original_price' => (int) $origPrice,
-                'description'    => $description,
-                'image'          => $image,
+                'description'    => $description ?: null,
+                'image'          => $image ?: null,
+                'partial'        => (!$title && !$image),
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Gagal scrape: ' . $e->getMessage()], 500);
         }
     }
-}
+}

@@ -2369,22 +2369,20 @@
                 <div class="form-group">
                     <label class="form-label">Link Produk (Shopee / Tokopedia / dll)</label>
                     <div style="display:flex; gap:0.5rem; align-items:center;">
-                        <input type="url" name="url" id="affUrl" class="form-input" placeholder="https://shopee.co.id/..."
+                        <input type="text" name="url" id="affUrl" class="form-input" placeholder="https://shopee.co.id/... atau https://tokopedia.com/..."
                             style="flex:1;">
                         <button type="button" id="btnScrape"
                             onclick="scrapeUrl(document.getElementById('affUrl').value, true)"
-                            style="height:44px; padding:0 1.1rem; border-radius:10px; background:linear-gradient(135deg,#1eb349,#a5cf37); border:none; color:#fff; font-weight:700; font-size:0.82rem; cursor:pointer; display:flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0;">
+                            style="height:44px; padding:0 1.1rem; border-radius:999px; background:linear-gradient(135deg,#1eb349,#16a34a); border:none; color:#fff; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0; box-shadow:0 2px 8px rgba(30,179,73,0.25);">
                             <svg id="scrapeSpinner" width="14" height="14" fill="none" stroke="currentColor"
                                 stroke-width="2.5" viewBox="0 0 24 24" style="display:none;">
                                 <path d="M21 12a9 9 0 1 1-6.219-8.56" />
                             </svg>
-                            <svg id="scrapeIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                            <svg id="scrapeIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24">
-                                <path d="M1 4v6h6" />
-                                <path d="M23 20v-6h-6" />
-                                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
+                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                             </svg>
-                            Scrape
+                            Cari
                         </button>
                     </div>
                     <span class="form-hint" id="scrapeStatus">Klik "Scrape" untuk mengambil gambar & judul otomatis dari
@@ -2527,9 +2525,9 @@
                     <div style="flex:1;">
                         <input type="text" id="scrapeUrlInput" placeholder="https://shopee.co.id/... atau https://tokopedia.com/..." style="width:100%; height:38px; padding:0 0.75rem; border-radius:8px; border:1.5px solid #cbd5e1; font-size:0.8rem; background:#fff; color:#1e293b; outline:none; box-sizing:border-box;">
                     </div>
-                    <button type="button" onclick="doScrapeProduct()" id="scrapeBtn" style="height:38px; padding:0 1rem; border-radius:8px; background:linear-gradient(135deg, #0f172a, #1e293b); color:#fff; border:none; font-weight:700; font-size:0.78rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0;">
-                        <svg id="scrapeBtnIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        <span id="scrapeBtnText">Ambil Data</span>
+                    <button type="button" onclick="doScrapeProduct()" id="scrapeBtn" style="height:38px; padding:0 1.1rem; border-radius:999px; background:linear-gradient(135deg,#1eb349,#16a34a); color:#fff; border:none; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0; box-shadow:0 2px 8px rgba(30,179,73,0.25);">
+                        <svg id="scrapeBtnIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <span id="scrapeBtnText">Cari</span>
                     </button>
                 </div>
                 <div id="scrapeStatus" style="margin-top:0.5rem; font-size:0.75rem; display:none;"></div>
@@ -2896,7 +2894,7 @@
             if (btn) btn.click();
         }
 
-        // Shopee URL scraper AJAX
+        // Affiliate URL scraper AJAX
         let scrapeTimeout;
         function scrapeUrl(url, immediate) {
             var btn = document.getElementById('btnScrape');
@@ -2923,10 +2921,16 @@
                     .then(function (r) { return r.json(); })
                     .then(function (data) {
                         var preview = document.getElementById('scrapePreview');
+                        if (data.error) {
+                            // Show friendly error popup
+                            showScrapeFailedPopup(data.error);
+                            if (status) { status.textContent = data.error; status.style.color = '#ef4444'; }
+                            return;
+                        }
                         if (data.image || data.title) {
                             if (data.image) {
                                 var img = document.getElementById('scrapeImg');
-                                var displayImg = data.image_url || (data.image.startsWith('http') ? data.image : '/storage/' + data.image.replace(/^\//, ''));
+                                var displayImg = data.image.startsWith('http') ? data.image : '/storage/' + data.image.replace(/^\//, '');
                                 img.src = displayImg;
                                 img.style.display = 'block';
                                 document.getElementById('affScrapedImage').value = data.image;
@@ -2937,13 +2941,18 @@
                                 document.getElementById('affTitle').value = shortTitle;
                             }
                             preview.style.display = 'flex';
-                            if (status) { status.textContent = '✓ Data berhasil diambil! Periksa judul & gambar di atas.'; status.style.color = '#1eb349'; }
+                            var msg = data.partial
+                                ? 'Info sebagian berhasil diambil. Lengkapi data yang kurang secara manual.'
+                                : 'Data berhasil diambil! Periksa judul & gambar di atas.';
+                            if (status) { status.textContent = msg; status.style.color = data.partial ? '#f59e0b' : '#1eb349'; }
                         } else {
-                            if (status) { status.textContent = 'Data tidak ditemukan otomatis. Silakan isi judul & gambar manual.'; status.style.color = '#f59e0b'; }
+                            showScrapeFailedPopup('Tidak ada data yang berhasil diambil dari link ini.');
+                            if (status) { status.textContent = 'Tidak ditemukan otomatis. Silakan isi judul & gambar manual.'; status.style.color = '#f59e0b'; }
                         }
                     })
                     .catch(function () {
-                        if (status) { status.textContent = 'Gagal terhubung ke link. Silakan isi manual.'; status.style.color = '#ef4444'; }
+                        showScrapeFailedPopup('Gagal terhubung ke server.');
+                        if (status) { status.textContent = 'Gagal koneksi. Silakan isi manual.'; status.style.color = '#ef4444'; }
                     })
                     .then(function () {
                         if (btn) btn.disabled = false;
@@ -2954,6 +2963,33 @@
 
             clearTimeout(scrapeTimeout);
             if (immediate) { doScrape(); } else { scrapeTimeout = setTimeout(doScrape, 800); }
+        }
+
+        function showScrapeFailedPopup(reason) {
+            // Remove existing popup if any
+            var existing = document.getElementById('scrapeFailedPopup');
+            if (existing) existing.remove();
+
+            var popup = document.createElement('div');
+            popup.id = 'scrapeFailedPopup';
+            popup.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);';
+            popup.innerHTML = `
+                <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
+                    <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                        <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <div style="font-weight:800;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
+                    <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
+                    <div style="display:flex;gap:0.6rem;justify-content:center;">
+                        <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight:700;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
+                        <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                            Scan AI
+                        </button>
+                    </div>
+                </div>`;
+            document.body.appendChild(popup);
+            popup.addEventListener('click', function(e) { if (e.target === popup) popup.remove(); });
         }
 
         function editBlock(btn) {
@@ -3474,12 +3510,11 @@
             const btnText = document.getElementById('scrapeBtnText');
             const btnIcon = document.getElementById('scrapeBtnIcon');
 
-            // Loading state
             btn.disabled = true;
             btnText.textContent = 'Mengambil...';
-            btnIcon.innerHTML = '<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10" style="animation:spin 1s linear infinite;transform-origin:center;"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/></circle>';
+            btnIcon.innerHTML = '<path d="M21 12a9 9 0 1 1-6.219-8.56"/>';
             hideScrapePreview();
-            showScrapeStatus('Mengambil data dari ' + (url.includes('shopee') ? 'Shopee' : 'Tokopedia') + '...', 'info');
+            showScrapeStatus('Mengambil data dari ' + (url.includes('shopee') ? 'Shopee' : (url.includes('tokopedia') ? 'Tokopedia' : 'marketplace')) + '...', 'info');
 
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
                             || document.querySelector('input[name="_token"]')?.value || '';
@@ -3496,11 +3531,12 @@
             .then(res => res.json().then(data => ({ ok: res.ok, data })))
             .then(({ ok, data }) => {
                 btn.disabled = false;
-                btnText.textContent = 'Ambil Data';
-                btnIcon.innerHTML = '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>';
+                btnText.textContent = 'Cari';
+                btnIcon.innerHTML = '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>';
 
                 if (!ok || data.error) {
                     showScrapeStatus((data.error || 'Gagal mengambil data produk.'), 'error');
+                    showScrapeFailedPopup(data.error || 'Gagal mengambil data produk.');
                     return;
                 }
 
