@@ -228,16 +228,21 @@ class CreatorBioController extends Controller
     {
         // Strip rupiah formatting (dots) from price fields before validation
         if ($request->has('price')) {
-            $request->merge(['price' => preg_replace('/[^0-9]/', '', $request->price ?? '')]);
+            $cPrice = preg_replace('/[^0-9]/', '', (string)$request->price);
+            $request->merge(['price' => $cPrice !== '' ? (int)$cPrice : null]);
         }
         if ($request->has('original_price')) {
-            $request->merge(['original_price' => preg_replace('/[^0-9]/', '', $request->original_price ?? '') ?: null]);
+            $cOrig = preg_replace('/[^0-9]/', '', (string)$request->original_price);
+            $request->merge(['original_price' => $cOrig !== '' ? (int)$cOrig : null]);
+        }
+        if ($request->has('title') && strlen((string)$request->title) > 250) {
+            $request->merge(['title' => Str::limit($request->title, 250, '')]);
         }
 
         $request->validate([
-            'type'  => 'required|in:link,pdf,tiktok,reels,affiliate,shopee,buyle_product,buyle_affiliate,image,custom_product',
-            'title' => 'required|string|max:150',
-            'url'   => 'nullable|string|max:2000',
+            'type'        => 'required|string|max:50',
+            'title'       => 'required|string|max:255',
+            'url'         => 'nullable|string|max:2000',
             'block_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'custom_images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
             'icon_class'  => 'nullable|string|max:100',
@@ -247,6 +252,8 @@ class CreatorBioController extends Controller
             'original_price' => 'nullable|numeric|min:0',
             'payment_method' => 'nullable|in:wa,web',
             'wa_text'        => 'nullable|string|max:500',
+            'scrape_image_url' => 'nullable|string|max:2000',
+            'scraped_image'    => 'nullable|string|max:2000',
         ]);
 
         $profile = $this->getProfile();
@@ -255,8 +262,9 @@ class CreatorBioController extends Controller
         // Handle custom image upload or scraped image
         if ($request->hasFile('block_image')) {
             $data['image'] = $request->file('block_image')->store('bio/blocks', 'public');
-        } elseif ($request->filled('scraped_image')) {
-            $data['image'] = $this->saveRemoteImageLocally($request->scraped_image);
+        } elseif ($request->filled('scraped_image') || $request->filled('scrape_image_url')) {
+            $scrapedUrl = $request->input('scraped_image') ?: $request->input('scrape_image_url');
+            $data['image'] = $this->saveRemoteImageLocally($scrapedUrl);
         }
 
         // If shopee/affiliate: try to scrape OG image if still empty and save locally
@@ -315,13 +323,7 @@ class CreatorBioController extends Controller
             }
 
             // If no uploaded images, try scrape_image_url (from Shopee/Tokopedia scraper)
-            if (empty($data['images']) && $request->filled('scrape_image_url')) {
-                $remoteImg = $this->saveRemoteImageLocally($request->scrape_image_url);
-                if ($remoteImg) {
-                    $data['images'] = [$remoteImg];
-                    $data['image']  = $remoteImg;
-                }
-            } elseif (!empty($data['image']) && empty($data['images'])) {
+            if (empty($data['images']) && !empty($data['image'])) {
                 $data['images'] = [$data['image']];
             }
             // Auto-create Product entry in products table for Payment Gateway checkout
@@ -415,18 +417,24 @@ class CreatorBioController extends Controller
 
         // Strip rupiah formatting before validation
         if ($request->has('price')) {
-            $request->merge(['price' => preg_replace('/[^0-9]/', '', $request->price ?? '')]);
+            $cPrice = preg_replace('/[^0-9]/', '', (string)$request->price);
+            $request->merge(['price' => $cPrice !== '' ? (int)$cPrice : null]);
         }
         if ($request->has('original_price')) {
-            $request->merge(['original_price' => preg_replace('/[^0-9]/', '', $request->original_price ?? '') ?: null]);
+            $cOrig = preg_replace('/[^0-9]/', '', (string)$request->original_price);
+            $request->merge(['original_price' => $cOrig !== '' ? (int)$cOrig : null]);
+        }
+        if ($request->has('title') && strlen((string)$request->title) > 250) {
+            $request->merge(['title' => Str::limit($request->title, 250, '')]);
         }
 
         $request->validate([
-            'title' => 'required|string|max:150',
+            'title' => 'required|string|max:255',
             'url'   => 'nullable|string|max:2000',
             'block_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'custom_images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
             'scraped_image' => 'nullable|string',
+            'scrape_image_url' => 'nullable|string',
             'icon_class'  => 'nullable|string|max:100',
             'description' => 'nullable|string|max:1000',
             'price'          => 'nullable|numeric|min:0',
