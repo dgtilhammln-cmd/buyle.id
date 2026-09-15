@@ -45,9 +45,14 @@ class CreatorProfileController extends Controller
             'address' => 'nullable|string|max:255',
             'province_id' => 'nullable|integer',
             'city_id' => 'nullable|integer',
+            'raja_city_id' => 'nullable|string|max:20',
             'subdistrict_id' => 'nullable|integer',
+            'raja_district_id' => 'nullable|string|max:20',
             'province_name' => 'nullable|string|max:100',
             'city_name' => 'nullable|string|max:100',
+            'subdistrict_name' => 'nullable|string|max:100',
+            'village_name' => 'nullable|string|max:100',
+            'postal_code' => 'nullable|string|max:20',
             'latitude' => 'nullable|string|max:50',
             'longitude' => 'nullable|string|max:50',
             'detected_ip' => 'nullable|string|max:50',
@@ -67,8 +72,10 @@ class CreatorProfileController extends Controller
                 $request->only([
                     'store_name', 'store_slug', 'custom_domain', 'store_description',
                     'creator_type',
-                    'address', 'province_id', 'city_id', 'subdistrict_id',
-                    'province_name', 'city_name', 'latitude', 'longitude',
+                    'address', 'province_id', 'city_id', 'raja_city_id',
+                    'subdistrict_id', 'raja_district_id',
+                    'province_name', 'city_name', 'subdistrict_name', 'village_name', 'postal_code',
+                    'latitude', 'longitude',
                     'meta_title', 'meta_desc', 'meta_keywords'
                 ]),
                 [

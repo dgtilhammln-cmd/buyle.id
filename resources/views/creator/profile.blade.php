@@ -747,6 +747,21 @@ select.form-input { cursor: pointer; }
                         </select>
                     </div>
 
+                    <div class="form-group">
+                        <label class="form-label">Kelurahan / Desa</label>
+                        <select name="village_id" id="village" class="form-input" disabled>
+                            <option value="">— Pilih Kelurahan/Desa —</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Kode Pos</label>
+                        <input type="text" name="postal_code" id="postal_code" class="form-input"
+                            value="{{ old('postal_code', $profile->postal_code) }}"
+                            placeholder="12345" maxlength="10" inputmode="numeric"
+                            pattern="[0-9]{4,10}">
+                    </div>
+
                     <div class="form-group full">
                         <label class="form-label">Alamat Lengkap</label>
                         <textarea name="address" class="form-input" rows="3" placeholder="Nama jalan, gedung, nomor rumah/ruko...">{{ old('address', $profile->address) }}</textarea>
@@ -754,9 +769,16 @@ select.form-input { cursor: pointer; }
 
                     <input type="hidden" id="provId_val" value="{{ old('province_id', $profile->province_id) }}">
                     <input type="hidden" id="cityId_val" value="{{ old('city_id', $profile->city_id) }}">
+                    <input type="hidden" id="rajaCityId_val" value="{{ old('raja_city_id', $profile->raja_city_id ?? '') }}">
                     <input type="hidden" id="distId_val" value="{{ old('subdistrict_id', $profile->subdistrict_id) }}">
+                    <input type="hidden" id="rajaDistId_val" value="{{ old('raja_district_id', $profile->raja_district_id ?? '') }}">
+                    <input type="hidden" id="villId_val" value="{{ old('village_id', '') }}">
                     <input type="hidden" name="province_name" id="province_name" value="{{ old('province_name', $profile->province_name) }}">
                     <input type="hidden" name="city_name" id="city_name" value="{{ old('city_name', $profile->city_name) }}">
+                    <input type="hidden" name="subdistrict_name" id="subdistrict_name" value="{{ old('subdistrict_name', $profile->subdistrict_name ?? '') }}">
+                    <input type="hidden" name="village_name" id="village_name" value="{{ old('village_name', $profile->village_name ?? '') }}">
+                    <input type="hidden" name="raja_city_id" id="raja_city_id" value="{{ old('raja_city_id', $profile->raja_city_id ?? '') }}">
+                    <input type="hidden" name="raja_district_id" id="raja_district_id" value="{{ old('raja_district_id', $profile->raja_district_id ?? '') }}">
                     <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude', $profile->latitude) }}">
                     <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude', $profile->longitude) }}">
                     <input type="hidden" name="detected_ip" id="detected_ip" value="{{ old('detected_ip', $profile->detected_ip) }}">
@@ -826,8 +848,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabBtns  = document.querySelectorAll('.tab-btn');
     const tabPanes = document.querySelectorAll('.tab-pane');
 
-    // Restore active tab from hash or localStorage
-    const savedTab = localStorage.getItem('prof_active_tab') || 'tab-identity';
+    // Restore active tab: prioritas URL ?tab=xxx, lalu hash, lalu localStorage
+    const urlParams  = new URLSearchParams(window.location.search);
+    const tabFromUrl = urlParams.get('tab');
+    // Mapping nama pendek → tab id
+    const tabAliases = { 'lokasi': 'tab-location', 'identitas': 'tab-identity', 'seo': 'tab-seo', 'bio': 'tab-bio', 'pengiriman': 'tab-location', 'location': 'tab-location' };
+    const resolvedTab = tabFromUrl ? (tabAliases[tabFromUrl] || `tab-${tabFromUrl}`) : null;
+    const savedTab = resolvedTab || localStorage.getItem('prof_active_tab') || 'tab-identity';
     activateTab(savedTab);
 
     tabBtns.forEach(btn => {
@@ -859,68 +886,181 @@ document.addEventListener('DOMContentLoaded', function () {
     titleInput?.addEventListener('input', updateSeoPreview);
     descInput?.addEventListener('input', updateSeoPreview);
 
-    // ── Wilayah API ────────────────────────────────────────────────────
-    const apiBase  = 'https://www.emsifa.com/api-wilayah-indonesia/api';
+    // ── Wilayah API (pakai route RajaOngkir internal, bukan EMSIFA langsung)
+    // Ini penting agar city_id yang tersimpan konsisten dengan CheckoutApiController
+    // ─────────────────────────────────────────────────────────────────────────────
     const provSel  = document.getElementById('province');
     const citySel  = document.getElementById('city');
     const distSel  = document.getElementById('subdistrict');
+    const villSel  = document.getElementById('village');
     const selProv  = document.getElementById('provId_val').value;
-    const selCity  = document.getElementById('cityId_val').value;
+    const selCity  = document.getElementById('cityId_val').value;   // RajaOngkir city_id
     const selDist  = document.getElementById('distId_val').value;
+    const selVill  = document.getElementById('villId_val').value;
 
-    fetch(`${apiBase}/provinces.json`)
+    // Helper reset + disable downstream selects
+    function resetBelow(from) {
+        if (from <= 1) { citySel.innerHTML = '<option value="">— Pilih Kabupaten/Kota —</option>'; citySel.disabled = true; document.getElementById('city_name').value = ''; document.getElementById('raja_city_id').value = ''; }
+        if (from <= 2) { distSel.innerHTML = '<option value="">— Pilih Kecamatan —</option>'; distSel.disabled = true; document.getElementById('subdistrict_name').value = ''; document.getElementById('raja_district_id').value = ''; }
+        if (from <= 3) { villSel.innerHTML = '<option value="">— Pilih Kelurahan/Desa —</option>'; villSel.disabled = true; document.getElementById('village_name').value = ''; }
+    }
+
+    // Load Provinces — pakai route internal RajaOngkir
+    fetch('{{ route("api.rajaongkir.provinces") }}')
         .then(r => r.json())
         .then(data => {
             data.forEach(p => {
-                const opt = new Option(p.name, p.id);
-                if (p.id == selProv) { opt.selected = true; }
+                const opt = new Option(p.province, p.province_id);
+                if (p.province_id == selProv) opt.selected = true;
                 provSel.add(opt);
             });
             if (selProv) loadCities(selProv, selCity);
+        })
+        .catch(() => {
+            // Fallback: tampilkan pesan error ringan
+            provSel.innerHTML = '<option value="">⚠ Gagal memuat provinsi</option>';
         });
 
     provSel.addEventListener('change', function () {
-        citySel.innerHTML = '<option value="">— Pilih Kabupaten/Kota —</option>';
-        distSel.innerHTML = '<option value="">— Pilih Kecamatan —</option>';
-        citySel.disabled = distSel.disabled = true;
+        resetBelow(1);
         document.getElementById('province_name').value = this.selectedIndex > 0 ? this.options[this.selectedIndex].text : '';
-        document.getElementById('city_name').value = '';
-        if (this.value) loadCities(this.value);
+        const provId = this.value;
+        // Simpan province_id (= RajaOngkir province_id) ke hidden input
+        this.name = 'province_id'; // pastikan name attribute benar
+        if (provId) loadCities(provId);
     });
 
     citySel.addEventListener('change', function () {
-        distSel.innerHTML = '<option value="">— Pilih Kecamatan —</option>';
-        distSel.disabled = true;
-        document.getElementById('city_name').value = this.selectedIndex > 0 ? this.options[this.selectedIndex].text : '';
-        if (this.value) loadDistricts(this.value);
+        resetBelow(2);
+        const selectedOpt = this.options[this.selectedIndex];
+        if (selectedOpt && selectedOpt.value) {
+            document.getElementById('city_name').value   = selectedOpt.text;
+            // raja_city_id = RajaOngkir city_id (sama dengan city_id dari API ini)
+            document.getElementById('raja_city_id').value = selectedOpt.value;
+        }
+        const cityId = this.value;
+        const cityName = selectedOpt?.text || '';
+        if (cityId) loadDistricts(cityId, null, cityName);
     });
 
+    distSel.addEventListener('change', function () {
+        resetBelow(3);
+        const selectedOpt = this.options[this.selectedIndex];
+        if (selectedOpt && selectedOpt.value) {
+            document.getElementById('subdistrict_name').value  = selectedOpt.text;
+            document.getElementById('raja_district_id').value  = selectedOpt.value;
+            // Kode pos dari district (jika tersedia di data-postal)
+            const postal = selectedOpt.dataset.postal;
+            if (postal && !document.getElementById('postal_code').value) {
+                document.getElementById('postal_code').value = postal;
+            }
+        }
+        if (this.value) loadVillages(this.value);
+    });
+
+    villSel.addEventListener('change', function () {
+        const selectedOpt = this.options[this.selectedIndex];
+        if (selectedOpt && selectedOpt.value) {
+            document.getElementById('village_name').value = selectedOpt.text;
+        }
+    });
+
+    // Load Cities (Kabupaten/Kota) — pakai route RajaOngkir
     function loadCities(provId, selectedId = null) {
-        fetch(`${apiBase}/regencies/${provId}.json`).then(r => r.json()).then(data => {
-            citySel.innerHTML = '<option value="">— Pilih Kabupaten/Kota —</option>';
-            data.forEach(c => {
-                const opt = new Option(c.name, c.id);
-                if (c.id == selectedId) {
-                    opt.selected = true;
-                    if (!document.getElementById('city_name').value) document.getElementById('city_name').value = c.name;
+        citySel.innerHTML = '<option value="">⏳ Memuat...</option>';
+        citySel.disabled = true;
+        fetch(`/api/rajaongkir/cities/${provId}`)
+            .then(r => r.json())
+            .then(data => {
+                citySel.innerHTML = '<option value="">— Pilih Kabupaten/Kota —</option>';
+                data.forEach(c => {
+                    const label = c.type ? `${c.type} ${c.city_name}` : c.city_name;
+                    const opt   = new Option(label, c.city_id);
+                    // selectedId bisa dari raja_city_id (RajaOngkir) atau city_id EMSIFA
+                    if (c.city_id == selectedId || (document.getElementById('rajaCityId_val').value && c.city_id == document.getElementById('rajaCityId_val').value)) {
+                        opt.selected = true;
+                        document.getElementById('city_name').value   = label;
+                        document.getElementById('raja_city_id').value = c.city_id;
+                    }
+                    citySel.add(opt);
+                });
+                citySel.disabled = false;
+                // Auto-pilih berdasarkan raja_city_id yg tersimpan
+                const savedRajaCity = document.getElementById('rajaCityId_val').value;
+                if (!citySel.value && savedRajaCity) {
+                    for (const opt of citySel.options) {
+                        if (opt.value == savedRajaCity) { opt.selected = true; break; }
+                    }
                 }
-                citySel.add(opt);
+                const activeCityId = citySel.value;
+                if (activeCityId && selDist) {
+                    const activeCityName = citySel.options[citySel.selectedIndex]?.text || '';
+                    loadDistricts(activeCityId, selDist, activeCityName);
+                }
+            })
+            .catch(() => {
+                citySel.innerHTML = '<option value="">⚠ Gagal memuat kota</option>';
+                citySel.disabled = false;
             });
-            citySel.disabled = false;
-            if (selectedId && selDist) loadDistricts(selectedId, selDist);
-        });
     }
 
-    function loadDistricts(cityId, selectedId = null) {
-        fetch(`${apiBase}/districts/${cityId}.json`).then(r => r.json()).then(data => {
-            distSel.innerHTML = '<option value="">— Pilih Kecamatan —</option>';
-            data.forEach(d => {
-                const opt = new Option(d.name, d.id);
-                if (d.id == selectedId) opt.selected = true;
-                distSel.add(opt);
+    // Load Districts (Kecamatan) — pakai route RajaOngkir
+    function loadDistricts(cityId, selectedId = null, cityName = '') {
+        distSel.innerHTML = '<option value="">⏳ Memuat...</option>';
+        distSel.disabled = true;
+        const params = cityName ? `?city_name=${encodeURIComponent(cityName)}&province_id=${provSel.value}` : '';
+        fetch(`/api/rajaongkir/districts/${cityId}${params}`)
+            .then(r => r.json())
+            .then(data => {
+                distSel.innerHTML = '<option value="">— Pilih Kecamatan —</option>';
+                const savedRajaDist = document.getElementById('rajaDistId_val').value;
+                data.forEach(d => {
+                    const opt = new Option(d.district_name, d.district_id);
+                    if (d.postal_code) opt.dataset.postal = d.postal_code;
+                    if (d.district_id == selectedId || d.district_id == savedRajaDist) {
+                        opt.selected = true;
+                        document.getElementById('subdistrict_name').value  = d.district_name;
+                        document.getElementById('raja_district_id').value  = d.district_id;
+                        if (d.postal_code && !document.getElementById('postal_code').value) {
+                            document.getElementById('postal_code').value = d.postal_code;
+                        }
+                    }
+                    distSel.add(opt);
+                });
+                distSel.disabled = false;
+                const activeDistId = distSel.value;
+                if (activeDistId && selVill) loadVillages(activeDistId, selVill);
+            })
+            .catch(() => {
+                distSel.innerHTML = '<option value="">⚠ Gagal memuat kecamatan</option>';
+                distSel.disabled = false;
             });
-            distSel.disabled = false;
-        });
+    }
+
+    // Load Villages (Kelurahan/Desa) — pakai route RajaOngkir (EMSIFA via server)
+    function loadVillages(districtId, selectedId = null) {
+        villSel.innerHTML = '<option value="">⏳ Memuat...</option>';
+        villSel.disabled = true;
+        fetch(`/api/rajaongkir/subdistricts/${districtId}`)
+            .then(r => r.json())
+            .then(data => {
+                villSel.innerHTML = '<option value="">— Pilih Kelurahan/Desa —</option>';
+                data.forEach(v => {
+                    const name = v.village_name || v.name || '';
+                    const id   = v.village_id   || v.id   || '';
+                    const opt  = new Option(name, id);
+                    if (id == selectedId) {
+                        opt.selected = true;
+                        document.getElementById('village_name').value = name;
+                    }
+                    villSel.add(opt);
+                });
+                villSel.disabled = false;
+            })
+            .catch(() => {
+                villSel.innerHTML = '<option value="">— Kelurahan tidak tersedia —</option>';
+                villSel.disabled = false;
+            });
     }
 
     // ── Image Compression on Submit ────────────────────────────────────
@@ -1077,8 +1217,8 @@ document.addEventListener('DOMContentLoaded', function () {
             return sel.options.length >= min;
         }
 
-        /** Isi Provinsi → Kota → opsional Kecamatan */
-        async function fillDropdowns(stateName, cityName, distName='') {
+        /** Isi Provinsi → Kota → Kecamatan → opsional Kelurahan */
+        async function fillDropdowns(stateName, cityName, distName='', villName='') {
             if (!await waitOpts(provSel, 2, 8000)) return;
             const provVal = selectByName(provSel, stateName);
             if (!provVal) return;
@@ -1093,7 +1233,19 @@ document.addEventListener('DOMContentLoaded', function () {
                     citySel.options[citySel.selectedIndex]?.text || cityName;
             }
             if (distName && await waitOpts(distSel, 2, 5000)) {
-                selectByName(distSel, distName);
+                const distVal = selectByName(distSel, distName);
+                if (distVal) {
+                    document.getElementById('subdistrict_name').value =
+                        distSel.options[distSel.selectedIndex]?.text || distName;
+                    // Load villages after district is selected
+                    if (villName && await waitOpts(villSel, 2, 5000)) {
+                        const villVal = selectByName(villSel, villName);
+                        if (villVal) {
+                            document.getElementById('village_name').value =
+                                villSel.options[villSel.selectedIndex]?.text || villName;
+                        }
+                    }
+                }
             }
         }
 
@@ -1159,14 +1311,16 @@ document.addEventListener('DOMContentLoaded', function () {
                             const a         = data.address;
                             const stateName = a.state || a.province || a.region || '';
                             const cityName  = a.city  || a.regency  || a.county || a.town || '';
-                            const distName  = a.suburb|| a.quarter  || a.neighbourhood || '';
+                            const distName  = a.suburb || a.quarter || a.neighbourhood || '';
+                            const villName  = a.village || a.hamlet || '';
+                            const postCode  = a.postcode || '';
 
                             // Upgrade Alamat Lengkap ke level jalan (akurat GPS)
                             const parts = [
                                 a.road,
                                 a.house_number ? 'No.' + a.house_number : null,
                                 a.suburb,
-                                a.village || a.hamlet,
+                                villName,
                                 cityName,
                                 stateName
                             ].filter(Boolean);
@@ -1174,12 +1328,18 @@ document.addEventListener('DOMContentLoaded', function () {
                             const af = document.querySelector('textarea[name="address"]');
                             if (af && fullAddr) af.value = fullAddr;
 
+                            // Isi Kode Pos dari GPS jika ada
+                            if (postCode) {
+                                const pcEl = document.getElementById('postal_code');
+                                if (pcEl && !pcEl.value) pcEl.value = postCode;
+                            }
+
                             // Upgrade dropdown jika nama dari GPS lebih akurat (Bahasa Indonesia)
-                            await fillDropdowns(stateName, cityName, distName);
+                            await fillDropdowns(stateName, cityName, distName, villName);
 
                             // Update badge jadi GPS-verified
                             setBadge('#F0FDF4','#15803D','#BBF7D0',
-                                '✔ <strong>Alamat Terisi dari GPS!</strong> Termasuk nama jalan. Anda dapat mengeditnya.');
+                                '✔ <strong>Alamat Terisi dari GPS!</strong> Termasuk nama jalan &amp; kelurahan. Anda dapat mengeditnya.');
                         }
                     } catch(e) { /* Nominatim error — koordinat tetap tersimpan */ }
                 },

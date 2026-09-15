@@ -21,7 +21,7 @@ class Product extends Model
         'icon', 'order', 'is_active',
         'meta_title', 'meta_desc', 'meta_keywords',
         // Kolom e-commerce (new)
-        'price', 'sale_price', 'stock', 'weight', 'sku',
+        'price', 'sale_price', 'stock', 'weight', 'sku', 'length', 'width', 'height', 'volume',
         'product_category_id', 'product_sub_category_id', 'is_featured',
         'product_type', 'file_type', 'digital_resource', 'seller_id', 'creator_group_id', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating', 'tiktok_video_url',
         // Event / Ticket fields

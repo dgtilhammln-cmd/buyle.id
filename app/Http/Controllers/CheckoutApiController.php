@@ -548,7 +548,15 @@ class CheckoutApiController extends Controller
             return response()->json($this->getFallbackShippingOptions($request->courier));
         }
 
-        $origin = (int) Setting::get('rajaongkir_origin_city', 304); // 304 = Surabaya
+        // Origin: admin Setting > creator's raja_city_id > hardcoded Surabaya (304)
+        $origin = (int) Setting::get('rajaongkir_origin_city', 0);
+        if (!$origin && auth()->check()) {
+            $creatorProfile = auth()->user()->creatorProfile ?? null;
+            if ($creatorProfile && !empty($creatorProfile->raja_city_id)) {
+                $origin = (int) $creatorProfile->raja_city_id;
+            }
+        }
+        if (!$origin) $origin = 304; // Default: Surabaya
 
         Log::info('[ONGKIR] Request dikirim', [
             'mode'        => $isLive ? 'LIVE' : 'SANDBOX',

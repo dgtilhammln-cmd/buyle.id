@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -12,7 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE creator_bio_blocks MODIFY title VARCHAR(500) NOT NULL");
+        // Use Laravel Schema builder for cross-DB compatibility (SQLite + MySQL)
+        Schema::table('creator_bio_blocks', function (Blueprint $table) {
+            $table->string('title', 500)->nullable()->change();
+        });
     }
 
     /**
@@ -20,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("ALTER TABLE creator_bio_blocks MODIFY title VARCHAR(150) NOT NULL");
+        Schema::table('creator_bio_blocks', function (Blueprint $table) {
+            $table->string('title', 150)->nullable()->change();
+        });
     }
 };

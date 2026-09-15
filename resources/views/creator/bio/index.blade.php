@@ -2171,7 +2171,7 @@
                                 </svg>
                                 Scan Menu AI
                             </button>
-                            <button onclick="document.getElementById('addUmkmModal').classList.add('open')"
+                            <button type="button" onclick="openAddUmkmWithCheck()"
                                 style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 1.1rem; border-radius:999px; font-size:0.78rem; cursor:pointer; height:34px; box-shadow:0 4px 14px rgba(30, 179, 73, 0.32); transition:all 0.2s ease;">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
                                     viewBox="0 0 24 24">
@@ -2600,6 +2600,41 @@
                     style="height:40px; width:100%; border-radius:999px; border:1.5px solid #E2E8F0; background:#fff; color:#64748B; font-weight:700; font-size:0.85rem; cursor:pointer;">
                     Tutup
                 </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- ── Modal: Peringatan Lokasi Belum Lengkap ── --}}
+    <div class="modal-overlay" id="locationWarningModal" onclick="if(event.target===this)this.classList.remove('open')">
+        <div class="modal-box" style="max-width:420px; text-align:center; padding:2rem 1.75rem;">
+            {{-- Icon --}}
+            <div style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,#fef3c7,#fde68a); display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
+                <svg width="28" height="28" fill="none" stroke="#d97706" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                </svg>
+            </div>
+            <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0 0 0.5rem; font-family:'Montserrat',sans-serif;">
+                Lokasi Belum Dilengkapi
+            </h3>
+            <p style="font-size:0.82rem; color:#64748b; line-height:1.6; margin:0 0 1.5rem;">
+                Untuk menambahkan <strong>Produk Fisik</strong>, kamu perlu mengisi
+                <strong>kota/kabupaten</strong> asal pengiriman di profil toko terlebih dahulu.
+                Ini digunakan untuk menghitung ongkos kirim ke pembeli secara otomatis.
+            </p>
+            <div style="display:flex; gap:0.75rem; justify-content:center;">
+                <button type="button" onclick="document.getElementById('locationWarningModal').classList.remove('open')"
+                    style="padding:0.55rem 1.25rem; border-radius:999px; border:1.5px solid #e2e8f0; background:#f8fafc; color:#64748b; font-weight:700; font-size:0.82rem; cursor:pointer;">
+                    Nanti Saja
+                </button>
+                <a href="{{ route('creator.profile.edit') }}?tab=lokasi"
+                    style="padding:0.55rem 1.4rem; border-radius:999px; background:linear-gradient(135deg,#1eb349,#a5cf37); color:#fff; font-weight:700; font-size:0.82rem; text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 14px rgba(30,179,73,0.28);">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    Lengkapi Lokasi
+                </a>
             </div>
         </div>
     </div>
@@ -3580,7 +3615,22 @@
             });
             visible.forEach(el => grid.appendChild(el));
         }
+        // ── Produk Fisik: Guard — cek lokasi sebelum buka modal ───────────────
+        // raja_city_id di-inject dari Blade server-side (null jika belum diisi)
+        const _creatorRajaCityId = @json($profile->raja_city_id ?? null);
+        const _creatorCityId     = @json($profile->city_id ?? null);
+
+        function openAddUmkmWithCheck() {
+            // Dianggap lengkap kalau ada raja_city_id ATAU city_id (migrasi lama)
+            if (_creatorRajaCityId || _creatorCityId) {
+                document.getElementById('addUmkmModal').classList.add('open');
+            } else {
+                document.getElementById('locationWarningModal').classList.add('open');
+            }
+        }
+
         // ── UMKM: Search / Filter ──────────────────────────────────────────
+
         function filterUmkmProducts() {
             const q = (document.getElementById('umkmSearch')?.value || '').toLowerCase().trim();
             const items = document.querySelectorAll('#umkmProductList .aff-card');
