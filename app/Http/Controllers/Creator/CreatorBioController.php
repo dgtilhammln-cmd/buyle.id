@@ -631,74 +631,7 @@ class CreatorBioController extends Controller
         return null;
     }
 
-    /**
-     * AJAX endpoint: scrape Shopee/any URL for OG image + title.
-     */
-    public function scrapeUrl(Request $request)
-    {
-        $request->validate(['url' => 'required|url']);
-        $url   = $request->url;
 
-        $image = null;
-        $title = null;
-
-        // Strategy 1: Direct HTML
-        try {
-            $response = Http::timeout(10)
-                ->withHeaders([
-                    'User-Agent'      => 'Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Mobile Safari/537.36',
-                    'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                    'Accept-Language' => 'id-ID,id;q=0.9',
-                ])
-                ->get($url);
-
-            if ($response->successful()) {
-                $html = $response->body();
-
-                // og:image
-                if (preg_match('/<meta[^>]+property=["\']og:image["\'][^>]+content=["\'](.*?)["\']/i', $html, $m) ||
-                    preg_match('/<meta[^>]+content=["\'](.*?)["\'\s][^>]+property=["\']og:image["\']/i', $html, $m)) {
-                    if (!empty($m[1]) && filter_var($m[1], FILTER_VALIDATE_URL)) $image = $m[1];
-                }
-                // og:title
-                if (preg_match('/<meta[^>]+property=["\']og:title["\'][^>]+content=["\'](.*?)["\']/i', $html, $m)) {
-                    $title = html_entity_decode($m[1], ENT_QUOTES);
-                } elseif (preg_match('/<title>(.*?)<\/title>/is', $html, $m)) {
-                    $title = html_entity_decode(strip_tags($m[1]), ENT_QUOTES);
-                }
-            }
-        } catch (\Throwable $e) {}
-
-        // Strategy 2: Microlink.io fallback (especially for Shopee)
-        if (!$image || !$title) {
-            try {
-                $mlResponse = Http::timeout(15)
-                    ->get('https://api.microlink.io', [
-                        'url'        => $url,
-                        'meta'       => 'true',
-                        'screenshot' => 'false',
-                    ]);
-                if ($mlResponse->successful()) {
-                    $data = $mlResponse->json();
-                    if (!$image) {
-                        $img = $data['data']['image']['url']
-                            ?? $data['data']['logo']['url']
-                            ?? null;
-                        if ($img && filter_var($img, FILTER_VALIDATE_URL)) $image = $img;
-                    }
-                    if (!$title) {
-                        $title = $data['data']['title'] ?? $data['data']['description'] ?? null;
-                    }
-                }
-            } catch (\Throwable $e) {}
-        }
-
-        if ($image) {
-            $image = $this->resolveUrl($image, $url);
-            $image = $this->saveRemoteImageLocally($image);
-        }
-        return response()->json(['image' => $image, 'title' => $title]);
-    }
 
     /**
      * Smart Image Downloader: Download remote scraped image & save locally to hosting storage
