@@ -278,7 +278,14 @@
             padding: 4px 11px;
             border-radius: 20px;
             box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: popBadge 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .product-qty-badge.has-qty {
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.4) !important;
         }
 
         @keyframes popBadge {
@@ -351,6 +358,20 @@
             background: #1eb349;
             color: #ffffff;
             border-color: #1eb349;
+        }
+
+        .btn-qty-plus {
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+            color: #ffffff !important;
+            border: none !important;
+            box-shadow: 0 2px 8px rgba(30, 179, 73, 0.35) !important;
+        }
+
+        .btn-qty-plus:hover {
+            background: linear-gradient(135deg, #16963c 0%, #8cb82b 100%) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.5) !important;
+            transform: scale(1.05);
         }
 
         .qty-num {
@@ -762,7 +783,7 @@
                             <div class="product-card" data-id="{{ $prod->id }}" data-name="{{ strtolower($prod->name) }}"
                                 data-price="{{ $prodPrice }}"
                                 onclick="addToCart({{ $prod->id }}, '{{ addslashes($prod->name) }}', {{ $prodPrice }})">
-                                <div class="product-qty-badge d-none" id="badge-qty-{{ $prod->id }}">0</div>
+                                <div class="product-qty-badge" id="badge-qty-{{ $prod->id }}">0</div>
                                 <div class="product-img-wrapper" style="@if(!$imgUrl) background: {{ $themeBg }}; border: 1px solid {{ $themeBorder }}; @endif">
                                     @if($imgUrl)
                                         <img src="{{ $imgUrl }}" alt="{{ $prod->name }}" class="product-img" loading="lazy"
@@ -1409,7 +1430,7 @@
             const container = document.getElementById('cartItemsContainer');
 
             document.querySelectorAll('.product-qty-badge').forEach(b => {
-                b.classList.add('d-none');
+                b.classList.remove('has-qty');
                 b.innerText = '0';
             });
 
@@ -1432,8 +1453,13 @@
 
                 const badge = document.getElementById(`badge-qty-${item.id}`);
                 if (badge) {
-                    badge.innerText = `x${item.qty}`;
-                    badge.classList.remove('d-none');
+                    if (item.qty > 0) {
+                        badge.innerText = `x${item.qty}`;
+                        badge.classList.add('has-qty');
+                    } else {
+                        badge.innerText = '0';
+                        badge.classList.remove('has-qty');
+                    }
                 }
 
                 html += `
@@ -1445,7 +1471,7 @@
                         <div class="cart-qty-ctrl">
                             <button type="button" class="btn-qty" onclick="updateQty(${item.id}, -1)">-</button>
                             <span class="qty-num">${item.qty}</span>
-                            <button type="button" class="btn-qty" onclick="updateQty(${item.id}, 1)">+</button>
+                            <button type="button" class="btn-qty btn-qty-plus" onclick="updateQty(${item.id}, 1)">+</button>
                             <button type="button" class="btn text-danger ms-1 p-0" onclick="removeItem(${item.id})" style="border:none; background:none;">
                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                             </button>

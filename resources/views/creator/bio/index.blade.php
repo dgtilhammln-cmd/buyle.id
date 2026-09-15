@@ -491,7 +491,7 @@
             height: 40px;
             padding: 0 1.25rem;
             border-radius: 999px;
-            background: linear-gradient(135deg, #1eb349, #a5cf37);
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             border: none;
             color: #fff;
             font-weight: 700;
@@ -500,6 +500,14 @@
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.32);
+            transition: all 0.2s ease;
+        }
+
+        .spin-icon {
+            animation: spin 0.8s linear infinite !important;
+            transform-origin: center !important;
+            display: inline-block !important;
         }
 
         /* Affiliate product card */
@@ -2160,7 +2168,7 @@
                                 Scan Menu AI
                             </button>
                             <button onclick="document.getElementById('addUmkmModal').classList.add('open')"
-                                style="background:linear-gradient(135deg, #1eb349, #16a34a); color:#fff; border:none; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.78rem; cursor:pointer; height:32px;">
+                                style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 1.1rem; border-radius:999px; font-size:0.78rem; cursor:pointer; height:34px; box-shadow:0 4px 14px rgba(30, 179, 73, 0.32); transition:all 0.2s ease;">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
                                     viewBox="0 0 24 24">
                                     <line x1="12" y1="5" x2="12" y2="19" />
@@ -2612,8 +2620,8 @@
                             style="width:100%; height:38px; padding:0 0.75rem; border-radius:8px; border:1.5px solid #cbd5e1; font-size:0.8rem; background:#fff; color:#1e293b; outline:none; box-sizing:border-box;">
                     </div>
                     <button type="button" onclick="doScrapeProduct()" id="scrapeBtn"
-                        style="height:38px; padding:0 1.1rem; border-radius:999px; background:linear-gradient(135deg,#1eb349,#16a34a); color:#fff; border:none; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0; box-shadow:0 2px 8px rgba(30,179,73,0.25);">
-                        <svg id="scrapeBtnIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                        style="height:38px; padding:0 1.25rem; border-radius:999px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0; box-shadow:0 4px 14px rgba(30,179,73,0.32); transition:all 0.2s ease;">
+                        <svg id="scrapeBtnIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
                             viewBox="0 0 24 24">
                             <circle cx="11" cy="11" r="8" />
                             <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -3620,7 +3628,10 @@
 
             btn.disabled = true;
             btnText.textContent = 'Mengambil...';
-            btnIcon.innerHTML = '<path d="M21 12a9 9 0 1 1-6.219-8.56"/>';
+            if (btnIcon) {
+                btnIcon.classList.add('spin-icon');
+                btnIcon.innerHTML = '<path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>';
+            }
             hideScrapePreview();
             showScrapeStatus('Mengambil data dari ' + (url.includes('shopee') ? 'Shopee' : (url.includes('tokopedia') ? 'Tokopedia' : 'marketplace')) + '...', 'info');
 
@@ -3640,7 +3651,10 @@
                 .then(({ ok, data }) => {
                     btn.disabled = false;
                     btnText.textContent = 'Cari';
-                    btnIcon.innerHTML = '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>';
+                    if (btnIcon) {
+                        btnIcon.classList.remove('spin-icon');
+                        btnIcon.innerHTML = '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>';
+                    }
 
                     if (!ok || data.error) {
                         showScrapeStatus((data.error || 'Gagal mengambil data produk.'), 'error');
@@ -3682,8 +3696,11 @@
                 })
                 .catch(err => {
                     btn.disabled = false;
-                    btnText.textContent = 'Ambil Data';
-                    btnIcon.innerHTML = '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>';
+                    btnText.textContent = 'Cari';
+                    if (btnIcon) {
+                        btnIcon.classList.remove('spin-icon');
+                        btnIcon.innerHTML = '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>';
+                    }
                     showScrapeStatus('Gagal koneksi: ' + err.message, 'error');
                 });
         }

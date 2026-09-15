@@ -235,8 +235,8 @@ class CreatorBioController extends Controller
             $cOrig = preg_replace('/[^0-9]/', '', (string)$request->original_price);
             $request->merge(['original_price' => $cOrig !== '' ? (int)$cOrig : null]);
         }
-        if ($request->has('title') && strlen((string)$request->title) > 250) {
-            $request->merge(['title' => Str::limit($request->title, 250, '')]);
+        if ($request->has('title') && strlen((string)$request->title) > 140) {
+            $request->merge(['title' => Str::limit(trim($request->title), 140, '...')]);
         }
 
         $request->validate([
@@ -424,8 +424,8 @@ class CreatorBioController extends Controller
             $cOrig = preg_replace('/[^0-9]/', '', (string)$request->original_price);
             $request->merge(['original_price' => $cOrig !== '' ? (int)$cOrig : null]);
         }
-        if ($request->has('title') && strlen((string)$request->title) > 250) {
-            $request->merge(['title' => Str::limit($request->title, 250, '')]);
+        if ($request->has('title') && strlen((string)$request->title) > 140) {
+            $request->merge(['title' => Str::limit(trim($request->title), 140, '...')]);
         }
 
         $request->validate([
