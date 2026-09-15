@@ -525,6 +525,100 @@
             </div>
         </div>
     </div>
+
+    {{-- ══ Custom Domain Management & Anti-Conflict Card ══ --}}
+    <div style="background:#ffffff; border:1.5px solid #E2E8F0; border-radius:20px; padding:1.5rem; margin-bottom:1.75rem; box-shadow:0 4px 20px rgba(0,0,0,0.02);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; padding-bottom:1rem; border-bottom:1.5px solid #F1F5F9; margin-bottom:1.25rem;">
+            <div>
+                <div style="font-size:1.05rem; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:0.5rem;">
+                    <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    Pengaturan Domain Pribadi Creator (Custom Domain Link in Bio)
+                </div>
+                <div style="font-size:0.78rem; color:#64748B; margin-top:0.2rem;">
+                    Atur domain pribadi yang dijual/didesikasikan untuk creator ini. Dilengkapi dengan Validasi Anti-Konflik otomatis.
+                </div>
+            </div>
+            <div>
+                @if(!empty($customDomain))
+                    @if($dnsStatus === 'active')
+                        <span style="background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; font-size:0.78rem; font-weight:700; padding:0.4rem 0.85rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.4rem;">
+                            <span style="width:8px; height:8px; background:#22C55E; border-radius:50%; display:inline-block;"></span>
+                            DNS Active & Resolved ({{ $dnsResolvedIp }})
+                        </span>
+                    @else
+                        <span style="background:#FFFBEB; color:#92400E; border:1px solid #FDE68A; font-size:0.78rem; font-weight:700; padding:0.4rem 0.85rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.4rem;">
+                            <span style="width:8px; height:8px; background:#F59E0B; border-radius:50%; display:inline-block;"></span>
+                            Menunggu DNS Propagation / Pointing
+                        </span>
+                    @endif
+                @else
+                    <span style="background:#F8FAFC; color:#64748B; border:1px solid #E2E8F0; font-size:0.78rem; font-weight:700; padding:0.4rem 0.85rem; border-radius:100px;">
+                        Belum Menggunakan Custom Domain
+                    </span>
+                @endif
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1.5rem;">
+            {{-- Form Settings --}}
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:16px; padding:1.25rem;">
+                <form action="{{ route('admin.creator-resources.custom-domain', $user->id) }}" method="POST">
+                    @csrf
+                    <label style="display:block; font-size:0.825rem; font-weight:700; color:#0F172A; margin-bottom:0.4rem;">
+                        Atur Nama Domain Pribadi Creator
+                    </label>
+                    <div style="display:flex; gap:0.5rem; margin-bottom:0.75rem;">
+                        <input type="text" name="custom_domain" value="{{ old('custom_domain', $customDomain) }}" placeholder="contoh: brandku.com atau bio.nama.id"
+                            style="flex:1; padding:0.65rem 0.9rem; border:1.5px solid #CBD5E1; border-radius:10px; font-size:0.85rem; font-family:inherit; outline:none;" required>
+                        <button type="submit" style="background:#0F172A; color:#fff; border:none; border-radius:10px; padding:0.65rem 1.1rem; font-size:0.825rem; font-weight:700; cursor:pointer; font-family:inherit;">
+                            Simpan Domain
+                        </button>
+                    </div>
+                </form>
+
+                @if(!empty($customDomain))
+                    <div style="margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid #E2E8F0; display:flex; justify-space-between; align-items:center;">
+                        <a href="https://{{ $customDomain }}" target="_blank" class="btn-open-link" style="margin-right:auto;">
+                            🌐 Buka Domain ({{ $customDomain }})
+                        </a>
+                        <form action="{{ route('admin.creator-resources.custom-domain', $user->id) }}" method="POST" onsubmit="return confirm('Hapus/Reset custom domain milik {{ addslashes($user->name) }}?');" style="margin:0;">
+                            @csrf
+                            <input type="hidden" name="custom_domain" value="">
+                            <button type="submit" style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; border-radius:8px; padding:0.4rem 0.85rem; font-size:0.78rem; font-weight:700; cursor:pointer;">
+                                🗑️ Hapus Custom Domain
+                            </button>
+                        </form>
+                    </div>
+                @endif
+
+                <div style="margin-top:1rem; font-size:0.75rem; color:#64748B; line-height:1.5;">
+                    🔒 <strong>Sistem Anti-Konflik Aktif:</strong> Format otomatis dibersihkan (menghapus http://, trailing slashes, www), dicek terhadap daftar domain reserved sistem, dan dipastikan unik antar seluruh creator.
+                </div>
+            </div>
+
+            {{-- DNS Setup Instructions --}}
+            <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:16px; padding:1.25rem;">
+                <div style="font-size:0.85rem; font-weight:800; color:#166534; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Panduan Konfigurasi DNS Domain (A Record / CNAME)
+                </div>
+                <div style="font-size:0.78rem; color:#15803D; line-height:1.5; margin-bottom:0.75rem;">
+                    Beri instruksi ini kepada creator / atur DNS di Registrar Domain (Rumahweb, Niagahoster, Hostinger, Cloudflare, dll):
+                </div>
+
+                <div style="background:#ffffff; border:1px solid #DCFCE7; border-radius:10px; padding:0.65rem 0.85rem; font-size:0.78rem; margin-bottom:0.5rem;">
+                    <div style="font-weight:700; color:#0F172A;">1. Record A (Domain Utama @)</div>
+                    <code style="background:#F1F5F9; padding:0.15rem 0.4rem; border-radius:4px; font-weight:700; color:#0F172A;">Type: A | Host: @ | Value: IP Server Buyle.id</code>
+                </div>
+
+                <div style="background:#ffffff; border:1px solid #DCFCE7; border-radius:10px; padding:0.65rem 0.85rem; font-size:0.78rem;">
+                    <div style="font-weight:700; color:#0F172A;">2. Record CNAME (Subdomain www)</div>
+                    <code style="background:#F1F5F9; padding:0.15rem 0.4rem; border-radius:4px; font-weight:700; color:#0F172A;">Type: CNAME | Host: www | Value: buyle.id</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- ══ Location Intelligence Card ══ --}}
     <div style="background:#ffffff; border-radius:20px; border:1.5px solid #E2E8F0; box-shadow:0 4px 20px rgba(0,0,0,0.03); margin-bottom:1.75rem; overflow:hidden;">
         {{-- Header --}}

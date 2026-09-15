@@ -22,9 +22,36 @@ class HandleCustomDomain
                 ->first();
 
             if ($profile) {
-                // If accessing root '/' or product links on custom domain, render creator bio seamlessly
-                if ($request->path() === '/') {
+                $path = trim($request->path(), '/');
+
+                // Pass static assets & API / webhooks / system routes through
+                if (
+                    str_starts_with($path, 'storage/') ||
+                    str_starts_with($path, 'build/') ||
+                    str_starts_with($path, 'assets/') ||
+                    str_starts_with($path, 'api/') ||
+                    str_starts_with($path, 'payment/') ||
+                    str_starts_with($path, 'track') ||
+                    str_starts_with($path, 'qr-code') ||
+                    str_starts_with($path, 'checkout') ||
+                    str_starts_with($path, 'keranjang')
+                ) {
+                    return $next($request);
+                }
+
+                // If accessing root '/' on custom domain -> render creator's bio page
+                if ($path === '' || $path === '/') {
                     return response(app(\App\Http\Controllers\BioPageController::class)->show($profile->store_slug));
+                }
+
+                // If accessing product detail link on custom domain, e.g. /p/{identifier} or /{identifier}
+                if (preg_match('#^(?:p/)?([a-zA-Z0-9_\-]+)$#', $path, $matches)) {
+                    $identifier = $matches[1];
+                    try {
+                        return response(app(\App\Http\Controllers\BioProductController::class)->show($profile->store_slug, $identifier));
+                    } catch (\Throwable $e) {
+                        return response(app(\App\Http\Controllers\BioPageController::class)->show($profile->store_slug));
+                    }
                 }
             }
         }

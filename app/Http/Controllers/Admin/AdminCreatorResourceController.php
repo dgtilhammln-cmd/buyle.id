@@ -265,6 +265,7 @@ class AdminCreatorResourceController extends Controller
             return [
                 'user'                 => $user,
                 'creator_profile'      => $creatorProfile,
+                'custom_domain'        => $creatorProfile->custom_domain ?? null,
                 'avatar_url'           => $avatarUrl,
                 'product_count'        => $productCount,
                 'bio_blocks_count'     => $bioBlocksCount,
@@ -340,6 +341,7 @@ class AdminCreatorResourceController extends Controller
         $totalProductsOverall     = $creatorResources->sum('product_count');
         $totalBlocksOverall       = $creatorResources->sum('bio_blocks_count');
         $totalAssetsOverall       = $creatorResources->sum('asset_file_count');
+        $totalCustomDomainsOverall= $creatorResources->filter(fn($c) => !empty($c['custom_domain']))->count();
 
         // Scan Orphan / Ghost Files (File Sampah Terbuang)
         $orphanData = self::getOrphanFiles();
@@ -359,6 +361,7 @@ class AdminCreatorResourceController extends Controller
             'totalProductsOverall'    => $totalProductsOverall,
             'totalBlocksOverall'      => $totalBlocksOverall,
             'totalAssetsOverall'      => $totalAssetsOverall,
+            'totalCustomDomainsOverall' => $totalCustomDomainsOverall,
             'orphanData'              => $orphanData,
         ]);
     }
@@ -571,9 +574,31 @@ class AdminCreatorResourceController extends Controller
             $q->whereNotIn('status', ['pending', 'cancelled', 'refunded', 'failed', 'expired']);
         })->sum('subtotal');
 
+        // DNS Status Check for Custom Domain
+        $customDomain = $creatorProfile->custom_domain ?? null;
+        $dnsStatus = 'none';
+        $dnsResolvedIp = null;
+
+        if (!empty($customDomain)) {
+            try {
+                $resolved = gethostbyname($customDomain);
+                if ($resolved && $resolved !== $customDomain) {
+                    $dnsResolvedIp = $resolved;
+                    $dnsStatus = 'active';
+                } else {
+                    $dnsStatus = 'pending';
+                }
+            } catch (\Throwable $e) {
+                $dnsStatus = 'pending';
+            }
+        }
+
         return view('admin.creator-resources.show', [
             'user'            => $user,
             'creatorProfile'  => $creatorProfile,
+            'customDomain'    => $customDomain,
+            'dnsStatus'       => $dnsStatus,
+            'dnsResolvedIp'   => $dnsResolvedIp,
             'avatarUrl'       => self::getStorageUrl($user->avatar),
             'detailedAssets'  => $detailedAssets,
             'totalAssets'     => count($detailedAssets),
@@ -593,6 +618,66 @@ class AdminCreatorResourceController extends Controller
             'city_name'       => $creatorProfile->city_name ?? null,
             'province_name'   => $creatorProfile->province_name ?? null,
         ]);
+    }
+
+    /**
+     * Update / Set / Clear Custom Domain untuk Creator (Link in Bio) dengan Sistem Anti-Konflik
+     */
+    public function updateCustomDomain(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $creatorProfile = CreatorProfile::getOrCreateForUser($user);
+
+        $rawDomain = trim($request->input('custom_domain', ''));
+
+        if (empty($rawDomain)) {
+            $creatorProfile->custom_domain = null;
+            $creatorProfile->save();
+            return redirect()->back()->with('success', "Custom domain untuk creator {$user->name} berhasil dihapus/direset.");
+        }
+
+        // Sanitasi Input Domain: Hilangkan http://, https://, trailing slashes, www., spaces
+        $cleanDomain = preg_replace('#^https?://#i', '', strtolower($rawDomain));
+        $cleanDomain = rtrim($cleanDomain, '/');
+        $cleanDomain = explode('/', $cleanDomain)[0];
+        $cleanDomain = preg_replace('/^www\./i', '', $cleanDomain);
+
+        // Reserved System & Platform Domains Anti-Konflik
+        $reservedDomains = [
+            'buyle.id', 'www.buyle.id', 'app.buyle.id', 'api.buyle.id', 'admin.buyle.id',
+            'dev.buyle.id', 'staging.buyle.id', 'test.buyle.id', 'localhost', '127.0.0.1',
+            'admin', 'creator', 'buyer', 'login', 'register', 'checkout', 'cart', 'api',
+            'auth', 'public', 'storage', 'assets', 'build', 'account', 'dashboard',
+            'payment', 'webhook', 'mail', 'cpanel', 'webmail'
+        ];
+
+        if (in_array($cleanDomain, $reservedDomains) || str_ends_with($cleanDomain, '.buyle.id')) {
+            return redirect()->back()->with('error', "Gagal: Domain '{$rawDomain}' adalah domain sistem/reserved dan tidak dapat digunakan.");
+        }
+
+        // Validasi Syntax & Format Domain (Standard FQDN)
+        if (!preg_match('/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$/i', $cleanDomain)) {
+            return redirect()->back()->with('error', "Gagal: Format domain '{$rawDomain}' tidak valid. Gunakan format seperti domainku.com atau bio.domain.com.");
+        }
+
+        // Cek Unik Anti-Konflik antar creator (Cegah Duplikasi / Tabrakan Domain)
+        $existing = CreatorProfile::where(function($q) use ($cleanDomain) {
+                $q->where('custom_domain', $cleanDomain)
+                  ->orWhere('custom_domain', 'www.' . $cleanDomain);
+            })
+            ->where('id', '!=', $creatorProfile->id)
+            ->first();
+
+        if ($existing) {
+            $ownerName = $existing->user->name ?? 'creator lain';
+            return redirect()->back()->with('error', "Gagal Anti-Konflik: Domain '{$cleanDomain}' sudah aktif digunakan oleh creator '{$ownerName}'. Gunakan domain lain.");
+        }
+
+        // Simpan Domain Anti-Konflik
+        $creatorProfile->custom_domain = $cleanDomain;
+        $creatorProfile->save();
+
+        return redirect()->back()->with('success', "Sukses! Custom domain '{$cleanDomain}' berhasil dikonfigurasi anti-konflik untuk {$user->name}. Pastikan DNS A Record mengarah ke server Buyle.id.");
     }
 
     /**

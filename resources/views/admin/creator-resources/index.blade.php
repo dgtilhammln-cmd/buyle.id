@@ -625,6 +625,12 @@
                 </select>
             </div>
 
+            {{-- SOP Domain Guide Button --}}
+            <button type="button" onclick="openDomainSopModal()" class="view-switch-btn" style="background:#F0FDF4; color:#166534; border-color:#BBF7D0;" title="Panduan SOP Setting Domain Custom Admin">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                SOP Custom Domain
+            </button>
+
             {{-- View Mode Switcher (Table vs Grid) --}}
             <div style="display:flex; gap:0.25rem; background:#F1F5F9; padding:0.2rem; border-radius:12px;">
                 <button type="button" id="btnViewTable" onclick="switchViewMode('table')" class="view-switch-btn active" title="Tampilan Tabel Data">
@@ -687,6 +693,9 @@
                                     <div class="res-user-sub">
                                         {{ $profile ? ($profile->store_name ?: '@' . $user->username) : '@' . ($user->username ?: 'user') }}
                                         &bull; {{ $user->email }}
+                                        @if(!empty($item['custom_domain']))
+                                            &bull; <a href="https://{{ $item['custom_domain'] }}" target="_blank" style="display:inline-flex; align-items:center; gap:0.25rem; background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; padding:0.1rem 0.45rem; border-radius:6px; font-weight:700; font-size:0.7rem; text-decoration:none;" title="Custom Domain Link in Bio Aktif">🌐 {{ $item['custom_domain'] }}</a>
+                                        @endif
                                     </div>
                                     <div style="font-size:0.68rem; color:#64748B; margin-top:0.2rem; display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap;">
                                         @if($item['city_name'] || $item['province_name'])
@@ -1022,7 +1031,79 @@
     </div>
 </div>
 
+{{-- Modal SOP Setting Domain Custom --}}
+<div id="domainSopModal" class="res-modal-overlay">
+    <div class="res-modal-card" style="max-width:700px;">
+        <div class="res-modal-header" style="background:#F0FDF4; border-bottom:1px solid #DCFCE7;">
+            <div>
+                <h3 style="margin:0; font-size:1.1rem; font-weight:800; color:#166534; display:flex; align-items:center; gap:0.5rem;">
+                    🌐 SOP Setting Custom Domain Creator (Tim Admin Buyle)
+                </h3>
+                <div style="font-size:0.75rem; color:#15803D; margin-top:0.2rem;">
+                    Standar Operasional Prosedur penyiapan domain pribadi untuk tiap link in bio creator.
+                </div>
+            </div>
+            <button type="button" onclick="closeDomainSopModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#64748B;">&times;</button>
+        </div>
+        <div class="res-modal-body" style="padding:1.5rem; font-size:0.825rem; color:#1E293B; line-height:1.6;">
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:1rem; margin-bottom:1rem;">
+                <div style="font-weight:800; color:#0F172A; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
+                    <span style="background:#0F172A; color:#fff; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:0.75rem;">1</span>
+                    Daftarkan Domain di Registrar (Beli Domain)
+                </div>
+                <div style="color:#475569; padding-left:1.75rem;">
+                    Tim mendaftarkan domain pilihan creator (misal: <code>brandku.com</code> atau <code>link.creator.id</code>) melalui registrar pilihan (Rumahweb, Niagahoster, Hostinger, Cloudflare, Namecheap, dll).
+                </div>
+            </div>
+
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:1rem; margin-bottom:1rem;">
+                <div style="font-weight:800; color:#0F172A; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
+                    <span style="background:#0F172A; color:#fff; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:0.75rem;">2</span>
+                    Atur DNS Management di Registrar
+                </div>
+                <div style="color:#475569; padding-left:1.75rem; font-size:0.8rem;">
+                    Tambahkan 2 DNS Record berikut pada DNS Management domain tersebut:
+                    <div style="background:#ffffff; border:1px solid #CBD5E1; border-radius:8px; padding:0.6rem 0.85rem; margin-top:0.4rem; font-family:monospace; font-weight:700; color:#0F172A;">
+                        Record 1: Type: A &nbsp;&nbsp;|&nbsp; Host: @ &nbsp;&nbsp;|&nbsp; Value: [IP Server VPS Buyle.id]<br>
+                        Record 2: Type: CNAME | Host: www | Value: buyle.id
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:1rem; margin-bottom:1rem;">
+                <div style="font-weight:800; color:#0F172A; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
+                    <span style="background:#0F172A; color:#fff; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:0.75rem;">3</span>
+                    Input Domain di Halaman Detail Creator Admin
+                </div>
+                <div style="color:#475569; padding-left:1.75rem;">
+                    Buka tombol <strong>"Detail"</strong> di creator target &rarr; scroll ke card <strong>"Pengaturan Domain Pribadi Creator"</strong> &rarr; ketik nama domain &rarr; klik <strong>"Simpan Domain"</strong>.
+                    <br><small style="color:#16A34A; font-weight:700;">✓ Sistem Anti-Konflik akan otomatis memverifikasi bahwa domain tidak bentrok dengan creator lain atau domain reserved sistem.</small>
+                </div>
+            </div>
+
+            <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:14px; padding:1rem;">
+                <div style="font-weight:800; color:#166534; margin-bottom:0.4rem;">
+                    🚀 Halaman Link in Bio Langsung Aktif Seamless!
+                </div>
+                <div style="color:#15803D; font-size:0.78rem;">
+                    Setelah DNS terpropagasi, saat pengunjung membuka <code>https://brandku.com</code>, halaman Link in Bio creator akan terbuka secara instan tanpa perlu setting rumit.
+                </div>
+            </div>
+        </div>
+        <div style="padding:1rem 1.5rem; background:#F8FAFC; border-top:1px solid #E2E8F0; text-align:right;">
+            <button type="button" onclick="closeDomainSopModal()" style="background:#0F172A; color:#fff; border:none; border-radius:10px; padding:0.6rem 1.25rem; font-weight:700; font-size:0.825rem; cursor:pointer;">Paham & Tutup</button>
+        </div>
+    </div>
+</div>
+
 <script>
+function openDomainSopModal() {
+    document.getElementById('domainSopModal').style.display = 'flex';
+}
+function closeDomainSopModal() {
+    document.getElementById('domainSopModal').style.display = 'none';
+}
+
 function switchViewMode(mode) {
     if (mode === 'grid') {
         document.getElementById('viewContainerTable').style.display = 'none';
