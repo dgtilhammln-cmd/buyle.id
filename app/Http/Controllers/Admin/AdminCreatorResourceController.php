@@ -593,35 +593,47 @@ class AdminCreatorResourceController extends Controller
             }
         }
 
+        // Detect Actual Server IP Address
+        $serverIp = $_SERVER['SERVER_ADDR'] ?? null;
+        if (empty($serverIp) || $serverIp === '127.0.0.1') {
+            try {
+                $serverIp = gethostbyname('buyle.id');
+            } catch (\Throwable $e) {
+                $serverIp = 'buyle.id';
+            }
+        }
+
         return view('admin.creator-resources.show', [
-            'user'            => $user,
-            'creatorProfile'  => $creatorProfile,
-            'customDomain'    => $customDomain,
-            'dnsStatus'       => $dnsStatus,
-            'dnsResolvedIp'   => $dnsResolvedIp,
-            'avatarUrl'       => self::getStorageUrl($user->avatar),
-            'detailedAssets'  => $detailedAssets,
-            'totalAssets'     => count($detailedAssets),
-            'totalSizeMb'     => $totalSizeMb,
-            'estMonthlyCost'  => $estMonthlyCost,
-            'totalRevenue'    => $totalRevenue,
-            'productCount'    => $user->products->count(),
-            'bioBlocksCount'  => $bioBlocks->count(),
+            'user'                  => $user,
+            'creatorProfile'        => $creatorProfile,
+            'customDomain'          => $customDomain,
+            'dnsStatus'             => $dnsStatus,
+            'dnsResolvedIp'         => $dnsResolvedIp,
+            'serverIp'              => $serverIp,
+            'siteVerificationCode'  => $creatorProfile->site_verification_code ?? null,
+            'avatarUrl'             => self::getStorageUrl($user->avatar),
+            'detailedAssets'        => $detailedAssets,
+            'totalAssets'           => count($detailedAssets),
+            'totalSizeMb'           => $totalSizeMb,
+            'estMonthlyCost'        => $estMonthlyCost,
+            'totalRevenue'          => $totalRevenue,
+            'productCount'          => $user->products->count(),
+            'bioBlocksCount'        => $bioBlocks->count(),
             // Location Tracking Data (hidden from creator)
-            'latitude'        => $creatorProfile->latitude ?? null,
-            'longitude'       => $creatorProfile->longitude ?? null,
-            'detected_ip'     => $creatorProfile->detected_ip ?? null,
-            'gmaps_link'      => ($creatorProfile && $creatorProfile->latitude && $creatorProfile->longitude)
-                                    ? "https://maps.google.com/?q={$creatorProfile->latitude},{$creatorProfile->longitude}"
-                                    : null,
-            'full_address'    => $creatorProfile->address ?? null,
-            'city_name'       => $creatorProfile->city_name ?? null,
-            'province_name'   => $creatorProfile->province_name ?? null,
+            'latitude'              => $creatorProfile->latitude ?? null,
+            'longitude'             => $creatorProfile->longitude ?? null,
+            'detected_ip'           => $creatorProfile->detected_ip ?? null,
+            'gmaps_link'            => ($creatorProfile && $creatorProfile->latitude && $creatorProfile->longitude)
+                                            ? "https://maps.google.com/?q={$creatorProfile->latitude},{$creatorProfile->longitude}"
+                                            : null,
+            'full_address'          => $creatorProfile->address ?? null,
+            'city_name'             => $creatorProfile->city_name ?? null,
+            'province_name'         => $creatorProfile->province_name ?? null,
         ]);
     }
 
     /**
-     * Update / Set / Clear Custom Domain untuk Creator (Link in Bio) dengan Sistem Anti-Konflik
+     * Update / Set / Clear Custom Domain & Verification Code untuk Creator (Link in Bio)
      */
     public function updateCustomDomain(Request $request, $id)
     {
@@ -629,6 +641,18 @@ class AdminCreatorResourceController extends Controller
         $creatorProfile = CreatorProfile::getOrCreateForUser($user);
 
         $rawDomain = trim($request->input('custom_domain', ''));
+        $rawVerification = trim($request->input('site_verification_code', ''));
+
+        // Handle Site Verification Code (Extract from Meta Tag if full HTML tag is pasted)
+        $cleanVerification = null;
+        if (!empty($rawVerification)) {
+            if (preg_match('/content=["\']([^"\']+)["\']/i', $rawVerification, $matches)) {
+                $cleanVerification = $matches[1];
+            } else {
+                $cleanVerification = strip_tags($rawVerification);
+            }
+        }
+        $creatorProfile->site_verification_code = $cleanVerification;
 
         if (empty($rawDomain)) {
             $creatorProfile->custom_domain = null;
@@ -673,11 +697,11 @@ class AdminCreatorResourceController extends Controller
             return redirect()->back()->with('error', "Gagal Anti-Konflik: Domain '{$cleanDomain}' sudah aktif digunakan oleh creator '{$ownerName}'. Gunakan domain lain.");
         }
 
-        // Simpan Domain Anti-Konflik
+        // Simpan Domain Anti-Konflik & Kode Verifikasi
         $creatorProfile->custom_domain = $cleanDomain;
         $creatorProfile->save();
 
-        return redirect()->back()->with('success', "Sukses! Custom domain '{$cleanDomain}' berhasil dikonfigurasi anti-konflik untuk {$user->name}. Pastikan DNS A Record mengarah ke server Buyle.id.");
+        return redirect()->back()->with('success', "Sukses! Custom domain '{$cleanDomain}' & Kode Verifikasi Site berhasil disimpan untuk {$user->name}. Pastikan DNS A Record mengarah ke Server IP.");
     }
 
     /**

@@ -263,7 +263,7 @@
         .product-price {
             font-size: 0.88rem;
             font-weight: 800;
-            color: #1eb349;
+            color: #0f172a;
             margin-top: auto;
         }
 
@@ -271,13 +271,13 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background: linear-gradient(135deg, #1eb349, #a5cf37);
+            background: #0f172a;
             color: #ffffff;
             font-size: 0.75rem;
             font-weight: 800;
             padding: 4px 11px;
             border-radius: 20px;
-            box-shadow: 0 4px 10px rgba(30, 179, 73, 0.35);
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
             animation: popBadge 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
@@ -741,29 +741,20 @@
                                     }
                                 }
 
-                                // Interactive Theme & SVG Icons based on product keywords
-                                $themeBg = 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)';
-                                $themeColor = '#166534';
-                                $themeBorder = '#bbf7d0';
+                                // Clean Light Neutral Theme for Placeholder Cards
+                                $themeBg = '#f8fafc';
+                                $themeColor = '#475569';
+                                $themeBorder = '#e2e8f0';
                                 $badgeText = 'MENU';
                                 $iconType = 'food';
 
                                 if (\Illuminate\Support\Str::contains($nameLower, ['es', 'kopi', 'teh', 'jus', 'air', 'boba', 'drink', 'minuman', 'jeruk', 'lemon', 'syrup', 'coffee', 'tea', 'milk', 'susu', 'soda', 'alpukat'])) {
-                                    $themeBg = 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)';
-                                    $themeColor = '#0369a1';
-                                    $themeBorder = '#bae6fd';
                                     $badgeText = 'MINUMAN';
                                     $iconType = 'drink';
                                 } elseif (\Illuminate\Support\Str::contains($nameLower, ['roti', 'kue', 'donut', 'snack', 'pisang', 'toast', 'cake', 'waffle', 'pancake', 'keju', 'cokelat', 'crepes', 'martabak'])) {
-                                    $themeBg = 'linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%)';
-                                    $themeColor = '#be185d';
-                                    $themeBorder = '#fbcfe8';
                                     $badgeText = 'SNACK';
                                     $iconType = 'snack';
                                 } elseif (\Illuminate\Support\Str::contains($nameLower, ['nasi', 'mie', 'ayam', 'bebek', 'daging', 'ikan', 'sate', 'bakso', 'soto', 'gudeg', 'bento', 'dimsum', 'burger', 'pizza', 'seafood', 'makanan'])) {
-                                    $themeBg = 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)';
-                                    $themeColor = '#b45309';
-                                    $themeBorder = '#fde68a';
                                     $badgeText = 'MAKANAN';
                                     $iconType = 'dish';
                                 }

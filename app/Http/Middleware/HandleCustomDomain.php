@@ -39,6 +39,16 @@ class HandleCustomDomain
                     return $next($request);
                 }
 
+                // Dynamic robots.txt khusus domain creator
+                if ($path === 'robots.txt') {
+                    return app(\App\Http\Controllers\SitemapController::class)->customDomainRobots($profile);
+                }
+
+                // Dynamic sitemap.xml khusus domain creator
+                if ($path === 'sitemap.xml') {
+                    return app(\App\Http\Controllers\SitemapController::class)->customDomainSitemap($profile);
+                }
+
                 // If accessing root '/' on custom domain -> render creator's bio page
                 if ($path === '' || $path === '/') {
                     return response(app(\App\Http\Controllers\BioPageController::class)->show($profile->store_slug));

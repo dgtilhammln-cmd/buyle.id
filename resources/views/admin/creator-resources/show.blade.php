@@ -532,10 +532,10 @@
             <div>
                 <div style="font-size:1.05rem; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:0.5rem;">
                     <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                    Pengaturan Domain Pribadi Creator (Custom Domain Link in Bio)
+                    Pengaturan Domain Pribadi & Verifikasi Site Creator (Link in Bio)
                 </div>
                 <div style="font-size:0.78rem; color:#64748B; margin-top:0.2rem;">
-                    Atur domain pribadi yang dijual/didesikasikan untuk creator ini. Dilengkapi dengan Validasi Anti-Konflik otomatis.
+                    Kelola custom domain dan kode verifikasi Google Search Console khusus creator ini dengan sistem Anti-Konflik.
                 </div>
             </div>
             <div>
@@ -559,61 +559,102 @@
             </div>
         </div>
 
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1.5rem;">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:1.5rem;">
             {{-- Form Settings --}}
             <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:16px; padding:1.25rem;">
                 <form action="{{ route('admin.creator-resources.custom-domain', $user->id) }}" method="POST">
                     @csrf
-                    <label style="display:block; font-size:0.825rem; font-weight:700; color:#0F172A; margin-bottom:0.4rem;">
-                        Atur Nama Domain Pribadi Creator
-                    </label>
-                    <div style="display:flex; gap:0.5rem; margin-bottom:0.75rem;">
+                    <div style="margin-bottom:1rem;">
+                        <label style="display:block; font-size:0.825rem; font-weight:700; color:#0F172A; margin-bottom:0.35rem;">
+                            Nama Domain Pribadi Creator
+                        </label>
                         <input type="text" name="custom_domain" value="{{ old('custom_domain', $customDomain) }}" placeholder="contoh: brandku.com atau bio.nama.id"
-                            style="flex:1; padding:0.65rem 0.9rem; border:1.5px solid #CBD5E1; border-radius:10px; font-size:0.85rem; font-family:inherit; outline:none;" required>
-                        <button type="submit" style="background:#0F172A; color:#fff; border:none; border-radius:10px; padding:0.65rem 1.1rem; font-size:0.825rem; font-weight:700; cursor:pointer; font-family:inherit;">
-                            Simpan Domain
-                        </button>
+                            style="width:100%; padding:0.65rem 0.9rem; border:1.5px solid #CBD5E1; border-radius:10px; font-size:0.85rem; font-family:inherit; outline:none; background:#ffffff; box-sizing:border-box;">
                     </div>
+
+                    <div style="margin-bottom:1rem;">
+                        <label style="display:block; font-size:0.825rem; font-weight:700; color:#0F172A; margin-bottom:0.35rem;">
+                            Kode Verifikasi Site (Google Search Console Meta Tag)
+                        </label>
+                        <input type="text" name="site_verification_code" value="{{ old('site_verification_code', $siteVerificationCode) }}" placeholder="Masukkan token, misal: abc123xyz atau meta tag Google"
+                            style="width:100%; padding:0.65rem 0.9rem; border:1.5px solid #CBD5E1; border-radius:10px; font-size:0.85rem; font-family:inherit; outline:none; background:#ffffff; box-sizing:border-box;">
+                        <div style="font-size:0.72rem; color:#64748B; margin-top:0.25rem;">
+                            Kode ini akan otomatis disematkan dalam <code>&lt;meta name="google-site-verification" content="..."&gt;</code> di domain creator.
+                        </div>
+                    </div>
+
+                    <button type="submit" style="background:#0F172A; color:#fff; border:none; border-radius:10px; padding:0.65rem 1.25rem; font-size:0.825rem; font-weight:700; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:0.4rem;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                        Simpan Pengaturan Domain
+                    </button>
                 </form>
 
                 @if(!empty($customDomain))
-                    <div style="margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid #E2E8F0; display:flex; justify-space-between; align-items:center;">
-                        <a href="https://{{ $customDomain }}" target="_blank" class="btn-open-link" style="margin-right:auto;">
-                            🌐 Buka Domain ({{ $customDomain }})
+                    <div style="margin-top:1rem; padding-top:0.85rem; border-top:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <a href="https://{{ $customDomain }}" target="_blank" class="btn-open-link">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            Buka Domain ({{ $customDomain }})
                         </a>
                         <form action="{{ route('admin.creator-resources.custom-domain', $user->id) }}" method="POST" onsubmit="return confirm('Hapus/Reset custom domain milik {{ addslashes($user->name) }}?');" style="margin:0;">
                             @csrf
                             <input type="hidden" name="custom_domain" value="">
-                            <button type="submit" style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; border-radius:8px; padding:0.4rem 0.85rem; font-size:0.78rem; font-weight:700; cursor:pointer;">
-                                🗑️ Hapus Custom Domain
+                            <input type="hidden" name="site_verification_code" value="">
+                            <button type="submit" style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; border-radius:8px; padding:0.45rem 0.85rem; font-size:0.78rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                Hapus Custom Domain
                             </button>
                         </form>
                     </div>
                 @endif
 
-                <div style="margin-top:1rem; font-size:0.75rem; color:#64748B; line-height:1.5;">
-                    🔒 <strong>Sistem Anti-Konflik Aktif:</strong> Format otomatis dibersihkan (menghapus http://, trailing slashes, www), dicek terhadap daftar domain reserved sistem, dan dipastikan unik antar seluruh creator.
+                <div style="margin-top:1rem; font-size:0.75rem; color:#64748B; line-height:1.5; display:flex; align-items:flex-start; gap:0.4rem;">
+                    <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <div>
+                        <strong>Sistem Anti-Konflik Aktif:</strong> Domain otomatis disanitasi, divalidasi terhadap daftar domain sistem/reserved, dan dipastikan unik antar seluruh akun creator.
+                    </div>
                 </div>
             </div>
 
-            {{-- DNS Setup Instructions --}}
+            {{-- Detailed DNS Setup Instructions --}}
             <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:16px; padding:1.25rem;">
-                <div style="font-size:0.85rem; font-weight:800; color:#166534; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
+                <div style="font-size:0.85rem; font-weight:800; color:#166534; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem;">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    Panduan Konfigurasi DNS Domain (A Record / CNAME)
+                    Panduan Detail DNS Record Registrar (Rumahweb, Niagahoster, Hostinger, Cloudflare)
                 </div>
-                <div style="font-size:0.78rem; color:#15803D; line-height:1.5; margin-bottom:0.75rem;">
-                    Beri instruksi ini kepada creator / atur DNS di Registrar Domain (Rumahweb, Niagahoster, Hostinger, Cloudflare, dll):
-                </div>
-
-                <div style="background:#ffffff; border:1px solid #DCFCE7; border-radius:10px; padding:0.65rem 0.85rem; font-size:0.78rem; margin-bottom:0.5rem;">
-                    <div style="font-weight:700; color:#0F172A;">1. Record A (Domain Utama @)</div>
-                    <code style="background:#F1F5F9; padding:0.15rem 0.4rem; border-radius:4px; font-weight:700; color:#0F172A;">Type: A | Host: @ | Value: IP Server Buyle.id</code>
+                <div style="font-size:0.78rem; color:#15803D; line-height:1.5; margin-bottom:0.85rem;">
+                    Atur 2 DNS Record berikut di Panel DNS Management Registrar tempat domain dibeli:
                 </div>
 
-                <div style="background:#ffffff; border:1px solid #DCFCE7; border-radius:10px; padding:0.65rem 0.85rem; font-size:0.78rem;">
-                    <div style="font-weight:700; color:#0F172A;">2. Record CNAME (Subdomain www)</div>
-                    <code style="background:#F1F5F9; padding:0.15rem 0.4rem; border-radius:4px; font-weight:700; color:#0F172A;">Type: CNAME | Host: www | Value: buyle.id</code>
+                {{-- Record A --}}
+                <div style="background:#ffffff; border:1px solid #DCFCE7; border-radius:12px; padding:0.85rem; font-size:0.78rem; margin-bottom:0.75rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+                        <span style="font-weight:800; color:#0F172A;">1. Record A (Domain Utama / Naked Domain)</span>
+                        <span style="background:#F1F5F9; color:#475569; padding:0.15rem 0.5rem; border-radius:6px; font-weight:700; font-size:0.7rem;">Type: A</span>
+                    </div>
+                    <div style="font-size:0.75rem; color:#64748B; margin-bottom:0.4rem;">Mengarahkan domain utama (misal: <code>brandku.com</code>) ke IP server Buyle.id:</div>
+                    <div style="display:flex; align-items:center; gap:0.5rem; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:0.45rem 0.75rem;">
+                        <code style="font-weight:800; color:#0F172A; font-family:monospace; font-size:0.85rem; flex:1;">Host: @ &nbsp;|&nbsp; Value: {{ $serverIp }}</code>
+                        <button type="button" onclick="navigator.clipboard.writeText('{{ $serverIp }}'); alert('IP Server {{ $serverIp }} berhasil disalin!');"
+                            style="background:#0F172A; color:#ffffff; border:none; border-radius:6px; padding:0.3rem 0.6rem; font-size:0.7rem; font-weight:700; cursor:pointer;">
+                            Salin IP
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Record CNAME --}}
+                <div style="background:#ffffff; border:1px solid #DCFCE7; border-radius:12px; padding:0.85rem; font-size:0.78rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+                        <span style="font-weight:800; color:#0F172A;">2. Record CNAME (Subdomain www)</span>
+                        <span style="background:#F1F5F9; color:#475569; padding:0.15rem 0.5rem; border-radius:6px; font-weight:700; font-size:0.7rem;">Type: CNAME</span>
+                    </div>
+                    <div style="font-size:0.75rem; color:#64748B; margin-bottom:0.4rem;">Mengarahkan prefix www (misal: <code>www.brandku.com</code>) ke server utama:</div>
+                    <div style="display:flex; align-items:center; gap:0.5rem; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:0.45rem 0.75rem;">
+                        <code style="font-weight:800; color:#0F172A; font-family:monospace; font-size:0.85rem; flex:1;">Host: www &nbsp;|&nbsp; Value: buyle.id</code>
+                        <button type="button" onclick="navigator.clipboard.writeText('buyle.id'); alert('Host buyle.id berhasil disalin!');"
+                            style="background:#0F172A; color:#ffffff; border:none; border-radius:6px; padding:0.3rem 0.6rem; font-size:0.7rem; font-weight:700; cursor:pointer;">
+                            Salin Host
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

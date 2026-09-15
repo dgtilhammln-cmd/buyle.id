@@ -167,4 +167,84 @@ class SitemapController extends Controller
     {
         return redirect('/sitemap.xml', 301);
     }
+
+    /**
+     * Dynamic Sitemap khusus Custom Domain Creator (Independent SEO per domain)
+     */
+    public function customDomainSitemap(CreatorProfile $profile)
+    {
+        $domain = 'https://' . rtrim($profile->custom_domain, '/');
+
+        $urls = [];
+
+        // 1. Root URL (Halaman Utama Bio Creator di domain pribadinya)
+        $urls[] = [
+            'url'        => $domain . '/',
+            'priority'   => '1.0',
+            'changefreq' => 'daily',
+            'lastmod'    => $profile->updated_at ? $profile->updated_at->toDateString() : now()->toDateString(),
+            'images'     => ($profile->user && !empty($profile->user->avatar)) ? [
+                [
+                    'loc'     => asset('storage/' . ltrim($profile->user->avatar, '/')),
+                    'title'   => $profile->store_name,
+                    'caption' => $profile->store_name,
+                ]
+            ] : [],
+        ];
+
+        // 2. Produk Custom / Bio Blocks milik creator ini
+        $bioBlocks = \App\Models\CreatorBioBlock::where('creator_id', $profile->id)
+            ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])
+            ->where('is_active', true)
+            ->get();
+
+        foreach ($bioBlocks as $block) {
+            $slug = $block->data_json['slug'] ?? $block->id;
+            $images = [];
+            if (!empty($block->data_json['images'][0])) {
+                $images[] = [
+                    'loc'     => asset('storage/' . ltrim($block->data_json['images'][0], '/')),
+                    'title'   => $block->title,
+                    'caption' => $block->title,
+                ];
+            }
+            $urls[] = [
+                'url'        => $domain . '/p/' . $slug,
+                'priority'   => '0.9',
+                'changefreq' => 'weekly',
+                'lastmod'    => $block->updated_at ? $block->updated_at->toDateString() : now()->toDateString(),
+                'images'     => $images,
+            ];
+        }
+
+        $content = view('sitemap', compact('urls'))->render();
+        return response($content, 200)->header('Content-Type', 'application/xml');
+    }
+
+    /**
+     * Dynamic Robots.txt khusus Custom Domain Creator
+     */
+    public function customDomainRobots(CreatorProfile $profile)
+    {
+        $domain = 'https://' . rtrim($profile->custom_domain, '/');
+        $sitemapUrl = $domain . '/sitemap.xml';
+
+        $lines = [
+            'User-agent: *',
+            'Allow: /',
+            '',
+            '# Disallow private/admin routes',
+            'Disallow: /admin',
+            'Disallow: /akun',
+            'Disallow: /checkout',
+            'Disallow: /keranjang',
+            '',
+            "Sitemap: {$sitemapUrl}",
+        ];
+
+        return response(implode("\n", $lines), 200)->withHeaders([
+            'Content-Type' => 'text/plain; charset=UTF-8',
+            'Content-Disposition' => 'inline; filename="robots.txt"'
+        ]);
+    }
 }

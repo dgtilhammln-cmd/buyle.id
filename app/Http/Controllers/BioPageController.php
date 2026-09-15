@@ -67,23 +67,19 @@ class BioPageController extends Controller
         ];
         $roleTitle = $roleTitleMap[$profile->bio_role ?? ''] ?? 'Creator';
         $bioName   = $config['name'] ?? $profile->store_name ?? $username;
-        $seoTitle  = $bioName . ' - ' . $roleTitle . ' | buyle.id';
-        $seoDesc   = !empty($config['bio']) ? $config['bio'] : (!empty($profile->store_description) ? $profile->store_description : 'Temukan berbagai produk digital, rekomendasi affiliate, dan informasi resmi dari ' . $bioName . ' di buyle.id.');
-
-        // OG image: bio avatar > user avatar > default
-        $ogImage = asset('images/buyle-og.png');
-        if (!empty($config['avatar'])) {
-            $ogImage = asset('storage/' . $config['avatar']);
-        } elseif (!empty($config['_user_avatar'])) {
-            $userAv = $config['_user_avatar'];
-            $ogImage = \Illuminate\Support\Str::startsWith($userAv, ['http://', 'https://']) ? $userAv : asset('storage/' . $userAv);
+        if (!empty($profile->custom_domain)) {
+            $canonical  = 'https://' . rtrim($profile->custom_domain, '/');
+            $seoTitle   = $bioName . ' - ' . $roleTitle;
+            $ogSiteName = $bioName;
+        } else {
+            $canonical  = url('/' . $username);
+            $seoTitle   = $bioName . ' - ' . $roleTitle . ' | buyle.id';
+            $ogSiteName = 'buyle.id';
         }
-
-        $canonical = url('/' . $username);
 
         return view("bio.{$theme}", compact(
             'profile', 'config', 'blocks', 'products',
-            'seoTitle', 'seoDesc', 'ogImage', 'canonical', 'username'
+            'seoTitle', 'seoDesc', 'ogImage', 'canonical', 'username', 'ogSiteName'
         ));
     }
 }
