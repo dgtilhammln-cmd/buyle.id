@@ -1376,10 +1376,10 @@
                                     </div>
                                 </a>
                             @endforeach
-                            @foreach($customProdBlocks as $block)
-                                @php $num5++;
+                            @foreach($customProdBlocks as $                                @php $num5++;
                                     $imgs = $block->data_json['images'] ?? [];
-                                    $img = !empty($imgs[0]) ? asset('storage/' . $imgs[0]) : (!empty($block->data_json['image']) ? asset('storage/' . $block->data_json['image']) : 'https://placehold.co/400x400/222/555?text=Produk');
+                                    $rawPath = !empty($imgs[0]) ? $imgs[0] : ($block->data_json['image'] ?? null);
+                                    $img = !empty($rawPath) ? (Str::startsWith($rawPath, 'http') ? $rawPath : asset('storage/' . $rawPath)) : 'https://placehold.co/400x400/222/555?text=Produk';
                                     $displayTitle = $block->title ?? '';
                                     $blockSlug = !empty($block->data_json['slug']) ? $block->data_json['slug'] : \Illuminate\Support\Str::slug($displayTitle ?: 'produk-' . $block->id);
                                     $prodUrl = route('bio.product.show', [$username, $blockSlug]);
@@ -1390,7 +1390,7 @@
                                     data-bio-creator="{{ $profile->id }}">
                                     <div class="landing-prod-img">
                                         <div class="prod-badge-num">#{{ sprintf('%02d', $num5) }}</div><img src="{{ $img }}"
-                                            alt="{{ $block->title }}">
+                                            alt="{{ $block->title }}" onerror="this.src='https://placehold.co/400x400/222/555?text=Produk'">
                                     </div>
                                     <div class="landing-prod-info">
                                         <h3 class="landing-prod-title">{{ $block->title }}</h3>
@@ -1413,13 +1413,13 @@
                                     $price = $block->data_json['price'] ?? $block->data_json['custom_price'] ?? ($prod ? ($prod->is_on_sale ? $prod->sale_price : $prod->effective_price) : 0);
                                 $origPrice = $block->data_json['original_price'] ?? ($prod && $prod->is_on_sale ? $prod->price : null); @endphp
                                 @if($prod)
+                                    @php $pImg = !empty($prod->image) ? (Str::startsWith($prod->image, 'http') ? $prod->image : asset('storage/' . $prod->image)) : 'https://placehold.co/400x400/fff/cbd5e1?text=Digital'; @endphp
                                     <a href="{{ $prodUrl }}" class="landing-prod-card search-item bio-track-link"
                                         data-title="{{ $displayTitle }}" data-bio-block="{{ $block->id }}"
                                         data-bio-creator="{{ $profile->id }}">
                                         <div class="landing-prod-img">
-                                            <div class="prod-badge-num">#{{ sprintf('%02d', $num5) }}</div>@if($prod->image)<img
-                                            src="{{ asset('storage/' . $prod->image) }}" alt="{{ $prod->name }}">@else<img
-                                                src="https://placehold.co/400x400/fff/cbd5e1?text=Digital" alt="No Image">@endif
+                                            <div class="prod-badge-num">#{{ sprintf('%02d', $num5) }}</div><img
+                                            src="{{ $pImg }}" alt="{{ $prod->name }}" onerror="this.src='https://placehold.co/400x400/fff/cbd5e1?text=Digital'">
                                         </div>
                                         <div class="landing-prod-info">
                                             <h3 class="landing-prod-title">{{ $displayTitle }}</h3>
@@ -1467,7 +1467,8 @@
                             <div class="landing-products-grid">
                                 @foreach($customProdBlocks as $i => $block)
                                     @php $imgs = $block->data_json['images'] ?? [];
-                                        $img = !empty($imgs[0]) ? asset('storage/' . $imgs[0]) : (!empty($block->data_json['image']) ? asset('storage/' . $block->data_json['image']) : 'https://placehold.co/400x400/222/555?text=Produk');
+                                        $rawPath = !empty($imgs[0]) ? $imgs[0] : ($block->data_json['image'] ?? null);
+                                        $img = !empty($rawPath) ? (Str::startsWith($rawPath, 'http') ? $rawPath : asset('storage/' . $rawPath)) : 'https://placehold.co/400x400/222/555?text=Produk';
                                         $displayTitle = $block->title ?? '';
                                         $blockSlug = !empty($block->data_json['slug']) ? $block->data_json['slug'] : \Illuminate\Support\Str::slug($displayTitle ?: 'produk-' . $block->id);
                                         $prodUrl = route('bio.product.show', [$username, $blockSlug]);
@@ -1478,7 +1479,7 @@
                                         data-bio-creator="{{ $profile->id }}">
                                         <div class="landing-prod-img">
                                             <div class="prod-badge-num">#{{ sprintf('%02d', $i + 1) }}</div><img src="{{ $img }}"
-                                                alt="{{ $block->title }}">
+                                                alt="{{ $block->title }}" onerror="this.src='https://placehold.co/400x400/222/555?text=Produk'">
                                         </div>
                                         <div class="landing-prod-info">
                                             <h3 class="landing-prod-title">{{ $block->title }}</h3>
@@ -1507,14 +1508,14 @@
                                         $price = $block->data_json['price'] ?? $block->data_json['custom_price'] ?? ($prod ? ($prod->is_on_sale ? $prod->sale_price : $prod->effective_price) : 0);
                                     $origPrice = $block->data_json['original_price'] ?? ($prod && $prod->is_on_sale ? $prod->price : null); @endphp
                                     @if($prod)
+                                        @php $pImg = !empty($prod->image) ? (Str::startsWith($prod->image, 'http') ? $prod->image : asset('storage/' . $prod->image)) : 'https://placehold.co/400x400/fff/cbd5e1?text=Digital'; @endphp
                                         <a href="{{ $prodUrl }}" class="landing-prod-card search-item bio-track-link"
                                             data-title="{{ $displayTitle }}" data-bio-block="{{ $block->id }}"
                                             data-bio-creator="{{ $profile->id }}">
                                             <div class="landing-prod-img">
-                                                <div class="prod-badge-num">#{{ sprintf('%02d', $i + 1) }}</div>@if($prod->image)<img
-                                                src="{{ asset('storage/' . $prod->image) }}" alt="{{ $prod->name }}">@else<img
-                                                    src="https://placehold.co/400x400/fff/cbd5e1?text=Digital" alt="No Image">@endif
-                                            </div>
+                                                <div class="prod-badge-num">#{{ sprintf('%02d', $i + 1) }}</div><img
+                                                src="{{ $pImg }}" alt="{{ $prod->name }}" onerror="this.src='https://placehold.co/400x400/fff/cbd5e1?text=Digital'">
+                                            </div>  </div>
                                             <div class="landing-prod-info">
                                                 <h3 class="landing-prod-title">{{ $displayTitle }}</h3>
                                                 <div class="landing-prod-footer"><span

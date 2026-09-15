@@ -130,6 +130,9 @@ class CreatorBioController extends Controller
             'bio_discord'   => 'nullable|string|max:200',
             'bio_snapchat'  => 'nullable|string|max:100',
             'bio_website'   => 'nullable|url|max:300',
+            'bio_gofood'    => 'nullable|url|max:300',
+            'bio_grabfood'  => 'nullable|url|max:300',
+            'bio_shopeefood'=> 'nullable|url|max:300',
             'color_bg'      => 'nullable|string|max:20',
             'color_text'    => 'nullable|string|max:20',
             'color_btn'     => 'nullable|string|max:20',
@@ -192,6 +195,9 @@ class CreatorBioController extends Controller
         $config['discord']   = $request->has('bio_discord') ? ($request->bio_discord ?? '') : ($config['discord'] ?? '');
         $config['snapchat']  = $request->has('bio_snapchat') ? ($request->bio_snapchat ?? '') : ($config['snapchat'] ?? '');
         $config['website']   = $request->has('bio_website') ? ($request->bio_website ?? '') : ($config['website'] ?? '');
+        $config['gofood']    = $request->has('bio_gofood') ? ($request->bio_gofood ?? '') : ($config['gofood'] ?? '');
+        $config['grabfood']  = $request->has('bio_grabfood') ? ($request->bio_grabfood ?? '') : ($config['grabfood'] ?? '');
+        $config['shopeefood']= $request->has('bio_shopeefood') ? ($request->bio_shopeefood ?? '') : ($config['shopeefood'] ?? '');
 
         if ($request->filled('color_bg')) $config['color_bg'] = $request->color_bg;
         if ($request->filled('color_text')) $config['color_text'] = $request->color_text;

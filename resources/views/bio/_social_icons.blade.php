@@ -66,3 +66,50 @@
 @endif
 </div>
 @endif
+
+@php
+    $s_gofood = $config['gofood'] ?? null;
+    $s_grabfood = $config['grabfood'] ?? null;
+    $s_shopeefood = $config['shopeefood'] ?? null;
+    $hasFood = !empty($s_gofood) || !empty($s_grabfood) || !empty($s_shopeefood);
+@endphp
+
+@if($hasFood)
+<div class="food-delivery-row fade-up" style="animation-delay:0.22s; display:flex; flex-direction:column; gap:0.5rem; width:100%; max-width:440px; margin:0.8rem auto; padding:0 1rem; box-sizing:border-box;">
+    @if(!empty($s_shopeefood))
+    <a href="{{ $s_shopeefood }}" target="_blank" class="food-delivery-btn shopee-food" style="display:flex; align-items:center; justify-content:space-between; background:linear-gradient(135deg, #ee4d2d 0%, #ff7337 100%); color:#fff; text-decoration:none; padding:0.65rem 1rem; border-radius:12px; font-weight:700; font-size:0.85rem; box-shadow:0 4px 12px rgba(238, 77, 45, 0.28); transition:all 0.2s ease;">
+        <span style="display:flex; align-items:center; gap:0.65rem;">
+            <span style="background:#fff; border-radius:6px; width:26px; height:26px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#ee4d2d"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h2v2c0 .55.45 1 1 1s1-.45 1-1V8h6v2c0 .55.45 1 1 1s1-.45 1-1V8h2v12z"/></svg>
+            </span>
+            Order via ShopeeFood
+        </span>
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+    @endif
+
+    @if(!empty($s_gofood))
+    <a href="{{ $s_gofood }}" target="_blank" class="food-delivery-btn gofood" style="display:flex; align-items:center; justify-content:space-between; background:linear-gradient(135deg, #e02428 0%, #ff4d4d 100%); color:#fff; text-decoration:none; padding:0.65rem 1rem; border-radius:12px; font-weight:700; font-size:0.85rem; box-shadow:0 4px 12px rgba(224, 36, 40, 0.28); transition:all 0.2s ease;">
+        <span style="display:flex; align-items:center; gap:0.65rem;">
+            <span style="background:#fff; border-radius:6px; width:26px; height:26px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#e02428"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+            </span>
+            Order via GoFood
+        </span>
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+    @endif
+
+    @if(!empty($s_grabfood))
+    <a href="{{ $s_grabfood }}" target="_blank" class="food-delivery-btn grabfood" style="display:flex; align-items:center; justify-content:space-between; background:linear-gradient(135deg, #00b14f 0%, #00e667 100%); color:#fff; text-decoration:none; padding:0.65rem 1rem; border-radius:12px; font-weight:700; font-size:0.85rem; box-shadow:0 4px 12px rgba(0, 177, 79, 0.28); transition:all 0.2s ease;">
+        <span style="display:flex; align-items:center; gap:0.65rem;">
+            <span style="background:#fff; border-radius:6px; width:26px; height:26px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#00b14f"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+            </span>
+            Order via GrabFood
+        </span>
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+    @endif
+</div>
+@endif

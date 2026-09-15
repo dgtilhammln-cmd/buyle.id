@@ -1669,8 +1669,35 @@
                                     class="form-input" placeholder="https://portofolio-anda.com">
                             </div>
 
+                            {{-- Food Delivery Merchant Links --}}
+                            <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px dashed #e2e8f0;">
+                                <div style="font-size:0.88rem; font-weight:800; color:#0f172a; margin-bottom:0.85rem; display:flex; align-items:center; gap:0.4rem;">
+                                    <svg width="18" height="18" fill="none" stroke="#e11d48" stroke-width="2" viewBox="0 0 24 24">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                    </svg>
+                                    Layanan Food Delivery (Order Online)
+                                </div>
+                                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.85rem;">
+                                    <div class="form-group" style="margin:0;">
+                                        <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#dc2626;">GoFood Link</label>
+                                        <input type="url" name="bio_gofood" value="{{ old('bio_gofood', $cfg['gofood'] ?? '') }}"
+                                            class="form-input" placeholder="https://gofood.link/u/..." style="font-size:0.78rem;">
+                                    </div>
+                                    <div class="form-group" style="margin:0;">
+                                        <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#16a34a;">GrabFood Link</label>
+                                        <input type="url" name="bio_grabfood" value="{{ old('bio_grabfood', $cfg['grabfood'] ?? '') }}"
+                                            class="form-input" placeholder="https://food.grab.com/..." style="font-size:0.78rem;">
+                                    </div>
+                                    <div class="form-group" style="margin:0;">
+                                        <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#ea580c;">ShopeeFood Link</label>
+                                        <input type="url" name="bio_shopeefood" value="{{ old('bio_shopeefood', $cfg['shopeefood'] ?? '') }}"
+                                            class="form-input" placeholder="https://shopee.co.id/universal-link/now-food/m/..." style="font-size:0.78rem;">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div style="display:flex; justify-content:flex-end; margin-top:1.25rem;">
-                                <button type="submit" class="btn-submit-sm">Simpan Social Media</button>
+                                <button type="submit" class="btn-submit-sm">Simpan Social & Food Delivery</button>
                             </div>
                         </div>
                     </div>

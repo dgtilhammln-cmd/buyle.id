@@ -74,15 +74,15 @@
 
     <style>
 :root {
-    --accent: #a1ff5a;
+    --accent: #ffffff;
     --glass: rgba(255, 255, 255, 0.06);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.12);
     --side: 24px;
     /* Tab styling variables */
     --tab-bg: var(--glass);
-    --tab-active-bg: var(--accent);
-    --tab-text: #64748b;
-    --tab-active-text: #fff;
+    --tab-active-bg: #ffffff;
+    --tab-text: #94a3b8;
+    --tab-active-text: #0f172a;
     --tab-border: var(--glass-border);
     --tab-radius: 12px;
     --tab-padding: 0.85rem 1rem;
@@ -381,6 +381,8 @@
             scroll-snap-align: start;
             background: #111;
             border: 1px solid var(--glass-border);
+            color: #ffffff !important;
+            text-decoration: none !important;
         }
 
         .video-card img {
@@ -393,7 +395,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 60%);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 60%);
         }
 
         .video-card .tt-icon {
@@ -401,6 +403,7 @@
             top: 10px;
             left: 10px;
             z-index: 2;
+            color: #ffffff !important;
         }
 
         .video-card .watch-label {
@@ -412,6 +415,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             z-index: 2;
+            color: #ffffff !important;
         }
 
         /* Footer */
@@ -750,9 +754,9 @@
         .cat-tabs-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:12px 0 10px;}
         .cat-tabs-wrap::-webkit-scrollbar{display:none;}
         .cat-tabs{display:flex;flex-wrap:nowrap;gap:6px;padding:0 var(--side,16px) 2px;}
-        .cat-tab{flex:0 0 auto;white-space:nowrap;padding:5px 14px;border-radius:999px;font-size:0.75rem;font-weight:700;cursor:pointer;letter-spacing:0.03em;border:1.5px solid rgba(161,255,90,0.25);background:rgba(161,255,90,0.05);color:rgba(255,255,255,0.55);transition:all .2s;user-select:none;text-transform:uppercase;}
-        .cat-tab.active{background:#a1ff5a;border-color:#a1ff5a;color:#000;box-shadow:0 0 12px rgba(161,255,90,0.45);}
-        .cat-tab:not(.active):hover{border-color:rgba(161,255,90,0.5);color:#a1ff5a;}
+        .cat-tab{flex:0 0 auto;white-space:nowrap;padding:5px 14px;border-radius:999px;font-size:0.75rem;font-weight:700;cursor:pointer;letter-spacing:0.03em;border:1.5px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);transition:all .2s;user-select:none;text-transform:uppercase;}
+        .cat-tab.active{background:#ffffff;border-color:#ffffff;color:#0f172a;box-shadow:0 0 12px rgba(255,255,255,0.25);}
+        .cat-tab:not(.active):hover{border-color:rgba(255,255,255,0.5);color:#ffffff;}
         .cat-panel{display:none;}.cat-panel.active{display:block;}
         </style>
 
@@ -780,17 +784,18 @@
                     </a>
                 @endforeach
                 @foreach($customProdBlocks as $block)
-                    @php $allNum++; $imgs=$block->data_json['images']??[]; $img=!empty($imgs[0])?asset('storage/'.$imgs[0]):(!empty($block->data_json['image'])?asset('storage/'.$block->data_json['image']):'https://placehold.co/400x400/222/555?text=Produk'); $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $prodUrl=route('bio.product.show',[$username,$blockSlug]); $price=$block->data_json['price']??0; $origPrice=$block->data_json['original_price']??null; @endphp
+                    @php $allNum++; $imgs=$block->data_json['images']??[]; $rawPath=!empty($imgs[0])?$imgs[0]:($block->data_json['image']??null); $img=!empty($rawPath)?(Str::startsWith($rawPath,'http')?$rawPath:asset('storage/'.$rawPath)):'https://placehold.co/400x400/222/555?text=Produk'; $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $prodUrl=route('bio.product.show',[$username,$blockSlug]); $price=$block->data_json['price']??0; $origPrice=$block->data_json['original_price']??null; @endphp
                     <a href="{{ $prodUrl }}" class="prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
-                        <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d', $allNum) }}</div><img src="{{ $img }}" alt="{{ $block->title }}"></div>
+                        <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d', $allNum) }}</div><img src="{{ $img }}" alt="{{ $block->title }}" onerror="this.src='https://placehold.co/400x400/222/555?text=Produk'"></div>
                         <div class="prod-info"><h3 class="prod-title">{{ $block->title }}</h3><div class="prod-price">@if(!empty($origPrice)&&$origPrice>$price)<span style="text-decoration:line-through;opacity:.5;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</span> @endif Rp {{ number_format($price,0,',','.') }}</div></div>
                     </a>
                 @endforeach
                 @foreach($buyleBlocks as $block)
                     @php $allNum++; $prod=$products[$block->data_json['product_id']??0]??null; $displayTitle=!empty($block->title)?$block->title:($prod->name??''); $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $prodUrl=route('bio.product.show',[$username,$blockSlug]); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); @endphp
                     @if($prod)
+                    @php $pImg = !empty($prod->image) ? (Str::startsWith($prod->image, 'http') ? $prod->image : asset('storage/'.$prod->image)) : 'https://placehold.co/400x400/222/555?text=Digital'; @endphp
                     <a href="{{ $prodUrl }}" class="prod-card search-item bio-track-link" data-title="{{ $displayTitle }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
-                        <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d', $allNum) }}</div>@if($prod->image)<img src="{{ asset('storage/'.$prod->image) }}" alt="{{ $prod->name }}">@else<img src="https://placehold.co/400x400/222/555?text=Digital" alt="No Image">@endif</div>
+                        <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d', $allNum) }}</div><img src="{{ $pImg }}" alt="{{ $prod->name }}" onerror="this.src='https://placehold.co/400x400/222/555?text=Digital'"></div>
                         <div class="prod-info"><h3 class="prod-title">{{ $displayTitle }}</h3><div class="prod-price">@if(!empty($origPrice)&&$origPrice>$price)<span style="text-decoration:line-through;opacity:.55;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</span> @endif Rp {{ number_format($price,0,',','.') }}</div></div>
                     </a>
                     @endif
@@ -817,9 +822,9 @@
         <div class="cat-panel" id="tab1-fis">
             <div class="product-grid">
                 @foreach($customProdBlocks as $i => $block)
-                    @php $imgs=$block->data_json['images']??[]; $img=!empty($imgs[0])?asset('storage/'.$imgs[0]):(!empty($block->data_json['image'])?asset('storage/'.$block->data_json['image']):'https://placehold.co/400x400/222/555?text=Produk'); $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $prodUrl=route('bio.product.show',[$username,$blockSlug]); $price=$block->data_json['price']??0; $origPrice=$block->data_json['original_price']??null; @endphp
+                    @php $imgs=$block->data_json['images']??[]; $rawPath=!empty($imgs[0])?$imgs[0]:($block->data_json['image']??null); $img=!empty($rawPath)?(Str::startsWith($rawPath,'http')?$rawPath:asset('storage/'.$rawPath)):'https://placehold.co/400x400/222/555?text=Produk'; $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $prodUrl=route('bio.product.show',[$username,$blockSlug]); $price=$block->data_json['price']??0; $origPrice=$block->data_json['original_price']??null; @endphp
                     <a href="{{ $prodUrl }}" class="prod-card search-item bio-track-link" data-title="{{ $block->title }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
-                        <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$i+1) }}</div><img src="{{ $img }}" alt="{{ $block->title }}"></div>
+                        <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$i+1) }}</div><img src="{{ $img }}" alt="{{ $block->title }}" onerror="this.src='https://placehold.co/400x400/222/555?text=Produk'"></div>
                         <div class="prod-info"><h3 class="prod-title">{{ $block->title }}</h3><div class="prod-price">@if(!empty($origPrice)&&$origPrice>$price)<span style="text-decoration:line-through;opacity:.5;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</span> @endif Rp {{ number_format($price,0,',','.') }}</div></div>
                     </a>
                 @endforeach
@@ -834,8 +839,9 @@
                 @foreach($buyleBlocks as $i => $block)
                     @php $prod=$products[$block->data_json['product_id']??0]??null; $displayTitle=!empty($block->title)?$block->title:($prod->name??''); $displayTitle=$block->title??''; $blockSlug=!empty($block->data_json['slug'])?$block->data_json['slug']:\Illuminate\Support\Str::slug($displayTitle?:'produk-'.$block->id); $prodUrl=route('bio.product.show',[$username,$blockSlug]); $price=$block->data_json['price']??$block->data_json['custom_price']??($prod?($prod->is_on_sale?$prod->sale_price:$prod->effective_price):0); $origPrice=$block->data_json['original_price']??($prod&&$prod->is_on_sale?$prod->price:null); @endphp
                     @if($prod)
+                    @php $pImg = !empty($prod->image) ? (Str::startsWith($prod->image, 'http') ? $prod->image : asset('storage/'.$prod->image)) : 'https://placehold.co/400x400/222/555?text=Digital'; @endphp
                     <a href="{{ $prodUrl }}" class="prod-card search-item bio-track-link" data-title="{{ $displayTitle }}" data-bio-block="{{ $block->id }}" data-bio-creator="{{ $profile->id }}">
-                        <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$i+1) }}</div>@if($prod->image)<img src="{{ asset('storage/'.$prod->image) }}" alt="{{ $prod->name }}">@else<img src="https://placehold.co/400x400/222/555?text=Digital" alt="No Image">@endif</div>
+                        <div class="prod-img-wrap"><div class="prod-number">{{ sprintf('%02d',$i+1) }}</div><img src="{{ $pImg }}" alt="{{ $prod->name }}" onerror="this.src='https://placehold.co/400x400/222/555?text=Digital'"></div>
                         <div class="prod-info"><h3 class="prod-title">{{ $displayTitle }}</h3><div class="prod-price">@if(!empty($origPrice)&&$origPrice>$price)<span style="text-decoration:line-through;opacity:.55;font-size:.72rem;">Rp {{ number_format($origPrice,0,',','.') }}</span> @endif Rp {{ number_format($price,0,',','.') }}</div></div>
                     </a>
                     @endif
