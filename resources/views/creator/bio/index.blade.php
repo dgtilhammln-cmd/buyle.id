@@ -437,14 +437,18 @@
             border: 1px solid #CBD5E1 !important;
         }
 
-        .modal-card-btn-detail:hover { background: #E2E8F0; }
+        .modal-card-btn-detail:hover {
+            background: #E2E8F0;
+        }
 
         .modal-card-btn-add {
             color: #fff;
             background: linear-gradient(135deg, #1eb349, #a5cf37);
         }
 
-        .modal-card-btn-add:hover { opacity: 0.9; }
+        .modal-card-btn-add:hover {
+            opacity: 0.9;
+        }
 
         .modal-card-btn-remove {
             color: #DC2626;
@@ -452,7 +456,9 @@
             border: 1px solid #FCA5A5 !important;
         }
 
-        .modal-card-btn-remove:hover { background: #FEE2E2; }
+        .modal-card-btn-remove:hover {
+            background: #FEE2E2;
+        }
 
         /* Filter sort buttons */
         .modal-filter-btn {
@@ -667,6 +673,7 @@
             font-size: 0.82rem;
             cursor: pointer;
         }
+
         @media(max-width:768px) {
             .bio-layout {
                 flex-direction: column;
@@ -851,7 +858,8 @@
                 height: 38px;
                 padding: 0 1rem;
             }
-        }}
+        }
+        }
 
         @keyframes spin {
             from {
@@ -1674,22 +1682,30 @@
                             $typeBlocks = $blocks->reject(fn($b) => in_array($b->type, ['buyle_product', 'buyle_affiliate', 'custom_product']));
                         @endphp
                         @forelse($typeBlocks as $block)
-                            <div class="block-item" data-id="{{ $block->id }}" style="{{ !$block->is_active ? 'opacity:0.5;' : '' }}">
-                                <div class="drag-handle" style="cursor:grab; padding:0 0.5rem; color:#94a3b8; display:flex; align-items:center; touch-action:none;" title="Geser urutan block">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/>
-                                        <circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/>
-                                        <circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/>
+                            <div class="block-item" data-id="{{ $block->id }}"
+                                style="{{ !$block->is_active ? 'opacity:0.5;' : '' }}">
+                                <div class="drag-handle"
+                                    style="cursor:grab; padding:0 0.5rem; color:#94a3b8; display:flex; align-items:center; touch-action:none;"
+                                    title="Geser urutan block">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <circle cx="9" cy="6" r="1.5" fill="currentColor" />
+                                        <circle cx="15" cy="6" r="1.5" fill="currentColor" />
+                                        <circle cx="9" cy="12" r="1.5" fill="currentColor" />
+                                        <circle cx="15" cy="12" r="1.5" fill="currentColor" />
+                                        <circle cx="9" cy="18" r="1.5" fill="currentColor" />
+                                        <circle cx="15" cy="18" r="1.5" fill="currentColor" />
                                     </svg>
                                 </div>
                                 <div class="block-icon"
                                     style="background:{{ ['link' => '#f0fdf4', 'pdf' => '#fef2f2', 'tiktok' => '#1a1a1a', 'reels' => '#fdf2f8'][$block->type] ?? '#f8fafc' }}; color:{{ ['link' => '#1eb349', 'pdf' => '#ef4444', 'tiktok' => '#fff', 'reels' => '#db2777'][$block->type] ?? '#64748b' }};">
                                     @if(!empty($block->data_json['image']))
-                                        <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']) }}" style="width:100%; height:100%; object-fit:cover; border-radius:6px;">
+                                        <img src="{{ Str::startsWith($block->data_json['image'], 'http') ? $block->data_json['image'] : asset('storage/' . $block->data_json['image']) }}"
+                                            style="width:100%; height:100%; object-fit:cover; border-radius:6px;">
                                     @elseif(!empty($block->data_json['icon_class']))
                                         <i class="{{ $block->data_json['icon_class'] }}" style="font-size:18px;"></i>
-                                    @elseif($block->type === 'link') <svg width="18" height="18" fill="none" stroke="currentColor"
-                                            stroke-width="2" viewBox="0 0 24 24">
+                                    @elseif($block->type === 'link') <svg width="18" height="18" fill="none"
+                                            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
                                                 stroke-linecap="round" />
                                             <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
@@ -1700,8 +1716,10 @@
                                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                                             <polyline points="14 2 14 8 20 8" />
                                         </svg>
-                                    @elseif($block->type === 'reels') <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                    @elseif($block->type === 'reels') <svg width="18" height="18" fill="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                                         </svg>
                                     @else <svg width="18" height="18" fill="white" viewBox="0 0 24 24">
                                             <path
@@ -1862,9 +1880,9 @@
 
                         @php
                             $affiliateBlockIds = $affiliateProducts->pluck('id')->toArray();
-                            $addedAffBlocks = $blocks->where('type', 'buyle_affiliate')->filter(function($b) use ($affiliateBlockIds) {
+                            $addedAffBlocks = $blocks->where('type', 'buyle_affiliate')->filter(function ($b) use ($affiliateBlockIds) {
                                 $pId = $b->data_json['product_id'] ?? null;
-                                return $pId && in_array((int)$pId, $affiliateBlockIds);
+                                return $pId && in_array((int) $pId, $affiliateBlockIds);
                             });
                         @endphp
 
@@ -1953,9 +1971,9 @@
 
                         @php
                             $wlBlockIds = $whitelabelProducts->pluck('id')->toArray();
-                            $addedWlBlocks = $blocks->where('type', 'buyle_product')->filter(function($b) use ($wlBlockIds) {
+                            $addedWlBlocks = $blocks->where('type', 'buyle_product')->filter(function ($b) use ($wlBlockIds) {
                                 $pId = $b->data_json['product_id'] ?? null;
-                                return $pId && in_array((int)$pId, $wlBlockIds);
+                                return $pId && in_array((int) $pId, $wlBlockIds);
                             });
                         @endphp
 
@@ -2073,7 +2091,8 @@
 
                 {{-- 4. Produk Fisik / UMKM --}}
                 <div class="prof-card">
-                    <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                    <div class="prof-card-head"
+                        style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
                         <span style="display:flex; align-items:center; gap:0.5rem;">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24">
@@ -2085,35 +2104,68 @@
                         <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
                             {{-- Search --}}
                             <div style="position:relative; display:flex; align-items:center;">
-                                <svg width="13" height="13" fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24" style="position:absolute; left:0.55rem; pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                                <input type="text" id="umkmSearch" placeholder="Cari produk..." oninput="filterUmkmProducts()" style="height:32px; padding:0 0.75rem 0 2rem; border-radius:8px; border:1.5px solid #e2e8f0; font-size:0.75rem; background:#f8fafc; color:#1e293b; outline:none; width:150px;">
+                                <svg width="13" height="13" fill="none" stroke="#94a3b8" stroke-width="2.5"
+                                    viewBox="0 0 24 24" style="position:absolute; left:0.55rem; pointer-events:none;">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                </svg>
+                                <input type="text" id="umkmSearch" placeholder="Cari produk..."
+                                    oninput="filterUmkmProducts()"
+                                    style="height:32px; padding:0 0.75rem 0 2rem; border-radius:8px; border:1.5px solid #e2e8f0; font-size:0.75rem; background:#f8fafc; color:#1e293b; outline:none; width:150px;">
                             </div>
                             {{-- Sort --}}
                             <div style="display:flex; gap:0.25rem;">
-                                <button id="sortTerbaru" onclick="sortUmkmProducts('terbaru')" title="Terbaru" style="height:32px; padding:0 0.65rem; border-radius:8px 0 0 8px; border:1.5px solid #e2e8f0; border-right:none; background:#0f172a; color:#fff; font-size:0.72rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                                <button id="sortTerbaru" onclick="sortUmkmProducts('terbaru')" title="Terbaru"
+                                    style="height:32px; padding:0 0.65rem; border-radius:8px 0 0 8px; border:1.5px solid #e2e8f0; border-right:none; background:#0f172a; color:#fff; font-size:0.72rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        viewBox="0 0 24 24">
+                                        <line x1="12" y1="19" x2="12" y2="5" />
+                                        <polyline points="5 12 12 5 19 12" />
+                                    </svg>
                                     Terbaru
                                 </button>
-                                <button id="sortTerlama" onclick="sortUmkmProducts('terlama')" title="Terlama" style="height:32px; padding:0 0.65rem; border-radius:0 8px 8px 0; border:1.5px solid #e2e8f0; background:#f8fafc; color:#64748b; font-size:0.72rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+                                <button id="sortTerlama" onclick="sortUmkmProducts('terlama')" title="Terlama"
+                                    style="height:32px; padding:0 0.65rem; border-radius:0 8px 8px 0; border:1.5px solid #e2e8f0; background:#f8fafc; color:#64748b; font-size:0.72rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        viewBox="0 0 24 24">
+                                        <line x1="12" y1="5" x2="12" y2="19" />
+                                        <polyline points="19 12 12 19 5 12" />
+                                    </svg>
                                     Terlama
                                 </button>
                             </div>
                             @if($blocks->where('type', 'custom_product')->count() > 0)
-                                <form action="{{ route('creator.bio.blocks.destroy-all-custom-products') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus SEMUA produk fisik/UMKM dari Link Bio Anda?');" style="margin:0;">
+                                <form action="{{ route('creator.bio.blocks.destroy-all-custom-products') }}" method="POST"
+                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus SEMUA produk fisik/UMKM dari Link Bio Anda?');"
+                                    style="margin:0;">
                                     @csrf @method('DELETE')
-                                    <button type="submit" style="background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; font-weight:700; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.75rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem; height:32px;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                                    <button type="submit"
+                                        style="background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; font-weight:700; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.75rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem; height:32px;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <polyline points="3 6 5 6 21 6" />
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                        </svg>
                                         Hapus Semua
                                     </button>
                                 </form>
                             @endif
-                            <button type="button" onclick="openScanMenuModal()" style="background:linear-gradient(135deg, #0f172a, #1e293b); color:#fff; border:none; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.78rem; cursor:pointer; height:32px;">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 01-2 2h-4a2 2 0 01-2-2v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                            <button type="button" onclick="openScanMenuModal()"
+                                style="background:linear-gradient(135deg, #0f172a, #1e293b); color:#fff; border:none; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.78rem; cursor:pointer; height:32px;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 01-2 2h-4a2 2 0 01-2-2v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                </svg>
                                 Scan Menu AI
                             </button>
-                            <button onclick="document.getElementById('addUmkmModal').classList.add('open')" style="background:linear-gradient(135deg, #1eb349, #16a34a); color:#fff; border:none; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.78rem; cursor:pointer; height:32px;">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            <button onclick="document.getElementById('addUmkmModal').classList.add('open')"
+                                style="background:linear-gradient(135deg, #1eb349, #16a34a); color:#fff; border:none; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.78rem; cursor:pointer; height:32px;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
                                 Tambah
                             </button>
                         </div>
@@ -2124,7 +2176,8 @@
                                                 $imgs = $block->data_json['images'] ?? [];
                                                 $firstImg = !empty($imgs[0]) ? $imgs[0] : ($block->data_json['image'] ?? null);
                                             @endphp
-                                            <div class="aff-card" data-id="{{ $block->id }}" style="display:flex; align-items:center; gap:0; padding:0; border-radius:14px; overflow:hidden; border:1px solid #e8f0e8; background:#fff; margin-bottom:0.6rem; box-shadow:0 1px 4px rgba(0,0,0,0.04);">
+                                            <div class="aff-card" data-id="{{ $block->id }}"
+                                                style="display:flex; align-items:center; gap:0; padding:0; border-radius:14px; overflow:hidden; border:1px solid #e8f0e8; background:#fff; margin-bottom:0.6rem; box-shadow:0 1px 4px rgba(0,0,0,0.04);">
                                                 {{-- Thumbnail foto produk --}}
                                                 @if(!empty($firstImg))
                                                     <div style="width:72px; height:72px; flex-shrink:0; overflow:hidden; background:#f1f5f9;">
@@ -2133,20 +2186,32 @@
                                                             onerror="this.parentElement.innerHTML='<div style=&quot;width:72px;height:72px;display:flex;align-items:center;justify-content:center;background:#f1f5f9;&quot;><svg width=\'28\' height=\'28\' fill=\'none\' stroke=\'#cbd5e1\' stroke-width=\'1.5\' viewBox=\'0 0 24 24\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><polyline points=\'21 15 16 10 5 21\'/></svg></div>'">
                                                     </div>
                                                 @else
-                                                    <div style="width:72px; height:72px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:#f8fafc; border-right:1px solid #e8f0e8;">
-                                                        <svg width="26" height="26" fill="none" stroke="#cbd5e1" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                                    <div
+                                                        style="width:72px; height:72px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:#f8fafc; border-right:1px solid #e8f0e8;">
+                                                        <svg width="26" height="26" fill="none" stroke="#cbd5e1" stroke-width="1.5"
+                                                            viewBox="0 0 24 24">
+                                                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                                            <polyline points="21 15 16 10 5 21" />
+                                                        </svg>
                                                     </div>
                                                 @endif
                                                 <div class="aff-info" style="flex:1; min-width:0; padding:0.55rem 0.75rem;">
-                                                    <div class="aff-title" style="font-size:0.83rem; font-weight:700; color:#0b120c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.2rem;">{{ $block->title }}</div>
+                                                    <div class="aff-title"
+                                                        style="font-size:0.83rem; font-weight:700; color:#0b120c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.2rem;">
+                                                        {{ $block->title }}</div>
                                                     <div class="aff-sub" style="font-size:0.72rem; color:#64748b;">
                                                         @if(!empty($block->data_json['original_price']) && $block->data_json['original_price'] > ($block->data_json['price'] ?? 0))
-                                                            <span style="text-decoration:line-through; color:#94a3b8; margin-right:0.3rem;">Rp {{ number_format($block->data_json['original_price'], 0, ',', '.') }}</span>
+                                                            <span style="text-decoration:line-through; color:#94a3b8; margin-right:0.3rem;">Rp
+                                                                {{ number_format($block->data_json['original_price'], 0, ',', '.') }}</span>
                                                         @endif
-                                                        <strong style="color:#1eb349;">Rp {{ number_format($block->data_json['price'] ?? 0, 0, ',', '.') }}</strong>
-                                                        &middot; {{ ($block->data_json['payment_method'] ?? 'wa') === 'wa' ? 'Beli via WA' : 'Beli via Web' }}
+                                                        <strong style="color:#1eb349;">Rp
+                                                            {{ number_format($block->data_json['price'] ?? 0, 0, ',', '.') }}</strong>
+                                                        &middot;
+                                                        {{ ($block->data_json['payment_method'] ?? 'wa') === 'wa' ? 'Beli via WA' : 'Beli via Web' }}
                                                         @if(!empty($block->data_json['category']))
-                                                            &middot; <span style="background:#f0fdf4;color:#1eb349;padding:1px 6px;border-radius:4px;font-size:0.68rem;font-weight:600;">{{ $block->data_json['category'] }}</span>
+                                                            &middot; <span
+                                                                style="background:#f0fdf4;color:#1eb349;padding:1px 6px;border-radius:4px;font-size:0.68rem;font-weight:600;">{{ $block->data_json['category'] }}</span>
                                                         @endif
                                                         @if(isset($block->data_json['stock']) && $block->data_json['stock'] !== null)
                                                             @if($block->data_json['stock'] == 0)
@@ -2157,12 +2222,14 @@
                                                         @endif
                                                     </div>
                                                 </div>
-                                                <div style="padding:0.5rem 0.6rem; display:flex; align-items:center; gap:0.35rem; flex-shrink:0;">
+                                                <div
+                                                    style="padding:0.5rem 0.6rem; display:flex; align-items:center; gap:0.35rem; flex-shrink:0;">
                                                     @if(!empty($profile->store_slug))
                                                         <a href="{{ route('bio.product.show', [$profile->store_slug, $block->data_json['slug'] ?? $block->id]) }}"
                                                             target="_blank" class="btn-icon-sm" style="background:#f0fdf4; color:#1eb349;"
                                                             title="Lihat Halaman Produk">
-                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                                viewBox="0 0 24 24">
                                                                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                                                                 <polyline points="15 3 21 3 21 9" />
                                                                 <line x1="10" y1="14" x2="21" y2="3" />
@@ -2315,8 +2382,7 @@
                         </div>
                         <div style="flex:1;">
                             <input type="file" name="block_image" accept="image/*" class="form-input"
-                                id="addBlock-icon-upload"
-                                style="height:44px; padding:0.5rem; width:100%;">
+                                id="addBlock-icon-upload" style="height:44px; padding:0.5rem; width:100%;">
                         </div>
                     </div>
                     <input type="hidden" name="icon_class" id="addBlockIconClass">
@@ -2325,10 +2391,10 @@
                 {{-- Upload gambar banner (hanya untuk image) --}}
                 <div class="form-group" id="addBlock-banner-group" style="display:none;">
                     <label class="form-label">Upload Gambar Banner / Poster <span style="color:#ef4444;">*</span></label>
-                    <input type="file" name="block_image" accept="image/*" class="form-input"
-                        id="addBlock-banner-upload"
+                    <input type="file" name="block_image" accept="image/*" class="form-input" id="addBlock-banner-upload"
                         style="height:44px; padding:0.5rem; width:100%;" required>
-                    <div style="font-size:0.75rem; color:#64748b; margin-top:4px;">Upload gambar poster/banner yang akan ditampilkan. URL klik opsional.</div>
+                    <div style="font-size:0.75rem; color:#64748b; margin-top:4px;">Upload gambar poster/banner yang akan
+                        ditampilkan. URL klik opsional.</div>
                 </div>
 
                 <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
@@ -2369,8 +2435,8 @@
                 <div class="form-group">
                     <label class="form-label">Link Produk (Shopee / Tokopedia / dll)</label>
                     <div style="display:flex; gap:0.5rem; align-items:center;">
-                        <input type="text" name="url" id="affUrl" class="form-input" placeholder="https://shopee.co.id/... atau https://tokopedia.com/..."
-                            style="flex:1;">
+                        <input type="text" name="url" id="affUrl" class="form-input"
+                            placeholder="https://shopee.co.id/... atau https://tokopedia.com/..." style="flex:1;">
                         <button type="button" id="btnScrape"
                             onclick="scrapeUrl(document.getElementById('affUrl').value, true)"
                             style="height:44px; padding:0 1.1rem; border-radius:999px; background:linear-gradient(135deg,#1eb349,#16a34a); border:none; color:#fff; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0; box-shadow:0 2px 8px rgba(30,179,73,0.25);">
@@ -2380,7 +2446,8 @@
                             </svg>
                             <svg id="scrapeIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24">
-                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
                             </svg>
                             Cari
                         </button>
@@ -2473,33 +2540,43 @@
     </div>
 
     {{-- ── Modal Interactive: Error Upload Foto Oversized / Terlalu Besar ── --}}
-    <div class="modal-overlay" id="imgOversizedModal" style="z-index:99999;" onclick="if(event.target===this)this.classList.remove('open')">
-        <div class="modal-box" style="max-width:420px; border-radius:20px; padding:1.75rem; text-align:center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
-            <div style="width:60px; height:60px; border-radius:50%; background:#FEF2F2; color:#EF4444; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                    <line x1="12" y1="9" x2="12" y2="13"/>
-                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+    <div class="modal-overlay" id="imgOversizedModal" style="z-index:99999;"
+        onclick="if(event.target===this)this.classList.remove('open')">
+        <div class="modal-box"
+            style="max-width:420px; border-radius:20px; padding:1.75rem; text-align:center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+            <div
+                style="width:60px; height:60px; border-radius:50%; background:#FEF2F2; color:#EF4444; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
                 </svg>
             </div>
-            <h3 style="font-size:1.15rem; font-weight:800; color:#0F172A; margin:0 0 0.5rem; font-family:'Montserrat',sans-serif;" id="imgOversizedTitle">
+            <h3 style="font-size:1.15rem; font-weight:800; color:#0F172A; margin:0 0 0.5rem; font-family:'Montserrat',sans-serif;"
+                id="imgOversizedTitle">
                 Ukuran Foto Melebihi Batas
             </h3>
             <p style="font-size:0.83rem; color:#64748B; margin:0 0 1rem; line-height:1.5;" id="imgOversizedDesc">
-                Maksimal ukuran foto adalah <strong>1 MB per file</strong>. Silakan kurangi ukuran foto Anda terlebih dahulu.
+                Maksimal ukuran foto adalah <strong>1 MB per file</strong>. Silakan kurangi ukuran foto Anda terlebih
+                dahulu.
             </p>
-            <div id="imgOversizedFileList" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:0.75rem 1rem; font-size:0.8rem; color:#334155; text-align:left; margin-bottom:1.25rem; max-height:120px; overflow-y:auto; font-weight:600;">
+            <div id="imgOversizedFileList"
+                style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:0.75rem 1rem; font-size:0.8rem; color:#334155; text-align:left; margin-bottom:1.25rem; max-height:120px; overflow-y:auto; font-weight:600;">
             </div>
             <div style="display:flex; flex-direction:column; gap:0.6rem;">
-                <a href="https://tinypng.com" target="_blank" rel="noopener" class="btn-submit-sm" style="display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; width:100%; height:44px; font-size:0.88rem; font-weight:700; text-decoration:none; background:#1eb349; color:#fff; border-radius:999px;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                        <circle cx="8.5" cy="8.5" r="1.5"/>
-                        <polyline points="21 15 16 10 5 21"/>
+                <a href="https://tinypng.com" target="_blank" rel="noopener" class="btn-submit-sm"
+                    style="display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; width:100%; height:44px; font-size:0.88rem; font-weight:700; text-decoration:none; background:#1eb349; color:#fff; border-radius:999px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <polyline points="21 15 16 10 5 21" />
                     </svg>
                     Kompres di TinyPNG.com
                 </a>
-                <button type="button" onclick="document.getElementById('imgOversizedModal').classList.remove('open')" style="height:40px; width:100%; border-radius:999px; border:1.5px solid #E2E8F0; background:#fff; color:#64748B; font-weight:700; font-size:0.85rem; cursor:pointer;">
+                <button type="button" onclick="document.getElementById('imgOversizedModal').classList.remove('open')"
+                    style="height:40px; width:100%; border-radius:999px; border:1.5px solid #E2E8F0; background:#fff; color:#64748B; font-weight:700; font-size:0.85rem; cursor:pointer;">
                     Tutup
                 </button>
             </div>
@@ -2512,42 +2589,60 @@
             <h3
                 style="font-size:1.1rem; font-weight:800; margin:0 0 0.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
                 Tambah Produk Fisik / UMKM</h3>
-            <p style="font-size:0.78rem; color:#64748b; margin:0 0 1rem;">Produk ini akan dibuatkan halaman detail produk SEO tersendiri.</p>
+            <p style="font-size:0.78rem; color:#64748b; margin:0 0 1rem;">Produk ini akan dibuatkan halaman detail produk
+                SEO tersendiri.</p>
 
             {{-- ── Scrape Shopee / Tokopedia ── --}}
-            <div id="scrapePanel" style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
+            <div id="scrapePanel"
+                style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
                 <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
-                    <svg width="16" height="16" fill="none" stroke="#0f172a" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <span style="font-size:0.8rem; font-weight:700; color:#0f172a;">Auto Import dari Shopee / Tokopedia</span>
+                    <svg width="16" height="16" fill="none" stroke="#0f172a" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <span style="font-size:0.8rem; font-weight:700; color:#0f172a;">Auto Import dari Shopee /
+                        Tokopedia</span>
                 </div>
-                <p style="font-size:0.73rem; color:#64748b; margin:0 0 0.75rem; line-height:1.5;">Tempel link produk Shopee atau Tokopedia — sistem akan otomatis mengambil nama, harga, deskripsi, dan foto produk.</p>
+                <p style="font-size:0.73rem; color:#64748b; margin:0 0 0.75rem; line-height:1.5;">Tempel link produk Shopee
+                    atau Tokopedia — sistem akan otomatis mengambil nama, harga, deskripsi, dan foto produk.</p>
                 <div style="display:flex; gap:0.5rem; align-items:flex-start;">
                     <div style="flex:1;">
-                        <input type="text" id="scrapeUrlInput" placeholder="https://shopee.co.id/... atau https://tokopedia.com/..." style="width:100%; height:38px; padding:0 0.75rem; border-radius:8px; border:1.5px solid #cbd5e1; font-size:0.8rem; background:#fff; color:#1e293b; outline:none; box-sizing:border-box;">
+                        <input type="text" id="scrapeUrlInput"
+                            placeholder="https://shopee.co.id/... atau https://tokopedia.com/..."
+                            style="width:100%; height:38px; padding:0 0.75rem; border-radius:8px; border:1.5px solid #cbd5e1; font-size:0.8rem; background:#fff; color:#1e293b; outline:none; box-sizing:border-box;">
                     </div>
-                    <button type="button" onclick="doScrapeProduct()" id="scrapeBtn" style="height:38px; padding:0 1.1rem; border-radius:999px; background:linear-gradient(135deg,#1eb349,#16a34a); color:#fff; border:none; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0; box-shadow:0 2px 8px rgba(30,179,73,0.25);">
-                        <svg id="scrapeBtnIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <button type="button" onclick="doScrapeProduct()" id="scrapeBtn"
+                        style="height:38px; padding:0 1.1rem; border-radius:999px; background:linear-gradient(135deg,#1eb349,#16a34a); color:#fff; border:none; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0; box-shadow:0 2px 8px rgba(30,179,73,0.25);">
+                        <svg id="scrapeBtnIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
                         <span id="scrapeBtnText">Cari</span>
                     </button>
                 </div>
                 <div id="scrapeStatus" style="margin-top:0.5rem; font-size:0.75rem; display:none;"></div>
-                <div id="scrapePreview" style="display:none; margin-top:0.75rem; background:#fff; border:1.5px solid #d1fae5; border-radius:10px; padding:0.75rem; display:flex; gap:0.75rem; align-items:flex-start;">
-                    <img id="scrapePreviewImg" src="" alt="" style="width:60px; height:60px; object-fit:cover; border-radius:8px; flex-shrink:0; border:1px solid #e2e8f0; display:none;">
+                <div id="scrapePreview"
+                    style="display:none; margin-top:0.75rem; background:#fff; border:1.5px solid #d1fae5; border-radius:10px; padding:0.75rem; display:flex; gap:0.75rem; align-items:flex-start;">
+                    <img id="scrapePreviewImg" src="" alt=""
+                        style="width:60px; height:60px; object-fit:cover; border-radius:8px; flex-shrink:0; border:1px solid #e2e8f0; display:none;">
                     <div style="flex:1; min-width:0;">
-                        <div id="scrapePreviewTitle" style="font-size:0.82rem; font-weight:700; color:#0f172a; margin-bottom:0.2rem;"></div>
+                        <div id="scrapePreviewTitle"
+                            style="font-size:0.82rem; font-weight:700; color:#0f172a; margin-bottom:0.2rem;"></div>
                         <div id="scrapePreviewPrice" style="font-size:0.78rem; color:#1eb349; font-weight:700;"></div>
                     </div>
                 </div>
-                <input type="hidden" id="scrapeImageUrl" name="scrape_image_url" value="">
             </div>
 
-            <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data" id="addUmkmForm">
+            <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data"
+                id="addUmkmForm">
                 @csrf
+                <input type="hidden" id="scrapeImageUrl" name="scrape_image_url" value="">
                 <input type="hidden" name="type" value="custom_product">
                 <div class="form-group">
                     <label class="form-label">Nama Produk *</label>
-                    <input type="text" name="title" id="umkmTitle" class="form-input" placeholder="Contoh: Tas Kulit Handmade"
-                        maxlength="150" required>
+                    <input type="text" name="title" id="umkmTitle" class="form-input"
+                        placeholder="Contoh: Tas Kulit Handmade" maxlength="150" required>
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
                     <div class="form-group">
@@ -2561,7 +2656,7 @@
                         <label class="form-label">Harga Coret (Rp / IDR) <span
                                 style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
                         <input type="text" name="original_price" id="umkmOriginalPrice" class="form-input"
-                            placeholder="200.000" oninput="formatRupiahInput(this)">
+                            placeholder="Contoh:200.000" oninput="formatRupiahInput(this)">
                     </div>
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
@@ -2575,36 +2670,46 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Jumlah Stok <span style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
-                        <input type="number" name="stock" class="form-input" placeholder="Kosongkan jika Unlimited (0 = Habis)">
-                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Kosongkan jika unlimited (stok tidak terbatas). Isi 0 jika habis.</span>
+                        <label class="form-label">Jumlah Stok <span
+                                style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
+                        <input type="number" name="stock" class="form-input" min="0"
+                            placeholder="Kosongkan jika Unlimited (0 = Habis)">
+                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Kosongkan jika unlimited (stok
+                            tidak terbatas). Isi 0 jika habis.</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Deskripsi Produk</label>
-                    <textarea name="description" id="umkmDescription" class="form-input" style="height:80px; padding:0.75rem;"
-                        placeholder="Ceritakan produk Anda..."></textarea>
+                    <textarea name="description" id="umkmDescription" class="form-input"
+                        style="height:80px; padding:0.75rem;" placeholder="Ceritakan produk Anda..."></textarea>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Foto Produk</label>
                     {{-- Preview foto dari scrape --}}
-                    <div id="scrapeImgPreviewBox" style="display:none; margin-bottom:0.6rem; align-items:center; gap:0.75rem; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:10px; padding:0.6rem 0.75rem;">
-                        <img id="scrapeImgThumb" src="" alt="" style="width:48px; height:48px; object-fit:cover; border-radius:8px; border:1px solid #d1fae5;">
+                    <div id="scrapeImgPreviewBox"
+                        style="display:none; margin-bottom:0.6rem; align-items:center; gap:0.75rem; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:10px; padding:0.6rem 0.75rem;">
+                        <img id="scrapeImgThumb" src="" alt=""
+                            style="width:48px; height:48px; object-fit:cover; border-radius:8px; border:1px solid #d1fae5;">
                         <div style="flex:1; min-width:0;">
-                            <div style="font-size:0.75rem; font-weight:700; color:#1eb349; margin-bottom:0.1rem;">Foto dari Shopee/Tokopedia</div>
-                            <div id="scrapeImgUrl" style="font-size:0.7rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px;"></div>
+                            <div style="font-size:0.75rem; font-weight:700; color:#1eb349; margin-bottom:0.1rem;">Foto dari
+                                Shopee/Tokopedia</div>
+                            <div id="scrapeImgUrl"
+                                style="font-size:0.7rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px;">
+                            </div>
                         </div>
-                        <button type="button" onclick="clearScrapeImage()" style="flex-shrink:0; border:none; background:none; color:#ef4444; cursor:pointer; font-size:1rem; line-height:1;" title="Hapus">&times;</button>
+                        <button type="button" onclick="clearScrapeImage()"
+                            style="flex-shrink:0; border:none; background:none; color:#ef4444; cursor:pointer; font-size:1rem; line-height:1;"
+                            title="Hapus">&times;</button>
                     </div>
                     <input type="file" name="custom_images[]" accept="image/*" multiple class="form-input"
-                        style="height:auto; padding:0.5rem;"
-                        id="addUmkmImages"
+                        style="height:auto; padding:0.5rem;" id="addUmkmImages"
                         onchange="validateUmkmImages(this, 'umkmImagePreview')">
                     <div id="umkmImagePreview" style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.5rem;"></div>
                     <span class="form-hint" style="color:#64748b; font-size:0.72rem;">
                         Format: JPG, PNG, WEBP &middot; <strong>Maks 1 MB per foto.</strong>
                         Jika foto terlalu besar, kompres dulu di
-                        <a href="https://tinypng.com" target="_blank" rel="noopener" style="color:#1eb349; font-weight:700; text-decoration:underline;">TinyPNG.com</a>
+                        <a href="https://tinypng.com" target="_blank" rel="noopener"
+                            style="color:#1eb349; font-weight:700; text-decoration:underline;">TinyPNG.com</a>
                     </span>
                 </div>
                 <div class="form-group">
@@ -2673,9 +2778,12 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Jumlah Stok <span style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
-                        <input type="number" name="stock" id="edit_stock" class="form-input" placeholder="Kosongkan jika Unlimited (0 = Habis)">
-                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Kosongkan jika unlimited (stok tidak terbatas). Isi 0 jika habis.</span>
+                        <label class="form-label">Jumlah Stok <span
+                                style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
+                        <input type="number" name="stock" id="edit_stock" class="form-input"
+                            placeholder="Kosongkan jika Unlimited (0 = Habis)">
+                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Kosongkan jika unlimited (stok
+                            tidak terbatas). Isi 0 jika habis.</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -2695,8 +2803,7 @@
                         style="font-size:0.75rem; font-weight:600; color:#64748b; margin-top:0.5rem; display:block;">Tambah
                         / Ganti Foto Baru:</label>
                     <input type="file" name="custom_images[]" accept="image/*" multiple class="form-input"
-                        style="height:auto; padding:0.5rem;"
-                        id="editUmkmImages"
+                        style="height:auto; padding:0.5rem;" id="editUmkmImages"
                         onchange="validateUmkmImages(this, 'editNewImagePreview')">
                     <div id="editNewImagePreview" style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.5rem;">
                     </div>
@@ -2709,7 +2816,8 @@
                             <path d="M10 22h4" />
                         </svg>
                         <strong>Maks 1 MB per foto.</strong>&nbsp;Jika terlalu besar, kompres dulu di&nbsp;
-                        <a href="https://tinypng.com" target="_blank" rel="noopener" style="color:#1eb349; font-weight:700;">TinyPNG.com</a>
+                        <a href="https://tinypng.com" target="_blank" rel="noopener"
+                            style="color:#1eb349; font-weight:700;">TinyPNG.com</a>
                         &middot; Klik ✕ pada foto tersimpan untuk menghapus permanen.
                     </span>
                 </div>
@@ -2974,22 +3082,22 @@
             popup.id = 'scrapeFailedPopup';
             popup.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);';
             popup.innerHTML = `
-                <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
-                    <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                        <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    </div>
-                    <div style="font-weight:800;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
-                    <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
-                    <div style="display:flex;gap:0.6rem;justify-content:center;">
-                        <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight:700;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
-                        <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                            Scan AI
-                        </button>
-                    </div>
-                </div>`;
+                    <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
+                        <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                            <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        </div>
+                        <div style="font-weight:800;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
+                        <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
+                        <div style="display:flex;gap:0.6rem;justify-content:center;">
+                            <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight:700;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
+                            <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                Scan AI
+                            </button>
+                        </div>
+                    </div>`;
             document.body.appendChild(popup);
-            popup.addEventListener('click', function(e) { if (e.target === popup) popup.remove(); });
+            popup.addEventListener('click', function (e) { if (e.target === popup) popup.remove(); });
         }
 
         function editBlock(btn) {
@@ -3022,16 +3130,16 @@
 
         // ── handleTypeChange: show/hide fields based on selected block type ──
         function handleTypeChange(type) {
-            const titleGroup  = document.getElementById('addBlock-title-group');
-            const titleLabel  = document.getElementById('addBlock-title-label');
-            const titleInput  = document.getElementById('addBlock-title-input');
-            const urlGroup    = document.getElementById('addBlock-url-group');
-            const urlLabel    = document.getElementById('addBlock-url-label');
-            const urlInput    = document.getElementById('addBlock-url-input');
-            const iconGroup   = document.getElementById('addBlock-icon-group');
+            const titleGroup = document.getElementById('addBlock-title-group');
+            const titleLabel = document.getElementById('addBlock-title-label');
+            const titleInput = document.getElementById('addBlock-title-input');
+            const urlGroup = document.getElementById('addBlock-url-group');
+            const urlLabel = document.getElementById('addBlock-url-label');
+            const urlInput = document.getElementById('addBlock-url-input');
+            const iconGroup = document.getElementById('addBlock-icon-group');
             const bannerGroup = document.getElementById('addBlock-banner-group');
             const bannerUpload = document.getElementById('addBlock-banner-upload');
-            const iconUpload  = document.getElementById('addBlock-icon-upload');
+            const iconUpload = document.getElementById('addBlock-icon-upload');
 
             // Reset all required states
             titleInput.removeAttribute('required');
@@ -3042,15 +3150,15 @@
             if (type === 'image') {
                 // Gambar/Banner: judul opsional, url opsional, ikon disembunyikan, banner upload tampil
                 titleGroup.style.display = 'block';
-                titleLabel.textContent   = 'Judul Gambar (Opsional)';
-                titleInput.placeholder   = 'Contoh: Promo Ramadan';
+                titleLabel.textContent = 'Judul Gambar (Opsional)';
+                titleInput.placeholder = 'Contoh: Promo Ramadan';
 
-                urlGroup.style.display   = 'block';
-                urlLabel.textContent     = 'URL Link (Opsional, jika gambar bisa diklik)';
-                urlInput.placeholder     = 'https://... (opsional)';
+                urlGroup.style.display = 'block';
+                urlLabel.textContent = 'URL Link (Opsional, jika gambar bisa diklik)';
+                urlInput.placeholder = 'https://... (opsional)';
                 urlInput.removeAttribute('required');
 
-                iconGroup.style.display  = 'none';
+                iconGroup.style.display = 'none';
                 bannerGroup.style.display = 'block';
                 if (bannerUpload) {
                     bannerUpload.disabled = false;
@@ -3061,15 +3169,15 @@
             } else if (type === 'tiktok' || type === 'reels') {
                 // Video: judul opsional, url wajib, ikon disembunyikan
                 titleGroup.style.display = 'block';
-                titleLabel.textContent   = 'Judul Video (Opsional)';
-                titleInput.placeholder   = 'Contoh: Tutorial Masak';
+                titleLabel.textContent = 'Judul Video (Opsional)';
+                titleInput.placeholder = 'Contoh: Tutorial Masak';
 
-                urlGroup.style.display   = 'block';
-                urlLabel.textContent     = 'URL Video';
-                urlInput.placeholder     = type === 'reels' ? 'https://www.instagram.com/reel/...' : 'https://www.tiktok.com/@.../video/...';
+                urlGroup.style.display = 'block';
+                urlLabel.textContent = 'URL Video';
+                urlInput.placeholder = type === 'reels' ? 'https://www.instagram.com/reel/...' : 'https://www.tiktok.com/@.../video/...';
                 urlInput.setAttribute('required', 'required');
 
-                iconGroup.style.display  = 'none';
+                iconGroup.style.display = 'none';
                 bannerGroup.style.display = 'none';
                 if (bannerUpload) bannerUpload.disabled = true;
                 if (iconUpload) iconUpload.disabled = true;
@@ -3077,16 +3185,16 @@
             } else if (type === 'pdf') {
                 // PDF: judul wajib, url wajib, ikon tampil, banner disembunyikan
                 titleGroup.style.display = 'block';
-                titleLabel.textContent   = 'Judul Dokumen';
-                titleInput.placeholder   = 'Contoh: Portfolio 2024';
+                titleLabel.textContent = 'Judul Dokumen';
+                titleInput.placeholder = 'Contoh: Portfolio 2024';
                 titleInput.setAttribute('required', 'required');
 
-                urlGroup.style.display   = 'block';
-                urlLabel.textContent     = 'URL File PDF';
-                urlInput.placeholder     = 'https://...';
+                urlGroup.style.display = 'block';
+                urlLabel.textContent = 'URL File PDF';
+                urlInput.placeholder = 'https://...';
                 urlInput.setAttribute('required', 'required');
 
-                iconGroup.style.display  = 'block';
+                iconGroup.style.display = 'block';
                 bannerGroup.style.display = 'none';
                 if (bannerUpload) bannerUpload.disabled = true;
                 if (iconUpload) iconUpload.disabled = false;
@@ -3094,16 +3202,16 @@
             } else {
                 // link (default): judul wajib, url wajib, ikon tampil, banner disembunyikan
                 titleGroup.style.display = 'block';
-                titleLabel.textContent   = 'Judul / Label Tombol';
-                titleInput.placeholder   = 'Contoh: Download Portfolio';
+                titleLabel.textContent = 'Judul / Label Tombol';
+                titleInput.placeholder = 'Contoh: Download Portfolio';
                 titleInput.setAttribute('required', 'required');
 
-                urlGroup.style.display   = 'block';
-                urlLabel.textContent     = 'URL / Link';
-                urlInput.placeholder     = 'https://...';
+                urlGroup.style.display = 'block';
+                urlLabel.textContent = 'URL / Link';
+                urlInput.placeholder = 'https://...';
                 urlInput.setAttribute('required', 'required');
 
-                iconGroup.style.display  = 'block';
+                iconGroup.style.display = 'block';
                 bannerGroup.style.display = 'none';
                 if (bannerUpload) bannerUpload.disabled = true;
                 if (iconUpload) iconUpload.disabled = false;
@@ -3238,8 +3346,8 @@
 
         function validateUmkmImages(input, previewId) {
             const MAX_FILES = 3;
-            const MAX_SIZE  = 1 * 1024 * 1024; // 1 MB
-            const preview   = document.getElementById(previewId);
+            const MAX_SIZE = 1 * 1024 * 1024; // 1 MB
+            const preview = document.getElementById(previewId);
             preview.innerHTML = '';
 
             const files = Array.from(input.files);
@@ -3259,14 +3367,14 @@
             if (oversized.length > 0) {
                 document.getElementById('imgOversizedTitle').innerText = 'Ukuran Foto Melebihi Batas 1 MB';
                 document.getElementById('imgOversizedDesc').innerHTML = 'Foto berikut melebihi batas <strong>1 MB per file</strong>. Harap kompres terlebih dahulu.';
-                
+
                 const listHtml = oversized.map(f => `
-                    <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
-                        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
-                        <span style="color:#EF4444; font-weight:700;">${(f.size/1024/1024).toFixed(2)} MB</span>
-                    </div>
-                `).join('');
-                
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
+                            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
+                            <span style="color:#EF4444; font-weight:700;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                        </div>
+                    `).join('');
+
                 document.getElementById('imgOversizedFileList').innerHTML = listHtml;
                 document.getElementById('imgOversizedModal').classList.add('open');
                 input.value = '';
@@ -3517,7 +3625,7 @@
             showScrapeStatus('Mengambil data dari ' + (url.includes('shopee') ? 'Shopee' : (url.includes('tokopedia') ? 'Tokopedia' : 'marketplace')) + '...', 'info');
 
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
-                            || document.querySelector('input[name="_token"]')?.value || '';
+                || document.querySelector('input[name="_token"]')?.value || '';
 
             fetch('{{ route("creator.bio.scrape-url") }}', {
                 method: 'POST',
@@ -3528,52 +3636,56 @@
                 },
                 body: JSON.stringify({ url })
             })
-            .then(res => res.json().then(data => ({ ok: res.ok, data })))
-            .then(({ ok, data }) => {
-                btn.disabled = false;
-                btnText.textContent = 'Cari';
-                btnIcon.innerHTML = '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>';
+                .then(res => res.json().then(data => ({ ok: res.ok, data })))
+                .then(({ ok, data }) => {
+                    btn.disabled = false;
+                    btnText.textContent = 'Cari';
+                    btnIcon.innerHTML = '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>';
 
-                if (!ok || data.error) {
-                    showScrapeStatus((data.error || 'Gagal mengambil data produk.'), 'error');
-                    showScrapeFailedPopup(data.error || 'Gagal mengambil data produk.');
-                    return;
-                }
+                    if (!ok || data.error) {
+                        showScrapeStatus((data.error || 'Gagal mengambil data produk.'), 'error');
+                        showScrapeFailedPopup(data.error || 'Gagal mengambil data produk.');
+                        return;
+                    }
 
-                // Fill form fields
-                const titleEl = document.getElementById('umkmTitle');
-                const priceEl = document.querySelector('#addUmkmForm input[name="price"]');
-                const origPriceEl = document.querySelector('#addUmkmForm input[name="original_price"]');
-                const descEl = document.getElementById('umkmDescription');
+                    // Fill form fields
+                    const titleEl = document.getElementById('umkmTitle');
+                    const priceEl = document.querySelector('#addUmkmForm input[name="price"]');
+                    const origPriceEl = document.querySelector('#addUmkmForm input[name="original_price"]');
+                    const descEl = document.getElementById('umkmDescription');
 
-                if (titleEl && data.title) titleEl.value = data.title;
-                if (priceEl && data.price) priceEl.value = new Intl.NumberFormat('id-ID').format(data.price);
-                if (origPriceEl && data.original_price) origPriceEl.value = new Intl.NumberFormat('id-ID').format(data.original_price);
-                if (descEl && data.description) descEl.value = data.description;
+                    if (titleEl && data.title) titleEl.value = data.title;
+                    if (priceEl && data.price) priceEl.value = new Intl.NumberFormat('id-ID').format(data.price);
+                    if (origPriceEl && data.original_price) origPriceEl.value = new Intl.NumberFormat('id-ID').format(data.original_price);
+                    if (descEl && data.description) descEl.value = data.description;
 
-                // Handle image
-                _scrapeImageUrl = data.image || '';
-                document.getElementById('scrapeImageUrl').value = _scrapeImageUrl;
+                    // Auto-select category to "Barang" for imported marketplace products
+                    const catEl = document.querySelector('#addUmkmForm select[name="category"]');
+                    if (catEl) catEl.value = 'Barang';
 
-                if (_scrapeImageUrl) {
-                    const box = document.getElementById('scrapeImgPreviewBox');
-                    const thumb = document.getElementById('scrapeImgThumb');
-                    const urlLabel = document.getElementById('scrapeImgUrl');
-                    if (box) { box.style.display = 'flex'; }
-                    if (thumb) { thumb.src = _scrapeImageUrl; thumb.onerror = () => { box.style.display = 'none'; }; }
-                    if (urlLabel) { urlLabel.textContent = _scrapeImageUrl; }
-                }
+                    // Handle image
+                    _scrapeImageUrl = data.image || '';
+                    document.getElementById('scrapeImageUrl').value = _scrapeImageUrl;
 
-                // Show inline preview in scrape panel
-                showScrapePreview(data);
-                showScrapeStatus('Data berhasil diambil! Cek form di bawah.', 'success');
-            })
-            .catch(err => {
-                btn.disabled = false;
-                btnText.textContent = 'Ambil Data';
-                btnIcon.innerHTML = '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>';
-                showScrapeStatus('Gagal koneksi: ' + err.message, 'error');
-            });
+                    if (_scrapeImageUrl) {
+                        const box = document.getElementById('scrapeImgPreviewBox');
+                        const thumb = document.getElementById('scrapeImgThumb');
+                        const urlLabel = document.getElementById('scrapeImgUrl');
+                        if (box) { box.style.display = 'flex'; }
+                        if (thumb) { thumb.src = _scrapeImageUrl; thumb.onerror = () => { box.style.display = 'none'; }; }
+                        if (urlLabel) { urlLabel.textContent = _scrapeImageUrl; }
+                    }
+
+                    // Show inline preview in scrape panel
+                    showScrapePreview(data);
+                    showScrapeStatus('Data berhasil diambil! Cek form di bawah.', 'success');
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    btnText.textContent = 'Ambil Data';
+                    btnIcon.innerHTML = '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>';
+                    showScrapeStatus('Gagal koneksi: ' + err.message, 'error');
+                });
         }
 
         function showScrapeStatus(msg, type) {

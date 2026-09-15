@@ -285,7 +285,7 @@ class CreatorBioController extends Controller
             };
 
             $stockVal = $request->stock ?? null;
-            $data['stock'] = ($stockVal === '' || $stockVal === null || $stockVal === 'unlimited') ? null : (int)$stockVal;
+            $data['stock'] = ($stockVal === '' || $stockVal === null || $stockVal === 'unlimited' || (is_numeric($stockVal) && (int)$stockVal < 0)) ? null : (int)$stockVal;
             
             // Smart slug logic: limit title length intelligently for clean URLs
             $cleanTitle = Str::limit($request->title, 45, '');
@@ -468,7 +468,7 @@ class CreatorBioController extends Controller
             }
             if ($request->has('stock')) {
                 $sVal = $request->stock;
-                $data['stock'] = ($sVal === null || $sVal === '' || $sVal === 'unlimited') ? null : (int)$sVal;
+                $data['stock'] = ($sVal === null || $sVal === '' || $sVal === 'unlimited' || (is_numeric($sVal) && (int)$sVal < 0)) ? null : (int)$sVal;
             }
             
             if (empty($data['slug']) || $block->title !== $request->title) {

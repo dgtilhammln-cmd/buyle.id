@@ -468,9 +468,9 @@
         <div class="prod-info-box">
             <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem; flex-wrap:wrap;">
                 <span style="font-size:0.72rem; font-weight:700; background:rgba(30,179,73,0.12); color:{{ $accent }}; padding:0.25rem 0.65rem; border-radius:6px; text-transform:uppercase; letter-spacing:0.5px;">{{ $category }}</span>
-                @if($stock === null)
+                @if($stock === null || (int)$stock < 0)
                     <span style="font-size:0.72rem; font-weight:700; color:#10B981;">• Stok Unlimited</span>
-                @elseif($stock > 0)
+                @elseif((int)$stock > 0)
                     <span style="font-size:0.72rem; font-weight:700; color:#10B981;">• Sisa {{ $stock }} unit</span>
                 @else
                     <span style="font-size:0.72rem; font-weight:700; color:#EF4444;">• Stok Habis</span>
