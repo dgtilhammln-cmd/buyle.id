@@ -971,9 +971,12 @@ label:focus{outline:none !important;box-shadow:none !important;}
                 if(service.service.toUpperCase() === 'REG' || service.service.toUpperCase() === 'EZ') desc = 'Layanan Standar Reguler';
                 if(service.service.toUpperCase() === 'YES') desc = 'Layanan Cepat (Yakin Esok Sampai)';
                 
+                const isChecked = (idx === 0) ? 'checked' : '';
+                const cardStyle = (idx === 0) ? 'border-color:#1eb349; background:#F0F9FF;' : 'border-color:#E2E8F0; background:#fff;';
+
                 html += `
-                    <label class="service-card" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #E2E8F0; border-radius:10px; background:#fff;">
-                        <input type="radio" name="courier_service_radio" value="${service.service}" data-cost="${cost}" style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
+                    <label class="service-card ${idx === 0 ? 'selected' : ''}" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid; ${cardStyle} border-radius:10px; transition:all 0.2s;">
+                        <input type="radio" name="courier_service_radio" value="${service.service}" data-cost="${cost}" ${isChecked} style="accent-color:#1eb349; width:1.2rem; height:1.2rem;">
                         <div style="flex:1;">
                             <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">${service.service}</div>
                             <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem; display:flex; align-items:center; gap:0.3rem;">
@@ -991,6 +994,14 @@ label:focus{outline:none !important;box-shadow:none !important;}
             });
             serviceContainer.innerHTML = html;
             attachRadioListeners();
+            
+            // Auto-select first option and update summary total immediately
+            const firstRadio = serviceContainer.querySelector('input[name="courier_service_radio"]:checked');
+            if (firstRadio) {
+                hiddenInput.value = firstRadio.value;
+                selectedCost = parseInt(firstRadio.dataset.cost) || 0;
+                updateTotal();
+            }
             console.info('[ONGKIR] Sukses:', data.length, 'layanan tampil.');
         })
         .catch(err => {
@@ -1020,29 +1031,43 @@ label:focus{outline:none !important;box-shadow:none !important;}
         const hiddenInput = document.getElementById('courier_service_hidden');
         
         radios.forEach(radio => {
-            radio.addEventListener('change', function() {
+            const selectOption = function() {
                 // Reset semua background card
                 document.querySelectorAll('.service-card').forEach(card => {
                     card.style.borderColor = '#E2E8F0';
                     card.style.background = '#fff';
+                    card.classList.remove('selected');
                 });
                 
-                // Tambahkan styling di card yang dipilih
-                if (this.checked) {
-                    this.closest('.service-card').style.borderColor = '#1eb349';
-                    this.closest('.service-card').style.background = '#F0F9FF';
-                    
-                    hiddenInput.value = this.value;
-                    
-                    if (this.value === 'manual') {
-                        selectedCost = 0;
-                        updateTotal('manual');
-                    } else {
-                        selectedCost = parseInt(this.dataset.cost) || 0;
-                        updateTotal();
-                    }
+                radio.checked = true;
+                const card = radio.closest('.service-card');
+                if (card) {
+                    card.style.borderColor = '#1eb349';
+                    card.style.background = '#F0F9FF';
+                    card.classList.add('selected');
                 }
-            });
+                
+                hiddenInput.value = radio.value;
+                
+                if (radio.value === 'manual') {
+                    selectedCost = 0;
+                    updateTotal('manual');
+                } else {
+                    selectedCost = parseInt(radio.dataset.cost) || 0;
+                    updateTotal();
+                }
+            };
+
+            radio.addEventListener('change', selectOption);
+
+            const card = radio.closest('.service-card');
+            if (card) {
+                card.onclick = function(e) {
+                    if (e.target !== radio) {
+                        selectOption();
+                    }
+                };
+            }
         });
     }
 
