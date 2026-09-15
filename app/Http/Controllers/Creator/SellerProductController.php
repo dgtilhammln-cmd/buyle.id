@@ -74,9 +74,10 @@ class SellerProductController extends Controller
             $data['gallery'] = [];
         }
 
-        // Produk type: ticket atau external_link
+        // Produk type: ticket, physical, makanan, service, atau external_link
         $data['seller_id']    = auth()->id();
-        $data['product_type'] = $request->input('product_type') === 'ticket' ? 'ticket' : 'external_link';
+        $pt = $request->input('product_type');
+        $data['product_type'] = in_array($pt, ['ticket', 'physical', 'makanan', 'service']) ? $pt : 'external_link';
         $data['stock']        = $data['stock'] ?? 0;
 
         // Handle White Label status (hanya untuk produk non-tiket)
@@ -167,7 +168,8 @@ class SellerProductController extends Controller
             $data['gallery'] = $galleryPaths;
         }
 
-        $data['product_type'] = $request->input('product_type') === 'ticket' ? 'ticket' : 'external_link';
+        $pt = $request->input('product_type');
+        $data['product_type'] = in_array($pt, ['ticket', 'physical', 'makanan', 'service']) ? $pt : 'external_link';
         $data['stock']        = $data['stock'] ?? 0;
         $isWhitelabel         = false; // Initialize to avoid undefined variable error
 

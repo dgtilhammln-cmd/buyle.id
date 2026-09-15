@@ -180,6 +180,9 @@
                             <div class="form-group">
                                 <label class="form-label">Tipe Produk <span>*</span></label>
                                 <select name="product_type" id="productTypeSelect" class="form-input" onchange="toggleProductTypeFields(this.value)" required>
+                                    <option value="physical" {{ old('product_type', $product->product_type) == 'physical' ? 'selected' : '' }}>Produk Fisik / Barang / UMKM</option>
+                                    <option value="makanan" {{ old('product_type', $product->product_type) == 'makanan' ? 'selected' : '' }}>Makanan / Minuman / Kuliner</option>
+                                    <option value="service" {{ old('product_type', $product->product_type) == 'service' ? 'selected' : '' }}>Jasa / Layanan / Service</option>
                                     <option value="external_link" {{ old('product_type', $product->product_type) == 'external_link' ? 'selected' : '' }}>Produk Digital / Link Access</option>
                                     <option value="ticket" {{ old('product_type', $product->product_type) == 'ticket' ? 'selected' : '' }}>Tiket Event / Wisata / Webinar</option>
                                 </select>

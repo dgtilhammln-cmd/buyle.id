@@ -2186,12 +2186,23 @@
                     </div>
                     <div class="card-body" id="umkmProductList">
                         @php
-                            $umkmBlocks = $blocks->filter(function ($b) {
+                            $umkmBlocks = $blocks->filter(function ($b) use ($myProducts) {
                                 if ($b->type === 'custom_product')
                                     return true;
                                 $cat = strtolower(trim($b->data_json['category'] ?? ''));
                                 if (in_array($cat, ['makanan', 'barang', 'jasa', 'lainnya', 'kuliner', 'fisik', 'umkm']))
                                     return true;
+                                if (!empty($b->data_json['weight']) || !empty($b->data_json['sku']))
+                                    return true;
+                                $pid = $b->data_json['product_id'] ?? null;
+                                if ($pid) {
+                                    $p = $myProducts->firstWhere('id', $pid);
+                                    if ($p) {
+                                        $pType = strtolower($p->product_type ?? $p->type ?? '');
+                                        if (in_array($pType, ['physical', 'makanan', 'service', 'product', 'umkm', 'barang', 'jasa', 'food']))
+                                            return true;
+                                    }
+                                }
                                 $title = strtolower($b->title ?? '');
                                 return (bool) preg_match('/(es|nasi|teh|kopi|jus|sirup|air|soto|bakso|mie|ayam|bebek|daging|ikan|kerupuk|lumpia|kasur|samsung|promo|sepatu|baju|celana)/i', $title);
                             })->sortByDesc('id');
@@ -2318,7 +2329,7 @@
                     </div>
                     <div class="card-body">
                         @forelse($myProducts as $product)
-                            @php $alreadyAdded = $blocks->where('type', 'buyle_product')->contains(fn($b) => ($b->data_json['product_id'] ?? null) == $product->id); @endphp
+                            @php $alreadyAdded = $blocks->contains(fn($b) => ($b->data_json['product_id'] ?? null) == $product->id); @endphp
                             <div
                                 style="display:flex; align-items:center; gap:0.75rem; padding:0.65rem 0; border-bottom:1px solid #f3f7f3;">
                                 @if($product->image)
@@ -2778,27 +2789,27 @@
                             <span class="form-hint" style="font-size:0.68rem; color:#64748b;">1.000 gr = 1 kg</span>
                         </div>
                     </div>
-                    <div style="font-size:0.75rem; color:#64748b; margin-bottom:0.5rem; font-weight:600;">Dimensi Paket (Panjang x Lebar x Tinggi cm) — Untuk Ongkir Volumetrik:</div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.75rem;">
-                        <div class="form-group" style="margin:0;">
-                            <label class="form-label" style="font-size:0.72rem;">Panjang (cm)</label>
+                    <div style="font-size:0.75rem; color:#475569; margin-bottom:0.4rem; font-weight:700;">Dimensi Paket (Panjang x Lebar x Tinggi cm) — Ongkir Volumetrik:</div>
+                    <div style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:0.4rem; width:100%; box-sizing:border-box;">
+                        <div class="form-group" style="margin:0; min-width:0;">
+                            <label class="form-label" style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">P (cm)</label>
                             <input type="number" name="length" min="0" step="0.1" class="form-input umkm-dim-p"
-                                placeholder="P" style="height:36px; font-size:0.78rem;" oninput="calcUmkmVolume(this)">
+                                placeholder="P" style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;" oninput="calcUmkmVolume(this)">
                         </div>
-                        <div class="form-group" style="margin:0;">
-                            <label class="form-label" style="font-size:0.72rem;">Lebar (cm)</label>
+                        <div class="form-group" style="margin:0; min-width:0;">
+                            <label class="form-label" style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">L (cm)</label>
                             <input type="number" name="width" min="0" step="0.1" class="form-input umkm-dim-l"
-                                placeholder="L" style="height:36px; font-size:0.78rem;" oninput="calcUmkmVolume(this)">
+                                placeholder="L" style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;" oninput="calcUmkmVolume(this)">
                         </div>
-                        <div class="form-group" style="margin:0;">
-                            <label class="form-label" style="font-size:0.72rem;">Tinggi (cm)</label>
+                        <div class="form-group" style="margin:0; min-width:0;">
+                            <label class="form-label" style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">T (cm)</label>
                             <input type="number" name="height" min="0" step="0.1" class="form-input umkm-dim-t"
-                                placeholder="T" style="height:36px; font-size:0.78rem;" oninput="calcUmkmVolume(this)">
+                                placeholder="T" style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;" oninput="calcUmkmVolume(this)">
                         </div>
-                        <div class="form-group" style="margin:0;">
-                            <label class="form-label" style="font-size:0.72rem;">Volum (cm³)</label>
+                        <div class="form-group" style="margin:0; min-width:0;">
+                            <label class="form-label" style="font-size:0.7rem; font-weight:700; color:#1eb349; white-space:nowrap; margin-bottom:0.2rem;">Vol (cm³)</label>
                             <input type="number" name="volume" min="0" class="form-input umkm-dim-v" placeholder="Vol"
-                                style="height:36px; font-size:0.78rem; background:#f1f5f9;" readonly>
+                                style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center; background:#f1f5f9; font-weight:700; color:#0f172a;" readonly>
                         </div>
                     </div>
                 </div>
@@ -2945,31 +2956,30 @@
                             <span class="form-hint" style="font-size:0.65rem; color:#64748b;">1.000 gr = 1 kg</span>
                         </div>
                     </div>
-                    <div style="font-size:0.7rem; color:#64748b; margin-bottom:0.4rem; font-weight:600;">Dimensi Paket
-                        (Panjang x Lebar x Tinggi cm) — Untuk Ongkir Volumetrik:</div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.5rem;">
-                        <div class="form-group" style="margin:0;">
-                            <label class="form-label" style="font-size:0.68rem;">Panjang (cm)</label>
+                    <div style="font-size:0.75rem; color:#475569; margin-bottom:0.4rem; font-weight:700;">Dimensi Paket (Panjang x Lebar x Tinggi cm) — Ongkir Volumetrik:</div>
+                    <div style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:0.4rem; width:100%; box-sizing:border-box;">
+                        <div class="form-group" style="margin:0; min-width:0;">
+                            <label class="form-label" style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">P (cm)</label>
                             <input type="number" name="length" id="edit_length" min="0" step="0.1"
-                                class="form-input umkm-dim-p" placeholder="P" style="height:34px; font-size:0.75rem;"
+                                class="form-input umkm-dim-p" placeholder="P" style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;"
                                 oninput="calcUmkmVolume(this)">
                         </div>
-                        <div class="form-group" style="margin:0;">
-                            <label class="form-label" style="font-size:0.68rem;">Lebar (cm)</label>
+                        <div class="form-group" style="margin:0; min-width:0;">
+                            <label class="form-label" style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">L (cm)</label>
                             <input type="number" name="width" id="edit_width" min="0" step="0.1"
-                                class="form-input umkm-dim-l" placeholder="L" style="height:34px; font-size:0.75rem;"
+                                class="form-input umkm-dim-l" placeholder="L" style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;"
                                 oninput="calcUmkmVolume(this)">
                         </div>
-                        <div class="form-group" style="margin:0;">
-                            <label class="form-label" style="font-size:0.68rem;">Tinggi (cm)</label>
+                        <div class="form-group" style="margin:0; min-width:0;">
+                            <label class="form-label" style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">T (cm)</label>
                             <input type="number" name="height" id="edit_height" min="0" step="0.1"
-                                class="form-input umkm-dim-t" placeholder="T" style="height:34px; font-size:0.75rem;"
+                                class="form-input umkm-dim-t" placeholder="T" style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;"
                                 oninput="calcUmkmVolume(this)">
                         </div>
-                        <div class="form-group" style="margin:0;">
-                            <label class="form-label" style="font-size:0.68rem;">Volum (cm³)</label>
+                        <div class="form-group" style="margin:0; min-width:0;">
+                            <label class="form-label" style="font-size:0.7rem; font-weight:700; color:#1eb349; white-space:nowrap; margin-bottom:0.2rem;">Vol (cm³)</label>
                             <input type="number" name="volume" id="edit_volume" min="0" class="form-input umkm-dim-v"
-                                placeholder="Vol" style="height:34px; font-size:0.75rem; background:#f1f5f9;" readonly>
+                                placeholder="Vol" style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center; background:#f1f5f9; font-weight:700; color:#0f172a;" readonly>
                         </div>
                     </div>
                 </div>
