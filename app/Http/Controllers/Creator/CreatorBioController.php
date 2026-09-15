@@ -734,41 +734,56 @@ class CreatorBioController extends Controller
     }
 
     /**
-     * Scrape product data from Shopee / Tokopedia URL.
-     * Returns JSON: { title, price, original_price, description, image }
+     * Scrape product data from Shopee / Tokopedia / other marketplace URLs.
+     * Returns JSON: { title, price, original_price, description, image, partial }
+     *
+     * Strategy per platform:
+     *  - Shopee / shortlinks → Facebook Bot UA (bypasses anti-bot login redirect)
+     *  - Tokopedia           → Browser UA + JSON-LD
+     *  - Others              → OG meta + Microlink.io fallback
      */
     public function scrapeUrl(Request $request)
     {
         $url = trim($request->input('url', ''));
 
-        // Lenient check — Shopee URLs often have () chars that fail filter_var
         if (!$url || !preg_match('#^https?://#i', $url)) {
             return response()->json(['error' => 'URL tidak valid. Pastikan dimulai dengan https://'], 422);
         }
 
-        // Clean URL: remove tracking params that break some parsers
         $url = preg_replace('/[\x00-\x1F\x7F]/', '', $url);
-
         $host = strtolower(parse_url($url, PHP_URL_HOST) ?? '');
 
-        try {
-            // Follow redirects (for short links like shp.ee)
-            $response = \Illuminate\Support\Facades\Http::withHeaders([
-                'User-Agent'      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-                'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                'Accept-Language' => 'id-ID,id;q=0.9,en;q=0.8',
-                'Cache-Control'   => 'no-cache',
-            ])->timeout(15)->get($url);
+        $isShopee = str_contains($host, 'shopee') || str_contains($host, 'shp.ee');
+        $isTokopedia = str_contains($host, 'tokopedia') || str_contains($host, 'tokope.dia');
 
-            if (!$response->successful()) {
-                return response()->json(['error' => 'Gagal mengambil halaman produk (status ' . $response->status() . ').'], 422);
-            }
+        try {
+            // Shopee redirects regular browsers to login/homepage. Facebook UA receives full product OG metadata!
+            $ua = $isShopee
+                ? 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'
+                : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
+
+            $response = \Illuminate\Support\Facades\Http::withHeaders([
+                'User-Agent'      => $ua,
+                'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                'Accept-Language' => 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
+            ])->timeout(15)->withOptions(['allow_redirects' => true])->get($url);
 
             $html = $response->body();
 
+            // Fallback for Shopee if FB UA returns empty: try WhatsApp UA
+            if ($isShopee && (!$html || strlen($html) < 500)) {
+                $response = \Illuminate\Support\Facades\Http::withHeaders([
+                    'User-Agent' => 'WhatsApp/2.23.20.0 i',
+                ])->timeout(15)->get($url);
+                $html = $response->body();
+            }
+
+            if (!$response->successful() && !$html) {
+                return response()->json(['error' => 'Gagal mengambil halaman produk (status ' . $response->status() . ').'], 422);
+            }
+
             // --- Helper: extract meta tag content ---
             $getMeta = function (string $prop) use ($html): string {
-                // Try og:, name=, property=
                 foreach (['property="' . $prop . '"', 'property=\'' . $prop . '\'', 'name="' . $prop . '"', 'name=\'' . $prop . '\''] as $attr) {
                     if (preg_match('/<meta[^>]+' . preg_quote($attr, '/') . '[^>]+content=["\']([^"\']+)["\'][^>]*>/i', $html, $m) ||
                         preg_match('/<meta[^>]+content=["\']([^"\']+)["\'][^>]+' . preg_quote($attr, '/') . '[^>]*>/i', $html, $m)) {
@@ -781,58 +796,55 @@ class CreatorBioController extends Controller
             $title       = $getMeta('og:title') ?: $getMeta('title');
             $description = $getMeta('og:description') ?: $getMeta('description');
             $image       = $getMeta('og:image');
+            $price       = (float) preg_replace('/[^0-9]/', '', $getMeta('product:price:amount'));
+            $origPrice   = 0.0;
 
-            // Price: try product:price:amount meta first
-            $price    = (float) preg_replace('/[^0-9]/', '', $getMeta('product:price:amount'));
-            $origPrice = 0.0;
-
-            // Tokopedia JSON-LD approach
-            if (str_contains($host, 'tokopedia') && (!$title || !$price)) {
-                if (preg_match('/<script[^>]+type=["\']application\/ld\+json["\'][^>]*>(.*?)<\/script>/is', $html, $jsonMatch)) {
-                    $ld = @json_decode($jsonMatch[1], true);
+            // JSON-LD Parsing (Tokopedia, Shopee breadcrumbs, generic sites)
+            if (preg_match_all('/<script[^>]+type=["\']application\/ld\+json["\'][^>]*>(.*?)<\/script>/is', $html, $jsonMatches)) {
+                foreach ($jsonMatches[1] as $jsonStr) {
+                    $ld = @json_decode($jsonStr, true);
                     if (is_array($ld)) {
-                        $title       = $title ?: ($ld['name'] ?? '');
-                        $description = $description ?: ($ld['description'] ?? '');
-                        $image       = $image ?: (is_array($ld['image'] ?? null) ? ($ld['image'][0] ?? '') : ($ld['image'] ?? ''));
-                        if (!$price && isset($ld['offers']['price'])) {
-                            $price = (float) preg_replace('/[^0-9]/', '', $ld['offers']['price']);
+                        if (($ld['@type'] ?? '') === 'BreadcrumbList' && !empty($ld['itemListElement'])) {
+                            $lastItem = end($ld['itemListElement']);
+                            if (!empty($lastItem['item']['name']) && strlen($lastItem['item']['name']) > 5) {
+                                $title = $title ?: $lastItem['item']['name'];
+                            }
+                        }
+                        if (($ld['@type'] ?? '') === 'Product') {
+                            $title       = $title ?: ($ld['name'] ?? '');
+                            $description = $description ?: ($ld['description'] ?? '');
+                            if (!$image && !empty($ld['image'])) {
+                                $image = is_array($ld['image']) ? ($ld['image'][0] ?? '') : $ld['image'];
+                            }
+                            if (!$price && isset($ld['offers']['price'])) {
+                                $price = (float) preg_replace('/[^0-9]/', '', $ld['offers']['price']);
+                            }
                         }
                     }
                 }
             }
 
-            // Shopee: price regex fallback from JSON embedded in page
-            if (str_contains($host, 'shopee') && !$price) {
-                // Shopee embeds price in window.__PRE_FETCHED_DATA__ or similar
-                if (preg_match('/"price"\s*:\s*(\d+)/', $html, $pm)) {
-                    // Shopee prices are in cents (x100000)
-                    $rawPrice = (int) $pm[1];
-                    $price = $rawPrice > 1000000 ? round($rawPrice / 100000) : $rawPrice;
-                }
-                if (preg_match('/"price_before_discount"\s*:\s*(\d+)/', $html, $pm)) {
-                    $rawOrig = (int) $pm[1];
-                    $origPrice = $rawOrig > 1000000 ? round($rawOrig / 100000) : $rawOrig;
+            // Shopee specific cleaning
+            if ($isShopee) {
+                $title = preg_replace('/^Jual\s+/i', '', $title);
+                $title = preg_replace('/\s*[-|]\s*(Shopee|Shopee Indonesia).*$/i', '', $title);
+                if (str_contains($description, 'Beli ') && str_contains($description, 'di Shopee')) {
+                    $description = preg_replace('/^Beli\s+.*?\s+Terbaru Harga Murah di Shopee\.\s*/i', '', $description);
                 }
             }
 
-            // Tokopedia price fallback
-            if (str_contains($host, 'tokopedia') && !$price) {
-                if (preg_match('/"price"\s*:\s*(\d+)/', $html, $pm)) {
-                    $price = (float) $pm[1];
-                }
+            // Tokopedia specific cleaning
+            if ($isTokopedia) {
+                $title = preg_replace('/\s*[-|]\s*(Tokopedia|Tokopedia).*$/i', '', $title);
             }
 
-            // Clean up title (remove site suffix)
-            $title = preg_replace('/\s*[-|]\s*(Shopee|Tokopedia|shopee\.co\.id|tokopedia\.com).*$/i', '', $title);
             $title = trim($title);
-
-            // Truncate description
             if (strlen($description) > 500) {
                 $description = substr($description, 0, 500) . '…';
             }
 
-            // Fallback: try Microlink.io when direct scrape returns nothing
-            if (!$title && !$image && !$price) {
+            // Microlink fallback if title and image are missing
+            if (!$title && !$image) {
                 try {
                     $ml = \Illuminate\Support\Facades\Http::timeout(12)->get('https://api.microlink.io', [
                         'url'  => $url,
@@ -847,14 +859,13 @@ class CreatorBioController extends Controller
                 } catch (\Throwable $e) {}
             }
 
-            // Return partial data — even title-only is useful to the user
             return response()->json([
                 'title'          => $title ?: null,
                 'price'          => (int) $price,
                 'original_price' => (int) $origPrice,
                 'description'    => $description ?: null,
                 'image'          => $image ?: null,
-                'partial'        => (!$title && !$image),
+                'partial'        => (!$title || !$image),
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Gagal scrape: ' . $e->getMessage()], 500);
