@@ -268,7 +268,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Harga Coret / Diskon (Rp)</label>
+                                <label class="form-label">Harga Sebelum Diskon (Rp)</label>
                                 <input type="text" name="sale_price" id="input_sale_price" value="{{ old('sale_price', $product->sale_price ? number_format($product->sale_price, 0, ',', '.') : '') }}" class="form-input currency-input" placeholder="Opsional, misal: 99.000" autocomplete="off">
                             </div>
 

@@ -2648,12 +2648,19 @@
 
     {{-- ── Modal: Tambah Produk UMKM / Fisik ── --}}
     <div class="modal-overlay" id="addUmkmModal" onclick="if(event.target===this)this.classList.remove('open')">
-        <div class="modal-box" style="max-width:560px; max-height:90vh; overflow-y:auto;">
-            <h3
-                style="font-size:1.1rem; font-weight:800; margin:0 0 0.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
-                Tambah Produk Fisik / UMKM</h3>
-            <p style="font-size:0.78rem; color:#64748b; margin:0 0 1rem;">Produk ini akan dibuatkan halaman detail produk
-                SEO tersendiri.</p>
+        <div class="modal-box" style="max-width:680px; width:94%; max-height:90vh; overflow-y:auto; border-radius:16px; padding:1.5rem;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; padding-bottom:0.75rem; border-bottom:1px solid #f1f5f9;">
+                <div style="display:flex; align-items:center; gap:0.6rem;">
+                    <div style="width:36px; height:36px; border-radius:10px; background:#ecfdf5; display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                    </div>
+                    <div>
+                        <h3 style="font-size:1.15rem; font-weight:800; margin:0; color:#0f172a; font-family:'Montserrat',sans-serif;">Tambah Produk Fisik / UMKM</h3>
+                        <p style="font-size:0.75rem; color:#64748b; margin:0.1rem 0 0;">Lengkapi data produk fisik dan informasi pengiriman logistik.</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeAddUmkmModal()" style="background:#f1f5f9; border:none; width:32px; height:32px; border-radius:50%; font-size:1.1rem; cursor:pointer; color:#64748b; display:flex; align-items:center; justify-content:center;">&times;</button>
+            </div>
 
             {{-- ── Scrape Shopee / Tokopedia ── --}}
             <div id="scrapePanel"
@@ -2663,19 +2670,17 @@
                         <circle cx="11" cy="11" r="8" />
                         <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
-                    <span style="font-size:0.8rem; font-weight:700; color:#0f172a;">Auto Import dari Shopee /
-                        Tokopedia</span>
+                    <span style="font-size:0.82rem; font-weight:700; color:#0f172a;">Auto Import dari Shopee / Tokopedia</span>
                 </div>
-                <p style="font-size:0.73rem; color:#64748b; margin:0 0 0.75rem; line-height:1.5;">Tempel link produk Shopee
-                    atau Tokopedia — sistem akan otomatis mengambil nama, harga, deskripsi, dan foto produk.</p>
+                <p style="font-size:0.75rem; color:#64748b; margin:0 0 0.75rem; line-height:1.5;">Tempel link produk Shopee atau Tokopedia — sistem akan otomatis mengambil nama, harga, deskripsi, dan foto produk.</p>
                 <div style="display:flex; gap:0.5rem; align-items:flex-start;">
                     <div style="flex:1;">
                         <input type="text" id="scrapeUrlInput"
                             placeholder="https://shopee.co.id/... atau https://tokopedia.com/..."
-                            style="width:100%; height:38px; padding:0 0.75rem; border-radius:8px; border:1.5px solid #cbd5e1; font-size:0.8rem; background:#fff; color:#1e293b; outline:none; box-sizing:border-box;">
+                            style="width:100%; height:40px; padding:0 0.85rem; border-radius:8px; border:1.5px solid #cbd5e1; font-size:0.8rem; background:#fff; color:#1e293b; outline:none; box-sizing:border-box;">
                     </div>
                     <button type="button" onclick="doScrapeProduct()" id="scrapeBtn"
-                        style="height:38px; padding:0 1.25rem; border-radius:999px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0; box-shadow:0 4px 14px rgba(30,179,73,0.32); transition:all 0.2s ease;">
+                        style="height:40px; padding:0 1.25rem; border-radius:999px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0; box-shadow:0 4px 14px rgba(30,179,73,0.32); transition:all 0.2s ease;">
                         <svg id="scrapeBtnIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
                             viewBox="0 0 24 24">
                             <circle cx="11" cy="11" r="8" />
@@ -2707,22 +2712,22 @@
                     <input type="text" name="title" id="umkmTitle" class="form-input"
                         placeholder="Contoh: Tas Kulit Handmade" maxlength="150" required>
                 </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                     <div class="form-group">
                         <label class="form-label">Harga Jual (Rp / IDR) *</label>
                         <input type="text" name="price" id="umkmPrice" class="form-input" placeholder="150.000"
                             oninput="formatRupiahInput(this)" required>
-                        <span class="form-hint" style="color:#1eb349; font-size:0.7rem;">Otomatis dengan titik (contoh:
-                            3.355.555)</span>
+                        <span class="form-hint" style="color:#1eb349; font-size:0.7rem;">Otomatis dengan titik (contoh: 3.355.555)</span>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Harga Coret (Rp / IDR) <span
+                        <label class="form-label">Harga Sebelum Diskon (Rp) <span
                                 style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
                         <input type="text" name="original_price" id="umkmOriginalPrice" class="form-input"
-                            placeholder="Contoh:200.000" oninput="formatRupiahInput(this)">
+                            placeholder="Contoh: 200.000 (Harga awal sebelum diskon)" oninput="formatRupiahInput(this)">
+                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Harga normal awal sebelum dipotong diskon (harus lebih besar dari Harga Jual).</span>
                     </div>
                 </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                     <div class="form-group">
                         <label class="form-label">Kategori Produk *</label>
                         <select name="category" class="form-input" required style="padding:0.6rem;">
@@ -2737,65 +2742,63 @@
                                 style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
                         <input type="number" name="stock" class="form-input" min="0"
                             placeholder="Kosongkan jika Unlimited (0 = Habis)">
-                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Kosongkan jika unlimited (stok
-                            tidak terbatas). Isi 0 jika habis.</span>
+                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Kosongkan jika unlimited (stok tidak terbatas). Isi 0 jika habis.</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Deskripsi Produk</label>
                     <textarea name="description" id="umkmDescription" class="form-input"
-                        style="height:80px; padding:0.75rem;" placeholder="Ceritakan produk Anda..."></textarea>
+                        style="height:80px; padding:0.75rem;" placeholder="Ceritakan detail produk Anda..."></textarea>
                 </div>
 
                 {{-- ── Informasi Pengiriman & Dimensi Ongkir ── --}}
                 <div
-                    style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; padding:0.85rem; margin-bottom:1rem;">
+                    style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
                     <div
-                        style="font-size:0.78rem; font-weight:700; color:#0f172a; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
-                        <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                        style="font-size:0.82rem; font-weight:700; color:#0f172a; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
                             <rect x="1" y="3" width="15" height="13"></rect>
                             <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
                             <circle cx="5.5" cy="18.5" r="2.5"></circle>
                             <circle cx="18.5" cy="18.5" r="2.5"></circle>
                         </svg>
-                        Informasi Pengiriman & Berat Ongkir
+                        Informasi Pengiriman & Berat Ongkir Logistik
                     </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.6rem;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:0.75rem;">
                         <div class="form-group" style="margin:0;">
-                            <label class="form-label" style="font-size:0.72rem;">SKU Produk <span
+                            <label class="form-label" style="font-size:0.75rem;">SKU Produk <span
                                     style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
                             <input type="text" name="sku" class="form-input" placeholder="Contoh: SKU-12345"
-                                style="height:36px; font-size:0.78rem;">
+                                style="height:38px; font-size:0.8rem;">
                         </div>
                         <div class="form-group" style="margin:0;">
-                            <label class="form-label" style="font-size:0.72rem;">Berat Fizik (Gram) *</label>
+                            <label class="form-label" style="font-size:0.75rem;">Berat Fizik (Gram) *</label>
                             <input type="number" name="weight" min="1" class="form-input" placeholder="Contoh: 1000 (1 kg)"
-                                value="1000" style="height:36px; font-size:0.78rem;" required>
-                            <span class="form-hint" style="font-size:0.65rem; color:#64748b;">1.000 gr = 1 kg</span>
+                                value="1000" style="height:38px; font-size:0.8rem;" required>
+                            <span class="form-hint" style="font-size:0.68rem; color:#64748b;">1.000 gr = 1 kg</span>
                         </div>
                     </div>
-                    <div style="font-size:0.7rem; color:#64748b; margin-bottom:0.4rem; font-weight:600;">Dimensi Paket
-                        (Panjang x Lebar x Tinggi cm) — Untuk Ongkir Volumetrik:</div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.5rem;">
+                    <div style="font-size:0.75rem; color:#64748b; margin-bottom:0.5rem; font-weight:600;">Dimensi Paket (Panjang x Lebar x Tinggi cm) — Untuk Ongkir Volumetrik:</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.75rem;">
                         <div class="form-group" style="margin:0;">
-                            <label class="form-label" style="font-size:0.68rem;">Panjang (cm)</label>
+                            <label class="form-label" style="font-size:0.72rem;">Panjang (cm)</label>
                             <input type="number" name="length" min="0" step="0.1" class="form-input umkm-dim-p"
-                                placeholder="P" style="height:34px; font-size:0.75rem;" oninput="calcUmkmVolume(this)">
+                                placeholder="P" style="height:36px; font-size:0.78rem;" oninput="calcUmkmVolume(this)">
                         </div>
                         <div class="form-group" style="margin:0;">
-                            <label class="form-label" style="font-size:0.68rem;">Lebar (cm)</label>
+                            <label class="form-label" style="font-size:0.72rem;">Lebar (cm)</label>
                             <input type="number" name="width" min="0" step="0.1" class="form-input umkm-dim-l"
-                                placeholder="L" style="height:34px; font-size:0.75rem;" oninput="calcUmkmVolume(this)">
+                                placeholder="L" style="height:36px; font-size:0.78rem;" oninput="calcUmkmVolume(this)">
                         </div>
                         <div class="form-group" style="margin:0;">
-                            <label class="form-label" style="font-size:0.68rem;">Tinggi (cm)</label>
+                            <label class="form-label" style="font-size:0.72rem;">Tinggi (cm)</label>
                             <input type="number" name="height" min="0" step="0.1" class="form-input umkm-dim-t"
-                                placeholder="T" style="height:34px; font-size:0.75rem;" oninput="calcUmkmVolume(this)">
+                                placeholder="T" style="height:36px; font-size:0.78rem;" oninput="calcUmkmVolume(this)">
                         </div>
                         <div class="form-group" style="margin:0;">
-                            <label class="form-label" style="font-size:0.68rem;">Volum (cm³)</label>
+                            <label class="form-label" style="font-size:0.72rem;">Volum (cm³)</label>
                             <input type="number" name="volume" min="0" class="form-input umkm-dim-v" placeholder="Vol"
-                                style="height:34px; font-size:0.75rem; background:#f1f5f9;" readonly>
+                                style="height:36px; font-size:0.78rem; background:#f1f5f9;" readonly>
                         </div>
                     </div>
                 </div>
@@ -2807,8 +2810,7 @@
                         <img id="scrapeImgThumb" src="" alt=""
                             style="width:48px; height:48px; object-fit:cover; border-radius:8px; border:1px solid #d1fae5;">
                         <div style="flex:1; min-width:0;">
-                            <div style="font-size:0.75rem; font-weight:700; color:#1eb349; margin-bottom:0.1rem;">Foto dari
-                                Shopee/Tokopedia</div>
+                            <div style="font-size:0.75rem; font-weight:700; color:#1eb349; margin-bottom:0.1rem;">Foto dari Shopee/Tokopedia</div>
                             <div id="scrapeImgUrl"
                                 style="font-size:0.7rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px;">
                             </div>
@@ -2830,7 +2832,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Metode Pembelian</label>
-                    <div style="display:flex; gap:0.75rem; margin-top:0.25rem;">
+                    <div style="display:flex; gap:1rem; margin-top:0.35rem;">
                         <label
                             style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; font-weight:600;">
                             <input type="radio" name="payment_method" value="wa" checked> Beli via WhatsApp
@@ -2846,10 +2848,10 @@
                     <input type="text" name="url" class="form-input"
                         placeholder="https://shopee.co.id/... (kosongkan untuk pakai halaman otomatis)">
                 </div>
-                <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
+                <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.25rem;">
                     <button type="button" onclick="closeAddUmkmModal()"
-                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
-                    <button type="submit" class="btn-submit-sm">Simpan Produk</button>
+                        style="height:42px; padding:0 1.4rem; border-radius:999px; border:1.5px solid #e2e8f0; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                    <button type="submit" class="btn-submit-sm" style="height:42px; padding:0 1.75rem; border-radius:999px;">Simpan Produk</button>
                 </div>
             </form>
         </div>
@@ -2857,12 +2859,19 @@
 
     {{-- ── Modal: Edit Produk UMKM / Fisik ── --}}
     <div class="modal-overlay" id="editUmkmModal" onclick="if(event.target===this)this.classList.remove('open')">
-        <div class="modal-box" style="max-width:540px; max-height:90vh; overflow-y:auto;">
-            <h3
-                style="font-size:1.1rem; font-weight:800; margin:0 0 0.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
-                Edit Produk Fisik / UMKM</h3>
-            <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Perbarui data produk fisik Anda di bawah ini.
-            </p>
+        <div class="modal-box" style="max-width:680px; width:94%; max-height:90vh; overflow-y:auto; border-radius:16px; padding:1.5rem;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; padding-bottom:0.75rem; border-bottom:1px solid #f1f5f9;">
+                <div style="display:flex; align-items:center; gap:0.6rem;">
+                    <div style="width:36px; height:36px; border-radius:10px; background:#ecfdf5; display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </div>
+                    <div>
+                        <h3 style="font-size:1.15rem; font-weight:800; margin:0; color:#0f172a; font-family:'Montserrat',sans-serif;">Edit Produk Fisik / UMKM</h3>
+                        <p style="font-size:0.75rem; color:#64748b; margin:0.1rem 0 0;">Perbarui data produk fisik dan informasi pengiriman logistik.</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeEditUmkmModal()" style="background:#f1f5f9; border:none; width:32px; height:32px; border-radius:50%; font-size:1.1rem; cursor:pointer; color:#64748b; display:flex; align-items:center; justify-content:center;">&times;</button>
+            </div>
             <form action="" method="POST" enctype="multipart/form-data" id="editUmkmForm">
                 @csrf
                 @method('PUT')
@@ -2870,17 +2879,18 @@
                     <label class="form-label">Nama Produk *</label>
                     <input type="text" name="title" id="edit_title" class="form-input" maxlength="150" required>
                 </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                     <div class="form-group">
                         <label class="form-label">Harga Jual (Rp / IDR) *</label>
                         <input type="text" name="price" id="edit_price" class="form-input" oninput="formatRupiahInput(this)"
                             required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Harga Coret (Rp / IDR) <span
+                        <label class="form-label">Harga Sebelum Diskon (Rp) <span
                                 style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
                         <input type="text" name="original_price" id="edit_original_price" class="form-input"
-                            oninput="formatRupiahInput(this)">
+                            placeholder="Contoh: 200.000 (Harga awal sebelum diskon)" oninput="formatRupiahInput(this)">
+                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Harga normal awal sebelum dipotong diskon.</span>
                     </div>
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
@@ -3580,12 +3590,85 @@
             el.value = new Intl.NumberFormat('id-ID').format(parseInt(val, 10));
         }
 
+        function validateUmkmForm(form) {
+            let isValid = true;
+            let firstInvalid = null;
+
+            // Reset field error highlights
+            form.querySelectorAll('.form-input, input, select, textarea').forEach(el => {
+                el.style.borderColor = '';
+                el.style.backgroundColor = '';
+            });
+
+            // 1. Nama Produk
+            const titleEl = form.querySelector('[name="title"]');
+            if (titleEl && !titleEl.value.trim()) {
+                isValid = false;
+                titleEl.style.borderColor = '#ef4444';
+                titleEl.style.backgroundColor = '#fff5f5';
+                if (!firstInvalid) firstInvalid = titleEl;
+            }
+
+            // 2. Harga Jual (Wajib > 0)
+            const priceEl = form.querySelector('[name="price"]');
+            let priceVal = 0;
+            if (priceEl) {
+                priceVal = parseFloat(priceEl.value.replace(/[^0-9]/g, '')) || 0;
+                if (priceVal <= 0) {
+                    isValid = false;
+                    priceEl.style.borderColor = '#ef4444';
+                    priceEl.style.backgroundColor = '#fff5f5';
+                    if (!firstInvalid) firstInvalid = priceEl;
+                }
+            }
+
+            // 3. Harga Sebelum Diskon (Harus > Harga Jual jika diisi)
+            const origPriceEl = form.querySelector('[name="original_price"]');
+            if (origPriceEl && origPriceEl.value.trim()) {
+                let origVal = parseFloat(origPriceEl.value.replace(/[^0-9]/g, '')) || 0;
+                if (origVal > 0 && origVal <= priceVal) {
+                    isValid = false;
+                    origPriceEl.style.borderColor = '#ef4444';
+                    origPriceEl.style.backgroundColor = '#fff5f5';
+                    alert('⚠️ Perhatian: Harga Sebelum Diskon (Harga Normal) HARUS lebih besar daripada Harga Jual (Harga Promo)!');
+                    if (!firstInvalid) firstInvalid = origPriceEl;
+                }
+            }
+
+            // 4. Berat Fisik (Gram) (Wajib >= 1 gram)
+            const weightEl = form.querySelector('[name="weight"]');
+            if (weightEl) {
+                let weightVal = parseFloat(weightEl.value) || 0;
+                if (weightVal < 1) {
+                    isValid = false;
+                    weightEl.style.borderColor = '#ef4444';
+                    weightEl.style.backgroundColor = '#fff5f5';
+                    if (!firstInvalid) firstInvalid = weightEl;
+                }
+            }
+
+            if (!isValid) {
+                if (firstInvalid) {
+                    firstInvalid.focus();
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return false;
+            }
+
+            // Strip dot formatting before submit
+            form.querySelectorAll('input[name="price"], input[name="original_price"]').forEach(inp => {
+                inp.value = inp.value.replace(/[^0-9]/g, '');
+            });
+
+            return true;
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('#addUmkmModal form, #editUmkmModal form').forEach(form => {
-                form.addEventListener('submit', function () {
-                    this.querySelectorAll('input[name="price"], input[name="original_price"]').forEach(inp => {
-                        inp.value = inp.value.replace(/[^0-9]/g, '');
-                    });
+                form.addEventListener('submit', function (e) {
+                    if (!validateUmkmForm(this)) {
+                        e.preventDefault();
+                    }
                 });
             });
         });
@@ -3930,7 +4013,7 @@
             if (priceEl) {
                 let priceText = data.price ? 'Rp ' + new Intl.NumberFormat('id-ID').format(data.price) : '';
                 if (data.original_price && data.original_price > data.price) {
-                    priceText = 'Rp ' + new Intl.NumberFormat('id-ID').format(data.price) + ' (coret: Rp ' + new Intl.NumberFormat('id-ID').format(data.original_price) + ')';
+                    priceText = 'Rp ' + new Intl.NumberFormat('id-ID').format(data.price) + ' (Sebelum Diskon: Rp ' + new Intl.NumberFormat('id-ID').format(data.original_price) + ')';
                 }
                 priceEl.textContent = priceText;
             }
