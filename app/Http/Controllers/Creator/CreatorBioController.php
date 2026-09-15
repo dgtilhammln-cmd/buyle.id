@@ -295,6 +295,19 @@ class CreatorBioController extends Controller
             $stockVal = $request->stock ?? null;
             $data['stock'] = ($stockVal === '' || $stockVal === null || $stockVal === 'unlimited' || (is_numeric($stockVal) && (int)$stockVal < 0)) ? null : (int)$stockVal;
             
+            // Shipping & Volume calculation fields
+            $data['sku']    = $request->filled('sku') ? trim($request->sku) : null;
+            $data['weight'] = $request->filled('weight') ? max(1, (int)$request->weight) : 1000;
+            $data['length'] = $request->filled('length') ? (float)$request->length : null;
+            $data['width']  = $request->filled('width')  ? (float)$request->width  : null;
+            $data['height'] = $request->filled('height') ? (float)$request->height : null;
+            
+            if (!empty($data['length']) && !empty($data['width']) && !empty($data['height'])) {
+                $data['volume'] = (int) ceil($data['length'] * $data['width'] * $data['height']);
+            } else {
+                $data['volume'] = $request->filled('volume') ? (int)$request->volume : null;
+            }
+
             // Smart slug logic: limit title length intelligently for clean URLs
             $cleanTitle = Str::limit($request->title, 45, '');
             $baseSlug   = rtrim(Str::slug($cleanTitle), '-');
@@ -334,6 +347,12 @@ class CreatorBioController extends Controller
                     'slug'         => $data['slug'] . '-' . time(),
                     'price'        => $data['price'] ?? 0,
                     'stock'        => $data['stock'],
+                    'sku'          => $data['sku'],
+                    'weight'       => $data['weight'],
+                    'length'       => $data['length'],
+                    'width'        => $data['width'],
+                    'height'       => $data['height'],
+                    'volume'       => $data['volume'],
                     'description'  => $data['description'] ?? '',
                     'image'        => !empty($data['images'][0]) ? $data['images'][0] : ($data['image'] ?? null),
                     'is_active'    => true,
@@ -479,6 +498,18 @@ class CreatorBioController extends Controller
                 $data['stock'] = ($sVal === null || $sVal === '' || $sVal === 'unlimited' || (is_numeric($sVal) && (int)$sVal < 0)) ? null : (int)$sVal;
             }
             
+            if ($request->has('sku'))    $data['sku']    = $request->filled('sku') ? trim($request->sku) : null;
+            if ($request->has('weight')) $data['weight'] = $request->filled('weight') ? max(1, (int)$request->weight) : 1000;
+            if ($request->has('length')) $data['length'] = $request->filled('length') ? (float)$request->length : null;
+            if ($request->has('width'))  $data['width']  = $request->filled('width')  ? (float)$request->width  : null;
+            if ($request->has('height')) $data['height'] = $request->filled('height') ? (float)$request->height : null;
+            
+            if (!empty($data['length']) && !empty($data['width']) && !empty($data['height'])) {
+                $data['volume'] = (int) ceil($data['length'] * $data['width'] * $data['height']);
+            } elseif ($request->has('volume')) {
+                $data['volume'] = $request->filled('volume') ? (int)$request->volume : null;
+            }
+            
             if (empty($data['slug']) || $block->title !== $request->title) {
                 $cleanTitle = Str::limit($request->title, 45, '');
                 $baseSlug   = rtrim(Str::slug($cleanTitle), '-');
@@ -539,6 +570,12 @@ class CreatorBioController extends Controller
                         'name'         => $request->title,
                         'price'        => $data['price'] ?? 0,
                         'stock'        => $data['stock'] ?? null,
+                        'sku'          => $data['sku'] ?? $p->sku,
+                        'weight'       => $data['weight'] ?? $p->weight,
+                        'length'       => $data['length'] ?? $p->length,
+                        'width'        => $data['width'] ?? $p->width,
+                        'height'       => $data['height'] ?? $p->height,
+                        'volume'       => $data['volume'] ?? $p->volume,
                         'description'  => $data['description'] ?? '',
                         'image'        => !empty($data['images'][0]) ? $data['images'][0] : ($data['image'] ?? $p->image),
                         'product_type' => $productType,
@@ -743,12 +780,16 @@ class CreatorBioController extends Controller
 
     /**
      * Scrape product data from Shopee / Tokopedia / other marketplace URLs.
-     * Returns JSON: { title, price, original_price, description, image, partial }
+     * Returns JSON: { title, price, original_price, description, image, images[], partial }
      *
      * Strategy per platform:
      *  - Shopee / shortlinks → Facebook Bot UA (bypasses anti-bot login redirect)
      *  - Tokopedia           → Browser UA + JSON-LD
      *  - Others              → OG meta + Microlink.io fallback
+     *
+     * Multi-image: tries og:image (1st), og:image:secure_url, JSON-LD image[], og:image:alt-index
+     * Original price: tries product:price:standart_amount (Tokopedia), og:price_before_discount (Shopee),
+     *                 JSON-LD offers.highPrice, og:original-price, regex in-page
      */
     public function scrapeUrl(Request $request)
     {
@@ -761,11 +802,10 @@ class CreatorBioController extends Controller
         $url = preg_replace('/[\x00-\x1F\x7F]/', '', $url);
         $host = strtolower(parse_url($url, PHP_URL_HOST) ?? '');
 
-        $isShopee = str_contains($host, 'shopee') || str_contains($host, 'shp.ee');
+        $isShopee    = str_contains($host, 'shopee') || str_contains($host, 'shp.ee');
         $isTokopedia = str_contains($host, 'tokopedia') || str_contains($host, 'tokope.dia');
 
         try {
-            // Shopee redirects regular browsers to login/homepage. Facebook UA receives full product OG metadata!
             $ua = $isShopee
                 ? 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'
                 : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
@@ -803,36 +843,106 @@ class CreatorBioController extends Controller
 
             $title       = $getMeta('og:title') ?: $getMeta('title');
             $description = $getMeta('og:description') ?: $getMeta('description');
-            $image       = $getMeta('og:image');
             $price       = (float) preg_replace('/[^0-9]/', '', $getMeta('product:price:amount'));
             $origPrice   = 0.0;
 
-            // JSON-LD Parsing (Tokopedia, Shopee breadcrumbs, generic sites)
+            // ── Multi-image collection (maks 3) ─────────────────────────────
+            $images = [];
+            $addImg = function (string $u) use (&$images) {
+                $u = trim($u);
+                if ($u && !in_array($u, $images) && count($images) < 3) {
+                    $images[] = $u;
+                }
+            };
+
+            // 1) og:image (main)
+            $ogImg = $getMeta('og:image') ?: $getMeta('og:image:secure_url');
+            if ($ogImg) $addImg($ogImg);
+
+            // 2) Tokopedia: product:image / og:image:alt indices
+            for ($i = 1; $i <= 4 && count($images) < 3; $i++) {
+                $alt = $getMeta("og:image:alt:$i") ?: $getMeta("og:image:$i");
+                if ($alt) $addImg($alt);
+            }
+
+            // ── Price: harga coret / original price ─────────────────────────
+            // Tokopedia: product:price:standart_amount, og:price_before_discount
+            $rawOrig = $getMeta('product:price:standart_amount')
+                    ?: $getMeta('og:price_before_discount')
+                    ?: $getMeta('og:original-price')
+                    ?: $getMeta('product:original_price:amount');
+            if ($rawOrig) {
+                $origPrice = (float) preg_replace('/[^0-9]/', '', $rawOrig);
+            }
+
+            // ── JSON-LD Parsing ──────────────────────────────────────────────
             if (preg_match_all('/<script[^>]+type=["\']application\/ld\+json["\'][^>]*>(.*?)<\/script>/is', $html, $jsonMatches)) {
                 foreach ($jsonMatches[1] as $jsonStr) {
                     $ld = @json_decode($jsonStr, true);
-                    if (is_array($ld)) {
-                        if (($ld['@type'] ?? '') === 'BreadcrumbList' && !empty($ld['itemListElement'])) {
-                            $lastItem = end($ld['itemListElement']);
-                            if (!empty($lastItem['item']['name']) && strlen($lastItem['item']['name']) > 5) {
-                                $title = $title ?: $lastItem['item']['name'];
+                    if (!is_array($ld)) continue;
+
+                    if (($ld['@type'] ?? '') === 'BreadcrumbList' && !empty($ld['itemListElement'])) {
+                        $lastItem = end($ld['itemListElement']);
+                        if (!empty($lastItem['item']['name']) && strlen($lastItem['item']['name']) > 5) {
+                            $title = $title ?: $lastItem['item']['name'];
+                        }
+                    }
+
+                    if (($ld['@type'] ?? '') === 'Product') {
+                        $title       = $title ?: ($ld['name'] ?? '');
+                        $description = $description ?: ($ld['description'] ?? '');
+
+                        // JSON-LD images (could be array of URLs)
+                        if (!empty($ld['image'])) {
+                            $ldImgs = is_array($ld['image']) ? $ld['image'] : [$ld['image']];
+                            foreach ($ldImgs as $ldImg) {
+                                $src = is_array($ldImg) ? ($ldImg['url'] ?? '') : $ldImg;
+                                $addImg((string)$src);
                             }
                         }
-                        if (($ld['@type'] ?? '') === 'Product') {
-                            $title       = $title ?: ($ld['name'] ?? '');
-                            $description = $description ?: ($ld['description'] ?? '');
-                            if (!$image && !empty($ld['image'])) {
-                                $image = is_array($ld['image']) ? ($ld['image'][0] ?? '') : $ld['image'];
+
+                        // Price from offers
+                        $offers = $ld['offers'] ?? [];
+                        // Normalize single offer or array
+                        if (isset($offers['@type'])) $offers = [$offers];
+                        foreach ((array)$offers as $offer) {
+                            if (!$price && isset($offer['price'])) {
+                                $price = (float) preg_replace('/[^0-9]/', '', (string)$offer['price']);
                             }
-                            if (!$price && isset($ld['offers']['price'])) {
-                                $price = (float) preg_replace('/[^0-9]/', '', $ld['offers']['price']);
+                            // highPrice = harga normal sebelum diskon
+                            if (!$origPrice && isset($offer['highPrice'])) {
+                                $origPrice = (float) preg_replace('/[^0-9]/', '', (string)$offer['highPrice']);
+                            }
+                            // Tokopedia sometimes puts priceValidUntil with originalPrice key
+                            if (!$origPrice && isset($offer['originalPrice'])) {
+                                $origPrice = (float) preg_replace('/[^0-9]/', '', (string)$offer['originalPrice']);
                             }
                         }
                     }
                 }
             }
 
-            // Shopee specific cleaning
+            // ── Harga coret: inline regex fallback ──────────────────────────
+            if (!$origPrice) {
+                // Tokopedia: "Rp51.600" as struck text near price — look for higher price in vicinity
+                // Pattern: data-testid="lblOriginalPrice" or class containing "strike" or "original"
+                if (preg_match('/(?:original.?price|harga.?normal|harga.?coret|strike)[^>]*>(?:[^<]*Rp\s*)?([0-9][0-9.,]{2,})/i', $html, $m)) {
+                    $candidate = (float) preg_replace('/[^0-9]/', '', $m[1]);
+                    if ($candidate > $price) $origPrice = $candidate;
+                }
+                // Shopee & Tokopedia: look for del/s tag with a price higher than current price
+                if (!$origPrice && preg_match_all('/<(?:del|s)[^>]*>(?:[^<]*?Rp\s*)?([0-9][0-9.,]{2,})<\/(?:del|s)>/i', $html, $m2)) {
+                    foreach ($m2[1] as $rawP) {
+                        $candidate = (float) preg_replace('/[^0-9]/', '', $rawP);
+                        if ($candidate > $price) { $origPrice = $candidate; break; }
+                    }
+                }
+            }
+
+            // Sanity: origPrice must be >= price (otherwise it's not a "coret" price)
+            if ($origPrice && $origPrice <= $price) $origPrice = 0;
+
+            // ── Platform-specific text cleaning ─────────────────────────────
             if ($isShopee) {
                 $title = preg_replace('/^Jual\s+/i', '', $title);
                 $title = preg_replace('/\s*[-|]\s*(Shopee|Shopee Indonesia).*$/i', '', $title);
@@ -840,10 +950,8 @@ class CreatorBioController extends Controller
                     $description = preg_replace('/^Beli\s+.*?\s+Terbaru Harga Murah di Shopee\.\s*/i', '', $description);
                 }
             }
-
-            // Tokopedia specific cleaning
             if ($isTokopedia) {
-                $title = preg_replace('/\s*[-|]\s*(Tokopedia|Tokopedia).*$/i', '', $title);
+                $title = preg_replace('/\s*[-|]\s*(Tokopedia).*$/i', '', $title);
             }
 
             $title = trim($title);
@@ -851,8 +959,29 @@ class CreatorBioController extends Controller
                 $description = substr($description, 0, 500) . '…';
             }
 
-            // Microlink fallback if title and image are missing
-            if (!$title && !$image) {
+            // ── Additional images: scrape product gallery img tags ───────────
+            if (count($images) < 3) {
+                // Tokopedia product images often in data-src or src with cdn urls
+                $imgPatterns = [
+                    '/data-src=["\']((https?:\/\/[^"\']+\.(?:jpg|jpeg|png|webp))[^"\']*)["\']/',
+                    '/src=["\']((https?:\/\/[^"\']+\.(?:jpg|jpeg|png|webp))[^"\']*)["\']/',
+                ];
+                foreach ($imgPatterns as $pat) {
+                    if (preg_match_all($pat, $html, $imgMatches)) {
+                        foreach ($imgMatches[1] as $src) {
+                            // Skip tiny/icon images (thumbnails < 50px), usually with w=30 or similar
+                            if (preg_match('/[?&]w=[1-9][0-9]?(?:&|$)/', $src)) continue;
+                            if (str_contains($src, 'icon') || str_contains($src, 'logo')) continue;
+                            $addImg($src);
+                            if (count($images) >= 3) break;
+                        }
+                    }
+                    if (count($images) >= 3) break;
+                }
+            }
+
+            // ── Microlink fallback if title and image are missing ────────────
+            if (!$title && empty($images)) {
                 try {
                     $ml = \Illuminate\Support\Facades\Http::timeout(12)->get('https://api.microlink.io', [
                         'url'  => $url,
@@ -862,21 +991,26 @@ class CreatorBioController extends Controller
                         $d = $ml->json('data', []);
                         $title       = $title ?: ($d['title'] ?? '');
                         $description = $description ?: ($d['description'] ?? '');
-                        $image       = $image ?: ($d['image']['url'] ?? $d['logo']['url'] ?? '');
+                        $mlImg = $d['image']['url'] ?? $d['logo']['url'] ?? '';
+                        if ($mlImg) $addImg($mlImg);
                     }
                 } catch (\Throwable $e) {}
             }
+
+            $primaryImage = $images[0] ?? null;
 
             return response()->json([
                 'title'          => $title ?: null,
                 'price'          => (int) $price,
                 'original_price' => (int) $origPrice,
                 'description'    => $description ?: null,
-                'image'          => $image ?: null,
-                'partial'        => (!$title || !$image),
+                'image'          => $primaryImage,
+                'images'         => $images,  // array, maks 3
+                'partial'        => (!$title || empty($images)),
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Gagal scrape: ' . $e->getMessage()], 500);
         }
     }
-}
+}
+

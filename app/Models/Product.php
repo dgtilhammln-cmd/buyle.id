@@ -57,6 +57,28 @@ class Product extends Model
         'affiliate_commission_rate' => 'decimal:2',
     ];
 
+    /**
+     * Hitung berat efektif produk (menggunakan max antara berat fisik dan berat volume dimensional).
+     * Rumus Volumetric Weight = (Panjang * Lebar * Tinggi) / 6 dalam gram (atau volume / 6).
+     * Agar seller/creator tidak nombok ongkir karena barang besar tapi ringan.
+     */
+    public function getEffectiveWeightAttribute(): int
+    {
+        $actualWeight = (int) ($this->weight ?? 0);
+        
+        $vol = 0;
+        if (!empty($this->length) && !empty($this->width) && !empty($this->height)) {
+            $vol = (float)$this->length * (float)$this->width * (float)$this->height;
+        } elseif (!empty($this->volume)) {
+            $vol = (float)$this->volume;
+        }
+        
+        $volumetricWeight = $vol > 0 ? (int) ceil($vol / 6) : 0;
+        
+        $effective = max($actualWeight, $volumetricWeight);
+        return $effective > 0 ? $effective : 1000;
+    }
+
     protected static function boot()
     {
         parent::boot();

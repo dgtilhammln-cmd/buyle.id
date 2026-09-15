@@ -1981,9 +1981,11 @@
                             $wlBlockIds = $whitelabelProducts->pluck('id')->toArray();
                             $addedWlBlocks = $blocks->where('type', 'buyle_product')->filter(function ($b) use ($wlBlockIds) {
                                 $cat = strtolower(trim($b->data_json['category'] ?? ''));
-                                if (in_array($cat, ['makanan', 'barang', 'jasa', 'lainnya', 'kuliner', 'fisik', 'umkm'])) return false;
+                                if (in_array($cat, ['makanan', 'barang', 'jasa', 'lainnya', 'kuliner', 'fisik', 'umkm']))
+                                    return false;
                                 $title = strtolower($b->title ?? '');
-                                if (preg_match('/(es|nasi|teh|kopi|jus|sirup|air|soto|bakso|mie|ayam|bebek|daging|ikan|kerupuk|lumpia|kasur|samsung|promo|sepatu|baju|celana)/i', $title)) return false;
+                                if (preg_match('/(es|nasi|teh|kopi|jus|sirup|air|soto|bakso|mie|ayam|bebek|daging|ikan|kerupuk|lumpia|kasur|samsung|promo|sepatu|baju|celana)/i', $title))
+                                    return false;
                                 $pId = $b->data_json['product_id'] ?? null;
                                 return $pId && in_array((int) $pId, $wlBlockIds);
                             });
@@ -2184,12 +2186,14 @@
                     </div>
                     <div class="card-body" id="umkmProductList">
                         @php
-                            $umkmBlocks = $blocks->filter(function($b) {
-                                if ($b->type === 'custom_product') return true;
+                            $umkmBlocks = $blocks->filter(function ($b) {
+                                if ($b->type === 'custom_product')
+                                    return true;
                                 $cat = strtolower(trim($b->data_json['category'] ?? ''));
-                                if (in_array($cat, ['makanan', 'barang', 'jasa', 'lainnya', 'kuliner', 'fisik', 'umkm'])) return true;
+                                if (in_array($cat, ['makanan', 'barang', 'jasa', 'lainnya', 'kuliner', 'fisik', 'umkm']))
+                                    return true;
                                 $title = strtolower($b->title ?? '');
-                                return (bool)preg_match('/(es|nasi|teh|kopi|jus|sirup|air|soto|bakso|mie|ayam|bebek|daging|ikan|kerupuk|lumpia|kasur|samsung|promo|sepatu|baju|celana)/i', $title);
+                                return (bool) preg_match('/(es|nasi|teh|kopi|jus|sirup|air|soto|bakso|mie|ayam|bebek|daging|ikan|kerupuk|lumpia|kasur|samsung|promo|sepatu|baju|celana)/i', $title);
                             })->sortByDesc('id');
                         @endphp
                         @forelse($umkmBlocks as $block)
@@ -2220,7 +2224,8 @@
                                                 <div class="aff-info" style="flex:1; min-width:0; padding:0.55rem 0.75rem;">
                                                     <div class="aff-title"
                                                         style="font-size:0.83rem; font-weight:700; color:#0b120c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.2rem;">
-                                                        {{ $block->title }}</div>
+                                                        {{ $block->title }}
+                                                    </div>
                                                     <div class="aff-sub" style="font-size:0.72rem; color:#64748b;">
                                                         @if(!empty($block->data_json['original_price']) && $block->data_json['original_price'] > ($block->data_json['price'] ?? 0))
                                                             <span style="text-decoration:line-through; color:#94a3b8; margin-right:0.3rem;">Rp
@@ -2608,13 +2613,15 @@
     <div class="modal-overlay" id="locationWarningModal" onclick="if(event.target===this)this.classList.remove('open')">
         <div class="modal-box" style="max-width:420px; text-align:center; padding:2rem 1.75rem;">
             {{-- Icon --}}
-            <div style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,#fef3c7,#fde68a); display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
+            <div
+                style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,#fef3c7,#fde68a); display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
                 <svg width="28" height="28" fill="none" stroke="#d97706" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                    <circle cx="12" cy="10" r="3"/>
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
                 </svg>
             </div>
-            <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0 0 0.5rem; font-family:'Montserrat',sans-serif;">
+            <h3
+                style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0 0 0.5rem; font-family:'Montserrat',sans-serif;">
                 Lokasi Belum Dilengkapi
             </h3>
             <p style="font-size:0.82rem; color:#64748b; line-height:1.6; margin:0 0 1.5rem;">
@@ -2630,8 +2637,8 @@
                 <a href="{{ route('creator.profile.edit') }}?tab=lokasi"
                     style="padding:0.55rem 1.4rem; border-radius:999px; background:linear-gradient(135deg,#1eb349,#a5cf37); color:#fff; font-weight:700; font-size:0.82rem; text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 14px rgba(30,179,73,0.28);">
                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                        <circle cx="12" cy="10" r="3"/>
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
                     </svg>
                     Lengkapi Lokasi
                 </a>
@@ -2738,6 +2745,59 @@
                     <label class="form-label">Deskripsi Produk</label>
                     <textarea name="description" id="umkmDescription" class="form-input"
                         style="height:80px; padding:0.75rem;" placeholder="Ceritakan produk Anda..."></textarea>
+                </div>
+
+                {{-- ── Informasi Pengiriman & Dimensi Ongkir ── --}}
+                <div
+                    style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; padding:0.85rem; margin-bottom:1rem;">
+                    <div
+                        style="font-size:0.78rem; font-weight:700; color:#0f172a; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
+                        <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                            <rect x="1" y="3" width="15" height="13"></rect>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                        </svg>
+                        Informasi Pengiriman & Berat Ongkir
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.6rem;">
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label" style="font-size:0.72rem;">SKU Produk <span
+                                    style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
+                            <input type="text" name="sku" class="form-input" placeholder="Contoh: SKU-12345"
+                                style="height:36px; font-size:0.78rem;">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label" style="font-size:0.72rem;">Berat Fizik (Gram) *</label>
+                            <input type="number" name="weight" min="1" class="form-input" placeholder="Contoh: 1000 (1 kg)"
+                                value="1000" style="height:36px; font-size:0.78rem;" required>
+                            <span class="form-hint" style="font-size:0.65rem; color:#64748b;">1.000 gr = 1 kg</span>
+                        </div>
+                    </div>
+                    <div style="font-size:0.7rem; color:#64748b; margin-bottom:0.4rem; font-weight:600;">Dimensi Paket
+                        (Panjang x Lebar x Tinggi cm) — Untuk Ongkir Volumetrik:</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.5rem;">
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label" style="font-size:0.68rem;">Panjang (cm)</label>
+                            <input type="number" name="length" min="0" step="0.1" class="form-input umkm-dim-p"
+                                placeholder="P" style="height:34px; font-size:0.75rem;" oninput="calcUmkmVolume(this)">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label" style="font-size:0.68rem;">Lebar (cm)</label>
+                            <input type="number" name="width" min="0" step="0.1" class="form-input umkm-dim-l"
+                                placeholder="L" style="height:34px; font-size:0.75rem;" oninput="calcUmkmVolume(this)">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label" style="font-size:0.68rem;">Tinggi (cm)</label>
+                            <input type="number" name="height" min="0" step="0.1" class="form-input umkm-dim-t"
+                                placeholder="T" style="height:34px; font-size:0.75rem;" oninput="calcUmkmVolume(this)">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label" style="font-size:0.68rem;">Volum (cm³)</label>
+                            <input type="number" name="volume" min="0" class="form-input umkm-dim-v" placeholder="Vol"
+                                style="height:34px; font-size:0.75rem; background:#f1f5f9;" readonly>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Foto Produk</label>
@@ -2846,6 +2906,62 @@
                     <label class="form-label">Deskripsi Produk</label>
                     <textarea name="description" id="edit_description" class="form-input"
                         style="height:80px; padding:0.75rem;"></textarea>
+                </div>
+
+                {{-- ── Informasi Pengiriman & Dimensi Ongkir ── --}}
+                <div
+                    style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; padding:0.85rem; margin-bottom:1rem;">
+                    <div
+                        style="font-size:0.78rem; font-weight:700; color:#0f172a; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
+                        <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                            <rect x="1" y="3" width="15" height="13"></rect>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                        </svg>
+                        Informasi Pengiriman & Berat Ongkir
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.6rem;">
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label" style="font-size:0.72rem;">SKU Produk <span
+                                    style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
+                            <input type="text" name="sku" id="edit_sku" class="form-input" placeholder="Contoh: SKU-12345"
+                                style="height:36px; font-size:0.78rem;">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label" style="font-size:0.72rem;">Berat Fizik (Gram) *</label>
+                            <input type="number" name="weight" id="edit_weight" min="1" class="form-input"
+                                placeholder="1000 (1 kg)" style="height:36px; font-size:0.78rem;" required>
+                            <span class="form-hint" style="font-size:0.65rem; color:#64748b;">1.000 gr = 1 kg</span>
+                        </div>
+                    </div>
+                    <div style="font-size:0.7rem; color:#64748b; margin-bottom:0.4rem; font-weight:600;">Dimensi Paket
+                        (Panjang x Lebar x Tinggi cm) — Untuk Ongkir Volumetrik:</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.5rem;">
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label" style="font-size:0.68rem;">Panjang (cm)</label>
+                            <input type="number" name="length" id="edit_length" min="0" step="0.1"
+                                class="form-input umkm-dim-p" placeholder="P" style="height:34px; font-size:0.75rem;"
+                                oninput="calcUmkmVolume(this)">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label" style="font-size:0.68rem;">Lebar (cm)</label>
+                            <input type="number" name="width" id="edit_width" min="0" step="0.1"
+                                class="form-input umkm-dim-l" placeholder="L" style="height:34px; font-size:0.75rem;"
+                                oninput="calcUmkmVolume(this)">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label" style="font-size:0.68rem;">Tinggi (cm)</label>
+                            <input type="number" name="height" id="edit_height" min="0" step="0.1"
+                                class="form-input umkm-dim-t" placeholder="T" style="height:34px; font-size:0.75rem;"
+                                oninput="calcUmkmVolume(this)">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label" style="font-size:0.68rem;">Volum (cm³)</label>
+                            <input type="number" name="volume" id="edit_volume" min="0" class="form-input umkm-dim-v"
+                                placeholder="Vol" style="height:34px; font-size:0.75rem; background:#f1f5f9;" readonly>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -3138,20 +3254,20 @@
             popup.id = 'scrapeFailedPopup';
             popup.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);';
             popup.innerHTML = `
-                    <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
-                        <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                            <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                        </div>
-                        <div style="font-weight:800;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
-                        <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
-                        <div style="display:flex;gap:0.6rem;justify-content:center;">
-                            <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight:700;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
-                            <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                Scan AI
-                            </button>
-                        </div>
-                    </div>`;
+                            <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
+                                <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                                    <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                </div>
+                                <div style="font-weight:800;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
+                                <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
+                                <div style="display:flex;gap:0.6rem;justify-content:center;">
+                                    <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight:700;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
+                                    <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                        Scan AI
+                                    </button>
+                                </div>
+                            </div>`;
             document.body.appendChild(popup);
             popup.addEventListener('click', function (e) { if (e.target === popup) popup.remove(); });
         }
@@ -3425,11 +3541,11 @@
                 document.getElementById('imgOversizedDesc').innerHTML = 'Foto berikut melebihi batas <strong>1 MB per file</strong>. Harap kompres terlebih dahulu.';
 
                 const listHtml = oversized.map(f => `
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
-                            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
-                            <span style="color:#EF4444; font-weight:700;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
-                        </div>
-                    `).join('');
+                                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
+                                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
+                                    <span style="color:#EF4444; font-weight:700;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                                </div>
+                            `).join('');
 
                 document.getElementById('imgOversizedFileList').innerHTML = listHtml;
                 document.getElementById('imgOversizedModal').classList.add('open');
@@ -3474,6 +3590,22 @@
             });
         });
 
+        function calcUmkmVolume(el) {
+            const form = el.closest('form');
+            if (!form) return;
+            const p = parseFloat(form.querySelector('.umkm-dim-p')?.value || 0);
+            const l = parseFloat(form.querySelector('.umkm-dim-l')?.value || 0);
+            const t = parseFloat(form.querySelector('.umkm-dim-t')?.value || 0);
+            const vEl = form.querySelector('.umkm-dim-v');
+            if (vEl) {
+                if (p > 0 && l > 0 && t > 0) {
+                    vEl.value = Math.round(p * l * t);
+                } else {
+                    vEl.value = '';
+                }
+            }
+        }
+
         function editUmkmProduct(data) {
             const form = document.getElementById('editUmkmForm');
             form.action = '/creator/bio/blocks/' + data.id;
@@ -3484,6 +3616,14 @@
             document.getElementById('edit_category').value = data.category || 'Makanan';
             document.getElementById('edit_stock').value = (data.stock !== undefined && data.stock !== null && data.stock !== '') ? data.stock : '';
             document.getElementById('edit_url').value = data.url || '';
+
+            // Shipping & Volume fields
+            document.getElementById('edit_sku').value = data.sku || '';
+            document.getElementById('edit_weight').value = data.weight || 1000;
+            document.getElementById('edit_length').value = data.length || '';
+            document.getElementById('edit_width').value = data.width || '';
+            document.getElementById('edit_height').value = data.height || '';
+            document.getElementById('edit_volume').value = data.volume || '';
 
             if (data.payment_method === 'web') {
                 document.getElementById('edit_pm_web').checked = true;
@@ -3618,7 +3758,7 @@
         // ── Produk Fisik: Guard — cek lokasi sebelum buka modal ───────────────
         // raja_city_id di-inject dari Blade server-side (null jika belum diisi)
         const _creatorRajaCityId = @json($profile->raja_city_id ?? null);
-        const _creatorCityId     = @json($profile->city_id ?? null);
+        const _creatorCityId = @json($profile->city_id ?? null);
 
         function openAddUmkmWithCheck() {
             // Dianggap lengkap kalau ada raja_city_id ATAU city_id (migrasi lama)

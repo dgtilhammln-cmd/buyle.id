@@ -33,6 +33,10 @@ class CartService
     {
         $product = Product::findOrFail($productId);
 
+        if (auth()->check() && $product->seller_id && (int)$product->seller_id === (int)auth()->id()) {
+            throw new \Exception('Anda tidak dapat membeli produk milik Anda sendiri.');
+        }
+
         if (! $product->is_available) {
             throw new \Exception('Produk tidak tersedia atau stok habis.');
         }
@@ -178,7 +182,8 @@ class CartService
 
         foreach ($items as $item) {
             $subtotal += $item->subtotal;
-            $totalWeight += ($item->product->weight ?? 0) * $item->qty;
+            $itemWeight = $item->product ? $item->product->effective_weight : 1000;
+            $totalWeight += $itemWeight * $item->qty;
 
             if ($item->product) {
                 $p = $item->product;

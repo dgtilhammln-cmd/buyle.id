@@ -39,6 +39,16 @@ class CheckoutService
             throw new Exception('Keranjang belanja Anda kosong.');
         }
 
+        // Proteksi: Creator tidak boleh melakukan checkout / membeli produk milik sendiri
+        foreach ($items as $cartItem) {
+            if ($cartItem->product) {
+                $sellerId = $cartItem->product->seller_id;
+                if ($sellerId && (int)$sellerId === (int)$user->id) {
+                    throw new Exception('Sistem mendeteksi Anda mencoba membeli produk Anda sendiri ("' . $cartItem->product->name . '"). Creator tidak diperbolehkan melakukan checkout produk milik sendiri.');
+                }
+            }
+        }
+
         // Kalkulasi harga
         $subtotal = $summary['subtotal'];
         $shippingCost = $data['shipping_cost'] ?? 0;
