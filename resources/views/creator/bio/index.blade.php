@@ -670,7 +670,7 @@
         @media(max-width:768px) {
             .bio-layout {
                 flex-direction: column;
-                gap: 0.75rem;
+                gap: 0.5rem;
                 width: 100%;
                 max-width: 100%;
                 overflow-x: hidden;
@@ -681,22 +681,24 @@
                 position: sticky;
                 top: 64px;
                 z-index: 80;
-                padding: 0.25rem;
-                border-radius: 14px;
-                background: #ffffff;
-                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+                padding: 4px;
+                border-radius: 12px;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
                 border: 1px solid #e2e8f0;
-                margin-bottom: 0.25rem;
+                margin-bottom: 0.4rem;
                 box-sizing: border-box;
             }
 
             .bio-tabs-list {
                 display: grid !important;
                 grid-template-columns: repeat(6, 1fr) !important;
-                gap: 3px !important;
-                background: #f8fafc;
-                padding: 3px;
-                border-radius: 12px;
+                gap: 2px !important;
+                background: #f1f5f9;
+                padding: 2px;
+                border-radius: 10px;
                 width: 100%;
                 box-sizing: border-box;
             }
@@ -704,11 +706,12 @@
             .tab-btn {
                 width: 100% !important;
                 min-width: 0 !important;
+                height: 36px !important;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                padding: 0.45rem 2px !important;
-                gap: 2px;
+                padding: 2px 1px !important;
+                gap: 1px;
                 border-radius: 8px;
                 margin-bottom: 0;
                 border: none;
@@ -717,8 +720,9 @@
 
             .tab-btn svg,
             .tab-btn i {
-                width: 16px !important;
-                height: 16px !important;
+                width: 14px !important;
+                height: 14px !important;
+                font-size: 14px !important;
             }
 
             .tab-text-full {
@@ -727,8 +731,8 @@
 
             .tab-text-mob {
                 display: block !important;
-                font-size: 0.6rem !important;
-                font-weight: 600;
+                font-size: 0.58rem !important;
+                font-weight: 700;
                 line-height: 1.1;
                 text-align: center;
                 white-space: nowrap;
@@ -744,51 +748,57 @@
 
             /* Compact Mobile Cards & Form Elements */
             .prof-card {
-                border-radius: 14px;
-                margin-bottom: 0.85rem;
+                border-radius: 12px;
+                margin-bottom: 0.65rem;
                 width: 100%;
                 box-sizing: border-box;
+                border: 1px solid #e2e8f0;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
             }
 
             .prof-card-head {
-                padding: 0.75rem 0.85rem;
-                font-size: 0.825rem;
-                font-weight: 700;
+                padding: 0.6rem 0.75rem;
+                font-size: 0.8rem;
+                font-weight: 800;
+                background: #fafafa;
+                border-bottom: 1px solid #f1f5f9;
             }
 
             .card-body {
-                padding: 0.85rem;
+                padding: 0.65rem 0.75rem;
             }
 
             /* Convert all 2-column inline style grids inside cards to 1 column on mobile */
             .card-body [style*="grid-template-columns"] {
                 grid-template-columns: 1fr !important;
-                gap: 0.75rem !important;
+                gap: 0.5rem !important;
             }
 
             .form-group {
-                gap: 0.3rem;
-                margin-bottom: 0.75rem;
+                gap: 0.25rem;
+                margin-bottom: 0.55rem;
                 width: 100%;
             }
 
             .form-label {
-                font-size: 0.75rem;
+                font-size: 0.72rem;
                 font-weight: 700;
+                color: #475569;
             }
 
             .form-input {
-                height: 38px;
+                height: 36px;
                 padding: 0 0.65rem;
-                font-size: 0.8rem;
+                font-size: 0.78rem;
                 border-radius: 8px;
                 width: 100%;
                 box-sizing: border-box;
             }
 
             textarea.form-input {
-                padding: 0.5rem 0.65rem;
-                min-height: 65px;
+                padding: 0.45rem 0.65rem;
+                min-height: 55px;
+                font-size: 0.78rem;
             }
 
             .theme-grid {
@@ -797,59 +807,62 @@
             }
 
             .theme-mockup {
-                height: 100px;
-                padding-top: 0.75rem;
+                height: 90px;
+                padding-top: 0.5rem;
             }
 
             .theme-label {
-                padding: 0.4rem 0.5rem;
-                font-size: 0.72rem;
+                padding: 0.35rem 0.5rem;
+                font-size: 0.7rem;
             }
 
             .block-item {
-                padding: 0.6rem 0.65rem;
-                gap: 0.5rem;
-                border-radius: 10px;
-                margin-bottom: 0.5rem;
+                padding: 0.5rem 0.6rem;
+                gap: 0.45rem;
+                border-radius: 8px;
+                margin-bottom: 0.4rem;
             }
 
             .block-icon {
-                width: 30px;
-                height: 30px;
-                border-radius: 8px;
+                width: 28px;
+                height: 28px;
+                border-radius: 6px;
+                font-size: 14px;
             }
 
             .block-title {
-                font-size: 0.78rem;
+                font-size: 0.76rem;
             }
 
             .block-sub {
-                font-size: 0.65rem;
+                font-size: 0.62rem;
             }
 
             .aff-card {
-                border-radius: 10px;
-                margin-bottom: 0.5rem;
+                border-radius: 8px;
+                margin-bottom: 0.45rem;
             }
 
             .aff-img {
-                width: 60px;
-                height: 60px;
+                width: 52px;
+                height: 52px;
             }
 
             .aff-info {
-                padding: 0.45rem;
+                padding: 0.35rem 0.5rem;
             }
 
             .aff-title {
-                font-size: 0.75rem;
+                font-size: 0.72rem;
+                line-height: 1.2;
             }
 
             .btn-submit-sm,
             .btn-primary {
-                font-size: 0.8rem;
-                height: 38px;
-                padding: 0 1rem;
+                font-size: 0.75rem;
+                height: 34px;
+                padding: 0 0.85rem;
+                border-radius: 999px;
             }
         }}
 
