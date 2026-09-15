@@ -1980,6 +1980,10 @@
                         @php
                             $wlBlockIds = $whitelabelProducts->pluck('id')->toArray();
                             $addedWlBlocks = $blocks->where('type', 'buyle_product')->filter(function ($b) use ($wlBlockIds) {
+                                $cat = strtolower(trim($b->data_json['category'] ?? ''));
+                                if (in_array($cat, ['makanan', 'barang', 'jasa', 'lainnya', 'kuliner', 'fisik', 'umkm'])) return false;
+                                $title = strtolower($b->title ?? '');
+                                if (preg_match('/(es|nasi|teh|kopi|jus|sirup|air|soto|bakso|mie|ayam|bebek|daging|ikan|kerupuk|lumpia|kasur|samsung|promo|sepatu|baju|celana)/i', $title)) return false;
                                 $pId = $b->data_json['product_id'] ?? null;
                                 return $pId && in_array((int) $pId, $wlBlockIds);
                             });
@@ -2179,7 +2183,16 @@
                         </div>
                     </div>
                     <div class="card-body" id="umkmProductList">
-                        @forelse($blocks->where('type', 'custom_product')->sortByDesc('id') as $block)
+                        @php
+                            $umkmBlocks = $blocks->filter(function($b) {
+                                if ($b->type === 'custom_product') return true;
+                                $cat = strtolower(trim($b->data_json['category'] ?? ''));
+                                if (in_array($cat, ['makanan', 'barang', 'jasa', 'lainnya', 'kuliner', 'fisik', 'umkm'])) return true;
+                                $title = strtolower($b->title ?? '');
+                                return (bool)preg_match('/(es|nasi|teh|kopi|jus|sirup|air|soto|bakso|mie|ayam|bebek|daging|ikan|kerupuk|lumpia|kasur|samsung|promo|sepatu|baju|celana)/i', $title);
+                            })->sortByDesc('id');
+                        @endphp
+                        @forelse($umkmBlocks as $block)
                                             @php
                                                 $imgs = $block->data_json['images'] ?? [];
                                                 $firstImg = !empty($imgs[0]) ? $imgs[0] : ($block->data_json['image'] ?? null);

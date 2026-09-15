@@ -623,14 +623,36 @@
             $imageBlocks = $blocks->where('type', 'image')->sortBy('order')->values();
             $videoBlocks = $blocks->whereIn('type', ['tiktok', 'reels'])->sortBy('order')->values();
             $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
-            $buyleBlocks = $blocks->whereIn('type', ['buyle_product', 'buyle_affiliate'])->filter(function($b) use ($products) {
-                if ($b->type === 'buyle_product') {
-                    $pid = $b->data_json['product_id'] ?? 0;
-                    return isset($products[$pid]);
+
+            $isBlockPhysical = function($b) use ($products) {
+                if ($b->type === 'custom_product') return true;
+                $cat = strtolower(trim($b->data_json['category'] ?? ''));
+                if (in_array($cat, ['makanan', 'barang', 'jasa', 'lainnya', 'kuliner', 'fisik', 'umkm'])) return true;
+                $pid = $b->data_json['product_id'] ?? null;
+                if ($pid && isset($products[$pid])) {
+                    $pType = strtolower($products[$pid]->product_type ?? $products[$pid]->type ?? '');
+                    if (in_array($pType, ['physical', 'makanan', 'service', 'product', 'umkm', 'barang', 'jasa', 'food'])) return true;
                 }
-                return true;
+                $title = strtolower($b->title ?? '');
+                if (preg_match('/(es|nasi|teh|kopi|jus|sirup|air|soto|bakso|mie|ayam|bebek|daging|ikan|kerupuk|lumpia|kasur|samsung|promo|sepatu|baju|celana)/i', $title)) {
+                    return true;
+                }
+                return false;
+            };
+
+            $customProdBlocks = $blocks->filter(fn($b) => $isBlockPhysical($b))->sortBy(fn($b) => [$b->order ?? 0, $b->id])->values();
+
+            $buyleBlocks = $blocks->filter(function($b) use ($products, $isBlockPhysical) {
+                if ($isBlockPhysical($b)) return false;
+                if (in_array($b->type, ['buyle_product', 'buyle_affiliate'])) {
+                    if ($b->type === 'buyle_product') {
+                        $pid = $b->data_json['product_id'] ?? 0;
+                        return isset($products[$pid]);
+                    }
+                    return true;
+                }
+                return false;
             })->sortBy(fn($b) => [$b->order ?? 0, $b->id])->values();
-            $customProdBlocks = $blocks->where('type', 'custom_product')->sortBy(fn($b) => [$b->order ?? 0, $b->id])->values();
         @endphp
 
         {{-- TikTok & Reels Slider --}}
