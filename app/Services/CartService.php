@@ -177,7 +177,8 @@ class CartService
         $totalWeight = 0;
         
         $hasGoodsShipping = false;
-        $hasFoodOrService = false;
+        $hasGoodsShipping = false;
+        $hasFood          = false;
         $hasDigitalOnly   = true;
 
         foreach ($items as $item) {
@@ -197,8 +198,8 @@ class CartService
                     $blockCat = strtolower($p->bioBlock->data_json['category'] ?? '');
                 }
 
-                // FnB & Service keywords in product name or category
-                $foodKeywords = ['nasi', 'mie', 'ayam', 'bebek', 'daging', 'ikan', 'es', 'kopi', 'makanan', 'minuman', 'kuliner', 'food', 'drink', 'resto', 'cafe', 'menu', 'paket', 'porsi', 'jus', 'teh', 'bakso', 'soto', 'gudeg', 'sate', 'bento', 'snack', 'kue', 'roti', 'donut', 'pizza', 'burger', 'seafood', 'dimsum', 'coffe', 'tea', 'boba', 'manja', 'jasa', 'service', 'layanan', 'booking', 'cuci', 'repair', 'cleaning', 'spa', 'barber', 'potong'];
+                // Food / FnB keywords
+                $foodKeywords = ['nasi', 'mie', 'ayam', 'bebek', 'daging', 'ikan', 'es', 'kopi', 'makanan', 'minuman', 'kuliner', 'food', 'drink', 'resto', 'cafe', 'menu', 'paket', 'porsi', 'jus', 'teh', 'bakso', 'soto', 'gudeg', 'sate', 'bento', 'snack', 'kue', 'roti', 'donut', 'pizza', 'burger', 'seafood', 'dimsum', 'coffe', 'tea', 'boba'];
                 $isFoodName = false;
                 foreach ($foodKeywords as $kw) {
                     if (str_contains($pName, $kw)) {
@@ -207,32 +208,30 @@ class CartService
                     }
                 }
 
-                // IMAGE 2: Kategori Produk -> "Makanan / Minuman / Kuliner" (makanan) & "Jasa / Layanan / Service" (jasa/service)
-                $isFoodOrServiceFromImage2 = ($isFoodName 
-                                              || $blockCat === 'makanan' 
-                                              || $blockCat === 'jasa' 
-                                              || $pType === 'service' 
-                                              || $pType === 'makanan' 
-                                              || $pType === 'fnb'
-                                              || in_array($catName, ['makanan', 'jasa', 'food', 'culinary', 'service', 'layanan', 'booking & jasa layanan online', 'booking', 'kuliner', 'resto', 'fnb']));
+                // 1. Food / FnB classification
+                $isFood = ($isFoodName 
+                           || $blockCat === 'makanan' 
+                           || $pType === 'makanan' 
+                           || $pType === 'fnb'
+                           || in_array($catName, ['makanan', 'food', 'culinary', 'kuliner', 'resto', 'fnb', 'makanan & minuman']));
 
-                // IMAGE 2: Kategori Produk -> "Barang / Produk Fisik" (barang)
-                $isGoodsFromImage2 = ($blockCat === 'barang' 
-                                      || $pType === 'physical' 
-                                      || $pType === 'barang' 
-                                      || in_array($catName, ['barang', 'produk fisik', 'umkm', 'peralatan dapur', 'kebersihan', 'kamar tidur', 'kamar mandi', 'elektronik', 'taman & outdoor', 'perkakas', 'laundry', 'penyimpanan', 'pengiriman kilat']));
+                // 2. Goods / Barang Physical classification
+                $isGoods = ($blockCat === 'barang' 
+                            || $pType === 'physical' 
+                            || $pType === 'barang' 
+                            || in_array($catName, ['barang', 'produk fisik', 'umkm', 'peralatan dapur', 'kebersihan', 'kamar tidur', 'kamar mandi', 'elektronik', 'taman & outdoor', 'perkakas', 'laundry', 'penyimpanan', 'pengiriman kilat']));
 
-                // IMAGE 1: Tipe Produk -> "Produk Digital / Link Access" (digital)
-                $isDigitalFromImage1 = in_array($pType, ['digital', 'download', 'course', 'ebook', 'virtual', 'file']) 
-                                       || (!empty($p->digital_resource) && !$isFoodOrServiceFromImage2 && !$isGoodsFromImage2);
+                // 3. Digital, Ticket, Service / Jasa classification
+                $isDigitalOrService = in_array($pType, ['digital', 'service', 'jasa', 'ticket', 'course', 'ebook', 'download', 'virtual', 'file', 'external_link']) 
+                                       || $blockCat === 'jasa'
+                                       || in_array($catName, ['jasa', 'service', 'layanan', 'booking & jasa layanan online', 'booking', 'tiket & event', 'ticket']);
 
-                // Classification:
-                if ($isGoodsFromImage2) {
+                if ($isGoods) {
                     $hasGoodsShipping = true;
                     $hasDigitalOnly   = false;
-                } elseif ($isFoodOrServiceFromImage2 || !$isDigitalFromImage1) {
-                    $hasFoodOrService = true;
-                    $hasDigitalOnly   = false;
+                } elseif ($isFood) {
+                    $hasFood        = true;
+                    $hasDigitalOnly = false;
                 }
             }
         }
@@ -240,8 +239,8 @@ class CartService
         $checkoutType = 'digital';
         if ($hasGoodsShipping) {
             $checkoutType = 'goods';
-        } elseif ($hasFoodOrService) {
-            $checkoutType = 'food_service';
+        } elseif ($hasFood) {
+            $checkoutType = 'food';
         }
 
         return [
@@ -251,10 +250,11 @@ class CartService
             'total_weight'         => $totalWeight,
             'checkout_type'        => $checkoutType,
             'has_goods_shipping'   => ($checkoutType === 'goods'),
-            'has_food_or_service'  => ($checkoutType === 'food_service'),
+            'has_food'             => ($checkoutType === 'food'),
+            'has_food_or_service'  => ($checkoutType === 'food'),
             'has_digital_only'     => ($checkoutType === 'digital'),
             'has_physical_product' => ($checkoutType === 'goods'),
-            'has_service'          => ($checkoutType === 'food_service'),
+            'has_service'          => ($checkoutType === 'digital'),
         ];
     }
 }

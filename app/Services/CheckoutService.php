@@ -183,6 +183,13 @@ class CheckoutService
                     }
                 }
             }
+        } else {
+            $shippingAddressArray = [
+                'receiver_name' => $data['guest_name'] ?? ($user->name ?? 'Pembeli'),
+                'phone'         => $data['guest_phone'] ?? ($user->phone ?? ''),
+                'address'       => 'Pengiriman Otomatis via Email & WhatsApp (Produk Digital / Tiket / Jasa)',
+                'label'         => 'Digital Direct Access',
+            ];
         }
 
         DB::beginTransaction();

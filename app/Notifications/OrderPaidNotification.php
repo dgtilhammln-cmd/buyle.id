@@ -33,11 +33,27 @@ class OrderPaidNotification extends Notification
         }
 
         $ticketPasses = \App\Models\TicketPass::where('order_id', $this->order->id)->with('product')->get();
-        // Deteksi jenis transaksi (Ticketing vs Produk Digital)
-        $hasTickets = $ticketPasses->isNotEmpty() || $this->order->items->contains(fn($i) => $i->product?->product_type === 'ticket');
+
+        $hasTickets = $ticketPasses->isNotEmpty() || $this->order->items->contains(function ($i) {
+            return strtolower($i->product?->product_type ?? '') === 'ticket';
+        });
+
+        $hasFood = $this->order->items->contains(function ($i) {
+            $type = strtolower($i->product?->product_type ?? $i->product?->type ?? '');
+            $cat  = strtolower($i->product?->category?->name ?? '');
+            return in_array($type, ['makanan', 'fnb', 'food']) || in_array($cat, ['makanan', 'food', 'culinary', 'kuliner', 'resto', 'fnb', 'makanan & minuman']);
+        });
+
         $hasPhysical = $this->order->items->contains(function ($i) {
-            $type = $i->product?->product_type ?? $i->product?->type ?? '';
-            return in_array($type, ['physical', 'product', 'fisik', 'umkm']);
+            $type = strtolower($i->product?->product_type ?? $i->product?->type ?? '');
+            $cat  = strtolower($i->product?->category?->name ?? '');
+            return in_array($type, ['physical', 'product', 'fisik', 'barang']) || in_array($cat, ['barang', 'produk fisik', 'umkm']);
+        });
+
+        $hasService = $this->order->items->contains(function ($i) {
+            $type = strtolower($i->product?->product_type ?? $i->product?->type ?? '');
+            $cat  = strtolower($i->product?->category?->name ?? '');
+            return in_array($type, ['service', 'jasa']) || in_array($cat, ['jasa', 'service', 'layanan', 'booking & jasa layanan online', 'booking']);
         });
 
         // Render item list table
@@ -129,6 +145,15 @@ class OrderPaidNotification extends Notification
             $ctaText          = 'Buka & Simpan E-Ticket Saya';
             $promptMsg        = "Silakan simpan email ini atau tunjukkan QR Code di atas saat proses check-in di lokasi acara:";
             $footerNote       = 'Ada kendala terkait lokasi, jadwal event, atau tiket? Balas email ini aja, tim kami siap bantu!';
+        } elseif ($hasFood) {
+            $subject          = "Pembayaran Berhasil! Pesanan Kuliner #{$orderNumber} Siap Diproses | buyle.id";
+            $badgeText        = 'PESANAN KULINER / F&B';
+            $title            = 'Pembayaran Pesanan Makanan Berhasil!';
+            $subtitle         = "Pesanan kuliner kamu sudah diteruskan ke Dapur / Resto #{$orderNumber}";
+            $introText        = "Halo <strong>{$buyerName}</strong>, pembayaran untuk pesanan makanan/minuman kamu <strong>#{$orderNumber}</strong> telah kami terima dan terverifikasi. Resto sedang memproses pesanan kamu:";
+            $ctaText          = 'Lihat Detail Status Pesanan';
+            $promptMsg        = "Resto / Dapur sedang menyiapkan pesanan kamu sesuai opsi (Dine-In / Takeaway / Delivery). Pantau statusnya di dashboard:";
+            $footerNote       = 'Ada pertanyaan terkait pesanan makanan kamu? Balas email ini aja, tim kami siap bantu!';
         } elseif ($hasPhysical) {
             $subject          = "Pembayaran Berhasil! Pesanan Produk #{$orderNumber} Sedang Diproses | buyle.id";
             $badgeText        = 'PRODUK FISIK DIPROSES';
@@ -138,6 +163,15 @@ class OrderPaidNotification extends Notification
             $ctaText          = 'Lihat Detail & Status Pesanan';
             $promptMsg        = "Penjual/UMKM sedang menyiapkan pesanan kamu. Kamu dapat memantau status pesanan dan rincian pengiriman melalui tombol di bawah ini:";
             $footerNote       = 'Ada pertanyaan terkait pengiriman atau produk fisik ini? Balas email ini aja, tim kami siap membantu!';
+        } elseif ($hasService) {
+            $subject          = "Pembayaran Berhasil! Pesanan Layanan Jasa #{$orderNumber} Terverifikasi | buyle.id";
+            $badgeText        = 'LAYANAN JASA / KONSULTASI';
+            $title            = 'Pembayaran Layanan Jasa Berhasil!';
+            $subtitle         = "Pesanan layanan / konsultasi kamu sudah terverifikasi #{$orderNumber}";
+            $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih banyak telah menggunakan layanan di <strong>buyle.id</strong>. Pembayaran untuk layanan <strong>#{$orderNumber}</strong> telah kami terima. Penyedia jasa akan segera menghubungi kamu untuk pelaksanaan layanan / konsultasi:";
+            $ctaText          = 'Lihat Detail Pesanan Jasa';
+            $promptMsg        = "Kamu dapat melihat instruksi layanan dan menghubungi penyedia jasa melalui dashboard pembeli di bawah ini:";
+            $footerNote       = 'Ada kendala atau pertanyaan terkait layanan jasa ini? Balas email ini aja, kami siap membantu!';
         } else {
             $subject          = "Pembayaran Berhasil! File Akses Produk Digital #{$orderNumber} Ready | buyle.id";
             $badgeText        = 'DIGITAL PRODUCT READY';
