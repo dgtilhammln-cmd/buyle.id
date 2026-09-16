@@ -17,6 +17,10 @@ class ImageDownloader
             return $url;
         }
 
+        if (preg_match('#/storage/(products/.*)$#i', $url, $m)) {
+            return $m[1];
+        }
+
         try {
             $ch = curl_init();
             curl_setopt_array($ch, [
