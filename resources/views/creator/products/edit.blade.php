@@ -396,6 +396,19 @@
                                     </select>
                                 </div>
 
+                                <div class="form-group full" id="buyleCheckoutToggleWrap" style="display:none; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:1rem; margin-top:0.25rem; margin-bottom:0.75rem;">
+                                    <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
+                                        <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
+                                            <input type="checkbox" name="is_buyle_checkout" id="isBuyleCheckoutToggle" value="1" {{ old('is_buyle_checkout', $product->is_buyle_checkout ?? 1) ? 'checked' : '' }} onchange="handleBuyleCheckoutToggle(this.checked)" style="opacity:0; width:0; height:0;">
+                                            <span class="toggle-slider-s"></span>
+                                        </div>
+                                        <div>
+                                            <div style="font-size:0.85rem; font-weight:700; color:#0f172a;">Pembayaran via Buyle</div>
+                                            <div style="font-size:0.72rem; color:#64748b; line-height:1.4;">Aktifkan untuk menerima pembayaran langsung melalui sistem checkout Buyle.id & ekspedisi logistik.</div>
+                                        </div>
+                                    </label>
+                                </div>
+
                                 <div id="categoryWrap" class="form-group">
                                     <label class="form-label">Kategori Utama <span>*</span></label>
                                     <select name="product_category_id" id="catSelect" class="form-input" required
@@ -1111,22 +1124,51 @@
             const catSelect = document.getElementById('catSelect');
             const commissionInput = document.getElementById('affiliate_commission_rate');
             const weightInput = document.getElementById('input_weight');
+            const buyleToggleWrap = document.getElementById('buyleCheckoutToggleWrap');
+            const buyleToggle = document.getElementById('isBuyleCheckoutToggle');
 
-            // Hide Kategori Utama & Komisi Affiliate for physical & makanan products
-            const hideCatAndCommission = (val === 'physical' || val === 'makanan');
-            if (categoryWrap) categoryWrap.style.display = hideCatAndCommission ? 'none' : '';
-            if (commissionWrap) commissionWrap.style.display = hideCatAndCommission ? 'none' : '';
-            if (catSelect) { hideCatAndCommission ? catSelect.removeAttribute('required') : catSelect.setAttribute('required', 'required'); }
-            if (commissionInput) { hideCatAndCommission ? commissionInput.removeAttribute('required') : commissionInput.setAttribute('required', 'required'); }
+            const isPhysicalOrFood = (val === 'physical' || val === 'makanan');
+            const isService = (val === 'service');
 
-            // Hide Kelompok Produk for makanan
-            const isFood = (val === 'makanan');
-            if (groupWrap) groupWrap.style.display = isFood ? 'none' : '';
+            if (isPhysicalOrFood) {
+                if (buyleToggleWrap) buyleToggleWrap.style.display = 'block';
+                const isBuyleActive = buyleToggle ? buyleToggle.checked : true;
 
-            // Show Physical specific fields ONLY for physical
-            const isPhysical = (val === 'physical');
-            if (physicalWrap) physicalWrap.style.display = isPhysical ? 'block' : 'none';
-            if (weightInput) { isPhysical ? weightInput.setAttribute('required', 'required') : weightInput.removeAttribute('required'); }
+                if (isBuyleActive) {
+                    if (physicalWrap) physicalWrap.style.display = (val === 'physical') ? 'block' : 'none';
+                    if (categoryWrap) categoryWrap.style.display = 'block';
+                    if (groupWrap) groupWrap.style.display = 'block';
+                    if (catSelect) catSelect.setAttribute('required', 'required');
+                    if (weightInput && val === 'physical') weightInput.setAttribute('required', 'required');
+                } else {
+                    if (physicalWrap) physicalWrap.style.display = 'none';
+                    if (categoryWrap) categoryWrap.style.display = 'none';
+                    if (groupWrap) groupWrap.style.display = 'none';
+                    if (catSelect) catSelect.removeAttribute('required');
+                    if (weightInput) weightInput.removeAttribute('required');
+                }
+                if (commissionWrap) commissionWrap.style.display = 'none';
+                if (commissionInput) commissionInput.removeAttribute('required');
+            } else if (isService) {
+                if (buyleToggleWrap) buyleToggleWrap.style.display = 'none';
+                if (physicalWrap) physicalWrap.style.display = 'none';
+                if (categoryWrap) categoryWrap.style.display = 'none';
+                if (groupWrap) groupWrap.style.display = 'none';
+                if (catSelect) catSelect.removeAttribute('required');
+                if (weightInput) weightInput.removeAttribute('required');
+                if (commissionWrap) commissionWrap.style.display = 'block';
+                if (commissionInput) commissionInput.setAttribute('required', 'required');
+            } else {
+                // ticket or external_link
+                if (buyleToggleWrap) buyleToggleWrap.style.display = 'none';
+                if (physicalWrap) physicalWrap.style.display = 'none';
+                if (weightInput) weightInput.removeAttribute('required');
+                if (categoryWrap) categoryWrap.style.display = 'block';
+                if (groupWrap) groupWrap.style.display = 'block';
+                if (catSelect) catSelect.setAttribute('required', 'required');
+                if (commissionWrap) commissionWrap.style.display = 'block';
+                if (commissionInput) commissionInput.setAttribute('required', 'required');
+            }
 
             if (val === 'ticket') {
                 if (wrap) wrap.style.display = 'block';
@@ -1156,6 +1198,11 @@
                     extInput.removeAttribute('required');
                 }
             }
+        }
+
+        function handleBuyleCheckoutToggle(checked) {
+            const val = document.getElementById('productTypeSelect')?.value;
+            toggleProductTypeFields(val);
         }
         const initPType = document.getElementById('productTypeSelect');
         if (initPType) toggleProductTypeFields(initPType.value);
