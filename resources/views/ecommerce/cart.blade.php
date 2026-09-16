@@ -7,7 +7,7 @@
     <style>
         :root {
             --c-accent: #1eb349;
-            --c-accent-dark: #15803d;
+            --c-accent-dark: #a5cf37;
             --c-text: #0F172A;
             --c-muted: #64748B;
             --c-border: #E2E8F0;

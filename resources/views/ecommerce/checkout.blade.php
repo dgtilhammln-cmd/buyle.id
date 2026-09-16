@@ -224,7 +224,7 @@
     .btn-pay {
         display: block;
         width: 100%;
-        background: linear-gradient(135deg, #1eb349, #15803d);
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
         color: #fff;
         border: none;
         border-radius: 999px;
@@ -235,7 +235,7 @@
         transition: transform 0.2s, box-shadow 0.2s;
         text-align: center;
         margin-top: 1.5rem;
-        box-shadow: 0 6px 20px rgba(30, 179, 73, .25);
+        box-shadow: 0 6px 20px rgba(30, 179, 73, .35);
     }
 
     .btn-pay:hover {
@@ -571,7 +571,7 @@
                             <div
                                 style="display:flex; flex-direction:column; gap:0.4rem; width:100%; max-width:180px; align-self:center;">
                                 <a href="{{ route('checkout.login') }}"
-                                    style="display:inline-flex; align-items:center; justify-content:center; gap:0.4rem; background:#1eb349; color:#fff; font-weight:800; font-size:0.85rem; padding:0.7rem 1rem; border-radius:10px; text-decoration:none; text-align:center; box-shadow:0 4px 12px rgba(30,179,73,0.3); transition:all 0.2s;"
+                                    style="display:inline-flex; align-items:center; justify-content:center; gap:0.4rem; background: linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-weight:800; font-size:0.85rem; padding:0.7rem 1rem; border-radius:10px; text-decoration:none; text-align:center; box-shadow:0 4px 12px rgba(30,179,73,0.3); transition:all 0.2s;"
                                     onmouseover="this.style.transform='translateY(-2px)'"
                                     onmouseout="this.style.transform='none'">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -947,7 +947,8 @@
                             Pengiriman Otomatis Produk Digital / Tiket / Jasa
                         </div>
                         <div style="font-size:0.85rem; color:#166534; line-height:1.5;">
-                            Akses file digital, tiket event, atau instruksi layanan jasa Anda akan otomatis dikirimkan langsung ke <strong>Email</strong> & <strong>WhatsApp</strong> Anda setelah pembayaran berhasil. Tidak memerlukan pengiriman fisik.
+                            Akses file digital, tiket event, atau instruksi layanan jasa Anda akan otomatis dikirimkan
+                            langsung ke <strong>Email</strong> Anda setelah pembayaran berhasil.
                         </div>
                     </div>
                 @endif
@@ -1000,7 +1001,8 @@
                                 <div style="flex:1;">
                                     <div class="summary-title">{{ $item->product->name ?? 'Produk Telah Dihapus' }}</div>
                                     <div class="summary-meta">{{ $item->qty }} x Rp
-                                        {{ number_format($item->unit_price, 0, ',', '.') }}</div>
+                                        {{ number_format($item->unit_price, 0, ',', '.') }}
+                                    </div>
                                     <div class="summary-price mt-1">Rp {{ number_format($item->subtotal, 0, ',', '.') }}
                                     </div>
                                 </div>
@@ -1138,7 +1140,7 @@
                                     style="flex:1;border:1.5px solid #E2E8F0;border-radius:10px;padding:0.65rem 1rem;font-size:0.9rem;font-family:var(--font);outline:none;text-transform:uppercase;"
                                     oninput="this.value=this.value.toUpperCase()">
                                 <button type="button" onclick="applyManualVoucher()"
-                                    style="background:linear-gradient(135deg,#1eb349,#16a34a);color:#fff;border:none;border-radius:10px;padding:0.65rem 1.25rem;font-weight:700;font-size:0.875rem;cursor:pointer;white-space:nowrap;">Pakai</button>
+                                    style="background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:10px;padding:0.65rem 1.25rem;font-weight:700;font-size:0.875rem;cursor:pointer;white-space:nowrap;">Pakai</button>
                             </div>
                             <div id="voucher-manual-msg" style="font-size:0.78rem;margin-top:0.4rem;display:none;">
                             </div>
@@ -2269,7 +2271,7 @@
         const wrapper = el.closest('.fee-info-wrapper');
         const popover = wrapper.querySelector('.fee-popover');
         const isOpen = popover.classList.contains('show');
-        
+
         document.querySelectorAll('.fee-popover.show').forEach(p => p.classList.remove('show'));
         document.querySelectorAll('.fee-info-icon.active').forEach(i => i.classList.remove('active'));
 
@@ -2279,7 +2281,7 @@
         }
     }
 
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (!e.target.closest('.fee-info-wrapper')) {
             document.querySelectorAll('.fee-popover.show').forEach(p => p.classList.remove('show'));
             document.querySelectorAll('.fee-info-icon.active').forEach(i => i.classList.remove('active'));

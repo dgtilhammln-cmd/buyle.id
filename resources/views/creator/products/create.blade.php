@@ -177,7 +177,7 @@
             border-radius: 12px;
             border: 1.5px solid #e2e8f0;
             background-color: #ffffff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
             transition: all 0.2s ease;
         }
 
@@ -771,7 +771,8 @@
                         </div>
                         <div class="form-body">
                             <div class="form-group">
-                                <label class="form-label">Tautan Eksternal (G-Drive / Notion / Website)</label>
+                                <label class="form-label">Tautan Eksternal (Google Drive / Dropbox / Mediafire /
+                                    dll)</label>
                                 <input type="url" name="digital_resource" id="externalLink"
                                     value="{{ old('digital_resource') }}" class="form-input" placeholder="https://..."
                                     required>
@@ -949,17 +950,17 @@
         function addFaqRow() {
             const container = document.getElementById('faqContainer');
             const html = `
-                <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                    <div class="form-group">
-                        <label class="form-label">Pertanyaan</label>
-                        <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Jawaban</label>
-                        <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
-                    </div>
-                    <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                </div>`;
+                            <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                                <div class="form-group">
+                                    <label class="form-label">Pertanyaan</label>
+                                    <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Jawaban</label>
+                                    <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
+                                </div>
+                                <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                            </div>`;
             container.insertAdjacentHTML('beforeend', html);
             faqIdx++;
         }
@@ -1100,7 +1101,7 @@
                     if (physicalWrap) physicalWrap.style.display = 'none';
                     if (weightInput) weightInput.removeAttribute('required');
                 }
-                
+
                 // Hide Category, Sub-Category, and Group for Barang & Makanan
                 if (categoryWrap) categoryWrap.style.display = 'none';
                 if (subCatWrap) subCatWrap.style.display = 'none';
@@ -1173,13 +1174,13 @@
 
                 // Banner alert
                 const alertHtml = `
-                        <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.1rem 1.4rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; color:#0f172a; font-size:0.85rem; font-weight:700; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
-                            <div style="display:flex; align-items:center; gap:0.6rem;">
-                                <svg width="22" height="22" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                                <span>Data berhasil diimpor otomatis via Smart Import! Silakan periksa dan sesuaikan data di bawah sebelum menyimpan.</span>
-                            </div>
-                        </div>
-                    `;
+                                    <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.1rem 1.4rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; color:#0f172a; font-size:0.85rem; font-weight:700; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
+                                        <div style="display:flex; align-items:center; gap:0.6rem;">
+                                            <svg width="22" height="22" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                                            <span>Data berhasil diimpor otomatis via Smart Import! Silakan periksa dan sesuaikan data di bawah sebelum menyimpan.</span>
+                                        </div>
+                                    </div>
+                                `;
                 const formBody = document.getElementById('productForm');
                 if (formBody) {
                     formBody.insertAdjacentHTML('afterbegin', alertHtml);
@@ -1285,9 +1286,9 @@
                             const imgBox = document.createElement('div');
                             imgBox.style.cssText = 'position:relative; width:90px; height:90px; border-radius:12px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06);';
                             imgBox.innerHTML = `
-                                    <img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                    <span style="position:absolute; bottom:4px; left:4px; background:rgba(15,23,42,0.75); color:#fff; font-size:9px; font-weight:700; padding:2px 5px; border-radius:6px; backdrop-filter:blur(4px);">Foto ${idx + 1}</span>
-                                `;
+                                                <img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                                <span style="position:absolute; bottom:4px; left:4px; background:rgba(15,23,42,0.75); color:#fff; font-size:9px; font-weight:700; padding:2px 5px; border-radius:6px; backdrop-filter:blur(4px);">Foto ${idx + 1}</span>
+                                            `;
                             galleryContainer.appendChild(imgBox);
                         });
                     }

@@ -1672,7 +1672,7 @@
             align-items: center;
             gap: 0.35rem;
             padding: 0.75rem 2.5rem;
-            background: linear-gradient(135deg, #1eb349, #15803d);
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
             color: #fff;
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
