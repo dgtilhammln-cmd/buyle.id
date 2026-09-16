@@ -645,6 +645,10 @@
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
         Tokopedia / Shopee
       </button>
+      <button class="si-tab" onclick="switchSiTab('lynk', this)" style="display:inline-flex; align-items:center; gap:0.4rem;">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Lynk.id
+      </button>
     </div>
 
     {{-- TAB 1: SCAN MENU AI --}}
@@ -771,6 +775,33 @@
         <div class="si-progress-bar"><div class="si-progress-fill" id="siMarketProgressFill"></div></div>
       </div>
       <div class="si-result" id="siMarketResult"></div>
+    </div>
+
+    {{-- TAB 4: LYNK.ID --}}
+    <div class="si-tab-pane" id="si-lynk">
+      <p style="font-size:0.8rem; color:#64748b; margin-bottom:1.25rem; line-height:1.6;">
+        Paste URL produk dari Lynk.id (misal: https://lynk.id/mindiw/Pv23p2E). Sistem akan membaca data nama, deskripsi, gambar (maks 5 foto), dan mengategorikan otomatis sebagai <b>Produk Digital / Link Access</b>.
+      </p>
+
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1.25rem; font-size:0.75rem; color:#334155; display:flex; gap:0.5rem; align-items:flex-start;">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Impor otomatis produk Lynk.id langsung menjadi tipe Produk Digital.</span>
+      </div>
+
+      <label class="si-label">URL Produk Lynk.id</label>
+      <input type="url" id="siLynkUrl" class="si-input" placeholder="https://lynk.id/mindiw/Pv23p2E">
+      <span style="font-size:0.72rem; color:#94a3b8; margin-top:0.3rem; display:block;">Contoh: https://lynk.id/mindiw/Pv23p2E</span>
+
+      <button class="si-btn" id="siLynkBtn" onclick="runSiLynkScrape()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Import dari Lynk.id (Produk Digital)
+      </button>
+
+      <div class="si-progress" id="siLynkProgress">
+        <p style="font-size:0.75rem; color:#0f172a; font-weight:600; margin-bottom:0.5rem;" id="siLynkProgressText">Membaca data produk dari Lynk.id...</p>
+        <div class="si-progress-bar"><div class="si-progress-fill" id="siLynkProgressFill"></div></div>
+      </div>
+      <div class="si-result" id="siLynkResult"></div>
     </div>
 
     <div style="padding:1rem 1.75rem; border-top:1px solid #f1f5f9; background:#f8fafc; border-radius:0 0 20px 20px;">
@@ -978,6 +1009,37 @@
     .catch(err => {
       btn.disabled = false;
       document.getElementById('siMarketProgress').style.display = 'none';
+      alert('Terjadi kesalahan: ' + err.message);
+    });
+  }
+
+  // LYNK.ID — langsung redirect ke form produk sebagai Produk Digital
+  function runSiLynkScrape() {
+    const url = document.getElementById('siLynkUrl').value;
+    if (!url) { alert('Masukkan URL produk dari Lynk.id.'); return; }
+    const btn = document.getElementById('siLynkBtn');
+    btn.disabled = true;
+    document.getElementById('siLynkProgress').style.display = 'block';
+    const csrfToken = '{{ csrf_token() }}';
+
+    fetch('{{ route("creator.products.scan-url") }}', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+      body: JSON.stringify({ url: url, source: 'lynk' })
+    })
+    .then(res => res.json())
+    .then(res => {
+      btn.disabled = false;
+      document.getElementById('siLynkProgress').style.display = 'none';
+      if (res.success && res.items && res.items.length > 0) {
+        redirectToCreateWithData(res.items[0], 'external_link'); // → Produk Digital / Link Access
+      } else {
+        alert(res.message || 'Gagal membaca data produk Lynk.id.');
+      }
+    })
+    .catch(err => {
+      btn.disabled = false;
+      document.getElementById('siLynkProgress').style.display = 'none';
       alert('Terjadi kesalahan: ' + err.message);
     });
   }

@@ -368,7 +368,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <input type="file" name="image" id="thumb-input" accept="image/*" onchange="previewSingleThumb(event)" style="display:none;" required>
+                            <input type="file" name="image" id="thumb-input" accept="image/*" onchange="previewSingleThumb(event)" style="display:none;">
                         </div>
 
                         <div class="form-group">
@@ -798,6 +798,37 @@
             if (item.source_url) {
                 const extLinkInput = document.getElementById('externalLink');
                 if (extLinkInput) extLinkInput.value = item.source_url;
+            }
+
+            // Fill Image & Gallery URLs if scraped (max 5 photos)
+            if (item.image && !item.image.includes('buyle-placeholder.svg')) {
+                const thumbImg = document.getElementById('thumbPreviewImg');
+                const thumbWrap = document.getElementById('thumbPreviewWrap');
+                if (thumbImg && thumbWrap) {
+                    thumbImg.src = item.image;
+                    thumbWrap.style.display = 'block';
+                }
+                let scrapedImgInput = document.getElementById('scraped_image_url');
+                if (!scrapedImgInput) {
+                    scrapedImgInput = document.createElement('input');
+                    scrapedImgInput.type = 'hidden';
+                    scrapedImgInput.name = 'scraped_image_url';
+                    scrapedImgInput.id = 'scraped_image_url';
+                    document.getElementById('productForm').appendChild(scrapedImgInput);
+                }
+                scrapedImgInput.value = item.image;
+            }
+
+            if (item.images && item.images.length > 0) {
+                let scrapedGalleryInput = document.getElementById('scraped_gallery_urls');
+                if (!scrapedGalleryInput) {
+                    scrapedGalleryInput = document.createElement('input');
+                    scrapedGalleryInput.type = 'hidden';
+                    scrapedGalleryInput.name = 'scraped_gallery_urls';
+                    scrapedGalleryInput.id = 'scraped_gallery_urls';
+                    document.getElementById('productForm').appendChild(scrapedGalleryInput);
+                }
+                scrapedGalleryInput.value = JSON.stringify(item.images.slice(0, 5));
             }
 
         } catch (e) {

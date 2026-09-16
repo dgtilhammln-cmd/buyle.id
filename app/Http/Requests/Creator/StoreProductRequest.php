@@ -25,7 +25,7 @@ class StoreProductRequest extends FormRequest
             'product_sub_category_id' => ['nullable', 'exists:product_sub_categories,id'],
             'creator_group_id'    => ['nullable', 'exists:creator_product_groups,id'],
             'file_type'           => ['nullable', 'string', 'max:50'],
-            'image'               => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
+            'image'               => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'gallery'             => ['nullable', 'array', 'max:6'],
             'product_type'        => ['nullable', 'string', 'in:digital,physical,makanan,service,ticket,external_link'],
             'sku'                 => ['nullable', 'string', 'max:100'],

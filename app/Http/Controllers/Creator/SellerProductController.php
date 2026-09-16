@@ -56,9 +56,11 @@ class SellerProductController extends Controller
     {
         $data = $request->validated();
 
-        // Handle thumbnail (wajib saat create)
+        // Handle thumbnail
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
             $data['image'] = $request->file('image')->store('products', 'public');
+        } elseif (!empty($request->input('scraped_image_url'))) {
+            $data['image'] = $request->input('scraped_image_url');
         }
 
         // Handle gallery (opsional, maks 6)
@@ -70,6 +72,9 @@ class SellerProductController extends Controller
                 $galleryPaths[] = $gFile->store('products/gallery', 'public');
             }
             $data['gallery'] = $galleryPaths;
+        } elseif (!empty($request->input('scraped_gallery_urls'))) {
+            $scrapedGalleries = json_decode($request->input('scraped_gallery_urls'), true);
+            $data['gallery'] = is_array($scrapedGalleries) ? array_slice($scrapedGalleries, 0, 5) : [];
         } else {
             $data['gallery'] = [];
         }
@@ -77,7 +82,7 @@ class SellerProductController extends Controller
         // Produk type: ticket, physical, makanan, service, atau external_link
         $data['seller_id']    = auth()->id();
         $pt = $request->input('product_type');
-        $data['product_type'] = in_array($pt, ['ticket', 'physical', 'makanan', 'service']) ? $pt : 'external_link';
+        $data['product_type'] = in_array($pt, ['ticket', 'physical', 'makanan', 'service', 'external_link']) ? $pt : 'external_link';
         $data['stock']        = $data['stock'] ?? 0;
 
         // Handle White Label status (hanya untuk produk non-tiket)

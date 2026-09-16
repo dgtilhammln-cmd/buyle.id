@@ -345,8 +345,11 @@ class MenuScanController extends Controller
             // Ignore HTTP fetch errors; rely on URL slug parsing below
         }
 
-        // ── Deduplicate images ──────────────────────────────────────────
+        $isLynk = (str_contains(strtolower($url), 'lynk.id') || str_contains(strtolower($url), 'link.id') || $source === 'lynk');
+
+        // ── Deduplicate & Limit images to MAX 5 ─────────────────────────
         $images = array_values(array_unique($images));
+        $images = array_slice($images, 0, 5);
         $image  = $images[0] ?? null;
 
         // ── Clean up title ──────────────────────────────────────────────
@@ -365,7 +368,7 @@ class MenuScanController extends Controller
                 $lastSegment = $pathSegments[count($pathSegments) - 2];
             }
 
-            // Strip Tokopedia/Shopee IDs: produk-nama-i.12345.67890 or produk-nama-12345678
+            // Strip Tokopedia/Shopee/Lynk IDs: produk-nama-i.12345.67890 or produk-nama-12345678
             $lastSegment = preg_replace('/-i\.\d+\.\d+$/i', '', $lastSegment);
             $lastSegment = preg_replace('/-p\d+$/i', '', $lastSegment);
             $lastSegment = preg_replace('/-\d{5,}$/i', '', $lastSegment);
@@ -374,19 +377,18 @@ class MenuScanController extends Controller
             $extractedName = trim(preg_replace('/\b(Product|Item|Detail|Create|Index|Shop|Toko|Id)\b/i', '', $extractedName));
             $extractedName = trim(preg_replace('/\s+/', ' ', $extractedName));
 
-            $cleanTitle = (mb_strlen($extractedName) > 2) ? $extractedName : 'Produk Impor';
+            $cleanTitle = (mb_strlen($extractedName) > 2) ? $extractedName : ($lastSegment ?: 'Pv23p2E');
         }
 
         // ── Build slug ──────────────────────────────────────────────────
         $slug = Str::slug($cleanTitle);
 
         // ── Clean & Format Description (No raw URL parameters) ──────────
-        if (!empty($desc)) {
+        if ($isLynk || empty($desc) || str_starts_with(strtolower($desc), 'http') || mb_strlen($desc) < 5) {
+            $desc = $cleanTitle . ' — Produk jualan berkualitas tinggi. Dapatkan penawaran terbaik dan layanan pengiriman cepat.';
+        } else {
             $desc = preg_replace('/Produk diimpor dari:\s*https?:\/\/[^\s]+/i', '', $desc);
             $desc = trim(strip_tags(html_entity_decode($desc)));
-        }
-        if (empty($desc) || str_starts_with(strtolower($desc), 'http') || mb_strlen($desc) < 5) {
-            $desc = $cleanTitle . ' — Produk jualan berkualitas tinggi. Dapatkan penawaran terbaik dan layanan pengiriman cepat.';
         }
 
         // ── If sale price > normal price, swap ──────────────────────────
@@ -399,14 +401,15 @@ class MenuScanController extends Controller
         }
 
         $item = [
-            'name'        => $cleanTitle,
-            'slug'        => $slug,
-            'price'       => $price > 0 ? (int) $price : null,
-            'sale_price'  => $salePrice > 0 ? (int) $salePrice : null,
-            'description' => $desc,
-            'image'       => $image ?: \App\Models\Product::getPlaceholderUrl(),
-            'images'      => $images,
-            'source_url'  => $url,
+            'name'         => $cleanTitle,
+            'slug'         => $slug,
+            'price'        => $price > 0 ? (int) $price : null,
+            'sale_price'   => $salePrice > 0 ? (int) $salePrice : null,
+            'description'  => $desc,
+            'image'        => $image ?: \App\Models\Product::getPlaceholderUrl(),
+            'images'       => $images,
+            'source_url'   => $url,
+            'product_type' => $isLynk ? 'external_link' : 'physical',
         ];
 
         return response()->json([
