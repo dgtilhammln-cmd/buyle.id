@@ -1257,32 +1257,45 @@
     {{-- TAB 4: LYNK.ID --}}
     <div class="si-tab-pane" id="si-lynk">
 
-      {{-- STEP 1: INPUT URL (UTAMA - MOBILE & PC) --}}
+      {{-- LYNK.ID DESKTOP VIEW-SOURCE FLOW --}}
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem; margin-bottom:1.2rem; display:flex; gap:0.75rem; align-items:flex-start;">
+        <svg width="20" height="20" fill="none" stroke="#0284c7" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+          <line x1="8" y1="21" x2="16" y2="21"/>
+          <line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+        <div style="font-size:0.78rem; color:#334155; line-height:1.45;">
+          <strong style="color:#0f172a; display:block; margin-bottom:0.25rem;">Impor Produk Lynk.id via Desktop / PC</strong>
+          1. Masukkan URL &#8594; Klik <strong>Salin Link Source</strong>.<br>
+          2. Buka tab baru &#8594; Paste URL &#8594; Tekan <strong>Ctrl+A &amp; Ctrl+C</strong>.<br>
+          3. Tempel seluruh HTML ke kolom di bawah &#8594; Klik <strong>Import</strong>.
+        </div>
+      </div>
+
+      {{-- STEP 1: INPUT URL --}}
       <div style="margin-bottom:1rem;">
-        <label class="si-label" style="margin-bottom:0.2rem;display:block;">URL Produk Lynk.id</label>
-        <p style="font-size:0.75rem; color:#64748b; margin-bottom:0.5rem; line-height:1.3;">📱 <b>Pengguna HP / Mobile:</b> Cukup masukan URL Lynk.id di bawah lalu klik tombol <b>Import dari Lynk.id</b>.</p>
+        <label class="si-label" style="margin-bottom:0.3rem;display:block;">URL Produk Lynk.id</label>
         <div style="display:flex; gap:0.5rem; align-items:center;">
           <input type="url" id="siLynkUrl" class="si-input" style="margin-bottom:0; flex:1;"
             placeholder="https://lynk.id/username/slug">
           <button type="button" id="btnCopyViewSource" onclick="copyViewSource()"
-            title="Khusus Komputer / PC"
             style="background:#e0f2fe; color:#0284c7; border:1px solid #bae6fd; padding:0.65rem 1rem; border-radius:12px; font-weight:700; font-size:0.78rem; white-space:nowrap; cursor:pointer; display:flex; align-items:center; gap:0.4rem; flex-shrink:0;">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            Salin Link Source (PC)
+            Salin Link Source
           </button>
         </div>
         <div id="lynkCopyToast" style="display:none; margin-top:0.5rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:0.6rem 0.9rem; font-size:0.78rem; color:#166534; font-weight:600; align-items:center; gap:0.5rem;">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-          <span>Link disalin! Buka tab baru <b>(Ctrl+T)</b>, paste <b>(Ctrl+V)</b>, lalu <b>Ctrl+A &rarr; Ctrl+C</b> semua HTML, paste di bawah.</span>
+          <span>Link disalin! Buka tab baru <b>(Ctrl+T)</b>, paste <b>(Ctrl+V)</b>, lalu <b>Ctrl+A &rarr; Ctrl+C</b> semua HTML.</span>
         </div>
       </div>
 
-      {{-- STEP 2: PASTE SOURCE HTML (OPSIONAL UNTUK PC) --}}
+      {{-- STEP 2: PASTE SOURCE HTML --}}
       <div style="margin-bottom:1rem;">
-        <label class="si-label" style="margin-bottom:0.2rem;display:block;">Paste Source HTML <span style="font-weight:400; color:#64748b; font-size:0.75rem;">(Opsional - Khusus PC jika butuh bypass)</span></label>
+        <label class="si-label" style="margin-bottom:0.3rem;display:block;">Paste Source HTML Lynk.id</label>
         <textarea id="siLynkHtmlCode" class="si-input"
-          style="height:100px; padding:0.75rem; font-family:monospace; font-size:0.74rem;"
-          placeholder="Pengguna HP abaikan kolom ini. Untuk PC: Jika URL tidak terbaca otomatis, salin link source &#8594; buka tab baru &#8594; Ctrl+A &#8594; Ctrl+C &#8594; tempel HTML di sini..."></textarea>
+          style="height:120px; padding:0.75rem; font-family:monospace; font-size:0.74rem;"
+          placeholder="Tempel seluruh HTML dari Ctrl+A Ctrl+C di sini..."></textarea>
       </div>
 
       <button class="si-btn" id="siLynkBtn" onclick="runSiLynkScrape()">
