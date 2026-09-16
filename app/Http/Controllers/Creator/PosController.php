@@ -99,6 +99,21 @@ class PosController extends Controller
                         ->first();
                 }
 
+                // Exclude digital products / tickets from POS
+                if ($product && in_array(strtolower($product->product_type ?? ''), ['external_link', 'digital', 'ticket'])) {
+                    continue;
+                }
+
+                $cat = strtolower(trim($data['category'] ?? ''));
+                if (in_array($cat, ['digital', 'ebook', 'link', 'tiket', 'event'])) {
+                    continue;
+                }
+
+                $titleLower = strtolower($block->title ?? '');
+                if (preg_match('/(ebook|e-book|pdf|modul|panduan|link|akses|webinar|tiket|course|kursus)/i', $titleLower)) {
+                    continue;
+                }
+
                 $extractedPrice = $parsePrice($data['price'] ?? 0);
                 if ($extractedPrice <= 0) {
                     $extractedPrice = $parsePrice($data['original_price'] ?? 0);
@@ -156,7 +171,7 @@ class PosController extends Controller
             }
         }
 
-        // Tambahkan juga produk katalog umum milik seller yang aktif
+        // Tambahkan juga produk katalog umum milik seller yang aktif (hanya produk fisik/makanan/service)
         $catalogProducts = Product::where('seller_id', $sellerId)
             ->where('is_active', true)
             ->whereNotIn('product_type', ['digital', 'ticket', 'external_link'])

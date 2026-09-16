@@ -49,7 +49,7 @@ class UpdateProductRequest extends FormRequest
             'whitelabel_terms'          => ['nullable', 'string', 'max:2000'],
             'affiliate_commission_rate' => ['nullable', 'numeric', 'min:5', 'max:100'],
             'meta_title'                => ['nullable', 'string', 'max:70'],
-            'meta_desc'                 => ['nullable', 'string', 'max:160'],
+            'meta_desc'                 => ['nullable', 'string', 'max:1000'],
             'meta_keywords'             => ['nullable', 'string', 'max:255'],
             'faqs'                      => ['nullable', 'array'],
             'faqs.*.question'           => ['nullable', 'string', 'max:500'],
@@ -104,8 +104,10 @@ class UpdateProductRequest extends FormRequest
         }
 
         // Map meta_description → meta_desc
-        if ($this->has('meta_description')) {
-            $merge['meta_desc'] = $this->input('meta_description');
+        if ($this->has('meta_description') && $this->input('meta_description')) {
+            $merge['meta_desc'] = \Illuminate\Support\Str::limit(strip_tags((string)$this->input('meta_description')), 160, '');
+        } elseif ($this->has('meta_desc') && $this->input('meta_desc')) {
+            $merge['meta_desc'] = \Illuminate\Support\Str::limit(strip_tags((string)$this->input('meta_desc')), 160, '');
         }
 
         // Filter empty FAQ entries

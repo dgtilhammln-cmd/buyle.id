@@ -540,6 +540,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::patch('/products/{product}/stock', [\App\Http\Controllers\Creator\SellerProductController::class, 'updateStock'])->name('products.stock');
     Route::patch('/products/{product}/order', [\App\Http\Controllers\Creator\SellerProductController::class, 'updateOrder'])->name('products.order');
     Route::post('/products/scan-menu', [\App\Http\Controllers\Creator\MenuScanController::class, 'scan'])->name('products.scan-menu');
+    Route::post('/products/scan-url', [\App\Http\Controllers\Creator\MenuScanController::class, 'scanUrl'])->name('products.scan-url');
     Route::post('/products/bulk-import-scanned', [\App\Http\Controllers\Creator\MenuScanController::class, 'bulkImport'])->name('products.bulk-import');
     Route::resource('products', \App\Http\Controllers\Creator\SellerProductController::class);
 

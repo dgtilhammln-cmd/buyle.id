@@ -42,8 +42,8 @@ class StoreProductRequest extends FormRequest
             'whitelabel_price'          => ['nullable', 'numeric', 'min:0'],
             'whitelabel_terms'          => ['nullable', 'string', 'max:2000'],
             'affiliate_commission_rate' => ['nullable', 'numeric', 'min:5', 'max:100'],
-            'meta_title'                => ['nullable', 'string', 'max:70'],
-            'meta_desc'                 => ['nullable', 'string', 'max:160'],
+            'meta_title'                => ['nullable', 'string', 'max:150'],
+            'meta_desc'                 => ['nullable', 'string', 'max:1000'],
             'meta_keywords'             => ['nullable', 'string', 'max:255'],
             'faqs'                      => ['nullable', 'array'],
             'faqs.*.question'           => ['nullable', 'string', 'max:500'],
@@ -102,9 +102,10 @@ class StoreProductRequest extends FormRequest
             $merge['tiktok_video_url'] = $this->input('youtube_video_url');
         }
 
-        // Map meta_description → meta_desc
-        if ($this->has('meta_description')) {
-            $merge['meta_desc'] = $this->input('meta_description');
+        // Map meta_description → meta_desc & auto-truncate if > 160 chars
+        $rawMetaDesc = $this->input('meta_desc') ?: $this->input('meta_description');
+        if ($rawMetaDesc !== null && $rawMetaDesc !== '') {
+            $merge['meta_desc'] = \Illuminate\Support\Str::limit(strip_tags((string)$rawMetaDesc), 160, '');
         }
 
         // Filter empty FAQ entries

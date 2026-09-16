@@ -2214,24 +2214,42 @@
                     <div class="card-body" id="umkmProductList">
                         @php
                             $umkmBlocks = $blocks->filter(function ($b) use ($myProducts) {
-                                if ($b->type === 'custom_product')
-                                    return true;
-                                $cat = strtolower(trim($b->data_json['category'] ?? ''));
-                                if (in_array($cat, ['makanan', 'barang', 'jasa', 'lainnya', 'kuliner', 'fisik', 'umkm']))
-                                    return true;
-                                if (!empty($b->data_json['weight']) || !empty($b->data_json['sku']))
-                                    return true;
+                                // 1. If linked to a catalog Product, respect the Product's product_type
                                 $pid = $b->data_json['product_id'] ?? null;
                                 if ($pid) {
                                     $p = $myProducts->firstWhere('id', $pid);
                                     if ($p) {
                                         $pType = strtolower($p->product_type ?? $p->type ?? '');
-                                        if (in_array($pType, ['physical', 'makanan', 'service', 'product', 'umkm', 'barang', 'jasa', 'food']))
+                                        if (in_array($pType, ['external_link', 'digital', 'ticket'])) {
+                                            return false; // Digital product / ticket belongs to Buyle catalog, NOT UMKM Physical!
+                                        }
+                                        if (in_array($pType, ['physical', 'makanan', 'service', 'product', 'umkm', 'barang', 'jasa', 'food'])) {
                                             return true;
+                                        }
                                     }
                                 }
+
+                                // 2. If block is custom_product, check category and title for digital/ebook terms
+                                if ($b->type === 'custom_product') {
+                                    $cat = strtolower(trim($b->data_json['category'] ?? ''));
+                                    if (in_array($cat, ['digital', 'ebook', 'link', 'tiket', 'event'])) {
+                                        return false;
+                                    }
+                                    $title = strtolower($b->title ?? '');
+                                    if (preg_match('/(ebook|e-book|pdf|modul|panduan|link|akses|webinar|tiket|course|kursus)/i', $title)) {
+                                        return false;
+                                    }
+                                    return true;
+                                }
+
+                                $cat = strtolower(trim($b->data_json['category'] ?? ''));
+                                if (in_array($cat, ['makanan', 'barang', 'jasa', 'lainnya', 'kuliner', 'fisik', 'umkm']))
+                                    return true;
+                                if (!empty($b->data_json['weight']) || !empty($b->data_json['sku']))
+                                    return true;
+
                                 $title = strtolower($b->title ?? '');
-                                return (bool) preg_match('/(es|nasi|teh|kopi|jus|sirup|air|soto|bakso|mie|ayam|bebek|daging|ikan|kerupuk|lumpia|kasur|samsung|promo|sepatu|baju|celana)/i', $title);
+                                return (bool) preg_match('/(es|nasi|teh|kopi|jus|sirup|air|soto|bakso|mie|ayam|bebek|daging|ikan|kerupuk|lumpia|kasur|samsung|sepatu|baju|celana)/i', $title);
                             })->sortByDesc('id');
                         @endphp
                         @forelse($umkmBlocks as $block)

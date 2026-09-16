@@ -625,20 +625,95 @@
                 wlCheck.checked = false;
                 toggleWhitelabelFields(false);
             }
-            if (extInput) {
-                extInput.removeAttribute('required');
-            }
+            if (extInput) extInput.removeAttribute('required');
             if (evType) toggleEventTypeFields(evType.value);
-        } else {
+        } else if (val === 'external_link') {
             if (wrap) wrap.style.display = 'none';
             if (digitalCard) digitalCard.style.display = 'block';
             if (whitelabelCard) whitelabelCard.style.display = 'block';
-            if (extInput) {
-                extInput.setAttribute('required', 'required');
-            }
+            if (extInput) extInput.setAttribute('required', 'required');
+        } else {
+            // physical, makanan, service
+            if (wrap) wrap.style.display = 'none';
+            if (digitalCard) digitalCard.style.display = 'block';
+            if (whitelabelCard) whitelabelCard.style.display = 'block';
+            if (extInput) extInput.removeAttribute('required');
         }
     }
     const initPType = document.getElementById('productTypeSelect');
     if (initPType) toggleProductTypeFields(initPType.value);
+
+    // Smart Import Auto-fill handler
+    document.addEventListener('DOMContentLoaded', function() {
+        const itemStr = sessionStorage.getItem('smart_imported_item');
+        if (!itemStr) return;
+
+        try {
+            const item = JSON.parse(itemStr);
+            sessionStorage.removeItem('smart_imported_item');
+
+            // Banner alert
+            const alertHtml = `
+                <div style="background:#fff7ed; border:1.5px solid #fde68a; border-radius:16px; padding:1.1rem 1.4rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; color:#c2410c; font-size:0.85rem; font-weight:700; box-shadow:0 4px 14px rgba(245,158,11,0.15);">
+                    <div style="display:flex; align-items:center; gap:0.6rem;">
+                        <svg width="22" height="22" fill="none" stroke="#f59e0b" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        <span>Data berhasil diimpor otomatis via Smart Import! Silakan periksa dan sesuaikan data di bawah sebelum menyimpan.</span>
+                    </div>
+                </div>
+            `;
+            const formBody = document.getElementById('productForm');
+            if (formBody) {
+                formBody.insertAdjacentHTML('afterbegin', alertHtml);
+            }
+
+            // Fill Name
+            if (item.name) {
+                const nameInput = document.querySelector('input[name="name"]');
+                if (nameInput) nameInput.value = item.name;
+            }
+
+            // Fill Price
+            if (item.price !== undefined && item.price !== null) {
+                const priceInput = document.getElementById('input_price');
+                if (priceInput) {
+                    const priceVal = parseFloat(item.price) || 0;
+                    priceInput.value = priceVal > 0 ? formatRupiah(priceVal.toString()) : '';
+                }
+            }
+
+            // Fill Product Type
+            if (item.product_type) {
+                const pTypeSelect = document.getElementById('productTypeSelect');
+                if (pTypeSelect) {
+                    pTypeSelect.value = item.product_type;
+                    toggleProductTypeFields(item.product_type);
+                }
+            }
+
+            // Fill Short Description & Description
+            if (item.description) {
+                const cleanDesc = item.description.replace(/<[^>]*>/g, '').trim();
+                const shortDescInput = document.querySelector('textarea[name="short_desc"]');
+                if (shortDescInput) {
+                    shortDescInput.value = cleanDesc.substring(0, 160);
+                }
+
+                // Rich text editor
+                const richEd = document.querySelector('[contenteditable="true"]');
+                const haTextarea = document.querySelector('textarea[name="description"]');
+                if (richEd) richEd.innerHTML = '<p>' + item.description + '</p>';
+                if (haTextarea) haTextarea.value = item.description;
+            }
+
+            // Fill Source URL / External Link if available
+            if (item.source_url) {
+                const extLinkInput = document.getElementById('externalLink');
+                if (extLinkInput) extLinkInput.value = item.source_url;
+            }
+
+        } catch (e) {
+            console.error('Smart Import autofill error:', e);
+        }
+    });
 </script>
 @endsection
