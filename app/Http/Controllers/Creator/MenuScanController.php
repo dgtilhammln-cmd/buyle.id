@@ -701,13 +701,21 @@ class MenuScanController extends Controller
                     $price = floatval(preg_replace('/[^0-9]/', '', $m[1]));
                 }
 
-                // Description Extraction
-                if (preg_match('/<div[^>]*class=["\'][^"\']*rich-content[^"\']*["\'][^>]*>(.*?)<\/div>\s*<\/div>/is', $rawHtml, $m) ||
-                    preg_match('/<div[^>]*class=["\'][^"\']*rich-content[^"\'][^>]*>(.*?)<\/div>/is', $rawHtml, $m)) {
+                // Description Extraction — Lynk.id uses: <div class="... rich-content" data-txt-sub>...</div>
+                // Strategy A: match via data-txt-sub attribute (most specific)
+                if (preg_match('/<div\b[^>]+data-txt-sub[^>]*>([\s\S]*?)<\/div>\s*(?:<\/div>|(?=<div\b[^>]+(?:Mt|class)[^>]*>))/i', $rawHtml, $m)) {
                     $desc = trim(html_entity_decode($m[1]));
-                } elseif (preg_match('/<meta[^>]+(?:property|name)=["\']og:description["\'][^>]+content=["\']([^"\']+)["\']/i', $rawHtml, $m) ||
-                          preg_match('/<meta[^>]+content=["\']([^"\']+)["\'][^>]+(?:property|name)=["\']og:description["\']/i', $rawHtml, $m)) {
-                    $desc = trim(html_entity_decode(strip_tags($m[1])));
+                }
+                // Strategy B: match class containing rich-content (greedy capture everything inside)
+                if (empty($desc) && preg_match('/<div\b[^>]+class="[^"]*rich-content[^"]*"[^>]*>([\s\S]+?)<\/div>\s*\n/i', $rawHtml, $m)) {
+                    $desc = trim(html_entity_decode($m[1]));
+                }
+                // Strategy C: fallback to og:description meta
+                if (empty($desc)) {
+                    if (preg_match('/<meta[^>]+(?:property|name)=["\']og:description["\'][^>]+content=["\']([^"\']+)["\']/i', $rawHtml, $m) ||
+                        preg_match('/<meta[^>]+content=["\']([^"\']+)["\'][^>]+(?:property|name)=["\']og:description["\']/i', $rawHtml, $m)) {
+                        $desc = trim(html_entity_decode(strip_tags($m[1])));
+                    }
                 }
 
                 if (!empty($desc)) {
