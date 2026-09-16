@@ -1257,30 +1257,32 @@
     {{-- TAB 4: LYNK.ID --}}
     <div class="si-tab-pane" id="si-lynk">
 
-      {{-- STEP 1: INPUT URL --}}
+      {{-- STEP 1: INPUT URL (UTAMA - MOBILE & PC) --}}
       <div style="margin-bottom:1rem;">
-        <label class="si-label" style="margin-bottom:0.4rem;display:block;">URL Produk Lynk.id</label>
+        <label class="si-label" style="margin-bottom:0.2rem;display:block;">URL Produk Lynk.id</label>
+        <p style="font-size:0.75rem; color:#64748b; margin-bottom:0.5rem; line-height:1.3;">📱 <b>Pengguna HP / Mobile:</b> Cukup masukan URL Lynk.id di bawah lalu klik tombol <b>Import dari Lynk.id</b>.</p>
         <div style="display:flex; gap:0.5rem; align-items:center;">
           <input type="url" id="siLynkUrl" class="si-input" style="margin-bottom:0; flex:1;"
             placeholder="https://lynk.id/username/slug">
           <button type="button" id="btnCopyViewSource" onclick="copyViewSource()"
+            title="Khusus Komputer / PC"
             style="background:#e0f2fe; color:#0284c7; border:1px solid #bae6fd; padding:0.65rem 1rem; border-radius:12px; font-weight:700; font-size:0.78rem; white-space:nowrap; cursor:pointer; display:flex; align-items:center; gap:0.4rem; flex-shrink:0;">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            Salin Link Source
+            Salin Link Source (PC)
           </button>
         </div>
-        <div id="lynkCopyToast" style="display:none; margin-top:0.5rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:0.6rem 0.9rem; font-size:0.78rem; color:#166534; font-weight:600; display:none; align-items:center; gap:0.5rem;">
+        <div id="lynkCopyToast" style="display:none; margin-top:0.5rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:0.6rem 0.9rem; font-size:0.78rem; color:#166534; font-weight:600; align-items:center; gap:0.5rem;">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
           <span>Link disalin! Buka tab baru <b>(Ctrl+T)</b>, paste <b>(Ctrl+V)</b>, lalu <b>Ctrl+A &rarr; Ctrl+C</b> semua HTML, paste di bawah.</span>
         </div>
       </div>
 
-      {{-- STEP 2: PASTE SOURCE HTML --}}
+      {{-- STEP 2: PASTE SOURCE HTML (OPSIONAL UNTUK PC) --}}
       <div style="margin-bottom:1rem;">
-        <label class="si-label" style="margin-bottom:0.4rem;display:block;">Paste Source HTML Lynk.id</label>
+        <label class="si-label" style="margin-bottom:0.2rem;display:block;">Paste Source HTML <span style="font-weight:400; color:#64748b; font-size:0.75rem;">(Opsional - Khusus PC jika butuh bypass)</span></label>
         <textarea id="siLynkHtmlCode" class="si-input"
-          style="height:120px; padding:0.75rem; font-family:monospace; font-size:0.74rem;"
-          placeholder="Setelah salin link source di atas, buka tab baru &#8594; paste URL &#8594; Ctrl+A &#8594; Ctrl+C &#8594; paste di sini..."></textarea>
+          style="height:100px; padding:0.75rem; font-family:monospace; font-size:0.74rem;"
+          placeholder="Pengguna HP abaikan kolom ini. Untuk PC: Jika URL tidak terbaca otomatis, salin link source &#8594; buka tab baru &#8594; Ctrl+A &#8594; Ctrl+C &#8594; tempel HTML di sini..."></textarea>
       </div>
 
       <button class="si-btn" id="siLynkBtn" onclick="runSiLynkScrape()">
