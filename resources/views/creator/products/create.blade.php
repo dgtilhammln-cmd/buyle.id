@@ -1230,35 +1230,39 @@
                     }
                 }
 
-                // Fill Short Description & Description (Clean scripts/styles first)
+                // Fill Short Description & Description (Clean scripts/styles & "Loading contents")
                 if (item.description) {
                     let sanitizedHtml = item.description
                         .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gim, '')
                         .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gim, '')
                         .trim();
 
-                    let formattedDesc = sanitizedHtml;
-                    if (!formattedDesc.includes('<p>') && !formattedDesc.includes('<br>') && !formattedDesc.includes('<div>')) {
-                        formattedDesc = formattedDesc.replace(/\r\n|\r|\n/g, '<br>');
+                    if (sanitizedHtml.toLowerCase().includes('loading contents')) {
+                        sanitizedHtml = '';
                     }
 
-                    const cleanDescText = sanitizedHtml.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-                    const shortDescInput = document.querySelector('textarea[name="short_desc"]');
-                    if (shortDescInput) {
-                        shortDescInput.value = cleanDescText.substring(0, 160);
+                    if (sanitizedHtml) {
+                        let formattedDesc = sanitizedHtml;
+                        if (!formattedDesc.includes('<p>') && !formattedDesc.includes('<br>') && !formattedDesc.includes('<div>')) {
+                            formattedDesc = formattedDesc.replace(/\r\n|\r|\n/g, '<br>');
+                        }
+
+                        const cleanDescText = sanitizedHtml.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+                        const shortDescInput = document.querySelector('textarea[name="short_desc"]');
+                        if (shortDescInput) {
+                            shortDescInput.value = cleanDescText.substring(0, 160);
+                        }
+
+                        const richEd = document.querySelector('[contenteditable="true"]');
+                        const haTextarea = document.querySelector('textarea[name="description"]');
+                        if (richEd) richEd.innerHTML = formattedDesc;
+                        if (haTextarea) haTextarea.value = formattedDesc;
                     }
-
-                    const richEd = document.querySelector('[contenteditable="true"]');
-                    const haTextarea = document.querySelector('textarea[name="description"]');
-                    if (richEd) richEd.innerHTML = formattedDesc;
-                    if (haTextarea) haTextarea.value = formattedDesc;
                 }
 
-                // Fill Source URL / External Link if available
-                if (item.source_url) {
-                    const extLinkInput = document.getElementById('externalLink');
-                    if (extLinkInput) extLinkInput.value = item.source_url;
-                }
+                // Leave Tautan Eksternal / Digital File Access EMPTY for creator to fill manually
+                const extLinkInput = document.getElementById('externalLink');
+                if (extLinkInput) extLinkInput.value = '';
 
                 // Fill Image & Gallery URLs if scraped (max 6 photos)
                 const allScrapedImages = (item.images && item.images.length > 0) ? item.images : (item.image ? [item.image] : []);
