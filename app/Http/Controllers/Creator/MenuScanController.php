@@ -273,7 +273,7 @@ class MenuScanController extends Controller
                 }
                 $desc = $getMeta('og:description') ?: $getMeta('description');
 
-                $priceRaw = $getMeta('product:price:amount');
+                $priceRaw = $getMeta('product:price:amount') ?: $getMeta('og:price:amount');
                 if ($priceRaw) {
                     $price = (float) preg_replace('/[^0-9]/', '', $priceRaw);
                 }
@@ -284,6 +284,52 @@ class MenuScanController extends Controller
                         ?: $getMeta('product:original_price:amount');
                 if ($rawOrig) {
                     $origPrice = (float) preg_replace('/[^0-9]/', '', $rawOrig);
+                }
+
+                // TikTok Shop Specific Scraper
+                if ($isTiktok) {
+                    if (preg_match('/"original_price"\s*:\s*["\']?([0-9.]+)/i', $html, $tm)) {
+                        $pOrig = (float) $tm[1];
+                        if ($pOrig > 0 && $origPrice <= 0) $origPrice = $pOrig;
+                    }
+                    if (preg_match('/"(?:real_price|sale_price|discount_price|min_price)"\s*:\s*["\']?([0-9.]+)/i', $html, $tm2)) {
+                        $pSale = (float) $tm2[1];
+                        if ($pSale > 0 && $price <= 0) $price = $pSale;
+                    }
+                    if (preg_match('/"format_original_price"\s*:\s*["\']?([^"\',]+)/i', $html, $tm3)) {
+                        $pOrigFmt = (float) preg_replace('/[^0-9]/', '', $tm3[1]);
+                        if ($pOrigFmt > 0 && $origPrice <= 0) $origPrice = $pOrigFmt;
+                    }
+                    if (preg_match('/"format_real_price"\s*:\s*["\']?([^"\',]+)/i', $html, $tm4)) {
+                        $pSaleFmt = (float) preg_replace('/[^0-9]/', '', $tm4[1]);
+                        if ($pSaleFmt > 0 && $price <= 0) $price = $pSaleFmt;
+                    }
+                }
+
+                // Shopee Specific Scraper
+                if ($isShopee) {
+                    if (preg_match('/"price_before_discount"\s*:\s*([0-9]+)/i', $html, $sm)) {
+                        $pOrigShp = (float) $sm[1];
+                        if ($pOrigShp > 10000000) $pOrigShp = $pOrigShp / 100000;
+                        if ($pOrigShp > 0 && $origPrice <= 0) $origPrice = $pOrigShp;
+                    }
+                    if (preg_match('/"price"\s*:\s*([0-9]+)/i', $html, $sm2)) {
+                        $pSaleShp = (float) $sm2[1];
+                        if ($pSaleShp > 10000000) $pSaleShp = $pSaleShp / 100000;
+                        if ($pSaleShp > 0 && $price <= 0) $price = $pSaleShp;
+                    }
+                }
+
+                // Tokopedia Specific Scraper
+                if ($isTokopedia) {
+                    if (preg_match('/"(?:slashPrice|originalPrice)"\s*:\s*["\']?([0-9.]+)/i', $html, $tokm)) {
+                        $pOrigTok = (float) preg_replace('/[^0-9]/', '', $tokm[1]);
+                        if ($pOrigTok > 0 && $origPrice <= 0) $origPrice = $pOrigTok;
+                    }
+                    if (preg_match('/"(?:slashPriceFmt)"\s*:\s*["\']?([^"\',]+)/i', $html, $tokm2)) {
+                        $pOrigTokFmt = (float) preg_replace('/[^0-9]/', '', $tokm2[1]);
+                        if ($pOrigTokFmt > 0 && $origPrice <= 0) $origPrice = $pOrigTokFmt;
+                    }
                 }
 
                 // Collect OpenGraph & Twitter Images
@@ -462,11 +508,25 @@ class MenuScanController extends Controller
             }
 
             // Normal Price vs Promo Price logic
-            if ($origPrice > 0 && $origPrice > $price) {
-                $normalPrice = (int)$origPrice;
-                $promoPrice  = (int)$price;
-            } else {
+            $normalPrice = 0;
+            $promoPrice  = 0;
+
+            if ($origPrice > 0 && $price > 0) {
+                if ($origPrice > $price) {
+                    $normalPrice = (int)$origPrice; // Harga Normal
+                    $promoPrice  = (int)$price;     // Harga Diskon
+                } else if ($price > $origPrice) {
+                    $normalPrice = (int)$price;     // Harga Normal
+                    $promoPrice  = (int)$origPrice; // Harga Diskon
+                } else {
+                    $normalPrice = (int)$price;     // Harga Normal
+                    $promoPrice  = 0;
+                }
+            } else if ($price > 0) {
                 $normalPrice = (int)$price;
+                $promoPrice  = 0;
+            } else if ($origPrice > 0) {
+                $normalPrice = (int)$origPrice;
                 $promoPrice  = 0;
             }
 

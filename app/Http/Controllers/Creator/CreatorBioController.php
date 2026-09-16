@@ -808,11 +808,11 @@ class CreatorBioController extends Controller
         $url = preg_replace('/[\x00-\x1F\x7F]/', '', $url);
         $host = strtolower(parse_url($url, PHP_URL_HOST) ?? '');
 
-        $isShopee    = str_contains($host, 'shopee') || str_contains($host, 'shp.ee');
-        $isTokopedia = str_contains($host, 'tokopedia') || str_contains($host, 'tokope.dia');
+            $isShopee    = str_contains($host, 'shopee') || str_contains($host, 'shp.ee');
+            $isTokopedia = str_contains($host, 'tokopedia') || str_contains($host, 'tokope.dia');
+            $isTiktok    = str_contains($host, 'tiktok') || str_contains($host, 'vt.tiktok') || str_contains($host, 'vm.tiktok');
 
-        try {
-            $ua = $isShopee
+            $ua = ($isShopee || $isTiktok)
                 ? 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'
                 : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
 
@@ -824,8 +824,8 @@ class CreatorBioController extends Controller
 
             $html = $response->body();
 
-            // Fallback for Shopee if FB UA returns empty: try WhatsApp UA
-            if ($isShopee && (!$html || strlen($html) < 500)) {
+            // Fallback for Shopee / TikTok if empty: try WhatsApp UA
+            if (($isShopee || $isTiktok) && (!$html || strlen($html) < 500)) {
                 $response = \Illuminate\Support\Facades\Http::withHeaders([
                     'User-Agent' => 'WhatsApp/2.23.20.0 i',
                 ])->timeout(15)->get($url);
@@ -849,8 +849,54 @@ class CreatorBioController extends Controller
 
             $title       = $getMeta('og:title') ?: $getMeta('title');
             $description = $getMeta('og:description') ?: $getMeta('description');
-            $price       = (float) preg_replace('/[^0-9]/', '', $getMeta('product:price:amount'));
+            $price       = (float) preg_replace('/[^0-9]/', '', $getMeta('product:price:amount') ?: $getMeta('og:price:amount'));
             $origPrice   = 0.0;
+
+            // TikTok Shop Specific Scraper
+            if ($isTiktok) {
+                if (preg_match('/"original_price"\s*:\s*["\']?([0-9.]+)/i', $html, $tm)) {
+                    $pOrig = (float) $tm[1];
+                    if ($pOrig > 0 && $origPrice <= 0) $origPrice = $pOrig;
+                }
+                if (preg_match('/"(?:real_price|sale_price|discount_price|min_price)"\s*:\s*["\']?([0-9.]+)/i', $html, $tm2)) {
+                    $pSale = (float) $tm2[1];
+                    if ($pSale > 0 && $price <= 0) $price = $pSale;
+                }
+                if (preg_match('/"format_original_price"\s*:\s*["\']?([^"\',]+)/i', $html, $tm3)) {
+                    $pOrigFmt = (float) preg_replace('/[^0-9]/', '', $tm3[1]);
+                    if ($pOrigFmt > 0 && $origPrice <= 0) $origPrice = $pOrigFmt;
+                }
+                if (preg_match('/"format_real_price"\s*:\s*["\']?([^"\',]+)/i', $html, $tm4)) {
+                    $pSaleFmt = (float) preg_replace('/[^0-9]/', '', $tm4[1]);
+                    if ($pSaleFmt > 0 && $price <= 0) $price = $pSaleFmt;
+                }
+            }
+
+            // Shopee Specific Scraper
+            if ($isShopee) {
+                if (preg_match('/"price_before_discount"\s*:\s*([0-9]+)/i', $html, $sm)) {
+                    $pOrigShp = (float) $sm[1];
+                    if ($pOrigShp > 10000000) $pOrigShp = $pOrigShp / 100000;
+                    if ($pOrigShp > 0 && $origPrice <= 0) $origPrice = $pOrigShp;
+                }
+                if (preg_match('/"price"\s*:\s*([0-9]+)/i', $html, $sm2)) {
+                    $pSaleShp = (float) $sm2[1];
+                    if ($pSaleShp > 10000000) $pSaleShp = $pSaleShp / 100000;
+                    if ($pSaleShp > 0 && $price <= 0) $price = $pSaleShp;
+                }
+            }
+
+            // Tokopedia Specific Scraper
+            if ($isTokopedia) {
+                if (preg_match('/"(?:slashPrice|originalPrice)"\s*:\s*["\']?([0-9.]+)/i', $html, $tokm)) {
+                    $pOrigTok = (float) preg_replace('/[^0-9]/', '', $tokm[1]);
+                    if ($pOrigTok > 0 && $origPrice <= 0) $origPrice = $pOrigTok;
+                }
+                if (preg_match('/"(?:slashPriceFmt)"\s*:\s*["\']?([^"\',]+)/i', $html, $tokm2)) {
+                    $pOrigTokFmt = (float) preg_replace('/[^0-9]/', '', $tokm2[1]);
+                    if ($pOrigTokFmt > 0 && $origPrice <= 0) $origPrice = $pOrigTokFmt;
+                }
+            }
 
             // ── Multi-image collection (maks 3) ─────────────────────────────
             $images = [];
@@ -1015,10 +1061,33 @@ class CreatorBioController extends Controller
 
             $primaryImage = $downloadedImages[0] ?? null;
 
+            $normalPrice = 0;
+            $promoPrice  = 0;
+
+            if ($origPrice > 0 && $price > 0) {
+                if ($origPrice > $price) {
+                    $normalPrice = (int)$origPrice;
+                    $promoPrice  = (int)$price;
+                } else if ($price > $origPrice) {
+                    $normalPrice = (int)$price;
+                    $promoPrice  = (int)$origPrice;
+                } else {
+                    $normalPrice = (int)$price;
+                    $promoPrice  = 0;
+                }
+            } else if ($price > 0) {
+                $normalPrice = (int)$price;
+                $promoPrice  = 0;
+            } else if ($origPrice > 0) {
+                $normalPrice = (int)$origPrice;
+                $promoPrice  = 0;
+            }
+
             return response()->json([
                 'title'          => $title ?: null,
-                'price'          => (int) $price,
-                'original_price' => (int) $origPrice,
+                'price'          => $normalPrice,
+                'original_price' => $normalPrice,
+                'sale_price'     => $promoPrice,
                 'description'    => $description ?: null,
                 'image'          => $primaryImage,
                 'images'         => $downloadedImages,  // array, maks 3
