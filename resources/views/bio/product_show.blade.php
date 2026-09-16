@@ -20,7 +20,37 @@
         $waText = $block->data_json['wa_text'] ?? '';
         $waNumber = $config['wa'] ?? '';
         $waMessage = 'Halo, saya mendapatkan nomor dari buyle.id. ' . ($waText ?: 'Saya tertarik dengan produk *' . $prodTitle . '* (Rp ' . number_format($price, 0, ',', '.') . '). Apakah masih tersedia?');
-        $category = $block->data_json['category'] ?? ($product && $product->category ? $product->category->name : 'Makanan');
+        $rawCat = $block->data_json['category'] ?? ($product && $product->category ? $product->category->name : null);
+        $pType  = strtolower($product->product_type ?? $product->type ?? '');
+
+        if (!empty($rawCat)) {
+            $catLower = strtolower($rawCat);
+            if (in_array($catLower, ['jasa', 'service', 'layanan'])) {
+                $category = 'Jasa / Layanan';
+            } elseif (in_array($catLower, ['makanan', 'fnb', 'kuliner', 'food'])) {
+                $category = 'Makanan';
+            } elseif (in_array($catLower, ['barang', 'physical', 'fisik', 'umkm'])) {
+                $category = 'Barang / Fisik';
+            } elseif (in_array($catLower, ['digital', 'ebook', 'course', 'download'])) {
+                $category = 'Produk Digital';
+            } elseif ($catLower === 'ticket' || $catLower === 'tiket') {
+                $category = 'Tiket Event';
+            } else {
+                $category = ucfirst($rawCat);
+            }
+        } else {
+            if (in_array($pType, ['service', 'jasa'])) {
+                $category = 'Jasa / Layanan';
+            } elseif (in_array($pType, ['physical', 'barang', 'product', 'fisik'])) {
+                $category = 'Barang / Fisik';
+            } elseif (in_array($pType, ['makanan', 'fnb', 'food'])) {
+                $category = 'Makanan';
+            } elseif ($pType === 'ticket') {
+                $category = 'Tiket Event';
+            } else {
+                $category = 'Produk Digital';
+            }
+        }
         $stock = isset($block->data_json['stock']) && $block->data_json['stock'] !== '' && $block->data_json['stock'] !== null 
             ? (int)$block->data_json['stock'] 
             : ($product ? $product->stock : null);

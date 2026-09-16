@@ -71,6 +71,18 @@ class BioProductController extends Controller
             }
             $stock    = isset($block->data_json['stock']) && $block->data_json['stock'] !== '' && $block->data_json['stock'] !== null ? (int)$block->data_json['stock'] : null;
             $sellerId = $profile->user_id;
+            $catLower = strtolower($block->data_json['category'] ?? '');
+            $resolvedProductType = 'digital';
+            if (in_array($catLower, ['barang', 'physical', 'fisik'])) {
+                $resolvedProductType = 'physical';
+            } elseif (in_array($catLower, ['jasa', 'service', 'layanan'])) {
+                $resolvedProductType = 'service';
+            } elseif (in_array($catLower, ['makanan', 'fnb', 'kuliner', 'food'])) {
+                $resolvedProductType = 'makanan';
+            } elseif ($catLower === 'ticket' || $catLower === 'tiket') {
+                $resolvedProductType = 'ticket';
+            }
+
             $product  = Product::create([
                 'seller_id'    => $sellerId,
                 'name'         => $block->title,
@@ -80,7 +92,7 @@ class BioProductController extends Controller
                 'description'  => $block->data_json['description'] ?? '',
                 'image'        => !empty($block->data_json['images'][0]) ? $block->data_json['images'][0] : ($block->data_json['image'] ?? null),
                 'is_active'    => true,
-                'product_type' => ($block->data_json['category'] ?? '') === 'Barang' ? 'physical' : ((($block->data_json['category'] ?? '') === 'Jasa') ? 'service' : ((($block->data_json['category'] ?? '') === 'Makanan') ? 'makanan' : 'external_link')),
+                'product_type' => $resolvedProductType,
             ]);
             $data = $block->data_json ?? [];
             $data['product_id'] = $product->id;

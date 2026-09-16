@@ -487,12 +487,14 @@
                 @if(session('success'))
                     <div
                         style="background:#F0FDF4;color:#166534;padding:0.75rem 1rem;border-radius:10px;font-size:0.85rem;border:1px solid #BBF7D0;">
-                        {{ session('success') }}</div>
+                        {{ session('success') }}
+                    </div>
                 @endif
                 @if(session('error'))
                     <div
                         style="background:#FEF2F2;color:#991B1B;padding:0.75rem 1rem;border-radius:10px;font-size:0.85rem;border:1px solid #FECACA;">
-                        {{ session('error') }}</div>
+                        {{ session('error') }}
+                    </div>
                 @endif
             </div>
         @endif
@@ -618,7 +620,7 @@
                             <span class="fee-info-icon" onclick="toggleFeePopover(event, this)">ⓘ</span>
                             <div class="fee-popover">
                                 <span class="fee-popover-title">Admin Fee</span>
-                                Biaya penanganan administrasi & gerbang pembayaran (payment gateway).
+                                Biaya penanganan administrasi & integrated payment.
                             </div>
                         </span>
                     </span>
@@ -778,7 +780,7 @@
             const wrapper = el.closest('.fee-info-wrapper');
             const popover = wrapper.querySelector('.fee-popover');
             const isOpen = popover.classList.contains('show');
-            
+
             document.querySelectorAll('.fee-popover.show').forEach(p => p.classList.remove('show'));
             document.querySelectorAll('.fee-info-icon.active').forEach(i => i.classList.remove('active'));
 
@@ -788,7 +790,7 @@
             }
         }
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!e.target.closest('.fee-info-wrapper')) {
                 document.querySelectorAll('.fee-popover.show').forEach(p => p.classList.remove('show'));
                 document.querySelectorAll('.fee-info-icon.active').forEach(i => i.classList.remove('active'));
