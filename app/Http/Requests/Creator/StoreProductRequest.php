@@ -48,9 +48,9 @@ class StoreProductRequest extends FormRequest
             'whitelabel_price'          => ['nullable', 'numeric', 'min:0'],
             'whitelabel_terms'          => ['nullable', 'string', 'max:2000'],
             'affiliate_commission_rate' => ['nullable', 'numeric', 'min:5', 'max:100'],
-            'meta_title'                => ['nullable', 'string', 'max:150'],
+            'meta_title'                => ['nullable', 'string', 'max:255'],
             'meta_desc'                 => ['nullable', 'string', 'max:1000'],
-            'meta_keywords'             => ['nullable', 'string', 'max:255'],
+            'meta_keywords'             => ['nullable', 'string', 'max:500'],
             'faqs'                      => ['nullable', 'array'],
             'faqs.*.question'           => ['nullable', 'string', 'max:500'],
             'faqs.*.answer'             => ['nullable', 'string'],
@@ -72,6 +72,9 @@ class StoreProductRequest extends FormRequest
             'image.max'                      => 'Ukuran thumbnail maksimal 10MB.',
             'gallery.*.max'                  => 'Ukuran masing-masing gambar galeri maksimal 10MB.',
             'gallery.*.mimes'                => 'Format gambar galeri harus berupa JPG, JPEG, PNG, atau WEBP.',
+            'meta_title.max'                 => 'Meta Title SEO maksimal 255 karakter.',
+            'meta_desc.max'                  => 'Meta Description SEO maksimal 1000 karakter.',
+            'meta_keywords.max'              => 'Meta Keywords SEO maksimal 500 karakter.',
         ];
     }
 
@@ -87,6 +90,10 @@ class StoreProductRequest extends FormRequest
             'height'      => (float) ($this->input('height') ?? 0),
             'volume'      => (float) ($this->input('volume') ?? 0),
         ];
+
+        if ($this->has('meta_title') && $this->input('meta_title')) {
+            $merge['meta_title'] = \Illuminate\Support\Str::limit(trim($this->input('meta_title')), 255, '');
+        }
 
         if ($this->has('affiliate_commission_rate') && $this->input('affiliate_commission_rate') !== null) {
             $val = (float) $this->input('affiliate_commission_rate');
