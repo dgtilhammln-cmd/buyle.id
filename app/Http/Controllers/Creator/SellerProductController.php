@@ -83,7 +83,16 @@ class SellerProductController extends Controller
         $data['seller_id']    = auth()->id();
         $pt = $request->input('product_type');
         $data['product_type'] = in_array($pt, ['ticket', 'physical', 'makanan', 'service', 'external_link']) ? $pt : 'external_link';
-        $data['stock']        = $data['stock'] ?? 0;
+        $data['stock']        = (int) ($data['stock'] ?? 0);
+        $data['weight']       = (int) ($data['weight'] ?? 0);
+        $data['length']       = (float) ($data['length'] ?? 0);
+        $data['width']        = (float) ($data['width'] ?? 0);
+        $data['height']       = (float) ($data['height'] ?? 0);
+        $data['volume']       = (float) ($data['volume'] ?? 0);
+
+        if (empty($data['short_desc'])) {
+            $data['short_desc'] = Str::limit(strip_tags($data['description'] ?? $data['name']), 150);
+        }
 
         // Handle White Label status (hanya untuk produk non-tiket)
         if ($data['product_type'] === 'ticket') {
@@ -174,8 +183,18 @@ class SellerProductController extends Controller
         }
 
         $pt = $request->input('product_type');
-        $data['product_type'] = in_array($pt, ['ticket', 'physical', 'makanan', 'service']) ? $pt : 'external_link';
-        $data['stock']        = $data['stock'] ?? 0;
+        $data['product_type'] = in_array($pt, ['ticket', 'physical', 'makanan', 'service', 'external_link']) ? $pt : 'external_link';
+        $data['stock']        = (int) ($data['stock'] ?? 0);
+        $data['weight']       = (int) ($data['weight'] ?? 0);
+        $data['length']       = (float) ($data['length'] ?? 0);
+        $data['width']        = (float) ($data['width'] ?? 0);
+        $data['height']       = (float) ($data['height'] ?? 0);
+        $data['volume']       = (float) ($data['volume'] ?? 0);
+
+        if (empty($data['short_desc'])) {
+            $data['short_desc'] = Str::limit(strip_tags($data['description'] ?? $data['name']), 150);
+        }
+
         $isWhitelabel         = false; // Initialize to avoid undefined variable error
 
         if ($data['product_type'] === 'ticket') {

@@ -1671,27 +1671,37 @@
 
                             {{-- Food Delivery Merchant Links --}}
                             <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px dashed #e2e8f0;">
-                                <div style="font-size:0.88rem; font-weight:800; color:#0f172a; margin-bottom:0.85rem; display:flex; align-items:center; gap:0.4rem;">
-                                    <svg width="18" height="18" fill="none" stroke="#e11d48" stroke-width="2" viewBox="0 0 24 24">
-                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                <div
+                                    style="font-size:0.88rem; font-weight:800; color:#0f172a; margin-bottom:0.85rem; display:flex; align-items:center; gap:0.4rem;">
+                                    <svg width="18" height="18" fill="none" stroke="#e11d48" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                                     </svg>
                                     Layanan Food Delivery (Order Online)
                                 </div>
                                 <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.85rem;">
                                     <div class="form-group" style="margin:0;">
-                                        <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#dc2626;">GoFood Link</label>
-                                        <input type="url" name="bio_gofood" value="{{ old('bio_gofood', $cfg['gofood'] ?? '') }}"
-                                            class="form-input" placeholder="https://gofood.link/u/..." style="font-size:0.78rem;">
+                                        <label class="form-label"
+                                            style="font-size:0.75rem; font-weight:700; color:#dc2626;">GoFood Link</label>
+                                        <input type="url" name="bio_gofood"
+                                            value="{{ old('bio_gofood', $cfg['gofood'] ?? '') }}" class="form-input"
+                                            placeholder="https://gofood.link/u/..." style="font-size:0.78rem;">
                                     </div>
                                     <div class="form-group" style="margin:0;">
-                                        <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#16a34a;">GrabFood Link</label>
-                                        <input type="url" name="bio_grabfood" value="{{ old('bio_grabfood', $cfg['grabfood'] ?? '') }}"
-                                            class="form-input" placeholder="https://food.grab.com/..." style="font-size:0.78rem;">
+                                        <label class="form-label"
+                                            style="font-size:0.75rem; font-weight:700; color:#16a34a;">GrabFood Link</label>
+                                        <input type="url" name="bio_grabfood"
+                                            value="{{ old('bio_grabfood', $cfg['grabfood'] ?? '') }}" class="form-input"
+                                            placeholder="https://food.grab.com/..." style="font-size:0.78rem;">
                                     </div>
                                     <div class="form-group" style="margin:0;">
-                                        <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#ea580c;">ShopeeFood Link</label>
-                                        <input type="url" name="bio_shopeefood" value="{{ old('bio_shopeefood', $cfg['shopeefood'] ?? '') }}"
-                                            class="form-input" placeholder="https://shopee.co.id/universal-link/now-food/m/..." style="font-size:0.78rem;">
+                                        <label class="form-label"
+                                            style="font-size:0.75rem; font-weight:700; color:#ea580c;">ShopeeFood
+                                            Link</label>
+                                        <input type="url" name="bio_shopeefood"
+                                            value="{{ old('bio_shopeefood', $cfg['shopeefood'] ?? '') }}" class="form-input"
+                                            placeholder="https://shopee.co.id/universal-link/now-food/m/..."
+                                            style="font-size:0.78rem;">
                                     </div>
                                 </div>
                             </div>
@@ -2704,18 +2714,28 @@
 
     {{-- ── Modal: Tambah Produk UMKM / Fisik ── --}}
     <div class="modal-overlay" id="addUmkmModal" onclick="if(event.target===this)this.classList.remove('open')">
-        <div class="modal-box" style="max-width:680px; width:94%; max-height:90vh; overflow-y:auto; border-radius:16px; padding:1.5rem;">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; padding-bottom:0.75rem; border-bottom:1px solid #f1f5f9;">
+        <div class="modal-box"
+            style="max-width:680px; width:94%; max-height:90vh; overflow-y:auto; border-radius:16px; padding:1.5rem;">
+            <div
+                style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; padding-bottom:0.75rem; border-bottom:1px solid #f1f5f9;">
                 <div style="display:flex; align-items:center; gap:0.6rem;">
-                    <div style="width:36px; height:36px; border-radius:10px; background:#ecfdf5; display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                    <div
+                        style="width:36px; height:36px; border-radius:10px; background:#ecfdf5; display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
+                            <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
                     </div>
                     <div>
-                        <h3 style="font-size:1.15rem; font-weight:800; margin:0; color:#0f172a; font-family:'Montserrat',sans-serif;">Tambah Produk Fisik / UMKM</h3>
-                        <p style="font-size:0.75rem; color:#64748b; margin:0.1rem 0 0;">Lengkapi data produk fisik dan informasi pengiriman logistik.</p>
+                        <h3
+                            style="font-size:1.15rem; font-weight:800; margin:0; color:#0f172a; font-family:'Montserrat',sans-serif;">
+                            Tambah Produk Fisik / UMKM</h3>
+                        <p style="font-size:0.75rem; color:#64748b; margin:0.1rem 0 0;">Lengkapi data produk fisik dan
+                            informasi pengiriman logistik.</p>
                     </div>
                 </div>
-                <button type="button" onclick="closeAddUmkmModal()" style="background:#f1f5f9; border:none; width:32px; height:32px; border-radius:50%; font-size:1.1rem; cursor:pointer; color:#64748b; display:flex; align-items:center; justify-content:center;">&times;</button>
+                <button type="button" onclick="closeAddUmkmModal()"
+                    style="background:#f1f5f9; border:none; width:32px; height:32px; border-radius:50%; font-size:1.1rem; cursor:pointer; color:#64748b; display:flex; align-items:center; justify-content:center;">&times;</button>
             </div>
 
             {{-- ── Scrape Shopee / Tokopedia ── --}}
@@ -2726,9 +2746,11 @@
                         <circle cx="11" cy="11" r="8" />
                         <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
-                    <span style="font-size:0.82rem; font-weight:700; color:#0f172a;">Auto Import dari Shopee / Tokopedia</span>
+                    <span style="font-size:0.82rem; font-weight:700; color:#0f172a;">Auto Import dari Shopee /
+                        Tokopedia</span>
                 </div>
-                <p style="font-size:0.75rem; color:#64748b; margin:0 0 0.75rem; line-height:1.5;">Tempel link produk Shopee atau Tokopedia — sistem akan otomatis mengambil nama, harga, deskripsi, dan foto produk.</p>
+                <p style="font-size:0.75rem; color:#64748b; margin:0 0 0.75rem; line-height:1.5;">Tempel link produk Shopee
+                    atau Tokopedia — sistem akan otomatis mengambil nama, harga, deskripsi, dan foto produk.</p>
                 <div style="display:flex; gap:0.5rem; align-items:flex-start;">
                     <div style="flex:1;">
                         <input type="text" id="scrapeUrlInput"
@@ -2773,14 +2795,16 @@
                         <label class="form-label">Harga Jual (Rp / IDR) *</label>
                         <input type="text" name="price" id="umkmPrice" class="form-input" placeholder="150.000"
                             oninput="formatRupiahInput(this)" required>
-                        <span class="form-hint" style="color:#1eb349; font-size:0.7rem;">Otomatis dengan titik (contoh: 3.355.555)</span>
+                        <span class="form-hint" style="color:#1eb349; font-size:0.7rem;">Otomatis dengan titik (contoh:
+                            3.355.555)</span>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Harga Sebelum Diskon (Rp) <span
+                        <label class="form-label">Harga Diskon (Rp) <span
                                 style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
                         <input type="text" name="original_price" id="umkmOriginalPrice" class="form-input"
                             placeholder="Contoh: 200.000 (Harga awal sebelum diskon)" oninput="formatRupiahInput(this)">
-                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Harga normal awal sebelum dipotong diskon (harus lebih besar dari Harga Jual).</span>
+                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Harga normal awal sebelum dipotong
+                            diskon (harus lebih besar dari Harga Jual).</span>
                     </div>
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
@@ -2798,7 +2822,8 @@
                                 style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
                         <input type="number" name="stock" class="form-input" min="0"
                             placeholder="Kosongkan jika Unlimited (0 = Habis)">
-                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Kosongkan jika unlimited (stok tidak terbatas). Isi 0 jika habis.</span>
+                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Kosongkan jika unlimited (stok
+                            tidak terbatas). Isi 0 jika habis.</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -2834,27 +2859,44 @@
                             <span class="form-hint" style="font-size:0.68rem; color:#64748b;">1.000 gr = 1 kg</span>
                         </div>
                     </div>
-                    <div style="font-size:0.75rem; color:#475569; margin-bottom:0.4rem; font-weight:700;">Dimensi Paket (Panjang x Lebar x Tinggi cm) — Ongkir Volumetrik:</div>
-                    <div style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:0.4rem; width:100%; box-sizing:border-box;">
+                    <div style="font-size:0.75rem; color:#475569; margin-bottom:0.4rem; font-weight:700;">Dimensi Paket
+                        (Panjang x Lebar x Tinggi cm) — Ongkir Volumetrik:</div>
+                    <div
+                        style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:0.4rem; width:100%; box-sizing:border-box;">
                         <div class="form-group" style="margin:0; min-width:0;">
-                            <label class="form-label" style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">P (cm)</label>
+                            <label class="form-label"
+                                style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">P
+                                (cm)</label>
                             <input type="number" name="length" min="0" step="0.1" class="form-input umkm-dim-p"
-                                placeholder="P" style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;" oninput="calcUmkmVolume(this)">
+                                placeholder="P"
+                                style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;"
+                                oninput="calcUmkmVolume(this)">
                         </div>
                         <div class="form-group" style="margin:0; min-width:0;">
-                            <label class="form-label" style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">L (cm)</label>
+                            <label class="form-label"
+                                style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">L
+                                (cm)</label>
                             <input type="number" name="width" min="0" step="0.1" class="form-input umkm-dim-l"
-                                placeholder="L" style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;" oninput="calcUmkmVolume(this)">
+                                placeholder="L"
+                                style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;"
+                                oninput="calcUmkmVolume(this)">
                         </div>
                         <div class="form-group" style="margin:0; min-width:0;">
-                            <label class="form-label" style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">T (cm)</label>
+                            <label class="form-label"
+                                style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">T
+                                (cm)</label>
                             <input type="number" name="height" min="0" step="0.1" class="form-input umkm-dim-t"
-                                placeholder="T" style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;" oninput="calcUmkmVolume(this)">
+                                placeholder="T"
+                                style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;"
+                                oninput="calcUmkmVolume(this)">
                         </div>
                         <div class="form-group" style="margin:0; min-width:0;">
-                            <label class="form-label" style="font-size:0.7rem; font-weight:700; color:#1eb349; white-space:nowrap; margin-bottom:0.2rem;">Vol (cm³)</label>
+                            <label class="form-label"
+                                style="font-size:0.7rem; font-weight:700; color:#1eb349; white-space:nowrap; margin-bottom:0.2rem;">Vol
+                                (cm³)</label>
                             <input type="number" name="volume" min="0" class="form-input umkm-dim-v" placeholder="Vol"
-                                style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center; background:#f1f5f9; font-weight:700; color:#0f172a;" readonly>
+                                style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center; background:#f1f5f9; font-weight:700; color:#0f172a;"
+                                readonly>
                         </div>
                     </div>
                 </div>
@@ -2866,7 +2908,8 @@
                         <img id="scrapeImgThumb" src="" alt=""
                             style="width:48px; height:48px; object-fit:cover; border-radius:8px; border:1px solid #d1fae5;">
                         <div style="flex:1; min-width:0;">
-                            <div style="font-size:0.75rem; font-weight:700; color:#1eb349; margin-bottom:0.1rem;">Foto dari Shopee/Tokopedia</div>
+                            <div style="font-size:0.75rem; font-weight:700; color:#1eb349; margin-bottom:0.1rem;">Foto dari
+                                Shopee/Tokopedia</div>
                             <div id="scrapeImgUrl"
                                 style="font-size:0.7rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px;">
                             </div>
@@ -2907,7 +2950,8 @@
                 <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.25rem;">
                     <button type="button" onclick="closeAddUmkmModal()"
                         style="height:42px; padding:0 1.4rem; border-radius:999px; border:1.5px solid #e2e8f0; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
-                    <button type="submit" class="btn-submit-sm" style="height:42px; padding:0 1.75rem; border-radius:999px;">Simpan Produk</button>
+                    <button type="submit" class="btn-submit-sm"
+                        style="height:42px; padding:0 1.75rem; border-radius:999px;">Simpan Produk</button>
                 </div>
             </form>
         </div>
@@ -2915,18 +2959,29 @@
 
     {{-- ── Modal: Edit Produk UMKM / Fisik ── --}}
     <div class="modal-overlay" id="editUmkmModal" onclick="if(event.target===this)this.classList.remove('open')">
-        <div class="modal-box" style="max-width:680px; width:94%; max-height:90vh; overflow-y:auto; border-radius:16px; padding:1.5rem;">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; padding-bottom:0.75rem; border-bottom:1px solid #f1f5f9;">
+        <div class="modal-box"
+            style="max-width:680px; width:94%; max-height:90vh; overflow-y:auto; border-radius:16px; padding:1.5rem;">
+            <div
+                style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; padding-bottom:0.75rem; border-bottom:1px solid #f1f5f9;">
                 <div style="display:flex; align-items:center; gap:0.6rem;">
-                    <div style="width:36px; height:36px; border-radius:10px; background:#ecfdf5; display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    <div
+                        style="width:36px; height:36px; border-radius:10px; background:#ecfdf5; display:flex; align-items:center; justify-content:center; color:#1eb349; flex-shrink:0;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
+                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
                     </div>
                     <div>
-                        <h3 style="font-size:1.15rem; font-weight:800; margin:0; color:#0f172a; font-family:'Montserrat',sans-serif;">Edit Produk Fisik / UMKM</h3>
-                        <p style="font-size:0.75rem; color:#64748b; margin:0.1rem 0 0;">Perbarui data produk fisik dan informasi pengiriman logistik.</p>
+                        <h3
+                            style="font-size:1.15rem; font-weight:800; margin:0; color:#0f172a; font-family:'Montserrat',sans-serif;">
+                            Edit Produk Fisik / UMKM</h3>
+                        <p style="font-size:0.75rem; color:#64748b; margin:0.1rem 0 0;">Perbarui data produk fisik dan
+                            informasi pengiriman logistik.</p>
                     </div>
                 </div>
-                <button type="button" onclick="closeEditUmkmModal()" style="background:#f1f5f9; border:none; width:32px; height:32px; border-radius:50%; font-size:1.1rem; cursor:pointer; color:#64748b; display:flex; align-items:center; justify-content:center;">&times;</button>
+                <button type="button" onclick="closeEditUmkmModal()"
+                    style="background:#f1f5f9; border:none; width:32px; height:32px; border-radius:50%; font-size:1.1rem; cursor:pointer; color:#64748b; display:flex; align-items:center; justify-content:center;">&times;</button>
             </div>
             <form action="" method="POST" enctype="multipart/form-data" id="editUmkmForm">
                 @csrf
@@ -2942,11 +2997,11 @@
                             required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Harga Sebelum Diskon (Rp) <span
-                                style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
+                        <label class="form-label"> <span style="font-weight:400;color:#94a3b8;">(Opsional)</span></label>
                         <input type="text" name="original_price" id="edit_original_price" class="form-input"
                             placeholder="Contoh: 200.000 (Harga awal sebelum diskon)" oninput="formatRupiahInput(this)">
-                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Harga normal awal sebelum dipotong diskon.</span>
+                        <span class="form-hint" style="color:#64748b; font-size:0.68rem;">Harga normal awal sebelum dipotong
+                            diskon.</span>
                     </div>
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
@@ -3001,30 +3056,45 @@
                             <span class="form-hint" style="font-size:0.65rem; color:#64748b;">1.000 gr = 1 kg</span>
                         </div>
                     </div>
-                    <div style="font-size:0.75rem; color:#475569; margin-bottom:0.4rem; font-weight:700;">Dimensi Paket (Panjang x Lebar x Tinggi cm) — Ongkir Volumetrik:</div>
-                    <div style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:0.4rem; width:100%; box-sizing:border-box;">
+                    <div style="font-size:0.75rem; color:#475569; margin-bottom:0.4rem; font-weight:700;">Dimensi Paket
+                        (Panjang x Lebar x Tinggi cm) — Ongkir Volumetrik:</div>
+                    <div
+                        style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:0.4rem; width:100%; box-sizing:border-box;">
                         <div class="form-group" style="margin:0; min-width:0;">
-                            <label class="form-label" style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">P (cm)</label>
+                            <label class="form-label"
+                                style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">P
+                                (cm)</label>
                             <input type="number" name="length" id="edit_length" min="0" step="0.1"
-                                class="form-input umkm-dim-p" placeholder="P" style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;"
+                                class="form-input umkm-dim-p" placeholder="P"
+                                style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;"
                                 oninput="calcUmkmVolume(this)">
                         </div>
                         <div class="form-group" style="margin:0; min-width:0;">
-                            <label class="form-label" style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">L (cm)</label>
+                            <label class="form-label"
+                                style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">L
+                                (cm)</label>
                             <input type="number" name="width" id="edit_width" min="0" step="0.1"
-                                class="form-input umkm-dim-l" placeholder="L" style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;"
+                                class="form-input umkm-dim-l" placeholder="L"
+                                style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;"
                                 oninput="calcUmkmVolume(this)">
                         </div>
                         <div class="form-group" style="margin:0; min-width:0;">
-                            <label class="form-label" style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">T (cm)</label>
+                            <label class="form-label"
+                                style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">T
+                                (cm)</label>
                             <input type="number" name="height" id="edit_height" min="0" step="0.1"
-                                class="form-input umkm-dim-t" placeholder="T" style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;"
+                                class="form-input umkm-dim-t" placeholder="T"
+                                style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center;"
                                 oninput="calcUmkmVolume(this)">
                         </div>
                         <div class="form-group" style="margin:0; min-width:0;">
-                            <label class="form-label" style="font-size:0.7rem; font-weight:700; color:#1eb349; white-space:nowrap; margin-bottom:0.2rem;">Vol (cm³)</label>
+                            <label class="form-label"
+                                style="font-size:0.7rem; font-weight:700; color:#1eb349; white-space:nowrap; margin-bottom:0.2rem;">Vol
+                                (cm³)</label>
                             <input type="number" name="volume" id="edit_volume" min="0" class="form-input umkm-dim-v"
-                                placeholder="Vol" style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center; background:#f1f5f9; font-weight:700; color:#0f172a;" readonly>
+                                placeholder="Vol"
+                                style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center; background:#f1f5f9; font-weight:700; color:#0f172a;"
+                                readonly>
                         </div>
                     </div>
                 </div>
@@ -3319,20 +3389,20 @@
             popup.id = 'scrapeFailedPopup';
             popup.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);';
             popup.innerHTML = `
-                            <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
-                                <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                                    <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                </div>
-                                <div style="font-weight:800;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
-                                <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
-                                <div style="display:flex;gap:0.6rem;justify-content:center;">
-                                    <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight:700;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
-                                    <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                        Scan AI
-                                    </button>
-                                </div>
-                            </div>`;
+                                    <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
+                                        <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                                            <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                        </div>
+                                        <div style="font-weight:800;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
+                                        <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
+                                        <div style="display:flex;gap:0.6rem;justify-content:center;">
+                                            <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight:700;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
+                                            <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
+                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                                Scan AI
+                                            </button>
+                                        </div>
+                                    </div>`;
             document.body.appendChild(popup);
             popup.addEventListener('click', function (e) { if (e.target === popup) popup.remove(); });
         }
@@ -3606,11 +3676,11 @@
                 document.getElementById('imgOversizedDesc').innerHTML = 'Foto berikut melebihi batas <strong>1 MB per file</strong>. Harap kompres terlebih dahulu.';
 
                 const listHtml = oversized.map(f => `
-                                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
-                                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
-                                    <span style="color:#EF4444; font-weight:700;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
-                                </div>
-                            `).join('');
+                                        <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
+                                            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
+                                            <span style="color:#EF4444; font-weight:700;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                                        </div>
+                                    `).join('');
 
                 document.getElementById('imgOversizedFileList').innerHTML = listHtml;
                 document.getElementById('imgOversizedModal').classList.add('open');

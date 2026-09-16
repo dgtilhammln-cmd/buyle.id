@@ -83,6 +83,12 @@ class UpdateProductRequest extends FormRequest
         $merge = [
             'is_active'   => $this->boolean('is_active', true),
             'is_featured' => $this->boolean('is_featured', false),
+            'stock'       => (int) ($this->input('stock') ?? 0),
+            'weight'      => (int) ($this->input('weight') ?? 0),
+            'length'      => (float) ($this->input('length') ?? 0),
+            'width'       => (float) ($this->input('width') ?? 0),
+            'height'      => (float) ($this->input('height') ?? 0),
+            'volume'      => (float) ($this->input('volume') ?? 0),
         ];
 
         if ($this->has('affiliate_commission_rate') && $this->input('affiliate_commission_rate') !== null) {
