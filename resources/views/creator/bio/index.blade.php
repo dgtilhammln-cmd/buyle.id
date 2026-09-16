@@ -2224,6 +2224,12 @@
                     <div class="card-body" id="umkmProductList">
                         @php
                             $umkmBlocks = $blocks->filter(function ($b) use ($myProducts) {
+                                // 0. buyle_product blocks are catalog products toggled from "Tampilkan Produk Buyle Saya".
+                                // They are NOT custom UMKM physical blocks and must never appear in the "Produk Fisik / UMKM" section!
+                                if ($b->type === 'buyle_product') {
+                                    return false;
+                                }
+
                                 // 1. If linked to a catalog Product, respect the Product's product_type
                                 $pid = $b->data_json['product_id'] ?? null;
                                 if ($pid) {
@@ -2246,7 +2252,7 @@
                                         return false;
                                     }
                                     $title = strtolower($b->title ?? '');
-                                    if (preg_match('/(ebook|e-book|pdf|modul|panduan|link|akses|webinar|tiket|course|kursus)/i', $title)) {
+                                    if (preg_match('/(ebook|e-book|pdf|modul|panduan|link|akses|webinar|tiket|course|kursus|spreadsheet|planner|template)/i', $title)) {
                                         return false;
                                     }
                                     return true;

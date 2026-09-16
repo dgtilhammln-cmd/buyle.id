@@ -321,6 +321,8 @@ class MenuScanController extends Controller
                 $desc = $cleanTitle . ' — Produk jualan berkualitas tinggi. Dapatkan penawaran terbaik dan layanan pengiriman cepat.';
             }
 
+            $isDigital = (bool) preg_match('/(spreadsheet|planner|ebook|e-book|pdf|course|kursus|template|webinar|modul|panduan|digital|akses|preset|link)/i', $cleanTitle);
+
             $item = [
                 'name'         => $cleanTitle,
                 'slug'         => $slug,
@@ -330,7 +332,7 @@ class MenuScanController extends Controller
                 'image'        => $primaryImg,
                 'images'       => $downloadedImages,
                 'source_url'   => $url,
-                'product_type' => 'physical',
+                'product_type' => $isDigital ? 'external_link' : 'physical',
             ];
 
             return response()->json([
