@@ -1818,6 +1818,7 @@
     function prepareSubmit(e) {
         const checkoutType = @json($summary['checkout_type']);
         const hasGoodsShipping = (checkoutType === 'goods');
+        const hasPhysicalProduct = (checkoutType === 'goods');
         const isGuest = @json(auth()->guest());
 
         // Validate guest contact info
