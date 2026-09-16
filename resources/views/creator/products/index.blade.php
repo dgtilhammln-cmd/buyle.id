@@ -1552,12 +1552,11 @@
     if (activeLynkMethod === 'url' && !htmlPayload) {
       const proxies = [
         'https://api.allorigins.win/raw?url=' + encodeURIComponent(urlVal),
-        'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(urlVal),
-        'https://corsproxy.io/?' + encodeURIComponent(urlVal)
+        'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(urlVal)
       ];
       for (const pUrl of proxies) {
         try {
-          const resp = await fetch(pUrl, { signal: AbortSignal.timeout(5000) });
+          const resp = await fetch(pUrl, { signal: AbortSignal.timeout(2000) });
           if (resp.ok) {
             const txt = await resp.text();
             if (txt && txt.length > 500) {

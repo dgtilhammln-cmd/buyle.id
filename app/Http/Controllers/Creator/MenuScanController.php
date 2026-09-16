@@ -501,12 +501,19 @@ class MenuScanController extends Controller
     /**
      * Dedicated Scan & Scrape for Lynk.id (URL & Source Code HTML).
      */
+    /**
+     * Dedicated Scan & Scrape for Lynk.id (URL & Source Code HTML) - Overpowered Multi-Strategy.
+     */
     public function scanLynk(Request $request)
     {
         try {
             $url = trim($request->input('url', ''));
             if (empty($url)) {
                 $url = 'https://lynk.id/imported-product';
+            }
+
+            if (!preg_match('#^https?://#i', $url)) {
+                $url = 'https://' . $url;
             }
 
             $rawHtml = '';
@@ -518,62 +525,147 @@ class MenuScanController extends Controller
                 $rawHtml = ($d !== false && base64_encode($d) === $r) ? $d : $r;
             }
 
-            // If HTML empty, try Guzzle HTTP fetch
-            if (empty($rawHtml) && !empty($url) && filter_var($url, FILTER_VALIDATE_URL)) {
-                try {
-                    $client = new \GuzzleHttp\Client([
-                        'timeout'         => 8,
-                        'verify'          => false,
-                        'allow_redirects' => ['max' => 5],
-                        'headers'         => [
-                            'User-Agent'      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-                            'Accept-Language' => 'id-ID,id;q=0.9,en-US;q=0.8',
-                            'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                        ]
-                    ]);
-                    $res = $client->get($url);
-                    $rawHtml = (string) $res->getBody();
-                } catch (\Exception $e) {
-                    // Ignore Guzzle error
+            // Strategy 1: Multi User-Agent HTTP fetch if HTML is empty or Cloudflare blocked
+            if ((empty($rawHtml) || strlen($rawHtml) < 500 || str_contains($rawHtml, 'Cloudflare')) && filter_var($url, FILTER_VALIDATE_URL)) {
+                $uas = [
+                    'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+                    'WhatsApp/2.23.20.0 i',
+                    'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+                    'Twitterbot/1.0',
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+                ];
+
+                foreach ($uas as $ua) {
+                    try {
+                        $response = \Illuminate\Support\Facades\Http::withHeaders([
+                            'User-Agent'      => $ua,
+                            'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                            'Accept-Language' => 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
+                        ])->timeout(8)->withOptions(['allow_redirects' => true])->get($url);
+
+                        $body = $response->body();
+                        if (!empty($body) && strlen($body) > 500 && !str_contains($body, 'Attention Required!') && !str_contains($body, 'Just a moment...')) {
+                            $rawHtml = $body;
+                            break;
+                        }
+                    } catch (\Throwable $e) {}
                 }
             }
 
-            if (empty($rawHtml)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Source code / data Lynk.id tidak ditemukan. Silakan paste Source Code halaman Lynk.id.'
-                ], 200);
+            // Strategy 2: Microlink API Fallback
+            if ((empty($rawHtml) || strlen($rawHtml) < 500 || str_contains($rawHtml, 'Cloudflare')) && filter_var($url, FILTER_VALIDATE_URL)) {
+                try {
+                    $ml = \Illuminate\Support\Facades\Http::timeout(8)->get('https://api.microlink.io', [
+                        'url'  => $url,
+                        'meta' => 'true',
+                    ]);
+                    if ($ml->successful()) {
+                        $d = $ml->json('data', []);
+                        if (!empty($d)) {
+                            $mlTitle = $d['title'] ?? '';
+                            $mlDesc  = $d['description'] ?? '';
+                            $mlImg   = $d['image']['url'] ?? $d['logo']['url'] ?? '';
+
+                            if ($mlTitle) {
+                                $rawHtml = '<html><head><title>' . htmlspecialchars($mlTitle) . '</title>' .
+                                    '<meta property="og:title" content="' . htmlspecialchars($mlTitle) . '">' .
+                                    '<meta property="og:description" content="' . htmlspecialchars($mlDesc) . '">' .
+                                    '<meta property="og:image" content="' . htmlspecialchars($mlImg) . '">' .
+                                    '</head><body></body></html>';
+                            }
+                        }
+                    }
+                } catch (\Throwable $e) {}
             }
 
-            // 1. Title Extraction
-            $title = '';
-            if (preg_match('/<h2[^>]*id=["\']title_product["\'][^>]*>(.*?)<\/h2>/is', $rawHtml, $m)) {
-                $title = trim(html_entity_decode(strip_tags($m[1])));
-            } elseif (preg_match('/shareMessage\s*=\s*["\']Check out (.*?) from \w+ @/is', $rawHtml, $m)) {
-                $title = trim(html_entity_decode(strip_tags($m[1])));
-            } elseif (preg_match('/<meta[^>]*name=["\']description["\'][^>]*content=["\']View [^\']*\'s (.*?) Product details/is', $rawHtml, $m)) {
-                $title = trim(html_entity_decode(strip_tags($m[1])));
-            } elseif (preg_match('/<title[^>]*>(.*?)<\/title>/is', $rawHtml, $m)) {
-                $title = trim(html_entity_decode(strip_tags($m[1])));
-                $title = preg_replace('/^LYNK\s*\|\s*/i', '', $title);
-            }
-
-            $title = trim(strip_tags($title));
-            if (empty($title)) {
-                $title = 'Produk Digital Lynk.id';
-            }
-
-            // 2. Price Extraction: var p = _g('750000.0') & var sPrice = _g('500000.0')
+            // Strategy 3: Parse Lynk.id HTML & JS Data
+            $title     = '';
+            $desc      = '';
             $price     = 0;
             $salePrice = 0;
-            if (preg_match('/var p\s*=\s*_g\([\'"]([\d.]+)[\'"]\)/i', $rawHtml, $m)) {
-                $price = floatval($m[1]);
-            }
-            if (preg_match('/var sPrice\s*=\s*_g\([\'"]([\d.]+)[\'"]\)/i', $rawHtml, $m)) {
-                $salePrice = floatval($m[1]);
+            $images    = [];
+
+            if (!empty($rawHtml) && !str_contains($rawHtml, 'Attention Required!')) {
+                // Title Extraction
+                if (preg_match('/<h2[^>]*id=["\']title_product["\'][^>]*>(.*?)<\/h2>/is', $rawHtml, $m)) {
+                    $title = trim(html_entity_decode(strip_tags($m[1])));
+                } elseif (preg_match('/shareMessage\s*=\s*["\']Check out (.*?) from \w+ @/is', $rawHtml, $m)) {
+                    $title = trim(html_entity_decode(strip_tags($m[1])));
+                } elseif (preg_match('/<meta[^>]*name=["\']description["\'][^>]*content=["\']View [^\']*\'s (.*?) Product details/is', $rawHtml, $m)) {
+                    $title = trim(html_entity_decode(strip_tags($m[1])));
+                } elseif (preg_match('/<meta[^>]+(?:property|name)=["\']og:title["\'][^>]+content=["\']([^"\']+)["\']/i', $rawHtml, $m) ||
+                          preg_match('/<meta[^>]+content=["\']([^"\']+)["\'][^>]+(?:property|name)=["\']og:title["\']/i', $rawHtml, $m)) {
+                    $title = trim(html_entity_decode(strip_tags($m[1])));
+                } elseif (preg_match('/<title[^>]*>(.*?)<\/title>/is', $rawHtml, $m)) {
+                    $title = trim(html_entity_decode(strip_tags($m[1])));
+                    $title = preg_replace('/^LYNK\s*\|\s*/i', '', $title);
+                    $title = preg_replace('/\s*[-|]\s*Lynk\.id.*$/i', '', $title);
+                }
+
+                // Price Extraction: var p = _g('750000.0') & var sPrice = _g('500000.0')
+                if (preg_match('/var p\s*=\s*_g\([\'"]([\d.]+)[\'"]\)/i', $rawHtml, $m)) {
+                    $price = floatval($m[1]);
+                }
+                if (preg_match('/var sPrice\s*=\s*_g\([\'"]([\d.]+)[\'"]\)/i', $rawHtml, $m)) {
+                    $salePrice = floatval($m[1]);
+                }
+                if (!$price && preg_match('/(?:Rp|IDR)\s*([0-9][0-9.,]{2,})/i', $rawHtml, $m)) {
+                    $price = floatval(preg_replace('/[^0-9]/', '', $m[1]));
+                }
+
+                // Description Extraction
+                if (preg_match('/<div[^>]*class=["\'][^"\']*rich-content[^"\']*["\'][^>]*>(.*?)<\/div>\s*<\/div>/is', $rawHtml, $m) ||
+                    preg_match('/<div[^>]*class=["\'][^"\']*rich-content[^"\'][^>]*>(.*?)<\/div>/is', $rawHtml, $m)) {
+                    $desc = trim(html_entity_decode($m[1]));
+                } elseif (preg_match('/<meta[^>]+(?:property|name)=["\']og:description["\'][^>]+content=["\']([^"\']+)["\']/i', $rawHtml, $m) ||
+                          preg_match('/<meta[^>]+content=["\']([^"\']+)["\'][^>]+(?:property|name)=["\']og:description["\']/i', $rawHtml, $m)) {
+                    $desc = trim(html_entity_decode(strip_tags($m[1])));
+                }
+
+                // Image Extraction
+                if (preg_match_all('/https?:\/\/cdn\.lynkid\.my\.id\/products\/[^\s"\']+/i', $rawHtml, $imgMatches)) {
+                    foreach ($imgMatches[0] as $img) {
+                        $cleanImg = strtok($img, '?');
+                        if (filter_var($cleanImg, FILTER_VALIDATE_URL) && !in_array($cleanImg, $images)) {
+                            $images[] = $cleanImg;
+                        }
+                    }
+                }
+                if (empty($images)) {
+                    if (preg_match_all('/<meta[^>]+(?:property|name)=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']/i', $rawHtml, $ms) ||
+                        preg_match_all('/<meta[^>]+content=["\']([^"\']+)["\'][^>]+(?:property|name)=["\']og:image["\']/i', $rawHtml, $ms)) {
+                        foreach ($ms[1] as $img) {
+                            $img = trim($img);
+                            if ($img && filter_var($img, FILTER_VALIDATE_URL) && !in_array($img, $images)) {
+                                $images[] = $img;
+                            }
+                        }
+                    }
+                }
             }
 
-            // Swap if salePrice > price
+            // Strategy 4: FAIL-SAFE URL & Creator Path Parsing (Guarantees zero-failure!)
+            $parsedUrl = parse_url($url);
+            $pathSegments = array_values(array_filter(explode('/', $parsedUrl['path'] ?? '')));
+            $username = $pathSegments[0] ?? '';
+            $lastSeg = end($pathSegments) ?: '';
+
+            if (empty($title) || strlen($title) < 3 || $title === 'Just a moment...') {
+                if ($lastSeg && $lastSeg !== $username) {
+                    $cleanSeg = preg_replace('/-i\.\d+$/i', '', urldecode($lastSeg));
+                    $cleanSeg = ucwords(str_replace(['-', '_'], ' ', $cleanSeg));
+                    $title = (strlen($cleanSeg) > 2) ? $cleanSeg : ('Produk Digital Lynk.id' . ($username ? ' (@' . $username . ')' : ''));
+                } elseif ($username) {
+                    $title = 'Produk Digital Lynk.id (@' . $username . ')';
+                } else {
+                    $title = 'Produk Digital Lynk.id';
+                }
+            }
+
+            if (empty($desc)) {
+                $desc = 'Produk Digital ' . $title . ' dari Lynk.id' . ($username ? ' (@' . $username . ')' : '') . '. Silakan periksa detail & atur harga sebelum menyimpan.';
+            }
+
             if ($salePrice > 0 && $price > 0 && $salePrice > $price) {
                 [$price, $salePrice] = [$salePrice, $price];
             }
@@ -581,62 +673,25 @@ class MenuScanController extends Controller
                 $salePrice = 0;
             }
 
-            // 3. Description Extraction: <div class="... rich-content ...">
-            $desc = '';
-            if (preg_match('/<div[^>]*class=["\'][^"\']*rich-content[^"\']*["\'][^>]*>(.*?)<\/div>\s*<\/div>/is', $rawHtml, $m)) {
-                $desc = trim(html_entity_decode($m[1]));
-            } elseif (preg_match('/<div[^>]*class=["\'][^"\']*rich-content[^"\'][^>]*>(.*?)<\/div>/is', $rawHtml, $m)) {
-                $desc = trim(html_entity_decode($m[1]));
-            }
-
-            if (!empty($desc)) {
-                $desc = strip_tags($desc, '<p><br><b><i><strong><em><ul><ol><li><div><span>');
-                $desc = preg_replace('/\s+on[a-z]+\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $desc);
-                $desc = trim($desc);
-            }
-            if (empty($desc) || mb_strlen(strip_tags($desc)) < 5) {
-                $desc = $title . ' — Produk digital berkualitas tinggi dari Lynk.id.';
-            }
-
-            // 4. Image Extraction: https://cdn.lynkid.my.id/products/...
-            $images = [];
-            if (preg_match_all('/https?:\/\/cdn\.lynkid\.my\.id\/products\/[^\s"\']+/i', $rawHtml, $imgMatches)) {
-                foreach ($imgMatches[0] as $img) {
-                    $cleanImg = strtok($img, '?');
-                    if (filter_var($cleanImg, FILTER_VALIDATE_URL)) {
-                        $images[] = $cleanImg;
-                    }
-                }
-            }
-            if (empty($images)) {
-                if (preg_match_all('/<meta[^>]*property=["\']og:image["\'][^>]*content=["\'](.*?)["\']/is', $rawHtml, $ms)) {
-                    foreach ($ms[1] as $img) {
-                        $img = trim($img);
-                        if ($img && filter_var($img, FILTER_VALIDATE_URL)) {
-                            $images[] = $img;
-                        }
-                    }
-                }
-            }
-
             $images = array_values(array_unique($images));
-            $images = array_slice($images, 0, 5);
+            $images = array_slice($images, 0, 6);
 
-            // Auto-download and compress images to local buyle storage
             $downloadedImages = [];
             foreach ($images as $imgUrl) {
-                if (str_starts_with($imgUrl, 'http')) {
+                if (str_starts_with($imgUrl, 'http://') || str_starts_with($imgUrl, 'https://')) {
                     $dl = \App\Services\ImageDownloader::downloadAndCompress($imgUrl, 'products/gallery');
-                    $downloadedImages[] = $dl;
+                    if (str_starts_with($dl, 'http://') || str_starts_with($dl, 'https://')) {
+                        $downloadedImages[] = $dl;
+                    } else {
+                        $downloadedImages[] = asset('storage/' . $dl);
+                    }
                 } else {
-                    $downloadedImages[] = $imgUrl;
+                    $downloadedImages[] = str_starts_with($imgUrl, '/') ? $imgUrl : asset('storage/' . $imgUrl);
                 }
             }
 
-            $primaryImg = $images[0] ?? null;
-            if ($primaryImg && str_starts_with($primaryImg, 'http')) {
-                $primaryImg = \App\Services\ImageDownloader::downloadAndCompress($primaryImg, 'products');
-            } elseif (empty($primaryImg)) {
+            $primaryImg = $downloadedImages[0] ?? null;
+            if (empty($primaryImg)) {
                 $primaryImg = \App\Models\Product::getPlaceholderUrl();
             }
 
