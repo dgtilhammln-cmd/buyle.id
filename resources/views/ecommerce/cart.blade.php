@@ -71,14 +71,15 @@
             left: 50%;
             transform: translateX(-50%) translateY(4px);
             width: 220px;
-            background: #0F172A;
-            color: #F8FAFC;
+            background: #ffffff;
+            color: #334155;
+            border: 1px solid #E2E8F0;
             padding: 10px 12px;
             border-radius: 10px;
             font-size: 0.73rem;
             line-height: 1.4;
-            font-weight: 400;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.15);
+            font-weight: 500;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s;
@@ -86,6 +87,17 @@
             pointer-events: none;
             text-align: left;
             white-space: normal;
+        }
+
+        .fee-popover::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 7px;
+            border-style: solid;
+            border-color: #E2E8F0 transparent transparent transparent;
         }
 
         .fee-popover::after {
@@ -96,7 +108,7 @@
             transform: translateX(-50%);
             border-width: 6px;
             border-style: solid;
-            border-color: #0F172A transparent transparent transparent;
+            border-color: #ffffff transparent transparent transparent;
         }
 
         .fee-info-wrapper:hover .fee-popover,
@@ -108,8 +120,8 @@
         }
 
         .fee-popover-title {
-            font-weight: 700;
-            color: #38BDF8;
+            font-weight: 800;
+            color: #1eb349;
             margin-bottom: 3px;
             display: block;
             font-size: 0.75rem;
