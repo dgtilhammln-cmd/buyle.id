@@ -242,6 +242,8 @@ class MenuScanController extends Controller
                 $title = trim(html_entity_decode(strip_tags($m[1])));
             } elseif (preg_match('/shareMessage\s*=\s*["\']Check out (.*?) from \w+ @/is', $html, $m)) {
                 $title = trim(html_entity_decode(strip_tags($m[1])));
+            } elseif (preg_match('/<meta[^>]*name=["\']description["\'][^>]*content=["\']View [^\']*\'s (.*?) Product details/is', $html, $m)) {
+                $title = trim(html_entity_decode(strip_tags($m[1])));
             }
         }
 

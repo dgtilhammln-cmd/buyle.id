@@ -1072,14 +1072,24 @@
     let targetUrl = urlVal || 'https://lynk.id/imported-product';
 
     if (activeLynkMethod === 'url' && !htmlPayload) {
-      try {
-        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(urlVal);
-        const resp = await fetch(proxyUrl, { signal: AbortSignal.timeout(6000) });
-        if (resp.ok) {
-          htmlPayload = await resp.text();
+      const proxies = [
+        'https://api.allorigins.win/raw?url=' + encodeURIComponent(urlVal),
+        'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(urlVal),
+        'https://corsproxy.io/?' + encodeURIComponent(urlVal)
+      ];
+      for (const pUrl of proxies) {
+        try {
+          const resp = await fetch(pUrl, { signal: AbortSignal.timeout(5000) });
+          if (resp.ok) {
+            const txt = await resp.text();
+            if (txt && txt.length > 500) {
+              htmlPayload = txt;
+              break;
+            }
+          }
+        } catch (e) {
+          // try next proxy
         }
-      } catch (err) {
-        console.warn('CORS proxy fetch failed:', err);
       }
     }
 
