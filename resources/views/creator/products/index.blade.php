@@ -1256,58 +1256,31 @@
 
     {{-- TAB 4: LYNK.ID --}}
     <div class="si-tab-pane" id="si-lynk">
-      <p
-        style="font-size:0.8rem; color:#64748b; margin-top:0; margin-bottom:1.25rem; line-height:1.6; font-family:'Montserrat',sans-serif;">
-        Impor produk dari Lynk.id secara otomatis menjadi <b>Produk Digital / Link Access</b>. Gunakan <b>Opsi 1
-          (URL)</b> atau <b>Opsi 2 (Paste Source Code)</b>.
-      </p>
 
-      {{-- METHOD TOGGLE CARDS --}}
-      <div class="si-source-cards">
-        <div class="si-source-card selected" id="srcLynkUrl" onclick="switchLynkMethod('url')">
-          <div
-            style="width:24px; height:24px; background:rgba(2,132,199,0.12); border-radius:6px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.3rem;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="#0284c7">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-            </svg>
-          </div>
-          <span>Opsi 1: URL Lynk.id</span>
-        </div>
-        <div class="si-source-card" id="srcLynkHtml" onclick="switchLynkMethod('html')">
-          <svg width="22" height="22" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24"
-            style="margin:0 auto 0.3rem;">
-            <polyline points="16 18 22 12 16 6" />
-            <polyline points="8 6 2 12 8 18" />
-          </svg>
-          <span>Opsi 2: Source Code</span>
-        </div>
-      </div>
-
-      {{-- OPSI 1: INPUT URL --}}
-      <div id="lynkUrlBox">
-        <label class="si-label">URL Produk Lynk.id</label>
+      {{-- STEP 1: INPUT URL --}}
+      <div style="margin-bottom:1rem;">
+        <label class="si-label" style="margin-bottom:0.4rem;display:block;">URL Produk Lynk.id</label>
         <div style="display:flex; gap:0.5rem; align-items:center;">
-          <input type="url" id="siLynkUrl" class="si-input" style="margin-bottom:0;" placeholder="https://lynk.id/mindiw/PZbVe7P">
-          <button type="button" onclick="openLynkUrlInNewTab()" style="background:#e0f2fe; color:#0284c7; border:1px solid #bae6fd; padding:0.65rem 0.9rem; border-radius:12px; font-weight:700; font-size:0.75rem; white-space:nowrap; cursor:pointer; display:flex; align-items:center; gap:0.3rem;">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Buka Halaman
+          <input type="url" id="siLynkUrl" class="si-input" style="margin-bottom:0; flex:1;"
+            placeholder="https://lynk.id/username/slug">
+          <button type="button" id="btnCopyViewSource" onclick="copyViewSource()"
+            style="background:#e0f2fe; color:#0284c7; border:1px solid #bae6fd; padding:0.65rem 1rem; border-radius:12px; font-weight:700; font-size:0.78rem; white-space:nowrap; cursor:pointer; display:flex; align-items:center; gap:0.4rem; flex-shrink:0;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Salin Link Source
           </button>
         </div>
-        <span style="font-size:0.72rem; color:#64748b; margin-top:0.4rem; display:block; font-family:'Montserrat',sans-serif; line-height:1.4;">
-          💡 <b>Tip Akurasi 100%:</b> Buka halaman Lynk.id → Tekan <b>Ctrl+U</b> (Lihat Source Code) → Tekan <b>Ctrl+A & Ctrl+C</b> → Paste di <b>Opsi 2 (Source Code)</b> untuk mengambil seluruh foto, judul & harga lengkap secara instan!
-        </span>
+        <div id="lynkCopyToast" style="display:none; margin-top:0.5rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:0.6rem 0.9rem; font-size:0.78rem; color:#166534; font-weight:600; display:none; align-items:center; gap:0.5rem;">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          <span>Link disalin! Buka tab baru <b>(Ctrl+T)</b>, paste <b>(Ctrl+V)</b>, lalu <b>Ctrl+A &rarr; Ctrl+C</b> semua HTML, paste di bawah.</span>
+        </div>
       </div>
 
-      {{-- OPSI 2: INPUT HTML SOURCE CODE --}}
-      <div id="lynkHtmlBox" style="display:none;">
-        <label class="si-label">Paste Source Code Halaman (HTML Lynk.id)</label>
+      {{-- STEP 2: PASTE SOURCE HTML --}}
+      <div style="margin-bottom:1rem;">
+        <label class="si-label" style="margin-bottom:0.4rem;display:block;">Paste Source HTML Lynk.id</label>
         <textarea id="siLynkHtmlCode" class="si-input"
-          style="height:110px; padding:0.75rem; font-family:monospace; font-size:0.74rem;"
-          placeholder="Buka link Lynk.id -> Klik kanan -> Lihat Sumber Halaman (Ctrl+U) -> Paste di sini..."></textarea>
-        <span
-          style="font-size:0.72rem; color:#0284c7; font-weight:600; margin-top:0.35rem; display:block; font-family:'Montserrat',sans-serif;">💡
-          Tip: Gunakan opsi ini untuk impor data produk secara instan dan lengkap!</span>
+          style="height:120px; padding:0.75rem; font-family:monospace; font-size:0.74rem;"
+          placeholder="Setelah salin link source di atas, buka tab baru &#8594; paste URL &#8594; Ctrl+A &#8594; Ctrl+C &#8594; paste di sini..."></textarea>
       </div>
 
       <button class="si-btn" id="siLynkBtn" onclick="runSiLynkScrape()">
@@ -1315,7 +1288,7 @@
           <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
           <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
         </svg>
-        Import dari Lynk.id (Produk Digital)
+        Import dari Lynk.id
       </button>
 
       <div class="si-progress" id="siLynkProgress">
@@ -1333,7 +1306,7 @@
       <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
         <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
       </svg>
-      <span>Smart Import membaca daftar produk otomatis & memungkinkan impor massal langsung ke katalog.</span>
+      <span>Smart Import membaca daftar produk otomatis & impor langsung ke katalog.</span>
     </div>
 
   </div>
@@ -1524,35 +1497,42 @@
     }
   }
 
-  let activeLynkMethod = 'url';
-  function switchLynkMethod(method) {
-    activeLynkMethod = method;
-    document.getElementById('srcLynkUrl').classList.toggle('selected', method === 'url');
-    document.getElementById('srcLynkHtml').classList.toggle('selected', method === 'html');
-    document.getElementById('lynkUrlBox').style.display = method === 'url' ? 'block' : 'none';
-    document.getElementById('lynkHtmlBox').style.display = method === 'html' ? 'block' : 'none';
-  }
-
-  function openLynkUrlInNewTab() {
+  // ── Lynk.id: Salin link view-source ke clipboard
+  function copyViewSource() {
     const url = document.getElementById('siLynkUrl').value.trim();
     if (!url) {
-      alert('Silakan masukkan URL Lynk.id terlebih dahulu.');
+      alert('Masukkan URL Lynk.id terlebih dahulu.');
       return;
     }
-    window.open(url, '_blank');
+    const vsUrl = 'view-source:' + url;
+    navigator.clipboard.writeText(vsUrl).then(() => {
+      const toast = document.getElementById('lynkCopyToast');
+      toast.style.display = 'flex';
+      const btn = document.getElementById('btnCopyViewSource');
+      btn.style.background = '#dcfce7';
+      btn.style.color = '#166534';
+      btn.style.borderColor = '#bbf7d0';
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Tersalin!`;
+      setTimeout(() => {
+        toast.style.display = 'none';
+        btn.style.background = '#e0f2fe';
+        btn.style.color = '#0284c7';
+        btn.style.borderColor = '#bae6fd';
+        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Salin Link Source`;
+      }, 4000);
+    }).catch(() => {
+      // fallback: prompt copy manual
+      prompt('Salin URL ini lalu buka di tab baru:', vsUrl);
+    });
   }
 
   // LYNK.ID — langsung redirect ke form produk sebagai Produk Digital
   async function runSiLynkScrape() {
-    const urlVal = document.getElementById('siLynkUrl').value.trim();
+    const urlVal  = document.getElementById('siLynkUrl').value.trim();
     const htmlVal = document.getElementById('siLynkHtmlCode').value.trim();
 
-    if (activeLynkMethod === 'url' && !urlVal && !htmlVal) {
-      alert('Silakan masukkan URL produk Lynk.id terlebih dahulu.');
-      return;
-    }
-    if (activeLynkMethod === 'html' && !htmlVal) {
-      alert('Silakan paste Source Code / HTML halaman Lynk.id terlebih dahulu.');
+    if (!urlVal && !htmlVal) {
+      alert('Masukkan URL Lynk.id atau paste Source HTML terlebih dahulu.');
       return;
     }
 
@@ -1564,7 +1544,7 @@
     let htmlPayload = htmlVal || '';
     let targetUrl = urlVal || 'https://lynk.id/imported-product';
 
-    if (activeLynkMethod === 'url' && !htmlPayload) {
+    if (!htmlPayload && urlVal) {
       const proxies = [
         'https://api.allorigins.win/raw?url=' + encodeURIComponent(urlVal),
         'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(urlVal)
