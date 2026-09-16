@@ -710,6 +710,12 @@ class MenuScanController extends Controller
                     $desc = trim(html_entity_decode(strip_tags($m[1])));
                 }
 
+                if (!empty($desc)) {
+                    $desc = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $desc);
+                    $desc = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $desc);
+                    $desc = trim($desc);
+                }
+
                 // Image Extraction
                 if (preg_match_all('/https?:\/\/cdn\.lynkid\.my\.id\/products\/[^\s"\']+/i', $rawHtml, $imgMatches)) {
                     foreach ($imgMatches[0] as $img) {

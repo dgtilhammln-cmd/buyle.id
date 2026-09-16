@@ -1230,14 +1230,19 @@
                     }
                 }
 
-                // Fill Short Description & Description
+                // Fill Short Description & Description (Clean scripts/styles first)
                 if (item.description) {
-                    let formattedDesc = item.description;
+                    let sanitizedHtml = item.description
+                        .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gim, '')
+                        .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gim, '')
+                        .trim();
+
+                    let formattedDesc = sanitizedHtml;
                     if (!formattedDesc.includes('<p>') && !formattedDesc.includes('<br>') && !formattedDesc.includes('<div>')) {
                         formattedDesc = formattedDesc.replace(/\r\n|\r|\n/g, '<br>');
                     }
 
-                    const cleanDescText = item.description.replace(/<[^>]*>/g, '').trim();
+                    const cleanDescText = sanitizedHtml.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
                     const shortDescInput = document.querySelector('textarea[name="short_desc"]');
                     if (shortDescInput) {
                         shortDescInput.value = cleanDescText.substring(0, 160);
