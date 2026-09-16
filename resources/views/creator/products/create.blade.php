@@ -1219,9 +1219,6 @@
                 }
 
                 // Fill Product Type
-                if (item.category === 'Makanan' || item.category === 'makanan' || item.product_type === 'makanan') {
-                    item.product_type = 'makanan';
-                }
                 if (item.product_type) {
                     const pTypeSelect = document.getElementById('productTypeSelect');
                     if (pTypeSelect) {

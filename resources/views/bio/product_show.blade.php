@@ -23,7 +23,18 @@
         $rawCat = $block->data_json['category'] ?? ($product && $product->category ? $product->category->name : null);
         $pType  = strtolower($product->product_type ?? $product->type ?? '');
 
-        if (!empty($rawCat)) {
+        // 1. Priority: Check product_type on Product model
+        if (in_array($pType, ['external_link', 'file_upload', 'digital'])) {
+            $category = 'Produk Digital';
+        } elseif ($pType === 'ticket') {
+            $category = 'Tiket Event';
+        } elseif (in_array($pType, ['service', 'jasa'])) {
+            $category = 'Jasa / Layanan';
+        } elseif (in_array($pType, ['makanan', 'fnb', 'food'])) {
+            $category = 'Makanan';
+        } elseif (in_array($pType, ['physical', 'barang', 'product', 'fisik'])) {
+            $category = 'Barang / Fisik';
+        } elseif (!empty($rawCat)) {
             $catLower = strtolower($rawCat);
             if (in_array($catLower, ['jasa', 'service', 'layanan'])) {
                 $category = 'Jasa / Layanan';
@@ -31,7 +42,7 @@
                 $category = 'Makanan';
             } elseif (in_array($catLower, ['barang', 'physical', 'fisik', 'umkm'])) {
                 $category = 'Barang / Fisik';
-            } elseif (in_array($catLower, ['digital', 'ebook', 'course', 'download'])) {
+            } elseif (in_array($catLower, ['digital', 'ebook', 'course', 'download', 'external_link'])) {
                 $category = 'Produk Digital';
             } elseif ($catLower === 'ticket' || $catLower === 'tiket') {
                 $category = 'Tiket Event';
@@ -39,16 +50,16 @@
                 $category = ucfirst($rawCat);
             }
         } else {
-            if (in_array($pType, ['service', 'jasa'])) {
-                $category = 'Jasa / Layanan';
-            } elseif (in_array($pType, ['physical', 'barang', 'product', 'fisik'])) {
-                $category = 'Barang / Fisik';
-            } elseif (in_array($pType, ['makanan', 'fnb', 'food'])) {
-                $category = 'Makanan';
-            } elseif ($pType === 'ticket') {
-                $category = 'Tiket Event';
-            } else {
+            $category = 'Produk Digital';
+        }
+
+        // 2. Failsafe: If title contains digital keywords (Planner, Spreadsheet, Ebook, etc.), override to Produk Digital
+        $digitalKeywords = ['planner', 'spreadsheet', 'ebook', 'template', 'course', 'academy', 'masterclass', 'guide', 'workbook', 'pdf', 'excel', 'canva', 'consultation', 'consult', 'rate card', 'notion', 'digital', 'access', 'link'];
+        $titleLower = strtolower($prodTitle);
+        foreach ($digitalKeywords as $kw) {
+            if (str_contains($titleLower, $kw)) {
                 $category = 'Produk Digital';
+                break;
             }
         }
         $stock = isset($block->data_json['stock']) && $block->data_json['stock'] !== '' && $block->data_json['stock'] !== null 
