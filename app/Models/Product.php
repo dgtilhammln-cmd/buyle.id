@@ -266,15 +266,33 @@ class Product extends Model
         $this->increment('sold_count', $qty);
     }
 
+    public static function getPlaceholderUrl(): string
+    {
+        $logo = \App\Models\Setting::get('logo');
+        if ($logo) {
+            $storagePath = storage_path('app/public/' . ltrim($logo, '/'));
+            $publicPath  = public_path('storage/' . ltrim($logo, '/'));
+            if (file_exists($storagePath) || file_exists($publicPath)) {
+                return asset('storage/' . ltrim($logo, '/'));
+            }
+        }
+        return asset('images/buyle-placeholder.svg');
+    }
+
     public function getImageUrlAttribute(): string
     {
-        if (!$this->image) {
-            return asset('images/service-default.jpg');
+        if (!empty($this->image)) {
+            if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+                return $this->image;
+            }
+            $storagePath = storage_path('app/public/' . ltrim($this->image, '/'));
+            $publicPath  = public_path('storage/' . ltrim($this->image, '/'));
+            if (file_exists($storagePath) || file_exists($publicPath)) {
+                return asset('storage/' . ltrim($this->image, '/'));
+            }
         }
-        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
-            return $this->image;
-        }
-        return asset('storage/' . ltrim($this->image, '/'));
+
+        return static::getPlaceholderUrl();
     }
     public function getOgImageUrlAttribute(): string
     {

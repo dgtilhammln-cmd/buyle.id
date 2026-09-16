@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+  <defs>
+    <linearGradient id="buyleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1eb349" />
+      <stop offset="100%" stop-color="#a5cf37" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- Background Gradient -->
+  <rect width="600" height="600" fill="url(#buyleGrad)" />
+  
+  <!-- Center White Card with Shadow -->
+  <g transform="translate(225, 200)" filter="url(#shadow)">
+    <rect width="150" height="150" rx="36" fill="#ffffff" />
+    <text x="75" y="102" font-family="'Montserrat', 'Helvetica Neue', sans-serif" font-weight="900" font-size="82" fill="#1eb349" text-anchor="middle">B</text>
+  </g>
+  
+  <!-- Brand Name -->
+  <text x="300" y="410" font-family="'Montserrat', 'Helvetica Neue', sans-serif" font-weight="800" font-size="36" fill="#ffffff" text-anchor="middle" letter-spacing="2">buyle.id</text>
+</svg>
