@@ -985,35 +985,7 @@
       document.getElementById('siMenuProgress').style.display = 'none';
       alert('Gagal scan foto: ' + err.message);
     });
-  }
-        btn.disabled = false;
-        document.getElementById('siMenuProgress').style.display = 'none';
-        alert('Gagal scan foto: ' + err.message);
-      });
-    } else {
-      const chosenType = document.getElementById('siMenuProductType').value || 'physical';
-      fetch('{{ route("creator.products.scan-url") }}', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
-        body: JSON.stringify({ url: urlVal, source: 'menu_url', product_type: chosenType })
-      })
-      .then(res => res.json())
-      .then(res => {
-        btn.disabled = false;
-        document.getElementById('siMenuProgress').style.display = 'none';
-        if (res.success && res.items && res.items.length > 0) {
-          showScannedResultModal(res.items, chosenType); // → popup modal
-        } else {
-          alert(res.message || 'Gagal membaca URL menu.');
-        }
-      })
-      .catch(err => {
-        btn.disabled = false;
-        document.getElementById('siMenuProgress').style.display = 'none';
-        alert('Gagal membaca URL: ' + err.message);
-      });
-    }
-  }
+
 
   // TIKTOK SHOP — langsung redirect ke form produk
   function runSiTiktokScrape() {
