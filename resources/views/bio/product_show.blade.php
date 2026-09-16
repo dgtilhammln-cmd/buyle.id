@@ -47,7 +47,7 @@
         $productImages = [];
         if (!empty($images) && is_array($images)) {
             foreach ($images as $img) {
-                $productImages[] = asset('storage/' . $img);
+                $productImages[] = (str_starts_with($img, 'http://') || str_starts_with($img, 'https://')) ? $img : asset('storage/' . $img);
             }
         }
         if (empty($productImages)) {
@@ -434,7 +434,8 @@
                 @endif
                 <div class="slider-track" id="sliderTrack">
                     @foreach($images as $img)
-                        <div class="slide"><img src="{{ asset('storage/' . $img) }}" alt="{{ $block->title }}"></div>
+                        @php $imgUrl = (str_starts_with($img, 'http://') || str_starts_with($img, 'https://')) ? $img : asset('storage/' . $img); @endphp
+                        <div class="slide"><img src="{{ $imgUrl }}" alt="{{ $block->title }}"></div>
                     @endforeach
                 </div>
                 @if(count($images) > 1)

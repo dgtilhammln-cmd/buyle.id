@@ -298,7 +298,24 @@ class MenuScanController extends Controller
             $slug   = Str::slug($cleanTitle);
             $images = array_values(array_unique($images));
             $images = array_slice($images, 0, 5);
-            $image  = $images[0] ?? \App\Models\Product::getPlaceholderUrl();
+
+            // Auto-download and compress images to local buyle storage
+            $downloadedImages = [];
+            foreach ($images as $imgUrl) {
+                if (str_starts_with($imgUrl, 'http')) {
+                    $dl = \App\Services\ImageDownloader::downloadAndCompress($imgUrl, 'products/gallery');
+                    $downloadedImages[] = $dl;
+                } else {
+                    $downloadedImages[] = $imgUrl;
+                }
+            }
+
+            $primaryImg = $images[0] ?? null;
+            if ($primaryImg && str_starts_with($primaryImg, 'http')) {
+                $primaryImg = \App\Services\ImageDownloader::downloadAndCompress($primaryImg, 'products');
+            } elseif (empty($primaryImg)) {
+                $primaryImg = \App\Models\Product::getPlaceholderUrl();
+            }
 
             if (empty($desc)) {
                 $desc = $cleanTitle . ' — Produk jualan berkualitas tinggi. Dapatkan penawaran terbaik dan layanan pengiriman cepat.';
@@ -310,8 +327,8 @@ class MenuScanController extends Controller
                 'price'        => $price > 0 ? (int)$price : null,
                 'sale_price'   => $salePrice > 0 ? (int)$salePrice : null,
                 'description'  => $desc,
-                'image'        => $image,
-                'images'       => $images,
+                'image'        => $primaryImg,
+                'images'       => $downloadedImages,
                 'source_url'   => $url,
                 'product_type' => 'physical',
             ];
@@ -453,7 +470,24 @@ class MenuScanController extends Controller
 
             $images = array_values(array_unique($images));
             $images = array_slice($images, 0, 5);
-            $image  = $images[0] ?? \App\Models\Product::getPlaceholderUrl();
+
+            // Auto-download and compress images to local buyle storage
+            $downloadedImages = [];
+            foreach ($images as $imgUrl) {
+                if (str_starts_with($imgUrl, 'http')) {
+                    $dl = \App\Services\ImageDownloader::downloadAndCompress($imgUrl, 'products/gallery');
+                    $downloadedImages[] = $dl;
+                } else {
+                    $downloadedImages[] = $imgUrl;
+                }
+            }
+
+            $primaryImg = $images[0] ?? null;
+            if ($primaryImg && str_starts_with($primaryImg, 'http')) {
+                $primaryImg = \App\Services\ImageDownloader::downloadAndCompress($primaryImg, 'products');
+            } elseif (empty($primaryImg)) {
+                $primaryImg = \App\Models\Product::getPlaceholderUrl();
+            }
 
             $slug = Str::slug($title);
 
@@ -463,8 +497,8 @@ class MenuScanController extends Controller
                 'price'        => $price > 0 ? (int)$price : null,
                 'sale_price'   => $salePrice > 0 ? (int)$salePrice : null,
                 'description'  => $desc,
-                'image'        => $image,
-                'images'       => $images,
+                'image'        => $primaryImg,
+                'images'       => $downloadedImages,
                 'source_url'   => $url,
                 'product_type' => 'external_link',
             ];

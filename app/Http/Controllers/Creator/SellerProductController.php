@@ -60,7 +60,13 @@ class SellerProductController extends Controller
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
             $data['image'] = $request->file('image')->store('products', 'public');
         } elseif (!empty($request->input('scraped_image_url'))) {
-            $data['image'] = $request->input('scraped_image_url');
+            $scrapedUrl = $request->input('scraped_image_url');
+            // Auto-download external image to local storage
+            if (str_starts_with($scrapedUrl, 'http')) {
+                $data['image'] = \App\Services\ImageDownloader::downloadAndCompress($scrapedUrl, 'products');
+            } else {
+                $data['image'] = $scrapedUrl;
+            }
         }
 
         // Handle gallery (opsional, maks 6)
@@ -74,7 +80,20 @@ class SellerProductController extends Controller
             $data['gallery'] = $galleryPaths;
         } elseif (!empty($request->input('scraped_gallery_urls'))) {
             $scrapedGalleries = json_decode($request->input('scraped_gallery_urls'), true);
-            $data['gallery'] = is_array($scrapedGalleries) ? array_slice($scrapedGalleries, 0, 5) : [];
+            if (is_array($scrapedGalleries)) {
+                // Auto-download each gallery image to local storage
+                $downloadedGallery = [];
+                foreach (array_slice($scrapedGalleries, 0, 5) as $gUrl) {
+                    if (str_starts_with((string)$gUrl, 'http')) {
+                        $downloadedGallery[] = \App\Services\ImageDownloader::downloadAndCompress($gUrl, 'products/gallery');
+                    } else {
+                        $downloadedGallery[] = $gUrl;
+                    }
+                }
+                $data['gallery'] = $downloadedGallery;
+            } else {
+                $data['gallery'] = [];
+            }
         } else {
             $data['gallery'] = [];
         }
