@@ -197,11 +197,23 @@ class Product extends Model
     }
 
     /**
-     * Produk yang masih ada stoknya.
+     * Produk yang masih ada stoknya (stok > 0 atau stok NULL = unlimited).
      */
     public function scopeInStock(Builder $query): Builder
     {
-        return $query->where('stock', '>', 0);
+        return $query->where(function ($q) {
+            $q->whereNull('stock')->orWhere('stock', '>', 0);
+        });
+    }
+
+    public function getIsUnlimitedStockAttribute(): bool
+    {
+        return is_null($this->stock);
+    }
+
+    public function getInStockAttribute(): bool
+    {
+        return is_null($this->stock) || $this->stock > 0;
     }
 
     /**

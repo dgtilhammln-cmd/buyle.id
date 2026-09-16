@@ -420,8 +420,8 @@
               <form action="{{ route('creator.products.stock', $s->id) }}" method="POST" style="margin:0;">
                 @csrf
                 @method('PATCH')
-                <input type="number" name="stock" value="{{ $s->stock }}" min="0" onchange="this.form.submit()"
-                  style="width:70px;padding:.375rem;border:1px solid #E2E8F0;border-radius:6px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.875rem;font-weight:600;color:{{ $s->stock > 0 ? '#10B981' : '#EF4444' }};outline:none;background:transparent;">
+                <input type="number" name="stock" value="{{ $s->stock }}" min="0" placeholder="∞" onchange="this.form.submit()" title="Kosongkan untuk Unlimited (Stok tidak terbatas)"
+                  style="width:70px;padding:.375rem;border:1px solid #E2E8F0;border-radius:6px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.875rem;font-weight:600;color:{{ is_null($s->stock) ? '#3B82F6' : ($s->stock > 0 ? '#10B981' : '#EF4444') }};outline:none;background:transparent;">
               </form>
             </td>
             <td style="padding:1.25rem 1.5rem;text-align:center;">
@@ -532,8 +532,8 @@
               <span style="font-size:.62rem;color:#94A3B8;font-weight:500;">STOK:</span>
               <form action="{{ route('creator.products.stock', $s->id) }}" method="POST" style="margin:0;">
                 @csrf @method('PATCH')
-                <input type="number" name="stock" value="{{ $s->stock }}" min="0" onchange="this.form.submit()"
-                  style="width:38px;padding:.15rem;border:1px solid #E2E8F0;border-radius:4px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:500;color:{{ $s->stock > 0 ? '#10B981' : '#EF4444' }};outline:none;background:#F8FAFC;">
+                <input type="number" name="stock" value="{{ $s->stock }}" min="0" placeholder="∞" onchange="this.form.submit()" title="Kosongkan untuk Unlimited (Stok tidak terbatas)"
+                  style="width:38px;padding:.15rem;border:1px solid #E2E8F0;border-radius:4px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:500;color:{{ is_null($s->stock) ? '#3B82F6' : ($s->stock > 0 ? '#10B981' : '#EF4444') }};outline:none;background:#F8FAFC;">
               </form>
               <span style="font-size:.62rem;color:#94A3B8;font-weight:500;">URT:</span>
               <form action="{{ route('creator.products.order', $s->id) }}" method="POST" style="margin:0;">

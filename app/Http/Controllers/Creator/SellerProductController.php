@@ -83,7 +83,7 @@ class SellerProductController extends Controller
         $data['seller_id']    = auth()->id();
         $pt = $request->input('product_type');
         $data['product_type'] = in_array($pt, ['ticket', 'physical', 'makanan', 'service', 'external_link']) ? $pt : 'external_link';
-        $data['stock']        = (int) ($data['stock'] ?? 0);
+        $data['stock']        = ($request->has('stock') && $request->input('stock') !== null && $request->input('stock') !== '') ? (int) $request->input('stock') : null;
         $data['weight']       = (int) ($data['weight'] ?? 0);
         $data['length']       = (float) ($data['length'] ?? 0);
         $data['width']        = (float) ($data['width'] ?? 0);
@@ -184,7 +184,7 @@ class SellerProductController extends Controller
 
         $pt = $request->input('product_type');
         $data['product_type'] = in_array($pt, ['ticket', 'physical', 'makanan', 'service', 'external_link']) ? $pt : 'external_link';
-        $data['stock']        = (int) ($data['stock'] ?? 0);
+        $data['stock']        = ($request->has('stock') && $request->input('stock') !== null && $request->input('stock') !== '') ? (int) $request->input('stock') : null;
         $data['weight']       = (int) ($data['weight'] ?? 0);
         $data['length']       = (float) ($data['length'] ?? 0);
         $data['width']        = (float) ($data['width'] ?? 0);
@@ -283,10 +283,14 @@ class SellerProductController extends Controller
         $this->authorizeProduct($product);
 
         $request->validate([
-            'stock' => 'required|integer|min:0',
+            'stock' => 'nullable|integer|min:0',
         ]);
 
-        $product->update(['stock' => $request->stock]);
+        $stock = ($request->has('stock') && $request->input('stock') !== null && $request->input('stock') !== '')
+            ? (int) $request->input('stock')
+            : null;
+
+        $product->update(['stock' => $stock]);
 
         Cache::forget('catalog_main');
         Cache::forget("seller_products_{$product->seller_id}");

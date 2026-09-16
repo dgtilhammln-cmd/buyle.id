@@ -83,7 +83,7 @@ class UpdateProductRequest extends FormRequest
         $merge = [
             'is_active'   => $this->boolean('is_active', true),
             'is_featured' => $this->boolean('is_featured', false),
-            'stock'       => (int) ($this->input('stock') ?? 0),
+            'stock'       => ($this->has('stock') && $this->input('stock') !== null && $this->input('stock') !== '') ? (int) $this->input('stock') : null,
             'weight'      => (int) ($this->input('weight') ?? 0),
             'length'      => (float) ($this->input('length') ?? 0),
             'width'       => (float) ($this->input('width') ?? 0),
