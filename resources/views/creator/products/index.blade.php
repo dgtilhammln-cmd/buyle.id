@@ -985,7 +985,7 @@
       document.getElementById('siMenuProgress').style.display = 'none';
       alert('Gagal scan foto: ' + err.message);
     });
-
+  }
 
   // TIKTOK SHOP — langsung redirect ke form produk
   function runSiTiktokScrape() {
