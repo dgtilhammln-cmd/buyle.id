@@ -380,8 +380,8 @@
             </td>
             <td style="padding:1.25rem 1.5rem;">
               <img src="{{ $s->image_url }}" alt="{{ $s->name }}"
-                style="width:60px;height:44px;object-fit:cover;border-radius:10px;border:1px solid #E4E7F0;"
-                onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';">
+                style="width:60px;height:44px;object-fit:{{ $s->image ? 'cover' : 'contain' }};border-radius:10px;border:1px solid #E4E7F0;background:#ffffff;padding:{{ $s->image ? '0' : '4px' }};"
+                onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='4px';">
             </td>
             <td style="padding:1.25rem 1.5rem;">
               <div style="font-size:.9rem;font-weight:700;color:#1E293B;">{{ $s->name }}</div>
@@ -513,10 +513,10 @@
           style="position:absolute;top:6px;right:6px;font-size:.6rem;font-weight:600;padding:.2rem .5rem;border-radius:100px;background:{{ $s->is_active ? 'rgba(16,185,129,0.9)' : 'rgba(239,68,68,0.9)' }};color:#fff;z-index:10;backdrop-filter:blur(4px);">
           {{ $s->is_active ? 'Aktif' : 'Nonaktif' }}
         </div>
-        <div style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-bottom:1px solid #F1F5F9;background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);display:flex;align-items:center;justify-content:center;">
+        <div style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-bottom:1px solid #F1F5F9;background:#ffffff;display:flex;align-items:center;justify-content:center;">
           <img src="{{ $s->image_url }}" alt="{{ $s->name }}"
-            style="width:100%;height:100%;object-fit:cover;display:block;"
-            onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';">
+            style="width:100%;height:100%;object-fit:{{ $s->image ? 'cover' : 'contain' }};padding:{{ $s->image ? '0' : '1.25rem' }};display:block;"
+            onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='1.25rem';">
         </div>
         <div style="padding:0.65rem;flex:1;display:flex;flex-direction:column;">
           <div

@@ -302,18 +302,32 @@ class MenuScanController extends Controller
 
             // ── Regex price fallback (Tokopedia, Shopee, TikTok patterns) ──
             if ($price <= 0) {
-                // JSON-like: "price":"49000" or "originalPrice":"59000"
+                // Meta tag prices
+                if (preg_match('/<meta[^>]*property=["\'](?:product|og):price:amount["\'][^>]*content=["\']([\d.]+)\b/i', $html, $m)) {
+                    $price = (float) $m[1];
+                } elseif (preg_match('/<meta[^>]*name=["\'](?:twitter:data1|price)["\'][^>]*content=["\']([\d.]+)\b/i', $html, $m)) {
+                    $price = (float) $m[1];
+                }
+            }
+            if ($price <= 0) {
+                // Shopee micro-currency / JSON prices ("price":4900000000 or "price_min":49000)
+                if (preg_match('/"(?:price_min|price)"\s*:\s*(\d{5,})/i', $html, $m)) {
+                    $rawP = (float) $m[1];
+                    $price = ($rawP > 10000000) ? ($rawP / 100000) : $rawP;
+                }
+            }
+            if ($price <= 0) {
                 if (preg_match('/["\'](?:price|harga)["\']\s*:\s*["\']?(\d{4,})["\']?/i', $html, $m)) {
                     $price = (float) $m[1];
                 }
             }
             if ($price <= 0 || $salePrice <= 0) {
-                // Rp pattern – grab first two occurrences (original then promo, or vice versa)
+                // Rp pattern – grab candidates
                 preg_match_all('/(?:Rp|IDR)[\s.]*([\d]{2,}(?:[.,][\d]{3})*)/u', $html, $pm);
                 $pricesCandidates = [];
                 foreach ($pm[1] as $rawP) {
                     $cleaned = (float) preg_replace('/[^\d]/', '', $rawP);
-                    if ($cleaned >= 1000) $pricesCandidates[] = $cleaned;
+                    if ($cleaned >= 500 && $cleaned < 1000000000) $pricesCandidates[] = $cleaned;
                 }
                 $pricesCandidates = array_unique($pricesCandidates);
                 if (count($pricesCandidates) >= 2) {
@@ -348,7 +362,7 @@ class MenuScanController extends Controller
                 $lastSegment = $pathSegments[count($pathSegments) - 2];
             }
 
-            // Strip Tokopedia IDs: produk-nama-i.12345.67890 or produk-nama-12345678
+            // Strip Tokopedia/Shopee IDs: produk-nama-i.12345.67890 or produk-nama-12345678
             $lastSegment = preg_replace('/-i\.\d+\.\d+$/i', '', $lastSegment);
             $lastSegment = preg_replace('/-p\d+$/i', '', $lastSegment);
             $lastSegment = preg_replace('/-\d{5,}$/i', '', $lastSegment);
@@ -363,6 +377,15 @@ class MenuScanController extends Controller
         // ── Build slug ──────────────────────────────────────────────────
         $slug = Str::slug($cleanTitle);
 
+        // ── Clean & Format Description (No raw URL parameters) ──────────
+        if (!empty($desc)) {
+            $desc = preg_replace('/Produk diimpor dari:\s*https?:\/\/[^\s]+/i', '', $desc);
+            $desc = trim(strip_tags(html_entity_decode($desc)));
+        }
+        if (empty($desc) || str_starts_with(strtolower($desc), 'http') || mb_strlen($desc) < 5) {
+            $desc = $cleanTitle . ' — Produk jualan berkualitas tinggi. Dapatkan penawaran terbaik dan layanan pengiriman cepat.';
+        }
+
         // ── If sale price > normal price, swap ──────────────────────────
         if ($salePrice > 0 && $price > 0 && $salePrice > $price) {
             [$price, $salePrice] = [$salePrice, $price];
@@ -372,24 +395,13 @@ class MenuScanController extends Controller
             $salePrice = 0;
         }
 
-        // ── Placeholder SVG data-URI when no image found ─────────────────
-        $placeholderImage = 'data:image/svg+xml;utf8,' . rawurlencode(
-            '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">'
-            . '<rect width="400" height="400" fill="#F1F5F9"/>'
-            . '<rect x="130" y="120" width="140" height="110" rx="12" fill="#CBD5E1"/>'
-            . '<circle cx="165" cy="155" r="16" fill="#94A3B8"/>'
-            . '<polyline points="130,230 175,175 210,210 240,185 270,230" fill="none" stroke="#94A3B8" stroke-width="3"/>'
-            . '<text x="200" y="290" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#94A3B8">Foto belum tersedia</text>'
-            . '</svg>'
-        );
-
         $item = [
             'name'        => $cleanTitle,
             'slug'        => $slug,
             'price'       => $price > 0 ? (int) $price : null,
             'sale_price'  => $salePrice > 0 ? (int) $salePrice : null,
-            'description' => $desc ?: 'Produk diimpor dari: ' . $url,
-            'image'       => $image ?: $placeholderImage,
+            'description' => $desc,
+            'image'       => $image ?: \App\Models\Product::getPlaceholderUrl(),
             'images'      => $images,
             'source_url'  => $url,
         ];
