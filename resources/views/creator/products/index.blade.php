@@ -1014,7 +1014,7 @@
   }
 
   // LYNK.ID — langsung redirect ke form produk sebagai Produk Digital
-  function runSiLynkScrape() {
+  async function runSiLynkScrape() {
     const url = document.getElementById('siLynkUrl').value;
     if (!url) { alert('Masukkan URL produk dari Lynk.id.'); return; }
     const btn = document.getElementById('siLynkBtn');
@@ -1022,17 +1022,28 @@
     document.getElementById('siLynkProgress').style.display = 'block';
     const csrfToken = '{{ csrf_token() }}';
 
+    let htmlContent = '';
+    try {
+      const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+      const resp = await fetch(proxyUrl, { signal: AbortSignal.timeout(6000) });
+      if (resp.ok) {
+        htmlContent = await resp.text();
+      }
+    } catch (err) {
+      console.warn('CORS proxy fetch failed, falling back to server fetch:', err);
+    }
+
     fetch('{{ route("creator.products.scan-url") }}', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
-      body: JSON.stringify({ url: url, source: 'lynk' })
+      body: JSON.stringify({ url: url, html: htmlContent, source: 'lynk' })
     })
     .then(res => res.json())
     .then(res => {
       btn.disabled = false;
       document.getElementById('siLynkProgress').style.display = 'none';
       if (res.success && res.items && res.items.length > 0) {
-        redirectToCreateWithData(res.items[0], 'external_link'); // → Produk Digital / Link Access
+        redirectToCreateWithData(res.items[0], 'external_link');
       } else {
         alert(res.message || 'Gagal membaca data produk Lynk.id.');
       }

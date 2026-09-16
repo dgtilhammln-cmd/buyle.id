@@ -207,38 +207,71 @@ class MenuScanController extends Controller
         $images    = [];
         $price     = 0;
         $salePrice = 0;
-        $html      = '';
+        $html = trim($request->input('html', ''));
 
-        try {
-            $client = new \GuzzleHttp\Client([
-                'timeout'         => 8,
-                'verify'          => false,
-                'allow_redirects' => ['max' => 5],
-                'headers'         => [
-                    'User-Agent'      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-                    'Accept-Language' => 'id-ID,id;q=0.9,en-US;q=0.8',
-                    'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                ]
-            ]);
+        if (empty($html)) {
+            try {
+                $client = new \GuzzleHttp\Client([
+                    'timeout'         => 8,
+                    'verify'          => false,
+                    'allow_redirects' => ['max' => 5],
+                    'headers'         => [
+                        'User-Agent'      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                        'Accept-Language' => 'id-ID,id;q=0.9,en-US;q=0.8',
+                        'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    ]
+                ]);
 
-            $res  = $client->get($url);
-            $html = (string) $res->getBody();
+                $res  = $client->get($url);
+                $html = (string) $res->getBody();
+            } catch (\Exception $e) {
+                // Ignore HTTP fetch errors
+            }
+        }
 
-            // ── Title ──────────────────────────────────────────────────
+        $isLynk = (str_contains(strtolower($url), 'lynk.id') || str_contains(strtolower($url), 'link.id') || $source === 'lynk');
+
+        // ── 1. Title Extraction ──
+        if ($isLynk) {
+            if (preg_match('/<h2[^>]*id=["\']title_product["\'][^>]*>(.*?)<\/h2>/is', $html, $m)) {
+                $title = trim(html_entity_decode(strip_tags($m[1])));
+            } elseif (preg_match('/shareMessage\s*=\s*["\']Check out (.*?) from \w+ @/is', $html, $m)) {
+                $title = trim(html_entity_decode(strip_tags($m[1])));
+            }
+        }
+
+        if (empty($title)) {
             if (preg_match('/<meta[^>]*property=["\']og:title["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
                 $title = trim(html_entity_decode(strip_tags($m[1])));
             } elseif (preg_match('/<title[^>]*>(.*?)<\/title>/is', $html, $m)) {
                 $title = trim(html_entity_decode(strip_tags($m[1])));
             }
+        }
 
-            // ── Description ────────────────────────────────────────────
+        // ── 2. Description Extraction ──
+        if ($isLynk && preg_match('/<div[^>]*class=["\'][^"\']*rich-content[^"\']*["\'][^>]*>(.*?)<\/div>\s*<\/div>/is', $html, $m)) {
+            $desc = trim(strip_tags(html_entity_decode($m[1]), '<br><p><div><li>'));
+        }
+
+        if (empty($desc)) {
             if (preg_match('/<meta[^>]*property=["\']og:description["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
                 $desc = trim(html_entity_decode($m[1]));
             } elseif (preg_match('/<meta[^>]*name=["\']description["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
                 $desc = trim(html_entity_decode($m[1]));
             }
+        }
 
-            // ── Primary Image (og:image) ────────────────────────────────
+        // ── 3. Image Extraction ──
+        if ($isLynk && preg_match_all('/https?:\/\/cdn\.lynkid\.my\.id\/products\/[^\s"\']+/i', $html, $imgMatches)) {
+            foreach ($imgMatches[0] as $img) {
+                $cleanImg = strtok($img, '?');
+                if (filter_var($cleanImg, FILTER_VALIDATE_URL)) {
+                    $images[] = $cleanImg;
+                }
+            }
+        }
+
+        if (empty($images)) {
             if (preg_match_all('/<meta[^>]*property=["\']og:image["\'][^>]*content=["\'](.*?)["\']/is', $html, $ms)) {
                 foreach ($ms[1] as $img) {
                     $img = trim($img);
@@ -247,14 +280,25 @@ class MenuScanController extends Controller
                     }
                 }
             }
+        }
 
-            // ── JSON-LD Structured Data (best source for prices & images) ──
+        // ── 4. Lynk.id Price Extraction ──
+        if ($isLynk) {
+            if (preg_match('/var sPrice\s*=\s*_g\([\'"]([\d.]+)[\'"]\)/i', $html, $m)) {
+                $salePrice = (float) $m[1];
+            }
+            if (preg_match('/var p\s*=\s*_g\([\'"]([\d.]+)[\'"]\)/i', $html, $m)) {
+                $price = (float) $m[1];
+            }
+        }
+
+        // ── 5. JSON-LD Structured Data (fallback for general URLs) ──
+        if (empty($title) || $price <= 0) {
             if (preg_match_all('/<script[^>]*type=["\']application\/ld\+json["\'][^>]*>(.*?)<\/script>/is', $html, $jsonMatches)) {
                 foreach ($jsonMatches[1] as $jsonRaw) {
                     $jsonData = json_decode(trim($jsonRaw), true);
                     if (!$jsonData) continue;
 
-                    // Handle @graph array
                     $candidates = isset($jsonData['@graph']) ? $jsonData['@graph'] : [$jsonData];
 
                     foreach ($candidates as $obj) {
@@ -268,7 +312,6 @@ class MenuScanController extends Controller
                             $desc = trim(strip_tags($obj['description']));
                         }
 
-                        // Images from JSON-LD
                         $imgField = $obj['image'] ?? null;
                         if (is_string($imgField) && $imgField) {
                             if (filter_var($imgField, FILTER_VALIDATE_URL)) $images[] = $imgField;
@@ -279,7 +322,6 @@ class MenuScanController extends Controller
                             }
                         }
 
-                        // Offers price
                         $offers = $obj['offers'] ?? null;
                         if ($offers) {
                             $offerList = isset($offers['@type']) ? [$offers] : $offers;
@@ -289,7 +331,6 @@ class MenuScanController extends Controller
                                     if ($price <= 0) $price = $offerPrice;
                                     else $salePrice = min($price, $offerPrice);
                                 }
-                                // highPrice = original, lowPrice = sale
                                 if (!empty($offer['highPrice'])) {
                                     $price     = (float) $offer['highPrice'];
                                     $salePrice = (float) ($offer['lowPrice'] ?? 0);
@@ -299,50 +340,45 @@ class MenuScanController extends Controller
                     }
                 }
             }
+        }
 
-            // ── Regex price fallback (Tokopedia, Shopee, TikTok patterns) ──
-            if ($price <= 0) {
-                // Meta tag prices
-                if (preg_match('/<meta[^>]*property=["\'](?:product|og):price:amount["\'][^>]*content=["\']([\d.]+)\b/i', $html, $m)) {
-                    $price = (float) $m[1];
-                } elseif (preg_match('/<meta[^>]*name=["\'](?:twitter:data1|price)["\'][^>]*content=["\']([\d.]+)\b/i', $html, $m)) {
-                    $price = (float) $m[1];
-                }
+        // ── 6. Regex price fallback (Tokopedia, Shopee, TikTok, Rp patterns) ──
+        if ($price <= 0) {
+            if (preg_match('/<meta[^>]*property=["\'](?:product|og):price:amount["\'][^>]*content=["\']([\d.]+)\b/i', $html, $m)) {
+                $price = (float) $m[1];
+            } elseif (preg_match('/<meta[^>]*name=["\'](?:twitter:data1|price)["\'][^>]*content=["\']([\d.]+)\b/i', $html, $m)) {
+                $price = (float) $m[1];
             }
+        }
 
-            // Shopee & Tokopedia JSON patterns
-            if (preg_match('/"(?:price_min_before_discount|price_before_discount|price_max|original_price|raw_price)"\s*:\s*(\d{5,})/i', $html, $m)) {
+        if (preg_match('/"(?:price_min_before_discount|price_before_discount|price_max|original_price|raw_price)"\s*:\s*(\d{5,})/i', $html, $m)) {
+            $rawP = (float) $m[1];
+            $parsedP = ($rawP > 10000000) ? ($rawP / 100000) : $rawP;
+            if ($price <= 0) $price = $parsedP;
+            else $salePrice = $parsedP;
+        }
+        if ($price <= 0) {
+            if (preg_match('/"(?:price_min|price|harga)"\s*:\s*"?(\d{5,})"?/i', $html, $m)) {
                 $rawP = (float) $m[1];
-                $parsedP = ($rawP > 10000000) ? ($rawP / 100000) : $rawP;
-                if ($price <= 0) $price = $parsedP;
-                else $salePrice = $parsedP;
+                $price = ($rawP > 10000000) ? ($rawP / 100000) : $rawP;
             }
-            if ($price <= 0) {
-                if (preg_match('/"(?:price_min|price|harga)"\s*:\s*"?(\d{5,})"?/i', $html, $m)) {
-                    $rawP = (float) $m[1];
-                    $price = ($rawP > 10000000) ? ($rawP / 100000) : $rawP;
-                }
-            }
+        }
 
-            if ($price <= 0 || $salePrice <= 0) {
-                // Rp pattern – grab candidates
-                preg_match_all('/(?:Rp|IDR)[\s.]*([\d]{2,}(?:[.,][\d]{3})*)/u', $html, $pm);
-                $pricesCandidates = [];
-                foreach ($pm[1] as $rawP) {
-                    $cleaned = (float) preg_replace('/[^\d]/', '', $rawP);
-                    if ($cleaned >= 500 && $cleaned < 1000000000) $pricesCandidates[] = $cleaned;
-                }
-                $pricesCandidates = array_values(array_unique($pricesCandidates));
-                if (count($pricesCandidates) >= 2) {
-                    rsort($pricesCandidates); // descending: biggest = original
-                    if ($price <= 0)     $price     = $pricesCandidates[0];
-                    if ($salePrice <= 0) $salePrice = $pricesCandidates[count($pricesCandidates) - 1];
-                } elseif (count($pricesCandidates) === 1 && $price <= 0) {
-                    $price = $pricesCandidates[0];
-                }
+        if ($price <= 0 || $salePrice <= 0) {
+            preg_match_all('/(?:Rp|IDR)[\s.]*([\d]{2,}(?:[.,][\d]{3})*)/u', $html, $pm);
+            $pricesCandidates = [];
+            foreach ($pm[1] as $rawP) {
+                $cleaned = (float) preg_replace('/[^\d]/', '', $rawP);
+                if ($cleaned >= 500 && $cleaned < 1000000000) $pricesCandidates[] = $cleaned;
             }
-        } catch (\Exception $e) {
-            // Ignore HTTP fetch errors; rely on URL slug parsing below
+            $pricesCandidates = array_values(array_unique($pricesCandidates));
+            if (count($pricesCandidates) >= 2) {
+                rsort($pricesCandidates);
+                if ($price <= 0)     $price     = $pricesCandidates[0];
+                if ($salePrice <= 0) $salePrice = $pricesCandidates[count($pricesCandidates) - 1];
+            } elseif (count($pricesCandidates) === 1 && $price <= 0) {
+                $price = $pricesCandidates[0];
+            }
         }
 
         $isLynk = (str_contains(strtolower($url), 'lynk.id') || str_contains(strtolower($url), 'link.id') || $source === 'lynk');
