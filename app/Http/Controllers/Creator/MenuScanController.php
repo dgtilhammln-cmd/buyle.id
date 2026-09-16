@@ -596,7 +596,7 @@ class MenuScanController extends Controller
             // Credits: 5 per request (render_js). 1000 credits = ~200 Lynk.id scrapes.
             // API Key dikelola via /admin → API & Integrasi
             $sbApiKey = \App\Models\Setting::get('scrapingbee_api_key', env('SCRAPINGBEE_API_KEY', ''));
-            if (!empty($sbApiKey) && filter_var($url, FILTER_VALIDATE_URL)) {
+            if (empty($rawHtml) && !empty($sbApiKey) && filter_var($url, FILTER_VALIDATE_URL)) {
                 try {
                     $sbResp = \Illuminate\Support\Facades\Http::timeout(30)->get('https://app.scrapingbee.com/api/v1/', [
                         'api_key'       => $sbApiKey,
@@ -618,7 +618,7 @@ class MenuScanController extends Controller
             }
 
             // Strategy 1: Multi User-Agent HTTP fetch if HTML is empty or Cloudflare blocked
-            if (empty($title) && (empty($rawHtml) || strlen($rawHtml) < 500 || str_contains($rawHtml, 'Cloudflare')) && filter_var($url, FILTER_VALIDATE_URL)) {
+            if (empty($rawHtml) && filter_var($url, FILTER_VALIDATE_URL)) {
                 $uas = [
                     'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
                     'WhatsApp/2.23.20.0 i',
@@ -645,7 +645,7 @@ class MenuScanController extends Controller
             }
 
             // Strategy 2: Microlink API Fallback
-            if ((empty($rawHtml) || strlen($rawHtml) < 500 || str_contains($rawHtml, 'Cloudflare')) && filter_var($url, FILTER_VALIDATE_URL)) {
+            if (empty($rawHtml) && filter_var($url, FILTER_VALIDATE_URL)) {
                 try {
                     $ml = \Illuminate\Support\Facades\Http::timeout(8)->get('https://api.microlink.io', [
                         'url'  => $url,
