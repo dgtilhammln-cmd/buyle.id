@@ -594,7 +594,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="form-label"></label>
+                                    <label class="form-label">Harga Diskon / Promo (Rp)</label>
                                     <input type="text" name="sale_price" id="input_sale_price"
                                         value="{{ old('sale_price', $product->sale_price ? number_format($product->sale_price, 0, ',', '.') : '') }}"
                                         class="form-input currency-input" placeholder="Opsional, misal: 99.000"
@@ -1156,8 +1156,8 @@
                 if (groupWrap) groupWrap.style.display = 'none';
                 if (catSelect) catSelect.removeAttribute('required');
                 if (weightInput) weightInput.removeAttribute('required');
-                if (commissionWrap) commissionWrap.style.display = 'block';
-                if (commissionInput) commissionInput.setAttribute('required', 'required');
+                if (commissionWrap) commissionWrap.style.display = 'none';
+                if (commissionInput) commissionInput.removeAttribute('required');
             } else {
                 // ticket or external_link
                 if (buyleToggleWrap) buyleToggleWrap.style.display = 'none';

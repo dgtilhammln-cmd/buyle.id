@@ -627,7 +627,7 @@
             $imageBlocks = $blocks->where('type', 'image')->sortBy('order')->values();
             $linkBlocks  = $blocks->whereIn('type', ['link', 'pdf'])->sortBy('order')->values();
 
-            $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
+            $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortBy(fn($b) => [$b->order ?? 0, $b->id])->values();
 
             $isBlockPhysical = function($b) use ($products) {
                 if ($b->type === 'buyle_product') return false;

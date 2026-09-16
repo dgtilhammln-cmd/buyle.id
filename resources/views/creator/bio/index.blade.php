@@ -2266,7 +2266,7 @@
 
                                 $title = strtolower($b->title ?? '');
                                 return (bool) preg_match('/(es|nasi|teh|kopi|jus|sirup|air|soto|bakso|mie|ayam|bebek|daging|ikan|kerupuk|lumpia|kasur|samsung|sepatu|baju|celana)/i', $title);
-                            })->sortByDesc('id');
+                            })->sortBy(fn($b) => [$b->order ?? 0, $b->id]);
                         @endphp
                         @forelse($umkmBlocks as $block)
                                             @php
