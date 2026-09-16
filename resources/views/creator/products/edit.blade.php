@@ -1173,6 +1173,7 @@
             const evType = document.getElementById('eventTypeSelect');
             const wlCheck = document.getElementById('isWhitelabelCheck');
             const categoryWrap = document.getElementById('categoryWrap');
+            const subCatWrap = document.getElementById('subCatWrap');
             const groupWrap = document.getElementById('groupWrap');
             const commissionWrap = document.getElementById('commissionWrap');
             const physicalWrap = document.getElementById('physicalFieldsWrap');
@@ -1189,32 +1190,34 @@
                 if (buyleToggleWrap) buyleToggleWrap.style.display = 'block';
                 const isBuyleActive = buyleToggle ? buyleToggle.checked : true;
 
-                if (isBuyleActive) {
-                    if (physicalWrap) physicalWrap.style.display = (val === 'physical') ? 'block' : 'none';
-                    if (categoryWrap) categoryWrap.style.display = 'block';
-                    if (groupWrap) groupWrap.style.display = 'block';
-                    if (catSelect) catSelect.setAttribute('required', 'required');
-                    if (weightInput && val === 'physical') weightInput.setAttribute('required', 'required');
+                if (isBuyleActive && val === 'physical') {
+                    if (physicalWrap) physicalWrap.style.display = 'block';
+                    if (weightInput) weightInput.setAttribute('required', 'required');
                 } else {
                     if (physicalWrap) physicalWrap.style.display = 'none';
-                    if (categoryWrap) categoryWrap.style.display = 'none';
-                    if (groupWrap) groupWrap.style.display = 'none';
-                    if (catSelect) catSelect.removeAttribute('required');
                     if (weightInput) weightInput.removeAttribute('required');
                 }
+                
+                // Hide Category, Sub-Category, and Group for Barang & Makanan
+                if (categoryWrap) categoryWrap.style.display = 'none';
+                if (subCatWrap) subCatWrap.style.display = 'none';
+                if (groupWrap) groupWrap.style.display = 'none';
+                if (catSelect) catSelect.removeAttribute('required');
+
                 if (commissionWrap) commissionWrap.style.display = 'none';
                 if (commissionInput) commissionInput.removeAttribute('required');
             } else if (isService) {
                 if (buyleToggleWrap) buyleToggleWrap.style.display = 'none';
                 if (physicalWrap) physicalWrap.style.display = 'none';
                 if (categoryWrap) categoryWrap.style.display = 'none';
+                if (subCatWrap) subCatWrap.style.display = 'none';
                 if (groupWrap) groupWrap.style.display = 'none';
                 if (catSelect) catSelect.removeAttribute('required');
                 if (weightInput) weightInput.removeAttribute('required');
                 if (commissionWrap) commissionWrap.style.display = 'none';
                 if (commissionInput) commissionInput.removeAttribute('required');
             } else {
-                // ticket or external_link
+                // ticket or external_link (Digital)
                 if (buyleToggleWrap) buyleToggleWrap.style.display = 'none';
                 if (physicalWrap) physicalWrap.style.display = 'none';
                 if (weightInput) weightInput.removeAttribute('required');
