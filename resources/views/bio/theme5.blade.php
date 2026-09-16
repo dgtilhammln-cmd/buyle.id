@@ -1022,18 +1022,20 @@
         $affBlocks = $blocks->whereIn('type', ['shopee', 'affiliate'])->sortByDesc('created_at')->values();
 
         $isBlockPhysical = function($b) use ($products) {
-            if ($b->type === 'custom_product') return true;
-            $cat = strtolower(trim($b->data_json['category'] ?? ''));
-            if (in_array($cat, ['makanan', 'barang', 'jasa', 'lainnya', 'kuliner', 'fisik', 'umkm'])) return true;
+            if ($b->type === 'buyle_product') return false;
+            if ($b->type === 'custom_product') {
+                $cat = strtolower(trim($b->data_json['category'] ?? ''));
+                if (in_array($cat, ['digital', 'ebook', 'link', 'tiket', 'event', 'external_link'])) return false;
+                return true;
+            }
             $pid = $b->data_json['product_id'] ?? null;
             if ($pid && isset($products[$pid])) {
                 $pType = strtolower($products[$pid]->product_type ?? $products[$pid]->type ?? '');
+                if (in_array($pType, ['external_link', 'digital', 'ticket'])) return false;
                 if (in_array($pType, ['physical', 'makanan', 'service', 'product', 'umkm', 'barang', 'jasa', 'food'])) return true;
             }
-            $title = strtolower($b->title ?? '');
-            if (preg_match('/(es|nasi|teh|kopi|jus|sirup|air|soto|bakso|mie|ayam|bebek|daging|ikan|kerupuk|lumpia|kasur|samsung|promo|sepatu|baju|celana)/i', $title)) {
-                return true;
-            }
+            $cat = strtolower(trim($b->data_json['category'] ?? ''));
+            if (in_array($cat, ['makanan', 'barang', 'jasa', 'lainnya', 'kuliner', 'fisik', 'umkm'])) return true;
             return false;
         };
 
