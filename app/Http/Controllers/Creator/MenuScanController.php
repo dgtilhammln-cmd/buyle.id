@@ -525,8 +525,33 @@ class MenuScanController extends Controller
                 $rawHtml = ($d !== false && base64_encode($d) === $r) ? $d : $r;
             }
 
+            // ── Variable declarations (harus sebelum semua strategy) ──────────────
+            $title     = '';
+            $desc      = '';
+            $price     = 0;
+            $salePrice = 0;
+            $images    = [];
+
+            // Strategy 0: Call Node.js Puppeteer Microservice (Render.com Cloud) — KHUSUS lynk.id
+            $scraperUrl = env('SCRAPER_SERVICE_URL');
+            if (!empty($scraperUrl) && filter_var($url, FILTER_VALIDATE_URL)) {
+                try {
+                    $microResp = \Illuminate\Support\Facades\Http::timeout(20)->get($scraperUrl, ['url' => $url]);
+                    if ($microResp->successful() && $microResp->json('success') === true) {
+                        $mdata = $microResp->json('data', []);
+                        if (!empty($mdata['title'])) {
+                            $title     = $mdata['title'] ?? '';
+                            $desc      = $mdata['description'] ?? '';
+                            $price     = floatval($mdata['price'] ?? 0);
+                            $salePrice = floatval($mdata['original_price'] ?? 0);
+                            $images    = is_array($mdata['images'] ?? null) ? $mdata['images'] : [];
+                        }
+                    }
+                } catch (\Throwable $e) {}
+            }
+
             // Strategy 1: Multi User-Agent HTTP fetch if HTML is empty or Cloudflare blocked
-            if ((empty($rawHtml) || strlen($rawHtml) < 500 || str_contains($rawHtml, 'Cloudflare')) && filter_var($url, FILTER_VALIDATE_URL)) {
+            if (empty($title) && (empty($rawHtml) || strlen($rawHtml) < 500 || str_contains($rawHtml, 'Cloudflare')) && filter_var($url, FILTER_VALIDATE_URL)) {
                 $uas = [
                     'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
                     'WhatsApp/2.23.20.0 i',
@@ -578,12 +603,8 @@ class MenuScanController extends Controller
                 } catch (\Throwable $e) {}
             }
 
-            // Strategy 3: Parse Lynk.id HTML & JS Data
-            $title     = '';
-            $desc      = '';
-            $price     = 0;
-            $salePrice = 0;
-            $images    = [];
+            // Strategy 3: Parse Lynk.id HTML & JS Data (skip jika Strategy 0 sudah berhasil)
+            if (empty($title)) {
 
             if (!empty($rawHtml) && !str_contains($rawHtml, 'Attention Required!')) {
                 // Title Extraction
@@ -644,6 +665,8 @@ class MenuScanController extends Controller
                 }
             }
 
+            } // end if (empty($title)) — Strategy 3
+
             // Strategy 4: FAIL-SAFE URL & Creator Path Parsing (Clean formatting, never outputs raw hashes)
             $parsedUrl = parse_url($url);
             $pathSegments = array_values(array_filter(explode('/', $parsedUrl['path'] ?? '')));
@@ -666,7 +689,7 @@ class MenuScanController extends Controller
             }
 
             if (empty($desc) || str_contains($desc, 'Just a moment...') || preg_match('/^[a-zA-Z0-9]{5,15}$/', $desc)) {
-                $desc = 'Produk Digital ' . $title . ' dari Lynk.id' . ($username ? ' (@' . $username . ')' : '') . '. Silakan periksa detail & atur harga sebelum menyimpan.';
+                $desc = 'Produk Digital ' . $title . ' dari Lynk.id' . ($username ? ' (@' . $username . ')' : '') . '. Checkout di Buyle.id!';
             }
 
             if ($salePrice > 0 && $price > 0 && $salePrice > $price) {
