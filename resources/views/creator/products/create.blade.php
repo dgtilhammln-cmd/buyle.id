@@ -162,6 +162,55 @@
             box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.1);
         }
 
+        select.form-input {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 16px;
+            padding-right: 2.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #0f172a;
+            border-radius: 12px;
+            border: 1.5px solid #e2e8f0;
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
+        }
+
+        select.form-input:hover {
+            border-color: #1eb349;
+            box-shadow: 0 3px 10px rgba(30, 179, 73, 0.08);
+        }
+
+        select.form-input:focus {
+            border-color: #1eb349;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(30, 179, 73, 0.15);
+        }
+
+        select.form-input option {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #0f172a;
+            background-color: #ffffff;
+            padding: 10px 14px;
+        }
+
+        select.form-input optgroup {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 0.78rem;
+            color: #1eb349;
+            background-color: #f8fafc;
+            padding: 8px 10px;
+            letter-spacing: 0.03em;
+        }
+
         textarea.form-input {
             height: auto;
             padding: 0.75rem 1rem;
@@ -398,15 +447,22 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group full" id="buyleCheckoutToggleWrap" style="display:none; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:1rem; margin-top:0.25rem; margin-bottom:0.75rem;">
+                                <div class="form-group full" id="buyleCheckoutToggleWrap"
+                                    style="display:none; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:1rem; margin-top:0.25rem; margin-bottom:0.75rem;">
                                     <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
                                         <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
-                                            <input type="checkbox" name="is_buyle_checkout" id="isBuyleCheckoutToggle" value="1" {{ old('is_buyle_checkout', 1) ? 'checked' : '' }} onchange="handleBuyleCheckoutToggle(this.checked)" style="opacity:0; width:0; height:0;">
+                                            <input type="checkbox" name="is_buyle_checkout" id="isBuyleCheckoutToggle"
+                                                value="1" {{ old('is_buyle_checkout', 1) ? 'checked' : '' }}
+                                                onchange="handleBuyleCheckoutToggle(this.checked)"
+                                                style="opacity:0; width:0; height:0;">
                                             <span class="toggle-slider-s"></span>
                                         </div>
                                         <div>
-                                            <div style="font-size:0.85rem; font-weight:700; color:#0f172a;">Pembayaran via Buyle</div>
-                                            <div style="font-size:0.72rem; color:#64748b; line-height:1.4;">Aktifkan untuk menerima pembayaran langsung melalui sistem checkout Buyle.id & ekspedisi logistik.</div>
+                                            <div style="font-size:0.85rem; font-weight:700; color:#0f172a;">Pembayaran via
+                                                Buyle</div>
+                                            <div style="font-size:0.72rem; color:#64748b; line-height:1.4;">Aktifkan untuk
+                                                menerima pembayaran langsung melalui sistem checkout Buyle.id & ekspedisi
+                                                logistik.</div>
                                         </div>
                                     </label>
                                 </div>
@@ -590,7 +646,7 @@
                                     <label class="form-label">Harga Diskon / Promo (Rp)</label>
                                     <input type="text" name="sale_price" id="input_sale_price"
                                         value="{{ old('sale_price') ? number_format((float) preg_replace('/[^\d]/', '', old('sale_price')), 0, ',', '.') : '' }}"
-                                        class="form-input currency-input" placeholder="Opsional, misal: 99.000"
+                                        class="form-input currency-input" placeholder="Opsional, misal: 29.000"
                                         autocomplete="off">
                                 </div>
 
@@ -773,7 +829,8 @@
                                             Informasi Utama Produk.</li>
                                         <li><strong>Approval Tim Buyle:</strong> Setelah produk disimpan, statusnya akan
                                             <code>Menunggu Approval Tim Buyle (Pending)</code>. Admin akan memverifikasi
-                                            file Anda sebelum muncul di katalog White Label Marketplace.</li>
+                                            file Anda sebelum muncul di katalog White Label Marketplace.
+                                        </li>
                                     </ul>
                                 </div>
 
@@ -892,17 +949,17 @@
         function addFaqRow() {
             const container = document.getElementById('faqContainer');
             const html = `
-            <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                <div class="form-group">
-                    <label class="form-label">Pertanyaan</label>
-                    <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Jawaban</label>
-                    <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
-                </div>
-                <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-            </div>`;
+                <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                    <div class="form-group">
+                        <label class="form-label">Pertanyaan</label>
+                        <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Jawaban</label>
+                        <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
+                    </div>
+                    <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                </div>`;
             container.insertAdjacentHTML('beforeend', html);
             faqIdx++;
         }
@@ -1113,13 +1170,13 @@
 
                 // Banner alert
                 const alertHtml = `
-                    <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.1rem 1.4rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; color:#0f172a; font-size:0.85rem; font-weight:700; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
-                        <div style="display:flex; align-items:center; gap:0.6rem;">
-                            <svg width="22" height="22" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                            <span>Data berhasil diimpor otomatis via Smart Import! Silakan periksa dan sesuaikan data di bawah sebelum menyimpan.</span>
+                        <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.1rem 1.4rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; color:#0f172a; font-size:0.85rem; font-weight:700; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
+                            <div style="display:flex; align-items:center; gap:0.6rem;">
+                                <svg width="22" height="22" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                                <span>Data berhasil diimpor otomatis via Smart Import! Silakan periksa dan sesuaikan data di bawah sebelum menyimpan.</span>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
                 const formBody = document.getElementById('productForm');
                 if (formBody) {
                     formBody.insertAdjacentHTML('afterbegin', alertHtml);
@@ -1225,9 +1282,9 @@
                             const imgBox = document.createElement('div');
                             imgBox.style.cssText = 'position:relative; width:90px; height:90px; border-radius:12px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06);';
                             imgBox.innerHTML = `
-                                <img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                <span style="position:absolute; bottom:4px; left:4px; background:rgba(15,23,42,0.75); color:#fff; font-size:9px; font-weight:700; padding:2px 5px; border-radius:6px; backdrop-filter:blur(4px);">Foto ${idx + 1}</span>
-                            `;
+                                    <img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                    <span style="position:absolute; bottom:4px; left:4px; background:rgba(15,23,42,0.75); color:#fff; font-size:9px; font-weight:700; padding:2px 5px; border-radius:6px; backdrop-filter:blur(4px);">Foto ${idx + 1}</span>
+                                `;
                             galleryContainer.appendChild(imgBox);
                         });
                     }
