@@ -517,13 +517,15 @@
                                     <button type="button" class="pd-qty-btn" onclick="document.getElementById('qty_input').stepDown()">−</button>
                                     <input type="number" id="qty_input" class="pd-qty-input" name="qty"
                                         value="{{ $service->min_order ?? 1 }}" min="{{ $service->min_order ?? 1 }}"
-                                        @if($service->type !== 'service' && $service->stock > 0) max="{{ $service->stock }}" @endif
-                                        @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+                                        @if($service->type !== 'service' && !is_null($service->stock) && $service->stock > 0) max="{{ $service->stock }}" @endif
+                                        @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
                                     <button type="button" class="pd-qty-btn" onclick="document.getElementById('qty_input').stepUp()">+</button>
                                 </div>
                                 <div class="pd-stock">
                                     @if($service->type === 'service')
                                         Jasa / Layanan
+                                    @elseif(is_null($service->stock))
+                                        <span style="color:#10B981;">Stok Tersedia</span>
                                     @elseif($service->stock > 0)
                                         Sisa {{ $service->stock }} buah
                                     @else
@@ -535,11 +537,11 @@
 
                         <div class="pd-actions" style="margin-top:1.5rem; display:flex; gap:0.75rem;">
                             <button type="submit" name="action" value="cart" class="pd-btn pd-btn-outline" style="flex:1;"
-                                @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+                                @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
                                 Tambah Keranjang
                             </button>
                             <button type="submit" name="action" value="buy" class="pd-btn pd-btn-primary" style="flex:1;"
-                                @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+                                @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
                                 Beli Sekarang
                             </button>
                         </div>
@@ -746,11 +748,11 @@
     @if($service->price > 0)
     <div class="pd-sticky-bar">
         <button type="submit" form="pd-cart-form" name="action" value="cart" class="pd-btn pd-btn-outline"
-            @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+            @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
             Keranjang
         </button>
         <button type="submit" form="pd-cart-form" name="action" value="buy" class="pd-btn pd-btn-primary"
-            @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+            @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
             Beli Langsung
         </button>
     </div>
