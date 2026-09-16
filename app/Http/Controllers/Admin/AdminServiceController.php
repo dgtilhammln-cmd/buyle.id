@@ -113,7 +113,7 @@ class AdminServiceController extends Controller
             if (isset($v['price']) && $v['price'] > 0) {
                 $v['meta_desc'] = "Jual {$v['name']} di Indonesia. Distributor, Supplier, Agen, {$v['name']}. Kami Menjual {$v['name']} terlengkap dengan harga termurah di Surabaya, Jawa Timur, Indonesia.";
             } else {
-                $v['meta_desc'] = "Layanan {$v['name']} profesional dan terpercaya di Surabaya, Jawa Timur. Hubungi kami untuk konsultasi gratis dan dapatkan penawaran terbaik.";
+                $v['meta_desc'] = "Layanan {$v['name']} profesional dan terpercaya di Surabaya, Jawa Timur. Hubungi kami untuk konsultasi gratis dan dapatkan harga terbaik.";
             }
             $v['meta_desc'] = Str::limit($v['meta_desc'], 155);
         }
@@ -259,7 +259,7 @@ class AdminServiceController extends Controller
             if (isset($v['price']) && $v['price'] > 0) {
                 $v['meta_desc'] = "Jual {$v['name']} di Indonesia. Distributor, Supplier, Agen, {$v['name']}. Kami Menjual {$v['name']} terlengkap dengan harga termurah di Surabaya, Jawa Timur, Indonesia.";
             } else {
-                $v['meta_desc'] = "Layanan {$v['name']} profesional dan terpercaya di Surabaya, Jawa Timur. Hubungi kami untuk konsultasi gratis dan dapatkan penawaran terbaik.";
+                $v['meta_desc'] = "Layanan {$v['name']} profesional dan terpercaya di Surabaya, Jawa Timur. Hubungi kami untuk konsultasi gratis dan dapatkan harga terbaik.";
             }
             $v['meta_desc'] = Str::limit($v['meta_desc'], 155);
         }

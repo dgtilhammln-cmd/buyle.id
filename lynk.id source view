@@ -1098,7 +1098,7 @@ const apptype0 = "remote"
       postURL("/v1/analytics/product/page-views/increment", { pkey:"67a8f275f5c6de557c9c6e89-2951-5346035087-1739125365623" }, true)
       // for share modal
       const shareMessage  = "Check out Private Consultation 1on1 | Overview Social Media Personal \u0026 Brand from mindiw @ https://lynk.id/mindiw/Pv23p2E"
-      const shareableLink = "https://lynk.id/mindiw/Pv23p2E"
+      const shareableLink = "https://lynk.id/creator/Pv23p2E"
       const x = _g('true');
       const max = +'0';
       const max_checkout = +'0';

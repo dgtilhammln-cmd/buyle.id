@@ -1003,7 +1003,17 @@ class CreatorBioController extends Controller
                 } catch (\Throwable $e) {}
             }
 
-            $primaryImage = $images[0] ?? null;
+            $downloadedImages = [];
+            foreach ($images as $imgUrl) {
+                if (str_starts_with($imgUrl, 'http://') || str_starts_with($imgUrl, 'https://')) {
+                    $dl = \App\Services\ImageDownloader::downloadAndCompress($imgUrl, 'products/gallery');
+                    $downloadedImages[] = $dl;
+                } else {
+                    $downloadedImages[] = $imgUrl;
+                }
+            }
+
+            $primaryImage = $downloadedImages[0] ?? null;
 
             return response()->json([
                 'title'          => $title ?: null,
@@ -1011,8 +1021,8 @@ class CreatorBioController extends Controller
                 'original_price' => (int) $origPrice,
                 'description'    => $description ?: null,
                 'image'          => $primaryImage,
-                'images'         => $images,  // array, maks 3
-                'partial'        => (!$title || empty($images)),
+                'images'         => $downloadedImages,  // array, maks 3
+                'partial'        => (!$title || empty($downloadedImages)),
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Gagal scrape: ' . $e->getMessage()], 500);

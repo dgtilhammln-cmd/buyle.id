@@ -318,7 +318,7 @@ class MenuScanController extends Controller
             }
 
             if (empty($desc)) {
-                $desc = $cleanTitle . ' — Produk jualan berkualitas tinggi. Dapatkan penawaran terbaik dan layanan pengiriman cepat.';
+                $desc = $cleanTitle . ' — Produk berkualitas tinggi. Dapatkan harga terbaik di buyle.id.';
             }
 
             $productType = $request->input('product_type', 'physical');
