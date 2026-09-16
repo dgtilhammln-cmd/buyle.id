@@ -1287,9 +1287,15 @@
       {{-- OPSI 1: INPUT URL --}}
       <div id="lynkUrlBox">
         <label class="si-label">URL Produk Lynk.id</label>
-        <input type="url" id="siLynkUrl" class="si-input" placeholder="https://lynk.id/creator/Pv23p2E">
-        <span
-          style="font-size:0.72rem; color:#94a3b8; margin-top:0.35rem; display:block; font-family:'Montserrat',sans-serif;">Contoh:
+        <div style="display:flex; gap:0.5rem; align-items:center;">
+          <input type="url" id="siLynkUrl" class="si-input" style="margin-bottom:0;" placeholder="https://lynk.id/mindiw/PZbVe7P">
+          <button type="button" onclick="openLynkUrlInNewTab()" style="background:#e0f2fe; color:#0284c7; border:1px solid #bae6fd; padding:0.65rem 0.9rem; border-radius:12px; font-weight:700; font-size:0.75rem; white-space:nowrap; cursor:pointer; display:flex; align-items:center; gap:0.3rem;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Buka Halaman
+          </button>
+        </div>
+        <span style="font-size:0.72rem; color:#64748b; margin-top:0.4rem; display:block; font-family:'Montserrat',sans-serif; line-height:1.4;">
+          💡 <b>Tip Akurasi 100%:</b> Buka halaman Lynk.id → Tekan <b>Ctrl+U</b> (Lihat Source Code) → Tekan <b>Ctrl+A & Ctrl+C</b> → Paste di <b>Opsi 2 (Source Code)</b> untuk mengambil seluruh foto, judul & harga lengkap secara instan!
         </span>
       </div>
 
@@ -1527,12 +1533,21 @@
     document.getElementById('lynkHtmlBox').style.display = method === 'html' ? 'block' : 'none';
   }
 
+  function openLynkUrlInNewTab() {
+    const url = document.getElementById('siLynkUrl').value.trim();
+    if (!url) {
+      alert('Silakan masukkan URL Lynk.id terlebih dahulu.');
+      return;
+    }
+    window.open(url, '_blank');
+  }
+
   // LYNK.ID — langsung redirect ke form produk sebagai Produk Digital
   async function runSiLynkScrape() {
     const urlVal = document.getElementById('siLynkUrl').value.trim();
     const htmlVal = document.getElementById('siLynkHtmlCode').value.trim();
 
-    if (activeLynkMethod === 'url' && !urlVal) {
+    if (activeLynkMethod === 'url' && !urlVal && !htmlVal) {
       alert('Silakan masukkan URL produk Lynk.id terlebih dahulu.');
       return;
     }
@@ -1546,7 +1561,7 @@
     document.getElementById('siLynkProgress').style.display = 'block';
     const csrfToken = '{{ csrf_token() }}';
 
-    let htmlPayload = (activeLynkMethod === 'html') ? htmlVal : '';
+    let htmlPayload = htmlVal || '';
     let targetUrl = urlVal || 'https://lynk.id/imported-product';
 
     if (activeLynkMethod === 'url' && !htmlPayload) {

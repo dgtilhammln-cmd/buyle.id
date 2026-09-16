@@ -644,14 +644,17 @@ class MenuScanController extends Controller
                 }
             }
 
-            // Strategy 4: FAIL-SAFE URL & Creator Path Parsing (Guarantees zero-failure!)
+            // Strategy 4: FAIL-SAFE URL & Creator Path Parsing (Clean formatting, never outputs raw hashes)
             $parsedUrl = parse_url($url);
             $pathSegments = array_values(array_filter(explode('/', $parsedUrl['path'] ?? '')));
             $username = $pathSegments[0] ?? '';
             $lastSeg = end($pathSegments) ?: '';
 
-            if (empty($title) || strlen($title) < 3 || $title === 'Just a moment...') {
-                if ($lastSeg && $lastSeg !== $username) {
+            $isHashTitle = empty($title) || strlen($title) < 3 || $title === 'Just a moment...' || preg_match('/^[a-zA-Z0-9]{5,15}$/', $title);
+
+            if ($isHashTitle) {
+                $isHashSeg = preg_match('/^[a-zA-Z0-9]{5,15}$/', $lastSeg) && !str_contains($lastSeg, '-') && !str_contains($lastSeg, '_');
+                if (!$isHashSeg && $lastSeg && $lastSeg !== $username) {
                     $cleanSeg = preg_replace('/-i\.\d+$/i', '', urldecode($lastSeg));
                     $cleanSeg = ucwords(str_replace(['-', '_'], ' ', $cleanSeg));
                     $title = (strlen($cleanSeg) > 2) ? $cleanSeg : ('Produk Digital Lynk.id' . ($username ? ' (@' . $username . ')' : ''));
@@ -662,7 +665,7 @@ class MenuScanController extends Controller
                 }
             }
 
-            if (empty($desc)) {
+            if (empty($desc) || str_contains($desc, 'Just a moment...') || preg_match('/^[a-zA-Z0-9]{5,15}$/', $desc)) {
                 $desc = 'Produk Digital ' . $title . ' dari Lynk.id' . ($username ? ' (@' . $username . ')' : '') . '. Silakan periksa detail & atur harga sebelum menyimpan.';
             }
 
