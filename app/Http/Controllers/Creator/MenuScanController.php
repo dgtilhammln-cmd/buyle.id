@@ -690,27 +690,63 @@ class MenuScanController extends Controller
                     $title = preg_replace('/\s*[-|]\s*Lynk\.id.*$/i', '', $title);
                 }
 
-                // Price Extraction: var p = _g('750000.0') & var sPrice = _g('500000.0')
+                // ── Price Extraction ──────────────────────────────────────────────
+                $strikethroughPrice = 0;
+                $activePrice = 0;
+
+                // 1. JS Variables (var p & var sPrice)
                 if (preg_match('/var p\s*=\s*_g\([\'"]([\d.]+)[\'"]\)/i', $rawHtml, $m)) {
                     $price = floatval($m[1]);
                 }
                 if (preg_match('/var sPrice\s*=\s*_g\([\'"]([\d.]+)[\'"]\)/i', $rawHtml, $m)) {
                     $salePrice = floatval($m[1]);
                 }
-                if (!$price && preg_match('/(?:Rp|IDR)\s*([0-9][0-9.,]{2,})/i', $rawHtml, $m)) {
+
+                // 2. HTML Spans (Strikethrough Td(lt) vs Active Fw(700))
+                if (preg_match('/<span[^>]*class="[^"]*Td\(lt\)[^"]*"[^>]*>(?:IDR|Rp)?\s*([\d,\.]+)/i', $rawHtml, $m)) {
+                    $strikethroughPrice = floatval(preg_replace('/[^0-9]/', '', $m[1]));
+                }
+                if (preg_match('/<span[^>]*class="[^"]*Fw\(700\)[^"]*"[^>]*>(?:IDR|Rp)?\s*([\d,\.]+)/i', $rawHtml, $m)) {
+                    $activePrice = floatval(preg_replace('/[^0-9]/', '', $m[1]));
+                }
+
+                if ($strikethroughPrice > 0 && $activePrice > 0 && $strikethroughPrice > $activePrice) {
+                    $price = $strikethroughPrice;   // Harga Normal (misal 750000)
+                    $salePrice = $activePrice;       // Harga Promo (misal 500000)
+                } elseif ($strikethroughPrice > 0 && !$price) {
+                    $price = $strikethroughPrice;
+                } elseif ($activePrice > 0 && !$price) {
+                    $price = $activePrice;
+                } elseif (!$price && preg_match('/(?:Rp|IDR)\s*([0-9][0-9.,]{2,})/i', $rawHtml, $m)) {
                     $price = floatval(preg_replace('/[^0-9]/', '', $m[1]));
                 }
 
-                // Description Extraction — Lynk.id uses: <div class="... rich-content" data-txt-sub>...</div>
-                // Strategy A: match via data-txt-sub attribute (most specific)
-                if (preg_match('/<div\b[^>]+data-txt-sub[^>]*>([\s\S]*?)<\/div>\s*(?:<\/div>|(?=<div\b[^>]+(?:Mt|class)[^>]*>))/i', $rawHtml, $m)) {
+                // ── Description Extraction ─────────────────────────────────────────
+                // Lynk.id uses: <div class="... rich-content" data-txt-sub>...</div>
+                if (str_contains($rawHtml, 'data-txt-sub') || str_contains($rawHtml, 'rich-content')) {
+                    try {
+                        $dom = new \DOMDocument();
+                        @$dom->loadHTML('<?xml encoding="utf-8" ?>' . mb_convert_encoding($rawHtml, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+                        $xpath = new \DOMXPath($dom);
+                        $nodes = $xpath->query('//*[@data-txt-sub] | //div[contains(@class, "rich-content")]');
+                        if ($nodes->length > 0) {
+                            $node = $nodes->item(0);
+                            $htmlContent = '';
+                            foreach ($node->childNodes as $child) {
+                                $htmlContent .= $dom->saveHTML($child);
+                            }
+                            if (!empty(trim($htmlContent))) {
+                                $desc = trim($htmlContent);
+                            }
+                        }
+                    } catch (\Throwable $e) {}
+                }
+
+                // Fallback A: Regex capture
+                if (empty($desc) && preg_match('/<div\b[^>]+data-txt-sub[^>]*>([\s\S]*?)<\/div>\s*(?:<\/div>|(?=<div\b[^>]+(?:Mt|class)[^>]*>))/i', $rawHtml, $m)) {
                     $desc = trim(html_entity_decode($m[1]));
                 }
-                // Strategy B: match class containing rich-content (greedy capture everything inside)
-                if (empty($desc) && preg_match('/<div\b[^>]+class="[^"]*rich-content[^"]*"[^>]*>([\s\S]+?)<\/div>\s*\n/i', $rawHtml, $m)) {
-                    $desc = trim(html_entity_decode($m[1]));
-                }
-                // Strategy C: fallback to og:description meta
+                // Fallback B: og:description
                 if (empty($desc)) {
                     if (preg_match('/<meta[^>]+(?:property|name)=["\']og:description["\'][^>]+content=["\']([^"\']+)["\']/i', $rawHtml, $m) ||
                         preg_match('/<meta[^>]+content=["\']([^"\']+)["\'][^>]+(?:property|name)=["\']og:description["\']/i', $rawHtml, $m)) {
