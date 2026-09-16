@@ -261,7 +261,7 @@ class MenuScanController extends Controller
 
             $addImg = function (string $u) use (&$images) {
                 $u = trim($u);
-                if ($u && filter_var($u, FILTER_VALIDATE_URL) && !in_array($u, $images) && count($images) < 5) {
+                if ($u && filter_var($u, FILTER_VALIDATE_URL) && !in_array($u, $images) && count($images) < 6) {
                     $images[] = $u;
                 }
             };
@@ -290,7 +290,7 @@ class MenuScanController extends Controller
                 $ogImg = $getMeta('og:image') ?: $getMeta('og:image:secure_url') ?: $getMeta('twitter:image');
                 if ($ogImg) $addImg($ogImg);
 
-                for ($i = 1; $i <= 5 && count($images) < 5; $i++) {
+                for ($i = 1; $i <= 6 && count($images) < 6; $i++) {
                     $alt = $getMeta("og:image:alt:$i") ?: $getMeta("og:image:$i") ?: $getMeta("product:image:$i");
                     if ($alt) $addImg($alt);
                 }
@@ -365,7 +365,7 @@ class MenuScanController extends Controller
                 }
 
                 // In-page <img> tags regex fallback for extra product gallery images
-                if (count($images) < 5) {
+                if (count($images) < 6) {
                     $imgPatterns = [
                         '/data-src=["\']((https?:\/\/[^"\']+\.(?:jpg|jpeg|png|webp))[^"\']*)["\']/',
                         '/src=["\']((https?:\/\/[^"\']+\.(?:jpg|jpeg|png|webp))[^"\']*)["\']/',
@@ -376,10 +376,10 @@ class MenuScanController extends Controller
                                 if (preg_match('/[?&]w=[1-9][0-9]?(?:&|$)/', $src)) continue;
                                 if (str_contains($src, 'icon') || str_contains($src, 'logo')) continue;
                                 $addImg($src);
-                                if (count($images) >= 5) break;
+                                if (count($images) >= 6) break;
                             }
                         }
-                        if (count($images) >= 5) break;
+                        if (count($images) >= 6) break;
                     }
                 }
             }
@@ -435,7 +435,7 @@ class MenuScanController extends Controller
 
             $slug   = Str::slug($cleanTitle);
             $images = array_values(array_unique($images));
-            $images = array_slice($images, 0, 5);
+            $images = array_slice($images, 0, 6);
 
             // 4. Download and compress images to local storage, formatting as full HTTP URLs
             $downloadedImages = [];

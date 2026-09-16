@@ -83,7 +83,7 @@ class SellerProductController extends Controller
             if (is_array($scrapedGalleries)) {
                 // Auto-download each gallery image to local storage
                 $downloadedGallery = [];
-                foreach (array_slice($scrapedGalleries, 0, 5) as $gUrl) {
+                foreach (array_slice($scrapedGalleries, 0, 6) as $gUrl) {
                     if (str_starts_with((string)$gUrl, 'http')) {
                         $downloadedGallery[] = \App\Services\ImageDownloader::downloadAndCompress($gUrl, 'products/gallery');
                     } else {

@@ -1147,9 +1147,9 @@
                     if (extLinkInput) extLinkInput.value = item.source_url;
                 }
 
-                // Fill Image & Gallery URLs if scraped (max 5 photos)
+                // Fill Image & Gallery URLs if scraped (max 6 photos)
                 const allScrapedImages = (item.images && item.images.length > 0) ? item.images : (item.image ? [item.image] : []);
-                const validImages = allScrapedImages.filter(img => img && !img.includes('buyle-placeholder.svg')).slice(0, 5);
+                const validImages = allScrapedImages.filter(img => img && !img.includes('buyle-placeholder.svg')).slice(0, 6);
 
                 if (validImages.length > 0) {
                     // Set Primary Thumbnail
@@ -1170,7 +1170,7 @@
                     }
                     scrapedImgInput.value = mainImg;
 
-                    // Render Gallery Visual Previews (up to 5 photos)
+                    // Render Gallery Visual Previews (up to 6 photos)
                     const galleryContainer = document.getElementById('galleryPreview');
                     if (galleryContainer) {
                         galleryContainer.innerHTML = '';
