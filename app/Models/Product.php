@@ -268,14 +268,6 @@ class Product extends Model
 
     public static function getPlaceholderUrl(): string
     {
-        $logo = \App\Models\Setting::get('logo');
-        if ($logo) {
-            $storagePath = storage_path('app/public/' . ltrim($logo, '/'));
-            $publicPath  = public_path('storage/' . ltrim($logo, '/'));
-            if (file_exists($storagePath) || file_exists($publicPath)) {
-                return asset('storage/' . ltrim($logo, '/'));
-            }
-        }
         return asset('images/buyle-placeholder.svg');
     }
 
