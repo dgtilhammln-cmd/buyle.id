@@ -806,7 +806,7 @@
       <div id="lynkHtmlBox" style="display:none;">
         <label class="si-label">Paste Source Code Halaman (HTML Lynk.id)</label>
         <textarea id="siLynkHtmlCode" class="si-input" style="height:110px; padding:0.75rem; font-family:monospace; font-size:0.74rem;" placeholder="Buka link Lynk.id -> Klik kanan -> Lihat Sumber Halaman (Ctrl+U) -> Paste di sini..."></textarea>
-        <span style="font-size:0.72rem; color:#0284c7; font-weight:600; margin-top:0.35rem; display:block;">💡 Tip: Gunakan ini jika URL Lynk.id terhalang Cloudflare. Ekstraksi data 100% instan!</span>
+        <span style="font-size:0.72rem; color:#0284c7; font-weight:600; margin-top:0.35rem; display:block;">💡 Tip: Gunakan opsi ini untuk impor data produk secara instan dan lengkap!</span>
       </div>
 
       <button class="si-btn" id="siLynkBtn" onclick="runSiLynkScrape()">
@@ -1030,6 +1030,16 @@
     });
   }
 
+  function strToBase64(str) {
+    try {
+      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        return String.fromCharCode('0x' + p1);
+      }));
+    } catch(e) {
+      return '';
+    }
+  }
+
   let activeLynkMethod = 'url';
   function switchLynkMethod(method) {
     activeLynkMethod = method;
@@ -1073,12 +1083,23 @@
       }
     }
 
+    const b64Payload = htmlPayload ? strToBase64(htmlPayload) : '';
+
     fetch('{{ route("creator.products.scan-url") }}', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
-      body: JSON.stringify({ url: targetUrl, html: htmlPayload, source: 'lynk' })
+      body: JSON.stringify({ url: targetUrl, html_b64: b64Payload, source: 'lynk' })
     })
-    .then(res => res.json())
+    .then(async res => {
+      const text = await res.text();
+      let resJson;
+      try {
+        resJson = JSON.parse(text);
+      } catch(e) {
+        throw new Error('Gagal membaca data produk. Silakan coba lagi.');
+      }
+      return resJson;
+    })
     .then(res => {
       btn.disabled = false;
       document.getElementById('siLynkProgress').style.display = 'none';
@@ -1091,7 +1112,7 @@
     .catch(err => {
       btn.disabled = false;
       document.getElementById('siLynkProgress').style.display = 'none';
-      alert('Terjadi kesalahan: ' + err.message);
+      alert(err.message);
     });
   }
 </script>

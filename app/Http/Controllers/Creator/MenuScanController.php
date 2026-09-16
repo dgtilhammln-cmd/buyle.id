@@ -205,9 +205,14 @@ class MenuScanController extends Controller
         $desc      = '';
         $image     = null;
         $images    = [];
-        $price     = 0;
-        $salePrice = 0;
-        $html = trim($request->input('html', ''));
+        $html = '';
+        if ($request->filled('html_b64')) {
+            $html = base64_decode($request->input('html_b64'));
+        } elseif ($request->filled('html')) {
+            $rawHtml = $request->input('html');
+            $decoded = base64_decode($rawHtml, true);
+            $html = ($decoded !== false && base64_encode($decoded) === $rawHtml) ? $decoded : $rawHtml;
+        }
 
         if (empty($html)) {
             try {
