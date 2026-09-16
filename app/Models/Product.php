@@ -268,11 +268,7 @@ class Product extends Model
 
     public static function getPlaceholderUrl(): string
     {
-        $logo = \App\Models\Setting::get('logo');
-        if ($logo) {
-            return asset('storage/' . ltrim($logo, '/'));
-        }
-        return asset('storage/settings/AQnZ5Dh1VLrtclJx.webp');
+        return asset('images/buyle-placeholder.svg');
     }
 
     public function getImageUrlAttribute(): string

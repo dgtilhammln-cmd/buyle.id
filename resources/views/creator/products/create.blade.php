@@ -741,12 +741,29 @@
                 if (nameInput) nameInput.value = item.name;
             }
 
-            // Fill Price
+            // Fill Normal Price & Sale Price (Promo)
             if (item.price !== undefined && item.price !== null) {
                 const priceInput = document.getElementById('input_price');
                 if (priceInput) {
                     const priceVal = parseFloat(item.price) || 0;
-                    priceInput.value = priceVal > 0 ? formatRupiah(priceVal.toString()) : '';
+                    if (priceVal > 0) priceInput.value = formatRupiah(priceVal.toString());
+                }
+            }
+            if (item.sale_price !== undefined && item.sale_price !== null) {
+                const salePriceInput = document.getElementById('input_sale_price');
+                if (salePriceInput) {
+                    const saleVal = parseFloat(item.sale_price) || 0;
+                    if (saleVal > 0) salePriceInput.value = formatRupiah(saleVal.toString());
+                }
+            }
+            const pIn = document.getElementById('input_price');
+            const spIn = document.getElementById('input_sale_price');
+            if (pIn && spIn && pIn.value && spIn.value) {
+                const pVal = parseFloat(pIn.value.replace(/[^\d]/g, '')) || 0;
+                const spVal = parseFloat(spIn.value.replace(/[^\d]/g, '')) || 0;
+                if (spVal > pVal && pVal > 0) {
+                    pIn.value = formatRupiah(spVal.toString());
+                    spIn.value = formatRupiah(pVal.toString());
                 }
             }
 

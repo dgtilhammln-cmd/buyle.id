@@ -309,18 +309,21 @@ class MenuScanController extends Controller
                     $price = (float) $m[1];
                 }
             }
+
+            // Shopee & Tokopedia JSON patterns
+            if (preg_match('/"(?:price_min_before_discount|price_before_discount|price_max|original_price|raw_price)"\s*:\s*(\d{5,})/i', $html, $m)) {
+                $rawP = (float) $m[1];
+                $parsedP = ($rawP > 10000000) ? ($rawP / 100000) : $rawP;
+                if ($price <= 0) $price = $parsedP;
+                else $salePrice = $parsedP;
+            }
             if ($price <= 0) {
-                // Shopee micro-currency / JSON prices ("price":4900000000 or "price_min":49000)
-                if (preg_match('/"(?:price_min|price)"\s*:\s*(\d{5,})/i', $html, $m)) {
+                if (preg_match('/"(?:price_min|price|harga)"\s*:\s*"?(\d{5,})"?/i', $html, $m)) {
                     $rawP = (float) $m[1];
                     $price = ($rawP > 10000000) ? ($rawP / 100000) : $rawP;
                 }
             }
-            if ($price <= 0) {
-                if (preg_match('/["\'](?:price|harga)["\']\s*:\s*["\']?(\d{4,})["\']?/i', $html, $m)) {
-                    $price = (float) $m[1];
-                }
-            }
+
             if ($price <= 0 || $salePrice <= 0) {
                 // Rp pattern – grab candidates
                 preg_match_all('/(?:Rp|IDR)[\s.]*([\d]{2,}(?:[.,][\d]{3})*)/u', $html, $pm);
@@ -329,11 +332,11 @@ class MenuScanController extends Controller
                     $cleaned = (float) preg_replace('/[^\d]/', '', $rawP);
                     if ($cleaned >= 500 && $cleaned < 1000000000) $pricesCandidates[] = $cleaned;
                 }
-                $pricesCandidates = array_unique($pricesCandidates);
+                $pricesCandidates = array_values(array_unique($pricesCandidates));
                 if (count($pricesCandidates) >= 2) {
                     rsort($pricesCandidates); // descending: biggest = original
                     if ($price <= 0)     $price     = $pricesCandidates[0];
-                    if ($salePrice <= 0) $salePrice = $pricesCandidates[1];
+                    if ($salePrice <= 0) $salePrice = $pricesCandidates[count($pricesCandidates) - 1];
                 } elseif (count($pricesCandidates) === 1 && $price <= 0) {
                     $price = $pricesCandidates[0];
                 }
