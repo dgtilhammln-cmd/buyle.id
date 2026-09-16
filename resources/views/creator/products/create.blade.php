@@ -1235,6 +1235,9 @@
                     let sanitizedHtml = item.description
                         .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gim, '')
                         .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gim, '')
+                        .replace(/<iframe\b[^>]*>[\s\S]*?<\/iframe>/gim, '')
+                        .replace(/<object\b[^>]*>[\s\S]*?<\/object>/gim, '')
+                        .replace(/<embed\b[^>]*>/gim, '')
                         .trim();
 
                     if (sanitizedHtml.toLowerCase().includes('loading contents')) {
@@ -1242,7 +1245,25 @@
                     }
 
                     if (sanitizedHtml) {
-                        let formattedDesc = sanitizedHtml;
+                        // Deep-clean: parse via DOMParser and strip all event handlers + dangerous attrs
+                        const domParser = new DOMParser();
+                        const doc = domParser.parseFromString(sanitizedHtml, 'text/html');
+                        doc.body.querySelectorAll('*').forEach(el => {
+                            // Remove all event handler attributes (onclick, onerror, onload, etc.)
+                            [...el.attributes].forEach(attr => {
+                                if (/^on/i.test(attr.name)) el.removeAttribute(attr.name);
+                                // Remove javascript: href/src
+                                if ((attr.name === 'href' || attr.name === 'src') && /^\s*javascript:/i.test(attr.value)) {
+                                    el.removeAttribute(attr.name);
+                                }
+                                // Remove data: URIs from src (potential vector)
+                                if (attr.name === 'src' && /^\s*data:/i.test(attr.value)) {
+                                    el.removeAttribute(attr.name);
+                                }
+                            });
+                        });
+                        let formattedDesc = doc.body.innerHTML;
+
                         if (!formattedDesc.includes('<p>') && !formattedDesc.includes('<br>') && !formattedDesc.includes('<div>')) {
                             formattedDesc = formattedDesc.replace(/\r\n|\r|\n/g, '<br>');
                         }
