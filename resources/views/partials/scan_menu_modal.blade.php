@@ -92,7 +92,7 @@
 
       <button type="button" id="btn-import-scanned" onclick="submitBulkImportScanned()" style="display:none; align-items:center; gap:0.5rem; padding:0.65rem 1.5rem; font-size:0.875rem; font-weight:700; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#FFFFFF; border:none; border-radius:10px; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,0.3);">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        <span id="btn-import-text">Impor ke Produk Fisik</span>
+        <span id="btn-import-text">Impor ke Katalog Produk</span>
       </button>
     </div>
 

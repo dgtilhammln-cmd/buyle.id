@@ -191,6 +191,9 @@ class MenuScanController extends Controller
     /**
      * Scan & Scrape product details from URL (Website, TikTok Shop, Tokopedia, Shopee).
      */
+    /**
+     * Scan & Scrape product details from URL (Website, TikTok Shop, Tokopedia, Shopee).
+     */
     public function scanUrl(Request $request)
     {
         $url = trim($request->input('url', ''));
@@ -203,19 +206,24 @@ class MenuScanController extends Controller
             ], 422);
         }
 
+        $title = '';
+        $desc  = '';
+        $image = null;
+        $price = 0;
+
         try {
             $client = new \GuzzleHttp\Client([
-                'timeout' => 8,
+                'timeout' => 6,
                 'verify' => false,
                 'headers' => [
-                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+                    'Accept-Language' => 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
                 ]
             ]);
 
             $res = $client->get($url);
             $html = (string) $res->getBody();
 
-            $title = '';
             if (preg_match('/<title[^>]*>(.*?)<\/title>/is', $html, $m)) {
                 $title = trim(html_entity_decode(strip_tags($m[1])));
             }
@@ -223,62 +231,73 @@ class MenuScanController extends Controller
                 $title = trim(html_entity_decode($m[1]));
             }
 
-            $desc = '';
             if (preg_match('/<meta[^>]*name=["\']description["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
                 $desc = trim(html_entity_decode($m[1]));
             } elseif (preg_match('/<meta[^>]*property=["\']og:description["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
                 $desc = trim(html_entity_decode($m[1]));
             }
 
-            $image = null;
             if (preg_match('/<meta[^>]*property=["\']og:image["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
                 $image = trim($m[1]);
             }
 
-            // Extract price if found in text
-            $price = 0;
-            if (preg_match('/(?:Rp|IDR)\s*([\d\.\,]+)/i', $html, $m)) {
+            // Extract price if found in text or JSON-LD
+            if (preg_match('/"price":\s*"?([\d\.]+)"?/i', $html, $m)) {
+                $price = (float) $m[1];
+            } elseif (preg_match('/(?:Rp|IDR)\s*([\d\.\,]+)/i', $html, $m)) {
                 $rawP = preg_replace('/[^\d]/', '', $m[1]);
                 if (is_numeric($rawP) && (float)$rawP > 100) {
                     $price = (float)$rawP;
                 }
             }
-
-            $cleanTitle = preg_replace('/(\||-|–|Buy|TikTok|Tokopedia|Shopee).*$/i', '', $title);
-            $cleanTitle = trim($cleanTitle) ?: $title;
-
-            $item = [
-                'name'        => $cleanTitle ?: 'Produk Import',
-                'price'       => $price,
-                'description' => Str::limit($desc ?: $title, 300, ''),
-                'image'       => $image,
-                'source_url'  => $url,
-            ];
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Berhasil mengambil data produk dari URL!',
-                'items'   => [$item]
-            ]);
         } catch (\Exception $e) {
-            // Fallback default item from URL slug
-            $path = parse_url($url, PHP_URL_PATH);
-            $slug = basename($path ?: $url);
-            $name = ucwords(str_replace(['-', '_'], ' ', $slug));
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Data produk disiapkan dari URL.',
-                'items'   => [
-                    [
-                        'name'        => $name ?: 'Produk Import',
-                        'price'       => 0,
-                        'description' => 'Produk diimpor dari: ' . $url,
-                        'image'       => null,
-                        'source_url'  => $url,
-                    ]
-                ]
-            ]);
+            // Ignore HTTP fetch error and rely on URL parsing below
         }
+
+        // Clean up title
+        $cleanTitle = preg_replace('/(\||-|–|Buy|TikTok|Tokopedia|Shopee|Jual|Beli|Online|Murah|Terlengkap).*$/i', '', $title);
+        $cleanTitle = trim($cleanTitle);
+
+        // Fallback: Smart URL slug extraction
+        if (empty($cleanTitle) || strlen($cleanTitle) < 3 || in_array(strtolower($cleanTitle), ['create', 'product', 'item', 'index'])) {
+            $parsedUrl = parse_url($url);
+            $path = $parsedUrl['path'] ?? '';
+
+            // Clean Tokopedia/Shopee/TikTok slug formats like /toko/nama-produk-i.12345 or /product/nama-produk-12345
+            $pathSegments = array_values(array_filter(explode('/', $path)));
+            $lastSegment = end($pathSegments) ?: '';
+
+            if (in_array(strtolower($lastSegment), ['create', 'products', 'item', 'product', 'detail']) && count($pathSegments) > 1) {
+                $lastSegment = $pathSegments[count($pathSegments) - 2];
+            }
+
+            // Strip IDs like i.123.456, p123456, or trailing numeric IDs
+            $lastSegment = preg_replace('/-i\.\d+\.\d+$/i', '', $lastSegment);
+            $lastSegment = preg_replace('/-p\d+$/i', '', $lastSegment);
+            $lastSegment = preg_replace('/-\d{5,}$/i', '', $lastSegment);
+
+            $extractedName = ucwords(str_replace(['-', '_'], ' ', $lastSegment));
+            $extractedName = trim(preg_replace('/\b(Product|Item|Detail|Create|Index|Shop|Toko)\b/i', '', $extractedName));
+
+            if (!empty($extractedName) && strlen($extractedName) > 2) {
+                $cleanTitle = $extractedName;
+            } else {
+                $cleanTitle = 'Produk Impor Baru';
+            }
+        }
+
+        $item = [
+            'name'        => $cleanTitle,
+            'price'       => $price > 0 ? $price : null,
+            'description' => $desc ?: ('Produk diimpor dari URL: ' . $url),
+            'image'       => $image,
+            'source_url'  => $url,
+        ];
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil mendeteksi data produk!',
+            'items'   => [$item]
+        ]);
     }
 }
