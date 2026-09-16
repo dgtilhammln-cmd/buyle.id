@@ -781,17 +781,21 @@
 
             // Fill Short Description & Description
             if (item.description) {
-                const cleanDesc = item.description.replace(/<[^>]*>/g, '').trim();
-                const shortDescInput = document.querySelector('textarea[name="short_desc"]');
-                if (shortDescInput) {
-                    shortDescInput.value = cleanDesc.substring(0, 160);
+                let formattedDesc = item.description;
+                if (!formattedDesc.includes('<p>') && !formattedDesc.includes('<br>') && !formattedDesc.includes('<div>')) {
+                    formattedDesc = formattedDesc.replace(/\r\n|\r|\n/g, '<br>');
                 }
 
-                // Rich text editor
+                const cleanDescText = item.description.replace(/<[^>]*>/g, '').trim();
+                const shortDescInput = document.querySelector('textarea[name="short_desc"]');
+                if (shortDescInput) {
+                    shortDescInput.value = cleanDescText.substring(0, 160);
+                }
+
                 const richEd = document.querySelector('[contenteditable="true"]');
                 const haTextarea = document.querySelector('textarea[name="description"]');
-                if (richEd) richEd.innerHTML = '<p>' + item.description + '</p>';
-                if (haTextarea) haTextarea.value = item.description;
+                if (richEd) richEd.innerHTML = formattedDesc;
+                if (haTextarea) haTextarea.value = formattedDesc;
             }
 
             // Fill Source URL / External Link if available
@@ -801,11 +805,16 @@
             }
 
             // Fill Image & Gallery URLs if scraped (max 5 photos)
-            if (item.image && !item.image.includes('buyle-placeholder.svg')) {
+            const allScrapedImages = (item.images && item.images.length > 0) ? item.images : (item.image ? [item.image] : []);
+            const validImages = allScrapedImages.filter(img => img && !img.includes('buyle-placeholder.svg')).slice(0, 5);
+
+            if (validImages.length > 0) {
+                // Set Primary Thumbnail
+                const mainImg = validImages[0];
                 const thumbImg = document.getElementById('thumbPreviewImg');
                 const thumbWrap = document.getElementById('thumbPreviewWrap');
                 if (thumbImg && thumbWrap) {
-                    thumbImg.src = item.image;
+                    thumbImg.src = mainImg;
                     thumbWrap.style.display = 'block';
                 }
                 let scrapedImgInput = document.getElementById('scraped_image_url');
@@ -816,10 +825,23 @@
                     scrapedImgInput.id = 'scraped_image_url';
                     document.getElementById('productForm').appendChild(scrapedImgInput);
                 }
-                scrapedImgInput.value = item.image;
-            }
+                scrapedImgInput.value = mainImg;
 
-            if (item.images && item.images.length > 0) {
+                // Render Gallery Visual Previews (up to 5 photos)
+                const galleryContainer = document.getElementById('galleryPreview');
+                if (galleryContainer) {
+                    galleryContainer.innerHTML = '';
+                    validImages.forEach((imgUrl, idx) => {
+                        const imgBox = document.createElement('div');
+                        imgBox.style.cssText = 'position:relative; width:90px; height:90px; border-radius:12px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06);';
+                        imgBox.innerHTML = `
+                            <img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                            <span style="position:absolute; bottom:4px; left:4px; background:rgba(15,23,42,0.75); color:#fff; font-size:9px; font-weight:700; padding:2px 5px; border-radius:6px; backdrop-filter:blur(4px);">Foto ${idx + 1}</span>
+                        `;
+                        galleryContainer.appendChild(imgBox);
+                    });
+                }
+
                 let scrapedGalleryInput = document.getElementById('scraped_gallery_urls');
                 if (!scrapedGalleryInput) {
                     scrapedGalleryInput = document.createElement('input');
@@ -828,7 +850,7 @@
                     scrapedGalleryInput.id = 'scraped_gallery_urls';
                     document.getElementById('productForm').appendChild(scrapedGalleryInput);
                 }
-                scrapedGalleryInput.value = JSON.stringify(item.images.slice(0, 5));
+                scrapedGalleryInput.value = JSON.stringify(validImages);
             }
 
         } catch (e) {

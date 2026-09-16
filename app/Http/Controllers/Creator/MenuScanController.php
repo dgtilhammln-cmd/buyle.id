@@ -424,12 +424,12 @@ class MenuScanController extends Controller
         // ── Build slug ──────────────────────────────────────────────────
         $slug = Str::slug($cleanTitle);
 
-        // ── Clean & Format Description (No raw URL parameters) ──────────
-        if ($isLynk || empty($desc) || str_starts_with(strtolower($desc), 'http') || mb_strlen($desc) < 5) {
-            $desc = $cleanTitle . ' — Produk jualan berkualitas tinggi. Dapatkan penawaran terbaik dan layanan pengiriman cepat.';
+        // ── Clean & Format Description (Preserve real parsed description) ──
+        if (empty($desc) || str_starts_with(strtolower($desc), 'http') || mb_strlen(strip_tags($desc)) < 5) {
+            $desc = $cleanTitle . ' — Produk berkualitas tinggi. Dapatkan penawaran terbaik dan pengiriman cepat.';
         } else {
             $desc = preg_replace('/Produk diimpor dari:\s*https?:\/\/[^\s]+/i', '', $desc);
-            $desc = trim(strip_tags(html_entity_decode($desc)));
+            $desc = $this->sanitizeDescription($desc);
         }
 
         // ── If sale price > normal price, swap ──────────────────────────
