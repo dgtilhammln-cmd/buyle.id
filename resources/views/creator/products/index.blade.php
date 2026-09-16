@@ -780,17 +780,34 @@
     {{-- TAB 4: LYNK.ID --}}
     <div class="si-tab-pane" id="si-lynk">
       <p style="font-size:0.8rem; color:#64748b; margin-bottom:1.25rem; line-height:1.6;">
-        Paste URL produk dari Lynk.id (misal: https://lynk.id/mindiw/Pv23p2E). Sistem akan membaca data nama, deskripsi, gambar (maks 5 foto), dan mengategorikan otomatis sebagai <b>Produk Digital / Link Access</b>.
+        Impor produk dari Lynk.id secara otomatis menjadi <b>Produk Digital / Link Access</b>. Gunakan <b>Opsi 1 (URL)</b> atau <b>Opsi 2 (Paste Source Code)</b>.
       </p>
 
-      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1.25rem; font-size:0.75rem; color:#334155; display:flex; gap:0.5rem; align-items:flex-start;">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span>Impor otomatis produk Lynk.id langsung menjadi tipe Produk Digital.</span>
+      {{-- METHOD TOGGLE CARDS --}}
+      <div class="si-source-cards" style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.25rem;">
+        <div class="si-source-card selected" id="srcLynkUrl" onclick="switchLynkMethod('url')">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin:0 auto 0.3rem;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span style="font-size:0.78rem;">Opsi 1: URL Lynk.id</span>
+        </div>
+        <div class="si-source-card" id="srcLynkHtml" onclick="switchLynkMethod('html')">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin:0 auto 0.3rem;"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span style="font-size:0.78rem;">Opsi 2: Source Code</span>
+        </div>
       </div>
 
-      <label class="si-label">URL Produk Lynk.id</label>
-      <input type="url" id="siLynkUrl" class="si-input" placeholder="https://lynk.id/mindiw/Pv23p2E">
-      <span style="font-size:0.72rem; color:#94a3b8; margin-top:0.3rem; display:block;">Contoh: https://lynk.id/mindiw/Pv23p2E</span>
+      {{-- OPSI 1: INPUT URL --}}
+      <div id="lynkUrlBox">
+        <label class="si-label">URL Produk Lynk.id</label>
+        <input type="url" id="siLynkUrl" class="si-input" placeholder="https://lynk.id/mindiw/Pv23p2E">
+        <span style="font-size:0.72rem; color:#94a3b8; margin-top:0.3rem; display:block;">Contoh: https://lynk.id/mindiw/Pv23p2E</span>
+      </div>
+
+      {{-- OPSI 2: INPUT HTML SOURCE CODE --}}
+      <div id="lynkHtmlBox" style="display:none;">
+        <label class="si-label">Paste Source Code Halaman (HTML Lynk.id)</label>
+        <textarea id="siLynkHtmlCode" class="si-input" style="height:110px; padding:0.75rem; font-family:monospace; font-size:0.74rem;" placeholder="Buka link Lynk.id -> Klik kanan -> Lihat Sumber Halaman (Ctrl+U) -> Paste di sini..."></textarea>
+        <span style="font-size:0.72rem; color:#0284c7; font-weight:600; margin-top:0.35rem; display:block;">💡 Tip: Gunakan ini jika URL Lynk.id terhalang Cloudflare. Ekstraksi data 100% instan!</span>
+      </div>
 
       <button class="si-btn" id="siLynkBtn" onclick="runSiLynkScrape()">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -1013,30 +1030,53 @@
     });
   }
 
+  let activeLynkMethod = 'url';
+  function switchLynkMethod(method) {
+    activeLynkMethod = method;
+    document.getElementById('srcLynkUrl').classList.toggle('selected', method === 'url');
+    document.getElementById('srcLynkHtml').classList.toggle('selected', method === 'html');
+    document.getElementById('lynkUrlBox').style.display = method === 'url' ? 'block' : 'none';
+    document.getElementById('lynkHtmlBox').style.display = method === 'html' ? 'block' : 'none';
+  }
+
   // LYNK.ID — langsung redirect ke form produk sebagai Produk Digital
   async function runSiLynkScrape() {
-    const url = document.getElementById('siLynkUrl').value;
-    if (!url) { alert('Masukkan URL produk dari Lynk.id.'); return; }
+    const urlVal = document.getElementById('siLynkUrl').value.trim();
+    const htmlVal = document.getElementById('siLynkHtmlCode').value.trim();
+
+    if (activeLynkMethod === 'url' && !urlVal) {
+      alert('Silakan masukkan URL produk Lynk.id terlebih dahulu.');
+      return;
+    }
+    if (activeLynkMethod === 'html' && !htmlVal) {
+      alert('Silakan paste Source Code / HTML halaman Lynk.id terlebih dahulu.');
+      return;
+    }
+
     const btn = document.getElementById('siLynkBtn');
     btn.disabled = true;
     document.getElementById('siLynkProgress').style.display = 'block';
     const csrfToken = '{{ csrf_token() }}';
 
-    let htmlContent = '';
-    try {
-      const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
-      const resp = await fetch(proxyUrl, { signal: AbortSignal.timeout(6000) });
-      if (resp.ok) {
-        htmlContent = await resp.text();
+    let htmlPayload = (activeLynkMethod === 'html') ? htmlVal : '';
+    let targetUrl = urlVal || 'https://lynk.id/imported-product';
+
+    if (activeLynkMethod === 'url' && !htmlPayload) {
+      try {
+        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(urlVal);
+        const resp = await fetch(proxyUrl, { signal: AbortSignal.timeout(6000) });
+        if (resp.ok) {
+          htmlPayload = await resp.text();
+        }
+      } catch (err) {
+        console.warn('CORS proxy fetch failed:', err);
       }
-    } catch (err) {
-      console.warn('CORS proxy fetch failed, falling back to server fetch:', err);
     }
 
     fetch('{{ route("creator.products.scan-url") }}', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
-      body: JSON.stringify({ url: url, html: htmlContent, source: 'lynk' })
+      body: JSON.stringify({ url: targetUrl, html: htmlPayload, source: 'lynk' })
     })
     .then(res => res.json())
     .then(res => {
