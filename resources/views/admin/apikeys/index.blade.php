@@ -176,6 +176,36 @@ input:checked + .env-slider:before { transform:translateX(24px); }
                         <button onclick="openApiModal('qrisly')" style="background:transparent;border:none;color:#1eb349;font-weight:600;cursor:pointer;font-size:.85rem;">Edit ➔</button>
                     </td>
                 </tr>
+                {{-- ScrapingBee API (Lynk.id Smart Import) --}}
+                <tr>
+                    <td style="text-align:center;color:#94A3B8;">5</td>
+                    <td>
+                        ScrapingBee API
+                        <span style="font-size:.75rem;color:#94A3B8;display:block;font-weight:400;">Smart Import Lynk.id</span>
+                        @if($settings->get('scrapingbee_api_key'))
+                            <span style="display:inline-block;margin-top:.25rem;padding:.1rem .5rem;background:#EFF6FF;color:#1D4ED8;border-radius:6px;font-size:.7rem;font-weight:700;">✅ AKTIF</span>
+                        @else
+                            <span style="display:inline-block;margin-top:.25rem;padding:.1rem .5rem;background:#FEF3C7;color:#92400E;border-radius:6px;font-size:.7rem;font-weight:700;">⚠ BELUM DIATUR</span>
+                        @endif
+                    </td>
+                    <td colspan="2">
+                        <div class="api-key-hidden">
+                            <button type="button" onclick="toggleApiKey(this)"
+                                data-full="{{ $settings->get('scrapingbee_api_key', '') }}"
+                                data-hidden="{{ $settings->get('scrapingbee_api_key') ? substr($settings->get('scrapingbee_api_key'), 0, 5) . str_repeat('•', 20) : 'Belum diatur' }}"
+                                style="background:none;border:none;cursor:pointer;color:inherit;display:flex;align-items:center;padding:0;">
+                                <svg class="icon-hide" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"/></svg>
+                                <svg class="icon-show" style="display:none;" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                            <span class="key-text" style="color:{{ $settings->get('scrapingbee_api_key') ? '#1D4ED8' : '#94A3B8' }}; letter-spacing:1px; font-family:monospace;">
+                                {{ $settings->get('scrapingbee_api_key') ? substr($settings->get('scrapingbee_api_key'), 0, 5) . str_repeat('•', 20) : 'Belum diatur' }}
+                            </span>
+                        </div>
+                    </td>
+                    <td style="text-align:center;">
+                        <button onclick="openApiModal('scrapingbee')" style="background:transparent;border:none;color:#1eb349;font-weight:600;cursor:pointer;font-size:.85rem;">Edit ➔</button>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -308,6 +338,37 @@ input:checked + .env-slider:before { transform:translateX(24px); }
   </div>
 </div>
 
+{{-- MODAL SCRAPINGBEE --}}
+<div id="modal-scrapingbee" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.5);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:#fff;border-radius:20px;padding:2.5rem;width:100%;max-width:520px;box-shadow:0 24px 64px rgba(0,0,0,0.2);margin:1rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+      <div>
+        <h3 style="font-size:1.25rem;font-weight:800;color:#1E293B;margin:0;">ScrapingBee API</h3>
+        <p style="font-size:.8rem;color:#64748B;margin:.25rem 0 0;">Digunakan untuk Smart Import produk Lynk.id (bypass Cloudflare)</p>
+      </div>
+      <button onclick="closeModal('modal-scrapingbee')" style="background:#F1F5F9;border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:1rem;color:#64748B;">✕</button>
+    </div>
+    <form action="{{ route('admin.apikeys.update') }}" method="POST">
+      @csrf
+      <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:1rem;margin-bottom:1.25rem;font-size:.82rem;color:#1D4ED8;">
+        🔑 Dapatkan API Key gratis di <a href="https://app.scrapingbee.com" target="_blank" style="color:#1D4ED8;font-weight:700;">app.scrapingbee.com</a><br>
+        <span style="color:#64748B;">Free: 1.000 credits/trial • Render JS (Lynk.id): 5 credits/request ≈ 200 import</span>
+      </div>
+      <div style="margin-bottom:2rem;">
+        <label style="display:block;font-size:.85rem;font-weight:700;color:#475569;margin-bottom:.5rem;">API Key ScrapingBee</label>
+        <input type="text" name="scrapingbee_api_key"
+               value="{{ $settings->get('scrapingbee_api_key', '') }}"
+               placeholder="Paste API Key dari dashboard.scrapingbee.com..."
+               style="width:100%;padding:.875rem 1rem;border:1.5px solid #BFDBFE;border-radius:12px;font-size:.85rem;outline:none;box-sizing:border-box;font-family:monospace;">
+      </div>
+      <div style="display:flex;gap:1rem;">
+        <button type="button" onclick="closeModal('modal-scrapingbee')" style="flex:1;padding:.875rem;background:#F1F5F9;color:#475569;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;">Batal</button>
+        <button type="submit" style="flex:2;padding:.875rem;background:#1D4ED8;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;">Simpan API Key</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
 function openApiModal(type) {
     document.getElementById('modal-' + type).style.display = 'flex';
@@ -315,7 +376,7 @@ function openApiModal(type) {
 function closeModal(id) {
     document.getElementById(id).style.display = 'none';
 }
-['modal-rajaongkir','modal-midtrans','modal-delivery','modal-qrisly'].forEach(id => {
+['modal-rajaongkir','modal-midtrans','modal-delivery','modal-qrisly','modal-scrapingbee'].forEach(id => {
     document.getElementById(id).addEventListener('click', function(e){ if(e.target===this) closeModal(id); });
 });
 

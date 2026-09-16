@@ -532,19 +532,26 @@ class MenuScanController extends Controller
             $salePrice = 0;
             $images    = [];
 
-            // Strategy 0: Call Node.js Puppeteer Microservice (Render.com Cloud) — KHUSUS lynk.id
-            $scraperUrl = env('SCRAPER_SERVICE_URL');
-            if (!empty($scraperUrl) && filter_var($url, FILTER_VALIDATE_URL)) {
+            // Strategy 0: ScrapingBee API — render_js=true bypass Cloudflare Turnstile Lynk.id
+            // Credits: 5 per request (render_js). 1000 credits = ~200 Lynk.id scrapes.
+            // API Key dikelola via /admin → API & Integrasi
+            $sbApiKey = \App\Models\Setting::get('scrapingbee_api_key', env('SCRAPINGBEE_API_KEY', ''));
+            if (!empty($sbApiKey) && filter_var($url, FILTER_VALIDATE_URL)) {
                 try {
-                    $microResp = \Illuminate\Support\Facades\Http::timeout(20)->get($scraperUrl, ['url' => $url]);
-                    if ($microResp->successful() && $microResp->json('success') === true) {
-                        $mdata = $microResp->json('data', []);
-                        if (!empty($mdata['title'])) {
-                            $title     = $mdata['title'] ?? '';
-                            $desc      = $mdata['description'] ?? '';
-                            $price     = floatval($mdata['price'] ?? 0);
-                            $salePrice = floatval($mdata['original_price'] ?? 0);
-                            $images    = is_array($mdata['images'] ?? null) ? $mdata['images'] : [];
+                    $sbResp = \Illuminate\Support\Facades\Http::timeout(30)->get('https://app.scrapingbee.com/api/v1/', [
+                        'api_key'       => $sbApiKey,
+                        'url'           => $url,
+                        'render_js'     => 'true',
+                        'premium_proxy' => 'false',
+                        'country_code'  => 'id',
+                        'wait'          => '3000',
+                    ]);
+
+                    if ($sbResp->successful() && strlen($sbResp->body()) > 500) {
+                        $sbHtml = $sbResp->body();
+                        // Only use if not blocked by Cloudflare
+                        if (!str_contains($sbHtml, 'Attention Required!') && !str_contains($sbHtml, 'Just a moment...')) {
+                            $rawHtml = $sbHtml; // Inject ke rawHtml, di-parse oleh Strategy 3
                         }
                     }
                 } catch (\Throwable $e) {}
