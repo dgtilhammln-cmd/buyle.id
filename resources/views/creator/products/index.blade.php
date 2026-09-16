@@ -1095,7 +1095,7 @@
 
     const b64Payload = htmlPayload ? strToBase64(htmlPayload) : '';
 
-    fetch('{{ route("creator.products.scan-url") }}', {
+    fetch('{{ route("creator.products.scan-lynk") }}', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
       body: JSON.stringify({ url: targetUrl, html_b64: b64Payload, source: 'lynk' })

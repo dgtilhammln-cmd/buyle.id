@@ -189,32 +189,24 @@ class MenuScanController extends Controller
     }
 
     /**
-     * Scan & Scrape product details from URL (Website, TikTok Shop, Tokopedia, Shopee).
-     * Returns: name, slug, price (normal), sale_price (promo), description, image, images[], source_url.
+     * Scan & Scrape product details from Marketplace URLs (Tokopedia, Shopee, TikTok Shop).
      */
     public function scanUrl(Request $request)
     {
-        $url    = trim($request->input('url', ''));
-        $source = $request->input('source', 'url');
+        try {
+            $url = trim($request->input('url', ''));
 
-        if (empty($url)) {
-            return response()->json(['success' => false, 'message' => 'URL produk wajib diisi.'], 422);
-        }
+            if (empty($url)) {
+                return response()->json(['success' => false, 'message' => 'URL produk wajib diisi.'], 200);
+            }
 
-        $title     = '';
-        $desc      = '';
-        $image     = null;
-        $images    = [];
-        $html = '';
-        if ($request->filled('html_b64')) {
-            $html = base64_decode($request->input('html_b64'));
-        } elseif ($request->filled('html')) {
-            $rawHtml = $request->input('html');
-            $decoded = base64_decode($rawHtml, true);
-            $html = ($decoded !== false && base64_encode($decoded) === $rawHtml) ? $decoded : $rawHtml;
-        }
+            $title     = '';
+            $desc      = '';
+            $images    = [];
+            $price     = 0;
+            $salePrice = 0;
+            $html      = '';
 
-        if (empty($html)) {
             try {
                 $client = new \GuzzleHttp\Client([
                     'timeout'         => 8,
@@ -232,233 +224,262 @@ class MenuScanController extends Controller
             } catch (\Exception $e) {
                 // Ignore HTTP fetch errors
             }
-        }
 
-        $isLynk = (str_contains(strtolower($url), 'lynk.id') || str_contains(strtolower($url), 'link.id') || $source === 'lynk');
-
-        // ── 1. Title Extraction ──
-        if ($isLynk) {
-            if (preg_match('/<h2[^>]*id=["\']title_product["\'][^>]*>(.*?)<\/h2>/is', $html, $m)) {
-                $title = trim(html_entity_decode(strip_tags($m[1])));
-            } elseif (preg_match('/shareMessage\s*=\s*["\']Check out (.*?) from \w+ @/is', $html, $m)) {
-                $title = trim(html_entity_decode(strip_tags($m[1])));
-            } elseif (preg_match('/<meta[^>]*name=["\']description["\'][^>]*content=["\']View [^\']*\'s (.*?) Product details/is', $html, $m)) {
-                $title = trim(html_entity_decode(strip_tags($m[1])));
-            }
-        }
-
-        if (empty($title)) {
-            if (preg_match('/<meta[^>]*property=["\']og:title["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
-                $title = trim(html_entity_decode(strip_tags($m[1])));
-            } elseif (preg_match('/<title[^>]*>(.*?)<\/title>/is', $html, $m)) {
-                $title = trim(html_entity_decode(strip_tags($m[1])));
-            }
-        }
-
-        // ── 2. Description Extraction ──
-        if ($isLynk && preg_match('/<div[^>]*class=["\'][^"\']*rich-content[^"\']*["\'][^>]*>(.*?)<\/div>\s*<\/div>/is', $html, $m)) {
-            $desc = trim(strip_tags(html_entity_decode($m[1]), '<br><p><div><li>'));
-        }
-
-        if (empty($desc)) {
-            if (preg_match('/<meta[^>]*property=["\']og:description["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
-                $desc = trim(html_entity_decode($m[1]));
-            } elseif (preg_match('/<meta[^>]*name=["\']description["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
-                $desc = trim(html_entity_decode($m[1]));
-            }
-        }
-
-        // ── 3. Image Extraction ──
-        if ($isLynk && preg_match_all('/https?:\/\/cdn\.lynkid\.my\.id\/products\/[^\s"\']+/i', $html, $imgMatches)) {
-            foreach ($imgMatches[0] as $img) {
-                $cleanImg = strtok($img, '?');
-                if (filter_var($cleanImg, FILTER_VALIDATE_URL)) {
-                    $images[] = $cleanImg;
+            if (!empty($html)) {
+                // OpenGraph title & desc
+                if (preg_match('/<meta[^>]*property=["\']og:title["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
+                    $title = trim(html_entity_decode(strip_tags($m[1])));
+                } elseif (preg_match('/<title[^>]*>(.*?)<\/title>/is', $html, $m)) {
+                    $title = trim(html_entity_decode(strip_tags($m[1])));
                 }
-            }
-        }
 
-        if (empty($images)) {
-            if (preg_match_all('/<meta[^>]*property=["\']og:image["\'][^>]*content=["\'](.*?)["\']/is', $html, $ms)) {
-                foreach ($ms[1] as $img) {
-                    $img = trim($img);
-                    if ($img && filter_var($img, FILTER_VALIDATE_URL)) {
-                        $images[] = $img;
+                if (preg_match('/<meta[^>]*property=["\']og:description["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
+                    $desc = trim(html_entity_decode(strip_tags($m[1])));
+                }
+
+                if (preg_match_all('/<meta[^>]*property=["\']og:image["\'][^>]*content=["\'](.*?)["\']/is', $html, $ms)) {
+                    foreach ($ms[1] as $imgUrl) {
+                        $imgUrl = trim($imgUrl);
+                        if ($imgUrl && filter_var($imgUrl, FILTER_VALIDATE_URL)) {
+                            $images[] = $imgUrl;
+                        }
                     }
                 }
-            }
-        }
 
-        // ── 4. Lynk.id Price Extraction ──
-        if ($isLynk) {
-            if (preg_match('/var sPrice\s*=\s*_g\([\'"]([\d.]+)[\'"]\)/i', $html, $m)) {
-                $salePrice = (float) $m[1];
-            }
-            if (preg_match('/var p\s*=\s*_g\([\'"]([\d.]+)[\'"]\)/i', $html, $m)) {
-                $price = (float) $m[1];
-            }
-        }
+                // JSON-LD structured data for products
+                if (preg_match_all('/<script[^>]*type=["\']application\/ld\+json["\'][^>]*>(.*?)<\/script>/is', $html, $jsonMatches)) {
+                    foreach ($jsonMatches[1] as $jsonRaw) {
+                        $jsonData = json_decode(trim($jsonRaw), true);
+                        if (!$jsonData) continue;
+                        $candidates = isset($jsonData['@graph']) ? $jsonData['@graph'] : [$jsonData];
+                        foreach ($candidates as $obj) {
+                            $type = $obj['@type'] ?? '';
+                            if (!in_array($type, ['Product', 'ItemPage', 'WebPage', 'Offer'])) continue;
 
-        // ── 5. JSON-LD Structured Data (fallback for general URLs) ──
-        if (empty($title) || $price <= 0) {
-            if (preg_match_all('/<script[^>]*type=["\']application\/ld\+json["\'][^>]*>(.*?)<\/script>/is', $html, $jsonMatches)) {
-                foreach ($jsonMatches[1] as $jsonRaw) {
-                    $jsonData = json_decode(trim($jsonRaw), true);
-                    if (!$jsonData) continue;
-
-                    $candidates = isset($jsonData['@graph']) ? $jsonData['@graph'] : [$jsonData];
-
-                    foreach ($candidates as $obj) {
-                        $type = $obj['@type'] ?? '';
-                        if (!in_array($type, ['Product', 'ItemPage', 'WebPage', 'Offer'])) continue;
-
-                        if (!empty($obj['name']) && empty($title)) {
-                            $title = trim($obj['name']);
-                        }
-                        if (!empty($obj['description']) && empty($desc)) {
-                            $desc = trim(strip_tags($obj['description']));
-                        }
-
-                        $imgField = $obj['image'] ?? null;
-                        if (is_string($imgField) && $imgField) {
-                            if (filter_var($imgField, FILTER_VALIDATE_URL)) $images[] = $imgField;
-                        } elseif (is_array($imgField)) {
-                            foreach ($imgField as $imgItem) {
-                                $imgUrl = is_array($imgItem) ? ($imgItem['url'] ?? '') : $imgItem;
-                                if ($imgUrl && filter_var($imgUrl, FILTER_VALIDATE_URL)) $images[] = $imgUrl;
+                            if (!empty($obj['name']) && empty($title)) {
+                                $title = trim($obj['name']);
                             }
-                        }
-
-                        $offers = $obj['offers'] ?? null;
-                        if ($offers) {
-                            $offerList = isset($offers['@type']) ? [$offers] : $offers;
-                            foreach ((array) $offerList as $offer) {
-                                $offerPrice = (float) ($offer['price'] ?? 0);
-                                if ($offerPrice > 100) {
-                                    if ($price <= 0) $price = $offerPrice;
-                                    else $salePrice = min($price, $offerPrice);
-                                }
-                                if (!empty($offer['highPrice'])) {
-                                    $price     = (float) $offer['highPrice'];
-                                    $salePrice = (float) ($offer['lowPrice'] ?? 0);
+                            if (!empty($obj['description']) && empty($desc)) {
+                                $desc = trim(strip_tags($obj['description']));
+                            }
+                            $offers = $obj['offers'] ?? ($type === 'Offer' ? $obj : null);
+                            if ($offers) {
+                                $offerList = isset($offers[0]) ? $offers : [$offers];
+                                foreach ($offerList as $off) {
+                                    $p = floatval($off['price'] ?? 0);
+                                    if ($p > 0 && $price <= 0) {
+                                        $price = $p;
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-        }
 
-        // ── 6. Regex price fallback (Tokopedia, Shopee, TikTok, Rp patterns) ──
-        if ($price <= 0) {
-            if (preg_match('/<meta[^>]*property=["\'](?:product|og):price:amount["\'][^>]*content=["\']([\d.]+)\b/i', $html, $m)) {
-                $price = (float) $m[1];
-            } elseif (preg_match('/<meta[^>]*name=["\'](?:twitter:data1|price)["\'][^>]*content=["\']([\d.]+)\b/i', $html, $m)) {
-                $price = (float) $m[1];
-            }
-        }
+            // Cleanup & Fallbacks
+            $cleanTitle = preg_replace('/\s*(\||-|–|—)\s*(TikTok|Tokopedia|Shopee|Bukalapak|Lazada|Blibli|Jual|Beli|Online|Murah|Terlengkap|Buy).*$/i', '', $title);
+            $cleanTitle = trim($cleanTitle);
 
-        if (preg_match('/"(?:price_min_before_discount|price_before_discount|price_max|original_price|raw_price)"\s*:\s*(\d{5,})/i', $html, $m)) {
-            $rawP = (float) $m[1];
-            $parsedP = ($rawP > 10000000) ? ($rawP / 100000) : $rawP;
-            if ($price <= 0) $price = $parsedP;
-            else $salePrice = $parsedP;
-        }
-        if ($price <= 0) {
-            if (preg_match('/"(?:price_min|price|harga)"\s*:\s*"?(\d{5,})"?/i', $html, $m)) {
-                $rawP = (float) $m[1];
-                $price = ($rawP > 10000000) ? ($rawP / 100000) : $rawP;
-            }
-        }
+            if (empty($cleanTitle) || mb_strlen($cleanTitle) < 3) {
+                $parsedUrl    = parse_url($url);
+                $path         = $parsedUrl['path'] ?? '';
+                $pathSegments = array_values(array_filter(explode('/', $path)));
+                $lastSegment  = end($pathSegments) ?: '';
+                $lastSegment  = preg_replace('/-i\.\d+\.\d+$/i', '', $lastSegment);
+                $lastSegment  = preg_replace('/-p\d+$/i', '', $lastSegment);
+                $lastSegment  = preg_replace('/-\d{5,}$/i', '', $lastSegment);
 
-        if ($price <= 0 || $salePrice <= 0) {
-            preg_match_all('/(?:Rp|IDR)[\s.]*([\d]{2,}(?:[.,][\d]{3})*)/u', $html, $pm);
-            $pricesCandidates = [];
-            foreach ($pm[1] as $rawP) {
-                $cleaned = (float) preg_replace('/[^\d]/', '', $rawP);
-                if ($cleaned >= 500 && $cleaned < 1000000000) $pricesCandidates[] = $cleaned;
-            }
-            $pricesCandidates = array_values(array_unique($pricesCandidates));
-            if (count($pricesCandidates) >= 2) {
-                rsort($pricesCandidates);
-                if ($price <= 0)     $price     = $pricesCandidates[0];
-                if ($salePrice <= 0) $salePrice = $pricesCandidates[count($pricesCandidates) - 1];
-            } elseif (count($pricesCandidates) === 1 && $price <= 0) {
-                $price = $pricesCandidates[0];
-            }
-        }
-
-        $isLynk = (str_contains(strtolower($url), 'lynk.id') || str_contains(strtolower($url), 'link.id') || $source === 'lynk');
-
-        // ── Deduplicate & Limit images to MAX 5 ─────────────────────────
-        $images = array_values(array_unique($images));
-        $images = array_slice($images, 0, 5);
-        $image  = $images[0] ?? null;
-
-        // ── Clean up title ──────────────────────────────────────────────
-        $cleanTitle = preg_replace('/\s*(\||-|–|—)\s*(TikTok|Tokopedia|Shopee|Bukalapak|Lazada|Blibli|Jual|Beli|Online|Murah|Terlengkap|Buy).*$/i', '', $title);
-        $cleanTitle = trim($cleanTitle);
-
-        // ── Fallback: smart URL slug extraction ─────────────────────────
-        if (empty($cleanTitle) || mb_strlen($cleanTitle) < 3) {
-            $parsedUrl    = parse_url($url);
-            $path         = $parsedUrl['path'] ?? '';
-            $pathSegments = array_values(array_filter(explode('/', $path)));
-            $lastSegment  = end($pathSegments) ?: '';
-
-            // Skip generic slugs
-            if (in_array(strtolower($lastSegment), ['create', 'products', 'item', 'product', 'detail', 'p', 'i']) && count($pathSegments) > 1) {
-                $lastSegment = $pathSegments[count($pathSegments) - 2];
+                $extractedName = ucwords(str_replace(['-', '_'], ' ', urldecode($lastSegment)));
+                $extractedName = trim(preg_replace('/\b(Product|Item|Detail|Create|Index|Shop|Toko|Id)\b/i', '', $extractedName));
+                $cleanTitle    = (mb_strlen($extractedName) > 2) ? $extractedName : 'Produk Marketplace';
             }
 
-            // Strip Tokopedia/Shopee/Lynk IDs: produk-nama-i.12345.67890 or produk-nama-12345678
-            $lastSegment = preg_replace('/-i\.\d+\.\d+$/i', '', $lastSegment);
-            $lastSegment = preg_replace('/-p\d+$/i', '', $lastSegment);
-            $lastSegment = preg_replace('/-\d{5,}$/i', '', $lastSegment);
+            $slug   = Str::slug($cleanTitle);
+            $images = array_values(array_unique($images));
+            $images = array_slice($images, 0, 5);
+            $image  = $images[0] ?? \App\Models\Product::getPlaceholderUrl();
 
-            $extractedName = ucwords(str_replace(['-', '_'], ' ', urldecode($lastSegment)));
-            $extractedName = trim(preg_replace('/\b(Product|Item|Detail|Create|Index|Shop|Toko|Id)\b/i', '', $extractedName));
-            $extractedName = trim(preg_replace('/\s+/', ' ', $extractedName));
+            if (empty($desc)) {
+                $desc = $cleanTitle . ' — Produk jualan berkualitas tinggi. Dapatkan penawaran terbaik dan layanan pengiriman cepat.';
+            }
 
-            $cleanTitle = (mb_strlen($extractedName) > 2) ? $extractedName : ($lastSegment ?: 'Pv23p2E');
+            $item = [
+                'name'         => $cleanTitle,
+                'slug'         => $slug,
+                'price'        => $price > 0 ? (int)$price : null,
+                'sale_price'   => $salePrice > 0 ? (int)$salePrice : null,
+                'description'  => $desc,
+                'image'        => $image,
+                'images'       => $images,
+                'source_url'   => $url,
+                'product_type' => 'physical',
+            ];
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil mendeteksi data produk!',
+                'items'   => [$item]
+            ]);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membaca data dari URL. Silakan periksa URL Anda atau masukkan data secara manual.'
+            ], 200);
         }
+    }
 
-        // ── Build slug ──────────────────────────────────────────────────
-        $slug = Str::slug($cleanTitle);
+    /**
+     * Dedicated Scan & Scrape for Lynk.id (URL & Source Code HTML).
+     */
+    public function scanLynk(Request $request)
+    {
+        try {
+            $url = trim($request->input('url', ''));
+            if (empty($url)) {
+                $url = 'https://lynk.id/imported-product';
+            }
 
-        // ── Clean & Format Description (Preserve real parsed description) ──
-        if (empty($desc) || str_starts_with(strtolower($desc), 'http') || mb_strlen(strip_tags($desc)) < 5) {
-            $desc = $cleanTitle . ' — Produk berkualitas tinggi. Dapatkan penawaran terbaik dan pengiriman cepat.';
-        } else {
-            $desc = preg_replace('/Produk diimpor dari:\s*https?:\/\/[^\s]+/i', '', $desc);
-            $desc = $this->sanitizeDescription($desc);
-        }
+            $rawHtml = '';
+            if ($request->filled('html_b64')) {
+                $rawHtml = base64_decode($request->input('html_b64'));
+            } elseif ($request->filled('html')) {
+                $r = $request->input('html');
+                $d = base64_decode($r, true);
+                $rawHtml = ($d !== false && base64_encode($d) === $r) ? $d : $r;
+            }
 
-        // ── If sale price > normal price, swap ──────────────────────────
-        if ($salePrice > 0 && $price > 0 && $salePrice > $price) {
-            [$price, $salePrice] = [$salePrice, $price];
-        }
-        // If sale price equals price, clear it
-        if ($salePrice > 0 && $salePrice === $price) {
+            // If HTML empty, try Guzzle HTTP fetch
+            if (empty($rawHtml) && !empty($url) && filter_var($url, FILTER_VALIDATE_URL)) {
+                try {
+                    $client = new \GuzzleHttp\Client([
+                        'timeout'         => 8,
+                        'verify'          => false,
+                        'allow_redirects' => ['max' => 5],
+                        'headers'         => [
+                            'User-Agent'      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                            'Accept-Language' => 'id-ID,id;q=0.9,en-US;q=0.8',
+                            'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                        ]
+                    ]);
+                    $res = $client->get($url);
+                    $rawHtml = (string) $res->getBody();
+                } catch (\Exception $e) {
+                    // Ignore Guzzle error
+                }
+            }
+
+            if (empty($rawHtml)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Source code / data Lynk.id tidak ditemukan. Silakan paste Source Code halaman Lynk.id.'
+                ], 200);
+            }
+
+            // 1. Title Extraction
+            $title = '';
+            if (preg_match('/<h2[^>]*id=["\']title_product["\'][^>]*>(.*?)<\/h2>/is', $rawHtml, $m)) {
+                $title = trim(html_entity_decode(strip_tags($m[1])));
+            } elseif (preg_match('/shareMessage\s*=\s*["\']Check out (.*?) from \w+ @/is', $rawHtml, $m)) {
+                $title = trim(html_entity_decode(strip_tags($m[1])));
+            } elseif (preg_match('/<meta[^>]*name=["\']description["\'][^>]*content=["\']View [^\']*\'s (.*?) Product details/is', $rawHtml, $m)) {
+                $title = trim(html_entity_decode(strip_tags($m[1])));
+            } elseif (preg_match('/<title[^>]*>(.*?)<\/title>/is', $rawHtml, $m)) {
+                $title = trim(html_entity_decode(strip_tags($m[1])));
+                $title = preg_replace('/^LYNK\s*\|\s*/i', '', $title);
+            }
+
+            $title = trim(strip_tags($title));
+            if (empty($title)) {
+                $title = 'Produk Digital Lynk.id';
+            }
+
+            // 2. Price Extraction: var p = _g('750000.0') & var sPrice = _g('500000.0')
+            $price     = 0;
             $salePrice = 0;
+            if (preg_match('/var p\s*=\s*_g\([\'"]([\d.]+)[\'"]\)/i', $rawHtml, $m)) {
+                $price = floatval($m[1]);
+            }
+            if (preg_match('/var sPrice\s*=\s*_g\([\'"]([\d.]+)[\'"]\)/i', $rawHtml, $m)) {
+                $salePrice = floatval($m[1]);
+            }
+
+            // Swap if salePrice > price
+            if ($salePrice > 0 && $price > 0 && $salePrice > $price) {
+                [$price, $salePrice] = [$salePrice, $price];
+            }
+            if ($salePrice > 0 && $salePrice === $price) {
+                $salePrice = 0;
+            }
+
+            // 3. Description Extraction: <div class="... rich-content ...">
+            $desc = '';
+            if (preg_match('/<div[^>]*class=["\'][^"\']*rich-content[^"\']*["\'][^>]*>(.*?)<\/div>\s*<\/div>/is', $rawHtml, $m)) {
+                $desc = trim(html_entity_decode($m[1]));
+            } elseif (preg_match('/<div[^>]*class=["\'][^"\']*rich-content[^"\'][^>]*>(.*?)<\/div>/is', $rawHtml, $m)) {
+                $desc = trim(html_entity_decode($m[1]));
+            }
+
+            if (!empty($desc)) {
+                $desc = strip_tags($desc, '<p><br><b><i><strong><em><ul><ol><li><div><span>');
+                $desc = preg_replace('/\s+on[a-z]+\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $desc);
+                $desc = trim($desc);
+            }
+            if (empty($desc) || mb_strlen(strip_tags($desc)) < 5) {
+                $desc = $title . ' — Produk digital berkualitas tinggi dari Lynk.id.';
+            }
+
+            // 4. Image Extraction: https://cdn.lynkid.my.id/products/...
+            $images = [];
+            if (preg_match_all('/https?:\/\/cdn\.lynkid\.my\.id\/products\/[^\s"\']+/i', $rawHtml, $imgMatches)) {
+                foreach ($imgMatches[0] as $img) {
+                    $cleanImg = strtok($img, '?');
+                    if (filter_var($cleanImg, FILTER_VALIDATE_URL)) {
+                        $images[] = $cleanImg;
+                    }
+                }
+            }
+            if (empty($images)) {
+                if (preg_match_all('/<meta[^>]*property=["\']og:image["\'][^>]*content=["\'](.*?)["\']/is', $rawHtml, $ms)) {
+                    foreach ($ms[1] as $img) {
+                        $img = trim($img);
+                        if ($img && filter_var($img, FILTER_VALIDATE_URL)) {
+                            $images[] = $img;
+                        }
+                    }
+                }
+            }
+
+            $images = array_values(array_unique($images));
+            $images = array_slice($images, 0, 5);
+            $image  = $images[0] ?? \App\Models\Product::getPlaceholderUrl();
+
+            $slug = Str::slug($title);
+
+            $item = [
+                'name'         => $title,
+                'slug'         => $slug,
+                'price'        => $price > 0 ? (int)$price : null,
+                'sale_price'   => $salePrice > 0 ? (int)$salePrice : null,
+                'description'  => $desc,
+                'image'        => $image,
+                'images'       => $images,
+                'source_url'   => $url,
+                'product_type' => 'external_link',
+            ];
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil mendeteksi data produk Lynk.id!',
+                'items'   => [$item]
+            ]);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat membaca data Lynk.id. Silakan periksa kembali data yang dimasukkan.'
+            ], 200);
         }
-
-        $item = [
-            'name'         => $cleanTitle,
-            'slug'         => $slug,
-            'price'        => $price > 0 ? (int) $price : null,
-            'sale_price'   => $salePrice > 0 ? (int) $salePrice : null,
-            'description'  => $desc,
-            'image'        => $image ?: \App\Models\Product::getPlaceholderUrl(),
-            'images'       => $images,
-            'source_url'   => $url,
-            'product_type' => $isLynk ? 'external_link' : 'physical',
-        ];
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Berhasil mendeteksi data produk!',
-            'items'   => [$item]
-        ]);
     }
 }
