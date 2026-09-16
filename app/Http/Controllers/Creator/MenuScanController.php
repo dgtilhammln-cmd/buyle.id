@@ -157,7 +157,7 @@ class MenuScanController extends Controller
                 'stock'        => $stock,
                 'description'  => $desc,
                 'is_active'    => true,
-                'product_type' => 'physical',
+                'product_type' => ($category === 'Makanan') ? 'makanan' : 'physical',
             ]);
 
             CreatorBioBlock::create([
@@ -190,107 +190,207 @@ class MenuScanController extends Controller
 
     /**
      * Scan & Scrape product details from URL (Website, TikTok Shop, Tokopedia, Shopee).
-     */
-    /**
-     * Scan & Scrape product details from URL (Website, TikTok Shop, Tokopedia, Shopee).
+     * Returns: name, slug, price (normal), sale_price (promo), description, image, images[], source_url.
      */
     public function scanUrl(Request $request)
     {
-        $url = trim($request->input('url', ''));
+        $url    = trim($request->input('url', ''));
         $source = $request->input('source', 'url');
 
         if (empty($url)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'URL produk wajib diisi.'
-            ], 422);
+            return response()->json(['success' => false, 'message' => 'URL produk wajib diisi.'], 422);
         }
 
-        $title = '';
-        $desc  = '';
-        $image = null;
-        $price = 0;
+        $title     = '';
+        $desc      = '';
+        $image     = null;
+        $images    = [];
+        $price     = 0;
+        $salePrice = 0;
+        $html      = '';
 
         try {
             $client = new \GuzzleHttp\Client([
-                'timeout' => 6,
-                'verify' => false,
-                'headers' => [
-                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-                    'Accept-Language' => 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
+                'timeout'         => 8,
+                'verify'          => false,
+                'allow_redirects' => ['max' => 5],
+                'headers'         => [
+                    'User-Agent'      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                    'Accept-Language' => 'id-ID,id;q=0.9,en-US;q=0.8',
+                    'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 ]
             ]);
 
-            $res = $client->get($url);
+            $res  = $client->get($url);
             $html = (string) $res->getBody();
 
-            if (preg_match('/<title[^>]*>(.*?)<\/title>/is', $html, $m)) {
+            // ── Title ──────────────────────────────────────────────────
+            if (preg_match('/<meta[^>]*property=["\']og:title["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
+                $title = trim(html_entity_decode(strip_tags($m[1])));
+            } elseif (preg_match('/<title[^>]*>(.*?)<\/title>/is', $html, $m)) {
                 $title = trim(html_entity_decode(strip_tags($m[1])));
             }
-            if (preg_match('/<meta[^>]*property=["\']og:title["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
-                $title = trim(html_entity_decode($m[1]));
-            }
 
-            if (preg_match('/<meta[^>]*name=["\']description["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
+            // ── Description ────────────────────────────────────────────
+            if (preg_match('/<meta[^>]*property=["\']og:description["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
                 $desc = trim(html_entity_decode($m[1]));
-            } elseif (preg_match('/<meta[^>]*property=["\']og:description["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
+            } elseif (preg_match('/<meta[^>]*name=["\']description["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
                 $desc = trim(html_entity_decode($m[1]));
             }
 
-            if (preg_match('/<meta[^>]*property=["\']og:image["\'][^>]*content=["\'](.*?)["\']/is', $html, $m)) {
-                $image = trim($m[1]);
+            // ── Primary Image (og:image) ────────────────────────────────
+            if (preg_match_all('/<meta[^>]*property=["\']og:image["\'][^>]*content=["\'](.*?)["\']/is', $html, $ms)) {
+                foreach ($ms[1] as $img) {
+                    $img = trim($img);
+                    if ($img && filter_var($img, FILTER_VALIDATE_URL)) {
+                        $images[] = $img;
+                    }
+                }
             }
 
-            // Extract price if found in text or JSON-LD
-            if (preg_match('/"price":\s*"?([\d\.]+)"?/i', $html, $m)) {
-                $price = (float) $m[1];
-            } elseif (preg_match('/(?:Rp|IDR)\s*([\d\.\,]+)/i', $html, $m)) {
-                $rawP = preg_replace('/[^\d]/', '', $m[1]);
-                if (is_numeric($rawP) && (float)$rawP > 100) {
-                    $price = (float)$rawP;
+            // ── JSON-LD Structured Data (best source for prices & images) ──
+            if (preg_match_all('/<script[^>]*type=["\']application\/ld\+json["\'][^>]*>(.*?)<\/script>/is', $html, $jsonMatches)) {
+                foreach ($jsonMatches[1] as $jsonRaw) {
+                    $jsonData = json_decode(trim($jsonRaw), true);
+                    if (!$jsonData) continue;
+
+                    // Handle @graph array
+                    $candidates = isset($jsonData['@graph']) ? $jsonData['@graph'] : [$jsonData];
+
+                    foreach ($candidates as $obj) {
+                        $type = $obj['@type'] ?? '';
+                        if (!in_array($type, ['Product', 'ItemPage', 'WebPage', 'Offer'])) continue;
+
+                        if (!empty($obj['name']) && empty($title)) {
+                            $title = trim($obj['name']);
+                        }
+                        if (!empty($obj['description']) && empty($desc)) {
+                            $desc = trim(strip_tags($obj['description']));
+                        }
+
+                        // Images from JSON-LD
+                        $imgField = $obj['image'] ?? null;
+                        if (is_string($imgField) && $imgField) {
+                            if (filter_var($imgField, FILTER_VALIDATE_URL)) $images[] = $imgField;
+                        } elseif (is_array($imgField)) {
+                            foreach ($imgField as $imgItem) {
+                                $imgUrl = is_array($imgItem) ? ($imgItem['url'] ?? '') : $imgItem;
+                                if ($imgUrl && filter_var($imgUrl, FILTER_VALIDATE_URL)) $images[] = $imgUrl;
+                            }
+                        }
+
+                        // Offers price
+                        $offers = $obj['offers'] ?? null;
+                        if ($offers) {
+                            $offerList = isset($offers['@type']) ? [$offers] : $offers;
+                            foreach ((array) $offerList as $offer) {
+                                $offerPrice = (float) ($offer['price'] ?? 0);
+                                if ($offerPrice > 100) {
+                                    if ($price <= 0) $price = $offerPrice;
+                                    else $salePrice = min($price, $offerPrice);
+                                }
+                                // highPrice = original, lowPrice = sale
+                                if (!empty($offer['highPrice'])) {
+                                    $price     = (float) $offer['highPrice'];
+                                    $salePrice = (float) ($offer['lowPrice'] ?? 0);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ── Regex price fallback (Tokopedia, Shopee, TikTok patterns) ──
+            if ($price <= 0) {
+                // JSON-like: "price":"49000" or "originalPrice":"59000"
+                if (preg_match('/["\'](?:price|harga)["\']\s*:\s*["\']?(\d{4,})["\']?/i', $html, $m)) {
+                    $price = (float) $m[1];
+                }
+            }
+            if ($price <= 0 || $salePrice <= 0) {
+                // Rp pattern – grab first two occurrences (original then promo, or vice versa)
+                preg_match_all('/(?:Rp|IDR)[\s.]*([\d]{2,}(?:[.,][\d]{3})*)/u', $html, $pm);
+                $pricesCandidates = [];
+                foreach ($pm[1] as $rawP) {
+                    $cleaned = (float) preg_replace('/[^\d]/', '', $rawP);
+                    if ($cleaned >= 1000) $pricesCandidates[] = $cleaned;
+                }
+                $pricesCandidates = array_unique($pricesCandidates);
+                if (count($pricesCandidates) >= 2) {
+                    rsort($pricesCandidates); // descending: biggest = original
+                    if ($price <= 0)     $price     = $pricesCandidates[0];
+                    if ($salePrice <= 0) $salePrice = $pricesCandidates[1];
+                } elseif (count($pricesCandidates) === 1 && $price <= 0) {
+                    $price = $pricesCandidates[0];
                 }
             }
         } catch (\Exception $e) {
-            // Ignore HTTP fetch error and rely on URL parsing below
+            // Ignore HTTP fetch errors; rely on URL slug parsing below
         }
 
-        // Clean up title
-        $cleanTitle = preg_replace('/(\||-|–|Buy|TikTok|Tokopedia|Shopee|Jual|Beli|Online|Murah|Terlengkap).*$/i', '', $title);
+        // ── Deduplicate images ──────────────────────────────────────────
+        $images = array_values(array_unique($images));
+        $image  = $images[0] ?? null;
+
+        // ── Clean up title ──────────────────────────────────────────────
+        $cleanTitle = preg_replace('/\s*(\||-|–|—)\s*(TikTok|Tokopedia|Shopee|Bukalapak|Lazada|Blibli|Jual|Beli|Online|Murah|Terlengkap|Buy).*$/i', '', $title);
         $cleanTitle = trim($cleanTitle);
 
-        // Fallback: Smart URL slug extraction
-        if (empty($cleanTitle) || strlen($cleanTitle) < 3 || in_array(strtolower($cleanTitle), ['create', 'product', 'item', 'index'])) {
-            $parsedUrl = parse_url($url);
-            $path = $parsedUrl['path'] ?? '';
-
-            // Clean Tokopedia/Shopee/TikTok slug formats like /toko/nama-produk-i.12345 or /product/nama-produk-12345
+        // ── Fallback: smart URL slug extraction ─────────────────────────
+        if (empty($cleanTitle) || mb_strlen($cleanTitle) < 3) {
+            $parsedUrl    = parse_url($url);
+            $path         = $parsedUrl['path'] ?? '';
             $pathSegments = array_values(array_filter(explode('/', $path)));
-            $lastSegment = end($pathSegments) ?: '';
+            $lastSegment  = end($pathSegments) ?: '';
 
-            if (in_array(strtolower($lastSegment), ['create', 'products', 'item', 'product', 'detail']) && count($pathSegments) > 1) {
+            // Skip generic slugs
+            if (in_array(strtolower($lastSegment), ['create', 'products', 'item', 'product', 'detail', 'p', 'i']) && count($pathSegments) > 1) {
                 $lastSegment = $pathSegments[count($pathSegments) - 2];
             }
 
-            // Strip IDs like i.123.456, p123456, or trailing numeric IDs
+            // Strip Tokopedia IDs: produk-nama-i.12345.67890 or produk-nama-12345678
             $lastSegment = preg_replace('/-i\.\d+\.\d+$/i', '', $lastSegment);
             $lastSegment = preg_replace('/-p\d+$/i', '', $lastSegment);
             $lastSegment = preg_replace('/-\d{5,}$/i', '', $lastSegment);
 
-            $extractedName = ucwords(str_replace(['-', '_'], ' ', $lastSegment));
-            $extractedName = trim(preg_replace('/\b(Product|Item|Detail|Create|Index|Shop|Toko)\b/i', '', $extractedName));
+            $extractedName = ucwords(str_replace(['-', '_'], ' ', urldecode($lastSegment)));
+            $extractedName = trim(preg_replace('/\b(Product|Item|Detail|Create|Index|Shop|Toko|Id)\b/i', '', $extractedName));
+            $extractedName = trim(preg_replace('/\s+/', ' ', $extractedName));
 
-            if (!empty($extractedName) && strlen($extractedName) > 2) {
-                $cleanTitle = $extractedName;
-            } else {
-                $cleanTitle = 'Produk Impor Baru';
-            }
+            $cleanTitle = (mb_strlen($extractedName) > 2) ? $extractedName : 'Produk Impor';
         }
+
+        // ── Build slug ──────────────────────────────────────────────────
+        $slug = Str::slug($cleanTitle);
+
+        // ── If sale price > normal price, swap ──────────────────────────
+        if ($salePrice > 0 && $price > 0 && $salePrice > $price) {
+            [$price, $salePrice] = [$salePrice, $price];
+        }
+        // If sale price equals price, clear it
+        if ($salePrice > 0 && $salePrice === $price) {
+            $salePrice = 0;
+        }
+
+        // ── Placeholder SVG data-URI when no image found ─────────────────
+        $placeholderImage = 'data:image/svg+xml;utf8,' . rawurlencode(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">'
+            . '<rect width="400" height="400" fill="#F1F5F9"/>'
+            . '<rect x="130" y="120" width="140" height="110" rx="12" fill="#CBD5E1"/>'
+            . '<circle cx="165" cy="155" r="16" fill="#94A3B8"/>'
+            . '<polyline points="130,230 175,175 210,210 240,185 270,230" fill="none" stroke="#94A3B8" stroke-width="3"/>'
+            . '<text x="200" y="290" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#94A3B8">Foto belum tersedia</text>'
+            . '</svg>'
+        );
 
         $item = [
             'name'        => $cleanTitle,
-            'price'       => $price > 0 ? $price : null,
-            'description' => $desc ?: ('Produk diimpor dari URL: ' . $url),
-            'image'       => $image,
+            'slug'        => $slug,
+            'price'       => $price > 0 ? (int) $price : null,
+            'sale_price'  => $salePrice > 0 ? (int) $salePrice : null,
+            'description' => $desc ?: 'Produk diimpor dari: ' . $url,
+            'image'       => $image ?: $placeholderImage,
+            'images'      => $images,
             'source_url'  => $url,
         ];
 

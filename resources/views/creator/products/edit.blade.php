@@ -254,16 +254,58 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <label class="form-label">Kelompok Produk</label>
-                                <select name="creator_group_id" class="form-input">
-                                    <option value="">— Tidak Masuk Kelompok —</option>
-                                    @foreach($groups as $grp)
-                                        <option value="{{ $grp->id }}" {{ old('creator_group_id', $product->creator_group_id) == $grp->id ? 'selected' : '' }}>{{ $grp->name }}</option>
-                                    @endforeach
-                                </select>
-                                <span class="form-hint"><a href="{{ route('creator.groups.index') }}" style="color:#1eb349;text-decoration:none;">Buat Kelompok Baru?</a></span>
-                            </div>
+                             <div class="form-group" id="groupWrap">
+                                 <label class="form-label">Kelompok Produk</label>
+                                 <select name="creator_group_id" class="form-input">
+                                     <option value="">— Tidak Masuk Kelompok —</option>
+                                     @foreach($groups as $grp)
+                                         <option value="{{ $grp->id }}" {{ old('creator_group_id', $product->creator_group_id) == $grp->id ? 'selected' : '' }}>{{ $grp->name }}</option>
+                                     @endforeach
+                                 </select>
+                                 <span class="form-hint"><a href="{{ route('creator.groups.index') }}" style="color:#1eb349;text-decoration:none;">Buat Kelompok Baru?</a></span>
+                             </div>
+
+                             {{-- PHYSICAL PRODUCT SPECIFIC FIELDS --}}
+                             <div class="form-group full" id="physicalFieldsWrap" style="display:none; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px; padding:1.5rem; width:100%; box-sizing:border-box;">
+                                 <h5 style="font-size:0.95rem; font-weight:800; color:#0F172A; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem; border-bottom:1px dashed #e2e8f0; padding-bottom:0.75rem;">
+                                     <svg width="20" height="20" fill="none" stroke="#0F172A" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                                     Spesifikasi Produk Fisik & Logistik
+                                 </h5>
+                                 <div class="form-grid">
+                                     <div class="form-group">
+                                         <label class="form-label">SKU / Kode Stok (Opsional)</label>
+                                         <input type="text" name="sku" value="{{ old('sku', $product->sku) }}" class="form-input" placeholder="Misal: BRG-001-RED">
+                                         <span class="form-hint">Kode unik identifikasi stok barang Anda.</span>
+                                     </div>
+
+                                     <div class="form-group">
+                                         <label class="form-label">Berat Produk (Gram) <span>*</span></label>
+                                         <input type="number" name="weight" id="input_weight" value="{{ old('weight', $product->weight) }}" class="form-input" placeholder="Misal: 500" min="0">
+                                         <span class="form-hint">Berat dalam hitungan gram (1 Kg = 1000 Gram).</span>
+                                     </div>
+
+                                     <div class="form-group">
+                                         <label class="form-label">Panjang (P) (cm)</label>
+                                         <input type="number" name="length" id="input_length" value="{{ old('length', $product->length) }}" class="form-input" placeholder="Misal: 20" min="0" step="0.1" oninput="calculateProductVolume()">
+                                     </div>
+
+                                     <div class="form-group">
+                                         <label class="form-label">Lebar (L) (cm)</label>
+                                         <input type="number" name="width" id="input_width" value="{{ old('width', $product->width) }}" class="form-input" placeholder="Misal: 15" min="0" step="0.1" oninput="calculateProductVolume()">
+                                     </div>
+
+                                     <div class="form-group">
+                                         <label class="form-label">Tinggi (T) (cm)</label>
+                                         <input type="number" name="height" id="input_height" value="{{ old('height', $product->height) }}" class="form-input" placeholder="Misal: 10" min="0" step="0.1" oninput="calculateProductVolume()">
+                                     </div>
+
+                                     <div class="form-group">
+                                         <label class="form-label">Volume (P x L x T) (cm³)</label>
+                                         <input type="number" name="volume" id="input_volume" value="{{ old('volume', $product->volume) }}" class="form-input" placeholder="Otomatis dihitung" readonly style="background:#f1f5f9; color:#475569; font-weight:700;">
+                                         <span class="form-hint">Dihitung otomatis: P × L × T.</span>
+                                     </div>
+                                 </div>
+                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Harga Normal (Rp) <span>*</span></label>
@@ -657,6 +699,21 @@
         }
     }
 
+    // Volume Calculation (P x L x T)
+    function calculateProductVolume() {
+        const p = parseFloat(document.getElementById('input_length')?.value) || 0;
+        const l = parseFloat(document.getElementById('input_width')?.value) || 0;
+        const t = parseFloat(document.getElementById('input_height')?.value) || 0;
+        const volInput = document.getElementById('input_volume');
+        if (volInput) {
+            if (p > 0 && l > 0 && t > 0) {
+                volInput.value = Math.round(p * l * t * 100) / 100;
+            } else {
+                volInput.value = '';
+            }
+        }
+    }
+
     // Product Type Toggle
     function toggleProductTypeFields(val) {
         const wrap = document.getElementById('ticketFieldsWrap');
@@ -666,16 +723,28 @@
         const evType = document.getElementById('eventTypeSelect');
         const wlCheck = document.getElementById('isWhitelabelCheck');
         const categoryWrap = document.getElementById('categoryWrap');
+        const groupWrap = document.getElementById('groupWrap');
         const commissionWrap = document.getElementById('commissionWrap');
+        const physicalWrap = document.getElementById('physicalFieldsWrap');
         const catSelect = document.getElementById('catSelect');
         const commissionInput = document.getElementById('affiliate_commission_rate');
+        const weightInput = document.getElementById('input_weight');
 
-        // Hide Kategori Utama & Komisi Affiliate for physical products
+        // Hide Kategori Utama & Komisi Affiliate for physical & makanan products
+        const hideCatAndCommission = (val === 'physical' || val === 'makanan');
+        if (categoryWrap) categoryWrap.style.display = hideCatAndCommission ? 'none' : '';
+        if (commissionWrap) commissionWrap.style.display = hideCatAndCommission ? 'none' : '';
+        if (catSelect) { hideCatAndCommission ? catSelect.removeAttribute('required') : catSelect.setAttribute('required','required'); }
+        if (commissionInput) { hideCatAndCommission ? commissionInput.removeAttribute('required') : commissionInput.setAttribute('required','required'); }
+
+        // Hide Kelompok Produk for makanan
+        const isFood = (val === 'makanan');
+        if (groupWrap) groupWrap.style.display = isFood ? 'none' : '';
+
+        // Show Physical specific fields ONLY for physical
         const isPhysical = (val === 'physical');
-        if (categoryWrap) categoryWrap.style.display = isPhysical ? 'none' : '';
-        if (commissionWrap) commissionWrap.style.display = isPhysical ? 'none' : '';
-        if (catSelect) { isPhysical ? catSelect.removeAttribute('required') : catSelect.setAttribute('required','required'); }
-        if (commissionInput) { isPhysical ? commissionInput.removeAttribute('required') : commissionInput.setAttribute('required','required'); }
+        if (physicalWrap) physicalWrap.style.display = isPhysical ? 'block' : 'none';
+        if (weightInput) { isPhysical ? weightInput.setAttribute('required', 'required') : weightInput.removeAttribute('required'); }
 
         if (val === 'ticket') {
             if (wrap) wrap.style.display = 'block';
@@ -689,12 +758,20 @@
                 extInput.removeAttribute('required');
             }
             if (evType) toggleEventTypeFields(evType.value);
-        } else {
+        } else if (val === 'external_link') {
             if (wrap) wrap.style.display = 'none';
             if (digitalCard) digitalCard.style.display = 'block';
             if (whitelabelCard) whitelabelCard.style.display = 'block';
             if (extInput) {
                 extInput.setAttribute('required', 'required');
+            }
+        } else {
+            // physical, makanan, service
+            if (wrap) wrap.style.display = 'none';
+            if (digitalCard) digitalCard.style.display = 'none';
+            if (whitelabelCard) whitelabelCard.style.display = 'none';
+            if (extInput) {
+                extInput.removeAttribute('required');
             }
         }
     }

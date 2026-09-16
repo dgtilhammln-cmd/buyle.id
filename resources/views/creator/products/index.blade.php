@@ -828,7 +828,7 @@
       : 'https://shopee.co.id/toko-anda/produk-abc';
   }
 
-  // Open the Scan Menu Result Table Modal directly with items
+  // Open the Scan Menu Result Table Modal (AI SCAN ONLY)
   function showScannedResultModal(items, categoryOverride) {
     closeSmartImport();
     document.getElementById('scan-menu-modal').style.display = 'flex';
@@ -846,20 +846,25 @@
     restoreImportBtn();
   }
 
-  // SCAN MENU AI
+  // Redirect to create form and pre-fill via sessionStorage
+  function redirectToCreateWithData(item, productType) {
+    item.product_type = productType || item.product_type || 'physical';
+    sessionStorage.setItem('smart_imported_item', JSON.stringify(item));
+    window.location.href = '{{ route("creator.products.create") }}?smart_import=1';
+  }
+
+  // SCAN MENU AI — shows popup selection list
   function runSiMenuScan() {
     const btn = document.getElementById('siMenuScanBtn');
     const urlVal = document.getElementById('siMenuUrl').value;
     const photoFile = document.getElementById('siMenuPhotoFile').files[0];
     const isPhoto = document.getElementById('srcPhoto').classList.contains('selected');
-    const productType = document.getElementById('siMenuProductType').value;
 
     if (isPhoto && !photoFile) { alert('Silakan upload foto menu terlebih dahulu.'); return; }
     if (!isPhoto && !urlVal) { alert('Silakan masukkan URL menu terlebih dahulu.'); return; }
 
     btn.disabled = true;
     document.getElementById('siMenuProgress').style.display = 'block';
-
     const csrfToken = '{{ csrf_token() }}';
 
     if (isPhoto) {
@@ -877,7 +882,7 @@
         btn.disabled = false;
         document.getElementById('siMenuProgress').style.display = 'none';
         if (res.success && res.items && res.items.length > 0) {
-          showScannedResultModal(res.items, 'Makanan');
+          showScannedResultModal(res.items, 'Makanan'); // → popup modal
         } else {
           alert(res.message || 'Gagal scan foto menu.');
         }
@@ -885,15 +890,12 @@
       .catch(err => {
         btn.disabled = false;
         document.getElementById('siMenuProgress').style.display = 'none';
-        alert('Terjadi kesalahan saat scan foto: ' + err.message);
+        alert('Gagal scan foto: ' + err.message);
       });
     } else {
       fetch('{{ route("creator.products.scan-url") }}', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': csrfToken
-        },
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
         body: JSON.stringify({ url: urlVal, source: 'menu_url' })
       })
       .then(res => res.json())
@@ -901,7 +903,7 @@
         btn.disabled = false;
         document.getElementById('siMenuProgress').style.display = 'none';
         if (res.success && res.items && res.items.length > 0) {
-          showScannedResultModal(res.items, 'Makanan');
+          showScannedResultModal(res.items, 'Makanan'); // → popup modal
         } else {
           alert(res.message || 'Gagal membaca URL menu.');
         }
@@ -909,27 +911,24 @@
       .catch(err => {
         btn.disabled = false;
         document.getElementById('siMenuProgress').style.display = 'none';
-        alert('Terjadi kesalahan saat membaca URL: ' + err.message);
+        alert('Gagal membaca URL: ' + err.message);
       });
     }
   }
 
-  // TIKTOK SHOP
+  // TIKTOK SHOP — langsung redirect ke form produk
   function runSiTiktokScrape() {
     const url = document.getElementById('siTiktokUrl').value;
     if (!url) { alert('Masukkan URL produk TikTok Shop.'); return; }
     const btn = document.getElementById('siTiktokBtn');
     btn.disabled = true;
     document.getElementById('siTiktokProgress').style.display = 'block';
-
+    document.getElementById('siTiktokProgressText').textContent = 'Membaca data produk dari TikTok...';
     const csrfToken = '{{ csrf_token() }}';
 
     fetch('{{ route("creator.products.scan-url") }}', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': csrfToken
-      },
+      headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
       body: JSON.stringify({ url: url, source: 'tiktokshop' })
     })
     .then(res => res.json())
@@ -937,9 +936,9 @@
       btn.disabled = false;
       document.getElementById('siTiktokProgress').style.display = 'none';
       if (res.success && res.items && res.items.length > 0) {
-        showScannedResultModal(res.items, 'Barang');
+        redirectToCreateWithData(res.items[0], 'physical'); // → form produk langsung
       } else {
-        alert(res.message || 'Gagal mengambil data produk TikTok Shop.');
+        alert(res.message || 'Gagal membaca data produk TikTok Shop.');
       }
     })
     .catch(err => {
@@ -949,22 +948,19 @@
     });
   }
 
-  // MARKETPLACE
+  // MARKETPLACE (Tokopedia / Shopee) — langsung redirect ke form produk
   function runSiMarketScrape() {
     const url = document.getElementById('siMarketUrl').value;
     if (!url) { alert('Masukkan URL produk dari marketplace.'); return; }
     const btn = document.getElementById('siMarketBtn');
     btn.disabled = true;
     document.getElementById('siMarketProgress').style.display = 'block';
-
+    document.getElementById('siMarketProgressText').textContent = 'Membaca data dari ' + (selectedMarketplace === 'tokopedia' ? 'Tokopedia' : 'Shopee') + '...';
     const csrfToken = '{{ csrf_token() }}';
 
     fetch('{{ route("creator.products.scan-url") }}', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': csrfToken
-      },
+      headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
       body: JSON.stringify({ url: url, source: selectedMarketplace })
     })
     .then(res => res.json())
@@ -972,9 +968,9 @@
       btn.disabled = false;
       document.getElementById('siMarketProgress').style.display = 'none';
       if (res.success && res.items && res.items.length > 0) {
-        showScannedResultModal(res.items, 'Barang');
+        redirectToCreateWithData(res.items[0], 'physical'); // → form produk langsung
       } else {
-        alert(res.message || 'Gagal mengambil data produk Marketplace.');
+        alert(res.message || 'Gagal membaca data produk Marketplace.');
       }
     })
     .catch(err => {
