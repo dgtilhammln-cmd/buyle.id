@@ -678,57 +678,57 @@
     <div class="si-tabs-nav">
       <button class="si-tab active" onclick="switchSiTab('menu-ai', this)">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><circle cx="12" cy="12" r="3"/></svg>
-        Scan Menu AI
+        Scan AI
       </button>
       <button class="si-tab" onclick="switchSiTab('tiktokshop', this)">
         <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
         TikTok Shop
       </button>
       <button class="si-tab" onclick="switchSiTab('marketplace', this)">
-        <img src="{{ asset('images/icons/tokopedia.png') }}" width="14" height="14" style="object-fit:contain; border-radius:2px; vertical-align:middle; margin-right:2px;">
-        <img src="{{ asset('images/icons/shopee.png') }}" width="14" height="14" style="object-fit:contain; border-radius:2px; vertical-align:middle; margin-right:4px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#1eb349" style="vertical-align:middle; margin-right:2px;"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/></svg>
         Tokopedia / Shopee
       </button>
       <button class="si-tab" onclick="switchSiTab('lynk', this)">
-        <img src="{{ asset('images/icons/lynk.png') }}" width="14" height="14" style="object-fit:contain; border-radius:2px; vertical-align:middle; margin-right:4px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#0284c7" style="vertical-align:middle; margin-right:4px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
         Lynk.id
       </button>
     </div>
 
-    {{-- TAB 1: SCAN MENU AI --}}
+    {{-- TAB 1: SCAN AI --}}
     <div class="si-tab-pane active" id="si-menu-ai">
       <p style="font-size:0.8rem; color:#64748b; margin-top:0; margin-bottom:1.25rem; line-height:1.6; font-family:'Montserrat',sans-serif;">
-        Upload foto menu / brosur, atau paste URL website menu. AI akan scan dan menampilkan daftar menu untuk diimpor ke katalog.
+        Upload foto menu / daftar produk. AI akan scan dan mengekstrak daftar produk secara otomatis untuk diimpor ke katalog.
       </p>
 
-      <div class="si-source-cards" id="siMenuSourceCards">
-        <div class="si-source-card selected" id="srcPhoto" onclick="selectSiSource('photo')">
-          <svg width="26" height="26" fill="none" stroke="#64748b" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <span>Foto Menu</span>
-        </div>
-        <div class="si-source-card" id="srcUrl" onclick="selectSiSource('url')">
-          <svg width="26" height="26" fill="none" stroke="#64748b" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          <span>URL Website</span>
-        </div>
-      </div>
-
       <div id="siPhotoInput">
-        <div class="si-upload-area" onclick="document.getElementById('siMenuPhotoFile').click()" id="siUploadArea">
-          <div style="width:48px; height:48px; background:rgba(30,179,73,0.1); color:#1eb349; border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem;">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <div class="si-upload-area" id="siUploadArea" style="min-height:160px; display:flex; align-items:center; justify-content:center; padding:1.25rem;">
+          
+          {{-- Placeholder when empty --}}
+          <div id="siPhotoPlaceholder" onclick="document.getElementById('siMenuPhotoFile').click()" style="cursor:pointer; text-align:center; width:100%;">
+            <div style="width:48px; height:48px; background:rgba(30,179,73,0.1); color:#1eb349; border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem;">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <p style="font-size:0.875rem; font-weight:700; color:#0f172a; margin:0 0 0.25rem; font-family:'Montserrat',sans-serif;">Klik untuk upload foto menu</p>
+            <p style="font-size:0.75rem; color:#94a3b8; margin:0; font-family:'Montserrat',sans-serif;">JPG, PNG, WEBP — Max 10MB</p>
           </div>
-          <p style="font-size:0.875rem; font-weight:700; color:#0f172a; margin:0 0 0.25rem; font-family:'Montserrat',sans-serif;">Klik untuk upload foto menu</p>
-          <p style="font-size:0.75rem; color:#94a3b8; margin:0; font-family:'Montserrat',sans-serif;">JPG, PNG, WEBP — Max 10MB</p>
-          <div id="siPhotoPreviewWrap" style="display:none; margin-top:0.75rem;">
-            <img id="siPhotoPreviewImg" src="" style="max-height:120px; border-radius:10px; max-width:100%; object-fit:contain; border:1px solid #e2e8f0;">
+
+          {{-- Clean preview when image selected (replaces placeholder completely) --}}
+          <div id="siPhotoPreviewWrap" style="display:none; text-align:center; width:100%;">
+            <img id="siPhotoPreviewImg" src="" style="max-height:180px; border-radius:12px; max-width:100%; object-fit:contain; border:1px solid #e2e8f0; box-shadow:0 4px 12px rgba(0,0,0,0.08); display:block; margin:0 auto 0.75rem;">
+            <div style="display:flex; justify-content:center; gap:0.5rem;">
+              <button type="button" onclick="document.getElementById('siMenuPhotoFile').click()" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; padding:0.4rem 0.9rem; border-radius:8px; font-size:0.75rem; font-weight:600; cursor:pointer; font-family:'Montserrat',sans-serif; display:inline-flex; align-items:center; gap:0.3rem;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Ganti Foto
+              </button>
+              <button type="button" onclick="clearSiMenuPhoto(event)" style="background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; padding:0.4rem 0.9rem; border-radius:8px; font-size:0.75rem; font-weight:600; cursor:pointer; font-family:'Montserrat',sans-serif; display:inline-flex; align-items:center; gap:0.3rem;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                Hapus
+              </button>
+            </div>
           </div>
+
         </div>
         <input type="file" id="siMenuPhotoFile" accept="image/*" style="display:none;" onchange="previewSiMenuPhoto(event)">
-      </div>
-
-      <div id="siUrlInput" style="display:none;">
-        <label class="si-label">URL Website / Menu Online</label>
-        <input type="url" id="siMenuUrl" class="si-input" placeholder="https://tokobakso.com/menu atau https://grabfood.com/...">
       </div>
 
       <div style="margin-top:1rem;">
@@ -788,11 +788,15 @@
 
       <div class="si-source-cards">
         <div class="si-source-card selected" id="srcTokopedia" onclick="selectMarketplace('tokopedia')">
-          <img src="{{ asset('images/icons/tokopedia.png') }}" width="28" height="28" style="object-fit:contain; margin:0 auto 0.4rem; display:block;" alt="Tokopedia">
+          <div style="width:28px; height:28px; background:rgba(66,181,73,0.12); border-radius:8px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.4rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#42b549"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/></svg>
+          </div>
           <span>Tokopedia</span>
         </div>
         <div class="si-source-card" id="srcShopee" onclick="selectMarketplace('shopee')">
-          <img src="{{ asset('images/icons/shopee.png') }}" width="28" height="28" style="object-fit:contain; margin:0 auto 0.4rem; display:block;" alt="Shopee">
+          <div style="width:28px; height:28px; background:rgba(238,77,45,0.12); border-radius:8px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.4rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#ee4d2d"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/></svg>
+          </div>
           <span>Shopee</span>
         </div>
       </div>
@@ -826,7 +830,9 @@
       {{-- METHOD TOGGLE CARDS --}}
       <div class="si-source-cards">
         <div class="si-source-card selected" id="srcLynkUrl" onclick="switchLynkMethod('url')">
-          <img src="{{ asset('images/icons/lynk.png') }}" width="24" height="24" style="object-fit:contain; margin:0 auto 0.3rem; display:block;" alt="Lynk.id">
+          <div style="width:24px; height:24px; background:rgba(2,132,199,0.12); border-radius:6px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.3rem;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="#0284c7"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          </div>
           <span>Opsi 1: URL Lynk.id</span>
         </div>
         <div class="si-source-card" id="srcLynkHtml" onclick="switchLynkMethod('html')">
@@ -887,23 +893,24 @@
     document.getElementById('si-' + tab).classList.add('active');
   }
 
-  // Source selector for menu AI
-  function selectSiSource(type) {
-    document.getElementById('srcPhoto').classList.toggle('selected', type === 'photo');
-    document.getElementById('srcUrl').classList.toggle('selected', type === 'url');
-    document.getElementById('siPhotoInput').style.display = type === 'photo' ? 'block' : 'none';
-    document.getElementById('siUrlInput').style.display = type === 'url' ? 'block' : 'none';
-  }
-
   function previewSiMenuPhoto(e) {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = ev => {
       document.getElementById('siPhotoPreviewImg').src = ev.target.result;
+      document.getElementById('siPhotoPlaceholder').style.display = 'none';
       document.getElementById('siPhotoPreviewWrap').style.display = 'block';
     };
     reader.readAsDataURL(file);
+  }
+
+  function clearSiMenuPhoto(e) {
+    if (e) e.stopPropagation();
+    document.getElementById('siMenuPhotoFile').value = '';
+    document.getElementById('siPhotoPreviewImg').src = '';
+    document.getElementById('siPhotoPreviewWrap').style.display = 'none';
+    document.getElementById('siPhotoPlaceholder').style.display = 'block';
   }
 
   // Marketplace selector
@@ -943,41 +950,42 @@
     window.location.href = '{{ route("creator.products.create") }}?smart_import=1';
   }
 
-  // SCAN MENU AI — shows popup selection list
+  // SCAN AI — process uploaded photo directly
   function runSiMenuScan() {
     const btn = document.getElementById('siMenuScanBtn');
-    const urlVal = document.getElementById('siMenuUrl').value;
     const photoFile = document.getElementById('siMenuPhotoFile').files[0];
-    const isPhoto = document.getElementById('srcPhoto').classList.contains('selected');
 
-    if (isPhoto && !photoFile) { alert('Silakan upload foto menu terlebih dahulu.'); return; }
-    if (!isPhoto && !urlVal) { alert('Silakan masukkan URL menu terlebih dahulu.'); return; }
+    if (!photoFile) { alert('Silakan upload foto menu terlebih dahulu.'); return; }
 
     btn.disabled = true;
     document.getElementById('siMenuProgress').style.display = 'block';
     const csrfToken = '{{ csrf_token() }}';
 
-    if (isPhoto) {
-      const fd = new FormData();
-      fd.append('menu_image', photoFile);
-      fd.append('_token', csrfToken);
+    const fd = new FormData();
+    fd.append('menu_image', photoFile);
+    fd.append('_token', csrfToken);
 
-      fetch('{{ route("creator.products.scan-menu") }}', {
-        method: 'POST',
-        headers: { 'X-CSRF-TOKEN': csrfToken },
-        body: fd
-      })
-      .then(res => res.json())
-      .then(res => {
-        btn.disabled = false;
-        document.getElementById('siMenuProgress').style.display = 'none';
-        if (res.success && res.items && res.items.length > 0) {
-          showScannedResultModal(res.items, 'Makanan'); // → popup modal
-        } else {
-          alert(res.message || 'Gagal scan foto menu.');
-        }
-      })
-      .catch(err => {
+    fetch('{{ route("creator.products.scan-menu") }}', {
+      method: 'POST',
+      headers: { 'X-CSRF-TOKEN': csrfToken },
+      body: fd
+    })
+    .then(res => res.json())
+    .then(res => {
+      btn.disabled = false;
+      document.getElementById('siMenuProgress').style.display = 'none';
+      if (res.success && res.items && res.items.length > 0) {
+        showScannedResultModal(res.items, 'Makanan'); // → popup modal
+      } else {
+        alert(res.message || 'Gagal membaca menu dari foto. Pastikan foto jelas dan terang.');
+      }
+    })
+    .catch(err => {
+      btn.disabled = false;
+      document.getElementById('siMenuProgress').style.display = 'none';
+      alert('Gagal scan foto: ' + err.message);
+    });
+  }
         btn.disabled = false;
         document.getElementById('siMenuProgress').style.display = 'none';
         alert('Gagal scan foto: ' + err.message);
