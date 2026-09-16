@@ -805,8 +805,9 @@ class CreatorBioController extends Controller
             return response()->json(['error' => 'URL tidak valid. Pastikan dimulai dengan https://'], 422);
         }
 
-        $url = preg_replace('/[\x00-\x1F\x7F]/', '', $url);
-        $host = strtolower(parse_url($url, PHP_URL_HOST) ?? '');
+        try {
+            $url  = preg_replace('/[\x00-\x1F\x7F]/', '', $url);
+            $host = strtolower(parse_url($url, PHP_URL_HOST) ?? '');
 
             $isShopee    = str_contains($host, 'shopee') || str_contains($host, 'shp.ee');
             $isTokopedia = str_contains($host, 'tokopedia') || str_contains($host, 'tokope.dia');
