@@ -21,19 +21,11 @@ use Illuminate\Support\Facades\Mail;
 class PosController extends Controller
 {
     /**
-     * Helper privat mengambil seluruh produk Makanan dari Link in Bio.
+     * Helper privat mengambil seluruh produk untuk Kasir Digital (POS) dari Link in Bio & Katalog Toko.
      */
-    private function getPosFoodProducts(int $sellerId)
+    private function getPosProducts(int $sellerId)
     {
         $profile = CreatorProfile::where('user_id', $sellerId)->first();
-        
-        $foodKeywords = [
-            'nasi', 'mie', 'ayam', 'bebek', 'daging', 'ikan', 'es', 'kopi', 
-            'makanan', 'minuman', 'kuliner', 'food', 'drink', 'resto', 'cafe', 
-            'menu', 'paket', 'porsi', 'jus', 'teh', 'bakso', 'soto', 'gudeg', 
-            'sate', 'bento', 'snack', 'kue', 'roti', 'donut', 'pizza', 'burger', 
-            'seafood', 'dimsum', 'coffe', 'tea', 'boba', 'manja'
-        ];
 
         $parsePrice = function ($val) {
             if (is_null($val) || $val === '' || $val === false) return 0.0;
@@ -94,100 +86,85 @@ class PosController extends Controller
                 }
 
                 $data  = $block->data_json ?? [];
-                $cat   = strtolower(trim($data['category'] ?? 'makanan'));
-                $title = strtolower(trim($block->title ?? ''));
+                $pId   = $data['product_id'] ?? null;
+                $product = null;
 
-                if ($cat === 'barang' || $cat === 'jasa') {
-                    continue;
+                if ($pId) {
+                    $product = Product::find($pId);
                 }
 
-                $isFoodCat = in_array($cat, ['makanan', 'food', 'kuliner', 'fnb', 'resto', 'minuman', 'drink', 'snack', 'kue', 'cafe', '']);
-                $isFoodKeyword = false;
-                foreach ($foodKeywords as $kw) {
-                    if (str_contains($title, strtolower($kw))) {
-                        $isFoodKeyword = true;
-                        break;
+                if (!$product) {
+                    $product = Product::where('seller_id', $sellerId)
+                        ->where('name', $block->title)
+                        ->first();
+                }
+
+                $extractedPrice = $parsePrice($data['price'] ?? 0);
+                if ($extractedPrice <= 0) {
+                    $extractedPrice = $parsePrice($data['original_price'] ?? 0);
+                }
+                if ($extractedPrice <= 0) {
+                    $extractedPrice = $parsePrice($data['harga'] ?? 0);
+                }
+
+                $extractedImg = $extractImage($data);
+
+                if (!$product) {
+                    $baseSlug = ($data['slug'] ?? \Illuminate\Support\Str::slug($block->title)) ?: 'produk';
+                    $slug     = $baseSlug;
+                    while (Product::where('slug', $slug)->exists()) {
+                        $slug = $baseSlug . '-' . \Illuminate\Support\Str::random(4);
+                    }
+                    $stock   = isset($data['stock']) && $data['stock'] !== '' && $data['stock'] !== null ? (int)$data['stock'] : null;
+
+                    $product = Product::create([
+                        'seller_id'    => $sellerId,
+                        'name'         => $block->title,
+                        'slug'         => $slug,
+                        'price'        => $extractedPrice,
+                        'stock'        => $stock,
+                        'description'  => $data['description'] ?? '',
+                        'image'        => $extractedImg,
+                        'is_active'    => true,
+                        'product_type' => 'physical',
+                    ]);
+
+                    $data['product_id'] = $product->id;
+                    $block->data_json   = $data;
+                    $block->save();
+                } else {
+                    $product->name = $block->title;
+
+                    if ($extractedPrice > 0) {
+                        $product->price = $extractedPrice;
+                    } elseif ((float)$product->price <= 0 && (float)$product->sale_price > 0) {
+                        $product->price = (float)$product->sale_price;
+                    }
+
+                    if (!empty($extractedImg)) {
+                        if (empty($product->image) || strlen($product->image) <= 1) {
+                            $product->image = $extractedImg;
+                        }
+                    }
+
+                    if ($product->isDirty(['price', 'name', 'image'])) {
+                        $product->save();
                     }
                 }
 
-                if ($isFoodCat || $isFoodKeyword || $cat === 'makanan') {
-                    $pId = $data['product_id'] ?? null;
-                    $product = null;
-
-                    if ($pId) {
-                        $product = Product::find($pId);
-                    }
-
-                    if (!$product) {
-                        $product = Product::where('seller_id', $sellerId)
-                            ->where('name', $block->title)
-                            ->first();
-                    }
-
-                    $extractedPrice = $parsePrice($data['price'] ?? 0);
-                    if ($extractedPrice <= 0) {
-                        $extractedPrice = $parsePrice($data['original_price'] ?? 0);
-                    }
-                    if ($extractedPrice <= 0) {
-                        $extractedPrice = $parsePrice($data['harga'] ?? 0);
-                    }
-
-                    $extractedImg = $extractImage($data);
-
-                    if (!$product) {
-                        $baseSlug = ($data['slug'] ?? \Illuminate\Support\Str::slug($block->title)) ?: 'produk';
-                        $slug     = $baseSlug;
-                        while (Product::where('slug', $slug)->exists()) {
-                            $slug = $baseSlug . '-' . \Illuminate\Support\Str::random(4);
-                        }
-                        $stock   = isset($data['stock']) && $data['stock'] !== '' && $data['stock'] !== null ? (int)$data['stock'] : null;
-
-                        $product = Product::create([
-                            'seller_id'    => $sellerId,
-                            'name'         => $block->title,
-                            'slug'         => $slug,
-                            'price'        => $extractedPrice,
-                            'stock'        => $stock,
-                            'description'  => $data['description'] ?? '',
-                            'image'        => $extractedImg,
-                            'is_active'    => true,
-                            'product_type' => 'makanan',
-                        ]);
-
-                        $data['product_id'] = $product->id;
-                        $block->data_json   = $data;
-                        $block->save();
-                    } else {
-                        $product->name = $block->title;
-
-                        if ($extractedPrice > 0) {
-                            $product->price = $extractedPrice;
-                        } elseif ((float)$product->price <= 0 && (float)$product->sale_price > 0) {
-                            $product->price = (float)$product->sale_price;
-                        }
-
-                        if (!empty($extractedImg)) {
-                            if (empty($product->image) || strlen($product->image) <= 1) {
-                                $product->image = $extractedImg;
-                            }
-                        }
-
-                        if ($product->isDirty(['price', 'name', 'image'])) {
-                            $product->save();
-                        }
-                    }
-
-                    $posProducts->push($product);
-                }
+                $posProducts->push($product);
             }
         }
 
-        if ($posProducts->isEmpty()) {
-            $posProducts = Product::where('seller_id', $sellerId)
-                ->where('is_active', true)
-                ->whereNotIn('product_type', ['digital', 'ticket', 'external_link', 'service'])
-                ->orderBy('name', 'asc')
-                ->get();
+        // Tambahkan juga produk katalog umum milik seller yang aktif
+        $catalogProducts = Product::where('seller_id', $sellerId)
+            ->where('is_active', true)
+            ->whereNotIn('product_type', ['digital', 'ticket', 'external_link'])
+            ->orderBy('name', 'asc')
+            ->get();
+
+        foreach ($catalogProducts as $cp) {
+            $posProducts->push($cp);
         }
 
         return $posProducts->unique('id')->values();
@@ -203,8 +180,8 @@ class PosController extends Controller
         // 1. Ambil profil toko creator
         $profile = CreatorProfile::where('user_id', $seller->id)->first();
 
-        // 2. Ambil produk makanan untuk POS
-        $products = $this->getPosFoodProducts($seller->id);
+        // 2. Ambil produk untuk POS
+        $products = $this->getPosProducts($seller->id);
 
         // 3. Transaksi POS hari ini
         $todayOrders = Order::where('source', 'pos')
@@ -228,12 +205,12 @@ class PosController extends Controller
     }
 
     /**
-     * Dipanggil AJAX: Mengambil produk ter-sync dari Link in Bio.
+     * Dipanggil AJAX: Mengambil produk ter-sync dari Link in Bio & Katalog.
      */
     public function products(Request $request)
     {
         $seller = auth()->user();
-        $products = $this->getPosFoodProducts($seller->id);
+        $products = $this->getPosProducts($seller->id);
 
         return response()->json([
             'success'  => true,
@@ -247,7 +224,7 @@ class PosController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'customer_name'  => 'required|string|max:100',
+            'customer_name'  => 'nullable|string|max:100',
             'customer_email' => 'nullable|email|max:100',
             'customer_phone' => 'nullable|string|max:30',
             'table_number'   => 'nullable|string|max:50',
@@ -307,6 +284,7 @@ class PosController extends Controller
 
             $paymentMethod = $request->payment_method;
             $isPaid = in_array($paymentMethod, ['cash', 'transfer']);
+            $customerName = trim($request->customer_name ?? '') ?: 'Pelanggan Umum';
 
             // Create Order
             $order = Order::create([
@@ -319,11 +297,11 @@ class PosController extends Controller
                 'admin_fee'       => $adminFee,
                 'discount'        => $discountAmount,
                 'total'           => $total,
-                'notes'           => $request->table_number ? ('Meja/Antrean: ' . $request->table_number) : null,
+                'notes'           => $request->table_number ? ('No. Ref/Meja: ' . $request->table_number) : null,
                 'source'          => 'pos',
                 'shipping_address' => [
-                    'name'           => $request->customer_name,
-                    'receiver_name'  => $request->customer_name,
+                    'name'           => $customerName,
+                    'receiver_name'  => $customerName,
                     'email'          => $request->customer_email,
                     'phone'          => $request->customer_phone,
                     'is_pos'         => true,

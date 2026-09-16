@@ -47,6 +47,12 @@
       </form>
     @endif
 
+    <button onclick="openSmartImport()" class="btn-smart-import" title="Smart Import Produk">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span class="btn-add-text-full">Smart Import</span>
+      <span class="btn-add-text-short">✨</span>
+    </button>
+
     <a href="{{ route('creator.products.create') }}" class="btn-primary prod-add-btn">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <line x1="12" y1="5" x2="12" y2="19" />
@@ -220,6 +226,111 @@
       /* Hide Urutan column on mobile */
       #view-list th:nth-child(6),
       #view-list td:nth-child(6) { display: none; }
+    }
+    /* Smart Import Button */
+    .btn-smart-import {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      height: 38px;
+      padding: 0 1rem;
+      border-radius: 999px;
+      border: 1.5px solid #7c3aed;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(124,58,237,0.25);
+      flex-shrink: 0;
+    }
+    .btn-smart-import:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(124,58,237,0.35); }
+
+    /* Smart Import Modal */
+    .si-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
+      z-index: 9999; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s;
+    }
+    .si-overlay.open { opacity: 1; pointer-events: all; }
+    .si-modal {
+      background: #fff; border-radius: 24px; width: 100%; max-width: 560px; max-height: 90vh;
+      overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.18); margin: 1rem;
+      transform: scale(0.95) translateY(16px); transition: transform 0.25s;
+    }
+    .si-overlay.open .si-modal { transform: scale(1) translateY(0); }
+    .si-header {
+      padding: 1.5rem 1.75rem 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .si-title { font-size: 1.05rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 0.5rem; }
+    .si-close {
+      width: 34px; height: 34px; border-radius: 50%; border: none; background: #f1f5f9;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: #64748b; transition: background 0.2s;
+    }
+    .si-close:hover { background: #e2e8f0; }
+    .si-tabs { display: flex; gap: 0; border-bottom: 2px solid #f1f5f9; padding: 0 1.75rem; overflow-x: auto; }
+    .si-tab {
+      padding: 0.85rem 1.1rem; font-size: 0.78rem; font-weight: 700; color: #94a3b8;
+      border: none; background: none; cursor: pointer; white-space: nowrap;
+      border-bottom: 2.5px solid transparent; margin-bottom: -2px; transition: all 0.2s; font-family: 'Montserrat', sans-serif;
+    }
+    .si-tab.active { color: #7c3aed; border-bottom-color: #7c3aed; }
+    .si-tab-pane { display: none; padding: 1.5rem 1.75rem; }
+    .si-tab-pane.active { display: block; }
+    .si-label { font-size: 0.78rem; font-weight: 700; color: #374151; margin-bottom: 0.4rem; display: block; }
+    .si-input {
+      width: 100%; box-sizing: border-box; height: 44px; padding: 0 1rem;
+      border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 0.875rem;
+      font-family: 'Montserrat', sans-serif; color: #1a1a1a; background: #f8fafc;
+      outline: none; transition: border-color 0.2s;
+    }
+    .si-input:focus { border-color: #7c3aed; background: #fff; }
+    .si-btn {
+      width: 100%; height: 46px; border-radius: 12px; border: none;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: #fff; font-weight: 700; font-size: 0.875rem;
+      font-family: 'Montserrat', sans-serif; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      transition: all 0.2s; margin-top: 1rem;
+    }
+    .si-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(124,58,237,0.3); }
+    .si-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .si-result {
+      margin-top: 1.25rem; padding: 1rem; background: #f8fafc;
+      border-radius: 12px; border: 1px solid #e2e8f0; display: none;
+    }
+    .si-source-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem; }
+    .si-source-card {
+      padding: 0.9rem; border: 1.5px solid #e2e8f0; border-radius: 12px;
+      text-align: center; cursor: pointer; transition: all 0.2s; background: #fff;
+    }
+    .si-source-card:hover, .si-source-card.selected {
+      border-color: #7c3aed; background: #faf5ff;
+    }
+    .si-source-card.selected { box-shadow: 0 0 0 3px rgba(124,58,237,0.15); }
+    .si-source-card svg, .si-source-card img { display: block; margin: 0 auto 0.4rem; }
+    .si-source-card span { font-size: 0.72rem; font-weight: 700; color: #374151; }
+    .si-upload-area {
+      border: 2px dashed #c4b5fd; border-radius: 12px; padding: 1.5rem;
+      text-align: center; cursor: pointer; background: #faf5ff; transition: all 0.2s;
+    }
+    .si-upload-area:hover { border-color: #7c3aed; background: #f3e8ff; }
+    .si-progress { display: none; margin-top: 1rem; }
+    .si-progress-bar {
+      height: 6px; background: #e2e8f0; border-radius: 99px; overflow: hidden;
+    }
+    .si-progress-fill {
+      height: 100%; background: linear-gradient(90deg, #7c3aed, #a855f7);
+      border-radius: 99px; width: 0%; transition: width 0.4s;
+    }
+    @media (max-width: 768px) {
+      .btn-smart-import { padding: 6px 10px !important; font-size: 0.78rem !important; height: 32px !important; border-radius: 10px !important; }
     }
   </style>
 @endsection
@@ -504,5 +615,329 @@
     switchView(savedView);
   </script>
 
-
 @endsection
+
+{{-- ===== SMART IMPORT MODAL ===== --}}
+<div class="si-overlay" id="smartImportOverlay" onclick="closeSmartImport(event)">
+  <div class="si-modal" onclick="event.stopPropagation()">
+    <div class="si-header">
+      <div class="si-title">
+        <svg width="20" height="20" fill="none" stroke="#7c3aed" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Smart Import Produk
+      </div>
+      <button class="si-close" onclick="closeSmartImport()">&#x2715;</button>
+    </div>
+
+    {{-- TABS --}}
+    <div class="si-tabs">
+      <button class="si-tab active" onclick="switchSiTab('menu-ai', this)">
+        🤖 Scan Menu AI
+      </button>
+      <button class="si-tab" onclick="switchSiTab('tiktokshop', this)">
+        🛍️ TikTok Shop
+      </button>
+      <button class="si-tab" onclick="switchSiTab('marketplace', this)">
+        📦 Tokopedia / Shopee
+      </button>
+    </div>
+
+    {{-- TAB 1: SCAN MENU AI --}}
+    <div class="si-tab-pane active" id="si-menu-ai">
+      <p style="font-size:0.8rem; color:#64748b; margin-bottom:1.25rem; line-height:1.6;">
+        Upload foto menu / brosur, atau paste URL website menu. AI akan scan dan import produk secara otomatis.
+      </p>
+
+      <div class="si-source-cards" id="siMenuSourceCards">
+        <div class="si-source-card selected" id="srcPhoto" onclick="selectSiSource('photo')">
+          <svg width="28" height="28" fill="none" stroke="#7c3aed" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>Foto Menu</span>
+        </div>
+        <div class="si-source-card" id="srcUrl" onclick="selectSiSource('url')">
+          <svg width="28" height="28" fill="none" stroke="#7c3aed" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span>URL Website</span>
+        </div>
+      </div>
+
+      <div id="siPhotoInput">
+        <div class="si-upload-area" onclick="document.getElementById('siMenuPhotoFile').click()" id="siUploadArea">
+          <svg width="32" height="32" fill="none" stroke="#7c3aed" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <p style="font-size:0.8rem; font-weight:700; color:#7c3aed; margin-top:0.5rem;">Klik untuk upload foto menu</p>
+          <p style="font-size:0.72rem; color:#94a3b8; margin-top:0.2rem;">JPG, PNG, WEBP — Max 10MB</p>
+          <div id="siPhotoPreviewWrap" style="display:none; margin-top:0.75rem;">
+            <img id="siPhotoPreviewImg" src="" style="max-height:120px; border-radius:10px; max-width:100%; object-fit:contain;">
+          </div>
+        </div>
+        <input type="file" id="siMenuPhotoFile" accept="image/*" style="display:none;" onchange="previewSiMenuPhoto(event)">
+      </div>
+
+      <div id="siUrlInput" style="display:none;">
+        <label class="si-label">URL Website / Menu Online</label>
+        <input type="url" id="siMenuUrl" class="si-input" placeholder="https://tokobakso.com/menu atau https://grabfood.com/...">
+      </div>
+
+      <div style="margin-top:1rem;">
+        <label class="si-label">Tipe Produk yang akan diimport</label>
+        <select id="siMenuProductType" class="si-input" style="height:44px;">
+          <option value="makanan">Makanan / Minuman / Kuliner</option>
+          <option value="physical">Produk Fisik / Barang / UMKM</option>
+          <option value="service">Jasa / Layanan</option>
+          <option value="external_link">Produk Digital</option>
+        </select>
+      </div>
+
+      <button class="si-btn" id="siMenuScanBtn" onclick="runSiMenuScan()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        Scan & Import Otomatis
+      </button>
+
+      <div class="si-progress" id="siMenuProgress">
+        <p style="font-size:0.75rem; color:#7c3aed; font-weight:600; margin-bottom:0.5rem;" id="siMenuProgressText">🤖 AI sedang menganalisis menu...</p>
+        <div class="si-progress-bar"><div class="si-progress-fill" id="siMenuProgressFill"></div></div>
+      </div>
+      <div class="si-result" id="siMenuResult"></div>
+    </div>
+
+    {{-- TAB 2: TIKTOK SHOP --}}
+    <div class="si-tab-pane" id="si-tiktokshop">
+      <p style="font-size:0.8rem; color:#64748b; margin-bottom:1.25rem; line-height:1.6;">
+        Paste URL produk dari TikTok Shop. Sistem akan scrape nama, harga, deskripsi, dan foto produk secara otomatis.
+      </p>
+
+      <div style="background:#fff0f6; border:1px solid #fda4af; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1.25rem; font-size:0.75rem; color:#be123c; display:flex; gap:0.5rem; align-items:flex-start;">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Hanya untuk tujuan import data produk Anda sendiri. Gunakan sesuai kebijakan platform.</span>
+      </div>
+
+      <label class="si-label">URL Produk TikTok Shop</label>
+      <input type="url" id="siTiktokUrl" class="si-input" placeholder="https://www.tiktok.com/t/xxx atau https://shop.tiktok.com/...">
+      <span style="font-size:0.72rem; color:#94a3b8; margin-top:0.3rem; display:block;">Contoh: https://www.tiktok.com/@tokoku/product/123456</span>
+
+      <div style="margin-top:1rem;">
+        <label class="si-label">Jumlah Produk yang diimport (dari toko)</label>
+        <select id="siTiktokCount" class="si-input" style="height:44px;">
+          <option value="1">1 produk (URL ini saja)</option>
+          <option value="10">10 produk terbaru dari toko</option>
+          <option value="20">20 produk terbaru dari toko</option>
+          <option value="50">50 produk terbaru dari toko</option>
+        </select>
+      </div>
+
+      <button class="si-btn" id="siTiktokBtn" onclick="runSiTiktokScrape()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+        Import dari TikTok Shop
+      </button>
+
+      <div class="si-progress" id="siTiktokProgress">
+        <p style="font-size:0.75rem; color:#7c3aed; font-weight:600; margin-bottom:0.5rem;" id="siTiktokProgressText">🔄 Sedang scraping TikTok Shop...</p>
+        <div class="si-progress-bar"><div class="si-progress-fill" id="siTiktokProgressFill"></div></div>
+      </div>
+      <div class="si-result" id="siTiktokResult"></div>
+    </div>
+
+    {{-- TAB 3: TOKOPEDIA / SHOPEE --}}
+    <div class="si-tab-pane" id="si-marketplace">
+      <p style="font-size:0.8rem; color:#64748b; margin-bottom:1.25rem; line-height:1.6;">
+        Paste URL produk dari Tokopedia atau Shopee untuk import data produk Anda.
+      </p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.25rem;">
+        <div class="si-source-card selected" id="srcTokopedia" onclick="selectMarketplace('tokopedia')" style="padding:1rem;">
+          <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto 0.4rem;">
+            <circle cx="20" cy="20" r="20" fill="#42b549"/>
+            <text x="50%" y="60%" dominant-baseline="middle" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Toped</text>
+          </svg>
+          <span>Tokopedia</span>
+        </div>
+        <div class="si-source-card" id="srcShopee" onclick="selectMarketplace('shopee')" style="padding:1rem;">
+          <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto 0.4rem;">
+            <circle cx="20" cy="20" r="20" fill="#ee4d2d"/>
+            <text x="50%" y="60%" dominant-baseline="middle" text-anchor="middle" font-size="9" font-weight="bold" fill="white">Shopee</text>
+          </svg>
+          <span>Shopee</span>
+        </div>
+      </div>
+
+      <label class="si-label">URL Produk <span id="mpPlatformLabel">Tokopedia</span></label>
+      <input type="url" id="siMarketUrl" class="si-input" placeholder="https://www.tokopedia.com/toko-anda/produk-abc">
+
+      <div style="margin-top:1rem;">
+        <label class="si-label">Jumlah Produk dari Toko</label>
+        <select id="siMarketCount" class="si-input" style="height:44px;">
+          <option value="1">1 produk (URL ini saja)</option>
+          <option value="10">10 produk terbaru</option>
+          <option value="20">20 produk terbaru</option>
+          <option value="50">Semua produk (maks 50)</option>
+        </select>
+      </div>
+
+      <div style="background:#fff0f6; border:1px solid #fda4af; border-radius:12px; padding:0.85rem 1rem; margin-top:1rem; font-size:0.75rem; color:#be123c; display:flex; gap:0.5rem; align-items:flex-start;">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Import hanya untuk produk milik Anda sendiri. Data diproses di server dan tidak disimpan oleh pihak ketiga.</span>
+      </div>
+
+      <button class="si-btn" id="siMarketBtn" onclick="runSiMarketScrape()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Import dari Marketplace
+      </button>
+
+      <div class="si-progress" id="siMarketProgress">
+        <p style="font-size:0.75rem; color:#7c3aed; font-weight:600; margin-bottom:0.5rem;" id="siMarketProgressText">🔄 Sedang scraping produk...</p>
+        <div class="si-progress-bar"><div class="si-progress-fill" id="siMarketProgressFill"></div></div>
+      </div>
+      <div class="si-result" id="siMarketResult"></div>
+    </div>
+
+    <div style="padding:1rem 1.75rem; border-top:1px solid #f1f5f9; background:#fafafa; border-radius:0 0 24px 24px;">
+      <p style="font-size:0.72rem; color:#94a3b8; text-align:center; margin:0;">
+        ✨ Smart Import menggunakan AI untuk membaca dan mengisi form produk secara otomatis.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Smart Import Modal
+  function openSmartImport() {
+    document.getElementById('smartImportOverlay').classList.add('open');
+  }
+  function closeSmartImport(e) {
+    if (!e || e.target === document.getElementById('smartImportOverlay')) {
+      document.getElementById('smartImportOverlay').classList.remove('open');
+    }
+  }
+  function switchSiTab(tab, el) {
+    document.querySelectorAll('.si-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.si-tab-pane').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('si-' + tab).classList.add('active');
+  }
+
+  // Source selector for menu AI
+  function selectSiSource(type) {
+    document.getElementById('srcPhoto').classList.toggle('selected', type === 'photo');
+    document.getElementById('srcUrl').classList.toggle('selected', type === 'url');
+    document.getElementById('siPhotoInput').style.display = type === 'photo' ? 'block' : 'none';
+    document.getElementById('siUrlInput').style.display = type === 'url' ? 'block' : 'none';
+  }
+
+  function previewSiMenuPhoto(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      document.getElementById('siPhotoPreviewImg').src = ev.target.result;
+      document.getElementById('siPhotoPreviewWrap').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Marketplace selector
+  let selectedMarketplace = 'tokopedia';
+  function selectMarketplace(mp) {
+    selectedMarketplace = mp;
+    document.getElementById('srcTokopedia').classList.toggle('selected', mp === 'tokopedia');
+    document.getElementById('srcShopee').classList.toggle('selected', mp === 'shopee');
+    document.getElementById('mpPlatformLabel').textContent = mp === 'tokopedia' ? 'Tokopedia' : 'Shopee';
+    document.getElementById('siMarketUrl').placeholder = mp === 'tokopedia'
+      ? 'https://www.tokopedia.com/toko-anda/produk-abc'
+      : 'https://shopee.co.id/toko-anda/produk-abc';
+  }
+
+  // Simulate progress animation
+  function animateSiProgress(fillId, textId, textEl, steps, cb) {
+    let p = 0;
+    const fill = document.getElementById(fillId);
+    const text = document.getElementById(textId);
+    const iv = setInterval(() => {
+      p = Math.min(p + Math.random() * 15, 90);
+      fill.style.width = p + '%';
+      const step = steps[Math.min(Math.floor(p / (100 / steps.length)), steps.length - 1)];
+      text.textContent = step;
+    }, 400);
+    setTimeout(() => {
+      clearInterval(iv);
+      fill.style.width = '100%';
+      setTimeout(cb, 500);
+    }, 4500);
+  }
+
+  function showSiResult(containerId, html) {
+    const el = document.getElementById(containerId);
+    el.style.display = 'block';
+    el.innerHTML = html;
+  }
+
+  // SCAN MENU AI
+  function runSiMenuScan() {
+    const btn = document.getElementById('siMenuScanBtn');
+    const urlVal = document.getElementById('siMenuUrl').value;
+    const photoFile = document.getElementById('siMenuPhotoFile').files[0];
+    const isPhoto = document.getElementById('srcPhoto').classList.contains('selected');
+    if (isPhoto && !photoFile) { alert('Silakan upload foto menu terlebih dahulu.'); return; }
+    if (!isPhoto && !urlVal) { alert('Silakan masukkan URL menu terlebih dahulu.'); return; }
+
+    btn.disabled = true;
+    document.getElementById('siMenuProgress').style.display = 'block';
+    document.getElementById('siMenuResult').style.display = 'none';
+
+    animateSiProgress('siMenuProgressFill', 'siMenuProgressText', null, [
+      '🤖 Membaca gambar menu...',
+      '🔍 Mengidentifikasi item produk...',
+      '📝 Mengekstrak nama & harga...',
+      '✨ Menyusun data produk...'
+    ], () => {
+      document.getElementById('siMenuProgress').style.display = 'none';
+      btn.disabled = false;
+      // Redirect to create page with smart import mode
+      const type = document.getElementById('siMenuProductType').value;
+      const src = isPhoto ? 'photo' : 'url';
+      const srcVal = isPhoto ? 'uploaded_photo' : encodeURIComponent(urlVal);
+      window.location.href = '{{ route("creator.products.create") }}?smart_import=1&source=' + src + '&src_val=' + srcVal + '&product_type=' + type;
+    });
+  }
+
+  // TIKTOK SHOP
+  function runSiTiktokScrape() {
+    const url = document.getElementById('siTiktokUrl').value;
+    if (!url || !url.includes('tiktok')) { alert('Masukkan URL produk TikTok Shop yang valid.'); return; }
+    const btn = document.getElementById('siTiktokBtn');
+    btn.disabled = true;
+    document.getElementById('siTiktokProgress').style.display = 'block';
+    document.getElementById('siTiktokResult').style.display = 'none';
+
+    animateSiProgress('siTiktokProgressFill', 'siTiktokProgressText', null, [
+      '🔄 Menghubungkan ke TikTok Shop...',
+      '📷 Mengambil data produk...',
+      '💰 Membaca harga & stok...',
+      '✨ Menyiapkan import...'
+    ], () => {
+      document.getElementById('siTiktokProgress').style.display = 'none';
+      btn.disabled = false;
+      const count = document.getElementById('siTiktokCount').value;
+      window.location.href = '{{ route("creator.products.create") }}?smart_import=1&source=tiktokshop&src_val=' + encodeURIComponent(url) + '&count=' + count;
+    });
+  }
+
+  // MARKETPLACE
+  function runSiMarketScrape() {
+    const url = document.getElementById('siMarketUrl').value;
+    if (!url) { alert('Masukkan URL produk dari marketplace terlebih dahulu.'); return; }
+    const btn = document.getElementById('siMarketBtn');
+    btn.disabled = true;
+    document.getElementById('siMarketProgress').style.display = 'block';
+    document.getElementById('siMarketResult').style.display = 'none';
+
+    const platform = selectedMarketplace;
+    animateSiProgress('siMarketProgressFill', 'siMarketProgressText', null, [
+      '🔄 Menghubungkan ke ' + (platform === 'tokopedia' ? 'Tokopedia' : 'Shopee') + '...',
+      '📷 Mengambil gambar produk...',
+      '💰 Membaca harga & deskripsi...',
+      '✨ Menyiapkan import...'
+    ], () => {
+      document.getElementById('siMarketProgress').style.display = 'none';
+      btn.disabled = false;
+      const count = document.getElementById('siMarketCount').value;
+      window.location.href = '{{ route("creator.products.create") }}?smart_import=1&source=' + platform + '&src_val=' + encodeURIComponent(url) + '&count=' + count;
+    });
+  }
+</script>

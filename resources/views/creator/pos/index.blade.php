@@ -2,7 +2,7 @@
 
 @section('title', 'Kasir Digital (POS)')
 @section('page_title', 'Kasir Digital (POS)')
-@section('page_subtitle', 'Kasir digital cepat & praktis. Auto-sync menu Makanan dari Link in Bio toko Anda.')
+@section('page_subtitle', 'Kasir digital cepat & praktis. Auto-sync produk dari Link in Bio & katalog toko Anda.')
 
 @section('styles')
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
@@ -722,11 +722,11 @@
                             <line x1="8" y1="7" x2="16" y2="7" />
                             <line x1="8" y1="11" x2="10" y2="11" />
                         </svg>
-                        PILIH MENU MAKANAN
+                        KATALOG PRODUK
                     </div>
-                    <span class="badge"
+                    <span class="badge" id="posMenuCountBadge"
                         style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-weight:700; padding:5px 12px; border-radius:20px; font-size:0.75rem;">
-                        {{ count($products) }} Menu Tersedia
+                        {{ count($products) }} Produk Tersedia
                     </span>
                 </div>
 
@@ -739,7 +739,7 @@
                             <line x1="21" y1="21" x2="16.65" y2="16.65" />
                         </svg>
                         <input type="text" id="posProductSearch" class="form-input"
-                            placeholder="Cari nama produk / menu makanan..." oninput="filterProducts()">
+                            placeholder="Cari nama produk / item..." oninput="filterProducts()">
                     </div>
 
                     <!-- Products Grid -->
@@ -766,8 +766,8 @@
                                 $themeBg = '#f8fafc';
                                 $themeColor = '#475569';
                                 $themeBorder = '#e2e8f0';
-                                $badgeText = 'MENU';
-                                $iconType = 'food';
+                                $badgeText = 'PRODUK';
+                                $iconType = 'item';
 
                                 if (\Illuminate\Support\Str::contains($nameLower, ['es', 'kopi', 'teh', 'jus', 'air', 'boba', 'drink', 'minuman', 'jeruk', 'lemon', 'syrup', 'coffee', 'tea', 'milk', 'susu', 'soda', 'alpukat'])) {
                                     $badgeText = 'MINUMAN';
@@ -796,7 +796,7 @@
                                             @elseif($iconType === 'dish')
                                                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a1 1 0 0 1 1 1v1a8 8 0 0 1-8 8H10a8 8 0 0 1-8-8v-1a1 1 0 0 1 1-1z"/><path d="M12 2a5 5 0 0 0-5 5h10a5 5 0 0 0-5-5z"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
                                             @else
-                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
                                             @endif
                                             <span style="font-size:0.62rem; font-weight:800; color:{{ $themeColor }}; letter-spacing:0.05em; text-transform:uppercase;">{{ $badgeText }}</span>
                                         </div>
@@ -809,7 +809,7 @@
                                             @elseif($iconType === 'dish')
                                                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a1 1 0 0 1 1 1v1a8 8 0 0 1-8 8H10a8 8 0 0 1-8-8v-1a1 1 0 0 1 1-1z"/><path d="M12 2a5 5 0 0 0-5 5h10a5 5 0 0 0-5-5z"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
                                             @else
-                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
                                             @endif
                                             <span style="font-size:0.62rem; font-weight:800; color:{{ $themeColor }}; letter-spacing:0.05em; text-transform:uppercase;">{{ $badgeText }}</span>
                                         </div>
@@ -820,7 +820,7 @@
                             </div>
                         @empty
                             <div class="col-12 text-center py-5 text-muted" style="font-size:0.85rem;">
-                                Belum ada produk kategori makanan yang aktif di Link in Bio Anda.
+                                Belum ada produk aktif di katalog atau Link in Bio Anda.
                             </div>
                         @endforelse
                     </div>
@@ -847,20 +847,19 @@
                 </div>
 
                 <div class="prof-card-body">
-                    <!-- Form Atas Nama Pelanggan (Mandatory) -->
+                    <!-- Form Atas Nama Pelanggan (Opsional) -->
                     <div class="form-group">
                         <label class="form-label">
-                            Atas Nama Pelanggan <span class="text-danger">*</span>
+                            Atas Nama Pelanggan <span style="font-size:0.7rem; font-weight:400; color:#64748b;">(Opsional)</span>
                         </label>
-                        <input type="text" id="posCustomerName" class="form-input" placeholder="Masukkan nama pelanggan"
-                            required>
+                        <input type="text" id="posCustomerName" class="form-input" placeholder="Nama Pelanggan (Opsional, default: Pelanggan Umum)">
                     </div>
 
-                    <!-- Form Grid: Meja & Phone -->
+                    <!-- Form Grid: Ref/Meja & Phone -->
                     <div class="form-grid">
                         <div class="form-group mb-0">
-                            <label class="form-label">No. Meja / Antrean</label>
-                            <input type="text" id="posTableNumber" class="form-input" placeholder="Meja 04 (Opsional)">
+                            <label class="form-label">No. Ref / Catatan / Meja</label>
+                            <input type="text" id="posTableNumber" class="form-input" placeholder="Catatan / Ref (Opsional)">
                         </div>
                         <div class="form-group mb-0">
                             <label class="form-label">No. HP / WA Pelanggan</label>
@@ -868,13 +867,12 @@
                         </div>
                     </div>
 
-                    <!-- Form Email Pelanggan (Wajib jika ingin kirim E-Receipt via email) -->
+                    <!-- Form Email Pelanggan -->
                     <div class="form-group mt-2 mb-0">
                         <label class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
                             <span>Email Pelanggan</span>
                             <span
-                                style="font-size:0.68rem; font-weight:500; color:#166534; background:#f0fdf4; padding:1px 6px; border-radius:4px; border:1px solid #bbf7d0;">Wajib
-                                jika ingin E-Receipt Email</span>
+                                style="font-size:0.68rem; font-weight:500; color:#166534; background:#f0fdf4; padding:1px 6px; border-radius:4px; border:1px solid #bbf7d0;">Opsional (untuk E-Receipt)</span>
                         </label>
                         <input type="email" id="posCartCustomerEmail" class="form-input"
                             placeholder="contoh@gmail.com (Opsional)" oninput="syncCustomerEmail(this.value)">
@@ -885,7 +883,7 @@
                     <!-- Cart Items Container -->
                     <div class="cart-items-container" id="cartItemsContainer">
                         <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.84rem;">
-                            Keranjang masih kosong.<br>Tap menu makanan di sebelah kiri untuk menambah.
+                            Keranjang masih kosong.<br>Pilih produk di sebelah kiri untuk menambah.
                         </div>
                     </div>
 
@@ -1375,9 +1373,9 @@
                 if (matches) visibleCount++;
             });
 
-            // Update badge jumlah menu tersedia
+            // Update badge jumlah produk tersedia
             const badge = document.getElementById('posMenuCountBadge');
-            if (badge) badge.textContent = visibleCount + ' Menu Tersedia';
+            if (badge) badge.textContent = visibleCount + ' Produk Tersedia';
         }
 
         // Pastikan event listener terpasang setelah DOM siap
@@ -1437,7 +1435,7 @@
             if (cart.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.84rem;">
-                        Keranjang masih kosong.<br>Tap menu makanan di sebelah kiri untuk menambah.
+                        Keranjang masih kosong.<br>Pilih produk di sebelah kiri untuk menambah.
                     </div>
                 `;
                 document.getElementById('btnCheckout').disabled = true;
@@ -1530,15 +1528,8 @@
 
         // Open Payment Modal
         function openPaymentModal() {
-            const custName = document.getElementById('posCustomerName').value.trim();
-            if (!custName) {
-                showPosAlert('Silakan isi Form Atas Nama Pelanggan terlebih dahulu!', 'Nama Pelanggan Wajib', 'warning');
-                document.getElementById('posCustomerName').focus();
-                return;
-            }
-
             if (cart.length === 0) {
-                showPosAlert('Keranjang POS Anda masih kosong. Silakan pilih menu makanan terlebih dahulu.', 'Keranjang Kosong', 'warning');
+                showPosAlert('Keranjang POS Anda masih kosong. Silakan pilih produk terlebih dahulu.', 'Keranjang Kosong', 'warning');
                 return;
             }
 

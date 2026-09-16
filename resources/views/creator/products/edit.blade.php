@@ -188,7 +188,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
+                            <div id="categoryWrap" class="form-group">
                                 <label class="form-label">Kategori Utama <span>*</span></label>
                                 <select name="product_category_id" id="catSelect" class="form-input" required onchange="loadSubCat(this.value)">
                                     <option value="">— Pilih Kategori —</option>
@@ -275,7 +275,7 @@
                                 <input type="text" name="sale_price" id="input_sale_price" value="{{ old('sale_price', $product->sale_price ? number_format($product->sale_price, 0, ',', '.') : '') }}" class="form-input currency-input" placeholder="Opsional, misal: 99.000" autocomplete="off">
                             </div>
 
-                            <div class="form-group full">
+                            <div id="commissionWrap" class="form-group full">
                                 <label class="form-label">Komisi Affiliate (%) <span>*</span></label>
                                 <div style="position:relative; display:flex; align-items:center;">
                                     <input type="number" name="affiliate_commission_rate" id="affiliate_commission_rate" value="{{ old('affiliate_commission_rate', $product->affiliate_commission_rate ?? 10) }}" class="form-input" min="5" max="100" step="0.5" placeholder="10" required style="padding-right:2.5rem;">
@@ -665,7 +665,18 @@
         const extInput = document.getElementById('externalLink');
         const evType = document.getElementById('eventTypeSelect');
         const wlCheck = document.getElementById('isWhitelabelCheck');
-        
+        const categoryWrap = document.getElementById('categoryWrap');
+        const commissionWrap = document.getElementById('commissionWrap');
+        const catSelect = document.getElementById('catSelect');
+        const commissionInput = document.getElementById('affiliate_commission_rate');
+
+        // Hide Kategori Utama & Komisi Affiliate for physical products
+        const isPhysical = (val === 'physical');
+        if (categoryWrap) categoryWrap.style.display = isPhysical ? 'none' : '';
+        if (commissionWrap) commissionWrap.style.display = isPhysical ? 'none' : '';
+        if (catSelect) { isPhysical ? catSelect.removeAttribute('required') : catSelect.setAttribute('required','required'); }
+        if (commissionInput) { isPhysical ? commissionInput.removeAttribute('required') : commissionInput.setAttribute('required','required'); }
+
         if (val === 'ticket') {
             if (wrap) wrap.style.display = 'block';
             if (digitalCard) digitalCard.style.display = 'none';
