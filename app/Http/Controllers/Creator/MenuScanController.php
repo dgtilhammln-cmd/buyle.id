@@ -691,10 +691,7 @@ class MenuScanController extends Controller
                 }
 
                 // ── Price Extraction ──────────────────────────────────────────────
-                $strikethroughPrice = 0;
-                $activePrice = 0;
-
-                // 1. JS Variables (var p & var sPrice)
+                // 1. JS Variables (var p & var sPrice) — Primary & most reliable on Lynk.id
                 if (preg_match('/var p\s*=\s*_g\([\'"]([\d.]+)[\'"]\)/i', $rawHtml, $m)) {
                     $price = floatval($m[1]);
                 }
@@ -702,23 +699,37 @@ class MenuScanController extends Controller
                     $salePrice = floatval($m[1]);
                 }
 
-                // 2. HTML Spans (Strikethrough Td(lt) vs Active Fw(700))
-                if (preg_match('/<span[^>]*class="[^"]*Td\(lt\)[^"]*"[^>]*>(?:IDR|Rp)?\s*([\d,\.]+)/i', $rawHtml, $m)) {
-                    $strikethroughPrice = floatval(preg_replace('/[^0-9]/', '', $m[1]));
-                }
-                if (preg_match('/<span[^>]*class="[^"]*Fw\(700\)[^"]*"[^>]*>(?:IDR|Rp)?\s*([\d,\.]+)/i', $rawHtml, $m)) {
-                    $activePrice = floatval(preg_replace('/[^0-9]/', '', $m[1]));
+                // Ensure if sPrice and p are found: p is normal price, sPrice is promo price
+                if ($price > 0 && $salePrice > 0) {
+                    if ($salePrice > $price) {
+                        [$price, $salePrice] = [$salePrice, $price];
+                    } elseif ($price == $salePrice) {
+                        $salePrice = 0;
+                    }
                 }
 
-                if ($strikethroughPrice > 0 && $activePrice > 0 && $strikethroughPrice > $activePrice) {
-                    $price = $strikethroughPrice;   // Harga Normal (misal 750000)
-                    $salePrice = $activePrice;       // Harga Promo (misal 500000)
-                } elseif ($strikethroughPrice > 0 && !$price) {
-                    $price = $strikethroughPrice;
-                } elseif ($activePrice > 0 && !$price) {
-                    $price = $activePrice;
-                } elseif (!$price && preg_match('/(?:Rp|IDR)\s*([0-9][0-9.,]{2,})/i', $rawHtml, $m)) {
-                    $price = floatval(preg_replace('/[^0-9]/', '', $m[1]));
+                // 2. HTML Spans Fallback (ONLY if JS variables were not found)
+                if ($price <= 0) {
+                    $strikethroughPrice = 0;
+                    $activePrice = 0;
+
+                    if (preg_match('/<span[^>]*class="[^"]*Td\(lt\)[^"]*"[^>]*>(?:IDR|Rp)?\s*([\d,\.]+)/i', $rawHtml, $m)) {
+                        $strikethroughPrice = floatval(preg_replace('/[^0-9]/', '', $m[1]));
+                    }
+                    if (preg_match('/<span[^>]*class="[^"]*Fw\(700\)[^"]*Fz\(16px\)[^"]*"[^>]*>(?:IDR|Rp)?\s*([\d,\.]+)/i', $rawHtml, $m)) {
+                        $activePrice = floatval(preg_replace('/[^0-9]/', '', $m[1]));
+                    }
+
+                    if ($strikethroughPrice > 0 && $activePrice > 0 && $strikethroughPrice > $activePrice) {
+                        $price = $strikethroughPrice;   // Harga Normal (misal 250000)
+                        $salePrice = $activePrice;       // Harga Promo (misal 150000)
+                    } elseif ($strikethroughPrice > 0) {
+                        $price = $strikethroughPrice;
+                    } elseif ($activePrice > 0) {
+                        $price = $activePrice;
+                    } elseif (preg_match('/(?:Rp|IDR)\s*([0-9][0-9.,]{2,})/i', $rawHtml, $m)) {
+                        $price = floatval(preg_replace('/[^0-9]/', '', $m[1]));
+                    }
                 }
 
                 // ── Description Extraction ─────────────────────────────────────────
