@@ -132,6 +132,21 @@ class SellerProductController extends Controller
         }
         $data['slug'] = $slug;
 
+        // Safety: Truncate fields yang mungkin melebihi batas kolom DB
+        // (migration fix mengubah ke TEXT, ini sebagai defense-in-depth)
+        if (!empty($data['meta_keywords']) && strlen($data['meta_keywords']) > 5000) {
+            $data['meta_keywords'] = substr($data['meta_keywords'], 0, 5000);
+        }
+        if (!empty($data['tags']) && strlen($data['tags']) > 5000) {
+            $data['tags'] = substr($data['tags'], 0, 5000);
+        }
+        if (!empty($data['meta_title']) && strlen($data['meta_title']) > 500) {
+            $data['meta_title'] = substr($data['meta_title'], 0, 500);
+        }
+        if (!empty($data['short_desc']) && strlen($data['short_desc']) > 500) {
+            $data['short_desc'] = substr($data['short_desc'], 0, 500);
+        }
+
         $product = Product::create($data);
 
         // Invalidate cache katalog
@@ -231,6 +246,20 @@ class SellerProductController extends Controller
             } else {
                 $data['whitelabel_approval_status'] = 'none';
             }
+        }
+
+        // Safety: Truncate fields yang mungkin melebihi batas kolom DB
+        if (!empty($data['meta_keywords']) && strlen($data['meta_keywords']) > 5000) {
+            $data['meta_keywords'] = substr($data['meta_keywords'], 0, 5000);
+        }
+        if (!empty($data['tags']) && strlen($data['tags']) > 5000) {
+            $data['tags'] = substr($data['tags'], 0, 5000);
+        }
+        if (!empty($data['meta_title']) && strlen($data['meta_title']) > 500) {
+            $data['meta_title'] = substr($data['meta_title'], 0, 500);
+        }
+        if (!empty($data['short_desc']) && strlen($data['short_desc']) > 500) {
+            $data['short_desc'] = substr($data['short_desc'], 0, 500);
         }
 
         $product->update($data);
