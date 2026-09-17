@@ -101,7 +101,8 @@ class SellerProductController extends Controller
         // Produk type: ticket, physical, makanan, service, atau external_link
         $data['seller_id']    = auth()->id();
         $pt = $request->input('product_type');
-        $data['product_type'] = in_array($pt, ['ticket', 'physical', 'makanan', 'service', 'external_link']) ? $pt : 'external_link';
+        $validTypes = ['digital', 'physical', 'makanan', 'service', 'ticket', 'external_link'];
+        $data['product_type'] = in_array($pt, $validTypes) ? $pt : 'physical';
         $data['stock']        = ($request->has('stock') && $request->input('stock') !== null && $request->input('stock') !== '') ? (int) $request->input('stock') : null;
         $data['weight']       = (int) ($data['weight'] ?? 0);
         $data['length']       = (float) ($data['length'] ?? 0);
@@ -202,7 +203,8 @@ class SellerProductController extends Controller
         }
 
         $pt = $request->input('product_type');
-        $data['product_type'] = in_array($pt, ['ticket', 'physical', 'makanan', 'service', 'external_link']) ? $pt : 'external_link';
+        $validTypes = ['digital', 'physical', 'makanan', 'service', 'ticket', 'external_link'];
+        $data['product_type'] = in_array($pt, $validTypes) ? $pt : 'physical';
         $data['stock']        = ($request->has('stock') && $request->input('stock') !== null && $request->input('stock') !== '') ? (int) $request->input('stock') : null;
         $data['weight']       = (int) ($data['weight'] ?? 0);
         $data['length']       = (float) ($data['length'] ?? 0);
