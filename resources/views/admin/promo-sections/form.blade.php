@@ -193,12 +193,26 @@
           {{-- Filter by Kategori Produk (ProductCategory) --}}
           <div id="categorySelectWrapper" style="display:none;">
               <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Pilih Kategori Produk</label>
-              <select name="category_id" style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;">
+              <select name="category_id" id="categorySelect" style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;" onchange="onCategoryChange()">
                   <option value="">-- Semua Kategori --</option>
                   @foreach($productCategories ?? [] as $pCat)
                       <option value="{{ $pCat->id }}" {{ old('category_id', $promoSection->category_id ?? '') == $pCat->id ? 'selected' : '' }}>{{ $pCat->name }}</option>
                   @endforeach
               </select>
+          </div>
+
+          {{-- Sub-Kategori (opsional, muncul setelah kategori dipilih) --}}
+          <div id="subCategoryWrapper" style="display:none; grid-column: 1 / -1;">
+              <div style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:12px;padding:1rem;">
+                  <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">
+                      🗂 Sub-Kategori
+                      <span style="font-weight:400;color:#64748B;">(Opsional — kosongkan untuk ambil semua produk dari kategori induk)</span>
+                  </label>
+                  <select name="sub_category_id" id="subCategorySelect" style="width:100%;padding:.75rem 1rem;background:#fff;border:1.5px solid #D1FAE5;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;">
+                      <option value="">-- Semua (ikut kategori induk) --</option>
+                  </select>
+                  <p style="font-size:.7rem;color:#64748B;margin:.4rem 0 0;">Jika dipilih, section akan menampilkan produk dari sub-kategori ini saja. Jika dikosongkan, mengambil semua produk dari kategori induk.</p>
+              </div>
           </div>
 
           {{-- Filter by Tipe Produk (product_type) --}}
@@ -353,6 +367,15 @@
 </div>{{-- end .pf-grid --}}
 
 <script>
+// ── Data Sub-Kategori (dari server) ──────────────────────────────────────────
+// Format: { category_id: [ {id, name}, ... ] }
+const subCategoriesData = @json(
+    ($subCategories ?? collect())->map(fn($items) =>
+        $items->map(fn($s) => ['id' => $s->id, 'name' => $s->name])->values()
+    )
+);
+const currentSubCategoryId = {{ old('sub_category_id', $promoSection->sub_category_id ?? 'null') }};
+
 function previewBanner(input) {
   const preview = document.getElementById('bannerPreview');
   if (input.files && input.files[0]) {
@@ -375,15 +398,49 @@ function filterProducts(q) {
   });
 }
 
+// ── Populate sub-kategori saat kategori berubah ───────────────────────────────
+function onCategoryChange() {
+  const categoryId   = document.getElementById('categorySelect').value;
+  const subWrapper   = document.getElementById('subCategoryWrapper');
+  const subSelect    = document.getElementById('subCategorySelect');
+
+  // Kosongkan dropdown sub-kategori
+  subSelect.innerHTML = '<option value="">-- Semua (ikut kategori induk) --</option>';
+
+  if (categoryId && subCategoriesData[categoryId] && subCategoriesData[categoryId].length > 0) {
+    // Ada sub-kategori untuk kategori ini — tampilkan wrapper
+    subCategoriesData[categoryId].forEach(sub => {
+      const opt = document.createElement('option');
+      opt.value       = sub.id;
+      opt.textContent = sub.name;
+      if (sub.id == currentSubCategoryId) opt.selected = true;
+      subSelect.appendChild(opt);
+    });
+    subWrapper.style.display = 'block';
+  } else {
+    // Tidak ada sub-kategori — sembunyikan wrapper
+    subWrapper.style.display = 'none';
+  }
+}
+
 function toggleSelectionOptions() {
-  const type = document.getElementById('selectionType').value;
+  const type          = document.getElementById('selectionType').value;
   const manualWrapper = document.getElementById('manualProductWrapper');
-  const catWrapper = document.getElementById('categorySelectWrapper');
-  const typeWrapper = document.getElementById('productTypeSelectWrapper');
+  const catWrapper    = document.getElementById('categorySelectWrapper');
+  const typeWrapper   = document.getElementById('productTypeSelectWrapper');
+  const subWrapper    = document.getElementById('subCategoryWrapper');
 
   manualWrapper.style.display = type === 'manual' ? 'block' : 'none';
-  catWrapper.style.display = type === 'category' ? 'block' : 'none';
+  catWrapper.style.display    = type === 'category' ? 'block' : 'none';
   if (typeWrapper) typeWrapper.style.display = type === 'product_type' ? 'block' : 'none';
+
+  // Sembunyikan sub-kategori jika bukan tipe 'category'
+  if (type !== 'category') {
+    if (subWrapper) subWrapper.style.display = 'none';
+  } else {
+    // Re-trigger populate sub-kategori sesuai kategori yang sedang dipilih
+    onCategoryChange();
+  }
 }
 
 // Initial call
@@ -428,6 +485,5 @@ document.querySelectorAll('[placeholder="#EF4444"],[placeholder="#F97316"]').for
     });
 });
 liveUpdate();
-
 </script>
 @endsection

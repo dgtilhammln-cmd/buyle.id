@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PromoSection;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\ProductSubCategory;
 use App\Models\CategoryItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -20,12 +21,13 @@ class AdminPromoSectionController extends Controller
 
     public function create()
     {
-        $services         = Product::where('is_active', true)->orderBy('created_at', 'desc')->get();
-        $categories       = CategoryItem::active()->get();
+        $services          = Product::where('is_active', true)->orderBy('created_at', 'desc')->get();
+        $categories        = CategoryItem::active()->get();
         $productCategories = ProductCategory::where('is_active', true)->orderBy('name')->get();
-        $productTypes     = ['physical' => 'Produk Fisik / Barang', 'digital' => 'Produk Digital', 'service' => 'Jasa / Service', 'ticket' => 'Tiket / Event', 'fnb' => 'Makanan & Minuman'];
-        $selectedIds      = [];
-        return view('admin.promo-sections.form', compact('services', 'categories', 'productCategories', 'productTypes', 'selectedIds'));
+        $subCategories     = ProductSubCategory::where('is_active', true)->orderBy('category_id')->orderBy('order')->get()->groupBy('category_id');
+        $productTypes      = ['physical' => 'Produk Fisik / Barang', 'digital' => 'Produk Digital', 'service' => 'Jasa / Service', 'ticket' => 'Tiket / Event', 'fnb' => 'Makanan & Minuman'];
+        $selectedIds       = [];
+        return view('admin.promo-sections.form', compact('services', 'categories', 'productCategories', 'subCategories', 'productTypes', 'selectedIds'));
     }
 
     public function store(Request $request)
@@ -39,6 +41,7 @@ class AdminPromoSectionController extends Controller
             'is_active'           => 'nullable|boolean',
             'selection_type'      => 'required|in:manual,category,product_type,discount,all',
             'category_id'         => 'nullable|integer|exists:product_categories,id',
+            'sub_category_id'     => 'nullable|integer|exists:product_sub_categories,id',
             'product_type_filter' => 'nullable|string|max:50',
             'service_ids'         => 'nullable|array',
             'service_ids.*'       => 'integer|exists:products,id',
@@ -58,9 +61,10 @@ class AdminPromoSectionController extends Controller
         $data['is_active']   = $request->boolean('is_active', true);
         $data['sort_order']  = $data['sort_order'] ?? 0;
 
-        // Reset category_id if not category type
+        // Reset category & sub-category jika bukan tipe category
         if ($data['selection_type'] !== 'category') {
-            $data['category_id'] = null;
+            $data['category_id']     = null;
+            $data['sub_category_id'] = null;
         }
 
         $promo = PromoSection::create($data);
@@ -88,9 +92,10 @@ class AdminPromoSectionController extends Controller
         $services          = Product::where('is_active', true)->orderBy('created_at', 'desc')->get();
         $categories        = CategoryItem::active()->get();
         $productCategories = ProductCategory::where('is_active', true)->orderBy('name')->get();
+        $subCategories     = ProductSubCategory::where('is_active', true)->orderBy('category_id')->orderBy('order')->get()->groupBy('category_id');
         $productTypes      = ['physical' => 'Produk Fisik / Barang', 'digital' => 'Produk Digital', 'service' => 'Jasa / Service', 'ticket' => 'Tiket / Event', 'fnb' => 'Makanan & Minuman'];
         $selectedIds       = $promoSection->services()->pluck('products.id')->toArray();
-        return view('admin.promo-sections.form', compact('promoSection', 'services', 'categories', 'productCategories', 'productTypes', 'selectedIds'));
+        return view('admin.promo-sections.form', compact('promoSection', 'services', 'categories', 'productCategories', 'subCategories', 'productTypes', 'selectedIds'));
     }
 
     public function update(Request $request, PromoSection $promoSection)
@@ -104,6 +109,7 @@ class AdminPromoSectionController extends Controller
             'is_active'           => 'nullable|boolean',
             'selection_type'      => 'required|in:manual,category,product_type,discount,all',
             'category_id'         => 'nullable|integer|exists:product_categories,id',
+            'sub_category_id'     => 'nullable|integer|exists:product_sub_categories,id',
             'product_type_filter' => 'nullable|string|max:50',
             'service_ids'         => 'nullable|array',
             'service_ids.*'       => 'integer|exists:products,id',
@@ -130,7 +136,8 @@ class AdminPromoSectionController extends Controller
         $data['sort_order'] = $data['sort_order'] ?? 0;
 
         if ($data['selection_type'] !== 'category') {
-            $data['category_id'] = null;
+            $data['category_id']     = null;
+            $data['sub_category_id'] = null;
         }
 
         $promoSection->update($data);
