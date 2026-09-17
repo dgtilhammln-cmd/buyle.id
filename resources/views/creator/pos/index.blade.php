@@ -247,10 +247,10 @@
         .pos-category-pills-wrap {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin: 12px 0 16px 0;
+            gap: 6px;
+            margin: 8px 0 14px 0;
             overflow-x: auto;
-            padding: 4px 2px 8px 2px;
+            padding: 2px 2px 6px 2px;
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
@@ -258,43 +258,42 @@
         .pos-cat-pill {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 0.5rem 1.05rem;
+            gap: 5px;
+            padding: 5px 12px;
             border-radius: 50px;
-            border: 1.5px solid #e2e8f0;
+            border: 1px solid #e2e8f0;
             background: #ffffff;
             color: #475569;
-            font-size: 0.78rem;
-            font-weight: 700;
+            font-size: 0.73rem;
+            font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.15s ease;
             user-select: none;
             font-family: 'Montserrat', sans-serif;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            box-shadow: none;
             flex-shrink: 0;
         }
         .pos-cat-pill:hover {
             border-color: #cbd5e1;
             background: #f8fafc;
             color: #0f172a;
-            transform: translateY(-1px);
         }
         .pos-cat-pill.active {
             background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             color: #ffffff !important;
             border-color: transparent;
-            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+            box-shadow: 0 2px 8px rgba(30, 179, 73, 0.25);
         }
         .pos-cat-pill .pos-cat-count {
-            background: rgba(0, 0, 0, 0.07);
+            background: rgba(0, 0, 0, 0.06);
             color: inherit;
-            padding: 2px 7px;
+            padding: 1px 6px;
             border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 800;
+            font-size: 0.68rem;
+            font-weight: 700;
             margin-left: 2px;
-            line-height: 1;
+            line-height: 1.2;
         }
         .pos-cat-pill.active .pos-cat-count {
             background: rgba(255, 255, 255, 0.25);
@@ -798,18 +797,18 @@
                     <!-- Filter Kategori Premium (Instant 0ms Client-Side Filtering) -->
                     <div class="pos-category-pills-wrap">
                         <button type="button" class="pos-cat-pill active" data-cat="all" onclick="setPosCategoryFilter('all', this)">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                             Semua Produk
                             <span class="pos-cat-count" id="catCountAll">0</span>
                         </button>
                         <button type="button" class="pos-cat-pill" data-cat="physical" onclick="setPosCategoryFilter('physical', this)">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-                            Produk Fisik / Barang / UMKM
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                            Produk Fisik / Barang
                             <span class="pos-cat-count" id="catCountPhysical">0</span>
                         </button>
                         <button type="button" class="pos-cat-pill" data-cat="fnb" onclick="setPosCategoryFilter('fnb', this)">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-                            Makanan / Minuman / Kuliner
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                            Makanan &amp; Minuman
                             <span class="pos-cat-count" id="catCountFnb">0</span>
                         </button>
                     </div>
