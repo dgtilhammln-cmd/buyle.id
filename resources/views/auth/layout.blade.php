@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>@yield('title', 'Masuk') – buyle.id</title>
+    <title>@yield('title', 'Masuk - buyle.id')</title>
     <meta name="description" content="@yield('meta_desc', 'Masuk atau daftar akun buyle.id untuk platform digital creator dan marketplace.')">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
