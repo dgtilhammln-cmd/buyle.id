@@ -1151,19 +1151,12 @@
                 addrBox.style.display = 'none';
             }
 
-            // Toggle shipping management fields vs digital update status
-            const mgmtTitle = document.getElementById('od_management_title');
-            const shippingWrap = document.getElementById('od_shipping_fields_wrap');
-            const statusGrid = document.getElementById('od_status_grid');
-
+            // Toggle status & shipping form for physical products only (digital/service/ticket auto-completed)
+            const odForm = document.getElementById('od_form');
             if (isPhysical) {
-                if (mgmtTitle) mgmtTitle.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Manajemen Status & Pengiriman`;
-                if (shippingWrap) shippingWrap.style.display = 'block';
-                if (statusGrid) statusGrid.style.gridTemplateColumns = '1fr 1fr';
+                if (odForm) odForm.style.display = 'block';
             } else {
-                if (mgmtTitle) mgmtTitle.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Update Status Pesanan`;
-                if (shippingWrap) shippingWrap.style.display = 'none';
-                if (statusGrid) statusGrid.style.gridTemplateColumns = '1fr';
+                if (odForm) odForm.style.display = 'none';
             }
 
             // Render Ordered Items
@@ -1309,7 +1302,7 @@
                     fulTitle.innerHTML = '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:4px;"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Layanan FnB / Resto: DELIVERY (Antar ke Rumah)';
                     fulDetail.innerHTML = `<strong>Alamat Pengantaran:</strong> ${sa.delivery_address || sa.address || '-'} ${sa.notes ? '<br><em>Catatan: ' + sa.notes + '</em>' : ''}`;
                 } else {
-                    fulTitle.innerHTML = '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:4px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Pengiriman Paket:';
+                    fulTitle.innerHTML = '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:4px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Pengiriman:';
                     let addrStr = [sa.name ? 'Penerima: ' + sa.name : null, sa.address, sa.district, sa.city, sa.province, sa.postal_code].filter(Boolean).join(', ');
                     if (data.courier_name || data.tracking_number) {
                         addrStr += `<br><strong>Kurir:</strong> ${data.courier_name || '-'} (Resi: ${data.tracking_number || '-'})`;

@@ -187,7 +187,7 @@ class CheckoutService
             $shippingAddressArray = [
                 'receiver_name' => $data['guest_name'] ?? ($user->name ?? 'Pembeli'),
                 'phone'         => $data['guest_phone'] ?? ($user->phone ?? ''),
-                'address'       => 'Pengiriman Otomatis via Email & WhatsApp (Produk Digital / Tiket / Jasa)',
+                'address'       => 'Pengiriman Otomatis via Email (Produk Digital / Tiket / Jasa Digital)',
                 'label'         => 'Digital Direct Access',
             ];
         }
