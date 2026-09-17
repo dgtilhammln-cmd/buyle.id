@@ -244,8 +244,61 @@
             transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .product-card:hover .product-placeholder-wrap svg {
-            transform: scale(1.18) rotate(-5deg);
+        .pos-category-pills-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 12px 0 16px 0;
+            overflow-x: auto;
+            padding: 4px 2px 8px 2px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .pos-category-pills-wrap::-webkit-scrollbar { display: none; }
+        .pos-cat-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.5rem 1.05rem;
+            border-radius: 50px;
+            border: 1.5px solid #e2e8f0;
+            background: #ffffff;
+            color: #475569;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            flex-shrink: 0;
+        }
+        .pos-cat-pill:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            color: #0f172a;
+            transform: translateY(-1px);
+        }
+        .pos-cat-pill.active {
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            color: #ffffff !important;
+            border-color: transparent;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+        }
+        .pos-cat-pill .pos-cat-count {
+            background: rgba(0, 0, 0, 0.07);
+            color: inherit;
+            padding: 2px 7px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            margin-left: 2px;
+            line-height: 1;
+        }
+        .pos-cat-pill.active .pos-cat-count {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
         }
 
         .product-name {
@@ -742,6 +795,30 @@
                             placeholder="Cari nama produk / item..." oninput="filterProducts()">
                     </div>
 
+                    <!-- Filter Kategori Premium (Instant 0ms Client-Side Filtering) -->
+                    <div class="pos-category-pills-wrap">
+                        <button type="button" class="pos-cat-pill active" data-cat="all" onclick="setPosCategoryFilter('all', this)">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                            Semua Produk
+                            <span class="pos-cat-count" id="catCountAll">0</span>
+                        </button>
+                        <button type="button" class="pos-cat-pill" data-cat="physical" onclick="setPosCategoryFilter('physical', this)">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                            Produk Fisik / Barang / UMKM
+                            <span class="pos-cat-count" id="catCountPhysical">0</span>
+                        </button>
+                        <button type="button" class="pos-cat-pill" data-cat="fnb" onclick="setPosCategoryFilter('fnb', this)">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                            Makanan / Minuman / Kuliner
+                            <span class="pos-cat-count" id="catCountFnb">0</span>
+                        </button>
+                        <button type="button" class="pos-cat-pill" data-cat="digital" onclick="setPosCategoryFilter('digital', this)">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            Produk Digital / Tiket / Jasa
+                            <span class="pos-cat-count" id="catCountDigital">0</span>
+                        </button>
+                    </div>
+
                     <!-- Products Grid -->
                     <div class="product-grid" id="productGridContainer">
                         @forelse($products as $prod)
@@ -762,6 +839,18 @@
                                     }
                                 }
 
+                                // Category Classification Slug
+                                $pType = strtolower($prod->product_type ?? $prod->type ?? 'physical');
+                                $catName = strtolower($prod->category?->name ?? '');
+
+                                if (in_array($pType, ['digital', 'service', 'ticket', 'external_link', 'digital_download', 'virtual']) || in_array($catName, ['digital', 'jasa', 'tiket', 'virtual'])) {
+                                    $catSlug = 'digital';
+                                } elseif ($pType === 'makanan' || $pType === 'fnb' || in_array($catName, ['makanan', 'minuman', 'kuliner', 'fnb', 'food', 'resto', 'dapur']) || \Illuminate\Support\Str::contains($nameLower, ['es', 'kopi', 'teh', 'jus', 'air', 'boba', 'drink', 'minuman', 'nasi', 'mie', 'ayam', 'bebek', 'daging', 'ikan', 'sate', 'bakso', 'soto', 'roti', 'kue', 'donut', 'snack', 'pisang', 'toast', 'burger', 'pizza', 'alpukat', 'susu'])) {
+                                    $catSlug = 'fnb';
+                                } else {
+                                    $catSlug = 'physical';
+                                }
+
                                 // Clean Light Neutral Theme for Placeholder Cards
                                 $themeBg = '#f8fafc';
                                 $themeColor = '#475569';
@@ -769,7 +858,10 @@
                                 $badgeText = 'PRODUK';
                                 $iconType = 'item';
 
-                                if (\Illuminate\Support\Str::contains($nameLower, ['es', 'kopi', 'teh', 'jus', 'air', 'boba', 'drink', 'minuman', 'jeruk', 'lemon', 'syrup', 'coffee', 'tea', 'milk', 'susu', 'soda', 'alpukat'])) {
+                                if ($catSlug === 'digital') {
+                                    $badgeText = 'DIGITAL';
+                                    $iconType = 'digital';
+                                } elseif (\Illuminate\Support\Str::contains($nameLower, ['es', 'kopi', 'teh', 'jus', 'air', 'boba', 'drink', 'minuman', 'jeruk', 'lemon', 'syrup', 'coffee', 'tea', 'milk', 'susu', 'soda', 'alpukat'])) {
                                     $badgeText = 'MINUMAN';
                                     $iconType = 'drink';
                                 } elseif (\Illuminate\Support\Str::contains($nameLower, ['roti', 'kue', 'donut', 'snack', 'pisang', 'toast', 'cake', 'waffle', 'pancake', 'keju', 'cokelat', 'crepes', 'martabak'])) {
@@ -781,7 +873,7 @@
                                 }
                             @endphp
                             <div class="product-card" data-id="{{ $prod->id }}" data-name="{{ strtolower($prod->name) }}"
-                                data-price="{{ $prodPrice }}"
+                                data-price="{{ $prodPrice }}" data-category="{{ $catSlug }}"
                                 onclick="addToCart({{ $prod->id }}, '{{ addslashes($prod->name) }}', {{ $prodPrice }})">
                                 <div class="product-qty-badge" id="badge-qty-{{ $prod->id }}">0</div>
                                 <div class="product-img-wrapper" style="@if(!$imgUrl) background: {{ $themeBg }}; border: 1px solid {{ $themeBorder }}; @endif">
@@ -795,6 +887,8 @@
                                                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                                             @elseif($iconType === 'dish')
                                                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a1 1 0 0 1 1 1v1a8 8 0 0 1-8 8H10a8 8 0 0 1-8-8v-1a1 1 0 0 1 1-1z"/><path d="M12 2a5 5 0 0 0-5 5h10a5 5 0 0 0-5-5z"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
+                                            @elseif($iconType === 'digital')
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                                             @else
                                                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
                                             @endif
@@ -808,6 +902,8 @@
                                                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                                             @elseif($iconType === 'dish')
                                                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a1 1 0 0 1 1 1v1a8 8 0 0 1-8 8H10a8 8 0 0 1-8-8v-1a1 1 0 0 1 1-1z"/><path d="M12 2a5 5 0 0 0-5 5h10a5 5 0 0 0-5-5z"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
+                                            @elseif($iconType === 'digital')
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                                             @else
                                                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
                                             @endif
@@ -819,33 +915,34 @@
                                 <div class="product-price">Rp {{ number_format($prodPrice, 0, ',', '.') }}</div>
                             </div>
                         @empty
-                            <div style="grid-column: 1 / -1; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3.5rem 1.5rem; text-align: center; background: #ffffff; border: 2px dashed #cbd5e1; border-radius: 24px; margin: 1rem 0; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
-                                <style>
-                                    @keyframes floatPulseIcon {
-                                        0% { transform: translateY(0px) scale(1); box-shadow: 0 4px 14px rgba(30,179,73,0.15); }
-                                        50% { transform: translateY(-8px) scale(1.04); box-shadow: 0 12px 24px rgba(30,179,73,0.3); }
-                                        100% { transform: translateY(0px) scale(1); box-shadow: 0 4px 14px rgba(30,179,73,0.15); }
-                                    }
-                                </style>
-                                <div style="width: 76px; height: 76px; border-radius: 24px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1.5px solid #bbf7d0; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; animation: floatPulseIcon 3.2s ease-in-out infinite;">
-                                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                                        <line x1="12" y1="22.08" x2="12" y2="12"/>
-                                    </svg>
-                                </div>
-                                <h4 style="font-weight: 800; color: #0f172a; font-size: 1.05rem; margin: 0 0 0.4rem 0; font-family: 'Montserrat', sans-serif;">Belum Ada Produk Aktif</h4>
-                                <p style="font-size: 0.85rem; color: #64748b; max-width: 380px; line-height: 1.55; margin: 0 0 1.25rem 0;">
-                                    Belum ada produk aktif di katalog atau Link in Bio Anda. Silakan tambahkan produk baru untuk mulai berjualan.
-                                </p>
-                                <a href="{{ route('creator.products.create') }}"
-                                   style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #ffffff; padding: 0.65rem 1.35rem; border-radius: 50px; font-weight: 700; font-size: 0.82rem; text-decoration: none; box-shadow: 0 4px 14px rgba(30,179,73,0.35); transition: all 0.2s;"
-                                   onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                    Tambah Produk Baru
-                                </a>
-                            </div>
                         @endforelse
+
+                        <!-- Empty State Container for zero results -->
+                        <div id="posEmptyStateContainer" style="display: none; grid-column: 1 / -1; width: 100%; flex-direction: column; align-items: center; justify-content: center; padding: 3.5rem 1.5rem; text-align: center; background: #ffffff; border: 2px dashed #cbd5e1; border-radius: 24px; margin: 1rem 0; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+                            <style>
+                                @keyframes floatPulseIcon {
+                                    0% { transform: translateY(0px) scale(1); box-shadow: 0 4px 14px rgba(30,179,73,0.15); }
+                                    50% { transform: translateY(-8px) scale(1.04); box-shadow: 0 12px 24px rgba(30,179,73,0.3); }
+                                    100% { transform: translateY(0px) scale(1); box-shadow: 0 4px 14px rgba(30,179,73,0.15); }
+                                }
+                            </style>
+                            <div style="width: 76px; height: 76px; border-radius: 24px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1.5px solid #bbf7d0; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; animation: floatPulseIcon 3.2s ease-in-out infinite;">
+                                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                                </svg>
+                            </div>
+                            <h4 style="font-weight: 800; color: #0f172a; font-size: 1.05rem; margin: 0 0 0.4rem 0; font-family: 'Montserrat', sans-serif;">Belum Ada Produk Ditemukan</h4>
+                            <p style="font-size: 0.85rem; color: #64748b; max-width: 380px; line-height: 1.55; margin: 0 0 1.25rem 0;">
+                                Tidak ada produk yang sesuai dengan filter atau pencarian Anda.
+                            </p>
+                            <a href="{{ route('creator.products.create') }}"
+                               style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #ffffff; padding: 0.65rem 1.35rem; border-radius: 50px; font-weight: 700; font-size: 0.82rem; text-decoration: none; box-shadow: 0 4px 14px rgba(30,179,73,0.35); transition: all 0.2s;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Tambah Produk Baru
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1383,31 +1480,77 @@
             });
         });
 
-        // Filter produk live (instant, tanpa debounce, tanpa Bootstrap d-none)
+        let activePosCategory = 'all';
+
+        function setPosCategoryFilter(cat, btn) {
+            activePosCategory = cat;
+            document.querySelectorAll('.pos-cat-pill').forEach(p => p.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            filterProducts();
+        }
+
+        // Filter produk live (instant 0ms client-side filtering, tanpa debounce)
         function filterProducts() {
-            const query = document.getElementById('posProductSearch').value.toLowerCase().trim();
+            const searchInput = document.getElementById('posProductSearch');
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
             const cards = document.querySelectorAll('.product-card');
             let visibleCount = 0;
 
+            let countAll = 0;
+            let countPhysical = 0;
+            let countFnb = 0;
+            let countDigital = 0;
+
             cards.forEach(card => {
                 const name = (card.getAttribute('data-name') || '').toLowerCase();
-                const matches = !query || name.includes(query);
+                const cat = card.getAttribute('data-category') || 'physical';
+
+                // Match text query
+                const textMatch = !query || name.includes(query);
+                if (textMatch) {
+                    countAll++;
+                    if (cat === 'physical') countPhysical++;
+                    else if (cat === 'fnb') countFnb++;
+                    else if (cat === 'digital') countDigital++;
+                }
+
+                const catMatch = (activePosCategory === 'all') || (cat === activePosCategory);
+                const matches = textMatch && catMatch;
+
                 card.style.display = matches ? '' : 'none';
                 if (matches) visibleCount++;
             });
 
+            // Update badge hitungan pill kategori
+            const elAll = document.getElementById('catCountAll');
+            const elPhys = document.getElementById('catCountPhysical');
+            const elFnb = document.getElementById('catCountFnb');
+            const elDigi = document.getElementById('catCountDigital');
+
+            if (elAll) elAll.textContent = countAll;
+            if (elPhys) elPhys.textContent = countPhysical;
+            if (elFnb) elFnb.textContent = countFnb;
+            if (elDigi) elDigi.textContent = countDigital;
+
             // Update badge jumlah produk tersedia
             const badge = document.getElementById('posMenuCountBadge');
             if (badge) badge.textContent = visibleCount + ' Produk Tersedia';
+
+            // Toggle empty state jika 0 hasil
+            const emptyState = document.getElementById('posEmptyStateContainer');
+            if (emptyState) {
+                emptyState.style.display = visibleCount === 0 ? 'flex' : 'none';
+            }
         }
 
-        // Pastikan event listener terpasang setelah DOM siap
+        // Pastikan event listener terpasang setelah DOM siap & init hitungan awal
         document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.getElementById('posProductSearch');
             if (searchInput) {
                 searchInput.addEventListener('input', filterProducts);
                 searchInput.addEventListener('keyup', filterProducts);
             }
+            filterProducts();
         });
 
         // Add product to cart
