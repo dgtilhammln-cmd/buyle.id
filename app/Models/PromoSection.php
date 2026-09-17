@@ -9,7 +9,7 @@ class PromoSection extends Model
 {
     protected $fillable = [
         'title', 'subtitle', 'banner', 'view_all_url', 'sort_order', 'is_active', 'selection_type', 'category_id',
-        'start_time', 'end_time', 'bg_color_1', 'bg_color_2', 'logo'
+        'start_time', 'end_time', 'bg_color_1', 'bg_color_2', 'logo', 'product_type_filter'
     ];
 
     protected $casts = [
@@ -39,6 +39,8 @@ class PromoSection extends Model
         switch ($this->selection_type) {
             case 'category':
                 return Product::active()->where('product_category_id', $this->category_id)->limit($limit)->get();
+            case 'product_type':
+                return Product::active()->where('product_type', $this->product_type_filter)->limit($limit)->get();
             case 'discount':
                 return Product::active()->whereNotNull('sale_price')->whereColumn('sale_price', '<', 'price')->where('sale_price', '>', 0)->limit($limit)->get();
             case 'all':

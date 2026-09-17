@@ -183,20 +183,34 @@
               <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Tipe Pemilihan Produk <span style="color:#EF4444">*</span></label>
               <select name="selection_type" id="selectionType" style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;" onchange="toggleSelectionOptions()">
                   <option value="manual" {{ old('selection_type', $promoSection->selection_type ?? 'manual') === 'manual' ? 'selected' : '' }}>Pilih Produk Manual</option>
-                  <option value="category" {{ old('selection_type', $promoSection->selection_type ?? '') === 'category' ? 'selected' : '' }}>Berdasarkan Kategori</option>
+                  <option value="category" {{ old('selection_type', $promoSection->selection_type ?? '') === 'category' ? 'selected' : '' }}>Filter Berdasarkan Kategori Produk</option>
+                  <option value="product_type" {{ old('selection_type', $promoSection->selection_type ?? '') === 'product_type' ? 'selected' : '' }}>Filter Berdasarkan Tipe Produk</option>
                   <option value="discount" {{ old('selection_type', $promoSection->selection_type ?? '') === 'discount' ? 'selected' : '' }}>Produk Sedang Diskon (Harga Coret)</option>
                   <option value="all" {{ old('selection_type', $promoSection->selection_type ?? '') === 'all' ? 'selected' : '' }}>Semua Produk</option>
               </select>
           </div>
           
+          {{-- Filter by Kategori Produk (ProductCategory) --}}
           <div id="categorySelectWrapper" style="display:none;">
-              <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Pilih Kategori</label>
+              <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Pilih Kategori Produk</label>
               <select name="category_id" style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;">
-                  <option value="">-- Pilih Kategori --</option>
-                  @foreach($categories as $cat)
-                      <option value="{{ $cat->id }}" {{ old('category_id', $promoSection->category_id ?? '') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                  <option value="">-- Semua Kategori --</option>
+                  @foreach($productCategories ?? [] as $pCat)
+                      <option value="{{ $pCat->id }}" {{ old('category_id', $promoSection->category_id ?? '') == $pCat->id ? 'selected' : '' }}>{{ $pCat->name }}</option>
                   @endforeach
               </select>
+          </div>
+
+          {{-- Filter by Tipe Produk (product_type) --}}
+          <div id="productTypeSelectWrapper" style="display:none;">
+              <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Pilih Tipe Produk</label>
+              <select name="product_type_filter" style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;">
+                  <option value="">-- Semua Tipe --</option>
+                  @foreach($productTypes ?? [] as $typeKey => $typeLabel)
+                      <option value="{{ $typeKey }}" {{ old('product_type_filter', $promoSection->product_type_filter ?? '') === $typeKey ? 'selected' : '' }}>{{ $typeLabel }}</option>
+                  @endforeach
+              </select>
+              <p style="font-size:.7rem;color:#94A3B8;margin:.3rem 0 0;">Tampilkan otomatis semua produk bertipe tersebut.</p>
           </div>
       </div>
     </div>
@@ -365,9 +379,11 @@ function toggleSelectionOptions() {
   const type = document.getElementById('selectionType').value;
   const manualWrapper = document.getElementById('manualProductWrapper');
   const catWrapper = document.getElementById('categorySelectWrapper');
+  const typeWrapper = document.getElementById('productTypeSelectWrapper');
 
   manualWrapper.style.display = type === 'manual' ? 'block' : 'none';
   catWrapper.style.display = type === 'category' ? 'block' : 'none';
+  if (typeWrapper) typeWrapper.style.display = type === 'product_type' ? 'block' : 'none';
 }
 
 // Initial call

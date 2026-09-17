@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PromoSection;
-use App\Models\Service;
+use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\CategoryItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -19,30 +20,33 @@ class AdminPromoSectionController extends Controller
 
     public function create()
     {
-        $services    = Service::active()->ordered()->get();
-        $categories  = CategoryItem::active()->get();
-        $selectedIds = [];
-        return view('admin.promo-sections.form', compact('services', 'categories', 'selectedIds'));
+        $services         = Product::where('is_active', true)->orderBy('created_at', 'desc')->get();
+        $categories       = CategoryItem::active()->get();
+        $productCategories = ProductCategory::where('is_active', true)->orderBy('name')->get();
+        $productTypes     = ['physical' => 'Produk Fisik / Barang', 'digital' => 'Produk Digital', 'service' => 'Jasa / Service', 'ticket' => 'Tiket / Event', 'fnb' => 'Makanan & Minuman'];
+        $selectedIds      = [];
+        return view('admin.promo-sections.form', compact('services', 'categories', 'productCategories', 'productTypes', 'selectedIds'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'title'          => 'required|string|max:100',
-            'subtitle'       => 'nullable|string|max:200',
-            'banner'         => 'nullable|image|max:3072',
-            'view_all_url'   => 'nullable|string|max:300',
-            'sort_order'     => 'nullable|integer|min:0',
-            'is_active'      => 'nullable|boolean',
-            'selection_type' => 'required|in:manual,category,discount,all',
-            'category_id'    => 'nullable|integer|exists:product_categories,id',
-            'service_ids'    => 'nullable|array',
-            'service_ids.*'  => 'integer|exists:products,id',
-            'start_time'     => 'nullable|date',
-            'end_time'       => 'nullable|date',
-            'bg_color_1'     => 'nullable|string|max:20',
-            'bg_color_2'     => 'nullable|string|max:20',
-            'logo'           => 'nullable|image|max:2048',
+            'title'               => 'required|string|max:100',
+            'subtitle'            => 'nullable|string|max:200',
+            'banner'              => 'nullable|image|max:3072',
+            'view_all_url'        => 'nullable|string|max:300',
+            'sort_order'          => 'nullable|integer|min:0',
+            'is_active'           => 'nullable|boolean',
+            'selection_type'      => 'required|in:manual,category,product_type,discount,all',
+            'category_id'         => 'nullable|integer|exists:product_categories,id',
+            'product_type_filter' => 'nullable|string|max:50',
+            'service_ids'         => 'nullable|array',
+            'service_ids.*'       => 'integer|exists:products,id',
+            'start_time'          => 'nullable|date',
+            'end_time'            => 'nullable|date',
+            'bg_color_1'          => 'nullable|string|max:20',
+            'bg_color_2'          => 'nullable|string|max:20',
+            'logo'                => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('banner')) {
@@ -81,30 +85,33 @@ class AdminPromoSectionController extends Controller
 
     public function edit(PromoSection $promoSection)
     {
-        $services     = Service::active()->ordered()->get();
-        $categories   = CategoryItem::active()->get();
-        $selectedIds  = $promoSection->services()->pluck('services.id')->toArray();
-        return view('admin.promo-sections.form', compact('promoSection', 'services', 'categories', 'selectedIds'));
+        $services          = Product::where('is_active', true)->orderBy('created_at', 'desc')->get();
+        $categories        = CategoryItem::active()->get();
+        $productCategories = ProductCategory::where('is_active', true)->orderBy('name')->get();
+        $productTypes      = ['physical' => 'Produk Fisik / Barang', 'digital' => 'Produk Digital', 'service' => 'Jasa / Service', 'ticket' => 'Tiket / Event', 'fnb' => 'Makanan & Minuman'];
+        $selectedIds       = $promoSection->services()->pluck('products.id')->toArray();
+        return view('admin.promo-sections.form', compact('promoSection', 'services', 'categories', 'productCategories', 'productTypes', 'selectedIds'));
     }
 
     public function update(Request $request, PromoSection $promoSection)
     {
         $data = $request->validate([
-            'title'          => 'required|string|max:100',
-            'subtitle'       => 'nullable|string|max:200',
-            'banner'         => 'nullable|image|max:3072',
-            'view_all_url'   => 'nullable|string|max:300',
-            'sort_order'     => 'nullable|integer|min:0',
-            'is_active'      => 'nullable|boolean',
-            'selection_type' => 'required|in:manual,category,discount,all',
-            'category_id'    => 'nullable|integer|exists:product_categories,id',
-            'service_ids'    => 'nullable|array',
-            'service_ids.*'  => 'integer|exists:products,id',
-            'start_time'     => 'nullable|date',
-            'end_time'       => 'nullable|date',
-            'bg_color_1'     => 'nullable|string|max:20',
-            'bg_color_2'     => 'nullable|string|max:20',
-            'logo'           => 'nullable|image|max:2048',
+            'title'               => 'required|string|max:100',
+            'subtitle'            => 'nullable|string|max:200',
+            'banner'              => 'nullable|image|max:3072',
+            'view_all_url'        => 'nullable|string|max:300',
+            'sort_order'          => 'nullable|integer|min:0',
+            'is_active'           => 'nullable|boolean',
+            'selection_type'      => 'required|in:manual,category,product_type,discount,all',
+            'category_id'         => 'nullable|integer|exists:product_categories,id',
+            'product_type_filter' => 'nullable|string|max:50',
+            'service_ids'         => 'nullable|array',
+            'service_ids.*'       => 'integer|exists:products,id',
+            'start_time'          => 'nullable|date',
+            'end_time'            => 'nullable|date',
+            'bg_color_1'          => 'nullable|string|max:20',
+            'bg_color_2'          => 'nullable|string|max:20',
+            'logo'                => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('banner')) {
