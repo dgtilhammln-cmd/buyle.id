@@ -812,11 +812,6 @@
                             Makanan / Minuman / Kuliner
                             <span class="pos-cat-count" id="catCountFnb">0</span>
                         </button>
-                        <button type="button" class="pos-cat-pill" data-cat="digital" onclick="setPosCategoryFilter('digital', this)">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                            Produk Digital / Tiket / Jasa
-                            <span class="pos-cat-count" id="catCountDigital">0</span>
-                        </button>
                     </div>
 
                     <!-- Products Grid -->
