@@ -202,7 +202,7 @@ class SellerReportController extends Controller
             ->get();
 
         $storeName = $seller->creatorProfile?->store_name ?? ('seller-' . $seller->id);
-        $filename  = 'Data_Pembeli_' . str_replace(' ', '_', $storeName) . '_' . date('Ymd');
+        $filename  = 'Laporan_Keuangan_Pembeli_' . str_replace(' ', '_', $storeName) . '_' . date('Ymd');
         $format    = $request->query('format', 'csv');
 
         if ($format === 'pdf') {
@@ -210,23 +210,34 @@ class SellerReportController extends Controller
             return $pdf->download($filename . '.pdf');
         }
 
-        // Default: CSV (buka dengan Excel)
+        // Default: CSV (buka dengan Excel / XLS)
         $csvData  = "\xEF\xBB\xBF"; // UTF-8 BOM agar Excel bisa baca
-        $csvData .= "Tanggal,Nama,Email,No WA,Order ID,Produk,Total (Rp),UTM Source\n";
+        $csvData .= "Tanggal,ID Transaksi,Nama Pembeli,Email,No WA,Produk,Total Nominal (Rp),UTM Source\n";
+
+        $grandTotalNominal = 0;
+        $totalOrderCount   = $orders->count();
 
         foreach ($orders as $order) {
             $date     = $order->created_at->format('Y-m-d H:i');
+            $rawOid   = $order->order_number ?: ('BYL-' . $order->id);
+            $oid      = str_starts_with($rawOid, '#') ? $rawOid : '#' . $rawOid;
             $name     = str_replace(',', ' ', $order->user?->name ?? '-');
             $email    = $order->user?->email ?? '-';
             $phone    = $order->user?->phone ?? '-';
-            $oid      = $order->order_number;
             $products = str_replace(',', ' ', $order->items->pluck('product_name')->implode(' | '));
-            $total    = number_format((float) $order->items->sum('subtotal'), 0, '.', '');
-            // Safely access utm_source — might not exist as column yet
+            $subtotal = (float) $order->items->sum('subtotal');
+            $grandTotalNominal += $subtotal;
+            $total    = number_format($subtotal, 0, '.', '');
             $source   = isset($order->utm_source) ? ($order->utm_source ?: 'Organic') : 'Organic';
 
-            $csvData .= "{$date},{$name},{$email},{$phone},{$oid},{$products},{$total},{$source}\n";
+            $csvData .= "{$date},{$oid},{$name},{$email},{$phone},{$products},{$total},{$source}\n";
         }
+
+        // Ringkasan Laporan Keuangan di bagian bawah CSV/XLS
+        $csvData .= "\n";
+        $csvData .= "LAPORAN KEUANGAN SAN PENJUALAN\n";
+        $csvData .= "Total Transaksi,{$totalOrderCount} Pesanan\n";
+        $csvData .= "Total Nominal Pendapatan,Rp " . number_format($grandTotalNominal, 0, ',', '.') . "\n";
 
         return response($csvData)
             ->header('Content-Type', 'text/csv; charset=utf-8')
@@ -235,23 +246,82 @@ class SellerReportController extends Controller
 
     private function generatePdfHtml($orders, string $storeName): string
     {
-        $html  = "<h2 style='font-family:sans-serif;'>Data Pembeli - " . htmlspecialchars($storeName) . "</h2>";
-        $html .= "<table border='1' cellpadding='5' cellspacing='0' style='width:100%;font-family:sans-serif;font-size:11px;border-collapse:collapse;'>";
-        $html .= "<tr style='background:#f3f4f6;'><th>Tanggal</th><th>Nama</th><th>Email</th><th>No WA</th><th>Total Order</th><th>Produk</th><th>Sumber UTM</th></tr>";
+        $totalOrderCount   = $orders->count();
+        $grandTotalNominal = 0;
+
+        $html = "<!DOCTYPE html><html><head><meta charset='utf-8'>";
+        $html .= "<style>
+            body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #0f172a; font-size: 11px; padding: 15px; }
+            .header { text-align: center; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 14px; }
+            .header h2 { margin: 0 0 6px 0; font-size: 18px; color: #0f172a; letter-spacing: -0.5px; }
+            .header p { margin: 0; color: #64748b; font-size: 11.5px; }
+            table.report-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            table.report-table th { background: #f8fafc; color: #475569; font-weight: 700; text-align: left; padding: 9px 10px; border: 1px solid #cbd5e1; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+            table.report-table td { padding: 8px 10px; border: 1px solid #e2e8f0; font-size: 10.5px; }
+            table.report-table tr:nth-child(even) { background-color: #f9fafb; }
+            .total-row td { background: #f1f5f9 !important; font-weight: 800; font-size: 11px; }
+            .summary-box { float: right; width: 280px; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 14px; background: #f8fafc; margin-top: 10px; }
+            .summary-title { margin: 0 0 10px 0; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #334155; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; }
+            .summary-table { width: 100%; border-collapse: collapse; }
+            .summary-table td { border: none; padding: 4px 0; font-size: 11px; }
+        </style></head><body>";
+
+        $html .= "<div class='header'>";
+        $html .= "<h2>LAPORAN KEUANGAN & DATA PEMBELI</h2>";
+        $html .= "<p>Toko / Creator: <strong>" . htmlspecialchars($storeName) . "</strong> | Tanggal Cetak: " . date('d/m/Y H:i') . "</p>";
+        $html .= "</div>";
+
+        $html .= "<table class='report-table'>";
+        $html .= "<thead><tr>
+            <th style='width: 12%;'>Tanggal</th>
+            <th style='width: 17%;'>ID Transaksi</th>
+            <th style='width: 15%;'>Nama Pembeli</th>
+            <th style='width: 16%;'>Email / Kontak</th>
+            <th style='width: 23%;'>Produk Dipesan</th>
+            <th style='width: 17%; text-align: right;'>Nominal (Rp)</th>
+        </tr></thead><tbody>";
 
         foreach ($orders as $order) {
             $date     = $order->created_at->format('d/m/Y H:i');
+            $rawOid   = $order->order_number ?: ('BYL-' . $order->id);
+            $oid      = htmlspecialchars(str_starts_with($rawOid, '#') ? $rawOid : '#' . $rawOid);
             $name     = htmlspecialchars($order->user?->name ?? '-');
-            $email    = htmlspecialchars($order->user?->email ?? '-');
-            $phone    = htmlspecialchars($order->user?->phone ?? '-');
-            $total    = 'Rp ' . number_format((float) $order->items->sum('subtotal'), 0, ',', '.');
+            $email    = htmlspecialchars($order->user?->email ?? ($order->user?->phone ?? '-'));
             $products = htmlspecialchars($order->items->pluck('product_name')->implode(', '));
-            $source   = htmlspecialchars(isset($order->utm_source) ? ($order->utm_source ?: 'Organic') : 'Organic');
+            $subtotal = (float) $order->items->sum('subtotal');
+            $grandTotalNominal += $subtotal;
+            $totalFormatted = 'Rp ' . number_format($subtotal, 0, ',', '.');
 
-            $html .= "<tr><td>{$date}</td><td>{$name}</td><td>{$email}</td><td>{$phone}</td><td>{$total}</td><td>{$products}</td><td>{$source}</td></tr>";
+            $html .= "<tr>
+                <td>{$date}</td>
+                <td style='font-family: monospace; font-weight: bold; color: #0f172a;'>{$oid}</td>
+                <td>{$name}</td>
+                <td>{$email}</td>
+                <td>{$products}</td>
+                <td style='text-align: right; font-weight: 700; color: #0f172a;'>{$totalFormatted}</td>
+            </tr>";
         }
 
-        $html .= '</table>';
+        $grandTotalFormatted = 'Rp ' . number_format($grandTotalNominal, 0, ',', '.');
+
+        $html .= "</tbody>";
+        $html .= "<tfoot>
+            <tr class='total-row'>
+                <td colspan='5' style='text-align: right; font-weight: 800; color: #0f172a;'>TOTAL KESELURUHAN ({$totalOrderCount} Transaksi):</td>
+                <td style='text-align: right; font-weight: 800; color: #1eb349; font-size: 11.5px;'>{$grandTotalFormatted}</td>
+            </tr>
+        </tfoot>";
+        $html .= "</table>";
+
+        $html .= "<div class='summary-box'>";
+        $html .= "<div class='summary-title'>Ringkasan Laporan Keuangan</div>";
+        $html .= "<table class='summary-table'>";
+        $html .= "<tr><td>Total Jumlah Pesanan:</td><td style='text-align: right; font-weight: 800; color: #0f172a;'>{$totalOrderCount} Pesanan</td></tr>";
+        $html .= "<tr><td>Total Nominal Omset:</td><td style='text-align: right; font-weight: 800; color: #1eb349; font-size: 12px;'>{$grandTotalFormatted}</td></tr>";
+        $html .= "</table>";
+        $html .= "</div>";
+
+        $html .= "</body></html>";
         return $html;
     }
 

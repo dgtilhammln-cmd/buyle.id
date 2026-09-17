@@ -147,21 +147,29 @@ class Order extends Model
 
     /**
      * Generate nomor order unik.
-     * Format: ORD-YYYYMMDD-XXXX (misal: ORD-20260713-0001)
+     * Format: BYL-YYYYMMDD-XXXX (misal: BYL-20260713-0001)
      */
     public static function generateOrderNumber(): string
     {
         $date   = now()->format('Ymd');
-        $prefix = "ORD-{$date}-";
+        $prefix = "BYL-{$date}-";
 
-        $lastOrder = static::where('order_number', 'like', $prefix . '%')
-            ->orderByDesc('order_number')
+        $lastOrder = static::where(function($q) use ($prefix, $date) {
+                $q->where('order_number', 'like', $prefix . '%')
+                  ->orWhere('order_number', 'like', "ORD-{$date}-%");
+            })
+            ->orderByDesc('id')
             ->lockForUpdate()
             ->first();
 
-        $sequence = $lastOrder
-            ? (int) substr($lastOrder->order_number, -4) + 1
-            : 1;
+        $sequence = 1;
+        if ($lastOrder && !empty($lastOrder->order_number)) {
+            $parts = explode('-', $lastOrder->order_number);
+            $lastSeq = (int) end($parts);
+            if ($lastSeq > 0) {
+                $sequence = $lastSeq + 1;
+            }
+        }
 
         return $prefix . str_pad($sequence, 4, '0', STR_PAD_LEFT);
     }
