@@ -819,8 +819,31 @@
                                 <div class="product-price">Rp {{ number_format($prodPrice, 0, ',', '.') }}</div>
                             </div>
                         @empty
-                            <div class="col-12 text-center py-5 text-muted" style="font-size:0.85rem;">
-                                Belum ada produk aktif di katalog atau Link in Bio Anda.
+                            <div style="grid-column: 1 / -1; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3.5rem 1.5rem; text-align: center; background: #ffffff; border: 2px dashed #cbd5e1; border-radius: 24px; margin: 1rem 0; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+                                <style>
+                                    @keyframes floatPulseIcon {
+                                        0% { transform: translateY(0px) scale(1); box-shadow: 0 4px 14px rgba(30,179,73,0.15); }
+                                        50% { transform: translateY(-8px) scale(1.04); box-shadow: 0 12px 24px rgba(30,179,73,0.3); }
+                                        100% { transform: translateY(0px) scale(1); box-shadow: 0 4px 14px rgba(30,179,73,0.15); }
+                                    }
+                                </style>
+                                <div style="width: 76px; height: 76px; border-radius: 24px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1.5px solid #bbf7d0; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; animation: floatPulseIcon 3.2s ease-in-out infinite;">
+                                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                                    </svg>
+                                </div>
+                                <h4 style="font-weight: 800; color: #0f172a; font-size: 1.05rem; margin: 0 0 0.4rem 0; font-family: 'Montserrat', sans-serif;">Belum Ada Produk Aktif</h4>
+                                <p style="font-size: 0.85rem; color: #64748b; max-width: 380px; line-height: 1.55; margin: 0 0 1.25rem 0;">
+                                    Belum ada produk aktif di katalog atau Link in Bio Anda. Silakan tambahkan produk baru untuk mulai berjualan.
+                                </p>
+                                <a href="{{ route('creator.products.create') }}"
+                                   style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #ffffff; padding: 0.65rem 1.35rem; border-radius: 50px; font-weight: 700; font-size: 0.82rem; text-decoration: none; box-shadow: 0 4px 14px rgba(30,179,73,0.35); transition: all 0.2s;"
+                                   onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                    Tambah Produk Baru
+                                </a>
                             </div>
                         @endforelse
                     </div>
