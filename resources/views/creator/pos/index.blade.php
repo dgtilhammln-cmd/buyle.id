@@ -1713,7 +1713,7 @@
             currentCompletedOrder = order;
             const addr = order.shipping_address || {};
 
-            document.getElementById('recOrderNum').innerText = '#' + (order.order_number || ('ORD-' + order.id));
+            document.getElementById('recOrderNum').innerText = '#' + (order.order_number || ('BYL-' + order.id));
             document.getElementById('recDate').innerText = formatDate(order.created_at || new Date().toISOString());
             document.getElementById('recCustomerName').innerText = addr.name || 'Pelanggan';
 

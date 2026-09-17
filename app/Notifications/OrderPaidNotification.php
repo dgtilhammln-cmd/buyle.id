@@ -179,9 +179,22 @@ class OrderPaidNotification extends Notification
             $subtitle         = "Produk digital kamu sudah siap diunduh dan dipelajari #{$orderNumber}";
             $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih banyak telah berbelanja di <strong>buyle.id</strong>. Pembayaran kamu untuk produk digital <strong>#{$orderNumber}</strong> sudah terverifikasi:";
             $ctaText          = 'Unduh & Akses Produk Digital';
-            $promptMsg        = "Klik tombol hijau di bawah untuk langsung mengunduh file atau membuka tautan akses produk digital kamu:";
-            $footerNote       = 'Ada kendala mengunduh file atau membuka link? Balas email ini aja, kami siap bantu sampai tuntas!';
+            $promptMsg        = "Klik tombol di bawah untuk langsung mengunduh file atau membuka tautan akses produk digital kamu:";
         }
+
+        // Cari tautan langsung file / produk digital jika ada
+        $digitalResourceUrl = null;
+        foreach ($this->order->items as $item) {
+            if ($item->product && !empty($item->product->digital_resource)) {
+                $digitalResourceUrl = trim($item->product->digital_resource);
+                break;
+            }
+        }
+
+        $orderShowUrl = route('account.orders.show', $this->order->id);
+        $primaryCtaUrl = ($ctaText === 'Unduh & Akses Produk Digital' && !empty($digitalResourceUrl)) 
+            ? $digitalResourceUrl 
+            : $orderShowUrl;
 
         return (new MailMessage)
             ->subject($subject)
@@ -197,10 +210,10 @@ class OrderPaidNotification extends Notification
                     {$accountNotice}
                     <p style='margin-top: 20px;'>{$promptMsg}</p>
                 ",
-                'ctaUrl'           => route('account.orders.show', $this->order->id),
+                'ctaUrl'           => $primaryCtaUrl,
                 'ctaText'          => $ctaText,
-                'secondaryCtaUrl'  => $this->isNewAccount ? $this->magicLoginUrl : route('account.orders'),
-                'secondaryCtaText' => $this->isNewAccount ? 'Masuk Instan ke Dashboard Pembeli' : 'Lihat Riwayat Pesanan Saya',
+                'secondaryCtaUrl'  => $orderShowUrl,
+                'secondaryCtaText' => 'Lihat Riwayat Pesanan Saya',
                 'footerNote'       => $footerNote,
             ]);
     }

@@ -91,7 +91,8 @@
                         : 'https://placehold.co/150x150/f1f5f9/94a3b8?text=No+Image';
                     $qty = $firstItem ? $firstItem->quantity : 0;
                     $otherCount = $order->items->count() - 1;
-                    $orderNo = $order->order_number ?? $order->id;
+                    $rawOrderNo = $order->order_number ?: ('BYL-' . $order->id);
+                    $orderNo = str_starts_with($rawOrderNo, '#') ? $rawOrderNo : '#' . $rawOrderNo;
                     $searchString = strtolower($orderNo . ' ' . $productName);
                 @endphp
                 <a href="{{ route('account.orders.show', $order->id) }}" class="order-card" data-status="{{ $tabStatus }}" data-search="{{ $searchString }}">
@@ -100,7 +101,7 @@
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
                             <span>{{ $order->created_at->format('d M Y') }}</span>
                             <span style="width:4px;height:4px;border-radius:50%;background:#CBD5E1;"></span>
-                            <span class="order-card-id">#{{ $orderNo }}</span>
+                            <span class="order-card-id">{{ $orderNo }}</span>
                         </div>
                         <div class="order-card-status {{ $statusEnum }}">
                             {{ $order->status->label() }}
