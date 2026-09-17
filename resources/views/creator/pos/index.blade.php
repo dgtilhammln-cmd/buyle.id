@@ -157,9 +157,15 @@
         /* ── POS Layout Grid ──────────────────────────────────────────────── */
         .pos-wrapper {
             display: grid;
-            grid-template-columns: 1fr 390px;
-            gap: 1.25rem;
+            grid-template-columns: minmax(0, 1fr) minmax(300px, 350px);
+            gap: 1rem;
             align-items: start;
+        }
+
+        @media (max-width: 1100px) {
+            .pos-wrapper {
+                grid-template-columns: minmax(0, 1fr) 310px;
+            }
         }
 
         @media (max-width: 991px) {
@@ -171,7 +177,7 @@
         /* ── Search Input ─────────────────────────────────────────────────── */
         .search-input-wrap {
             position: relative;
-            margin-bottom: 1rem;
+            margin-bottom: 0.85rem;
         }
 
         .search-input-wrap svg {
@@ -188,14 +194,14 @@
         /* ── Product Grid ────────────────────────────────────────────────── */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+            gap: 0.75rem;
         }
 
         @media (max-width: 576px) {
             .product-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 0.75rem;
+                gap: 0.65rem;
             }
         }
 
@@ -203,7 +209,7 @@
             background: #ffffff;
             border: 1.5px solid #e2e8f0;
             border-radius: 16px;
-            padding: 0.85rem;
+            padding: 0.75rem;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
@@ -224,11 +230,11 @@
 
         .product-img-wrapper {
             width: 100%;
-            height: 120px;
+            height: 110px;
             border-radius: 12px;
             overflow: hidden;
             background: #f8fafc;
-            margin-bottom: 0.65rem;
+            margin-bottom: 0.6rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -247,12 +253,10 @@
         .pos-category-pills-wrap {
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
             gap: 6px;
-            margin: 8px 0 14px 0;
-            overflow-x: auto;
-            padding: 2px 2px 6px 2px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
+            margin: 6px 0 12px 0;
+            padding: 2px;
         }
         .pos-category-pills-wrap::-webkit-scrollbar { display: none; }
         .pos-cat-pill {
