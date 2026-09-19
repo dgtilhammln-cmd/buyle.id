@@ -132,24 +132,60 @@ class MidtransService
     {
         $midtransOrderId = 'DOMAIN-' . $domainOrder->id . '-' . time();
 
+        $basePrice   = (int) ($domainOrder->base_amount > 0 ? $domainOrder->base_amount : $domainOrder->amount);
+        $platformFee = (int) ($domainOrder->platform_fee ?? 0);
+        $adminFee    = (int) ($domainOrder->admin_fee ?? 0);
+        $taxAmount   = (int) ($domainOrder->tax_amount ?? 0);
+
+        $items = [
+            [
+                'id'       => 'DOM-' . $domainOrder->id,
+                'price'    => $basePrice,
+                'quantity' => 1,
+                'name'     => 'Custom Domain: ' . substr($domainOrder->domain_name, 0, 40),
+            ]
+        ];
+
+        if ($platformFee > 0) {
+            $items[] = [
+                'id'       => 'FEE-PLATFORM',
+                'price'    => $platformFee,
+                'quantity' => 1,
+                'name'     => 'Platform Fee',
+            ];
+        }
+
+        if ($adminFee > 0) {
+            $items[] = [
+                'id'       => 'FEE-ADMIN',
+                'price'    => $adminFee,
+                'quantity' => 1,
+                'name'     => 'Admin Fee',
+            ];
+        }
+
+        if ($taxAmount > 0) {
+            $items[] = [
+                'id'       => 'TAX-11',
+                'price'    => $taxAmount,
+                'quantity' => 1,
+                'name'     => 'PPN (Pajak 11%)',
+            ];
+        }
+
+        $grossAmount = array_reduce($items, fn($sum, $item) => $sum + ($item['price'] * $item['quantity']), 0);
+
         $params = [
             'transaction_details' => [
                 'order_id'     => $midtransOrderId,
-                'gross_amount' => (int) $domainOrder->amount,
+                'gross_amount' => $grossAmount,
             ],
             'customer_details' => [
                 'first_name' => $user->name,
                 'email'      => $user->email,
                 'phone'      => $user->phone ?? '',
             ],
-            'item_details' => [
-                [
-                    'id'       => 'DOM-' . $domainOrder->id,
-                    'price'    => (int) $domainOrder->amount,
-                    'quantity' => 1,
-                    'name'     => 'Custom Domain: ' . substr($domainOrder->domain_name, 0, 45),
-                ]
-            ],
+            'item_details' => $items,
         ];
 
         try {

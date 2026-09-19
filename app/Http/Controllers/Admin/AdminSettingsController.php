@@ -23,10 +23,14 @@ class AdminSettingsController extends Controller
         $data      = $request->except(['_token', '_method']);
 
         foreach ($data as $key => $value) {
-            // Jika array, ubah menjadi JSON string agar bisa disimpan di DB (kecuali untuk file upload yang tidak ada di $data)
+            // Jika array, ubah menjadi JSON string agar bisa disimpan di DB
             if (is_array($value)) {
-                // Filter array kosong dan reset index (array_values) untuk menghindari format object JSON yang salah
-                $value = json_encode(array_values(array_filter($value)));
+                if ($key === 'domain_prices') {
+                    $value = json_encode($value);
+                } else {
+                    // Filter array kosong dan reset index (array_values) untuk menghindari format object JSON yang salah
+                    $value = json_encode(array_values(array_filter($value)));
+                }
             }
             
             $existing = Setting::where('key', $key)->first();

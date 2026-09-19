@@ -23,6 +23,24 @@ class CreatorDomainController extends Controller
         'my.id'  => 333189,
     ];
 
+    public static function getPrices(): array
+    {
+        $custom = Setting::get('domain_prices');
+        if ($custom) {
+            $decoded = is_string($custom) ? json_decode($custom, true) : $custom;
+            if (is_array($decoded) && !empty($decoded)) {
+                $prices = self::$PRICES;
+                foreach ($decoded as $k => $v) {
+                    if (is_numeric($v) && $v > 0) {
+                        $prices[strtolower($k)] = (float)$v;
+                    }
+                }
+                return $prices;
+            }
+        }
+        return self::$PRICES;
+    }
+
     /**
      * Cek Ketersediaan Domain via WhoisJSON dengan Caching (24 jam)
      */
@@ -44,24 +62,26 @@ class CreatorDomainController extends Controller
         $cleanDomain = rtrim($cleanDomain, '/');
         $cleanDomain = explode('/', $cleanDomain)[0];
 
+        $prices = self::getPrices();
+
         // Determine extension
         $ext = $this->extractExtension($cleanDomain);
         $keyword = preg_replace('/' . preg_quote('.' . $ext, '/') . '$/i', '', $cleanDomain);
         $keyword = preg_replace('/[^a-z0-9\-]/i', '', $keyword);
 
-        if (empty($ext) || !array_key_exists($ext, self::$PRICES)) {
+        if (empty($ext) || !array_key_exists($ext, $prices)) {
             // Extension unsupported -> Suggest supported extensions
             $recommendations = $this->generateRecommendations($keyword);
             return response()->json([
                 'success' => false,
                 'unsupported_ext' => true,
-                'message' => "Ekstensi '." . ($ext ?: 'domain') . "' tidak didukung. Pilihan ekstensi resmi: .com, .id, .co.id, .biz, .biz.id, .store, .my.id",
+                'message' => "Ekstensi '." . ($ext ?: 'domain') . "' tidak didukung. Pilihan ekstensi resmi: ." . implode(', .', array_keys($prices)),
                 'recommendations' => $recommendations
             ], 422);
         }
 
         $fullDomainName = $keyword . '.' . $ext;
-        $price = self::$PRICES[$ext];
+        $price = $prices[$ext];
 
         // CACHING: Simpan hasil Whois selama 24 jam agar 1 request tidak diulang-ulang
         $cacheKey = 'whois_json_v1_' . md5($fullDomainName);
@@ -164,20 +184,36 @@ class CreatorDomainController extends Controller
         $cleanDomain = rtrim($cleanDomain, '/');
         $cleanDomain = explode('/', $cleanDomain)[0];
 
+        $prices = self::getPrices();
         $ext = $this->extractExtension($cleanDomain);
-        if (empty($ext) || !array_key_exists($ext, self::$PRICES)) {
+        if (empty($ext) || !array_key_exists($ext, $prices)) {
             return response()->json(['success' => false, 'message' => 'Ekstensi domain tidak didukung.'], 422);
         }
 
-        $price = self::$PRICES[$ext];
+        $basePrice = (float) $prices[$ext];
+
+        // Calculating Admin Fee, Platform Fee, & PPN Tax 11% using Admin setting path
+        $platformFeeRate = (float) Setting::get('platform_fee_rate', 5);
+        $adminFeeRate    = (float) Setting::get('admin_fee_rate', 5);
+        $taxRate         = (float) Setting::get('tax_rate', 11);
+
+        $platformFee = round($basePrice * ($platformFeeRate / 100));
+        $adminFee    = round($basePrice * ($adminFeeRate / 100));
+        $taxAmount   = round($basePrice * ($taxRate / 100));
+
+        $totalAmount = $basePrice + $platformFee + $adminFee + $taxAmount;
 
         // Buat record DomainOrder pending
         $domainOrder = DomainOrder::create([
-            'user_id'     => $user->id,
-            'domain_name' => $cleanDomain,
-            'extension'   => $ext,
-            'amount'      => $price,
-            'status'      => 'pending',
+            'user_id'      => $user->id,
+            'domain_name'  => $cleanDomain,
+            'extension'    => $ext,
+            'base_amount'  => $basePrice,
+            'platform_fee' => $platformFee,
+            'admin_fee'    => $adminFee,
+            'tax_amount'   => $taxAmount,
+            'amount'       => $totalAmount,
+            'status'       => 'pending',
         ]);
 
         // Generate Midtrans Snap Token
@@ -200,7 +236,12 @@ class CreatorDomainController extends Controller
                 'order_id' => $domainOrder->id,
                 'snap_token' => $snapToken,
                 'domain' => $cleanDomain,
-                'formatted_price' => 'Rp ' . number_format($price, 0, ',', '.')
+                'base_price' => $basePrice,
+                'platform_fee' => $platformFee,
+                'admin_fee' => $adminFee,
+                'tax_amount' => $taxAmount,
+                'total_amount' => $totalAmount,
+                'formatted_price' => 'Rp ' . number_format($totalAmount, 0, ',', '.')
             ]);
         } catch (\Throwable $e) {
             Log::error('Midtrans Domain Snap Error: ' . $e->getMessage(), ['domain' => $cleanDomain]);
@@ -219,13 +260,15 @@ class CreatorDomainController extends Controller
         $parts = explode('.', $domain);
         if (count($parts) < 2) return '';
 
+        $prices = self::getPrices();
+
         $sub = implode('.', array_slice($parts, -2));
-        if (array_key_exists($sub, self::$PRICES)) {
+        if (array_key_exists($sub, $prices)) {
             return $sub;
         }
 
         $single = end($parts);
-        if (array_key_exists($single, self::$PRICES)) {
+        if (array_key_exists($single, $prices)) {
             return $single;
         }
 
@@ -238,7 +281,8 @@ class CreatorDomainController extends Controller
     private function generateRecommendations(string $keyword): array
     {
         $recommendations = [];
-        foreach (self::$PRICES as $ext => $price) {
+        $prices = self::getPrices();
+        foreach ($prices as $ext => $price) {
             $recommendations[] = [
                 'domain' => $keyword . '.' . $ext,
                 'extension' => $ext,

@@ -240,6 +240,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       'ads'     => ['Space Iklan / Banner', 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z'],
       'adsense' => ['Monetisasi AdSense', 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
       'email'   => ['Pengaturan Email (SMTP)', 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'],
+      'domain'  => ['Harga Custom Domain', 'M12 2a10 10 0 100 20 10 10 0 000-20zM2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z'],
     ];
   @endphp
   @foreach($tabs as $tabKey => [$tabLabel, $tabIcon])
@@ -1203,6 +1204,47 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       <button type="button" onclick="submitTestEmail()" style="display:inline-flex;align-items:center;gap:.375rem;padding:.625rem 1.25rem;font-size:.85rem;font-weight:700;background:#2563EB;color:#ffffff;border:none;border-radius:8px;cursor:pointer;transition:all .2s;">
         🚀 Kirim Email Tes
       </button>
+    </div>
+  </div>
+</div>
+
+{{-- ======== TAB: HARGA CUSTOM DOMAIN ======== --}}
+<div id="tab-domain" class="tab-section" style="display:none;">
+  <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1.25rem;">
+      <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <div>
+        <div style="font-size:.9rem;font-weight:700;color:#0F172A;">Pengaturan Harga Jual Custom Domain</div>
+        <div style="font-size:.78rem;color:#64748B;">Atur harga pendaftaran & perpanjangan domain pertahun untuk creator (dalam Rupiah).</div>
+      </div>
+    </div>
+
+    @php
+      $dpRaw = $settings['domain_prices'] ?? '';
+      $dpSaved = [];
+      if (!empty($dpRaw)) {
+        $dpSaved = is_string($dpRaw) ? json_decode($dpRaw, true) : $dpRaw;
+      }
+      if (!is_array($dpSaved)) $dpSaved = [];
+      $dpDefaults = \App\Http\Controllers\Creator\CreatorDomainController::$PRICES;
+    @endphp
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;">
+      @foreach($dpDefaults as $ext => $defaultPrice)
+      <div>
+        <label class="form-label">
+          Harga .{{ $ext }} <span>(Default: Rp {{ number_format($defaultPrice,0,',','.') }})</span>
+        </label>
+        <div style="position:relative;">
+          <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-size:.85rem;font-weight:600;color:#64748B;">Rp</span>
+          <input type="number" name="domain_prices[{{ $ext }}]" value="{{ $dpSaved[$ext] ?? $defaultPrice }}" class="form-input" style="padding-left:2.8rem !important;" placeholder="{{ $defaultPrice }}">
+        </div>
+      </div>
+      @endforeach
+    </div>
+
+    <div style="margin-top:1.5rem;padding:1rem;background:#F8FAFC;border-radius:12px;border:1px solid #E2E8F0;font-size:.78rem;color:#64748B;line-height:1.5;">
+      💡 <strong>Informasi:</strong> Harga di atas akan ditampilkan secara otomatis saat creator memeriksa ketersediaan domain dan melakukan checkout via Midtrans.
     </div>
   </div>
 </div>

@@ -532,6 +532,13 @@ button.btn-primary:hover, a.btn-primary:hover {
       </div>
       <span class="sb-link-text">Resource Creator</span>
     </a>
+
+    <a href="{{ route('admin.domain-orders.index') }}" class="sb-link {{ request()->routeIs('admin.domain-orders*') ? 'active' : '' }}" title="Riwayat Domain">
+      <div class="sb-link-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </div>
+      <span class="sb-link-text">Transaksi Domain</span>
+    </a>
     @endif
 
     @if(!$uPerm || $uPerm->hasMenuPermission('leads'))
