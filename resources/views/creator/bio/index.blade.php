@@ -1,4 +1,4 @@
-﻿@extends('creator.layout')
+@extends('creator.layout')
 @section('title', 'Web Builder · Dashboard')
 @section('page_title', 'Web Builder')
 
@@ -4677,10 +4677,27 @@
                         <span class="dcm-info-label">Nama Domain</span>
                         <span id="modalDomainName" class="dcm-domain-name"></span>
                     </div>
+                    <div class="dcm-info-row" style="padding-top:0.35rem; margin-top:0.35rem; border-top:1px dashed #E2E8F0;">
+                        <span style="font-size:0.75rem; color:#475569;">Harga Dasar Domain</span>
+                        <span id="modalBasePrice" style="font-size:0.8rem; font-weight:600; color:#334155;">-</span>
+                    </div>
                     <div class="dcm-info-row">
-                        <span class="dcm-info-label">Total Pembayaran</span>
+                        <span style="font-size:0.75rem; color:#475569;">Platform Fee ({{ (float)(\App\Models\Setting::get('platform_fee_rate', 5)) }}%)</span>
+                        <span id="modalPlatformFee" style="font-size:0.8rem; font-weight:600; color:#334155;">-</span>
+                    </div>
+                    <div class="dcm-info-row">
+                        <span style="font-size:0.75rem; color:#475569;">Admin Fee ({{ (float)(\App\Models\Setting::get('admin_fee_rate', 5)) }}%)</span>
+                        <span id="modalAdminFee" style="font-size:0.8rem; font-weight:600; color:#334155;">-</span>
+                    </div>
+                    <div class="dcm-info-row">
+                        <span style="font-size:0.75rem; color:#475569;">PPN / Pajak ({{ (float)(\App\Models\Setting::get('tax_rate', 11)) }}%)</span>
+                        <span id="modalTaxAmount" style="font-size:0.8rem; font-weight:600; color:#334155;">-</span>
+                    </div>
+                    <div class="dcm-info-row" style="padding-top:0.5rem; margin-top:0.5rem; border-top:1.5px solid #10B981;">
+                        <span class="dcm-info-label" style="font-size:0.8rem; color:#0F172A;">TOTAL PEMBAYARAN</span>
                         <span>
-                            <span id="modalDomainPrice" class="dcm-domain-price"></span>
+                            <span id="modalTotalPrice" class="dcm-domain-price" style="font-size:1.1rem; color:#166534; font-weight:700;"></span>
+                            <span id="modalDomainPrice" class="dcm-domain-price" style="display:none;"></span>
                             <span class="dcm-domain-period">/tahun</span>
                         </span>
                     </div>
@@ -4769,15 +4786,39 @@
     }
 
     /* ── Checkout Modal ─────────────────────────────────────────── */
-    function buyDomain(domainName, formattedPrice) {
+    const DOM_PF_RATE = {{ (float) (\App\Models\Setting::get('platform_fee_rate', 5)) }};
+    const DOM_AF_RATE = {{ (float) (\App\Models\Setting::get('admin_fee_rate', 5)) }};
+    const DOM_TAX_RATE = {{ (float) (\App\Models\Setting::get('tax_rate', 11)) }};
+
+    function formatRupiah(num) {
+        return 'Rp ' + Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function buyDomain(domainName, formattedPrice, rawPrice) {
         activeDomainToBuy = domainName;
         document.getElementById('modalDomainName').textContent = domainName;
-        if (!formattedPrice) {
+
+        var basePrice = 0;
+        if (rawPrice && !isNaN(rawPrice)) {
+            basePrice = parseFloat(rawPrice);
+        } else {
             var ext = domainName.split('.').slice(1).join('.');
-            var map = {'com':'Rp 436.666','id':'Rp 480.719','co.id':'Rp 532.889','biz':'Rp 667.546','biz.id':'Rp 177.589','store':'Rp 1.065.836','my.id':'Rp 333.189'};
-            formattedPrice = map[ext] || 'Rp 436.666';
+            var map = {'com':436666,'id':480719,'co.id':532889,'biz':667546,'biz.id':177589,'store':1065836,'my.id':333189};
+            basePrice = map[ext] || 436666;
         }
-        document.getElementById('modalDomainPrice').textContent = formattedPrice;
+
+        var platformFee = Math.round(basePrice * (DOM_PF_RATE / 100));
+        var adminFee = Math.round(basePrice * (DOM_AF_RATE / 100));
+        var taxAmount = Math.round(basePrice * (DOM_TAX_RATE / 100));
+        var totalPrice = basePrice + platformFee + adminFee + taxAmount;
+
+        if (document.getElementById('modalBasePrice')) document.getElementById('modalBasePrice').textContent = formatRupiah(basePrice);
+        if (document.getElementById('modalPlatformFee')) document.getElementById('modalPlatformFee').textContent = formatRupiah(platformFee);
+        if (document.getElementById('modalAdminFee')) document.getElementById('modalAdminFee').textContent = formatRupiah(adminFee);
+        if (document.getElementById('modalTaxAmount')) document.getElementById('modalTaxAmount').textContent = formatRupiah(taxAmount);
+        if (document.getElementById('modalTotalPrice')) document.getElementById('modalTotalPrice').textContent = formatRupiah(totalPrice);
+        if (document.getElementById('modalDomainPrice')) document.getElementById('modalDomainPrice').textContent = formatRupiah(totalPrice);
+
         document.getElementById('dcmErrorBox').style.display = 'none';
         var modal = document.getElementById('domainCheckoutModal');
         modal.classList.add('open');
