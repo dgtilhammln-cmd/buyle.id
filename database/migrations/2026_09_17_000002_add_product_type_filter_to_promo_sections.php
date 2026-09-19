@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('promo_sections', function (Blueprint $table) {
             if (!Schema::hasColumn('promo_sections', 'product_type_filter')) {
-                $table->string('product_type_filter', 50)->nullable()->after('category_id');
+                $table->string('product_type_filter', 50)->nullable();
             }
         });
     }
