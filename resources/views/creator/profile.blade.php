@@ -388,15 +388,18 @@ select.form-input { cursor: pointer; }
                         @error('store_slug')<span class="form-error">{{ $message }}</span>@enderror
                     </div>
 
-                    <div class="form-group full">
-                        <label class="form-label">Custom Domain Toko / Bio Page (Opsional)</label>
-                        <div class="slug-wrap">
-                            <span class="slug-prefix">https://</span>
-                            <input type="text" name="custom_domain" class="slug-input" value="{{ old('custom_domain', $profile->custom_domain) }}" placeholder="domainkreator.com">
+                    @if(!empty($profile->custom_domain))
+                        <div class="form-group full">
+                            <label class="form-label">Custom Domain Toko / Bio Page</label>
+                            <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:0.75rem 1rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+                                <div style="display:flex; align-items:center; gap:0.5rem;">
+                                    <span style="background:#166534; color:#fff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.5rem; border-radius:6px;">🌐 ACTIVE DOMAIN</span>
+                                    <strong style="color:#166534; font-size:0.875rem;">https://{{ $profile->custom_domain }}</strong>
+                                </div>
+                                <span style="font-size:0.75rem; color:#15803D;">Pengaturan & pemetaan domain dikelola oleh Admin Platform.</span>
+                            </div>
                         </div>
-                        <span class="form-hint">Isi jika kreator menggunakan domain sendiri (contoh: <code>domainkamu.com</code> atau <code>bio.domainkamu.com</code>). Cukup A Record ke IP Server Buyle.id.</span>
-                        @error('custom_domain')<span class="form-error">{{ $message }}</span>@enderror
-                    </div>
+                    @endif
 
                     <div class="form-group full">
                         <label class="form-label">Tipe / Peran Creator</label>

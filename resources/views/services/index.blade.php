@@ -95,20 +95,34 @@
         }
 
         .sp-sort-select {
+            width: 100%;
             border: 1.5px solid var(--c-border);
-            border-radius: 8px;
-            padding: 0.4rem 0.75rem;
+            border-radius: 10px;
+            padding: 0.55rem 2.25rem 0.55rem 0.875rem;
             font-size: 0.8125rem;
+            font-weight: 500;
             font-family: var(--font);
             color: var(--c-text);
-            background: var(--c-card);
+            background-color: var(--c-card);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%252364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 0.9rem;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
             outline: none;
             cursor: pointer;
-            transition: border-color 0.2s;
+            transition: all 0.2s ease;
+        }
+
+        .sp-sort-select:hover {
+            border-color: var(--c-accent);
         }
 
         .sp-sort-select:focus {
             border-color: var(--c-accent);
+            box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.15);
         }
 
         .sp-view-btns {
@@ -1230,22 +1244,6 @@
                         <line x1="20" y1="9" x2="4" y2="9" />
                         <line x1="13" y1="14" x2="4" y2="14" />
                     </svg>
-                    Urutkan:
-                    <form id="sortForm" method="GET" action="{{ route_locale('products') }}">
-                        @foreach(request()->except('sort') as $k => $v)
-                            <input type="hidden" name="{{ $k }}" value="{{ is_array($v) ? implode(',', $v) : $v }}">
-                        @endforeach
-                        <select class="sp-sort-select" name="sort" onchange="document.getElementById('sortForm').submit()">
-                            <option value="default" {{ request('sort', 'default') === 'default' ? 'selected' : '' }}>Default
-                            </option>
-                            <option value="newest" {{ request('sort') === 'newest' ? 'selected' : '' }}>Terbaru</option>
-                            <option value="name_az" {{ request('sort') === 'name_az' ? 'selected' : '' }}>Nama A-Z</option>
-                            <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>Harga Terendah
-                            </option>
-                            <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>Harga
-                                Tertinggi</option>
-                        </select>
-                    </form>
                 </div>
 
                 <div class="sp-result-count">{{ $services->count() }} produk</div>
@@ -1364,9 +1362,21 @@
                 <div class="sp-sidebar-head"><span class="sp-sidebar-head-dot"></span>Filter Produk</div>
                 <div class="sp-sidebar-body">
                     <form method="GET" action="{{ route_locale('products') }}">
-                        @foreach(request()->except(['type', 'price_min', 'price_max', 'page']) as $k => $v)
+                        @foreach(request()->except(['sort', 'type', 'price_min', 'price_max', 'page']) as $k => $v)
                             <input type="hidden" name="{{ $k }}" value="{{ is_array($v) ? implode(',', $v) : $v }}">
                         @endforeach
+
+                        {{-- Urutkan / Sort --}}
+                        <div style="margin-bottom:1.25rem;">
+                            <div style="font-size:0.75rem;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;font-family:var(--font);">Urutkan Berdasarkan</div>
+                            <select class="sp-sort-select" name="sort" onchange="this.form.submit()" style="width:100%;box-sizing:border-box;">
+                                <option value="default" {{ request('sort', 'default') === 'default' ? 'selected' : '' }}>Default</option>
+                                <option value="newest" {{ request('sort') === 'newest' ? 'selected' : '' }}>Terbaru</option>
+                                <option value="name_az" {{ request('sort') === 'name_az' ? 'selected' : '' }}>Nama A-Z</option>
+                                <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>Harga Terendah</option>
+                                <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>Harga Tertinggi</option>
+                            </select>
+                        </div>
 
                         {{-- Tipe Produk --}}
                         <div style="margin-bottom:1.25rem;">
@@ -1479,8 +1489,10 @@
 
 
 
-            {{-- Grid (Coming Soon) --}}
-            @include('components.coming-soon-inline')
+            {{-- Grid --}}
+            <div id="spGrid" class="sp-grid">
+                @include('components.coming-soon-inline')
+            </div>
         </div>
     </div>
 

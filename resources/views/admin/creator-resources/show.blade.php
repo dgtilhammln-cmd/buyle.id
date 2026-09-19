@@ -527,32 +527,55 @@
     </div>
 
     {{-- ══ Custom Domain Management & Anti-Conflict Card ══ --}}
+    {{-- ══ Custom Domain & Site Verification Card (Centralized Admin Management) ══ --}}
     <div style="background:#ffffff; border:1.5px solid #E2E8F0; border-radius:20px; padding:1.5rem; margin-bottom:1.75rem; box-shadow:0 4px 20px rgba(0,0,0,0.02);">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; padding-bottom:1rem; border-bottom:1.5px solid #F1F5F9; margin-bottom:1.25rem;">
             <div>
                 <div style="font-size:1.05rem; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:0.5rem;">
                     <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                    Pengaturan Domain Pribadi & Verifikasi Site Creator (Link in Bio)
+                    Pengaturan Custom Domain & Verifikasi Site (Centralized Control)
                 </div>
                 <div style="font-size:0.78rem; color:#64748B; margin-top:0.2rem;">
-                    Kelola custom domain dan kode verifikasi Google Search Console khusus creator ini dengan sistem Anti-Konflik.
+                    Seluruh kontrol domain, pemetaan toko, verifikasi TXT, dan pemeriksaan SSL dikelola penuh di sini.
                 </div>
             </div>
-            <div>
+            <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
                 @if(!empty($customDomain))
+                    {{-- Status DNS --}}
                     @if($dnsStatus === 'active')
-                        <span style="background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; font-size:0.78rem; font-weight:700; padding:0.4rem 0.85rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.4rem;">
-                            <span style="width:8px; height:8px; background:#22C55E; border-radius:50%; display:inline-block;"></span>
-                            DNS Active & Resolved ({{ $dnsResolvedIp }})
+                        <span style="background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; font-size:0.75rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.4rem;">
+                            <span style="width:7px; height:7px; background:#22C55E; border-radius:50%; display:inline-block;"></span>
+                            DNS Active ({{ $dnsResolvedIp }})
                         </span>
                     @else
-                        <span style="background:#FFFBEB; color:#92400E; border:1px solid #FDE68A; font-size:0.78rem; font-weight:700; padding:0.4rem 0.85rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.4rem;">
-                            <span style="width:8px; height:8px; background:#F59E0B; border-radius:50%; display:inline-block;"></span>
-                            Menunggu DNS Propagation / Pointing
+                        <span style="background:#FFFBEB; color:#92400E; border:1px solid #FDE68A; font-size:0.75rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.4rem;">
+                            <span style="width:7px; height:7px; background:#F59E0B; border-radius:50%; display:inline-block;"></span>
+                            Menunggu DNS Pointing
                         </span>
                     @endif
+
+                    {{-- Status SSL --}}
+                    @if(isset($sslStatus) && $sslStatus === 'active')
+                        <span style="background:#ECFDF5; color:#047857; border:1px solid #A7F3D0; font-size:0.75rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.35rem;">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            SSL Active (HTTPS)
+                        </span>
+                    @else
+                        <span style="background:#FEF2F2; color:#B91C1C; border:1px solid #FECACA; font-size:0.75rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.35rem;">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            SSL Pending / Check Required
+                        </span>
+                    @endif
+
+                    {{-- Tombol Periksa Ulang DNS & SSL --}}
+                    <a href="{{ route('admin.creator-resources.show', $user->id) }}?recheck_dns=1"
+                        style="background:#F1F5F9; color:#0F172A; border:1px solid #CBD5E1; font-size:0.75rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:100px; text-decoration:none; display:inline-flex; align-items:center; gap:0.35rem; transition:all 0.2s;"
+                        title="Periksa Ulang DNS & Status SSL Live">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                        Periksa Ulang DNS
+                    </a>
                 @else
-                    <span style="background:#F8FAFC; color:#64748B; border:1px solid #E2E8F0; font-size:0.78rem; font-weight:700; padding:0.4rem 0.85rem; border-radius:100px;">
+                    <span style="background:#F8FAFC; color:#64748B; border:1px solid #E2E8F0; font-size:0.75rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:100px;">
                         Belum Menggunakan Custom Domain
                     </span>
                 @endif
@@ -574,28 +597,30 @@
 
                     <div style="margin-bottom:1rem;">
                         <label style="display:block; font-size:0.825rem; font-weight:700; color:#0F172A; margin-bottom:0.35rem;">
-                            Kode Verifikasi Site (Google Search Console Meta Tag)
+                            Token / Kode Verifikasi Site (Google Search Console Meta Tag)
                         </label>
-                        <input type="text" name="site_verification_code" value="{{ old('site_verification_code', $siteVerificationCode) }}" placeholder="Masukkan token, misal: abc123xyz atau meta tag Google"
+                        <input type="text" name="site_verification_code" value="{{ old('site_verification_code', $siteVerificationCode) }}" placeholder="Masukkan token TXT/meta tag Google Search Console"
                             style="width:100%; padding:0.65rem 0.9rem; border:1.5px solid #CBD5E1; border-radius:10px; font-size:0.85rem; font-family:inherit; outline:none; background:#ffffff; box-sizing:border-box;">
                         <div style="font-size:0.72rem; color:#64748B; margin-top:0.25rem;">
-                            Kode ini akan otomatis disematkan dalam <code>&lt;meta name="google-site-verification" content="..."&gt;</code> di domain creator.
+                            Token ini otomatis disematkan dalam <code>&lt;meta name="google-site-verification" content="..."&gt;</code> di domain creator.
                         </div>
                     </div>
 
-                    <button type="submit" style="background:#0F172A; color:#fff; border:none; border-radius:10px; padding:0.65rem 1.25rem; font-size:0.825rem; font-weight:700; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:0.4rem;">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                        Simpan Pengaturan Domain
-                    </button>
+                    <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                        <button type="submit" style="background:#0F172A; color:#fff; border:none; border-radius:10px; padding:0.65rem 1.25rem; font-size:0.825rem; font-weight:700; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:0.4rem;">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                            Simpan Domain & Kode Verifikasi
+                        </button>
+                    </div>
                 </form>
 
                 @if(!empty($customDomain))
                     <div style="margin-top:1rem; padding-top:0.85rem; border-top:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
                         <a href="https://{{ $customDomain }}" target="_blank" class="btn-open-link">
                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            Buka Domain ({{ $customDomain }})
+                            Buka Domain (https://{{ $customDomain }})
                         </a>
-                        <form action="{{ route('admin.creator-resources.custom-domain', $user->id) }}" method="POST" onsubmit="return confirm('Hapus/Reset custom domain milik {{ addslashes($user->name) }}?');" style="margin:0;">
+                        <form action="{{ route('admin.creator-resources.custom-domain', $user->id) }}" method="POST" onsubmit="return confirm('Hapus / reset custom domain {{ addslashes($customDomain) }} milik creator {{ addslashes($user->name) }}?');" style="margin:0;">
                             @csrf
                             <input type="hidden" name="custom_domain" value="">
                             <input type="hidden" name="site_verification_code" value="">
@@ -610,7 +635,7 @@
                 <div style="margin-top:1rem; font-size:0.75rem; color:#64748B; line-height:1.5; display:flex; align-items:flex-start; gap:0.4rem;">
                     <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     <div>
-                        <strong>Sistem Anti-Konflik Aktif:</strong> Domain otomatis disanitasi, divalidasi terhadap daftar domain sistem/reserved, dan dipastikan unik antar seluruh akun creator.
+                        <strong>Sistem Anti-Konflik Aktif:</strong> Setiap domain dipastikan unik (1 domain = 1 toko), disanitasi otomatis, serta dicek terhadap daftar domain sistem/reserved.
                     </div>
                 </div>
             </div>
@@ -619,19 +644,19 @@
             <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:16px; padding:1.25rem;">
                 <div style="font-size:0.85rem; font-weight:800; color:#166534; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem;">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    Panduan Detail DNS Record Registrar (Rumahweb, Niagahoster, Hostinger, Cloudflare)
+                    Panduan Detail Aturan DNS Record (Registrar & Cloudflare)
                 </div>
                 <div style="font-size:0.78rem; color:#15803D; line-height:1.5; margin-bottom:0.85rem;">
-                    Atur 2 DNS Record berikut di Panel DNS Management Registrar tempat domain dibeli:
+                    Atur 2 DNS Record berikut pada DNS Management Registrar tempat domain dibeli:
                 </div>
 
                 {{-- Record A --}}
                 <div style="background:#ffffff; border:1px solid #DCFCE7; border-radius:12px; padding:0.85rem; font-size:0.78rem; margin-bottom:0.75rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
-                        <span style="font-weight:800; color:#0F172A;">1. Record A (Domain Utama / Naked Domain)</span>
-                        <span style="background:#F1F5F9; color:#475569; padding:0.15rem 0.5rem; border-radius:6px; font-weight:700; font-size:0.7rem;">Type: A</span>
+                        <span style="font-weight:800; color:#0F172A;">1. Record A (Domain Utama / ANAME / ALIAS)</span>
+                        <span style="background:#F1F5F9; color:#475569; padding:0.15rem 0.5rem; border-radius:6px; font-weight:700; font-size:0.7rem;">Type: A / ANAME</span>
                     </div>
-                    <div style="font-size:0.75rem; color:#64748B; margin-bottom:0.4rem;">Mengarahkan domain utama (misal: <code>brandku.com</code>) ke IP server Buyle.id:</div>
+                    <div style="font-size:0.75rem; color:#64748B; margin-bottom:0.4rem;">Arahkan domain utama (naked domain) ke IP Server resmi:</div>
                     <div style="display:flex; align-items:center; gap:0.5rem; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:0.45rem 0.75rem;">
                         <code style="font-weight:800; color:#0F172A; font-family:monospace; font-size:0.85rem; flex:1;">Host: @ &nbsp;|&nbsp; Value: {{ $serverIp }}</code>
                         <button type="button" onclick="navigator.clipboard.writeText('{{ $serverIp }}'); alert('IP Server {{ $serverIp }} berhasil disalin!');"
@@ -642,7 +667,7 @@
                 </div>
 
                 {{-- Record CNAME --}}
-                <div style="background:#ffffff; border:1px solid #DCFCE7; border-radius:12px; padding:0.85rem; font-size:0.78rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
+                <div style="background:#ffffff; border:1px solid #DCFCE7; border-radius:12px; padding:0.85rem; font-size:0.78rem; margin-bottom:0.75rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
                         <span style="font-weight:800; color:#0F172A;">2. Record CNAME (Subdomain www)</span>
                         <span style="background:#F1F5F9; color:#475569; padding:0.15rem 0.5rem; border-radius:6px; font-weight:700; font-size:0.7rem;">Type: CNAME</span>
@@ -655,6 +680,13 @@
                             Salin Host
                         </button>
                     </div>
+                </div>
+
+                {{-- Strict DNS Rules Notice --}}
+                <div style="font-size:0.72rem; color:#15803D; line-height:1.45; background:#DCFCE7; padding:0.5rem 0.75rem; border-radius:8px;">
+                    <strong>Aturan Penting DNS:</strong><br>
+                    • Jangan menambahkan Record AAAA (IPv6) untuk domain utama agar tidak terjadi konflik routing SSL.<br>
+                    • Record MX, SPF, DKIM, dan DMARC bawaan registrar/domain utama tidak perlu dihapus agar email tetap normal.
                 </div>
             </div>
         </div>

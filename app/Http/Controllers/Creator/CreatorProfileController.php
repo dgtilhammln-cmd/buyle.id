@@ -26,18 +26,9 @@ class CreatorProfileController extends Controller
             $request->merge(['store_slug' => \Illuminate\Support\Str::slug($request->store_name)]);
         }
 
-        if ($request->filled('custom_domain')) {
-            $cleanedDomain = preg_replace('#^https?://#i', '', strtolower(trim($request->custom_domain)));
-            $cleanedDomain = explode('/', $cleanedDomain)[0];
-            $request->merge(['custom_domain' => $cleanedDomain ?: null]);
-        } else {
-            $request->merge(['custom_domain' => null]);
-        }
-
         $request->validate([
             'store_name' => 'nullable|string|max:100',
             'store_slug' => 'nullable|string|max:100|regex:/^[a-z0-9\-]+$/|unique:creator_profiles,store_slug,' . ($user->creatorProfile->id ?? 'NULL'),
-            'custom_domain' => 'nullable|string|max:150|unique:creator_profiles,custom_domain,' . ($user->creatorProfile->id ?? 'NULL'),
             'store_description' => 'nullable|string|max:500',
             'creator_type' => 'nullable|string|max:100',
             'social_links' => 'nullable|array',
@@ -70,7 +61,7 @@ class CreatorProfileController extends Controller
             ['user_id' => $user->id],
             array_merge(
                 $request->only([
-                    'store_name', 'store_slug', 'custom_domain', 'store_description',
+                    'store_name', 'store_slug', 'store_description',
                     'creator_type',
                     'address', 'province_id', 'city_id', 'raja_city_id',
                     'subdistrict_id', 'raja_district_id',

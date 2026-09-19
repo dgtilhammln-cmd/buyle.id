@@ -574,9 +574,10 @@ class AdminCreatorResourceController extends Controller
             $q->whereNotIn('status', ['pending', 'cancelled', 'refunded', 'failed', 'expired']);
         })->sum('subtotal');
 
-        // DNS Status Check for Custom Domain
+        // DNS & SSL Status Check for Custom Domain
         $customDomain = $creatorProfile->custom_domain ?? null;
         $dnsStatus = 'none';
+        $sslStatus = 'none';
         $dnsResolvedIp = null;
 
         if (!empty($customDomain)) {
@@ -590,6 +591,19 @@ class AdminCreatorResourceController extends Controller
                 }
             } catch (\Throwable $e) {
                 $dnsStatus = 'pending';
+            }
+
+            // Probe SSL Certificate / Port 443
+            $sslStatus = 'pending';
+            try {
+                $g = stream_context_create(["ssl" => ["capture_peer_cert" => true, "verify_peer" => false, "verify_peer_name" => false]]);
+                $r = @stream_socket_client("ssl://" . $customDomain . ":443", $errno, $errstr, 2, STREAM_CLIENT_CONNECT, $g);
+                if ($r) {
+                    $sslStatus = 'active';
+                    @fclose($r);
+                }
+            } catch (\Throwable $e) {
+                $sslStatus = 'pending';
             }
         }
 
@@ -608,6 +622,7 @@ class AdminCreatorResourceController extends Controller
             'creatorProfile'        => $creatorProfile,
             'customDomain'          => $customDomain,
             'dnsStatus'             => $dnsStatus,
+            'sslStatus'             => $sslStatus,
             'dnsResolvedIp'         => $dnsResolvedIp,
             'serverIp'              => $serverIp,
             'siteVerificationCode'  => $creatorProfile->site_verification_code ?? null,
