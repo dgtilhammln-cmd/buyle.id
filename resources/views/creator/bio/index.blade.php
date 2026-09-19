@@ -1,4 +1,4 @@
-﻿@extends('creator.layout')
+@extends('creator.layout')
 @section('title', 'Web Builder · Dashboard')
 @section('page_title', 'Web Builder')
 
@@ -4589,73 +4589,148 @@
 
     @include('partials.scan_menu_modal')
 
-    {{-- Interactive Mobile-Friendly Domain Checkout Modal --}}
-    <div id="domainCheckoutModal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1rem; overflow-y:auto; transition:all 0.3s ease;">
-        <div style="background:#ffffff; border-radius:24px; max-width:460px; width:100%; padding:1.75rem; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); border:1px solid #E2E8F0; position:relative;">
-            
-            {{-- Close Button --}}
-            <button type="button" onclick="closeCheckoutModal()" style="position:absolute; top:1rem; right:1rem; background:#F1F5F9; border:none; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#64748B; transition:all 0.2s;">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
+    {{-- ============================================================ --}}
+    {{-- DOMAIN CHECKOUT MODAL — Premium Interactive                  --}}
+    {{-- ============================================================ --}}
+    <style>
+    /* ── Domain Checkout Modal ─────────────────────────────── */
+    #domainCheckoutModal {
+        display: none; position: fixed; inset: 0; z-index: 99999;
+        background: rgba(10,15,30,0.72); backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        align-items: center; justify-content: center; padding: 1rem; overflow-y: auto;
+    }
+    #domainCheckoutModal.open { display: flex; animation: dcmFadeIn .25s ease; }
+    @keyframes dcmFadeIn { from { opacity:0; } to { opacity:1; } }
+    .dcm-card {
+        background: #fff; border-radius: 28px; max-width: 480px; width: 100%;
+        padding: 0; box-shadow: 0 32px 64px -12px rgba(0,0,0,0.32);
+        border: 1px solid rgba(255,255,255,0.5); position: relative; overflow: hidden;
+        animation: dcmSlideUp .3s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes dcmSlideUp { from { transform:translateY(30px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+    .dcm-header { background: linear-gradient(135deg, #0F172A 0%, #1e293b 100%); padding: 1.75rem 1.75rem 1.5rem; text-align: center; position: relative; }
+    .dcm-close-btn {
+        position: absolute; top: 1rem; right: 1rem;
+        background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+        color: rgba(255,255,255,0.7); width: 32px; height: 32px;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; transition: all .2s;
+    }
+    .dcm-close-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+    .dcm-icon-wrap {
+        width: 60px; height: 60px; background: linear-gradient(135deg, #1eb349, #a5cf37);
+        border-radius: 18px; display: inline-flex; align-items: center; justify-content: center;
+        margin-bottom: 0.9rem; box-shadow: 0 8px 24px rgba(30,179,73,0.4);
+    }
+    .dcm-title { font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem; }
+    .dcm-subtitle { font-size: 0.8rem; color: rgba(255,255,255,0.55); margin: 0; }
+    .dcm-body { padding: 1.5rem 1.75rem; }
+    .dcm-info-card {
+        background: linear-gradient(135deg, #F0FDF4, #ECFDF5);
+        border: 1.5px solid #BBF7D0; border-radius: 16px; padding: 1rem 1.25rem; margin-bottom: 1.25rem;
+    }
+    .dcm-info-row { display: flex; justify-content: space-between; align-items: center; }
+    .dcm-info-row + .dcm-info-row { margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed #BBF7D0; }
+    .dcm-info-label { font-size: 0.72rem; font-weight: 700; color: #15803D; text-transform: uppercase; letter-spacing: 0.05em; }
+    .dcm-domain-name { font-size: 1.1rem; font-weight: 900; color: #166534; }
+    .dcm-domain-price { font-size: 1.15rem; font-weight: 900; color: #0F172A; }
+    .dcm-domain-period { font-size: 0.7rem; color: #94A3B8; margin-left: 3px; }
+    .dcm-benefits { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; }
+    .dcm-benefit-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #475569; }
+    .dcm-benefit-icon { width: 20px; height: 20px; background: #F0FDF4; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .dcm-notice { background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 12px; padding: 0.75rem 0.9rem; font-size: 0.75rem; color: #92400E; margin-bottom: 1.25rem; display: flex; align-items: flex-start; gap: 0.5rem; }
+    .dcm-error-box { background: #FEF2F2; border: 1.5px solid #FCA5A5; border-radius: 12px; padding: 0.75rem 0.9rem; font-size: 0.8rem; color: #991B1B; margin-bottom: 1rem; display: none; align-items: center; gap: 0.5rem; }
+    .dcm-actions { display: grid; grid-template-columns: 1fr 1.6fr; gap: 0.75rem; }
+    .dcm-btn-cancel { height: 48px; background: #F1F5F9; color: #64748B; border: 1.5px solid #E2E8F0; border-radius: 14px; font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: all .2s; }
+    .dcm-btn-cancel:hover { background: #E2E8F0; color: #334155; }
+    .dcm-btn-pay { height: 48px; background: linear-gradient(135deg, #1eb349 0%, #16a34a 60%, #a5cf37 100%); color: #fff; border: none; border-radius: 14px; font-weight: 800; font-size: 0.875rem; cursor: pointer; box-shadow: 0 6px 20px rgba(30,179,73,0.4); display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; transition: all .25s; }
+    .dcm-btn-pay:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(30,179,73,0.5); }
+    .dcm-btn-pay:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+    /* ── Toast ─────────────────────────────────────────────── */
+    #domainToast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(100px); z-index: 999999; min-width: 300px; max-width: calc(100vw - 2rem); background: #0F172A; color: #fff; border-radius: 16px; padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 0.75rem; box-shadow: 0 16px 40px rgba(0,0,0,0.3); transition: transform .4s cubic-bezier(.34,1.56,.64,1), opacity .3s; opacity: 0; }
+    #domainToast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    #domainToast.toast-success { background: linear-gradient(135deg, #166534, #15803D); }
+    #domainToast.toast-error { background: linear-gradient(135deg, #991B1B, #DC2626); }
+    #domainToast.toast-info { background: linear-gradient(135deg, #1e40af, #1d4ed8); }
+    .toast-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .toast-content { flex: 1; }
+    .toast-title { font-size: 0.875rem; font-weight: 800; margin: 0 0 0.2rem; }
+    .toast-msg { font-size: 0.78rem; opacity: 0.85; margin: 0; line-height: 1.4; }
+    .toast-close { background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer; padding: 0; flex-shrink: 0; }
+    .toast-close:hover { color: #fff; }
+    </style>
 
-            {{-- Header --}}
-            <div style="text-align:center; margin-bottom:1.25rem;">
-                <div style="width:52px; height:52px; background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:16px; display:inline-flex; align-items:center; justify-content:center; color:#166534; margin-bottom:0.75rem;">
-                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    {{-- Domain Checkout Modal --}}
+    <div id="domainCheckoutModal">
+        <div class="dcm-card">
+            <div class="dcm-header">
+                <button type="button" class="dcm-close-btn" onclick="closeCheckoutModal()" aria-label="Tutup">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+                <div class="dcm-icon-wrap">
+                    <svg width="28" height="28" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 </div>
-                <h3 style="font-size:1.2rem; font-weight:800; color:#0F172A; margin:0 0 0.25rem;">Konfirmasi Amankan Domain</h3>
-                <p style="font-size:0.8rem; color:#64748B; margin:0;">Periksa rincian pesanan custom domain Anda</p>
+                <h3 class="dcm-title">Amankan Custom Domain</h3>
+                <p class="dcm-subtitle">Periksa detail pesanan sebelum lanjut bayar</p>
             </div>
-
-            {{-- Domain Card Info --}}
-            <div style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px; padding:1.1rem; margin-bottom:1.25rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; border-bottom:1px solid #E2E8F0; padding-bottom:0.6rem;">
-                    <span style="font-size:0.75rem; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.05em;">Nama Domain:</span>
-                    <span id="modalDomainName" style="font-size:1.05rem; font-weight:800; color:#166534;"></span>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.75rem; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.05em;">Total Harga:</span>
-                    <div>
-                        <span id="modalDomainPrice" style="font-size:1.1rem; font-weight:800; color:#0F172A;"></span>
-                        <span style="font-size:0.7rem; color:#94A3B8;">/tahun</span>
+            <div class="dcm-body">
+                <div class="dcm-info-card">
+                    <div class="dcm-info-row">
+                        <span class="dcm-info-label">Nama Domain</span>
+                        <span id="modalDomainName" class="dcm-domain-name"></span>
+                    </div>
+                    <div class="dcm-info-row">
+                        <span class="dcm-info-label">Total Pembayaran</span>
+                        <span>
+                            <span id="modalDomainPrice" class="dcm-domain-price"></span>
+                            <span class="dcm-domain-period">/tahun</span>
+                        </span>
                     </div>
                 </div>
-            </div>
-
-            {{-- Benefits List --}}
-            <div style="margin-bottom:1.25rem; font-size:0.78rem; color:#475569; display:flex; flex-direction:column; gap:0.45rem;">
-                <div style="display:flex; align-items:center; gap:0.4rem;">
-                    <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span>Sudah termasuk pendaftaran domain resmi 1 Tahun</span>
+                <div class="dcm-benefits">
+                    <div class="dcm-benefit-item">
+                        <div class="dcm-benefit-icon"><svg width="11" height="11" fill="none" stroke="#16a34a" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                        <span>Pendaftaran domain resmi masa aktif <strong>1 Tahun</strong></span>
+                    </div>
+                    <div class="dcm-benefit-item">
+                        <div class="dcm-benefit-icon"><svg width="11" height="11" fill="none" stroke="#16a34a" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                        <span>Auto SSL/HTTPS & DNS Pointing ke halaman Web Builder Anda</span>
+                    </div>
+                    <div class="dcm-benefit-item">
+                        <div class="dcm-benefit-icon"><svg width="11" height="11" fill="none" stroke="#16a34a" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                        <span>Proses setup maks. <strong>2&#215;24 jam</strong> + notifikasi email</span>
+                    </div>
                 </div>
-                <div style="display:flex; align-items:center; gap:0.4rem;">
-                    <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span>Auto SSL / HTTPS & DNS Pointing ke Halaman Creator</span>
+                <div class="dcm-notice">
+                    <svg width="16" height="16" fill="none" stroke="#92400E" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span>Email konfirmasi & bukti transaksi akan dikirim setelah pembayaran berhasil.</span>
                 </div>
-                <div style="display:flex; align-items:center; gap:0.4rem;">
-                    <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span>Proses pendaftaran & pemetaan maks. <strong>2x24 jam</strong></span>
+                <div id="dcmErrorBox" class="dcm-error-box">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                    <span id="dcmErrorText"></span>
                 </div>
-            </div>
-
-            {{-- Important Notice --}}
-            <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:0.75rem 0.9rem; font-size:0.75rem; color:#92400E; margin-bottom:1.25rem; display:flex; align-items:flex-start; gap:0.4rem;">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <div>
-                    Setelah pembayaran berhasil, Anda akan menerima email konfirmasi bukti transaksi & update status domain.
+                <div class="dcm-actions">
+                    <button type="button" class="dcm-btn-cancel" onclick="closeCheckoutModal()">Batal</button>
+                    <button type="button" id="btnConfirmPayDomain" class="dcm-btn-pay" onclick="proceedDomainCheckout()">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                        Lanjut Bayar Sekarang
+                    </button>
                 </div>
-            </div>
-
-            {{-- Modal Actions --}}
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-                <button type="button" onclick="closeCheckoutModal()" style="height:44px; background:#F1F5F9; color:#475569; border:1.5px solid #CBD5E1; border-radius:12px; font-weight:700; font-size:0.85rem; cursor:pointer;">
-                    Batal
-                </button>
-                <button type="button" id="btnConfirmPayDomain" onclick="proceedDomainCheckout()" style="height:44px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; border-radius:12px; font-weight:800; font-size:0.85rem; cursor:pointer; box-shadow:0 4px 14px rgba(30, 179, 73, 0.35); display:inline-flex; align-items:center; justify-content:center; gap:0.35rem;">
-                    Lanjut Bayar ➔
-                </button>
             </div>
         </div>
+    </div>
+
+    {{-- Toast Notification --}}
+    <div id="domainToast">
+        <div class="toast-icon" id="toastIcon"></div>
+        <div class="toast-content">
+            <p class="toast-title" id="toastTitle"></p>
+            <p class="toast-msg" id="toastMsg"></p>
+        </div>
+        <button class="toast-close" onclick="hideToast()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
     </div>
 
     @php
@@ -4668,232 +4743,193 @@
     @endif
 
     <script>
+    /* ==============================================================
+       DOMAIN MODULE — Toast + Checkout Modal + Search
+       ============================================================== */
     let activeDomainToBuy = '';
-    const domainPricingMap = {
-        'com': 'Rp 436.666',
-        'id': 'Rp 480.719',
-        'co.id': 'Rp 532.889',
-        'biz': 'Rp 667.546',
-        'biz.id': 'Rp 177.589',
-        'store': 'Rp 1.065.836',
-        'my.id': 'Rp 333.189'
-    };
+    let toastTimer = null;
 
-    function checkSpecificDomain(domainName, btnEl) {
-        document.getElementById('domainSearchInput').value = domainName;
-        executeDomainSearch(btnEl);
+    /* ── Toast ──────────────────────────────────────────────────── */
+    function showToast(type, title, msg, duration) {
+        duration = duration || 6000;
+        var toast = document.getElementById('domainToast');
+        var iconEl = document.getElementById('toastIcon');
+        var icons = {
+            success: '<svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+            error:   '<svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+            info:    '<svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+        };
+        toast.className = 'toast-' + type;
+        iconEl.innerHTML = icons[type] || icons.info;
+        document.getElementById('toastTitle').textContent = title;
+        document.getElementById('toastMsg').textContent = msg;
+        clearTimeout(toastTimer);
+        setTimeout(function() { toast.classList.add('show'); }, 10);
+        toastTimer = setTimeout(hideToast, duration);
+    }
+    function hideToast() {
+        document.getElementById('domainToast').classList.remove('show');
     }
 
-    function executeDomainSearch(triggerBtn) {
-        const domainInput = document.getElementById('domainSearchInput');
-        const resultBox   = document.getElementById('searchResultBox');
-        const searchBtn   = document.getElementById('btnSearchDomain');
-        const rawDomain   = domainInput.value.trim();
-
-        if (!rawDomain) {
-            alert('Masukkan nama domain yang ingin dicari!');
-            return;
-        }
-
-        // Loading State
-        const origBtnHtml = searchBtn.innerHTML;
-        searchBtn.disabled = true;
-        searchBtn.innerHTML = `
-            <svg class="spin-svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#ffffff"/></svg>
-            Memeriksa...
-        `;
-
-        if (triggerBtn && triggerBtn !== searchBtn) {
-            triggerBtn.disabled = true;
-            triggerBtn.innerHTML = 'Memeriksa...';
-        }
-
-        resultBox.style.display = 'block';
-        resultBox.innerHTML = `
-            <div style="background:#F8FAFC; border:1.5px solid #CBD5E1; border-radius:14px; padding:1.25rem; text-align:center;">
-                <div style="font-size:0.9rem; font-weight:700; color:#0F172A; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
-                    <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#1eb349"/></svg>
-                    Memeriksa ketersediaan domain <strong>${rawDomain}</strong> via WhoisJSON API...
-                </div>
-            </div>
-        `;
-
-        fetch('{{ route("creator.domain.check") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ domain: rawDomain })
-        })
-        .then(r => r.json())
-        .then(data => {
-            searchBtn.disabled = false;
-            searchBtn.innerHTML = origBtnHtml;
-            if (triggerBtn && triggerBtn !== searchBtn) {
-                triggerBtn.disabled = false;
-                triggerBtn.innerHTML = 'Cek Ketersediaan';
-            }
-
-            if (!data.success && data.unsupported_ext) {
-                let recHtml = '';
-                if (data.recommendations && data.recommendations.length > 0) {
-                    recHtml = '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:0.5rem; margin-top:0.75rem;">';
-                    data.recommendations.forEach(r => {
-                        recHtml += `
-                            <div style="background:#fff; border:1px solid #BBF7D0; padding:0.6rem 0.8rem; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
-                                <span style="font-weight:700; font-size:0.85rem; color:#0F172A;">${r.domain}</span>
-                                <button type="button" onclick="checkSpecificDomain('${r.domain}')" style="background:#166534; color:#fff; border:none; padding:0.3rem 0.6rem; border-radius:6px; font-size:0.7rem; font-weight:700; cursor:pointer;">Cek (${r.formatted_price})</button>
-                            </div>
-                        `;
-                    });
-                    recHtml += '</div>';
-                }
-
-                resultBox.innerHTML = `
-                    <div style="background:#FFFBEB; border:1.5px solid #FDE68A; border-radius:14px; padding:1.25rem;">
-                        <div style="font-weight:700; color:#92400E; font-size:0.9rem; display:flex; align-items:center; gap:0.4rem;">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                            ${data.message}
-                        </div>
-                        ${recHtml}
-                    </div>
-                `;
-                return;
-            }
-
-            if (!data.success) {
-                resultBox.innerHTML = `
-                    <div style="background:#FEF2F2; border:1.5px solid #FCA5A5; border-radius:14px; padding:1.25rem; color:#991B1B;">
-                        <strong>Error:</strong> ${data.message || 'Gagal mengecek ketersediaan domain.'}
-                    </div>
-                `;
-                return;
-            }
-
-            if (data.available) {
-                resultBox.innerHTML = `
-                    <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:16px; padding:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
-                        <div>
-                            <span style="background:#166534; color:#fff; font-size:0.7rem; font-weight:800; padding:0.2rem 0.5rem; border-radius:6px; display:inline-flex; align-items:center; gap:0.3rem;">
-                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                                DOMAIN TERSEDIA!
-                            </span>
-                            <h3 style="font-size:1.3rem; font-weight:800; color:#166534; margin:0.4rem 0 0.1rem;">${data.domain}</h3>
-                            <p style="font-size:0.8rem; color:#15803D; margin:0;">Domain ini belum terdaftar dan bisa langsung Anda amankan sekarang.</p>
-                        </div>
-                        <div style="text-align:right;">
-                            <div style="font-size:1.25rem; font-weight:800; color:#166534; margin-bottom:0.4rem;">${data.formatted_price} <span style="font-size:0.75rem; font-weight:400; color:#64748B;">/tahun</span></div>
-                            <button type="button" onclick="buyDomain('${data.domain}', '${data.formatted_price}')"
-                                style="padding:0.7rem 1.5rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; border-radius:12px; font-weight:800; font-size:0.9rem; cursor:pointer; box-shadow:0 4px 14px rgba(30, 179, 73, 0.35); display:inline-flex; align-items:center; gap:0.4rem;">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                                Amankan Domain (Beli)
-                            </button>
-                        </div>
-                    </div>
-                `;
-            } else {
-                resultBox.innerHTML = `
-                    <div style="background:#FEF2F2; border:1.5px solid #FECACA; border-radius:16px; padding:1.25rem;">
-                        <div style="display:flex; align-items:center; gap:0.5rem; color:#991B1B; font-weight:800; font-size:1rem;">
-                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                            Maaf, domain ${data.domain} sudah terdaftar / tidak tersedia.
-                        </div>
-                        <p style="font-size:0.78rem; color:#7F1D1D; margin:0.35rem 0 0;">Silakan coba variasi nama lain atau pilih dari rekomendasi domain di bawah ini.</p>
-                    </div>
-                `;
-            }
-        })
-        .catch(err => {
-            searchBtn.disabled = false;
-            searchBtn.innerHTML = origBtnHtml;
-            if (triggerBtn && triggerBtn !== searchBtn) {
-                triggerBtn.disabled = false;
-                triggerBtn.innerHTML = 'Cek Ketersediaan';
-            }
-            resultBox.innerHTML = `
-                <div style="background:#FEF2F2; border:1.5px solid #FCA5A5; border-radius:14px; padding:1.25rem; color:#991B1B;">
-                    Gagal memproses pencarian domain. Pastikan jaringan internet Anda terhubung.
-                </div>
-            `;
-        });
-    }
-
+    /* ── Checkout Modal ─────────────────────────────────────────── */
     function buyDomain(domainName, formattedPrice) {
         activeDomainToBuy = domainName;
-        document.getElementById('modalDomainName').innerText = domainName;
-        
-        let priceStr = formattedPrice;
-        if (!priceStr) {
-            const ext = domainName.split('.').slice(1).join('.');
-            priceStr = domainPricingMap[ext] || 'Rp 436.666';
+        document.getElementById('modalDomainName').textContent = domainName;
+        if (!formattedPrice) {
+            var ext = domainName.split('.').slice(1).join('.');
+            var map = {'com':'Rp 436.666','id':'Rp 480.719','co.id':'Rp 532.889','biz':'Rp 667.546','biz.id':'Rp 177.589','store':'Rp 1.065.836','my.id':'Rp 333.189'};
+            formattedPrice = map[ext] || 'Rp 436.666';
         }
-        document.getElementById('modalDomainPrice').innerText = priceStr;
-
-        const modal = document.getElementById('domainCheckoutModal');
-        modal.style.display = 'flex';
+        document.getElementById('modalDomainPrice').textContent = formattedPrice;
+        document.getElementById('dcmErrorBox').style.display = 'none';
+        var modal = document.getElementById('domainCheckoutModal');
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
     }
 
     function closeCheckoutModal() {
-        document.getElementById('domainCheckoutModal').style.display = 'none';
+        document.getElementById('domainCheckoutModal').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    document.getElementById('domainCheckoutModal').addEventListener('click', function(e) {
+        if (e.target === this) closeCheckoutModal();
+    });
+
+    function showModalError(msg) {
+        var box = document.getElementById('dcmErrorBox');
+        document.getElementById('dcmErrorText').textContent = msg;
+        box.style.display = 'flex';
     }
 
     function proceedDomainCheckout() {
         if (!activeDomainToBuy) return;
-
-        const payBtn = document.getElementById('btnConfirmPayDomain');
-        const origText = payBtn.innerHTML;
+        var payBtn = document.getElementById('btnConfirmPayDomain');
         payBtn.disabled = true;
-        payBtn.innerHTML = 'Memproses Token...';
+        payBtn.innerHTML = '<svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24" style="animation:domSpin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-opacity=".3"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#fff"/></svg> Memproses...';
+        document.getElementById('dcmErrorBox').style.display = 'none';
+
+        var resetBtn = function() {
+            payBtn.disabled = false;
+            payBtn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Lanjut Bayar Sekarang';
+        };
 
         fetch('{{ route("creator.domain.checkout") }}', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
             body: JSON.stringify({ domain: activeDomainToBuy })
         })
-        .then(r => r.json())
-        .then(data => {
-            payBtn.disabled = false;
-            payBtn.innerHTML = origText;
+        .then(function(resp) {
+            return resp.json().then(function(d) { return { ok: resp.ok, data: d }; });
+        })
+        .then(function(res) {
+            resetBtn();
+            var data = res.data;
+            if (!data.success) { showModalError(data.message || 'Gagal membuat transaksi. Coba lagi.'); return; }
+            if (!data.snap_token) { showModalError('Token pembayaran tidak diterima. Cek konfigurasi Midtrans di Admin.'); return; }
             closeCheckoutModal();
-
-            if (!data.success) {
-                alert('Gagal membuat transaksi domain: ' + (data.message || 'Error'));
-                return;
-            }
-
-            if (typeof snap !== 'undefined' && data.snap_token) {
+            if (typeof snap !== 'undefined') {
                 snap.pay(data.snap_token, {
-                    onSuccess: function(result) {
-                        alert('Pembayaran Berhasil! Domain ' + activeDomainToBuy + ' akan segera diproses oleh Admin dalam 2x24 jam.');
-                        window.location.reload();
+                    onSuccess: function() {
+                        showToast('success', 'Pembayaran Berhasil!', 'Domain ' + activeDomainToBuy + ' diproses Admin maks. 2×24 jam. Cek email Anda.', 10000);
+                        setTimeout(function() { window.location.reload(); }, 3500);
                     },
-                    onPending: function(result) {
-                        alert('Menunggu pembayaran Midtrans. Silakan selesaikan instruksi pembayaran Anda.');
-                        window.location.reload();
+                    onPending: function() {
+                        showToast('info', 'Menunggu Pembayaran', 'Selesaikan instruksi Midtrans. Domain diproses setelah konfirmasi.', 8000);
                     },
-                    onError: function(result) {
-                        alert('Pembayaran gagal atau dibatalkan.');
+                    onError: function() {
+                        showToast('error', 'Pembayaran Gagal', 'Terjadi kesalahan saat pembayaran. Silakan coba lagi.', 6000);
                     },
                     onClose: function() {
-                        alert('Jendela pembayaran Midtrans ditutup.');
+                        showToast('info', 'Pembayaran Dibatalkan', 'Jendela Midtrans ditutup. Klik Amankan Domain lagi jika ingin lanjut.', 5000);
                     }
                 });
             } else {
-                alert('Token Midtrans berhasil dibuat: ' + data.snap_token);
+                showToast('error', 'Midtrans Tidak Tersedia', 'Script pembayaran belum termuat. Refresh halaman dan coba lagi.', 8000);
             }
         })
-        .catch(err => {
-            payBtn.disabled = false;
-            payBtn.innerHTML = origText;
-            alert('Terjadi kesalahan saat memproses checkout domain.');
+        .catch(function(err) {
+            resetBtn();
+            showModalError('Gagal terhubung ke server. Periksa koneksi internet Anda.');
+            console.error('[Domain Checkout]', err);
         });
     }
+
+    /* ── Domain Search ──────────────────────────────────────────── */
+    function checkSpecificDomain(domainName) {
+        document.getElementById('domainSearchInput').value = domainName;
+        executeDomainSearch();
+    }
+
+    function executeDomainSearch(triggerBtn) {
+        var domainInput = document.getElementById('domainSearchInput');
+        var resultBox   = document.getElementById('searchResultBox');
+        var searchBtn   = document.getElementById('btnSearchDomain');
+        var rawDomain   = domainInput.value.trim();
+
+        if (!rawDomain) {
+            showToast('error', 'Input Kosong', 'Masukkan nama domain yang ingin dicari.', 4000);
+            return;
+        }
+
+        var origBtnHtml = searchBtn.innerHTML;
+        searchBtn.disabled = true;
+        searchBtn.innerHTML = '<svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24" style="animation:domSpin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-opacity=".25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#fff"/></svg> Memeriksa...';
+
+        if (triggerBtn && triggerBtn !== searchBtn) {
+            triggerBtn.disabled = true;
+            triggerBtn.textContent = 'Memeriksa...';
+        }
+
+        resultBox.style.display = 'block';
+        resultBox.innerHTML = '<div style="background:#F8FAFC;border:1.5px solid #CBD5E1;border-radius:14px;padding:1.25rem;text-align:center;"><div style="font-size:0.88rem;font-weight:700;color:#0F172A;display:flex;align-items:center;justify-content:center;gap:0.5rem;"><svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24" style="animation:domSpin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-opacity=".25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#1eb349"/></svg>Memeriksa <strong style="color:#1eb349">' + rawDomain + '</strong>...</div></div>';
+
+        fetch('{{ route("creator.domain.check") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
+            body: JSON.stringify({ domain: rawDomain })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            searchBtn.disabled = false;
+            searchBtn.innerHTML = origBtnHtml;
+            if (triggerBtn && triggerBtn !== searchBtn) { triggerBtn.disabled = false; triggerBtn.textContent = 'Cek Ketersediaan'; }
+
+            if (!data.success && data.unsupported_ext) {
+                var recHtml = '';
+                if (data.recommendations && data.recommendations.length) {
+                    recHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.5rem;margin-top:0.75rem;">';
+                    data.recommendations.forEach(function(r) {
+                        recHtml += '<div style="background:#fff;border:1px solid #BBF7D0;padding:0.6rem 0.8rem;border-radius:10px;display:flex;justify-content:space-between;align-items:center;"><span style="font-weight:700;font-size:0.82rem;">' + r.domain + '</span><button type="button" onclick="checkSpecificDomain(\'' + r.domain + '\')" style="background:#166534;color:#fff;border:none;padding:0.3rem 0.6rem;border-radius:6px;font-size:0.7rem;font-weight:700;cursor:pointer;">Cek</button></div>';
+                    });
+                    recHtml += '</div>';
+                }
+                resultBox.innerHTML = '<div style="background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:14px;padding:1.25rem;"><div style="font-weight:700;color:#92400E;font-size:0.88rem;">' + data.message + '</div>' + recHtml + '</div>';
+                return;
+            }
+            if (!data.success) {
+                resultBox.innerHTML = '<div style="background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:14px;padding:1.25rem;color:#991B1B;"><strong>Error:</strong> ' + (data.message || 'Gagal mengecek domain.') + '</div>';
+                return;
+            }
+            if (data.available) {
+                resultBox.innerHTML = '<div style="background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border:1.5px solid #BBF7D0;border-radius:16px;padding:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;"><div><span style="background:linear-gradient(135deg,#166534,#15803D);color:#fff;font-size:0.68rem;font-weight:800;padding:0.2rem 0.6rem;border-radius:6px;display:inline-flex;align-items:center;gap:0.3rem;"><svg width="11" height="11" fill="none" stroke="#fff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>TERSEDIA</span><h3 style="font-size:1.3rem;font-weight:900;color:#166534;margin:0.4rem 0 0.15rem;">' + data.domain + '</h3><p style="font-size:0.78rem;color:#15803D;margin:0;">Amankan sebelum diambil orang lain!</p></div><div style="text-align:right;"><div style="font-size:1.25rem;font-weight:900;color:#166534;margin-bottom:0.5rem;">' + data.formatted_price + ' <span style="font-size:0.72rem;font-weight:400;color:#64748B;">/thn</span></div><button type="button" onclick="buyDomain(\'' + data.domain + '\',\'' + data.formatted_price + '\')" style="padding:0.7rem 1.35rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:12px;font-weight:800;font-size:0.875rem;cursor:pointer;box-shadow:0 6px 20px rgba(30,179,73,.4);display:inline-flex;align-items:center;gap:0.4rem;"><svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Amankan Domain</button></div></div>';
+            } else {
+                resultBox.innerHTML = '<div style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:16px;padding:1.25rem;"><div style="display:flex;align-items:center;gap:0.5rem;color:#991B1B;font-weight:800;"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Domain ' + data.domain + ' sudah terdaftar.</div><p style="font-size:0.78rem;color:#7F1D1D;margin:0.35rem 0 0;">Coba variasi nama lain atau pilih rekomendasi di bawah.</p></div>';
+            }
+        })
+        .catch(function(err) {
+            searchBtn.disabled = false;
+            searchBtn.innerHTML = origBtnHtml;
+            if (triggerBtn && triggerBtn !== searchBtn) { triggerBtn.disabled = false; triggerBtn.textContent = 'Cek Ketersediaan'; }
+            resultBox.innerHTML = '<div style="background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:14px;padding:1.25rem;color:#991B1B;">Gagal memproses pencarian. Periksa koneksi internet.</div>';
+        });
+    }
+
+    document.getElementById('domainSearchInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') executeDomainSearch();
+    });
     </script>
     <style>
-    @keyframes spin { 100% { transform: rotate(360deg); } }
+    @keyframes domSpin { 100% { transform: rotate(360deg); } }
     </style>
-@endsection
+@endsection
