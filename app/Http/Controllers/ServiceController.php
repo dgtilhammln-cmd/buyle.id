@@ -172,11 +172,42 @@ class ServiceController extends Controller
         // Price range for slider
         $maxPrice = Product::active()->where('price', '>', 0)->max('price') ?? 5000000;
 
-        $hasFilters = request()->hasAny(['q', 'category', 'kategori', 'price_min', 'price_max', 'type', 'sort']);
+        $hasFilters = request()->hasAny(['q', 'category', 'kategori', 'subcategory', 'sub_category', 'price_min', 'price_max', 'type', 'sort']);
+
+        // Dynamic Meta Title & Description on /produk based on selected category or subcategory
+        $dynamicTitle = null;
+        $dynamicDesc  = null;
+        $dynamicKey   = null;
+
+        $subParam = request('subcategory') ?? request('sub_category');
+        $catParam = request('category') ?? request('kategori');
+
+        if (!empty($subParam)) {
+            $subObj = \App\Models\ProductSubCategory::where('slug', $subParam)->first();
+            if ($subObj) {
+                $dynamicTitle = 'Cari ' . $subObj->name . ' di ' . $siteName . ' - Digital Creator Center';
+                $dynamicDesc  = 'Temukan dan beli ' . $subObj->name . ' berkualitas hanya di ' . $siteName . '. Katalog terlengkap produk digital & jasa dari kreator terpercaya.';
+                $dynamicKey   = $subObj->name . ', produk digital ' . $subObj->name . ', ' . $siteName . ', lynk.id';
+            }
+        } elseif (!empty($catParam)) {
+            $catSlug = is_array($catParam) ? ($catParam[0] ?? null) : explode(',', $catParam)[0];
+            if ($catSlug) {
+                $cObj = \App\Models\ProductCategory::where('slug', $catSlug)->first();
+                if ($cObj) {
+                    $dynamicTitle = 'Cari ' . $cObj->name . ' di ' . $siteName . ' - Digital Creator Center';
+                    $dynamicDesc  = 'Cari dan beli produk ' . $cObj->name . ' terlengkap di ' . $siteName . '. Pilihan terbanyak produk digital, ebook, lisensi, dan layanan jasa dari kreator terpercaya.';
+                    $dynamicKey   = $cObj->name . ', produk digital ' . $cObj->name . ', ' . $siteName . ', lynk.id';
+                }
+            }
+        } elseif (request()->filled('q')) {
+            $dynamicTitle = 'Hasil Pencarian "' . request('q') . '" di ' . $siteName . ' - Digital Creator Center';
+            $dynamicDesc  = 'Menampilkan hasil pencarian untuk "' . request('q') . '" di ' . $siteName . '. Dapatkan produk digital & jasa profesional harga terbaik.';
+        }
+
         $seo = [
-            'title'       => $settings['meta_title_services'] ?? 'Produk & Layanan | ' . $siteName,
-            'description' => $settings['meta_desc_services']  ?? 'Temukan berbagai produk buyle.id tangga berkualitas dan layanan jasa profesional di ' . $siteName . '.',
-            'keywords'    => $settings['meta_keywords_services'] ?? 'buyle.id tangga, produk, layanan jasa, pemasangan',
+            'title'       => $dynamicTitle ?? ($settings['meta_title_services'] ?? 'Produk & Layanan | ' . $siteName),
+            'description' => $dynamicDesc  ?? ($settings['meta_desc_services']  ?? 'Temukan berbagai produk digital berkualitas dan layanan jasa profesional di ' . $siteName . '.'),
+            'keywords'    => $dynamicKey   ?? ($settings['meta_keywords_services'] ?? 'produk digital, marketplace, buyle.id, lynk.id, layanan jasa'),
             'og_image'    => !empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : (!empty($settings['logo']) ? asset('storage/'.$settings['logo']) : asset('images/og-default.jpg')),
             'canonical'   => route('products'),
             'robots'      => $hasFilters ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',

@@ -1288,32 +1288,10 @@
     <div class="sp-layout">
 
         {{-- SIDEBAR --}}
+        {{-- SIDEBAR --}}
         <aside class="sp-sidebar" id="spSidebar">
 
-            {{-- Search --}}
-            <div class="sp-sidebar-card">
-                <div class="sp-sidebar-head"><span class="sp-sidebar-head-dot"></span>Pencarian</div>
-                <div class="sp-sidebar-body">
-                    <form method="GET" action="{{ route_locale('products') }}" id="searchForm">
-                        @foreach(request()->except('q') as $k => $v)
-                            <input type="hidden" name="{{ $k }}" value="{{ is_array($v) ? implode(',', $v) : $v }}">
-                        @endforeach
-                        <div class="sp-search-wrap">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
-                                <circle cx="11" cy="11" r="8" />
-                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                            </svg>
-                            <input class="sp-search-input" type="text" name="q" value="{{ request('q') }}"
-                                placeholder="Cari nama produk...">
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-
-
-            {{-- Kategori --}}
+            {{-- Kategori (Paling Atas) --}}
             @if($categories->count() > 0)
                 <div class="sp-sidebar-card">
                     <div class="sp-sidebar-head"><span class="sp-sidebar-head-dot"></span>Kategori</div>
@@ -1380,6 +1358,54 @@
                     </div>
                 </div>
             @endif
+
+            {{-- Filter Produk --}}
+            <div class="sp-sidebar-card">
+                <div class="sp-sidebar-head"><span class="sp-sidebar-head-dot"></span>Filter Produk</div>
+                <div class="sp-sidebar-body">
+                    <form method="GET" action="{{ route_locale('products') }}">
+                        @foreach(request()->except(['type', 'price_min', 'price_max', 'page']) as $k => $v)
+                            <input type="hidden" name="{{ $k }}" value="{{ is_array($v) ? implode(',', $v) : $v }}">
+                        @endforeach
+
+                        {{-- Tipe Produk --}}
+                        <div style="margin-bottom:1.25rem;">
+                            <div style="font-size:0.75rem;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;font-family:var(--font);">Tipe Produk</div>
+                            <div class="sp-type-options">
+                                @php $curType = request('type', 'semua'); @endphp
+                                <a href="{{ route_locale('products') }}?{{ http_build_query(array_merge(request()->except('type'), ['type' => 'semua'])) }}"
+                                    class="sp-type-opt {{ $curType === 'semua' ? 'active' : '' }}">
+                                    <span class="sp-type-dot semua"></span> Semua
+                                </a>
+                                <a href="{{ route_locale('products') }}?{{ http_build_query(array_merge(request()->except('type'), ['type' => 'produk'])) }}"
+                                    class="sp-type-opt {{ $curType === 'produk' ? 'active' : '' }}">
+                                    <span class="sp-type-dot produk"></span> Produk Digital
+                                </a>
+                                <a href="{{ route_locale('products') }}?{{ http_build_query(array_merge(request()->except('type'), ['type' => 'jasa'])) }}"
+                                    class="sp-type-opt {{ $curType === 'jasa' ? 'active' : '' }}">
+                                    <span class="sp-type-dot jasa"></span> Jasa Profesional
+                                </a>
+                            </div>
+                        </div>
+
+                        {{-- Filter Harga --}}
+                        <div>
+                            <div style="font-size:0.75rem;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;font-family:var(--font);">Rentang Harga</div>
+                            <div class="sp-price-inputs">
+                                <div>
+                                    <div class="sp-price-label">Min (Rp)</div>
+                                    <input type="number" name="price_min" class="sp-price-input" placeholder="0" value="{{ request('price_min') }}">
+                                </div>
+                                <div>
+                                    <div class="sp-price-label">Max (Rp)</div>
+                                    <input type="number" name="price_max" class="sp-price-input" placeholder="Tak terbatas" value="{{ request('price_max') }}">
+                                </div>
+                            </div>
+                            <button type="submit" class="sp-apply-btn">Terapkan Filter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
             @if(request()->hasAny(['q', 'category', 'subcategory', 'sub_category', 'type', 'price_min', 'price_max', 'sort']))
                 <a href="{{ route_locale('products') }}" class="sp-reset-link">

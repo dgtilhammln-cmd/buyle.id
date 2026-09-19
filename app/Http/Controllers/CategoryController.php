@@ -58,6 +58,33 @@ class CategoryController extends Controller
             }])
             ->get();
 
-        return view('categories.show', compact('category', 'subcategory', 'products', 'categories'));
+        $settings = \App\Models\Setting::getAllAsArray();
+        $siteName = $settings['site_name'] ?? 'buyle.id';
+
+        // Dynamic Meta Title, Description & Keywords for Categories & Subcategories
+        if ($subcategory) {
+            $seoTitle = 'Cari ' . $subcategory->name . ' di ' . $siteName . ' - Digital Creator Center';
+            $seoDesc  = 'Temukan pilihan ' . $subcategory->name . ' terbaik dalam kategori ' . $category->name . ' di ' . $siteName . '. Dapatkan produk digital, template, dan layanan jasa berkualitas.';
+            $seoKeywords = $subcategory->name . ', ' . $category->name . ', produk digital ' . $subcategory->name . ', ' . $siteName . ', digital creator marketplace';
+        } else {
+            $seoTitle = 'Cari ' . $category->name . ' di ' . $siteName . ' - Digital Creator Center';
+            $seoDesc  = 'Cari dan beli produk ' . $category->name . ' terlengkap di ' . $siteName . '. Pilihan terbanyak produk digital, ebook, lisensi, dan layanan jasa dari kreator terpercaya.';
+            $seoKeywords = $category->name . ', produk digital ' . $category->name . ', ' . $siteName . ', digital creator marketplace';
+        }
+
+        $ogImage = !empty($category->image) 
+            ? asset('storage/' . $category->image) 
+            : (!empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('images/og-default.jpg'));
+
+        $seo = [
+            'title'       => $seoTitle,
+            'description' => $seoDesc,
+            'keywords'    => $seoKeywords,
+            'og_image'    => $ogImage,
+            'canonical'   => url()->current(),
+            'robots'      => 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+        ];
+
+        return view('categories.show', compact('category', 'subcategory', 'products', 'categories', 'seo', 'settings'));
     }
 }
