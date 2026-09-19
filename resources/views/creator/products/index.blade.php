@@ -1,4 +1,4 @@
-@extends('creator.layout')
+﻿@extends('creator.layout')
 @section('title', 'Produk Saya')
 @section('page_title', 'Produk Saya')
 @section('page_subtitle', $products->count() . ' produk/layanan terdaftar')
@@ -43,7 +43,7 @@
         @csrf
         @method('DELETE')
         <button type="submit" class="btn-danger-sm"
-          style="background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; font-weight:700; padding:0.5rem 0.85rem; border-radius:8px; font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+          style="background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; font-weight: 500; padding:0.5rem 0.85rem; border-radius:8px; font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <polyline points="3 6 5 6 21 6" />
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
@@ -307,7 +307,7 @@
       color: #0f172a;
       font-family: 'Montserrat', sans-serif;
       font-size: 0.82rem;
-      font-weight: 700;
+      font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -394,7 +394,7 @@
 
     .si-title {
       font-size: 1.05rem;
-      font-weight: 800;
+      font-weight: 600;
       color: #0f172a;
       margin: 0;
       line-height: 1.2;
@@ -475,7 +475,7 @@
     .si-tab.active {
       background: linear-gradient(135deg, #1eb349, #a5cf37);
       color: #ffffff;
-      font-weight: 700;
+      font-weight: 500;
       box-shadow: 0 4px 12px rgba(30, 179, 73, 0.25);
     }
 
@@ -493,7 +493,7 @@
     /* Form Elements & Cards */
     .si-label {
       font-size: 0.78rem;
-      font-weight: 700;
+      font-weight: 500;
       color: #334155;
       margin-bottom: 0.45rem;
       display: block;
@@ -529,7 +529,7 @@
       border: none;
       background: linear-gradient(135deg, #1eb349, #a5cf37);
       color: #ffffff;
-      font-weight: 700;
+      font-weight: 500;
       font-size: 0.875rem;
       font-family: 'Montserrat', sans-serif;
       cursor: pointer;
@@ -596,7 +596,7 @@
 
     .si-source-card.selected span {
       color: #1eb349;
-      font-weight: 700;
+      font-weight: 500;
     }
 
     .si-source-card.selected svg {
@@ -717,28 +717,28 @@
       <thead>
         <tr style="background:#F8FAFC;">
           <th
-            style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+            style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
             No</th>
           <th
-            style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+            style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
             Gambar</th>
           <th
-            style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+            style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
             Nama Layanan</th>
           <th
-            style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+            style="padding:1rem 1.5rem;text-align:left;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
             Slug</th>
           <th
-            style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+            style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
             Stok</th>
           <th
-            style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+            style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
             Urutan</th>
           <th
-            style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+            style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
             Status</th>
           <th
-            style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
+            style="padding:1rem 1.5rem;text-align:center;font-size:.75rem;font-weight: 500;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #F1F5F9;">
             Aksi</th>
         </tr>
       </thead>
@@ -748,7 +748,7 @@
             onmouseover="this.style.background='#FAFBFF'" onmouseout="this.style.background='transparent'">
             <td style="padding:1.25rem 1.5rem;">
               <span
-                style="font-size:.8rem;font-weight:700;color:#CBD5E1;">{{ str_pad($s->order, 2, '0', STR_PAD_LEFT) }}</span>
+                style="font-size:.8rem;font-weight: 500;color:#CBD5E1;">{{ str_pad($s->order, 2, '0', STR_PAD_LEFT) }}</span>
             </td>
             <td style="padding:1.25rem 1.5rem;">
               <img src="{{ $s->image_url }}" alt="{{ $s->name }}"
@@ -756,7 +756,7 @@
                 onerror="this.onerror=null;this.src='{{ \App\Models\Product::getPlaceholderUrl() }}';this.style.objectFit='contain';this.style.padding='4px';">
             </td>
             <td style="padding:1.25rem 1.5rem;">
-              <div style="font-size:.9rem;font-weight:700;color:#1E293B;">{{ $s->name }}</div>
+              <div style="font-size:.9rem;font-weight: 500;color:#1E293B;">{{ $s->name }}</div>
               @if($s->short_desc)
                 <div
                   style="font-size:.75rem;color:#94A3B8;margin-top:.2rem;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
@@ -767,7 +767,7 @@
                 <div style="margin-top:.35rem;">
                   @if($s->whitelabel_approval_status === 'pending')
                     <span
-                      style="font-size:.68rem;font-weight:700;background:#FEF3C7;color:#D97706;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;">
+                      style="font-size:.68rem;font-weight: 500;background:#FEF3C7;color:#D97706;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;">
                       <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="10" />
                         <polyline points="12 6 12 12 16 14" />
@@ -776,7 +776,7 @@
                     </span>
                   @elseif($s->whitelabel_approval_status === 'approved')
                     <span
-                      style="font-size:.68rem;font-weight:700;background:#DCFCE7;color:#16A34A;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;">
+                      style="font-size:.68rem;font-weight: 500;background:#DCFCE7;color:#16A34A;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;">
                       <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
@@ -784,7 +784,7 @@
                     </span>
                   @elseif($s->whitelabel_approval_status === 'rejected')
                     <span
-                      style="font-size:.68rem;font-weight:700;background:#FEE2E2;color:#DC2626;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;"
+                      style="font-size:.68rem;font-weight: 500;background:#FEE2E2;color:#DC2626;padding:.15rem .55rem;border-radius:10px;display:inline-flex;align-items:center;gap:.3rem;"
                       title="{{ $s->whitelabel_rejection_reason }}">
                       <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <line x1="18" y1="6" x2="6" y2="18" />
@@ -814,18 +814,18 @@
                 @csrf
                 @method('PATCH')
                 <input type="number" name="order" value="{{ $s->order }}" min="0" onchange="this.form.submit()"
-                  style="width:60px;padding:.375rem;border:1px solid #E2E8F0;border-radius:6px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.875rem;font-weight:700;color:#334155;outline:none;background:transparent;">
+                  style="width:60px;padding:.375rem;border:1px solid #E2E8F0;border-radius:6px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.875rem;font-weight: 500;color:#334155;outline:none;background:transparent;">
               </form>
             </td>
             <td style="padding:1.25rem 1.5rem;text-align:center;">
               @if($s->is_active)
                 <span
-                  style="display:inline-flex;align-items:center;gap:.375rem;font-size:.75rem;font-weight:700;padding:.3rem .875rem;border-radius:100px;background:rgba(16,185,129,0.1);color:#10B981;">
+                  style="display:inline-flex;align-items:center;gap:.375rem;font-size:.75rem;font-weight: 500;padding:.3rem .875rem;border-radius:100px;background:rgba(16,185,129,0.1);color:#10B981;">
                   <span style="width:6px;height:6px;background:#10B981;border-radius:50%;"></span>Aktif
                 </span>
               @else
                 <span
-                  style="display:inline-flex;align-items:center;gap:.375rem;font-size:.75rem;font-weight:700;padding:.3rem .875rem;border-radius:100px;background:rgba(239,68,68,0.1);color:#EF4444;">
+                  style="display:inline-flex;align-items:center;gap:.375rem;font-size:.75rem;font-weight: 500;padding:.3rem .875rem;border-radius:100px;background:rgba(239,68,68,0.1);color:#EF4444;">
                   <span style="width:6px;height:6px;background:#EF4444;border-radius:50%;"></span>Nonaktif
                 </span>
               @endif
@@ -878,7 +878,7 @@
                     d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
                 </svg>
               </div>
-              <div style="font-size:.9rem;font-weight:700;color:#334155;">Belum ada produk</div>
+              <div style="font-size:.9rem;font-weight: 500;color:#334155;">Belum ada produk</div>
               <div style="font-size:.8rem;color:#94A3B8;margin-top:.25rem;">Klik tombol "Tambah produk" untuk upload.</div>
             </td>
           </tr>
@@ -967,7 +967,7 @@
               d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
           </svg>
         </div>
-        <div style="font-size:.9rem;font-weight:700;color:#334155;">Belum ada produk</div>
+        <div style="font-size:.9rem;font-weight: 500;color:#334155;">Belum ada produk</div>
         <div style="font-size:.8rem;color:#94A3B8;margin-top:.25rem;">Klik tombol "Tambah" untuk mulai.</div>
       </div>
     @endif
@@ -1084,7 +1084,7 @@
               </svg>
             </div>
             <p
-              style="font-size:0.875rem; font-weight:700; color:#0f172a; margin:0 0 0.25rem; font-family:'Montserrat',sans-serif;">
+              style="font-size:0.875rem; font-weight: 500; color:#0f172a; margin:0 0 0.25rem; font-family:'Montserrat',sans-serif;">
               Klik untuk upload foto menu</p>
             <p style="font-size:0.75rem; color:#94a3b8; margin:0; font-family:'Montserrat',sans-serif;">JPG, PNG, WEBP —
               Max 10MB</p>
@@ -1139,7 +1139,7 @@
       </button>
 
       <div class="si-progress" id="siMenuProgress">
-        <p style="font-size:0.78rem; color:#0f172a; font-weight:700; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
+        <p style="font-size:0.78rem; color:#0f172a; font-weight: 500; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
           id="siMenuProgressText">AI sedang menganalisis menu...</p>
         <div class="si-progress-bar">
           <div class="si-progress-fill" id="siMenuProgressFill"></div>
@@ -1182,7 +1182,7 @@
       </button>
 
       <div class="si-progress" id="siTiktokProgress">
-        <p style="font-size:0.78rem; color:#0f172a; font-weight:700; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
+        <p style="font-size:0.78rem; color:#0f172a; font-weight: 500; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
           id="siTiktokProgressText">Sedang mendeteksi produk TikTok Shop...</p>
         <div class="si-progress-bar">
           <div class="si-progress-fill" id="siTiktokProgressFill"></div>
@@ -1245,7 +1245,7 @@
       </button>
 
       <div class="si-progress" id="siMarketProgress">
-        <p style="font-size:0.78rem; color:#0f172a; font-weight:700; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
+        <p style="font-size:0.78rem; color:#0f172a; font-weight: 500; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
           id="siMarketProgressText">Sedang membaca data marketplace...</p>
         <div class="si-progress-bar">
           <div class="si-progress-fill" id="siMarketProgressFill"></div>
@@ -1279,7 +1279,7 @@
           <input type="url" id="siLynkUrl" class="si-input" style="margin-bottom:0; flex:1;"
             placeholder="https://lynk.id/username/slug">
           <button type="button" id="btnCopyViewSource" onclick="copyViewSource()"
-            style="background:#e0f2fe; color:#0284c7; border:1px solid #bae6fd; padding:0.65rem 1rem; border-radius:12px; font-weight:700; font-size:0.78rem; white-space:nowrap; cursor:pointer; display:flex; align-items:center; gap:0.4rem; flex-shrink:0;">
+            style="background:#e0f2fe; color:#0284c7; border:1px solid #bae6fd; padding:0.65rem 1rem; border-radius:12px; font-weight: 500; font-size:0.78rem; white-space:nowrap; cursor:pointer; display:flex; align-items:center; gap:0.4rem; flex-shrink:0;">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
             Salin Link Source
           </button>
@@ -1307,7 +1307,7 @@
       </button>
 
       <div class="si-progress" id="siLynkProgress">
-        <p style="font-size:0.78rem; color:#0f172a; font-weight:700; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
+        <p style="font-size:0.78rem; color:#0f172a; font-weight: 500; margin-bottom:0.5rem; font-family:'Montserrat',sans-serif;"
           id="siLynkProgressText">Membaca data produk dari Lynk.id...</p>
         <div class="si-progress-bar">
           <div class="si-progress-fill" id="siLynkProgressFill"></div>

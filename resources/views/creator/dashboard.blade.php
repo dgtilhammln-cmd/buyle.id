@@ -1,4 +1,4 @@
-@extends('creator.layout')
+﻿@extends('creator.layout')
 
 @section('title', 'Overview – Creator Studio')
 @section('page_title', 'Overview')
@@ -50,7 +50,7 @@
         background: #a3e635;
         color: #0b120c;
         font-size: 0.68rem;
-        font-weight: 800;
+        font-weight: 600;
         letter-spacing: 0.08em;
         padding: 0.3rem 0.85rem;
         border-radius: 999px;
@@ -63,7 +63,7 @@
     }
     .banner-title {
         font-size: 1.5rem;
-        font-weight: 700;
+        font-weight: 500;
         color: #ffffff;
         letter-spacing: -0.01em;
         line-height: 1.2;
@@ -96,13 +96,13 @@
     }
     .budget-label {
         font-size: 0.85rem;
-        font-weight: 700;
+        font-weight: 500;
         color: #64748b;
         margin-bottom: 0.35rem;
     }
     .budget-val {
         font-size: 2rem;
-        font-weight: 800;
+        font-weight: 600;
         color: #0f172a;
         letter-spacing: -0.02em;
         margin-bottom: 0.5rem;
@@ -114,7 +114,7 @@
         background: #f8fafc;
         color: #0f172a;
         font-size: 0.75rem;
-        font-weight: 800;
+        font-weight: 600;
         padding: 0.35rem 0.75rem;
         border-radius: 100px;
         border: 1.5px solid #e2e8f0;
@@ -207,13 +207,13 @@
     .calendar-month {
         color: #1eb349;
         font-size: 0.78rem;
-        font-weight: 800;
+        font-weight: 600;
         letter-spacing: 0.12em;
         text-transform: uppercase;
     }
     .calendar-day {
         font-size: 2.75rem;
-        font-weight: 700;
+        font-weight: 500;
         color: #0b120c;
         line-height: 1.1;
         margin: 0.2rem 0;
@@ -221,7 +221,7 @@
     }
     .calendar-clock {
         font-size: 0.78rem;
-        font-weight: 700;
+        font-weight: 500;
         color: #94a3b8;
         font-variant-numeric: tabular-nums;
     }
@@ -253,7 +253,7 @@
     }
     .wave-title {
         font-size: 0.75rem;
-        font-weight: 800;
+        font-weight: 600;
         color: #475569;
         letter-spacing: 0.08em;
         text-transform: uppercase;
@@ -261,7 +261,7 @@
     .wave-live-badge {
         color: #1eb349;
         font-size: 0.7rem;
-        font-weight: 800;
+        font-weight: 600;
         letter-spacing: 0.05em;
         background: #f0fdf4;
         border: 1px solid #dcfce7;
@@ -325,7 +325,7 @@
     }
     .counter-label {
         font-size: 0.72rem;
-        font-weight: 800;
+        font-weight: 600;
         color: #94a3b8;
         letter-spacing: 0.08em;
         text-transform: uppercase;
@@ -333,7 +333,7 @@
     }
     .counter-value {
         font-size: 2rem;
-        font-weight: 700;
+        font-weight: 500;
         color: #0b120c;
         line-height: 1;
         letter-spacing: -0.02em;

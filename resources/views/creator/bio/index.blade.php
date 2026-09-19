@@ -1,4 +1,4 @@
-@extends('creator.layout')
+﻿@extends('creator.layout')
 @section('title', 'Web Builder · Dashboard')
 @section('page_title', 'Web Builder')
 
@@ -84,7 +84,7 @@
         .tab-btn.active {
             background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
             color: #ffffff !important;
-            font-weight: 700;
+            font-weight: 500;
             border-color: transparent !important;
             box-shadow: 0 4px 14px rgba(30, 179, 73, 0.32);
         }
@@ -154,7 +154,7 @@
             justify-content: space-between;
             gap: 0.6rem;
             font-size: 0.95rem;
-            font-weight: 800;
+            font-weight: 600;
             color: #0b120c;
         }
 
@@ -171,7 +171,7 @@
 
         .form-label {
             font-size: 0.8rem;
-            font-weight: 700;
+            font-weight: 500;
             color: #374151;
         }
 
@@ -241,7 +241,7 @@
 
         .theme-label {
             padding: 0.6rem 0.8rem;
-            font-weight: 700;
+            font-weight: 500;
             font-size: 0.8rem;
             color: #0b120c;
             display: flex;
@@ -285,7 +285,7 @@
         }
 
         .block-title {
-            font-weight: 700;
+            font-weight: 500;
             font-size: 0.85rem;
             color: #0b120c;
             white-space: nowrap;
@@ -422,7 +422,7 @@
             justify-content: center;
             gap: 0.25rem;
             font-size: 0.72rem;
-            font-weight: 700;
+            font-weight: 500;
             border-radius: 8px;
             height: 32px;
             cursor: pointer;
@@ -494,7 +494,7 @@
             background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             border: none;
             color: #fff;
-            font-weight: 700;
+            font-weight: 500;
             font-size: 0.82rem;
             cursor: pointer;
             display: inline-flex;
@@ -534,7 +534,7 @@
         }
 
         .aff-title {
-            font-weight: 700;
+            font-weight: 500;
             font-size: 0.82rem;
             color: #0b120c;
             line-height: 1.3;
@@ -627,7 +627,7 @@
 
         .confirm-modal-title {
             font-size: 1.05rem;
-            font-weight: 800;
+            font-weight: 600;
             color: #0b120c;
             margin-bottom: 0.4rem;
             font-family: 'Montserrat', sans-serif;
@@ -653,7 +653,7 @@
             border: 1.5px solid #e7f0e7;
             background: #fff;
             color: #64748b;
-            font-weight: 700;
+            font-weight: 500;
             font-size: 0.82rem;
             cursor: pointer;
         }
@@ -665,7 +665,7 @@
             border: none;
             background: #ef4444;
             color: #fff;
-            font-weight: 700;
+            font-weight: 500;
             font-size: 0.82rem;
             cursor: pointer;
         }
@@ -677,7 +677,7 @@
             border: none;
             background: linear-gradient(135deg, #1eb349, #a5cf37);
             color: #fff;
-            font-weight: 700;
+            font-weight: 500;
             font-size: 0.82rem;
             cursor: pointer;
         }
@@ -768,7 +768,7 @@
             .prof-card-head {
                 padding: 0.75rem 0.85rem;
                 font-size: 0.825rem;
-                font-weight: 700;
+                font-weight: 500;
             }
 
             .card-body {
@@ -789,7 +789,7 @@
 
             .form-label {
                 font-size: 0.75rem;
-                font-weight: 700;
+                font-weight: 500;
             }
 
             .form-input {
@@ -1090,9 +1090,9 @@
 
             <div class="sidebar-extra-info" style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid #e7f0e7;">
                 <div
-                    style="font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem;">
+                    style="font-size:0.7rem; color:#94a3b8; font-weight: 500; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem;">
                     Tipe Profil</div>
-                <div style="font-size:0.82rem; font-weight:700; color:#1eb349;">{{ $roleLabels[$profile->bio_role] ?? '-' }}
+                <div style="font-size:0.82rem; font-weight: 500; color:#1eb349;">{{ $roleLabels[$profile->bio_role] ?? '-' }}
                 </div>
                 @if($bioUrl)
                     <a href="{{ $bioUrl }}" target="_blank"
@@ -1110,7 +1110,7 @@
             @if($bioUrl)
                 <div class="bio-mockup-wrapper" style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7;">
                     <div
-                        style="font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:1rem; text-align:center;">
+                        style="font-size:0.7rem; color:#94a3b8; font-weight: 500; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:1rem; text-align:center;">
                         Live Preview</div>
                     <div
                         style="width: 260px; height: 530px; margin: 0 auto; border: 12px solid #1a1a1a; border-radius: 36px; overflow: hidden; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1); background:#fff;">
@@ -1153,11 +1153,11 @@
                     <div class="prof-card" style="border:1.5px solid #BBF7D0; background:#F0FDF4; margin-bottom:1.5rem;">
                         <div class="card-body" style="padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
                             <div>
-                                <span style="background:#166534; color:#fff; font-size:0.7rem; font-weight:800; padding:0.25rem 0.6rem; border-radius:6px; letter-spacing:0.05em; display:inline-flex; align-items:center; gap:0.3rem;">
+                                <span style="background:#166534; color:#fff; font-size:0.7rem; font-weight: 600; padding:0.25rem 0.6rem; border-radius:6px; letter-spacing:0.05em; display:inline-flex; align-items:center; gap:0.3rem;">
                                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                                     DOMAIN AKTIF ANDA
                                 </span>
-                                <h3 style="font-size:1.15rem; font-weight:800; color:#166534; margin:0.4rem 0 0.1rem;">https://{{ $profile->custom_domain }}</h3>
+                                <h3 style="font-size:1.15rem; font-weight: 600; color:#166534; margin:0.4rem 0 0.1rem;">https://{{ $profile->custom_domain }}</h3>
                                 <p style="font-size:0.78rem; color:#15803D; margin:0;">Domain ini sudah terpasang dan aktif mengarah ke halaman Web Builder toko Anda.</p>
                             </div>
                             <a href="https://{{ $profile->custom_domain }}" target="_blank" class="btn-primary" style="background:#166534; border:none; box-shadow:none; display:inline-flex; align-items:center; gap:0.4rem;">
@@ -1183,12 +1183,12 @@
 
                         {{-- Search Input Box --}}
                         <div style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px; padding:1.25rem; margin-bottom:1.5rem;">
-                            <label style="display:block; font-size:0.8rem; font-weight:700; color:#0F172A; margin-bottom:0.5rem;">Cari Nama Domain (Contoh: {{ $cleanKeyword }}.com):</label>
+                            <label style="display:block; font-size:0.8rem; font-weight: 500; color:#0F172A; margin-bottom:0.5rem;">Cari Nama Domain (Contoh: {{ $cleanKeyword }}.com):</label>
                             <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
                                 <input type="text" id="domainSearchInput" value="{{ $cleanKeyword }}.com" placeholder="Ketik nama domain..."
                                     style="flex:1; min-width:200px; height:46px; padding:0 1rem; border:1.5px solid #CBD5E1; border-radius:12px; font-size:0.9rem; font-family:inherit; outline:none; background:#ffffff;">
                                 <button type="button" id="btnSearchDomain" onclick="executeDomainSearch()"
-                                    style="height:46px; padding:0 1.5rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; border-radius:12px; font-weight:700; font-size:0.875rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 14px rgba(30, 179, 73, 0.3);">
+                                    style="height:46px; padding:0 1.5rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; border-radius:12px; font-weight: 500; font-size:0.875rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 14px rgba(30, 179, 73, 0.3);">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
                                     Cari Domain
                                 </button>
@@ -1204,7 +1204,7 @@
 
                         {{-- Auto Recommendations Grid (0 API Hit initially) --}}
                         <div style="margin-top:1rem;">
-                            <div style="font-size:0.85rem; font-weight:800; color:#0F172A; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+                            <div style="font-size:0.85rem; font-weight: 600; color:#0F172A; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem;">
                                 <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>
                                 Rekomendasi Domain untuk "{{ $creatorRawName }}"
                                 <span style="font-size:0.7rem; font-weight:600; color:#64748B; background:#F1F5F9; padding:0.15rem 0.5rem; border-radius:100px;">Auto-Generated</span>
@@ -1216,15 +1216,15 @@
                                     <div style="background:#ffffff; border:1.5px solid #E2E8F0; border-radius:14px; padding:1rem; display:flex; flex-direction:column; justify-content:space-between; gap:0.75rem; transition:all 0.2s; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
                                         <div style="display:flex; justify-content:space-between; align-items:center;">
                                             <div>
-                                                <div style="font-size:0.95rem; font-weight:800; color:#0F172A;">{{ $recDomain }}</div>
+                                                <div style="font-size:0.95rem; font-weight: 600; color:#0F172A;">{{ $recDomain }}</div>
                                             </div>
                                             <div style="text-align:right;">
-                                                <div style="font-size:0.9rem; font-weight:800; color:#1eb349;">Rp {{ number_format($price, 0, ',', '.') }}</div>
+                                                <div style="font-size:0.9rem; font-weight: 600; color:#1eb349;">Rp {{ number_format($price, 0, ',', '.') }}</div>
                                                 <div style="font-size:0.68rem; color:#94A3B8;">per tahun</div>
                                             </div>
                                         </div>
                                         <button type="button" onclick="checkSpecificDomain('{{ $recDomain }}', this)"
-                                            style="width:100%; height:36px; background:#F8FAFC; color:#0F172A; border:1.5px solid #CBD5E1; border-radius:10px; font-size:0.78rem; font-weight:700; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; justify-content:center; gap:0.35rem;">
+                                            style="width:100%; height:36px; background:#F8FAFC; color:#0F172A; border:1.5px solid #CBD5E1; border-radius:10px; font-size:0.78rem; font-weight: 500; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; justify-content:center; gap:0.35rem;">
                                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
                                             Cek Ketersediaan
                                         </button>
@@ -1298,7 +1298,7 @@
                             {{-- 2 Opsi Background --}}
                             <div style="margin-bottom: 1.25rem;">
                                 <label class="form-label"
-                                    style="font-weight:700; margin-bottom:0.5rem; display:block;">Pilih Tipe
+                                    style="font-weight: 500; margin-bottom:0.5rem; display:block;">Pilih Tipe
                                     Background</label>
                                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
                                     <label id="bg_mode_card_color" class="bg-mode-card"
@@ -1464,16 +1464,16 @@
                                         style="width:46px; height:46px; border-radius:50%; background:{{ $cfg['color_card'] ?? '#1a231b' }}; border:2px solid {{ $cfg['color_accent'] ?? '#1eb349' }};">
                                     </div>
                                     <div id="cpText"
-                                        style="font-weight:700; font-size:0.88rem; color:{{ $cfg['color_text'] ?? '#ffffff' }};">
+                                        style="font-weight: 500; font-size:0.88rem; color:{{ $cfg['color_text'] ?? '#ffffff' }};">
                                         Preview Nama Anda</div>
                                     <div id="cpBtn"
-                                        style="padding:0.45rem 1.25rem; border-radius:999px; font-size:0.78rem; font-weight:700; background:{{ $cfg['color_btn'] ?? '#1eb349' }}; color:{{ $cfg['color_btn_text'] ?? '#ffffff' }};">
+                                        style="padding:0.45rem 1.25rem; border-radius:999px; font-size:0.78rem; font-weight: 500; background:{{ $cfg['color_btn'] ?? '#1eb349' }}; color:{{ $cfg['color_btn_text'] ?? '#ffffff' }};">
                                         Tombol Contoh</div>
                                 </div>
                             </div>
                             <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
                                 <button type="button" onclick="resetColors()"
-                                    style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Reset
+                                    style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight: 500; cursor:pointer;">Reset
                                     Default</button>
                                 <button type="submit" class="btn-submit-sm">Simpan Kustomisasi</button>
                             </div>
@@ -1786,7 +1786,7 @@
                             {{-- Food Delivery Merchant Links --}}
                             <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px dashed #e2e8f0;">
                                 <div
-                                    style="font-size:0.88rem; font-weight:800; color:#0f172a; margin-bottom:0.85rem; display:flex; align-items:center; gap:0.4rem;">
+                                    style="font-size:0.88rem; font-weight: 600; color:#0f172a; margin-bottom:0.85rem; display:flex; align-items:center; gap:0.4rem;">
                                     <svg width="18" height="18" fill="none" stroke="#e11d48" stroke-width="2"
                                         viewBox="0 0 24 24">
                                         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
@@ -1796,21 +1796,21 @@
                                 <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.85rem;">
                                     <div class="form-group" style="margin:0;">
                                         <label class="form-label"
-                                            style="font-size:0.75rem; font-weight:700; color:#dc2626;">GoFood Link</label>
+                                            style="font-size:0.75rem; font-weight: 500; color:#dc2626;">GoFood Link</label>
                                         <input type="url" name="bio_gofood"
                                             value="{{ old('bio_gofood', $cfg['gofood'] ?? '') }}" class="form-input"
                                             placeholder="https://gofood.link/u/..." style="font-size:0.78rem;">
                                     </div>
                                     <div class="form-group" style="margin:0;">
                                         <label class="form-label"
-                                            style="font-size:0.75rem; font-weight:700; color:#16a34a;">GrabFood Link</label>
+                                            style="font-size:0.75rem; font-weight: 500; color:#16a34a;">GrabFood Link</label>
                                         <input type="url" name="bio_grabfood"
                                             value="{{ old('bio_grabfood', $cfg['grabfood'] ?? '') }}" class="form-input"
                                             placeholder="https://food.grab.com/..." style="font-size:0.78rem;">
                                     </div>
                                     <div class="form-group" style="margin:0;">
                                         <label class="form-label"
-                                            style="font-size:0.75rem; font-weight:700; color:#ea580c;">ShopeeFood
+                                            style="font-size:0.75rem; font-weight: 500; color:#ea580c;">ShopeeFood
                                             Link</label>
                                         <input type="url" name="bio_shopeefood"
                                             value="{{ old('bio_shopeefood', $cfg['shopeefood'] ?? '') }}" class="form-input"
@@ -1991,7 +1991,7 @@
 
                         @if(!empty($cfg['embed_location']))
                             <div style="margin-top:2rem;">
-                                <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:1rem;">Preview Map</h4>
+                                <h4 style="font-size:0.9rem; font-weight: 500; margin-bottom:1rem;">Preview Map</h4>
                                 <div style="border-radius:16px; overflow:hidden; border:2px solid #e2e8f0;">
                                     {!! $cfg['embed_location'] !!}
                                 </div>
@@ -2018,7 +2018,7 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 style="font-size:0.95rem; font-weight:800; color:#0F172A; margin:0;">Katalog Produk
+                                <h3 style="font-size:0.95rem; font-weight: 600; color:#0F172A; margin:0;">Katalog Produk
                                     Affiliate buyle.id</h3>
                                 <p style="font-size:0.78rem; color:#64748B; margin:0.15rem 0 0;">Tampilkan produk affiliate
                                     buyle.id milik creator lain & dapatkan komisi penjualan.</p>
@@ -2057,16 +2057,16 @@
                                         style="width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
                                 @endif
                                 <div style="flex:1; min-width:200px;">
-                                    <div style="font-weight:700; font-size:0.875rem; color:#0F172A;">
+                                    <div style="font-weight: 500; font-size:0.875rem; color:#0F172A;">
                                         {{ $affBlock->title }}
                                     </div>
                                     <div style="font-size:0.75rem; color:#64748B; margin-top:0.2rem;">
                                         @if($affProd)
                                             Oleh: <strong style="color:#334155;">{{ $affProd->seller->name ?? 'Creator' }}</strong>
-                                            &middot; Harga: <span style="color:#0F172A; font-weight:700;">Rp
+                                            &middot; Harga: <span style="color:#0F172A; font-weight: 500;">Rp
                                                 {{ number_format($affProd->sale_price ?? $affProd->price, 0, ',', '.') }}</span>
                                             &middot; Komisi: <span
-                                                style="color:#166534; font-weight:700;">{{ $affProd->affiliate_commission_rate ?? 10 }}%
+                                                style="color:#166534; font-weight: 500;">{{ $affProd->affiliate_commission_rate ?? 10 }}%
                                                 (Rp
                                                 {{ number_format(round((($affProd->sale_price ?? $affProd->price) * ($affProd->affiliate_commission_rate ?? 10)) / 100), 0, ',', '.') }})</span>
                                         @else
@@ -2078,7 +2078,7 @@
                                     class="form-delete-block" style="margin-left:auto;">
                                     @csrf @method('DELETE')
                                     <button type="button" class="btn-delete-block"
-                                        style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                        style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
                                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
                                             viewBox="0 0 24 24">
                                             <polyline points="3 6 5 6 21 6" />
@@ -2109,7 +2109,7 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 style="font-size:0.95rem; font-weight:800; color:#0F172A; margin:0;">Katalog Produk
+                                <h3 style="font-size:0.95rem; font-weight: 600; color:#0F172A; margin:0;">Katalog Produk
                                     White Label & Resell</h3>
                                 <p style="font-size:0.78rem; color:#64748B; margin:0.15rem 0 0;">Bebas lisensi &Tentukan
                                     harga jual (markup) sendiri!</p>
@@ -2154,17 +2154,17 @@
                                         style="width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
                                 @endif
                                 <div style="flex:1; min-width:200px;">
-                                    <div style="font-weight:700; font-size:0.875rem; color:#0F172A;">
+                                    <div style="font-weight: 500; font-size:0.875rem; color:#0F172A;">
                                         {{ $wlBlock->title }}
                                     </div>
                                     <div style="font-size:0.75rem; color:#64748B; margin-top:0.2rem;">
                                         @if($wlProd)
                                             Oleh: <strong style="color:#334155;">{{ $wlProd->seller->name ?? 'Creator' }}</strong>
                                             @if($wlProd->whitelabel_price)
-                                                &middot; Min. Resell: <span style="color:#0F172A; font-weight:700;">Rp
+                                                &middot; Min. Resell: <span style="color:#0F172A; font-weight: 500;">Rp
                                                     {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}</span>
                                             @else
-                                                &middot; Harga Asli: <span style="color:#0F172A; font-weight:700;">Rp
+                                                &middot; Harga Asli: <span style="color:#0F172A; font-weight: 500;">Rp
                                                     {{ number_format($wlProd->price, 0, ',', '.') }}</span>
                                             @endif
                                         @endif
@@ -2174,7 +2174,7 @@
                                     class="form-delete-block" style="margin-left:auto;">
                                     @csrf @method('DELETE')
                                     <button type="button" class="btn-delete-block"
-                                        style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                        style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
                                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
                                             viewBox="0 0 24 24">
                                             <polyline points="3 6 5 6 21 6" />
@@ -2281,7 +2281,7 @@
                             {{-- Sort --}}
                             <div style="display:flex; gap:0.25rem;">
                                 <button id="sortTerbaru" onclick="sortUmkmProducts('terbaru')" title="Terbaru"
-                                    style="height:32px; padding:0 0.65rem; border-radius:8px 0 0 8px; border:1.5px solid #e2e8f0; border-right:none; background:#0f172a; color:#fff; font-size:0.72rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                    style="height:32px; padding:0 0.65rem; border-radius:8px 0 0 8px; border:1.5px solid #e2e8f0; border-right:none; background:#0f172a; color:#fff; font-size:0.72rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
                                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
                                         viewBox="0 0 24 24">
                                         <line x1="12" y1="19" x2="12" y2="5" />
@@ -2290,7 +2290,7 @@
                                     Terbaru
                                 </button>
                                 <button id="sortTerlama" onclick="sortUmkmProducts('terlama')" title="Terlama"
-                                    style="height:32px; padding:0 0.65rem; border-radius:0 8px 8px 0; border:1.5px solid #e2e8f0; background:#f8fafc; color:#64748b; font-size:0.72rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                    style="height:32px; padding:0 0.65rem; border-radius:0 8px 8px 0; border:1.5px solid #e2e8f0; background:#f8fafc; color:#64748b; font-size:0.72rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
                                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
                                         viewBox="0 0 24 24">
                                         <line x1="12" y1="5" x2="12" y2="19" />
@@ -2305,7 +2305,7 @@
                                     style="margin:0;">
                                     @csrf @method('DELETE')
                                     <button type="submit"
-                                        style="background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; font-weight:700; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.75rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem; height:32px;">
+                                        style="background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; font-weight: 500; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.75rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem; height:32px;">
                                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
                                             viewBox="0 0 24 24">
                                             <polyline points="3 6 5 6 21 6" />
@@ -2316,7 +2316,7 @@
                                 </form>
                             @endif
                             <button type="button" onclick="openScanMenuModal()"
-                                style="background:linear-gradient(135deg, #0f172a, #1e293b); color:#fff; border:none; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.78rem; cursor:pointer; height:32px;">
+                                style="background:linear-gradient(135deg, #0f172a, #1e293b); color:#fff; border:none; font-weight: 500; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.78rem; cursor:pointer; height:32px;">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
                                     viewBox="0 0 24 24">
                                     <path
@@ -2325,7 +2325,7 @@
                                 Scan Menu AI
                             </button>
                             <button type="button" onclick="openAddUmkmWithCheck()"
-                                style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; font-weight:700; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 1.1rem; border-radius:999px; font-size:0.78rem; cursor:pointer; height:34px; box-shadow:0 4px 14px rgba(30, 179, 73, 0.32); transition:all 0.2s ease;">
+                                style="background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; font-weight: 500; display:inline-flex; align-items:center; gap:0.35rem; padding:0.4rem 1.1rem; border-radius:999px; font-size:0.78rem; cursor:pointer; height:34px; box-shadow:0 4px 14px rgba(30, 179, 73, 0.32); transition:all 0.2s ease;">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
                                     viewBox="0 0 24 24">
                                     <line x1="12" y1="5" x2="12" y2="19" />
@@ -2409,7 +2409,7 @@
                                                 @endif
                                                 <div class="aff-info" style="flex:1; min-width:0; padding:0.55rem 0.75rem;">
                                                     <div class="aff-title"
-                                                        style="font-size:0.83rem; font-weight:700; color:#0b120c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.2rem;">
+                                                        style="font-size:0.83rem; font-weight: 500; color:#0b120c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.2rem;">
                                                         {{ $block->title }}
                                                     </div>
                                                     <div class="aff-sub" style="font-size:0.72rem; color:#64748b;">
@@ -2427,7 +2427,7 @@
                                                         @endif
                                                         @if(isset($block->data_json['stock']) && $block->data_json['stock'] !== null)
                                                             @if($block->data_json['stock'] == 0)
-                                                                &middot; <span style="color:#ef4444;font-weight:700;">Habis</span>
+                                                                &middot; <span style="color:#ef4444;font-weight: 500;">Habis</span>
                                                             @else
                                                                 &middot; <span style="color:#64748b;">Stok: {{ $block->data_json['stock'] }}</span>
                                                             @endif
@@ -2513,7 +2513,7 @@
                                 @endif
                                 <div style="flex:1; min-width:0;">
                                     <div
-                                        style="font-weight:700; font-size:0.82rem; color:#0b120c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                        style="font-weight: 500; font-size:0.82rem; color:#0b120c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                                         {{ $product->name }}
                                     </div>
                                     <div style="font-size:0.72rem; color:#64748b;">Rp
@@ -2522,7 +2522,7 @@
                                 </div>
                                 @if($alreadyAdded)
                                     <span
-                                        style="font-size:0.72rem; font-weight:700; color:#1eb349; background:#f0fdf4; padding:0.25rem 0.6rem; border-radius:6px;">Ditampilkan</span>
+                                        style="font-size:0.72rem; font-weight: 500; color:#1eb349; background:#f0fdf4; padding:0.25rem 0.6rem; border-radius:6px;">Ditampilkan</span>
                                 @else
                                     <form action="{{ route('creator.bio.blocks.store') }}" method="POST" style="display:inline;">
                                         @csrf
@@ -2552,7 +2552,7 @@
     <div class="modal-overlay" id="addBlockModal" onclick="if(event.target===this)this.classList.remove('open')">
         <div class="modal-box">
             <h3
-                style="font-size:1.1rem; font-weight:800; margin:0 0 1.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
+                style="font-size:1.1rem; font-weight: 600; margin:0 0 1.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
                 Tambah Block Baru</h3>
             <form action="{{ route('creator.bio.blocks.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -2611,7 +2611,7 @@
 
                 <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
                     <button type="button" onclick="document.getElementById('addBlockModal').classList.remove('open')"
-                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight: 500; cursor:pointer;">Batal</button>
                     <button type="submit" class="btn-submit-sm">Tambah Block</button>
                 </div>
             </form>
@@ -2623,7 +2623,7 @@
     <div class="modal-overlay" id="addAffModal" onclick="if(event.target===this)this.classList.remove('open')">
         <div class="modal-box">
             <h3
-                style="font-size:1.1rem; font-weight:800; margin:0 0 0.5rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
+                style="font-size:1.1rem; font-weight: 600; margin:0 0 0.5rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
                 Tambah Produk Affiliate</h3>
             <p style="font-size:0.78rem; color:#64748b; margin:0 0 1.25rem;">Tempel link Shopee/Tokopedia — sistem akan
                 ambil gambar otomatis. Atau upload manual.</p>
@@ -2634,7 +2634,7 @@
                     onerror="this.src='https://placehold.co/60x60/fff/cbd5e1?text=Img'">
                 <div>
                     <div id="scrapeTitle"
-                        style="font-weight:700; font-size:0.82rem; color:#0b120c; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+                        style="font-weight: 500; font-size:0.82rem; color:#0b120c; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
                     </div>
                     <div style="font-size:0.7rem; color:#1eb349;">✓ Info berhasil ditemukan</div>
                 </div>
@@ -2651,7 +2651,7 @@
                             placeholder="https://shopee.co.id/... atau https://tokopedia.com/..." style="flex:1;">
                         <button type="button" id="btnScrape"
                             onclick="scrapeUrl(document.getElementById('affUrl').value, true)"
-                            style="height:44px; padding:0 1.1rem; border-radius:999px; background:linear-gradient(135deg,#1eb349,#16a34a); border:none; color:#fff; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0; box-shadow:0 2px 8px rgba(30,179,73,0.25);">
+                            style="height:44px; padding:0 1.1rem; border-radius:999px; background:linear-gradient(135deg,#1eb349,#16a34a); border:none; color:#fff; font-weight: 500; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0; box-shadow:0 2px 8px rgba(30,179,73,0.25);">
                             <svg id="scrapeSpinner" width="14" height="14" fill="none" stroke="currentColor"
                                 stroke-width="2.5" viewBox="0 0 24 24" style="display:none;">
                                 <path d="M21 12a9 9 0 1 1-6.219-8.56" />
@@ -2679,7 +2679,7 @@
                 </div>
                 <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
                     <button type="button" onclick="document.getElementById('addAffModal').classList.remove('open')"
-                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight: 500; cursor:pointer;">Batal</button>
                     <button type="submit" class="btn-submit-sm">Tambah Produk</button>
                 </div>
             </form>
@@ -2690,7 +2690,7 @@
     <div class="modal-overlay" id="editBlockModal" onclick="if(event.target===this)this.classList.remove('open')">
         <div class="modal-box">
             <h3
-                style="font-size:1.1rem; font-weight:800; margin:0 0 1.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
+                style="font-size:1.1rem; font-weight: 600; margin:0 0 1.25rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
                 Edit Block</h3>
             <form action="" method="POST" enctype="multipart/form-data" id="editBlockForm">
                 @csrf
@@ -2723,7 +2723,7 @@
                 </div>
                 <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
                     <button type="button" onclick="document.getElementById('editBlockModal').classList.remove('open')"
-                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight: 500; cursor:pointer;">Batal</button>
                     <button type="submit" class="btn-submit-sm">Simpan Perubahan</button>
                 </div>
             </form>
@@ -2735,7 +2735,7 @@
         style="z-index: 1050;">
         <div class="modal-box">
             <h3
-                style="font-size:1.1rem; font-weight:800; margin:0 0 1rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
+                style="font-size:1.1rem; font-weight: 600; margin:0 0 1rem; color:#0b120c; font-family:'Montserrat',sans-serif;">
                 Pilih Ikon</h3>
             <p style="font-size:0.75rem; color:#64748b; margin-bottom:1rem;">Pilih salah satu ikon di bawah ini untuk
                 ditampilkan di tombol Anda.</p>
@@ -2746,7 +2746,7 @@
 
             <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.5rem;">
                 <button type="button" onclick="document.getElementById('iconPickerModal').classList.remove('open')"
-                    style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Tutup</button>
+                    style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight: 500; cursor:pointer;">Tutup</button>
             </div>
         </div>
     </div>
@@ -2765,7 +2765,7 @@
                     <line x1="12" y1="17" x2="12.01" y2="17" />
                 </svg>
             </div>
-            <h3 style="font-size:1.15rem; font-weight:800; color:#0F172A; margin:0 0 0.5rem; font-family:'Montserrat',sans-serif;"
+            <h3 style="font-size:1.15rem; font-weight: 600; color:#0F172A; margin:0 0 0.5rem; font-family:'Montserrat',sans-serif;"
                 id="imgOversizedTitle">
                 Ukuran Foto Melebihi Batas
             </h3>
@@ -2778,7 +2778,7 @@
             </div>
             <div style="display:flex; flex-direction:column; gap:0.6rem;">
                 <a href="https://tinypng.com" target="_blank" rel="noopener" class="btn-submit-sm"
-                    style="display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; width:100%; height:44px; font-size:0.88rem; font-weight:700; text-decoration:none; background:#1eb349; color:#fff; border-radius:999px;">
+                    style="display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; width:100%; height:44px; font-size:0.88rem; font-weight: 500; text-decoration:none; background:#1eb349; color:#fff; border-radius:999px;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
@@ -2788,7 +2788,7 @@
                     Kompres di TinyPNG.com
                 </a>
                 <button type="button" onclick="document.getElementById('imgOversizedModal').classList.remove('open')"
-                    style="height:40px; width:100%; border-radius:999px; border:1.5px solid #E2E8F0; background:#fff; color:#64748B; font-weight:700; font-size:0.85rem; cursor:pointer;">
+                    style="height:40px; width:100%; border-radius:999px; border:1.5px solid #E2E8F0; background:#fff; color:#64748B; font-weight: 500; font-size:0.85rem; cursor:pointer;">
                     Tutup
                 </button>
             </div>
@@ -2807,7 +2807,7 @@
                 </svg>
             </div>
             <h3
-                style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0 0 0.5rem; font-family:'Montserrat',sans-serif;">
+                style="font-size:1.05rem; font-weight: 600; color:#0f172a; margin:0 0 0.5rem; font-family:'Montserrat',sans-serif;">
                 Lokasi Belum Dilengkapi
             </h3>
             <p style="font-size:0.82rem; color:#64748b; line-height:1.6; margin:0 0 1.5rem;">
@@ -2817,11 +2817,11 @@
             </p>
             <div style="display:flex; gap:0.75rem; justify-content:center;">
                 <button type="button" onclick="document.getElementById('locationWarningModal').classList.remove('open')"
-                    style="padding:0.55rem 1.25rem; border-radius:999px; border:1.5px solid #e2e8f0; background:#f8fafc; color:#64748b; font-weight:700; font-size:0.82rem; cursor:pointer;">
+                    style="padding:0.55rem 1.25rem; border-radius:999px; border:1.5px solid #e2e8f0; background:#f8fafc; color:#64748b; font-weight: 500; font-size:0.82rem; cursor:pointer;">
                     Nanti Saja
                 </button>
                 <a href="{{ route('creator.profile.edit') }}?tab=lokasi"
-                    style="padding:0.55rem 1.4rem; border-radius:999px; background:linear-gradient(135deg,#1eb349,#a5cf37); color:#fff; font-weight:700; font-size:0.82rem; text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 14px rgba(30,179,73,0.28);">
+                    style="padding:0.55rem 1.4rem; border-radius:999px; background:linear-gradient(135deg,#1eb349,#a5cf37); color:#fff; font-weight: 500; font-size:0.82rem; text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 14px rgba(30,179,73,0.28);">
                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                         <circle cx="12" cy="10" r="3" />
@@ -2848,7 +2848,7 @@
                     </div>
                     <div>
                         <h3
-                            style="font-size:1.15rem; font-weight:800; margin:0; color:#0f172a; font-family:'Montserrat',sans-serif;">
+                            style="font-size:1.15rem; font-weight: 600; margin:0; color:#0f172a; font-family:'Montserrat',sans-serif;">
                             Tambah Produk Fisik / UMKM</h3>
                         <p style="font-size:0.75rem; color:#64748b; margin:0.1rem 0 0;">Lengkapi data produk fisik dan
                             informasi pengiriman logistik.</p>
@@ -2866,7 +2866,7 @@
                         <circle cx="11" cy="11" r="8" />
                         <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
-                    <span style="font-size:0.82rem; font-weight:700; color:#0f172a;">Auto Import dari Shopee /
+                    <span style="font-size:0.82rem; font-weight: 500; color:#0f172a;">Auto Import dari Shopee /
                         Tokopedia</span>
                 </div>
                 <p style="font-size:0.75rem; color:#64748b; margin:0 0 0.75rem; line-height:1.5;">Tempel link produk Shopee
@@ -2878,7 +2878,7 @@
                             style="width:100%; height:40px; padding:0 0.85rem; border-radius:8px; border:1.5px solid #cbd5e1; font-size:0.8rem; background:#fff; color:#1e293b; outline:none; box-sizing:border-box;">
                     </div>
                     <button type="button" onclick="doScrapeProduct()" id="scrapeBtn"
-                        style="height:40px; padding:0 1.25rem; border-radius:999px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0; box-shadow:0 4px 14px rgba(30,179,73,0.32); transition:all 0.2s ease;">
+                        style="height:40px; padding:0 1.25rem; border-radius:999px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; font-weight: 500; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; flex-shrink:0; box-shadow:0 4px 14px rgba(30,179,73,0.32); transition:all 0.2s ease;">
                         <svg id="scrapeBtnIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
                             viewBox="0 0 24 24">
                             <circle cx="11" cy="11" r="8" />
@@ -2894,8 +2894,8 @@
                         style="width:60px; height:60px; object-fit:cover; border-radius:8px; flex-shrink:0; border:1px solid #e2e8f0; display:none;">
                     <div style="flex:1; min-width:0;">
                         <div id="scrapePreviewTitle"
-                            style="font-size:0.82rem; font-weight:700; color:#0f172a; margin-bottom:0.2rem;"></div>
-                        <div id="scrapePreviewPrice" style="font-size:0.78rem; color:#1eb349; font-weight:700;"></div>
+                            style="font-size:0.82rem; font-weight: 500; color:#0f172a; margin-bottom:0.2rem;"></div>
+                        <div id="scrapePreviewPrice" style="font-size:0.78rem; color:#1eb349; font-weight: 500;"></div>
                     </div>
                 </div>
             </div>
@@ -2956,7 +2956,7 @@
                 <div
                     style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
                     <div
-                        style="font-size:0.82rem; font-weight:700; color:#0f172a; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.5rem;">
+                        style="font-size:0.82rem; font-weight: 500; color:#0f172a; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.5rem;">
                         <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
                             <rect x="1" y="3" width="15" height="13"></rect>
                             <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
@@ -2979,13 +2979,13 @@
                             <span class="form-hint" style="font-size:0.68rem; color:#64748b;">1.000 gr = 1 kg</span>
                         </div>
                     </div>
-                    <div style="font-size:0.75rem; color:#475569; margin-bottom:0.4rem; font-weight:700;">Dimensi Paket
+                    <div style="font-size:0.75rem; color:#475569; margin-bottom:0.4rem; font-weight: 500;">Dimensi Paket
                         (Panjang x Lebar x Tinggi cm) — Ongkir Volumetrik:</div>
                     <div
                         style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:0.4rem; width:100%; box-sizing:border-box;">
                         <div class="form-group" style="margin:0; min-width:0;">
                             <label class="form-label"
-                                style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">P
+                                style="font-size:0.7rem; font-weight: 500; white-space:nowrap; margin-bottom:0.2rem;">P
                                 (cm)</label>
                             <input type="number" name="length" min="0" step="0.1" class="form-input umkm-dim-p"
                                 placeholder="P"
@@ -2994,7 +2994,7 @@
                         </div>
                         <div class="form-group" style="margin:0; min-width:0;">
                             <label class="form-label"
-                                style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">L
+                                style="font-size:0.7rem; font-weight: 500; white-space:nowrap; margin-bottom:0.2rem;">L
                                 (cm)</label>
                             <input type="number" name="width" min="0" step="0.1" class="form-input umkm-dim-l"
                                 placeholder="L"
@@ -3003,7 +3003,7 @@
                         </div>
                         <div class="form-group" style="margin:0; min-width:0;">
                             <label class="form-label"
-                                style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">T
+                                style="font-size:0.7rem; font-weight: 500; white-space:nowrap; margin-bottom:0.2rem;">T
                                 (cm)</label>
                             <input type="number" name="height" min="0" step="0.1" class="form-input umkm-dim-t"
                                 placeholder="T"
@@ -3012,10 +3012,10 @@
                         </div>
                         <div class="form-group" style="margin:0; min-width:0;">
                             <label class="form-label"
-                                style="font-size:0.7rem; font-weight:700; color:#1eb349; white-space:nowrap; margin-bottom:0.2rem;">Vol
+                                style="font-size:0.7rem; font-weight: 500; color:#1eb349; white-space:nowrap; margin-bottom:0.2rem;">Vol
                                 (cm³)</label>
                             <input type="number" name="volume" min="0" class="form-input umkm-dim-v" placeholder="Vol"
-                                style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center; background:#f1f5f9; font-weight:700; color:#0f172a;"
+                                style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center; background:#f1f5f9; font-weight: 500; color:#0f172a;"
                                 readonly>
                         </div>
                     </div>
@@ -3028,7 +3028,7 @@
                         <img id="scrapeImgThumb" src="" alt=""
                             style="width:48px; height:48px; object-fit:cover; border-radius:8px; border:1px solid #d1fae5;">
                         <div style="flex:1; min-width:0;">
-                            <div style="font-size:0.75rem; font-weight:700; color:#1eb349; margin-bottom:0.1rem;">Foto dari
+                            <div style="font-size:0.75rem; font-weight: 500; color:#1eb349; margin-bottom:0.1rem;">Foto dari
                                 Shopee/Tokopedia</div>
                             <div id="scrapeImgUrl"
                                 style="font-size:0.7rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px;">
@@ -3046,7 +3046,7 @@
                         Format: JPG, PNG, WEBP &middot; <strong>Maks 1 MB per foto.</strong>
                         Jika foto terlalu besar, kompres dulu di
                         <a href="https://tinypng.com" target="_blank" rel="noopener"
-                            style="color:#1eb349; font-weight:700; text-decoration:underline;">TinyPNG.com</a>
+                            style="color:#1eb349; font-weight: 500; text-decoration:underline;">TinyPNG.com</a>
                     </span>
                 </div>
                 <div class="form-group">
@@ -3069,7 +3069,7 @@
                 </div>
                 <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.25rem;">
                     <button type="button" onclick="closeAddUmkmModal()"
-                        style="height:42px; padding:0 1.4rem; border-radius:999px; border:1.5px solid #e2e8f0; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                        style="height:42px; padding:0 1.4rem; border-radius:999px; border:1.5px solid #e2e8f0; background:#fff; color:#64748b; font-weight: 500; cursor:pointer;">Batal</button>
                     <button type="submit" class="btn-submit-sm"
                         style="height:42px; padding:0 1.75rem; border-radius:999px;">Simpan Produk</button>
                 </div>
@@ -3094,7 +3094,7 @@
                     </div>
                     <div>
                         <h3
-                            style="font-size:1.15rem; font-weight:800; margin:0; color:#0f172a; font-family:'Montserrat',sans-serif;">
+                            style="font-size:1.15rem; font-weight: 600; margin:0; color:#0f172a; font-family:'Montserrat',sans-serif;">
                             Edit Produk Fisik / UMKM</h3>
                         <p style="font-size:0.75rem; color:#64748b; margin:0.1rem 0 0;">Perbarui data produk fisik dan
                             informasi pengiriman logistik.</p>
@@ -3153,7 +3153,7 @@
                 <div
                     style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; padding:0.85rem; margin-bottom:1rem;">
                     <div
-                        style="font-size:0.78rem; font-weight:700; color:#0f172a; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
+                        style="font-size:0.78rem; font-weight: 500; color:#0f172a; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
                         <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
                             <rect x="1" y="3" width="15" height="13"></rect>
                             <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
@@ -3176,13 +3176,13 @@
                             <span class="form-hint" style="font-size:0.65rem; color:#64748b;">1.000 gr = 1 kg</span>
                         </div>
                     </div>
-                    <div style="font-size:0.75rem; color:#475569; margin-bottom:0.4rem; font-weight:700;">Dimensi Paket
+                    <div style="font-size:0.75rem; color:#475569; margin-bottom:0.4rem; font-weight: 500;">Dimensi Paket
                         (Panjang x Lebar x Tinggi cm) — Ongkir Volumetrik:</div>
                     <div
                         style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:0.4rem; width:100%; box-sizing:border-box;">
                         <div class="form-group" style="margin:0; min-width:0;">
                             <label class="form-label"
-                                style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">P
+                                style="font-size:0.7rem; font-weight: 500; white-space:nowrap; margin-bottom:0.2rem;">P
                                 (cm)</label>
                             <input type="number" name="length" id="edit_length" min="0" step="0.1"
                                 class="form-input umkm-dim-p" placeholder="P"
@@ -3191,7 +3191,7 @@
                         </div>
                         <div class="form-group" style="margin:0; min-width:0;">
                             <label class="form-label"
-                                style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">L
+                                style="font-size:0.7rem; font-weight: 500; white-space:nowrap; margin-bottom:0.2rem;">L
                                 (cm)</label>
                             <input type="number" name="width" id="edit_width" min="0" step="0.1"
                                 class="form-input umkm-dim-l" placeholder="L"
@@ -3200,7 +3200,7 @@
                         </div>
                         <div class="form-group" style="margin:0; min-width:0;">
                             <label class="form-label"
-                                style="font-size:0.7rem; font-weight:700; white-space:nowrap; margin-bottom:0.2rem;">T
+                                style="font-size:0.7rem; font-weight: 500; white-space:nowrap; margin-bottom:0.2rem;">T
                                 (cm)</label>
                             <input type="number" name="height" id="edit_height" min="0" step="0.1"
                                 class="form-input umkm-dim-t" placeholder="T"
@@ -3209,11 +3209,11 @@
                         </div>
                         <div class="form-group" style="margin:0; min-width:0;">
                             <label class="form-label"
-                                style="font-size:0.7rem; font-weight:700; color:#1eb349; white-space:nowrap; margin-bottom:0.2rem;">Vol
+                                style="font-size:0.7rem; font-weight: 500; color:#1eb349; white-space:nowrap; margin-bottom:0.2rem;">Vol
                                 (cm³)</label>
                             <input type="number" name="volume" id="edit_volume" min="0" class="form-input umkm-dim-v"
                                 placeholder="Vol"
-                                style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center; background:#f1f5f9; font-weight:700; color:#0f172a;"
+                                style="height:34px; font-size:0.78rem; padding:0 0.35rem; width:100%; box-sizing:border-box; text-align:center; background:#f1f5f9; font-weight: 500; color:#0f172a;"
                                 readonly>
                         </div>
                     </div>
@@ -3244,7 +3244,7 @@
                         </svg>
                         <strong>Maks 1 MB per foto.</strong>&nbsp;Jika terlalu besar, kompres dulu di&nbsp;
                         <a href="https://tinypng.com" target="_blank" rel="noopener"
-                            style="color:#1eb349; font-weight:700;">TinyPNG.com</a>
+                            style="color:#1eb349; font-weight: 500;">TinyPNG.com</a>
                         &middot; Klik ✕ pada foto tersimpan untuk menghapus permanen.
                     </span>
                 </div>
@@ -3268,7 +3268,7 @@
                 </div>
                 <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
                     <button type="button" onclick="document.getElementById('editUmkmModal').classList.remove('open')"
-                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight:700; cursor:pointer;">Batal</button>
+                        style="height:40px; padding:0 1.25rem; border-radius:999px; border:1.5px solid #e7f0e7; background:#fff; color:#64748b; font-weight: 500; cursor:pointer;">Batal</button>
                     <button type="submit" class="btn-submit-sm">Simpan Perubahan</button>
                 </div>
             </form>
@@ -3513,11 +3513,11 @@
                                         <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
                                             <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                         </div>
-                                        <div style="font-weight:800;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
+                                        <div style="font-weight: 600;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
                                         <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
                                         <div style="display:flex;gap:0.6rem;justify-content:center;">
-                                            <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight:700;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
-                                            <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
+                                            <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight: 500;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
+                                            <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight: 500;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
                                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                                                 Scan AI
                                             </button>
@@ -3798,7 +3798,7 @@
                 const listHtml = oversized.map(f => `
                                         <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
                                             <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
-                                            <span style="color:#EF4444; font-weight:700;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                                            <span style="color:#EF4444; font-weight: 500;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
                                         </div>
                                     `).join('');
 
@@ -4305,7 +4305,7 @@
                 style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #F1F5F9;">
                 <div>
                     <h3
-                        style="font-size:1.1rem; font-weight:800; color:#0F172A; font-family:'Montserrat',sans-serif; margin:0; display:flex; align-items:center; gap:0.5rem;">
+                        style="font-size:1.1rem; font-weight: 600; color:#0F172A; font-family:'Montserrat',sans-serif; margin:0; display:flex; align-items:center; gap:0.5rem;">
                         <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
                             <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                         </svg>
@@ -4361,7 +4361,7 @@
                         <div
                             style="display:flex; flex-direction:column; flex:1; justify-content:space-between; gap:0.4rem; margin-top:0.5rem;">
                             <div>
-                                <div style="font-weight:700; font-size:0.8rem; color:#0F172A; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"
+                                <div style="font-weight: 500; font-size:0.8rem; color:#0F172A; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"
                                     title="{{ $affProduct->name }}">
                                     {{ $affProduct->name }}
                                 </div>
@@ -4373,11 +4373,11 @@
                             </div>
 
                             <div>
-                                <div style="font-size:0.82rem; color:#0F172A; font-weight:800;">
+                                <div style="font-size:0.82rem; color:#0F172A; font-weight: 600;">
                                     Rp {{ number_format($effPrice, 0, ',', '.') }}
                                 </div>
                                 <div
-                                    style="font-size:0.68rem; font-weight:700; color:#166534; background:#ECFDF5; border:1px solid #A7F3D0; padding:0.15rem 0.4rem; border-radius:6px; margin-top:0.2rem; display:flex; align-items:center; gap:0.2rem;">
+                                    style="font-size:0.68rem; font-weight: 500; color:#166534; background:#ECFDF5; border:1px solid #A7F3D0; padding:0.15rem 0.4rem; border-radius:6px; margin-top:0.2rem; display:flex; align-items:center; gap:0.2rem;">
                                     <svg width="10" height="10" fill="none" stroke="#166534" stroke-width="2.5"
                                         viewBox="0 0 24 24">
                                         <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
@@ -4390,7 +4390,7 @@
                             {{-- Action Buttons --}}
                             <div style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.35rem;">
                                 <a href="{{ route('products.show', $affProduct->slug) }}" target="_blank"
-                                    style="display:flex; align-items:center; justify-content:center; gap:0.25rem; font-size:0.72rem; font-weight:700; color:#475569; background:#F1F5F9; border:1px solid #CBD5E1; padding:0.35rem 0.4rem; border-radius:8px; text-decoration:none; transition:all 0.15s;">
+                                    style="display:flex; align-items:center; justify-content:center; gap:0.25rem; font-size:0.72rem; font-weight: 500; color:#475569; background:#F1F5F9; border:1px solid #CBD5E1; padding:0.35rem 0.4rem; border-radius:8px; text-decoration:none; transition:all 0.15s;">
                                     <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"
                                         viewBox="0 0 24 24">
                                         <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -4405,7 +4405,7 @@
                                         style="margin:0;">
                                         @csrf @method('DELETE')
                                         <button type="submit"
-                                            style="width:100%; border:1px solid #FCA5A5; color:#DC2626; background:#FEF2F2; font-size:0.72rem; padding:0.35rem 0.4rem; border-radius:8px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
+                                            style="width:100%; border:1px solid #FCA5A5; color:#DC2626; background:#FEF2F2; font-size:0.72rem; padding:0.35rem 0.4rem; border-radius:8px; font-weight: 500; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
                                             <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
                                                 viewBox="0 0 24 24">
                                                 <polyline points="3 6 5 6 21 6" />
@@ -4422,7 +4422,7 @@
                                         <input type="hidden" name="url" value="{{ route('products.show', $affProduct->slug) }}">
                                         <input type="hidden" name="product_id" value="{{ $affProduct->id }}">
                                         <button type="submit"
-                                            style="width:100%; background:#1eb349; color:#fff; font-size:0.72rem; padding:0.35rem 0.4rem; height:32px; border-radius:8px; font-weight:700; cursor:pointer; border:none; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
+                                            style="width:100%; background:#1eb349; color:#fff; font-size:0.72rem; padding:0.35rem 0.4rem; height:32px; border-radius:8px; font-weight: 500; cursor:pointer; border:none; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
                                             + Tambah ke Bio
                                         </button>
                                     </form>
@@ -4446,7 +4446,7 @@
                 style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #F1F5F9;">
                 <div>
                     <h3
-                        style="font-size:1.15rem; font-weight:800; color:#0F172A; font-family:'Montserrat',sans-serif; margin:0; display:flex; align-items:center; gap:0.5rem;">
+                        style="font-size:1.15rem; font-weight: 600; color:#0F172A; font-family:'Montserrat',sans-serif; margin:0; display:flex; align-items:center; gap:0.5rem;">
                         <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
                             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                         </svg>
@@ -4499,7 +4499,7 @@
                         <div
                             style="display:flex; flex-direction:column; flex:1; justify-content:space-between; gap:0.4rem; margin-top:0.5rem;">
                             <div>
-                                <div style="font-weight:700; font-size:0.8rem; color:#0F172A; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"
+                                <div style="font-weight: 500; font-size:0.8rem; color:#0F172A; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"
                                     title="{{ $wlProd->name }}">
                                     {{ $wlProd->name }}
                                 </div>
@@ -4513,12 +4513,12 @@
                             <div>
                                 @if($wlProd->whitelabel_price)
                                     <div style="font-size:0.68rem; color:#64748B;">Min. Resell:</div>
-                                    <div style="font-size:0.82rem; color:#166534; font-weight:800;">
+                                    <div style="font-size:0.82rem; color:#166534; font-weight: 600;">
                                         Rp {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}
                                     </div>
                                 @else
                                     <div style="font-size:0.68rem; color:#64748B;">Harga Asli:</div>
-                                    <div style="font-size:0.82rem; color:#166534; font-weight:800;">
+                                    <div style="font-size:0.82rem; color:#166534; font-weight: 600;">
                                         Rp {{ number_format($wlProd->price, 0, ',', '.') }}
                                     </div>
                                 @endif
@@ -4538,7 +4538,7 @@
                             {{-- Action Buttons --}}
                             <div style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.35rem;">
                                 <a href="{{ route('products.show', $wlProd->slug) }}" target="_blank"
-                                    style="display:flex; align-items:center; justify-content:center; gap:0.25rem; font-size:0.72rem; font-weight:700; color:#475569; background:#F1F5F9; border:1px solid #CBD5E1; padding:0.35rem 0.4rem; border-radius:8px; text-decoration:none; transition:all 0.15s;">
+                                    style="display:flex; align-items:center; justify-content:center; gap:0.25rem; font-size:0.72rem; font-weight: 500; color:#475569; background:#F1F5F9; border:1px solid #CBD5E1; padding:0.35rem 0.4rem; border-radius:8px; text-decoration:none; transition:all 0.15s;">
                                     <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"
                                         viewBox="0 0 24 24">
                                         <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -4553,7 +4553,7 @@
                                         style="margin:0;">
                                         @csrf @method('DELETE')
                                         <button type="submit"
-                                            style="width:100%; border:1px solid #FCA5A5; color:#DC2626; background:#FEF2F2; font-size:0.72rem; padding:0.35rem 0.4rem; border-radius:8px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
+                                            style="width:100%; border:1px solid #FCA5A5; color:#DC2626; background:#FEF2F2; font-size:0.72rem; padding:0.35rem 0.4rem; border-radius:8px; font-weight: 500; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
                                             <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
                                                 viewBox="0 0 24 24">
                                                 <polyline points="3 6 5 6 21 6" />
@@ -4570,7 +4570,7 @@
                                         <input type="hidden" name="url" value="{{ route('products.show', $wlProd->slug) }}">
                                         <input type="hidden" name="product_id" value="{{ $wlProd->id }}">
                                         <button type="submit"
-                                            style="width:100%; background:#1eb349; color:#fff; font-size:0.72rem; padding:0.35rem 0.4rem; height:32px; border-radius:8px; font-weight:700; cursor:pointer; border:none; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
+                                            style="width:100%; background:#1eb349; color:#fff; font-size:0.72rem; padding:0.35rem 0.4rem; height:32px; border-radius:8px; font-weight: 500; cursor:pointer; border:none; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
                                             + Tambah ke Bio
                                         </button>
                                     </form>
@@ -4879,7 +4879,7 @@
         }
 
         resultBox.style.display = 'block';
-        resultBox.innerHTML = '<div style="background:#F8FAFC;border:1.5px solid #CBD5E1;border-radius:14px;padding:1.25rem;text-align:center;"><div style="font-size:0.88rem;font-weight:700;color:#0F172A;display:flex;align-items:center;justify-content:center;gap:0.5rem;"><svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24" style="animation:domSpin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-opacity=".25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#1eb349"/></svg>Memeriksa <strong style="color:#1eb349">' + rawDomain + '</strong>...</div></div>';
+        resultBox.innerHTML = '<div style="background:#F8FAFC;border:1.5px solid #CBD5E1;border-radius:14px;padding:1.25rem;text-align:center;"><div style="font-size:0.88rem;font-weight: 500;color:#0F172A;display:flex;align-items:center;justify-content:center;gap:0.5rem;"><svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24" style="animation:domSpin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-opacity=".25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#1eb349"/></svg>Memeriksa <strong style="color:#1eb349">' + rawDomain + '</strong>...</div></div>';
 
         fetch('{{ route("creator.domain.check") }}', {
             method: 'POST',
@@ -4897,11 +4897,11 @@
                 if (data.recommendations && data.recommendations.length) {
                     recHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.5rem;margin-top:0.75rem;">';
                     data.recommendations.forEach(function(r) {
-                        recHtml += '<div style="background:#fff;border:1px solid #BBF7D0;padding:0.6rem 0.8rem;border-radius:10px;display:flex;justify-content:space-between;align-items:center;"><span style="font-weight:700;font-size:0.82rem;">' + r.domain + '</span><button type="button" onclick="checkSpecificDomain(\'' + r.domain + '\')" style="background:#166534;color:#fff;border:none;padding:0.3rem 0.6rem;border-radius:6px;font-size:0.7rem;font-weight:700;cursor:pointer;">Cek</button></div>';
+                        recHtml += '<div style="background:#fff;border:1px solid #BBF7D0;padding:0.6rem 0.8rem;border-radius:10px;display:flex;justify-content:space-between;align-items:center;"><span style="font-weight: 500;font-size:0.82rem;">' + r.domain + '</span><button type="button" onclick="checkSpecificDomain(\'' + r.domain + '\')" style="background:#166534;color:#fff;border:none;padding:0.3rem 0.6rem;border-radius:6px;font-size:0.7rem;font-weight: 500;cursor:pointer;">Cek</button></div>';
                     });
                     recHtml += '</div>';
                 }
-                resultBox.innerHTML = '<div style="background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:14px;padding:1.25rem;"><div style="font-weight:700;color:#92400E;font-size:0.88rem;">' + data.message + '</div>' + recHtml + '</div>';
+                resultBox.innerHTML = '<div style="background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:14px;padding:1.25rem;"><div style="font-weight: 500;color:#92400E;font-size:0.88rem;">' + data.message + '</div>' + recHtml + '</div>';
                 return;
             }
             if (!data.success) {
@@ -4909,9 +4909,9 @@
                 return;
             }
             if (data.available) {
-                resultBox.innerHTML = '<div style="background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border:1.5px solid #BBF7D0;border-radius:16px;padding:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;"><div><span style="background:linear-gradient(135deg,#166534,#15803D);color:#fff;font-size:0.68rem;font-weight:800;padding:0.2rem 0.6rem;border-radius:6px;display:inline-flex;align-items:center;gap:0.3rem;"><svg width="11" height="11" fill="none" stroke="#fff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>TERSEDIA</span><h3 style="font-size:1.3rem;font-weight:900;color:#166534;margin:0.4rem 0 0.15rem;">' + data.domain + '</h3><p style="font-size:0.78rem;color:#15803D;margin:0;">Amankan sebelum diambil orang lain!</p></div><div style="text-align:right;"><div style="font-size:1.25rem;font-weight:900;color:#166534;margin-bottom:0.5rem;">' + data.formatted_price + ' <span style="font-size:0.72rem;font-weight:400;color:#64748B;">/thn</span></div><button type="button" onclick="buyDomain(\'' + data.domain + '\',\'' + data.formatted_price + '\')" style="padding:0.7rem 1.35rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:12px;font-weight:800;font-size:0.875rem;cursor:pointer;box-shadow:0 6px 20px rgba(30,179,73,.4);display:inline-flex;align-items:center;gap:0.4rem;"><svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Amankan Domain</button></div></div>';
+                resultBox.innerHTML = '<div style="background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border:1.5px solid #BBF7D0;border-radius:16px;padding:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;"><div><span style="background:linear-gradient(135deg,#166534,#15803D);color:#fff;font-size:0.68rem;font-weight: 600;padding:0.2rem 0.6rem;border-radius:6px;display:inline-flex;align-items:center;gap:0.3rem;"><svg width="11" height="11" fill="none" stroke="#fff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>TERSEDIA</span><h3 style="font-size:1.3rem;font-weight: 600;color:#166534;margin:0.4rem 0 0.15rem;">' + data.domain + '</h3><p style="font-size:0.78rem;color:#15803D;margin:0;">Amankan sebelum diambil orang lain!</p></div><div style="text-align:right;"><div style="font-size:1.25rem;font-weight: 600;color:#166534;margin-bottom:0.5rem;">' + data.formatted_price + ' <span style="font-size:0.72rem;font-weight:400;color:#64748B;">/thn</span></div><button type="button" onclick="buyDomain(\'' + data.domain + '\',\'' + data.formatted_price + '\')" style="padding:0.7rem 1.35rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:12px;font-weight: 600;font-size:0.875rem;cursor:pointer;box-shadow:0 6px 20px rgba(30,179,73,.4);display:inline-flex;align-items:center;gap:0.4rem;"><svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Amankan Domain</button></div></div>';
             } else {
-                resultBox.innerHTML = '<div style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:16px;padding:1.25rem;"><div style="display:flex;align-items:center;gap:0.5rem;color:#991B1B;font-weight:800;"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Domain ' + data.domain + ' sudah terdaftar.</div><p style="font-size:0.78rem;color:#7F1D1D;margin:0.35rem 0 0;">Coba variasi nama lain atau pilih rekomendasi di bawah.</p></div>';
+                resultBox.innerHTML = '<div style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:16px;padding:1.25rem;"><div style="display:flex;align-items:center;gap:0.5rem;color:#991B1B;font-weight: 600;"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Domain ' + data.domain + ' sudah terdaftar.</div><p style="font-size:0.78rem;color:#7F1D1D;margin:0.35rem 0 0;">Coba variasi nama lain atau pilih rekomendasi di bawah.</p></div>';
             }
         })
         .catch(function(err) {

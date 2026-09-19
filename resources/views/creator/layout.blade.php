@@ -157,7 +157,7 @@
             gap: 0.5rem;
             color: #fff;
             font-size: 1rem;
-            font-weight: 700;
+            font-weight: 500;
         }
 
         .cr-brand-logo-dot {
@@ -168,7 +168,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 900;
+            font-weight: 600;
             font-size: 0.85rem;
             color: #fff;
         }
@@ -203,7 +203,7 @@
         .cr-nav-link.active {
             background: #ffffff;
             color: #1eb349 !important;
-            font-weight: 800;
+            font-weight: 600;
             position: relative;
             z-index: 10;
         }
@@ -261,7 +261,7 @@
             gap: 0.65rem;
             color: #a3e635;
             font-size: 0.85rem;
-            font-weight: 700;
+            font-weight: 500;
             text-decoration: none;
             padding: 0.65rem 0.85rem;
             border-radius: 14px;
@@ -333,7 +333,7 @@
             padding: 0.65rem 1.35rem;
             font-family: 'Montserrat', sans-serif;
             font-size: 0.82rem;
-            font-weight: 700;
+            font-weight: 500;
             cursor: pointer;
             text-decoration: none;
             box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
@@ -511,7 +511,7 @@
             .cr-nav-link.active {
                 background: #ffffff !important;
                 color: #1eb349 !important;
-                font-weight: 800;
+                font-weight: 600;
                 box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
             }
 
@@ -570,7 +570,7 @@
             .superapp-nav-item.active {
                 color: #ffffff;
                 background: rgba(255, 255, 255, 0.18);
-                font-weight: 700;
+                font-weight: 500;
                 box-shadow: 0 2px 12px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.2);
             }
 
@@ -599,8 +599,8 @@
             <img src="{{ asset('storage/' . $mobileLogo) }}" alt="buyle.id" style="height:30px;width:auto;object-fit:contain;">
         @else
             <div style="display:flex;align-items:center;gap:0.4rem;">
-                <div style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#1eb349,#a5cf37);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.8rem;color:#fff;">B</div>
-                <span style="color:#fff;font-weight:700;font-size:0.95rem;">buyle.id</span>
+                <div style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#1eb349,#a5cf37);display:flex;align-items:center;justify-content:center;font-weight: 600;font-size:0.8rem;color:#fff;">B</div>
+                <span style="color:#fff;font-weight: 500;font-size:0.95rem;">buyle.id</span>
             </div>
         @endif
         {{-- Profile icon on the right --}}
@@ -631,7 +631,7 @@
             {{-- Mobile Profile Dropdown --}}
             <div id="mobile-profile-dropdown" style="display:none;opacity:0;transform:translateY(-8px);position:absolute;top:calc(100% + 10px);right:0;width:220px;background:#fff;border:1px solid #E2E8F0;border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,0.15);z-index:99999;overflow:hidden;transition:opacity .2s,transform .2s;padding:0.5rem 0;font-family:inherit;">
                 <div style="padding:0.65rem 1rem;border-bottom:1px solid #F1F5F9;">
-                    <div style="font-size:0.82rem;font-weight:700;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ auth()->user()->name }}</div>
+                    <div style="font-size:0.82rem;font-weight: 500;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ auth()->user()->name }}</div>
                     <div style="font-size:0.72rem;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;">{{ auth()->user()->email }}</div>
                 </div>
                 <div style="padding:0.25rem 0;">
@@ -830,7 +830,7 @@
             {{-- Header Area: Title & Actions --}}
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
                 <div>
-                    <h1 style="font-size: 1.5rem; font-weight: 800; color: #0b120c; margin: 0 0 0.25rem; font-family: 'Montserrat', sans-serif;">
+                    <h1 style="font-size: 1.5rem; font-weight: 600; color: #0b120c; margin: 0 0 0.25rem; font-family: 'Montserrat', sans-serif;">
                         @yield('page_title', 'Dashboard')
                     </h1>
                     @hasSection('page_subtitle')
@@ -855,7 +855,7 @@
                     <div style="position:relative;" id="creator-profile-container">
                         <button id="creator-profile-btn" onclick="toggleCreatorProfile(event)" type="button"
                                 style="border:none;background:none;padding:0;cursor:pointer;display:flex;align-items:center;outline:none;" title="Profil Saya">
-                            <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg, #1eb349, #a5cf37);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:0.9rem;flex-shrink:0;box-shadow:0 2px 8px rgba(30,179,73,0.25);overflow:hidden;border:2px solid #fff;">
+                            <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg, #1eb349, #a5cf37);display:flex;align-items:center;justify-content:center;font-weight: 500;color:#fff;font-size:0.9rem;flex-shrink:0;box-shadow:0 2px 8px rgba(30,179,73,0.25);overflow:hidden;border:2px solid #fff;">
                                 @if($crAvatarUrl)
                                     <img src="{{ $crAvatarUrl }}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">
                                 @else
@@ -866,7 +866,7 @@
 
                         <div id="creator-profile-dropdown" style="display:none;opacity:0;transform:translateY(-8px);position:absolute;top:calc(100% + 10px);right:0;width:240px;background:#fff;border:1px solid #E2E8F0;border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,0.08), 0 2px 10px rgba(0,0,0,0.02);z-index:9999;overflow:hidden;transition:opacity .2s,transform .2s;padding:0.5rem 0;font-family:inherit;">
                             <div style="padding:0.75rem 1rem;border-bottom:1px solid #F1F5F9;">
-                                <div style="font-size:0.875rem;font-weight:700;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                <div style="font-size:0.875rem;font-weight: 500;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                                     {{ $crUser->name }}
                                 </div>
                                 <div style="font-size:0.75rem;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;">
@@ -916,7 +916,7 @@
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     </div>
                     <div>
-                        <div style="font-size:0.95rem;font-weight:700;color:#92400E;margin-bottom:0.2rem;">Langkah Terakhir: Lengkapi Data Creator</div>
+                        <div style="font-size:0.95rem;font-weight: 500;color:#92400E;margin-bottom:0.2rem;">Langkah Terakhir: Lengkapi Data Creator</div>
                         <div style="font-size:0.82rem;color:#B45309;line-height:1.5;">{{ session('warning_onboarding') }}</div>
                     </div>
                 </div>
@@ -1020,15 +1020,15 @@
             <div style="width:64px;height:64px;border-radius:50%;background:#F0FDF4;color:#1eb349;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;border:2px solid #BBF7D0;">
                 <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </div>
-            <h3 style="font-size:1.25rem;font-weight:800;color:#0F172A;margin:0 0 0.5rem;font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:center;gap:0.4rem;">
+            <h3 style="font-size:1.25rem;font-weight: 600;color:#0F172A;margin:0 0 0.5rem;font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:center;gap:0.4rem;">
                 Yuk, Jadi Creator Dulu!
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-3.05 11a22.35 22.35 0 0 1-3.95 2z"/></svg>
             </h3>
             <p style="font-size:0.875rem;color:#64748B;line-height:1.6;margin:0 0 1.5rem;font-family:'Montserrat',sans-serif;">
-                Fitur ini akan <strong style="color:#1eb349;font-weight:700;">langsung terbuka</strong> setelah Anda melengkapi form data toko di halaman ini. Gratis dan hanya butuh 1 menit!
+                Fitur ini akan <strong style="color:#1eb349;font-weight: 500;">langsung terbuka</strong> setelah Anda melengkapi form data toko di halaman ini. Gratis dan hanya butuh 1 menit!
             </p>
             <div style="display:flex;gap:0.75rem;justify-content:center;">
-                <button type="button" onclick="closeLockedModal()" style="padding:0.75rem 1.75rem;border-radius:999px;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;border:none;font-weight:700;font-size:0.875rem;cursor:pointer;font-family:'Montserrat',sans-serif;box-shadow:0 4px 14px rgba(30,179,73,0.35);">
+                <button type="button" onclick="closeLockedModal()" style="padding:0.75rem 1.75rem;border-radius:999px;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#fff;border:none;font-weight: 500;font-size:0.875rem;cursor:pointer;font-family:'Montserrat',sans-serif;box-shadow:0 4px 14px rgba(30,179,73,0.35);">
                     Isi Data Sekarang
                 </button>
             </div>
@@ -1094,7 +1094,7 @@
     <div id="cropperModal" style="display:none; position:fixed; inset:0; background:rgba(11,18,12,0.85); backdrop-filter:blur(8px); z-index:99999; align-items:center; justify-content:center; padding:1rem;">
         <div style="background:#fff; border-radius:24px; max-width:620px; width:100%; padding:1.5rem; box-shadow:0 24px 60px rgba(0,0,0,0.3); position:relative; display:flex; flex-direction:column; gap:1rem;">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:0.75rem;">
-                <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0; font-family:'Montserrat',sans-serif;" id="cropperModalTitle">Potong & Atur Ukuran Foto</h3>
+                <h3 style="font-size:1.05rem; font-weight: 600; color:#0f172a; margin:0; font-family:'Montserrat',sans-serif;" id="cropperModalTitle">Potong & Atur Ukuran Foto</h3>
                 <button type="button" onclick="closeCropperModal()" style="border:none; background:transparent; font-size:1.5rem; color:#94a3b8; cursor:pointer; line-height:1;">&times;</button>
             </div>
             
@@ -1114,8 +1114,8 @@
                     </button>
                 </div>
                 <div style="display:flex; gap:0.6rem;">
-                    <button type="button" onclick="closeCropperModal()" style="padding:0.6rem 1.25rem; border-radius:999px; border:1.5px solid #cbd5e1; background:#fff; color:#64748b; font-weight:700; font-size:0.82rem; cursor:pointer;">Batal</button>
-                    <button type="button" id="applyCropBtn" style="padding:0.6rem 1.5rem; border-radius:999px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; border:none; font-weight:700; font-size:0.82rem; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,0.35);">Potong & Gunakan Foto</button>
+                    <button type="button" onclick="closeCropperModal()" style="padding:0.6rem 1.25rem; border-radius:999px; border:1.5px solid #cbd5e1; background:#fff; color:#64748b; font-weight: 500; font-size:0.82rem; cursor:pointer;">Batal</button>
+                    <button type="button" id="applyCropBtn" style="padding:0.6rem 1.5rem; border-radius:999px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; border:none; font-weight: 500; font-size:0.82rem; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,0.35);">Potong & Gunakan Foto</button>
                 </div>
             </div>
         </div>

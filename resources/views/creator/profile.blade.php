@@ -1,4 +1,4 @@
-@extends('creator.layout')
+﻿@extends('creator.layout')
 
 @section('title', 'Profil & Pengaturan Toko')
 @section('page_title', 'Profil & Pengaturan Toko')
@@ -11,7 +11,7 @@
 
 /* ── Page Header ─────────────────────────────────────────── */
 .pg-header { margin-bottom: 1.75rem; }
-.pg-title   { font-size: 1.6rem; font-weight: 700; color: #0f172a; margin: 0 0 0.2rem; }
+.pg-title   { font-size: 1.6rem; font-weight: 500; color: #0f172a; margin: 0 0 0.2rem; }
 .pg-sub     { font-size: 0.82rem; color: #64748b; margin: 0; font-weight: 400; }
 
 /* ── Alert ───────────────────────────────────────────────── */
@@ -77,7 +77,7 @@
     border-bottom: 1px solid #f1f5f9;
     background: #fafbfa;
     font-size: 0.72rem;
-    font-weight: 700;
+    font-weight: 500;
     color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -225,12 +225,12 @@ select.form-input { cursor: pointer; }
     align-items: center;
     justify-content: center;
     font-size: 1.6rem;
-    font-weight: 800;
+    font-weight: 600;
     color: #fff;
     flex-shrink: 0;
 }
 .avatar-info { flex: 1; }
-.avatar-info h4 { font-size: 0.9rem; font-weight: 700; color: #0f172a; margin: 0 0 0.2rem; }
+.avatar-info h4 { font-size: 0.9rem; font-weight: 500; color: #0f172a; margin: 0 0 0.2rem; }
 .avatar-info p  { font-size: 0.75rem; color: #64748b; margin: 0 0 0.75rem; }
 
 .banner-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -242,7 +242,7 @@ select.form-input { cursor: pointer; }
     transition: border-color 0.2s;
 }
 .banner-slot:hover { border-color: #1eb349; }
-.banner-label { font-size: 0.78rem; font-weight: 700; color: #475569; margin-bottom: 0.5rem; }
+.banner-label { font-size: 0.78rem; font-weight: 500; color: #475569; margin-bottom: 0.5rem; }
 .banner-preview { width: 100%; height: 80px; object-fit: cover; border-radius: 8px; margin-bottom: 0.5rem; }
 
 /* ── SEO Preview ─────────────────────────────────────────── */
@@ -282,7 +282,7 @@ select.form-input { cursor: pointer; }
     border-radius: 10px;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.85rem;
-    font-weight: 700;
+    font-weight: 500;
     cursor: pointer;
     box-shadow: 0 2px 10px rgba(30,179,73,0.3);
     transition: all 0.2s;
@@ -393,7 +393,7 @@ select.form-input { cursor: pointer; }
                             <label class="form-label">Custom Domain Toko / Bio Page</label>
                             <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:0.75rem 1rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
                                 <div style="display:flex; align-items:center; gap:0.5rem;">
-                                    <span style="background:#166534; color:#fff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.5rem; border-radius:6px;">🌐 ACTIVE DOMAIN</span>
+                                    <span style="background:#166534; color:#fff; font-size:0.7rem; font-weight: 500; padding:0.2rem 0.5rem; border-radius:6px;">🌐 ACTIVE DOMAIN</span>
                                     <strong style="color:#166534; font-size:0.875rem;">https://{{ $profile->custom_domain }}</strong>
                                 </div>
                                 <span style="font-size:0.75rem; color:#15803D;">Pengaturan & pemetaan domain dikelola oleh Admin Platform.</span>
@@ -431,7 +431,7 @@ select.form-input { cursor: pointer; }
                     <div class="form-group full" style="margin-top: 0.75rem; padding: 1.1rem 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;">
                         <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem;">
                             <div>
-                                <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-bottom: 0.15rem;">
+                                <div style="font-size: 0.88rem; font-weight: 500; color: #0f172a; margin-bottom: 0.15rem;">
                                     Aktifkan Online Store di Marketplace Buyle.id
                                 </div>
                                 <div style="font-size: 0.76rem; color: #64748b; line-height: 1.4;">
@@ -711,7 +711,7 @@ select.form-input { cursor: pointer; }
                 <div class="form-group full" style="margin-bottom:1.25rem; padding:1.25rem; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
                         <div>
-                            <div style="font-size:0.9rem; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:0.4rem;">
+                            <div style="font-size:0.9rem; font-weight: 600; color:#0F172A; display:flex; align-items:center; gap:0.4rem;">
                                 <svg width="18" height="18" fill="none" stroke="#1EB349" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                                 Isi Alamat Toko Otomatis
                             </div>
@@ -719,7 +719,7 @@ select.form-input { cursor: pointer; }
                                 Izinkan lokasi browser untuk mengisi Provinsi, Kabupaten/Kota, dan Alamat toko Anda secara otomatis.
                             </div>
                         </div>
-                        <button type="button" id="btnDetectGps" onclick="detectGpsLocation()" style="background:#0F172A; color:#ffffff; border:none; border-radius:12px; padding:0.65rem 1.25rem; font-size:0.8rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; font-family:inherit; transition:background 0.2s;">
+                        <button type="button" id="btnDetectGps" onclick="detectGpsLocation()" style="background:#0F172A; color:#ffffff; border:none; border-radius:12px; padding:0.65rem 1.25rem; font-size:0.8rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; font-family:inherit; transition:background 0.2s;">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                             Isi Alamat Otomatis
                         </button>
