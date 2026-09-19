@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::table('promo_sections', function (Blueprint $table) {
             if (!Schema::hasColumn('promo_sections', 'sub_category_id')) {
                 // Nullable FK ke product_sub_categories, opsional
-                $table->unsignedBigInteger('sub_category_id')->nullable()->after('category_id');
+                $table->unsignedBigInteger('sub_category_id')->nullable();
             }
         });
     }
