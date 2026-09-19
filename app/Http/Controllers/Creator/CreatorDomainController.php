@@ -184,6 +184,14 @@ class CreatorDomainController extends Controller
         try {
             $midtransService = new MidtransService();
             $snapToken = $midtransService->createDomainSnapToken($domainOrder, $user);
+
+            if (!$snapToken) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal memproses Token Pembayaran Midtrans. Pastikan Server Key Midtrans di Pengaturan Admin sudah dikonfigurasi dengan benar.'
+                ], 422);
+            }
+
             $domainOrder->snap_token = $snapToken;
             $domainOrder->save();
 

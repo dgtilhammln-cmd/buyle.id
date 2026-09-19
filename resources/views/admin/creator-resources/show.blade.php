@@ -617,18 +617,31 @@
                 @if(!empty($customDomain))
                     <div style="margin-top:1rem; padding-top:0.85rem; border-top:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
                         <a href="https://{{ $customDomain }}" target="_blank" class="btn-open-link">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg>
                             Buka Domain (https://{{ $customDomain }})
                         </a>
-                        <form action="{{ route('admin.creator-resources.custom-domain', $user->id) }}" method="POST" onsubmit="return confirm('Hapus / reset custom domain {{ addslashes($customDomain) }} milik creator {{ addslashes($user->name) }}?');" style="margin:0;">
-                            @csrf
-                            <input type="hidden" name="custom_domain" value="">
-                            <input type="hidden" name="site_verification_code" value="">
-                            <button type="submit" style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; border-radius:8px; padding:0.45rem 0.85rem; font-size:0.78rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                Hapus Custom Domain
-                            </button>
-                        </form>
+
+                        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                            <form action="{{ route('admin.creator-resources.send-domain-completed-email', $user->id) }}" method="POST" style="margin:0;">
+                                @csrf
+                                <input type="hidden" name="domain" value="{{ $customDomain }}">
+                                <button type="submit" onclick="return confirm('Kirim email pemberitahuan domain {{ addslashes($customDomain) }} selesai & aktif ke creator ({{ addslashes($user->email) }})?');"
+                                    style="background:#166534; color:#ffffff; border:none; border-radius:8px; padding:0.45rem 0.85rem; font-size:0.78rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                    Kirim Email Domain Selesai
+                                </button>
+                            </form>
+
+                            <form action="{{ route('admin.creator-resources.custom-domain', $user->id) }}" method="POST" onsubmit="return confirm('Hapus / reset custom domain {{ addslashes($customDomain) }} milik creator {{ addslashes($user->name) }}?');" style="margin:0;">
+                                @csrf
+                                <input type="hidden" name="custom_domain" value="">
+                                <input type="hidden" name="site_verification_code" value="">
+                                <button type="submit" style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; border-radius:8px; padding:0.45rem 0.85rem; font-size:0.78rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                    Hapus Custom Domain
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 @endif
 
@@ -731,10 +744,21 @@
                                     </td>
                                     <td style="padding:0.65rem 0.85rem; text-align:right;">
                                         @if($domOrder->status === 'paid')
-                                            <button type="button" onclick="document.getElementsByName('custom_domain')[0].value='{{ $domOrder->domain_name }}'; window.scrollTo({top:0, behavior:'smooth'});"
-                                                style="background:#0F172A; color:#fff; border:none; padding:0.3rem 0.6rem; border-radius:6px; font-size:0.7rem; font-weight:700; cursor:pointer;">
-                                                Pasang ke Creator ➔
-                                            </button>
+                                            <div style="display:inline-flex; align-items:center; gap:0.4rem;">
+                                                <button type="button" onclick="document.getElementsByName('custom_domain')[0].value='{{ $domOrder->domain_name }}'; window.scrollTo({top:0, behavior:'smooth'});"
+                                                    style="background:#0F172A; color:#fff; border:none; padding:0.3rem 0.6rem; border-radius:6px; font-size:0.7rem; font-weight:700; cursor:pointer;">
+                                                    Pasang ke Creator ➔
+                                                </button>
+                                                <form action="{{ route('admin.creator-resources.send-domain-completed-email', $user->id) }}" method="POST" style="margin:0;">
+                                                    @csrf
+                                                    <input type="hidden" name="domain" value="{{ $domOrder->domain_name }}">
+                                                    <button type="submit" onclick="return confirm('Kirim email konfirmasi domain {{ addslashes($domOrder->domain_name) }} selesai ke creator?');"
+                                                        style="background:#166534; color:#fff; border:none; padding:0.3rem 0.6rem; border-radius:6px; font-size:0.7rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                                        Kirim Email Selesai
+                                                    </button>
+                                                </form>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>

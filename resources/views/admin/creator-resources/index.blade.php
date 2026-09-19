@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Audit Resource & Revenue Creators')
 @section('page-title', 'Audit Resource, Revenue & Aktivitas Creators')
 
@@ -694,7 +694,7 @@
                                         {{ $profile ? ($profile->store_name ?: '@' . $user->username) : '@' . ($user->username ?: 'user') }}
                                         &bull; {{ $user->email }}
                                         @if(!empty($item['custom_domain']))
-                                            &bull; <a href="https://{{ $item['custom_domain'] }}" target="_blank" style="display:inline-flex; align-items:center; gap:0.25rem; background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; padding:0.1rem 0.45rem; border-radius:6px; font-weight:700; font-size:0.7rem; text-decoration:none;" title="Custom Domain Link in Bio Aktif">🌐 {{ $item['custom_domain'] }}</a>
+                                            &bull; <a href="https://{{ $item['custom_domain'] }}" target="_blank" style="display:inline-flex; align-items:center; gap:0.25rem; background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; padding:0.1rem 0.45rem; border-radius:6px; font-weight:700; font-size:0.7rem; text-decoration:none;" title="Custom Domain Web Builder Aktif">🌐 {{ $item['custom_domain'] }}</a>
                                         @endif
                                     </div>
                                     <div style="font-size:0.68rem; color:#64748B; margin-top:0.2rem; display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap;">
@@ -1057,7 +1057,7 @@
                     🌐 SOP Setting Custom Domain Creator (Tim Admin Buyle)
                 </h3>
                 <div style="font-size:0.75rem; color:#15803D; margin-top:0.2rem;">
-                    Standar Operasional Prosedur penyiapan domain pribadi untuk tiap link in bio creator.
+                    Standar Operasional Prosedur penyiapan domain pribadi untuk tiap Web Builder creator.
                 </div>
             </div>
             <button type="button" onclick="closeDomainSopModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#64748B;">&times;</button>
@@ -1100,10 +1100,10 @@
 
             <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:14px; padding:1rem;">
                 <div style="font-weight:800; color:#166534; margin-bottom:0.4rem;">
-                    🚀 Halaman Link in Bio Langsung Aktif Seamless!
+                    🚀 Halaman Web Builder Langsung Aktif Seamless!
                 </div>
                 <div style="color:#15803D; font-size:0.78rem;">
-                    Setelah DNS terpropagasi, saat pengunjung membuka <code>https://brandku.com</code>, halaman Link in Bio creator akan terbuka secara instan tanpa perlu setting rumit.
+                    Setelah DNS terpropagasi, saat pengunjung membuka <code>https://brandku.com</code>, halaman Web Builder creator akan terbuka secara instan tanpa perlu setting rumit.
                 </div>
             </div>
         </div>

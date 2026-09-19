@@ -1,4 +1,4 @@
-{{-- ============================================================
+﻿{{-- ============================================================
 COMING SOON — Countdown Page Component
 Usage: @include('components.coming-soon')
 Target: 26 Oktober 2026, 08:00 WIB
@@ -500,7 +500,7 @@ Target: 26 Oktober 2026, 08:00 WIB
                     <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
                     <polyline points="17 6 23 6 23 12" />
                 </svg>
-                Link in Bio + Affiliate
+                Web Builder + Affiliate
             </div>
         </div>
 

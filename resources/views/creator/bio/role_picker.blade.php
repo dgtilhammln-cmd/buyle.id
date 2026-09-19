@@ -1,6 +1,6 @@
-@extends('creator.layout')
-@section('title', 'Link in Bio · Pilih Tipe Profil')
-@section('page_title', 'Link in Bio')
+﻿@extends('creator.layout')
+@section('title', 'Web Builder · Pilih Tipe Profil')
+@section('page_title', 'Web Builder')
 
 @section('content')
 <div style="max-width: 680px; margin: 0 auto; padding-top: 1rem;">
@@ -10,7 +10,7 @@
         <div style="width:72px; height:72px; border-radius:20px; background:linear-gradient(135deg,#1eb349,#a5cf37); display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
             <svg width="36" height="36" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke-linecap="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke-linecap="round"/></svg>
         </div>
-        <h2 style="font-size:1.6rem; font-weight:800; color:#0b120c; margin:0 0 0.5rem; font-family:'Montserrat',sans-serif;">Buat Link in Bio Anda</h2>
+        <h2 style="font-size:1.6rem; font-weight:800; color:#0b120c; margin:0 0 0.5rem; font-family:'Montserrat',sans-serif;">Buat Web Builder Anda</h2>
         <p style="color:#64748b; font-size:0.9rem; line-height:1.6; margin:0;">Satu link untuk semua konten Anda. Pilih tipe profil yang sesuai untuk pengalaman terbaik.</p>
     </div>
 

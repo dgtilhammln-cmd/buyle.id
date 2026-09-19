@@ -185,20 +185,34 @@ class PaymentWebhookController extends Controller
                 if ($user && !empty($user->email)) {
                     try {
                         \Illuminate\Support\Facades\Mail::html("
-                            <div style='font-family:sans-serif; max-width:600px; margin:0 auto; padding:20px; border:1px solid #e2e8f0; border-radius:12px;'>
-                                <h2 style='color:#166534;'>Konfirmasi Pembelian Custom Domain</h2>
-                                <p>Halo <strong>{$user->name}</strong>,</p>
-                                <p>Pembayaran untuk pembelian custom domain <strong>{$domainOrder->domain_name}</strong> sebesar <strong>{$formattedAmount}</strong> telah BERHASIL diterima.</p>
-                                <div style='background:#f0fdf4; padding:15px; border-radius:8px; margin:15px 0;'>
-                                    <strong>Rincian Pesanan Domain:</strong><br>
-                                    • Domain: <strong>{$domainOrder->domain_name}</strong><br>
-                                    • Total Pembayaran: <strong>{$formattedAmount}</strong><br>
-                                    • Status: <span style='color:#166534; font-weight:bold;'>LUNAS (Paid)</span><br>
-                                    • Transaction ID: {$domainOrder->midtrans_transaction_id}
+                            <div style='font-family:sans-serif; max-width:600px; margin:0 auto; padding:24px; border:1.5px solid #BBF7D0; border-radius:16px; background:#ffffff;'>
+                                <div style='text-align:center; margin-bottom:20px;'>
+                                    <h2 style='color:#166534; margin:0; font-size:22px;'>Bukti Pembayaran Custom Domain</h2>
+                                    <p style='color:#64748B; font-size:14px; margin-top:6px;'>Terima kasih! Pembayaran domain Anda telah kami terima.</p>
                                 </div>
-                                <p>Tim Admin Buyle.id akan segera memproses pendaftaran & pemetaan DNS domain Anda ke halaman Link in Bio toko Anda.</p>
-                                <hr style='border:none; border-top:1px solid #e2e8f0; margin:20px 0;'>
-                                <p style='font-size:12px; color:#64748b;'>Buyle.id - Digital Creator Center</p>
+
+                                <p style='font-size:14px; color:#0F172A; line-height:1.6;'>Halo <strong>{$user->name}</strong>,</p>
+                                <p style='font-size:14px; color:#334155; line-height:1.6;'>
+                                    Pembayaran Anda untuk pembelian custom domain <strong>{$domainOrder->domain_name}</strong> sebesar <strong>{$formattedAmount}</strong> telah <strong>BERHASIL LUNAS</strong>.
+                                </p>
+
+                                <div style='background:#F0FDF4; border:1.5px solid #BBF7D0; padding:18px; border-radius:12px; margin:20px 0;'>
+                                    <div style='font-size:13px; font-weight:bold; color:#166534; margin-bottom:8px;'>Rincian Pesanan Domain:</div>
+                                    <div style='font-size:13px; color:#334155; line-height:1.6;'>
+                                        • Nama Domain: <strong>{$domainOrder->domain_name}</strong><br>
+                                        • Total Pembayaran: <strong>{$formattedAmount}</strong><br>
+                                        • Status Pembayaran: <span style='color:#166534; font-weight:bold;'>LUNAS (Paid)</span><br>
+                                        • Transaction ID: {$domainOrder->midtrans_transaction_id}
+                                    </div>
+                                </div>
+
+                                <div style='background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:16px; margin:20px 0; font-size:13px; color:#92400E; line-height:1.6;'>
+                                    <strong>Informasi Penting Proses Domain (Maks. 2x24 Jam):</strong><br>
+                                    Proses pendaftaran & konfigurasi domain memerlukan waktu <strong>maksimal 2x24 jam</strong>. Mohon menunggu, Anda akan menerima pemberitahuan via email berikutnya setelah domain Anda selesai dipasang & aktif.
+                                </div>
+
+                                <hr style='border:none; border-top:1px solid #E2E8F0; margin:24px 0;'>
+                                <p style='font-size:12px; color:#94A3B8; text-align:center;'>Salam hangat,<br><strong>Tim Buyle.id - Digital Creator Platform</strong></p>
                             </div>
                         ", function ($message) use ($user, $domainOrder) {
                             $message->to($user->email, $user->name)

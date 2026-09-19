@@ -1,8 +1,8 @@
-@extends('creator.layout')
+﻿@extends('creator.layout')
 
 @section('title', 'Kasir Digital (POS)')
 @section('page_title', 'Kasir Digital (POS)')
-@section('page_subtitle', 'Kasir digital cepat & praktis. Auto-sync produk dari Link in Bio & katalog toko Anda.')
+@section('page_subtitle', 'Kasir digital cepat & praktis. Auto-sync produk dari Web Builder & katalog toko Anda.')
 
 @section('styles')
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
@@ -13,7 +13,7 @@
             box-sizing: border-box;
         }
 
-        /* ── Card Styling (Sama dengan Profil & Link in Bio) ──────────────── */
+        /* ── Card Styling (Sama dengan Profil & Web Builder) ──────────────── */
         .prof-card {
             background: #ffffff;
             border-radius: 20px;
@@ -93,7 +93,7 @@
             box-shadow: 0 0 0 4px rgba(30, 179, 73, 0.12);
         }
 
-        /* ── Link in Bio Signature Green Buttons ──────────────────────────── */
+        /* ── Web Builder Signature Green Buttons ──────────────────────────── */
         .btn-submit-green {
             background: linear-gradient(135deg, #1eb349, #a5cf37);
             border-radius: 999px !important;

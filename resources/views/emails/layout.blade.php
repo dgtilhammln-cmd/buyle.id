@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -138,7 +138,7 @@
                                     <td align="center" style="padding-bottom: 6px;">
                                         <p
                                             style="margin: 0; font-size: 12px; color: #94A3B8; line-height: 1.5; font-weight: 400;">
-                                            Digital Creator Platform - Marketplace, Link in Bio, Ticketing & Website
+                                            Digital Creator Platform - Marketplace, Web Builder, Ticketing & Website
                                             Builder
                                             Kreator
                                         </p>

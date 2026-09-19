@@ -1,6 +1,6 @@
-@extends('creator.layout')
-@section('title', 'Link in Bio · Dashboard')
-@section('page_title', 'Link in Bio')
+﻿@extends('creator.layout')
+@section('title', 'Web Builder · Dashboard')
+@section('page_title', 'Web Builder')
 
 @section('topbar_actions')
     @if($profile->store_slug)
@@ -1153,12 +1153,16 @@
                     <div class="prof-card" style="border:1.5px solid #BBF7D0; background:#F0FDF4; margin-bottom:1.5rem;">
                         <div class="card-body" style="padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
                             <div>
-                                <span style="background:#166534; color:#fff; font-size:0.7rem; font-weight:800; padding:0.25rem 0.6rem; border-radius:6px; letter-spacing:0.05em;">🌐 DOMAIN AKTIF ANDA</span>
+                                <span style="background:#166534; color:#fff; font-size:0.7rem; font-weight:800; padding:0.25rem 0.6rem; border-radius:6px; letter-spacing:0.05em; display:inline-flex; align-items:center; gap:0.3rem;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                    DOMAIN AKTIF ANDA
+                                </span>
                                 <h3 style="font-size:1.15rem; font-weight:800; color:#166534; margin:0.4rem 0 0.1rem;">https://{{ $profile->custom_domain }}</h3>
-                                <p style="font-size:0.78rem; color:#15803D; margin:0;">Domain ini sudah terpasang dan aktif mengarah ke halaman Link in Bio toko Anda.</p>
+                                <p style="font-size:0.78rem; color:#15803D; margin:0;">Domain ini sudah terpasang dan aktif mengarah ke halaman Web Builder toko Anda.</p>
                             </div>
-                            <a href="https://{{ $profile->custom_domain }}" target="_blank" class="btn-primary" style="background:#166534; border:none; box-shadow:none;">
-                                Buka Domain ➔
+                            <a href="https://{{ $profile->custom_domain }}" target="_blank" class="btn-primary" style="background:#166534; border:none; box-shadow:none; display:inline-flex; align-items:center; gap:0.4rem;">
+                                Buka Domain
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                             </a>
                         </div>
                     </div>
@@ -1189,8 +1193,9 @@
                                     Cari Domain
                                 </button>
                             </div>
-                            <div style="font-size:0.72rem; color:#94A3B8; margin-top:0.4rem;">
-                                💡 Hasil pencarian di-cache otomatis sehingga pencarian ulang tidak mengurangi kuota API.
+                            <div style="font-size:0.72rem; color:#94A3B8; margin-top:0.4rem; display:flex; align-items:center; gap:0.35rem;">
+                                <svg width="14" height="14" fill="none" stroke="#94A3B8" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                Hasil pencarian di-cache otomatis sehingga pencarian ulang tidak mengurangi kuota API.
                             </div>
                         </div>
 
@@ -1200,7 +1205,8 @@
                         {{-- Auto Recommendations Grid (0 API Hit initially) --}}
                         <div style="margin-top:1rem;">
                             <div style="font-size:0.85rem; font-weight:800; color:#0F172A; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem;">
-                                🌟 Rekomendasi Domain untuk "{{ $creatorRawName }}"
+                                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>
+                                Rekomendasi Domain untuk "{{ $creatorRawName }}"
                                 <span style="font-size:0.7rem; font-weight:600; color:#64748B; background:#F1F5F9; padding:0.15rem 0.5rem; border-radius:100px;">Auto-Generated</span>
                             </div>
 
@@ -1208,10 +1214,9 @@
                                 @foreach($officialExtensions as $ext => $price)
                                     @php $recDomain = $cleanKeyword . '.' . $ext; @endphp
                                     <div style="background:#ffffff; border:1.5px solid #E2E8F0; border-radius:14px; padding:1rem; display:flex; flex-direction:column; justify-content:space-between; gap:0.75rem; transition:all 0.2s; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
-                                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                        <div style="display:flex; justify-content:space-between; align-items:center;">
                                             <div>
                                                 <div style="font-size:0.95rem; font-weight:800; color:#0F172A;">{{ $recDomain }}</div>
-                                                <div style="font-size:0.75rem; color:#64748B; font-weight:600;">.{{ $ext }} extension</div>
                                             </div>
                                             <div style="text-align:right;">
                                                 <div style="font-size:0.9rem; font-weight:800; color:#1eb349;">Rp {{ number_format($price, 0, ',', '.') }}</div>
@@ -1239,7 +1244,7 @@
                     </div>
                     <div class="card-body">
                         <p style="font-size:0.82rem; color:#64748b; margin-bottom:1.5rem;">Tema menentukan tampilan halaman
-                            publik Link in Bio Anda. Klik untuk memilih, lalu klik Simpan.</p>
+                            publik Web Builder Anda. Klik untuk memilih, lalu klik Simpan.</p>
                         <form action="{{ route('creator.bio.save-theme') }}" method="POST">
                             @csrf
                             <div class="theme-grid">
@@ -4584,6 +4589,75 @@
 
     @include('partials.scan_menu_modal')
 
+    {{-- Interactive Mobile-Friendly Domain Checkout Modal --}}
+    <div id="domainCheckoutModal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1rem; overflow-y:auto; transition:all 0.3s ease;">
+        <div style="background:#ffffff; border-radius:24px; max-width:460px; width:100%; padding:1.75rem; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); border:1px solid #E2E8F0; position:relative;">
+            
+            {{-- Close Button --}}
+            <button type="button" onclick="closeCheckoutModal()" style="position:absolute; top:1rem; right:1rem; background:#F1F5F9; border:none; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#64748B; transition:all 0.2s;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+
+            {{-- Header --}}
+            <div style="text-align:center; margin-bottom:1.25rem;">
+                <div style="width:52px; height:52px; background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:16px; display:inline-flex; align-items:center; justify-content:center; color:#166534; margin-bottom:0.75rem;">
+                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <h3 style="font-size:1.2rem; font-weight:800; color:#0F172A; margin:0 0 0.25rem;">Konfirmasi Amankan Domain</h3>
+                <p style="font-size:0.8rem; color:#64748B; margin:0;">Periksa rincian pesanan custom domain Anda</p>
+            </div>
+
+            {{-- Domain Card Info --}}
+            <div style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px; padding:1.1rem; margin-bottom:1.25rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; border-bottom:1px solid #E2E8F0; padding-bottom:0.6rem;">
+                    <span style="font-size:0.75rem; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.05em;">Nama Domain:</span>
+                    <span id="modalDomainName" style="font-size:1.05rem; font-weight:800; color:#166534;"></span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:0.75rem; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.05em;">Total Harga:</span>
+                    <div>
+                        <span id="modalDomainPrice" style="font-size:1.1rem; font-weight:800; color:#0F172A;"></span>
+                        <span style="font-size:0.7rem; color:#94A3B8;">/tahun</span>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Benefits List --}}
+            <div style="margin-bottom:1.25rem; font-size:0.78rem; color:#475569; display:flex; flex-direction:column; gap:0.45rem;">
+                <div style="display:flex; align-items:center; gap:0.4rem;">
+                    <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>Sudah termasuk pendaftaran domain resmi 1 Tahun</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.4rem;">
+                    <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>Auto SSL / HTTPS & DNS Pointing ke Halaman Creator</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.4rem;">
+                    <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>Proses pendaftaran & pemetaan maks. <strong>2x24 jam</strong></span>
+                </div>
+            </div>
+
+            {{-- Important Notice --}}
+            <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:0.75rem 0.9rem; font-size:0.75rem; color:#92400E; margin-bottom:1.25rem; display:flex; align-items:flex-start; gap:0.4rem;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <div>
+                    Setelah pembayaran berhasil, Anda akan menerima email konfirmasi bukti transaksi & update status domain.
+                </div>
+            </div>
+
+            {{-- Modal Actions --}}
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                <button type="button" onclick="closeCheckoutModal()" style="height:44px; background:#F1F5F9; color:#475569; border:1.5px solid #CBD5E1; border-radius:12px; font-weight:700; font-size:0.85rem; cursor:pointer;">
+                    Batal
+                </button>
+                <button type="button" id="btnConfirmPayDomain" onclick="proceedDomainCheckout()" style="height:44px; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#ffffff; border:none; border-radius:12px; font-weight:800; font-size:0.85rem; cursor:pointer; box-shadow:0 4px 14px rgba(30, 179, 73, 0.35); display:inline-flex; align-items:center; justify-content:center; gap:0.35rem;">
+                    Lanjut Bayar ➔
+                </button>
+            </div>
+        </div>
+    </div>
+
     @php
         $midtransClientKey = \App\Models\Setting::get('midtrans_client_key') ?: config('midtrans.client_key');
         $isProd = \App\Models\Setting::get('midtrans_is_production', '0') == '1';
@@ -4594,6 +4668,17 @@
     @endif
 
     <script>
+    let activeDomainToBuy = '';
+    const domainPricingMap = {
+        'com': 'Rp 436.666',
+        'id': 'Rp 480.719',
+        'co.id': 'Rp 532.889',
+        'biz': 'Rp 667.546',
+        'biz.id': 'Rp 177.589',
+        'store': 'Rp 1.065.836',
+        'my.id': 'Rp 333.189'
+    };
+
     function checkSpecificDomain(domainName, btnEl) {
         document.getElementById('domainSearchInput').value = domainName;
         executeDomainSearch(btnEl);
@@ -4613,18 +4698,22 @@
         // Loading State
         const origBtnHtml = searchBtn.innerHTML;
         searchBtn.disabled = true;
-        searchBtn.innerHTML = '⚡ Memeriksa...';
+        searchBtn.innerHTML = `
+            <svg class="spin-svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#ffffff"/></svg>
+            Memeriksa...
+        `;
 
         if (triggerBtn && triggerBtn !== searchBtn) {
             triggerBtn.disabled = true;
-            triggerBtn.innerHTML = '⚡ Checking...';
+            triggerBtn.innerHTML = 'Memeriksa...';
         }
 
         resultBox.style.display = 'block';
         resultBox.innerHTML = `
             <div style="background:#F8FAFC; border:1.5px solid #CBD5E1; border-radius:14px; padding:1.25rem; text-align:center;">
                 <div style="font-size:0.9rem; font-weight:700; color:#0F172A; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
-                    <span class="spin-icon">⏳</span> Memeriksa ketersediaan domain <strong>${rawDomain}</strong> via WhoisJSON API...
+                    <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#1eb349"/></svg>
+                    Memeriksa ketersediaan domain <strong>${rawDomain}</strong> via WhoisJSON API...
                 </div>
             </div>
         `;
@@ -4663,7 +4752,10 @@
 
                 resultBox.innerHTML = `
                     <div style="background:#FFFBEB; border:1.5px solid #FDE68A; border-radius:14px; padding:1.25rem;">
-                        <div style="font-weight:700; color:#92400E; font-size:0.9rem;">⚠️ ${data.message}</div>
+                        <div style="font-weight:700; color:#92400E; font-size:0.9rem; display:flex; align-items:center; gap:0.4rem;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            ${data.message}
+                        </div>
                         ${recHtml}
                     </div>
                 `;
@@ -4683,13 +4775,16 @@
                 resultBox.innerHTML = `
                     <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:16px; padding:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
                         <div>
-                            <span style="background:#166534; color:#fff; font-size:0.7rem; font-weight:800; padding:0.2rem 0.5rem; border-radius:6px;">🎉 DOMAIN TERSEDIA!</span>
+                            <span style="background:#166534; color:#fff; font-size:0.7rem; font-weight:800; padding:0.2rem 0.5rem; border-radius:6px; display:inline-flex; align-items:center; gap:0.3rem;">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                DOMAIN TERSEDIA!
+                            </span>
                             <h3 style="font-size:1.3rem; font-weight:800; color:#166534; margin:0.4rem 0 0.1rem;">${data.domain}</h3>
                             <p style="font-size:0.8rem; color:#15803D; margin:0;">Domain ini belum terdaftar dan bisa langsung Anda amankan sekarang.</p>
                         </div>
                         <div style="text-align:right;">
                             <div style="font-size:1.25rem; font-weight:800; color:#166534; margin-bottom:0.4rem;">${data.formatted_price} <span style="font-size:0.75rem; font-weight:400; color:#64748B;">/tahun</span></div>
-                            <button type="button" onclick="buyDomain('${data.domain}')"
+                            <button type="button" onclick="buyDomain('${data.domain}', '${data.formatted_price}')"
                                 style="padding:0.7rem 1.5rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; border-radius:12px; font-weight:800; font-size:0.9rem; cursor:pointer; box-shadow:0 4px 14px rgba(30, 179, 73, 0.35); display:inline-flex; align-items:center; gap:0.4rem;">
                                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                                 Amankan Domain (Beli)
@@ -4724,10 +4819,32 @@
         });
     }
 
-    function buyDomain(domainName) {
-        if (!confirm('Lanjutkan ke pembayaran untuk amankan domain ' + domainName + '?')) {
-            return;
+    function buyDomain(domainName, formattedPrice) {
+        activeDomainToBuy = domainName;
+        document.getElementById('modalDomainName').innerText = domainName;
+        
+        let priceStr = formattedPrice;
+        if (!priceStr) {
+            const ext = domainName.split('.').slice(1).join('.');
+            priceStr = domainPricingMap[ext] || 'Rp 436.666';
         }
+        document.getElementById('modalDomainPrice').innerText = priceStr;
+
+        const modal = document.getElementById('domainCheckoutModal');
+        modal.style.display = 'flex';
+    }
+
+    function closeCheckoutModal() {
+        document.getElementById('domainCheckoutModal').style.display = 'none';
+    }
+
+    function proceedDomainCheckout() {
+        if (!activeDomainToBuy) return;
+
+        const payBtn = document.getElementById('btnConfirmPayDomain');
+        const origText = payBtn.innerHTML;
+        payBtn.disabled = true;
+        payBtn.innerHTML = 'Memproses Token...';
 
         fetch('{{ route("creator.domain.checkout") }}', {
             method: 'POST',
@@ -4735,10 +4852,14 @@
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
-            body: JSON.stringify({ domain: domainName })
+            body: JSON.stringify({ domain: activeDomainToBuy })
         })
         .then(r => r.json())
         .then(data => {
+            payBtn.disabled = false;
+            payBtn.innerHTML = origText;
+            closeCheckoutModal();
+
             if (!data.success) {
                 alert('Gagal membuat transaksi domain: ' + (data.message || 'Error'));
                 return;
@@ -4747,18 +4868,18 @@
             if (typeof snap !== 'undefined' && data.snap_token) {
                 snap.pay(data.snap_token, {
                     onSuccess: function(result) {
-                        alert('Pembayaran Berhasil! Domain ' + domainName + ' akan segera diproses oleh Admin.');
+                        alert('Pembayaran Berhasil! Domain ' + activeDomainToBuy + ' akan segera diproses oleh Admin dalam 2x24 jam.');
                         window.location.reload();
                     },
                     onPending: function(result) {
-                        alert('Menunggu pembayaran Midtrans. Selesaikan pembayaran Anda.');
+                        alert('Menunggu pembayaran Midtrans. Silakan selesaikan instruksi pembayaran Anda.');
                         window.location.reload();
                     },
                     onError: function(result) {
                         alert('Pembayaran gagal atau dibatalkan.');
                     },
                     onClose: function() {
-                        alert('Anda menutup jendela pembayaran.');
+                        alert('Jendela pembayaran Midtrans ditutup.');
                     }
                 });
             } else {
@@ -4766,8 +4887,13 @@
             }
         })
         .catch(err => {
+            payBtn.disabled = false;
+            payBtn.innerHTML = origText;
             alert('Terjadi kesalahan saat memproses checkout domain.');
         });
     }
     </script>
-@endsection
+    <style>
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+@endsection

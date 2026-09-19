@@ -130,8 +130,6 @@ class MidtransService
      */
     public function createDomainSnapToken(\App\Models\DomainOrder $domainOrder, \App\Models\User $user): ?string
     {
-        $this->initConfig();
-
         $midtransOrderId = 'DOMAIN-' . $domainOrder->id . '-' . time();
 
         $params = [

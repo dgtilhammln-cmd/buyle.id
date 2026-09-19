@@ -494,6 +494,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/creator-resources/send-cart-email',        [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'sendCartReminderEmail'])->name('admin.creator-resources.send-cart-email');
         Route::post('/creator-resources/delete-cart-item',       [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'deleteCartItem'])->name('admin.creator-resources.delete-cart-item');
         Route::post('/creator-resources/clear-cart-items',       [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'clearCreatorAbandonedCarts'])->name('admin.creator-resources.clear-cart-items');
+        Route::post('/creator-resources/{user}/send-domain-completed-email', [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'sendDomainCompletedEmail'])->name('admin.creator-resources.send-domain-completed-email');
 
         // Order Management
         Route::get('/orders/export',                            [\App\Http\Controllers\Admin\AdminOrderController::class, 'export'])->name('admin.orders.export');

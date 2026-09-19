@@ -1136,6 +1136,66 @@ class AdminCreatorResourceController extends Controller
         }
         return redirect()->back()->with('error', 'Creator ID tidak valid.');
     }
+
+    /**
+     * Kirim email konfirmasi ke creator bahwa pemasangan & konfigurasi domain telah selesai & aktif.
+     */
+    public function sendDomainCompletedEmail(Request $request, User $user)
+    {
+        $domain = trim($request->input('domain', ''));
+        if (empty($domain)) {
+            $profile = CreatorProfile::where('user_id', $user->id)->first();
+            $domain = $profile ? $profile->custom_domain : null;
+        }
+
+        if (empty($domain)) {
+            return redirect()->back()->with('error', 'Creator ini belum memiliki custom domain yang terpasang!');
+        }
+
+        if (empty($user->email)) {
+            return redirect()->back()->with('error', 'Alamat email creator tidak ditemukan.');
+        }
+
+        try {
+            $storeUrl = "https://{$domain}";
+            \Illuminate\Support\Facades\Mail::html("
+                <div style='font-family:sans-serif; max-width:600px; margin:0 auto; padding:24px; border:1.5px solid #BBF7D0; border-radius:16px; background:#ffffff;'>
+                    <div style='text-align:center; margin-bottom:20px;'>
+                        <h2 style='color:#166534; margin:0; font-size:22px;'>Selamat! Custom Domain Anda Telah Aktif</h2>
+                        <p style='color:#64748B; font-size:14px; margin-top:6px;'>Domain Anda telah selesai dipasang dan siap digunakan.</p>
+                    </div>
+
+                    <p style='font-size:14px; color:#0F172A; line-height:1.6;'>Halo <strong>{$user->name}</strong>,</p>
+                    <p style='font-size:14px; color:#334155; line-height:1.6;'>
+                        Kami ingin mengabarkan bahwa proses konfigurasi dan pemetaan custom domain <strong>{$domain}</strong> untuk halaman Link in Bio toko Anda telah <strong>SELESAI dan AKTIF</strong>.
+                    </p>
+
+                    <div style='background:#F0FDF4; border:1.5px solid #BBF7D0; padding:18px; border-radius:12px; margin:20px 0; text-align:center;'>
+                        <div style='font-size:12px; font-weight:bold; color:#166534; letter-spacing:0.05em; text-transform:uppercase;'>Link Bio Kustom Anda</div>
+                        <div style='font-size:20px; font-weight:800; color:#166534; margin:8px 0;'>{$storeUrl}</div>
+                        <a href='{$storeUrl}' target='_blank' style='display:inline-block; background:#166534; color:#ffffff; font-weight:bold; font-size:13px; text-decoration:none; padding:10px 20px; border-radius:8px; margin-top:6px;'>
+                            Buka Halaman Domain ➔
+                        </a>
+                    </div>
+
+                    <p style='font-size:13px; color:#475569; line-height:1.6;'>
+                        Calon pembeli kini dapat mengakses seluruh katalog produk dan tautan bio Anda secara langsung melalui domain kustom Anda yang lebih profesional.
+                    </p>
+
+                    <hr style='border:none; border-top:1px solid #E2E8F0; margin:24px 0;'>
+                    <p style='font-size:12px; color:#94A3B8; text-align:center;'>Salam hangat,<br><strong>Tim Buyle.id - Digital Creator Platform</strong></p>
+                </div>
+            ", function ($message) use ($user, $domain) {
+                $message->to($user->email, $user->name)
+                        ->subject("Selamat! Custom Domain {$domain} Anda Telah Aktif - Buyle.id");
+            });
+
+            return redirect()->back()->with('success', "Email konfirmasi domain selesai ({$domain}) berhasil dikirim ke creator {$user->email}!");
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('[SendDomainCompletedEmail] Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal mengirim email: ' . $e->getMessage());
+        }
+    }
 }
 
 
