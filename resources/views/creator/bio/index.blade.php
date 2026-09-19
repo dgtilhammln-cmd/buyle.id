@@ -1027,7 +1027,15 @@
         {{-- Sidebar Nav --}}
         <div class="bio-sidebar">
             <div class="bio-tabs-list">
-                <button class="tab-btn active" data-tab="tab-theme">
+                <button class="tab-btn active" data-tab="tab-domain">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                    <span class="tab-text-full">Beli Custom Domain</span>
+                    <small class="tab-text-mob">Domain</small>
+                </button>
+                <button class="tab-btn" data-tab="tab-theme">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="3" />
                         <path
@@ -1122,8 +1130,109 @@
         {{-- Main Content --}}
         <div class="bio-content">
 
+            {{-- ══ TAB 0: DOMAIN SEARCH & PURCHASE ══ --}}
+            <div class="tab-pane active" id="tab-domain">
+                @php
+                    $creatorRawName = $profile->store_name ?: auth()->user()->name;
+                    $cleanKeyword = \Illuminate\Support\Str::slug($creatorRawName, '');
+                    if (empty($cleanKeyword)) $cleanKeyword = 'mybrand';
+
+                    $officialExtensions = [
+                        'com'    => 436666,
+                        'id'     => 480719,
+                        'co.id'  => 532889,
+                        'biz'    => 667546,
+                        'biz.id' => 177589,
+                        'store'  => 1065836,
+                        'my.id'  => 333189,
+                    ];
+                @endphp
+
+                {{-- Status Active Domain if assigned --}}
+                @if(!empty($profile->custom_domain))
+                    <div class="prof-card" style="border:1.5px solid #BBF7D0; background:#F0FDF4; margin-bottom:1.5rem;">
+                        <div class="card-body" style="padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+                            <div>
+                                <span style="background:#166534; color:#fff; font-size:0.7rem; font-weight:800; padding:0.25rem 0.6rem; border-radius:6px; letter-spacing:0.05em;">🌐 DOMAIN AKTIF ANDA</span>
+                                <h3 style="font-size:1.15rem; font-weight:800; color:#166534; margin:0.4rem 0 0.1rem;">https://{{ $profile->custom_domain }}</h3>
+                                <p style="font-size:0.78rem; color:#15803D; margin:0;">Domain ini sudah terpasang dan aktif mengarah ke halaman Link in Bio toko Anda.</p>
+                            </div>
+                            <a href="https://{{ $profile->custom_domain }}" target="_blank" class="btn-primary" style="background:#166534; border:none; box-shadow:none;">
+                                Buka Domain ➔
+                            </a>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Search & Recommendation Card --}}
+                <div class="prof-card">
+                    <div class="prof-card-head">
+                        <span style="display:flex; align-items:center; gap:0.5rem;">
+                            <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            Cari & Amankan Custom Domain Brand Anda
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <p style="font-size:0.825rem; color:#64748B; margin-bottom:1.25rem; line-height:1.5;">
+                            Gunakan domain profesional (.com, .id, .co.id, dll) untuk meningkatkan impresi, kepercayaan calon pembeli, serta ranking Google untuk halaman creator Anda.
+                        </p>
+
+                        {{-- Search Input Box --}}
+                        <div style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px; padding:1.25rem; margin-bottom:1.5rem;">
+                            <label style="display:block; font-size:0.8rem; font-weight:700; color:#0F172A; margin-bottom:0.5rem;">Cari Nama Domain (Contoh: {{ $cleanKeyword }}.com):</label>
+                            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                                <input type="text" id="domainSearchInput" value="{{ $cleanKeyword }}.com" placeholder="Ketik nama domain..."
+                                    style="flex:1; min-width:200px; height:46px; padding:0 1rem; border:1.5px solid #CBD5E1; border-radius:12px; font-size:0.9rem; font-family:inherit; outline:none; background:#ffffff;">
+                                <button type="button" id="btnSearchDomain" onclick="executeDomainSearch()"
+                                    style="height:46px; padding:0 1.5rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; border-radius:12px; font-weight:700; font-size:0.875rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 14px rgba(30, 179, 73, 0.3);">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                                    Cari Domain
+                                </button>
+                            </div>
+                            <div style="font-size:0.72rem; color:#94A3B8; margin-top:0.4rem;">
+                                💡 Hasil pencarian di-cache otomatis sehingga pencarian ulang tidak mengurangi kuota API.
+                            </div>
+                        </div>
+
+                        {{-- Dynamic Search Result Alert Box --}}
+                        <div id="searchResultBox" style="display:none; margin-bottom:1.5rem;"></div>
+
+                        {{-- Auto Recommendations Grid (0 API Hit initially) --}}
+                        <div style="margin-top:1rem;">
+                            <div style="font-size:0.85rem; font-weight:800; color:#0F172A; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+                                🌟 Rekomendasi Domain untuk "{{ $creatorRawName }}"
+                                <span style="font-size:0.7rem; font-weight:600; color:#64748B; background:#F1F5F9; padding:0.15rem 0.5rem; border-radius:100px;">Auto-Generated</span>
+                            </div>
+
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:0.85rem;">
+                                @foreach($officialExtensions as $ext => $price)
+                                    @php $recDomain = $cleanKeyword . '.' . $ext; @endphp
+                                    <div style="background:#ffffff; border:1.5px solid #E2E8F0; border-radius:14px; padding:1rem; display:flex; flex-direction:column; justify-content:space-between; gap:0.75rem; transition:all 0.2s; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
+                                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                            <div>
+                                                <div style="font-size:0.95rem; font-weight:800; color:#0F172A;">{{ $recDomain }}</div>
+                                                <div style="font-size:0.75rem; color:#64748B; font-weight:600;">.{{ $ext }} extension</div>
+                                            </div>
+                                            <div style="text-align:right;">
+                                                <div style="font-size:0.9rem; font-weight:800; color:#1eb349;">Rp {{ number_format($price, 0, ',', '.') }}</div>
+                                                <div style="font-size:0.68rem; color:#94A3B8;">per tahun</div>
+                                            </div>
+                                        </div>
+                                        <button type="button" onclick="checkSpecificDomain('{{ $recDomain }}', this)"
+                                            style="width:100%; height:36px; background:#F8FAFC; color:#0F172A; border:1.5px solid #CBD5E1; border-radius:10px; font-size:0.78rem; font-weight:700; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; justify-content:center; gap:0.35rem;">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                                            Cek Ketersediaan
+                                        </button>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{-- ══ TAB 1: TEMA ══ --}}
-            <div class="tab-pane active" id="tab-theme">
+            <div class="tab-pane" id="tab-theme">
                 <div class="prof-card">
                     <div class="prof-card-head">
                         <span>Pilih Tema Visual</span>
@@ -4474,4 +4583,191 @@
     </div>
 
     @include('partials.scan_menu_modal')
+
+    @php
+        $midtransClientKey = \App\Models\Setting::get('midtrans_client_key') ?: config('midtrans.client_key');
+        $isProd = \App\Models\Setting::get('midtrans_is_production', '0') == '1';
+        $snapUrl = $isProd ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js';
+    @endphp
+    @if($midtransClientKey)
+        <script src="{{ $snapUrl }}" data-client-key="{{ $midtransClientKey }}"></script>
+    @endif
+
+    <script>
+    function checkSpecificDomain(domainName, btnEl) {
+        document.getElementById('domainSearchInput').value = domainName;
+        executeDomainSearch(btnEl);
+    }
+
+    function executeDomainSearch(triggerBtn) {
+        const domainInput = document.getElementById('domainSearchInput');
+        const resultBox   = document.getElementById('searchResultBox');
+        const searchBtn   = document.getElementById('btnSearchDomain');
+        const rawDomain   = domainInput.value.trim();
+
+        if (!rawDomain) {
+            alert('Masukkan nama domain yang ingin dicari!');
+            return;
+        }
+
+        // Loading State
+        const origBtnHtml = searchBtn.innerHTML;
+        searchBtn.disabled = true;
+        searchBtn.innerHTML = '⚡ Memeriksa...';
+
+        if (triggerBtn && triggerBtn !== searchBtn) {
+            triggerBtn.disabled = true;
+            triggerBtn.innerHTML = '⚡ Checking...';
+        }
+
+        resultBox.style.display = 'block';
+        resultBox.innerHTML = `
+            <div style="background:#F8FAFC; border:1.5px solid #CBD5E1; border-radius:14px; padding:1.25rem; text-align:center;">
+                <div style="font-size:0.9rem; font-weight:700; color:#0F172A; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
+                    <span class="spin-icon">⏳</span> Memeriksa ketersediaan domain <strong>${rawDomain}</strong> via WhoisJSON API...
+                </div>
+            </div>
+        `;
+
+        fetch('{{ route("creator.domain.check") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ domain: rawDomain })
+        })
+        .then(r => r.json())
+        .then(data => {
+            searchBtn.disabled = false;
+            searchBtn.innerHTML = origBtnHtml;
+            if (triggerBtn && triggerBtn !== searchBtn) {
+                triggerBtn.disabled = false;
+                triggerBtn.innerHTML = 'Cek Ketersediaan';
+            }
+
+            if (!data.success && data.unsupported_ext) {
+                let recHtml = '';
+                if (data.recommendations && data.recommendations.length > 0) {
+                    recHtml = '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:0.5rem; margin-top:0.75rem;">';
+                    data.recommendations.forEach(r => {
+                        recHtml += `
+                            <div style="background:#fff; border:1px solid #BBF7D0; padding:0.6rem 0.8rem; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-weight:700; font-size:0.85rem; color:#0F172A;">${r.domain}</span>
+                                <button type="button" onclick="checkSpecificDomain('${r.domain}')" style="background:#166534; color:#fff; border:none; padding:0.3rem 0.6rem; border-radius:6px; font-size:0.7rem; font-weight:700; cursor:pointer;">Cek (${r.formatted_price})</button>
+                            </div>
+                        `;
+                    });
+                    recHtml += '</div>';
+                }
+
+                resultBox.innerHTML = `
+                    <div style="background:#FFFBEB; border:1.5px solid #FDE68A; border-radius:14px; padding:1.25rem;">
+                        <div style="font-weight:700; color:#92400E; font-size:0.9rem;">⚠️ ${data.message}</div>
+                        ${recHtml}
+                    </div>
+                `;
+                return;
+            }
+
+            if (!data.success) {
+                resultBox.innerHTML = `
+                    <div style="background:#FEF2F2; border:1.5px solid #FCA5A5; border-radius:14px; padding:1.25rem; color:#991B1B;">
+                        <strong>Error:</strong> ${data.message || 'Gagal mengecek ketersediaan domain.'}
+                    </div>
+                `;
+                return;
+            }
+
+            if (data.available) {
+                resultBox.innerHTML = `
+                    <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:16px; padding:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+                        <div>
+                            <span style="background:#166534; color:#fff; font-size:0.7rem; font-weight:800; padding:0.2rem 0.5rem; border-radius:6px;">🎉 DOMAIN TERSEDIA!</span>
+                            <h3 style="font-size:1.3rem; font-weight:800; color:#166534; margin:0.4rem 0 0.1rem;">${data.domain}</h3>
+                            <p style="font-size:0.8rem; color:#15803D; margin:0;">Domain ini belum terdaftar dan bisa langsung Anda amankan sekarang.</p>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:1.25rem; font-weight:800; color:#166534; margin-bottom:0.4rem;">${data.formatted_price} <span style="font-size:0.75rem; font-weight:400; color:#64748B;">/tahun</span></div>
+                            <button type="button" onclick="buyDomain('${data.domain}')"
+                                style="padding:0.7rem 1.5rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; border-radius:12px; font-weight:800; font-size:0.9rem; cursor:pointer; box-shadow:0 4px 14px rgba(30, 179, 73, 0.35); display:inline-flex; align-items:center; gap:0.4rem;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                Amankan Domain (Beli)
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultBox.innerHTML = `
+                    <div style="background:#FEF2F2; border:1.5px solid #FECACA; border-radius:16px; padding:1.25rem;">
+                        <div style="display:flex; align-items:center; gap:0.5rem; color:#991B1B; font-weight:800; font-size:1rem;">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                            Maaf, domain ${data.domain} sudah terdaftar / tidak tersedia.
+                        </div>
+                        <p style="font-size:0.78rem; color:#7F1D1D; margin:0.35rem 0 0;">Silakan coba variasi nama lain atau pilih dari rekomendasi domain di bawah ini.</p>
+                    </div>
+                `;
+            }
+        })
+        .catch(err => {
+            searchBtn.disabled = false;
+            searchBtn.innerHTML = origBtnHtml;
+            if (triggerBtn && triggerBtn !== searchBtn) {
+                triggerBtn.disabled = false;
+                triggerBtn.innerHTML = 'Cek Ketersediaan';
+            }
+            resultBox.innerHTML = `
+                <div style="background:#FEF2F2; border:1.5px solid #FCA5A5; border-radius:14px; padding:1.25rem; color:#991B1B;">
+                    Gagal memproses pencarian domain. Pastikan jaringan internet Anda terhubung.
+                </div>
+            `;
+        });
+    }
+
+    function buyDomain(domainName) {
+        if (!confirm('Lanjutkan ke pembayaran untuk amankan domain ' + domainName + '?')) {
+            return;
+        }
+
+        fetch('{{ route("creator.domain.checkout") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ domain: domainName })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success) {
+                alert('Gagal membuat transaksi domain: ' + (data.message || 'Error'));
+                return;
+            }
+
+            if (typeof snap !== 'undefined' && data.snap_token) {
+                snap.pay(data.snap_token, {
+                    onSuccess: function(result) {
+                        alert('Pembayaran Berhasil! Domain ' + domainName + ' akan segera diproses oleh Admin.');
+                        window.location.reload();
+                    },
+                    onPending: function(result) {
+                        alert('Menunggu pembayaran Midtrans. Selesaikan pembayaran Anda.');
+                        window.location.reload();
+                    },
+                    onError: function(result) {
+                        alert('Pembayaran gagal atau dibatalkan.');
+                    },
+                    onClose: function() {
+                        alert('Anda menutup jendela pembayaran.');
+                    }
+                });
+            } else {
+                alert('Token Midtrans berhasil dibuat: ' + data.snap_token);
+            }
+        })
+        .catch(err => {
+            alert('Terjadi kesalahan saat memproses checkout domain.');
+        });
+    }
+    </script>
 @endsection

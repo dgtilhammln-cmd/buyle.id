@@ -617,6 +617,9 @@ class AdminCreatorResourceController extends Controller
             }
         }
 
+        // Fetch Domain Orders for this Creator
+        $domainOrders = \App\Models\DomainOrder::where('user_id', $user->id)->orderBy('id', 'desc')->get();
+
         return view('admin.creator-resources.show', [
             'user'                  => $user,
             'creatorProfile'        => $creatorProfile,
@@ -625,6 +628,7 @@ class AdminCreatorResourceController extends Controller
             'sslStatus'             => $sslStatus,
             'dnsResolvedIp'         => $dnsResolvedIp,
             'serverIp'              => $serverIp,
+            'domainOrders'          => $domainOrders,
             'siteVerificationCode'  => $creatorProfile->site_verification_code ?? null,
             'avatarUrl'             => self::getStorageUrl($user->avatar),
             'detailedAssets'        => $detailedAssets,

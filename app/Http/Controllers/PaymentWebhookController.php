@@ -33,6 +33,11 @@ class PaymentWebhookController extends Controller
             return response('OK', 200);
         }
 
+        // Support DOMAIN-xxx for Domain Orders
+        if (\Illuminate\Support\Str::startsWith($rawOrderId, 'DOMAIN-')) {
+            return $this->handleDomainWebhook($payload, $rawOrderId);
+        }
+
         // Support BUYLE-{id}, ORD-xxx, or numeric ID
         $order = null;
         if (\Illuminate\Support\Str::startsWith($rawOrderId, 'BUYLE-')) {
@@ -124,6 +129,114 @@ class PaymentWebhookController extends Controller
                     $order->update(['status' => OrderStatus::Cancelled]);
                 }
             }
+        }
+
+        return response('OK', 200);
+    }
+
+    /**
+     * Handle Webhook Notifikasi Pembelian Domain Creator dari Midtrans
+     */
+    protected function handleDomainWebhook(array $payload, string $rawOrderId): Response
+    {
+        // Validasi Signature Key SHA-512
+        $serverKey = \App\Models\Setting::get('midtrans_server_key') ?: config('midtrans.server_key');
+        $signature = hash('sha512',
+            ($payload['order_id'] ?? '') .
+            ($payload['status_code'] ?? '') .
+            ($payload['gross_amount'] ?? '') .
+            $serverKey
+        );
+
+        if ($signature !== ($payload['signature_key'] ?? '')) {
+            Log::warning('[Webhook Domain] Invalid Midtrans signature', ['order' => $rawOrderId]);
+            return response('OK', 200);
+        }
+
+        // Parse DomainOrder ID
+        $parts = explode('-', $rawOrderId);
+        $domainOrderId = isset($parts[1]) ? (int)$parts[1] : 0;
+        $domainOrder = \App\Models\DomainOrder::with('user')->find($domainOrderId);
+
+        if (!$domainOrder) {
+            Log::warning("[Webhook Domain] DomainOrder not found ID: {$domainOrderId}");
+            return response('OK', 200);
+        }
+
+        $transactionStatus = $payload['transaction_status'] ?? '';
+        $fraudStatus       = $payload['fraud_status'] ?? '';
+
+        $isPaid = (
+            ($transactionStatus === 'capture' && $fraudStatus === 'accept') ||
+            $transactionStatus === 'settlement'
+        );
+
+        if ($isPaid) {
+            if ($domainOrder->status !== 'paid') {
+                $domainOrder->update([
+                    'status'                  => 'paid',
+                    'midtrans_transaction_id' => $payload['transaction_id'] ?? null,
+                ]);
+
+                $user = $domainOrder->user;
+                $formattedAmount = 'Rp ' . number_format($domainOrder->amount, 0, ',', '.');
+
+                // 1. Kirim Email Bukti Pembelian Domain ke Creator
+                if ($user && !empty($user->email)) {
+                    try {
+                        \Illuminate\Support\Facades\Mail::html("
+                            <div style='font-family:sans-serif; max-width:600px; margin:0 auto; padding:20px; border:1px solid #e2e8f0; border-radius:12px;'>
+                                <h2 style='color:#166534;'>Konfirmasi Pembelian Custom Domain</h2>
+                                <p>Halo <strong>{$user->name}</strong>,</p>
+                                <p>Pembayaran untuk pembelian custom domain <strong>{$domainOrder->domain_name}</strong> sebesar <strong>{$formattedAmount}</strong> telah BERHASIL diterima.</p>
+                                <div style='background:#f0fdf4; padding:15px; border-radius:8px; margin:15px 0;'>
+                                    <strong>Rincian Pesanan Domain:</strong><br>
+                                    • Domain: <strong>{$domainOrder->domain_name}</strong><br>
+                                    • Total Pembayaran: <strong>{$formattedAmount}</strong><br>
+                                    • Status: <span style='color:#166534; font-weight:bold;'>LUNAS (Paid)</span><br>
+                                    • Transaction ID: {$domainOrder->midtrans_transaction_id}
+                                </div>
+                                <p>Tim Admin Buyle.id akan segera memproses pendaftaran & pemetaan DNS domain Anda ke halaman Link in Bio toko Anda.</p>
+                                <hr style='border:none; border-top:1px solid #e2e8f0; margin:20px 0;'>
+                                <p style='font-size:12px; color:#64748b;'>Buyle.id - Digital Creator Center</p>
+                            </div>
+                        ", function ($message) use ($user, $domainOrder) {
+                            $message->to($user->email, $user->name)
+                                    ->subject("Bukti Pembayaran Custom Domain: {$domainOrder->domain_name} - Buyle.id");
+                        });
+                    } catch (\Throwable $e) {
+                        Log::error('[Webhook Domain] Fail sending email to creator: ' . $e->getMessage());
+                    }
+                }
+
+                // 2. Kirim Email Notifikasi Alert ke Admin
+                $adminEmail = \App\Models\Setting::get('admin_notification_email') ?: 'dgtilhammln@gmail.com';
+                if (!empty($adminEmail)) {
+                    try {
+                        \Illuminate\Support\Facades\Mail::html("
+                            <div style='font-family:sans-serif; max-width:600px; margin:0 auto; padding:20px; border:1px solid #cbd5e1; border-radius:12px;'>
+                                <h2 style='color:#0f172a;'>🚨 Notifikasi Pembelian Domain Baru!</h2>
+                                <p>Creator <strong>{$user->name}</strong> ({$user->email}) telah MELUNASI pembelian custom domain:</p>
+                                <div style='background:#f8fafc; border:1.5px solid #cbd5e1; padding:15px; border-radius:8px; margin:15px 0;'>
+                                    • <strong>Nama Domain:</strong> {$domainOrder->domain_name}<br>
+                                    • <strong>Creator:</strong> {$user->name} (#{$user->id})<br>
+                                    • <strong>Nominal:</strong> {$formattedAmount}<br>
+                                    • <strong>Midtrans ID:</strong> {$domainOrder->midtrans_transaction_id}<br>
+                                    • <strong>Waktu:</strong> " . now()->format('d M Y H:i:s') . "
+                                </div>
+                                <p>Silakan buka dashboard admin di <a href='" . route('admin.creator-resources.show', $user->id) . "'>Admin Creator Resources</a> untuk mendaftarkan / memetakan domain ini.</p>
+                            </div>
+                        ", function ($message) use ($adminEmail, $domainOrder) {
+                            $message->to($adminEmail)
+                                    ->subject("🚨 TRANSAKSI DOMAIN BARU: {$domainOrder->domain_name}");
+                        });
+                    } catch (\Throwable $e) {
+                        Log::error('[Webhook Domain] Fail sending email to admin: ' . $e->getMessage());
+                    }
+                }
+            }
+        } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
+            $domainOrder->update(['status' => 'cancelled']);
         }
 
         return response('OK', 200);

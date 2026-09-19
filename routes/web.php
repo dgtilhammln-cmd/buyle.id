@@ -597,6 +597,10 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::patch('/bio/blocks/{block}/toggle', [\App\Http\Controllers\Creator\CreatorBioController::class, 'toggleBlock'])->name('bio.blocks.toggle');
     Route::post('/bio/blocks/reorder', [\App\Http\Controllers\Creator\CreatorBioController::class, 'reorderBlocks'])->name('bio.blocks.reorder');
     Route::post('/bio/scrape-url', [\App\Http\Controllers\Creator\CreatorBioController::class, 'scrapeUrl'])->name('bio.scrape-url');
+
+    // Custom Domain Search & Purchase (WhoisJSON & Midtrans)
+    Route::post('/domain/check',    [\App\Http\Controllers\Creator\CreatorDomainController::class, 'checkAvailability'])->name('domain.check');
+    Route::post('/domain/checkout', [\App\Http\Controllers\Creator\CreatorDomainController::class, 'checkout'])->name('domain.checkout');
 });
 
 // 3. Buyer Dashboard

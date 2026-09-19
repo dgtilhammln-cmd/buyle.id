@@ -690,6 +690,60 @@
                 </div>
             </div>
         </div>
+
+        {{-- Domain Purchase Orders History --}}
+        @if(isset($domainOrders) && $domainOrders->count() > 0)
+            <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1.5px solid #F1F5F9;">
+                <div style="font-size:0.875rem; font-weight:800; color:#0F172A; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+                    🛒 Riwayat Transaksi Pembelian Domain ({{ $domainOrders->count() }})
+                </div>
+                <div style="border-radius:12px; overflow:hidden; border:1px solid #E2E8F0;">
+                    <table style="width:100%; border-collapse:collapse; font-size:0.78rem;">
+                        <thead>
+                            <tr style="background:#F8FAFC; color:#475569; text-align:left;">
+                                <th style="padding:0.6rem 0.85rem;">Domain</th>
+                                <th style="padding:0.6rem 0.85rem;">Nominal</th>
+                                <th style="padding:0.6rem 0.85rem;">Status Midtrans</th>
+                                <th style="padding:0.6rem 0.85rem;">Tanggal</th>
+                                <th style="padding:0.6rem 0.85rem; text-align:right;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($domainOrders as $domOrder)
+                                <tr style="border-top:1px solid #F1F5F9;">
+                                    <td style="padding:0.65rem 0.85rem; font-weight:800; color:#0F172A;">
+                                        {{ $domOrder->domain_name }}
+                                    </td>
+                                    <td style="padding:0.65rem 0.85rem; font-weight:700; color:#166534;">
+                                        Rp {{ number_format($domOrder->amount, 0, ',', '.') }}
+                                    </td>
+                                    <td style="padding:0.65rem 0.85rem;">
+                                        @if($domOrder->status === 'paid')
+                                            <span style="background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; padding:0.15rem 0.5rem; border-radius:6px; font-weight:700; font-size:0.7rem;">LUNAS (Paid)</span>
+                                        @elseif($domOrder->status === 'cancelled')
+                                            <span style="background:#FEF2F2; color:#991B1B; border:1px solid #FECACA; padding:0.15rem 0.5rem; border-radius:6px; font-weight:700; font-size:0.7rem;">DIBATALKAN</span>
+                                        @else
+                                            <span style="background:#FFFBEB; color:#92400E; border:1px solid #FDE68A; padding:0.15rem 0.5rem; border-radius:6px; font-weight:700; font-size:0.7rem;">PENDING</span>
+                                        @endif
+                                    </td>
+                                    <td style="padding:0.65rem 0.85rem; color:#64748B;">
+                                        {{ $domOrder->created_at->format('d M Y H:i') }}
+                                    </td>
+                                    <td style="padding:0.65rem 0.85rem; text-align:right;">
+                                        @if($domOrder->status === 'paid')
+                                            <button type="button" onclick="document.getElementsByName('custom_domain')[0].value='{{ $domOrder->domain_name }}'; window.scrollTo({top:0, behavior:'smooth'});"
+                                                style="background:#0F172A; color:#fff; border:none; padding:0.3rem 0.6rem; border-radius:6px; font-size:0.7rem; font-weight:700; cursor:pointer;">
+                                                Pasang ke Creator ➔
+                                            </button>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @endif
     </div>
 
     {{-- ══ Location Intelligence Card ══ --}}

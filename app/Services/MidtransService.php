@@ -126,6 +126,43 @@ class MidtransService
     }
 
     /**
+     * Membuat Snap Token khusus Pembelian Custom Domain Creator.
+     */
+    public function createDomainSnapToken(\App\Models\DomainOrder $domainOrder, \App\Models\User $user): ?string
+    {
+        $this->initConfig();
+
+        $midtransOrderId = 'DOMAIN-' . $domainOrder->id . '-' . time();
+
+        $params = [
+            'transaction_details' => [
+                'order_id'     => $midtransOrderId,
+                'gross_amount' => (int) $domainOrder->amount,
+            ],
+            'customer_details' => [
+                'first_name' => $user->name,
+                'email'      => $user->email,
+                'phone'      => $user->phone ?? '',
+            ],
+            'item_details' => [
+                [
+                    'id'       => 'DOM-' . $domainOrder->id,
+                    'price'    => (int) $domainOrder->amount,
+                    'quantity' => 1,
+                    'name'     => 'Custom Domain: ' . substr($domainOrder->domain_name, 0, 45),
+                ]
+            ],
+        ];
+
+        try {
+            return Snap::getSnapToken($params);
+        } catch (Exception $e) {
+            \Log::error('Midtrans Domain Snap Error: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Membatalkan transaksi di Midtrans.
      */
     public function cancelTransaction(string $orderNumber): bool
