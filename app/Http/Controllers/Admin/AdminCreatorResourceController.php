@@ -997,6 +997,54 @@ class AdminCreatorResourceController extends Controller
     }
 
     /**
+     * Kompresi SEMUA gambar di seluruh storage (global, bukan per-creator)
+     */
+    public function compressAllStorage(Request $request)
+    {
+        $disk = Storage::disk('public');
+        $allFiles = $disk->allFiles();
+
+        $imageExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+        $compressedCount = 0;
+        $skippedCount   = 0;
+        $totalSavedBytes = 0;
+        $maxFiles = 500; // Batasi per-request agar tidak timeout
+        $processed = 0;
+
+        foreach ($allFiles as $relativePath) {
+            if ($processed >= $maxFiles) break;
+
+            $ext = strtolower(pathinfo($relativePath, PATHINFO_EXTENSION));
+            if (!in_array($ext, $imageExtensions)) continue;
+
+            $fullPath = $disk->path($relativePath);
+            if (!file_exists($fullPath)) continue;
+
+            $processed++;
+            $res = self::compressImageFile($fullPath, 70);
+            if ($res['success']) {
+                $compressedCount++;
+                $totalSavedBytes += $res['saved_bytes'] ?? 0;
+            } else {
+                $skippedCount++;
+            }
+        }
+
+        $savedKb = round($totalSavedBytes / 1024, 1);
+        $savedMb = round($totalSavedBytes / (1024 * 1024), 2);
+        $savedText = $savedMb >= 1 ? "{$savedMb} MB" : "{$savedKb} KB";
+
+        $msg = "Kompresi global selesai! Berhasil kompresi {$compressedCount} gambar";
+        if ($skippedCount > 0) $msg .= ", {$skippedCount} dilewati (bukan gambar/sudah optimal)";
+        $msg .= ". Total hemat disk: {$savedText}.";
+        if ($processed >= $maxFiles) {
+            $msg .= " (Batch pertama {$maxFiles} berkas — jalankan ulang untuk lanjut batch berikutnya.)";
+        }
+
+        return redirect()->back()->with('success', $msg);
+    }
+
+    /**
      * Kirim email pengingat keranjang belanja (Abandoned Cart Reminder) ke pembeli
      */
     public function sendCartReminderEmail(Request $request)

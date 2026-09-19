@@ -1181,8 +1181,10 @@
                             @foreach($categories as $cat)
                                 @php
                                     $isCatA = in_array($cat->slug, $activeCats);
-                                    $newList = $isCatA ? array_values(array_filter($activeCats, fn($c) => $c !== $cat->slug)) : array_merge($activeCats, [$cat->slug]);
-                                    $catQ = array_merge(request()->except('category'), $newList ? ['category' => implode(',', $newList)] : []);
+                                    // Single-select: klik kategori yang sudah aktif → hapus filter; klik yang lain → ganti
+                                    $catQ = $isCatA
+                                        ? request()->except('category')
+                                        : array_merge(request()->except('category'), ['category' => $cat->slug]);
                                 @endphp
                                 <a href="{{ route_locale('products') }}?{{ http_build_query($catQ) }}"
                                     class="sp-cat-item {{ $isCatA ? 'active' : '' }}">

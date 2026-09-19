@@ -10,12 +10,37 @@
     $shareUrlEncoded = urlencode($shareUrl);
 @endphp
 
-{{-- Share Button (fixed top-right) --}}
-<button id="bio-share-btn" onclick="openShareSheet()" aria-label="Bagikan profil"
-    style="position:fixed;top:1rem;right:1rem;z-index:900;width:40px;height:40px;border-radius:50%;
-           background:rgba(255,255,255,0.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-           border:1.5px solid rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;
-           cursor:pointer;transition:all 0.2s;box-shadow:0 4px 16px rgba(0,0,0,0.15);">
+{{-- Share Button styles --}}
+<style>
+#bio-share-btn {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 900;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(255,255,255,0.28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+/* Desktop: letakkan tombol share sejajar tepi kanan konten bio */
+@media (min-width: 640px) {
+    #bio-share-btn {
+        right: calc(50% - 260px - 50px);
+    }
+}
+</style>
+
+{{-- Share Button (fixed) --}}
+<button id="bio-share-btn" onclick="openShareSheet()" aria-label="Bagikan profil">
     <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24">
         <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
         <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>

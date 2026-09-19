@@ -490,6 +490,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/creator-resources/{user}/compress-asset',  [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'compressAsset'])->name('admin.creator-resources.compress-asset');
         Route::post('/creator-resources/{user}/compress-all',    [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'compressAll'])->name('admin.creator-resources.compress-all');
         Route::post('/creator-resources/clean-orphans',          [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'cleanOrphans'])->name('admin.creator-resources.clean-orphans');
+        Route::post('/creator-resources/compress-all-storage',   [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'compressAllStorage'])->name('admin.creator-resources.compress-all-storage');
         Route::post('/creator-resources/send-cart-email',        [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'sendCartReminderEmail'])->name('admin.creator-resources.send-cart-email');
         Route::post('/creator-resources/delete-cart-item',       [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'deleteCartItem'])->name('admin.creator-resources.delete-cart-item');
         Route::post('/creator-resources/clear-cart-items',       [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'clearCreatorAbandonedCarts'])->name('admin.creator-resources.clear-cart-items');

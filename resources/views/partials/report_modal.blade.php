@@ -24,6 +24,13 @@
         text-decoration: none;
     }
 
+    /* Desktop: ikuti posisi konten bio yang terpusat (max-width 520px) */
+    @media (min-width: 640px) {
+        .buyle-report-btn {
+            left: calc(50% - 260px + 8px);
+        }
+    }
+
     .buyle-report-btn:hover {
         background: #1eb349;
         color: #ffffff;

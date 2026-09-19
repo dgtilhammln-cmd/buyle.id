@@ -939,19 +939,36 @@
                 Sistem telah memindai seluruh referensi di database produk, bio block, banner, dan avatar user. Seluruh berkas yang terdaftar di bawah ini <strong>tidak lagi digunakan/terhubung ke toko manapun</strong>. Menghapusnya <strong>100% AMAN</strong> dan akan langsung membebaskan <strong>{{ $orphanData['total_mb'] }} MB</strong> kapasitas ruang disk server Hostinger/VPS.
             </div>
 
-            <div style="background:#FEF2F2; border:1px solid #FEE2E2; padding:0.85rem 1rem; border-radius:12px; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center;">
+            {{-- Action Bar: Compress + Delete --}}
+            <div style="background:#FEF2F2; border:1px solid #FEE2E2; padding:0.85rem 1rem; border-radius:12px; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
                 <div>
                     <div style="font-size:0.85rem; font-weight:700; color:#991B1B;">Ditemukan {{ $orphanData['count'] }} Ghost Files</div>
                     <div style="font-size:0.75rem; color:#7F1D1D;">Ukuran total sampah terbuang: <strong>{{ $orphanData['total_mb'] }} MB</strong></div>
                 </div>
-                @if($orphanData['count'] > 0)
-                    <form action="{{ route('admin.creator-resources.clean-orphans') }}" method="POST" style="margin:0;">
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    {{-- Compress All Images --}}
+                    <form action="{{ route('admin.creator-resources.compress-all-storage') }}" method="POST" style="margin:0;">
                         @csrf
-                        <button type="submit" class="res-btn" style="background:#DC2626; color:#ffffff; font-size:0.75rem; padding:0.55rem 1.1rem;" onclick="return confirm('Hapus {{ $orphanData['count'] }} berkas sampah terbuang ({{ $orphanData['total_mb'] }} MB) secara permanen?')">
-                            Hapus Semua Sampah
+                        <button type="submit" class="res-btn"
+                            style="background:#1D4ED8; color:#ffffff; font-size:0.75rem; padding:0.55rem 1.1rem; display:inline-flex; align-items:center; gap:0.35rem;"
+                            onclick="return confirm('Kompresi maksimal semua gambar di seluruh storage? Proses ini mungkin memakan waktu beberapa detik.')">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+                            </svg>
+                            Compress Semua Gambar
                         </button>
                     </form>
-                @endif
+                    {{-- Delete All Orphans --}}
+                    @if($orphanData['count'] > 0)
+                        <form action="{{ route('admin.creator-resources.clean-orphans') }}" method="POST" style="margin:0;">
+                            @csrf
+                            <button type="submit" class="res-btn" style="background:#DC2626; color:#ffffff; font-size:0.75rem; padding:0.55rem 1.1rem;" onclick="return confirm('Hapus {{ $orphanData['count'] }} berkas sampah terbuang ({{ $orphanData['total_mb'] }} MB) secara permanen?')">
+                                Hapus Semua Sampah
+                            </button>
+                        </form>
+                    @endif
+                </div>
             </div>
 
             @if($orphanData['count'] > 0)
