@@ -28,7 +28,10 @@ class HomeController extends Controller
         $clients      = collect();
         $testimonials = collect();
         $uspItems       = UspItem::active()->get();
-        $categoryItems  = \App\Models\ProductCategory::active()->orderBy('order')->get();
+        $categoryItems  = \App\Models\ProductCategory::active()
+            ->with(['subCategories' => function($q) { $q->where('is_active', true)->orderBy('order'); }])
+            ->orderBy('order')
+            ->get();
         $promoSections  = PromoSection::active()->get();
         
         $wa           = WaSetting::primary();

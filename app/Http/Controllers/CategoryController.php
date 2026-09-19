@@ -48,7 +48,15 @@ class CategoryController extends Controller
         }
 
         $products = $query->paginate(24)->withQueryString();
-        $categories = ProductCategory::active()->orderBy('order')->get();
+        $categories = ProductCategory::active()
+            ->orderBy('order')
+            ->withCount(['products' => function($q) { $q->where('is_active', true); }])
+            ->with(['subCategories' => function($q) {
+                $q->where('is_active', true)
+                  ->orderBy('order')
+                  ->withCount(['products' => function($pq) { $pq->where('is_active', true); }]);
+            }])
+            ->get();
 
         return view('categories.show', compact('category', 'subcategory', 'products', 'categories'));
     }

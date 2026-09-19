@@ -414,6 +414,147 @@
             color: var(--c-accent);
         }
 
+        /* CATEGORY GROUP & SUBCATEGORY ANIMATED TREE */
+        .sp-cat-group {
+            border-bottom: 1px solid var(--c-border);
+            transition: background 0.2s ease;
+            border-radius: 8px;
+        }
+        .sp-cat-group:last-child {
+            border-bottom: none;
+        }
+        .sp-cat-parent-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .sp-cat-parent-row .sp-cat-item {
+            flex: 1;
+            border-bottom: none !important;
+        }
+        .sp-subcat-toggle-btn {
+            background: transparent;
+            border: none;
+            padding: 6px 8px;
+            cursor: pointer;
+            color: var(--c-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            margin-right: -4px;
+        }
+        .sp-subcat-toggle-btn:hover {
+            background: rgba(30, 179, 73, 0.1);
+            color: var(--c-accent);
+        }
+        .sp-chevron-icon {
+            transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sp-cat-group.open .sp-chevron-icon {
+            transform: rotate(180deg);
+            color: var(--c-accent);
+        }
+
+        /* Subcategory Container Accordion & Hover Reveal */
+        .sp-subcat-container {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+            opacity: 0;
+            overflow: hidden;
+        }
+        @media (hover: hover) {
+            .sp-cat-group:hover .sp-subcat-container {
+                grid-template-rows: 1fr;
+                opacity: 1;
+            }
+            .sp-cat-group:hover .sp-chevron-icon {
+                transform: rotate(180deg);
+                color: var(--c-accent);
+            }
+        }
+        .sp-cat-group.open .sp-subcat-container {
+            grid-template-rows: 1fr;
+            opacity: 1;
+        }
+
+        .sp-subcat-list {
+            min-height: 0;
+            padding: 0.15rem 0 0.5rem 1.6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            position: relative;
+        }
+        .sp-subcat-list::before {
+            content: '';
+            position: absolute;
+            left: 0.8rem;
+            top: 0.35rem;
+            bottom: 0.6rem;
+            width: 2px;
+            background: var(--c-border);
+            border-radius: 2px;
+        }
+        .sp-subcat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.6rem;
+            font-size: 0.78rem;
+            color: var(--c-muted);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            position: relative;
+            font-family: var(--font);
+        }
+        .sp-subcat-item:hover,
+        .sp-subcat-item.active {
+            background: rgba(30, 179, 73, 0.08);
+            color: var(--c-accent);
+            font-weight: 600;
+            transform: translateX(3px);
+        }
+        .sp-subcat-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--c-muted2);
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        .sp-subcat-item:hover .sp-subcat-dot,
+        .sp-subcat-item.active .sp-subcat-dot {
+            background: var(--c-accent);
+            transform: scale(1.4);
+            box-shadow: 0 0 6px rgba(30, 179, 73, 0.5);
+        }
+        .sp-subcat-name {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .sp-subcat-badge {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--c-muted);
+            background: #fff;
+            border: 1px solid var(--c-border);
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+        .sp-subcat-item.active .sp-subcat-badge,
+        .sp-subcat-item:hover .sp-subcat-badge {
+            border-color: var(--c-accent);
+            color: var(--c-accent);
+        }
+
         .sp-reset-link {
             display: inline-flex;
             align-items: center;
@@ -1181,28 +1322,66 @@
                             @foreach($categories as $cat)
                                 @php
                                     $isCatA = in_array($cat->slug, $activeCats);
+                                    $hasSubs = $cat->subCategories && $cat->subCategories->count() > 0;
+                                    $activeSubSlug = request('subcategory') ?? request('sub_category');
+                                    $hasActiveSub = $hasSubs && $cat->subCategories->contains('slug', $activeSubSlug);
+
                                     // Single-select: klik kategori yang sudah aktif → hapus filter; klik yang lain → ganti
                                     $catQ = $isCatA
-                                        ? request()->except('category')
-                                        : array_merge(request()->except('category'), ['category' => $cat->slug]);
+                                        ? request()->except(['category', 'subcategory', 'sub_category'])
+                                        : array_merge(request()->except(['category', 'subcategory', 'sub_category']), ['category' => $cat->slug]);
                                 @endphp
-                                <a href="{{ route_locale('products') }}?{{ http_build_query($catQ) }}"
-                                    class="sp-cat-item {{ $isCatA ? 'active' : '' }}">
-                                    <div class="sp-cat-check">
-                                        <svg width="10" height="10" fill="none" stroke="white" stroke-width="3" viewBox="0 0 24 24">
-                                            <polyline points="20 6 9 17 4 12" />
-                                        </svg>
+                                <div class="sp-cat-group {{ ($isCatA || $hasActiveSub) ? 'open' : '' }}">
+                                    <div class="sp-cat-parent-row">
+                                        <a href="{{ route_locale('products') }}?{{ http_build_query($catQ) }}"
+                                            class="sp-cat-item {{ $isCatA ? 'active' : '' }}">
+                                            <div class="sp-cat-check">
+                                                <svg width="10" height="10" fill="none" stroke="white" stroke-width="3" viewBox="0 0 24 24">
+                                                    <polyline points="20 6 9 17 4 12" />
+                                                </svg>
+                                            </div>
+                                            <span class="sp-cat-name">{{ $cat->name }}</span>
+                                            <span class="sp-cat-badge">{{ $cat->services_count ?? $cat->products_count }}</span>
+                                        </a>
+                                        @if($hasSubs)
+                                            <button type="button" class="sp-subcat-toggle-btn" aria-label="Toggle Sub Kategori" onclick="event.preventDefault(); event.stopPropagation(); this.closest('.sp-cat-group').classList.toggle('open');">
+                                                <svg class="sp-chevron-icon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                                </svg>
+                                            </button>
+                                        @endif
                                     </div>
-                                    <span class="sp-cat-name">{{ $cat->name }}</span>
-                                    <span class="sp-cat-badge">{{ $cat->services_count }}</span>
-                                </a>
+
+                                    @if($hasSubs)
+                                        <div class="sp-subcat-container">
+                                            <div class="sp-subcat-list">
+                                                @foreach($cat->subCategories as $sub)
+                                                    @php
+                                                        $isSubActive = $activeSubSlug === $sub->slug;
+                                                        $subQ = $isSubActive
+                                                            ? request()->except(['subcategory', 'sub_category'])
+                                                            : array_merge(request()->except(['subcategory', 'sub_category']), ['category' => $cat->slug, 'subcategory' => $sub->slug]);
+                                                    @endphp
+                                                    <a href="{{ route_locale('products') }}?{{ http_build_query($subQ) }}"
+                                                       class="sp-subcat-item {{ $isSubActive ? 'active' : '' }}">
+                                                        <span class="sp-subcat-dot"></span>
+                                                        <span class="sp-subcat-name">{{ $sub->name }}</span>
+                                                        @if(isset($sub->products_count) && $sub->products_count > 0)
+                                                            <span class="sp-subcat-badge">{{ $sub->products_count }}</span>
+                                                        @endif
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
                             @endforeach
                         </div>
                     </div>
                 </div>
             @endif
 
-            @if(request()->hasAny(['q', 'category', 'type', 'price_min', 'price_max', 'sort']))
+            @if(request()->hasAny(['q', 'category', 'subcategory', 'sub_category', 'type', 'price_min', 'price_max', 'sort']))
                 <a href="{{ route_locale('products') }}" class="sp-reset-link">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <polyline points="23 4 23 10 17 10" />
@@ -1217,7 +1396,10 @@
         <div class="sp-content">
 
             {{-- Active Filter Chips --}}
-            @php $hasF = request()->hasAny(['q', 'category']); @endphp
+            @php 
+                $activeSubSlug = request('subcategory') ?? request('sub_category');
+                $hasF = request()->hasAny(['q', 'category']) || !empty($activeSubSlug); 
+            @endphp
             @if($hasF)
                 <div class="sp-active-filters">
                     <span style="font-size:0.8rem;color:var(--c-muted);font-family:var(--font);font-weight:600;">Filter:</span>
@@ -1235,7 +1417,7 @@
                         @php $cObj = $categories->firstWhere('slug', $cs); @endphp
                         @if($cObj)
                             @php $rem = array_values(array_diff($activeCats, [$cs])); @endphp
-                            <a href="{{ route_locale('products') }}?{{ http_build_query(array_merge(request()->except('category'), $rem ? ['category' => implode(',', $rem)] : [])) }}"
+                            <a href="{{ route_locale('products') }}?{{ http_build_query(array_merge(request()->except(['category', 'subcategory', 'sub_category']), $rem ? ['category' => implode(',', $rem)] : [])) }}"
                                 class="sp-filter-chip">
                                 {{ $cObj->name }} <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                     <line x1="18" y1="6" x2="6" y2="18" />
@@ -1244,6 +1426,27 @@
                             </a>
                         @endif
                     @endforeach
+
+                    @if(!empty($activeSubSlug))
+                        @php
+                            $subObj = null;
+                            foreach($categories as $c) {
+                                if($c->subCategories && $sFound = $c->subCategories->firstWhere('slug', $activeSubSlug)) {
+                                    $subObj = $sFound;
+                                    break;
+                                }
+                            }
+                        @endphp
+                        @if($subObj)
+                            <a href="{{ route_locale('products') }}?{{ http_build_query(request()->except(['subcategory', 'sub_category'])) }}"
+                                class="sp-filter-chip">
+                                Sub: {{ $subObj->name }} <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                            </a>
+                        @endif
+                    @endif
 
                 </div>
             @endif

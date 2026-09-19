@@ -90,7 +90,7 @@ class ServiceController extends Controller
             $cats = array_filter(array_map('trim', $cats));
             
             // SEO-friendly Redirect: If it's a single category search on the legacy URL, redirect to the new route
-            if (count($cats) === 1 && !request()->routeIs('category.show') && !request()->filled('q')) {
+            if (count($cats) === 1 && !request()->routeIs('category.show') && !request()->filled('q') && !request()->filled('subcategory')) {
                 return redirect()->route('category.show', ['categorySlug' => $cats[0]], 301);
             }
 
@@ -99,6 +99,14 @@ class ServiceController extends Controller
                     $q->whereIn('slug', $cats);
                 });
             }
+        }
+
+        // Subcategory filter
+        $subCatParam = request('subcategory') ?? request('sub_category');
+        if ($subCatParam) {
+            $query->whereHas('subCategory', function($q) use ($subCatParam) {
+                $q->where('slug', $subCatParam);
+            });
         }
 
         // Price range filter
@@ -146,10 +154,15 @@ class ServiceController extends Controller
         $siteName   = $settings['site_name'] ?? 'buyle.id';
         $wa         = WaSetting::primary();
 
-        // Categories with counts
+        // Categories with counts and eager-loaded sub-categories
         $categories = \App\Models\ProductCategory::where('is_active', true)
             ->orderBy('order')
             ->withCount(['products' => function($q) { $q->where('is_active', true); }])
+            ->with(['subCategories' => function($q) {
+                $q->where('is_active', true)
+                  ->orderBy('order')
+                  ->withCount(['products' => function($pq) { $pq->where('is_active', true); }]);
+            }])
             ->get()
             ->map(function($cat) {
                 $cat->services_count = $cat->products_count;
