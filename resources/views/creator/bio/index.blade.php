@@ -4593,71 +4593,68 @@
     {{-- DOMAIN CHECKOUT MODAL — Premium Interactive                  --}}
     {{-- ============================================================ --}}
     <style>
-    /* ── Domain Checkout Modal ─────────────────────────────── */
+    /* Light Theme Modal */
     #domainCheckoutModal {
         display: none; position: fixed; inset: 0; z-index: 99999;
-        background: rgba(10,15,30,0.72); backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
+        background: rgba(15,23,42,0.48); backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
         align-items: center; justify-content: center; padding: 1rem; overflow-y: auto;
     }
-    #domainCheckoutModal.open { display: flex; animation: dcmFadeIn .25s ease; }
+    #domainCheckoutModal.open { display: flex; animation: dcmFadeIn .2s ease; }
     @keyframes dcmFadeIn { from { opacity:0; } to { opacity:1; } }
     .dcm-card {
-        background: #fff; border-radius: 28px; max-width: 480px; width: 100%;
-        padding: 0; box-shadow: 0 32px 64px -12px rgba(0,0,0,0.32);
-        border: 1px solid rgba(255,255,255,0.5); position: relative; overflow: hidden;
-        animation: dcmSlideUp .3s cubic-bezier(.34,1.56,.64,1);
+        background: #fff; border-radius: 18px; max-width: 450px; width: 100%;
+        padding: 0; box-shadow: 0 16px 48px -8px rgba(0,0,0,0.15);
+        border: 1px solid #E8EDF2; position: relative; overflow: hidden;
+        animation: dcmSlideUp .26s cubic-bezier(.34,1.4,.64,1);
     }
-    @keyframes dcmSlideUp { from { transform:translateY(30px); opacity:0; } to { transform:translateY(0); opacity:1; } }
-    .dcm-header { background: linear-gradient(135deg, #0F172A 0%, #1e293b 100%); padding: 1.75rem 1.75rem 1.5rem; text-align: center; position: relative; }
+    @keyframes dcmSlideUp { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+    .dcm-header { background: #fff; border-bottom: 1px solid #F1F5F9; padding: 1.4rem 1.4rem 1.1rem; text-align: center; position: relative; }
     .dcm-close-btn {
-        position: absolute; top: 1rem; right: 1rem;
-        background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
-        color: rgba(255,255,255,0.7); width: 32px; height: 32px;
+        position: absolute; top: 0.9rem; right: 0.9rem;
+        background: #F1F5F9; border: 1px solid #E2E8F0;
+        color: #94A3B8; width: 28px; height: 28px;
         border-radius: 50%; display: flex; align-items: center; justify-content: center;
-        cursor: pointer; transition: all .2s;
+        cursor: pointer; transition: all .15s;
     }
-    .dcm-close-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+    .dcm-close-btn:hover { background: #E2E8F0; color: #475569; }
     .dcm-icon-wrap {
-        width: 60px; height: 60px; background: linear-gradient(135deg, #1eb349, #a5cf37);
-        border-radius: 18px; display: inline-flex; align-items: center; justify-content: center;
-        margin-bottom: 0.9rem; box-shadow: 0 8px 24px rgba(30,179,73,0.4);
+        width: 48px; height: 48px; background: linear-gradient(135deg, #1eb349, #a5cf37);
+        border-radius: 12px; display: inline-flex; align-items: center; justify-content: center;
+        margin-bottom: 0.65rem; box-shadow: 0 4px 14px rgba(30,179,73,0.25);
     }
-    .dcm-title { font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem; }
-    .dcm-subtitle { font-size: 0.8rem; color: rgba(255,255,255,0.55); margin: 0; }
-    .dcm-body { padding: 1.5rem 1.75rem; }
-    .dcm-info-card {
-        background: linear-gradient(135deg, #F0FDF4, #ECFDF5);
-        border: 1.5px solid #BBF7D0; border-radius: 16px; padding: 1rem 1.25rem; margin-bottom: 1.25rem;
-    }
+    .dcm-title { font-size: 1rem; font-weight: 600; color: #0F172A; margin: 0 0 0.15rem; }
+    .dcm-subtitle { font-size: 0.75rem; color: #94A3B8; margin: 0; font-weight: 400; }
+    .dcm-body { padding: 1.1rem 1.4rem 1.3rem; }
+    .dcm-info-card { background: #F8FFF9; border: 1px solid #D1FAE5; border-radius: 11px; padding: 0.85rem 1rem; margin-bottom: 1rem; }
     .dcm-info-row { display: flex; justify-content: space-between; align-items: center; }
-    .dcm-info-row + .dcm-info-row { margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed #BBF7D0; }
-    .dcm-info-label { font-size: 0.72rem; font-weight: 700; color: #15803D; text-transform: uppercase; letter-spacing: 0.05em; }
-    .dcm-domain-name { font-size: 1.1rem; font-weight: 900; color: #166534; }
-    .dcm-domain-price { font-size: 1.15rem; font-weight: 900; color: #0F172A; }
-    .dcm-domain-period { font-size: 0.7rem; color: #94A3B8; margin-left: 3px; }
-    .dcm-benefits { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; }
-    .dcm-benefit-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #475569; }
-    .dcm-benefit-icon { width: 20px; height: 20px; background: #F0FDF4; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .dcm-notice { background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 12px; padding: 0.75rem 0.9rem; font-size: 0.75rem; color: #92400E; margin-bottom: 1.25rem; display: flex; align-items: flex-start; gap: 0.5rem; }
-    .dcm-error-box { background: #FEF2F2; border: 1.5px solid #FCA5A5; border-radius: 12px; padding: 0.75rem 0.9rem; font-size: 0.8rem; color: #991B1B; margin-bottom: 1rem; display: none; align-items: center; gap: 0.5rem; }
-    .dcm-actions { display: grid; grid-template-columns: 1fr 1.6fr; gap: 0.75rem; }
-    .dcm-btn-cancel { height: 48px; background: #F1F5F9; color: #64748B; border: 1.5px solid #E2E8F0; border-radius: 14px; font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: all .2s; }
-    .dcm-btn-cancel:hover { background: #E2E8F0; color: #334155; }
-    .dcm-btn-pay { height: 48px; background: linear-gradient(135deg, #1eb349 0%, #16a34a 60%, #a5cf37 100%); color: #fff; border: none; border-radius: 14px; font-weight: 800; font-size: 0.875rem; cursor: pointer; box-shadow: 0 6px 20px rgba(30,179,73,0.4); display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; transition: all .25s; }
-    .dcm-btn-pay:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(30,179,73,0.5); }
-    .dcm-btn-pay:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
-    /* ── Toast ─────────────────────────────────────────────── */
-    #domainToast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(100px); z-index: 999999; min-width: 300px; max-width: calc(100vw - 2rem); background: #0F172A; color: #fff; border-radius: 16px; padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 0.75rem; box-shadow: 0 16px 40px rgba(0,0,0,0.3); transition: transform .4s cubic-bezier(.34,1.56,.64,1), opacity .3s; opacity: 0; }
+    .dcm-info-row + .dcm-info-row { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #ECFDF5; }
+    .dcm-info-label { font-size: 0.68rem; font-weight: 600; color: #16a34a; text-transform: uppercase; letter-spacing: 0.06em; }
+    .dcm-domain-name { font-size: 0.95rem; font-weight: 600; color: #166534; }
+    .dcm-domain-price { font-size: 1rem; font-weight: 600; color: #0F172A; }
+    .dcm-domain-period { font-size: 0.67rem; color: #94A3B8; margin-left: 2px; font-weight: 400; }
+    .dcm-benefits { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+    .dcm-benefit-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.76rem; color: #64748B; font-weight: 400; }
+    .dcm-benefit-icon { width: 16px; height: 16px; background: #F0FDF4; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .dcm-notice { background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 9px; padding: 0.6rem 0.8rem; font-size: 0.72rem; color: #92400E; margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 0.4rem; font-weight: 400; line-height: 1.5; }
+    .dcm-error-box { background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 9px; padding: 0.6rem 0.8rem; font-size: 0.76rem; color: #DC2626; margin-bottom: 0.85rem; display: none; align-items: flex-start; gap: 0.4rem; font-weight: 400; line-height: 1.5; }
+    .dcm-actions { display: grid; grid-template-columns: 1fr 1.7fr; gap: 0.6rem; }
+    .dcm-btn-cancel { height: 42px; background: #F8FAFC; color: #64748B; border: 1px solid #E2E8F0; border-radius: 10px; font-weight: 500; font-size: 0.83rem; cursor: pointer; transition: all .15s; }
+    .dcm-btn-cancel:hover { background: #F1F5F9; color: #334155; }
+    .dcm-btn-pay { height: 42px; background: linear-gradient(135deg, #1eb349 0%, #16a34a 60%, #a5cf37 100%); color: #fff; border: none; border-radius: 10px; font-weight: 600; font-size: 0.83rem; cursor: pointer; box-shadow: 0 3px 12px rgba(30,179,73,0.3); display: inline-flex; align-items: center; justify-content: center; gap: 0.32rem; transition: all .18s; }
+    .dcm-btn-pay:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(30,179,73,0.4); }
+    .dcm-btn-pay:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    /* Toast */
+    #domainToast { position: fixed; bottom: 1.25rem; left: 50%; transform: translateX(-50%) translateY(80px); z-index: 999999; min-width: 280px; max-width: calc(100vw - 2rem); background: #1e293b; color: #fff; border-radius: 13px; padding: 0.85rem 1rem; display: flex; align-items: flex-start; gap: 0.6rem; box-shadow: 0 10px 28px rgba(0,0,0,0.22); transition: transform .32s cubic-bezier(.34,1.4,.64,1), opacity .22s; opacity: 0; }
     #domainToast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    #domainToast.toast-success { background: linear-gradient(135deg, #166534, #15803D); }
-    #domainToast.toast-error { background: linear-gradient(135deg, #991B1B, #DC2626); }
-    #domainToast.toast-info { background: linear-gradient(135deg, #1e40af, #1d4ed8); }
-    .toast-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    #domainToast.toast-success { background: #166534; }
+    #domainToast.toast-error { background: #991B1B; }
+    #domainToast.toast-info { background: #1e40af; }
+    .toast-icon { width: 30px; height: 30px; background: rgba(255,255,255,0.12); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .toast-content { flex: 1; }
-    .toast-title { font-size: 0.875rem; font-weight: 800; margin: 0 0 0.2rem; }
-    .toast-msg { font-size: 0.78rem; opacity: 0.85; margin: 0; line-height: 1.4; }
-    .toast-close { background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer; padding: 0; flex-shrink: 0; }
+    .toast-title { font-size: 0.8rem; font-weight: 600; margin: 0 0 0.12rem; }
+    .toast-msg { font-size: 0.72rem; opacity: 0.8; margin: 0; line-height: 1.45; font-weight: 400; }
+    .toast-close { background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer; padding: 0; flex-shrink: 0; }
     .toast-close:hover { color: #fff; }
     </style>
 
