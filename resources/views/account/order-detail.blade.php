@@ -546,22 +546,44 @@
 
                 @foreach($order->items as $item)
                     @if($item->product && $item->product->product_type !== 'ticket' && !empty($item->product->digital_resource))
+                        @php
+                            $userRating = \App\Models\ProductRating::where('product_id', $item->product_id)
+                                ->where('user_id', auth()->id())
+                                ->first();
+                            $currentRatingVal = $userRating ? $userRating->rating : 0;
+                        @endphp
                         <div
-                            style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; background: #f8fafc; padding: 1rem; border-radius: 10px; border: 1px solid #e2e8f0;">
+                            style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; background: #f8fafc; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
                             <div>
                                 <div style="font-weight: 700; font-size: 0.95rem; color: #0f172a; margin-bottom: 2px;">
                                     {{ $item->product_name }}</div>
                                 <div style="font-size: 0.8rem; color: #64748b;">Klik tombol di samping untuk membuka materi / file
                                     produk digital.</div>
                             </div>
-                            <a href="{{ $item->product->digital_resource }}" target="_blank"
-                                style="display: inline-flex; align-items: center; gap: 8px; background: #1eb349; color: #ffffff; padding: 0.6rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.85rem; transition: background 0.2s;">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-                                </svg>
-                                Buka Link Produk
-                            </a>
+                            <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+                                {{-- Rating Button (Neutral Gray Pill) --}}
+                                <button type="button" class="btn-rating-gray"
+                                    onclick="openProductRatingModal({{ $item->product_id }}, '{{ addslashes($item->product_name) }}', {{ $currentRatingVal }}, {{ $order->id }})"
+                                    style="display: inline-flex; align-items: center; gap: 6px; background: #f1f5f9; color: #475569; border: 1.5px solid #cbd5e1; padding: 0.6rem 1.1rem; border-radius: 999px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease;">
+                                    <svg width="15" height="15" fill="{{ $currentRatingVal > 0 ? '#f59e0b' : 'none' }}" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                    </svg>
+                                    <span id="btn-rating-text-{{ $item->product_id }}">
+                                        {{ $currentRatingVal > 0 ? 'Rating (' . $currentRatingVal . '★)' : 'Beri Rating' }}
+                                    </span>
+                                </button>
+
+                                {{-- Buka Link Produk Button (Buyle Gradient Pill) --}}
+                                <a href="{{ $item->product->digital_resource }}" target="_blank"
+                                    style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color: #ffffff; padding: 0.6rem 1.25rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem; box-shadow: 0 4px 14px rgba(30,179,73,0.35); border: none; transition: all 0.2s ease;"
+                                    onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                                    </svg>
+                                    Buka Link Produk
+                                </a>
+                            </div>
                         </div>
                     @endif
                 @endforeach
@@ -597,7 +619,179 @@
         </div>
     </div>
 
+    {{-- Interactive Star Rating Modal (1 - 5 Stars) --}}
+    <div id="productRatingModal"
+        style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(6px);z-index:99999;align-items:center;justify-content:center;padding:1rem;opacity:0;transition:opacity .2s;">
+        <div id="productRatingModalBox"
+            style="background:#fff;border-radius:24px;padding:2rem;width:100%;max-width:400px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.18);transform:scale(0.95);transition:transform .2s;position:relative;">
+            <button type="button" onclick="closeProductRatingModal()"
+                style="position:absolute;top:16px;right:16px;background:#f1f5f9;border:none;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#64748b;cursor:pointer;font-size:18px;">&times;</button>
+
+            <div
+                style="width:56px;height:56px;background:#fef3c7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;color:#f59e0b;">
+                <svg width="28" height="28" fill="#f59e0b" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+            </div>
+
+            <h3 style="font-size:1.15rem;font-weight:800;color:#0f172a;margin:0 0 0.35rem;" id="ratingModalTitle">Beri Rating Produk</h3>
+            <p style="font-size:0.82rem;color:#64748b;margin:0 0 1.25rem;line-height:1.4;" id="ratingModalProductName"></p>
+
+            {{-- 5-Star SVG Selector with Micro Animations --}}
+            <div style="display:flex;justify-content:center;gap:8px;margin-bottom:0.75rem;" id="starContainer">
+                @for($i = 1; $i <= 5; $i++)
+                    <button type="button" class="star-rating-btn" data-star="{{ $i }}" onclick="selectRating({{ $i }})" onmouseenter="previewRating({{ $i }})" onmouseleave="resetPreviewRating()" style="background:none;border:none;cursor:pointer;padding:4px;transition:transform 0.15s ease;">
+                        <svg width="34" height="34" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" viewBox="0 0 24 24" class="star-svg-{{ $i }}" style="transition:all 0.2s ease;">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                    </button>
+                @endfor
+            </div>
+
+            {{-- Interactive Satisfaction Indicator Label --}}
+            <div id="ratingIndicatorText" style="font-size:0.9rem;font-weight:700;color:#f59e0b;min-height:24px;margin-bottom:1.5rem;">
+                Pilih Bintang (1 - 5)
+            </div>
+
+            <input type="hidden" id="ratingProductId" value="">
+            <input type="hidden" id="ratingOrderId" value="">
+            <input type="hidden" id="selectedRatingValue" value="0">
+
+            <button type="button" onclick="submitRatingAjax()" id="btnSubmitRating" disabled
+                style="width:100%;padding:0.8rem;background:#cbd5e1;color:#ffffff;border:none;border-radius:999px;font-weight:700;font-size:0.9rem;cursor:not-allowed;transition:all 0.2s ease;">
+                Simpan Rating
+            </button>
+        </div>
+    </div>
+
     <script>
+        const ratingLabels = {
+            1: 'Sangat Kecewa 😞',
+            2: 'Kecewa 🙁',
+            3: 'Cukup 😐',
+            4: 'Puas 😊',
+            5: 'Sangat Puas! 🤩'
+        };
+        let currentSelectedStar = 0;
+
+        function openProductRatingModal(prodId, prodName, currentRating, orderId) {
+            document.getElementById('ratingProductId').value = prodId;
+            document.getElementById('ratingOrderId').value = orderId || '';
+            document.getElementById('ratingModalProductName').textContent = prodName;
+            
+            currentSelectedStar = currentRating || 0;
+            selectRating(currentSelectedStar, false);
+
+            const modal = document.getElementById('productRatingModal');
+            const box = document.getElementById('productRatingModalBox');
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                box.style.transform = 'scale(1)';
+            }, 10);
+        }
+
+        function closeProductRatingModal() {
+            const modal = document.getElementById('productRatingModal');
+            const box = document.getElementById('productRatingModalBox');
+            modal.style.opacity = '0';
+            box.style.transform = 'scale(0.95)';
+            setTimeout(() => { modal.style.display = 'none'; }, 200);
+        }
+
+        function selectRating(val) {
+            currentSelectedStar = val;
+            document.getElementById('selectedRatingValue').value = val;
+            updateStarDisplay(val);
+
+            const btn = document.getElementById('btnSubmitRating');
+            if (val > 0) {
+                btn.disabled = false;
+                btn.style.background = 'linear-gradient(135deg, #1eb349 0%, #a5cf37 100%)';
+                btn.style.cursor = 'pointer';
+                btn.style.boxShadow = '0 4px 14px rgba(30,179,73,0.35)';
+            } else {
+                btn.disabled = true;
+                btn.style.background = '#cbd5e1';
+                btn.style.cursor = 'not-allowed';
+                btn.style.boxShadow = 'none';
+            }
+
+            document.getElementById('ratingIndicatorText').textContent = ratingLabels[val] || 'Pilih Bintang (1 - 5)';
+        }
+
+        function previewRating(val) {
+            updateStarDisplay(val);
+            document.getElementById('ratingIndicatorText').textContent = ratingLabels[val] || 'Pilih Bintang';
+        }
+
+        function resetPreviewRating() {
+            updateStarDisplay(currentSelectedStar);
+            document.getElementById('ratingIndicatorText').textContent = ratingLabels[currentSelectedStar] || 'Pilih Bintang (1 - 5)';
+        }
+
+        function updateStarDisplay(val) {
+            for (let i = 1; i <= 5; i++) {
+                const btn = document.querySelector(`.star-rating-btn[data-star="${i}"]`);
+                const svg = document.querySelector(`.star-svg-${i}`);
+                if (svg) {
+                    if (i <= val) {
+                        svg.setAttribute('fill', '#f59e0b');
+                        svg.setAttribute('stroke', '#f59e0b');
+                        if (btn) btn.style.transform = 'scale(1.18)';
+                    } else {
+                        svg.setAttribute('fill', '#e2e8f0');
+                        svg.setAttribute('stroke', '#cbd5e1');
+                        if (btn) btn.style.transform = 'scale(1)';
+                    }
+                }
+            }
+        }
+
+        function submitRatingAjax() {
+            const prodId = document.getElementById('ratingProductId').value;
+            const orderId = document.getElementById('ratingOrderId').value;
+            const val = document.getElementById('selectedRatingValue').value;
+
+            if (!val || val < 1) return;
+
+            const btn = document.getElementById('btnSubmitRating');
+            btn.disabled = true;
+            btn.textContent = 'Menyimpan...';
+
+            fetch('{{ route("account.orders.rating") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    product_id: prodId,
+                    order_id: orderId,
+                    rating: val
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    closeProductRatingModal();
+                    const txtEl = document.getElementById('btn-rating-text-' + prodId);
+                    if (txtEl) txtEl.textContent = 'Rating (' + val + '★)';
+                    alert(data.message);
+                } else {
+                    alert(data.message || 'Gagal menyimpan rating.');
+                    btn.disabled = false;
+                    btn.textContent = 'Simpan Rating';
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.textContent = 'Simpan Rating';
+                alert('Terjadi kesalahan koneksi.');
+            });
+        }
+
         function openConfirmModal() {
             const modal = document.getElementById('confirmModal');
             const box = document.getElementById('confirmModalBox');

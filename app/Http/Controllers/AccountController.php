@@ -387,4 +387,46 @@ class AccountController extends Controller
 
         return back()->with('success', 'Profil berhasil diperbarui!');
     }
+
+    public function submitRating(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'order_id'   => 'nullable|exists:orders,id',
+            'rating'     => 'required|integer|min:1|max:5',
+        ]);
+
+        $user = Auth::user();
+        $productId = (int)$request->product_id;
+        $ratingVal = (int)$request->rating;
+
+        // Verify buyer owns an order for this product
+        $hasPurchased = $user->orders()
+            ->whereIn('status', ['confirmed', 'processing', 'shipped', 'delivered', 'completed'])
+            ->whereHas('items', fn($q) => $q->where('product_id', $productId))
+            ->exists();
+
+        if (!$hasPurchased) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda hanya dapat memberikan rating untuk produk yang telah Anda beli.'
+            ], 403);
+        }
+
+        \App\Models\ProductRating::updateOrCreate(
+            ['product_id' => $productId, 'user_id' => $user->id],
+            ['order_id' => $request->order_id ?: null, 'rating' => $ratingVal]
+        );
+
+        $avgRating = \App\Models\ProductRating::where('product_id', $productId)->avg('rating');
+        if ($avgRating) {
+            \App\Models\Product::where('id', $productId)->update(['rating' => round($avgRating, 1)]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Terima kasih! Rating ' . $ratingVal . ' bintang Anda berhasil disimpan.',
+            'rating'  => $ratingVal
+        ]);
+    }
 }

@@ -174,6 +174,7 @@ Route::middleware(['auth'])->prefix('akun')->name('account.')->group(function ()
     Route::get('/pesanan',   [AccountController::class, 'orders'])->name('orders');
     Route::get('/pesanan/{order}', [AccountController::class, 'showOrder'])->name('orders.show');
     Route::post('/pesanan/{order}/selesai', [AccountController::class, 'completeOrder'])->name('orders.complete');
+    Route::post('/pesanan/rating', [AccountController::class, 'submitRating'])->name('orders.rating');
     Route::get('/pesanan/{order}/unduh-tiket', [AccountController::class, 'downloadTicketReceipt'])->name('orders.ticket.download');
     Route::get('/alamat',    [AccountController::class, 'addresses'])->name('addresses');
     Route::post('/alamat',   [AccountController::class, 'storeAddress'])->name('addresses.store');

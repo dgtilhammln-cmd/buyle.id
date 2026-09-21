@@ -413,7 +413,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return back()->withInput()->withErrors(['email' => 'Email tidak terdaftar di sistem kami.']);
+            return back()->withInput()->withErrors(['email' => 'Email tidak terdaftar, cek ulang sisst...']);
         }
 
         $token = Str::random(64);
