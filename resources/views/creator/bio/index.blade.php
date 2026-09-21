@@ -1552,25 +1552,30 @@
                         cursor: pointer;
                         transition: all 0.2s ease;
                     }
+
                     .prof-subtab-btn:hover {
                         background: #ffffff;
                         color: #0f172a;
                         border-color: #94a3b8;
                     }
+
                     .prof-subtab-btn.active {
                         background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
                         color: #ffffff !important;
                         border: 1.5px solid transparent !important;
                         box-shadow: 0 4px 14px rgba(30, 179, 73, 0.32) !important;
                     }
+
                     .prof-subtab-btn.active svg {
                         stroke: #ffffff !important;
                     }
                 </style>
-                <div style="display:flex; gap:0.6rem; margin-bottom:1.5rem; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.85rem; flex-wrap:wrap;">
+                <div
+                    style="display:flex; gap:0.6rem; margin-bottom:1.5rem; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.85rem; flex-wrap:wrap;">
                     <button type="button" class="prof-subtab-btn active" id="btn-subtab-info"
                         onclick="switchProfileSubtab('subtab-profile-info', this)">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <circle cx="12" cy="8" r="4" />
                             <path d="M20 21a8 8 0 1 0-16 0" />
                         </svg>
@@ -1578,11 +1583,20 @@
                     </button>
                     <button type="button" class="prof-subtab-btn" id="btn-subtab-about"
                         onclick="switchProfileSubtab('subtab-homepage-about', this)">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                             <polyline points="9 22 9 12 15 12 15 22" />
                         </svg>
-                        Homepage/Beranda
+                        Homepage / About Us
+                    </button>
+                    <button type="button" class="prof-subtab-btn" id="btn-subtab-services"
+                        onclick="switchProfileSubtab('subtab-homepage-services', this)">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                        </svg>
+                        Homepage / Jasa &amp; Layanan
                     </button>
                 </div>
 
@@ -1732,182 +1746,335 @@
                                         class="form-input" placeholder="#products-section atau https://...">
                                 </div>
                             </div>
-                             {{-- Card 1: Dark Gradient Card & Media --}}
-                        <div class="prof-card">
-                            <div class="prof-card-head">2. Card 1 (Box Gradient Gelap &amp; Logo/Gambar)</div>
-                            <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
-                                <div class="form-group" style="grid-column:1/-1;">
-                                    <label class="form-label">Judul Card 1</label>
-                                    <input type="text" name="about_card1_title"
-                                        value="{{ old('about_card1_title', $cfg['about_card1_title'] ?? 'Helping businesses connect, convert, and scale digitally.') }}"
-                                        class="form-input" placeholder="Helping businesses connect...">
-                                </div>
-                                <div class="form-group" style="grid-column:1/-1;">
-                                    <label class="form-label">Deskripsi Card 1</label>
-                                    <textarea name="about_card1_desc" class="form-input" rows="2"
-                                        placeholder="We ensure every marketing drives real results...">{{ old('about_card1_desc', $cfg['about_card1_desc'] ?? 'We ensure every marketing drives real results increased traffic and engagement to higher and revenue') }}</textarea>
-                                </div>
-
-                                {{-- Logo Pojok Kiri Atas --}}
-                                <div class="form-group" style="grid-column:1/-1; background:#f8fafc; padding:1rem; border-radius:12px; border:1px solid #e2e8f0;">
-                                    <label class="form-label" style="font-weight:700; color:#0f172a;">Logo / Ikon Pojok Kiri Atas Card 1</label>
-                                    @if(!empty($cfg['about_card1_logo_image']))
-                                        <div style="margin-bottom:0.5rem; display:flex; align-items:center; gap:1rem;">
-                                            <img src="{{ asset('storage/' . $cfg['about_card1_logo_image']) }}"
-                                                style="max-height:48px; max-width:140px; object-fit:contain; border-radius:6px; background:#0f172a; padding:6px;">
-                                            <label style="font-size:0.75rem; color:#ef4444; display:flex; align-items:center; gap:0.25rem; cursor:pointer;">
-                                                <input type="checkbox" name="delete_about_card1_logo" value="1"> Hapus Logo Ini (Gunakan Ikon Default)
-                                            </label>
-                                        </div>
-                                    @endif
-                                    <input type="file" name="about_card1_logo_image" accept="image/*" class="form-input" style="height:auto; padding:0.4rem;">
-                                    <small style="color:#94a3b8; font-size:0.72rem; display:block; margin-top:0.3rem;">Kosongkan jika ingin menggunakan ikon bawaan (default 4-dots lime green).</small>
-                                </div>
-
-                                {{-- Gradasi Warna & Background Image Card 1 --}}
-                                <div class="form-group" style="grid-column:1/-1; background:#f8fafc; padding:1rem; border-radius:12px; border:1px solid #e2e8f0; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                                    <div style="grid-column:1/-1; font-weight:700; color:#0f172a; font-size:0.85rem;">Tampilan Gradasi &amp; Background Card 1</div>
-                                    <div class="form-group">
-                                        <label class="form-label">Warna Gradasi Awal (Start)</label>
-                                        <input type="color" name="about_card1_bg_color1" value="{{ old('about_card1_bg_color1', $cfg['about_card1_bg_color1'] ?? '#09090b') }}" class="form-input" style="height:40px; padding:0.2rem; cursor:pointer;">
+                            {{-- Card 1: Dark Gradient Card & Media --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head">2. Card 1 (Box Gradient Gelap &amp; Logo/Gambar)</div>
+                                <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                                    <div class="form-group" style="grid-column:1/-1;">
+                                        <label class="form-label">Judul Card 1</label>
+                                        <input type="text" name="about_card1_title"
+                                            value="{{ old('about_card1_title', $cfg['about_card1_title'] ?? 'Helping businesses connect, convert, and scale digitally.') }}"
+                                            class="form-input" placeholder="Helping businesses connect...">
                                     </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Warna Gradasi Akhir (End)</label>
-                                        <input type="color" name="about_card1_bg_color2" value="{{ old('about_card1_bg_color2', $cfg['about_card1_bg_color2'] ?? '#312e81') }}" class="form-input" style="height:40px; padding:0.2rem; cursor:pointer;">
+                                    <div class="form-group" style="grid-column:1/-1;">
+                                        <label class="form-label">Deskripsi Card 1</label>
+                                        <textarea name="about_card1_desc" class="form-input" rows="2"
+                                            placeholder="We ensure every marketing drives real results...">{{ old('about_card1_desc', $cfg['about_card1_desc'] ?? 'We ensure every marketing drives real results increased traffic and engagement to higher and revenue') }}</textarea>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Upload Background Image Card 1 (Opsional)</label>
-                                        @if(!empty($cfg['about_card1_bg_image']))
-                                            <div style="margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem;">
-                                                <img src="{{ asset('storage/' . $cfg['about_card1_bg_image']) }}" style="width:80px; height:45px; object-fit:cover; border-radius:6px;">
-                                                <label style="font-size:0.72rem; color:#ef4444; cursor:pointer;">
-                                                    <input type="checkbox" name="delete_about_card1_bg_image" value="1"> Hapus BG
+
+                                    {{-- Logo Pojok Kiri Atas --}}
+                                    <div class="form-group"
+                                        style="grid-column:1/-1; background:#f8fafc; padding:1rem; border-radius:12px; border:1px solid #e2e8f0;">
+                                        <label class="form-label" style="font-weight:700; color:#0f172a;">Logo / Ikon Pojok
+                                            Kiri Atas Card 1</label>
+                                        @if(!empty($cfg['about_card1_logo_image']))
+                                            <div style="margin-bottom:0.5rem; display:flex; align-items:center; gap:1rem;">
+                                                <img src="{{ asset('storage/' . $cfg['about_card1_logo_image']) }}"
+                                                    style="max-height:48px; max-width:140px; object-fit:contain; border-radius:6px; background:#0f172a; padding:6px;">
+                                                <label
+                                                    style="font-size:0.75rem; color:#ef4444; display:flex; align-items:center; gap:0.25rem; cursor:pointer;">
+                                                    <input type="checkbox" name="delete_about_card1_logo" value="1"> Hapus Logo
+                                                    Ini (Gunakan Ikon Default)
                                                 </label>
                                             </div>
                                         @endif
-                                        <input type="file" name="about_card1_bg_image" accept="image/*" class="form-input" style="height:auto; padding:0.4rem;">
+                                        <input type="file" name="about_card1_logo_image" accept="image/*" class="form-input"
+                                            style="height:auto; padding:0.4rem;">
+                                        <small
+                                            style="color:#94a3b8; font-size:0.72rem; display:block; margin-top:0.3rem;">Kosongkan
+                                            jika ingin menggunakan ikon bawaan (default 4-dots lime green).</small>
+                                    </div>
+
+                                    {{-- Gradasi Warna & Background Image Card 1 --}}
+                                    <div class="form-group"
+                                        style="grid-column:1/-1; background:#f8fafc; padding:1rem; border-radius:12px; border:1px solid #e2e8f0; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                                        <div style="grid-column:1/-1; font-weight:700; color:#0f172a; font-size:0.85rem;">
+                                            Tampilan Gradasi &amp; Background Card 1</div>
+                                        <div class="form-group">
+                                            <label class="form-label">Warna Gradasi Awal (Start)</label>
+                                            <input type="color" name="about_card1_bg_color1"
+                                                value="{{ old('about_card1_bg_color1', $cfg['about_card1_bg_color1'] ?? '#09090b') }}"
+                                                class="form-input" style="height:40px; padding:0.2rem; cursor:pointer;">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Warna Gradasi Akhir (End)</label>
+                                            <input type="color" name="about_card1_bg_color2"
+                                                value="{{ old('about_card1_bg_color2', $cfg['about_card1_bg_color2'] ?? '#312e81') }}"
+                                                class="form-input" style="height:40px; padding:0.2rem; cursor:pointer;">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Upload Background Image Card 1 (Opsional)</label>
+                                            @if(!empty($cfg['about_card1_bg_image']))
+                                                <div
+                                                    style="margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem;">
+                                                    <img src="{{ asset('storage/' . $cfg['about_card1_bg_image']) }}"
+                                                        style="width:80px; height:45px; object-fit:cover; border-radius:6px;">
+                                                    <label style="font-size:0.72rem; color:#ef4444; cursor:pointer;">
+                                                        <input type="checkbox" name="delete_about_card1_bg_image" value="1">
+                                                        Hapus BG
+                                                    </label>
+                                                </div>
+                                            @endif
+                                            <input type="file" name="about_card1_bg_image" accept="image/*"
+                                                class="form-input" style="height:auto; padding:0.4rem;">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Transparansi Image Overlay (0 - 100%)</label>
+                                            <input type="number" name="about_card1_bg_opacity" min="0" max="100"
+                                                value="{{ old('about_card1_bg_opacity', $cfg['about_card1_bg_opacity'] ?? 30) }}"
+                                                class="form-input" placeholder="30">
+                                            <small style="color:#94a3b8; font-size:0.7rem;">Default: 30% (semakin kecil
+                                                semakin samar).</small>
+                                        </div>
+                                    </div>
+
+                                    {{-- Poin Keunggulan (Maks 5) --}}
+                                    <div class="form-group"
+                                        style="grid-column:1/-1; background:#f0fdf4; padding:1rem; border-radius:12px; border:1px solid #bbf7d0;">
+                                        <label class="form-label"
+                                            style="font-weight:700; color:#166534; margin-bottom:0.75rem;">Poin Keunggulan
+                                            (Maksimal 5 Poin)</label>
+                                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem;">
+                                            <div>
+                                                <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Keunggulan
+                                                    1</label>
+                                                <input type="text" name="about_card1_check1"
+                                                    value="{{ old('about_card1_check1', $cfg['about_card1_check1'] ?? 'SEO & Search Visibility') }}"
+                                                    class="form-input" placeholder="SEO & Search Visibility">
+                                            </div>
+                                            <div>
+                                                <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Keunggulan
+                                                    2</label>
+                                                <input type="text" name="about_card1_check2"
+                                                    value="{{ old('about_card1_check2', $cfg['about_card1_check2'] ?? 'Data-Driven Strategy') }}"
+                                                    class="form-input" placeholder="Data-Driven Strategy">
+                                            </div>
+                                            <div>
+                                                <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Keunggulan
+                                                    3</label>
+                                                <input type="text" name="about_card1_check3"
+                                                    value="{{ old('about_card1_check3', $cfg['about_card1_check3'] ?? '') }}"
+                                                    class="form-input" placeholder="Misal: High Conversion Guarantee">
+                                            </div>
+                                            <div>
+                                                <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Keunggulan
+                                                    4</label>
+                                                <input type="text" name="about_card1_check4"
+                                                    value="{{ old('about_card1_check4', $cfg['about_card1_check4'] ?? '') }}"
+                                                    class="form-input" placeholder="Misal: 24/7 Dedicated Support">
+                                            </div>
+                                            <div style="grid-column:1/-1;">
+                                                <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Keunggulan
+                                                    5</label>
+                                                <input type="text" name="about_card1_check5"
+                                                    value="{{ old('about_card1_check5', $cfg['about_card1_check5'] ?? '') }}"
+                                                    class="form-input" placeholder="Misal: Scalable Growth Engine">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Card 2: Foto/Gambar --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head">3. Card 2 (Foto / Banner Center)</div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label class="form-label">Upload Foto Card Center</label>
+                                        @if(!empty($cfg['about_card2_image']))
+                                            <div style="margin-bottom:0.75rem; display:flex; align-items:center; gap:1rem;">
+                                                <img src="{{ asset('storage/' . $cfg['about_card2_image']) }}"
+                                                    style="width:120px; height:80px; border-radius:10px; object-fit:cover; border:2px solid #1eb349;">
+                                                <label
+                                                    style="font-size:0.75rem; color:#ef4444; display:flex; align-items:center; gap:0.25rem; cursor:pointer;">
+                                                    <input type="checkbox" name="delete_about_card2_image" value="1"> Hapus Foto
+                                                    Ini
+                                                </label>
+                                            </div>
+                                        @endif
+                                        <input type="file" name="about_card2_image" accept="image/*" class="form-input"
+                                            style="height:auto; padding:0.5rem;">
+                                        <small
+                                            style="color:#94a3b8; font-size:0.72rem; display:block; margin-top:0.3rem;">Format
+                                            rekomendasi: JPG/PNG/WebP rasio 3:4 portrait atau 4:3.</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Card 3: Statistik & Tombol CTA --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head">4. Card 3 (Statistik &amp; Tombol Call to Action)</div>
+                                <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                                    <div class="form-group">
+                                        <label class="form-label">Angka / Persentase Statistik</label>
+                                        <input type="text" name="about_card3_stat"
+                                            value="{{ old('about_card3_stat', $cfg['about_card3_stat'] ?? '63%') }}"
+                                            class="form-input" placeholder="63%">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">Transparansi Image Overlay (0 - 100%)</label>
-                                        <input type="number" name="about_card1_bg_opacity" min="0" max="100" value="{{ old('about_card1_bg_opacity', $cfg['about_card1_bg_opacity'] ?? 30) }}" class="form-input" placeholder="30">
-                                        <small style="color:#94a3b8; font-size:0.7rem;">Default: 30% (semakin kecil semakin samar).</small>
+                                        <label class="form-label">Label Statistik</label>
+                                        <input type="text" name="about_card3_title"
+                                            value="{{ old('about_card3_title', $cfg['about_card3_title'] ?? 'Business develop growth') }}"
+                                            class="form-input" placeholder="Business develop growth">
                                     </div>
-                                </div>
-
-                                {{-- Poin Keunggulan (Maks 5) --}}
-                                <div class="form-group" style="grid-column:1/-1; background:#f0fdf4; padding:1rem; border-radius:12px; border:1px solid #bbf7d0;">
-                                    <label class="form-label" style="font-weight:700; color:#166534; margin-bottom:0.75rem;">Poin Keunggulan (Maksimal 5 Poin)</label>
-                                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem;">
-                                        <div>
-                                            <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Poin Keunggulan 1</label>
-                                            <input type="text" name="about_card1_check1"
-                                                value="{{ old('about_card1_check1', $cfg['about_card1_check1'] ?? 'SEO & Search Visibility') }}"
-                                                class="form-input" placeholder="SEO & Search Visibility">
-                                        </div>
-                                        <div>
-                                            <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Poin Keunggulan 2</label>
-                                            <input type="text" name="about_card1_check2"
-                                                value="{{ old('about_card1_check2', $cfg['about_card1_check2'] ?? 'Data-Driven Strategy') }}"
-                                                class="form-input" placeholder="Data-Driven Strategy">
-                                        </div>
-                                        <div>
-                                            <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Poin Keunggulan 3</label>
-                                            <input type="text" name="about_card1_check3"
-                                                value="{{ old('about_card1_check3', $cfg['about_card1_check3'] ?? '') }}"
-                                                class="form-input" placeholder="Misal: High Conversion Guarantee">
-                                        </div>
-                                        <div>
-                                            <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Poin Keunggulan 4</label>
-                                            <input type="text" name="about_card1_check4"
-                                                value="{{ old('about_card1_check4', $cfg['about_card1_check4'] ?? '') }}"
-                                                class="form-input" placeholder="Misal: 24/7 Dedicated Support">
-                                        </div>
-                                        <div style="grid-column:1/-1;">
-                                            <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Poin Keunggulan 5</label>
-                                            <input type="text" name="about_card1_check5"
-                                                value="{{ old('about_card1_check5', $cfg['about_card1_check5'] ?? '') }}"
-                                                class="form-input" placeholder="Misal: Scalable Growth Engine">
-                                        </div>
+                                    <div class="form-group" style="grid-column:1/-1;">
+                                        <label class="form-label">Deskripsi Card 3</label>
+                                        <textarea name="about_card3_desc" class="form-input" rows="2"
+                                            placeholder="We help brands increase visibility...">{{ old('about_card3_desc', $cfg['about_card3_desc'] ?? 'We help brands increase visibility, engage the right audience, and convert leads into loyal customers.') }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Teks Tombol CTA Utama</label>
+                                        <input type="text" name="about_card3_btn_text"
+                                            value="{{ old('about_card3_btn_text', $cfg['about_card3_btn_text'] ?? 'GET STARTED') }}"
+                                            class="form-input" placeholder="GET STARTED">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Link Tombol CTA Utama</label>
+                                        <input type="text" name="about_card3_btn_link"
+                                            value="{{ old('about_card3_btn_link', $cfg['about_card3_btn_link'] ?? '#products-section') }}"
+                                            class="form-input" placeholder="#products-section atau https://...">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Warna Background Tombol CTA Card 3</label>
+                                        <input type="color" name="about_card3_btn_bg"
+                                            value="{{ old('about_card3_btn_bg', $cfg['about_card3_btn_bg'] ?? '#1d4ed8') }}"
+                                            class="form-input" style="height:40px; padding:0.2rem; cursor:pointer;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Warna Teks Tombol CTA Card 3</label>
+                                        <input type="color" name="about_card3_btn_color"
+                                            value="{{ old('about_card3_btn_color', $cfg['about_card3_btn_color'] ?? '#ffffff') }}"
+                                            class="form-input" style="height:40px; padding:0.2rem; cursor:pointer;">
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {{-- Card 2: Foto/Gambar --}}
+                            <div style="display:flex; justify-content:flex-end; margin-top:1.25rem;">
+                                <button type="submit" class="btn-submit-sm">Simpan About Us (Tema 5)</button>
+                            </div>
+                    </form>
+                </div>
+
+                {{-- SUBTAB 3: HOMEPAGE / JASA & LAYANAN (TEMA 5) --}}
+                <div class="prof-subtab-pane" id="subtab-homepage-services" style="display:none;">
+                    <form action="{{ route('creator.bio.save-profile') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="services_enabled_present" value="1">
+
+                        {{-- Card Toggle Active --}}
                         <div class="prof-card">
-                            <div class="prof-card-head">3. Card 2 (Foto / Banner Center)</div>
+                            <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                <span>Status Section Jasa &amp; Layanan (Tema 5)</span>
+                                <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                    <input type="checkbox" name="services_enabled" value="1" {{ ($cfg['services_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
+                                    Aktifkan Section Jasa
+                                </label>
+                            </div>
                             <div class="card-body">
-                                <div class="form-group">
-                                    <label class="form-label">Upload Foto Card Center</label>
-                                    @if(!empty($cfg['about_card2_image']))
-                                        <div style="margin-bottom:0.75rem; display:flex; align-items:center; gap:1rem;">
-                                            <img src="{{ asset('storage/' . $cfg['about_card2_image']) }}"
-                                                style="width:120px; height:80px; border-radius:10px; object-fit:cover; border:2px solid #1eb349;">
-                                            <label
-                                                style="font-size:0.75rem; color:#ef4444; display:flex; align-items:center; gap:0.25rem; cursor:pointer;">
-                                                <input type="checkbox" name="delete_about_card2_image" value="1"> Hapus Foto Ini
-                                            </label>
-                                        </div>
-                                    @endif
-                                    <input type="file" name="about_card2_image" accept="image/*" class="form-input"
-                                        style="height:auto; padding:0.5rem;">
-                                    <small
-                                        style="color:#94a3b8; font-size:0.72rem; display:block; margin-top:0.3rem;">Format
-                                        rekomendasi: JPG/PNG/WebP rasio 3:4 portrait atau 4:3.</small>
-                                </div>
+                                <p style="font-size:0.8rem; color:#64748b; margin:0;">
+                                    Sistem akan otomatis mengambil produk bertipe <strong>Jasa / Layanan / Service</strong> yang Anda miliki. Jika Anda belum membuat produk tipe Jasa, Anda dapat mengisi daftar jasa manual di bawah ini.
+                                </p>
                             </div>
                         </div>
 
-                        {{-- Card 3: Statistik & Tombol CTA --}}
+                        {{-- Card Header & Description --}}
                         <div class="prof-card">
-                            <div class="prof-card-head">4. Card 3 (Statistik &amp; Tombol Call to Action)</div>
+                            <div class="prof-card-head">1. Header &amp; Deskripsi Section Jasa</div>
                             <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
-                                <div class="form-group">
-                                    <label class="form-label">Angka / Persentase Statistik</label>
-                                    <input type="text" name="about_card3_stat"
-                                        value="{{ old('about_card3_stat', $cfg['about_card3_stat'] ?? '63%') }}"
-                                        class="form-input" placeholder="63%">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Label Statistik</label>
-                                    <input type="text" name="about_card3_title"
-                                        value="{{ old('about_card3_title', $cfg['about_card3_title'] ?? 'Business develop growth') }}"
-                                        class="form-input" placeholder="Business develop growth">
+                                <div class="form-group" style="grid-column:1/-1;">
+                                    <label class="form-label">Sub-Judul / Badge Tagline (Eyebrow)</label>
+                                    <input type="text" name="services_eyebrow"
+                                        value="{{ old('services_eyebrow', $cfg['services_eyebrow'] ?? 'MISSION') }}"
+                                        class="form-input" placeholder="MISSION atau JASA & LAYANAN">
                                 </div>
                                 <div class="form-group" style="grid-column:1/-1;">
-                                    <label class="form-label">Deskripsi Card 3</label>
-                                    <textarea name="about_card3_desc" class="form-input" rows="2"
-                                        placeholder="We help brands increase visibility...">{{ old('about_card3_desc', $cfg['about_card3_desc'] ?? 'We help brands increase visibility, engage the right audience, and convert leads into loyal customers.') }}</textarea>
+                                    <label class="form-label">Judul Utama H2 (Headline)</label>
+                                    <textarea name="services_headline" class="form-input" rows="2"
+                                        placeholder="We've orchestrated Intelligence.">{{ old('services_headline', $cfg['services_headline'] ?? "We've orchestrated Intelligence.") }}</textarea>
+                                </div>
+                                <div class="form-group" style="grid-column:1/-1;">
+                                    <label class="form-label">Deskripsi Ringkas (Sisi Kanan)</label>
+                                    <textarea name="services_description" class="form-input" rows="3"
+                                        placeholder="Metafore brings clarity, not complexity...">{{ old('services_description', $cfg['services_description'] ?? 'Metafore brings clarity, not complexity - uniting every agent into one adaptive system that learns, acts, and evolves across your enterprise.') }}</textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Teks Tombol CTA Utama</label>
-                                    <input type="text" name="about_card3_btn_text"
-                                        value="{{ old('about_card3_btn_text', $cfg['about_card3_btn_text'] ?? 'GET STARTED') }}"
-                                        class="form-input" placeholder="GET STARTED">
+                                    <label class="form-label">Teks Tombol CTA</label>
+                                    <input type="text" name="services_btn_text"
+                                        value="{{ old('services_btn_text', $cfg['services_btn_text'] ?? 'Explore More') }}"
+                                        class="form-input" placeholder="Explore More">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Link Tombol CTA Utama</label>
-                                    <input type="text" name="about_card3_btn_link"
-                                        value="{{ old('about_card3_btn_link', $cfg['about_card3_btn_link'] ?? '#products-section') }}"
-                                        class="form-input" placeholder="#products-section atau https://...">
+                                    <label class="form-label">Link Tombol CTA</label>
+                                    <input type="text" name="services_btn_link"
+                                        value="{{ old('services_btn_link', $cfg['services_btn_link'] ?? '#services-section') }}"
+                                        class="form-input" placeholder="#services-section atau https://...">
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-label">Warna Background Tombol CTA Card 3</label>
-                                    <input type="color" name="about_card3_btn_bg"
-                                        value="{{ old('about_card3_btn_bg', $cfg['about_card3_btn_bg'] ?? '#1d4ed8') }}"
-                                        class="form-input" style="height:40px; padding:0.2rem; cursor:pointer;">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Warna Teks Tombol CTA Card 3</label>
-                                    <input type="color" name="about_card3_btn_color"
-                                        value="{{ old('about_card3_btn_color', $cfg['about_card3_btn_color'] ?? '#ffffff') }}"
-                                        class="form-input" style="height:40px; padding:0.2rem; cursor:pointer;">
-                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Custom Services List (Card 1 to 4) --}}
+                        <div class="prof-card">
+                            <div class="prof-card-head">2. Manual Fallback List Jasa (Jika Belum Ada Produk Tipe Jasa)</div>
+                            <div class="card-body" style="display:flex; flex-direction:column; gap:1.5rem;">
+                                @php
+                                    $defaultServicesConfig = [
+                                        1 => ['number' => '01.', 'title' => 'Amplify Intelligence', 'desc' => 'Coordinate your entire organization through orchestrated agents that ensure precision, compliance, and efficiency everywhere you operate.'],
+                                        2 => ['number' => '02.', 'title' => 'Command Global Operations', 'desc' => 'Coordinate your entire organization through orchestrated agents that ensure precision, compliance, and efficiency everywhere you operate.'],
+                                        3 => ['number' => '03.', 'title' => 'Eliminate Silos', 'desc' => 'Break down data barriers and connect cross-functional teams with seamless real-time data sync and automated workflows.'],
+                                        4 => ['number' => '04.', 'title' => 'Scale with Clarity', 'desc' => 'Empower your business growth with actionable analytics, transparent reporting, and scalable cloud infrastructure.'],
+                                    ];
+                                @endphp
+
+                                @for($i = 1; $i <= 4; $i++)
+                                    @php
+                                        $dItem = $defaultServicesConfig[$i];
+                                    @endphp
+                                    <div style="background:#f8fafc; padding:1.2rem; border-radius:14px; border:1px solid #e2e8f0; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                                        <div style="grid-column:1/-1; font-weight:700; color:#0f172a; font-size:0.9rem; border-bottom:1px solid #e2e8f0; padding-bottom:0.4rem;">
+                                            Card Jasa {{ $i }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Nomor Card (Urutan)</label>
+                                            <input type="text" name="service_{{ $i }}_number"
+                                                value="{{ old("service_{$i}_number", $cfg["service_{$i}_number"] ?? $dItem['number']) }}"
+                                                class="form-input" placeholder="0{{ $i }}.">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Nama / Judul Jasa</label>
+                                            <input type="text" name="service_{{ $i }}_title"
+                                                value="{{ old("service_{$i}_title", $cfg["service_{$i}_title"] ?? $dItem['title']) }}"
+                                                class="form-input" placeholder="Nama jasa...">
+                                        </div>
+                                        <div class="form-group" style="grid-column:1/-1;">
+                                            <label class="form-label">Deskripsi Singkat Jasa</label>
+                                            <textarea name="service_{{ $i }}_desc" class="form-input" rows="2"
+                                                placeholder="Deskripsi jasa...">{{ old("service_{$i}_desc", $cfg["service_{$i}_desc"] ?? $dItem['desc']) }}</textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Upload Foto Jasa {{ $i }}</label>
+                                            @if(!empty($cfg["service_{$i}_image"]))
+                                                <div style="margin-bottom:0.4rem; display:flex; align-items:center; gap:0.5rem;">
+                                                    <img src="{{ asset('storage/' . $cfg["service_{$i}_image"]) }}" style="width:70px; height:45px; object-fit:cover; border-radius:6px;">
+                                                    <label style="font-size:0.72rem; color:#ef4444; cursor:pointer;">
+                                                        <input type="checkbox" name="delete_service_{{ $i }}_image" value="1"> Hapus Foto
+                                                    </label>
+                                                </div>
+                                            @endif
+                                            <input type="file" name="service_{{ $i }}_image" accept="image/*" class="form-input" style="height:auto; padding:0.4rem;">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Link Detail / Order Jasa</label>
+                                            <input type="text" name="service_{{ $i }}_link"
+                                                value="{{ old("service_{$i}_link", $cfg["service_{$i}_link"] ?? '#') }}"
+                                                class="form-input" placeholder="# atau https://...">
+                                        </div>
+                                    </div>
+                                @endfor
                             </div>
                         </div>
 
                         <div style="display:flex; justify-content:flex-end; margin-top:1.25rem;">
-                            <button type="submit" class="btn-submit-sm">Simpan About Us (Tema 5)</button>
+                            <button type="submit" class="btn-submit-sm">Simpan Section Jasa (Tema 5)</button>
                         </div>
                     </form>
                 </div>
@@ -3695,7 +3862,11 @@
         var savedProfileSubtab = localStorage.getItem('bio_profile_subtab');
         if (savedProfileSubtab) {
             var paneEl = document.getElementById(savedProfileSubtab);
-            var btnMap = { 'subtab-profile-info': 'btn-subtab-info', 'subtab-homepage-about': 'btn-subtab-about' };
+            var btnMap = {
+                'subtab-profile-info': 'btn-subtab-info',
+                'subtab-homepage-about': 'btn-subtab-about',
+                'subtab-homepage-services': 'btn-subtab-services'
+            };
             var btnEl = document.getElementById(btnMap[savedProfileSubtab]);
             if (paneEl) switchProfileSubtab(savedProfileSubtab, btnEl);
         }
@@ -3899,20 +4070,20 @@
             popup.id = 'scrapeFailedPopup';
             popup.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);';
             popup.innerHTML = `
-                                                                    <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
-                                                                        <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                                                                            <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                                                        </div>
-                                                                        <div style="font-weight: 600;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
-                                                                        <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
-                                                                        <div style="display:flex;gap:0.6rem;justify-content:center;">
-                                                                            <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight: 500;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
-                                                                            <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight: 500;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
-                                                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                                                                Scan AI
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>`;
+                                                                        <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
+                                                                            <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                                                                                <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                                                            </div>
+                                                                            <div style="font-weight: 600;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
+                                                                            <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
+                                                                            <div style="display:flex;gap:0.6rem;justify-content:center;">
+                                                                                <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight: 500;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
+                                                                                <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight: 500;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
+                                                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                                                                    Scan AI
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>`;
             document.body.appendChild(popup);
             popup.addEventListener('click', function (e) { if (e.target === popup) popup.remove(); });
         }
@@ -4186,11 +4357,11 @@
                 document.getElementById('imgOversizedDesc').innerHTML = 'Foto berikut melebihi batas <strong>1 MB per file</strong>. Harap kompres terlebih dahulu.';
 
                 const listHtml = oversized.map(f => `
-                                                                        <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
-                                                                            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
-                                                                            <span style="color:#EF4444; font-weight: 500;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
-                                                                        </div>
-                                                                    `).join('');
+                                                                            <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
+                                                                                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
+                                                                                <span style="color:#EF4444; font-weight: 500;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                                                                            </div>
+                                                                        `).join('');
 
                 document.getElementById('imgOversizedFileList').innerHTML = listHtml;
                 document.getElementById('imgOversizedModal').classList.add('open');

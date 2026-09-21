@@ -1270,6 +1270,9 @@
 
         {{-- 4. Products Catalog Grid --}}
         @include('bio.theme5.products_grid')
+
+        {{-- 5. Services Section (Tema 5) --}}
+        @include('bio.theme5.services_section')
     </main>
 
     {{-- FLOATING WHATSAPP BUTTON --}}

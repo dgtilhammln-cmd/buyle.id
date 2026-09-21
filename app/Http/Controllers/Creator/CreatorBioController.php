@@ -292,6 +292,32 @@ class CreatorBioController extends Controller
         if ($request->has('about_card3_btn_bg'))   $config['about_card3_btn_bg']   = $request->about_card3_btn_bg;
         if ($request->has('about_card3_btn_color'))$config['about_card3_btn_color']= $request->about_card3_btn_color;
 
+        // Services Section fields (Tema 5)
+        if ($request->has('services_enabled_present')) {
+            $config['services_enabled'] = $request->has('services_enabled') ? 1 : 0;
+        }
+        if ($request->has('services_eyebrow'))     $config['services_eyebrow']     = $request->services_eyebrow;
+        if ($request->has('services_headline'))    $config['services_headline']    = $request->services_headline;
+        if ($request->has('services_description')) $config['services_description'] = $request->services_description;
+        if ($request->has('services_btn_text'))    $config['services_btn_text']    = $request->services_btn_text;
+        if ($request->has('services_btn_link'))    $config['services_btn_link']    = $request->services_btn_link;
+
+        for ($i = 1; $i <= 6; $i++) {
+            if ($request->has("service_{$i}_number")) $config["service_{$i}_number"] = $request->input("service_{$i}_number");
+            if ($request->has("service_{$i}_title"))  $config["service_{$i}_title"]  = $request->input("service_{$i}_title");
+            if ($request->has("service_{$i}_desc"))   $config["service_{$i}_desc"]   = $request->input("service_{$i}_desc");
+            if ($request->has("service_{$i}_link"))   $config["service_{$i}_link"]   = $request->input("service_{$i}_link");
+
+            // Handle service image uploads & deletions
+            if ($request->has("delete_service_{$i}_image") && !empty($config["service_{$i}_image"])) {
+                Storage::disk('public')->delete($config["service_{$i}_image"]);
+                $config["service_{$i}_image"] = null;
+            } elseif ($request->hasFile("service_{$i}_image")) {
+                if (!empty($config["service_{$i}_image"])) Storage::disk('public')->delete($config["service_{$i}_image"]);
+                $config["service_{$i}_image"] = $request->file("service_{$i}_image")->store('bio/services', 'public');
+            }
+        }
+
         // Handle username (store_slug used as bio URL slug)
         if ($request->filled('bio_username')) {
             $slug = $request->bio_username;

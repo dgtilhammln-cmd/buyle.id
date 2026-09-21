@@ -1,14 +1,25 @@
-@if($products->count() > 0)
+@php
+    $catalogProducts = $products->reject(function($p) {
+        $pType = strtolower($p->product_type ?? '');
+        if (empty($pType)) {
+            $bData = is_array($p->data_json ?? null) ? $p->data_json : (json_decode($p->data_json ?? '[]', true) ?: []);
+            $pType = strtolower($bData['product_type'] ?? '');
+        }
+        return in_array($pType, ['service', 'jasa', 'layanan']);
+    });
+@endphp
+
+@if($catalogProducts->count() > 0)
     <section class="t5-products-section" id="products-section">
         <div class="t5-section-header">
             <div class="t5-section-title-wrap">
-                <h2 class="t5-section-title">Produk & Layanan Unggulan</h2>
-                <p class="t5-section-sub">Katalog produk dan layanan.</p>
+                <h2 class="t5-section-title">Produk Unggulan</h2>
+                <p class="t5-section-sub">Katalog produk pilihan terbaik.</p>
             </div>
         </div>
 
         <div class="t5-products-grid">
-            @foreach($products as $product)
+            @foreach($catalogProducts as $product)
                 @php
                     $img = $product->image_url ?: asset('images/buyle-placeholder.svg');
                     $hasDiscount = $product->sale_price && $product->sale_price < $product->price;
