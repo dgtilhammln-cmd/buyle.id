@@ -133,25 +133,25 @@
         :root {
             --t5-emerald: #1eb349;
             --t5-emerald-dark: #15803d;
-            --t5-emerald-light: rgba(30, 179, 73, 0.15);
-            --t5-emerald-border: rgba(30, 179, 73, 0.35);
-            --t5-slate-900: #080a0c;
-            --t5-slate-800: #121518;
-            --t5-slate-700: #1a1e23;
-            --t5-slate-600: #94a3b8;
+            --t5-emerald-light: #f0fdf4;
+            --t5-emerald-border: #bbf7d0;
+            --t5-slate-900: #0f172a;
+            --t5-slate-800: #1e293b;
+            --t5-slate-700: #334155;
+            --t5-slate-600: #475569;
             --t5-slate-500: #64748b;
-            --t5-slate-400: #cbd5e1;
-            --t5-slate-200: #22282f;
-            --t5-bg-main: #080a0c;
-            --t5-white: #121518;
+            --t5-slate-400: #94a3b8;
+            --t5-slate-200: #e2e8f0;
+            --t5-bg-main: #f8fafc;
+            --t5-white: #ffffff;
             --t5-amber: #f59e0b;
             --t5-radius-sm: 6px;
             --t5-radius-md: 10px;
             --t5-radius-lg: 16px;
             --t5-radius-xl: 20px;
-            --t5-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-            --t5-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
-            --t5-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+            --t5-shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+            --t5-shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+            --t5-shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.12);
         }
 
         *, *::before, *::after {
@@ -168,7 +168,7 @@
         body.t5-body {
             font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--t5-bg-main);
-            color: #ffffff;
+            color: var(--t5-slate-800);
             line-height: 1.6;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
@@ -181,7 +181,7 @@
             left: 0;
             width: 100%;
             z-index: 999;
-            background: rgba(8, 10, 12, 0.94);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--t5-slate-200);
@@ -230,18 +230,9 @@
         .t5-brand-title {
             font-weight: 600;
             font-size: 1.05rem;
-            color: #ffffff;
+            color: var(--t5-slate-900);
             letter-spacing: -0.02em;
             line-height: 1.2;
-        }
-        .t5-brand-subtitle {
-            font-size: 0.72rem;
-            color: var(--t5-slate-500);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            margin-top: 2px;
         }
         .t5-live-dot {
             width: 6px;
@@ -1137,6 +1128,59 @@
             .t5-nav-desktop { display: none; }
             .t5-mobile-toggle { display: block; }
         }
+        /* ── FOOTER BRAND & SOCIAL STYLES ── */
+        .t5-footer-brand-head {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.85rem;
+        }
+        .t5-footer-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--t5-emerald);
+            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.25);
+            flex-shrink: 0;
+        }
+        .t5-footer-avatar-fallback {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--t5-emerald), #15803d);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+        .t5-footer-brand-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        .t5-footer-verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: #4ade80;
+            background: rgba(30, 179, 73, 0.15);
+            border: 1px solid rgba(30, 179, 73, 0.35);
+            padding: 0.15rem 0.55rem;
+            border-radius: 6px;
+        }
+        .t5-footer-social {
+            margin-top: 1rem;
+        }
+        .t5-footer-social .social-row {
+            justify-content: flex-start !important;
+            margin: 0 !important;
+        }
     </style>
 </head>
 <body class="t5-body">
@@ -1150,9 +1194,6 @@
 
         {{-- 3. Products Catalog Grid --}}
         @include('bio.theme5.products_grid')
-
-        {{-- 4. About Creator Card --}}
-        @include('bio.theme5.about_section')
     </main>
 
     {{-- 6. Footer --}}

@@ -19,7 +19,6 @@
             @endif
             <div class="t5-brand-info">
                 <span class="t5-brand-title">{{ $bioName }}</span>
-                <span class="t5-brand-subtitle"><span class="t5-live-dot"></span> {{ $roleTitle }}</span>
             </div>
         </a>
 

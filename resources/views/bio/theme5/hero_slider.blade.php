@@ -1,7 +1,7 @@
 @php
     $bioName     = $config['name'] ?? $profile->store_name ?? $username;
-    $bioText     = $config['bio'] ?? $profile->store_description ?? 'Temukan koleksi produk digital & layanan terbaik di sini.';
-    $roleTitle   = $profile->bio_role ? ucfirst(str_replace('_', ' ', $profile->bio_role)) : 'Digital Creator';
+    $bioText     = $config['bio'] ?? $profile->store_description ?? 'Temukan koleksi produk & layanan terbaik di sini.';
+    $roleTitle   = $profile->bio_role ? ucfirst(str_replace('_', ' ', $profile->bio_role)) : 'Official Website';
     
     // Collect all banner images from Profile Banners, Config Banners, and Banner Blocks
     $slides = [];
@@ -9,10 +9,10 @@
     if (!empty($profile->store_banner_1)) {
         $slides[] = [
             'image' => asset('storage/' . $profile->store_banner_1),
-            'tag'   => 'OFFICIAL PROMO',
+            'tag'   => 'PROMO UTAMA',
             'title' => 'Selamat Datang di ' . $bioName,
             'desc'  => $bioText,
-            'cta'   => 'Jelajahi Produk',
+            'cta'   => 'Jelajahi Katalog',
             'link'  => '#products-section'
         ];
     }
@@ -20,8 +20,8 @@
         $slides[] = [
             'image' => asset('storage/' . $profile->store_banner_2),
             'tag'   => 'REKOMENDASI TERBAIK',
-            'title' => 'Aset & Layanan Digital Berlisensi',
-            'desc'  => 'Dapatkan akses instan, produk original & terverifikasi langsung dari ' . $bioName . '.',
+            'title' => 'Produk & Layanan Pilihan',
+            'desc'  => 'Dapatkan produk original & layanan profesional langsung dari ' . $bioName . '.',
             'cta'   => 'Lihat Katalog',
             'link'  => '#products-section'
         ];
@@ -33,7 +33,7 @@
                 $slides[] = [
                     'image' => Str::startsWith($imgUrl, ['http://', 'https://']) ? $imgUrl : asset('storage/' . $imgUrl),
                     'tag'   => 'FEATURED',
-                    'title' => is_array($b) ? ($b['title'] ?? 'Promo Spesial #' . ($idx+1)) : 'Promo Spesial',
+                    'title' => is_array($b) ? ($b['title'] ?? 'Layanan Spesial #' . ($idx+1)) : 'Layanan Spesial',
                     'desc'  => is_array($b) ? ($b['desc'] ?? $bioText) : $bioText,
                     'cta'   => 'Selengkapnya',
                     'link'  => is_array($b) ? ($b['link'] ?? '#products-section') : '#products-section'
@@ -47,30 +47,30 @@
         $slides = [
             [
                 'image' => null,
-                'bg_gradient' => 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #064e3b 100%)',
-                'tag'   => 'OFFICIAL CREATOR',
-                'title' => 'Solusi Digital Terlengkap dari ' . $bioName,
+                'bg_gradient' => 'linear-gradient(135deg, #080a0c 0%, #161b20 50%, #064e3b 100%)',
+                'tag'   => 'OFFICIAL WEBSITE',
+                'title' => 'Solusi Terbaik dari ' . $bioName,
                 'desc'  => $bioText,
                 'cta'   => 'Lihat Katalog Produk',
                 'link'  => '#products-section'
             ],
             [
                 'image' => null,
-                'bg_gradient' => 'linear-gradient(135deg, #064e3b 0%, #0f172a 60%, #1eb349 100%)',
-                'tag'   => 'TRANSAKSI INSTAN & AMAN',
-                'title' => 'Produk Digital & Layanan Profesional',
-                'desc'  => 'Akses cepat, lisensi original, dan pembayaran aman terverifikasi via buyle.id.',
-                'cta'   => 'Beli Sekarang',
+                'bg_gradient' => 'linear-gradient(135deg, #064e3b 0%, #080a0c 60%, #1eb349 100%)',
+                'tag'   => 'TERPERCAYA & BERKUALITAS',
+                'title' => 'Produk & Layanan Resmi',
+                'desc'  => 'Layanan profesional, transaksi aman, dan kualitas terjamin.',
+                'cta'   => 'Lihat Produk',
                 'link'  => '#products-section'
             ],
             [
                 'image' => null,
-                'bg_gradient' => 'linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #0f172a 100%)',
+                'bg_gradient' => 'linear-gradient(135deg, #161b20 0%, #22282f 50%, #080a0c 100%)',
                 'tag'   => 'KONSULTASI & LAYANAN',
                 'title' => 'Terhubung Langsung dengan ' . $bioName,
-                'desc'  => 'Dapatkan rekomendasi & layanan khusus yang disesuaikan dengan kebutuhan Anda.',
+                'desc'  => 'Dapatkan konsultasi & layanan khusus yang disesuaikan dengan kebutuhan Anda.',
                 'cta'   => 'Hubungi Kami',
-                'link'  => '#links-section'
+                'link'  => '#footer-section'
             ]
         ];
     }
@@ -89,7 +89,6 @@
                     @endif
 
                     <div class="t5-slide-content">
-                        <span class="t5-slide-tag"><span class="t5-tag-badge"></span> {{ $slide['tag'] }}</span>
                         <h1 class="t5-slide-title">{{ $slide['title'] }}</h1>
                         <p class="t5-slide-desc">{{ $slide['desc'] }}</p>
 
