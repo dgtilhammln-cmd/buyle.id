@@ -288,6 +288,30 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       <p style="font-size:.7rem;color:#94A3B8;margin:.5rem 0 0;">Rekomendasi: 32×32 atau 64×64 px format ICO/PNG.</p>
     </div>
 
+    {{-- Logo Barcode / QR Code Tiket --}}
+    <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;grid-column:1/-1;">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
+        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Logo Barcode / QR Code Tiket</div>
+      </div>
+      @if(!empty($settings['qr_logo']))
+      <div style="margin-bottom:1rem;padding:1rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:6px;display:flex;align-items:center;gap:1rem;">
+        <img src="{{ asset('storage/'.$settings['qr_logo']) }}" alt="QR Logo" style="width:40px;height:40px;object-fit:contain;background:#fff;padding:2px;border:1px solid #cbd5e1;border-radius:6px;">
+        <span style="font-size:.75rem;color:#94A3B8;">Logo Barcode Tiket saat ini (Kustom)</span>
+      </div>
+      @else
+      <div style="margin-bottom:1rem;padding:1rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:6px;display:flex;align-items:center;gap:1rem;">
+        @if(!empty($settings['favicon']))
+          <img src="{{ asset('storage/'.$settings['favicon']) }}" alt="Favicon" style="width:40px;height:40px;object-fit:contain;background:#fff;padding:2px;border:1px solid #cbd5e1;border-radius:6px;">
+        @endif
+        <span style="font-size:.75rem;color:#64748B;">Mengikuti Favicon Browser (Default)</span>
+      </div>
+      @endif
+      <label style="font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:.5rem;">Upload Logo Barcode Tiket Kustom (PNG/SVG)</label>
+      <input type="file" name="qr_logo" class="form-input" accept=".png,.svg,.jpg,.webp" style="padding:.5rem;">
+      <p style="font-size:.7rem;color:#94A3B8;margin:.5rem 0 0;">Upload logo khusus untuk posisi tengah QR Code / Barcode tiket. Jika tidak diupload, sistem otomatis memakai Favicon buyle.id.</p>
+    </div>
+
     {{-- Company Profile --}}
     <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;grid-column:1/-1;">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">

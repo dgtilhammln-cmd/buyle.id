@@ -283,7 +283,7 @@ class ServiceController extends Controller
 
     public function show(string $slug)
     {
-        $service      = Product::where('slug', $slug)->where('is_active', true)->with('seller.creatorProfile')->firstOrFail();
+        $service      = Product::where('slug', $slug)->where('is_active', true)->with(['seller.creatorProfile', 'subCategory', 'category'])->firstOrFail();
         $service->increment('views_count');
 
         // Track Visit
@@ -342,7 +342,7 @@ class ServiceController extends Controller
         $seo = [
             'title'       => $service->meta_title ?: ($service->name . ' Terbaik & Terlengkap — ' . $sellerName . ' | ' . $siteName),
             'description' => $service->meta_desc  ?: (
-                'Cari berbagai macam dari pilihan terlengkap ' . $service->name . '. '
+                'Cari berbagai macam dari pilihan terlengkap ' . ($service->subCategory?->name ?? $service->name) . '. '
                 . ($service->short_desc
                     ? trim($service->short_desc) . ' '
                     : '')

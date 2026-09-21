@@ -19,7 +19,7 @@ class AdminSettingsController extends Controller
 
     public function update(Request $request)
     {
-        $imageKeys = ['hero_bg_image', 'hero_main_image', 'hero_secondary_image', 'about_image', 'about_c3_image', 'og_image_default', 'logo', 'favicon', 'coverage_map', 'ad_product_sidebar_1_image', 'ad_product_sidebar_2_image', 'adsense_custom_image'];
+        $imageKeys = ['hero_bg_image', 'hero_main_image', 'hero_secondary_image', 'about_image', 'about_c3_image', 'og_image_default', 'logo', 'favicon', 'qr_logo', 'coverage_map', 'ad_product_sidebar_1_image', 'ad_product_sidebar_2_image', 'adsense_custom_image'];
         $data      = $request->except(['_token', '_method']);
 
         foreach ($data as $key => $value) {
@@ -101,6 +101,19 @@ class AdminSettingsController extends Controller
 
                 Setting::clearCache();
                 Setting::set($key, $path, 'image');
+                \Illuminate\Support\Facades\Cache::flush();
+                continue;
+            }
+
+            // Handle QR Code Logo separately
+            if ($key === 'qr_logo') {
+                $ext = strtolower($file->getClientOriginalExtension());
+                $filename = 'qr_logo_' . time() . '.' . ($ext === 'svg' ? 'svg' : 'png');
+                $path = 'settings/' . $filename;
+                Storage::disk('public')->put($path, file_get_contents($file->getRealPath()));
+                Setting::set('qr_logo', $path, 'image');
+                Setting::clearCache();
+                \Illuminate\Support\Facades\Cache::flush();
                 continue;
             }
 
