@@ -35,15 +35,28 @@ class QrCodeController extends Controller
             $data = 'buyle-id-ticket';
         }
 
-        $cacheKey = 'qr_code_base64_v3_' . md5($data);
+        $cacheKey = 'qr_code_base64_v5_' . md5($data);
 
         return Cache::remember($cacheKey, 86400, function () use ($data) {
-            $favPath = public_path('favicon.png');
-            if (!file_exists($favPath)) {
+            $favPath = null;
+            $dbFav = \App\Models\Setting::get('favicon');
+            if (!empty($dbFav)) {
+                $checkPath = storage_path('app/public/' . ltrim($dbFav, '/'));
+                if (file_exists($checkPath)) {
+                    $favPath = $checkPath;
+                }
+            }
+            if (!$favPath || !file_exists($favPath)) {
                 $favPath = storage_path('app/public/settings/favicon.png');
             }
             if (!file_exists($favPath)) {
-                $favPath = public_path('favicon.ico');
+                $favPath = storage_path('app/public/settings/logo_transparent.png');
+            }
+            if (!file_exists($favPath)) {
+                $favPath = public_path('favicon.png');
+            }
+            if (!file_exists($favPath)) {
+                $favPath = base_path('public_html/favicon.png');
             }
 
             return SimpleQrCode::base64($data, 300, $favPath);
