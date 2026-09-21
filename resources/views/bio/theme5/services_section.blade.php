@@ -17,6 +17,7 @@
                 'desc'   => 'Coordinate your entire organization through orchestrated agents that ensure precision, compliance, and efficiency everywhere you operate.',
                 'image'  => 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
                 'icon'   => 'lightning',
+                'link'   => '#',
             ],
             [
                 'number' => '02.',
@@ -24,6 +25,7 @@
                 'desc'   => 'Coordinate your entire organization through orchestrated agents that ensure precision, compliance, and efficiency everywhere you operate.',
                 'image'  => 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=800&q=80',
                 'icon'   => 'globe',
+                'link'   => '#',
             ],
             [
                 'number' => '03.',
@@ -31,6 +33,7 @@
                 'desc'   => 'Break down data barriers and connect cross-functional teams with seamless real-time data sync and automated workflows.',
                 'image'  => 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
                 'icon'   => 'link',
+                'link'   => '#',
             ],
             [
                 'number' => '04.',
@@ -38,6 +41,7 @@
                 'desc'   => 'Empower your business growth with actionable analytics, transparent reporting, and scalable cloud infrastructure.',
                 'image'  => 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
                 'icon'   => 'chart',
+                'link'   => '#',
             ],
         ];
 
@@ -457,7 +461,7 @@
             {{-- CARDS GRID WITH HOVER ANIMATION & SWIPE SUPPORT --}}
             <div class="t5-services-grid">
                 @foreach($servicesList as $idx => $srv)
-                    <a href="{{ $srv['link'] }}" class="t5-service-card {{ $idx === 1 ? 'active' : '' }}">
+                    <a href="{{ $srv['link'] ?? '#' }}" class="t5-service-card {{ $idx === 1 ? 'active' : '' }}">
                         <div class="t5-service-number">{{ $srv['number'] }}</div>
                         
                         <div class="t5-service-img-wrap">
