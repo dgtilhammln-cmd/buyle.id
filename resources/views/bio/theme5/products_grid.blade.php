@@ -14,7 +14,13 @@
                     $hasDiscount = $product->sale_price && $product->sale_price < $product->price;
                     $effectivePrice = $hasDiscount ? $product->sale_price : $product->price;
                     $discountPercent = $hasDiscount ? round((($product->price - $product->sale_price) / $product->price) * 100) : 0;
-                    $prodIdentifier = !empty($product->slug) ? $product->slug : $product->id;
+                    $bData = is_array($product->data_json) ? $product->data_json : (json_decode($product->data_json ?? '[]', true) ?: []);
+                    $prodIdentifier = !empty($bData['slug']) 
+                        ? $bData['slug'] 
+                        : (!empty($product->slug) 
+                            ? $product->slug 
+                            : (\Illuminate\Support\Str::slug($product->title ?? ($product->name ?? '')) ?: $product->id));
+
                     if (!empty($profile->custom_domain)) {
                         $productUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/produk/' . $prodIdentifier;
                     } else {

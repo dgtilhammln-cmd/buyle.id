@@ -6,7 +6,210 @@
         : (!empty($config['_user_avatar']) ? (Str::startsWith($config['_user_avatar'], ['http://', 'https://']) ? $config['_user_avatar'] : asset('storage/' . $config['_user_avatar'])) : null);
     
     $storeSlug = $profile->store_slug ?? $username;
+    $products  = $products ?? collect();
+    $blocks    = $blocks ?? collect();
 @endphp
+
+<style>
+    /* ── SELF-CONTAINED THEME 5 HEADER STYLES ── */
+    .t5-header {
+        position: sticky;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 999;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid #e2e8f0;
+        font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .t5-header-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .t5-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        text-decoration: none;
+        flex-shrink: 0;
+    }
+    .t5-brand-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #bbf7d0;
+    }
+    .t5-brand-avatar-fallback {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1eb349, #15803d);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+    .t5-brand-info {
+        display: flex;
+        flex-direction: column;
+    }
+    .t5-brand-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #0f172a;
+        letter-spacing: -0.02em;
+    }
+    .t5-nav-desktop {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+    .t5-nav-link {
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #475569;
+        transition: color 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .t5-nav-link:hover, .t5-nav-link.active {
+        color: #15803d;
+        font-weight: 600;
+    }
+    .t5-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+    }
+    .t5-action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.42rem 0.85rem;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        color: #334155;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: 'Montserrat', sans-serif;
+    }
+    .t5-action-btn:hover {
+        border-color: #1eb349;
+        color: #15803d;
+    }
+    .t5-btn-wa {
+        background: #f0fdf4;
+        color: #15803d;
+        border-color: #bbf7d0;
+    }
+    .t5-mobile-toggle {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #334155;
+        padding: 0.2rem;
+    }
+    @media (max-width: 991px) {
+        .t5-nav-desktop { display: none !important; }
+        .t5-mobile-toggle { display: block !important; }
+    }
+
+    /* ── MOBILE DRAWER STANDALONE STYLES ── */
+    .t5-mobile-drawer {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        pointer-events: none;
+        font-family: 'Montserrat', sans-serif;
+    }
+    .t5-mobile-drawer.active {
+        pointer-events: auto;
+    }
+    .t5-drawer-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .t5-mobile-drawer.active .t5-drawer-overlay {
+        opacity: 1;
+    }
+    .t5-drawer-content {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 280px;
+        background: #ffffff;
+        box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+    }
+    .t5-mobile-drawer.active .t5-drawer-content {
+        transform: translateX(0);
+    }
+    .t5-drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 1.25rem;
+    }
+    .t5-drawer-title {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #0f172a;
+    }
+    .t5-drawer-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #64748b;
+        cursor: pointer;
+    }
+    .t5-drawer-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    .t5-drawer-link {
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #334155;
+        padding: 0.65rem 0.85rem;
+        border-radius: 6px;
+        transition: background 0.2s, color 0.2s;
+    }
+    .t5-drawer-link:hover {
+        background: #f0fdf4;
+        color: #1eb349;
+    }
+</style>
 
 <header class="t5-header">
     <div class="t5-header-container">
@@ -24,10 +227,9 @@
 
         {{-- Desktop Navigation Links --}}
         <nav class="t5-nav-desktop">
-            <a href="#hero-section" class="t5-nav-link active">Beranda</a>
-            @if($products->count() > 0)
-                <a href="#products-section" class="t5-nav-link">Katalog Produk</a>
-            @endif
+            <a href="{{ url('/' . $username) }}" class="t5-nav-link {{ request()->is($username) ? 'active' : '' }}">Beranda</a>
+            <a href="{{ url('/' . $username . '/produk') }}" class="t5-nav-link {{ request()->is('*/produk*') ? 'active' : '' }}">Produk</a>
+            
             @if($blocks->count() > 0)
                 @foreach($blocks as $b)
                     @php $bData = $b->data_json ?? []; @endphp
@@ -46,7 +248,7 @@
                     @endif
                 @endforeach
             @endif
-            <a href="#about-section" class="t5-nav-link">Tentang</a>
+            <a href="{{ url('/' . $username) }}#about-section" class="t5-nav-link">Tentang</a>
         </nav>
 
         {{-- Action Buttons --}}
@@ -87,10 +289,8 @@
                 <button type="button" class="t5-drawer-close" onclick="toggleT5Drawer()">&times;</button>
             </div>
             <nav class="t5-drawer-nav">
-                <a href="#hero-section" onclick="toggleT5Drawer()" class="t5-drawer-link">Beranda</a>
-                @if($products->count() > 0)
-                    <a href="#products-section" onclick="toggleT5Drawer()" class="t5-drawer-link">Katalog Produk</a>
-                @endif
+                <a href="{{ url('/' . $username) }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Beranda</a>
+                <a href="{{ url('/' . $username . '/produk') }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Produk</a>
                 @if($blocks->count() > 0)
                     @foreach($blocks as $b)
                         @php $bData = $b->data_json ?? []; @endphp
@@ -109,7 +309,7 @@
                         @endif
                     @endforeach
                 @endif
-                <a href="#about-section" onclick="toggleT5Drawer()" class="t5-drawer-link">Tentang Creator</a>
+                <a href="{{ url('/' . $username) }}#about-section" onclick="toggleT5Drawer()" class="t5-drawer-link">Tentang Creator</a>
             </nav>
         </div>
     </div>
