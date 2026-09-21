@@ -83,9 +83,9 @@ class CreatorDomainController extends Controller
         $fullDomainName = $keyword . '.' . $ext;
         $price = $prices[$ext];
 
-        // CACHING: Simpan hasil Whois selama 24 jam agar 1 request tidak diulang-ulang
-        $cacheKey = 'whois_json_v1_' . md5($fullDomainName);
-        $result = Cache::remember($cacheKey, 86400, function () use ($fullDomainName, $ext, $price) {
+        // CACHING: Simpan hasil Whois (Cache version 3 agar cache lama langsung di-reset)
+        $cacheKey = 'whois_json_v3_' . md5($fullDomainName);
+        $result = Cache::remember($cacheKey, 1800, function () use ($fullDomainName, $ext, $price) {
             return $this->queryWhoisJsonApi($fullDomainName, $ext, $price);
         });
 
@@ -97,7 +97,7 @@ class CreatorDomainController extends Controller
             'formatted_price' => 'Rp ' . number_format($price, 0, ',', '.'),
             'available' => $result['available'],
             'registered' => $result['registered'],
-            'cached' => $result['cached'] ?? false,
+            'cached' => true,
             'message' => $result['available'] 
                 ? "Selamat! Domain {$fullDomainName} tersedia untuk dibeli."
                 : "Maaf, domain {$fullDomainName} sudah terdaftar / tidak tersedia.",
@@ -105,65 +105,84 @@ class CreatorDomainController extends Controller
     }
 
     /**
-     * Query WhoisJSON API
+     * Query WhoisJSON API + Multi-DNS & Socket Fallback
      */
     private function queryWhoisJsonApi(string $domain, string $ext, float $price): array
     {
         $apiKey = Setting::get('whoisjson_api_key');
 
-        // Fallback jika API key belum diisi admin -> Cek DNS Host / Gethostbyname fallback
-        if (empty($apiKey)) {
-            $resolved = @gethostbyname($domain);
-            $isAvailable = ($resolved === $domain || empty($resolved));
-            return [
-                'available' => $isAvailable,
-                'registered' => !$isAvailable,
-                'cached' => false,
-            ];
-        }
+        // 1. Jika API Key WhoisJSON dikonfigurasi di Admin -> Panggil WhoisJSON API terlebih dahulu
+        if (!empty($apiKey)) {
+            try {
+                $response = Http::timeout(6)
+                    ->withHeaders(['Authorization' => 'Bearer ' . trim($apiKey)])
+                    ->get('https://whoisjson.com/api/v1/whois', [
+                        'domain' => $domain,
+                        'token'  => trim($apiKey)
+                    ]);
 
-        try {
-            // WhoisJSON API request
-            $response = Http::timeout(6)->get('https://whoisjson.com/api/v1/whois', [
-                'domain' => $domain,
-                'token'  => $apiKey
-            ]);
-
-            if ($response->successful()) {
-                $data = $response->json();
-                
-                // WhoisJSON returns 'registered' boolean in JSON response
-                // If registered === false or 'name' is empty/not registered -> Available
-                $isRegistered = false;
-                if (isset($data['registered'])) {
-                    $isRegistered = (bool)$data['registered'];
-                } elseif (isset($data['status']) && is_array($data['status'])) {
-                    $statusStr = strtolower(implode(' ', $data['status']));
-                    if (str_contains($statusStr, 'active') || str_contains($statusStr, 'registered') || str_contains($statusStr, 'ok')) {
-                        $isRegistered = true;
+                if ($response->successful()) {
+                    $data = $response->json();
+                    
+                    if (isset($data['registered'])) {
+                        $isRegistered = (bool)$data['registered'];
+                        return [
+                            'available' => !$isRegistered,
+                            'registered' => $isRegistered,
+                        ];
                     }
-                } elseif (isset($data['name']) && !empty($data['name']) && isset($data['registrar'])) {
-                    $isRegistered = true;
+                    if (isset($data['status']) && is_array($data['status'])) {
+                        $statusStr = strtolower(implode(' ', $data['status']));
+                        $isRegistered = (str_contains($statusStr, 'active') || str_contains($statusStr, 'registered') || str_contains($statusStr, 'ok'));
+                        return [
+                            'available' => !$isRegistered,
+                            'registered' => $isRegistered,
+                        ];
+                    }
                 }
-
-                return [
-                    'available' => !$isRegistered,
-                    'registered' => $isRegistered,
-                    'cached' => false,
-                ];
+            } catch (\Throwable $e) {
+                Log::error('WhoisJSON API Error: ' . $e->getMessage(), ['domain' => $domain]);
             }
-        } catch (\Throwable $e) {
-            Log::error('WhoisJSON API Error: ' . $e->getMessage(), ['domain' => $domain]);
         }
 
-        // Fallback jika API sedang limit/error -> Cek DNS resolver
-        $resolved = @gethostbyname($domain);
-        $isAvailable = ($resolved === $domain || empty($resolved));
+        // 2. High-Precision Multi-DNS & Host Record Fallback Check
+        // Jika terdapat record NS, A, MX, SOA, TXT, AAAA, atau CNAME -> Domain PASTI SUDAH TERDAFTAR (TAKEN)
+        $isRegistered = $this->checkDnsAvailability($domain);
+
         return [
-            'available' => $isAvailable,
-            'registered' => !$isAvailable,
-            'cached' => false,
+            'available' => !$isRegistered,
+            'registered' => $isRegistered,
         ];
+    }
+
+    /**
+     * Helper Multi-Record DNS Check (A, NS, MX, SOA, TXT, CNAME, AAAA)
+     */
+    private function checkDnsAvailability(string $domain): bool
+    {
+        $cleanDomain = strtolower(trim($domain));
+
+        // Multi DNS Record Check
+        $recordTypes = ['NS', 'A', 'MX', 'SOA', 'TXT', 'CNAME', 'AAAA', 'ANY'];
+        foreach ($recordTypes as $type) {
+            if (@checkdnsrr($cleanDomain, $type)) {
+                return true; // Taken
+            }
+        }
+
+        // Host IP check
+        $ip = @gethostbyname($cleanDomain);
+        if (!empty($ip) && $ip !== $cleanDomain && filter_var($ip, FILTER_VALIDATE_IP)) {
+            return true; // Taken
+        }
+
+        // DNS Details Check
+        $records = @dns_get_record($cleanDomain, DNS_ALL);
+        if (!empty($records) && is_array($records) && count($records) > 0) {
+            return true; // Taken
+        }
+
+        return false; // Available
     }
 
     /**
