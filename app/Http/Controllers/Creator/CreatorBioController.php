@@ -290,13 +290,18 @@ class CreatorBioController extends Controller
             if ($request->filled('payment_method')) $data['payment_method'] = $request->payment_method;
             if ($request->filled('wa_text')) $data['wa_text'] = $request->wa_text;
 
-            $catRaw = trim($request->category ?? 'Makanan');
+            $catRaw = trim($request->category ?? '');
+            if (empty($catRaw) && $request->type === 'buyle_product') {
+                $catRaw = 'whitelabel';
+            }
             $data['category'] = match (strtolower($catRaw)) {
                 'barang'     => 'Barang',
                 'jasa'       => 'Jasa',
                 'whitelabel' => 'whitelabel',
+                'makanan', 'fnb', 'kuliner' => 'Makanan',
+                'digital'    => 'digital',
                 'lainnya'    => 'Lainnya',
-                default      => 'Makanan',
+                default      => 'digital',
             };
 
             $stockVal = $request->stock ?? null;

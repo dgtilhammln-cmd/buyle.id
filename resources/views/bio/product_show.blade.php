@@ -10,8 +10,20 @@
         if (empty($images) && !empty($block->data_json['image'])) {
             $images = [$block->data_json['image']];
         }
-        if (empty($images) && $product && $product->image) {
-            $images = [$product->image];
+        if ($product) {
+            $pGallery = $product->gallery;
+            if (is_string($pGallery)) {
+                $pGallery = json_decode($pGallery, true) ?: [];
+            }
+            if (is_array($pGallery) && !empty($pGallery)) {
+                $mainImg = $product->image ? [$product->image] : [];
+                $merged = array_unique(array_merge($mainImg, $pGallery));
+                if (!empty($merged)) {
+                    $images = array_values($merged);
+                }
+            } elseif (empty($images) && !empty($product->image)) {
+                $images = [$product->image];
+            }
         }
         $prodTitle = !empty($block->title) ? $block->title : ($product->name ?? 'Produk');
         $price = $block->data_json['price'] ?? $block->data_json['custom_price'] ?? ($product ? ($product->is_on_sale ? $product->sale_price : $product->effective_price) : 0);
@@ -23,14 +35,25 @@
         $rawCat = $block->data_json['category'] ?? ($product && $product->category ? $product->category->name : null);
         $pType  = strtolower($product->product_type ?? $product->type ?? '');
 
-        // 1. Priority: Check product_type on Product model
+        // Digital & Service Keyword Check
+        $digitalServiceKeywords = ['website', 'jasa', 'design', 'desain', 'web', 'aplikasi', 'app', 'system', 'sistem', 'service', 'layanan', 'company profile', 'seo', 'marketing', 'whitelabel', 'planner', 'spreadsheet', 'ebook', 'template', 'course', 'academy', 'masterclass', 'guide', 'workbook', 'pdf', 'excel', 'canva', 'consultation', 'consult', 'rate card', 'notion', 'digital', 'access', 'link'];
+        $titleLower = strtolower($prodTitle);
+        $isDigitalOrServiceTitle = false;
+        foreach ($digitalServiceKeywords as $kw) {
+            if (str_contains($titleLower, $kw)) {
+                $isDigitalOrServiceTitle = true;
+                break;
+            }
+        }
+
+        // 1. Category Resolution
         if (in_array($pType, ['external_link', 'file_upload', 'digital'])) {
             $category = 'Produk Digital';
         } elseif ($pType === 'ticket') {
             $category = 'Tiket Event';
-        } elseif (in_array($pType, ['service', 'jasa'])) {
+        } elseif (in_array($pType, ['service', 'jasa']) || $isDigitalOrServiceTitle) {
             $category = 'Jasa / Layanan';
-        } elseif (in_array($pType, ['makanan', 'fnb', 'food'])) {
+        } elseif (in_array($pType, ['makanan', 'fnb', 'food']) && !$isDigitalOrServiceTitle) {
             $category = 'Makanan';
         } elseif (in_array($pType, ['physical', 'barang', 'product', 'fisik'])) {
             $category = 'Barang / Fisik';
@@ -38,11 +61,11 @@
             $catLower = strtolower($rawCat);
             if (in_array($catLower, ['jasa', 'service', 'layanan'])) {
                 $category = 'Jasa / Layanan';
-            } elseif (in_array($catLower, ['makanan', 'fnb', 'kuliner', 'food'])) {
+            } elseif (in_array($catLower, ['makanan', 'fnb', 'kuliner', 'food']) && !$isDigitalOrServiceTitle) {
                 $category = 'Makanan';
             } elseif (in_array($catLower, ['barang', 'physical', 'fisik', 'umkm'])) {
                 $category = 'Barang / Fisik';
-            } elseif (in_array($catLower, ['digital', 'ebook', 'course', 'download', 'external_link'])) {
+            } elseif (in_array($catLower, ['digital', 'ebook', 'course', 'download', 'external_link', 'whitelabel'])) {
                 $category = 'Produk Digital';
             } elseif ($catLower === 'ticket' || $catLower === 'tiket') {
                 $category = 'Tiket Event';
@@ -53,22 +76,17 @@
             $category = 'Produk Digital';
         }
 
-        // 2. Failsafe: If title contains digital keywords (Planner, Spreadsheet, Ebook, etc.), override to Produk Digital
-        $digitalKeywords = ['planner', 'spreadsheet', 'ebook', 'template', 'course', 'academy', 'masterclass', 'guide', 'workbook', 'pdf', 'excel', 'canva', 'consultation', 'consult', 'rate card', 'notion', 'digital', 'access', 'link'];
-        $titleLower = strtolower($prodTitle);
-        foreach ($digitalKeywords as $kw) {
-            if (str_contains($titleLower, $kw)) {
-                $category = 'Produk Digital';
-                break;
-            }
+        if ($category === 'Makanan' && ($isDigitalOrServiceTitle || !in_array($pType, ['makanan', 'fnb', 'food']))) {
+            $category = 'Produk Digital';
         }
+
         $stock = isset($block->data_json['stock']) && $block->data_json['stock'] !== '' && $block->data_json['stock'] !== null 
             ? (int)$block->data_json['stock'] 
             : ($product ? $product->stock : null);
         $isOutOfStock = ($stock !== null && $stock <= 0);
         $firstImage = !empty($images[0]) ? (Str::startsWith($images[0], 'http') ? $images[0] : asset('storage/' . $images[0])) : asset('images/buyle-og.png');
         $pageTitle = $prodTitle . ' - ' . ($config['name'] ?? $username) . ' | buyle.id';
-        $rawDesc  = $block->data_json['description'] ?? ($product ? $product->description : '');
+        $rawDesc  = !empty($block->data_json['description']) ? $block->data_json['description'] : ($product ? ($product->description ?: $product->short_desc) : '');
         $pageDesc = !empty($rawDesc) ? Str::limit(strip_tags($rawDesc), 160) : 'Beli ' . $prodTitle . ' berkualitas dengan harga terbaik dari ' . ($config['name'] ?? $username) . ' di buyle.id.';
     @endphp
 

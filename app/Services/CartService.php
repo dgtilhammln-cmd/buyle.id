@@ -208,23 +208,23 @@ class CartService
                     }
                 }
 
-                // 1. Food / FnB classification
-                $isFood = ($isFoodName 
+                // 1. Digital, Ticket, Service / Jasa / Whitelabel classification
+                $isDigitalOrService = in_array($pType, ['digital', 'service', 'jasa', 'ticket', 'course', 'ebook', 'download', 'virtual', 'file', 'external_link']) 
+                                       || in_array($blockCat, ['jasa', 'digital', 'whitelabel'])
+                                       || in_array($catName, ['jasa', 'service', 'layanan', 'booking & jasa layanan online', 'booking', 'tiket & event', 'ticket']);
+
+                // 2. Food / FnB classification (only if not digital/service)
+                $isFood = !$isDigitalOrService && ($isFoodName 
                            || $blockCat === 'makanan' 
                            || $pType === 'makanan' 
                            || $pType === 'fnb'
                            || in_array($catName, ['makanan', 'food', 'culinary', 'kuliner', 'resto', 'fnb', 'makanan & minuman']));
 
-                // 2. Goods / Barang Physical classification
-                $isGoods = ($blockCat === 'barang' 
+                // 3. Goods / Barang Physical classification (only if not digital/service)
+                $isGoods = !$isDigitalOrService && ($blockCat === 'barang' 
                             || $pType === 'physical' 
                             || $pType === 'barang' 
                             || in_array($catName, ['barang', 'produk fisik', 'umkm', 'peralatan dapur', 'kebersihan', 'kamar tidur', 'kamar mandi', 'elektronik', 'taman & outdoor', 'perkakas', 'laundry', 'penyimpanan', 'pengiriman kilat']));
-
-                // 3. Digital, Ticket, Service / Jasa classification
-                $isDigitalOrService = in_array($pType, ['digital', 'service', 'jasa', 'ticket', 'course', 'ebook', 'download', 'virtual', 'file', 'external_link']) 
-                                       || $blockCat === 'jasa'
-                                       || in_array($catName, ['jasa', 'service', 'layanan', 'booking & jasa layanan online', 'booking', 'tiket & event', 'ticket']);
 
                 if ($isGoods) {
                     $hasGoodsShipping = true;
