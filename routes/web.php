@@ -100,7 +100,7 @@ Route::middleware(['track.pageview'])->group(function () {
         return redirect()->route('login');
     })->name('checkout.login');
     Route::get('/checkout',                [CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/checkout',               [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::post('/checkout',               [CheckoutController::class, 'store'])->name('checkout.store')->middleware('throttle:checkout-limit');
     Route::get('/checkout/selesai/{order}',[CheckoutController::class, 'finish'])->name('checkout.finish');
 
     // API RajaOngkir & Wilayah untuk Checkout
@@ -139,14 +139,14 @@ Route::post('/request-order', [LeadController::class, 'store'])->name('lead.stor
 */
 Route::middleware(['guest'])->group(function () {
     Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login',   [AuthController::class, 'login'])->name('login.submit');
+    Route::post('/login',   [AuthController::class, 'login'])->name('login.submit')->middleware('throttle:login-limit');
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register',[AuthController::class, 'register'])->name('register.submit');
+    Route::post('/register',[AuthController::class, 'register'])->name('register.submit')->middleware('throttle:login-limit');
 
     // Email OTP Verification Routes
     Route::get('/verify-otp',  [AuthController::class, 'showVerifyOtp'])->name('otp.verify');
     Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('otp.verify.submit');
-    Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('otp.resend');
+    Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('otp.resend')->middleware('throttle:login-limit');
 
     // Password Reset Routes
     Route::get('/lupa-password',          [AuthController::class, 'showForgotPassword'])->name('password.request');
@@ -604,8 +604,8 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/bio/scrape-url', [\App\Http\Controllers\Creator\CreatorBioController::class, 'scrapeUrl'])->name('bio.scrape-url');
 
     // Custom Domain Search & Purchase (WhoisJSON & Midtrans)
-    Route::post('/domain/check',    [\App\Http\Controllers\Creator\CreatorDomainController::class, 'checkAvailability'])->name('domain.check');
-    Route::post('/domain/checkout', [\App\Http\Controllers\Creator\CreatorDomainController::class, 'checkout'])->name('domain.checkout');
+    Route::post('/domain/check',    [\App\Http\Controllers\Creator\CreatorDomainController::class, 'checkAvailability'])->name('domain.check')->middleware('throttle:domain-check');
+    Route::post('/domain/checkout', [\App\Http\Controllers\Creator\CreatorDomainController::class, 'checkout'])->name('domain.checkout')->middleware('throttle:checkout-limit');
 });
 
 // 3. Buyer Dashboard
