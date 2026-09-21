@@ -91,7 +91,7 @@ class ServiceController extends Controller
             
             // SEO-friendly Redirect: If it's a single category search on the legacy URL, redirect to the new route
             if (count($cats) === 1 && !request()->routeIs('category.show') && !request()->filled('q') && !request()->filled('subcategory')) {
-                return redirect()->route('category.show', ['categorySlug' => $cats[0]], 301);
+                return redirect()->route('category.show', ['slug' => $cats[0]], 301);
             }
 
             if (!empty($cats)) {

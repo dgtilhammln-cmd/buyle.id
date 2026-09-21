@@ -234,15 +234,34 @@ class CheckoutService
                 }
                 $product->increment('sold_count', $cartItem->qty);
 
+                // Margin Split Calculation (White Label & Reseller)
+                $sellerId = $product->seller_id;
+                $resellerId = null;
+                $baseWhitelabelPrice = null;
+                $resellerMargin = 0;
+                $creatorEarnings = $cartItem->subtotal;
+
+                if (!empty($cartItem->reseller_id) && (int)$cartItem->reseller_id !== (int)$sellerId) {
+                    $resellerId = (int)$cartItem->reseller_id;
+                    $baseWhitelabelPrice = $product->whitelabel_price ?: $product->price;
+                    $resellerMargin = max(0, ($cartItem->unit_price - $baseWhitelabelPrice) * $cartItem->qty);
+                    $creatorEarnings = $baseWhitelabelPrice * $cartItem->qty;
+                }
+
                 OrderItem::create([
-                    'order_id'         => $order->id,
-                    'product_id'       => $product->id,
-                    'variant_value_id' => $cartItem->variant_value_id,
-                    'product_name'     => $product->name,
-                    'variant_name'     => $cartItem->variantValue?->value,
-                    'price'            => $cartItem->unit_price,
-                    'qty'              => $cartItem->qty,
-                    'subtotal'         => $cartItem->subtotal,
+                    'order_id'              => $order->id,
+                    'product_id'            => $product->id,
+                    'variant_value_id'      => $cartItem->variant_value_id,
+                    'seller_id'             => $sellerId,
+                    'reseller_id'           => $resellerId,
+                    'product_name'          => $product->name,
+                    'variant_name'          => $cartItem->variantValue?->value,
+                    'price'                 => $cartItem->unit_price,
+                    'base_whitelabel_price' => $baseWhitelabelPrice,
+                    'reseller_margin'       => $resellerMargin,
+                    'creator_earnings'      => $creatorEarnings,
+                    'qty'                   => $cartItem->qty,
+                    'subtotal'              => $cartItem->subtotal,
                 ]);
             }
 

@@ -1334,7 +1334,7 @@
                                                     @php
                                                         $isSubActive = isset($subcategory) && $subcategory && $subcategory->id === $sub->id;
                                                     @endphp
-                                                    <a href="{{ route('category.show', [$cat->slug, $sub->slug]) }}"
+                                                    <a href="{{ route('category.show', $sub->slug) }}"
                                                        class="sp-subcat-item {{ $isSubActive ? 'active' : '' }}">
                                                         <span class="sp-subcat-dot"></span>
                                                         <span class="sp-subcat-name">{{ $sub->name }}</span>
@@ -1357,7 +1357,8 @@
             <div class="sp-sidebar-card">
                 <div class="sp-sidebar-head"><span class="sp-sidebar-head-dot"></span>Filter Produk</div>
                 <div class="sp-sidebar-body">
-                    <form method="GET" action="{{ route('category.show', isset($subcategory) && $subcategory ? [$category->slug, $subcategory->slug] : $category->slug) }}">
+                    @php $activeSlug = isset($subcategory) && $subcategory ? $subcategory->slug : $category->slug; @endphp
+                    <form method="GET" action="{{ route('category.show', $activeSlug) }}">
                         {{-- Urutkan / Sort --}}
                         <div style="margin-bottom:1.25rem;">
                             <div style="font-size:0.75rem;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;font-family:var(--font);">Urutkan Berdasarkan</div>
@@ -1375,15 +1376,15 @@
                             <div style="font-size:0.75rem;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;font-family:var(--font);">Tipe Produk</div>
                             <div class="sp-type-options">
                                 @php $curType = request('type', 'semua'); @endphp
-                                <a href="{{ route('category.show', isset($subcategory) && $subcategory ? [$category->slug, $subcategory->slug] : $category->slug) }}?{{ http_build_query(array_merge(request()->except('type'), ['type' => 'semua'])) }}"
+                                <a href="{{ route('category.show', $activeSlug) }}?{{ http_build_query(array_merge(request()->except('type'), ['type' => 'semua'])) }}"
                                     class="sp-type-opt {{ $curType === 'semua' ? 'active' : '' }}">
                                     <span class="sp-type-dot semua"></span> Semua
                                 </a>
-                                <a href="{{ route('category.show', isset($subcategory) && $subcategory ? [$category->slug, $subcategory->slug] : $category->slug) }}?{{ http_build_query(array_merge(request()->except('type'), ['type' => 'produk'])) }}"
+                                <a href="{{ route('category.show', $activeSlug) }}?{{ http_build_query(array_merge(request()->except('type'), ['type' => 'produk'])) }}"
                                     class="sp-type-opt {{ $curType === 'produk' ? 'active' : '' }}">
                                     <span class="sp-type-dot produk"></span> Produk Digital
                                 </a>
-                                <a href="{{ route('category.show', isset($subcategory) && $subcategory ? [$category->slug, $subcategory->slug] : $category->slug) }}?{{ http_build_query(array_merge(request()->except('type'), ['type' => 'jasa'])) }}"
+                                <a href="{{ route('category.show', $activeSlug) }}?{{ http_build_query(array_merge(request()->except('type'), ['type' => 'jasa'])) }}"
                                     class="sp-type-opt {{ $curType === 'jasa' ? 'active' : '' }}">
                                     <span class="sp-type-dot jasa"></span> Jasa Profesional
                                 </a>
@@ -1410,7 +1411,7 @@
             </div>
 
             @if(request()->hasAny(['type', 'price_min', 'price_max', 'sort']))
-                <a href="{{ route('category.show', isset($subcategory) && $subcategory ? [$category->slug, $subcategory->slug] : $category->slug) }}" class="sp-reset-link">
+                <a href="{{ route('category.show', $activeSlug) }}" class="sp-reset-link">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <polyline points="23 4 23 10 17 10" />
                         <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />

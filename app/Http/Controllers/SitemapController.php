@@ -99,16 +99,16 @@ class SitemapController extends Controller
         $categoryUrls = [];
         foreach ($categories as $cat) {
             $categoryUrls[] = [
-                'url'        => route('category.show', ['categorySlug' => $cat->slug]),
+                'url'        => route('category.show', ['slug' => $cat->slug]),
                 'priority'   => '0.9',
                 'changefreq' => 'weekly',
                 'lastmod'    => $cat->updated_at ? $cat->updated_at->toDateString() : now()->toDateString(),
                 'images'     => [],
             ];
-            // Sub-kategori juga dimasukkan: /kategori/{slug}/{sub-slug}
+            // Sub-kategori juga dimasukkan secara bersih: /kategori/{sub-slug}
             foreach ($cat->subCategories as $sub) {
                 $categoryUrls[] = [
-                    'url'        => route('category.show', ['categorySlug' => $cat->slug, 'subcategorySlug' => $sub->slug]),
+                    'url'        => route('category.show', ['slug' => $sub->slug]),
                     'priority'   => '0.8',
                     'changefreq' => 'weekly',
                     'lastmod'    => $sub->updated_at ? $sub->updated_at->toDateString() : now()->toDateString(),

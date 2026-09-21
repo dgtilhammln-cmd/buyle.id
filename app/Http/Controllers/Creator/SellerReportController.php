@@ -42,12 +42,15 @@ class SellerReportController extends Controller
     }
 
     /**
-     * Base query untuk orders seller yang sudah bayar.
+     * Base query untuk orders seller atau reseller yang sudah bayar.
      */
     private function paidOrdersBaseQuery(int $sellerId, Carbon $startDate, Carbon $endDate)
     {
         return Order::whereHas('payment', fn($q) => $q->where('status', PaymentStatus::Success->value))
-            ->whereHas('items.product', fn($q) => $q->where('seller_id', $sellerId))
+            ->where(function($orQ) use ($sellerId) {
+                $orQ->whereHas('items.product', fn($q) => $q->where('seller_id', $sellerId))
+                    ->orWhereHas('items', fn($q) => $q->where('reseller_id', $sellerId));
+            })
             ->whereBetween('created_at', [$startDate, $endDate]);
     }
 
@@ -65,17 +68,42 @@ class SellerReportController extends Controller
                 'user',
                 'payment',
                 'shipment',
-                'items' => fn($q) => $q->whereHas('product', fn($p) => $p->where('seller_id', $seller->id)),
+                'items' => fn($q) => $q->where(function($iq) use ($seller) {
+                    $iq->where('seller_id', $seller->id)
+                       ->orWhere('reseller_id', $seller->id)
+                       ->orWhereHas('product', fn($p) => $p->where('seller_id', $seller->id));
+                }),
                 'items.product',
+                'items.seller',
+                'items.reseller',
             ])
             ->orderByDesc('created_at')
             ->get();
 
         $totalOrders = $allOrders->count();
-        $totalSales  = $allOrders->sum(fn($o) => $o->items->sum('subtotal'));
+
+        // Calculate sales & net earnings (Original creator gets creator_earnings, Reseller gets reseller_margin)
+        $totalSales = $allOrders->sum(function($o) use ($seller) {
+            return $o->items->sum(function($item) use ($seller) {
+                if ((int)$item->reseller_id === (int)$seller->id) {
+                    return (float) ($item->reseller_margin > 0 ? $item->reseller_margin : $item->subtotal);
+                }
+                return (float) ($item->creator_earnings > 0 ? $item->creator_earnings : $item->subtotal);
+            });
+        });
+
         $salesByDate = $allOrders
             ->groupBy(fn($o) => $o->created_at->format('Y-m-d'))
-            ->map(fn($group) => (float)$group->sum(fn($o) => $o->items->sum('subtotal')))
+            ->map(function($group) use ($seller) {
+                return (float)$group->sum(function($o) use ($seller) {
+                    return $o->items->sum(function($item) use ($seller) {
+                        if ((int)$item->reseller_id === (int)$seller->id) {
+                            return (float) ($item->reseller_margin > 0 ? $item->reseller_margin : $item->subtotal);
+                        }
+                        return (float) ($item->creator_earnings > 0 ? $item->creator_earnings : $item->subtotal);
+                    });
+                });
+            })
             ->toArray();
 
         // ── 2. Visitor Stats ────────────────────────────────────────────────────

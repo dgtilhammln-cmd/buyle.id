@@ -10,38 +10,60 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     /**
-     * Display the specified category and optionally a subcategory.
+     * Permanent 301 Redirect for legacy 2-level category URLs (/kategori/{categorySlug}/{subcategorySlug})
+     * Redirects to clean single-level URL (/kategori/{subcategorySlug}) to prevent SEO duplicate content.
      */
-    public function show($categorySlug, $subcategorySlug = null)
+    public function redirectLegacySubcategory($categorySlug, $subcategorySlug)
     {
-        $category = ProductCategory::where('slug', $categorySlug)
-            ->active()
-            ->firstOrFail();
+        $queryString = request()->getQueryString();
+        $targetUrl = route('category.show', ['slug' => $subcategorySlug]);
+        if ($queryString) {
+            $targetUrl .= '?' . $queryString;
+        }
+        return redirect($targetUrl, 301);
+    }
 
-        $subcategory = null;
-        if ($subcategorySlug) {
-            $subcategory = ProductSubCategory::where('slug', $subcategorySlug)
-                ->where('category_id', $category->id)
+    /**
+     * Display the specified category or subcategory with clean single slug (/kategori/{slug}).
+     */
+    public function show($slug)
+    {
+        $subcategory = ProductSubCategory::where('slug', $slug)
+            ->where('is_active', true)
+            ->first();
+
+        if ($subcategory) {
+            $category = $subcategory->category;
+        } else {
+            $category = ProductCategory::where('slug', $slug)
+                ->active()
                 ->firstOrFail();
         }
 
         $query = Product::active()->ordered();
-        $query->where('product_category_id', $category->id);
 
         if ($subcategory) {
             $query->where('product_sub_category_id', $subcategory->id);
+        } else {
+            $query->where('product_category_id', $category->id);
         }
         
         // Sorting
         $sort = request('sort', 'terbaru');
         switch ($sort) {
             case 'termurah':
+            case 'price_asc':
                 $query->orderBy('price', 'asc');
                 break;
             case 'termahal':
+            case 'price_desc':
                 $query->orderBy('price', 'desc');
                 break;
+            case 'name_az':
+                $query->orderBy('name', 'asc');
+                break;
             case 'terbaru':
+            case 'newest':
             default:
                 $query->latest();
                 break;

@@ -292,10 +292,11 @@ class CreatorBioController extends Controller
 
             $catRaw = trim($request->category ?? 'Makanan');
             $data['category'] = match (strtolower($catRaw)) {
-                'barang' => 'Barang',
-                'jasa'   => 'Jasa',
-                'lainnya' => 'Lainnya',
-                default  => 'Makanan',
+                'barang'     => 'Barang',
+                'jasa'       => 'Jasa',
+                'whitelabel' => 'whitelabel',
+                'lainnya'    => 'Lainnya',
+                default      => 'Makanan',
             };
 
             $stockVal = $request->stock ?? null;

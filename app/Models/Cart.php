@@ -13,13 +13,16 @@ class Cart extends Model
         'session_id',
         'product_id',
         'variant_value_id',
+        'reseller_id',
+        'custom_price',
         'qty',
     ];
 
     protected function casts(): array
     {
         return [
-            'qty' => 'integer',
+            'custom_price' => 'decimal:2',
+            'qty'          => 'integer',
         ];
     }
 
@@ -41,6 +44,14 @@ class Cart extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    /**
+     * Reseller / Creator pemilik Halaman Bio yang menawarkan produk ini.
+     */
+    public function reseller(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reseller_id');
     }
 
     /**
@@ -76,10 +87,14 @@ class Cart extends Model
     // =========================================================================
 
     /**
-     * Harga satuan item (mempertimbangkan varian).
+     * Harga satuan item (mempertimbangkan harga markup reseller & varian).
      */
     public function getUnitPriceAttribute(): float
     {
+        if ($this->custom_price && (float)$this->custom_price > 0) {
+            return (float) $this->custom_price;
+        }
+
         if ($this->variantValue) {
             return $this->variantValue->finalPrice();
         }

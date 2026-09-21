@@ -1210,7 +1210,7 @@
                                     <line x1="12" y1="16" x2="12" y2="12" />
                                     <line x1="12" y1="8" x2="12.01" y2="8" />
                                 </svg>
-                                Hasil pencarian di-cache otomatis sehingga pencarian ulang tidak mengurangi kuota API.
+                                Hasil pencarian di-cache otomatis.
                             </div>
                         </div>
 
@@ -2161,15 +2161,14 @@
 
                         @php
                             $wlBlockIds = $whitelabelProducts->pluck('id')->toArray();
-                            $addedWlBlocks = $blocks->where('type', 'buyle_product')->filter(function ($b) use ($wlBlockIds) {
-                                $cat = strtolower(trim($b->data_json['category'] ?? ''));
-                                if (in_array($cat, ['makanan', 'barang', 'jasa', 'lainnya', 'kuliner', 'fisik', 'umkm']))
-                                    return false;
-                                $title = strtolower($b->title ?? '');
-                                if (preg_match('/(es|nasi|teh|kopi|jus|sirup|air|soto|bakso|mie|ayam|bebek|daging|ikan|kerupuk|lumpia|kasur|samsung|promo|sepatu|baju|celana)/i', $title))
-                                    return false;
-                                $pId = $b->data_json['product_id'] ?? null;
-                                return $pId && in_array((int) $pId, $wlBlockIds);
+                            $addedWlBlocks = $blocks->filter(function ($b) use ($wlBlockIds) {
+                                if ($b->type === 'buyle_product') {
+                                    $cat = strtolower(trim($b->data_json['category'] ?? ''));
+                                    if ($cat === 'whitelabel') return true;
+                                    $pId = $b->data_json['product_id'] ?? null;
+                                    return $pId && in_array((int) $pId, $wlBlockIds);
+                                }
+                                return false;
                             });
                         @endphp
 
@@ -2177,43 +2176,52 @@
                             @php
                                 $wlProdId = $wlBlock->data_json['product_id'] ?? null;
                                 $wlProd = $whitelabelProducts->firstWhere('id', $wlProdId) ?? ($wlProdId ? \App\Models\Product::with('seller:id,name')->find($wlProdId) : null);
+                                $baseWlPrice = $wlProd ? ($wlProd->whitelabel_price ?: $wlProd->price) : 0;
+                                $resellerSellingPrice = (float)($wlBlock->data_json['price'] ?? $baseWlPrice);
+                                $resellerMarginProfit = max(0, $resellerSellingPrice - $baseWlPrice);
                             @endphp
                             <div
-                                style="background:#fff; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
+                                style="background:#fff; border:1px solid #E2E8F0; border-radius:12px; padding:1rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
                                 @if($wlProd)
                                     <img src="{{ $wlProd->main_image }}"
-                                        style="width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
+                                        style="width:54px; height:54px; border-radius:10px; object-fit:cover; flex-shrink:0; border:1px solid #E2E8F0;">
                                 @endif
                                 <div style="flex:1; min-width:200px;">
-                                    <div style="font-weight: 500; font-size:0.875rem; color:#0F172A;">
+                                    <div style="font-weight: 600; font-size:0.875rem; color:#0F172A;">
                                         {{ $wlBlock->title }}
                                     </div>
-                                    <div style="font-size:0.75rem; color:#64748B; margin-top:0.2rem;">
+                                    <div style="font-size:0.75rem; color:#64748B; margin-top:0.3rem; display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center;">
                                         @if($wlProd)
-                                            Oleh: <strong style="color:#334155;">{{ $wlProd->seller->name ?? 'Creator' }}</strong>
-                                            @if($wlProd->whitelabel_price)
-                                                &middot; Min. Resell: <span style="color:#0F172A; font-weight: 500;">Rp
-                                                    {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}</span>
-                                            @else
-                                                &middot; Harga Asli: <span style="color:#0F172A; font-weight: 500;">Rp
-                                                    {{ number_format($wlProd->price, 0, ',', '.') }}</span>
-                                            @endif
+                                            <span>Oleh: <strong style="color:#334155;">{{ $wlProd->seller->name ?? 'Creator' }}</strong></span>
+                                            <span>&middot; Modal: <strong style="color:#475569;">Rp {{ number_format($baseWlPrice, 0, ',', '.') }}</strong></span>
+                                            <span>&middot; Harga Jual: <strong style="color:#0F172A;">Rp {{ number_format($resellerSellingPrice, 0, ',', '.') }}</strong></span>
+                                            <span style="background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; padding:0.1rem 0.45rem; border-radius:6px; font-weight:600; font-size:0.7rem;">
+                                                Profit: +Rp {{ number_format($resellerMarginProfit, 0, ',', '.') }}
+                                            </span>
                                         @endif
                                     </div>
                                 </div>
-                                <form action="{{ route('creator.bio.blocks.destroy', $wlBlock) }}" method="POST"
-                                    class="form-delete-block" style="margin-left:auto;">
-                                    @csrf @method('DELETE')
-                                    <button type="button" class="btn-delete-block"
-                                        style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <polyline points="3 6 5 6 21 6" />
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                                        </svg>
-                                        Hapus dari Bio
+                                <div style="display:flex; align-items:center; gap:0.4rem; margin-left:auto;">
+                                    <button type="button"
+                                        onclick="openEditWlMarkupModal('{{ $wlBlock->id }}', '{{ addslashes($wlBlock->title) }}', {{ $baseWlPrice }}, {{ $resellerSellingPrice }})"
+                                        style="background:#F8FAFC; color:#0F172A; border:1.5px solid #CBD5E1; padding:0.38rem 0.75rem; border-radius:8px; font-size:0.75rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                        Edit Harga
                                     </button>
-                                </form>
+                                    <form action="{{ route('creator.bio.blocks.destroy', $wlBlock) }}" method="POST"
+                                        class="form-delete-block" style="margin:0;">
+                                        @csrf @method('DELETE')
+                                        <button type="button" class="btn-delete-block"
+                                            style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.38rem 0.75rem; border-radius:8px; font-size:0.75rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                viewBox="0 0 24 24">
+                                                <polyline points="3 6 5 6 21 6" />
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                            </svg>
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         @empty
                             <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0; margin:0;">Belum
@@ -3540,20 +3548,20 @@
             popup.id = 'scrapeFailedPopup';
             popup.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);';
             popup.innerHTML = `
-                                            <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
-                                                <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                                                    <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                                </div>
-                                                <div style="font-weight: 600;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
-                                                <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
-                                                <div style="display:flex;gap:0.6rem;justify-content:center;">
-                                                    <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight: 500;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
-                                                    <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight: 500;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
-                                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                                        Scan AI
-                                                    </button>
-                                                </div>
-                                            </div>`;
+                                                        <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
+                                                            <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                                                                <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                                            </div>
+                                                            <div style="font-weight: 600;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
+                                                            <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
+                                                            <div style="display:flex;gap:0.6rem;justify-content:center;">
+                                                                <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight: 500;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
+                                                                <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight: 500;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
+                                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                                                    Scan AI
+                                                                </button>
+                                                            </div>
+                                                        </div>`;
             document.body.appendChild(popup);
             popup.addEventListener('click', function (e) { if (e.target === popup) popup.remove(); });
         }
@@ -3827,11 +3835,11 @@
                 document.getElementById('imgOversizedDesc').innerHTML = 'Foto berikut melebihi batas <strong>1 MB per file</strong>. Harap kompres terlebih dahulu.';
 
                 const listHtml = oversized.map(f => `
-                                                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
-                                                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
-                                                    <span style="color:#EF4444; font-weight: 500;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
-                                                </div>
-                                            `).join('');
+                                                            <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
+                                                                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
+                                                                <span style="color:#EF4444; font-weight: 500;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                                                            </div>
+                                                        `).join('');
 
                 document.getElementById('imgOversizedFileList').innerHTML = listHtml;
                 document.getElementById('imgOversizedModal').classList.add('open');
@@ -4594,17 +4602,16 @@
                                         </button>
                                     </form>
                                 @else
-                                    <form action="{{ route('creator.bio.blocks.store') }}" method="POST" style="margin:0;">
-                                        @csrf
-                                        <input type="hidden" name="type" value="buyle_product">
-                                        <input type="hidden" name="title" value="{{ $wlProd->name }}">
-                                        <input type="hidden" name="url" value="{{ route('products.show', $wlProd->slug) }}">
-                                        <input type="hidden" name="product_id" value="{{ $wlProd->id }}">
-                                        <button type="submit"
-                                            style="width:100%; background:#1eb349; color:#fff; font-size:0.72rem; padding:0.35rem 0.4rem; height:32px; border-radius:8px; font-weight: 500; cursor:pointer; border:none; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
-                                            + Tambah ke Bio
-                                        </button>
-                                    </form>
+                                    <input type="hidden" name="type" value="buyle_product">
+                                    <input type="hidden" name="category" value="whitelabel">
+                                    <input type="hidden" name="title" value="{{ $wlProd->name }}">
+                                    <input type="hidden" name="url" value="{{ route('products.show', $wlProd->slug) }}">
+                                    <input type="hidden" name="product_id" value="{{ $wlProd->id }}">
+                                    <button type="button"
+                                        onclick="openAddWhitelabelMarkupModal('{{ $wlProd->id }}', '{{ addslashes($wlProd->name) }}', '{{ route('products.show', $wlProd->slug) }}', {{ $wlProd->whitelabel_price ?: $wlProd->price }})"
+                                        style="width:100%; background:#1eb349; color:#fff; font-size:0.72rem; padding:0.35rem 0.4rem; height:32px; border-radius:8px; font-weight: 500; cursor:pointer; border:none; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
+                                        + Tambah ke Bio & Atur Harga
+                                    </button>
                                 @endif
                             </div>
                         </div>
@@ -5323,6 +5330,54 @@
         document.getElementById('domainSearchInput').addEventListener('keydown', function (e) {
             if (e.key === 'Enter') executeDomainSearch();
         });
+
+        /* ── White Label Markup Modal JS ────────────────────────────── */
+        var currentWlBasePrice = 0;
+
+        function openAddWhitelabelMarkupModal(prodId, title, url, basePrice) {
+            currentWlBasePrice = parseFloat(basePrice) || 0;
+            document.getElementById('wlModalHeading').textContent = 'Tambah Produk & Atur Harga Jual';
+            document.getElementById('wlMethodField').innerHTML = '';
+            document.getElementById('wlFormTitle').value = title;
+            document.getElementById('wlFormUrl').value = url;
+            document.getElementById('wlFormProductId').value = prodId;
+            document.getElementById('wlModalTitleDisplay').textContent = title;
+            document.getElementById('wlModalBasePriceDisplay').textContent = 'Rp ' + Math.round(currentWlBasePrice).toLocaleString('id-ID');
+            document.getElementById('wlModalSellingPriceInput').value = Math.round(currentWlBasePrice);
+            document.getElementById('wlForm').action = "{{ route('creator.bio.blocks.store') }}";
+            calculateLiveWlMargin();
+            var modal = document.getElementById('wlMarkupModal');
+            modal.style.display = 'flex';
+            modal.classList.add('open');
+        }
+
+        function openEditWlMarkupModal(blockId, title, basePrice, currentSellingPrice) {
+            currentWlBasePrice = parseFloat(basePrice) || 0;
+            document.getElementById('wlModalHeading').textContent = 'Edit Harga Jual (Markup)';
+            document.getElementById('wlMethodField').innerHTML = '<input type="hidden" name="_method" value="PUT">';
+            document.getElementById('wlFormTitle').value = title;
+            document.getElementById('wlModalTitleDisplay').textContent = title;
+            document.getElementById('wlModalBasePriceDisplay').textContent = 'Rp ' + Math.round(currentWlBasePrice).toLocaleString('id-ID');
+            document.getElementById('wlModalSellingPriceInput').value = Math.round(currentSellingPrice);
+            document.getElementById('wlForm').action = "{{ url('creator/bio/blocks') }}/" + blockId;
+            calculateLiveWlMargin();
+            var modal = document.getElementById('wlMarkupModal');
+            modal.style.display = 'flex';
+            modal.classList.add('open');
+        }
+
+        function closeWlMarkupModal() {
+            var modal = document.getElementById('wlMarkupModal');
+            modal.style.display = 'none';
+            modal.classList.remove('open');
+        }
+
+        function calculateLiveWlMargin() {
+            var rawInput = document.getElementById('wlModalSellingPriceInput').value.replace(/[^0-9]/g, '');
+            var sellingPrice = parseFloat(rawInput) || 0;
+            var margin = Math.max(0, sellingPrice - currentWlBasePrice);
+            document.getElementById('wlModalMarginPreview').textContent = '+Rp ' + Math.round(margin).toLocaleString('id-ID');
+        }
     </script>
     <style>
         @keyframes domSpin {
@@ -5331,4 +5386,51 @@
             }
         }
     </style>
+
+    {{-- Modal Atur / Edit Harga Jual White Label --}}
+    <div id="wlMarkupModal" class="modal-backdrop" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:99999; align-items:center; justify-content:center;">
+        <div style="width:90%; max-width:440px; background:#fff; border-radius:20px; padding:1.5rem; box-shadow:0 20px 40px rgba(0,0,0,0.15);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom:1px solid #E2E8F0; padding-bottom:0.75rem;">
+                <h3 style="font-size:1.05rem; font-weight:700; color:#0F172A; margin:0;" id="wlModalHeading">Atur Harga Jual (Markup)</h3>
+                <button type="button" onclick="closeWlMarkupModal()" style="background:none; border:none; cursor:pointer; color:#64748B; padding:0.2rem;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <form id="wlForm" method="POST">
+                @csrf
+                <div id="wlMethodField"></div>
+                <input type="hidden" name="type" value="buyle_product">
+                <input type="hidden" name="category" value="whitelabel">
+                <input type="hidden" name="title" id="wlFormTitle">
+                <input type="hidden" name="url" id="wlFormUrl">
+                <input type="hidden" name="product_id" id="wlFormProductId">
+
+                <div style="margin-bottom:1rem;">
+                    <label style="font-size:0.78rem; font-weight:600; color:#475569; display:block; margin-bottom:0.35rem;">Nama Produk White Label</label>
+                    <div id="wlModalTitleDisplay" style="font-size:0.9rem; font-weight:600; color:#0F172A; background:#F8FAFC; border:1px solid #E2E8F0; padding:0.65rem 0.85rem; border-radius:10px;"></div>
+                </div>
+
+                <div style="background:#F0FDF4; border:1px solid #BBF7D0; padding:0.85rem; border-radius:12px; margin-bottom:1rem;">
+                    <div style="font-size:0.75rem; color:#166534; font-weight:500;">Harga Modal (Owner Produk):</div>
+                    <div style="font-size:1.1rem; font-weight:700; color:#15803D; margin-top:0.15rem;" id="wlModalBasePriceDisplay">Rp 0</div>
+                </div>
+
+                <div style="margin-bottom:1rem;">
+                    <label style="font-size:0.8rem; font-weight:600; color:#0F172A; display:block; margin-bottom:0.35rem;">Tentukan Harga Jual Anda di Link Bio (Rp):</label>
+                    <input type="text" id="wlModalSellingPriceInput" name="price" required oninput="calculateLiveWlMargin()" class="form-input" style="height:44px; font-size:1rem; font-weight:700; color:#0F172A; width:100%; box-sizing:border-box; padding:0 0.85rem; border:1.5px solid #CBD5E1; border-radius:10px;" placeholder="Masukkan harga jual...">
+                    <div style="font-size:0.72rem; color:#64748B; margin-top:0.35rem;">*Minimal sama dengan atau lebih tinggi dari Harga Modal.</div>
+                </div>
+
+                <div style="background:#EFF6FF; border:1px solid #BFDBFE; padding:0.85rem; border-radius:12px; margin-bottom:1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:0.78rem; font-weight:600; color:#1E40AF;">Keuntungan (Profit Margin) Anda:</span>
+                    <span id="wlModalMarginPreview" style="font-size:1.05rem; font-weight:700; color:#1E3A8A;">+Rp 0</span>
+                </div>
+
+                <div style="display:flex; gap:0.5rem;">
+                    <button type="button" onclick="closeWlMarkupModal()" style="flex:1; height:42px; background:#F1F5F9; border:1px solid #CBD5E1; color:#334155; border-radius:10px; font-size:0.85rem; font-weight:600; cursor:pointer;">Batal</button>
+                    <button type="submit" style="flex:1.5; height:42px; background:linear-gradient(135deg,#1eb349,#a5cf37); border:none; color:#fff; border-radius:10px; font-size:0.85rem; font-weight:600; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,.3);">Simpan & Tambahkan</button>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection

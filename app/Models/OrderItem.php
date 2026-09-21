@@ -11,9 +11,14 @@ class OrderItem extends Model
         'order_id',
         'product_id',
         'variant_value_id',
+        'seller_id',
+        'reseller_id',
         'product_name',
         'variant_name',
         'price',
+        'base_whitelabel_price',
+        'reseller_margin',
+        'creator_earnings',
         'qty',
         'subtotal',
     ];
@@ -21,9 +26,12 @@ class OrderItem extends Model
     protected function casts(): array
     {
         return [
-            'price'    => 'decimal:2',
-            'qty'      => 'integer',
-            'subtotal' => 'decimal:2',
+            'price'                 => 'decimal:2',
+            'base_whitelabel_price' => 'decimal:2',
+            'reseller_margin'       => 'decimal:2',
+            'creator_earnings'      => 'decimal:2',
+            'qty'                   => 'integer',
+            'subtotal'              => 'decimal:2',
         ];
     }
 
@@ -45,6 +53,22 @@ class OrderItem extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    /**
+     * Creator asli pemilik produk.
+     */
+    public function seller(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'seller_id');
+    }
+
+    /**
+     * Reseller / Whitelabel yang menjual produk ini.
+     */
+    public function reseller(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reseller_id');
     }
 
     /**

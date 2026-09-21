@@ -834,6 +834,13 @@
                                                 'price' => $i->price,
                                                 'subtotal' => $i->subtotal,
                                                 'product_type' => $i->product?->product_type ?? $i->product?->type ?? 'external_link',
+                                                'seller_id' => $i->seller_id,
+                                                'reseller_id' => $i->reseller_id,
+                                                'seller_name' => $i->seller?->name ?? '',
+                                                'reseller_name' => $i->reseller?->name ?? '',
+                                                'base_price' => (float) ($i->base_whitelabel_price ?? 0),
+                                                'reseller_margin' => (float) ($i->reseller_margin ?? 0),
+                                                'creator_earnings' => (float) ($i->creator_earnings ?? $i->subtotal),
                                             ])->values(),
                                             'subtotal' => $order->items->sum('subtotal'),
                                             'shipping_cost' => (float) ($order->shipping_cost ?? 0),
@@ -1163,13 +1170,36 @@
             const itemsList = document.getElementById('od_items_list');
             let itemsHtml = '';
             (data.items || []).forEach(item => {
+                let wlBadges = '';
+                if (item.seller_name) {
+                    wlBadges += `<span style="background:#F1F5F9;color:#475569;padding:2px 7px;border-radius:4px;font-size:0.7rem;font-weight:600;display:inline-flex;align-items:center;gap:3px;margin-top:4px;">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        Pemilik Produk: ${item.seller_name}</span>`;
+                }
+                if (item.reseller_name) {
+                    wlBadges += `<span style="background:#EFF6FF;color:#2563EB;padding:2px 7px;border-radius:4px;font-size:0.7rem;font-weight:600;display:inline-flex;align-items:center;gap:3px;margin-top:4px;margin-left:4px;">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        Reseller Whitelabel: ${item.reseller_name}</span>`;
+                }
+                let wlBreakdown = '';
+                if (item.reseller_margin > 0) {
+                    wlBreakdown = `<div style="margin-top:5px;background:#F0FDF4;border:1px dashed #86EFAC;color:#166534;padding:4px 8px;border-radius:6px;font-size:0.7rem;line-height:1.8;">
+                        <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Harga Dasar Whitelabel: Rp ${Number(item.base_price).toLocaleString('id-ID')}</div>
+                        <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Margin Reseller Whitelabel: <strong>+ Rp ${Number(item.reseller_margin).toLocaleString('id-ID')}</strong></div>
+                        <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Hak Pemilik Produk: <strong>Rp ${Number(item.creator_earnings).toLocaleString('id-ID')}</strong></div>
+                    </div>`;
+                }
                 itemsHtml += `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0.85rem; border-bottom:1px solid #f1f5f9; font-size:0.82rem;">
-                    <div>
-                        <strong style="color:#0f172a;">${item.name}</strong>
-                        <div style="font-size:0.72rem; color:#64748b;">Rp ${Number(item.price).toLocaleString('id-ID')} x ${item.quantity}</div>
+                <div style="padding:0.6rem 0.85rem; border-bottom:1px solid #f1f5f9; font-size:0.82rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <strong style="color:#0f172a;">${item.name}</strong>
+                            <div style="font-size:0.72rem; color:#64748b;">Rp ${Number(item.price).toLocaleString('id-ID')} x ${item.quantity}</div>
+                            <div style="display:flex;flex-wrap:wrap;gap:3px;">${wlBadges}</div>
+                            ${wlBreakdown}
+                        </div>
+                        <div style="font-weight:700; color:#0f172a; white-space:nowrap; margin-left:1rem;">Rp ${Number(item.subtotal).toLocaleString('id-ID')}</div>
                     </div>
-                    <div style="font-weight:700; color:#0f172a;">Rp ${Number(item.subtotal).toLocaleString('id-ID')}</div>
                 </div>
             `;
             });

@@ -329,6 +329,29 @@
                                                 @if($item->variant_name)
                                                     <div class="od-prod-var">Variasi: {{ $item->variant_name }}</div>
                                                 @endif
+                                                @if($item->seller_id || $item->reseller_id)
+                                                    <div style="margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.725rem;">
+                                                        @if($item->seller)
+                                                            <span style="background: #F1F5F9; color: #475569; padding: 2px 8px; border-radius: 4px; font-weight: 600; display:inline-flex; align-items:center; gap:4px;">
+                                                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                                                Pemilik Produk: {{ $item->seller->name }}
+                                                            </span>
+                                                        @endif
+                                                        @if($item->reseller)
+                                                            <span style="background: #EFF6FF; color: #2563EB; padding: 2px 8px; border-radius: 4px; font-weight: 600; display:inline-flex; align-items:center; gap:4px;">
+                                                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                                                Reseller Whitelabel: {{ $item->reseller->name }}
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                                @if($item->reseller_margin > 0)
+                                                    <div style="margin-top: 4px; font-size: 0.725rem; background: #F0FDF4; border: 1px dashed #86EFAC; color: #166534; padding: 4px 8px; border-radius: 6px;">
+                                                        <div style="display:inline-flex;align-items:center;gap:4px;"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Harga Dasar Whitelabel: Rp {{ number_format($item->base_whitelabel_price ?? 0, 0, ',', '.') }}</div>
+                                                        <div style="display:inline-flex;align-items:center;gap:4px;"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Margin Reseller Whitelabel: <strong>+ Rp {{ number_format($item->reseller_margin, 0, ',', '.') }}</strong></div>
+                                                        <div style="display:inline-flex;align-items:center;gap:4px;"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Hak Pemilik Produk: <strong>Rp {{ number_format($item->creator_earnings, 0, ',', '.') }}</strong></div>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>

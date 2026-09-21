@@ -77,8 +77,9 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/galeri',         [GalleryController::class,'index'])->name('gallery');
     Route::get('/galeri/{slug}',  [GalleryController::class,'show'])->name('gallery.show');
     
-    // SEO Friendly Category Route
-    Route::get('/kategori/{categorySlug}/{subcategorySlug?}', [CategoryController::class, 'show'])->name('category.show');
+    // SEO Friendly Category Route & 301 Legacy Redirect
+    Route::get('/kategori/{categorySlug}/{subcategorySlug}', [CategoryController::class, 'redirectLegacySubcategory']);
+    Route::get('/kategori/{slug}', [CategoryController::class, 'show'])->name('category.show');
     
     Route::get('/produk',         [ServiceController::class,'index'])->name('products');
     Route::get('/produk/{slug}',  [ServiceController::class,'show'])->name('products.show');
