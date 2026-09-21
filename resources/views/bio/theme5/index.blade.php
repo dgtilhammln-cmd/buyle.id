@@ -133,25 +133,25 @@
         :root {
             --t5-emerald: #1eb349;
             --t5-emerald-dark: #15803d;
-            --t5-emerald-light: #f0fdf4;
-            --t5-emerald-border: #bbf7d0;
-            --t5-slate-900: #0f172a;
-            --t5-slate-800: #1e293b;
-            --t5-slate-700: #334155;
-            --t5-slate-600: #475569;
+            --t5-emerald-light: rgba(30, 179, 73, 0.15);
+            --t5-emerald-border: rgba(30, 179, 73, 0.35);
+            --t5-slate-900: #080a0c;
+            --t5-slate-800: #121518;
+            --t5-slate-700: #1a1e23;
+            --t5-slate-600: #94a3b8;
             --t5-slate-500: #64748b;
-            --t5-slate-400: #94a3b8;
-            --t5-slate-200: #e2e8f0;
-            --t5-bg-main: #f8fafc;
-            --t5-white: #ffffff;
+            --t5-slate-400: #cbd5e1;
+            --t5-slate-200: #22282f;
+            --t5-bg-main: #080a0c;
+            --t5-white: #121518;
             --t5-amber: #f59e0b;
-            --t5-radius-sm: 8px;
-            --t5-radius-md: 14px;
-            --t5-radius-lg: 20px;
-            --t5-radius-xl: 28px;
-            --t5-shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
-            --t5-shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
-            --t5-shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.12);
+            --t5-radius-sm: 6px;
+            --t5-radius-md: 10px;
+            --t5-radius-lg: 16px;
+            --t5-radius-xl: 20px;
+            --t5-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --t5-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+            --t5-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
         }
 
         *, *::before, *::after {
@@ -168,7 +168,7 @@
         body.t5-body {
             font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--t5-bg-main);
-            color: var(--t5-slate-800);
+            color: #ffffff;
             line-height: 1.6;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
@@ -181,7 +181,7 @@
             left: 0;
             width: 100%;
             z-index: 999;
-            background: rgba(255, 255, 255, 0.94);
+            background: rgba(8, 10, 12, 0.94);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--t5-slate-200);
@@ -215,7 +215,7 @@
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--t5-emerald), #a5cf37);
+            background: linear-gradient(135deg, var(--t5-emerald), #15803d);
             color: #fff;
             display: flex;
             align-items: center;
@@ -230,7 +230,7 @@
         .t5-brand-title {
             font-weight: 600;
             font-size: 1.05rem;
-            color: var(--t5-slate-900);
+            color: #ffffff;
             letter-spacing: -0.02em;
             line-height: 1.2;
         }
@@ -260,16 +260,26 @@
         .t5-nav-desktop {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 1.25rem;
+            max-width: 60%;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .t5-nav-desktop::-webkit-scrollbar {
+            display: none;
         }
         .t5-nav-link {
             text-decoration: none;
             font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--t5-slate-600);
+            font-weight: 500;
+            color: #94a3b8;
             transition: color 0.2s ease;
             position: relative;
             padding: 0.4rem 0;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
         }
         .t5-nav-link:hover, .t5-nav-link.active {
             color: var(--t5-emerald);
@@ -278,15 +288,16 @@
             display: flex;
             align-items: center;
             gap: 0.6rem;
+            flex-shrink: 0;
         }
         .t5-action-btn {
             display: inline-flex;
             align-items: center;
             gap: 0.45rem;
             padding: 0.55rem 1rem;
-            border-radius: 999px;
+            border-radius: 8px; /* RECTANGULAR Sleek Rounded Corner, NO CAPSULE 999px */
             font-size: 0.82rem;
-            font-weight: 700;
+            font-weight: 600;
             text-decoration: none;
             transition: all 0.25s ease;
             border: none;
@@ -303,10 +314,10 @@
             box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
         }
         .t5-btn-share {
-            background: var(--t5-slate-200);
-            color: var(--t5-slate-700);
-            padding: 0.55rem;
-            border-radius: 50%;
+            background: var(--t5-slate-700);
+            color: #ffffff;
+            padding: 0.55rem 0.65rem;
+            border-radius: 8px; /* RECTANGULAR Sleek Rounded Corner */
         }
         .t5-btn-share:hover {
             background: var(--t5-emerald-light);
@@ -317,7 +328,7 @@
             display: none;
             background: none;
             border: none;
-            color: var(--t5-slate-800);
+            color: #ffffff;
             cursor: pointer;
             padding: 0.4rem;
         }
@@ -1140,10 +1151,7 @@
         {{-- 3. Products Catalog Grid --}}
         @include('bio.theme5.products_grid')
 
-        {{-- 4. Custom Bio Link Blocks & Recommendations --}}
-        @include('bio.theme5.blocks_section')
-
-        {{-- 5. About Creator Card --}}
+        {{-- 4. About Creator Card --}}
         @include('bio.theme5.about_section')
     </main>
 
