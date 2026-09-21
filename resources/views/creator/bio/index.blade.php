@@ -1581,22 +1581,14 @@
                         </svg>
                         Informasi Profil
                     </button>
-                    <button type="button" class="prof-subtab-btn" id="btn-subtab-about"
-                        onclick="switchProfileSubtab('subtab-homepage-about', this)">
+                    <button type="button" class="prof-subtab-btn" id="btn-subtab-homepage"
+                        onclick="switchProfileSubtab('subtab-homepage-main', this)">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
                             viewBox="0 0 24 24">
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                             <polyline points="9 22 9 12 15 12 15 22" />
                         </svg>
-                        Homepage / About Us
-                    </button>
-                    <button type="button" class="prof-subtab-btn" id="btn-subtab-services"
-                        onclick="switchProfileSubtab('subtab-homepage-services', this)">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
-                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                        </svg>
-                        Homepage / Jasa &amp; Layanan
+                        Homepage / Beranda (Tema 5)
                     </button>
                 </div>
 
@@ -1685,11 +1677,75 @@
                     </form>
                 </div>
 
-                {{-- SUBTAB 2: HOMEPAGE / ABOUT US (TEMA 5) --}}
-                <div class="prof-subtab-pane" id="subtab-homepage-about" style="display:none;">
+                {{-- SUBTAB 2: HOMEPAGE / BERANDA (TEMA 5) --}}
+                <div class="prof-subtab-pane" id="subtab-homepage-main" style="display:none;">
                     <form action="{{ route('creator.bio.save-profile') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="about_enabled_present" value="1">
+                        <input type="hidden" name="services_enabled_present" value="1">
+
+                        {{-- Sub-Subtab Switcher Bar --}}
+                        <style>
+                            .hp-subtab-btn {
+                                flex: 1;
+                                display: inline-flex;
+                                align-items: center;
+                                justify-content: center;
+                                gap: 0.5rem;
+                                padding: 0.7rem 1.2rem;
+                                border-radius: 10px;
+                                border: none;
+                                background: transparent;
+                                color: #64748b;
+                                font-family: 'Montserrat', sans-serif;
+                                font-size: 0.85rem;
+                                font-weight: 600;
+                                cursor: pointer;
+                                transition: all 0.25s ease;
+                            }
+                            .hp-subtab-btn:hover {
+                                color: #0f172a;
+                            }
+                            .hp-subtab-btn.active {
+                                background: #ffffff;
+                                color: #1eb349;
+                                box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+                                font-weight: 700;
+                            }
+                            .hpsub-pane {
+                                animation: hpsubSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                            }
+                            @keyframes hpsubSlideDown {
+                                from {
+                                    opacity: 0;
+                                    transform: translateY(-12px);
+                                }
+                                to {
+                                    opacity: 1;
+                                    transform: translateY(0);
+                                }
+                            }
+                        </style>
+
+                        <div style="background:#f1f5f9; padding:0.4rem; border-radius:14px; border:1px solid #cbd5e1; display:flex; gap:0.5rem; margin-bottom:1.5rem;">
+                            <button type="button" class="hp-subtab-btn active" id="btn-hpsub-about"
+                                onclick="switchHomepageSubSubtab('hpsub-about', this)">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                                </svg>
+                                Section About Us (Tema 5)
+                            </button>
+                            <button type="button" class="hp-subtab-btn" id="btn-hpsub-services"
+                                onclick="switchHomepageSubSubtab('hpsub-services', this)">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                </svg>
+                                Section Jasa &amp; Layanan (Tema 5)
+                            </button>
+                        </div>
+
+                        {{-- SUB-SUBTAB 1: ABOUT US --}}
+                        <div class="hpsub-pane" id="hpsub-about">
 
                         {{-- Card Toggle Active --}}
                         <div class="prof-card">
@@ -1947,19 +2003,10 @@
                                             class="form-input" style="height:40px; padding:0.2rem; cursor:pointer;">
                                     </div>
                                 </div>
-                            </div>
+                        </div> {{-- End #hpsub-about --}}
 
-                        <div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
-                            <button type="submit" class="btn-submit-sm">Simpan About Us (Tema 5)</button>
-                        </div>
-                    </form>
-                </div>
-
-                {{-- SUBTAB 3: HOMEPAGE / JASA & LAYANAN (TEMA 5) --}}
-                <div class="prof-subtab-pane" id="subtab-homepage-services" style="display:none;">
-                    <form action="{{ route('creator.bio.save-profile') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <input type="hidden" name="services_enabled_present" value="1">
+                        {{-- SUB-SUBTAB 2: HOMEPAGE / JASA & LAYANAN (TEMA 5) --}}
+                        <div class="hpsub-pane" id="hpsub-services" style="display:none;">
 
                         {{-- Card Toggle Active --}}
                         <div class="prof-card">
@@ -2070,14 +2117,16 @@
                                         </div>
                                     </div>
                                 @endfor
-                            </div>
-                        </div>
+                        </div> {{-- End #hpsub-services --}}
 
-                        <div style="display:flex; justify-content:flex-end; margin-top:1.25rem;">
-                            <button type="submit" class="btn-submit-sm">Simpan Section Jasa (Tema 5)</button>
+                        {{-- SINGLE SUBMIT BUTTON FOR HOMEPAGE (TEMA 5) --}}
+                        <div style="display:flex; justify-content:flex-end; margin-top:1.5rem; padding-top:1rem; border-top:1.5px solid #e2e8f0;">
+                            <button type="submit" class="btn-submit-sm" style="padding:0.75rem 2.2rem; font-size:0.9rem; font-weight:700;">
+                                Simpan Pengaturan Homepage (Tema 5)
+                            </button>
                         </div>
                     </form>
-                </div>
+                </div> {{-- End #subtab-homepage-main --}}
             </div>
 
             <div class="tab-pane" id="tab-social">
@@ -3864,11 +3913,40 @@
             var paneEl = document.getElementById(savedProfileSubtab);
             var btnMap = {
                 'subtab-profile-info': 'btn-subtab-info',
-                'subtab-homepage-about': 'btn-subtab-about',
-                'subtab-homepage-services': 'btn-subtab-services'
+                'subtab-homepage-main': 'btn-subtab-homepage'
             };
             var btnEl = document.getElementById(btnMap[savedProfileSubtab]);
             if (paneEl) switchProfileSubtab(savedProfileSubtab, btnEl);
+        }
+
+        // Homepage Sub-Subtab switching
+        function switchHomepageSubSubtab(paneId, btn) {
+            document.querySelectorAll('.hpsub-pane').forEach(p => p.style.display = 'none');
+            var target = document.getElementById(paneId);
+            if (target) {
+                target.style.display = 'block';
+                target.style.animation = 'none';
+                target.offsetHeight; /* trigger reflow */
+                target.style.animation = 'hpsubSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+            }
+
+            document.querySelectorAll('.hp-subtab-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            localStorage.setItem('bio_homepage_subsubtab', paneId);
+        }
+
+        // Restore active homepage subsubtab from localStorage
+        var savedHpSubsubtab = localStorage.getItem('bio_homepage_subsubtab');
+        if (savedHpSubsubtab) {
+            var hpSubMap = {
+                'hpsub-about': 'btn-hpsub-about',
+                'hpsub-services': 'btn-hpsub-services'
+            };
+            var hpBtnEl = document.getElementById(hpSubMap[savedHpSubsubtab]);
+            if (document.getElementById(savedHpSubsubtab)) {
+                switchHomepageSubSubtab(savedHpSubsubtab, hpBtnEl);
+            }
         }
 
 
