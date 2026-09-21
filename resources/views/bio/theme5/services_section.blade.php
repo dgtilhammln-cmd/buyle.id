@@ -41,7 +41,7 @@
             ],
         ];
 
-        // Fetch up to 4 service products from database
+        // Fetch all service products from database
         $dbServices = collect();
         if (isset($products) && is_iterable($products)) {
             $dbServices = collect($products)->filter(function($p) {
@@ -51,14 +51,13 @@
                     $pType = strtolower($bData['product_type'] ?? '');
                 }
                 return in_array($pType, ['service', 'jasa', 'layanan']);
-            })->take(4);
+            });
         }
 
         if ($dbServices->isEmpty() && isset($profile->id)) {
             $realProds = \App\Models\Product::where('seller_id', $profile->id)
                 ->whereIn('product_type', ['service', 'jasa', 'layanan'])
                 ->latest()
-                ->take(4)
                 ->get();
             if ($realProds->count() > 0) {
                 $dbServices = $realProds;
@@ -212,15 +211,66 @@
             color: #ffffff;
         }
 
-        /* CARDS GRID & HOVER ANIMATION */
+        .t5-services-nav-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .t5-nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1.5px solid #cbd5e1;
+            background: #ffffff;
+            color: #0f172a;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .t5-nav-btn:hover {
+            background: #0f172a;
+            color: #ffffff;
+            border-color: #0f172a;
+            transform: scale(1.06);
+        }
+
+        /* CARDS GRID & SWIPE CAROUSEL */
         .t5-services-grid {
-            display: grid;
-            grid-template-columns: repeat({{ min(count($servicesList), 4) }}, 1fr);
+            display: flex;
             gap: 1.25rem;
             align-items: stretch;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding: 0.5rem 0.25rem 1.5rem 0.25rem;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 transparent;
+        }
+
+        .t5-services-grid::-webkit-scrollbar {
+            height: 6px;
+        }
+        .t5-services-grid::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 999px;
+        }
+        .t5-services-grid::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 999px;
+        }
+        .t5-services-grid::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
 
         .t5-service-card {
+            flex: 0 0 calc(25% - 0.95rem);
+            min-width: 270px;
+            scroll-snap-align: start;
             background: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 24px;
@@ -234,6 +284,7 @@
             cursor: pointer;
             box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
             overflow: hidden;
+            text-decoration: none;
         }
 
         .t5-service-card:hover,
@@ -345,8 +396,8 @@
         }
 
         @media (max-width: 1024px) {
-            .t5-services-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .t5-service-card {
+                flex: 0 0 calc(50% - 0.65rem);
             }
         }
 
@@ -358,10 +409,8 @@
             .t5-services-headline {
                 font-size: 1.65rem;
             }
-            .t5-services-grid {
-                grid-template-columns: 1fr;
-            }
             .t5-service-card {
+                flex: 0 0 85%;
                 min-height: auto;
             }
             .t5-service-img-wrap {
@@ -386,16 +435,29 @@
                 </div>
                 <div class="t5-services-right">
                     <p class="t5-services-desc">{{ $description }}</p>
-                    @if(!empty($btnText))
-                        <a href="{{ $btnLink }}" class="t5-services-btn">{{ $btnText }}</a>
-                    @endif
+                    <div style="display:flex; align-items:center; justify-content:space-between; width:100%; gap:1rem; flex-wrap:wrap;">
+                        @if(!empty($btnText))
+                            <a href="{{ $btnLink }}" class="t5-services-btn">{{ $btnText }}</a>
+                        @endif
+
+                        @if(count($servicesList) > 4)
+                            <div class="t5-services-nav-wrap">
+                                <button type="button" class="t5-nav-btn" onclick="scrollT5Services('left')" aria-label="Swipe Left">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                                </button>
+                                <button type="button" class="t5-nav-btn" onclick="scrollT5Services('right')" aria-label="Swipe Right">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                                </button>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
 
-            {{-- CARDS GRID WITH HOVER ANIMATION --}}
+            {{-- CARDS GRID WITH HOVER ANIMATION & SWIPE SUPPORT --}}
             <div class="t5-services-grid">
                 @foreach($servicesList as $idx => $srv)
-                    <div class="t5-service-card {{ $idx === 1 ? 'active' : '' }}">
+                    <a href="{{ $srv['link'] }}" class="t5-service-card {{ $idx === 1 ? 'active' : '' }}">
                         <div class="t5-service-number">{{ $srv['number'] }}</div>
                         
                         <div class="t5-service-img-wrap">
@@ -417,9 +479,18 @@
                             <h3 class="t5-service-title">{{ $srv['title'] }}</h3>
                             <p class="t5-service-desc">{{ $srv['desc'] }}</p>
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
         </div>
     </section>
+
+    <script>
+        function scrollT5Services(dir) {
+            var el = document.querySelector('.t5-services-grid');
+            if (!el) return;
+            var amount = el.clientWidth * 0.75;
+            el.scrollBy({ left: dir === 'left' ? -amount : amount, behavior: 'smooth' });
+        }
+    </script>
 @endif
