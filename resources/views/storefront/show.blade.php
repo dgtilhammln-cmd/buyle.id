@@ -19,7 +19,7 @@
         '@id'         => $storeUrl . '#profilepage',
         'url'         => $storeUrl,
         'name'        => $profile->store_name . ' — buyle.id Creator',
-        'description' => $profile->store_description ?: ('Toko digital ' . $profile->store_name . ' di buyle.id'),
+        'description' => $profile->store_description ?: ('Digital store ' . $profile->store_name . ' di buyle.id'),
         'mainEntity'  => array_filter([
             '@type'       => 'Organization',
             '@id'         => $storeUrl . '#seller',
@@ -413,7 +413,7 @@
                         @php $socials = $profile->social_links ?? []; @endphp
                         <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0.35rem;margin-top:0.4rem;">
                             @if(!empty($profile->store_slug))
-                                <a href="{{ route('store.show', $profile->store_slug) }}" target="_blank" rel="noopener noreferrer" style="width:30px;height:30px;border-radius:50%;background:#F0FDF4;border:1px solid #BBF7D0;display:flex;align-items:center;justify-content:center;color:#1eb349;text-decoration:none;transition:transform 0.2s;" title="Toko Online buyle.id">
+                                <a href="{{ route('store.show', $profile->store_slug) }}" target="_blank" rel="noopener noreferrer" style="width:30px;height:30px;border-radius:50%;background:#F0FDF4;border:1px solid #BBF7D0;display:flex;align-items:center;justify-content:center;color:#1eb349;text-decoration:none;transition:transform 0.2s;" title="Digital Store buyle.id">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                                 </a>
                             @endif
@@ -619,5 +619,5 @@
         </main>
     </div>
 </div>
-@include('partials.report_modal', ['reportType' => 'store', 'targetName' => $profile->store_name ?? 'Online Store'])
+@include('partials.report_modal', ['reportType' => 'store', 'targetName' => $profile->store_name ?? 'Digital Store'])
 @endsection

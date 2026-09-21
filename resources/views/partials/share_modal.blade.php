@@ -81,7 +81,9 @@
     {{-- QR Code --}}
     <div style="text-align:center;margin-bottom:1.25rem;">
         <div style="display:inline-block;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:16px;padding:1rem;">
-            <div id="share-qr-box"></div>
+            <div id="share-qr-box">
+                <img src="{{ route('qr.code', ['data' => $shareUrl]) }}" alt="QR Code {{ $shareName }}" style="width:180px;height:180px;display:block;margin:0 auto;border-radius:8px;object-fit:contain;">
+            </div>
             <p style="font-family:'Montserrat',sans-serif;font-size:0.68rem;color:#94a3b8;margin:0.5rem 0 0;font-weight:600;">
                 Scan QR untuk buka profil
             </p>
@@ -191,32 +193,7 @@
     };
 
     function loadQR() {
-        if (_qrDone) return;
-        if (_qrReady) { genQR(); return; }
-        if (_qrLoading) return;
-        _qrLoading = true;
-        var s = document.createElement('script');
-        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
-        s.onload = function() { _qrReady = true; genQR(); };
-        s.onerror = function() { showQRFallback(); };
-        document.head.appendChild(s);
-    }
-
-    function genQR() {
-        if (_qrDone) return;
-        _qrDone = true;
-        var box = document.getElementById('share-qr-box');
-        if (!box) return;
-        box.innerHTML = '';
-        try {
-            new QRCode(box, {
-                text: "{{ addslashes($shareUrl) }}",
-                width: 160, height: 160,
-                colorDark: '#0f172a',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.M
-            });
-        } catch(e) { showQRFallback(); }
+        // QR Code with green buyle.id logo badge is rendered server-side
     }
 
     function showQRFallback() {
