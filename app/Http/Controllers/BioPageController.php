@@ -45,17 +45,22 @@ class BioPageController extends Controller
             }
         }
 
-        // Resolve Buyle products linked in blocks
-        $productIds = $blocks->where('type', 'buyle_product')
-            ->pluck('data_json')->flatten()->filter(fn($v) => is_array($v) && isset($v['product_id']))
-            ->map(fn($v) => $v['product_id'])->unique()->toArray();
+        // Resolve seller products from DB
+        $sellerIds = array_values(array_unique(array_filter([
+            $profile->user_id ?? null,
+            isset($profile->user) ? $profile->user->id : null,
+            $profile->id ?? null,
+        ])));
+        $sellerProducts = !empty($sellerIds) ? Product::whereIn('seller_id', $sellerIds)->where('is_active', true)->latest()->get() : collect();
 
-        // Simpler: get product_id from data_json
+        // Resolve Buyle products linked in blocks
         $productIds = [];
         foreach ($blocks->where('type', 'buyle_product') as $b) {
             if (!empty($b->data_json['product_id'])) $productIds[] = $b->data_json['product_id'];
         }
-        $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
+        $blockProducts = !empty($productIds) ? Product::whereIn('id', $productIds)->get() : collect();
+
+        $products = $sellerProducts->concat($blockProducts)->unique('id')->keyBy('id');
 
         $theme = $profile->bio_theme ?? 'theme1';
 

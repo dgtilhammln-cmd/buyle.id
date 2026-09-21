@@ -45,27 +45,65 @@
             ],
         ];
 
-        // Fetch all service products from database
-        $dbServices = collect();
-        if (isset($products) && is_iterable($products)) {
-            $dbServices = collect($products)->filter(function($p) {
-                $pType = strtolower($p->product_type ?? '');
-                if (empty($pType)) {
-                    $bData = is_array($p->data_json ?? null) ? $p->data_json : (json_decode($p->data_json ?? '[]', true) ?: []);
-                    $pType = strtolower($bData['product_type'] ?? '');
-                }
-                return in_array($pType, ['service', 'jasa', 'layanan']);
-            });
-        }
+        // Fetch seller IDs
+        $sellerIds = array_values(array_unique(array_filter([
+            $profile->user_id ?? null,
+            isset($profile->user) ? $profile->user->id : null,
+            $profile->id ?? null,
+            auth()->check() ? auth()->id() : null,
+        ])));
 
-        if ($dbServices->isEmpty() && isset($profile->id)) {
-            $realProds = \App\Models\Product::where('seller_id', $profile->id)
-                ->whereIn('product_type', ['service', 'jasa', 'layanan'])
+        $dbServices = collect();
+
+        // 1. Direct DB Query for Products created in /creator/products of type service / jasa / layanan
+        if (!empty($sellerIds)) {
+            $dbServices = \App\Models\Product::whereIn('seller_id', $sellerIds)
+                ->where(function($q) {
+                    $q->whereIn('product_type', ['service', 'jasa', 'layanan', 'jasa / layanan / service', 'services'])
+                      ->orWhereIn('product_category_id', function($sub) {
+                          $sub->select('id')->from('product_categories')->whereIn('name', ['Jasa', 'Layanan', 'Service', 'Services']);
+                      })
+                      ->orWhere('name', 'LIKE', '%Jasa%')
+                      ->orWhere('name', 'LIKE', '%Layanan%')
+                      ->orWhere('name', 'LIKE', '%Service%');
+                })
+                ->where(function($q) {
+                    $q->where('is_active', true)->orWhereNull('is_active');
+                })
                 ->latest()
                 ->get();
-            if ($realProds->count() > 0) {
-                $dbServices = $realProds;
-            }
+        }
+
+        // 2. Fallback: check $products collection if passed from Controller
+        if ($dbServices->isEmpty() && isset($products) && is_iterable($products)) {
+            $dbServices = collect($products)->filter(function($p) {
+                $pType = strtolower($p->product_type ?? '');
+                $pName = strtolower($p->name ?? $p->title ?? '');
+                if (empty($pType)) {
+                    $bData = is_array($p->data_json ?? null) ? $p->data_json : (json_decode($p->data_json ?? '[]', true) ?: []);
+                    $pType = strtolower($bData['product_type'] ?? $bData['category'] ?? '');
+                }
+                return in_array($pType, ['service', 'jasa', 'layanan', 'jasa / layanan / service', 'services'])
+                       || str_contains($pName, 'jasa')
+                       || str_contains($pName, 'layanan')
+                       || str_contains($pName, 'service');
+            })->values();
+        }
+
+        // 3. Fallback 2: if no seller match, query any active service products from DB
+        if ($dbServices->isEmpty()) {
+            $dbServices = \App\Models\Product::where(function($q) {
+                    $q->whereIn('product_type', ['service', 'jasa', 'layanan', 'jasa / layanan / service', 'services'])
+                      ->orWhere('name', 'LIKE', '%Jasa%')
+                      ->orWhere('name', 'LIKE', '%Layanan%')
+                      ->orWhere('name', 'LIKE', '%Service%');
+                })
+                ->where(function($q) {
+                    $q->where('is_active', true)->orWhereNull('is_active');
+                })
+                ->latest()
+                ->limit(10)
+                ->get();
         }
 
         $servicesList = [];
@@ -73,33 +111,37 @@
         if ($dbServices->count() > 0) {
             foreach ($dbServices as $sp) {
                 $bData = is_array($sp->data_json ?? null) ? $sp->data_json : (json_decode($sp->data_json ?? '[]', true) ?: []);
-                $sTitle = $sp->title ?? $sp->name ?? ($bData['title'] ?? 'Layanan Jasa');
-                $sDesc = $sp->description ?? ($bData['description'] ?? '');
+                $sTitle = $sp->name ?? $sp->title ?? ($bData['title'] ?? 'Layanan Jasa');
+                $rawDesc = $sp->short_desc ?? $sp->description ?? ($bData['description'] ?? '');
+                $sDesc  = !empty($rawDesc) ? \Illuminate\Support\Str::limit(strip_tags($rawDesc), 120) : $sTitle;
                 
                 $img = null;
-                if (!empty($sp->image_url)) {
+                if (!empty($sp->image)) {
+                    $img = \Illuminate\Support\Str::startsWith($sp->image, ['http://', 'https://'])
+                        ? $sp->image
+                        : asset('storage/' . $sp->image);
+                } elseif (!empty($sp->image_url)) {
                     $img = $sp->image_url;
                 } elseif (!empty($bData['images'][0])) {
                     $img = asset('storage/' . $bData['images'][0]);
-                } elseif (!empty($sp->image)) {
-                    $img = asset('storage/' . $sp->image);
                 } else {
                     $img = $defaultServices[($idx - 1) % 4]['image'];
                 }
 
                 $linkedProd = !empty($bData['product_id']) ? \App\Models\Product::find($bData['product_id']) : null;
-                $prodIdentifier = !empty($linkedProd->slug)
-                    ? $linkedProd->slug
-                    : (!empty($bData['slug']) 
-                        ? $bData['slug'] 
-                        : (!empty($sp->slug) 
-                            ? $sp->slug 
+                $prodIdentifier = !empty($sp->slug)
+                    ? $sp->slug
+                    : (!empty($linkedProd->slug)
+                        ? $linkedProd->slug
+                        : (!empty($bData['slug']) 
+                            ? $bData['slug'] 
                             : (\Illuminate\Support\Str::slug($sTitle) ?: $sp->id)));
 
+                $storeUsername = $profile->store_slug ?? ($username ?? 'creator');
                 if (!empty($profile->custom_domain)) {
                     $sLink = 'https://' . rtrim($profile->custom_domain, '/') . '/produk/' . $prodIdentifier;
                 } else {
-                    $sLink = url(($profile->store_slug ?? 'creator') . '/produk/' . $prodIdentifier);
+                    $sLink = url($storeUsername . '/produk/' . $prodIdentifier);
                 }
 
                 $servicesList[] = [
