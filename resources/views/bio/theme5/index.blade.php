@@ -941,11 +941,11 @@
 
         /* ── FOOTER ── */
         .t5-footer {
-            background: var(--t5-slate-900);
+            background: #0d0d0d;
             color: #ffffff;
             margin-top: 3rem;
             padding: 3rem 1.5rem 1.5rem;
-            border-top: 1px solid var(--t5-slate-800);
+            border-top: 1px solid rgba(255,255,255,0.07);
         }
         .t5-footer-container {
             max-width: 1200px;
@@ -957,7 +957,7 @@
             gap: 2.5rem;
             margin-bottom: 2.5rem;
             padding-bottom: 2.5rem;
-            border-bottom: 1px solid var(--t5-slate-800);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
         }
         @media (max-width: 768px) {
             .t5-footer-main {
@@ -1033,9 +1033,9 @@
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
-            background: var(--t5-slate-800);
+            background: rgba(255,255,255,0.1);
             color: #ffffff;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.12);
             padding: 0.4rem 0.85rem;
             border-radius: 999px;
             font-size: 0.75rem;
@@ -1181,7 +1181,35 @@
             justify-content: flex-start !important;
             margin: 0 !important;
         }
+        /* Force all social icons in footer to uniform white */
+        .t5-footer-social .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            transition: background 0.2s, border-color 0.2s;
+            flex-shrink: 0;
+        }
+        .t5-footer-social .social-icon:hover {
+            background: rgba(255,255,255,0.18);
+            border-color: rgba(255,255,255,0.3);
+        }
+        /* Turn ALL svg icons white via CSS filter — works on any color/gradient */
+        .t5-footer-social .social-icon svg {
+            display: block;
+            filter: brightness(0) invert(1);
+        }
+        /* Buyle.id favicon is an <img> — keep original colors as requested */
+        .t5-footer-social .social-icon img {
+            display: block;
+            filter: none !important;
+        }
     </style>
+
 </head>
 <body class="t5-body">
 
