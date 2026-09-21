@@ -135,7 +135,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ url('/sitemap.xml') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=4">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=4">
@@ -479,7 +479,7 @@
     <div class="page-wrap">
         <div class="back-bar">
             <a href="{{ route('bio.public', $username) }}" class="back-btn">
-                <i class="fas fa-arrow-left"></i> Kembali ke Profil
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Kembali ke Profil
             </a>
         </div>
 
@@ -505,7 +505,7 @@
                     </div>
                 @endif
             @else
-                <div class="slide-placeholder"><i class="fas fa-image" style="font-size:3.5rem;opacity:0.2;"></i></div>
+                <div class="slide-placeholder"><svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="opacity:0.25;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
             @endif
         </div>
 
@@ -568,11 +568,11 @@
     <div class="cta-bar">
         @if($isOutOfStock)
             <button type="button" class="btn-buy" disabled style="background:#CBD5E1; color:#64748B; cursor:not-allowed; border:none; width:100%; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
-                <i class="fas fa-ban"></i> Stok Habis
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg> Stok Habis
             </button>
         @elseif($paymentMethod === 'wa' && $waNumber)
             <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $waNumber) }}?text={{ urlencode($waMessage) }}" target="_blank" class="btn-buy" style="width:100%; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
-                <i class="fab fa-whatsapp" style="font-size:1.15rem;"></i> Beli via WhatsApp
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg> Beli via WhatsApp
             </a>
         @elseif($product || !empty($block->data_json['product_id']))
             <form action="{{ route('cart.add') }}" method="POST" style="width:100%;">
@@ -580,12 +580,12 @@
                 <input type="hidden" name="product_id" value="{{ $product ? $product->id : ($block->data_json['product_id'] ?? '') }}">
                 <input type="hidden" name="qty" value="1">
                 <button type="submit" class="btn-buy" style="border:none; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
-                    <i class="fas fa-shopping-bag"></i> Beli Sekarang (Checkout via Buyle)
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Beli Sekarang (Checkout via Buyle)
                 </button>
             </form>
         @elseif($block->url)
             <a href="{{ $block->url }}" target="_blank" class="btn-buy" style="width:100%; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
-                <i class="fas fa-shopping-cart"></i> Beli Sekarang (Checkout)
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Beli Sekarang (Checkout)
             </a>
         @else
             @php
@@ -596,7 +596,7 @@
                     : 'https://wa.me/?text=' . urlencode($checkoutMsg);
             @endphp
             <a href="{{ $waUrl }}" target="_blank" class="btn-buy" style="width:100%; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
-                <i class="fab fa-whatsapp" style="font-size:1.15rem;"></i> Beli Sekarang (Checkout)
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg> Beli Sekarang (Checkout)
             </a>
         @endif
     </div>

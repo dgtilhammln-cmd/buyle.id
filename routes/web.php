@@ -630,8 +630,13 @@ Route::get('/{username}/produk', [\App\Http\Controllers\BioProductsPageControlle
     ->name('bio.products.page')
     ->where('username', '[a-zA-Z0-9_\-]+');
 
-Route::get('/{username}/p/{identifier}', [\App\Http\Controllers\BioProductController::class, 'show'])
+// Product detail page: /{username}/produk/{identifier}
+Route::get('/{username}/produk/{identifier}', [\App\Http\Controllers\BioProductController::class, 'show'])
     ->name('bio.product.show')
+    ->where('username', '[a-zA-Z0-9_\-]+');
+
+// Legacy alias: /{username}/p/{identifier}
+Route::get('/{username}/p/{identifier}', [\App\Http\Controllers\BioProductController::class, 'show'])
     ->where('username', '[a-zA-Z0-9_\-]+');
 
 Route::get('/{username}', [\App\Http\Controllers\BioPageController::class, 'show'])

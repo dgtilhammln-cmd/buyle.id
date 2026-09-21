@@ -381,6 +381,7 @@
             <select name="sort" class="pp-sort-select" id="pp-sort" onchange="document.getElementById('pp-form').submit()">
                 <option value="terbaru" {{ $sort === 'terbaru' ? 'selected' : '' }}>Terbaru</option>
                 <option value="terlama" {{ $sort === 'terlama' ? 'selected' : '' }}>Terlama</option>
+                <option value="terpopuler" {{ $sort === 'terpopuler' ? 'selected' : '' }}>Terpopuler</option>
             </select>
             <button type="submit" class="pp-submit-btn">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">

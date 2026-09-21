@@ -48,7 +48,7 @@ class BioProductsPageController extends Controller
             if (!$slug) $slug = Str::slug($name) ?: (string)$block->id;
 
             if (!empty($profile->custom_domain))
-                $productUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/p/' . $slug;
+                $productUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/produk/' . $slug;
             else
                 $productUrl = route('bio.product.show', ['username' => $username, 'identifier' => $slug]);
 
@@ -91,10 +91,20 @@ class BioProductsPageController extends Controller
         }
 
         $sort = $request->get('sort', 'terbaru');
-        if ($sort === 'terlama')
+        if ($sort === 'terlama') {
             $allProducts = $allProducts->sortBy('created_at')->values();
-        else
+        } elseif ($sort === 'terpopuler') {
+            $allProducts = $allProducts->sortByDesc(function ($p) {
+                return [
+                    (float)($p['rating'] ?? 5.0),
+                    (int)($p['has_discount'] ? 1 : 0),
+                    (int)($p['price'] > 0 ? 1 : 0),
+                    $p['block_id']
+                ];
+            })->values();
+        } else {
             $allProducts = $allProducts->sortByDesc('created_at')->values();
+        }
 
         $bioName  = $config['name'] ?? $profile->store_name ?? $username;
         $seoTitle = 'Semua Produk - ' . $bioName . (!empty($profile->custom_domain) ? '' : ' | buyle.id');

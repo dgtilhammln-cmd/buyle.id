@@ -16,7 +16,7 @@
                     $discountPercent = $hasDiscount ? round((($product->price - $product->sale_price) / $product->price) * 100) : 0;
                     $prodIdentifier = !empty($product->slug) ? $product->slug : $product->id;
                     if (!empty($profile->custom_domain)) {
-                        $productUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/p/' . $prodIdentifier;
+                        $productUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/produk/' . $prodIdentifier;
                     } else {
                         $productUrl = route('bio.product.show', ['username' => $username, 'identifier' => $prodIdentifier]);
                     }
