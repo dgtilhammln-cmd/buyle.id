@@ -217,18 +217,21 @@
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.08);
         border: 1px solid rgba(255, 255, 255, 0.12);
-        transition: background 0.2s, border-color 0.2s;
+        color: #ffffff !important;
+        transition: all 0.2s ease;
         flex-shrink: 0;
     }
 
     .t5-footer-social .social-icon:hover {
-        background: rgba(255, 255, 255, 0.18);
-        border-color: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.4);
+        color: #ffffff !important;
+        transform: translateY(-2px);
     }
 
     .t5-footer-social .social-icon svg {
         display: block;
-        filter: brightness(0) invert(1);
+        color: #ffffff !important;
     }
 
     .t5-footer-social .social-icon img {
@@ -250,13 +253,6 @@
                     @endif
                     <div class="t5-footer-brand-meta">
                         <span class="t5-footer-title">{{ $bioName }}</span>
-                        <span class="t5-footer-verified-badge">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                            </svg>
-                            Terverifikasi buyle.id
-                        </span>
                     </div>
                 </div>
 

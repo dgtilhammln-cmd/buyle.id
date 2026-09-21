@@ -322,9 +322,23 @@
         }
 
         @media (max-width: 900px) {
+            .t5-about-section {
+                text-align: left !important;
+            }
             .t5-about-header {
                 grid-template-columns: 1fr;
                 gap: 1.25rem;
+                text-align: left !important;
+            }
+            .t5-about-eyebrow,
+            .t5-about-headline,
+            .t5-about-desc {
+                text-align: left !important;
+            }
+            .t5-about-right {
+                align-items: flex-start !important;
+                text-align: left !important;
+                padding-top: 0;
             }
             .t5-about-headline {
                 font-size: 1.5rem;
@@ -335,9 +349,10 @@
             }
             .t5-about-card1, .t5-about-card2, .t5-about-card3 {
                 min-height: auto;
+                text-align: left !important;
             }
             .t5-about-card2 {
-                height: 260px;
+                height: 240px;
             }
         }
     </style>
