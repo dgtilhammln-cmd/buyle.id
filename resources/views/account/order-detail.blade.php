@@ -827,7 +827,7 @@
 
             const btn = document.getElementById('btnSubmitRating');
             btn.disabled = true;
-            btn.textContent = 'Menyimpan...';
+            btn.textContent = 'Simpan...';
 
             fetch('{{ route("account.orders.rating") }}', {
                 method: 'POST',
