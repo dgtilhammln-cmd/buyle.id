@@ -20,10 +20,10 @@
     <meta name="twitter:image" content="{{ $ogImage }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     @php
-        $bioName  = $config['name'] ?? $profile->store_name ?? $username;
+        $bioName   = $config['name'] ?? $profile->store_name ?? $username;
         $avatarUrl = null;
         if (!empty($config['avatar']))
             $avatarUrl = asset('storage/' . $config['avatar']);
@@ -90,52 +90,66 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* HEADER */
-        .pp-header {
+        /* HEADER & NAVBAR STYLES (MATCH HOME TEMA 5) */
+        .t5-header {
             position: sticky; top: 0; left: 0; width: 100%; z-index: 999;
-            background: rgba(255,255,255,0.95);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--t5-slate-200);
         }
-        .pp-header-inner {
+        .t5-header-container {
             max-width: 1200px; margin: 0 auto; padding: 0.75rem 1.5rem;
             display: flex; align-items: center; justify-content: space-between; gap: 1rem;
         }
-        .pp-brand {
-            display: flex; align-items: center; gap: 0.65rem;
-            text-decoration: none; flex-shrink: 0;
+        .t5-brand {
+            display: flex; align-items: center; gap: 0.65rem; text-decoration: none; flex-shrink: 0;
         }
-        .pp-brand-avatar {
-            width: 38px; height: 38px; border-radius: 50%;
-            object-fit: cover; border: 2px solid var(--t5-emerald-border);
+        .t5-brand-avatar {
+            width: 38px; height: 38px; border-radius: 50%; object-fit: cover;
+            border: 2px solid var(--t5-emerald-border);
         }
-        .pp-brand-fallback {
+        .t5-brand-avatar-fallback {
             width: 38px; height: 38px; border-radius: 50%;
             background: linear-gradient(135deg, var(--t5-emerald), #15803d);
             color: #fff; display: flex; align-items: center; justify-content: center;
             font-weight: 600; font-size: 1rem; flex-shrink: 0;
         }
-        .pp-brand-name {
-            font-size: 0.9rem; font-weight: 600;
-            color: var(--t5-slate-900); letter-spacing: -0.02em;
+        .t5-brand-title {
+            font-size: 0.95rem; font-weight: 600; color: var(--t5-slate-900); letter-spacing: -0.02em;
         }
-        .pp-back-btn {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            padding: 0.4rem 0.9rem; border-radius: var(--t5-radius-sm);
-            border: 1.5px solid var(--t5-slate-200); background: var(--t5-white);
-            color: var(--t5-slate-700); font-size: 0.8rem; font-weight: 500;
-            font-family: 'Montserrat', sans-serif; cursor: pointer;
-            text-decoration: none; transition: all 0.2s;
+        .t5-nav-desktop { display: flex; align-items: center; gap: 1.5rem; }
+        .t5-nav-link {
+            text-decoration: none; font-size: 0.85rem; font-weight: 500; color: var(--t5-slate-600);
+            transition: color 0.2s; display: inline-flex; align-items: center; gap: 0.3rem;
         }
-        .pp-back-btn:hover {
-            border-color: var(--t5-emerald); color: var(--t5-emerald-dark);
-            background: var(--t5-emerald-light);
+        .t5-nav-link:hover, .t5-nav-link.active { color: var(--t5-emerald-dark); font-weight: 600; }
+        .t5-header-actions { display: flex; align-items: center; gap: 0.65rem; }
+        .t5-action-btn {
+            display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.42rem 0.85rem;
+            border-radius: var(--t5-radius-sm); border: 1px solid var(--t5-slate-200);
+            background: #fff; color: var(--t5-slate-700); font-size: 0.8rem; font-weight: 500;
+            text-decoration: none; cursor: pointer; transition: all 0.2s;
         }
+        .t5-action-btn:hover { border-color: var(--t5-emerald); color: var(--t5-emerald-dark); }
+        .t5-btn-wa { background: var(--t5-emerald-light); color: var(--t5-emerald-dark); border-color: var(--t5-emerald-border); }
+        .t5-mobile-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--t5-slate-700); }
 
-        /* HERO */
+        /* BREADCRUMB BAR */
+        .t5-breadcrumb-wrap {
+            max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem 0;
+        }
+        .t5-breadcrumb {
+            display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: var(--t5-slate-500); flex-wrap: wrap;
+        }
+        .t5-breadcrumb a { color: var(--t5-slate-600); text-decoration: none; font-weight: 400; transition: color 0.2s; }
+        .t5-breadcrumb a:hover { color: var(--t5-emerald); }
+        .t5-breadcrumb-sep { color: var(--t5-slate-400); }
+        .t5-breadcrumb-current { color: var(--t5-slate-900); font-weight: 600; }
+
+        /* HERO HEADER */
         .pp-hero {
             background: linear-gradient(135deg, var(--t5-slate-900) 0%, #1e3a2f 100%);
-            padding: 2.5rem 1.5rem; text-align: center; position: relative; overflow: hidden;
+            padding: 2.5rem 1.5rem; text-align: center; position: relative; overflow: hidden; margin-top: 1rem;
         }
         .pp-hero::before {
             content: ''; position: absolute; inset: 0;
@@ -147,7 +161,7 @@
             font-size: 1.6rem; font-weight: 600; color: #fff;
             letter-spacing: -0.03em; margin-bottom: 0.4rem;
         }
-        .pp-hero p { font-size: 0.87rem; color: rgba(255,255,255,0.6); font-weight: 300; }
+        .pp-hero p { font-size: 0.87rem; color: rgba(255,255,255,0.7); font-weight: 300; }
 
         /* CONTROLS */
         .pp-controls {
@@ -205,11 +219,11 @@
 
         /* GRID */
         .pp-grid-wrap {
-            max-width: 1200px; margin: 0 auto; padding: 1.25rem 1.5rem 3rem;
+            max-width: 1200px; margin: 0 auto; padding: 1.25rem 1.5rem 3.5rem;
         }
         .pp-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 1.25rem;
         }
         .pp-card {
@@ -237,7 +251,7 @@
         }
         .pp-badge-type {
             position: absolute; top: 0.6rem; right: 0.6rem;
-            background: rgba(15,23,42,0.72); color: #fff;
+            background: rgba(15,23,42,0.75); color: #fff;
             font-size: 0.62rem; font-weight: 600;
             padding: 0.18rem 0.45rem; border-radius: 4px;
             letter-spacing: 0.05em; text-transform: uppercase;
@@ -313,16 +327,80 @@
         }
         .pp-empty-clear:hover { background: var(--t5-emerald); color: #fff; }
 
-        /* FOOTER */
-        .pp-footer {
-            background: var(--t5-slate-900); color: rgba(255,255,255,0.5);
-            text-align: center; padding: 1.5rem;
-            font-size: 0.78rem; font-weight: 300;
+        /* FLOATING WA BUTTON */
+        .t5-floating-wa {
+            position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+            width: 56px; height: 56px; border-radius: 50%;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: #ffffff; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-decoration: none;
         }
-        .pp-footer a { color: var(--t5-emerald); text-decoration: none; font-weight: 500; }
-        .pp-footer a:hover { text-decoration: underline; }
+        .t5-floating-wa:hover {
+            transform: scale(1.1) translateY(-2px);
+            box-shadow: 0 12px 30px rgba(37, 211, 102, 0.55); color: #ffffff;
+        }
+        .t5-wa-pulse {
+            position: absolute; inset: 0; border-radius: 50%;
+            border: 2px solid #25D366; animation: t5WaPulse 2s infinite; pointer-events: none;
+        }
+        @keyframes t5WaPulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
 
-        /* RESPONSIVE */
+        /* FOOTER STYLES (MATCH HOME TEMA 5) */
+        .t5-footer {
+            background: #0d0d0d; color: #ffffff; margin-top: 3rem;
+            padding: 3rem 1.5rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.07);
+        }
+        .t5-footer-container { max-width: 1200px; margin: 0 auto; }
+        .t5-footer-main {
+            display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2.5rem;
+            margin-bottom: 2.5rem; padding-bottom: 2.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        @media (max-width: 768px) {
+            .t5-footer-main { grid-template-columns: 1fr; gap: 1.75rem; }
+        }
+        .t5-footer-title { display: block; font-size: 1.3rem; font-weight: 600; color: #ffffff; margin-bottom: 0.2rem; }
+        .t5-footer-desc { font-size: 0.82rem; color: var(--t5-slate-400); line-height: 1.6; max-width: 400px; }
+        .t5-footer-heading { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #ffffff; margin-bottom: 1rem; }
+        .t5-footer-links { display: flex; flex-direction: column; gap: 0.5rem; }
+        .t5-footer-link { color: var(--t5-slate-400); text-decoration: none; font-size: 0.85rem; transition: color 0.2s ease; }
+        .t5-footer-link:hover { color: var(--t5-emerald); }
+        .t5-footer-bottom { display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: var(--t5-slate-400); flex-wrap: wrap; gap: 1rem; }
+        .t5-footer-bottom a { color: var(--t5-emerald); text-decoration: none; font-weight: 500; }
+        .t5-back-to-top {
+            display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.1);
+            color: #ffffff; border: 1px solid rgba(255,255,255,0.12); padding: 0.4rem 0.85rem;
+            border-radius: 999px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease;
+        }
+        .t5-back-to-top:hover { background: var(--t5-emerald); transform: translateY(-2px); }
+
+        .t5-footer-social { margin-top: 1rem; }
+        .t5-footer-social .social-row { justify-content: flex-start !important; margin: 0 !important; }
+        .t5-footer-social .social-icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12); transition: background 0.2s, border-color 0.2s; flex-shrink: 0;
+        }
+        .t5-footer-social .social-icon:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.3); }
+        .t5-footer-social .social-icon svg { display: block; filter: brightness(0) invert(1); }
+        .t5-footer-social .social-icon img { display: block; filter: none !important; }
+
+        .t5-footer-brand-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.85rem; }
+        .t5-footer-avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--t5-emerald); box-shadow: 0 4px 12px rgba(30, 179, 73, 0.25); flex-shrink: 0; }
+        .t5-footer-avatar-fallback { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--t5-emerald), #15803d); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1.25rem; flex-shrink: 0; }
+        .t5-footer-brand-meta { display: flex; flex-direction: column; gap: 0.2rem; }
+        .t5-footer-verified-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; font-weight: 500; color: #4ade80; background: rgba(30, 179, 73, 0.15); border: 1px solid rgba(30, 179, 73, 0.35); padding: 0.15rem 0.55rem; border-radius: 6px; }
+
+        .t5-footer-location-text { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.82rem; color: var(--t5-slate-300); margin-bottom: 0.85rem; line-height: 1.5; }
+        .t5-footer-location-icon { color: var(--t5-emerald); flex-shrink: 0; margin-top: 0.15rem; }
+        .t5-footer-map-wrap { border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); max-height: 160px; }
+        .t5-footer-map-wrap iframe { width: 100% !important; height: 150px !important; border: 0 !important; display: block; }
+
         @media (max-width: 640px) {
             .pp-hero { padding: 2rem 1rem; }
             .pp-hero h1 { font-size: 1.25rem; }
@@ -333,6 +411,7 @@
             .pp-grid { grid-template-columns: repeat(2, 1fr); gap: 0.85rem; }
             .pp-grid-wrap { padding: 1rem 1rem 2.5rem; }
             .pp-results-info { padding: 0.6rem 1rem 0; }
+            .t5-floating-wa { bottom: 18px; right: 18px; width: 50px; height: 50px; }
         }
         @media (min-width: 1024px) {
             .pp-grid { grid-template-columns: repeat(4, 1fr); }
@@ -341,25 +420,21 @@
 </head>
 <body>
 
-    <header class="pp-header">
-        <div class="pp-header-inner">
-            <a href="{{ url('/' . $username) }}" class="pp-brand">
-                @if($avatarUrl)
-                    <img src="{{ $avatarUrl }}" alt="{{ $bioName }}" class="pp-brand-avatar">
-                @else
-                    <div class="pp-brand-fallback">{{ strtoupper(substr($bioName, 0, 2)) }}</div>
-                @endif
-                <span class="pp-brand-name">{{ $bioName }}</span>
-            </a>
-            <a href="{{ url('/' . $username) }}" class="pp-back-btn">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
-                </svg>
-                Kembali
-            </a>
-        </div>
-    </header>
+    {{-- HEADER TEMA 5 --}}
+    @include('bio.theme5.header', ['products' => $products, 'blocks' => $blocks, 'config' => $config, 'profile' => $profile, 'username' => $username])
 
+    {{-- BREADCRUMB --}}
+    <div class="t5-breadcrumb-wrap">
+        <div class="t5-breadcrumb">
+            <a href="{{ url('/' . $username) }}">Beranda</a>
+            <span class="t5-breadcrumb-sep">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </span>
+            <span class="t5-breadcrumb-current">Semua Produk &amp; Layanan</span>
+        </div>
+    </div>
+
+    {{-- HERO BANNER --}}
     <section class="pp-hero">
         <div class="pp-hero-content">
             <h1>Semua Produk &amp; Layanan</h1>
@@ -367,6 +442,7 @@
         </div>
     </section>
 
+    {{-- CONTROLS --}}
     <form method="GET" action="{{ url('/' . $username . '/produk') }}" id="pp-form">
         <div class="pp-controls">
             <div class="pp-search-wrap">
@@ -396,10 +472,11 @@
         @if(!empty($search))
             Menampilkan <strong>{{ $allProducts->count() }}</strong> hasil untuk &ldquo;<strong>{{ e($search) }}</strong>&rdquo;
         @else
-            <strong>{{ $allProducts->count() }}</strong> produk tersedia
+            Menampilkan <strong>{{ $allProducts->count() }}</strong> produk tersedia
         @endif
     </div>
 
+    {{-- GRID --}}
     <div class="pp-grid-wrap">
         <div class="pp-grid">
             @forelse($allProducts as $prod)
@@ -474,11 +551,29 @@
         </div>
     </div>
 
-    <footer class="pp-footer">
-        <p>&copy; {{ date('Y') }} {{ $bioName }} &mdash; Powered by <a href="{{ url('/') }}" target="_blank" rel="noopener">buyle.id</a></p>
-    </footer>
+    {{-- FLOATING WHATSAPP BUTTON --}}
+    @if(!empty($config['wa']))
+        @php $waFloatNum = preg_replace('/[^0-9]/', '', $config['wa']); @endphp
+        @if($waFloatNum)
+            <a href="https://wa.me/{{ Str::startsWith($waFloatNum, '62') ? $waFloatNum : '62' . ltrim($waFloatNum, '0') }}"
+               target="_blank" rel="noopener noreferrer" class="t5-floating-wa" title="Chat via WhatsApp">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.556 4.117 1.528 5.849L0 24l6.335-1.508A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.154-1.422l-.37-.218-3.764.896.924-3.667-.243-.381A9.953 9.953 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/>
+                </svg>
+                <span class="t5-wa-pulse"></span>
+            </a>
+        @endif
+    @endif
+
+    {{-- FOOTER TEMA 5 --}}
+    @include('bio.theme5.footer', ['products' => $products, 'config' => $config, 'profile' => $profile, 'username' => $username])
 
     <script>
+        function toggleT5Drawer() {
+            var drawer = document.getElementById('t5MobileDrawer');
+            if (drawer) drawer.classList.toggle('active');
+        }
         var searchTimer = null;
         var searchInput = document.getElementById('pp-search');
         if (searchInput) {

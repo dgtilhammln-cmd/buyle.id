@@ -101,8 +101,13 @@ class BioProductController extends Controller
         }
 
         $config = $profile->bio_config ?? [];
-        $theme  = $profile->bio_theme ?? 'theme1';
+        $theme  = $profile->bio_theme ?? 'theme5';
+        $blocks = $profile->bioBlocks;
+        $products = CreatorBioBlock::where('creator_id', $profile->id)
+            ->where('is_active', true)
+            ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])
+            ->get();
 
-        return view('bio.product_show', compact('profile', 'block', 'config', 'theme', 'username', 'product'));
+        return view('bio.product_show', compact('profile', 'block', 'config', 'theme', 'username', 'product', 'blocks', 'products'));
     }
 }

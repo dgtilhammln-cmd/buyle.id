@@ -115,13 +115,13 @@ class BioProductsPageController extends Controller
             : url('/' . $username . '/produk');
 
         $ogImage = asset('images/buyle-og.png');
-        if (!empty($config['avatar']))
-            $ogImage = asset('storage/' . $config['avatar']);
+        $products = $blocks;
 
         return view('bio.theme5.products_page', compact(
             'profile', 'config', 'username',
             'allProducts', 'search', 'sort',
-            'seoTitle', 'seoDesc', 'canonical', 'ogImage', 'bioName'
+            'seoTitle', 'seoDesc', 'canonical', 'ogImage', 'bioName',
+            'blocks', 'products'
         ));
     }
 }
