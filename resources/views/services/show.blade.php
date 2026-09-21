@@ -590,9 +590,14 @@
                             @endif
                             {!! $service->description ?? 'Belum ada deskripsi mendetail.' !!}
 
-                            {{-- SEO Closing Paragraph --}}
-                            <p style="font-size:0.85rem; color:#64748B; line-height:1.75; margin-top:1.75rem; padding:0.875rem 1.25rem; background:#f8fafc; border:1px dashed #CBD5E1; border-radius:10px;">
-                                <strong>Belanja aman di BUYLE.ID</strong> — Semua produk digital diverifikasi, transaksi terlindungi, dan layanan pelanggan siap membantu. Dapatkan <strong>{{ $service->name }}</strong> asli dan berlisensi langsung dari kreatornya. Tersedia pilihan {{ $catName }} terbaik, termurah, dan terlengkap hanya di <strong>buyle.id</strong>.
+                            {{-- Security Notice Paragraph --}}
+                            <p style="font-size:0.825rem; color:#475569; line-height:1.6; margin-top:1.75rem; padding:0.875rem 1.25rem; background:#FFFBEB; border:1px solid #FDE68A; border-radius:10px; display:flex; align-items:flex-start; gap:0.65rem;">
+                                <svg width="18" height="18" fill="none" stroke="#D97706" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                                <span>
+                                    <strong style="color:#B45309;">Jaminan Transaksi Aman:</strong> Untuk transaksi yang aman dan terlindungi, selalu lakukan pembayaran melalui platform resmi <strong>buyle.id</strong>. Kerugian akibat transaksi atau pembayaran di luar platform menjadi tanggung jawab pribadi.
+                                </span>
                             </p>
                         </div>
                     </div>
