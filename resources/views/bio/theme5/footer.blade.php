@@ -320,9 +320,7 @@
         </div>
 
         <div class="t5-footer-bottom">
-            <p>&copy; {{ date('Y') }} <strong>{{ $bioName }}</strong> &bull; Powered by <a href="https://buyle.id"
-                    target="_blank" rel="noopener">buyle.id x <a href="https://hvm-digital.id" target="_blank"
-                        rel="noopener"></a>HVM Digital</a></p>
+            <p>&copy; {{ date('Y') }} <strong>{{ $bioName }}</strong> &bull; Powered by <a href="https://buyle.id" target="_blank" rel="noopener">buyle.id</a> x <a href="https://hvm-digital.id" target="_blank" rel="noopener">HVM Digital</a></p>
 
             <button type="button" class="t5-back-to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})"
                 title="Kembali ke Atas">

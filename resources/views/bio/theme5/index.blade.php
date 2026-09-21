@@ -752,6 +752,43 @@
             box-shadow: 0 4px 14px rgba(30, 179, 73, 0.4);
         }
 
+        @media (max-width: 640px) {
+            .t5-products-section {
+                padding: 2rem 0.85rem;
+            }
+            .t5-products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+            .t5-product-body {
+                padding: 0.75rem;
+            }
+            .t5-product-name {
+                font-size: 0.82rem;
+                line-height: 1.3;
+                margin-bottom: 0.5rem;
+            }
+            .t5-price-main {
+                font-size: 0.88rem;
+            }
+            .t5-price-old {
+                font-size: 0.65rem;
+            }
+            .t5-buy-btn {
+                padding: 0.35rem 0.65rem;
+                font-size: 0.72rem;
+            }
+            .t5-discount-tag {
+                font-size: 0.62rem;
+                padding: 0.15rem 0.35rem;
+            }
+        }
+        @media (max-width: 360px) {
+            .t5-products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* ── BLOCKS SECTION ── */
         .t5-blocks-section {
             max-width: 1000px;

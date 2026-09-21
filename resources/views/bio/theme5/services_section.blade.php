@@ -448,26 +448,37 @@
         }
 
         @media (max-width: 640px) {
+            .t5-services-wrapper {
+                padding: 2.5rem 1rem;
+            }
             .t5-services-header {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
+                gap: 1.25rem;
+                margin-bottom: 2rem;
             }
             .t5-services-headline {
-                font-size: 1.65rem;
+                font-size: 1.5rem;
             }
             .t5-service-card {
-                flex: 0 0 85%;
+                flex: 0 0 84%;
+                min-width: 250px;
+                padding: 1.25rem;
                 min-height: auto;
+                border-radius: 18px;
+            }
+            .t5-service-number {
+                font-size: 2.5rem;
+                margin-bottom: 0.5rem;
             }
             .t5-service-img-wrap {
-                height: 160px !important;
+                height: 140px !important;
                 opacity: 1 !important;
-                margin-bottom: 1.25rem !important;
+                margin-bottom: 1rem !important;
             }
             .t5-service-desc {
-                max-height: 200px !important;
+                max-height: 140px !important;
                 opacity: 1 !important;
-                margin-top: 0.75rem !important;
+                margin-top: 0.5rem !important;
             }
         }
     </style>

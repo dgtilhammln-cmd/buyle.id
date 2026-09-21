@@ -121,15 +121,41 @@
     }
     .t5-mobile-toggle {
         display: none;
-        background: none;
-        border: none;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
         cursor: pointer;
-        color: #334155;
-        padding: 0.2rem;
+        color: #0f172a;
+        padding: 0.4rem;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    .t5-mobile-toggle:hover {
+        background: #e2e8f0;
     }
     @media (max-width: 991px) {
         .t5-nav-desktop { display: none !important; }
-        .t5-mobile-toggle { display: block !important; }
+        .t5-mobile-toggle { display: inline-flex !important; }
+    }
+    @media (max-width: 640px) {
+        .t5-header-container {
+            padding: 0.55rem 0.85rem;
+        }
+        .t5-brand-avatar, .t5-brand-avatar-fallback {
+            width: 34px;
+            height: 34px;
+            font-size: 0.85rem;
+        }
+        .t5-brand-title {
+            font-size: 0.88rem;
+        }
+        .t5-btn-text {
+            display: none !important;
+        }
+        .t5-action-btn {
+            padding: 0.4rem 0.55rem;
+        }
     }
 
     /* ── MOBILE DRAWER STANDALONE STYLES ── */
@@ -280,37 +306,62 @@
         </div>
     </div>
 
-    {{-- Mobile Nav Drawer --}}
-    <div class="t5-mobile-drawer" id="t5MobileDrawer">
-        <div class="t5-drawer-overlay" onclick="toggleT5Drawer()"></div>
-        <div class="t5-drawer-content">
-            <div class="t5-drawer-header">
-                <span class="t5-drawer-title">Menu Navigasi</span>
-                <button type="button" class="t5-drawer-close" onclick="toggleT5Drawer()">&times;</button>
-            </div>
-            <nav class="t5-drawer-nav">
-                <a href="{{ url('/' . $username) }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Beranda</a>
-                <a href="{{ url('/' . $username . '/produk') }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Produk</a>
-                @if($blocks->count() > 0)
-                    @foreach($blocks as $b)
-                        @php $bData = $b->data_json ?? []; @endphp
-                        @if(in_array($b->type, ['link', 'url', 'custom_link']) || (!empty($bData['url']) && empty($bData['product_id'])))
-                            @php
-                                $bUrl = $bData['url'] ?? '#';
-                                $bTitle = $bData['title'] ?? ($bData['label'] ?? ($b->title ?? 'Link'));
-                            @endphp
-                            <a href="{{ $bUrl }}" target="_blank" rel="noopener noreferrer" onclick="toggleT5Drawer()" class="t5-drawer-link t5-drawer-custom-link">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                                    <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
-                                </svg>
-                                <span>{{ $bTitle }}</span>
-                            </a>
-                        @endif
-                    @endforeach
-                @endif
-                <a href="{{ url('/' . $username) }}#about-section" onclick="toggleT5Drawer()" class="t5-drawer-link">Tentang Creator</a>
-            </nav>
-        </div>
-    </div>
 </header>
+
+{{-- Mobile Nav Drawer (Positioned outside <header> to avoid backdrop-filter containing block trap) --}}
+<div class="t5-mobile-drawer" id="t5MobileDrawer">
+    <div class="t5-drawer-overlay" onclick="toggleT5Drawer()"></div>
+    <div class="t5-drawer-content">
+        <div class="t5-drawer-header">
+            <span class="t5-drawer-title">Menu Navigasi</span>
+            <button type="button" class="t5-drawer-close" onclick="toggleT5Drawer()">&times;</button>
+        </div>
+        <nav class="t5-drawer-nav">
+            <a href="{{ url('/' . $username) }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Beranda</a>
+            <a href="{{ url('/' . $username . '/produk') }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Produk</a>
+            @if($blocks->count() > 0)
+                @foreach($blocks as $b)
+                    @php $bData = $b->data_json ?? []; @endphp
+                    @if(in_array($b->type, ['link', 'url', 'custom_link']) || (!empty($bData['url']) && empty($bData['product_id'])))
+                        @php
+                            $bUrl = $bData['url'] ?? '#';
+                            $bTitle = $bData['title'] ?? ($bData['label'] ?? ($b->title ?? 'Link'));
+                        @endphp
+                        <a href="{{ $bUrl }}" target="_blank" rel="noopener noreferrer" onclick="toggleT5Drawer()" class="t5-drawer-link t5-drawer-custom-link">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+                            </svg>
+                            <span>{{ $bTitle }}</span>
+                        </a>
+                    @endif
+                @endforeach
+            @endif
+            <a href="{{ url('/' . $username) }}#about-section" onclick="toggleT5Drawer()" class="t5-drawer-link">Tentang Creator</a>
+        </nav>
+    </div>
+</div>
+
+<script>
+    function toggleT5Drawer() {
+        var drawer = document.getElementById('t5MobileDrawer');
+        if (!drawer) return;
+        if (drawer.parentNode !== document.body) {
+            document.body.appendChild(drawer);
+        }
+        var isActive = drawer.classList.contains('active');
+        if (isActive) {
+            drawer.classList.remove('active');
+            document.body.style.overflow = '';
+        } else {
+            drawer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        var drawer = document.getElementById('t5MobileDrawer');
+        if (drawer && drawer.parentNode !== document.body) {
+            document.body.appendChild(drawer);
+        }
+    });
+</script>
