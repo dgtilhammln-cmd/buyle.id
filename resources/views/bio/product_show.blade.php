@@ -133,13 +133,13 @@
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ url('/sitemap.xml') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=3">
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=3">
-    <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}?v=3">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=4">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=4">
+    <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}?v=4">
 
     @php
         $bg = $config['color_bg'] ?? ($theme === 'theme2' || $theme === 'theme4' ? '#ffffff' : '#0b120c');
@@ -148,7 +148,7 @@
         $btnText = $config['color_btn_text'] ?? '#ffffff';
         $accent = $config['color_accent'] ?? ($theme === 'theme3' ? '#a855f7' : '#1eb349');
         $card = $config['color_card'] ?? ($theme === 'theme2' || $theme === 'theme4' ? '#f8fafc' : '#1a231b');
-        $isDark = in_array($theme, ['theme1', 'theme3']);
+        $isDark = in_array($theme, ['theme1', 'theme3', 'theme5']);
         $glass = $isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.04)';
         $border = $isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)';
     @endphp

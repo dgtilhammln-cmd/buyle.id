@@ -192,7 +192,32 @@ class SitemapController extends Controller
             ] : [],
         ];
 
-        // 2. Produk Custom / Bio Blocks milik creator ini
+        // 2. Produk Asli milik Creator ini
+        if ($profile->user_id) {
+            $products = Product::where('user_id', $profile->user_id)
+                ->where('is_active', true)
+                ->get();
+
+            foreach ($products as $p) {
+                $images = [];
+                if (!empty($p->image)) {
+                    $images[] = [
+                        'loc'     => asset('storage/' . ltrim($p->image, '/')),
+                        'title'   => $p->name,
+                        'caption' => $p->name,
+                    ];
+                }
+                $urls[] = [
+                    'url'        => $domain . '/p/' . ($p->slug ?? $p->id),
+                    'priority'   => '0.9',
+                    'changefreq' => 'weekly',
+                    'lastmod'    => $p->updated_at ? $p->updated_at->toDateString() : now()->toDateString(),
+                    'images'     => $images,
+                ];
+            }
+        }
+
+        // 3. Produk Custom / Bio Blocks milik creator ini
         $bioBlocks = \App\Models\CreatorBioBlock::where('creator_id', $profile->id)
             ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])
             ->where('is_active', true)
@@ -210,7 +235,7 @@ class SitemapController extends Controller
             }
             $urls[] = [
                 'url'        => $domain . '/p/' . $slug,
-                'priority'   => '0.9',
+                'priority'   => '0.85',
                 'changefreq' => 'weekly',
                 'lastmod'    => $block->updated_at ? $block->updated_at->toDateString() : now()->toDateString(),
                 'images'     => $images,
