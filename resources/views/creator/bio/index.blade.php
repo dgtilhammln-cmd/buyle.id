@@ -989,28 +989,6 @@
             border: 1px solid #e2e8f0;
             border-radius: 6px;
         }
-
-        /* Theme 5: Landing Page Pro */
-        .theme-mockup.theme5 {
-            background: #f8fafc;
-            border-left: 3px solid #0f172a;
-        }
-
-        .theme-mockup.theme5 .mockup-avatar {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 6px;
-        }
-
-        .theme-mockup.theme5 .mockup-title {
-            background: #0f172a;
-        }
-
-        .theme-mockup.theme5 .mockup-btn {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-        }
     </style>
 @endsection
 
@@ -1030,7 +1008,8 @@
                 <button class="tab-btn active" data-tab="tab-domain">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="10" />
-                        <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                        <path
+                            d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                     </svg>
                     <span class="tab-text-full">Beli Custom Domain</span>
                     <small class="tab-text-mob">Domain</small>
@@ -1092,7 +1071,8 @@
                 <div
                     style="font-size:0.7rem; color:#94a3b8; font-weight: 500; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem;">
                     Tipe Profil</div>
-                <div style="font-size:0.82rem; font-weight: 500; color:#1eb349;">{{ $roleLabels[$profile->bio_role] ?? '-' }}
+                <div style="font-size:0.82rem; font-weight: 500; color:#1eb349;">
+                    {{ $roleLabels[$profile->bio_role] ?? '-' }}
                 </div>
                 @if($bioUrl)
                     <a href="{{ $bioUrl }}" target="_blank"
@@ -1135,34 +1115,50 @@
                 @php
                     $creatorRawName = $profile->store_name ?: auth()->user()->name;
                     $cleanKeyword = \Illuminate\Support\Str::slug($creatorRawName, '');
-                    if (empty($cleanKeyword)) $cleanKeyword = 'mybrand';
+                    if (empty($cleanKeyword))
+                        $cleanKeyword = 'mybrand';
 
                     $officialExtensions = [
-                        'com'    => 436666,
-                        'id'     => 480719,
-                        'co.id'  => 532889,
-                        'biz'    => 667546,
+                        'com' => 436666,
+                        'id' => 480719,
+                        'co.id' => 532889,
+                        'biz' => 667546,
                         'biz.id' => 177589,
-                        'store'  => 1065836,
-                        'my.id'  => 333189,
+                        'store' => 1065836,
+                        'my.id' => 333189,
                     ];
                 @endphp
 
                 {{-- Status Active Domain if assigned --}}
                 @if(!empty($profile->custom_domain))
                     <div class="prof-card" style="border:1.5px solid #BBF7D0; background:#F0FDF4; margin-bottom:1.5rem;">
-                        <div class="card-body" style="padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+                        <div class="card-body"
+                            style="padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
                             <div>
-                                <span style="background:#166534; color:#fff; font-size:0.7rem; font-weight: 600; padding:0.25rem 0.6rem; border-radius:6px; letter-spacing:0.05em; display:inline-flex; align-items:center; gap:0.3rem;">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                <span
+                                    style="background:#166534; color:#fff; font-size:0.7rem; font-weight: 600; padding:0.25rem 0.6rem; border-radius:6px; letter-spacing:0.05em; display:inline-flex; align-items:center; gap:0.3rem;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path
+                                            d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                                    </svg>
                                     DOMAIN AKTIF ANDA
                                 </span>
-                                <h3 style="font-size:1.15rem; font-weight: 600; color:#166534; margin:0.4rem 0 0.1rem;">https://{{ $profile->custom_domain }}</h3>
-                                <p style="font-size:0.78rem; color:#15803D; margin:0;">Domain ini sudah terpasang dan aktif mengarah ke halaman Web Builder toko Anda.</p>
+                                <h3 style="font-size:1.15rem; font-weight: 600; color:#166534; margin:0.4rem 0 0.1rem;">
+                                    https://{{ $profile->custom_domain }}</h3>
+                                <p style="font-size:0.78rem; color:#15803D; margin:0;">Domain ini sudah terpasang dan aktif
+                                    mengarah ke halaman Web Builder toko Anda.</p>
                             </div>
-                            <a href="https://{{ $profile->custom_domain }}" target="_blank" class="btn-primary" style="background:#166534; border:none; box-shadow:none; display:inline-flex; align-items:center; gap:0.4rem;">
+                            <a href="https://{{ $profile->custom_domain }}" target="_blank" class="btn-primary"
+                                style="background:#166534; border:none; box-shadow:none; display:inline-flex; align-items:center; gap:0.4rem;">
                                 Buka Domain
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                    <polyline points="15 3 21 3 21 9" />
+                                    <line x1="10" y1="14" x2="21" y2="3" />
+                                </svg>
                             </a>
                         </div>
                     </div>
@@ -1172,29 +1168,48 @@
                 <div class="prof-card">
                     <div class="prof-card-head">
                         <span style="display:flex; align-items:center; gap:0.5rem;">
-                            <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" />
+                                <path
+                                    d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            </svg>
                             Cari & Amankan Custom Domain Brand Anda
                         </span>
                     </div>
                     <div class="card-body">
                         <p style="font-size:0.825rem; color:#64748B; margin-bottom:1.25rem; line-height:1.5;">
-                            Gunakan domain profesional (.com, .id, .co.id, dll) untuk meningkatkan impresi, kepercayaan calon pembeli, serta ranking Google untuk halaman creator Anda.
+                            Gunakan domain profesional (.com, .id, .co.id, dll) untuk meningkatkan impresi, kepercayaan
+                            calon pembeli, serta ranking Google untuk halaman creator Anda.
                         </p>
 
                         {{-- Search Input Box --}}
-                        <div style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px; padding:1.25rem; margin-bottom:1.5rem;">
-                            <label style="display:block; font-size:0.8rem; font-weight: 500; color:#0F172A; margin-bottom:0.5rem;">Cari Nama Domain (Contoh: {{ $cleanKeyword }}.com):</label>
+                        <div
+                            style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px; padding:1.25rem; margin-bottom:1.5rem;">
+                            <label
+                                style="display:block; font-size:0.8rem; font-weight: 500; color:#0F172A; margin-bottom:0.5rem;">Cari
+                                Nama Domain (Contoh: {{ $cleanKeyword }}.com):</label>
                             <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                                <input type="text" id="domainSearchInput" value="{{ $cleanKeyword }}.com" placeholder="Ketik nama domain..."
+                                <input type="text" id="domainSearchInput" value="{{ $cleanKeyword }}.com"
+                                    placeholder="Ketik nama domain..."
                                     style="flex:1; min-width:200px; height:46px; padding:0 1rem; border:1.5px solid #CBD5E1; border-radius:12px; font-size:0.9rem; font-family:inherit; outline:none; background:#ffffff;">
                                 <button type="button" id="btnSearchDomain" onclick="executeDomainSearch()"
                                     style="height:46px; padding:0 1.5rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border:none; border-radius:12px; font-weight: 500; font-size:0.875rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 14px rgba(30, 179, 73, 0.3);">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        viewBox="0 0 24 24">
+                                        <circle cx="11" cy="11" r="8" />
+                                        <path d="M21 21l-4.35-4.35" />
+                                    </svg>
                                     Cari Domain
                                 </button>
                             </div>
-                            <div style="font-size:0.72rem; color:#94A3B8; margin-top:0.4rem; display:flex; align-items:center; gap:0.35rem;">
-                                <svg width="14" height="14" fill="none" stroke="#94A3B8" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            <div
+                                style="font-size:0.72rem; color:#94A3B8; margin-top:0.4rem; display:flex; align-items:center; gap:0.35rem;">
+                                <svg width="14" height="14" fill="none" stroke="#94A3B8" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="16" x2="12" y2="12" />
+                                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                                </svg>
                                 Hasil pencarian di-cache otomatis sehingga pencarian ulang tidak mengurangi kuota API.
                             </div>
                         </div>
@@ -1204,28 +1219,43 @@
 
                         {{-- Auto Recommendations Grid (0 API Hit initially) --}}
                         <div style="margin-top:1rem;">
-                            <div style="font-size:0.85rem; font-weight: 600; color:#0F172A; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem;">
-                                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>
+                            <div
+                                style="font-size:0.85rem; font-weight: 600; color:#0F172A; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+                                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z" />
+                                </svg>
                                 Rekomendasi Domain untuk "{{ $creatorRawName }}"
-                                <span style="font-size:0.7rem; font-weight:600; color:#64748B; background:#F1F5F9; padding:0.15rem 0.5rem; border-radius:100px;">Auto-Generated</span>
+                                <span
+                                    style="font-size:0.7rem; font-weight:600; color:#64748B; background:#F1F5F9; padding:0.15rem 0.5rem; border-radius:100px;">Auto-Generated</span>
                             </div>
 
-                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:0.85rem;">
+                            <div
+                                style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:0.85rem;">
                                 @foreach($officialExtensions as $ext => $price)
                                     @php $recDomain = $cleanKeyword . '.' . $ext; @endphp
-                                    <div style="background:#ffffff; border:1.5px solid #E2E8F0; border-radius:14px; padding:1rem; display:flex; flex-direction:column; justify-content:space-between; gap:0.75rem; transition:all 0.2s; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
+                                    <div
+                                        style="background:#ffffff; border:1.5px solid #E2E8F0; border-radius:14px; padding:1rem; display:flex; flex-direction:column; justify-content:space-between; gap:0.75rem; transition:all 0.2s; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
                                         <div style="display:flex; justify-content:space-between; align-items:center;">
                                             <div>
-                                                <div style="font-size:0.95rem; font-weight: 600; color:#0F172A;">{{ $recDomain }}</div>
+                                                <div style="font-size:0.95rem; font-weight: 600; color:#0F172A;">
+                                                    {{ $recDomain }}
+                                                </div>
                                             </div>
                                             <div style="text-align:right;">
-                                                <div style="font-size:0.9rem; font-weight: 600; color:#1eb349;">Rp {{ number_format($price, 0, ',', '.') }}</div>
+                                                <div style="font-size:0.9rem; font-weight: 600; color:#1eb349;">Rp
+                                                    {{ number_format($price, 0, ',', '.') }}
+                                                </div>
                                                 <div style="font-size:0.68rem; color:#94A3B8;">per tahun</div>
                                             </div>
                                         </div>
                                         <button type="button" onclick="checkSpecificDomain('{{ $recDomain }}', this)"
                                             style="width:100%; height:36px; background:#F8FAFC; color:#0F172A; border:1.5px solid #CBD5E1; border-radius:10px; font-size:0.78rem; font-weight: 500; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; justify-content:center; gap:0.35rem;">
-                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <circle cx="11" cy="11" r="8" />
+                                                <path d="M21 21l-4.35-4.35" />
+                                            </svg>
                                             Cek Ketersediaan
                                         </button>
                                     </div>
@@ -1248,7 +1278,7 @@
                         <form action="{{ route('creator.bio.save-theme') }}" method="POST">
                             @csrf
                             <div class="theme-grid">
-                                @foreach(['theme1' => 'Gelap Elegan', 'theme2' => 'Minimalis Pro', 'theme3' => 'Gradient Neon', 'theme4' => 'Clean Light', 'theme5' => 'Landing Page Pro'] as $key => $label)
+                                @foreach(['theme1' => 'Gelap Elegan', 'theme2' => 'Minimalis Pro', 'theme3' => 'Gradient Neon', 'theme4' => 'Clean Light'] as $key => $label)
                                     <label class="theme-card {{ $currentTheme === $key ? 'active' : '' }}">
                                         <input type="radio" name="bio_theme" value="{{ $key }}" {{ $currentTheme === $key ? 'checked' : '' }} style="display:none;" onchange="this.closest('form').submit()">
                                         <div class="theme-mockup {{ $key }}">
@@ -1803,7 +1833,8 @@
                                     </div>
                                     <div class="form-group" style="margin:0;">
                                         <label class="form-label"
-                                            style="font-size:0.75rem; font-weight: 500; color:#16a34a;">GrabFood Link</label>
+                                            style="font-size:0.75rem; font-weight: 500; color:#16a34a;">GrabFood
+                                            Link</label>
                                         <input type="url" name="bio_grabfood"
                                             value="{{ old('bio_grabfood', $cfg['grabfood'] ?? '') }}" class="form-input"
                                             placeholder="https://food.grab.com/..." style="font-size:0.78rem;">
@@ -3509,20 +3540,20 @@
             popup.id = 'scrapeFailedPopup';
             popup.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);';
             popup.innerHTML = `
-                                    <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
-                                        <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                                            <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                        </div>
-                                        <div style="font-weight: 600;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
-                                        <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
-                                        <div style="display:flex;gap:0.6rem;justify-content:center;">
-                                            <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight: 500;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
-                                            <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight: 500;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
-                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                                Scan AI
-                                            </button>
-                                        </div>
-                                    </div>`;
+                                            <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
+                                                <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                                                    <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                                </div>
+                                                <div style="font-weight: 600;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
+                                                <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
+                                                <div style="display:flex;gap:0.6rem;justify-content:center;">
+                                                    <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight: 500;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
+                                                    <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight: 500;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
+                                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                                        Scan AI
+                                                    </button>
+                                                </div>
+                                            </div>`;
             document.body.appendChild(popup);
             popup.addEventListener('click', function (e) { if (e.target === popup) popup.remove(); });
         }
@@ -3796,11 +3827,11 @@
                 document.getElementById('imgOversizedDesc').innerHTML = 'Foto berikut melebihi batas <strong>1 MB per file</strong>. Harap kompres terlebih dahulu.';
 
                 const listHtml = oversized.map(f => `
-                                        <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
-                                            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
-                                            <span style="color:#EF4444; font-weight: 500;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
-                                        </div>
-                                    `).join('');
+                                                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
+                                                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
+                                                    <span style="color:#EF4444; font-weight: 500;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                                                </div>
+                                            `).join('');
 
                 document.getElementById('imgOversizedFileList').innerHTML = listHtml;
                 document.getElementById('imgOversizedModal').classList.add('open');
@@ -4590,72 +4621,358 @@
     @include('partials.scan_menu_modal')
 
     {{-- ============================================================ --}}
-    {{-- DOMAIN CHECKOUT MODAL — Premium Interactive                  --}}
+    {{-- DOMAIN CHECKOUT MODAL — Premium Interactive --}}
     {{-- ============================================================ --}}
     <style>
-    /* Light Theme Modal */
-    #domainCheckoutModal {
-        display: none; position: fixed; inset: 0; z-index: 99999;
-        background: rgba(15,23,42,0.48); backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px);
-        align-items: center; justify-content: center; padding: 1rem; overflow-y: auto;
-    }
-    #domainCheckoutModal.open { display: flex; animation: dcmFadeIn .2s ease; }
-    @keyframes dcmFadeIn { from { opacity:0; } to { opacity:1; } }
-    .dcm-card {
-        background: #fff; border-radius: 18px; max-width: 450px; width: 100%;
-        padding: 0; box-shadow: 0 16px 48px -8px rgba(0,0,0,0.15);
-        border: 1px solid #E8EDF2; position: relative; overflow: hidden;
-        animation: dcmSlideUp .26s cubic-bezier(.34,1.4,.64,1);
-    }
-    @keyframes dcmSlideUp { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
-    .dcm-header { background: #fff; border-bottom: 1px solid #F1F5F9; padding: 1.4rem 1.4rem 1.1rem; text-align: center; position: relative; }
-    .dcm-close-btn {
-        position: absolute; top: 0.9rem; right: 0.9rem;
-        background: #F1F5F9; border: 1px solid #E2E8F0;
-        color: #94A3B8; width: 28px; height: 28px;
-        border-radius: 50%; display: flex; align-items: center; justify-content: center;
-        cursor: pointer; transition: all .15s;
-    }
-    .dcm-close-btn:hover { background: #E2E8F0; color: #475569; }
-    .dcm-icon-wrap {
-        width: 48px; height: 48px; background: linear-gradient(135deg, #1eb349, #a5cf37);
-        border-radius: 12px; display: inline-flex; align-items: center; justify-content: center;
-        margin-bottom: 0.65rem; box-shadow: 0 4px 14px rgba(30,179,73,0.25);
-    }
-    .dcm-title { font-size: 1rem; font-weight: 600; color: #0F172A; margin: 0 0 0.15rem; }
-    .dcm-subtitle { font-size: 0.75rem; color: #94A3B8; margin: 0; font-weight: 400; }
-    .dcm-body { padding: 1.1rem 1.4rem 1.3rem; }
-    .dcm-info-card { background: #F8FFF9; border: 1px solid #D1FAE5; border-radius: 11px; padding: 0.85rem 1rem; margin-bottom: 1rem; }
-    .dcm-info-row { display: flex; justify-content: space-between; align-items: center; }
-    .dcm-info-row + .dcm-info-row { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #ECFDF5; }
-    .dcm-info-label { font-size: 0.68rem; font-weight: 600; color: #16a34a; text-transform: uppercase; letter-spacing: 0.06em; }
-    .dcm-domain-name { font-size: 0.95rem; font-weight: 600; color: #166534; }
-    .dcm-domain-price { font-size: 1rem; font-weight: 600; color: #0F172A; }
-    .dcm-domain-period { font-size: 0.67rem; color: #94A3B8; margin-left: 2px; font-weight: 400; }
-    .dcm-benefits { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
-    .dcm-benefit-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.76rem; color: #64748B; font-weight: 400; }
-    .dcm-benefit-icon { width: 16px; height: 16px; background: #F0FDF4; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .dcm-notice { background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 9px; padding: 0.6rem 0.8rem; font-size: 0.72rem; color: #92400E; margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 0.4rem; font-weight: 400; line-height: 1.5; }
-    .dcm-error-box { background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 9px; padding: 0.6rem 0.8rem; font-size: 0.76rem; color: #DC2626; margin-bottom: 0.85rem; display: none; align-items: flex-start; gap: 0.4rem; font-weight: 400; line-height: 1.5; }
-    .dcm-actions { display: grid; grid-template-columns: 1fr 1.7fr; gap: 0.6rem; }
-    .dcm-btn-cancel { height: 42px; background: #F8FAFC; color: #64748B; border: 1px solid #E2E8F0; border-radius: 10px; font-weight: 500; font-size: 0.83rem; cursor: pointer; transition: all .15s; }
-    .dcm-btn-cancel:hover { background: #F1F5F9; color: #334155; }
-    .dcm-btn-pay { height: 42px; background: linear-gradient(135deg, #1eb349 0%, #16a34a 60%, #a5cf37 100%); color: #fff; border: none; border-radius: 10px; font-weight: 600; font-size: 0.83rem; cursor: pointer; box-shadow: 0 3px 12px rgba(30,179,73,0.3); display: inline-flex; align-items: center; justify-content: center; gap: 0.32rem; transition: all .18s; }
-    .dcm-btn-pay:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(30,179,73,0.4); }
-    .dcm-btn-pay:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    /* Toast */
-    #domainToast { position: fixed; bottom: 1.25rem; left: 50%; transform: translateX(-50%) translateY(80px); z-index: 999999; min-width: 280px; max-width: calc(100vw - 2rem); background: #1e293b; color: #fff; border-radius: 13px; padding: 0.85rem 1rem; display: flex; align-items: flex-start; gap: 0.6rem; box-shadow: 0 10px 28px rgba(0,0,0,0.22); transition: transform .32s cubic-bezier(.34,1.4,.64,1), opacity .22s; opacity: 0; }
-    #domainToast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    #domainToast.toast-success { background: #166534; }
-    #domainToast.toast-error { background: #991B1B; }
-    #domainToast.toast-info { background: #1e40af; }
-    .toast-icon { width: 30px; height: 30px; background: rgba(255,255,255,0.12); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .toast-content { flex: 1; }
-    .toast-title { font-size: 0.8rem; font-weight: 600; margin: 0 0 0.12rem; }
-    .toast-msg { font-size: 0.72rem; opacity: 0.8; margin: 0; line-height: 1.45; font-weight: 400; }
-    .toast-close { background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer; padding: 0; flex-shrink: 0; }
-    .toast-close:hover { color: #fff; }
+        /* Light Theme Modal */
+        #domainCheckoutModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(15, 23, 42, 0.48);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        #domainCheckoutModal.open {
+            display: flex;
+            animation: dcmFadeIn .2s ease;
+        }
+
+        @keyframes dcmFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .dcm-card {
+            background: #fff;
+            border-radius: 18px;
+            max-width: 450px;
+            width: 100%;
+            padding: 0;
+            box-shadow: 0 16px 48px -8px rgba(0, 0, 0, 0.15);
+            border: 1px solid #E8EDF2;
+            position: relative;
+            overflow: hidden;
+            animation: dcmSlideUp .26s cubic-bezier(.34, 1.4, .64, 1);
+        }
+
+        @keyframes dcmSlideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .dcm-header {
+            background: #fff;
+            border-bottom: 1px solid #F1F5F9;
+            padding: 1.4rem 1.4rem 1.1rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .dcm-close-btn {
+            position: absolute;
+            top: 0.9rem;
+            right: 0.9rem;
+            background: #F1F5F9;
+            border: 1px solid #E2E8F0;
+            color: #94A3B8;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .dcm-close-btn:hover {
+            background: #E2E8F0;
+            color: #475569;
+        }
+
+        .dcm-icon-wrap {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #1eb349, #a5cf37);
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.65rem;
+            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.25);
+        }
+
+        .dcm-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0F172A;
+            margin: 0 0 0.15rem;
+        }
+
+        .dcm-subtitle {
+            font-size: 0.75rem;
+            color: #94A3B8;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .dcm-body {
+            padding: 1.1rem 1.4rem 1.3rem;
+        }
+
+        .dcm-info-card {
+            background: #F8FFF9;
+            border: 1px solid #D1FAE5;
+            border-radius: 11px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .dcm-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dcm-info-row+.dcm-info-row {
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #ECFDF5;
+        }
+
+        .dcm-info-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: #16a34a;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .dcm-domain-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #166534;
+        }
+
+        .dcm-domain-price {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0F172A;
+        }
+
+        .dcm-domain-period {
+            font-size: 0.67rem;
+            color: #94A3B8;
+            margin-left: 2px;
+            font-weight: 400;
+        }
+
+        .dcm-benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            margin-bottom: 1rem;
+        }
+
+        .dcm-benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.76rem;
+            color: #64748B;
+            font-weight: 400;
+        }
+
+        .dcm-benefit-icon {
+            width: 16px;
+            height: 16px;
+            background: #F0FDF4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .dcm-notice {
+            background: #FFFBEB;
+            border: 1px solid #FDE68A;
+            border-radius: 9px;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.72rem;
+            color: #92400E;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.4rem;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .dcm-error-box {
+            background: #FEF2F2;
+            border: 1px solid #FCA5A5;
+            border-radius: 9px;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.76rem;
+            color: #DC2626;
+            margin-bottom: 0.85rem;
+            display: none;
+            align-items: flex-start;
+            gap: 0.4rem;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .dcm-actions {
+            display: grid;
+            grid-template-columns: 1fr 1.7fr;
+            gap: 0.6rem;
+        }
+
+        .dcm-btn-cancel {
+            height: 42px;
+            background: #F8FAFC;
+            color: #64748B;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 0.83rem;
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .dcm-btn-cancel:hover {
+            background: #F1F5F9;
+            color: #334155;
+        }
+
+        .dcm-btn-pay {
+            height: 42px;
+            background: linear-gradient(135deg, #1eb349 0%, #16a34a 60%, #a5cf37 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.83rem;
+            cursor: pointer;
+            box-shadow: 0 3px 12px rgba(30, 179, 73, 0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.32rem;
+            transition: all .18s;
+        }
+
+        .dcm-btn-pay:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 18px rgba(30, 179, 73, 0.4);
+        }
+
+        .dcm-btn-pay:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Toast */
+        #domainToast {
+            position: fixed;
+            bottom: 1.25rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            z-index: 999999;
+            min-width: 280px;
+            max-width: calc(100vw - 2rem);
+            background: #1e293b;
+            color: #fff;
+            border-radius: 13px;
+            padding: 0.85rem 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+            transition: transform .32s cubic-bezier(.34, 1.4, .64, 1), opacity .22s;
+            opacity: 0;
+        }
+
+        #domainToast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        #domainToast.toast-success {
+            background: #166534;
+        }
+
+        #domainToast.toast-error {
+            background: #991B1B;
+        }
+
+        #domainToast.toast-info {
+            background: #1e40af;
+        }
+
+        .toast-icon {
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0 0 0.12rem;
+        }
+
+        .toast-msg {
+            font-size: 0.72rem;
+            opacity: 0.8;
+            margin: 0;
+            line-height: 1.45;
+            font-weight: 400;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .toast-close:hover {
+            color: #fff;
+        }
     </style>
 
     {{-- Domain Checkout Modal --}}
@@ -4663,10 +4980,17 @@
         <div class="dcm-card">
             <div class="dcm-header">
                 <button type="button" class="dcm-close-btn" onclick="closeCheckoutModal()" aria-label="Tutup">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
                 </button>
                 <div class="dcm-icon-wrap">
-                    <svg width="28" height="28" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <svg width="28" height="28" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                        <path
+                            d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
                 </div>
                 <h3 class="dcm-title">Amankan Custom Domain</h3>
                 <p class="dcm-subtitle">Periksa detail pesanan sebelum lanjut bayar</p>
@@ -4677,26 +5001,32 @@
                         <span class="dcm-info-label">Nama Domain</span>
                         <span id="modalDomainName" class="dcm-domain-name"></span>
                     </div>
-                    <div class="dcm-info-row" style="padding-top:0.35rem; margin-top:0.35rem; border-top:1px dashed #E2E8F0;">
-                        <span style="font-size:0.75rem; color:#475569;">Harga Dasar Domain</span>
+                    <div class="dcm-info-row"
+                        style="padding-top:0.35rem; margin-top:0.35rem; border-top:1px dashed #E2E8F0;">
+                        <span style="font-size:0.75rem; color:#475569;">Harga Domain</span>
                         <span id="modalBasePrice" style="font-size:0.8rem; font-weight:600; color:#334155;">-</span>
                     </div>
                     <div class="dcm-info-row">
-                        <span style="font-size:0.75rem; color:#475569;">Platform Fee ({{ (float)(\App\Models\Setting::get('platform_fee_rate', 5)) }}%)</span>
+                        <span style="font-size:0.75rem; color:#475569;">Platform Fee
+                            ({{ (float) (\App\Models\Setting::get('platform_fee_rate', 5)) }}%)</span>
                         <span id="modalPlatformFee" style="font-size:0.8rem; font-weight:600; color:#334155;">-</span>
                     </div>
                     <div class="dcm-info-row">
-                        <span style="font-size:0.75rem; color:#475569;">Admin Fee ({{ (float)(\App\Models\Setting::get('admin_fee_rate', 5)) }}%)</span>
+                        <span style="font-size:0.75rem; color:#475569;">Admin Fee
+                            ({{ (float) (\App\Models\Setting::get('admin_fee_rate', 5)) }}%)</span>
                         <span id="modalAdminFee" style="font-size:0.8rem; font-weight:600; color:#334155;">-</span>
                     </div>
                     <div class="dcm-info-row">
-                        <span style="font-size:0.75rem; color:#475569;">PPN / Pajak ({{ (float)(\App\Models\Setting::get('tax_rate', 11)) }}%)</span>
+                        <span style="font-size:0.75rem; color:#475569;">PPN / Pajak
+                            ({{ (float) (\App\Models\Setting::get('tax_rate', 11)) }}%)</span>
                         <span id="modalTaxAmount" style="font-size:0.8rem; font-weight:600; color:#334155;">-</span>
                     </div>
-                    <div class="dcm-info-row" style="padding-top:0.5rem; margin-top:0.5rem; border-top:1.5px solid #10B981;">
+                    <div class="dcm-info-row"
+                        style="padding-top:0.5rem; margin-top:0.5rem; border-top:1.5px solid #10B981;">
                         <span class="dcm-info-label" style="font-size:0.8rem; color:#0F172A;">TOTAL PEMBAYARAN</span>
                         <span>
-                            <span id="modalTotalPrice" class="dcm-domain-price" style="font-size:1.1rem; color:#166534; font-weight:700;"></span>
+                            <span id="modalTotalPrice" class="dcm-domain-price"
+                                style="font-size:1.1rem; color:#166534; font-weight:700;"></span>
                             <span id="modalDomainPrice" class="dcm-domain-price" style="display:none;"></span>
                             <span class="dcm-domain-period">/tahun</span>
                         </span>
@@ -4704,30 +5034,54 @@
                 </div>
                 <div class="dcm-benefits">
                     <div class="dcm-benefit-item">
-                        <div class="dcm-benefit-icon"><svg width="11" height="11" fill="none" stroke="#16a34a" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                        <div class="dcm-benefit-icon"><svg width="11" height="11" fill="none" stroke="#16a34a"
+                                stroke-width="3" viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg></div>
                         <span>Pendaftaran domain resmi masa aktif <strong>1 Tahun</strong></span>
                     </div>
                     <div class="dcm-benefit-item">
-                        <div class="dcm-benefit-icon"><svg width="11" height="11" fill="none" stroke="#16a34a" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                        <div class="dcm-benefit-icon"><svg width="11" height="11" fill="none" stroke="#16a34a"
+                                stroke-width="3" viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg></div>
                         <span>Auto SSL/HTTPS & DNS Pointing ke halaman Web Builder Anda</span>
                     </div>
                     <div class="dcm-benefit-item">
-                        <div class="dcm-benefit-icon"><svg width="11" height="11" fill="none" stroke="#16a34a" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                        <div class="dcm-benefit-icon"><svg width="11" height="11" fill="none" stroke="#16a34a"
+                                stroke-width="3" viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg></div>
                         <span>Proses setup maks. <strong>2&#215;24 jam</strong> + notifikasi email</span>
                     </div>
                 </div>
                 <div class="dcm-notice">
-                    <svg width="16" height="16" fill="none" stroke="#92400E" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    <span><strong>Catatan:</strong> Harga belum termasuk Admin Fee, Platform Fee, dan PPN (Pajak) 11%. Rincian fee & pajak akan dikalkulasi secara otomatis saat pembayaran Midtrans.</span>
+                    <svg width="16" height="16" fill="none" stroke="#92400E" stroke-width="2" viewBox="0 0 24 24"
+                        style="flex-shrink:0;margin-top:1px">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    <span><strong>Catatan:</strong> Harga belum termasuk Admin Fee, Platform Fee, dan PPN (Pajak) 11%.
+                        Rincian fee & pajak akan dikalkulasi secara otomatis saat pembayaran.</span>
                 </div>
                 <div id="dcmErrorBox" class="dcm-error-box">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"
+                        style="flex-shrink:0">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="15" y1="9" x2="9" y2="15" />
+                        <line x1="9" y1="9" x2="15" y2="15" />
+                    </svg>
                     <span id="dcmErrorText"></span>
                 </div>
                 <div class="dcm-actions">
                     <button type="button" class="dcm-btn-cancel" onclick="closeCheckoutModal()">Batal</button>
                     <button type="button" id="btnConfirmPayDomain" class="dcm-btn-pay" onclick="proceedDomainCheckout()">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
+                            <rect x="1" y="4" width="22" height="16" rx="2" />
+                            <line x1="1" y1="10" x2="23" y2="10" />
+                        </svg>
                         Lanjut Bayar Sekarang
                     </button>
                 </div>
@@ -4743,7 +5097,10 @@
             <p class="toast-msg" id="toastMsg"></p>
         </div>
         <button class="toast-close" onclick="hideToast()">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
         </button>
     </div>
 
@@ -4757,217 +5114,221 @@
     @endif
 
     <script>
-    /* ==============================================================
-       DOMAIN MODULE — Toast + Checkout Modal + Search
-       ============================================================== */
-    let activeDomainToBuy = '';
-    let toastTimer = null;
+        /* ==============================================================
+           DOMAIN MODULE — Toast + Checkout Modal + Search
+           ============================================================== */
+        let activeDomainToBuy = '';
+        let toastTimer = null;
 
-    /* ── Toast ──────────────────────────────────────────────────── */
-    function showToast(type, title, msg, duration) {
-        duration = duration || 6000;
-        var toast = document.getElementById('domainToast');
-        var iconEl = document.getElementById('toastIcon');
-        var icons = {
-            success: '<svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
-            error:   '<svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
-            info:    '<svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
-        };
-        toast.className = 'toast-' + type;
-        iconEl.innerHTML = icons[type] || icons.info;
-        document.getElementById('toastTitle').textContent = title;
-        document.getElementById('toastMsg').textContent = msg;
-        clearTimeout(toastTimer);
-        setTimeout(function() { toast.classList.add('show'); }, 10);
-        toastTimer = setTimeout(hideToast, duration);
-    }
-    function hideToast() {
-        document.getElementById('domainToast').classList.remove('show');
-    }
-
-    /* ── Checkout Modal ─────────────────────────────────────────── */
-    const DOM_PF_RATE = {{ (float) (\App\Models\Setting::get('platform_fee_rate', 5)) }};
-    const DOM_AF_RATE = {{ (float) (\App\Models\Setting::get('admin_fee_rate', 5)) }};
-    const DOM_TAX_RATE = {{ (float) (\App\Models\Setting::get('tax_rate', 11)) }};
-
-    function formatRupiah(num) {
-        return 'Rp ' + Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-
-    function buyDomain(domainName, formattedPrice, rawPrice) {
-        activeDomainToBuy = domainName;
-        document.getElementById('modalDomainName').textContent = domainName;
-
-        var basePrice = 0;
-        if (rawPrice && !isNaN(rawPrice)) {
-            basePrice = parseFloat(rawPrice);
-        } else {
-            var ext = domainName.split('.').slice(1).join('.');
-            var map = {'com':436666,'id':480719,'co.id':532889,'biz':667546,'biz.id':177589,'store':1065836,'my.id':333189};
-            basePrice = map[ext] || 436666;
+        /* ── Toast ──────────────────────────────────────────────────── */
+        function showToast(type, title, msg, duration) {
+            duration = duration || 6000;
+            var toast = document.getElementById('domainToast');
+            var iconEl = document.getElementById('toastIcon');
+            var icons = {
+                success: '<svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+                error: '<svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+                info: '<svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+            };
+            toast.className = 'toast-' + type;
+            iconEl.innerHTML = icons[type] || icons.info;
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMsg').textContent = msg;
+            clearTimeout(toastTimer);
+            setTimeout(function () { toast.classList.add('show'); }, 10);
+            toastTimer = setTimeout(hideToast, duration);
+        }
+        function hideToast() {
+            document.getElementById('domainToast').classList.remove('show');
         }
 
-        var platformFee = Math.round(basePrice * (DOM_PF_RATE / 100));
-        var adminFee = Math.round(basePrice * (DOM_AF_RATE / 100));
-        var taxAmount = Math.round(basePrice * (DOM_TAX_RATE / 100));
-        var totalPrice = basePrice + platformFee + adminFee + taxAmount;
+        /* ── Checkout Modal ─────────────────────────────────────────── */
+        const DOM_PF_RATE = {{ (float) (\App\Models\Setting::get('platform_fee_rate', 5)) }};
+        const DOM_AF_RATE = {{ (float) (\App\Models\Setting::get('admin_fee_rate', 5)) }};
+        const DOM_TAX_RATE = {{ (float) (\App\Models\Setting::get('tax_rate', 11)) }};
 
-        if (document.getElementById('modalBasePrice')) document.getElementById('modalBasePrice').textContent = formatRupiah(basePrice);
-        if (document.getElementById('modalPlatformFee')) document.getElementById('modalPlatformFee').textContent = formatRupiah(platformFee);
-        if (document.getElementById('modalAdminFee')) document.getElementById('modalAdminFee').textContent = formatRupiah(adminFee);
-        if (document.getElementById('modalTaxAmount')) document.getElementById('modalTaxAmount').textContent = formatRupiah(taxAmount);
-        if (document.getElementById('modalTotalPrice')) document.getElementById('modalTotalPrice').textContent = formatRupiah(totalPrice);
-        if (document.getElementById('modalDomainPrice')) document.getElementById('modalDomainPrice').textContent = formatRupiah(totalPrice);
+        function formatRupiah(num) {
+            return 'Rp ' + Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
 
-        document.getElementById('dcmErrorBox').style.display = 'none';
-        var modal = document.getElementById('domainCheckoutModal');
-        modal.classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
+        function buyDomain(domainName, formattedPrice, rawPrice) {
+            activeDomainToBuy = domainName;
+            document.getElementById('modalDomainName').textContent = domainName;
 
-    function closeCheckoutModal() {
-        document.getElementById('domainCheckoutModal').classList.remove('open');
-        document.body.style.overflow = '';
-    }
+            var basePrice = 0;
+            if (rawPrice && !isNaN(rawPrice)) {
+                basePrice = parseFloat(rawPrice);
+            } else {
+                var ext = domainName.split('.').slice(1).join('.');
+                var map = { 'com': 436666, 'id': 480719, 'co.id': 532889, 'biz': 667546, 'biz.id': 177589, 'store': 1065836, 'my.id': 333189 };
+                basePrice = map[ext] || 436666;
+            }
 
-    document.getElementById('domainCheckoutModal').addEventListener('click', function(e) {
-        if (e.target === this) closeCheckoutModal();
-    });
+            var platformFee = Math.round(basePrice * (DOM_PF_RATE / 100));
+            var adminFee = Math.round(basePrice * (DOM_AF_RATE / 100));
+            var taxAmount = Math.round(basePrice * (DOM_TAX_RATE / 100));
+            var totalPrice = basePrice + platformFee + adminFee + taxAmount;
 
-    function showModalError(msg) {
-        var box = document.getElementById('dcmErrorBox');
-        document.getElementById('dcmErrorText').textContent = msg;
-        box.style.display = 'flex';
-    }
+            if (document.getElementById('modalBasePrice')) document.getElementById('modalBasePrice').textContent = formatRupiah(basePrice);
+            if (document.getElementById('modalPlatformFee')) document.getElementById('modalPlatformFee').textContent = formatRupiah(platformFee);
+            if (document.getElementById('modalAdminFee')) document.getElementById('modalAdminFee').textContent = formatRupiah(adminFee);
+            if (document.getElementById('modalTaxAmount')) document.getElementById('modalTaxAmount').textContent = formatRupiah(taxAmount);
+            if (document.getElementById('modalTotalPrice')) document.getElementById('modalTotalPrice').textContent = formatRupiah(totalPrice);
+            if (document.getElementById('modalDomainPrice')) document.getElementById('modalDomainPrice').textContent = formatRupiah(totalPrice);
 
-    function proceedDomainCheckout() {
-        if (!activeDomainToBuy) return;
-        var payBtn = document.getElementById('btnConfirmPayDomain');
-        payBtn.disabled = true;
-        payBtn.innerHTML = '<svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24" style="animation:domSpin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-opacity=".3"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#fff"/></svg> Memproses...';
-        document.getElementById('dcmErrorBox').style.display = 'none';
+            document.getElementById('dcmErrorBox').style.display = 'none';
+            var modal = document.getElementById('domainCheckoutModal');
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
 
-        var resetBtn = function() {
-            payBtn.disabled = false;
-            payBtn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Lanjut Bayar Sekarang';
-        };
+        function closeCheckoutModal() {
+            document.getElementById('domainCheckoutModal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
 
-        fetch('{{ route("creator.domain.checkout") }}', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
-            body: JSON.stringify({ domain: activeDomainToBuy })
-        })
-        .then(function(resp) {
-            return resp.json().then(function(d) { return { ok: resp.ok, data: d }; });
-        })
-        .then(function(res) {
-            resetBtn();
-            var data = res.data;
-            if (!data.success) { showModalError(data.message || 'Gagal membuat transaksi. Coba lagi.'); return; }
-            if (!data.snap_token) { showModalError('Token pembayaran tidak diterima. Cek konfigurasi Midtrans di Admin.'); return; }
-            closeCheckoutModal();
-            if (typeof snap !== 'undefined') {
-                snap.pay(data.snap_token, {
-                    onSuccess: function() {
-                        showToast('success', 'Pembayaran Berhasil!', 'Domain ' + activeDomainToBuy + ' diproses Admin maks. 2×24 jam. Cek email Anda.', 10000);
-                        setTimeout(function() { window.location.reload(); }, 3500);
-                    },
-                    onPending: function() {
-                        showToast('info', 'Menunggu Pembayaran', 'Selesaikan instruksi Midtrans. Domain diproses setelah konfirmasi.', 8000);
-                    },
-                    onError: function() {
-                        showToast('error', 'Pembayaran Gagal', 'Terjadi kesalahan saat pembayaran. Silakan coba lagi.', 6000);
-                    },
-                    onClose: function() {
-                        showToast('info', 'Pembayaran Dibatalkan', 'Jendela Midtrans ditutup. Klik Amankan Domain lagi jika ingin lanjut.', 5000);
+        document.getElementById('domainCheckoutModal').addEventListener('click', function (e) {
+            if (e.target === this) closeCheckoutModal();
+        });
+
+        function showModalError(msg) {
+            var box = document.getElementById('dcmErrorBox');
+            document.getElementById('dcmErrorText').textContent = msg;
+            box.style.display = 'flex';
+        }
+
+        function proceedDomainCheckout() {
+            if (!activeDomainToBuy) return;
+            var payBtn = document.getElementById('btnConfirmPayDomain');
+            payBtn.disabled = true;
+            payBtn.innerHTML = '<svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24" style="animation:domSpin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-opacity=".3"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#fff"/></svg> Memproses...';
+            document.getElementById('dcmErrorBox').style.display = 'none';
+
+            var resetBtn = function () {
+                payBtn.disabled = false;
+                payBtn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Lanjut Bayar Sekarang';
+            };
+
+            fetch('{{ route("creator.domain.checkout") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
+                body: JSON.stringify({ domain: activeDomainToBuy })
+            })
+                .then(function (resp) {
+                    return resp.json().then(function (d) { return { ok: resp.ok, data: d }; });
+                })
+                .then(function (res) {
+                    resetBtn();
+                    var data = res.data;
+                    if (!data.success) { showModalError(data.message || 'Gagal membuat transaksi. Coba lagi.'); return; }
+                    if (!data.snap_token) { showModalError('Token pembayaran tidak diterima. Cek konfigurasi Midtrans di Admin.'); return; }
+                    closeCheckoutModal();
+                    if (typeof snap !== 'undefined') {
+                        snap.pay(data.snap_token, {
+                            onSuccess: function () {
+                                showToast('success', 'Pembayaran Berhasil!', 'Domain ' + activeDomainToBuy + ' diproses Admin maks. 2×24 jam. Cek email Anda.', 10000);
+                                setTimeout(function () { window.location.reload(); }, 3500);
+                            },
+                            onPending: function () {
+                                showToast('info', 'Menunggu Pembayaran', 'Selesaikan instruksi Midtrans. Domain diproses setelah konfirmasi.', 8000);
+                            },
+                            onError: function () {
+                                showToast('error', 'Pembayaran Gagal', 'Terjadi kesalahan saat pembayaran. Silakan coba lagi.', 6000);
+                            },
+                            onClose: function () {
+                                showToast('info', 'Pembayaran Dibatalkan', 'Jendela Midtrans ditutup. Klik Amankan Domain lagi jika ingin lanjut.', 5000);
+                            }
+                        });
+                    } else {
+                        showToast('error', 'Midtrans Tidak Tersedia', 'Script pembayaran belum termuat. Refresh halaman dan coba lagi.', 8000);
                     }
+                })
+                .catch(function (err) {
+                    resetBtn();
+                    showModalError('Gagal terhubung ke server. Periksa koneksi internet Anda.');
+                    console.error('[Domain Checkout]', err);
                 });
-            } else {
-                showToast('error', 'Midtrans Tidak Tersedia', 'Script pembayaran belum termuat. Refresh halaman dan coba lagi.', 8000);
-            }
-        })
-        .catch(function(err) {
-            resetBtn();
-            showModalError('Gagal terhubung ke server. Periksa koneksi internet Anda.');
-            console.error('[Domain Checkout]', err);
-        });
-    }
-
-    /* ── Domain Search ──────────────────────────────────────────── */
-    function checkSpecificDomain(domainName) {
-        document.getElementById('domainSearchInput').value = domainName;
-        executeDomainSearch();
-    }
-
-    function executeDomainSearch(triggerBtn) {
-        var domainInput = document.getElementById('domainSearchInput');
-        var resultBox   = document.getElementById('searchResultBox');
-        var searchBtn   = document.getElementById('btnSearchDomain');
-        var rawDomain   = domainInput.value.trim();
-
-        if (!rawDomain) {
-            showToast('error', 'Input Kosong', 'Masukkan nama domain yang ingin dicari.', 4000);
-            return;
         }
 
-        var origBtnHtml = searchBtn.innerHTML;
-        searchBtn.disabled = true;
-        searchBtn.innerHTML = '<svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24" style="animation:domSpin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-opacity=".25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#fff"/></svg> Memeriksa...';
-
-        if (triggerBtn && triggerBtn !== searchBtn) {
-            triggerBtn.disabled = true;
-            triggerBtn.textContent = 'Memeriksa...';
+        /* ── Domain Search ──────────────────────────────────────────── */
+        function checkSpecificDomain(domainName) {
+            document.getElementById('domainSearchInput').value = domainName;
+            executeDomainSearch();
         }
 
-        resultBox.style.display = 'block';
-        resultBox.innerHTML = '<div style="background:#F8FAFC;border:1.5px solid #CBD5E1;border-radius:14px;padding:1.25rem;text-align:center;"><div style="font-size:0.88rem;font-weight: 500;color:#0F172A;display:flex;align-items:center;justify-content:center;gap:0.5rem;"><svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24" style="animation:domSpin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-opacity=".25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#1eb349"/></svg>Memeriksa <strong style="color:#1eb349">' + rawDomain + '</strong>...</div></div>';
+        function executeDomainSearch(triggerBtn) {
+            var domainInput = document.getElementById('domainSearchInput');
+            var resultBox = document.getElementById('searchResultBox');
+            var searchBtn = document.getElementById('btnSearchDomain');
+            var rawDomain = domainInput.value.trim();
 
-        fetch('{{ route("creator.domain.check") }}', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
-            body: JSON.stringify({ domain: rawDomain })
-        })
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-            searchBtn.disabled = false;
-            searchBtn.innerHTML = origBtnHtml;
-            if (triggerBtn && triggerBtn !== searchBtn) { triggerBtn.disabled = false; triggerBtn.textContent = 'Cek Ketersediaan'; }
-
-            if (!data.success && data.unsupported_ext) {
-                var recHtml = '';
-                if (data.recommendations && data.recommendations.length) {
-                    recHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.5rem;margin-top:0.75rem;">';
-                    data.recommendations.forEach(function(r) {
-                        recHtml += '<div style="background:#fff;border:1px solid #BBF7D0;padding:0.6rem 0.8rem;border-radius:10px;display:flex;justify-content:space-between;align-items:center;"><span style="font-weight: 500;font-size:0.82rem;">' + r.domain + '</span><button type="button" onclick="checkSpecificDomain(\'' + r.domain + '\')" style="background:#166534;color:#fff;border:none;padding:0.3rem 0.6rem;border-radius:6px;font-size:0.7rem;font-weight: 500;cursor:pointer;">Cek</button></div>';
-                    });
-                    recHtml += '</div>';
-                }
-                resultBox.innerHTML = '<div style="background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:14px;padding:1.25rem;"><div style="font-weight: 500;color:#92400E;font-size:0.88rem;">' + data.message + '</div>' + recHtml + '</div>';
+            if (!rawDomain) {
+                showToast('error', 'Input Kosong', 'Masukkan nama domain yang ingin dicari.', 4000);
                 return;
             }
-            if (!data.success) {
-                resultBox.innerHTML = '<div style="background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:14px;padding:1.25rem;color:#991B1B;"><strong>Error:</strong> ' + (data.message || 'Gagal mengecek domain.') + '</div>';
-                return;
+
+            var origBtnHtml = searchBtn.innerHTML;
+            searchBtn.disabled = true;
+            searchBtn.innerHTML = '<svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24" style="animation:domSpin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-opacity=".25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#fff"/></svg> Memeriksa...';
+
+            if (triggerBtn && triggerBtn !== searchBtn) {
+                triggerBtn.disabled = true;
+                triggerBtn.textContent = 'Memeriksa...';
             }
-            if (data.available) {
-                resultBox.innerHTML = '<div style="background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border:1.5px solid #BBF7D0;border-radius:16px;padding:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;"><div><span style="background:linear-gradient(135deg,#166534,#15803D);color:#fff;font-size:0.68rem;font-weight: 600;padding:0.2rem 0.6rem;border-radius:6px;display:inline-flex;align-items:center;gap:0.3rem;"><svg width="11" height="11" fill="none" stroke="#fff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>TERSEDIA</span><h3 style="font-size:1.3rem;font-weight: 600;color:#166534;margin:0.4rem 0 0.15rem;">' + data.domain + '</h3><p style="font-size:0.78rem;color:#15803D;margin:0;">Amankan sebelum diambil orang lain!</p><div style="font-size:0.68rem;color:#64748B;margin-top:0.2rem;">*Belum termasuk Admin Fee, Platform Fee, & PPN 11% (dikalkulasi otomatis saat pembayaran)</div></div><div style="text-align:right;"><div style="font-size:1.25rem;font-weight: 600;color:#166534;margin-bottom:0.5rem;">' + data.formatted_price + ' <span style="font-size:0.72rem;font-weight:400;color:#64748B;">/thn</span></div><button type="button" onclick="buyDomain(\'' + data.domain + '\',\'' + data.formatted_price + '\')" style="padding:0.7rem 1.35rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:12px;font-weight: 600;font-size:0.875rem;cursor:pointer;box-shadow:0 6px 20px rgba(30,179,73,.4);display:inline-flex;align-items:center;gap:0.4rem;"><svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Amankan Domain</button></div></div>';
-            } else {
-                resultBox.innerHTML = '<div style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:16px;padding:1.25rem;"><div style="display:flex;align-items:center;gap:0.5rem;color:#991B1B;font-weight: 600;"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Domain ' + data.domain + ' sudah terdaftar.</div><p style="font-size:0.78rem;color:#7F1D1D;margin:0.35rem 0 0;">Coba variasi nama lain atau pilih rekomendasi di bawah.</p></div>';
-            }
-        })
-        .catch(function(err) {
-            searchBtn.disabled = false;
-            searchBtn.innerHTML = origBtnHtml;
-            if (triggerBtn && triggerBtn !== searchBtn) { triggerBtn.disabled = false; triggerBtn.textContent = 'Cek Ketersediaan'; }
-            resultBox.innerHTML = '<div style="background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:14px;padding:1.25rem;color:#991B1B;">Gagal memproses pencarian. Periksa koneksi internet.</div>';
+
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = '<div style="background:#F8FAFC;border:1.5px solid #CBD5E1;border-radius:14px;padding:1.25rem;text-align:center;"><div style="font-size:0.88rem;font-weight: 500;color:#0F172A;display:flex;align-items:center;justify-content:center;gap:0.5rem;"><svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24" style="animation:domSpin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-opacity=".25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#1eb349"/></svg>Memeriksa <strong style="color:#1eb349">' + rawDomain + '</strong>...</div></div>';
+
+            fetch('{{ route("creator.domain.check") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
+                body: JSON.stringify({ domain: rawDomain })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    searchBtn.disabled = false;
+                    searchBtn.innerHTML = origBtnHtml;
+                    if (triggerBtn && triggerBtn !== searchBtn) { triggerBtn.disabled = false; triggerBtn.textContent = 'Cek Ketersediaan'; }
+
+                    if (!data.success && data.unsupported_ext) {
+                        var recHtml = '';
+                        if (data.recommendations && data.recommendations.length) {
+                            recHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.5rem;margin-top:0.75rem;">';
+                            data.recommendations.forEach(function (r) {
+                                recHtml += '<div style="background:#fff;border:1px solid #BBF7D0;padding:0.6rem 0.8rem;border-radius:10px;display:flex;justify-content:space-between;align-items:center;"><span style="font-weight: 500;font-size:0.82rem;">' + r.domain + '</span><button type="button" onclick="checkSpecificDomain(\'' + r.domain + '\')" style="background:#166534;color:#fff;border:none;padding:0.3rem 0.6rem;border-radius:6px;font-size:0.7rem;font-weight: 500;cursor:pointer;">Cek</button></div>';
+                            });
+                            recHtml += '</div>';
+                        }
+                        resultBox.innerHTML = '<div style="background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:14px;padding:1.25rem;"><div style="font-weight: 500;color:#92400E;font-size:0.88rem;">' + data.message + '</div>' + recHtml + '</div>';
+                        return;
+                    }
+                    if (!data.success) {
+                        resultBox.innerHTML = '<div style="background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:14px;padding:1.25rem;color:#991B1B;"><strong>Error:</strong> ' + (data.message || 'Gagal mengecek domain.') + '</div>';
+                        return;
+                    }
+                    if (data.available) {
+                        resultBox.innerHTML = '<div style="background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border:1.5px solid #BBF7D0;border-radius:16px;padding:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;"><div><span style="background:linear-gradient(135deg,#166534,#15803D);color:#fff;font-size:0.68rem;font-weight: 600;padding:0.2rem 0.6rem;border-radius:6px;display:inline-flex;align-items:center;gap:0.3rem;"><svg width="11" height="11" fill="none" stroke="#fff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>TERSEDIA</span><h3 style="font-size:1.3rem;font-weight: 600;color:#166534;margin:0.4rem 0 0.15rem;">' + data.domain + '</h3><p style="font-size:0.78rem;color:#15803D;margin:0;">Amankan sebelum diambil orang lain!</p><div style="font-size:0.68rem;color:#64748B;margin-top:0.2rem;">*Rincian Platform Fee, Admin Fee, & PPN 11% ditampilkan lengkap di pop up checkout</div></div><div style="text-align:right;"><div style="font-size:1.25rem;font-weight: 600;color:#166534;margin-bottom:0.5rem;">' + data.formatted_price + ' <span style="font-size:0.72rem;font-weight:400;color:#64748B;">/thn</span></div><button type="button" onclick="buyDomain(\'' + data.domain + '\',\'' + data.formatted_price + '\', ' + data.price + ')" style="padding:0.7rem 1.35rem;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;border:none;border-radius:12px;font-weight: 600;font-size:0.875rem;cursor:pointer;box-shadow:0 6px 20px rgba(30,179,73,.4);display:inline-flex;align-items:center;gap:0.4rem;"><svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Amankan Domain</button></div></div>';
+                    } else {
+                        resultBox.innerHTML = '<div style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:16px;padding:1.25rem;"><div style="display:flex;align-items:center;gap:0.5rem;color:#991B1B;font-weight: 600;"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Domain ' + data.domain + ' sudah terdaftar.</div><p style="font-size:0.78rem;color:#7F1D1D;margin:0.35rem 0 0;">Coba variasi nama lain atau pilih rekomendasi di bawah.</p></div>';
+                    }
+                })
+                .catch(function (err) {
+                    searchBtn.disabled = false;
+                    searchBtn.innerHTML = origBtnHtml;
+                    if (triggerBtn && triggerBtn !== searchBtn) { triggerBtn.disabled = false; triggerBtn.textContent = 'Cek Ketersediaan'; }
+                    resultBox.innerHTML = '<div style="background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:14px;padding:1.25rem;color:#991B1B;">Gagal memproses pencarian. Periksa koneksi internet.</div>';
+                });
+        }
+
+        document.getElementById('domainSearchInput').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') executeDomainSearch();
         });
-    }
-
-    document.getElementById('domainSearchInput').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') executeDomainSearch();
-    });
     </script>
     <style>
-    @keyframes domSpin { 100% { transform: rotate(360deg); } }
+        @keyframes domSpin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 @endsection
