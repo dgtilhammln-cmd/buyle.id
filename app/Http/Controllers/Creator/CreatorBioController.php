@@ -151,12 +151,22 @@ class CreatorBioController extends Controller
             'about_card1_desc'    => 'nullable|string|max:1000',
             'about_card1_check1'  => 'nullable|string|max:200',
             'about_card1_check2'  => 'nullable|string|max:200',
+            'about_card1_check3'  => 'nullable|string|max:200',
+            'about_card1_check4'  => 'nullable|string|max:200',
+            'about_card1_check5'  => 'nullable|string|max:200',
+            'about_card1_logo_image' => 'nullable|image|mimes:jpg,jpeg,png,webp,svg|max:5120',
+            'about_card1_bg_image'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'about_card1_bg_color1'  => 'nullable|string|max:50',
+            'about_card1_bg_color2'  => 'nullable|string|max:50',
+            'about_card1_bg_opacity' => 'nullable|numeric|min:0|max:100',
             'about_card2_image'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'about_card3_stat'    => 'nullable|string|max:50',
             'about_card3_title'   => 'nullable|string|max:200',
             'about_card3_desc'    => 'nullable|string|max:1000',
             'about_card3_btn_text'=> 'nullable|string|max:100',
             'about_card3_btn_link'=> 'nullable|string|max:500',
+            'about_card3_btn_bg'  => 'nullable|string|max:50',
+            'about_card3_btn_color'=> 'nullable|string|max:50',
         ]);
 
         $profile = $this->getProfile();
@@ -178,6 +188,24 @@ class CreatorBioController extends Controller
         } elseif ($request->hasFile('bio_cover')) {
             if (!empty($config['cover'])) Storage::disk('public')->delete($config['cover']);
             $config['cover'] = $request->file('bio_cover')->store('bio/covers', 'public');
+        }
+
+        // Handle About Section Card 1 logo upload / deletion
+        if ($request->has('delete_about_card1_logo') && !empty($config['about_card1_logo_image'])) {
+            Storage::disk('public')->delete($config['about_card1_logo_image']);
+            $config['about_card1_logo_image'] = null;
+        } elseif ($request->hasFile('about_card1_logo_image')) {
+            if (!empty($config['about_card1_logo_image'])) Storage::disk('public')->delete($config['about_card1_logo_image']);
+            $config['about_card1_logo_image'] = $request->file('about_card1_logo_image')->store('bio/about', 'public');
+        }
+
+        // Handle About Section Card 1 background image upload / deletion
+        if ($request->has('delete_about_card1_bg_image') && !empty($config['about_card1_bg_image'])) {
+            Storage::disk('public')->delete($config['about_card1_bg_image']);
+            $config['about_card1_bg_image'] = null;
+        } elseif ($request->hasFile('about_card1_bg_image')) {
+            if (!empty($config['about_card1_bg_image'])) Storage::disk('public')->delete($config['about_card1_bg_image']);
+            $config['about_card1_bg_image'] = $request->file('about_card1_bg_image')->store('bio/about', 'public');
         }
 
         // Handle About Section Card 2 image upload / deletion
@@ -250,11 +278,19 @@ class CreatorBioController extends Controller
         if ($request->has('about_card1_desc'))   $config['about_card1_desc']   = $request->about_card1_desc;
         if ($request->has('about_card1_check1')) $config['about_card1_check1'] = $request->about_card1_check1;
         if ($request->has('about_card1_check2')) $config['about_card1_check2'] = $request->about_card1_check2;
+        if ($request->has('about_card1_check3')) $config['about_card1_check3'] = $request->about_card1_check3;
+        if ($request->has('about_card1_check4')) $config['about_card1_check4'] = $request->about_card1_check4;
+        if ($request->has('about_card1_check5')) $config['about_card1_check5'] = $request->about_card1_check5;
+        if ($request->has('about_card1_bg_color1'))  $config['about_card1_bg_color1']  = $request->about_card1_bg_color1;
+        if ($request->has('about_card1_bg_color2'))  $config['about_card1_bg_color2']  = $request->about_card1_bg_color2;
+        if ($request->has('about_card1_bg_opacity')) $config['about_card1_bg_opacity'] = $request->about_card1_bg_opacity;
         if ($request->has('about_card3_stat'))   $config['about_card3_stat']   = $request->about_card3_stat;
         if ($request->has('about_card3_title'))  $config['about_card3_title']  = $request->about_card3_title;
         if ($request->has('about_card3_desc'))   $config['about_card3_desc']   = $request->about_card3_desc;
         if ($request->has('about_card3_btn_text')) $config['about_card3_btn_text'] = $request->about_card3_btn_text;
         if ($request->has('about_card3_btn_link')) $config['about_card3_btn_link'] = $request->about_card3_btn_link;
+        if ($request->has('about_card3_btn_bg'))   $config['about_card3_btn_bg']   = $request->about_card3_btn_bg;
+        if ($request->has('about_card3_btn_color'))$config['about_card3_btn_color']= $request->about_card3_btn_color;
 
         // Handle username (store_slug used as bio URL slug)
         if ($request->filled('bio_username')) {

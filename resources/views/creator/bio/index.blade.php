@@ -1536,23 +1536,49 @@
             {{-- ══ TAB 2: PROFIL (WITH SUBTABS) ══ --}}
             <div class="tab-pane" id="tab-profile">
                 {{-- Subtabs Navigation Bar --}}
-                <div
-                    style="display:flex; gap:0.5rem; margin-bottom:1.25rem; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.75rem; flex-wrap:wrap;">
+                <style>
+                    .prof-subtab-btn {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        padding: 0.65rem 1.25rem;
+                        border-radius: 12px;
+                        border: 1.5px solid #cbd5e1;
+                        background: #f8fafc;
+                        color: #475569;
+                        font-family: 'Montserrat', sans-serif;
+                        font-size: 0.85rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                    }
+                    .prof-subtab-btn:hover {
+                        background: #ffffff;
+                        color: #0f172a;
+                        border-color: #94a3b8;
+                    }
+                    .prof-subtab-btn.active {
+                        background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+                        color: #ffffff !important;
+                        border: 1.5px solid transparent !important;
+                        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.32) !important;
+                    }
+                    .prof-subtab-btn.active svg {
+                        stroke: #ffffff !important;
+                    }
+                </style>
+                <div style="display:flex; gap:0.6rem; margin-bottom:1.5rem; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.85rem; flex-wrap:wrap;">
                     <button type="button" class="prof-subtab-btn active" id="btn-subtab-info"
-                        onclick="switchProfileSubtab('subtab-profile-info', this)"
-                        style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.55rem 1.1rem; border-radius:8px; border:none; background:#1eb349; color:#ffffff; font-family:'Montserrat',sans-serif; font-size:0.82rem; font-weight:600; cursor:pointer; transition:all 0.2s;">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
+                        onclick="switchProfileSubtab('subtab-profile-info', this)">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                             <circle cx="12" cy="8" r="4" />
                             <path d="M20 21a8 8 0 1 0-16 0" />
                         </svg>
                         Informasi Profil
                     </button>
                     <button type="button" class="prof-subtab-btn" id="btn-subtab-about"
-                        onclick="switchProfileSubtab('subtab-homepage-about', this)"
-                        style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.55rem 1.1rem; border-radius:8px; border:1px solid #cbd5e1; background:#f8fafc; color:#475569; font-family:'Montserrat',sans-serif; font-size:0.82rem; font-weight:600; cursor:pointer; transition:all 0.2s;">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
+                        onclick="switchProfileSubtab('subtab-homepage-about', this)">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                             <polyline points="9 22 9 12 15 12 15 22" />
                         </svg>
@@ -1706,11 +1732,9 @@
                                         class="form-input" placeholder="#products-section atau https://...">
                                 </div>
                             </div>
-                        </div>
-
-                        {{-- Card 1: Dark Gradient Card --}}
+                             {{-- Card 1: Dark Gradient Card & Media --}}
                         <div class="prof-card">
-                            <div class="prof-card-head">2. Card 1 (Box Gradient Gelap)</div>
+                            <div class="prof-card-head">2. Card 1 (Box Gradient Gelap &amp; Logo/Gambar)</div>
                             <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
                                 <div class="form-group" style="grid-column:1/-1;">
                                     <label class="form-label">Judul Card 1</label>
@@ -1723,17 +1747,88 @@
                                     <textarea name="about_card1_desc" class="form-input" rows="2"
                                         placeholder="We ensure every marketing drives real results...">{{ old('about_card1_desc', $cfg['about_card1_desc'] ?? 'We ensure every marketing drives real results increased traffic and engagement to higher and revenue') }}</textarea>
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-label">Poin Keunggulan 1</label>
-                                    <input type="text" name="about_card1_check1"
-                                        value="{{ old('about_card1_check1', $cfg['about_card1_check1'] ?? 'SEO & Search Visibility') }}"
-                                        class="form-input" placeholder="SEO & Search Visibility">
+
+                                {{-- Logo Pojok Kiri Atas --}}
+                                <div class="form-group" style="grid-column:1/-1; background:#f8fafc; padding:1rem; border-radius:12px; border:1px solid #e2e8f0;">
+                                    <label class="form-label" style="font-weight:700; color:#0f172a;">Logo / Ikon Pojok Kiri Atas Card 1</label>
+                                    @if(!empty($cfg['about_card1_logo_image']))
+                                        <div style="margin-bottom:0.5rem; display:flex; align-items:center; gap:1rem;">
+                                            <img src="{{ asset('storage/' . $cfg['about_card1_logo_image']) }}"
+                                                style="max-height:48px; max-width:140px; object-fit:contain; border-radius:6px; background:#0f172a; padding:6px;">
+                                            <label style="font-size:0.75rem; color:#ef4444; display:flex; align-items:center; gap:0.25rem; cursor:pointer;">
+                                                <input type="checkbox" name="delete_about_card1_logo" value="1"> Hapus Logo Ini (Gunakan Ikon Default)
+                                            </label>
+                                        </div>
+                                    @endif
+                                    <input type="file" name="about_card1_logo_image" accept="image/*" class="form-input" style="height:auto; padding:0.4rem;">
+                                    <small style="color:#94a3b8; font-size:0.72rem; display:block; margin-top:0.3rem;">Kosongkan jika ingin menggunakan ikon bawaan (default 4-dots lime green).</small>
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-label">Poin Keunggulan 2</label>
-                                    <input type="text" name="about_card1_check2"
-                                        value="{{ old('about_card1_check2', $cfg['about_card1_check2'] ?? 'Data-Driven Strategy') }}"
-                                        class="form-input" placeholder="Data-Driven Strategy">
+
+                                {{-- Gradasi Warna & Background Image Card 1 --}}
+                                <div class="form-group" style="grid-column:1/-1; background:#f8fafc; padding:1rem; border-radius:12px; border:1px solid #e2e8f0; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                                    <div style="grid-column:1/-1; font-weight:700; color:#0f172a; font-size:0.85rem;">Tampilan Gradasi &amp; Background Card 1</div>
+                                    <div class="form-group">
+                                        <label class="form-label">Warna Gradasi Awal (Start)</label>
+                                        <input type="color" name="about_card1_bg_color1" value="{{ old('about_card1_bg_color1', $cfg['about_card1_bg_color1'] ?? '#09090b') }}" class="form-input" style="height:40px; padding:0.2rem; cursor:pointer;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Warna Gradasi Akhir (End)</label>
+                                        <input type="color" name="about_card1_bg_color2" value="{{ old('about_card1_bg_color2', $cfg['about_card1_bg_color2'] ?? '#312e81') }}" class="form-input" style="height:40px; padding:0.2rem; cursor:pointer;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Upload Background Image Card 1 (Opsional)</label>
+                                        @if(!empty($cfg['about_card1_bg_image']))
+                                            <div style="margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem;">
+                                                <img src="{{ asset('storage/' . $cfg['about_card1_bg_image']) }}" style="width:80px; height:45px; object-fit:cover; border-radius:6px;">
+                                                <label style="font-size:0.72rem; color:#ef4444; cursor:pointer;">
+                                                    <input type="checkbox" name="delete_about_card1_bg_image" value="1"> Hapus BG
+                                                </label>
+                                            </div>
+                                        @endif
+                                        <input type="file" name="about_card1_bg_image" accept="image/*" class="form-input" style="height:auto; padding:0.4rem;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Transparansi Image Overlay (0 - 100%)</label>
+                                        <input type="number" name="about_card1_bg_opacity" min="0" max="100" value="{{ old('about_card1_bg_opacity', $cfg['about_card1_bg_opacity'] ?? 30) }}" class="form-input" placeholder="30">
+                                        <small style="color:#94a3b8; font-size:0.7rem;">Default: 30% (semakin kecil semakin samar).</small>
+                                    </div>
+                                </div>
+
+                                {{-- Poin Keunggulan (Maks 5) --}}
+                                <div class="form-group" style="grid-column:1/-1; background:#f0fdf4; padding:1rem; border-radius:12px; border:1px solid #bbf7d0;">
+                                    <label class="form-label" style="font-weight:700; color:#166534; margin-bottom:0.75rem;">Poin Keunggulan (Maksimal 5 Poin)</label>
+                                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem;">
+                                        <div>
+                                            <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Poin Keunggulan 1</label>
+                                            <input type="text" name="about_card1_check1"
+                                                value="{{ old('about_card1_check1', $cfg['about_card1_check1'] ?? 'SEO & Search Visibility') }}"
+                                                class="form-input" placeholder="SEO & Search Visibility">
+                                        </div>
+                                        <div>
+                                            <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Poin Keunggulan 2</label>
+                                            <input type="text" name="about_card1_check2"
+                                                value="{{ old('about_card1_check2', $cfg['about_card1_check2'] ?? 'Data-Driven Strategy') }}"
+                                                class="form-input" placeholder="Data-Driven Strategy">
+                                        </div>
+                                        <div>
+                                            <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Poin Keunggulan 3</label>
+                                            <input type="text" name="about_card1_check3"
+                                                value="{{ old('about_card1_check3', $cfg['about_card1_check3'] ?? '') }}"
+                                                class="form-input" placeholder="Misal: High Conversion Guarantee">
+                                        </div>
+                                        <div>
+                                            <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Poin Keunggulan 4</label>
+                                            <input type="text" name="about_card1_check4"
+                                                value="{{ old('about_card1_check4', $cfg['about_card1_check4'] ?? '') }}"
+                                                class="form-input" placeholder="Misal: 24/7 Dedicated Support">
+                                        </div>
+                                        <div style="grid-column:1/-1;">
+                                            <label style="font-size:0.75rem; font-weight:600; color:#15803d;">Poin Keunggulan 5</label>
+                                            <input type="text" name="about_card1_check5"
+                                                value="{{ old('about_card1_check5', $cfg['about_card1_check5'] ?? '') }}"
+                                                class="form-input" placeholder="Misal: Scalable Growth Engine">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1796,10 +1891,22 @@
                                         value="{{ old('about_card3_btn_link', $cfg['about_card3_btn_link'] ?? '#products-section') }}"
                                         class="form-input" placeholder="#products-section atau https://...">
                                 </div>
+                                <div class="form-group">
+                                    <label class="form-label">Warna Background Tombol CTA Card 3</label>
+                                    <input type="color" name="about_card3_btn_bg"
+                                        value="{{ old('about_card3_btn_bg', $cfg['about_card3_btn_bg'] ?? '#1d4ed8') }}"
+                                        class="form-input" style="height:40px; padding:0.2rem; cursor:pointer;">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Warna Teks Tombol CTA Card 3</label>
+                                    <input type="color" name="about_card3_btn_color"
+                                        value="{{ old('about_card3_btn_color', $cfg['about_card3_btn_color'] ?? '#ffffff') }}"
+                                        class="form-input" style="height:40px; padding:0.2rem; cursor:pointer;">
+                                </div>
                             </div>
                         </div>
 
-                        <div style="display:flex; justify-content:flex-end;">
+                        <div style="display:flex; justify-content:flex-end; margin-top:1.25rem;">
                             <button type="submit" class="btn-submit-sm">Simpan About Us (Tema 5)</button>
                         </div>
                     </form>
@@ -3577,18 +3684,10 @@
             var target = document.getElementById(paneId);
             if (target) target.style.display = 'block';
 
-            // Reset all subtab buttons
-            document.querySelectorAll('.prof-subtab-btn').forEach(b => {
-                b.style.background = '#f8fafc';
-                b.style.color = '#475569';
-                b.style.border = '1px solid #cbd5e1';
-            });
-            // Activate clicked button
-            if (btn) {
-                btn.style.background = '#1eb349';
-                btn.style.color = '#ffffff';
-                btn.style.border = 'none';
-            }
+            // Toggle active class on subtab buttons
+            document.querySelectorAll('.prof-subtab-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
             localStorage.setItem('bio_profile_subtab', paneId);
         }
 
