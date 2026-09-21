@@ -36,7 +36,7 @@ class CreatorBioController extends Controller
             ->where('seller_id', '!=', auth()->id())
             ->with('seller:id,name')
             ->orderBy('name')
-            ->get(['id', 'name', 'price', 'whitelabel_price', 'whitelabel_terms', 'image', 'slug', 'seller_id']);
+            ->get(['id', 'name', 'price', 'sale_price', 'whitelabel_price', 'whitelabel_terms', 'image', 'slug', 'seller_id']);
         $affiliateProducts = Product::where('is_active', true)
             ->where('seller_id', '!=', auth()->id())
             ->with('seller:id,name')

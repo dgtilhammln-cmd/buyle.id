@@ -243,7 +243,7 @@ class CheckoutService
 
                 if (!empty($cartItem->reseller_id) && (int)$cartItem->reseller_id !== (int)$sellerId) {
                     $resellerId = (int)$cartItem->reseller_id;
-                    $baseWhitelabelPrice = $product->whitelabel_price ?: $product->price;
+                    $baseWhitelabelPrice = $product->sale_price ?: ($product->whitelabel_price ?: $product->price);
                     $resellerMargin = max(0, ($cartItem->unit_price - $baseWhitelabelPrice) * $cartItem->qty);
                     $creatorEarnings = $baseWhitelabelPrice * $cartItem->qty;
                 }

@@ -2176,7 +2176,7 @@
                             @php
                                 $wlProdId = $wlBlock->data_json['product_id'] ?? null;
                                 $wlProd = $whitelabelProducts->firstWhere('id', $wlProdId) ?? ($wlProdId ? \App\Models\Product::with('seller:id,name')->find($wlProdId) : null);
-                                $baseWlPrice = $wlProd ? ($wlProd->whitelabel_price ?: $wlProd->price) : 0;
+                                $baseWlPrice = $wlProd ? ($wlProd->sale_price ?: ($wlProd->whitelabel_price ?: $wlProd->price)) : 0;
                                 $resellerSellingPrice = (float)($wlBlock->data_json['price'] ?? $baseWlPrice);
                                 $resellerMarginProfit = max(0, $resellerSellingPrice - $baseWlPrice);
                             @endphp
@@ -4550,23 +4550,17 @@
                             </div>
 
                             <div>
-                                @if($wlProd->whitelabel_price)
-                                    <div style="font-size:0.68rem; color:#64748B;">Min. Resell (Harga Modal):</div>
-                                    <div style="font-size:0.82rem; color:#166534; font-weight: 600;">
-                                        Rp {{ number_format($wlProd->whitelabel_price, 0, ',', '.') }}
-                                    </div>
-                                @elseif($wlProd->sale_price)
-                                    <div style="font-size:0.68rem; color:#64748B;">Harga (Diskon):</div>
-                                    <div style="font-size:0.82rem; color:#166534; font-weight: 600;">
-                                        Rp {{ number_format($wlProd->sale_price, 0, ',', '.') }}
-                                        <span style="font-size:0.65rem; color:#94a3b8; text-decoration:line-through; margin-left:3px;">Rp {{ number_format($wlProd->price, 0, ',', '.') }}</span>
-                                    </div>
-                                @else
-                                    <div style="font-size:0.68rem; color:#64748B;">Harga:</div>
-                                    <div style="font-size:0.82rem; color:#166534; font-weight: 600;">
-                                        Rp {{ number_format($wlProd->price, 0, ',', '.') }}
-                                    </div>
-                                @endif
+                                @php
+                                    $wlBasePrice = $wlProd->sale_price ?: ($wlProd->whitelabel_price ?: $wlProd->price);
+                                    $wlOrigPrice = ($wlProd->sale_price && $wlProd->price > $wlProd->sale_price) ? $wlProd->price : null;
+                                @endphp
+                                <div style="font-size:0.68rem; color:#64748B;">Harga Modal Reseller:</div>
+                                <div style="font-size:0.82rem; color:#166534; font-weight: 600;">
+                                    Rp {{ number_format($wlBasePrice, 0, ',', '.') }}
+                                    @if($wlOrigPrice)
+                                        <span style="font-size:0.65rem; color:#94a3b8; text-decoration:line-through; margin-left:3px;">Rp {{ number_format($wlOrigPrice, 0, ',', '.') }}</span>
+                                    @endif
+                                </div>
                                 @if($wlProd->whitelabel_terms)
                                     <div
                                         style="font-size:0.65rem; color:#64748b; margin-top:0.2rem; display:flex; align-items:center; gap:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
@@ -4614,7 +4608,7 @@
                                     <input type="hidden" name="url" value="{{ route('products.show', $wlProd->slug) }}">
                                     <input type="hidden" name="product_id" value="{{ $wlProd->id }}">
                                     <button type="button"
-                                        onclick="openAddWhitelabelMarkupModal('{{ $wlProd->id }}', '{{ addslashes($wlProd->name) }}', '{{ route('products.show', $wlProd->slug) }}', {{ $wlProd->whitelabel_price ?: ($wlProd->sale_price ?: $wlProd->price) }})"
+                                        onclick="openAddWhitelabelMarkupModal('{{ $wlProd->id }}', '{{ addslashes($wlProd->name) }}', '{{ route('products.show', $wlProd->slug) }}', {{ $wlProd->sale_price ?: ($wlProd->whitelabel_price ?: $wlProd->price) }})"
                                         style="width:100%; background:#1eb349; color:#fff; font-size:0.72rem; padding:0.35rem 0.4rem; height:32px; border-radius:8px; font-weight: 500; cursor:pointer; border:none; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
                                         + Tambah ke Bio & Atur Harga
                                     </button>
