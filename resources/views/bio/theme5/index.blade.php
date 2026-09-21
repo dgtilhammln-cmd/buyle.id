@@ -1007,13 +1007,32 @@
         .t5-footer-link:hover {
             color: var(--t5-emerald);
         }
-        .t5-security-badge {
+        .t5-footer-location-text {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.5rem;
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             color: var(--t5-slate-300);
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.85rem;
+            line-height: 1.5;
+        }
+        .t5-footer-location-icon {
+            color: var(--t5-emerald);
+            flex-shrink: 0;
+            margin-top: 0.15rem;
+        }
+        .t5-footer-map-wrap {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.05);
+            max-height: 160px;
+        }
+        .t5-footer-map-wrap iframe {
+            width: 100% !important;
+            height: 150px !important;
+            border: 0 !important;
+            display: block;
         }
         .t5-footer-bottom {
             display: flex;
