@@ -264,13 +264,7 @@
                             $bUrl = $bData['url'] ?? '#';
                             $bTitle = $bData['title'] ?? ($bData['label'] ?? ($b->title ?? 'Link'));
                         @endphp
-                        <a href="{{ $bUrl }}" target="_blank" rel="noopener noreferrer" class="t5-nav-link t5-custom-block-link">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-                            </svg>
-                            <span>{{ $bTitle }}</span>
-                        </a>
+                        <a href="{{ $bUrl }}" target="_blank" rel="noopener noreferrer" class="t5-nav-link t5-custom-block-link">{{ $bTitle }}</a>
                     @endif
                 @endforeach
             @endif
@@ -327,13 +321,7 @@
                             $bUrl = $bData['url'] ?? '#';
                             $bTitle = $bData['title'] ?? ($bData['label'] ?? ($b->title ?? 'Link'));
                         @endphp
-                        <a href="{{ $bUrl }}" target="_blank" rel="noopener noreferrer" onclick="toggleT5Drawer()" class="t5-drawer-link t5-drawer-custom-link">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
-                            </svg>
-                            <span>{{ $bTitle }}</span>
-                        </a>
+                        <a href="{{ $bUrl }}" target="_blank" rel="noopener noreferrer" onclick="toggleT5Drawer()" class="t5-drawer-link t5-drawer-custom-link">{{ $bTitle }}</a>
                     @endif
                 @endforeach
             @endif
