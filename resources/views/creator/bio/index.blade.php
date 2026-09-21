@@ -2005,6 +2005,7 @@
                                             class="form-input" style="height:40px; padding:0.2rem; cursor:pointer;">
                                     </div>
                                 </div>
+                            </div>
                         </div> {{-- End #hpsub-about --}}
 
                         {{-- SUB-SUBTAB 2: HOMEPAGE / JASA & LAYANAN (TEMA 5) --}}
