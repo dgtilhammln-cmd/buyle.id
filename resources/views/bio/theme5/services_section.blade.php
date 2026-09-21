@@ -41,28 +41,98 @@
             ],
         ];
 
-        $servicesList = [];
-        for ($i = 1; $i <= 6; $i++) {
-            $num   = $config["service_{$i}_number"] ?? null;
-            $title = $config["service_{$i}_title"] ?? null;
-            $desc  = $config["service_{$i}_desc"] ?? null;
-            $link  = $config["service_{$i}_link"] ?? null;
-            $img   = !empty($config["service_{$i}_image"]) ? asset('storage/' . $config["service_{$i}_image"]) : null;
+        // Fetch 3 latest service products from database
+        $dbServices = collect();
+        if (isset($products) && is_iterable($products)) {
+            $dbServices = collect($products)->filter(function($p) {
+                $pType = strtolower($p->product_type ?? '');
+                if (empty($pType)) {
+                    $bData = is_array($p->data_json ?? null) ? $p->data_json : (json_decode($p->data_json ?? '[]', true) ?: []);
+                    $pType = strtolower($bData['product_type'] ?? '');
+                }
+                return in_array($pType, ['service', 'jasa', 'layanan']);
+            })->take(3);
+        }
 
-            if ($title !== null && trim($title) !== '') {
+        if ($dbServices->isEmpty() && isset($profile->id)) {
+            $realProds = \App\Models\Product::where('seller_id', $profile->id)
+                ->whereIn('product_type', ['service', 'jasa', 'layanan'])
+                ->latest()
+                ->take(3)
+                ->get();
+            if ($realProds->count() > 0) {
+                $dbServices = $realProds;
+            }
+        }
+
+        $servicesList = [];
+        if ($dbServices->count() > 0) {
+            $idx = 1;
+            foreach ($dbServices as $sp) {
+                $bData = is_array($sp->data_json ?? null) ? $sp->data_json : (json_decode($sp->data_json ?? '[]', true) ?: []);
+                $sTitle = $sp->title ?? $sp->name ?? ($bData['title'] ?? 'Layanan Jasa');
+                $sDesc = $sp->description ?? ($bData['description'] ?? '');
+                
+                $img = null;
+                if (!empty($sp->image_url)) {
+                    $img = $sp->image_url;
+                } elseif (!empty($bData['images'][0])) {
+                    $img = asset('storage/' . $bData['images'][0]);
+                } elseif (!empty($sp->image)) {
+                    $img = asset('storage/' . $sp->image);
+                } else {
+                    $img = $defaultServices[($idx - 1) % 4]['image'];
+                }
+
+                $linkedProd = !empty($bData['product_id']) ? \App\Models\Product::find($bData['product_id']) : null;
+                $prodIdentifier = !empty($linkedProd->slug)
+                    ? $linkedProd->slug
+                    : (!empty($bData['slug']) 
+                        ? $bData['slug'] 
+                        : (!empty($sp->slug) 
+                            ? $sp->slug 
+                            : (\Illuminate\Support\Str::slug($sTitle) ?: $sp->id)));
+
+                if (!empty($profile->custom_domain)) {
+                    $sLink = 'https://' . rtrim($profile->custom_domain, '/') . '/produk/' . $prodIdentifier;
+                } else {
+                    $sLink = url(($profile->store_slug ?? 'creator') . '/produk/' . $prodIdentifier);
+                }
+
                 $servicesList[] = [
-                    'number' => !empty($num) ? $num : sprintf('%02d.', $i),
-                    'title'  => $title,
-                    'desc'   => $desc ?? '',
-                    'image'  => $img ?? ($defaultServices[($i - 1) % 4]['image']),
-                    'link'   => $link ?? '#',
-                    'icon'   => $defaultServices[($i - 1) % 4]['icon']
+                    'number' => sprintf('%02d.', $idx),
+                    'title'  => $sTitle,
+                    'desc'   => $sDesc,
+                    'image'  => $img,
+                    'link'   => $sLink,
+                    'icon'   => $defaultServices[($idx - 1) % 4]['icon']
                 ];
+                $idx++;
+            }
+        } else {
+            // Fallback to manual configuration in bio_config
+            for ($i = 1; $i <= 4; $i++) {
+                $num   = $config["service_{$i}_number"] ?? null;
+                $title = $config["service_{$i}_title"] ?? null;
+                $desc  = $config["service_{$i}_desc"] ?? null;
+                $link  = $config["service_{$i}_link"] ?? null;
+                $img   = !empty($config["service_{$i}_image"]) ? asset('storage/' . $config["service_{$i}_image"]) : null;
+
+                if ($title !== null && trim($title) !== '') {
+                    $servicesList[] = [
+                        'number' => !empty($num) ? $num : sprintf('%02d.', $i),
+                        'title'  => $title,
+                        'desc'   => $desc ?? '',
+                        'image'  => $img ?? ($defaultServices[($i - 1) % 4]['image']),
+                        'link'   => $link ?? '#',
+                        'icon'   => $defaultServices[($i - 1) % 4]['icon']
+                    ];
+                }
             }
         }
 
         if (empty($servicesList)) {
-            $servicesList = $defaultServices;
+            $servicesList = array_slice($defaultServices, 0, 3);
         }
     @endphp
 

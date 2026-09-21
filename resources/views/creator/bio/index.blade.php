@@ -2020,9 +2020,18 @@
                                 </label>
                             </div>
                             <div class="card-body">
-                                <p style="font-size:0.8rem; color:#64748b; margin:0;">
-                                    Sistem akan otomatis mengambil produk bertipe <strong>Jasa / Layanan / Service</strong> yang Anda miliki. Jika Anda belum membuat produk tipe Jasa, Anda dapat mengisi daftar jasa manual di bawah ini.
-                                </p>
+                                <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:1rem 1.25rem; display:flex; gap:0.85rem; align-items:flex-start;">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.2" style="flex-shrink:0; margin-top:2px;">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="12" y1="16" x2="12" y2="12"/>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                    </svg>
+                                    <div style="font-size:0.825rem; color:#166534; line-height:1.5;">
+                                        <strong style="font-size:0.875rem; color:#14532d; display:block; margin-bottom:4px;">📌 Sumber Data Produk Jasa &amp; Layanan:</strong>
+                                        Secara otomatis, sistem akan mengambil dan menampilkan <strong>3 produk terbaru</strong> dengan tipe <strong>Jasa / Layanan / Service</strong> yang Anda buat di menu <a href="{{ route('creator.products.index') }}" target="_blank" style="color:#1eb349; font-weight:700; text-decoration:underline;">Kelola Produk (buyle.id/creator/products)</a>.<br>
+                                        <span style="color:#15803d; font-size:0.78rem; display:inline-block; margin-top:4px;">*Jika Anda belum memiliki produk tipe Jasa di menu Produk, sistem akan otomatis menggunakan daftar jasa manual fallback yang dapat diatur di bawah ini.</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
