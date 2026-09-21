@@ -619,6 +619,76 @@
         </div>
     </div>
 
+    {{-- Rating Success Modal --}}
+    <div id="ratingSuccessModal"
+        style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(6px);z-index:999999;align-items:center;justify-content:center;padding:1rem;opacity:0;transition:opacity .25s;">
+        <div id="ratingSuccessModalBox"
+            style="background:#fff;border-radius:24px;padding:2.5rem 2rem;width:100%;max-width:400px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.22);transform:scale(0.88);transition:transform .3s cubic-bezier(0.34,1.56,0.64,1);position:relative;overflow:hidden;">
+
+            {{-- Confetti particles (CSS animated) --}}
+            <div id="ratingSuccessConfetti" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
+                <span class="confetti-dot" style="--x:10%;--d:0s;background:#f59e0b;"></span>
+                <span class="confetti-dot" style="--x:25%;--d:.1s;background:#1eb349;"></span>
+                <span class="confetti-dot" style="--x:40%;--d:.05s;background:#6366f1;"></span>
+                <span class="confetti-dot" style="--x:55%;--d:.15s;background:#f59e0b;"></span>
+                <span class="confetti-dot" style="--x:70%;--d:.08s;background:#ec4899;"></span>
+                <span class="confetti-dot" style="--x:85%;--d:.2s;background:#1eb349;"></span>
+                <span class="confetti-dot" style="--x:18%;--d:.25s;background:#6366f1;"></span>
+                <span class="confetti-dot" style="--x:65%;--d:.12s;background:#f59e0b;"></span>
+                <span class="confetti-dot" style="--x:90%;--d:.3s;background:#ec4899;"></span>
+            </div>
+
+            {{-- Animated Check Circle --}}
+            <div id="ratingSuccessIcon"
+                style="width:72px;height:72px;background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;transform:scale(0);transition:transform .4s cubic-bezier(0.34,1.56,0.64,1) .1s;">
+                <svg id="ratingSuccessSvg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="9 12 11 14 15 10" stroke-dasharray="20" stroke-dashoffset="20" style="transition:stroke-dashoffset .4s ease .5s;" id="checkPolyline" />
+                </svg>
+            </div>
+
+            {{-- Animated Stars display --}}
+            <div id="ratingSuccessStars" style="display:flex;justify-content:center;gap:4px;margin-bottom:1rem;opacity:0;transform:translateY(8px);transition:all .3s ease .35s;"></div>
+
+            {{-- Success Title --}}
+            <h3 style="font-size:1.2rem;font-weight:800;color:#0f172a;margin:0 0 0.5rem;opacity:0;transform:translateY(6px);transition:all .3s ease .45s;" id="ratingSuccessTitle">
+                Terima kasih! 🎉
+            </h3>
+
+            {{-- Animated Copywriting Text --}}
+            <p id="ratingSuccessText"
+                style="font-size:0.9rem;color:#475569;line-height:1.6;margin:0 0 1.75rem;min-height:48px;opacity:0;transform:translateY(6px);transition:all .3s ease .55s;"></p>
+
+            <button type="button" onclick="closeRatingSuccessModal()"
+                id="ratingSuccessCloseBtn"
+                style="width:100%;padding:0.85rem;background:linear-gradient(135deg,#1eb349 0%,#a5cf37 100%);color:#fff;border:none;border-radius:999px;font-weight:700;font-size:0.95rem;cursor:pointer;box-shadow:0 4px 16px rgba(30,179,73,0.35);opacity:0;transform:translateY(6px);transition:all .3s ease .65s;"
+                onmouseover="this.style.transform='scale(1.03)';this.style.boxShadow='0 6px 20px rgba(30,179,73,0.45)'"
+                onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 16px rgba(30,179,73,0.35)'">
+                Oke, Terima Kasih!
+            </button>
+        </div>
+    </div>
+
+    {{-- Rating Error Modal --}}
+    <div id="ratingErrorModal"
+        style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(6px);z-index:999999;align-items:center;justify-content:center;padding:1rem;opacity:0;transition:opacity .25s;">
+        <div id="ratingErrorModalBox"
+            style="background:#fff;border-radius:24px;padding:2rem;width:100%;max-width:380px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.18);transform:scale(0.95);transition:transform .3s cubic-bezier(0.34,1.56,0.64,1);">
+            <div style="width:60px;height:60px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                <svg width="28" height="28" fill="none" stroke="#dc2626" stroke-width="2.2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+            </div>
+            <h3 style="font-size:1.1rem;font-weight:800;color:#0f172a;margin:0 0 0.5rem;">Oops!</h3>
+            <p id="ratingErrorText" style="font-size:0.88rem;color:#64748b;margin:0 0 1.5rem;line-height:1.5;">Gagal menyimpan rating.</p>
+            <button type="button" onclick="closeRatingErrorModal()"
+                style="width:100%;padding:0.8rem;background:#f1f5f9;color:#475569;border:none;border-radius:999px;font-weight:700;font-size:0.9rem;cursor:pointer;transition:background .2s;"
+                onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">Tutup</button>
+        </div>
+    </div>
+
     {{-- Interactive Star Rating Modal (1 - 5 Stars) --}}
     <div id="productRatingModal"
         style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(6px);z-index:99999;align-items:center;justify-content:center;padding:1rem;opacity:0;transition:opacity .2s;">
@@ -751,7 +821,7 @@
         function submitRatingAjax() {
             const prodId = document.getElementById('ratingProductId').value;
             const orderId = document.getElementById('ratingOrderId').value;
-            const val = document.getElementById('selectedRatingValue').value;
+            const val = parseInt(document.getElementById('selectedRatingValue').value);
 
             if (!val || val < 1) return;
 
@@ -778,9 +848,9 @@
                     closeProductRatingModal();
                     const txtEl = document.getElementById('btn-rating-text-' + prodId);
                     if (txtEl) txtEl.textContent = 'Rating (' + val + '★)';
-                    alert(data.message);
+                    showRatingSuccessModal(val);
                 } else {
-                    alert(data.message || 'Gagal menyimpan rating.');
+                    showRatingErrorModal(data.message || 'Gagal menyimpan rating.');
                     btn.disabled = false;
                     btn.textContent = 'Simpan Rating';
                 }
@@ -788,8 +858,105 @@
             .catch(err => {
                 btn.disabled = false;
                 btn.textContent = 'Simpan Rating';
-                alert('Terjadi kesalahan koneksi.');
+                showRatingErrorModal('Terjadi kesalahan koneksi. Silakan coba lagi.');
             });
+        }
+
+        function showRatingSuccessModal(starCount) {
+            const labels = { 1:'Sangat Kecewa 😞', 2:'Kecewa 🙁', 3:'Cukup 😐', 4:'Puas 😊', 5:'Sangat Puas! 🤩' };
+            const modal = document.getElementById('ratingSuccessModal');
+            const box   = document.getElementById('ratingSuccessModalBox');
+
+            // Build star HTML
+            let starsHtml = '';
+            for (let i = 1; i <= 5; i++) {
+                const color = i <= starCount ? '#f59e0b' : '#e2e8f0';
+                starsHtml += `<svg width="28" height="28" viewBox="0 0 24 24" fill="${color}" stroke="${color}" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+            }
+            document.getElementById('ratingSuccessStars').innerHTML = starsHtml;
+
+            // Set message text
+            const msg = `Rating ${starCount} bintang Anda berhasil disimpan.`;
+            document.getElementById('ratingSuccessText').textContent = '';
+
+            // Show modal
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                box.style.transform = 'scale(1)';
+
+                // Animate check icon
+                const icon = document.getElementById('ratingSuccessIcon');
+                icon.style.transform = 'scale(1)';
+                document.getElementById('checkPolyline').style.strokeDashoffset = '0';
+
+                // Reveal elements via their CSS transitions
+                const stars = document.getElementById('ratingSuccessStars');
+                stars.style.opacity = '1';
+                stars.style.transform = 'translateY(0)';
+
+                const title = document.getElementById('ratingSuccessTitle');
+                title.style.opacity = '1';
+                title.style.transform = 'translateY(0)';
+
+                const closeBtn = document.getElementById('ratingSuccessCloseBtn');
+                closeBtn.style.opacity = '1';
+                closeBtn.style.transform = 'translateY(0)';
+
+                // Typewriter effect for the success message
+                const textEl = document.getElementById('ratingSuccessText');
+                textEl.style.opacity = '1';
+                textEl.style.transform = 'translateY(0)';
+                let charIndex = 0;
+                function typeChar() {
+                    if (charIndex <= msg.length) {
+                        textEl.textContent = msg.substring(0, charIndex);
+                        charIndex++;
+                        setTimeout(typeChar, 35);
+                    }
+                }
+                setTimeout(typeChar, 600);
+            }, 15);
+        }
+
+        function closeRatingSuccessModal() {
+            const modal = document.getElementById('ratingSuccessModal');
+            const box   = document.getElementById('ratingSuccessModalBox');
+            modal.style.opacity = '0';
+            box.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                modal.style.display = 'none';
+                // Reset for next time
+                document.getElementById('ratingSuccessIcon').style.transform = 'scale(0)';
+                document.getElementById('ratingSuccessStars').style.opacity = '0';
+                document.getElementById('ratingSuccessStars').style.transform = 'translateY(8px)';
+                document.getElementById('ratingSuccessTitle').style.opacity = '0';
+                document.getElementById('ratingSuccessTitle').style.transform = 'translateY(6px)';
+                document.getElementById('ratingSuccessText').style.opacity = '0';
+                document.getElementById('ratingSuccessText').style.transform = 'translateY(6px)';
+                document.getElementById('ratingSuccessCloseBtn').style.opacity = '0';
+                document.getElementById('ratingSuccessCloseBtn').style.transform = 'translateY(6px)';
+                document.getElementById('checkPolyline').style.strokeDashoffset = '20';
+            }, 250);
+        }
+
+        function showRatingErrorModal(msg) {
+            document.getElementById('ratingErrorText').textContent = msg;
+            const modal = document.getElementById('ratingErrorModal');
+            const box   = document.getElementById('ratingErrorModalBox');
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                box.style.transform = 'scale(1)';
+            }, 10);
+        }
+
+        function closeRatingErrorModal() {
+            const modal = document.getElementById('ratingErrorModal');
+            const box   = document.getElementById('ratingErrorModalBox');
+            modal.style.opacity = '0';
+            box.style.transform = 'scale(0.95)';
+            setTimeout(() => { modal.style.display = 'none'; }, 220);
         }
 
         function openConfirmModal() {
@@ -841,6 +1008,29 @@
             .tr-right-header>div:last-child {
                 text-align: left !important;
             }
+        }
+
+        /* Confetti dots animation for rating success modal */
+        .confetti-dot {
+            position: absolute;
+            top: -12px;
+            left: var(--x, 50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: confettiFall 1.2s ease-out var(--d, 0s) forwards;
+            opacity: 0;
+        }
+        @keyframes confettiFall {
+            0%   { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+            60%  { opacity: 1; }
+            100% { opacity: 0; transform: translateY(140px) rotate(540deg) scale(0.4); }
+        }
+
+        /* Success checkmark draw */
+        #checkPolyline {
+            stroke-dasharray: 20;
+            stroke-dashoffset: 20;
         }
     </style>
 @endsection
