@@ -1265,7 +1265,10 @@
         {{-- 2. Hero Banner Slider Section --}}
         @include('bio.theme5.hero_slider')
 
-        {{-- 3. Products Catalog Grid --}}
+        {{-- 3. About Us Section (Tema 5) --}}
+        @include('bio.theme5.about_section')
+
+        {{-- 4. Products Catalog Grid --}}
         @include('bio.theme5.products_grid')
     </main>
 

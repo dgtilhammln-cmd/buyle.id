@@ -1533,89 +1533,277 @@
                 </div>
             </div>
 
-            {{-- ══ TAB 2: PROFIL ══ --}}
+            {{-- ══ TAB 2: PROFIL (WITH SUBTABS) ══ --}}
             <div class="tab-pane" id="tab-profile">
-                <form action="{{ route('creator.bio.save-profile') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="prof-card">
-                        <div class="prof-card-head">Informasi Profil Kreator</div>
-                        <div class="card-body">
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                {{-- Subtabs Navigation Bar --}}
+                <div
+                    style="display:flex; gap:0.5rem; margin-bottom:1.25rem; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.75rem; flex-wrap:wrap;">
+                    <button type="button" class="prof-subtab-btn active" id="btn-subtab-info"
+                        onclick="switchProfileSubtab('subtab-profile-info', this)"
+                        style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.55rem 1.1rem; border-radius:8px; border:none; background:#1eb349; color:#ffffff; font-family:'Montserrat',sans-serif; font-size:0.82rem; font-weight:600; cursor:pointer; transition:all 0.2s;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
+                            <circle cx="12" cy="8" r="4" />
+                            <path d="M20 21a8 8 0 1 0-16 0" />
+                        </svg>
+                        Informasi Profil
+                    </button>
+                    <button type="button" class="prof-subtab-btn" id="btn-subtab-about"
+                        onclick="switchProfileSubtab('subtab-homepage-about', this)"
+                        style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.55rem 1.1rem; border-radius:8px; border:1px solid #cbd5e1; background:#f8fafc; color:#475569; font-family:'Montserrat',sans-serif; font-size:0.82rem; font-weight:600; cursor:pointer; transition:all 0.2s;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg>
+                        Homepage/Beranda
+                    </button>
+                </div>
+
+                {{-- SUBTAB 1: INFORMASI PROFIL --}}
+                <div class="prof-subtab-pane" id="subtab-profile-info">
+                    <form action="{{ route('creator.bio.save-profile') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="prof-card">
+                            <div class="prof-card-head">Informasi Profil Kreator</div>
+                            <div class="card-body">
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                                    <div class="form-group">
+                                        <label class="form-label">Nama Tampilan</label>
+                                        <input type="text" name="bio_name"
+                                            value="{{ old('bio_name', $cfg['name'] ?? $profile->store_name) }}"
+                                            class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Username / URL Publik</label>
+                                        <div
+                                            style="display:flex; align-items:center; border:1.5px solid #e7f0e7; border-radius:10px; background:#f9fefb; overflow:hidden;">
+                                            <span
+                                                style="padding:0 0.75rem; color:#94a3b8; font-size:0.8rem; border-right:1.5px solid #e7f0e7; background:#f1f5f9; height:44px; display:flex; align-items:center;">buyle.id/</span>
+                                            <input type="text" name="bio_username"
+                                                value="{{ old('bio_username', $profile->store_slug) }}"
+                                                style="height:44px; border:none; background:transparent; padding:0 1rem; font-family:'Montserrat',sans-serif; font-size:0.875rem; color:#1a1a1a; outline:none; flex:1;"
+                                                placeholder="username">
+                                        </div>
+                                        @error('bio_username')<span
+                                        style="font-size:0.72rem; color:#ef4444;">{{ $message }}</span>@enderror
+                                    </div>
+                                    <div class="form-group" style="grid-column:1/-1;">
+                                        <label class="form-label">Bio / Tagline</label>
+                                        <textarea name="bio_bio" class="form-input" rows="2" maxlength="300"
+                                            placeholder="Ceritakan sedikit tentang diri Anda...">{{ old('bio_bio', $cfg['bio'] ?? '') }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Lokasi</label>
+                                        <input type="text" name="bio_location"
+                                            value="{{ old('bio_location', $cfg['location'] ?? '') }}" class="form-input"
+                                            placeholder="Jakarta, Indonesia">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="prof-card">
+                            <div class="prof-card-head">Foto Profil & Cover</div>
+                            <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
                                 <div class="form-group">
-                                    <label class="form-label">Nama Tampilan</label>
-                                    <input type="text" name="bio_name"
-                                        value="{{ old('bio_name', $cfg['name'] ?? $profile->store_name) }}"
-                                        class="form-input">
+                                    <label class="form-label">Foto Profil / Avatar</label>
+                                    @if(!empty($cfg['avatar']))
+                                        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.5rem;">
+                                            <img src="{{ asset('storage/' . $cfg['avatar']) }}"
+                                                style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid #1eb349;">
+                                            <label
+                                                style="font-size:0.75rem; color:#ef4444; display:flex; align-items:center; gap:0.25rem; cursor:pointer;">
+                                                <input type="checkbox" name="delete_avatar" value="1"> Hapus Avatar
+                                            </label>
+                                        </div>
+                                    @endif
+                                    <input type="file" name="bio_avatar" accept="image/*" class="form-input"
+                                        style="height:auto; padding:0.5rem;">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Username / URL Publik</label>
-                                    <div
-                                        style="display:flex; align-items:center; border:1.5px solid #e7f0e7; border-radius:10px; background:#f9fefb; overflow:hidden;">
-                                        <span
-                                            style="padding:0 0.75rem; color:#94a3b8; font-size:0.8rem; border-right:1.5px solid #e7f0e7; background:#f1f5f9; height:44px; display:flex; align-items:center;">buyle.id/</span>
-                                        <input type="text" name="bio_username"
-                                            value="{{ old('bio_username', $profile->store_slug) }}"
-                                            style="height:44px; border:none; background:transparent; padding:0 1rem; font-family:'Montserrat',sans-serif; font-size:0.875rem; color:#1a1a1a; outline:none; flex:1;"
-                                            placeholder="username">
-                                    </div>
-                                    @error('bio_username')<span
-                                    style="font-size:0.72rem; color:#ef4444;">{{ $message }}</span>@enderror
+                                    <label class="form-label">Foto Cover / Banner</label>
+                                    @if(!empty($cfg['cover']))
+                                        <div style="margin-bottom:0.5rem;">
+                                            <img src="{{ asset('storage/' . $cfg['cover']) }}"
+                                                style="width:100%; height:60px; border-radius:10px; object-fit:cover; margin-bottom:0.25rem;">
+                                            <label
+                                                style="font-size:0.75rem; color:#ef4444; display:flex; align-items:center; gap:0.25rem; cursor:pointer;">
+                                                <input type="checkbox" name="delete_cover" value="1"> Hapus Cover
+                                            </label>
+                                        </div>
+                                    @endif
+                                    <input type="file" name="bio_cover" accept="image/*" class="form-input"
+                                        style="height:auto; padding:0.5rem;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end;">
+                            <button type="submit" class="btn-submit-sm">Simpan Profil</button>
+                        </div>
+                    </form>
+                </div>
+
+                {{-- SUBTAB 2: HOMEPAGE / ABOUT US (TEMA 5) --}}
+                <div class="prof-subtab-pane" id="subtab-homepage-about" style="display:none;">
+                    <form action="{{ route('creator.bio.save-profile') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="about_enabled_present" value="1">
+
+                        {{-- Card Toggle Active --}}
+                        <div class="prof-card">
+                            <div class="prof-card-head"
+                                style="display:flex; justify-content:space-between; align-items:center;">
+                                <span>Status Section About Us (Tema 5)</span>
+                                <label
+                                    style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                    <input type="checkbox" name="about_enabled" value="1" {{ ($cfg['about_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
+                                    Aktifkan Section
+                                </label>
+                            </div>
+                            <div class="card-body">
+                                <p style="font-size:0.8rem; color:#64748b; margin:0;">
+                                    Tampilkan section About Us / Tentang Kami modern 3-Card pada halaman utama (Homepage
+                                    Tema 5). Semua teks, gambar, dan tombol dapat Anda ubah sesuai keinginan. Jika dibiarkan
+                                    kosong, sistem akan menggunakan kalimat default standar Buyle.
+                                </p>
+                            </div>
+                        </div>
+
+                        {{-- Card Header & Description --}}
+                        <div class="prof-card">
+                            <div class="prof-card-head">1. Header &amp; Deskripsi Utama</div>
+                            <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                                <div class="form-group" style="grid-column:1/-1;">
+                                    <label class="form-label">Sub-Judul / Tagline Atas (Eyebrow)</label>
+                                    <input type="text" name="about_eyebrow"
+                                        value="{{ old('about_eyebrow', $cfg['about_eyebrow'] ?? 'Real strategies. Real results.') }}"
+                                        class="form-input" placeholder="Real strategies. Real results.">
+                                    <small style="color:#94a3b8; font-size:0.72rem;">Gunakan &lt;em&gt;kata&lt;/em&gt; untuk
+                                        teks tebal/miring.</small>
                                 </div>
                                 <div class="form-group" style="grid-column:1/-1;">
-                                    <label class="form-label">Bio / Tagline</label>
-                                    <textarea name="bio_bio" class="form-input" rows="2" maxlength="300"
-                                        placeholder="Ceritakan sedikit tentang diri Anda...">{{ old('bio_bio', $cfg['bio'] ?? '') }}</textarea>
+                                    <label class="form-label">Judul Utama H2 (Headline)</label>
+                                    <textarea name="about_headline" class="form-input" rows="2"
+                                        placeholder="We believe success comes from strategy, not guesswork.">{{ old('about_headline', $cfg['about_headline'] ?? 'We believe success comes from strategy, not guesswork. Approach combines deep market insight.') }}</textarea>
+                                </div>
+                                <div class="form-group" style="grid-column:1/-1;">
+                                    <label class="form-label">Deskripsi Ringkas (Sisi Kanan)</label>
+                                    <textarea name="about_description" class="form-input" rows="3"
+                                        placeholder="We focus on creating real, data-driven strategies...">{{ old('about_description', $cfg['about_description'] ?? 'We focus on creating real, data-driven strategies that deliver measurable results. Every campaign is built on research, insight, and clear objectives—ensuring your marketing.') }}</textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Lokasi</label>
-                                    <input type="text" name="bio_location"
-                                        value="{{ old('bio_location', $cfg['location'] ?? '') }}" class="form-input"
-                                        placeholder="Jakarta, Indonesia">
+                                    <label class="form-label">Teks Tombol Atas</label>
+                                    <input type="text" name="about_btn_text"
+                                        value="{{ old('about_btn_text', $cfg['about_btn_text'] ?? 'LEARN MORE') }}"
+                                        class="form-input" placeholder="LEARN MORE">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Link Tombol Atas</label>
+                                    <input type="text" name="about_btn_link"
+                                        value="{{ old('about_btn_link', $cfg['about_btn_link'] ?? '#products-section') }}"
+                                        class="form-input" placeholder="#products-section atau https://...">
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="prof-card">
-                        <div class="prof-card-head">Foto Profil & Cover</div>
-                        <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
-                            <div class="form-group">
-                                <label class="form-label">Foto Profil / Avatar</label>
-                                @if(!empty($cfg['avatar']))
-                                    <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.5rem;">
-                                        <img src="{{ asset('storage/' . $cfg['avatar']) }}"
-                                            style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid #1eb349;">
-                                        <label
-                                            style="font-size:0.75rem; color:#ef4444; display:flex; align-items:center; gap:0.25rem; cursor:pointer;">
-                                            <input type="checkbox" name="delete_avatar" value="1"> Hapus Avatar
-                                        </label>
-                                    </div>
-                                @endif
-                                <input type="file" name="bio_avatar" accept="image/*" class="form-input"
-                                    style="height:auto; padding:0.5rem;">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Foto Cover / Banner</label>
-                                @if(!empty($cfg['cover']))
-                                    <div style="margin-bottom:0.5rem;">
-                                        <img src="{{ asset('storage/' . $cfg['cover']) }}"
-                                            style="width:100%; height:60px; border-radius:10px; object-fit:cover; margin-bottom:0.25rem;">
-                                        <label
-                                            style="font-size:0.75rem; color:#ef4444; display:flex; align-items:center; gap:0.25rem; cursor:pointer;">
-                                            <input type="checkbox" name="delete_cover" value="1"> Hapus Cover
-                                        </label>
-                                    </div>
-                                @endif
-                                <input type="file" name="bio_cover" accept="image/*" class="form-input"
-                                    style="height:auto; padding:0.5rem;">
+                        {{-- Card 1: Dark Gradient Card --}}
+                        <div class="prof-card">
+                            <div class="prof-card-head">2. Card 1 (Box Gradient Gelap)</div>
+                            <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                                <div class="form-group" style="grid-column:1/-1;">
+                                    <label class="form-label">Judul Card 1</label>
+                                    <input type="text" name="about_card1_title"
+                                        value="{{ old('about_card1_title', $cfg['about_card1_title'] ?? 'Helping businesses connect, convert, and scale digitally.') }}"
+                                        class="form-input" placeholder="Helping businesses connect...">
+                                </div>
+                                <div class="form-group" style="grid-column:1/-1;">
+                                    <label class="form-label">Deskripsi Card 1</label>
+                                    <textarea name="about_card1_desc" class="form-input" rows="2"
+                                        placeholder="We ensure every marketing drives real results...">{{ old('about_card1_desc', $cfg['about_card1_desc'] ?? 'We ensure every marketing drives real results increased traffic and engagement to higher and revenue') }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Poin Keunggulan 1</label>
+                                    <input type="text" name="about_card1_check1"
+                                        value="{{ old('about_card1_check1', $cfg['about_card1_check1'] ?? 'SEO & Search Visibility') }}"
+                                        class="form-input" placeholder="SEO & Search Visibility">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Poin Keunggulan 2</label>
+                                    <input type="text" name="about_card1_check2"
+                                        value="{{ old('about_card1_check2', $cfg['about_card1_check2'] ?? 'Data-Driven Strategy') }}"
+                                        class="form-input" placeholder="Data-Driven Strategy">
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div style="display:flex; justify-content:flex-end;">
-                        <button type="submit" class="btn-submit-sm">Simpan Profil</button>
-                    </div>
-                </form>
+                        {{-- Card 2: Foto/Gambar --}}
+                        <div class="prof-card">
+                            <div class="prof-card-head">3. Card 2 (Foto / Banner Center)</div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="form-label">Upload Foto Card Center</label>
+                                    @if(!empty($cfg['about_card2_image']))
+                                        <div style="margin-bottom:0.75rem; display:flex; align-items:center; gap:1rem;">
+                                            <img src="{{ asset('storage/' . $cfg['about_card2_image']) }}"
+                                                style="width:120px; height:80px; border-radius:10px; object-fit:cover; border:2px solid #1eb349;">
+                                            <label
+                                                style="font-size:0.75rem; color:#ef4444; display:flex; align-items:center; gap:0.25rem; cursor:pointer;">
+                                                <input type="checkbox" name="delete_about_card2_image" value="1"> Hapus Foto Ini
+                                            </label>
+                                        </div>
+                                    @endif
+                                    <input type="file" name="about_card2_image" accept="image/*" class="form-input"
+                                        style="height:auto; padding:0.5rem;">
+                                    <small
+                                        style="color:#94a3b8; font-size:0.72rem; display:block; margin-top:0.3rem;">Format
+                                        rekomendasi: JPG/PNG/WebP rasio 3:4 portrait atau 4:3.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Card 3: Statistik & Tombol CTA --}}
+                        <div class="prof-card">
+                            <div class="prof-card-head">4. Card 3 (Statistik &amp; Tombol Call to Action)</div>
+                            <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                                <div class="form-group">
+                                    <label class="form-label">Angka / Persentase Statistik</label>
+                                    <input type="text" name="about_card3_stat"
+                                        value="{{ old('about_card3_stat', $cfg['about_card3_stat'] ?? '63%') }}"
+                                        class="form-input" placeholder="63%">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Label Statistik</label>
+                                    <input type="text" name="about_card3_title"
+                                        value="{{ old('about_card3_title', $cfg['about_card3_title'] ?? 'Business develop growth') }}"
+                                        class="form-input" placeholder="Business develop growth">
+                                </div>
+                                <div class="form-group" style="grid-column:1/-1;">
+                                    <label class="form-label">Deskripsi Card 3</label>
+                                    <textarea name="about_card3_desc" class="form-input" rows="2"
+                                        placeholder="We help brands increase visibility...">{{ old('about_card3_desc', $cfg['about_card3_desc'] ?? 'We help brands increase visibility, engage the right audience, and convert leads into loyal customers.') }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Teks Tombol CTA Utama</label>
+                                    <input type="text" name="about_card3_btn_text"
+                                        value="{{ old('about_card3_btn_text', $cfg['about_card3_btn_text'] ?? 'GET STARTED') }}"
+                                        class="form-input" placeholder="GET STARTED">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Link Tombol CTA Utama</label>
+                                    <input type="text" name="about_card3_btn_link"
+                                        value="{{ old('about_card3_btn_link', $cfg['about_card3_btn_link'] ?? '#products-section') }}"
+                                        class="form-input" placeholder="#products-section atau https://...">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end;">
+                            <button type="submit" class="btn-submit-sm">Simpan About Us (Tema 5)</button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
             <div class="tab-pane" id="tab-social">
@@ -2185,7 +2373,8 @@
                             $addedWlBlocks = $blocks->filter(function ($b) use ($wlBlockIds) {
                                 if ($b->type === 'buyle_product') {
                                     $cat = strtolower(trim($b->data_json['category'] ?? ''));
-                                    if ($cat === 'whitelabel') return true;
+                                    if ($cat === 'whitelabel')
+                                        return true;
                                     $pId = $b->data_json['product_id'] ?? null;
                                     return $pId && in_array((int) $pId, $wlBlockIds);
                                 }
@@ -2198,7 +2387,7 @@
                                 $wlProdId = $wlBlock->data_json['product_id'] ?? null;
                                 $wlProd = $whitelabelProducts->firstWhere('id', $wlProdId) ?? ($wlProdId ? \App\Models\Product::with('seller:id,name')->find($wlProdId) : null);
                                 $baseWlPrice = $wlProd ? ($wlProd->sale_price ?: ($wlProd->whitelabel_price ?: $wlProd->price)) : 0;
-                                $resellerSellingPrice = (float)($wlBlock->data_json['price'] ?? $baseWlPrice);
+                                $resellerSellingPrice = (float) ($wlBlock->data_json['price'] ?? $baseWlPrice);
                                 $resellerMarginProfit = max(0, $resellerSellingPrice - $baseWlPrice);
                             @endphp
                             <div
@@ -2211,12 +2400,17 @@
                                     <div style="font-weight: 600; font-size:0.875rem; color:#0F172A;">
                                         {{ $wlBlock->title }}
                                     </div>
-                                    <div style="font-size:0.75rem; color:#64748B; margin-top:0.3rem; display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center;">
+                                    <div
+                                        style="font-size:0.75rem; color:#64748B; margin-top:0.3rem; display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center;">
                                         @if($wlProd)
-                                            <span>Oleh: <strong style="color:#334155;">{{ $wlProd->seller->name ?? 'Creator' }}</strong></span>
-                                            <span>&middot; Modal: <strong style="color:#475569;">Rp {{ number_format($baseWlPrice, 0, ',', '.') }}</strong></span>
-                                            <span>&middot; Harga Jual: <strong style="color:#0F172A;">Rp {{ number_format($resellerSellingPrice, 0, ',', '.') }}</strong></span>
-                                            <span style="background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; padding:0.1rem 0.45rem; border-radius:6px; font-weight:600; font-size:0.7rem;">
+                                            <span>Oleh: <strong
+                                                    style="color:#334155;">{{ $wlProd->seller->name ?? 'Creator' }}</strong></span>
+                                            <span>&middot; Modal: <strong style="color:#475569;">Rp
+                                                    {{ number_format($baseWlPrice, 0, ',', '.') }}</strong></span>
+                                            <span>&middot; Harga Jual: <strong style="color:#0F172A;">Rp
+                                                    {{ number_format($resellerSellingPrice, 0, ',', '.') }}</strong></span>
+                                            <span
+                                                style="background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; padding:0.1rem 0.45rem; border-radius:6px; font-weight:600; font-size:0.7rem;">
                                                 Profit: +Rp {{ number_format($resellerMarginProfit, 0, ',', '.') }}
                                             </span>
                                         @endif
@@ -2226,7 +2420,11 @@
                                     <button type="button"
                                         onclick="openEditWlMarkupModal('{{ $wlBlock->id }}', '{{ addslashes($wlBlock->title) }}', {{ $baseWlPrice }}, {{ $resellerSellingPrice }})"
                                         style="background:#F8FAFC; color:#0F172A; border:1.5px solid #CBD5E1; padding:0.38rem 0.75rem; border-radius:8px; font-size:0.75rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                        </svg>
                                         Edit Harga
                                     </button>
                                     <form action="{{ route('creator.bio.blocks.destroy', $wlBlock) }}" method="POST"
@@ -3371,6 +3569,39 @@
             });
         });
 
+        // Profile Sub-tab switching
+        function switchProfileSubtab(paneId, btn) {
+            // Hide all subtab panes inside tab-profile
+            document.querySelectorAll('.prof-subtab-pane').forEach(p => p.style.display = 'none');
+            // Show the selected pane
+            var target = document.getElementById(paneId);
+            if (target) target.style.display = 'block';
+
+            // Reset all subtab buttons
+            document.querySelectorAll('.prof-subtab-btn').forEach(b => {
+                b.style.background = '#f8fafc';
+                b.style.color = '#475569';
+                b.style.border = '1px solid #cbd5e1';
+            });
+            // Activate clicked button
+            if (btn) {
+                btn.style.background = '#1eb349';
+                btn.style.color = '#ffffff';
+                btn.style.border = 'none';
+            }
+            localStorage.setItem('bio_profile_subtab', paneId);
+        }
+
+        // Restore active profile subtab from localStorage
+        var savedProfileSubtab = localStorage.getItem('bio_profile_subtab');
+        if (savedProfileSubtab) {
+            var paneEl = document.getElementById(savedProfileSubtab);
+            var btnMap = { 'subtab-profile-info': 'btn-subtab-info', 'subtab-homepage-about': 'btn-subtab-about' };
+            var btnEl = document.getElementById(btnMap[savedProfileSubtab]);
+            if (paneEl) switchProfileSubtab(savedProfileSubtab, btnEl);
+        }
+
+
         // Color & Background Sync for Custom Theme
         function toggleBgMode(mode) {
             let colorPanel = document.getElementById('bg_color_panel');
@@ -3569,20 +3800,20 @@
             popup.id = 'scrapeFailedPopup';
             popup.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);';
             popup.innerHTML = `
-                                                        <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
-                                                            <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                                                                <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                                            </div>
-                                                            <div style="font-weight: 600;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
-                                                            <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
-                                                            <div style="display:flex;gap:0.6rem;justify-content:center;">
-                                                                <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight: 500;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
-                                                                <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight: 500;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
-                                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                                                    Scan AI
-                                                                </button>
-                                                            </div>
-                                                        </div>`;
+                                                                    <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
+                                                                        <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                                                                            <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                                                        </div>
+                                                                        <div style="font-weight: 600;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
+                                                                        <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
+                                                                        <div style="display:flex;gap:0.6rem;justify-content:center;">
+                                                                            <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight: 500;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
+                                                                            <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight: 500;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
+                                                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                                                                Scan AI
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>`;
             document.body.appendChild(popup);
             popup.addEventListener('click', function (e) { if (e.target === popup) popup.remove(); });
         }
@@ -3856,11 +4087,11 @@
                 document.getElementById('imgOversizedDesc').innerHTML = 'Foto berikut melebihi batas <strong>1 MB per file</strong>. Harap kompres terlebih dahulu.';
 
                 const listHtml = oversized.map(f => `
-                                                            <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
-                                                                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
-                                                                <span style="color:#EF4444; font-weight: 500;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
-                                                            </div>
-                                                        `).join('');
+                                                                        <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
+                                                                            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
+                                                                            <span style="color:#EF4444; font-weight: 500;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                                                                        </div>
+                                                                    `).join('');
 
                 document.getElementById('imgOversizedFileList').innerHTML = listHtml;
                 document.getElementById('imgOversizedModal').classList.add('open');
@@ -4579,7 +4810,9 @@
                                 <div style="font-size:0.82rem; color:#166534; font-weight: 600;">
                                     Rp {{ number_format($wlBasePrice, 0, ',', '.') }}
                                     @if($wlOrigPrice)
-                                        <span style="font-size:0.65rem; color:#94a3b8; text-decoration:line-through; margin-left:3px;">Rp {{ number_format($wlOrigPrice, 0, ',', '.') }}</span>
+                                        <span
+                                            style="font-size:0.65rem; color:#94a3b8; text-decoration:line-through; margin-left:3px;">Rp
+                                            {{ number_format($wlOrigPrice, 0, ',', '.') }}</span>
                                     @endif
                                 </div>
                                 @if($wlProd->whitelabel_terms)
@@ -5409,12 +5642,20 @@
     </style>
 
     {{-- Modal Atur / Edit Harga Jual White Label --}}
-    <div id="wlMarkupModal" class="modal-backdrop" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:99999; align-items:center; justify-content:center;">
-        <div style="width:90%; max-width:440px; background:#fff; border-radius:20px; padding:1.5rem; box-shadow:0 20px 40px rgba(0,0,0,0.15);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom:1px solid #E2E8F0; padding-bottom:0.75rem;">
-                <h3 style="font-size:1.05rem; font-weight:700; color:#0F172A; margin:0;" id="wlModalHeading">Atur Harga Jual (Markup)</h3>
-                <button type="button" onclick="closeWlMarkupModal()" style="background:none; border:none; cursor:pointer; color:#64748B; padding:0.2rem;">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    <div id="wlMarkupModal" class="modal-backdrop"
+        style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:99999; align-items:center; justify-content:center;">
+        <div
+            style="width:90%; max-width:440px; background:#fff; border-radius:20px; padding:1.5rem; box-shadow:0 20px 40px rgba(0,0,0,0.15);">
+            <div
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom:1px solid #E2E8F0; padding-bottom:0.75rem;">
+                <h3 style="font-size:1.05rem; font-weight:700; color:#0F172A; margin:0;" id="wlModalHeading">Atur Harga Jual
+                    (Markup)</h3>
+                <button type="button" onclick="closeWlMarkupModal()"
+                    style="background:none; border:none; cursor:pointer; color:#64748B; padding:0.2rem;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
                 </button>
             </div>
             <form id="wlForm" method="POST">
@@ -5427,29 +5668,45 @@
                 <input type="hidden" name="product_id" id="wlFormProductId">
 
                 <div style="margin-bottom:1rem;">
-                    <label style="font-size:0.78rem; font-weight:600; color:#475569; display:block; margin-bottom:0.35rem;">Nama Produk White Label</label>
-                    <div id="wlModalTitleDisplay" style="font-size:0.9rem; font-weight:600; color:#0F172A; background:#F8FAFC; border:1px solid #E2E8F0; padding:0.65rem 0.85rem; border-radius:10px;"></div>
+                    <label
+                        style="font-size:0.78rem; font-weight:600; color:#475569; display:block; margin-bottom:0.35rem;">Nama
+                        Produk White Label</label>
+                    <div id="wlModalTitleDisplay"
+                        style="font-size:0.9rem; font-weight:600; color:#0F172A; background:#F8FAFC; border:1px solid #E2E8F0; padding:0.65rem 0.85rem; border-radius:10px;">
+                    </div>
                 </div>
 
-                <div style="background:#F0FDF4; border:1px solid #BBF7D0; padding:0.85rem; border-radius:12px; margin-bottom:1rem;">
+                <div
+                    style="background:#F0FDF4; border:1px solid #BBF7D0; padding:0.85rem; border-radius:12px; margin-bottom:1rem;">
                     <div style="font-size:0.75rem; color:#166534; font-weight:500;">Harga Modal (Owner Produk):</div>
-                    <div style="font-size:1.1rem; font-weight:700; color:#15803D; margin-top:0.15rem;" id="wlModalBasePriceDisplay">Rp 0</div>
+                    <div style="font-size:1.1rem; font-weight:700; color:#15803D; margin-top:0.15rem;"
+                        id="wlModalBasePriceDisplay">Rp 0</div>
                 </div>
 
                 <div style="margin-bottom:1rem;">
-                    <label style="font-size:0.8rem; font-weight:600; color:#0F172A; display:block; margin-bottom:0.35rem;">Tentukan Harga Jual Anda di Link Bio (Rp):</label>
-                    <input type="text" id="wlModalSellingPriceInput" name="price" required oninput="calculateLiveWlMargin()" class="form-input" style="height:44px; font-size:1rem; font-weight:700; color:#0F172A; width:100%; box-sizing:border-box; padding:0 0.85rem; border:1.5px solid #CBD5E1; border-radius:10px;" placeholder="Masukkan harga jual...">
-                    <div style="font-size:0.72rem; color:#64748B; margin-top:0.35rem;">*Minimal sama dengan atau lebih tinggi dari Harga Modal.</div>
+                    <label
+                        style="font-size:0.8rem; font-weight:600; color:#0F172A; display:block; margin-bottom:0.35rem;">Tentukan
+                        Harga Jual Anda di Link Bio (Rp):</label>
+                    <input type="text" id="wlModalSellingPriceInput" name="price" required oninput="calculateLiveWlMargin()"
+                        class="form-input"
+                        style="height:44px; font-size:1rem; font-weight:700; color:#0F172A; width:100%; box-sizing:border-box; padding:0 0.85rem; border:1.5px solid #CBD5E1; border-radius:10px;"
+                        placeholder="Masukkan harga jual...">
+                    <div style="font-size:0.72rem; color:#64748B; margin-top:0.35rem;">*Minimal sama dengan atau lebih
+                        tinggi dari Harga Modal.</div>
                 </div>
 
-                <div style="background:#EFF6FF; border:1px solid #BFDBFE; padding:0.85rem; border-radius:12px; margin-bottom:1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                <div
+                    style="background:#EFF6FF; border:1px solid #BFDBFE; padding:0.85rem; border-radius:12px; margin-bottom:1.25rem; display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-size:0.78rem; font-weight:600; color:#1E40AF;">Keuntungan (Profit Margin) Anda:</span>
                     <span id="wlModalMarginPreview" style="font-size:1.05rem; font-weight:700; color:#1E3A8A;">+Rp 0</span>
                 </div>
 
                 <div style="display:flex; gap:0.5rem;">
-                    <button type="button" onclick="closeWlMarkupModal()" style="flex:1; height:42px; background:#F1F5F9; border:1px solid #CBD5E1; color:#334155; border-radius:10px; font-size:0.85rem; font-weight:600; cursor:pointer;">Batal</button>
-                    <button type="submit" style="flex:1.5; height:42px; background:linear-gradient(135deg,#1eb349,#a5cf37); border:none; color:#fff; border-radius:10px; font-size:0.85rem; font-weight:600; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,.3);">Simpan & Tambahkan</button>
+                    <button type="button" onclick="closeWlMarkupModal()"
+                        style="flex:1; height:42px; background:#F1F5F9; border:1px solid #CBD5E1; color:#334155; border-radius:10px; font-size:0.85rem; font-weight:600; cursor:pointer;">Batal</button>
+                    <button type="submit"
+                        style="flex:1.5; height:42px; background:linear-gradient(135deg,#1eb349,#a5cf37); border:none; color:#fff; border-radius:10px; font-size:0.85rem; font-weight:600; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,.3);">Simpan
+                        & Tambahkan</button>
                 </div>
             </form>
         </div>
