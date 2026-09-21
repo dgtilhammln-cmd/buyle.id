@@ -1949,9 +1949,9 @@
                                 </div>
                             </div>
 
-                            <div style="display:flex; justify-content:flex-end; margin-top:1.25rem;">
-                                <button type="submit" class="btn-submit-sm">Simpan About Us (Tema 5)</button>
-                            </div>
+                        <div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+                            <button type="submit" class="btn-submit-sm">Simpan About Us (Tema 5)</button>
+                        </div>
                     </form>
                 </div>
 
