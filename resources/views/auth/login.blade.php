@@ -6,7 +6,6 @@
 <h1 class="auth-title">Selamat datang!</h1>
 <p class="auth-subtitle">Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a></p>
 
-{{-- FORM EMAIL (disembunyikan sementara — hanya Google yang aktif)
 @if($errors->any())
     <div class="alert-error">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -47,8 +46,7 @@
     <button type="submit" class="btn-primary">Masuk</button>
 </form>
 
-<div class="divider">atau</div>
---}}
+<div class="divider">atau masuk dengan</div>
 
 <a href="{{ route('auth.google') }}" class="btn-google">
     <svg width="20" height="20" viewBox="0 0 48 48">

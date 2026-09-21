@@ -257,6 +257,9 @@
     .buyle-report-close-btn:hover {
         background: #E2E8F0;
         color: #0F172A;
+    /* On storefront pages, hide global floating button since cards have dedicated report icons */
+    body:has(.sf-main) .buyle-report-btn {
+        display: none !important;
     }
 </style>
 
@@ -366,7 +369,15 @@
 </div>
 
 <script>
-    function openBuyleReportModal() {
+    function openBuyleReportModal(name, url) {
+        if (name) {
+            const targetNameInput = document.querySelector('#buyleReportForm input[name="target_name"]');
+            if (targetNameInput) targetNameInput.value = name;
+        }
+        if (url) {
+            const targetUrlInput = document.querySelector('#buyleReportForm input[name="target_url"]');
+            if (targetUrlInput) targetUrlInput.value = url;
+        }
         document.getElementById('buyleReportModal').style.display = 'flex';
     }
     function closeBuyleReportModal() {

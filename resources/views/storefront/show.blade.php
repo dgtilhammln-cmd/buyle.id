@@ -280,6 +280,17 @@
     background: #EF4444; color: #fff; font-size: 0.65rem; font-weight: 700;
     padding: 0.2rem 0.4rem; border-radius: 4px; z-index: 2;
 }
+.sf-card-report-btn {
+    position: absolute; top: 0.5rem; right: 0.5rem;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px);
+    color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 5; transition: all 0.2s ease; opacity: 0.85;
+}
+.sf-card-report-btn:hover {
+    background: #ef4444; color: #ffffff; border-color: #ef4444; opacity: 1; transform: scale(1.1);
+}
 .sf-card-body { padding: 0.6rem; flex: 1; display: flex; flex-direction: column; }
 .sf-card-name {
     font-size: 0.8rem; color: #1E293B; margin: 0 0 0.4rem;
@@ -554,6 +565,12 @@
                                 @php $discount = round((($product->price - $product->sale_price) / $product->price) * 100); @endphp
                                 <div class="sf-discount-badge">{{ $discount }}%</div>
                             @endif
+                            <button type="button" class="sf-card-report-btn" onclick="event.preventDefault(); event.stopPropagation(); openBuyleReportModal('{{ addslashes($product->name) }}', '{{ route('products.show', $product->slug) }}')" title="Laporkan Produk Ini">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                                    <line x1="4" y1="22" x2="4" y2="15"/>
+                                </svg>
+                            </button>
                         </div>
                         <div class="sf-card-body">
                             <p class="sf-card-name">{{ $product->name }}</p>
