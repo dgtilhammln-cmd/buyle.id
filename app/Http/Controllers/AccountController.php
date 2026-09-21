@@ -413,10 +413,21 @@ class AccountController extends Controller
             ], 403);
         }
 
-        \App\Models\ProductRating::updateOrCreate(
-            ['product_id' => $productId, 'user_id' => $user->id],
-            ['order_id' => $request->order_id ?: null, 'rating' => $ratingVal]
-        );
+        $existing = \App\Models\ProductRating::where('product_id', $productId)->where('user_id', $user->id)->first();
+        if ($existing) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Anda sudah memberikan rating ' . $existing->rating . '★ untuk produk ini.',
+                'rating'  => $existing->rating
+            ]);
+        }
+
+        \App\Models\ProductRating::create([
+            'product_id' => $productId,
+            'user_id'    => $user->id,
+            'order_id'   => $request->order_id ?: null,
+            'rating'     => $ratingVal
+        ]);
 
         $avgRating = \App\Models\ProductRating::where('product_id', $productId)->avg('rating');
         if ($avgRating) {

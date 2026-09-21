@@ -561,15 +561,20 @@
                                     produk digital.</div>
                             </div>
                             <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
-                                {{-- Rating Button (Neutral Gray Pill) --}}
-                                <button type="button" class="btn-rating-gray"
-                                    onclick="openProductRatingModal({{ $item->product_id }}, '{{ addslashes($item->product_name) }}', {{ $currentRatingVal }}, {{ $order->id }})"
-                                    style="display: inline-flex; align-items: center; gap: 6px; background: #f1f5f9; color: #475569; border: 1.5px solid #cbd5e1; padding: 0.6rem 1.1rem; border-radius: 999px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease;">
+                                {{-- Rating Button (Neutral Gray Pill when unrated, Disabled Green Pill when rated) --}}
+                                <button type="button" class="btn-rating-gray" id="btn-rating-{{ $item->product_id }}"
+                                    @if($currentRatingVal > 0)
+                                        disabled
+                                        style="display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; color: #15803d; border: 1.5px solid #bbf7d0; padding: 0.6rem 1.1rem; border-radius: 999px; font-weight: 700; font-size: 0.85rem; cursor: default; opacity: 0.9;"
+                                    @else
+                                        onclick="openProductRatingModal({{ $item->product_id }}, '{{ addslashes($item->product_name) }}', {{ $currentRatingVal }}, {{ $order->id }})"
+                                        style="display: inline-flex; align-items: center; gap: 6px; background: #f1f5f9; color: #475569; border: 1.5px solid #cbd5e1; padding: 0.6rem 1.1rem; border-radius: 999px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease;"
+                                    @endif>
                                     <svg width="15" height="15" fill="{{ $currentRatingVal > 0 ? '#f59e0b' : 'none' }}" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24">
                                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                                     </svg>
                                     <span id="btn-rating-text-{{ $item->product_id }}">
-                                        {{ $currentRatingVal > 0 ? 'Rating (' . $currentRatingVal . '★)' : 'Beri Rating' }}
+                                        {{ $currentRatingVal > 0 ? 'Sudah Di-rating (' . $currentRatingVal . '★)' : 'Beri Rating' }}
                                     </span>
                                 </button>
 
@@ -846,8 +851,20 @@
             .then(data => {
                 if (data.success) {
                     closeProductRatingModal();
+                    const ratingBtn = document.getElementById('btn-rating-' + prodId);
                     const txtEl = document.getElementById('btn-rating-text-' + prodId);
-                    if (txtEl) txtEl.textContent = 'Rating (' + val + '★)';
+                    if (txtEl) txtEl.textContent = 'Sudah Di-rating (' + val + '★)';
+                    if (ratingBtn) {
+                        ratingBtn.disabled = true;
+                        ratingBtn.onclick = null;
+                        ratingBtn.style.cursor = 'default';
+                        ratingBtn.style.background = '#f8fafc';
+                        ratingBtn.style.color = '#15803d';
+                        ratingBtn.style.borderColor = '#bbf7d0';
+                        ratingBtn.style.opacity = '0.9';
+                        const svg = ratingBtn.querySelector('svg');
+                        if (svg) svg.setAttribute('fill', '#f59e0b');
+                    }
                     showRatingSuccessModal(val);
                 } else {
                     showRatingErrorModal(data.message || 'Gagal menyimpan rating.');

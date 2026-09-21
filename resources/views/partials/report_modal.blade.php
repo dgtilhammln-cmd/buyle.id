@@ -24,11 +24,19 @@
         text-decoration: none;
     }
 
-    /* Desktop: ikuti posisi konten bio yang terpusat (max-width 520px) */
+    /* Desktop: ikuti posisi konten bio yang terpusat (max-width 520px) hanya pada halaman Bio */
     @media (min-width: 640px) {
-        .buyle-report-btn {
+        body.bio-page .buyle-report-btn,
+        .bio-wrapper .buyle-report-btn,
+        .bio-container ~ .buyle-report-btn {
             left: calc(50% - 260px + 8px);
         }
+    }
+
+    /* Di Storefront Kreator, sembunyikan floating report button karena setiap produk card sudah memiliki tombol laporkan sendiri */
+    body:has(.sf-main) .buyle-report-btn,
+    .sf-main ~ .buyle-report-btn {
+        display: none !important;
     }
 
     .buyle-report-btn:hover {
