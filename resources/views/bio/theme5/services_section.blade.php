@@ -41,7 +41,7 @@
             ],
         ];
 
-        // Fetch 3 latest service products from database
+        // Fetch up to 4 service products from database
         $dbServices = collect();
         if (isset($products) && is_iterable($products)) {
             $dbServices = collect($products)->filter(function($p) {
@@ -51,14 +51,14 @@
                     $pType = strtolower($bData['product_type'] ?? '');
                 }
                 return in_array($pType, ['service', 'jasa', 'layanan']);
-            })->take(3);
+            })->take(4);
         }
 
         if ($dbServices->isEmpty() && isset($profile->id)) {
             $realProds = \App\Models\Product::where('seller_id', $profile->id)
                 ->whereIn('product_type', ['service', 'jasa', 'layanan'])
                 ->latest()
-                ->take(3)
+                ->take(4)
                 ->get();
             if ($realProds->count() > 0) {
                 $dbServices = $realProds;
@@ -66,8 +66,8 @@
         }
 
         $servicesList = [];
+        $idx = 1;
         if ($dbServices->count() > 0) {
-            $idx = 1;
             foreach ($dbServices as $sp) {
                 $bData = is_array($sp->data_json ?? null) ? $sp->data_json : (json_decode($sp->data_json ?? '[]', true) ?: []);
                 $sTitle = $sp->title ?? $sp->name ?? ($bData['title'] ?? 'Layanan Jasa');
@@ -109,30 +109,14 @@
                 ];
                 $idx++;
             }
-        } else {
-            // Fallback to manual configuration in bio_config
-            for ($i = 1; $i <= 4; $i++) {
-                $num   = $config["service_{$i}_number"] ?? null;
-                $title = $config["service_{$i}_title"] ?? null;
-                $desc  = $config["service_{$i}_desc"] ?? null;
-                $link  = $config["service_{$i}_link"] ?? null;
-                $img   = !empty($config["service_{$i}_image"]) ? asset('storage/' . $config["service_{$i}_image"]) : null;
-
-                if ($title !== null && trim($title) !== '') {
-                    $servicesList[] = [
-                        'number' => !empty($num) ? $num : sprintf('%02d.', $i),
-                        'title'  => $title,
-                        'desc'   => $desc ?? '',
-                        'image'  => $img ?? ($defaultServices[($i - 1) % 4]['image']),
-                        'link'   => $link ?? '#',
-                        'icon'   => $defaultServices[($i - 1) % 4]['icon']
-                    ];
-                }
-            }
         }
 
-        if (empty($servicesList)) {
-            $servicesList = array_slice($defaultServices, 0, 3);
+        // Fill remaining slots up to 4 items so 4 cards are always displayed
+        while (count($servicesList) < 4) {
+            $defIndex = count($servicesList);
+            $item = $defaultServices[$defIndex % 4];
+            $item['number'] = sprintf('%02d.', count($servicesList) + 1);
+            $servicesList[] = $item;
         }
     @endphp
 
@@ -398,12 +382,6 @@
             {{-- HEADER --}}
             <div class="t5-services-header">
                 <div>
-                    <div class="t5-services-pill">
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/>
-                        </svg>
-                        <span>{{ $eyebrow }}</span>
-                    </div>
                     <h2 class="t5-services-headline">{!! preg_replace('/(\b\w+\b)$/', '<span class="accent-word">$1</span>', e($headline)) !!}</h2>
                 </div>
                 <div class="t5-services-right">

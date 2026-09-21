@@ -2041,12 +2041,6 @@
                             <div class="prof-card-head">1. Header &amp; Deskripsi Section Jasa</div>
                             <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
                                 <div class="form-group" style="grid-column:1/-1;">
-                                    <label class="form-label">Sub-Judul / Badge Tagline (Eyebrow)</label>
-                                    <input type="text" name="services_eyebrow"
-                                        value="{{ old('services_eyebrow', $cfg['services_eyebrow'] ?? 'MISSION') }}"
-                                        class="form-input" placeholder="MISSION atau JASA & LAYANAN">
-                                </div>
-                                <div class="form-group" style="grid-column:1/-1;">
                                     <label class="form-label">Judul Utama H2 (Headline)</label>
                                     <textarea name="services_headline" class="form-input" rows="2"
                                         placeholder="We've orchestrated Intelligence.">{{ old('services_headline', $cfg['services_headline'] ?? "We've orchestrated Intelligence.") }}</textarea>
@@ -2071,64 +2065,21 @@
                             </div>
                         </div>
 
-                        {{-- Custom Services List (Card 1 to 4) --}}
+                        {{-- Auto-Fetch Info Card --}}
                         <div class="prof-card">
-                            <div class="prof-card-head">2. Manual Fallback List Jasa (Jika Belum Ada Produk Tipe Jasa)</div>
-                            <div class="card-body" style="display:flex; flex-direction:column; gap:1.5rem;">
-                                @php
-                                    $defaultServicesConfig = [
-                                        1 => ['number' => '01.', 'title' => 'Amplify Intelligence', 'desc' => 'Coordinate your entire organization through orchestrated agents that ensure precision, compliance, and efficiency everywhere you operate.'],
-                                        2 => ['number' => '02.', 'title' => 'Command Global Operations', 'desc' => 'Coordinate your entire organization through orchestrated agents that ensure precision, compliance, and efficiency everywhere you operate.'],
-                                        3 => ['number' => '03.', 'title' => 'Eliminate Silos', 'desc' => 'Break down data barriers and connect cross-functional teams with seamless real-time data sync and automated workflows.'],
-                                        4 => ['number' => '04.', 'title' => 'Scale with Clarity', 'desc' => 'Empower your business growth with actionable analytics, transparent reporting, and scalable cloud infrastructure.'],
-                                    ];
-                                @endphp
-
-                                @for($i = 1; $i <= 4; $i++)
-                                    @php
-                                        $dItem = $defaultServicesConfig[$i];
-                                    @endphp
-                                    <div style="background:#f8fafc; padding:1.2rem; border-radius:14px; border:1px solid #e2e8f0; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                                        <div style="grid-column:1/-1; font-weight:700; color:#0f172a; font-size:0.9rem; border-bottom:1px solid #e2e8f0; padding-bottom:0.4rem;">
-                                            Card Jasa {{ $i }}
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Nomor Card (Urutan)</label>
-                                            <input type="text" name="service_{{ $i }}_number"
-                                                value="{{ old("service_{$i}_number", $cfg["service_{$i}_number"] ?? $dItem['number']) }}"
-                                                class="form-input" placeholder="0{{ $i }}.">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Nama / Judul Jasa</label>
-                                            <input type="text" name="service_{{ $i }}_title"
-                                                value="{{ old("service_{$i}_title", $cfg["service_{$i}_title"] ?? $dItem['title']) }}"
-                                                class="form-input" placeholder="Nama jasa...">
-                                        </div>
-                                        <div class="form-group" style="grid-column:1/-1;">
-                                            <label class="form-label">Deskripsi Singkat Jasa</label>
-                                            <textarea name="service_{{ $i }}_desc" class="form-input" rows="2"
-                                                placeholder="Deskripsi jasa...">{{ old("service_{$i}_desc", $cfg["service_{$i}_desc"] ?? $dItem['desc']) }}</textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Upload Foto Jasa {{ $i }}</label>
-                                            @if(!empty($cfg["service_{$i}_image"]))
-                                                <div style="margin-bottom:0.4rem; display:flex; align-items:center; gap:0.5rem;">
-                                                    <img src="{{ asset('storage/' . $cfg["service_{$i}_image"]) }}" style="width:70px; height:45px; object-fit:cover; border-radius:6px;">
-                                                    <label style="font-size:0.72rem; color:#ef4444; cursor:pointer;">
-                                                        <input type="checkbox" name="delete_service_{{ $i }}_image" value="1"> Hapus Foto
-                                                    </label>
-                                                </div>
-                                            @endif
-                                            <input type="file" name="service_{{ $i }}_image" accept="image/*" class="form-input" style="height:auto; padding:0.4rem;">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Link Detail / Order Jasa</label>
-                                            <input type="text" name="service_{{ $i }}_link"
-                                                value="{{ old("service_{$i}_link", $cfg["service_{$i}_link"] ?? '#') }}"
-                                                class="form-input" placeholder="# atau https://...">
-                                        </div>
+                            <div class="prof-card-head">2. Sumber Data Card Jasa &amp; Layanan (Otomatis Dari Produk Tipe Jasa)</div>
+                            <div class="card-body">
+                                <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:1.25rem; display:flex; gap:1rem; align-items:flex-start;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.2" style="flex-shrink:0; margin-top:2px;">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14.01 9 11.01"/>
+                                    </svg>
+                                    <div style="font-size:0.85rem; color:#166534; line-height:1.6;">
+                                        <strong style="font-size:0.92rem; color:#14532d; display:block; margin-bottom:4px;">✨ Otomatis Mengambil dari Kelola Produk:</strong>
+                                        Seluruh card Jasa &amp; Layanan pada halaman utama akan otomatis diambil dari produk bertipe <strong>Jasa / Layanan / Service</strong> yang Anda tambahkan di menu <a href="{{ route('creator.products.index') }}" target="_blank" style="color:#1eb349; font-weight:700; text-decoration:underline;">Kelola Produk (buyle.id/creator/products)</a>.<br>
+                                        <span style="color:#15803d; font-size:0.8rem; display:inline-block; margin-top:6px;">*Sistem secara cerdas menerapkan desain premium horizontal card, penomoran otomatis (01, 02, 03, 04), serta animasi hover interaktif tanpa perlu diisi manual.</span>
                                     </div>
-                                @endfor
+                                </div>
                             </div>
                         </div>
                         </div> {{-- End #hpsub-services --}}
