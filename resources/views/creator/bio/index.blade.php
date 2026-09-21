@@ -1802,7 +1802,9 @@
                                         class="form-input" placeholder="#products-section atau https://...">
                                 </div>
                             </div>
-                            {{-- Card 1: Dark Gradient Card & Media --}}
+                        </div>
+
+                        {{-- Card 1: Dark Gradient Card & Media --}}
                             <div class="prof-card">
                                 <div class="prof-card-head">2. Card 1 (Box Gradient Gelap &amp; Logo/Gambar)</div>
                                 <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
@@ -2117,6 +2119,8 @@
                                         </div>
                                     </div>
                                 @endfor
+                            </div>
+                        </div>
                         </div> {{-- End #hpsub-services --}}
 
                         {{-- SINGLE SUBMIT BUTTON FOR HOMEPAGE (TEMA 5) --}}
@@ -3909,6 +3913,10 @@
 
         // Restore active profile subtab from localStorage
         var savedProfileSubtab = localStorage.getItem('bio_profile_subtab');
+        if (savedProfileSubtab === 'subtab-homepage-about' || savedProfileSubtab === 'subtab-homepage-services') {
+            savedProfileSubtab = 'subtab-homepage-main';
+            localStorage.setItem('bio_profile_subtab', 'subtab-homepage-main');
+        }
         if (savedProfileSubtab) {
             var paneEl = document.getElementById(savedProfileSubtab);
             var btnMap = {
