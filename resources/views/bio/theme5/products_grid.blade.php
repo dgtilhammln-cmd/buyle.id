@@ -20,7 +20,12 @@
                 $hasDiscount = $product->sale_price && $product->sale_price < $product->price;
                 $effectivePrice = $hasDiscount ? $product->sale_price : $product->price;
                 $discountPercent = $hasDiscount ? round((($product->price - $product->sale_price) / $product->price) * 100) : 0;
-                $productUrl = route('bio.product.show', ['username' => $username, 'product' => $product->slug]);
+                $prodIdentifier = !empty($product->slug) ? $product->slug : $product->id;
+                if (!empty($profile->custom_domain)) {
+                    $productUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/p/' . $prodIdentifier;
+                } else {
+                    $productUrl = route('bio.product.show', ['username' => $username, 'identifier' => $prodIdentifier]);
+                }
                 $ratingVal = !empty($product->rating) && $product->rating > 0 ? number_format($product->rating, 1) : '5.0';
             @endphp
 

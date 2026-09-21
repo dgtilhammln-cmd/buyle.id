@@ -99,7 +99,12 @@ class PromoSectionSeeder extends Seeder
             ],
         ];
 
+        $hasCat = \Illuminate\Support\Facades\Schema::hasColumn('promo_sections', 'category_id');
+        $hasSubCat = \Illuminate\Support\Facades\Schema::hasColumn('promo_sections', 'sub_category_id');
+
         foreach ($sections as $data) {
+            if (!$hasCat) unset($data['category_id']);
+            if (!$hasSubCat) unset($data['sub_category_id']);
             // firstOrCreate: tidak menimpa jika judul sudah ada
             PromoSection::firstOrCreate(['title' => $data['title']], $data);
         }
