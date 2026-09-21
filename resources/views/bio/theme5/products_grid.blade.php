@@ -1,11 +1,18 @@
 @php
     $catalogProducts = $products->reject(function($p) {
         $pType = strtolower($p->product_type ?? '');
+        $pName = strtolower($p->name ?? $p->title ?? '');
+        $bData = is_array($p->data_json ?? null) ? $p->data_json : (json_decode($p->data_json ?? '[]', true) ?: []);
         if (empty($pType)) {
-            $bData = is_array($p->data_json ?? null) ? $p->data_json : (json_decode($p->data_json ?? '[]', true) ?: []);
-            $pType = strtolower($bData['product_type'] ?? '');
+            $pType = strtolower($bData['product_type'] ?? $bData['category'] ?? '');
         }
-        return in_array($pType, ['service', 'jasa', 'layanan']);
+        $catName = strtolower($p->category->name ?? '');
+
+        return in_array($pType, ['service', 'jasa', 'layanan', 'jasa / layanan / service', 'services'])
+               || in_array($catName, ['service', 'jasa', 'layanan', 'services'])
+               || str_contains($pName, 'jasa')
+               || str_contains($pName, 'layanan')
+               || str_contains($pName, 'service');
     });
 @endphp
 
