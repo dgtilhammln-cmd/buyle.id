@@ -43,9 +43,16 @@ class BioProductsPageController extends Controller
             else
                 $imageUrl = $image ?: asset('images/buyle-placeholder.svg');
 
-            $slug = $data['slug'] ?? null;
-            if (!$slug && $product) $slug = $product->slug;
-            if (!$slug) $slug = Str::slug($name) ?: (string)$block->id;
+            $slug = null;
+            if ($product && !empty($product->slug)) {
+                $slug = $product->slug;
+            }
+            if (!$slug && !empty($data['slug'])) {
+                $slug = $data['slug'];
+            }
+            if (!$slug) {
+                $slug = Str::slug($name) ?: (string)$block->id;
+            }
 
             if (!empty($profile->custom_domain))
                 $productUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/produk/' . $slug;

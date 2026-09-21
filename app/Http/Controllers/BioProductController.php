@@ -13,7 +13,7 @@ class BioProductController extends Controller
     {
         $profile = CreatorProfile::where('store_slug', $username)->firstOrFail();
 
-        // Search by block ID, slug in data_json, or matching product slug
+        // 1. Primary lookup by block ID or data_json->slug
         $block = CreatorBioBlock::where('creator_id', $profile->id)
             ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])
             ->where('is_active', true)
@@ -27,26 +27,64 @@ class BioProductController extends Controller
             })
             ->first();
 
+        // 2. Lookup via linked Product model slug (e.g. e-testgo-cbt-digital)
+        if (!$block && !is_numeric($identifier)) {
+            $productBySlug = Product::where('slug', $identifier)->first();
+            if ($productBySlug) {
+                $block = CreatorBioBlock::where('creator_id', $profile->id)
+                    ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])
+                    ->where('is_active', true)
+                    ->where(function ($q) use ($productBySlug) {
+                        $q->where('data_json->product_id', $productBySlug->id)
+                          ->orWhere('data_json->product_id', (string)$productBySlug->id);
+                    })
+                    ->first();
+
+                if (!$block) {
+                    // Try finding block by title matching product name or slug
+                    $block = CreatorBioBlock::where('creator_id', $profile->id)
+                        ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])
+                        ->where('is_active', true)
+                        ->where(function ($q) use ($productBySlug, $identifier) {
+                            $q->where('title', 'LIKE', '%' . $productBySlug->name . '%')
+                              ->orWhere('data_json->title', 'LIKE', '%' . $productBySlug->name . '%');
+                        })
+                        ->first();
+                }
+            }
+        }
+
+        // 3. Fallback iteration over creator's bio blocks
         if (!$block) {
-            // Fallback: search by product slug or title slug
             $blocks = CreatorBioBlock::where('creator_id', $profile->id)
                 ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])
                 ->where('is_active', true)
                 ->get();
 
             foreach ($blocks as $b) {
-                $bSlug = $b->data_json['slug'] ?? null;
-                if (!$bSlug && !empty($b->data_json['product_id'])) {
+                // Check if linked product has matching slug
+                if (!empty($b->data_json['product_id'])) {
                     $p = Product::find($b->data_json['product_id']);
-                    if ($p && $p->slug === $identifier) {
+                    if ($p && ($p->slug === $identifier || \Illuminate\Support\Str::slug($p->name) === $identifier)) {
                         $block = $b;
                         break;
                     }
                 }
-                if (!$bSlug) {
-                    $bSlug = \Illuminate\Support\Str::slug($b->title);
-                }
+
+                $bSlug = $b->data_json['slug'] ?? null;
                 if ($bSlug === $identifier) {
+                    $block = $b;
+                    break;
+                }
+
+                $titleSlug = \Illuminate\Support\Str::slug($b->title);
+                if ($titleSlug === $identifier) {
+                    $block = $b;
+                    break;
+                }
+
+                // Prefix / substring matching (e.g. "e-testgo-cbt-digital" vs "e-testgo-cbt-digital-aplikasi-ujian-online")
+                if (!is_numeric($identifier) && (\Illuminate\Support\Str::startsWith($titleSlug, $identifier) || \Illuminate\Support\Str::startsWith($identifier, $titleSlug))) {
                     $block = $b;
                     break;
                 }

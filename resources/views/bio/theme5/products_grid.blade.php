@@ -15,11 +15,14 @@
                     $effectivePrice = $hasDiscount ? $product->sale_price : $product->price;
                     $discountPercent = $hasDiscount ? round((($product->price - $product->sale_price) / $product->price) * 100) : 0;
                     $bData = is_array($product->data_json) ? $product->data_json : (json_decode($product->data_json ?? '[]', true) ?: []);
-                    $prodIdentifier = !empty($bData['slug']) 
-                        ? $bData['slug'] 
-                        : (!empty($product->slug) 
-                            ? $product->slug 
-                            : (\Illuminate\Support\Str::slug($product->title ?? ($product->name ?? '')) ?: $product->id));
+                    $linkedProd = !empty($bData['product_id']) ? \App\Models\Product::find($bData['product_id']) : null;
+                    $prodIdentifier = !empty($linkedProd->slug)
+                        ? $linkedProd->slug
+                        : (!empty($bData['slug']) 
+                            ? $bData['slug'] 
+                            : (!empty($product->slug) 
+                                ? $product->slug 
+                                : (\Illuminate\Support\Str::slug($product->title ?? ($product->name ?? '')) ?: $product->id)));
 
                     if (!empty($profile->custom_domain)) {
                         $productUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/produk/' . $prodIdentifier;
@@ -35,10 +38,6 @@
 
                         @if($hasDiscount)
                             <span class="t5-discount-tag">-{{ $discountPercent }}%</span>
-                        @endif
-
-                        @if(!empty($product->product_type))
-                            <span class="t5-type-tag">{{ strtoupper($product->product_type) }}</span>
                         @endif
                     </a>
 

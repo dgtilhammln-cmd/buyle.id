@@ -493,9 +493,6 @@
                         @if($hasDisc)
                             <span class="pp-badge-disc">-{{ $discPct }}%</span>
                         @endif
-                        @if($pType)
-                            <span class="pp-badge-type">{{ $pType }}</span>
-                        @endif
                     </a>
                     <div class="pp-card-body">
                         <div class="pp-card-meta">
