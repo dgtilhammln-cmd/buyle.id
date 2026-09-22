@@ -98,7 +98,7 @@
             border-bottom: 1px solid var(--t5-slate-200);
         }
         .t5-header-container {
-            max-width: 1200px; margin: 0 auto; padding: 0.75rem 1.5rem;
+            max-width: 1340px; margin: 0 auto; padding: 0.75rem 1.5rem;
             display: flex; align-items: center; justify-content: space-between; gap: 1rem;
         }
         .t5-brand {
@@ -136,7 +136,7 @@
 
         /* BREADCRUMB BAR */
         .t5-breadcrumb-wrap {
-            max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem 0;
+            max-width: 1340px; margin: 0 auto; padding: 1.25rem 1.5rem 0;
         }
         .t5-breadcrumb {
             display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: var(--t5-slate-500); flex-wrap: wrap;
@@ -146,36 +146,93 @@
         .t5-breadcrumb-sep { color: var(--t5-slate-400); }
         .t5-breadcrumb-current { color: var(--t5-slate-900); font-weight: 600; }
 
-        /* HERO HEADER */
-        .pp-hero {
-            background: linear-gradient(135deg, var(--t5-slate-900) 0%, #1e3a2f 100%);
-            padding: 2.5rem 1.5rem; text-align: center; position: relative; overflow: hidden; margin-top: 1rem;
+        /* MAIN PAGE CONTAINER & LAYOUT */
+        .pp-page-wrap {
+            max-width: 1340px; margin: 1rem auto 3.5rem; padding: 0 1.5rem;
         }
-        .pp-hero::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(ellipse at center top, rgba(30,179,73,0.15) 0%, transparent 70%);
-            pointer-events: none;
+        .pp-main-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 1.75rem;
+            align-items: start;
         }
-        .pp-hero-content { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
-        .pp-hero h1 {
-            font-size: 1.6rem; font-weight: 600; color: #fff;
-            letter-spacing: -0.03em; margin-bottom: 0.4rem;
-        }
-        .pp-hero p { font-size: 0.87rem; color: rgba(255,255,255,0.7); font-weight: 300; }
 
-        /* CONTROLS */
-        .pp-controls {
-            max-width: 1200px; margin: 0 auto;
-            padding: 1.5rem 1.5rem 0;
-            display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+        /* LEFT SIDEBAR CARD (KATEGORI PRODUK) */
+        .pp-sidebar-card {
+            background: #ffffff;
+            border: 1.5px solid var(--t5-slate-200);
+            border-radius: 20px;
+            padding: 1.35rem 1.2rem;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+            position: sticky; top: 90px;
         }
-        .pp-search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 480px; }
+        .pp-sidebar-heading {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--t5-slate-900);
+            margin-bottom: 1.1rem;
+            padding-left: 0.2rem;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .pp-sidebar-subheading {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--t5-slate-400);
+            margin: 1.25rem 0 0.65rem 0.2rem;
+        }
+        .pp-sidebar-menu {
+            display: flex; flex-direction: column; gap: 0.45rem;
+        }
+        .pp-sidebar-item {
+            display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+            padding: 0.75rem 1rem; border-radius: 14px; width: 100%; border: none;
+            cursor: pointer; font-family: 'Montserrat', sans-serif;
+            transition: all 0.22s cubic-bezier(0.22, 1, 0.36, 1); text-align: left;
+            background: #f8fafc; color: var(--t5-slate-700); font-weight: 500; font-size: 0.88rem;
+        }
+        .pp-sidebar-item:hover {
+            background: #f1f5f9; color: var(--t5-slate-900); transform: translateX(3px);
+        }
+        .pp-sidebar-item.active {
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+            color: #ffffff; font-weight: 600;
+            box-shadow: 0 6px 18px rgba(30, 179, 73, 0.28);
+            transform: none;
+        }
+        .pp-item-title {
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1;
+        }
+        .pp-item-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 24px; height: 24px; padding: 0 0.45rem; border-radius: 999px;
+            background: #e2e8f0; color: var(--t5-slate-700); font-size: 0.75rem; font-weight: 700;
+            flex-shrink: 0; transition: all 0.2s;
+        }
+        .pp-sidebar-item.active .pp-item-badge {
+            background: rgba(0, 0, 0, 0.2); color: #ffffff;
+        }
+
+        /* MAIN CONTENT AREA (RIGHT SIDE) */
+        .pp-main-content {
+            display: flex; flex-direction: column; gap: 1.25rem; min-width: 0;
+        }
+
+        /* CONTROLS (SEARCH & SORT BAR) */
+        .pp-controls {
+            display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+            background: #ffffff; border: 1.5px solid var(--t5-slate-200);
+            padding: 0.85rem 1rem; border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.02);
+        }
+        .pp-search-wrap { position: relative; flex: 1; min-width: 220px; }
         .pp-search-icon {
             position: absolute; left: 0.85rem; top: 50%;
             transform: translateY(-50%); color: var(--t5-slate-400); pointer-events: none;
         }
         .pp-search-input {
-            width: 100%; padding: 0.65rem 1rem 0.65rem 2.5rem;
+            width: 100%; padding: 0.62rem 1rem 0.62rem 2.5rem;
             border: 1.5px solid var(--t5-slate-200); border-radius: var(--t5-radius-md);
             background: var(--t5-white); font-family: 'Montserrat', sans-serif;
             font-size: 0.85rem; font-weight: 400; color: var(--t5-slate-800);
@@ -187,19 +244,19 @@
         }
         .pp-search-input::placeholder { color: var(--t5-slate-400); }
         .pp-sort-select {
-            padding: 0.65rem 2.2rem 0.65rem 1rem;
+            padding: 0.62rem 2.2rem 0.62rem 1rem;
             border: 1.5px solid var(--t5-slate-200); border-radius: var(--t5-radius-md);
             background: var(--t5-white); font-family: 'Montserrat', sans-serif;
             font-size: 0.82rem; font-weight: 500; color: var(--t5-slate-700);
             cursor: pointer; outline: none; transition: border-color 0.2s;
-            appearance: none; -webkit-appearance: none; min-width: 150px;
+            appearance: none; -webkit-appearance: none; min-width: 140px;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2394a3b8' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
             background-repeat: no-repeat; background-position: right 0.7rem center;
         }
         .pp-sort-select:focus { border-color: var(--t5-emerald); }
         .pp-submit-btn {
             display: inline-flex; align-items: center; gap: 0.35rem;
-            padding: 0.62rem 1.1rem;
+            padding: 0.62rem 1.15rem;
             background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             color: #fff; border: none; border-radius: var(--t5-radius-md);
             font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 600;
@@ -212,67 +269,15 @@
         }
 
         .pp-results-info {
-            max-width: 1200px; margin: 0 auto;
-            padding: 0.85rem 1.5rem 0;
-            font-size: 0.8rem; font-weight: 400; color: var(--t5-slate-500);
+            font-size: 0.82rem; font-weight: 400; color: var(--t5-slate-500); padding-left: 0.2rem;
         }
         .pp-results-info strong { font-weight: 600; color: var(--t5-slate-700); }
 
-        /* GROUP CARDS */
-        .pp-group-cards-wrap {
-            max-width: 1200px; margin: 0 auto;
-            padding: 1.25rem 1.5rem 0.5rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 0.85rem;
-        }
-        .pp-group-card {
-            background: #ffffff;
-            border: 1.5px solid var(--t5-slate-200);
-            border-radius: var(--t5-radius-lg);
-            padding: 0.85rem 1rem;
-            display: flex; align-items: center; gap: 0.75rem;
-            cursor: pointer; transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-            user-select: none;
-        }
-        .pp-group-card:hover {
-            transform: translateY(-4px);
-            border-color: #1eb349;
-            box-shadow: 0 10px 25px rgba(30,179,73,0.15);
-        }
-        .pp-group-card.active {
-            background: #f0fdf4;
-            border-color: #1eb349;
-            box-shadow: 0 6px 20px rgba(30,179,73,0.18);
-        }
-        .pp-group-icon {
-            width: 38px; height: 38px; border-radius: 10px;
-            background: #f1f5f9; color: #1eb349;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; transition: all 0.2s;
-        }
-        .pp-group-card.active .pp-group-icon, .pp-group-card:hover .pp-group-icon {
-            background: #1eb349; color: #ffffff;
-        }
-        .pp-group-info { display: flex; flex-direction: column; gap: 0.1rem; }
-        .pp-group-title { font-size: 0.83rem; font-weight: 700; color: #0f172a; line-height: 1.2; }
-        .pp-group-badge {
-            font-size: 0.7rem; font-weight: 700; color: #1eb349;
-            background: #dcfce7; padding: 0.1rem 0.45rem; border-radius: 999px;
-            width: fit-content; margin-top: 0.1rem;
-        }
-        .pp-group-card.active .pp-group-badge {
-            background: #1eb349; color: #ffffff;
-        }
-
-        /* GRID (STRICTLY 4 COLUMNS ON DESKTOP) */
-        .pp-grid-wrap {
-            max-width: 1200px; margin: 0 auto; padding: 1.25rem 1.5rem 3.5rem;
-        }
+        /* GRID (4 COLUMNS DESKTOP INSIDE MAIN CONTENT AREA) */
         .pp-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1.25rem;
+            gap: 1.1rem;
         }
         .pp-card {
             background: var(--t5-white); border-radius: var(--t5-radius-lg);
@@ -298,17 +303,9 @@
             background: #ef4444; color: #fff; font-size: 0.68rem; font-weight: 600;
             padding: 0.18rem 0.48rem; border-radius: 4px; letter-spacing: 0.02em;
         }
-        .pp-badge-type {
-            position: absolute; top: 0.6rem; right: 0.6rem;
-            background: rgba(15,23,42,0.75); color: #fff;
-            font-size: 0.62rem; font-weight: 600;
-            padding: 0.18rem 0.45rem; border-radius: 4px;
-            letter-spacing: 0.05em; text-transform: uppercase;
-            backdrop-filter: blur(4px);
-        }
         .pp-card-body {
-            padding: 0.9rem 1rem; display: flex; flex-direction: column;
-            gap: 0.5rem; flex: 1;
+            padding: 0.85rem 0.9rem; display: flex; flex-direction: column;
+            gap: 0.45rem; flex: 1;
         }
         .pp-card-meta { display: flex; align-items: center; gap: 0.5rem; }
         .pp-rating {
@@ -320,31 +317,31 @@
             font-size: 0.7rem; font-weight: 500; color: var(--t5-emerald);
         }
         .pp-card-name {
-            font-size: 0.88rem; font-weight: 600; color: var(--t5-slate-900);
-            line-height: 1.4; display: -webkit-box;
+            font-size: 0.86rem; font-weight: 600; color: var(--t5-slate-900);
+            line-height: 1.35; display: -webkit-box;
             -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
         .pp-card-name a { color: inherit; text-decoration: none; }
         .pp-card-name a:hover { color: var(--t5-emerald-dark); }
         .pp-card-footer {
             display: flex; align-items: center; justify-content: space-between;
-            gap: 0.5rem; margin-top: auto; padding-top: 0.4rem;
+            gap: 0.4rem; margin-top: auto; padding-top: 0.4rem;
             border-top: 1px solid var(--t5-slate-200);
         }
         .pp-price-wrap { display: flex; flex-direction: column; gap: 0.05rem; }
         .pp-price-old {
-            font-size: 0.7rem; font-weight: 400;
+            font-size: 0.68rem; font-weight: 400;
             color: var(--t5-slate-400); text-decoration: line-through;
         }
         .pp-price-main {
-            font-size: 0.95rem; font-weight: 700; color: var(--t5-emerald-dark);
+            font-size: 0.9rem; font-weight: 700; color: var(--t5-emerald-dark);
         }
         .pp-buy-btn {
             display: inline-flex; align-items: center; gap: 0.3rem;
-            padding: 0.42rem 0.82rem;
+            padding: 0.38rem 0.75rem;
             background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             color: #fff; border-radius: var(--t5-radius-sm);
-            font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 600;
+            font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 600;
             text-decoration: none; transition: all 0.2s; flex-shrink: 0; white-space: nowrap;
             box-shadow: 0 3px 10px rgba(30,179,73,0.25);
         }
@@ -405,14 +402,11 @@
             background: #0d0d0d; color: #ffffff; margin-top: 3rem;
             padding: 3rem 1.5rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.07);
         }
-        .t5-footer-container { max-width: 1200px; margin: 0 auto; }
+        .t5-footer-container { max-width: 1340px; margin: 0 auto; }
         .t5-footer-main {
             display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2.5rem;
             margin-bottom: 2.5rem; padding-bottom: 2.5rem;
             border-bottom: 1px solid rgba(255,255,255,0.07);
-        }
-        @media (max-width: 768px) {
-            .t5-footer-main { grid-template-columns: 1fr; gap: 1.75rem; }
         }
         .t5-footer-title { display: block; font-size: 1.3rem; font-weight: 600; color: #ffffff; margin-bottom: 0.2rem; }
         .t5-footer-desc { font-size: 0.82rem; color: var(--t5-slate-400); line-height: 1.6; max-width: 400px; }
@@ -451,22 +445,35 @@
         .t5-footer-map-wrap { border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); max-height: 160px; }
         .t5-footer-map-wrap iframe { width: 100% !important; height: 150px !important; border: 0 !important; display: block; }
 
-        @media (max-width: 640px) {
-            .pp-hero { padding: 2rem 1rem; }
-            .pp-hero h1 { font-size: 1.25rem; }
-            .pp-controls { flex-direction: column; align-items: stretch; padding: 1rem 1rem 0; }
-        @media (max-width: 1024px) {
+        /* RESPONSIVE LAYOUT BREAKPOINTS */
+        @media (max-width: 1200px) {
             .pp-grid { grid-template-columns: repeat(3, 1fr); }
-            .pp-group-cards-wrap { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 991px) {
+            .pp-main-layout { grid-template-columns: 1fr; gap: 1.25rem; }
+            .pp-sidebar-card { position: static; padding: 1.1rem 1rem; border-radius: 16px; }
+            .pp-sidebar-menu {
+                display: flex; flex-direction: row; flex-wrap: nowrap; overflow-x: auto;
+                gap: 0.5rem; padding-bottom: 0.4rem; -webkit-overflow-scrolling: touch;
+            }
+            .pp-sidebar-menu::-webkit-scrollbar { display: none; }
+            .pp-sidebar-item {
+                flex-shrink: 0; width: auto; padding: 0.55rem 0.9rem; border-radius: 999px;
+            }
+            .pp-sidebar-item:hover { transform: none; }
+            .pp-sidebar-subheading { display: none; }
+            .pp-grid { grid-template-columns: repeat(3, 1fr); }
         }
         @media (max-width: 768px) {
             .pp-grid { grid-template-columns: repeat(2, 1fr); gap: 0.85rem; }
-            .pp-group-cards-wrap { grid-template-columns: repeat(2, 1fr); gap: 0.65rem; padding: 1rem 1rem 0.5rem; }
-            .pp-group-card { padding: 0.7rem 0.85rem; }
+            .t5-footer-main { grid-template-columns: 1fr; gap: 1.75rem; }
         }
-        @media (max-width: 480px) {
+        @media (max-width: 576px) {
+            .pp-controls { flex-direction: column; align-items: stretch; }
+            .pp-search-wrap { max-width: 100%; }
             .pp-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-            .pp-group-cards-wrap { grid-template-columns: repeat(2, 1fr); gap: 0.55rem; }
+            .pp-card-body { padding: 0.7rem 0.75rem; gap: 0.35rem; }
+            .pp-buy-btn { padding: 0.35rem 0.6rem; font-size: 0.72rem; }
         }
     </style>
 </head>
@@ -474,6 +481,14 @@
 
     {{-- HEADER TEMA 5 --}}
     @include('bio.theme5.header', ['products' => $products, 'blocks' => $blocks, 'config' => $config, 'profile' => $profile, 'username' => $username])
+
+    <div class="t5-breadcrumb-wrap">
+        <div class="t5-breadcrumb">
+            <a href="{{ url('/' . $username) }}">Beranda</a>
+            <span class="t5-breadcrumb-sep">&rsaquo;</span>
+            <span class="t5-breadcrumb-current">Produk / Layanan</span>
+        </div>
+    </div>
 
     @php
         $catCounts = [
@@ -494,209 +509,178 @@
         }
     @endphp
 
-    {{-- INTERACTIVE GROUP CARDS WITH ITEM COUNT BADGES (FROM /creator/groups) --}}
-    @if(isset($creatorGroups) && $creatorGroups->count() > 0)
-        <div class="pp-group-cards-wrap">
-            <div class="pp-group-card active" onclick="filterGroup('all', this)" title="Tampilkan Semua Produk">
-                <div class="pp-group-icon">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-                </div>
-                <div class="pp-group-info">
-                    <span class="pp-group-title">Semua Produk</span>
-                    <span class="pp-group-badge">{{ $allProducts->count() }} produk</span>
-                </div>
-            </div>
-            @foreach($creatorGroups as $cGroup)
-                @php
-                    $gCount = $allProducts->filter(function($p) use ($cGroup) {
-                        return (string)($p['creator_group_id'] ?? '') === (string)$cGroup->id;
-                    })->count();
-                @endphp
-                <div class="pp-group-card" onclick="filterGroup('group-{{ $cGroup->id }}', this)" title="{{ $cGroup->name }}">
-                    <div class="pp-group-icon">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-                    </div>
-                    <div class="pp-group-info">
-                        <span class="pp-group-title">{{ $cGroup->name }}</span>
-                        <span class="pp-group-badge">{{ $gCount }} produk</span>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    @else
-        <div class="pp-group-cards-wrap">
-            <div class="pp-group-card active" onclick="filterGroup('all', this)" title="Tampilkan Semua Produk">
-                <div class="pp-group-icon">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-                </div>
-                <div class="pp-group-info">
-                    <span class="pp-group-title">Semua Produk</span>
-                    <span class="pp-group-badge">{{ $catCounts['all'] }} produk</span>
-                </div>
-            </div>
-            @if($catCounts['digital'] > 0)
-            <div class="pp-group-card" onclick="filterGroup('digital', this)" title="Filter Produk Digital">
-                <div class="pp-group-icon">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-                </div>
-                <div class="pp-group-info">
-                    <span class="pp-group-title">Produk Digital</span>
-                    <span class="pp-group-badge">{{ $catCounts['digital'] }} produk</span>
-                </div>
-            </div>
-            @endif
-            @if($catCounts['physical'] > 0)
-            <div class="pp-group-card" onclick="filterGroup('physical', this)" title="Filter Barang &amp; Fisik">
-                <div class="pp-group-icon">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                </div>
-                <div class="pp-group-info">
-                    <span class="pp-group-title">Barang &amp; Fisik</span>
-                    <span class="pp-group-badge">{{ $catCounts['physical'] }} produk</span>
-                </div>
-            </div>
-            @endif
-            @if($catCounts['service'] > 0)
-            <div class="pp-group-card" onclick="filterGroup('service', this)" title="Filter Jasa &amp; Layanan">
-                <div class="pp-group-icon">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                </div>
-                <div class="pp-group-info">
-                    <span class="pp-group-title">Jasa &amp; Layanan</span>
-                    <span class="pp-group-badge">{{ $catCounts['service'] }} produk</span>
-                </div>
-            </div>
-            @endif
-            @if($catCounts['makanan'] > 0)
-            <div class="pp-group-card" onclick="filterGroup('makanan', this)" title="Filter Makanan &amp; Culinary">
-                <div class="pp-group-icon">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                </div>
-                <div class="pp-group-info">
-                    <span class="pp-group-title">Makanan</span>
-                    <span class="pp-group-badge">{{ $catCounts['makanan'] }} produk</span>
-                </div>
-            </div>
-            @endif
-            @if($catCounts['ticket'] > 0)
-            <div class="pp-group-card" onclick="filterGroup('ticket', this)" title="Filter Tiket Event">
-                <div class="pp-group-icon">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/><line x1="12" y1="7" x2="12" y2="17"/></svg>
-                </div>
-                <div class="pp-group-info">
-                    <span class="pp-group-title">Tiket Event</span>
-                    <span class="pp-group-badge">{{ $catCounts['ticket'] }} produk</span>
-                </div>
-            </div>
-            @endif
-        </div>
-    @endif
+    {{-- MAIN PAGE LAYOUT (LEFT SIDEBAR + MAIN CONTENT) --}}
+    <div class="pp-page-wrap">
+        <div class="pp-main-layout">
 
+            {{-- LEFT SIDEBAR: KATEGORI PRODUK CARD (MATCHES /c/hvmdigital/) --}}
+            <aside class="pp-sidebar">
+                <div class="pp-sidebar-card">
+                    <div class="pp-sidebar-heading">Kategori Produk</div>
+                    <div class="pp-sidebar-menu">
+                        <button type="button" class="pp-sidebar-item active" onclick="filterGroup('all', this)" title="Tampilkan Semua Produk">
+                            <span class="pp-item-title">Semua Produk</span>
+                            <span class="pp-item-badge">{{ $allProducts->count() }}</span>
+                        </button>
 
-
-    {{-- CONTROLS --}}
-    <form method="GET" action="{{ url('/' . $username . '/produk') }}" id="pp-form">
-        <div class="pp-controls">
-            <div class="pp-search-wrap">
-                <span class="pp-search-icon">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                    </svg>
-                </span>
-                <input type="text" name="q" id="pp-search" class="pp-search-input"
-                    placeholder="Cari produk..." value="{{ $search }}" autocomplete="off">
-            </div>
-            <select name="sort" class="pp-sort-select" id="pp-sort" onchange="document.getElementById('pp-form').submit()">
-                <option value="terbaru" {{ $sort === 'terbaru' ? 'selected' : '' }}>Terbaru</option>
-                <option value="terlama" {{ $sort === 'terlama' ? 'selected' : '' }}>Terlama</option>
-                <option value="terpopuler" {{ $sort === 'terpopuler' ? 'selected' : '' }}>Terpopuler</option>
-            </select>
-            <button type="submit" class="pp-submit-btn">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                </svg>
-                Cari
-            </button>
-        </div>
-    </form>
-
-    <div class="pp-results-info">
-        @if(!empty($search))
-            Menampilkan <strong>{{ $allProducts->count() }}</strong> hasil untuk &ldquo;<strong>{{ e($search) }}</strong>&rdquo;
-        @else
-            Menampilkan <strong>{{ $allProducts->count() }}</strong> produk tersedia
-        @endif
-    </div>
-
-    {{-- GRID --}}
-    <div class="pp-grid-wrap">
-        <div class="pp-grid">
-            @forelse($allProducts as $prod)
-                @php
-                    $hasDisc  = $prod['has_discount'];
-                    $discPct  = $prod['discount_pct'];
-                    $effPrice = $prod['effective_price'];
-                    $oldPrice = $prod['price'];
-                    $pType    = strtoupper($prod['product_type'] ?? '');
-                @endphp
-                <div class="pp-card" data-type="{{ strtolower($prod['product_type'] ?? 'digital') }}" data-group-id="group-{{ $prod['creator_group_id'] ?? 'none' }}">
-                    <a href="{{ $prod['product_url'] }}" class="pp-card-img-wrap">
-                        <img src="{{ $prod['image_url'] }}" alt="{{ $prod['name'] }}" loading="lazy" class="pp-card-img">
-                        @if($hasDisc)
-                            <span class="pp-badge-disc">-{{ $discPct }}%</span>
+                        {{-- Creator Product Groups from /creator/groups --}}
+                        @if(isset($creatorGroups) && $creatorGroups->count() > 0)
+                            @foreach($creatorGroups as $cGroup)
+                                @php
+                                    $gCount = $allProducts->filter(function($p) use ($cGroup) {
+                                        return (string)($p['creator_group_id'] ?? '') === (string)$cGroup->id;
+                                    })->count();
+                                @endphp
+                                <button type="button" class="pp-sidebar-item" onclick="filterGroup('group-{{ $cGroup->id }}', this)" title="{{ $cGroup->name }}">
+                                    <span class="pp-item-title">{{ $cGroup->name }}</span>
+                                    <span class="pp-item-badge">{{ $gCount }}</span>
+                                </button>
+                            @endforeach
                         @endif
-                    </a>
-                    <div class="pp-card-body">
-                        <div class="pp-card-meta">
-                            <span class="pp-rating">
-                                <svg width="12" height="12" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" viewBox="0 0 24 24">
-                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                                </svg>
-                                {{ $prod['rating'] }}
-                            </span>
-                            <span class="pp-verified">
-                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-                                </svg>
-                                Verified
-                            </span>
-                        </div>
-                        <h3 class="pp-card-name">
-                            <a href="{{ $prod['product_url'] }}">{{ $prod['name'] }}</a>
-                        </h3>
-                        <div class="pp-card-footer">
-                            <div class="pp-price-wrap">
-                                @if($hasDisc)
-                                    <span class="pp-price-old">Rp{{ number_format($oldPrice, 0, ',', '.') }}</span>
-                                @endif
-                                <span class="pp-price-main">Rp{{ number_format($effPrice, 0, ',', '.') }}</span>
-                            </div>
-                            <a href="{{ $prod['product_url'] }}" class="pp-buy-btn">
-                                Beli
-                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                                </svg>
-                            </a>
-                        </div>
+
+                        {{-- Product & Service Type Filters --}}
+                        <div class="pp-sidebar-subheading">Tipe Produk / Jasa</div>
+                        @if($catCounts['digital'] > 0)
+                            <button type="button" class="pp-sidebar-item" onclick="filterGroup('digital', this)" title="Filter Produk Digital">
+                                <span class="pp-item-title">Produk Digital</span>
+                                <span class="pp-item-badge">{{ $catCounts['digital'] }}</span>
+                            </button>
+                        @endif
+                        @if($catCounts['physical'] > 0)
+                            <button type="button" class="pp-sidebar-item" onclick="filterGroup('physical', this)" title="Filter Barang &amp; Fisik">
+                                <span class="pp-item-title">Barang &amp; Fisik</span>
+                                <span class="pp-item-badge">{{ $catCounts['physical'] }}</span>
+                            </button>
+                        @endif
+                        @if($catCounts['service'] > 0)
+                            <button type="button" class="pp-sidebar-item" onclick="filterGroup('service', this)" title="Filter Jasa &amp; Layanan">
+                                <span class="pp-item-title">Jasa &amp; Layanan</span>
+                                <span class="pp-item-badge">{{ $catCounts['service'] }}</span>
+                            </button>
+                        @endif
+                        @if($catCounts['makanan'] > 0)
+                            <button type="button" class="pp-sidebar-item" onclick="filterGroup('makanan', this)" title="Filter Makanan">
+                                <span class="pp-item-title">Makanan</span>
+                                <span class="pp-item-badge">{{ $catCounts['makanan'] }}</span>
+                            </button>
+                        @endif
+                        @if($catCounts['ticket'] > 0)
+                            <button type="button" class="pp-sidebar-item" onclick="filterGroup('ticket', this)" title="Filter Tiket Event">
+                                <span class="pp-item-title">Tiket Event</span>
+                                <span class="pp-item-badge">{{ $catCounts['ticket'] }}</span>
+                            </button>
+                        @endif
                     </div>
                 </div>
-            @empty
-                <div class="pp-empty">
-                    <div class="pp-empty-icon">
-                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                        </svg>
+            </aside>
+
+            {{-- MAIN CONTENT AREA --}}
+            <main class="pp-main-content">
+                {{-- CONTROLS BAR (SEARCH & SORT) --}}
+                <form method="GET" action="{{ url('/' . $username . '/produk') }}" id="pp-form">
+                    <div class="pp-controls">
+                        <div class="pp-search-wrap">
+                            <span class="pp-search-icon">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                </svg>
+                            </span>
+                            <input type="text" name="q" id="pp-search" class="pp-search-input"
+                                placeholder="Cari produk..." value="{{ $search }}" autocomplete="off">
+                        </div>
+                        <select name="sort" class="pp-sort-select" id="pp-sort" onchange="document.getElementById('pp-form').submit()">
+                            <option value="terbaru" {{ $sort === 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                            <option value="terlama" {{ $sort === 'terlama' ? 'selected' : '' }}>Terlama</option>
+                            <option value="terpopuler" {{ $sort === 'terpopuler' ? 'selected' : '' }}>Terpopuler</option>
+                        </select>
+                        <button type="submit" class="pp-submit-btn">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            Cari
+                        </button>
                     </div>
+                </form>
+
+                <div class="pp-results-info">
                     @if(!empty($search))
-                        <h3>Tidak ada produk ditemukan</h3>
-                        <p>Tidak ada produk yang cocok dengan pencarian Anda.</p>
-                        <a href="{{ url('/' . $username . '/produk') }}" class="pp-empty-clear">Tampilkan Semua</a>
+                        Menampilkan <strong id="pp-count-notice">{{ $allProducts->count() }}</strong> hasil untuk &ldquo;<strong>{{ e($search) }}</strong>&rdquo;
                     @else
-                        <h3>Belum ada produk</h3>
-                        <p>Produk akan segera hadir.</p>
+                        Menampilkan <strong id="pp-count-notice">{{ $allProducts->count() }}</strong> produk tersedia
                     @endif
                 </div>
-            @endforelse
+
+                {{-- PRODUCTS GRID (4 COLUMNS DESKTOP) --}}
+                <div class="pp-grid">
+                    @forelse($allProducts as $prod)
+                        @php
+                            $hasDisc  = $prod['has_discount'];
+                            $discPct  = $prod['discount_pct'];
+                            $effPrice = $prod['effective_price'];
+                            $oldPrice = $prod['price'];
+                            $pType    = strtoupper($prod['product_type'] ?? '');
+                        @endphp
+                        <div class="pp-card" data-type="{{ strtolower($prod['product_type'] ?? 'digital') }}" data-group-id="group-{{ $prod['creator_group_id'] ?? 'none' }}">
+                            <a href="{{ $prod['product_url'] }}" class="pp-card-img-wrap">
+                                <img src="{{ $prod['image_url'] }}" alt="{{ $prod['name'] }}" loading="lazy" class="pp-card-img">
+                                @if($hasDisc)
+                                    <span class="pp-badge-disc">-{{ $discPct }}%</span>
+                                @endif
+                            </a>
+                            <div class="pp-card-body">
+                                <div class="pp-card-meta">
+                                    <span class="pp-rating">
+                                        <svg width="12" height="12" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" viewBox="0 0 24 24">
+                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                        </svg>
+                                        {{ $prod['rating'] }}
+                                    </span>
+                                    <span class="pp-verified">
+                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                                        </svg>
+                                        Verified
+                                    </span>
+                                </div>
+                                <h3 class="pp-card-name">
+                                    <a href="{{ $prod['product_url'] }}">{{ $prod['name'] }}</a>
+                                </h3>
+                                <div class="pp-card-footer">
+                                    <div class="pp-price-wrap">
+                                        @if($hasDisc)
+                                            <span class="pp-price-old">Rp{{ number_format($oldPrice, 0, ',', '.') }}</span>
+                                        @endif
+                                        <span class="pp-price-main">Rp{{ number_format($effPrice, 0, ',', '.') }}</span>
+                                    </div>
+                                    <a href="{{ $prod['product_url'] }}" class="pp-buy-btn">
+                                        Beli
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="pp-empty">
+                            <div class="pp-empty-icon">
+                                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                </svg>
+                            </div>
+                            @if(!empty($search))
+                                <h3>Tidak ada produk ditemukan</h3>
+                                <p>Tidak ada produk yang cocok dengan pencarian Anda.</p>
+                                <a href="{{ url('/' . $username . '/produk') }}" class="pp-empty-clear">Tampilkan Semua</a>
+                            @else
+                                <h3>Belum ada produk</h3>
+                                <p>Produk akan segera hadir.</p>
+                            @endif
+                        </div>
+                    @endforelse
+                </div>
+            </main>
+
         </div>
     </div>
 
@@ -724,30 +708,41 @@
             var drawer = document.getElementById('t5MobileDrawer');
             if (drawer) drawer.classList.toggle('active');
         }
+
         function filterGroup(cat, el) {
-            document.querySelectorAll('.pp-group-card').forEach(function(c) { c.classList.remove('active'); });
+            document.querySelectorAll('.pp-sidebar-item').forEach(function(c) { c.classList.remove('active'); });
             if (el) el.classList.add('active');
             
             var items = document.querySelectorAll('.pp-card');
+            var visibleCount = 0;
+
             items.forEach(function(item) {
                 var itemCat = (item.getAttribute('data-type') || 'digital').toLowerCase();
                 var itemGroupId = item.getAttribute('data-group-id') || '';
                 
+                var show = false;
                 if (cat === 'all') {
-                    item.style.display = 'flex';
+                    show = true;
                 } else if (cat.startsWith('group-')) {
-                    if (itemGroupId === cat) {
-                        item.style.display = 'flex';
-                    } else {
-                        item.style.display = 'none';
-                    }
+                    show = (itemGroupId === cat);
                 } else if (itemCat === cat || (cat === 'physical' && (itemCat === 'barang' || itemCat === 'fisik')) || (cat === 'service' && (itemCat === 'jasa' || itemCat === 'layanan')) || (cat === 'makanan' && (itemCat === 'fnb' || itemCat === 'kuliner'))) {
+                    show = true;
+                }
+
+                if (show) {
                     item.style.display = 'flex';
+                    visibleCount++;
                 } else {
                     item.style.display = 'none';
                 }
             });
+
+            var countNotice = document.getElementById('pp-count-notice');
+            if (countNotice) {
+                countNotice.textContent = visibleCount;
+            }
         }
+
         var searchTimer = null;
         var searchInput = document.getElementById('pp-search');
         if (searchInput) {
