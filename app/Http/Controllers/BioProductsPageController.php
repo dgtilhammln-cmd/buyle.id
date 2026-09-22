@@ -13,7 +13,6 @@ class BioProductsPageController extends Controller
     {
         $profile = CreatorProfile::with(['user', 'bioBlocks' => function ($q) {
             $q->where('is_active', true)
-              ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])
               ->orderBy('order', 'asc')
               ->orderBy('id', 'asc');
         }])->where('store_slug', $username)->firstOrFail();
@@ -24,6 +23,10 @@ class BioProductsPageController extends Controller
         $allProducts = collect();
 
         foreach ($blocks as $block) {
+            $data = $block->data_json ?? [];
+            if (!in_array($block->type, ['custom_product', 'buyle_product', 'buyle_affiliate']) && empty($data['product_id'])) {
+                continue;
+            }
             $data    = $block->data_json ?? [];
             $product = null;
             if (!empty($data['product_id'])) {
