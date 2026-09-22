@@ -36,12 +36,29 @@ class CartController extends Controller
                 $request->qty
             );
 
+            $summary = $this->cartService->getSummary();
+            $totalItems = (int)($summary['total_items'] ?? 1);
+
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Produk berhasil ditambahkan ke keranjang.',
+                    'total_items' => $totalItems,
+                ]);
+            }
+
             if ($request->input('action') === 'cart') {
                 return back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
             }
 
             return redirect()->route('cart.index')->with('success', 'Produk berhasil ditambahkan ke keranjang.');
         } catch (\Exception $e) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ], 422);
+            }
             return back()->with('error', $e->getMessage());
         }
     }

@@ -304,21 +304,26 @@
         {{-- Desktop Navigation Links --}}
         <nav class="t5-nav-desktop">
             <a href="{{ url('/' . $username) }}" class="t5-nav-link {{ request()->is($username) ? 'active' : '' }}">Beranda</a>
-            <a href="{{ url('/' . $username . '/produk') }}" class="t5-nav-link {{ request()->is('*/produk*') ? 'active' : '' }}">Produk</a>
+            <a href="{{ url('/' . $username) }}#about-section" class="t5-nav-link">Profil</a>
+            <a href="{{ url('/' . $username . '/produk') }}" class="t5-nav-link {{ request()->is('*/produk*') ? 'active' : '' }}">Produk / Layanan</a>
             
-            @if($blocks->count() > 0)
+            @if(isset($blocks) && $blocks->count() > 0)
                 @foreach($blocks as $b)
                     @php $bData = $b->data_json ?? []; @endphp
-                    @if(in_array($b->type, ['link', 'url', 'custom_link']) || (!empty($bData['url']) && empty($bData['product_id'])))
+                    @if(in_array($b->type, ['link', 'url', 'custom_link', 'shopee', 'affiliate', 'external']) || (!empty($bData['url']) && empty($bData['product_id'])))
                         @php
-                            $bUrl = $bData['url'] ?? '#';
-                            $bTitle = $bData['title'] ?? ($bData['label'] ?? ($b->title ?? 'Link'));
+                            $bUrl = $bData['url'] ?? ($bData['link'] ?? ($b->url ?? '#'));
+                            if ($bUrl !== '#' && !\Illuminate\Support\Str::startsWith($bUrl, ['http://', 'https://', '/', '#'])) {
+                                $bUrl = 'https://' . $bUrl;
+                            }
+                            $bTitle = $b->title ?? ($bData['title'] ?? ($bData['label'] ?? 'Link'));
                         @endphp
                         <a href="{{ $bUrl }}" target="_blank" rel="noopener noreferrer" class="t5-nav-link t5-custom-block-link">{{ $bTitle }}</a>
                     @endif
                 @endforeach
             @endif
-            <a href="{{ url('/' . $username) }}#about-section" class="t5-nav-link">Tentang</a>
+
+            <a href="{{ url('/' . $username) }}#contact-section" class="t5-nav-link">Kontak</a>
         </nav>
 
         {{-- Action Buttons --}}
@@ -338,9 +343,7 @@
                     <line x1="3" y1="6" x2="21" y2="6"/>
                     <path d="M16 10a4 4 0 0 1-8 0"/>
                 </svg>
-                @if($cartBadgeVal > 0)
-                    <span class="t5-cart-badge">{{ $cartBadgeVal }}</span>
-                @endif
+                <span class="t5-cart-badge" id="t5HeaderCartBadge" style="{{ $cartBadgeVal > 0 ? '' : 'display:none;' }}">{{ $cartBadgeVal }}</span>
             </a>
 
             @if(!empty($config['wa']))
@@ -382,7 +385,8 @@
         </div>
         <nav class="t5-drawer-nav">
             <a href="{{ url('/' . $username) }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Beranda</a>
-            <a href="{{ url('/' . $username . '/produk') }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Produk</a>
+            <a href="{{ url('/' . $username) }}#about-section" onclick="toggleT5Drawer()" class="t5-drawer-link">Profil</a>
+            <a href="{{ url('/' . $username . '/produk') }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Produk / Layanan</a>
             <a href="https://buyle.id/keranjang" class="t5-drawer-link t5-drawer-cart-link">
                 <span style="display:inline-flex; align-items:center; gap:0.45rem;">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#1eb349;">
@@ -392,23 +396,24 @@
                     </svg>
                     Keranjang
                 </span>
-                @if($cartBadgeVal > 0)
-                    <span class="t5-drawer-cart-badge">{{ $cartBadgeVal }}</span>
-                @endif
+                <span class="t5-drawer-cart-badge" id="t5DrawerCartBadge" style="{{ $cartBadgeVal > 0 ? '' : 'display:none;' }}">{{ $cartBadgeVal }}</span>
             </a>
-            @if($blocks->count() > 0)
+            @if(isset($blocks) && $blocks->count() > 0)
                 @foreach($blocks as $b)
                     @php $bData = $b->data_json ?? []; @endphp
-                    @if(in_array($b->type, ['link', 'url', 'custom_link']) || (!empty($bData['url']) && empty($bData['product_id'])))
+                    @if(in_array($b->type, ['link', 'url', 'custom_link', 'shopee', 'affiliate', 'external']) || (!empty($bData['url']) && empty($bData['product_id'])))
                         @php
-                            $bUrl = $bData['url'] ?? '#';
-                            $bTitle = $bData['title'] ?? ($bData['label'] ?? ($b->title ?? 'Link'));
+                            $bUrl = $bData['url'] ?? ($bData['link'] ?? ($b->url ?? '#'));
+                            if ($bUrl !== '#' && !\Illuminate\Support\Str::startsWith($bUrl, ['http://', 'https://', '/', '#'])) {
+                                $bUrl = 'https://' . $bUrl;
+                            }
+                            $bTitle = $b->title ?? ($bData['title'] ?? ($bData['label'] ?? 'Link'));
                         @endphp
                         <a href="{{ $bUrl }}" target="_blank" rel="noopener noreferrer" onclick="toggleT5Drawer()" class="t5-drawer-link t5-drawer-custom-link">{{ $bTitle }}</a>
                     @endif
                 @endforeach
             @endif
-            <a href="{{ url('/' . $username) }}#about-section" onclick="toggleT5Drawer()" class="t5-drawer-link">Tentang Creator</a>
+            <a href="{{ url('/' . $username) }}#contact-section" onclick="toggleT5Drawer()" class="t5-drawer-link">Kontak</a>
         </nav>
     </div>
 </div>
@@ -435,4 +440,28 @@
             document.body.appendChild(drawer);
         }
     });
+
+    window.updateHeaderCartBadge = function(count) {
+        var desktopBadge = document.getElementById('t5HeaderCartBadge');
+        var drawerBadge = document.getElementById('t5DrawerCartBadge');
+        if (count > 0) {
+            if (desktopBadge) {
+                desktopBadge.textContent = count;
+                desktopBadge.style.display = 'inline-flex';
+            }
+            if (drawerBadge) {
+                drawerBadge.textContent = count;
+                drawerBadge.style.display = 'inline-flex';
+            }
+        }
+    };
+
+    window.showCartToast = function(msg) {
+        var toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:0.65rem 1.3rem;border-radius:99px;font-size:0.85rem;font-weight:600;box-shadow:0 10px 25px rgba(16,185,129,0.35);z-index:99999;display:flex;align-items:center;gap:0.5rem;transition:all 0.3s ease;opacity:0;';
+        toast.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> ' + (msg || 'Produk dimasukkan ke keranjang');
+        document.body.appendChild(toast);
+        setTimeout(function(){ toast.style.opacity = '1'; toast.style.transform = 'translateX(-50%) translateY(-6px)'; }, 50);
+        setTimeout(function(){ toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(0)'; setTimeout(function(){ toast.remove(); }, 300); }, 3000);
+    };
 </script>

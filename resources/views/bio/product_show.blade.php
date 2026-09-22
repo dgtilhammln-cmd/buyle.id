@@ -494,7 +494,7 @@
                     </div>
                 @elseif($prodId)
                     <div class="ps-cta-row">
-                        <form action="{{ route('cart.add') }}" method="POST" style="display:contents;">
+                        <form action="{{ route('cart.add') }}" method="POST" style="display:contents;" class="t5-add-cart-form">
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $prodId }}">
                             <input type="hidden" name="qty" value="1">
@@ -581,7 +581,38 @@
                 var diff = txStart - e.changedTouches[0].screenX;
                 if (Math.abs(diff) > 40) psMove(diff > 0 ? 1 : -1);
             });
-        }
+        // AJAX Add to Cart
+        document.addEventListener('submit', function(e) {
+            if (e.target && e.target.classList.contains('t5-add-cart-form')) {
+                e.preventDefault();
+                var form = e.target;
+                var btn = form.querySelector('button[type="submit"]');
+                if (btn) btn.disabled = true;
+                
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (btn) btn.disabled = false;
+                    if (data.success) {
+                        if (window.updateHeaderCartBadge) window.updateHeaderCartBadge(data.total_items);
+                        if (window.showCartToast) window.showCartToast(data.message);
+                    } else {
+                        alert(data.message || 'Gagal menambahkan ke keranjang');
+                    }
+                })
+                .catch(function(err) {
+                    if (btn) btn.disabled = false;
+                    form.submit();
+                });
+            }
+        });
     </script>
 
     @include('partials.adsense_modal')
