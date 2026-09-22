@@ -1152,27 +1152,31 @@
 
                 {{-- Status Active Domain if assigned --}}
                 @if(!empty($profile->custom_domain))
-                    <div class="prof-card" style="border:1.5px solid #BBF7D0; background:#F0FDF4; margin-bottom:1.5rem;">
+                    @php $isDomainVerified = ($profile->custom_domain_status ?? 'pending') === 'verified'; @endphp
+                    <div class="prof-card" style="border:1.5px solid {{ $isDomainVerified ? '#BBF7D0' : '#FDE68A' }}; background:{{ $isDomainVerified ? '#F0FDF4' : '#FFFBEB' }}; margin-bottom:1.5rem;">
                         <div class="card-body"
                             style="padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
                             <div>
                                 <span
-                                    style="background:#166534; color:#fff; font-size:0.7rem; font-weight: 600; padding:0.25rem 0.6rem; border-radius:6px; letter-spacing:0.05em; display:inline-flex; align-items:center; gap:0.3rem;">
+                                    style="background:{{ $isDomainVerified ? '#166534' : '#B45309' }}; color:#fff; font-size:0.7rem; font-weight: 700; padding:0.25rem 0.6rem; border-radius:6px; letter-spacing:0.05em; display:inline-flex; align-items:center; gap:0.3rem;">
                                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
                                         viewBox="0 0 24 24">
                                         <circle cx="12" cy="12" r="10" />
                                         <path
                                             d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                                     </svg>
-                                    DOMAIN AKTIF ANDA
+                                    {{ $isDomainVerified ? 'DOMAIN TERVERIFIKASI & AKTIF' : 'VERIFIKASI DNS PENDING' }}
                                 </span>
-                                <h3 style="font-size:1.15rem; font-weight: 600; color:#166534; margin:0.4rem 0 0.1rem;">
+                                <h3 style="font-size:1.15rem; font-weight: 700; color:{{ $isDomainVerified ? '#166534' : '#92400E' }}; margin:0.4rem 0 0.1rem;">
                                     https://{{ $profile->custom_domain }}</h3>
-                                <p style="font-size:0.78rem; color:#15803D; margin:0;">Domain ini sudah terpasang dan aktif
-                                    mengarah ke halaman Web Builder toko Anda.</p>
+                                <p style="font-size:0.78rem; color:{{ $isDomainVerified ? '#15803D' : '#B45309' }}; margin:0;">
+                                    {{ $isDomainVerified 
+                                        ? 'Domain ini sudah terverifikasi dan aktif mengarah ke halaman toko Anda.' 
+                                        : 'Pastikan DNS CNAME / ALIAS diatur ke buyle.id.cdn.hstgr.net & domain telah ditambahkan ke hPanel Hostinger.' }}
+                                </p>
                             </div>
                             <a href="https://{{ $profile->custom_domain }}" target="_blank" class="btn-primary"
-                                style="background:#166534; border:none; box-shadow:none; display:inline-flex; align-items:center; gap:0.4rem;">
+                                style="background:{{ $isDomainVerified ? '#166534' : '#B45309' }}; border:none; box-shadow:none; display:inline-flex; align-items:center; gap:0.4rem;">
                                 Buka Domain
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
                                     viewBox="0 0 24 24">
