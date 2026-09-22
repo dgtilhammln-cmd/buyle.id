@@ -11,6 +11,7 @@ class CreatorProfile extends Model
         'store_name',
         'store_slug',
         'custom_domain',
+        'custom_domain_status',
         'site_verification_code',
         'store_description',
         'creator_type',

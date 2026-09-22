@@ -542,15 +542,15 @@
             <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
                 @if(!empty($customDomain))
                     {{-- Status DNS --}}
-                    @if($dnsStatus === 'active')
-                        <span style="background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; font-size:0.75rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.4rem;">
+                    @if(($creatorProfile->custom_domain_status ?? 'pending') === 'verified' || $dnsStatus === 'active')
+                        <span style="background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; font-size:0.75rem; font-weight:800; padding:0.35rem 0.75rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.4rem;">
                             <span style="width:7px; height:7px; background:#22C55E; border-radius:50%; display:inline-block;"></span>
-                            DNS Active ({{ $dnsResolvedIp }})
+                            VERIFIED & AKTIF ({{ $dnsResolvedIp ?: 'Hostinger CDN' }})
                         </span>
                     @else
-                        <span style="background:#FFFBEB; color:#92400E; border:1px solid #FDE68A; font-size:0.75rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.4rem;">
+                        <span style="background:#FFFBEB; color:#92400E; border:1px solid #FDE68A; font-size:0.75rem; font-weight:800; padding:0.35rem 0.75rem; border-radius:100px; display:inline-flex; align-items:center; gap:0.4rem;">
                             <span style="width:7px; height:7px; background:#F59E0B; border-radius:50%; display:inline-block;"></span>
-                            Menunggu DNS Pointing
+                            STATUS: PENDING DNS
                         </span>
                     @endif
 
@@ -611,6 +611,12 @@
                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                             Simpan Domain & Kode Verifikasi
                         </button>
+
+                        @if(!empty($customDomain))
+                            <button type="submit" formaction="{{ route('admin.creator-resources.verify-dns', $user->id) }}" style="background:#166534; color:#fff; border:none; border-radius:10px; padding:0.65rem 1rem; font-size:0.825rem; font-weight:700; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:0.4rem;" title="Cek live CNAME/ALIAS domain ke Hostinger CDN">
+                                ⚡ Cek & Verifikasi DNS Live
+                            </button>
+                        @endif
                     </div>
                 </form>
 

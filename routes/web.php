@@ -489,6 +489,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/creator-resources',                        [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'index'])->name('admin.creator-resources.index');
         Route::get('/creator-resources/{user}',                  [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'show'])->name('admin.creator-resources.show');
         Route::post('/creator-resources/{user}/custom-domain',   [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'updateCustomDomain'])->name('admin.creator-resources.custom-domain');
+        Route::post('/creator-resources/{user}/verify-dns',     [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'verifyCustomDomainDns'])->name('admin.creator-resources.verify-dns');
         Route::post('/creator-resources/{user}/impersonate',     [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'impersonate'])->name('admin.creator-resources.impersonate');
         Route::post('/creator-resources/{user}/compress-asset',  [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'compressAsset'])->name('admin.creator-resources.compress-asset');
         Route::post('/creator-resources/{user}/compress-all',    [\App\Http\Controllers\Admin\AdminCreatorResourceController::class, 'compressAll'])->name('admin.creator-resources.compress-all');

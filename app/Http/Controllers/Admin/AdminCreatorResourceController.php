@@ -716,11 +716,73 @@ class AdminCreatorResourceController extends Controller
             return redirect()->back()->with('error', "Gagal Anti-Konflik: Domain '{$cleanDomain}' sudah aktif digunakan oleh creator '{$ownerName}'. Gunakan domain lain.");
         }
 
-        // Simpan Domain Anti-Konflik & Kode Verifikasi
+        // Simpan Domain Anti-Konflik, Kode Verifikasi & Validasi DNS
         $creatorProfile->custom_domain = $cleanDomain;
+        $isVerified = $this->checkDnsValidation($cleanDomain);
+        $creatorProfile->custom_domain_status = $isVerified ? 'verified' : 'pending';
         $creatorProfile->save();
 
-        return redirect()->back()->with('success', "Sukses! Custom domain '{$cleanDomain}' & Kode Verifikasi Site berhasil disimpan untuk {$user->name}. Pastikan DNS A Record mengarah ke Server IP.");
+        if ($isVerified) {
+            return redirect()->back()->with('success', "🟢 SUKSES! Custom domain '{$cleanDomain}' & Kode Verifikasi disimpan. DNS TERVERIFIKASI & AKTIF mengarah ke Hostinger CDN (buyle.id.cdn.hstgr.net).");
+        } else {
+            return redirect()->back()->with('success', "🟡 DISIMPAN (STATUS: PENDING). Domain '{$cleanDomain}' telah disimpan. DNS belum terdeteksi mengarah ke buyle.id.cdn.hstgr.net. Pastikan domain telah didaftarkan di hPanel & CNAME/ALIAS diatur.");
+        }
+    }
+
+    /**
+     * Memeriksa dan Memvalidasi DNS Record Live (CNAME / ALIAS / IP) terhadap Hostinger CDN
+     */
+    public function checkDnsValidation(string $domain): bool
+    {
+        $clean = preg_replace('/^www\./i', '', strtolower(trim($domain)));
+        $targetCdn = 'buyle.id.cdn.hstgr.net';
+
+        // 1. Cek Record CNAME pada domain utama & prefix www
+        $cnameRecords = @dns_get_record($clean, DNS_CNAME) ?: [];
+        $wwwCnameRecords = @dns_get_record('www.' . $clean, DNS_CNAME) ?: [];
+
+        $allCnames = array_map(fn($r) => strtolower(rtrim($r['target'] ?? '', '.')), array_merge($cnameRecords, $wwwCnameRecords));
+        foreach ($allCnames as $cname) {
+            if (str_contains($cname, 'hstgr.net') || str_contains($cname, 'buyle.id')) {
+                return true;
+            }
+        }
+
+        // 2. Fallback IP Resolution (Pencocokan IP CDN Hostinger atau IP Server buyle.id)
+        $domainIp = @gethostbyname($clean);
+        $targetIp = @gethostbyname($targetCdn);
+        $buyleIp  = @gethostbyname('buyle.id');
+
+        if ($domainIp && $domainIp !== $clean) {
+            if ($domainIp === $targetIp || $domainIp === $buyleIp || $domainIp === '46.202.186.86') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Trigger Manual Verifikasi DNS Live dari Admin Panel
+     */
+    public function verifyCustomDomainDns($id)
+    {
+        $user = User::findOrFail($id);
+        $creatorProfile = CreatorProfile::getOrCreateForUser($user);
+
+        if (empty($creatorProfile->custom_domain)) {
+            return redirect()->back()->with('error', 'Creator belum memiliki custom domain yang didaftarkan.');
+        }
+
+        $isVerified = $this->checkDnsValidation($creatorProfile->custom_domain);
+        $creatorProfile->custom_domain_status = $isVerified ? 'verified' : 'pending';
+        $creatorProfile->save();
+
+        if ($isVerified) {
+            return redirect()->back()->with('success', "🟢 VERIFIKASI BERHASIL! Domain '{$creatorProfile->custom_domain}' terverifikasi mengarah ke Hostinger CDN (buyle.id.cdn.hstgr.net). Status domain: VERIFIED & AKTIF.");
+        } else {
+            return redirect()->back()->with('error', "🟡 VERIFIKASI PENDING: Domain '{$creatorProfile->custom_domain}' belum terdeteksi mengarah ke Hostinger CDN (buyle.id.cdn.hstgr.net). Pastikan CNAME/ALIAS diatur ke buyle.id.cdn.hstgr.net dan domain telah ditambahkan di hPanel Hostinger.");
+        }
     }
 
     /**
