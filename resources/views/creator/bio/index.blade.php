@@ -1590,15 +1590,6 @@
                         </svg>
                         Homepage / Beranda (Tema 5)
                     </button>
-                    <button type="button" class="prof-subtab-btn" id="btn-subtab-footer"
-                        onclick="switchProfileSubtab('subtab-footer-settings', this)">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
-                            <rect x="3" y="14" width="18" height="7" rx="2"/>
-                            <path d="M3 10h18M3 6h18"/>
-                        </svg>
-                        Kustomisasi Footer
-                    </button>
                 </div>
 
                 {{-- SUBTAB 1: INFORMASI PROFIL --}}
@@ -1793,6 +1784,15 @@
                                         d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                                 </svg>
                                 Section Jasa &amp; Layanan (Tema 5)
+                            </button>
+                            <button type="button" class="hp-subtab-btn" id="btn-hpsub-footer"
+                                onclick="switchHomepageSubSubtab('hpsub-footer', this)">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <rect x="3" y="14" width="18" height="7" rx="2"/>
+                                    <path d="M3 10h18M3 6h18"/>
+                                </svg>
+                                Kustomisasi Footer (Tema 5)
                             </button>
                         </div>
 
@@ -2167,6 +2167,148 @@
                             </div>
                         </div> {{-- End #hpsub-services --}}
 
+                        {{-- SUB-SUBTAB 3: KUSTOMISASI FOOTER (TEMA 5) --}}
+                        <div class="hpsub-pane" id="hpsub-footer" style="display:none;">
+                            {{-- Card: Warna Gradasi Footer --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head">
+                                    <span style="display:flex;align-items:center;gap:0.5rem;">
+                                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <rect x="3" y="14" width="18" height="7" rx="2"/>
+                                            <path d="M3 10h18M3 6h18"/>
+                                        </svg>
+                                        Warna Gradasi Background Footer
+                                    </span>
+                                    <span style="font-size:0.72rem;font-weight:600;color:#64748b;">Tema 5 — Footer Gradient</span>
+                                </div>
+                                <div class="card-body">
+                                    <p style="font-size:0.82rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">
+                                        Atur warna gradasi footer halaman publik Tema 5. Dua warna ini akan dijadikan gradasi dari kiri ke kanan (atau bisa ditimpa dengan gambar background di bawah).
+                                    </p>
+                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+                                        <div class="form-group" style="margin-bottom:0;">
+                                            <label class="form-label">Warna Gradasi 1 (Kiri / Atas)</label>
+                                            <div style="display:flex;gap:0.5rem;align-items:center;">
+                                                <input type="color" name="footer_bg_color1" id="footer_color1_picker"
+                                                    value="{{ $cfg['footer_bg_color1'] ?? '#09121a' }}"
+                                                    style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
+                                                    oninput="syncFooterColor('footer_color1_picker','footer_color1_text',this.value);updateFooterPreview()">
+                                                <input type="text" id="footer_color1_text"
+                                                    value="{{ $cfg['footer_bg_color1'] ?? '#09121a' }}"
+                                                    class="form-input" style="flex:1;"
+                                                    oninput="syncFooterColorFromText('footer_color1_picker','footer_color1_text',this.value);updateFooterPreview()">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom:0;">
+                                            <label class="form-label">Warna Gradasi 2 (Kanan / Bawah)</label>
+                                            <div style="display:flex;gap:0.5rem;align-items:center;">
+                                                <input type="color" name="footer_bg_color2" id="footer_color2_picker"
+                                                    value="{{ $cfg['footer_bg_color2'] ?? '#064e3b' }}"
+                                                    style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
+                                                    oninput="syncFooterColor('footer_color2_picker','footer_color2_text',this.value);updateFooterPreview()">
+                                                <input type="text" id="footer_color2_text"
+                                                    value="{{ $cfg['footer_bg_color2'] ?? '#064e3b' }}"
+                                                    class="form-input" style="flex:1;"
+                                                    oninput="syncFooterColorFromText('footer_color2_picker','footer_color2_text',this.value);updateFooterPreview()">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {{-- Live Gradient Preview --}}
+                                    <div style="margin-top:1.25rem;">
+                                        <label class="form-label" style="margin-bottom:0.4rem;display:block;">Preview Gradasi:</label>
+                                        <div id="footerGradientPreview"
+                                            style="height:64px;border-radius:12px;border:1px solid #e2e8f0;background:linear-gradient(135deg,{{ $cfg['footer_bg_color1'] ?? '#09121a' }},{{ $cfg['footer_bg_color2'] ?? '#064e3b' }});transition:background 0.3s;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Card: Background Image + Opacity --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head">
+                                    <span style="display:flex;align-items:center;gap:0.5rem;">
+                                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                                            <polyline points="21 15 16 10 5 21"/>
+                                        </svg>
+                                        Gambar Background Footer (Overlay)
+                                    </span>
+                                </div>
+                                <div class="card-body">
+                                    <p style="font-size:0.82rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">
+                                        Upload gambar untuk digunakan sebagai lapisan overlay di atas warna gradasi footer. Atur opacity agar gambar menyatu (blending) dengan gradasi warna yang sudah diset.
+                                    </p>
+
+                                    {{-- Current Image --}}
+                                    @php $curFooterImg = $cfg['footer_bg_image'] ?? null; @endphp
+                                    @if(!empty($curFooterImg))
+                                        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;background:#f8fafc;padding:0.5rem 0.75rem;border-radius:8px;border:1px solid #e2e8f0;">
+                                            <img src="{{ asset('storage/' . $curFooterImg) }}"
+                                                id="footer_bg_image_thumb"
+                                                style="width:80px;height:50px;object-fit:cover;border-radius:6px;">
+                                            <div style="flex:1;">
+                                                <span style="font-size:0.78rem;color:#475569;display:block;font-weight:600;">Gambar Terpasang (.webp)</span>
+                                                <label style="font-size:0.75rem;color:#ef4444;cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-top:2px;">
+                                                    <input type="checkbox" name="delete_footer_bg_image" value="1"> Hapus Gambar Footer
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    <input type="file" name="footer_bg_image" id="footer_bg_image_input" accept="image/*"
+                                        class="form-input" style="height:auto;padding:0.5rem;"
+                                        onchange="previewFooterBgImage(this)">
+                                    <span style="font-size:0.72rem;color:#64748b;margin-top:4px;display:flex;align-items:center;gap:4px;">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2">
+                                            <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/>
+                                        </svg>
+                                        Semua format (JPG, PNG, WebP) otomatis dikonversi ke WebP resolusi tinggi.
+                                    </span>
+
+                                    {{-- Opacity Slider --}}
+                                    <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid #e2e8f0;">
+                                        <label class="form-label" style="margin-bottom:0.5rem;display:flex;justify-content:space-between;">
+                                            <span>Opacity Gambar Background Footer</span>
+                                            <strong id="footer_opacity_label" style="color:#1eb349;">{{ $cfg['footer_bg_opacity'] ?? 30 }}%</strong>
+                                        </label>
+                                        <input type="range" name="footer_bg_opacity" id="footer_opacity_slider"
+                                            min="0" max="100" step="1"
+                                            value="{{ $cfg['footer_bg_opacity'] ?? 30 }}"
+                                            style="width:100%;accent-color:#1eb349;height:6px;"
+                                            oninput="document.getElementById('footer_opacity_label').textContent=this.value+'%';updateFooterPreview()">
+                                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:#94a3b8;margin-top:0.25rem;">
+                                            <span>0% (Transparan)</span>
+                                            <span>50% (Campuran)</span>
+                                            <span>100% (Penuh)</span>
+                                        </div>
+                                        <p style="font-size:0.78rem;color:#64748b;margin-top:0.75rem;line-height:1.5;">
+                                            Opacity rendah → gambar menyatu halus dengan gradasi warna. Opacity tinggi → gambar lebih dominan menutupi gradasi.
+                                        </p>
+                                    </div>
+
+                                    {{-- Footer Live Preview --}}
+                                    <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid #e2e8f0;">
+                                        <label class="form-label" style="margin-bottom:0.5rem;display:block;">Preview Footer (Simulasi):</label>
+                                        <div id="footerLivePreview"
+                                            style="position:relative;border-radius:14px;overflow:hidden;height:90px;border:1px solid #e2e8f0;background:linear-gradient(135deg,{{ $cfg['footer_bg_color1'] ?? '#09121a' }},{{ $cfg['footer_bg_color2'] ?? '#064e3b' }});">
+                                            @if(!empty($curFooterImg))
+                                            <div id="footerImgOverlay"
+                                                style="position:absolute;inset:0;background:url('{{ asset('storage/' . $curFooterImg) }}') center/cover no-repeat;opacity:{{ ($cfg['footer_bg_opacity'] ?? 30) / 100 }};mix-blend-mode:overlay;"></div>
+                                            @else
+                                            <div id="footerImgOverlay" style="position:absolute;inset:0;opacity:{{ ($cfg['footer_bg_opacity'] ?? 30) / 100 }};mix-blend-mode:overlay;"></div>
+                                            @endif
+                                            <div style="position:relative;z-index:1;display:flex;align-items:center;justify-content:center;height:100%;gap:1rem;flex-wrap:wrap;">
+                                                <span style="font-size:0.78rem;color:rgba(255,255,255,0.6);">© 2026 Brand Anda</span>
+                                                <span style="font-size:0.78rem;color:rgba(255,255,255,0.8);font-weight:600;">Hubungi Kami</span>
+                                                <span style="font-size:0.78rem;color:rgba(255,255,255,0.6);">📍 Jakarta, Indonesia</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> {{-- End #hpsub-footer --}}
+
                         {{-- SINGLE SUBMIT BUTTON FOR HOMEPAGE (TEMA 5) --}}
                         <div
                             style="display:flex; justify-content:flex-end; margin-top:1.5rem; padding-top:1rem; border-top:1.5px solid #e2e8f0;">
@@ -2177,158 +2319,6 @@
                         </div>
                     </form>
                 </div> {{-- End #subtab-homepage-main --}}
-
-                {{-- SUBTAB 3: KUSTOMISASI FOOTER --}}
-                <div class="prof-subtab-pane" id="subtab-footer-settings" style="display:none;">
-                    <form action="{{ route('creator.bio.save-profile') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-
-                        {{-- Card: Warna Gradasi Footer --}}
-                        <div class="prof-card">
-                            <div class="prof-card-head">
-                                <span style="display:flex;align-items:center;gap:0.5rem;">
-                                    <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
-                                        <rect x="3" y="14" width="18" height="7" rx="2"/>
-                                        <path d="M3 10h18M3 6h18"/>
-                                    </svg>
-                                    Warna Gradasi Background Footer
-                                </span>
-                                <span style="font-size:0.72rem;font-weight:600;color:#64748b;">Tema 5 — Footer Gradient</span>
-                            </div>
-                            <div class="card-body">
-                                <p style="font-size:0.82rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">
-                                    Atur warna gradasi footer halaman publik Tema 5. Dua warna ini akan dijadikan gradasi dari kiri ke kanan (atau bisa ditimpa dengan gambar background di bawah).
-                                </p>
-                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label class="form-label">Warna Gradasi 1 (Kiri / Atas)</label>
-                                        <div style="display:flex;gap:0.5rem;align-items:center;">
-                                            <input type="color" name="footer_bg_color1" id="footer_color1_picker"
-                                                value="{{ $cfg['footer_bg_color1'] ?? '#09121a' }}"
-                                                style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
-                                                oninput="syncFooterColor('footer_color1_picker','footer_color1_text',this.value);updateFooterPreview()">
-                                            <input type="text" id="footer_color1_text"
-                                                value="{{ $cfg['footer_bg_color1'] ?? '#09121a' }}"
-                                                class="form-input" style="flex:1;"
-                                                oninput="syncFooterColorFromText('footer_color1_picker','footer_color1_text',this.value);updateFooterPreview()">
-                                        </div>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label class="form-label">Warna Gradasi 2 (Kanan / Bawah)</label>
-                                        <div style="display:flex;gap:0.5rem;align-items:center;">
-                                            <input type="color" name="footer_bg_color2" id="footer_color2_picker"
-                                                value="{{ $cfg['footer_bg_color2'] ?? '#064e3b' }}"
-                                                style="width:44px;height:40px;border-radius:8px;border:1.5px solid #e2e8f0;padding:2px;cursor:pointer;flex-shrink:0;"
-                                                oninput="syncFooterColor('footer_color2_picker','footer_color2_text',this.value);updateFooterPreview()">
-                                            <input type="text" id="footer_color2_text"
-                                                value="{{ $cfg['footer_bg_color2'] ?? '#064e3b' }}"
-                                                class="form-input" style="flex:1;"
-                                                oninput="syncFooterColorFromText('footer_color2_picker','footer_color2_text',this.value);updateFooterPreview()">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {{-- Live Gradient Preview --}}
-                                <div style="margin-top:1.25rem;">
-                                    <label class="form-label" style="margin-bottom:0.4rem;display:block;">Preview Gradasi:</label>
-                                    <div id="footerGradientPreview"
-                                        style="height:64px;border-radius:12px;border:1px solid #e2e8f0;background:linear-gradient(135deg,{{ $cfg['footer_bg_color1'] ?? '#09121a' }},{{ $cfg['footer_bg_color2'] ?? '#064e3b' }});transition:background 0.3s;"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Card: Background Image + Opacity --}}
-                        <div class="prof-card">
-                            <div class="prof-card-head">
-                                <span style="display:flex;align-items:center;gap:0.5rem;">
-                                    <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
-                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                        <circle cx="8.5" cy="8.5" r="1.5"/>
-                                        <polyline points="21 15 16 10 5 21"/>
-                                    </svg>
-                                    Gambar Background Footer (Overlay)
-                                </span>
-                            </div>
-                            <div class="card-body">
-                                <p style="font-size:0.82rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">
-                                    Upload gambar untuk digunakan sebagai lapisan overlay di atas warna gradasi footer. Atur opacity agar gambar menyatu (blending) dengan gradasi warna yang sudah diset.
-                                </p>
-
-                                {{-- Current Image --}}
-                                @php $curFooterImg = $cfg['footer_bg_image'] ?? null; @endphp
-                                @if(!empty($curFooterImg))
-                                    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;background:#f8fafc;padding:0.5rem 0.75rem;border-radius:8px;border:1px solid #e2e8f0;">
-                                        <img src="{{ asset('storage/' . $curFooterImg) }}"
-                                            id="footer_bg_image_thumb"
-                                            style="width:80px;height:50px;object-fit:cover;border-radius:6px;">
-                                        <div style="flex:1;">
-                                            <span style="font-size:0.78rem;color:#475569;display:block;font-weight:600;">Gambar Terpasang (.webp)</span>
-                                            <label style="font-size:0.75rem;color:#ef4444;cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-top:2px;">
-                                                <input type="checkbox" name="delete_footer_bg_image" value="1"> Hapus Gambar Footer
-                                            </label>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                <input type="file" name="footer_bg_image" id="footer_bg_image_input" accept="image/*"
-                                    class="form-input" style="height:auto;padding:0.5rem;"
-                                    onchange="previewFooterBgImage(this)">
-                                <span style="font-size:0.72rem;color:#64748b;margin-top:4px;display:flex;align-items:center;gap:4px;">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2">
-                                        <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/>
-                                    </svg>
-                                    Semua format (JPG, PNG, WebP) otomatis dikonversi ke WebP resolusi tinggi.
-                                </span>
-
-                                {{-- Opacity Slider --}}
-                                <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid #e2e8f0;">
-                                    <label class="form-label" style="margin-bottom:0.5rem;display:flex;justify-content:space-between;">
-                                        <span>Opacity Gambar Background Footer</span>
-                                        <strong id="footer_opacity_label" style="color:#1eb349;">{{ $cfg['footer_bg_opacity'] ?? 30 }}%</strong>
-                                    </label>
-                                    <input type="range" name="footer_bg_opacity" id="footer_opacity_slider"
-                                        min="0" max="100" step="1"
-                                        value="{{ $cfg['footer_bg_opacity'] ?? 30 }}"
-                                        style="width:100%;accent-color:#1eb349;height:6px;"
-                                        oninput="document.getElementById('footer_opacity_label').textContent=this.value+'%';updateFooterPreview()">
-                                    <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:#94a3b8;margin-top:0.25rem;">
-                                        <span>0% (Transparan)</span>
-                                        <span>50% (Campuran)</span>
-                                        <span>100% (Penuh)</span>
-                                    </div>
-                                    <p style="font-size:0.78rem;color:#64748b;margin-top:0.75rem;line-height:1.5;">
-                                        Opacity rendah → gambar menyatu halus dengan gradasi warna. Opacity tinggi → gambar lebih dominan menutupi gradasi.
-                                    </p>
-                                </div>
-
-                                {{-- Footer Live Preview --}}
-                                <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid #e2e8f0;">
-                                    <label class="form-label" style="margin-bottom:0.5rem;display:block;">Preview Footer (Simulasi):</label>
-                                    <div id="footerLivePreview"
-                                        style="position:relative;border-radius:14px;overflow:hidden;height:90px;border:1px solid #e2e8f0;background:linear-gradient(135deg,{{ $cfg['footer_bg_color1'] ?? '#09121a' }},{{ $cfg['footer_bg_color2'] ?? '#064e3b' }});">
-                                        @if(!empty($curFooterImg))
-                                        <div id="footerImgOverlay"
-                                            style="position:absolute;inset:0;background:url('{{ asset('storage/' . $curFooterImg) }}') center/cover no-repeat;opacity:{{ ($cfg['footer_bg_opacity'] ?? 30) / 100 }};mix-blend-mode:overlay;"></div>
-                                        @else
-                                        <div id="footerImgOverlay" style="position:absolute;inset:0;opacity:{{ ($cfg['footer_bg_opacity'] ?? 30) / 100 }};mix-blend-mode:overlay;"></div>
-                                        @endif
-                                        <div style="position:relative;z-index:1;display:flex;align-items:center;justify-content:center;height:100%;gap:1rem;flex-wrap:wrap;">
-                                            <span style="font-size:0.78rem;color:rgba(255,255,255,0.6);">© 2026 Brand Anda</span>
-                                            <span style="font-size:0.78rem;color:rgba(255,255,255,0.8);font-weight:600;">Hubungi Kami</span>
-                                            <span style="font-size:0.78rem;color:rgba(255,255,255,0.6);">📍 Jakarta, Indonesia</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style="display:flex;justify-content:flex-end;margin-top:1rem;">
-                            <button type="submit" class="btn-submit-sm" style="padding:0.75rem 2.2rem;font-size:0.9rem;font-weight:700;">
-                                Simpan Kustomisasi Footer
-                            </button>
-                        </div>
-                    </form>
-                </div> {{-- End #subtab-footer-settings --}}
             </div>
 
 
@@ -4148,7 +4138,8 @@
         if (savedHpSubsubtab) {
             var hpSubMap = {
                 'hpsub-about': 'btn-hpsub-about',
-                'hpsub-services': 'btn-hpsub-services'
+                'hpsub-services': 'btn-hpsub-services',
+                'hpsub-footer': 'btn-hpsub-footer'
             };
             var hpBtnEl = document.getElementById(hpSubMap[savedHpSubsubtab]);
             if (document.getElementById(savedHpSubsubtab)) {

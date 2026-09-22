@@ -22,7 +22,7 @@ class Product extends Model
         'meta_title', 'meta_desc', 'meta_keywords',
         // Kolom e-commerce (new)
         'price', 'sale_price', 'stock', 'weight', 'sku', 'length', 'width', 'height', 'volume',
-        'product_category_id', 'product_sub_category_id', 'is_featured',
+        'product_category_id', 'product_sub_category_id', 'is_featured', 'is_buyle_checkout',
         'product_type', 'file_type', 'digital_resource', 'seller_id', 'creator_group_id', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating', 'tiktok_video_url',
         // Event / Ticket fields
         'event_date', 'event_time', 'event_location', 'event_type',
@@ -34,7 +34,8 @@ class Product extends Model
 
     protected $casts = [
         // Existing casts
-        'is_active'      => 'boolean',
+        'is_active'          => 'boolean',
+        'is_buyle_checkout'  => 'boolean',
         'order'          => 'integer',
         'gallery'        => 'array',
         'specifications' => 'array',

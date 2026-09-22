@@ -1087,11 +1087,10 @@
             const buyleToggleWrap = document.getElementById('buyleCheckoutToggleWrap');
             const buyleToggle = document.getElementById('isBuyleCheckoutToggle');
 
-            const isPhysicalOrFood = (val === 'physical' || val === 'makanan');
-            const isService = (val === 'service');
+            // Always show buyleToggleWrap so creator can choose payment vs WA lead mode
+            if (buyleToggleWrap) buyleToggleWrap.style.display = 'block';
 
             if (isPhysicalOrFood) {
-                if (buyleToggleWrap) buyleToggleWrap.style.display = 'block';
                 const isBuyleActive = buyleToggle ? buyleToggle.checked : true;
 
                 if (isBuyleActive && val === 'physical') {
@@ -1111,7 +1110,6 @@
                 if (commissionWrap) commissionWrap.style.display = 'none';
                 if (commissionInput) commissionInput.removeAttribute('required');
             } else if (isService) {
-                if (buyleToggleWrap) buyleToggleWrap.style.display = 'none';
                 if (physicalWrap) physicalWrap.style.display = 'none';
                 if (categoryWrap) categoryWrap.style.display = 'none';
                 if (subCatWrap) subCatWrap.style.display = 'none';
@@ -1122,7 +1120,6 @@
                 if (commissionInput) commissionInput.removeAttribute('required');
             } else {
                 // ticket or external_link (Digital)
-                if (buyleToggleWrap) buyleToggleWrap.style.display = 'none';
                 if (physicalWrap) physicalWrap.style.display = 'none';
                 if (weightInput) weightInput.removeAttribute('required');
                 if (categoryWrap) categoryWrap.style.display = 'block';

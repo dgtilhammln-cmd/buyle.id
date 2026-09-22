@@ -84,8 +84,9 @@ class UpdateProductRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $merge = [
-            'is_active'   => $this->boolean('is_active', true),
-            'is_featured' => $this->boolean('is_featured', false),
+            'is_active'          => $this->boolean('is_active', true),
+            'is_featured'        => $this->boolean('is_featured', false),
+            'is_buyle_checkout' => $this->boolean('is_buyle_checkout', true),
             'stock'       => ($this->has('stock') && $this->input('stock') !== null && $this->input('stock') !== '') ? (int) $this->input('stock') : null,
             'weight'      => (int) ($this->input('weight') ?? 0),
             'length'      => (float) ($this->input('length') ?? 0),
