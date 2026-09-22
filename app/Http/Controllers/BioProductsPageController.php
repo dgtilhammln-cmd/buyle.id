@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CreatorProfile;
+use App\Models\CreatorProductGroup;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -20,6 +21,12 @@ class BioProductsPageController extends Controller
         $config = $profile->bio_config ?? [];
         $blocks = $profile->bioBlocks;
 
+        $creatorGroups = CreatorProductGroup::where('seller_id', $profile->user_id)
+            ->where('is_active', true)
+            ->withCount('products')
+            ->orderBy('order')
+            ->get();
+
         $allProducts = collect();
 
         foreach ($blocks as $block) {
@@ -27,7 +34,6 @@ class BioProductsPageController extends Controller
             if (!in_array($block->type, ['custom_product', 'buyle_product', 'buyle_affiliate']) && empty($data['product_id'])) {
                 continue;
             }
-            $data    = $block->data_json ?? [];
             $product = null;
             if (!empty($data['product_id'])) {
                 $product = Product::find($data['product_id']);
@@ -76,20 +82,21 @@ class BioProductsPageController extends Controller
             $effectivePrice = $hasDiscount ? $salePrice : $price;
 
             $allProducts->push([
-                'block_id'        => $block->id,
-                'product_id'      => $product->id ?? null,
-                'name'            => $name,
-                'slug'            => $slug,
-                'image_url'       => $imageUrl,
-                'price'           => $price,
-                'sale_price'      => $salePrice,
-                'effective_price' => $effectivePrice,
-                'has_discount'    => $hasDiscount,
-                'discount_pct'    => $discountPct,
-                'product_url'     => $productUrl,
-                'rating'          => $ratingVal,
-                'product_type'    => $productType,
-                'created_at'      => $block->created_at,
+                'block_id'         => $block->id,
+                'product_id'       => $product->id ?? null,
+                'creator_group_id' => $data['creator_group_id'] ?? ($product ? $product->creator_group_id : null),
+                'name'             => $name,
+                'slug'             => $slug,
+                'image_url'        => $imageUrl,
+                'price'            => $price,
+                'sale_price'       => $salePrice,
+                'effective_price'  => $effectivePrice,
+                'has_discount'     => $hasDiscount,
+                'discount_pct'     => $discountPct,
+                'product_url'      => $productUrl,
+                'rating'           => $ratingVal,
+                'product_type'     => $productType,
+                'created_at'       => $block->created_at,
             ]);
         }
 
@@ -131,7 +138,7 @@ class BioProductsPageController extends Controller
             'profile', 'config', 'username',
             'allProducts', 'search', 'sort',
             'seoTitle', 'seoDesc', 'canonical', 'ogImage', 'bioName',
-            'blocks', 'products'
+            'blocks', 'products', 'creatorGroups'
         ));
     }
 }

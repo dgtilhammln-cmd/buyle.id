@@ -1,4 +1,4 @@
-@extends('creator.layout')
+﻿@extends('creator.layout')
 @section('title', 'Web Builder · Dashboard')
 @section('page_title', 'Web Builder')
 
@@ -1703,23 +1703,28 @@
                                 cursor: pointer;
                                 transition: all 0.25s ease;
                             }
+
                             .hp-subtab-btn:hover {
                                 color: #0f172a;
                             }
+
                             .hp-subtab-btn.active {
                                 background: #ffffff;
                                 color: #1eb349;
-                                box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+                                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
                                 font-weight: 700;
                             }
+
                             .hpsub-pane {
                                 animation: hpsubSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
                             }
+
                             @keyframes hpsubSlideDown {
                                 from {
                                     opacity: 0;
                                     transform: translateY(-12px);
                                 }
+
                                 to {
                                     opacity: 1;
                                     transform: translateY(0);
@@ -1727,18 +1732,23 @@
                             }
                         </style>
 
-                        <div style="background:#f1f5f9; padding:0.4rem; border-radius:14px; border:1px solid #cbd5e1; display:flex; gap:0.5rem; margin-bottom:1.5rem;">
+                        <div
+                            style="background:#f1f5f9; padding:0.4rem; border-radius:14px; border:1px solid #cbd5e1; display:flex; gap:0.5rem; margin-bottom:1.5rem;">
                             <button type="button" class="hp-subtab-btn active" id="btn-hpsub-about"
                                 onclick="switchHomepageSubSubtab('hpsub-about', this)">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M12 20h9" />
+                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
                                 </svg>
                                 Section About Us (Tema 5)
                             </button>
                             <button type="button" class="hp-subtab-btn" id="btn-hpsub-services"
                                 onclick="switchHomepageSubSubtab('hpsub-services', this)">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                                 </svg>
                                 Section Jasa &amp; Layanan (Tema 5)
                             </button>
@@ -1747,64 +1757,66 @@
                         {{-- SUB-SUBTAB 1: ABOUT US --}}
                         <div class="hpsub-pane" id="hpsub-about">
 
-                        {{-- Card Toggle Active --}}
-                        <div class="prof-card">
-                            <div class="prof-card-head"
-                                style="display:flex; justify-content:space-between; align-items:center;">
-                                <span>Status Section About Us (Tema 5)</span>
-                                <label
-                                    style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
-                                    <input type="checkbox" name="about_enabled" value="1" {{ ($cfg['about_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
-                                    Aktifkan Section
-                                </label>
+                            {{-- Card Toggle Active --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head"
+                                    style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span>Status Section About Us (Tema 5)</span>
+                                    <label
+                                        style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                        <input type="checkbox" name="about_enabled" value="1" {{ ($cfg['about_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
+                                        Aktifkan Section
+                                    </label>
+                                </div>
+                                <div class="card-body">
+                                    <p style="font-size:0.8rem; color:#64748b; margin:0;">
+                                        Tampilkan section About Us / Tentang Kami modern 3-Card pada halaman utama (Homepage
+                                        Tema 5). Semua teks, gambar, dan tombol dapat Anda ubah sesuai keinginan. Jika
+                                        dibiarkan
+                                        kosong, sistem akan menggunakan kalimat default standar Buyle.
+                                    </p>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <p style="font-size:0.8rem; color:#64748b; margin:0;">
-                                    Tampilkan section About Us / Tentang Kami modern 3-Card pada halaman utama (Homepage
-                                    Tema 5). Semua teks, gambar, dan tombol dapat Anda ubah sesuai keinginan. Jika dibiarkan
-                                    kosong, sistem akan menggunakan kalimat default standar Buyle.
-                                </p>
-                            </div>
-                        </div>
 
-                        {{-- Card Header & Description --}}
-                        <div class="prof-card">
-                            <div class="prof-card-head">1. Header &amp; Deskripsi Utama</div>
-                            <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
-                                <div class="form-group" style="grid-column:1/-1;">
-                                    <label class="form-label">Sub-Judul / Tagline Atas (Eyebrow)</label>
-                                    <input type="text" name="about_eyebrow"
-                                        value="{{ old('about_eyebrow', $cfg['about_eyebrow'] ?? 'Real strategies. Real results.') }}"
-                                        class="form-input" placeholder="Real strategies. Real results.">
-                                    <small style="color:#94a3b8; font-size:0.72rem;">Gunakan &lt;em&gt;kata&lt;/em&gt; untuk
-                                        teks tebal/miring.</small>
-                                </div>
-                                <div class="form-group" style="grid-column:1/-1;">
-                                    <label class="form-label">Judul Utama H2 (Headline)</label>
-                                    <textarea name="about_headline" class="form-input" rows="2"
-                                        placeholder="We believe success comes from strategy, not guesswork.">{{ old('about_headline', $cfg['about_headline'] ?? 'We believe success comes from strategy, not guesswork. Approach combines deep market insight.') }}</textarea>
-                                </div>
-                                <div class="form-group" style="grid-column:1/-1;">
-                                    <label class="form-label">Deskripsi Ringkas (Sisi Kanan)</label>
-                                    <textarea name="about_description" class="form-input" rows="3"
-                                        placeholder="We focus on creating real, data-driven strategies...">{{ old('about_description', $cfg['about_description'] ?? 'We focus on creating real, data-driven strategies that deliver measurable results. Every campaign is built on research, insight, and clear objectives—ensuring your marketing.') }}</textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Teks Tombol Atas</label>
-                                    <input type="text" name="about_btn_text"
-                                        value="{{ old('about_btn_text', $cfg['about_btn_text'] ?? 'LEARN MORE') }}"
-                                        class="form-input" placeholder="LEARN MORE">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Link Tombol Atas</label>
-                                    <input type="text" name="about_btn_link"
-                                        value="{{ old('about_btn_link', $cfg['about_btn_link'] ?? '#products-section') }}"
-                                        class="form-input" placeholder="#products-section atau https://...">
+                            {{-- Card Header & Description --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head">1. Header &amp; Deskripsi Utama</div>
+                                <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                                    <div class="form-group" style="grid-column:1/-1;">
+                                        <label class="form-label">Sub-Judul / Tagline Atas (Eyebrow)</label>
+                                        <input type="text" name="about_eyebrow"
+                                            value="{{ old('about_eyebrow', $cfg['about_eyebrow'] ?? 'Real strategies. Real results.') }}"
+                                            class="form-input" placeholder="Real strategies. Real results.">
+                                        <small style="color:#94a3b8; font-size:0.72rem;">Gunakan &lt;em&gt;kata&lt;/em&gt;
+                                            untuk
+                                            teks tebal/miring.</small>
+                                    </div>
+                                    <div class="form-group" style="grid-column:1/-1;">
+                                        <label class="form-label">Judul Utama H2 (Headline)</label>
+                                        <textarea name="about_headline" class="form-input" rows="2"
+                                            placeholder="We believe success comes from strategy, not guesswork.">{{ old('about_headline', $cfg['about_headline'] ?? 'We believe success comes from strategy, not guesswork. Approach combines deep market insight.') }}</textarea>
+                                    </div>
+                                    <div class="form-group" style="grid-column:1/-1;">
+                                        <label class="form-label">Deskripsi Ringkas (Sisi Kanan)</label>
+                                        <textarea name="about_description" class="form-input" rows="3"
+                                            placeholder="We focus on creating real, data-driven strategies...">{{ old('about_description', $cfg['about_description'] ?? 'We focus on creating real, data-driven strategies that deliver measurable results. Every campaign is built on research, insight, and clear objectives—ensuring your marketing.') }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Teks Tombol Atas</label>
+                                        <input type="text" name="about_btn_text"
+                                            value="{{ old('about_btn_text', $cfg['about_btn_text'] ?? 'LEARN MORE') }}"
+                                            class="form-input" placeholder="LEARN MORE">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Link Tombol Atas</label>
+                                        <input type="text" name="about_btn_link"
+                                            value="{{ old('about_btn_link', $cfg['about_btn_link'] ?? '#products-section') }}"
+                                            class="form-input" placeholder="#products-section atau https://...">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {{-- Card 1: Dark Gradient Card & Media --}}
+                            {{-- Card 1: Dark Gradient Card & Media --}}
                             <div class="prof-card">
                                 <div class="prof-card-head">2. Card 1 (Box Gradient Gelap &amp; Logo/Gambar)</div>
                                 <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
@@ -2011,83 +2023,114 @@
                         {{-- SUB-SUBTAB 2: HOMEPAGE / JASA & LAYANAN (TEMA 5) --}}
                         <div class="hpsub-pane" id="hpsub-services" style="display:none;">
 
-                        {{-- Card Toggle Active --}}
-                        <div class="prof-card">
-                            <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
-                                <span>Status Section Jasa &amp; Layanan (Tema 5)</span>
-                                <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
-                                    <input type="checkbox" name="services_enabled" value="1" {{ ($cfg['services_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
-                                    Aktifkan Section Jasa
-                                </label>
-                            </div>
-                            <div class="card-body">
-                                <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:1rem 1.25rem; display:flex; gap:0.85rem; align-items:flex-start;">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.2" style="flex-shrink:0; margin-top:2px;">
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <line x1="12" y1="16" x2="12" y2="12"/>
-                                        <line x1="12" y1="8" x2="12.01" y2="8"/>
-                                    </svg>
-                                    <div style="font-size:0.825rem; color:#166534; line-height:1.5;">
-                                        <strong style="font-size:0.875rem; color:#14532d; display:block; margin-bottom:4px;">📌 Sumber Data Produk Jasa &amp; Layanan:</strong>
-                                        Secara otomatis, sistem akan mengambil dan menampilkan <strong>3 produk terbaru</strong> dengan tipe <strong>Jasa / Layanan / Service</strong> yang Anda buat di menu <a href="{{ route('creator.products.index') }}" target="_blank" style="color:#1eb349; font-weight:700; text-decoration:underline;">Kelola Produk (buyle.id/creator/products)</a>.<br>
-                                        <span style="color:#15803d; font-size:0.78rem; display:inline-block; margin-top:4px;">*Jika Anda belum memiliki produk tipe Jasa di menu Produk, sistem akan otomatis menggunakan daftar jasa manual fallback yang dapat diatur di bawah ini.</span>
+                            {{-- Card Toggle Active --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head"
+                                    style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span>Status Section Jasa &amp; Layanan (Tema 5)</span>
+                                    <label
+                                        style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                        <input type="checkbox" name="services_enabled" value="1" {{ ($cfg['services_enabled'] ?? 1) ? 'checked' : '' }}
+                                            style="width:18px; height:18px; accent-color:#1eb349;">
+                                        Aktifkan Section Jasa
+                                    </label>
+                                </div>
+                                <div class="card-body">
+                                    <div
+                                        style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:1rem 1.25rem; display:flex; gap:0.85rem; align-items:flex-start;">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#166534"
+                                            stroke-width="2.2" style="flex-shrink:0; margin-top:2px;">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <line x1="12" y1="16" x2="12" y2="12" />
+                                            <line x1="12" y1="8" x2="12.01" y2="8" />
+                                        </svg>
+                                        <div style="font-size:0.825rem; color:#166534; line-height:1.5;">
+                                            <strong
+                                                style="font-size:0.875rem; color:#14532d; display:block; margin-bottom:4px;">📌
+                                                Sumber Data Produk Jasa &amp; Layanan:</strong>
+                                            Secara otomatis, sistem akan mengambil dan menampilkan <strong>3 produk
+                                                terbaru</strong> dengan tipe <strong>Jasa / Layanan / Service</strong> yang
+                                            Anda buat di menu <a href="{{ route('creator.products.index') }}"
+                                                target="_blank"
+                                                style="color:#1eb349; font-weight:700; text-decoration:underline;">Kelola
+                                                Produk (buyle.id/creator/products)</a>.<br>
+                                            <span
+                                                style="color:#15803d; font-size:0.78rem; display:inline-block; margin-top:4px;">*Jika
+                                                Anda belum memiliki produk tipe Jasa di menu Produk, sistem akan otomatis
+                                                menggunakan daftar jasa manual fallback yang dapat diatur di bawah
+                                                ini.</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {{-- Card Header & Description --}}
-                        <div class="prof-card">
-                            <div class="prof-card-head">1. Header &amp; Deskripsi Section Jasa</div>
-                            <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
-                                <div class="form-group" style="grid-column:1/-1;">
-                                    <label class="form-label">Judul Utama H2 (Headline)</label>
-                                    <textarea name="services_headline" class="form-input" rows="2"
-                                        placeholder="We've orchestrated Intelligence.">{{ old('services_headline', $cfg['services_headline'] ?? "We've orchestrated Intelligence.") }}</textarea>
-                                </div>
-                                <div class="form-group" style="grid-column:1/-1;">
-                                    <label class="form-label">Deskripsi Ringkas (Sisi Kanan)</label>
-                                    <textarea name="services_description" class="form-input" rows="3"
-                                        placeholder="Metafore brings clarity, not complexity...">{{ old('services_description', $cfg['services_description'] ?? 'Metafore brings clarity, not complexity - uniting every agent into one adaptive system that learns, acts, and evolves across your enterprise.') }}</textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Teks Tombol CTA</label>
-                                    <input type="text" name="services_btn_text"
-                                        value="{{ old('services_btn_text', $cfg['services_btn_text'] ?? 'Explore More') }}"
-                                        class="form-input" placeholder="Explore More">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Link Tombol CTA</label>
-                                    <input type="text" name="services_btn_link"
-                                        value="{{ old('services_btn_link', $cfg['services_btn_link'] ?? '#services-section') }}"
-                                        class="form-input" placeholder="#services-section atau https://...">
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Auto-Fetch Info Card --}}
-                        <div class="prof-card">
-                            <div class="prof-card-head">2. Sumber Data Card Jasa &amp; Layanan (Otomatis Dari Produk Tipe Jasa)</div>
-                            <div class="card-body">
-                                <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:1.25rem; display:flex; gap:1rem; align-items:flex-start;">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.2" style="flex-shrink:0; margin-top:2px;">
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                        <polyline points="22 4 12 14.01 9 11.01"/>
-                                    </svg>
-                                    <div style="font-size:0.85rem; color:#166534; line-height:1.6;">
-                                        <strong style="font-size:0.92rem; color:#14532d; display:block; margin-bottom:4px;">✨ Otomatis Mengambil dari Kelola Produk:</strong>
-                                        Seluruh card Jasa &amp; Layanan pada halaman utama akan otomatis diambil dari produk bertipe <strong>Jasa / Layanan / Service</strong> yang Anda tambahkan di menu <a href="{{ route('creator.products.index') }}" target="_blank" style="color:#1eb349; font-weight:700; text-decoration:underline;">Kelola Produk (buyle.id/creator/products)</a>.<br>
-                                        <span style="color:#15803d; font-size:0.8rem; display:inline-block; margin-top:6px;">*Sistem secara cerdas menerapkan desain premium horizontal card, penomoran otomatis (01, 02, 03, 04), serta animasi hover interaktif tanpa perlu diisi manual.</span>
+                            {{-- Card Header & Description --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head">1. Header &amp; Deskripsi Section Jasa</div>
+                                <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                                    <div class="form-group" style="grid-column:1/-1;">
+                                        <label class="form-label">Judul Utama H2 (Headline)</label>
+                                        <textarea name="services_headline" class="form-input" rows="2"
+                                            placeholder="We've orchestrated Intelligence.">{{ old('services_headline', $cfg['services_headline'] ?? "We've orchestrated Intelligence.") }}</textarea>
+                                    </div>
+                                    <div class="form-group" style="grid-column:1/-1;">
+                                        <label class="form-label">Deskripsi Ringkas (Sisi Kanan)</label>
+                                        <textarea name="services_description" class="form-input" rows="3"
+                                            placeholder="Metafore brings clarity, not complexity...">{{ old('services_description', $cfg['services_description'] ?? 'Metafore brings clarity, not complexity - uniting every agent into one adaptive system that learns, acts, and evolves across your enterprise.') }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Teks Tombol CTA</label>
+                                        <input type="text" name="services_btn_text"
+                                            value="{{ old('services_btn_text', $cfg['services_btn_text'] ?? 'Explore More') }}"
+                                            class="form-input" placeholder="Explore More">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Link Tombol CTA</label>
+                                        <input type="text" name="services_btn_link"
+                                            value="{{ old('services_btn_link', $cfg['services_btn_link'] ?? '#services-section') }}"
+                                            class="form-input" placeholder="#services-section atau https://...">
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
+                            {{-- Auto-Fetch Info Card --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head">2. Sumber Data Card Jasa &amp; Layanan (Otomatis Dari Produk
+                                    Tipe Jasa)</div>
+                                <div class="card-body">
+                                    <div
+                                        style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; padding:1.25rem; display:flex; gap:1rem; align-items:flex-start;">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#166534"
+                                            stroke-width="2.2" style="flex-shrink:0; margin-top:2px;">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                            <polyline points="22 4 12 14.01 9 11.01" />
+                                        </svg>
+                                        <div style="font-size:0.85rem; color:#166534; line-height:1.6;">
+                                            <strong
+                                                style="font-size:0.92rem; color:#14532d; display:block; margin-bottom:4px;">✨
+                                                Otomatis Mengambil dari Kelola Produk:</strong>
+                                            Seluruh card Jasa &amp; Layanan pada halaman utama akan otomatis diambil dari
+                                            produk bertipe <strong>Jasa / Layanan / Service</strong> yang Anda tambahkan di
+                                            menu <a href="{{ route('creator.products.index') }}" target="_blank"
+                                                style="color:#1eb349; font-weight:700; text-decoration:underline;">Kelola
+                                                Produk (buyle.id/creator/products)</a>.<br>
+                                            <span
+                                                style="color:#15803d; font-size:0.8rem; display:inline-block; margin-top:6px;">*Sistem
+                                                secara cerdas menerapkan desain premium horizontal card, penomoran otomatis
+                                                (01, 02, 03, 04), serta animasi hover interaktif tanpa perlu diisi
+                                                manual.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div> {{-- End #hpsub-services --}}
 
                         {{-- SINGLE SUBMIT BUTTON FOR HOMEPAGE (TEMA 5) --}}
-                        <div style="display:flex; justify-content:flex-end; margin-top:1.5rem; padding-top:1rem; border-top:1.5px solid #e2e8f0;">
-                            <button type="submit" class="btn-submit-sm" style="padding:0.75rem 2.2rem; font-size:0.9rem; font-weight:700;">
-                                Simpan Pengaturan Homepage (Tema 5)
+                        <div
+                            style="display:flex; justify-content:flex-end; margin-top:1.5rem; padding-top:1rem; border-top:1.5px solid #e2e8f0;">
+                            <button type="submit" class="btn-submit-sm"
+                                style="padding:0.75rem 2.2rem; font-size:0.9rem; font-weight:700;">
+                                Simpan Perubahan
                             </button>
                         </div>
                     </form>
@@ -4117,20 +4160,20 @@
             popup.id = 'scrapeFailedPopup';
             popup.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);';
             popup.innerHTML = `
-                                                                        <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
-                                                                            <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                                                                                <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                                                            </div>
-                                                                            <div style="font-weight: 600;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
-                                                                            <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
-                                                                            <div style="display:flex;gap:0.6rem;justify-content:center;">
-                                                                                <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight: 500;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
-                                                                                <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight: 500;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
-                                                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                                                                    Scan AI
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>`;
+                                                                            <div style="background:#fff;border-radius:16px;padding:1.75rem 1.5rem;max-width:340px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
+                                                                                <div style="width:48px;height:48px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                                                                                    <svg width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                                                                </div>
+                                                                                <div style="font-weight: 600;font-size:0.95rem;color:#0f172a;margin-bottom:0.4rem;">Gagal Mengambil Data Otomatis</div>
+                                                                                <div style="font-size:0.78rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5;">${reason}<br><br>Silakan isi data produk secara <strong>manual</strong> di form bawah, atau gunakan <strong>Scan Menu AI</strong> untuk foto produk.</div>
+                                                                                <div style="display:flex;gap:0.6rem;justify-content:center;">
+                                                                                    <button onclick="document.getElementById('scrapeFailedPopup').remove()" style="flex:1;height:38px;border-radius:999px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-weight: 500;font-size:0.8rem;cursor:pointer;">Isi Manual</button>
+                                                                                    <button onclick="document.getElementById('scrapeFailedPopup').remove();openScanMenuModal();" style="flex:1;height:38px;border-radius:999px;border:none;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;font-weight: 500;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;">
+                                                                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                                                                        Scan AI
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>`;
             document.body.appendChild(popup);
             popup.addEventListener('click', function (e) { if (e.target === popup) popup.remove(); });
         }
@@ -4404,11 +4447,11 @@
                 document.getElementById('imgOversizedDesc').innerHTML = 'Foto berikut melebihi batas <strong>1 MB per file</strong>. Harap kompres terlebih dahulu.';
 
                 const listHtml = oversized.map(f => `
-                                                                            <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
-                                                                                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
-                                                                                <span style="color:#EF4444; font-weight: 500;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
-                                                                            </div>
-                                                                        `).join('');
+                                                                                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; border-bottom:1px dashed #E2E8F0;">
+                                                                                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">• ${f.name}</span>
+                                                                                    <span style="color:#EF4444; font-weight: 500;">${(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                                                                                </div>
+                                                                            `).join('');
 
                 document.getElementById('imgOversizedFileList').innerHTML = listHtml;
                 document.getElementById('imgOversizedModal').classList.add('open');

@@ -218,33 +218,81 @@
         }
         .pp-results-info strong { font-weight: 600; color: var(--t5-slate-700); }
 
-        /* GRID */
+        /* GROUP CARDS */
+        .pp-group-cards-wrap {
+            max-width: 1200px; margin: 0 auto;
+            padding: 1.25rem 1.5rem 0.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.85rem;
+        }
+        .pp-group-card {
+            background: #ffffff;
+            border: 1.5px solid var(--t5-slate-200);
+            border-radius: var(--t5-radius-lg);
+            padding: 0.85rem 1rem;
+            display: flex; align-items: center; gap: 0.75rem;
+            cursor: pointer; transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            user-select: none;
+        }
+        .pp-group-card:hover {
+            transform: translateY(-4px);
+            border-color: #1eb349;
+            box-shadow: 0 10px 25px rgba(30,179,73,0.15);
+        }
+        .pp-group-card.active {
+            background: #f0fdf4;
+            border-color: #1eb349;
+            box-shadow: 0 6px 20px rgba(30,179,73,0.18);
+        }
+        .pp-group-icon {
+            width: 38px; height: 38px; border-radius: 10px;
+            background: #f1f5f9; color: #1eb349;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; transition: all 0.2s;
+        }
+        .pp-group-card.active .pp-group-icon, .pp-group-card:hover .pp-group-icon {
+            background: #1eb349; color: #ffffff;
+        }
+        .pp-group-info { display: flex; flex-direction: column; gap: 0.1rem; }
+        .pp-group-title { font-size: 0.83rem; font-weight: 700; color: #0f172a; line-height: 1.2; }
+        .pp-group-badge {
+            font-size: 0.7rem; font-weight: 700; color: #1eb349;
+            background: #dcfce7; padding: 0.1rem 0.45rem; border-radius: 999px;
+            width: fit-content; margin-top: 0.1rem;
+        }
+        .pp-group-card.active .pp-group-badge {
+            background: #1eb349; color: #ffffff;
+        }
+
+        /* GRID (STRICTLY 4 COLUMNS ON DESKTOP) */
         .pp-grid-wrap {
             max-width: 1200px; margin: 0 auto; padding: 1.25rem 1.5rem 3.5rem;
         }
         .pp-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 1.25rem;
         }
         .pp-card {
             background: var(--t5-white); border-radius: var(--t5-radius-lg);
-            border: 1px solid var(--t5-slate-200); overflow: hidden;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-            display: flex; flex-direction: column;
+            border: 1.5px solid var(--t5-slate-200); overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex; flex-direction: column; position: relative;
         }
         .pp-card:hover {
-            transform: translateY(-4px); box-shadow: var(--t5-shadow-lg);
-            border-color: var(--t5-emerald-border);
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 16px 36px rgba(30,179,73,0.18);
+            border-color: #1eb349;
         }
         .pp-card-img-wrap {
             position: relative; aspect-ratio: 4/3; overflow: hidden;
             background: var(--t5-slate-200); display: block; text-decoration: none;
         }
         .pp-card-img {
-            width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s ease;
+            width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .pp-card:hover .pp-card-img { transform: scale(1.04); }
+        .pp-card:hover .pp-card-img { transform: scale(1.08); }
         .pp-badge-disc {
             position: absolute; top: 0.6rem; left: 0.6rem;
             background: #ef4444; color: #fff; font-size: 0.68rem; font-weight: 600;
@@ -407,16 +455,18 @@
             .pp-hero { padding: 2rem 1rem; }
             .pp-hero h1 { font-size: 1.25rem; }
             .pp-controls { flex-direction: column; align-items: stretch; padding: 1rem 1rem 0; }
-            .pp-search-wrap { max-width: 100%; }
-            .pp-sort-select { width: 100%; }
-            .pp-submit-btn { width: 100%; justify-content: center; }
-            .pp-grid { grid-template-columns: repeat(2, 1fr); gap: 0.85rem; }
-            .pp-grid-wrap { padding: 1rem 1rem 2.5rem; }
-            .pp-results-info { padding: 0.6rem 1rem 0; }
-            .t5-floating-wa { bottom: 18px; right: 18px; width: 50px; height: 50px; }
+        @media (max-width: 1024px) {
+            .pp-grid { grid-template-columns: repeat(3, 1fr); }
+            .pp-group-cards-wrap { grid-template-columns: repeat(3, 1fr); }
         }
-        @media (min-width: 1024px) {
-            .pp-grid { grid-template-columns: repeat(4, 1fr); }
+        @media (max-width: 768px) {
+            .pp-grid { grid-template-columns: repeat(2, 1fr); gap: 0.85rem; }
+            .pp-group-cards-wrap { grid-template-columns: repeat(2, 1fr); gap: 0.65rem; padding: 1rem 1rem 0.5rem; }
+            .pp-group-card { padding: 0.7rem 0.85rem; }
+        }
+        @media (max-width: 480px) {
+            .pp-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+            .pp-group-cards-wrap { grid-template-columns: repeat(2, 1fr); gap: 0.55rem; }
         }
     </style>
 </head>
@@ -425,16 +475,122 @@
     {{-- HEADER TEMA 5 --}}
     @include('bio.theme5.header', ['products' => $products, 'blocks' => $blocks, 'config' => $config, 'profile' => $profile, 'username' => $username])
 
-    {{-- BREADCRUMB --}}
-    <div class="t5-breadcrumb-wrap">
-        <div class="t5-breadcrumb">
-            <a href="{{ url('/' . $username) }}">Beranda</a>
-            <span class="t5-breadcrumb-sep">
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-            </span>
-            <span class="t5-breadcrumb-current">Semua Produk &amp; Layanan</span>
+    @php
+        $catCounts = [
+            'all' => $allProducts->count(),
+            'digital' => 0,
+            'physical' => 0,
+            'service' => 0,
+            'makanan' => 0,
+            'ticket' => 0,
+        ];
+        foreach($allProducts as $pItem) {
+            $t = strtolower($pItem['product_type'] ?? 'digital');
+            if (in_array($t, ['barang', 'fisik', 'physical'])) $catCounts['physical']++;
+            elseif (in_array($t, ['jasa', 'service', 'layanan'])) $catCounts['service']++;
+            elseif (in_array($t, ['makanan', 'fnb', 'kuliner', 'food'])) $catCounts['makanan']++;
+            elseif (in_array($t, ['ticket', 'tiket'])) $catCounts['ticket']++;
+            else $catCounts['digital']++;
+        }
+    @endphp
+
+    {{-- INTERACTIVE GROUP CARDS WITH ITEM COUNT BADGES (FROM /creator/groups) --}}
+    @if(isset($creatorGroups) && $creatorGroups->count() > 0)
+        <div class="pp-group-cards-wrap">
+            <div class="pp-group-card active" onclick="filterGroup('all', this)" title="Tampilkan Semua Produk">
+                <div class="pp-group-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+                </div>
+                <div class="pp-group-info">
+                    <span class="pp-group-title">Semua Produk</span>
+                    <span class="pp-group-badge">{{ $allProducts->count() }} produk</span>
+                </div>
+            </div>
+            @foreach($creatorGroups as $cGroup)
+                @php
+                    $gCount = $allProducts->filter(function($p) use ($cGroup) {
+                        return (string)($p['creator_group_id'] ?? '') === (string)$cGroup->id;
+                    })->count();
+                @endphp
+                <div class="pp-group-card" onclick="filterGroup('group-{{ $cGroup->id }}', this)" title="{{ $cGroup->name }}">
+                    <div class="pp-group-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <div class="pp-group-info">
+                        <span class="pp-group-title">{{ $cGroup->name }}</span>
+                        <span class="pp-group-badge">{{ $gCount }} produk</span>
+                    </div>
+                </div>
+            @endforeach
         </div>
-    </div>
+    @else
+        <div class="pp-group-cards-wrap">
+            <div class="pp-group-card active" onclick="filterGroup('all', this)" title="Tampilkan Semua Produk">
+                <div class="pp-group-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+                </div>
+                <div class="pp-group-info">
+                    <span class="pp-group-title">Semua Produk</span>
+                    <span class="pp-group-badge">{{ $catCounts['all'] }} produk</span>
+                </div>
+            </div>
+            @if($catCounts['digital'] > 0)
+            <div class="pp-group-card" onclick="filterGroup('digital', this)" title="Filter Produk Digital">
+                <div class="pp-group-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                </div>
+                <div class="pp-group-info">
+                    <span class="pp-group-title">Produk Digital</span>
+                    <span class="pp-group-badge">{{ $catCounts['digital'] }} produk</span>
+                </div>
+            </div>
+            @endif
+            @if($catCounts['physical'] > 0)
+            <div class="pp-group-card" onclick="filterGroup('physical', this)" title="Filter Barang &amp; Fisik">
+                <div class="pp-group-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                </div>
+                <div class="pp-group-info">
+                    <span class="pp-group-title">Barang &amp; Fisik</span>
+                    <span class="pp-group-badge">{{ $catCounts['physical'] }} produk</span>
+                </div>
+            </div>
+            @endif
+            @if($catCounts['service'] > 0)
+            <div class="pp-group-card" onclick="filterGroup('service', this)" title="Filter Jasa &amp; Layanan">
+                <div class="pp-group-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                </div>
+                <div class="pp-group-info">
+                    <span class="pp-group-title">Jasa &amp; Layanan</span>
+                    <span class="pp-group-badge">{{ $catCounts['service'] }} produk</span>
+                </div>
+            </div>
+            @endif
+            @if($catCounts['makanan'] > 0)
+            <div class="pp-group-card" onclick="filterGroup('makanan', this)" title="Filter Makanan &amp; Culinary">
+                <div class="pp-group-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                </div>
+                <div class="pp-group-info">
+                    <span class="pp-group-title">Makanan</span>
+                    <span class="pp-group-badge">{{ $catCounts['makanan'] }} produk</span>
+                </div>
+            </div>
+            @endif
+            @if($catCounts['ticket'] > 0)
+            <div class="pp-group-card" onclick="filterGroup('ticket', this)" title="Filter Tiket Event">
+                <div class="pp-group-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/><line x1="12" y1="7" x2="12" y2="17"/></svg>
+                </div>
+                <div class="pp-group-info">
+                    <span class="pp-group-title">Tiket Event</span>
+                    <span class="pp-group-badge">{{ $catCounts['ticket'] }} produk</span>
+                </div>
+            </div>
+            @endif
+        </div>
+    @endif
 
 
 
@@ -483,7 +639,7 @@
                     $oldPrice = $prod['price'];
                     $pType    = strtoupper($prod['product_type'] ?? '');
                 @endphp
-                <div class="pp-card">
+                <div class="pp-card" data-type="{{ strtolower($prod['product_type'] ?? 'digital') }}" data-group-id="group-{{ $prod['creator_group_id'] ?? 'none' }}">
                     <a href="{{ $prod['product_url'] }}" class="pp-card-img-wrap">
                         <img src="{{ $prod['image_url'] }}" alt="{{ $prod['name'] }}" loading="lazy" class="pp-card-img">
                         @if($hasDisc)
@@ -567,6 +723,30 @@
         function toggleT5Drawer() {
             var drawer = document.getElementById('t5MobileDrawer');
             if (drawer) drawer.classList.toggle('active');
+        }
+        function filterGroup(cat, el) {
+            document.querySelectorAll('.pp-group-card').forEach(function(c) { c.classList.remove('active'); });
+            if (el) el.classList.add('active');
+            
+            var items = document.querySelectorAll('.pp-card');
+            items.forEach(function(item) {
+                var itemCat = (item.getAttribute('data-type') || 'digital').toLowerCase();
+                var itemGroupId = item.getAttribute('data-group-id') || '';
+                
+                if (cat === 'all') {
+                    item.style.display = 'flex';
+                } else if (cat.startsWith('group-')) {
+                    if (itemGroupId === cat) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                } else if (itemCat === cat || (cat === 'physical' && (itemCat === 'barang' || itemCat === 'fisik')) || (cat === 'service' && (itemCat === 'jasa' || itemCat === 'layanan')) || (cat === 'makanan' && (itemCat === 'fnb' || itemCat === 'kuliner'))) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         }
         var searchTimer = null;
         var searchInput = document.getElementById('pp-search');
