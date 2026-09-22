@@ -589,8 +589,8 @@
 </div>
 
 <script>
-    function openT5LeadModal() {
-        const inputVal = document.getElementById('t5FooterKebutuhanInput')?.value || '';
+    function openT5LeadModal(customMsg) {
+        const inputVal = customMsg || document.getElementById('t5FooterKebutuhanInput')?.value || '';
         const modalKebutuhan = document.getElementById('t5LeadKebutuhan');
         if (modalKebutuhan && inputVal.trim() !== '') {
             modalKebutuhan.value = inputVal;
@@ -603,6 +603,29 @@
         const modal = document.getElementById('t5LeadModal');
         if (modal) modal.classList.remove('show');
     }
+
+    // Global WhatsApp Click Interceptor for Tema 5
+    document.addEventListener('click', function(e) {
+        const waLink = e.target.closest('a[href*="wa.me"], a[href*="whatsapp.com"], .t5-btn-wa, .t5-floating-wa, .social-icon[title="WhatsApp"]');
+        if (waLink) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            let customMsg = '';
+            try {
+                if (waLink.href && waLink.href !== 'javascript:void(0)') {
+                    const urlObj = new URL(waLink.href, window.location.origin);
+                    customMsg = urlObj.searchParams.get('text') || '';
+                }
+            } catch(err) {}
+
+            if (!customMsg) {
+                customMsg = 'Halo, saya tertarik berkonsultasi & terhubung via WhatsApp.';
+            }
+
+            openT5LeadModal(customMsg);
+        }
+    }, true);
 
     async function submitT5Lead(e) {
         e.preventDefault();

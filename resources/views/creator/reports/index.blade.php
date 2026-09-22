@@ -1049,7 +1049,7 @@
                                 </td>
                                 <td>
                                     <span style="display:inline-block; padding:0.2rem 0.55rem; background:#EFF6FF; border:1px solid #BFDBFE; color:#1D4ED8; border-radius:6px; font-size:0.72rem; font-weight:600;">
-                                        {{ $lead->source === 'theme5_footer' ? 'Footer Theme 5' : ucfirst($lead->source ?? 'Website') }}
+                                        {{ $lead->source === 'theme5_footer' ? 'Footer5' : ucfirst($lead->source ?? 'Website') }}
                                     </span>
                                 </td>
                                 <td>
@@ -1058,7 +1058,7 @@
                                             <a href="https://wa.me/{{ $waClean }}?text={{ urlencode($waMsg) }}" target="_blank"
                                                 title="Chat via WhatsApp"
                                                 style="padding:0.35rem 0.65rem; background:#22c55e; color:#fff; border-radius:6px; font-size:0.75rem; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
-                                                Chat WA
+                                                WA
                                             </a>
                                         @endif
 
