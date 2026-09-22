@@ -660,235 +660,431 @@
         </div>
     </div>
 
-    {{-- ── Metric Cards ────────────────────────────────────────────────── --}}
-    <div class="metrics-grid">
-        <div class="metric-card">
-            <div class="metric-label">Total Visitor</div>
-            <div class="metric-value">{{ number_format($totalVisitors) }}</div>
-        </div>
-        <div class="metric-card">
-            <div class="metric-label">Unique Visitor</div>
-            <div class="metric-value">{{ number_format($uniqueVisitors) }}</div>
-        </div>
-        <div class="metric-card">
-            <div class="metric-label">Total Transaksi</div>
-            <div class="metric-value">{{ number_format($totalOrders) }}</div>
-        </div>
-        <div class="metric-card">
-            <div class="metric-label">Link Klik Bio</div>
-            <div class="metric-value">{{ number_format($totalBioClicks) }}</div>
-        </div>
-        <div class="metric-card dark" style="grid-column: span 4;">
-            <div class="metric-label">Total Penjualan</div>
-            <div class="metric-value">Rp {{ number_format($totalSales, 0, ',', '.') }}</div>
-        </div>
+    {{-- ── TAB NAVIGATION ────────────────────────────────────────────── --}}
+    <div class="rp-tab-nav" style="display:flex; gap:0.5rem; margin-bottom:1.5rem; border-bottom:2px solid #e2e8f0; padding-bottom:0.25rem;">
+        <button type="button" class="rp-tab-btn active" onclick="switchReportTab('analytics')" id="tabBtnAnalytics" style="padding:0.65rem 1.25rem; font-weight:700; font-size:0.9rem; border:none; background:none; color:#1eb349; border-bottom:3px solid #1eb349; cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:all 0.2s;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            <span>Laporan Penjualan & Analytics</span>
+        </button>
+        <button type="button" class="rp-tab-btn" onclick="switchReportTab('leads')" id="tabBtnLeads" style="padding:0.65rem 1.25rem; font-weight:700; font-size:0.9rem; border:none; background:none; color:#64748b; border-bottom:3px solid transparent; cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:all 0.2s;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Leads Tracker</span>
+            <span style="background:#1eb349; color:#fff; font-size:0.72rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($leads ?? []) }}</span>
+        </button>
     </div>
 
-    {{-- ── 2 Wave Cards Grid: Visitors Wave & Sales Wave ──────────────── --}}
-    <div class="charts-wave-grid">
-        {{-- Card Kiri: Grafik Wave Visitor --}}
-        <div class="wave-card" style="margin-bottom:0;">
-            <div class="wave-header">
-                <span class="wave-title">GRAFIK WAVE VISITOR</span>
-                <span class="wave-live-badge"><span class="wave-live-dot"></span> LIVE</span>
+    {{-- ── TAB 1: ANALYTICS & PENJUALAN ────────────────────────────────── --}}
+    <div id="tabContentAnalytics" class="rp-tab-content">
+        {{-- ── Metric Cards ────────────────────────────────────────────────── --}}
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Total Visitor</div>
+                <div class="metric-value">{{ number_format($totalVisitors) }}</div>
             </div>
-            <div class="chart-wrap">
-                <canvas id="trafficChart"></canvas>
+            <div class="metric-card">
+                <div class="metric-label">Unique Visitor</div>
+                <div class="metric-value">{{ number_format($uniqueVisitors) }}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Total Transaksi</div>
+                <div class="metric-value">{{ number_format($totalOrders) }}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Link Klik Bio</div>
+                <div class="metric-value">{{ number_format($totalBioClicks) }}</div>
+            </div>
+            <div class="metric-card dark" style="grid-column: span 4;">
+                <div class="metric-label">Total Penjualan</div>
+                <div class="metric-value">Rp {{ number_format($totalSales, 0, ',', '.') }}</div>
             </div>
         </div>
 
-        {{-- Card Kanan: Grafik Wave Penjualan --}}
-        <div class="wave-card" style="margin-bottom:0;">
-            <div class="wave-header">
-                <span class="wave-title">GRAFIK WAVE PENJUALAN</span>
-                <span class="wave-live-badge" style="background:#e0e7ff; color:#3730a3;"><span class="wave-live-dot"
-                        style="background:#4338ca;"></span> RP</span>
-            </div>
-            <div class="chart-wrap">
-                <canvas id="salesChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    {{-- ── Main Grid: Buyers + Sidebar ────────────────────────────────── --}}
-    <div class="main-grid">
-
-        {{-- Buyers Table --}}
-        <div class="panel-card">
-            <div class="panel-head">
-                <h3 class="panel-title">Data Pembeli</h3>
-                <div class="export-group">
-                    <a href="{{ route('creator.sales.report.export', array_merge(request()->query(), ['format' => 'xls'])) }}"
-                        class="btn-export">
-                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                            <polyline points="7 10 12 15 17 10" />
-                            <line x1="12" y1="15" x2="12" y2="3" />
-                        </svg>
-                        Export XLS
-                    </a>
-                    <a href="{{ route('creator.sales.report.export', array_merge(request()->query(), ['format' => 'pdf'])) }}"
-                        class="btn-export red">
-                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                            <polyline points="7 10 12 15 17 10" />
-                            <line x1="12" y1="15" x2="12" y2="3" />
-                        </svg>
-                        Export PDF
-                    </a>
+        {{-- ── 2 Wave Cards Grid: Visitors Wave & Sales Wave ──────────────── --}}
+        <div class="charts-wave-grid">
+            {{-- Card Kiri: Grafik Wave Visitor --}}
+            <div class="wave-card" style="margin-bottom:0;">
+                <div class="wave-header">
+                    <span class="wave-title">GRAFIK WAVE VISITOR</span>
+                    <span class="wave-live-badge"><span class="wave-live-dot"></span> LIVE</span>
+                </div>
+                <div class="chart-wrap">
+                    <canvas id="trafficChart"></canvas>
                 </div>
             </div>
+
+            {{-- Card Kanan: Grafik Wave Penjualan --}}
+            <div class="wave-card" style="margin-bottom:0;">
+                <div class="wave-header">
+                    <span class="wave-title">GRAFIK WAVE PENJUALAN</span>
+                    <span class="wave-live-badge" style="background:#e0e7ff; color:#3730a3;"><span class="wave-live-dot"
+                            style="background:#4338ca;"></span> RP</span>
+                </div>
+                <div class="chart-wrap">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        {{-- ── Main Grid: Buyers + Sidebar ────────────────────────────────── --}}
+        <div class="main-grid">
+
+            {{-- Buyers Table --}}
+            <div class="panel-card">
+                <div class="panel-head">
+                    <h3 class="panel-title">Data Pembeli</h3>
+                    <div class="export-group">
+                        <a href="{{ route('creator.sales.report.export', array_merge(request()->query(), ['format' => 'xls'])) }}"
+                            class="btn-export">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg>
+                            Export XLS
+                        </a>
+                        <a href="{{ route('creator.sales.report.export', array_merge(request()->query(), ['format' => 'pdf'])) }}"
+                            class="btn-export red">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg>
+                            Export PDF
+                        </a>
+                    </div>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal & ID</th>
+                                <th>Pembeli</th>
+                                <th>Produk</th>
+                                <th>Total</th>
+                                <th>Status Pesanan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($buyers as $order)
+                                @php
+                                    $statusVal = is_object($order->status) ? $order->status->value : (string) $order->status;
+                                    $statusLabel = is_object($order->status) && method_exists($order->status, 'label') ? $order->status->label() : ucfirst($statusVal);
+                                    $statusBadgeStyle = match ($statusVal) {
+                                        'completed' => 'background:#dcfce7;color:#166534;border:1px solid #bbf7d0;',
+                                        'shipped' => 'background:#e0e7ff;color:#3730a3;border:1px solid #c7d2fe;',
+                                        'processing' => 'background:#fef3c7;color:#92400e;border:1px solid #fde68a;',
+                                        'cancelled' => 'background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;',
+                                        default => 'background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;',
+                                    };
+                                    $shipment = $order->shipment;
+                                    $addr = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
+                                @endphp
+                                <tr>
+                                    <td style="white-space:nowrap; color:#64748b; font-size:0.75rem;">
+                                        <div style="display:flex;align-items:center;gap:6px;">
+                                            <span
+                                                style="font-weight:700;color:#0f172a;">#{{ $order->order_number ?? ('BYL-' . $order->id) }}</span>
+                                            @if(($order->source ?? '') === 'pos')
+                                                <span
+                                                    style="background:#e0e7ff;color:#3730a3;font-size:0.65rem;padding:1px 6px;border-radius:4px;font-weight:700;">POS</span>
+                                            @else
+                                                <span
+                                                    style="background:#f1f5f9;color:#475569;font-size:0.65rem;padding:1px 6px;border-radius:4px;font-weight:600;">Bio</span>
+                                            @endif
+                                        </div>
+                                        <div>{{ $order->created_at->format('d M Y H:i') }}</div>
+                                    </td>
+                                    <td class="td-user">
+                                        <div class="name" style="font-weight:700; color:#0f172a;">
+                                            {{ $addr['name'] ?? $order->user?->name ?? 'Pembeli' }}</div>
+                                        @if(!empty($addr['phone']) || !empty($order->user?->phone))
+                                            <div class="phone" style="font-size:0.75rem;color:#1eb349;font-weight:600;">
+                                                {{ $addr['phone'] ?? $order->user?->phone }}</div>
+                                        @endif
+                                        <div class="email" style="font-size:0.72rem;color:#94a3b8;">{{ $order->user?->email ?? '' }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @foreach($order->items as $item)
+                                            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;">
+                                                <span class="badge"
+                                                    style="font-weight:600;">{{ Str::limit($item->product_name, 28) }}</span>
+                                                <span style="font-size:0.68rem;color:#64748b;">(x{{ $item->quantity }})</span>
+                                            </div>
+                                        @endforeach
+                                    </td>
+                                    <td style="font-weight:800; white-space:nowrap; color:#0f172a;">Rp
+                                        {{ number_format($order->items->sum('subtotal'), 0, ',', '.') }}</td>
+                                    <td>
+                                        <span id="badge-status-{{ $order->id }}" class="badge"
+                                            style="{{ $statusBadgeStyle }} font-weight:700; padding:3px 8px; border-radius:6px; font-size:0.72rem;">
+                                            {{ $statusLabel }}
+                                        </span>
+                                        @if(!empty($shipment?->tracking_number))
+                                            <div id="resi-text-{{ $order->id }}"
+                                                style="font-size:0.7rem; color:#2563eb; font-weight:700; margin-top:3px;">
+                                                <i class="fas fa-truck"></i> {{ $shipment->tracking_number }}
+                                            </div>
+                                        @else
+                                            <div id="resi-text-{{ $order->id }}"
+                                                style="font-size:0.68rem; color:#94a3b8; margin-top:2px;">Belum ada resi</div>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @php
+                                            $orderDataJson = json_encode([
+                                                'id' => $order->id,
+                                                'order_number' => $order->order_number ?? ('BYL-' . $order->id),
+                                                'date' => $order->created_at->format('d M Y H:i'),
+                                                'status' => $statusVal,
+                                                'status_label' => $statusLabel,
+                                                'user_name' => $addr['name'] ?? $order->user?->name ?? 'Pembeli',
+                                                'phone' => $addr['phone'] ?? $order->user?->phone ?? '',
+                                                'email' => $order->user?->email ?? '',
+                                                'shipping_address' => $addr,
+                                                'items' => $order->items->map(fn($i) => [
+                                                    'name' => $i->product_name,
+                                                    'quantity' => $i->quantity,
+                                                    'price' => $i->price,
+                                                    'subtotal' => $i->subtotal,
+                                                    'product_type' => $i->product?->product_type ?? $i->product?->type ?? 'external_link',
+                                                    'seller_id' => $i->seller_id,
+                                                    'reseller_id' => $i->reseller_id,
+                                                    'seller_name' => $i->seller?->name ?? '',
+                                                    'reseller_name' => $i->reseller?->name ?? '',
+                                                    'base_price' => (float) ($i->base_whitelabel_price ?? 0),
+                                                    'reseller_margin' => (float) ($i->reseller_margin ?? 0),
+                                                    'creator_earnings' => (float) ($i->creator_earnings ?? $i->subtotal),
+                                                ])->values(),
+                                                'subtotal' => $order->items->sum('subtotal'),
+                                                'shipping_cost' => (float) ($order->shipping_cost ?? 0),
+                                                'platform_fee' => (float) ($order->platform_fee ?? 0),
+                                                'admin_fee' => (float) ($order->admin_fee ?? 0),
+                                                'discount' => (float) ($order->discount ?? 0),
+                                                'grand_total' => (float) ($order->total ?? $order->items->sum('subtotal')),
+                                                'total' => (float) ($order->total ?? $order->items->sum('subtotal')),
+                                                'seller_name' => auth()->user()->name ?? 'Kreator buyle.id',
+                                                'courier_name' => $shipment?->courier_name ?? '',
+                                                'tracking_number' => $shipment?->tracking_number ?? '',
+                                                'update_url' => route('creator.sales.report.update_order', $order->id),
+                                            ]);
+                                        @endphp
+                                        <div style="display:flex; align-items:center; gap:0.4rem;">
+                                            <button type="button" onclick="openOrderModal({{ $orderDataJson }})" class="btn-export"
+                                                style="background:#0f172a; color:#fff; border:none; padding:0.4rem 0.65rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap;">
+                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
+                                                    viewBox="0 0 24 24" style="vertical-align:middle;margin-right:3px;">
+                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                                </svg>
+                                                Detail & Edit
+                                            </button>
+                                            <button type="button" onclick="printReceipt({{ $orderDataJson }})" class="btn-export"
+                                                style="background:#1eb349; color:#fff; border:none; padding:0.4rem 0.65rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap;"
+                                                title="Cetak / Download e-Receipt Pesanan">
+                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
+                                                    viewBox="0 0 24 24" style="vertical-align:middle;margin-right:3px;">
+                                                    <polyline points="6 9 6 2 18 2 18 9" />
+                                                    <path
+                                                        d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                                                    <rect x="6" y="14" width="12" height="8" />
+                                                </svg>
+                                                e-Receipt
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" style="text-align:center; padding: 2.5rem; color:#94a3b8; font-size:0.85rem;">
+                                        Belum ada data pembeli di rentang waktu ini.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {{-- Sidebar --}}
+            <div>
+                {{-- Top Products --}}
+                <div class="panel-card side-panel">
+                    <h3 class="panel-title" style="margin-bottom:1rem;">Produk Terpopuler</h3>
+                    @forelse($topProducts as $prod)
+                        <div class="list-row">
+                            <div class="list-name">
+                                {{ Str::limit($prod->name, 32) }}
+                                <small>Rp {{ number_format($prod->sold_amount ?? 0, 0, ',', '.') }}</small>
+                            </div>
+                            <div class="list-stat">{{ number_format($prod->visits_count) }} klik</div>
+                        </div>
+                    @empty
+                        <p style="font-size:0.82rem; color:#94a3b8; margin:0;">Belum ada data kunjungan produk.</p>
+                    @endforelse
+                </div>
+
+                {{-- Top Bio Link Clicks --}}
+                <div class="panel-card side-panel">
+                    <h3 class="panel-title" style="margin-bottom:1rem;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                            style="vertical-align:middle;margin-right:4px;">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                        </svg>
+                        Klik Link Bio
+                    </h3>
+                    @forelse($topBioLinks as $link)
+                        <div class="list-row">
+                            <div class="list-name">{{ Str::limit($link->page_title ?? 'Block #' . $link->bio_block_id, 32) }}</div>
+                            <div class="list-stat">{{ number_format($link->click_count) }} klik</div>
+                        </div>
+                    @empty
+                        <p style="font-size:0.82rem; color:#94a3b8; margin:0;">Belum ada klik link bio tercatat.</p>
+                    @endforelse
+                </div>
+
+                {{-- Bio UTM Sources --}}
+                @if($bioUtmSources->isNotEmpty())
+                    <div class="panel-card side-panel">
+                        <h3 class="panel-title" style="margin-bottom:1rem;">Sumber Trafik Bio</h3>
+                        @foreach($bioUtmSources as $utm)
+                            <div class="list-row">
+                                <div class="list-name">{{ $utm->utm_source }}</div>
+                                <div class="list-stat">{{ number_format($utm->count) }} klik</div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
+                {{-- UTM Sources (orders) --}}
+                <div class="panel-card">
+                    <h3 class="panel-title" style="margin-bottom:1rem;">Sumber Trafik Order</h3>
+                    @forelse($utmSources as $utm)
+                        <div class="list-row">
+                            <div class="list-name">{{ $utm->utm_source }}</div>
+                            <div class="list-stat">{{ number_format($utm->count) }} transaksi</div>
+                        </div>
+                    @empty
+                        <p style="font-size:0.82rem; color:#94a3b8; margin:0;">Belum ada data UTM tercatat.</p>
+                    @endforelse
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {{-- ── TAB 2: LEADS TRACKER ────────────────────────────────────────── --}}
+    <div id="tabContentLeads" class="rp-tab-content" style="display:none;">
+        {{-- Leads Metric Cards --}}
+        <div class="metrics-grid" style="margin-bottom:1.5rem;">
+            <div class="metric-card">
+                <div class="metric-label">Total Leads Masuk</div>
+                <div class="metric-value">{{ number_format(count($leads ?? [])) }}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Leads Hari Ini</div>
+                <div class="metric-value">{{ number_format(collect($leads ?? [])->filter(fn($l) => \Carbon\Carbon::parse($l->created_at)->isToday())->count()) }}</div>
+            </div>
+            <div class="metric-card dark" style="grid-column: span 2;">
+                <div class="metric-label">Leads Bulan Ini</div>
+                <div class="metric-value">{{ number_format(collect($leads ?? [])->filter(fn($l) => \Carbon\Carbon::parse($l->created_at)->isCurrentMonth())->count()) }}</div>
+            </div>
+        </div>
+
+        {{-- Leads Table Panel --}}
+        <div class="panel-card" style="width:100%; box-sizing:border-box;">
+            <div class="panel-head" style="margin-bottom:1.25rem;">
+                <div>
+                    <h3 class="panel-title" style="margin:0 0 0.2rem;">Daftar Leads & Pesan Masuk</h3>
+                    <p style="font-size:0.8rem; color:#64748b; margin:0;">Daftar calon klien & pembeli yang mengisi form Hubungi Kami dari website Anda.</p>
+                </div>
+            </div>
+
             <div style="overflow-x:auto;">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Tanggal & ID</th>
-                            <th>Pembeli</th>
-                            <th>Produk</th>
-                            <th>Total</th>
-                            <th>Status Pesanan</th>
+                            <th>Waktu & Tanggal</th>
+                            <th>Nama Lead</th>
+                            <th>WhatsApp</th>
+                            <th>Kota / Perusahaan</th>
+                            <th>Kebutuhan / Pesan</th>
+                            <th>Sumber</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($buyers as $order)
+                        @forelse($leads ?? [] as $lead)
                             @php
-                                $statusVal = is_object($order->status) ? $order->status->value : (string) $order->status;
-                                $statusLabel = is_object($order->status) && method_exists($order->status, 'label') ? $order->status->label() : ucfirst($statusVal);
-                                $statusBadgeStyle = match ($statusVal) {
-                                    'completed' => 'background:#dcfce7;color:#166534;border:1px solid #bbf7d0;',
-                                    'shipped' => 'background:#e0e7ff;color:#3730a3;border:1px solid #c7d2fe;',
-                                    'processing' => 'background:#fef3c7;color:#92400e;border:1px solid #fde68a;',
-                                    'cancelled' => 'background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;',
-                                    default => 'background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;',
-                                };
-                                $shipment = $order->shipment;
-                                $addr = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address ?? '', true) ?? []);
+                                $waClean = preg_replace('/[^0-9]/', '', $lead->phone);
+                                if(str_starts_with($waClean, '0')) $waClean = '62' . substr($waClean, 1);
+                                $waMsg = "Halo Kak {$lead->name}, terima kasih telah menghubungi kami mengenai kebutuhan: " . ($lead->message ?? $lead->product);
                             @endphp
                             <tr>
-                                <td style="white-space:nowrap; color:#64748b; font-size:0.75rem;">
-                                    <div style="display:flex;align-items:center;gap:6px;">
-                                        <span
-                                            style="font-weight:700;color:#0f172a;">#{{ $order->order_number ?? ('BYL-' . $order->id) }}</span>
-                                        @if(($order->source ?? '') === 'pos')
-                                            <span
-                                                style="background:#e0e7ff;color:#3730a3;font-size:0.65rem;padding:1px 6px;border-radius:4px;font-weight:700;">POS</span>
-                                        @else
-                                            <span
-                                                style="background:#f1f5f9;color:#475569;font-size:0.65rem;padding:1px 6px;border-radius:4px;font-weight:600;">Bio</span>
-                                        @endif
-                                    </div>
-                                    <div>{{ $order->created_at->format('d M Y H:i') }}</div>
-                                </td>
-                                <td class="td-user">
-                                    <div class="name" style="font-weight:700; color:#0f172a;">
-                                        {{ $addr['name'] ?? $order->user?->name ?? 'Pembeli' }}</div>
-                                    @if(!empty($addr['phone']) || !empty($order->user?->phone))
-                                        <div class="phone" style="font-size:0.75rem;color:#1eb349;font-weight:600;">
-                                            {{ $addr['phone'] ?? $order->user?->phone }}</div>
-                                    @endif
-                                    <div class="email" style="font-size:0.72rem;color:#94a3b8;">{{ $order->user?->email ?? '' }}
-                                    </div>
+                                <td style="white-space:nowrap; color:#64748b; font-size:0.78rem;">
+                                    <div style="font-weight:600; color:#0f172a;">{{ \Carbon\Carbon::parse($lead->created_at)->format('d M Y') }}</div>
+                                    <div style="font-size:0.72rem; color:#94a3b8;">{{ \Carbon\Carbon::parse($lead->created_at)->format('H:i') }} WIB</div>
                                 </td>
                                 <td>
-                                    @foreach($order->items as $item)
-                                        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;">
-                                            <span class="badge"
-                                                style="font-weight:600;">{{ Str::limit($item->product_name, 28) }}</span>
-                                            <span style="font-size:0.68rem;color:#64748b;">(x{{ $item->quantity }})</span>
-                                        </div>
-                                    @endforeach
+                                    <div style="font-weight:700; color:#0f172a; font-size:0.88rem;">{{ $lead->name }}</div>
                                 </td>
-                                <td style="font-weight:800; white-space:nowrap; color:#0f172a;">Rp
-                                    {{ number_format($order->items->sum('subtotal'), 0, ',', '.') }}</td>
                                 <td>
-                                    <span id="badge-status-{{ $order->id }}" class="badge"
-                                        style="{{ $statusBadgeStyle }} font-weight:700; padding:3px 8px; border-radius:6px; font-size:0.72rem;">
-                                        {{ $statusLabel }}
-                                    </span>
-                                    @if(!empty($shipment?->tracking_number))
-                                        <div id="resi-text-{{ $order->id }}"
-                                            style="font-size:0.7rem; color:#2563eb; font-weight:700; margin-top:3px;">
-                                            <i class="fas fa-truck"></i> {{ $shipment->tracking_number }}
-                                        </div>
+                                    @if($waClean)
+                                        <a href="https://wa.me/{{ $waClean }}?text={{ urlencode($waMsg) }}" target="_blank"
+                                            style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#F0FDF4; border:1px solid #BBF7D0; color:#15803D; border-radius:6px; font-weight:700; font-size:0.78rem; text-decoration:none;">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+                                            <span>{{ $lead->phone }}</span>
+                                        </a>
                                     @else
-                                        <div id="resi-text-{{ $order->id }}"
-                                            style="font-size:0.68rem; color:#94a3b8; margin-top:2px;">Belum ada resi</div>
+                                        <span style="font-size:0.8rem; color:#64748b;">{{ $lead->phone }}</span>
                                     @endif
                                 </td>
                                 <td>
-                                    @php
-                                        $orderDataJson = json_encode([
-                                            'id' => $order->id,
-                                            'order_number' => $order->order_number ?? ('BYL-' . $order->id),
-                                            'date' => $order->created_at->format('d M Y H:i'),
-                                            'status' => $statusVal,
-                                            'status_label' => $statusLabel,
-                                            'user_name' => $addr['name'] ?? $order->user?->name ?? 'Pembeli',
-                                            'phone' => $addr['phone'] ?? $order->user?->phone ?? '',
-                                            'email' => $order->user?->email ?? '',
-                                            'shipping_address' => $addr,
-                                            'items' => $order->items->map(fn($i) => [
-                                                'name' => $i->product_name,
-                                                'quantity' => $i->quantity,
-                                                'price' => $i->price,
-                                                'subtotal' => $i->subtotal,
-                                                'product_type' => $i->product?->product_type ?? $i->product?->type ?? 'external_link',
-                                                'seller_id' => $i->seller_id,
-                                                'reseller_id' => $i->reseller_id,
-                                                'seller_name' => $i->seller?->name ?? '',
-                                                'reseller_name' => $i->reseller?->name ?? '',
-                                                'base_price' => (float) ($i->base_whitelabel_price ?? 0),
-                                                'reseller_margin' => (float) ($i->reseller_margin ?? 0),
-                                                'creator_earnings' => (float) ($i->creator_earnings ?? $i->subtotal),
-                                            ])->values(),
-                                            'subtotal' => $order->items->sum('subtotal'),
-                                            'shipping_cost' => (float) ($order->shipping_cost ?? 0),
-                                            'platform_fee' => (float) ($order->platform_fee ?? 0),
-                                            'admin_fee' => (float) ($order->admin_fee ?? 0),
-                                            'discount' => (float) ($order->discount ?? 0),
-                                            'grand_total' => (float) ($order->total ?? $order->items->sum('subtotal')),
-                                            'total' => (float) ($order->total ?? $order->items->sum('subtotal')),
-                                            'seller_name' => auth()->user()->name ?? 'Kreator buyle.id',
-                                            'courier_name' => $shipment?->courier_name ?? '',
-                                            'tracking_number' => $shipment?->tracking_number ?? '',
-                                            'update_url' => route('creator.sales.report.update_order', $order->id),
-                                        ]);
-                                    @endphp
-                                    <div style="display:flex; align-items:center; gap:0.4rem;">
-                                        <button type="button" onclick="openOrderModal({{ $orderDataJson }})" class="btn-export"
-                                            style="background:#0f172a; color:#fff; border:none; padding:0.4rem 0.65rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap;">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
-                                                viewBox="0 0 24 24" style="vertical-align:middle;margin-right:3px;">
-                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                            </svg>
-                                            Detail & Edit
-                                        </button>
-                                        <button type="button" onclick="printReceipt({{ $orderDataJson }})" class="btn-export"
-                                            style="background:#1eb349; color:#fff; border:none; padding:0.4rem 0.65rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap;"
-                                            title="Cetak / Download e-Receipt Pesanan">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
-                                                viewBox="0 0 24 24" style="vertical-align:middle;margin-right:3px;">
-                                                <polyline points="6 9 6 2 18 2 18 9" />
-                                                <path
-                                                    d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-                                                <rect x="6" y="14" width="12" height="8" />
-                                            </svg>
-                                            e-Receipt
-                                        </button>
+                                    <span style="font-size:0.83rem; font-weight:600; color:#334155;">{{ $lead->city ?? $lead->company ?? '-' }}</span>
+                                </td>
+                                <td style="max-width:280px; font-size:0.82rem; color:#475569; line-height:1.4;">
+                                    {{ $lead->message ?? $lead->product ?? '-' }}
+                                </td>
+                                <td>
+                                    <span style="display:inline-block; padding:0.2rem 0.55rem; background:#EFF6FF; border:1px solid #BFDBFE; color:#1D4ED8; border-radius:6px; font-size:0.72rem; font-weight:600;">
+                                        {{ $lead->source === 'theme5_footer' ? 'Footer Theme 5' : ucfirst($lead->source ?? 'Website') }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        @if($waClean)
+                                            <a href="https://wa.me/{{ $waClean }}?text={{ urlencode($waMsg) }}" target="_blank"
+                                                title="Chat via WhatsApp"
+                                                style="padding:0.35rem 0.65rem; background:#22c55e; color:#fff; border-radius:6px; font-size:0.75rem; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                                                Chat WA
+                                            </a>
+                                        @endif
+
+                                        <form method="POST" action="{{ route('sales.report.destroy_lead', $lead->id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus lead ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" title="Hapus Lead"
+                                                style="padding:0.35rem 0.55rem; background:#FEE2E2; border:1px solid #FCA5A5; color:#991B1B; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer;">
+                                                Hapus
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" style="text-align:center; padding: 2.5rem; color:#94a3b8; font-size:0.85rem;">
-                                    Belum ada data pembeli di rentang waktu ini.
+                                <td colspan="7" style="text-align:center; padding:2.5rem; color:#94a3b8; font-size:0.85rem;">
+                                    Belum ada data leads masuk dari formulir footer Anda.
                                 </td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
             </div>
         </div>
 
@@ -964,6 +1160,36 @@
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
     <script>
+        function switchReportTab(tabName) {
+            const analyticsContent = document.getElementById('tabContentAnalytics');
+            const leadsContent     = document.getElementById('tabContentLeads');
+            const tabBtnAnalytics  = document.getElementById('tabBtnAnalytics');
+            const tabBtnLeads      = document.getElementById('tabBtnLeads');
+
+            if (tabName === 'leads') {
+                if (analyticsContent) analyticsContent.style.display = 'none';
+                if (leadsContent) leadsContent.style.display = 'block';
+                if (tabBtnAnalytics) {
+                    tabBtnAnalytics.style.color = '#64748b';
+                    tabBtnAnalytics.style.borderBottomColor = 'transparent';
+                }
+                if (tabBtnLeads) {
+                    tabBtnLeads.style.color = '#1eb349';
+                    tabBtnLeads.style.borderBottomColor = '#1eb349';
+                }
+            } else {
+                if (analyticsContent) analyticsContent.style.display = 'block';
+                if (leadsContent) leadsContent.style.display = 'none';
+                if (tabBtnAnalytics) {
+                    tabBtnAnalytics.style.color = '#1eb349';
+                    tabBtnAnalytics.style.borderBottomColor = '#1eb349';
+                }
+                if (tabBtnLeads) {
+                    tabBtnLeads.style.color = '#64748b';
+                    tabBtnLeads.style.borderBottomColor = 'transparent';
+                }
+            }
+        }
         // ── Traffic Wave Chart ────────────────────────────────────────────────
         (function () {
             const filter = @json($filter);

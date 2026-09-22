@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Lead extends Model
 {
     protected $fillable = [
-        'name', 'company', 'email', 'phone', 'product', 'message',
+        'user_id', 'seller_id', 'name', 'company', 'city', 'email', 'phone', 'product', 'message',
         'source', 'page_url', 'ip_address', 'device_type',
         'status', 'notes', 'wa_number',
         'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',

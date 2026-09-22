@@ -205,12 +205,31 @@ class SellerReportController extends Controller
             }
         }
 
+        // ── 7. Leads Tracker ───────────────────────────────────────────────────
+        $leads = \App\Models\Lead::where('user_id', $seller->id)
+            ->orWhere('seller_id', $seller->id)
+            ->orderByDesc('created_at')
+            ->get();
+
         return view('creator.reports.index', compact(
             'filter', 'startDate', 'endDate',
             'totalSales', 'totalOrders', 'totalVisitors', 'uniqueVisitors',
             'topProducts', 'utmSources', 'buyers', 'visitorsByDate', 'salesByDate',
-            'totalBioClicks', 'topBioLinks', 'bioUtmSources'
+            'totalBioClicks', 'topBioLinks', 'bioUtmSources', 'leads'
         ));
+    }
+
+    /**
+     * Hapus lead dari tracker.
+     */
+    public function destroyLead(\App\Models\Lead $lead)
+    {
+        $seller = auth()->user();
+        if ((int)$lead->seller_id === (int)$seller->id || (int)$lead->user_id === (int)$seller->id) {
+            $lead->delete();
+            return back()->with('success', 'Lead berhasil dihapus.');
+        }
+        return back()->with('error', 'Anda tidak memiliki akses untuk menghapus lead ini.');
     }
 
     /**

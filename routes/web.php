@@ -61,6 +61,7 @@ Route::prefix('api/region')->group(function() {
 });
 
 Route::get('/qr-code', [\App\Http\Controllers\QrCodeController::class, 'generate'])->name('qr.code');
+Route::post('/lead/store', [\App\Http\Controllers\LeadController::class, 'store'])->name('lead.store');
 
 Route::middleware(['track.pageview'])->group(function () {
     // Legacy redirects for cached locale routes
@@ -572,6 +573,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::get('/sales-report', [\App\Http\Controllers\Creator\SellerReportController::class, 'index'])->name('sales.report');
     Route::get('/sales-report/export', [\App\Http\Controllers\Creator\SellerReportController::class, 'export'])->name('sales.report.export');
     Route::post('/sales-report/orders/{order}/update', [\App\Http\Controllers\Creator\SellerReportController::class, 'updateOrder'])->name('sales.report.update_order');
+    Route::delete('/sales-report/leads/{lead}', [\App\Http\Controllers\Creator\SellerReportController::class, 'destroyLead'])->name('sales.report.destroy_lead');
 
     // Simple POS (Kasir Digital)
     Route::get('/pos', [\App\Http\Controllers\Creator\PosController::class, 'index'])->name('pos.index');
