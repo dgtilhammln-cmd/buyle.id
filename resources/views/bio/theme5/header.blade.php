@@ -303,15 +303,19 @@
     $homeUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') : url('/' . $username);
     $productsUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') . '/produk' : url('/' . $username . '/produk');
     
-    $berandaLink = $isHome ? '#' : $homeUrl;
-    $aboutLink   = $isHome ? '#about-section' : $homeUrl . '#about-section';
-    $contactLink = $isHome ? '#contact-section' : $homeUrl . '#contact-section';
+    $berandaLink = $isHome ? 'javascript:void(0)' : $homeUrl;
+    $aboutLink   = $isHome ? 'javascript:void(0)' : $homeUrl . '?scroll=about';
+    $contactLink = $isHome ? 'javascript:void(0)' : $homeUrl . '?scroll=contact';
+
+    $berandaOnClick = $isHome ? "t5ScrollTo('top'); return false;" : "";
+    $aboutOnClick   = $isHome ? "t5ScrollTo('about-section'); return false;" : "";
+    $contactOnClick = $isHome ? "t5ScrollTo('contact-section'); return false;" : "";
 @endphp
 
 <header class="t5-header">
     <div class="t5-header-container">
         {{-- Brand / Logo --}}
-        <a href="{{ $berandaLink }}" class="t5-brand">
+        <a href="{{ $berandaLink }}" onclick="{{ $berandaOnClick }}" class="t5-brand">
             @if($avatarUrl)
                 <img src="{{ $avatarUrl }}" alt="{{ $bioName }}" class="t5-brand-avatar">
             @else
@@ -324,8 +328,8 @@
 
         {{-- Desktop Navigation Links --}}
         <nav class="t5-nav-desktop">
-            <a href="{{ $berandaLink }}" class="t5-nav-link {{ $isHome ? 'active' : '' }}">Beranda</a>
-            <a href="{{ $aboutLink }}" class="t5-nav-link">Profil</a>
+            <a href="{{ $berandaLink }}" onclick="{{ $berandaOnClick }}" class="t5-nav-link {{ $isHome ? 'active' : '' }}">Beranda</a>
+            <a href="{{ $aboutLink }}" onclick="{{ $aboutOnClick }}" class="t5-nav-link">Profil</a>
             <a href="{{ $productsUrl }}" class="t5-nav-link {{ request()->is('*/produk*') || request()->is('produk*') ? 'active' : '' }}">Produk / Layanan</a>
             
             @if(isset($blocks) && $blocks->count() > 0)
@@ -344,7 +348,7 @@
                 @endforeach
             @endif
 
-            <a href="{{ $contactLink }}" class="t5-nav-link">Kontak</a>
+            <a href="{{ $contactLink }}" onclick="{{ $contactOnClick }}" class="t5-nav-link">Kontak</a>
         </nav>
 
         {{-- Action Buttons --}}
@@ -404,8 +408,8 @@
             <button type="button" class="t5-drawer-close" onclick="toggleT5Drawer()">&times;</button>
         </div>
         <nav class="t5-drawer-nav">
-            <a href="{{ $berandaLink }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Beranda</a>
-            <a href="{{ $aboutLink }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Profil</a>
+            <a href="{{ $berandaLink }}" onclick="{{ $berandaOnClick }} toggleT5Drawer();" class="t5-drawer-link">Beranda</a>
+            <a href="{{ $aboutLink }}" onclick="{{ $aboutOnClick }} toggleT5Drawer();" class="t5-drawer-link">Profil</a>
             <a href="{{ $productsUrl }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Produk / Layanan</a>
             <a href="https://buyle.id/keranjang" class="t5-drawer-link t5-drawer-cart-link">
                 <span style="display:inline-flex; align-items:center; gap:0.45rem;">
@@ -433,12 +437,28 @@
                     @endif
                 @endforeach
             @endif
-            <a href="{{ $contactLink }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Kontak</a>
+            <a href="{{ $contactLink }}" onclick="{{ $contactOnClick }} toggleT5Drawer();" class="t5-drawer-link">Kontak</a>
         </nav>
     </div>
 </div>
 
 <script>
+    function t5ScrollTo(targetId) {
+        if (targetId === 'top') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        var el = document.getElementById(targetId);
+        if (!el && targetId === 'contact-section') {
+            el = document.getElementById('footer-section') || document.querySelector('.t5-footer') || document.querySelector('.t5-footer-card');
+        }
+        if (el) {
+            var yOffset = -80;
+            var y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+    }
+
     function toggleT5Drawer() {
         var drawer = document.getElementById('t5MobileDrawer');
         if (!drawer) return;
@@ -454,10 +474,22 @@
             document.body.style.overflow = 'hidden';
         }
     }
+
     document.addEventListener('DOMContentLoaded', function() {
         var drawer = document.getElementById('t5MobileDrawer');
         if (drawer && drawer.parentNode !== document.body) {
             document.body.appendChild(drawer);
+        }
+
+        var params = new URLSearchParams(window.location.search);
+        var scrollTarget = params.get('scroll');
+        if (scrollTarget) {
+            setTimeout(function() {
+                t5ScrollTo(scrollTarget === 'about' ? 'about-section' : 'contact-section');
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState(null, '', window.location.pathname);
+                }
+            }, 300);
         }
     });
 

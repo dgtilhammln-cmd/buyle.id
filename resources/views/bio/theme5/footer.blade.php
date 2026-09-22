@@ -469,16 +469,20 @@
             $homeUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') : url('/' . $username);
             $productsUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') . '/produk' : url('/' . $username . '/produk');
 
-            $berandaLink = $isHome ? '#' : $homeUrl;
-            $aboutLink   = $isHome ? '#about-section' : $homeUrl . '#about-section';
-            $contactLink = $isHome ? '#footer-section' : $homeUrl . '#footer-section';
+            $berandaLink = $isHome ? 'javascript:void(0)' : $homeUrl;
+            $aboutLink   = $isHome ? 'javascript:void(0)' : $homeUrl . '?scroll=about';
+            $contactLink = $isHome ? 'javascript:void(0)' : $homeUrl . '?scroll=contact';
+
+            $berandaOnClick = $isHome ? "t5ScrollTo('top'); return false;" : "";
+            $aboutOnClick   = $isHome ? "t5ScrollTo('about-section'); return false;" : "";
+            $contactOnClick = $isHome ? "t5ScrollTo('contact-section'); return false;" : "";
         @endphp
         {{-- Navigation Links (Top Row) --}}
         <div class="t5-footer-nav">
-            <a href="{{ $berandaLink }}">Beranda</a>
-            <a href="{{ $aboutLink }}">Profil</a>
+            <a href="{{ $berandaLink }}" onclick="{{ $berandaOnClick }}">Beranda</a>
+            <a href="{{ $aboutLink }}" onclick="{{ $aboutOnClick }}">Profil</a>
             <a href="{{ $productsUrl }}">Produk / Layanan</a>
-            <a href="{{ $contactLink }}">Kontak</a>
+            <a href="{{ $contactLink }}" onclick="{{ $contactOnClick }}">Kontak</a>
         </div>
 
         {{-- Main Center Section --}}
