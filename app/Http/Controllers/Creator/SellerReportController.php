@@ -206,8 +206,11 @@ class SellerReportController extends Controller
         }
 
         // ── 7. Leads Tracker ───────────────────────────────────────────────────
-        $leads = \App\Models\Lead::where('user_id', $seller->id)
-            ->orWhere('seller_id', $seller->id)
+        $leads = \App\Models\Lead::where(function($q) use ($seller) {
+                $q->where('user_id', $seller->id)
+                  ->orWhere('seller_id', $seller->id);
+            })
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->orderByDesc('created_at')
             ->get();
 
@@ -240,6 +243,52 @@ class SellerReportController extends Controller
         $seller = auth()->user();
         [$filter, $startDate, $endDate] = $this->getDateRange($request);
 
+        $type = $request->query('type') ?? $request->query('tab');
+        $storeName = $seller->creatorProfile?->store_name ?? ('seller-' . $seller->id);
+        $format    = $request->query('format', 'csv');
+
+        // ── 1. Export Data Leads ──────────────────────────────────────────────
+        if ($type === 'leads') {
+            $leads = \App\Models\Lead::where(function($q) use ($seller) {
+                    $q->where('user_id', $seller->id)
+                      ->orWhere('seller_id', $seller->id);
+                })
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->orderByDesc('created_at')
+                ->get();
+
+            $filename = 'Data_Leads_' . str_replace(' ', '_', $storeName) . '_' . date('Ymd');
+
+            if ($format === 'pdf') {
+                $pdf = Pdf::loadHTML($this->generateLeadsPdfHtml($leads, $storeName));
+                return $pdf->download($filename . '.pdf');
+            }
+
+            // Default CSV / XLS
+            $csvData  = "\xEF\xBB\xBF"; // UTF-8 BOM agar Excel dapat membaca dengan benar
+            $csvData .= "Tanggal & Waktu,Nama Lead,No WhatsApp,Kota / Perusahaan,Kebutuhan / Pesan,Sumber Form\n";
+
+            foreach ($leads as $lead) {
+                $date    = $lead->created_at ? $lead->created_at->format('Y-m-d H:i') : '-';
+                $name    = str_replace([",", "\n", "\r"], ' ', $lead->name ?? '-');
+                $phone   = str_replace([",", "\n", "\r"], ' ', $lead->phone ?? '-');
+                $city    = str_replace([",", "\n", "\r"], ' ', $lead->city ?? $lead->company ?? '-');
+                $message = str_replace([",", "\n", "\r"], ' ', $lead->message ?? $lead->product ?? '-');
+                $source  = str_replace([",", "\n", "\r"], ' ', $lead->source === 'theme5_footer' ? 'Footer5' : ($lead->source ?? 'Website'));
+
+                $csvData .= "{$date},{$name},{$phone},{$city},{$message},{$source}\n";
+            }
+
+            $csvData .= "\n";
+            $csvData .= "RINGKASAN LEADS TRACKER\n";
+            $csvData .= "Total Leads Masuk," . $leads->count() . " Leads\n";
+
+            return response($csvData)
+                ->header('Content-Type', 'text/csv; charset=utf-8')
+                ->header('Content-Disposition', "attachment; filename=\"{$filename}.csv\"");
+        }
+
+        // ── 2. Export Data Pembeli / Keuangan (Default) ─────────────────────
         $orders = $this->paidOrdersBaseQuery($seller->id, $startDate, $endDate)
             ->with([
                 'user',
@@ -248,9 +297,7 @@ class SellerReportController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        $storeName = $seller->creatorProfile?->store_name ?? ('seller-' . $seller->id);
-        $filename  = 'Laporan_Keuangan_Pembeli_' . str_replace(' ', '_', $storeName) . '_' . date('Ymd');
-        $format    = $request->query('format', 'csv');
+        $filename = 'Laporan_Keuangan_Pembeli_' . str_replace(' ', '_', $storeName) . '_' . date('Ymd');
 
         if ($format === 'pdf') {
             $pdf = Pdf::loadHTML($this->generatePdfHtml($orders, $storeName));
@@ -369,6 +416,77 @@ class SellerReportController extends Controller
         $html .= "</div>";
 
         $html .= "</body></html>";
+        return $html;
+    }
+
+    private function generateLeadsPdfHtml($leads, string $storeName): string
+    {
+        $totalLeads = $leads->count();
+
+        $html = "<!DOCTYPE html><html><head><meta charset='utf-8'>";
+        $html .= "<style>
+            body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #0f172a; font-size: 11px; padding: 15px; }
+            .header { text-align: center; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 14px; }
+            .header h2 { margin: 0 0 6px 0; font-size: 18px; color: #0f172a; letter-spacing: -0.5px; }
+            .header p { margin: 0; color: #64748b; font-size: 11.5px; }
+            table.report-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            table.report-table th { background: #f8fafc; color: #475569; font-weight: 700; text-align: left; padding: 9px 10px; border: 1px solid #cbd5e1; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+            table.report-table td { padding: 8px 10px; border: 1px solid #e2e8f0; font-size: 10.5px; }
+            table.report-table tr:nth-child(even) { background-color: #f9fafb; }
+            .summary-box { float: right; width: 250px; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 12px; background: #f8fafc; margin-top: 10px; }
+            .summary-title { margin: 0 0 8px 0; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #334155; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; }
+            .summary-table { width: 100%; border-collapse: collapse; }
+            .summary-table td { border: none; padding: 3px 0; font-size: 11px; }
+        </style></head><body>";
+
+        $html .= "<div class='header'>";
+        $html .= "<h2>LAPORAN LEADS TRACKER & PESAN MASUK</h2>";
+        $html .= "<p>Toko / Creator: <strong>" . htmlspecialchars($storeName) . "</strong> | Tanggal Cetak: " . date('d/m/Y H:i') . "</p>";
+        $html .= "</div>";
+
+        $html .= "<table class='report-table'>";
+        $html .= "<thead><tr>
+            <th style='width: 15%;'>Waktu & Tanggal</th>
+            <th style='width: 20%;'>Nama Lead</th>
+            <th style='width: 18%;'>WhatsApp / Kontak</th>
+            <th style='width: 17%;'>Kota / Perusahaan</th>
+            <th style='width: 20%;'>Kebutuhan / Pesan</th>
+            <th style='width: 10%;'>Sumber</th>
+        </tr></thead><tbody>";
+
+        foreach ($leads as $lead) {
+            $date    = $lead->created_at ? $lead->created_at->format('d/m/Y H:i') : '-';
+            $name    = htmlspecialchars($lead->name ?? '-');
+            $phone   = htmlspecialchars($lead->phone ?? '-');
+            $city    = htmlspecialchars($lead->city ?? $lead->company ?? '-');
+            $message = htmlspecialchars($lead->message ?? $lead->product ?? '-');
+            $source  = htmlspecialchars($lead->source === 'theme5_footer' ? 'Footer5' : ($lead->source ?? 'Website'));
+
+            $html .= "<tr>
+                <td>{$date}</td>
+                <td><strong>{$name}</strong></td>
+                <td>{$phone}</td>
+                <td>{$city}</td>
+                <td>{$message}</td>
+                <td>{$source}</td>
+            </tr>";
+        }
+
+        if ($totalLeads === 0) {
+            $html .= "<tr><td colspan='6' style='text-align:center; padding:20px; color:#64748b;'>Belum ada data leads pada periode ini.</td></tr>";
+        }
+
+        $html .= "</tbody></table>";
+
+        $html .= "<div class='summary-box'>";
+        $html .= "<div class='summary-title'>RINGKASAN LEADS</div>";
+        $html .= "<table class='summary-table'>";
+        $html .= "<tr><td>Total Leads Masuk:</td><td style='text-align:right;'><strong>{$totalLeads} Leads</strong></td></tr>";
+        $html .= "</table>";
+        $html .= "</div>";
+
+        $html .= "</body></html>";
+
         return $html;
     }
 

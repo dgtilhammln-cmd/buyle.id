@@ -5,13 +5,14 @@
 @section('page_subtitle', 'Pantau trafik visitor, sumber klik, dan data pembelian produkmu.')
 
 @section('topbar_actions')
+    @php $activeTab = request('tab', 'pembeli'); @endphp
     <div class="filter-bar">
-        <a href="{{ route('creator.sales.report', ['filter' => '7']) }}"
-            class="filter-btn {{ $filter === '7' ? 'active' : '' }}">7 Hari</a>
-        <a href="{{ route('creator.sales.report', ['filter' => '30']) }}"
-            class="filter-btn {{ $filter === '30' ? 'active' : '' }}">30 Hari</a>
-        <a href="{{ route('creator.sales.report', ['filter' => '90']) }}"
-            class="filter-btn {{ $filter === '90' ? 'active' : '' }}">90 Hari</a>
+        <a href="{{ route('creator.sales.report', array_merge(request()->query(), ['filter' => '7', 'tab' => $activeTab])) }}"
+            class="filter-btn {{ $filter === '7' ? 'active' : '' }}" id="filterBtn7">7 Hari</a>
+        <a href="{{ route('creator.sales.report', array_merge(request()->query(), ['filter' => '30', 'tab' => $activeTab])) }}"
+            class="filter-btn {{ $filter === '30' ? 'active' : '' }}" id="filterBtn30">30 Hari</a>
+        <a href="{{ route('creator.sales.report', array_merge(request()->query(), ['filter' => '90', 'tab' => $activeTab])) }}"
+            class="filter-btn {{ $filter === '90' ? 'active' : '' }}" id="filterBtn90">90 Hari</a>
         <div class="filter-divider"></div>
         <button type="button" class="filter-custom-btn {{ $filter === 'custom' ? 'active' : '' }}" id="btnOpenCustomDate">
             <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -954,6 +955,7 @@
             <h4>Pilih Periode Custom</h4>
             <form method="GET" action="{{ route('creator.sales.report') }}" id="customDateForm">
                 <input type="hidden" name="filter" value="custom">
+                <input type="hidden" name="tab" id="modalTabInput" value="{{ $activeTab }}">
                 <div class="date-input-group">
                     <label>Dari Tanggal</label>
                     <input type="date" name="start_date" id="inputStartDate"
@@ -976,19 +978,20 @@
 
     {{-- ── TAB NAVIGATION ────────────────────────────────────────────── --}}
     <div class="rp-tab-nav" style="display:flex; gap:0.5rem; margin-bottom:1.5rem; border-bottom:2px solid #e2e8f0; padding-bottom:0.25rem;">
-        <button type="button" class="rp-tab-btn active" onclick="switchReportTab('analytics')" id="tabBtnAnalytics" style="padding:0.65rem 1.25rem; font-weight:700; font-size:0.9rem; border:none; background:none; color:#1eb349; border-bottom:3px solid #1eb349; cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:all 0.2s;">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-            <span>Laporan Penjualan & Analytics</span>
+        <button type="button" class="rp-tab-btn {{ $activeTab === 'pembeli' ? 'active' : '' }}" onclick="switchReportTab('pembeli')" id="tabBtnPembeli" style="padding:0.65rem 1.25rem; font-weight:700; font-size:0.9rem; border:none; background:none; color:{{ $activeTab === 'pembeli' ? '#1eb349' : '#64748b' }}; border-bottom:3px solid {{ $activeTab === 'pembeli' ? '#1eb349' : 'transparent' }}; cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:all 0.2s;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            <span>Data Pembeli</span>
+            <span style="background:#1eb349; color:#fff; font-size:0.72rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($buyers ?? []) }}</span>
         </button>
-        <button type="button" class="rp-tab-btn" onclick="switchReportTab('leads')" id="tabBtnLeads" style="padding:0.65rem 1.25rem; font-weight:700; font-size:0.9rem; border:none; background:none; color:#64748b; border-bottom:3px solid transparent; cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:all 0.2s;">
+        <button type="button" class="rp-tab-btn {{ $activeTab === 'leads' ? 'active' : '' }}" onclick="switchReportTab('leads')" id="tabBtnLeads" style="padding:0.65rem 1.25rem; font-weight:700; font-size:0.9rem; border:none; background:none; color:{{ $activeTab === 'leads' ? '#1eb349' : '#64748b' }}; border-bottom:3px solid {{ $activeTab === 'leads' ? '#1eb349' : 'transparent' }}; cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:all 0.2s;">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <span>Leads Tracker</span>
+            <span>Data Leads</span>
             <span style="background:#1eb349; color:#fff; font-size:0.72rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($leads ?? []) }}</span>
         </button>
     </div>
 
-    {{-- ── TAB 1: ANALYTICS & PENJUALAN ────────────────────────────────── --}}
-    <div id="tabContentAnalytics" class="rp-tab-content">
+    {{-- ── TAB 1: DATA PEMBELI & ANALYTICS ─────────────────────────────── --}}
+    <div id="tabContentPembeli" class="rp-tab-content" style="{{ $activeTab === 'pembeli' ? '' : 'display:none;' }}">
         {{-- ── ACHIEVEMENT CARD & STATS HERO SECTION ─────────────────────── --}}
         <div class="rp-hero-section">
             {{-- Left Column: Luxury Banking Achievement Card --}}
@@ -1146,7 +1149,7 @@
                 <div class="panel-head">
                     <h3 class="panel-title">Data Pembeli</h3>
                     <div class="export-group">
-                        <a href="{{ route('creator.sales.report.export', array_merge(request()->query(), ['format' => 'xls'])) }}"
+                        <a href="{{ route('creator.sales.report.export', array_merge(request()->query(), ['type' => 'pembeli', 'format' => 'xls'])) }}"
                             class="btn-export">
                             <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -1155,7 +1158,7 @@
                             </svg>
                             Export XLS
                         </a>
-                        <a href="{{ route('creator.sales.report.export', array_merge(request()->query(), ['format' => 'pdf'])) }}"
+                        <a href="{{ route('creator.sales.report.export', array_merge(request()->query(), ['type' => 'pembeli', 'format' => 'pdf'])) }}"
                             class="btn-export red">
                             <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -1388,8 +1391,8 @@
         </div>
     </div>
 
-    {{-- ── TAB 2: LEADS TRACKER ────────────────────────────────────────── --}}
-    <div id="tabContentLeads" class="rp-tab-content" style="display:none;">
+    {{-- ── TAB 2: DATA LEADS TRACKER ───────────────────────────────────── --}}
+    <div id="tabContentLeads" class="rp-tab-content" style="{{ $activeTab === 'leads' ? '' : 'display:none;' }}">
         {{-- Leads Metric Cards --}}
         <div class="metrics-grid" style="margin-bottom:1.5rem;">
             <div class="metric-card">
@@ -1408,10 +1411,30 @@
 
         {{-- Leads Table Panel --}}
         <div class="panel-card" style="width:100%; box-sizing:border-box;">
-            <div class="panel-head" style="margin-bottom:1.25rem;">
+            <div class="panel-head" style="margin-bottom:1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
                 <div>
                     <h3 class="panel-title" style="margin:0 0 0.2rem;">Daftar Leads & Pesan Masuk</h3>
                     <p style="font-size:0.8rem; color:#64748b; margin:0;">Daftar calon klien & pembeli yang mengisi form Hubungi Kami dari website Anda.</p>
+                </div>
+                <div class="export-group">
+                    <a href="{{ route('creator.sales.report.export', array_merge(request()->query(), ['type' => 'leads', 'format' => 'xls'])) }}"
+                        class="btn-export">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Export XLS
+                    </a>
+                    <a href="{{ route('creator.sales.report.export', array_merge(request()->query(), ['type' => 'leads', 'format' => 'pdf'])) }}"
+                        class="btn-export red">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Export PDF
+                    </a>
                 </div>
             </div>
 
@@ -1505,34 +1528,60 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
     <script>
         function switchReportTab(tabName) {
-            const analyticsContent = document.getElementById('tabContentAnalytics');
-            const leadsContent     = document.getElementById('tabContentLeads');
-            const tabBtnAnalytics  = document.getElementById('tabBtnAnalytics');
-            const tabBtnLeads      = document.getElementById('tabBtnLeads');
+            const pembeliContent = document.getElementById('tabContentPembeli');
+            const leadsContent   = document.getElementById('tabContentLeads');
+            const tabBtnPembeli  = document.getElementById('tabBtnPembeli');
+            const tabBtnLeads    = document.getElementById('tabBtnLeads');
+            const modalTabInput  = document.getElementById('modalTabInput');
 
             if (tabName === 'leads') {
-                if (analyticsContent) analyticsContent.style.display = 'none';
+                if (pembeliContent) pembeliContent.style.display = 'none';
                 if (leadsContent) leadsContent.style.display = 'block';
-                if (tabBtnAnalytics) {
-                    tabBtnAnalytics.style.color = '#64748b';
-                    tabBtnAnalytics.style.borderBottomColor = 'transparent';
+                if (tabBtnPembeli) {
+                    tabBtnPembeli.style.color = '#64748b';
+                    tabBtnPembeli.style.borderBottomColor = 'transparent';
+                    tabBtnPembeli.classList.remove('active');
                 }
                 if (tabBtnLeads) {
                     tabBtnLeads.style.color = '#1eb349';
                     tabBtnLeads.style.borderBottomColor = '#1eb349';
+                    tabBtnLeads.classList.add('active');
                 }
+                if (modalTabInput) modalTabInput.value = 'leads';
+                updateFilterUrls('leads');
             } else {
-                if (analyticsContent) analyticsContent.style.display = 'block';
+                if (pembeliContent) pembeliContent.style.display = 'block';
                 if (leadsContent) leadsContent.style.display = 'none';
-                if (tabBtnAnalytics) {
-                    tabBtnAnalytics.style.color = '#1eb349';
-                    tabBtnAnalytics.style.borderBottomColor = '#1eb349';
+                if (tabBtnPembeli) {
+                    tabBtnPembeli.style.color = '#1eb349';
+                    tabBtnPembeli.style.borderBottomColor = '#1eb349';
+                    tabBtnPembeli.classList.add('active');
                 }
                 if (tabBtnLeads) {
                     tabBtnLeads.style.color = '#64748b';
                     tabBtnLeads.style.borderBottomColor = 'transparent';
+                    tabBtnLeads.classList.remove('active');
                 }
+                if (modalTabInput) modalTabInput.value = 'pembeli';
+                updateFilterUrls('pembeli');
             }
+        }
+
+        function updateFilterUrls(currentTab) {
+            try {
+                const url = new URL(window.location.href);
+                url.searchParams.set('tab', currentTab);
+                window.history.replaceState(null, '', url.toString());
+
+                ['filterBtn7', 'filterBtn30', 'filterBtn90'].forEach(id => {
+                    const btn = document.getElementById(id);
+                    if (btn && btn.href) {
+                        const btnUrl = new URL(btn.href);
+                        btnUrl.searchParams.set('tab', currentTab);
+                        btn.href = btnUrl.toString();
+                    }
+                });
+            } catch(e) {}
         }
         // ── Traffic Wave Chart ────────────────────────────────────────────────
         (function () {
