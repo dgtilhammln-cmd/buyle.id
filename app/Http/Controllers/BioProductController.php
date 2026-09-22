@@ -77,16 +77,26 @@ class BioProductController extends Controller
                     break;
                 }
 
-                $titleSlug = \Illuminate\Support\Str::slug($b->title);
-                if ($titleSlug === $identifier) {
+                $titleSlug = \Illuminate\Support\Str::slug($b->title ?? '');
+                if ($titleSlug && $titleSlug === $identifier) {
                     $block = $b;
                     break;
                 }
 
-                // Prefix / substring matching (e.g. "e-testgo-cbt-digital" vs "e-testgo-cbt-digital-aplikasi-ujian-online")
-                if (!is_numeric($identifier) && (\Illuminate\Support\Str::startsWith($titleSlug, $identifier) || \Illuminate\Support\Str::startsWith($identifier, $titleSlug))) {
+                // Prefix / substring matching
+                if (!is_numeric($identifier) && $titleSlug && (\Illuminate\Support\Str::startsWith($titleSlug, $identifier) || \Illuminate\Support\Str::startsWith($identifier, $titleSlug))) {
                     $block = $b;
                     break;
+                }
+            }
+
+            // Auto-persist slug into data_json so next lookup hits Step 1 fast
+            if ($block) {
+                $dj = $block->data_json ?? [];
+                if (empty($dj['slug'])) {
+                    $dj['slug'] = $identifier;
+                    $block->data_json = $dj;
+                    $block->save();
                 }
             }
         }
@@ -94,6 +104,7 @@ class BioProductController extends Controller
         if (!$block) {
             abort(404);
         }
+
 
         $product = null;
         if (!empty($block->data_json['product_id'])) {

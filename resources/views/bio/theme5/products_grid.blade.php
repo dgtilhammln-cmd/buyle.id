@@ -34,12 +34,13 @@
                     $discountPercent = $hasDiscount ? round((($product->price - $product->sale_price) / $product->price) * 100) : 0;
                     $bData = is_array($product->data_json) ? $product->data_json : (json_decode($product->data_json ?? '[]', true) ?: []);
                     $linkedProd = !empty($bData['product_id']) ? \App\Models\Product::find($bData['product_id']) : null;
+                    // Priority: linked product slug > data_json slug > block->slug > title slug > block ID (numeric, always resolves)
                     $prodIdentifier = !empty($linkedProd->slug)
                         ? $linkedProd->slug
-                        : (!empty($bData['slug']) 
-                            ? $bData['slug'] 
-                            : (!empty($product->slug) 
-                                ? $product->slug 
+                        : (!empty($bData['slug'])
+                            ? $bData['slug']
+                            : (!empty($product->slug)
+                                ? $product->slug
                                 : (\Illuminate\Support\Str::slug($product->title ?? ($product->name ?? '')) ?: $product->id)));
 
                     if (!empty($profile->custom_domain)) {
