@@ -657,49 +657,44 @@
             <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:16px; padding:1.25rem;">
                 <div style="font-size:0.85rem; font-weight:800; color:#166534; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem;">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    Panduan Detail Aturan DNS Record (Registrar & Cloudflare)
+                    Panduan Konfigurasi Custom Domain (Hostinger CDN & DNS)
                 </div>
                 <div style="font-size:0.78rem; color:#15803D; line-height:1.5; margin-bottom:0.85rem;">
-                    Atur 2 DNS Record berikut pada DNS Management Registrar tempat domain dibeli:
+                    Ikuti 2 langkah wajib berikut agar domain custom creator aktif dengan SSL otomatis:
                 </div>
 
-                {{-- Record A --}}
+                {{-- Step 1: Add Alias in Hostinger --}}
                 <div style="background:#ffffff; border:1px solid #DCFCE7; border-radius:12px; padding:0.85rem; font-size:0.78rem; margin-bottom:0.75rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
-                        <span style="font-weight:800; color:#0F172A;">1. Record A (Domain Utama / ANAME / ALIAS)</span>
-                        <span style="background:#F1F5F9; color:#475569; padding:0.15rem 0.5rem; border-radius:6px; font-weight:700; font-size:0.7rem;">Type: A / ANAME</span>
-                    </div>
-                    <div style="font-size:0.75rem; color:#64748B; margin-bottom:0.4rem;">Arahkan domain utama (naked domain) ke IP Server resmi:</div>
-                    <div style="display:flex; align-items:center; gap:0.5rem; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:0.45rem 0.75rem;">
-                        <code style="font-weight:800; color:#0F172A; font-family:monospace; font-size:0.85rem; flex:1;">Host: @ &nbsp;|&nbsp; Value: {{ $serverIp }}</code>
-                        <button type="button" onclick="navigator.clipboard.writeText('{{ $serverIp }}'); alert('IP Server {{ $serverIp }} berhasil disalin!');"
-                            style="background:#0F172A; color:#ffffff; border:none; border-radius:6px; padding:0.3rem 0.6rem; font-size:0.7rem; font-weight:700; cursor:pointer;">
-                            Salin IP
-                        </button>
+                    <div style="font-weight:800; color:#0F172A; margin-bottom:0.35rem;">1. Tambahkan Domain Alias / Parked Domain di Hostinger hPanel</div>
+                    <div style="font-size:0.75rem; color:#475569; line-height:1.45;">
+                        Buka hPanel Hostinger <strong>buyle.id</strong> &rarr; Kelola &rarr; <strong>Domains / Parked Domains (Domain Alias)</strong> &rarr; Tambahkan domain custom creator di sana agar Hostinger meneruskan permintaan ke folder aplikasi Laravel dan menerbitkan sertifikat SSL.
                     </div>
                 </div>
 
-                {{-- Record CNAME --}}
+                {{-- Step 2: CNAME / ALIAS Record --}}
                 <div style="background:#ffffff; border:1px solid #DCFCE7; border-radius:12px; padding:0.85rem; font-size:0.78rem; margin-bottom:0.75rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
-                        <span style="font-weight:800; color:#0F172A;">2. Record CNAME (Subdomain www)</span>
-                        <span style="background:#F1F5F9; color:#475569; padding:0.15rem 0.5rem; border-radius:6px; font-weight:700; font-size:0.7rem;">Type: CNAME</span>
+                        <span style="font-weight:800; color:#0F172A;">2. Setting DNS Record di Provider Domain Creator</span>
+                        <span style="background:#F1F5F9; color:#475569; padding:0.15rem 0.5rem; border-radius:6px; font-weight:700; font-size:0.7rem;">CNAME / ALIAS Target</span>
                     </div>
-                    <div style="font-size:0.75rem; color:#64748B; margin-bottom:0.4rem;">Mengarahkan prefix www (misal: <code>www.brandku.com</code>) ke server utama:</div>
+                    <div style="font-size:0.75rem; color:#64748B; margin-bottom:0.4rem;">
+                        Arahkan CNAME (untuk subdomain / www) atau ALIAS/ANAME (untuk apex domain <code>@</code>) ke Endpoint CDN Hostinger:
+                    </div>
                     <div style="display:flex; align-items:center; gap:0.5rem; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:0.45rem 0.75rem;">
-                        <code style="font-weight:800; color:#0F172A; font-family:monospace; font-size:0.85rem; flex:1;">Host: www &nbsp;|&nbsp; Value: buyle.id</code>
-                        <button type="button" onclick="navigator.clipboard.writeText('buyle.id'); alert('Host buyle.id berhasil disalin!');"
+                        <code style="font-weight:800; color:#0F172A; font-family:monospace; font-size:0.85rem; flex:1;">buyle.id.cdn.hstgr.net</code>
+                        <button type="button" onclick="navigator.clipboard.writeText('buyle.id.cdn.hstgr.net'); alert('CDN Target buyle.id.cdn.hstgr.net berhasil disalin!');"
                             style="background:#0F172A; color:#ffffff; border:none; border-radius:6px; padding:0.3rem 0.6rem; font-size:0.7rem; font-weight:700; cursor:pointer;">
-                            Salin Host
+                            Salin Target CDN
                         </button>
                     </div>
                 </div>
 
                 {{-- Strict DNS Rules Notice --}}
                 <div style="font-size:0.72rem; color:#15803D; line-height:1.45; background:#DCFCE7; padding:0.5rem 0.75rem; border-radius:8px;">
-                    <strong>Aturan Penting DNS:</strong><br>
-                    • Jangan menambahkan Record AAAA (IPv6) untuk domain utama agar tidak terjadi konflik routing SSL.<br>
-                    • Record MX, SPF, DKIM, dan DMARC bawaan registrar/domain utama tidak perlu dihapus agar email tetap normal.
+                    <strong>Catatan Hostinger:</strong><br>
+                    • Jangan gunakan A Record IP FTP (46.202.186.86) karena trafik utama melewati CDN Hostinger.<br>
+                    • DNS MX, SPF, DKIM, dan DMARC pada domain utama buyle.id tetap dipertahankan untuk pengiriman email.<br>
+                    • SSL akan diterbitkan otomatis oleh Hostinger begitu DNS terpropagasi & domain terdaftar di hPanel.
                 </div>
             </div>
         </div>
