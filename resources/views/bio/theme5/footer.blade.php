@@ -317,17 +317,17 @@
     }
 
     .t5-lead-modal-card {
-        background: #0f172a;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 24px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
         width: 100%;
-        max-width: 480px;
+        max-width: 460px;
         padding: 2rem;
-        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(30, 179, 73, 0.2);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12), 0 4px 20px rgba(30, 179, 73, 0.08);
         position: relative;
-        transform: translateY(20px) scale(0.95);
+        transform: translateY(20px) scale(0.97);
         transition: all 0.3s ease;
-        color: #ffffff;
+        color: #1e293b;
     }
 
     .t5-lead-modal-backdrop.show .t5-lead-modal-card {
@@ -336,24 +336,27 @@
 
     .t5-modal-close-btn {
         position: absolute;
-        top: 1.25rem;
-        right: 1.25rem;
+        top: 1rem;
+        right: 1rem;
         width: 32px;
         height: 32px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.1);
-        border: none;
-        color: #ffffff;
-        font-size: 1.25rem;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+        font-size: 1.1rem;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: all 0.2s;
+        line-height: 1;
     }
 
     .t5-modal-close-btn:hover {
-        background: #ef4444;
+        background: #fee2e2;
+        color: #ef4444;
+        border-color: #fca5a5;
     }
 
     .t5-modal-head-box {
@@ -375,16 +378,16 @@
     }
 
     .t5-modal-h3 {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         font-weight: 700;
-        margin-bottom: 0.35rem;
-        color: #ffffff;
+        margin-bottom: 0.3rem;
+        color: #0f172a;
     }
 
     .t5-modal-subtext {
         font-size: 0.8rem;
-        color: #94a3b8;
-        line-height: 1.45;
+        color: #64748b;
+        line-height: 1.5;
     }
 
     .t5-mform-group {
@@ -396,26 +399,32 @@
         display: block;
         font-size: 0.78rem;
         font-weight: 600;
-        color: #cbd5e1;
+        color: #374151;
         margin-bottom: 0.35rem;
     }
 
     .t5-mform-input {
         width: 100%;
-        background: #1e293b;
-        border: 1.5px solid #334155;
-        border-radius: 12px;
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
         padding: 0.65rem 0.9rem;
-        color: #ffffff;
+        color: #0f172a;
         font-size: 0.85rem;
+        font-family: inherit;
         outline: none;
         box-sizing: border-box;
-        transition: border-color 0.2s;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .t5-mform-input::placeholder {
+        color: #b0bec5;
     }
 
     .t5-mform-input:focus {
         border-color: #1eb349;
-        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.2);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.12);
     }
 
     .t5-mform-submit-btn {
