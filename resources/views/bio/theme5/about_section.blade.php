@@ -380,11 +380,11 @@
             {{-- CARD 1: DARK GRADIENT --}}
             <div class="t5-about-card1">
                 @if(!empty($card1BgImg))
-                    <img src="{{ $card1BgImg }}" class="t5-card1-bg-img" alt="Background Card 1">
+                    <img src="{{ $card1BgImg }}" class="t5-card1-bg-img" alt="Background Card 1" draggable="false">
                 @endif
                 <div class="t5-card1-content">
                     @if(!empty($card1Logo))
-                        <img src="{{ $card1Logo }}" class="t5-card1-logo-img" alt="Logo">
+                        <img src="{{ $card1Logo }}" class="t5-card1-logo-img" alt="Logo" draggable="false">
                     @else
                         <svg class="t5-card1-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="16" cy="16" r="8" fill="#a3e635"/>
@@ -410,7 +410,7 @@
 
             {{-- CARD 2: IMAGE --}}
             <div class="t5-about-card2">
-                <img src="{{ $card2Img }}" alt="About Image" loading="lazy">
+                <img src="{{ $card2Img }}" alt="About Image" loading="lazy" draggable="false">
             </div>
 
             {{-- CARD 3: STAT & CTA --}}

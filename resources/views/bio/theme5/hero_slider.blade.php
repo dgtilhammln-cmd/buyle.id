@@ -90,18 +90,18 @@
                     @if(!empty($slide['image']))
                         @if(!empty($slide['has_overlay']))
                             <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] ?? 'Banner' }}" class="t5-slide-bg-img"
-                                loading="{{ $index === 0 ? 'eager' : 'lazy' }}">
+                                loading="{{ $index === 0 ? 'eager' : 'lazy' }}" draggable="false">
                             <div class="t5-slide-overlay"></div>
                         @else
                             @if(!empty($slide['link']) && $slide['link'] !== '#')
                                 <a href="{{ $slide['link'] }}" class="t5-clean-banner-link"
                                     style="display:block; width:100%; height:100%;">
                                     <img src="{{ $slide['image'] }}" alt="Banner {{ $index + 1 }}" class="t5-slide-bg-img"
-                                        loading="lazy" style="object-fit:cover;">
+                                        loading="lazy" style="object-fit:cover;" draggable="false">
                                 </a>
                             @else
                                 <img src="{{ $slide['image'] }}" alt="Banner {{ $index + 1 }}" class="t5-slide-bg-img" loading="lazy"
-                                    style="object-fit:cover;">
+                                    style="object-fit:cover;" draggable="false">
                             @endif
                         @endif
                     @else

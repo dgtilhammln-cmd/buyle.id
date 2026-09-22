@@ -518,7 +518,7 @@
                         <div class="t5-service-number">{{ $srv['number'] }}</div>
                         
                         <div class="t5-service-img-wrap">
-                            <img src="{{ $srv['image'] }}" alt="{{ $srv['title'] }}" loading="lazy">
+                            <img src="{{ $srv['image'] }}" alt="{{ $srv['title'] }}" loading="lazy" draggable="false">
                         </div>
 
                         <div class="t5-service-body">

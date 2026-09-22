@@ -160,6 +160,19 @@
             padding: 0;
         }
 
+        /* Prevent dragging all images in Theme 5 */
+        img, picture, svg, .t5-slide-bg-img, .t5-product-img, .t5-brand-avatar, .t5-service-img, .t5-card1-bg-img, .t5-card1-logo-img {
+            -webkit-user-drag: none !important;
+            -khtml-user-drag: none !important;
+            -moz-user-drag: none !important;
+            -o-user-drag: none !important;
+            user-drag: none !important;
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+        }
+
         html {
             scroll-behavior: smooth;
             font-size: 16px;
@@ -1437,6 +1450,14 @@
         document.addEventListener('DOMContentLoaded', () => {
             initT5Slider();
         });
+
+        // Lock image dragging globally in Theme 5
+        document.addEventListener('dragstart', function(e) {
+            if (e.target && (e.target.tagName === 'IMG' || e.target.closest('img'))) {
+                e.preventDefault();
+                return false;
+            }
+        }, true);
     </script>
 </body>
 </html>

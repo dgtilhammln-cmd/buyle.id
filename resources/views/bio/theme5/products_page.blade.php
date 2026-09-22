@@ -595,7 +595,7 @@
                         @endphp
                         <div class="pp-card" data-type="{{ strtolower($prod['product_type'] ?? 'digital') }}" data-group-id="group-{{ $prod['creator_group_id'] ?? 'none' }}">
                             <a href="{{ $prod['product_url'] }}" class="pp-card-img-wrap">
-                                <img src="{{ $prod['image_url'] }}" alt="{{ $prod['name'] }}" loading="lazy" class="pp-card-img">
+                                <img src="{{ $prod['image_url'] }}" alt="{{ $prod['name'] }}" loading="lazy" class="pp-card-img" draggable="false">
                                 @if($hasDisc)
                                     <span class="pp-badge-disc">-{{ $discPct }}%</span>
                                 @endif
@@ -726,6 +726,13 @@
                 }, 650);
             });
         }
+        // Lock image dragging
+        document.addEventListener('dragstart', function(e) {
+            if (e.target && e.target.tagName === 'IMG') {
+                e.preventDefault();
+                return false;
+            }
+        }, true);
     </script>
 </body>
 </html>

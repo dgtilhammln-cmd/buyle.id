@@ -54,7 +54,7 @@
                 @endphp
                 @if($bImg)
                     <a href="{{ $bUrl }}" target="_blank" rel="noopener noreferrer" class="t5-block-banner-card">
-                        <img src="{{ $bImg }}" alt="Banner Promo" loading="lazy">
+                        <img src="{{ $bImg }}" alt="Banner Promo" loading="lazy" draggable="false">
                     </a>
                 @endif
             @elseif($bType === 'heading' || $bType === 'title')

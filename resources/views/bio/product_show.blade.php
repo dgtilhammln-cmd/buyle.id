@@ -388,7 +388,7 @@
                             @foreach($images as $img)
                                 @php $imgUrl = (\Illuminate\Support\Str::startsWith($img, 'http://') || \Illuminate\Support\Str::startsWith($img, 'https://')) ? $img : asset('storage/' . $img); @endphp
                                 <div class="ps-slide">
-                                    <img src="{{ $imgUrl }}" alt="{{ $prodTitle }}" loading="lazy" onclick="openImageLightbox({{ $loop->index }})" style="cursor:zoom-in;" title="Klik untuk memperbesar / zoom">
+                                    <img src="{{ $imgUrl }}" alt="{{ $prodTitle }}" loading="lazy" onclick="openImageLightbox({{ $loop->index }})" style="cursor:zoom-in;" title="Klik untuk memperbesar / zoom" draggable="false">
                                 </div>
                             @endforeach
                         </div>
@@ -405,7 +405,7 @@
                         @foreach($images as $i => $img)
                             @php $tUrl = (\Illuminate\Support\Str::startsWith($img, 'http://') || \Illuminate\Support\Str::startsWith($img, 'https://')) ? $img : asset('storage/' . $img); @endphp
                             <div class="ps-thumb {{ $i === 0 ? 'active' : '' }}" onclick="psTo({{ $i }})">
-                                <img src="{{ $tUrl }}" alt="Foto {{ $i+1 }}">
+                                <img src="{{ $tUrl }}" alt="Foto {{ $i+1 }}" draggable="false">
                             </div>
                         @endforeach
                     </div>
@@ -460,7 +460,7 @@
                 <div class="ps-seller">
                     <div class="ps-seller-l">
                         @if(!empty($config['avatar']))
-                            <img src="{{ asset('storage/' . $config['avatar']) }}" alt="{{ $bioName }}" class="ps-av-img">
+                            <img src="{{ asset('storage/' . $config['avatar']) }}" alt="{{ $bioName }}" class="ps-av-img" draggable="false">
                         @else
                             <div class="ps-av-fb">{{ strtoupper(substr($bioName, 0, 1)) }}</div>
                         @endif
@@ -711,6 +711,13 @@
                 });
             }
         });
+        // Lock image dragging
+        document.addEventListener('dragstart', function(e) {
+            if (e.target && e.target.tagName === 'IMG') {
+                e.preventDefault();
+                return false;
+            }
+        }, true);
     </script>
 
     @include('partials.adsense_modal')

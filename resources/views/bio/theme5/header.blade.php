@@ -317,7 +317,7 @@
         {{-- Brand / Logo --}}
         <a href="{{ $berandaLink }}" onclick="{{ $berandaOnClick }}" class="t5-brand">
             @if($avatarUrl)
-                <img src="{{ $avatarUrl }}" alt="{{ $bioName }}" class="t5-brand-avatar">
+                <img src="{{ $avatarUrl }}" alt="{{ $bioName }}" class="t5-brand-avatar" draggable="false">
             @else
                 <div class="t5-brand-avatar-fallback">{{ strtoupper(substr($bioName, 0, 2)) }}</div>
             @endif

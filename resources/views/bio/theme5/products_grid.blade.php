@@ -53,7 +53,7 @@
 
                 <div class="t5-product-card">
                     <a href="{{ $productUrl }}" class="t5-product-img-wrap">
-                        <img src="{{ $img }}" alt="{{ $product->name }}" loading="lazy" class="t5-product-img">
+                        <img src="{{ $img }}" alt="{{ $product->name }}" loading="lazy" class="t5-product-img" draggable="false">
 
                         @if($hasDiscount)
                             <span class="t5-discount-tag">-{{ $discountPercent }}%</span>
