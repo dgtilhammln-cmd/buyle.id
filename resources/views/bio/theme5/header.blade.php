@@ -22,7 +22,7 @@
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         border-bottom: 1px solid #e2e8f0;
-        font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'Montserrat', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
     .t5-header-container {
         max-width: 1200px;

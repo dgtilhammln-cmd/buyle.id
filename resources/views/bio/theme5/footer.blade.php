@@ -21,7 +21,7 @@
         margin: 3rem auto 2rem;
         max-width: 1280px;
         padding: 0 1.25rem;
-        font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'Montserrat', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     .t5-footer-card {
