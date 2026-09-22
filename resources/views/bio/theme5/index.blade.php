@@ -392,12 +392,12 @@
             position: relative;
             z-index: 3;
             max-width: 650px;
-            padding: 2.5rem 3rem;
+            padding: 2.5rem 3rem 2.5rem 4.75rem;
             color: #ffffff;
         }
         @media (max-width: 768px) {
             .t5-slide-content {
-                padding: 1.25rem 1.5rem;
+                padding: 1.25rem 1rem 1.25rem 3.75rem;
             }
         }
         .t5-slide-tag {
