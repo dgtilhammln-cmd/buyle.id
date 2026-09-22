@@ -413,24 +413,49 @@
         .lc-holder-name { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.03em; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .lc-subtitle-badge { font-size: 0.68rem; font-weight: 600; opacity: 0.85; text-align: right; }
 
-        /* Progress bar inside card */
-        .lc-progress-bar-wrap {
-            position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
-            background: rgba(0,0,0,0.15); overflow: hidden;
-        }
-        .lc-progress-bar {
-            height: 100%; background: linear-gradient(90deg, #1eb349, #a5cf37);
-            transition: width 0.5s ease;
+        /* Progress bar container below card */
+        .lc-progress-container {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 0.85rem 1.15rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
         }
 
-        /* Progress note below card */
-        .lc-progress-note {
-            display: flex; align-items: center; justify-content: space-between;
-            font-size: 0.74rem; color: #64748b; font-weight: 500; padding: 0.1rem 0.2rem 0;
-            flex-wrap: wrap; gap: 0.4rem;
+        .lc-progress-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.76rem;
+            color: #475569;
+            font-weight: 500;
+            flex-wrap: wrap;
+            gap: 0.4rem;
         }
+
+        .lc-progress-track {
+            width: 100%;
+            height: 9px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .lc-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1eb349 0%, #a5cf37 100%);
+            border-radius: 999px;
+            transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 10px rgba(30, 179, 73, 0.35);
+        }
+
         .lc-tier-info-btn {
-            background: none; border: none; color: #1eb349; font-size: 0.74rem; font-weight: 700;
+            background: none; border: none; color: #1eb349; font-size: 0.75rem; font-weight: 700;
             cursor: pointer; padding: 0; text-decoration: underline; font-family: 'Montserrat', sans-serif;
         }
         .lc-tier-info-btn:hover { color: #15803d; }
@@ -1027,15 +1052,22 @@
                     @endif
                 </div>
 
-                <div class="lc-progress-note">
+                <div class="lc-progress-container">
+                    <div class="lc-progress-header">
+                        @if($nextTierTarget)
+                            <span>Pencapaian: <strong>{{ $tierProgress }}%</strong> menuju {{ $nextTierName }}</span>
+                        @else
+                            <span>🏆 Selamat! Anda telah mencapai Tier Tertinggi (Financial Freedom)</span>
+                        @endif
+                        <button type="button" class="lc-tier-info-btn" onclick="openTierModal()">
+                            Lihat 6 Tier Card ⓘ
+                        </button>
+                    </div>
                     @if($nextTierTarget)
-                        <span>Pencapaian: <strong>{{ $tierProgress }}%</strong> menuju {{ $nextTierName }}</span>
-                    @else
-                        <span>🏆 Selamat! Anda telah mencapai Tier Tertinggi (Financial Freedom)</span>
+                        <div class="lc-progress-track">
+                            <div class="lc-progress-fill" style="width: {{ min(100, max(2, $tierProgress)) }}%;"></div>
+                        </div>
                     @endif
-                    <button type="button" class="lc-tier-info-btn" onclick="openTierModal()">
-                        Lihat 6 Tier Card ⓘ
-                    </button>
                 </div>
             </div>
 
@@ -2240,36 +2272,77 @@
                 if (m) m.classList.remove('show');
             }
         }
-        function toggleSalesVisibility() {
-            const amtEl = document.getElementById('lcAmountText');
-            const eyeOpen = document.getElementById('eyeIconOpen');
-            const eyeClosed = document.getElementById('eyeIconClosed');
-            if (!amtEl) return;
 
-            const isHidden = amtEl.classList.contains('hidden-mask');
-            const fullAmount = amtEl.getAttribute('data-amount');
+        // ── Anti-Inspect & Anti-Tamper Protection + Smooth Eye Toggle ──
+        (function initLuxuryCardProtection() {
+            const card = document.querySelector('.luxury-card');
+            if (!card) return;
 
-            amtEl.style.opacity = '0';
-            amtEl.style.transform = 'translateY(-2px)';
+            let isInternalUpdating = false;
+            let pristineHTML = card.innerHTML;
 
-            setTimeout(function() {
-                if (isHidden) {
-                    amtEl.innerText = fullAmount;
-                    amtEl.classList.remove('hidden-mask');
-                    if (eyeOpen) eyeOpen.style.display = 'block';
-                    if (eyeClosed) eyeClosed.style.display = 'none';
-                    localStorage.setItem('buyle_sales_hidden', 'false');
-                } else {
-                    amtEl.innerText = 'Rp ••••••••';
-                    amtEl.classList.add('hidden-mask');
-                    if (eyeOpen) eyeOpen.style.display = 'none';
-                    if (eyeClosed) eyeClosed.style.display = 'block';
-                    localStorage.setItem('buyle_sales_hidden', 'true');
+            // MutationObserver to catch DevTools inspect element edits
+            const observer = new MutationObserver(function() {
+                if (isInternalUpdating) return;
+                
+                // Revert tampering instantly!
+                observer.disconnect();
+                card.innerHTML = pristineHTML;
+                rebindEvents();
+                observer.observe(card, { childList: true, subtree: true, characterData: true, attributes: true });
+            });
+
+            observer.observe(card, { childList: true, subtree: true, characterData: true, attributes: true });
+
+            function rebindEvents() {
+                const btn = document.getElementById('btnToggleSalesMask');
+                if (btn) {
+                    btn.onclick = function() {
+                        toggleSalesVisibility();
+                    };
                 }
-                amtEl.style.opacity = '1';
-                amtEl.style.transform = 'translateY(0)';
-            }, 150);
-        }
+            }
+
+            window.toggleSalesVisibility = function() {
+                const amtEl = document.getElementById('lcAmountText');
+                const eyeOpen = document.getElementById('eyeIconOpen');
+                const eyeClosed = document.getElementById('eyeIconClosed');
+                if (!amtEl) return;
+
+                observer.disconnect();
+                isInternalUpdating = true;
+
+                const isHidden = amtEl.classList.contains('hidden-mask');
+                const fullAmount = amtEl.getAttribute('data-amount');
+
+                amtEl.style.opacity = '0';
+                amtEl.style.transform = 'translateY(-2px)';
+
+                setTimeout(function() {
+                    if (isHidden) {
+                        amtEl.innerText = fullAmount;
+                        amtEl.classList.remove('hidden-mask');
+                        if (eyeOpen) eyeOpen.style.display = 'block';
+                        if (eyeClosed) eyeClosed.style.display = 'none';
+                        localStorage.setItem('buyle_sales_hidden', 'false');
+                    } else {
+                        amtEl.innerText = 'Rp ••••••••';
+                        amtEl.classList.add('hidden-mask');
+                        if (eyeOpen) eyeOpen.style.display = 'none';
+                        if (eyeClosed) eyeClosed.style.display = 'block';
+                        localStorage.setItem('buyle_sales_hidden', 'true');
+                    }
+                    amtEl.style.opacity = '1';
+                    amtEl.style.transform = 'translateY(0)';
+                    
+                    pristineHTML = card.innerHTML;
+                    isInternalUpdating = false;
+                    observer.observe(card, { childList: true, subtree: true, characterData: true, attributes: true });
+                }, 150);
+            };
+
+            rebindEvents();
+        })();
 
         document.addEventListener('DOMContentLoaded', function() {
             if (localStorage.getItem('buyle_sales_hidden') === 'true') {
