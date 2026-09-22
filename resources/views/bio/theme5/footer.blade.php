@@ -268,34 +268,99 @@
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
+        .t5-footer-wrapper {
+            margin: 1.5rem auto 1rem;
+            padding: 0 0.75rem;
+        }
+
         .t5-footer-card {
-            padding: 2.25rem 1.25rem 1.5rem;
-            border-radius: 24px;
+            padding: 1.5rem 1rem 1rem;
+            border-radius: 18px;
         }
 
         .t5-footer-title {
-            font-size: 1.85rem;
+            font-size: 1.35rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .t5-footer-sub {
+            font-size: 0.78rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
         }
 
         .t5-footer-nav {
-            gap: 0.75rem;
-            margin-bottom: 2rem;
+            gap: 0.4rem 1rem;
+            margin-bottom: 1.25rem;
+            font-size: 0;
+        }
+
+        .t5-footer-nav a {
+            font-size: 0.78rem;
+            padding: 0.2rem 0.4rem;
+        }
+
+        .t5-capsule-bar {
+            padding: 0.25rem 0.25rem 0.25rem 1rem;
+        }
+
+        .t5-capsule-input {
+            font-size: 0.8rem;
+        }
+
+        .t5-capsule-btn {
+            padding: 0.55rem 1rem;
+            font-size: 0.8rem;
+            gap: 0.3rem;
+        }
+
+        .t5-capsule-btn svg {
+            width: 15px;
+            height: 15px;
         }
 
         .t5-footer-bottom-row {
-            flex-direction: column;
-            text-align: center;
+            flex-direction: row;
+            flex-wrap: wrap;
+            text-align: left;
             align-items: center;
-            gap: 1rem;
-            margin-top: 2.5rem;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-top: 1.25rem;
+            padding-top: 0.85rem;
         }
 
         .t5-footer-left {
-            justify-content: center;
+            justify-content: flex-start;
+            flex: 0 0 auto;
+        }
+
+        .t5-location-pill {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.65rem;
+        }
+
+        .t5-footer-credit {
+            font-size: 0.68rem;
+            order: 3;
+            width: 100%;
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .t5-footer-social-wrap {
+            flex: 0 0 auto;
         }
 
         .t5-footer-social-wrap .social-row {
-            justify-content: center !important;
+            justify-content: flex-end !important;
+            margin: 0 !important;
+            gap: 0.3rem !important;
+        }
+
+        .t5-footer-social-wrap .social-icon {
+            width: 30px !important;
+            height: 30px !important;
         }
     }
 
