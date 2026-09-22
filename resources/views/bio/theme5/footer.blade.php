@@ -661,7 +661,7 @@
                 if (waNum.startsWith('0')) waNum = '62' + waNum.substring(1);
                 if (!waNum) waNum = '6281234567890'; // fallback
 
-                const msg = `Halo ${@json($bioName)}, saya *${name}* dari *${city}*.\nNo. WA: ${phone}\n\nKebutuhan:\n${kebutuhan}`;
+                const msg = `Halo *${@json($bioName)}*,\n\nNama: *${name}*\nNo. WhatsApp: ${phone}\nPerusahaan / Kota: *${city}*\n\n*Pesan / Kebutuhan:*\n${kebutuhan}`;
                 const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`;
 
                 closeT5LeadModal();
