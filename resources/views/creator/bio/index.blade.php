@@ -1,4 +1,4 @@
-﻿@extends('creator.layout')
+@extends('creator.layout')
 @section('title', 'Web Builder · Dashboard')
 @section('page_title', 'Web Builder')
 
@@ -1654,7 +1654,7 @@
                                         style="height:auto; padding:0.5rem;">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Foto Cover / Banner</label>
+                                    <label class="form-label">Foto Cover / Banner Utama (Slide 1)</label>
                                     @if(!empty($cfg['cover']))
                                         <div style="margin-bottom:0.5rem;">
                                             <img src="{{ asset('storage/' . $cfg['cover']) }}"
@@ -1667,6 +1667,39 @@
                                     @endif
                                     <input type="file" name="bio_cover" accept="image/*" class="form-input"
                                         style="height:auto; padding:0.5rem;">
+                                </div>
+
+                                {{-- Multi Banner Slider (Max 5 Banners total) --}}
+                                <div class="form-group" style="grid-column: 1 / -1; margin-top: 0.75rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+                                    <label class="form-label" style="font-weight: 700; color: #0f172a;">Banner Slide Tambahan (Upload Maksimal 5 Banner)</label>
+                                    <p style="font-size:0.78rem; color:#64748b; margin-bottom:0.75rem;">
+                                        Slide 1 menampilkan teks overlay hero. Slide 2, 3, 4, 5 hanya menampilkan banner gambar secara bersih dengan animasi pindah otomatis (fade/slide). Semua foto otomatis dikonversi ke WebP.
+                                    </p>
+                                    @php
+                                        $bannersList = $cfg['banners'] ?? [];
+                                        if (!is_array($bannersList)) $bannersList = [];
+                                    @endphp
+                                    @if(!empty($bannersList))
+                                        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 0.75rem;">
+                                            @foreach($bannersList as $bIdx => $bItem)
+                                                @php
+                                                    $bImg = is_array($bItem) ? ($bItem['image'] ?? null) : $bItem;
+                                                @endphp
+                                                @if($bImg)
+                                                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:0.5rem; text-align:center;">
+                                                        <img src="{{ Str::startsWith($bImg, ['http://', 'https://']) ? $bImg : asset('storage/' . $bImg) }}" style="width:100%; height:65px; object-fit:cover; border-radius:6px; margin-bottom:0.3rem;">
+                                                        <label style="font-size:0.72rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:2px;">
+                                                            <input type="checkbox" name="delete_banners[]" value="{{ $bIdx }}"> Hapus Slide {{ $bIdx + 2 }}
+                                                        </label>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                    @if(count($bannersList) < 4)
+                                        <input type="file" name="bio_banners[]" accept="image/*" multiple class="form-input" style="height:auto; padding:0.5rem;">
+                                        <span style="font-size:0.72rem; color:#64748b; margin-top:4px; display:block;">Pilih gambar banner tambahan (JPG, PNG, WebP — Otomatis Dikonversi ke WebP).</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>

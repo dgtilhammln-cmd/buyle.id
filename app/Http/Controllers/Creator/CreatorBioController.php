@@ -178,7 +178,7 @@ class CreatorBioController extends Controller
             $config['avatar'] = null;
         } elseif ($request->hasFile('bio_avatar')) {
             if (!empty($config['avatar'])) Storage::disk('public')->delete($config['avatar']);
-            $config['avatar'] = $request->file('bio_avatar')->store('bio/avatars', 'public');
+            $config['avatar'] = $this->convertToWebp($request->file('bio_avatar'), 'bio/avatars');
         }
 
         // Handle cover upload / deletion
@@ -187,8 +187,40 @@ class CreatorBioController extends Controller
             $config['cover'] = null;
         } elseif ($request->hasFile('bio_cover')) {
             if (!empty($config['cover'])) Storage::disk('public')->delete($config['cover']);
-            $config['cover'] = $request->file('bio_cover')->store('bio/covers', 'public');
+            $config['cover'] = $this->convertToWebp($request->file('bio_cover'), 'bio/covers');
         }
+
+        // Handle Banners upload / deletion (max 5 banners)
+        $existingBanners = $config['banners'] ?? [];
+        if (!is_array($existingBanners)) $existingBanners = [];
+
+        if ($request->has('delete_banners')) {
+            foreach ((array)$request->delete_banners as $delIndex) {
+                if (isset($existingBanners[$delIndex])) {
+                    $imgPath = is_array($existingBanners[$delIndex]) ? ($existingBanners[$delIndex]['image'] ?? '') : $existingBanners[$delIndex];
+                    if ($imgPath && !Str::startsWith($imgPath, 'http')) {
+                        Storage::disk('public')->delete($imgPath);
+                    }
+                    unset($existingBanners[$delIndex]);
+                }
+            }
+            $existingBanners = array_values($existingBanners);
+        }
+
+        if ($request->hasFile('bio_banners')) {
+            $newFiles = $request->file('bio_banners');
+            foreach ($newFiles as $file) {
+                if (count($existingBanners) < 5 && $file->isValid()) {
+                    $webpPath = $this->convertToWebp($file, 'bio/banners');
+                    $existingBanners[] = [
+                        'image' => $webpPath,
+                        'title' => '',
+                        'link'  => '#products-section'
+                    ];
+                }
+            }
+        }
+        $config['banners'] = array_slice($existingBanners, 0, 5);
 
         // Handle About Section Card 1 logo upload / deletion
         if ($request->has('delete_about_card1_logo') && !empty($config['about_card1_logo_image'])) {
@@ -196,7 +228,7 @@ class CreatorBioController extends Controller
             $config['about_card1_logo_image'] = null;
         } elseif ($request->hasFile('about_card1_logo_image')) {
             if (!empty($config['about_card1_logo_image'])) Storage::disk('public')->delete($config['about_card1_logo_image']);
-            $config['about_card1_logo_image'] = $request->file('about_card1_logo_image')->store('bio/about', 'public');
+            $config['about_card1_logo_image'] = $this->convertToWebp($request->file('about_card1_logo_image'), 'bio/about');
         }
 
         // Handle About Section Card 1 background image upload / deletion
@@ -205,7 +237,7 @@ class CreatorBioController extends Controller
             $config['about_card1_bg_image'] = null;
         } elseif ($request->hasFile('about_card1_bg_image')) {
             if (!empty($config['about_card1_bg_image'])) Storage::disk('public')->delete($config['about_card1_bg_image']);
-            $config['about_card1_bg_image'] = $request->file('about_card1_bg_image')->store('bio/about', 'public');
+            $config['about_card1_bg_image'] = $this->convertToWebp($request->file('about_card1_bg_image'), 'bio/about');
         }
 
         // Handle About Section Card 2 image upload / deletion
@@ -214,7 +246,7 @@ class CreatorBioController extends Controller
             $config['about_card2_image'] = null;
         } elseif ($request->hasFile('about_card2_image')) {
             if (!empty($config['about_card2_image'])) Storage::disk('public')->delete($config['about_card2_image']);
-            $config['about_card2_image'] = $request->file('about_card2_image')->store('bio/about', 'public');
+            $config['about_card2_image'] = $this->convertToWebp($request->file('about_card2_image'), 'bio/about');
         }
 
         // Handle custom background image upload / deletion

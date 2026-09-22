@@ -538,38 +538,6 @@
                             @endforeach
                         @endif
 
-                        {{-- Product & Service Type Filters --}}
-                        <div class="pp-sidebar-subheading">Tipe Produk / Jasa</div>
-                        @if($catCounts['digital'] > 0)
-                            <button type="button" class="pp-sidebar-item" onclick="filterGroup('digital', this)" title="Filter Produk Digital">
-                                <span class="pp-item-title">Produk Digital</span>
-                                <span class="pp-item-badge">{{ $catCounts['digital'] }}</span>
-                            </button>
-                        @endif
-                        @if($catCounts['physical'] > 0)
-                            <button type="button" class="pp-sidebar-item" onclick="filterGroup('physical', this)" title="Filter Barang &amp; Fisik">
-                                <span class="pp-item-title">Barang &amp; Fisik</span>
-                                <span class="pp-item-badge">{{ $catCounts['physical'] }}</span>
-                            </button>
-                        @endif
-                        @if($catCounts['service'] > 0)
-                            <button type="button" class="pp-sidebar-item" onclick="filterGroup('service', this)" title="Filter Jasa &amp; Layanan">
-                                <span class="pp-item-title">Jasa &amp; Layanan</span>
-                                <span class="pp-item-badge">{{ $catCounts['service'] }}</span>
-                            </button>
-                        @endif
-                        @if($catCounts['makanan'] > 0)
-                            <button type="button" class="pp-sidebar-item" onclick="filterGroup('makanan', this)" title="Filter Makanan">
-                                <span class="pp-item-title">Makanan</span>
-                                <span class="pp-item-badge">{{ $catCounts['makanan'] }}</span>
-                            </button>
-                        @endif
-                        @if($catCounts['ticket'] > 0)
-                            <button type="button" class="pp-sidebar-item" onclick="filterGroup('ticket', this)" title="Filter Tiket Event">
-                                <span class="pp-item-title">Tiket Event</span>
-                                <span class="pp-item-badge">{{ $catCounts['ticket'] }}</span>
-                            </button>
-                        @endif
                     </div>
                 </div>
             </aside>
