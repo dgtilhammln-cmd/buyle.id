@@ -123,6 +123,7 @@ class BioProductsPageController extends Controller
             $allProducts = $allProducts->sortByDesc('created_at')->values();
         }
 
+        $theme   = $profile->bio_theme ?? 'theme5';
         $bioName  = $config['name'] ?? $profile->store_name ?? $username;
         $seoTitle = 'Semua Produk - ' . $bioName . (!empty($profile->custom_domain) ? '' : ' | buyle.id');
         $seoDesc  = 'Temukan semua produk dan layanan dari ' . $bioName . '.';
@@ -133,6 +134,15 @@ class BioProductsPageController extends Controller
 
         $ogImage = asset('images/buyle-og.png');
         $products = $blocks;
+
+        // Tema 1-4 tidak memiliki halaman katalog produk terpisah.
+        // Redirect ke halaman bio utama agar tidak tampil dengan gaya tema 5.
+        if ($theme !== 'theme5') {
+            $homeUrl = !empty($profile->custom_domain)
+                ? 'https://' . rtrim($profile->custom_domain, '/')
+                : url('/' . $username);
+            return redirect($homeUrl);
+        }
 
         return view('bio.theme5.products_page', compact(
             'profile', 'config', 'username',

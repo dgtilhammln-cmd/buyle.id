@@ -312,6 +312,61 @@
         .t5-wa-pulse { position: absolute; inset: 0; border-radius: 50%; border: 2px solid #25D366; animation: waPulse 2s infinite; pointer-events: none; }
         @keyframes waPulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.5); opacity: 0; } }
 
+        /* ── MINI TOPBAR (tema 1-4) ── */
+        .ps-topbar {
+            position: sticky; top: 0; z-index: 999;
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0 1.25rem;
+            height: 54px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .ps-topbar-back {
+            display: flex; align-items: center; gap: 0.4rem;
+            font-size: 0.82rem; font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.2s;
+            flex-shrink: 0;
+        }
+        .ps-topbar-back:hover { opacity: 0.7; }
+        .ps-topbar-back svg { flex-shrink: 0; }
+        .ps-topbar-title {
+            flex: 1; font-size: 0.85rem; font-weight: 700;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            text-align: center;
+        }
+        .ps-topbar-logo {
+            flex-shrink: 0;
+            display: flex; align-items: center; gap: 0.3rem;
+            font-size: 0.72rem; font-weight: 800; letter-spacing: 0.02em;
+            text-decoration: none; opacity: 0.75;
+        }
+        .ps-topbar-logo img { width: 18px; height: 18px; border-radius: 4px; }
+
+        /* tema 1: dark */
+        .ps-topbar-t1 { background: rgba(0,0,0,0.85); border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .ps-topbar-t1 .ps-topbar-back,
+        .ps-topbar-t1 .ps-topbar-title,
+        .ps-topbar-t1 .ps-topbar-logo { color: #ffffff; }
+
+        /* tema 2: light / slate */
+        .ps-topbar-t2 { background: rgba(255,255,255,0.92); border-bottom: 1px solid #e2e8f0; }
+        .ps-topbar-t2 .ps-topbar-back,
+        .ps-topbar-t2 .ps-topbar-title,
+        .ps-topbar-t2 .ps-topbar-logo { color: #0f172a; }
+
+        /* tema 3: green gradient */
+        .ps-topbar-t3 { background: rgba(30,179,73,0.92); border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .ps-topbar-t3 .ps-topbar-back,
+        .ps-topbar-t3 .ps-topbar-title,
+        .ps-topbar-t3 .ps-topbar-logo { color: #ffffff; }
+
+        /* tema 4: light / green accent */
+        .ps-topbar-t4 { background: rgba(255,255,255,0.92); border-bottom: 1px solid #e2e8f0; }
+        .ps-topbar-t4 .ps-topbar-back { color: #1eb349; }
+        .ps-topbar-t4 .ps-topbar-title,
+        .ps-topbar-t4 .ps-topbar-logo { color: #1e293b; }
+
         /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
             .ps-wrap { padding: 0; gap: 0; }
@@ -336,8 +391,34 @@
 </head>
 <body>
 
-    {{-- HEADER --}}
-    @include('bio.theme5.header', ['products' => $products, 'blocks' => $blocks, 'config' => $config, 'profile' => $profile, 'username' => $username])
+    {{-- MINI TOPBAR (disesuaikan per tema 1-4) --}}
+    @php
+        $homeUrl2 = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') : url('/' . $username);
+        $productsUrl2 = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') . '/produk' : url('/' . $username . '/produk');
+        $topbarThemeClass = match($theme) {
+            'theme1' => 'ps-topbar-t1',
+            'theme2' => 'ps-topbar-t2',
+            'theme3' => 'ps-topbar-t3',
+            'theme4' => 'ps-topbar-t4',
+            default  => 'ps-topbar-t2',
+        };
+        $topbarIconColor = in_array($theme, ['theme1','theme3']) ? '#ffffff' : ($theme === 'theme4' ? '#1eb349' : '#0f172a');
+        $topbarTitleColor = in_array($theme, ['theme1','theme3']) ? '#ffffff' : '#1e293b';
+        $bioDisplayName = $config['name'] ?? $profile->store_name ?? $username;
+    @endphp
+    <nav class="ps-topbar {{ $topbarThemeClass }}" role="navigation" aria-label="Halaman produk">
+        <a href="{{ $productsUrl2 }}" class="ps-topbar-back" aria-label="Kembali ke daftar produk">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="color:{{ $topbarIconColor }}">
+                <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            <span style="color:{{ $topbarIconColor }}">Produk</span>
+        </a>
+        <span class="ps-topbar-title" style="color:{{ $topbarTitleColor }}">{{ $bioDisplayName }}</span>
+        <a href="{{ $homeUrl2 }}" class="ps-topbar-logo" aria-label="Kembali ke halaman utama" style="color:{{ $topbarTitleColor }}">
+            <img src="{{ asset('images/buyle-logo.png') }}" alt="buyle.id" onerror="this.style.display='none'">
+            buyle.id
+        </a>
+    </nav>
 
     @php
         $homeUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') : url('/' . $username);
