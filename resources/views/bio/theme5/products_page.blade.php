@@ -200,14 +200,15 @@
         .pp-submit-btn {
             display: inline-flex; align-items: center; gap: 0.35rem;
             padding: 0.62rem 1.1rem;
-            background: linear-gradient(135deg, var(--t5-emerald), var(--t5-emerald-dark));
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             color: #fff; border: none; border-radius: var(--t5-radius-md);
             font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 600;
             cursor: pointer; transition: all 0.2s; white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(30,179,73,0.25);
         }
         .pp-submit-btn:hover {
-            background: linear-gradient(135deg, #16a34a, #14532d);
-            transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30,179,73,0.3);
+            background: linear-gradient(135deg, #179b3e 0%, #94bc2e 100%);
+            transform: translateY(-1px); box-shadow: 0 6px 16px rgba(30,179,73,0.35);
         }
 
         .pp-results-info {
@@ -293,14 +294,15 @@
         .pp-buy-btn {
             display: inline-flex; align-items: center; gap: 0.3rem;
             padding: 0.42rem 0.82rem;
-            background: linear-gradient(135deg, var(--t5-emerald), var(--t5-emerald-dark));
+            background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             color: #fff; border-radius: var(--t5-radius-sm);
             font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 600;
             text-decoration: none; transition: all 0.2s; flex-shrink: 0; white-space: nowrap;
+            box-shadow: 0 3px 10px rgba(30,179,73,0.25);
         }
         .pp-buy-btn:hover {
-            background: linear-gradient(135deg, #16a34a, #14532d);
-            transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30,179,73,0.35);
+            background: linear-gradient(135deg, #179b3e 0%, #94bc2e 100%);
+            transform: translateY(-1px); box-shadow: 0 6px 14px rgba(30,179,73,0.35); color: #fff;
         }
 
         /* EMPTY STATE */
@@ -434,13 +436,7 @@
         </div>
     </div>
 
-    {{-- HERO BANNER --}}
-    <section class="pp-hero">
-        <div class="pp-hero-content">
-            <h1>Semua Produk &amp; Layanan</h1>
-            <p>Katalog lengkap dari {{ $bioName }}</p>
-        </div>
-    </section>
+
 
     {{-- CONTROLS --}}
     <form method="GET" action="{{ url('/' . $username . '/produk') }}" id="pp-form">
@@ -549,18 +545,19 @@
     </div>
 
     {{-- FLOATING WHATSAPP BUTTON --}}
-    @if(!empty($config['wa']))
-        @php $waFloatNum = preg_replace('/[^0-9]/', '', $config['wa']); @endphp
-        @if($waFloatNum)
-            <a href="https://wa.me/{{ Str::startsWith($waFloatNum, '62') ? $waFloatNum : '62' . ltrim($waFloatNum, '0') }}"
-               target="_blank" rel="noopener noreferrer" class="t5-floating-wa" title="Chat via WhatsApp">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.556 4.117 1.528 5.849L0 24l6.335-1.508A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.154-1.422l-.37-.218-3.764.896.924-3.667-.243-.381A9.953 9.953 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/>
-                </svg>
-                <span class="t5-wa-pulse"></span>
-            </a>
-        @endif
+    @php
+        $waRaw = $config['wa'] ?? ($profile->user->phone ?? '');
+        $waFloatNum = preg_replace('/[^0-9]/', '', $waRaw);
+    @endphp
+    @if($waFloatNum)
+        <a href="https://wa.me/{{ Str::startsWith($waFloatNum, '62') ? $waFloatNum : '62' . ltrim($waFloatNum, '0') }}"
+           target="_blank" rel="noopener noreferrer" class="t5-floating-wa" title="Chat via WhatsApp">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.556 4.117 1.528 5.849L0 24l6.335-1.508A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.154-1.422l-.37-.218-3.764.896.924-3.667-.243-.381A9.953 9.953 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/>
+            </svg>
+            <span class="t5-wa-pulse"></span>
+        </a>
     @endif
 
     {{-- FOOTER TEMA 5 --}}

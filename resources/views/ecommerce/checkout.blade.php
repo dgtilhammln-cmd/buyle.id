@@ -957,7 +957,7 @@
                     @php
                         $authUserName  = auth()->check() ? auth()->user()->name  : '';
                         $authUserEmail = auth()->check() ? auth()->user()->email : '';
-                        $ticketSlotCounter = 0; {{-- global slot index across all items --}}
+                        $ticketSlotCounter = 0; /* global slot index across all items */
                     @endphp
 
                     <div class="co-section" style="margin-bottom:1.5rem;">
