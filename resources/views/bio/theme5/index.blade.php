@@ -586,9 +586,10 @@
             margin-bottom: 0.5rem;
         }
         .t5-section-title {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: var(--t5-slate-900);
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.25;
+            color: #0f172a;
             letter-spacing: -0.03em;
         }
         .t5-section-sub {
