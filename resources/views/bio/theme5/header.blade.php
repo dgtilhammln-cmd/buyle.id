@@ -118,17 +118,28 @@
         background: #f0fdf4;
         color: #15803d;
         border-color: #bbf7d0;
+        font-weight: 600;
+    }
+    .t5-btn-wa:hover {
+        background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
+        color: #ffffff !important;
+        border-color: transparent !important;
+        transform: translateY(-2px) scale(1.04);
+        box-shadow: 0 6px 18px rgba(30, 179, 73, 0.4);
     }
     .t5-btn-cart {
-        background: #f0fdf4;
-        color: #15803d;
-        border-color: #bbf7d0;
+        background: #ffffff;
+        color: #334155;
+        border-color: #e2e8f0;
         position: relative;
+        font-weight: 500;
     }
     .t5-btn-cart:hover {
-        background: #1eb349;
-        color: #fff !important;
-        border-color: #1eb349;
+        background: #f0fdf4 !important;
+        color: #15803d !important;
+        border-color: #1eb349 !important;
+        transform: translateY(-2px) scale(1.04);
+        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.18);
     }
     .t5-cart-badge {
         position: absolute;
