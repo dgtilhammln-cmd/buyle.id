@@ -119,6 +119,56 @@
         color: #15803d;
         border-color: #bbf7d0;
     }
+    .t5-btn-cart {
+        background: #f0fdf4;
+        color: #15803d;
+        border-color: #bbf7d0;
+        position: relative;
+    }
+    .t5-btn-cart:hover {
+        background: #1eb349;
+        color: #fff !important;
+        border-color: #1eb349;
+    }
+    .t5-cart-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: #ef4444;
+        color: #ffffff;
+        font-size: 0.65rem;
+        font-weight: 800;
+        min-width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+        line-height: 1;
+        box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+        border: 2px solid #ffffff;
+    }
+    .t5-drawer-cart-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .t5-drawer-cart-badge {
+        background: #ef4444;
+        color: #ffffff;
+        font-size: 0.68rem;
+        font-weight: 800;
+        min-width: 20px;
+        height: 20px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 5px;
+        line-height: 1;
+        box-shadow: 0 2px 5px rgba(239, 68, 68, 0.35);
+    }
     .t5-mobile-toggle {
         display: none;
         background: #f1f5f9;
@@ -273,6 +323,25 @@
 
         {{-- Action Buttons --}}
         <div class="t5-header-actions">
+            {{-- Cart Button --}}
+            @php
+                $cartBadgeVal = 1;
+                try {
+                    if (class_exists(\App\Services\CartService::class)) {
+                        $itemsQty = app(\App\Services\CartService::class)->getItems()->sum('qty');
+                        if ($itemsQty > 0) $cartBadgeVal = $itemsQty;
+                    }
+                } catch (\Throwable $e) {}
+            @endphp
+            <a href="https://buyle.id/keranjang" class="t5-action-btn t5-btn-cart" title="Keranjang Belanja">
+                <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+                <span class="t5-cart-badge">{{ $cartBadgeVal }}</span>
+            </a>
+
             @if(!empty($config['wa']))
                 @php $waNum = preg_replace('/^(62|0)/', '', $config['wa']); @endphp
                 <a href="https://wa.me/62{{ $waNum }}" target="_blank" class="t5-action-btn t5-btn-wa" title="Hubungi via WhatsApp">
@@ -313,6 +382,17 @@
         <nav class="t5-drawer-nav">
             <a href="{{ url('/' . $username) }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Beranda</a>
             <a href="{{ url('/' . $username . '/produk') }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Produk</a>
+            <a href="https://buyle.id/keranjang" class="t5-drawer-link t5-drawer-cart-link">
+                <span style="display:inline-flex; align-items:center; gap:0.45rem;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#1eb349;">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 0 1-8 0"/>
+                    </svg>
+                    Keranjang
+                </span>
+                <span class="t5-drawer-cart-badge">{{ $cartBadgeVal }}</span>
+            </a>
             @if($blocks->count() > 0)
                 @foreach($blocks as $b)
                     @php $bData = $b->data_json ?? []; @endphp

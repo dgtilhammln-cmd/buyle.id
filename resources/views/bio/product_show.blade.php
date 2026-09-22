@@ -239,6 +239,44 @@
         .ps-btn-buy:active { transform: translateY(0); }
         .ps-btn-buy:disabled, .ps-btn-buy.disabled { background: var(--s2); color: var(--s4); cursor: not-allowed; box-shadow: none; transform: none; }
 
+        /* ── 2-BUTTON ROW ── */
+        .ps-cta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+        .ps-btn-cart {
+            display: flex; align-items: center; justify-content: center; gap: 0.45rem;
+            width: 100%; padding: 0.82rem 1rem; border-radius: var(--r10);
+            background: var(--wh); color: var(--em2);
+            border: 2px solid var(--em);
+            font-family: 'Montserrat', sans-serif; font-size: 0.87rem; font-weight: 700;
+            text-decoration: none; cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+        .ps-btn-cart:hover { background: var(--eml); border-color: var(--em2); }
+        .ps-btn-cart-badge {
+            background: #ef4444; color: #ffffff;
+            font-size: 0.68rem; font-weight: 800;
+            min-width: 19px; height: 19px;
+            border-radius: 999px;
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0 4px; line-height: 1; margin-left: 0.15rem;
+            box-shadow: 0 2px 5px rgba(239, 68, 68, 0.35);
+        }
+        .ps-btn-checkout {
+            display: flex; align-items: center; justify-content: center; gap: 0.45rem;
+            width: 100%; padding: 0.82rem 1rem; border-radius: var(--r10);
+            background: linear-gradient(135deg, var(--em) 0%, var(--em2) 100%);
+            color: #fff; border: 2px solid transparent;
+            font-family: 'Montserrat', sans-serif; font-size: 0.87rem; font-weight: 700;
+            text-decoration: none; cursor: pointer;
+            transition: all 0.22s ease;
+            box-shadow: 0 4px 14px rgba(30,179,73,0.28);
+            letter-spacing: 0.01em;
+        }
+        .ps-btn-checkout:hover { background: linear-gradient(135deg, #16a34a, #14532d); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(30,179,73,0.38); color: #fff; }
+        .ps-btn-checkout:active, .ps-btn-cart:active { transform: translateY(0); }
+        .ps-btn-disabled { background: var(--s2); color: var(--s4); cursor: not-allowed; border-color: var(--s2); box-shadow: none; }
+        @media (max-width: 380px) { .ps-cta-row { grid-template-columns: 1fr; } }
+
         /* ── DESCRIPTION CARD (BELOW) ── */
         .ps-desc-card {
             background: var(--wh); border-radius: var(--r16); border: 1px solid var(--s2); box-shadow: var(--shd);
@@ -369,9 +407,8 @@
             {{-- RIGHT: PRODUCT INFO --}}
             <div class="ps-info">
 
-                {{-- Meta: category + stock --}}
+                {{-- Stock only (no category badge) --}}
                 <div class="ps-meta-row">
-                    <span class="ps-badge-cat">{{ $category }}</span>
                     @if($stock === null || (int)$stock < 0)
                         <span class="ps-badge-stock stock-unlimited">• Unlimited</span>
                     @elseif((int)$stock > 0)
@@ -421,46 +458,81 @@
                         @endif
                         <div>
                             <div class="ps-seller-name">{{ $bioName }}</div>
-                            <div class="ps-seller-sub">Official Creator buyle.id</div>
                         </div>
                     </div>
                     <a href="{{ url('/' . $username) }}" class="ps-seller-link">Profil →</a>
                 </div>
 
-                {{-- CTA BUTTONS --}}
-                <div class="ps-cta">
-                    @if($isOutOfStock)
-                        <button class="ps-btn-buy disabled" disabled>
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                {{-- CTA BUTTONS: 2-column Keranjang + Checkout --}}
+                @php
+                    $prodId = $product ? $product->id : ($block->data_json['product_id'] ?? null);
+                    $cleanNum = preg_replace('/[^0-9]/', '', $waNumber);
+                    $ctaMsg = 'Halo, saya ingin memesan *' . $prodTitle . '* (Rp ' . number_format($price, 0, ',', '.') . '). Apakah masih tersedia?';
+                    $waOrderUrl = !empty($cleanNum) ? 'https://wa.me/' . $cleanNum . '?text=' . urlencode($ctaMsg) : '#';
+                @endphp
+
+                @php
+                    $psCartBadge = 1;
+                    try {
+                        if (class_exists(\App\Services\CartService::class)) {
+                            $cQty = app(\App\Services\CartService::class)->getItems()->sum('qty');
+                            if ($cQty > 0) $psCartBadge = $cQty;
+                        }
+                    } catch (\Throwable $e) {}
+                @endphp
+
+                @if($isOutOfStock)
+                    <div class="ps-cta-row">
+                        <button class="ps-btn-cart ps-btn-disabled" disabled>
+                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
                             Stok Habis
                         </button>
-                    @elseif($paymentMethod === 'wa' && $waNumber)
-                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $waNumber) }}?text={{ urlencode($waMessage) }}" target="_blank" class="ps-btn-buy">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.556 4.117 1.528 5.849L0 24l6.335-1.508A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.154-1.422l-.37-.218-3.764.896.924-3.667-.243-.381A9.953 9.953 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/></svg>
-                            Pesan via WhatsApp
+                        <button class="ps-btn-checkout ps-btn-disabled" disabled>
+                            Stok Habis
+                        </button>
+                    </div>
+                @elseif($paymentMethod === 'wa' && $waNumber)
+                    <div class="ps-cta-row">
+                        <a href="https://buyle.id/keranjang" class="ps-btn-cart">
+                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                            <span>Keranjang</span>
+                            <span class="ps-btn-cart-badge">{{ $psCartBadge }}</span>
                         </a>
-                    @elseif($product || !empty($block->data_json['product_id']))
-                        <form action="{{ route('cart.add') }}" method="POST" style="width:100%;">
+                        <a href="{{ $waOrderUrl }}" target="_blank" class="ps-btn-checkout">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+                            Checkout
+                        </a>
+                    </div>
+                @elseif($prodId)
+                    <div class="ps-cta-row">
+                        <form action="{{ route('cart.add') }}" method="POST" style="display:contents;">
                             @csrf
-                            <input type="hidden" name="product_id" value="{{ $product ? $product->id : ($block->data_json['product_id'] ?? '') }}">
+                            <input type="hidden" name="product_id" value="{{ $prodId }}">
                             <input type="hidden" name="qty" value="1">
-                            <button type="submit" class="ps-btn-buy">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                                Beli Sekarang
+                            <button type="submit" class="ps-btn-cart">
+                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                                <span>Keranjang</span>
+                                <span class="ps-btn-cart-badge">{{ $psCartBadge }}</span>
                             </button>
                         </form>
-                    @else
-                        @php
-                            $cleanNum = preg_replace('/[^0-9]/', '', $waNumber);
-                            $ctaMsg = 'Halo, saya ingin memesan *' . $prodTitle . '* (Rp ' . number_format($price, 0, ',', '.') . '). Apakah masih tersedia?';
-                            $ctaWa = !empty($cleanNum) ? 'https://wa.me/' . $cleanNum . '?text=' . urlencode($ctaMsg) : '#';
-                        @endphp
-                        <a href="{{ $ctaWa }}" target="_blank" class="ps-btn-buy">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                            Beli Sekarang
+                        <a href="https://buyle.id/keranjang" class="ps-btn-checkout">
+                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                            Checkout
                         </a>
-                    @endif
-                </div>
+                    </div>
+                @else
+                    <div class="ps-cta-row">
+                        <a href="https://buyle.id/keranjang" class="ps-btn-cart">
+                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                            <span>Keranjang</span>
+                            <span class="ps-btn-cart-badge">{{ $psCartBadge }}</span>
+                        </a>
+                        <a href="{{ $waOrderUrl }}" target="_blank" class="ps-btn-checkout">
+                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                            Checkout
+                        </a>
+                    </div>
+                @endif
 
             </div>{{-- end .ps-info --}}
         </div>{{-- end .ps-top --}}
