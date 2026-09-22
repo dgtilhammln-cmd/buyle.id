@@ -465,15 +465,20 @@
         @endif
 
         @php
+            $isHome = request()->is($username) || request()->path() === '/' || request()->path() === '';
             $homeUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') : url('/' . $username);
             $productsUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') . '/produk' : url('/' . $username . '/produk');
+
+            $berandaLink = $isHome ? '#' : $homeUrl;
+            $aboutLink   = $isHome ? '#about-section' : $homeUrl . '#about-section';
+            $contactLink = $isHome ? '#footer-section' : $homeUrl . '#footer-section';
         @endphp
         {{-- Navigation Links (Top Row) --}}
         <div class="t5-footer-nav">
-            <a href="{{ $homeUrl }}">Beranda</a>
-            <a href="{{ $homeUrl }}#about-section">Profil</a>
+            <a href="{{ $berandaLink }}">Beranda</a>
+            <a href="{{ $aboutLink }}">Profil</a>
             <a href="{{ $productsUrl }}">Produk / Layanan</a>
-            <a href="{{ $homeUrl }}#footer-section">Kontak</a>
+            <a href="{{ $contactLink }}">Kontak</a>
         </div>
 
         {{-- Main Center Section --}}
