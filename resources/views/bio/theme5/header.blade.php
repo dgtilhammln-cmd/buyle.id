@@ -325,11 +325,10 @@
         <div class="t5-header-actions">
             {{-- Cart Button --}}
             @php
-                $cartBadgeVal = 1;
+                $cartBadgeVal = 0;
                 try {
                     if (class_exists(\App\Services\CartService::class)) {
-                        $itemsQty = app(\App\Services\CartService::class)->getItems()->sum('qty');
-                        if ($itemsQty > 0) $cartBadgeVal = $itemsQty;
+                        $cartBadgeVal = (int) app(\App\Services\CartService::class)->getItems()->sum('qty');
                     }
                 } catch (\Throwable $e) {}
             @endphp
@@ -339,7 +338,9 @@
                     <line x1="3" y1="6" x2="21" y2="6"/>
                     <path d="M16 10a4 4 0 0 1-8 0"/>
                 </svg>
-                <span class="t5-cart-badge">{{ $cartBadgeVal }}</span>
+                @if($cartBadgeVal > 0)
+                    <span class="t5-cart-badge">{{ $cartBadgeVal }}</span>
+                @endif
             </a>
 
             @if(!empty($config['wa']))
@@ -391,7 +392,9 @@
                     </svg>
                     Keranjang
                 </span>
-                <span class="t5-drawer-cart-badge">{{ $cartBadgeVal }}</span>
+                @if($cartBadgeVal > 0)
+                    <span class="t5-drawer-cart-badge">{{ $cartBadgeVal }}</span>
+                @endif
             </a>
             @if($blocks->count() > 0)
                 @foreach($blocks as $b)
