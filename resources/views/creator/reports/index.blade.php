@@ -221,53 +221,277 @@
             font-family: 'Montserrat', sans-serif;
         }
 
-        /* ── Metric Cards ──────────────────────────────────── */
-        .metrics-grid {
+        /* ── Metric Cards & Luxury Banking Card ──────────────────── */
+        .rp-hero-section {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: minmax(320px, 440px) 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.75rem;
+            align-items: stretch;
         }
 
-        .metric-card {
-            background: #fff;
-            border-radius: 18px;
-            padding: 1.25rem 1.5rem;
+        @media (max-width: 960px) {
+            .rp-hero-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .luxury-card-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .luxury-card {
+            position: relative;
+            border-radius: 20px;
+            padding: 1.4rem 1.6rem;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+            user-select: none;
+            box-sizing: border-box;
+        }
+
+        .luxury-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 22px 45px rgba(0, 0, 0, 0.26);
+        }
+
+        .luxury-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(
+                115deg,
+                rgba(255, 255, 255, 0) 30%,
+                rgba(255, 255, 255, 0.12) 48%,
+                rgba(255, 255, 255, 0.25) 50%,
+                rgba(255, 255, 255, 0.12) 52%,
+                rgba(255, 255, 255, 0) 70%
+            );
+            pointer-events: none;
+            transform: rotate(25deg);
+        }
+
+        /* Tier 1: Perintis (Matte Silver / Brushed Steel) */
+        .luxury-card.tier-silver {
+            background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 50%, #94a3b8 100%);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            color: #0f172a;
+            box-shadow: 0 12px 30px rgba(148, 163, 184, 0.3);
+        }
+        .luxury-card.tier-silver .lc-label,
+        .luxury-card.tier-silver .lc-holder-label { color: #475569; }
+        .luxury-card.tier-silver .lc-amount { color: #0f172a; text-shadow: 0 1px 2px rgba(255,255,255,0.7); }
+        .luxury-card.tier-silver .lc-tier-badge { background: rgba(15, 23, 42, 0.08); color: #0f172a; border: 1px solid rgba(15, 23, 42, 0.15); }
+
+        /* Tier 2: Hustler (Titanium Gray Card) */
+        .luxury-card.tier-titanium {
+            background: linear-gradient(135deg, #334155 0%, #1e293b 50%, #0f172a 100%);
+            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 10px), linear-gradient(135deg, #334155 0%, #1e293b 50%, #0f172a 100%);
+            border: 1px solid rgba(203, 213, 225, 0.35);
+            color: #ffffff;
+            box-shadow: 0 14px 35px rgba(15, 23, 42, 0.4);
+        }
+        .luxury-card.tier-titanium .lc-label,
+        .luxury-card.tier-titanium .lc-holder-label { color: #94a3b8; }
+        .luxury-card.tier-titanium .lc-amount { color: #ffffff; }
+        .luxury-card.tier-titanium .lc-tier-badge { background: rgba(255, 255, 255, 0.12); color: #f1f5f9; border: 1px solid rgba(255, 255, 255, 0.25); }
+
+        /* Tier 3: Pengusaha Muda (Rose Gold / Champagne Gold Minimalist) */
+        .luxury-card.tier-rosegold {
+            background: linear-gradient(135deg, #f5d0c5 0%, #e6b8a2 40%, #d49b85 80%, #b87355 100%);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            color: #3b1609;
+            box-shadow: 0 14px 35px rgba(212, 155, 133, 0.4);
+        }
+        .luxury-card.tier-rosegold .lc-label,
+        .luxury-card.tier-rosegold .lc-holder-label { color: #6e331f; }
+        .luxury-card.tier-rosegold .lc-amount { color: #2e0f05; }
+        .luxury-card.tier-rosegold .lc-tier-badge { background: rgba(61, 22, 9, 0.12); color: #3b1609; border: 1px solid rgba(61, 22, 9, 0.22); }
+
+        /* Tier 4: Eksekutif Muda (Deep Emerald Platinum Card) */
+        .luxury-card.tier-emerald {
+            background: linear-gradient(135deg, #064e3b 0%, #047857 40%, #022c22 100%);
+            border: 1px solid rgba(52, 211, 153, 0.4);
+            color: #ffffff;
+            box-shadow: 0 14px 38px rgba(4, 120, 87, 0.4);
+        }
+        .luxury-card.tier-emerald .lc-label,
+        .luxury-card.tier-emerald .lc-holder-label { color: #a7f3d0; }
+        .luxury-card.tier-emerald .lc-amount { color: #ffffff; text-shadow: 0 0 12px rgba(52, 211, 153, 0.35); }
+        .luxury-card.tier-emerald .lc-tier-badge { background: rgba(52, 211, 153, 0.18); color: #6ee7b7; border: 1px solid rgba(52, 211, 153, 0.35); }
+
+        /* Tier 5: Eksekutif Senior (Obsidian Matte Black Silver Engraved) */
+        .luxury-card.tier-obsidian {
+            background: linear-gradient(135deg, #111827 0%, #030712 100%);
+            border: 1px solid rgba(226, 232, 240, 0.3);
+            color: #f8fafc;
+            box-shadow: 0 16px 42px rgba(0, 0, 0, 0.65);
+        }
+        .luxury-card.tier-obsidian .lc-label,
+        .luxury-card.tier-obsidian .lc-holder-label { color: #94a3b8; }
+        .luxury-card.tier-obsidian .lc-amount { color: #f8fafc; text-shadow: 0 2px 6px rgba(0,0,0,0.9); }
+        .luxury-card.tier-obsidian .lc-tier-badge { background: rgba(255, 255, 255, 0.1); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.25); }
+
+        /* Tier 6: Financial Freedom (Solid Carbon Fiber Ultra-Card) */
+        .luxury-card.tier-carbon {
+            background-color: #050505;
+            background-image: 
+                radial-gradient(rgba(255,255,255,0.09) 1px, transparent 0),
+                radial-gradient(rgba(255,255,255,0.09) 1px, #050505 1px);
+            background-size: 8px 8px;
+            background-position: 0 0, 4px 4px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: #ffffff;
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.85);
+        }
+        .luxury-card.tier-carbon .lc-label,
+        .luxury-card.tier-carbon .lc-holder-label { color: #a1a1aa; letter-spacing: 0.1em; }
+        .luxury-card.tier-carbon .lc-amount { color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.95); }
+        .luxury-card.tier-carbon .lc-tier-badge { background: rgba(255, 255, 255, 0.15); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.35); font-weight: 800; letter-spacing: 0.08em; }
+
+        /* EMV Chip & NFC elements */
+        .lc-chip-group { display: flex; align-items: center; gap: 0.65rem; }
+        .emv-chip {
+            width: 36px; height: 26px;
+            background: linear-gradient(135deg, #ffe066 0%, #d4af37 50%, #aa8c2c 100%);
+            border-radius: 5px;
+            position: relative;
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.2);
+            overflow: hidden; flex-shrink: 0;
+        }
+        .luxury-card.tier-titanium .emv-chip,
+        .luxury-card.tier-obsidian .emv-chip,
+        .luxury-card.tier-carbon .emv-chip {
+            background: linear-gradient(135deg, #f1f5f9 0%, #94a3b8 50%, #64748b 100%);
+        }
+        .chip-line.horizontal { position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(0,0,0,0.25); }
+        .chip-line.vertical { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(0,0,0,0.25); }
+
+        .nfc-icon { opacity: 0.65; }
+
+        /* Card Rows */
+        .lc-top { display: flex; align-items: center; justify-content: space-between; z-index: 2; margin-bottom: 0.5rem; }
+        .lc-brand { display: flex; align-items: center; gap: 0.5rem; }
+        .lc-brand-title { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em; }
+        .lc-brand-dot { color: #1eb349; }
+        .lc-tier-badge {
+            font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+            padding: 0.2rem 0.55rem; border-radius: 999px; letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+        .lc-middle { margin: 0.75rem 0; z-index: 2; }
+        .lc-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.2rem; }
+        .lc-amount { font-size: 1.65rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; word-break: break-word; }
+
+        .lc-bottom { display: flex; align-items: flex-end; justify-content: space-between; z-index: 2; gap: 0.5rem; }
+        .lc-holder-label { font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+        .lc-holder-name { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.03em; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .lc-subtitle-badge { font-size: 0.68rem; font-weight: 600; opacity: 0.85; text-align: right; }
+
+        /* Progress bar inside card */
+        .lc-progress-bar-wrap {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+            background: rgba(0,0,0,0.15); overflow: hidden;
+        }
+        .lc-progress-bar {
+            height: 100%; background: linear-gradient(90deg, #1eb349, #a5cf37);
+            transition: width 0.5s ease;
+        }
+
+        /* Progress note below card */
+        .lc-progress-note {
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 0.74rem; color: #64748b; font-weight: 500; padding: 0.1rem 0.2rem 0;
+            flex-wrap: wrap; gap: 0.4rem;
+        }
+        .lc-tier-info-btn {
+            background: none; border: none; color: #1eb349; font-size: 0.74rem; font-weight: 700;
+            cursor: pointer; padding: 0; text-decoration: underline; font-family: 'Montserrat', sans-serif;
+        }
+        .lc-tier-info-btn:hover { color: #15803d; }
+
+        /* Mini Stats Grid (2x2 beside Luxury Card) */
+        .stats-mini-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.85rem;
+        }
+        @media (max-width: 540px) {
+            .stats-mini-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .stat-mini-card {
+            background: #ffffff;
             border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
-            min-width: 0;
+            border-radius: 16px;
+            padding: 1rem 1.15rem;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .stat-mini-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+        .sm-icon {
+            width: 42px; height: 42px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .sm-icon.green { background: #f0fdf4; color: #16a34a; }
+        .sm-icon.blue { background: #eff6ff; color: #2563eb; }
+        .sm-icon.purple { background: #faf5ff; color: #9333ea; }
+        .sm-icon.orange { background: #fff7ed; color: #ea580c; }
+
+        .sm-label { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.15rem; }
+        .sm-value { font-size: 1.3rem; font-weight: 800; color: #0f172a; line-height: 1.1; }
+
+        /* ── TIER GUIDE MODAL ── */
+        .tier-modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px);
+            z-index: 9999; align-items: center; justify-content: center;
+            padding: 1rem;
+        }
+        .tier-modal-overlay.show { display: flex; animation: tmFadeIn 0.25s ease; }
+        @keyframes tmFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .tier-modal-card {
+            background: #ffffff; border-radius: 24px; max-width: 680px; width: 100%;
+            max-height: 90vh; overflow-y: auto; padding: 1.75rem;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3); position: relative;
+        }
+        .tier-modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+        .tier-modal-title { font-size: 1.25rem; font-weight: 800; color: #0f172a; margin: 0; }
+        .tier-modal-close {
+            background: #f1f5f9; border: none; width: 32px; height: 32px;
+            border-radius: 50%; font-size: 18px; cursor: pointer; color: #64748b;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .tier-grid-preview {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;
+        }
+        @media (max-width: 580px) { .tier-grid-preview { grid-template-columns: 1fr; } }
+        .tier-item-box {
+            border-radius: 14px; padding: 1rem; border: 1px solid #e2e8f0;
+            display: flex; flex-direction: column; gap: 0.4rem; position: relative;
             overflow: hidden;
         }
-
-        .metric-card.dark {
-            background: linear-gradient(135deg, #0b120c, #1a2744);
-            border: none;
-        }
-
-        .metric-label {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.5rem;
-        }
-
-        .metric-card.dark .metric-label {
-            color: #94a3b8;
-        }
-
-        .metric-value {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #0f172a;
-            line-height: 1.1;
-            word-break: break-word;
-        }
-
-        .metric-card.dark .metric-value {
-            color: #fff;
-        }
+        .tier-item-name { font-size: 0.85rem; font-weight: 800; }
+        .tier-item-target { font-size: 0.78rem; font-weight: 700; opacity: 0.9; }
+        .tier-item-desc { font-size: 0.72rem; opacity: 0.8; line-height: 1.4; }
 
         /* ── Traffic Wave Chart Card ─────────────────────────────── */
         /* ── Charts Grid (2 Cards) ─────────────────────────────────── */
@@ -634,6 +858,55 @@
 
 @section('content')
 
+@php
+    $salesVal = (float)($totalSales ?? 0);
+    $sellerStoreName = $config['name'] ?? $profile->store_name ?? auth()->user()->name ?? 'CREATOR';
+
+    if ($salesVal >= 500000000) {
+        $tierName = 'FINANCIAL FREEDOM';
+        $tierSubtitle = 'Solid Carbon Fiber Ultra-Card';
+        $tierClass = 'tier-carbon';
+        $nextTierTarget = null;
+        $nextTierName = null;
+        $tierProgress = 100;
+    } elseif ($salesVal >= 200000000) {
+        $tierName = 'EKSEKUTIF SENIOR';
+        $tierSubtitle = 'Obsidian Matte Black Priority';
+        $tierClass = 'tier-obsidian';
+        $nextTierTarget = 500000000;
+        $nextTierName = 'Financial Freedom (500 Juta)';
+        $tierProgress = round(($salesVal / 500000000) * 100, 1);
+    } elseif ($salesVal >= 100000000) {
+        $tierName = 'EKSEKUTIF MUDA';
+        $tierSubtitle = 'Deep Emerald Platinum Card';
+        $tierClass = 'tier-emerald';
+        $nextTierTarget = 200000000;
+        $nextTierName = 'Eksekutif Senior (200 Juta)';
+        $tierProgress = round(($salesVal / 200000000) * 100, 1);
+    } elseif ($salesVal >= 50000000) {
+        $tierName = 'PENGUSAHA MUDA';
+        $tierSubtitle = 'Rose Gold Minimalist Card';
+        $tierClass = 'tier-rosegold';
+        $nextTierTarget = 100000000;
+        $nextTierName = 'Eksekutif Muda (100 Juta)';
+        $tierProgress = round(($salesVal / 100000000) * 100, 1);
+    } elseif ($salesVal >= 10000000) {
+        $tierName = 'PEJUANG / HUSTLER';
+        $tierSubtitle = 'Titanium Gray Metallic Card';
+        $tierClass = 'tier-titanium';
+        $nextTierTarget = 50000000;
+        $nextTierName = 'Pengusaha Muda (50 Juta)';
+        $tierProgress = round(($salesVal / 50000000) * 100, 1);
+    } else {
+        $tierName = 'PERINTIS';
+        $tierSubtitle = 'Matte Silver Brushed Steel';
+        $tierClass = 'tier-silver';
+        $nextTierTarget = 10000000;
+        $nextTierName = 'Pejuang / Hustler (10 Juta)';
+        $tierProgress = round(($salesVal / 10000000) * 100, 1);
+    }
+@endphp
+
     {{-- ── Custom Date Modal ──────────────────────────────────────────── --}}
     <div class="date-modal-overlay" id="customDateModal">
         <div class="date-modal">
@@ -675,27 +948,101 @@
 
     {{-- ── TAB 1: ANALYTICS & PENJUALAN ────────────────────────────────── --}}
     <div id="tabContentAnalytics" class="rp-tab-content">
-        {{-- ── Metric Cards ────────────────────────────────────────────────── --}}
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-label">Total Visitor</div>
-                <div class="metric-value">{{ number_format($totalVisitors) }}</div>
+        {{-- ── ACHIEVEMENT CARD & STATS HERO SECTION ─────────────────────── --}}
+        <div class="rp-hero-section">
+            {{-- Left Column: Luxury Banking Achievement Card --}}
+            <div class="luxury-card-wrapper">
+                <div class="luxury-card {{ $tierClass }}">
+                    <div class="lc-top">
+                        <div class="lc-chip-group">
+                            <div class="emv-chip">
+                                <div class="chip-line horizontal"></div>
+                                <div class="chip-line vertical"></div>
+                            </div>
+                            <svg class="nfc-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                <path d="M12 2a10 10 0 0 1 10 10" />
+                                <path d="M12 6a6 6 0 0 1 6 6" />
+                                <path d="M12 10a2 2 0 0 1 2 2" />
+                            </svg>
+                        </div>
+                        <div class="lc-brand">
+                            <span class="lc-brand-title">buyle<span class="lc-brand-dot">.id</span></span>
+                            <span class="lc-tier-badge">{{ $tierName }}</span>
+                        </div>
+                    </div>
+
+                    <div class="lc-middle">
+                        <div class="lc-label">TOTAL OMZET PENJUALAN</div>
+                        <div class="lc-amount">Rp {{ number_format($totalSales, 0, ',', '.') }}</div>
+                    </div>
+
+                    <div class="lc-bottom">
+                        <div>
+                            <div class="lc-holder-label">CARD HOLDER</div>
+                            <div class="lc-holder-name">{{ strtoupper($sellerStoreName) }}</div>
+                        </div>
+                        <div class="lc-subtitle-badge">
+                            {{ $tierSubtitle }}
+                        </div>
+                    </div>
+
+                    @if($nextTierTarget)
+                        <div class="lc-progress-bar-wrap" title="Progress ke Tier Berikutnya">
+                            <div class="lc-progress-bar" style="width: {{ min(100, $tierProgress) }}%;"></div>
+                        </div>
+                    @endif
+                </div>
+
+                <div class="lc-progress-note">
+                    @if($nextTierTarget)
+                        <span>Pencapaian: <strong>{{ $tierProgress }}%</strong> menuju {{ $nextTierName }}</span>
+                    @else
+                        <span>🏆 Selamat! Anda telah mencapai Tier Tertinggi (Financial Freedom)</span>
+                    @endif
+                    <button type="button" class="lc-tier-info-btn" onclick="openTierModal()">
+                        Lihat 6 Tier Card ⓘ
+                    </button>
+                </div>
             </div>
-            <div class="metric-card">
-                <div class="metric-label">Unique Visitor</div>
-                <div class="metric-value">{{ number_format($uniqueVisitors) }}</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">Total Transaksi</div>
-                <div class="metric-value">{{ number_format($totalOrders) }}</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">Link Klik Bio</div>
-                <div class="metric-value">{{ number_format($totalBioClicks) }}</div>
-            </div>
-            <div class="metric-card dark" style="grid-column: span 4;">
-                <div class="metric-label">Total Penjualan</div>
-                <div class="metric-value">Rp {{ number_format($totalSales, 0, ',', '.') }}</div>
+
+            {{-- Right Column: 4 Stat Cards in 2x2 Grid --}}
+            <div class="stats-mini-grid">
+                <div class="stat-mini-card">
+                    <div class="sm-icon green">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    </div>
+                    <div>
+                        <div class="sm-label">Total Visitor</div>
+                        <div class="sm-value">{{ number_format($totalVisitors) }}</div>
+                    </div>
+                </div>
+                <div class="stat-mini-card">
+                    <div class="sm-icon blue">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div>
+                        <div class="sm-label">Unique Visitor</div>
+                        <div class="sm-value">{{ number_format($uniqueVisitors) }}</div>
+                    </div>
+                </div>
+                <div class="stat-mini-card">
+                    <div class="sm-icon purple">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    </div>
+                    <div>
+                        <div class="sm-label">Total Transaksi</div>
+                        <div class="sm-value">{{ number_format($totalOrders) }}</div>
+                    </div>
+                </div>
+                <div class="stat-mini-card">
+                    <div class="sm-icon orange">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    </div>
+                    <div>
+                        <div class="sm-label">Link Klik Bio</div>
+                        <div class="sm-value">{{ number_format($totalBioClicks) }}</div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1790,4 +2137,74 @@
             <div style="font-size:0.68rem; color:#94a3b8; margin-top:4px;">https://buyle.id • Digital Creator Center</div>
         </div>
     </div>
+
+    {{-- TIER PREVIEW MODAL --}}
+    <div id="tierModalOverlay" class="tier-modal-overlay" onclick="closeTierModal(event)">
+        <div class="tier-modal-card" onclick="event.stopPropagation()">
+            <div class="tier-modal-head">
+                <h3 class="tier-modal-title">🏆 6 Tingkat Kasta Achievement Card</h3>
+                <button type="button" class="tier-modal-close" onclick="closeTierModal()">&times;</button>
+            </div>
+            <p style="font-size:0.8rem; color:#64748b; margin-bottom:1.25rem; line-height:1.5;">
+                Tingkatkan omzet penjualan buyle.id Anda untuk membuka tampilan kartu digital bernilai tinggi dengan finishing material eksklusif ala luxury priority banking.
+            </p>
+
+            <div class="tier-grid-preview">
+                {{-- Tier 1 --}}
+                <div class="tier-item-box" style="background: linear-gradient(135deg, #f1f5f9, #cbd5e1); color:#0f172a; border-color:#cbd5e1;">
+                    <div class="tier-item-name">1. PERINTIS (Rp 1 Juta+)</div>
+                    <div class="tier-item-target">Matte Silver / Brushed Steel Card</div>
+                    <div class="tier-item-desc">Tampilan bersih industrial steel, menandakan langkah awal fondasi bisnis yang kokoh.</div>
+                </div>
+
+                {{-- Tier 2 --}}
+                <div class="tier-item-box" style="background: linear-gradient(135deg, #334155, #0f172a); color:#ffffff; border-color:#475569;">
+                    <div class="tier-item-name">2. PEJUANG / HUSTLER (Rp 10 Juta+)</div>
+                    <div class="tier-item-target">Titanium Gray Metallic Card</div>
+                    <div class="tier-item-desc">Titanium gray dengan garis metalik, menyimbolkan tempaan awal bisnis yang berputar kencang.</div>
+                </div>
+
+                {{-- Tier 3 --}}
+                <div class="tier-item-box" style="background: linear-gradient(135deg, #f5d0c5, #d49b85); color:#3b1609; border-color:#e6b8a2;">
+                    <div class="tier-item-name">3. PENGUSAHA MUDA (Rp 50 Juta+)</div>
+                    <div class="tier-item-target">Rose Gold / Champagne Gold Card</div>
+                    <div class="tier-item-desc">Estetika hangat champagne gold minimalist yang elegan dan berkelas.</div>
+                </div>
+
+                {{-- Tier 4 --}}
+                <div class="tier-item-box" style="background: linear-gradient(135deg, #064e3b, #022c22); color:#ffffff; border-color:#047857;">
+                    <div class="tier-item-name">4. EKSEKUTIF MUDA (Rp 100 Juta+)</div>
+                    <div class="tier-item-target">Deep Emerald Platinum Card</div>
+                    <div class="tier-item-desc">Emerald green & platinum dengan chip hologram, menggambarkan pertumbuhan korporat matang.</div>
+                </div>
+
+                {{-- Tier 5 --}}
+                <div class="tier-item-box" style="background: linear-gradient(135deg, #111827, #030712); color:#f8fafc; border-color:#334155;">
+                    <div class="tier-item-name">5. EKSEKUTIF SENIOR (Rp 200 Juta+)</div>
+                    <div class="tier-item-target">Obsidian Matte Black Silver Engraved</div>
+                    <div class="tier-item-desc">Warna gelap obsidian misterius ala kartu prioritas perbankan papan atas dengan ukiran perak.</div>
+                </div>
+
+                {{-- Tier 6 --}}
+                <div class="tier-item-box" style="background:#080808; color:#ffffff; border-color:#3f3f46;">
+                    <div class="tier-item-name">6. FINANCIAL FREEDOM (Rp 500 Juta+)</div>
+                    <div class="tier-item-target">Solid Carbon Fiber Ultra-Card</div>
+                    <div class="tier-item-desc">Pure Carbon Fiber & laser platinum matte, memancarkan prestise mutlak ala Amex Centurion.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTierModal() {
+            const m = document.getElementById('tierModalOverlay');
+            if (m) m.classList.add('show');
+        }
+        function closeTierModal(e) {
+            if (!e || e.target.id === 'tierModalOverlay' || e.target.classList.contains('tier-modal-close')) {
+                const m = document.getElementById('tierModalOverlay');
+                if (m) m.classList.remove('show');
+            }
+        }
+    </script>
 @endsection
