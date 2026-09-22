@@ -167,6 +167,11 @@ class CreatorBioController extends Controller
             'about_card3_btn_link'=> 'nullable|string|max:500',
             'about_card3_btn_bg'  => 'nullable|string|max:50',
             'about_card3_btn_color'=> 'nullable|string|max:50',
+            // Footer Section Settings
+            'footer_bg_color1'   => 'nullable|string|max:50',
+            'footer_bg_color2'   => 'nullable|string|max:50',
+            'footer_bg_image'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:8192',
+            'footer_bg_opacity'  => 'nullable|numeric|min:0|max:100',
         ]);
 
         $profile = $this->getProfile();
@@ -264,6 +269,21 @@ class CreatorBioController extends Controller
             $config['bg_image'] = $this->convertToWebp($request->file('bio_bg_image'), 'bio/backgrounds');
             $config['bg_type'] = 'image';
         }
+
+        // Handle Footer Background Image Upload / Deletion
+        if ($request->has('delete_footer_bg_image') && !empty($config['footer_bg_image'])) {
+            Storage::disk('public')->delete($config['footer_bg_image']);
+            $config['footer_bg_image'] = null;
+        } elseif ($request->hasFile('footer_bg_image')) {
+            if (!empty($config['footer_bg_image'])) {
+                Storage::disk('public')->delete($config['footer_bg_image']);
+            }
+            $config['footer_bg_image'] = $this->convertToWebp($request->file('footer_bg_image'), 'bio/footers');
+        }
+
+        if ($request->has('footer_bg_color1'))  $config['footer_bg_color1']  = $request->footer_bg_color1;
+        if ($request->has('footer_bg_color2'))  $config['footer_bg_color2']  = $request->footer_bg_color2;
+        if ($request->has('footer_bg_opacity')) $config['footer_bg_opacity'] = $request->footer_bg_opacity;
 
         $config['name']     = $request->has('bio_name') ? ($request->bio_name ?? '') : ($config['name'] ?? '');
         $config['bio']      = $request->has('bio_bio') ? ($request->bio_bio ?? '') : ($config['bio'] ?? '');

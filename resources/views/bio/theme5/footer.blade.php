@@ -7,6 +7,12 @@
 
     $locationText = !empty($config['location']) ? $config['location'] : ($profile->address ?? $profile->store_location ?? null);
     $sellerWa     = !empty($config['wa']) ? $config['wa'] : ($profile->phone ?? '');
+
+    // Footer Custom Colors & Background Image
+    $footerBgColor1 = $config['footer_bg_color1'] ?? '#09121a';
+    $footerBgColor2 = $config['footer_bg_color2'] ?? '#064e3b';
+    $footerBgImg    = !empty($config['footer_bg_image']) ? asset('storage/' . $config['footer_bg_image']) : null;
+    $footerOpacity  = isset($config['footer_bg_opacity']) ? ((float)$config['footer_bg_opacity'] / 100) : 0.3;
 @endphp
 
 <style>
@@ -20,7 +26,7 @@
 
     .t5-footer-card {
         position: relative;
-        background: linear-gradient(135deg, #09121a 0%, #0d1e2e 50%, #064e3b 100%);
+        background: linear-gradient(135deg, {{ $footerBgColor1 }} 0%, {{ $footerBgColor2 }} 100%);
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 32px;
         padding: 3.5rem 3rem 2rem;
@@ -38,6 +44,7 @@
         background-size: 24px 24px;
         opacity: 0.3;
         pointer-events: none;
+        z-index: 2;
     }
 
     .t5-footer-card::after {
@@ -50,6 +57,7 @@
         background: radial-gradient(circle, rgba(30, 179, 73, 0.25) 0%, transparent 70%);
         pointer-events: none;
         filter: blur(40px);
+        z-index: 2;
     }
 
     /* Top Navigation Links */
@@ -61,7 +69,7 @@
         flex-wrap: wrap;
         margin-bottom: 2.75rem;
         position: relative;
-        z-index: 2;
+        z-index: 3;
     }
 
     .t5-footer-nav a {
@@ -85,7 +93,7 @@
         max-width: 680px;
         margin: 0 auto;
         position: relative;
-        z-index: 2;
+        z-index: 3;
     }
 
     .t5-footer-title {
@@ -173,7 +181,7 @@
         padding-top: 1.5rem;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
         position: relative;
-        z-index: 2;
+        z-index: 3;
         gap: 1.5rem;
         flex-wrap: wrap;
     }
@@ -210,24 +218,6 @@
     .t5-location-icon {
         color: #4ade80;
         flex-shrink: 0;
-    }
-
-    .t5-legal-pill {
-        display: inline-flex;
-        align-items: center;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 999px;
-        padding: 0.45rem 0.85rem;
-        color: rgba(255, 255, 255, 0.65);
-        font-size: 0.75rem;
-        text-decoration: none;
-        transition: all 0.2s ease;
-    }
-
-    .t5-legal-pill:hover {
-        color: #ffffff;
-        border-color: rgba(255, 255, 255, 0.3);
     }
 
     .t5-footer-credit {
@@ -455,6 +445,10 @@
 
 <footer class="t5-footer-wrapper" id="footer-section">
     <div class="t5-footer-card">
+        @if($footerBgImg)
+            <div class="t5-footer-bg-layer" style="position:absolute; inset:0; width:100%; height:100%; background-image:url('{{ $footerBgImg }}'); background-size:cover; background-position:center; opacity:{{ $footerOpacity }}; mix-blend-mode:overlay; pointer-events:none; z-index:1;"></div>
+        @endif
+
         {{-- Navigation Links (Top Row) --}}
         <div class="t5-footer-nav">
             <a href="{{ url('/' . $username) }}">Beranda</a>
@@ -483,7 +477,7 @@
 
         {{-- Bottom Row (Location left, Credit center, Social right) --}}
         <div class="t5-footer-bottom-row">
-            {{-- Bottom Left: Location Address + Legal Links --}}
+            {{-- Bottom Left: Location Address --}}
             <div class="t5-footer-left">
                 @if(!empty($locationText))
                     <a href="https://maps.google.com/?q={{ urlencode($locationText) }}" target="_blank" rel="noopener" class="t5-location-pill">
@@ -502,8 +496,6 @@
                         <span>Indonesia</span>
                     </a>
                 @endif
-                <span class="t5-legal-pill">Syarat & Ketentuan</span>
-                <span class="t5-legal-pill">Kebijakan Privasi</span>
             </div>
 
             {{-- Bottom Center: Credit --}}
