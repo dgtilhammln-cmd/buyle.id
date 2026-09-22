@@ -6,6 +6,7 @@ use App\Models\CreatorBioBlock;
 use App\Models\CreatorProfile;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class BioProductController extends Controller
 {
@@ -41,15 +42,32 @@ class BioProductController extends Controller
                     ->first();
 
                 if (!$block) {
-                    // Try finding block by title matching product name or slug
+                    // Try finding block by title matching product name
                     $block = CreatorBioBlock::where('creator_id', $profile->id)
                         ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])
                         ->where('is_active', true)
-                        ->where(function ($q) use ($productBySlug, $identifier) {
+                        ->where(function ($q) use ($productBySlug) {
                             $q->where('title', 'LIKE', '%' . $productBySlug->name . '%')
                               ->orWhere('data_json->title', 'LIKE', '%' . $productBySlug->name . '%');
                         })
                         ->first();
+                }
+
+                // 2b. Product exists but NO linked block — auto-create block from Product
+                if (!$block && $productBySlug->seller_id === $profile->user_id) {
+                    $block = new CreatorBioBlock();
+                    $block->creator_id = $profile->id;
+                    $block->type       = 'buyle_product';
+                    $block->is_active  = true;
+                    $block->title      = $productBySlug->name;
+                    $block->data_json  = [
+                        'product_id'  => $productBySlug->id,
+                        'slug'        => $productBySlug->slug,
+                        'price'       => $productBySlug->price,
+                        'description' => $productBySlug->description ?? '',
+                        'image'       => $productBySlug->image ?? null,
+                    ];
+                    $block->save();
                 }
             }
         }
@@ -62,31 +80,47 @@ class BioProductController extends Controller
                 ->get();
 
             foreach ($blocks as $b) {
+                $bData = is_array($b->data_json) ? $b->data_json : (json_decode($b->data_json ?? '[]', true) ?: []);
+
                 // Check if linked product has matching slug
-                if (!empty($b->data_json['product_id'])) {
-                    $p = Product::find($b->data_json['product_id']);
-                    if ($p && ($p->slug === $identifier || \Illuminate\Support\Str::slug($p->name) === $identifier)) {
+                if (!empty($bData['product_id'])) {
+                    $p = Product::find($bData['product_id']);
+                    if ($p && ($p->slug === $identifier || Str::slug($p->name) === $identifier)) {
                         $block = $b;
                         break;
                     }
                 }
 
-                $bSlug = $b->data_json['slug'] ?? null;
+                // Match data_json slug
+                $bSlug = $bData['slug'] ?? null;
                 if ($bSlug === $identifier) {
                     $block = $b;
                     break;
                 }
 
-                $titleSlug = \Illuminate\Support\Str::slug($b->title ?? '');
+                // Match by block title column
+                $titleSlug = Str::slug($b->title ?? '');
                 if ($titleSlug && $titleSlug === $identifier) {
                     $block = $b;
                     break;
                 }
 
-                // Prefix / substring matching
-                if (!is_numeric($identifier) && $titleSlug && (\Illuminate\Support\Str::startsWith($titleSlug, $identifier) || \Illuminate\Support\Str::startsWith($identifier, $titleSlug))) {
-                    $block = $b;
-                    break;
+                // Match by data_json title or name
+                $djTitle = $bData['title'] ?? $bData['name'] ?? null;
+                if ($djTitle) {
+                    $djTitleSlug = Str::slug($djTitle);
+                    if ($djTitleSlug && $djTitleSlug === $identifier) {
+                        $block = $b;
+                        break;
+                    }
+                }
+
+                // Prefix / substring matching (minimum 5 chars to avoid false positives)
+                if (!is_numeric($identifier) && $titleSlug && strlen($titleSlug) >= 5) {
+                    if (Str::startsWith($titleSlug, $identifier) || Str::startsWith($identifier, $titleSlug)) {
+                        $block = $b;
+                        break;
+                    }
                 }
             }
 
@@ -105,7 +139,6 @@ class BioProductController extends Controller
             abort(404);
         }
 
-
         $product = null;
         if (!empty($block->data_json['product_id'])) {
             $product = Product::find($block->data_json['product_id']);
@@ -113,10 +146,10 @@ class BioProductController extends Controller
 
         // Auto-heal: If custom_product missing product_id or product model, create Product entry now
         if (!$product && in_array($block->type, ['custom_product', 'buyle_product'])) {
-            $baseSlug = ($block->data_json['slug'] ?? \Illuminate\Support\Str::slug($block->title)) ?: 'produk';
+            $baseSlug = ($block->data_json['slug'] ?? Str::slug($block->title ?? '')) ?: 'produk';
             $slug     = $baseSlug;
             while (Product::where('slug', $slug)->exists()) {
-                $slug = $baseSlug . '-' . \Illuminate\Support\Str::random(4);
+                $slug = $baseSlug . '-' . Str::random(4);
             }
             $stock    = isset($block->data_json['stock']) && $block->data_json['stock'] !== '' && $block->data_json['stock'] !== null ? (int)$block->data_json['stock'] : null;
             $sellerId = $profile->user_id;
