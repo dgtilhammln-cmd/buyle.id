@@ -1,5 +1,5 @@
 @php
-    $catalogProducts = $products->reject(function($p) {
+    $catalogProducts = $products->reject(function ($p) {
         $pType = strtolower($p->product_type ?? '');
         $pName = strtolower($p->name ?? $p->title ?? '');
         $bData = is_array($p->data_json ?? null) ? $p->data_json : (json_decode($p->data_json ?? '[]', true) ?: []);
@@ -9,10 +9,10 @@
         $catName = strtolower($p->category->name ?? '');
 
         return in_array($pType, ['service', 'jasa', 'layanan', 'jasa / layanan / service', 'services'])
-               || in_array($catName, ['service', 'jasa', 'layanan', 'services'])
-               || str_contains($pName, 'jasa')
-               || str_contains($pName, 'layanan')
-               || str_contains($pName, 'service');
+            || in_array($catName, ['service', 'jasa', 'layanan', 'services'])
+            || str_contains($pName, 'jasa')
+            || str_contains($pName, 'layanan')
+            || str_contains($pName, 'service');
     });
 @endphp
 
@@ -92,8 +92,8 @@
                                 <span class="t5-price-main">Rp{{ number_format($effectivePrice, 0, ',', '.') }}</span>
                             </div>
 
-                            <a href="{{ $productUrl }}" class="t5-buy-btn" title="Beli / Detail Produk">
-                                <span>Beli</span>
+                            <a href="{{ $productUrl }}" class="t5-buy-btn" title="Detail Produk">
+                                <span>Lihat</span>
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
                                     viewBox="0 0 24 24">
                                     <line x1="5" y1="12" x2="19" y2="12" />

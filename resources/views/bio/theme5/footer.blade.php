@@ -1,18 +1,18 @@
 @php
-    $bioName      = $config['name'] ?? $profile->store_name ?? $username;
-    $bioText      = $config['bio'] ?? $profile->store_description ?? 'Solusi digital terpercaya untuk kebutuhan bisnis & personal Anda.';
-    $avatarUrl    = !empty($config['avatar'])
+    $bioName = $config['name'] ?? $profile->store_name ?? $username;
+    $bioText = $config['bio'] ?? $profile->store_description ?? 'Solusi digital terpercaya untuk kebutuhan bisnis & personal Anda.';
+    $avatarUrl = !empty($config['avatar'])
         ? asset('storage/' . $config['avatar'])
         : (!empty($config['_user_avatar']) ? (Str::startsWith($config['_user_avatar'], ['http://', 'https://']) ? $config['_user_avatar'] : asset('storage/' . $config['_user_avatar'])) : null);
 
     $locationText = !empty($config['location']) ? $config['location'] : ($profile->address ?? $profile->store_location ?? null);
-    $sellerWa     = !empty($config['wa']) ? $config['wa'] : ($profile->phone ?? '');
+    $sellerWa = !empty($config['wa']) ? $config['wa'] : ($profile->phone ?? '');
 
     // Footer Custom Colors & Background Image
     $footerBgColor1 = $config['footer_bg_color1'] ?? '#09121a';
     $footerBgColor2 = $config['footer_bg_color2'] ?? '#064e3b';
-    $footerBgImg    = !empty($config['footer_bg_image']) ? asset('storage/' . $config['footer_bg_image']) : null;
-    $footerOpacity  = isset($config['footer_bg_opacity']) ? ((float)$config['footer_bg_opacity'] / 100) : 0.3;
+    $footerBgImg = !empty($config['footer_bg_image']) ? asset('storage/' . $config['footer_bg_image']) : null;
+    $footerOpacity = isset($config['footer_bg_opacity']) ? ((float) $config['footer_bg_opacity'] / 100) : 0.3;
 @endphp
 
 <style>
@@ -26,7 +26,11 @@
 
     .t5-footer-card {
         position: relative;
-        background: linear-gradient(135deg, {{ $footerBgColor1 }} 0%, {{ $footerBgColor2 }} 100%);
+        background: linear-gradient(135deg,
+                {{ $footerBgColor1 }}
+                0%,
+                {{ $footerBgColor2 }}
+                100%);
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 32px;
         padding: 3.5rem 3rem 2rem;
@@ -455,7 +459,9 @@
 <footer class="t5-footer-wrapper" id="footer-section">
     <div class="t5-footer-card">
         @if($footerBgImg)
-            <div class="t5-footer-bg-layer" style="position:absolute; inset:0; width:100%; height:100%; background-image:url('{{ $footerBgImg }}'); background-size:cover; background-position:center; opacity:{{ $footerOpacity }}; mix-blend-mode:overlay; pointer-events:none; z-index:1;"></div>
+            <div class="t5-footer-bg-layer"
+                style="position:absolute; inset:0; width:100%; height:100%; background-image:url('{{ $footerBgImg }}'); background-size:cover; background-position:center; opacity:{{ $footerOpacity }}; mix-blend-mode:overlay; pointer-events:none; z-index:1;">
+            </div>
         @endif
 
         {{-- Navigation Links (Top Row) --}}
@@ -469,13 +475,16 @@
         {{-- Main Center Section --}}
         <div class="t5-footer-center">
             <h2 class="t5-footer-title">Hubungi Kami</h2>
-            <p class="t5-footer-sub">Punya pertanyaan atau butuh konsultasi layanan? Tuliskan kebutuhan Anda di bawah ini.</p>
+            <p class="t5-footer-sub">Punya pertanyaan atau butuh konsultasi layanan? Tuliskan kebutuhan Anda di bawah
+                ini.</p>
 
             {{-- Capsule Input Bar --}}
             <div class="t5-capsule-bar">
-                <input type="text" id="t5FooterKebutuhanInput" class="t5-capsule-input" placeholder="Tuliskan kebutuhan Anda...">
+                <input type="text" id="t5FooterKebutuhanInput" class="t5-capsule-input"
+                    placeholder="Tuliskan kebutuhan Anda...">
                 <button type="button" class="t5-capsule-btn" onclick="openT5LeadModal()">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                        viewBox="0 0 24 24">
                         <line x1="22" y1="2" x2="11" y2="13"></line>
                         <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                     </svg>
@@ -489,8 +498,10 @@
             {{-- Bottom Left: Location Address --}}
             <div class="t5-footer-left">
                 @if(!empty($locationText))
-                    <a href="https://maps.google.com/?q={{ urlencode($locationText) }}" target="_blank" rel="noopener" class="t5-location-pill">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="t5-location-icon">
+                    <a href="https://maps.google.com/?q={{ urlencode($locationText) }}" target="_blank" rel="noopener"
+                        class="t5-location-pill">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                            class="t5-location-icon">
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                             <circle cx="12" cy="10" r="3" />
                         </svg>
@@ -498,7 +509,8 @@
                     </a>
                 @else
                     <a href="https://maps.google.com/?q=Indonesia" target="_blank" rel="noopener" class="t5-location-pill">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="t5-location-icon">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                            class="t5-location-icon">
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                             <circle cx="12" cy="10" r="3" />
                         </svg>
@@ -509,7 +521,9 @@
 
             {{-- Bottom Center: Credit --}}
             <div class="t5-footer-credit">
-                &copy; {{ date('Y') }} <strong>{{ $bioName }}</strong>. All Rights Reserved. Powered by <a href="https://buyle.id" target="_blank" rel="noopener">buyle.id</a> x <a href="https://hvm-digital.id" target="_blank" rel="noopener">HVM Digital</a>
+                &copy; {{ date('Y') }} <strong>{{ $bioName }}</strong>. All Rights Reserved. Powered by <a
+                    href="https://buyle.id" target="_blank" rel="noopener">buyle.id</a> x <a
+                    href="https://hvm-digital.id" target="_blank" rel="noopener">HVM Digital</a>
             </div>
 
             {{-- Bottom Right: Social Icons --}}
@@ -524,7 +538,7 @@
 <div class="t5-lead-modal-backdrop" id="t5LeadModal">
     <div class="t5-lead-modal-card">
         <button type="button" class="t5-modal-close-btn" onclick="closeT5LeadModal()">&times;</button>
-        
+
         <div class="t5-modal-head-box">
             <div class="t5-modal-badge">
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -541,27 +555,32 @@
 
             <div class="t5-mform-group">
                 <label class="t5-mform-label">Nama Lengkap <span style="color:#ef4444;">*</span></label>
-                <input type="text" name="name" id="t5LeadName" class="t5-mform-input" placeholder="Contoh: Budi Santoso" required>
+                <input type="text" name="name" id="t5LeadName" class="t5-mform-input" placeholder="Contoh: Budi Santoso"
+                    required>
             </div>
 
             <div class="t5-mform-group">
                 <label class="t5-mform-label">No. WhatsApp <span style="color:#ef4444;">*</span></label>
-                <input type="tel" name="phone" id="t5LeadPhone" class="t5-mform-input" placeholder="Contoh: 081234567890" required>
+                <input type="tel" name="phone" id="t5LeadPhone" class="t5-mform-input"
+                    placeholder="Contoh: 081234567890" required>
             </div>
 
             <div class="t5-mform-group">
-                <label class="t5-mform-label">Kota / Perusahaan <span style="color:#ef4444;">*</span></label>
-                <input type="text" name="city_company" id="t5LeadCity" class="t5-mform-input" placeholder="Contoh: Surabaya / PT HVM Digital" required>
+                <label class="t5-mform-label">Perusahaan & Kota<span style="color:#ef4444;">*</span></label>
+                <input type="text" name="city_company" id="t5LeadCity" class="t5-mform-input"
+                    placeholder="Contoh:PT HVM Digital - Surabaya" required>
             </div>
 
             <div class="t5-mform-group">
                 <label class="t5-mform-label">Kebutuhan <span style="color:#ef4444;">*</span></label>
-                <textarea name="kebutuhan" id="t5LeadKebutuhan" class="t5-mform-input" rows="3" placeholder="Deskripsikan kebutuhan Anda..." required></textarea>
+                <textarea name="kebutuhan" id="t5LeadKebutuhan" class="t5-mform-input" rows="3"
+                    placeholder="Deskripsikan kebutuhan Anda..." required></textarea>
             </div>
 
             <button type="submit" id="t5LeadSubmitBtn" class="t5-mform-submit-btn">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                    <path
+                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
                 </svg>
                 <span>Kirim & Hubungi via WhatsApp</span>
             </button>
