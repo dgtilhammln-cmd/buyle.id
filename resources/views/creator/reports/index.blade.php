@@ -1062,7 +1062,7 @@
                                             </a>
                                         @endif
 
-                                        <form method="POST" action="{{ route('sales.report.destroy_lead', $lead->id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus lead ini?')">
+                                        <form method="POST" action="{{ route('creator.sales.report.destroy_lead', $lead->id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus lead ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" title="Hapus Lead"
