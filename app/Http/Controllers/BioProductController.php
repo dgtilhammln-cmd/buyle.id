@@ -190,6 +190,11 @@ class BioProductController extends Controller
             ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])
             ->get();
 
-        return view('bio.product_show', compact('profile', 'block', 'config', 'theme', 'username', 'product', 'blocks', 'products'));
+        // Route to theme-specific product show view
+        // Theme 5 is exclusive and has its own product show with its own header/footer
+        // Themes 1-4 use the shared product_show view (no theme5 header)
+        $view = ($theme === 'theme5') ? 'bio.theme5.product_show' : 'bio.product_show';
+
+        return view($view, compact('profile', 'block', 'config', 'theme', 'username', 'product', 'blocks', 'products'));
     }
 }
