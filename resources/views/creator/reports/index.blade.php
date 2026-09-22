@@ -2273,77 +2273,39 @@
             }
         }
 
-        // ── Anti-Inspect & Anti-Tamper Protection + Smooth Eye Toggle ──
-        (function initLuxuryCardProtection() {
-            const card = document.querySelector('.luxury-card');
-            if (!card) return;
+        // ── Smooth Eye Toggle for Sales Nominal ──
+        function toggleSalesVisibility() {
+            const amtEl = document.getElementById('lcAmountText');
+            const eyeOpen = document.getElementById('eyeIconOpen');
+            const eyeClosed = document.getElementById('eyeIconClosed');
+            if (!amtEl) return;
 
-            let isInternalUpdating = false;
-            let pristineHTML = card.innerHTML;
+            const isHidden = amtEl.classList.contains('hidden-mask');
+            const fullAmount = amtEl.getAttribute('data-amount');
 
-            // MutationObserver to catch DevTools inspect element edits
-            const observer = new MutationObserver(function() {
-                if (isInternalUpdating) return;
-                
-                // Revert tampering instantly!
-                observer.disconnect();
-                card.innerHTML = pristineHTML;
-                rebindEvents();
-                observer.observe(card, { childList: true, subtree: true, characterData: true, attributes: true });
-            });
+            amtEl.style.opacity = '0';
+            amtEl.style.transform = 'translateY(-2px)';
 
-            observer.observe(card, { childList: true, subtree: true, characterData: true, attributes: true });
-
-            function rebindEvents() {
-                const btn = document.getElementById('btnToggleSalesMask');
-                if (btn) {
-                    btn.onclick = function() {
-                        toggleSalesVisibility();
-                    };
+            setTimeout(function() {
+                if (isHidden) {
+                    amtEl.innerText = fullAmount;
+                    amtEl.classList.remove('hidden-mask');
+                    if (eyeOpen) eyeOpen.style.display = 'block';
+                    if (eyeClosed) eyeClosed.style.display = 'none';
+                    localStorage.setItem('buyle_sales_hidden', 'false');
+                } else {
+                    amtEl.innerText = 'Rp ••••••••';
+                    amtEl.classList.add('hidden-mask');
+                    if (eyeOpen) eyeOpen.style.display = 'none';
+                    if (eyeClosed) eyeClosed.style.display = 'block';
+                    localStorage.setItem('buyle_sales_hidden', 'true');
                 }
-            }
+                amtEl.style.opacity = '1';
+                amtEl.style.transform = 'translateY(0)';
+            }, 150);
+        }
 
-            window.toggleSalesVisibility = function() {
-                const amtEl = document.getElementById('lcAmountText');
-                const eyeOpen = document.getElementById('eyeIconOpen');
-                const eyeClosed = document.getElementById('eyeIconClosed');
-                if (!amtEl) return;
-
-                observer.disconnect();
-                isInternalUpdating = true;
-
-                const isHidden = amtEl.classList.contains('hidden-mask');
-                const fullAmount = amtEl.getAttribute('data-amount');
-
-                amtEl.style.opacity = '0';
-                amtEl.style.transform = 'translateY(-2px)';
-
-                setTimeout(function() {
-                    if (isHidden) {
-                        amtEl.innerText = fullAmount;
-                        amtEl.classList.remove('hidden-mask');
-                        if (eyeOpen) eyeOpen.style.display = 'block';
-                        if (eyeClosed) eyeClosed.style.display = 'none';
-                        localStorage.setItem('buyle_sales_hidden', 'false');
-                    } else {
-                        amtEl.innerText = 'Rp ••••••••';
-                        amtEl.classList.add('hidden-mask');
-                        if (eyeOpen) eyeOpen.style.display = 'none';
-                        if (eyeClosed) eyeClosed.style.display = 'block';
-                        localStorage.setItem('buyle_sales_hidden', 'true');
-                    }
-                    amtEl.style.opacity = '1';
-                    amtEl.style.transform = 'translateY(0)';
-                    
-                    pristineHTML = card.innerHTML;
-                    isInternalUpdating = false;
-                    observer.observe(card, { childList: true, subtree: true, characterData: true, attributes: true });
-                }, 150);
-            };
-
-            rebindEvents();
-        })();
-
+        // ── Safe & Non-blocking Anti-Tamper Text Guard ──
         document.addEventListener('DOMContentLoaded', function() {
             if (localStorage.getItem('buyle_sales_hidden') === 'true') {
                 const amtEl = document.getElementById('lcAmountText');
@@ -2356,6 +2318,19 @@
                     if (eyeClosed) eyeClosed.style.display = 'block';
                 }
             }
+
+            // Verify and restore text if modified via Inspect Element
+            setInterval(function() {
+                const amtEl = document.getElementById('lcAmountText');
+                if (!amtEl) return;
+                const isHidden = amtEl.classList.contains('hidden-mask');
+                const validAmount = amtEl.getAttribute('data-amount');
+                const expected = isHidden ? 'Rp ••••••••' : validAmount;
+
+                if (amtEl.innerText.trim() !== expected) {
+                    amtEl.innerText = expected;
+                }
+            }, 1000);
         });
     </script>
 @endsection
