@@ -1017,7 +1017,7 @@
                     </div>
 
                     <div class="lc-middle">
-                        <div class="lc-label">TOTAL OMZET PENJUALAN</div>
+                        <div class="lc-label">TOTAL INCOME</div>
                         <div class="lc-amount-row">
                             <div class="lc-amount" id="lcAmountText" data-amount="Rp {{ number_format($totalSales, 0, ',', '.') }}">
                                 Rp {{ number_format($totalSales, 0, ',', '.') }}
