@@ -54,8 +54,13 @@ class HandleCustomDomain
                     return response(app(\App\Http\Controllers\BioPageController::class)->show($profile->store_slug));
                 }
 
-                // If accessing product detail link on custom domain, e.g. /p/{identifier} or /{identifier}
-                if (preg_match('#^(?:p/)?([a-zA-Z0-9_\-]+)$#', $path, $matches)) {
+                // If accessing '/produk' listing page on custom domain
+                if ($path === 'produk') {
+                    return response(app(\App\Http\Controllers\BioProductsPageController::class)->index($request, $profile->store_slug));
+                }
+
+                // If accessing product detail link on custom domain, e.g. /produk/{identifier}, /p/{identifier}, or /{identifier}
+                if (preg_match('#^(?:p/|produk/)?([a-zA-Z0-9_\-]+)$#', $path, $matches)) {
                     $identifier = $matches[1];
                     try {
                         return response(app(\App\Http\Controllers\BioProductController::class)->show($profile->store_slug, $identifier));

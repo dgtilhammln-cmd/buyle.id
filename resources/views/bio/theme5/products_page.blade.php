@@ -482,9 +482,14 @@
     {{-- HEADER TEMA 5 --}}
     @include('bio.theme5.header', ['products' => $products, 'blocks' => $blocks, 'config' => $config, 'profile' => $profile, 'username' => $username])
 
+    @php
+        $homeUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') : url('/' . $username);
+        $productsUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') . '/produk' : url('/' . $username . '/produk');
+    @endphp
+
     <div class="t5-breadcrumb-wrap">
         <div class="t5-breadcrumb">
-            <a href="{{ url('/' . $username) }}">Beranda</a>
+            <a href="{{ $homeUrl }}">Beranda</a>
             <span class="t5-breadcrumb-sep">&rsaquo;</span>
             <span class="t5-breadcrumb-current">Produk / Layanan</span>
         </div>
@@ -545,7 +550,7 @@
             {{-- MAIN CONTENT AREA --}}
             <main class="pp-main-content">
                 {{-- CONTROLS BAR (SEARCH & SORT) --}}
-                <form method="GET" action="{{ url('/' . $username . '/produk') }}" id="pp-form">
+                <form method="GET" action="{{ $productsUrl }}" id="pp-form">
                     <div class="pp-controls">
                         <div class="pp-search-wrap">
                             <span class="pp-search-icon">
@@ -639,7 +644,7 @@
                             @if(!empty($search))
                                 <h3>Tidak ada produk ditemukan</h3>
                                 <p>Tidak ada produk yang cocok dengan pencarian Anda.</p>
-                                <a href="{{ url('/' . $username . '/produk') }}" class="pp-empty-clear">Tampilkan Semua</a>
+                                <a href="{{ $productsUrl }}" class="pp-empty-clear">Tampilkan Semua</a>
                             @else
                                 <h3>Belum ada produk</h3>
                                 <p>Produk akan segera hadir.</p>

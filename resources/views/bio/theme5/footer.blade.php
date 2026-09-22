@@ -464,12 +464,16 @@
             </div>
         @endif
 
+        @php
+            $homeUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') : url('/' . $username);
+            $productsUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') . '/produk' : url('/' . $username . '/produk');
+        @endphp
         {{-- Navigation Links (Top Row) --}}
         <div class="t5-footer-nav">
-            <a href="{{ url('/' . $username) }}">Beranda</a>
-            <a href="{{ url('/' . $username) }}#about-section">Profil</a>
-            <a href="{{ url('/' . $username . '/produk') }}">Produk / Layanan</a>
-            <a href="{{ url('/' . $username) }}#footer-section">Kontak</a>
+            <a href="{{ $homeUrl }}">Beranda</a>
+            <a href="{{ $homeUrl }}#about-section">Profil</a>
+            <a href="{{ $productsUrl }}">Produk / Layanan</a>
+            <a href="{{ $homeUrl }}#footer-section">Kontak</a>
         </div>
 
         {{-- Main Center Section --}}

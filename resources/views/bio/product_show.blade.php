@@ -339,12 +339,17 @@
     {{-- HEADER --}}
     @include('bio.theme5.header', ['products' => $products, 'blocks' => $blocks, 'config' => $config, 'profile' => $profile, 'username' => $username])
 
+    @php
+        $homeUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') : url('/' . $username);
+        $productsUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') . '/produk' : url('/' . $username . '/produk');
+    @endphp
+
     {{-- BREADCRUMB (Desktop only) --}}
     <div class="bc-bar">
         <div class="bc-inner">
-            <a href="{{ url('/' . $username) }}">Beranda</a>
+            <a href="{{ $homeUrl }}">Beranda</a>
             <span class="bc-sep">›</span>
-            <a href="{{ url('/' . $username . '/produk') }}">Produk</a>
+            <a href="{{ $productsUrl }}">Produk</a>
             <span class="bc-sep">›</span>
             <span class="bc-cur">{{ $prodTitle }}</span>
         </div>

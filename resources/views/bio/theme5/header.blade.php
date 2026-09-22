@@ -298,10 +298,15 @@
     }
 </style>
 
+@php
+    $homeUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') : url('/' . $username);
+    $productsUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') . '/produk' : url('/' . $username . '/produk');
+@endphp
+
 <header class="t5-header">
     <div class="t5-header-container">
         {{-- Brand / Logo --}}
-        <a href="{{ url('/' . $username) }}" class="t5-brand">
+        <a href="{{ $homeUrl }}" class="t5-brand">
             @if($avatarUrl)
                 <img src="{{ $avatarUrl }}" alt="{{ $bioName }}" class="t5-brand-avatar">
             @else
@@ -314,9 +319,9 @@
 
         {{-- Desktop Navigation Links --}}
         <nav class="t5-nav-desktop">
-            <a href="{{ url('/' . $username) }}" class="t5-nav-link {{ request()->is($username) ? 'active' : '' }}">Beranda</a>
-            <a href="{{ url('/' . $username) }}#about-section" class="t5-nav-link">Profil</a>
-            <a href="{{ url('/' . $username . '/produk') }}" class="t5-nav-link {{ request()->is('*/produk*') ? 'active' : '' }}">Produk / Layanan</a>
+            <a href="{{ $homeUrl }}" class="t5-nav-link {{ request()->is($username) || request()->path() === '/' ? 'active' : '' }}">Beranda</a>
+            <a href="{{ $homeUrl }}#about-section" class="t5-nav-link">Profil</a>
+            <a href="{{ $productsUrl }}" class="t5-nav-link {{ request()->is('*/produk*') || request()->is('produk*') ? 'active' : '' }}">Produk / Layanan</a>
             
             @if(isset($blocks) && $blocks->count() > 0)
                 @foreach($blocks as $b)
@@ -334,7 +339,7 @@
                 @endforeach
             @endif
 
-            <a href="{{ url('/' . $username) }}#contact-section" class="t5-nav-link">Kontak</a>
+            <a href="{{ $homeUrl }}#contact-section" class="t5-nav-link">Kontak</a>
         </nav>
 
         {{-- Action Buttons --}}
@@ -394,9 +399,9 @@
             <button type="button" class="t5-drawer-close" onclick="toggleT5Drawer()">&times;</button>
         </div>
         <nav class="t5-drawer-nav">
-            <a href="{{ url('/' . $username) }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Beranda</a>
-            <a href="{{ url('/' . $username) }}#about-section" onclick="toggleT5Drawer()" class="t5-drawer-link">Profil</a>
-            <a href="{{ url('/' . $username . '/produk') }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Produk / Layanan</a>
+            <a href="{{ $homeUrl }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Beranda</a>
+            <a href="{{ $homeUrl }}#about-section" onclick="toggleT5Drawer()" class="t5-drawer-link">Profil</a>
+            <a href="{{ $productsUrl }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Produk / Layanan</a>
             <a href="https://buyle.id/keranjang" class="t5-drawer-link t5-drawer-cart-link">
                 <span style="display:inline-flex; align-items:center; gap:0.45rem;">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#1eb349;">
@@ -423,7 +428,7 @@
                     @endif
                 @endforeach
             @endif
-            <a href="{{ url('/' . $username) }}#contact-section" onclick="toggleT5Drawer()" class="t5-drawer-link">Kontak</a>
+            <a href="{{ $homeUrl }}#contact-section" onclick="toggleT5Drawer()" class="t5-drawer-link">Kontak</a>
         </nav>
     </div>
 </div>
