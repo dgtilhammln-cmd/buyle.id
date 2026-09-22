@@ -51,6 +51,9 @@
         $ratingVal   = ($product && !empty($product->rating) && $product->rating > 0) ? number_format($product->rating, 1) : '5.0';
         $blocks      = $blocks ?? $profile->bioBlocks;
         $products    = $products ?? \App\Models\CreatorBioBlock::where('creator_id', $profile->id)->where('is_active', true)->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])->get();
+        $formattedImages = array_map(function($img) {
+            return (\Illuminate\Support\Str::startsWith($img, 'http://') || \Illuminate\Support\Str::startsWith($img, 'https://')) ? $img : asset('storage/' . $img);
+        }, $images);
     @endphp
 
     <title>{{ $pageTitle }}</title>
@@ -609,9 +612,7 @@
             if (d) d.classList.toggle('active');
         }
 
-        const psImagesList = @json(array_map(function($img) {
-            return (\Illuminate\Support\Str::startsWith($img, 'http://') || \Illuminate\Support\Str::startsWith($img, 'https://')) ? $img : asset('storage/' . $img);
-        }, $images));
+        const psImagesList = {!! json_encode($formattedImages) !!};
 
         let psCur = 0;
         const psTotal = {{ count($images) }};
