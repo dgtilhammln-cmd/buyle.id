@@ -380,21 +380,37 @@
         /* Card Rows */
         .lc-top { display: flex; align-items: center; justify-content: space-between; z-index: 2; margin-bottom: 0.5rem; }
         .lc-brand { display: flex; align-items: center; gap: 0.5rem; }
-        .lc-brand-title { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em; }
+        .lc-brand-title { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em; }
         .lc-brand-dot { color: #1eb349; }
-        .lc-tier-badge {
-            font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
-            padding: 0.2rem 0.55rem; border-radius: 999px; letter-spacing: 0.05em;
-            white-space: nowrap;
-        }
 
         .lc-middle { margin: 0.75rem 0; z-index: 2; }
         .lc-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.2rem; }
-        .lc-amount { font-size: 1.65rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; word-break: break-word; }
+        
+        .lc-amount-row { display: flex; align-items: center; gap: 0.65rem; }
+        .lc-amount { font-size: 1.65rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; word-break: break-word; transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s ease; }
+        .lc-amount.hidden-mask { opacity: 0.85; letter-spacing: 0.05em; }
+
+        .lc-eye-toggle {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: inherit;
+            width: 30px; height: 30px;
+            border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+            flex-shrink: 0; backdrop-filter: blur(4px); outline: none;
+        }
+        .luxury-card.tier-silver .lc-eye-toggle,
+        .luxury-card.tier-rosegold .lc-eye-toggle {
+            background: rgba(15, 23, 42, 0.08);
+            border-color: rgba(15, 23, 42, 0.15);
+            color: #0f172a;
+        }
+        .lc-eye-toggle:hover { transform: scale(1.1); background: rgba(255, 255, 255, 0.25); }
 
         .lc-bottom { display: flex; align-items: flex-end; justify-content: space-between; z-index: 2; gap: 0.5rem; }
-        .lc-holder-label { font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
-        .lc-holder-name { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.03em; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .lc-tier-label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.9; margin-bottom: 0.15rem; }
+        .lc-holder-name { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.03em; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .lc-subtitle-badge { font-size: 0.68rem; font-weight: 600; opacity: 0.85; text-align: right; }
 
         /* Progress bar inside card */
@@ -966,19 +982,37 @@
                             </svg>
                         </div>
                         <div class="lc-brand">
-                            <span class="lc-brand-title">buyle<span class="lc-brand-dot">.id</span></span>
-                            <span class="lc-tier-badge">{{ $tierName }}</span>
+                            @php $siteLogo = \App\Models\Setting::get('logo'); @endphp
+                            @if($siteLogo)
+                                <img src="{{ asset('storage/' . $siteLogo) }}" alt="buyle.id" style="height:24px; max-width:120px; object-fit:contain;">
+                            @else
+                                <span class="lc-brand-title">buyle<span class="lc-brand-dot">.id</span></span>
+                            @endif
                         </div>
                     </div>
 
                     <div class="lc-middle">
                         <div class="lc-label">TOTAL OMZET PENJUALAN</div>
-                        <div class="lc-amount">Rp {{ number_format($totalSales, 0, ',', '.') }}</div>
+                        <div class="lc-amount-row">
+                            <div class="lc-amount" id="lcAmountText" data-amount="Rp {{ number_format($totalSales, 0, ',', '.') }}">
+                                Rp {{ number_format($totalSales, 0, ',', '.') }}
+                            </div>
+                            <button type="button" class="lc-eye-toggle" id="btnToggleSalesMask" onclick="toggleSalesVisibility()" title="Tampilkan / Sembunyikan Nominal">
+                                <svg id="eyeIconOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg id="eyeIconClosed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="lc-bottom">
                         <div>
-                            <div class="lc-holder-label">CARD HOLDER</div>
+                            <div class="lc-tier-label">{{ $tierName }}</div>
                             <div class="lc-holder-name">{{ strtoupper($sellerStoreName) }}</div>
                         </div>
                         <div class="lc-subtitle-badge">
@@ -2206,5 +2240,49 @@
                 if (m) m.classList.remove('show');
             }
         }
+        function toggleSalesVisibility() {
+            const amtEl = document.getElementById('lcAmountText');
+            const eyeOpen = document.getElementById('eyeIconOpen');
+            const eyeClosed = document.getElementById('eyeIconClosed');
+            if (!amtEl) return;
+
+            const isHidden = amtEl.classList.contains('hidden-mask');
+            const fullAmount = amtEl.getAttribute('data-amount');
+
+            amtEl.style.opacity = '0';
+            amtEl.style.transform = 'translateY(-2px)';
+
+            setTimeout(function() {
+                if (isHidden) {
+                    amtEl.innerText = fullAmount;
+                    amtEl.classList.remove('hidden-mask');
+                    if (eyeOpen) eyeOpen.style.display = 'block';
+                    if (eyeClosed) eyeClosed.style.display = 'none';
+                    localStorage.setItem('buyle_sales_hidden', 'false');
+                } else {
+                    amtEl.innerText = 'Rp ••••••••';
+                    amtEl.classList.add('hidden-mask');
+                    if (eyeOpen) eyeOpen.style.display = 'none';
+                    if (eyeClosed) eyeClosed.style.display = 'block';
+                    localStorage.setItem('buyle_sales_hidden', 'true');
+                }
+                amtEl.style.opacity = '1';
+                amtEl.style.transform = 'translateY(0)';
+            }, 150);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('buyle_sales_hidden') === 'true') {
+                const amtEl = document.getElementById('lcAmountText');
+                const eyeOpen = document.getElementById('eyeIconOpen');
+                const eyeClosed = document.getElementById('eyeIconClosed');
+                if (amtEl) {
+                    amtEl.innerText = 'Rp ••••••••';
+                    amtEl.classList.add('hidden-mask');
+                    if (eyeOpen) eyeOpen.style.display = 'none';
+                    if (eyeClosed) eyeClosed.style.display = 'block';
+                }
+            }
+        });
     </script>
 @endsection
