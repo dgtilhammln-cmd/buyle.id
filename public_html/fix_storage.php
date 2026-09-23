@@ -79,8 +79,21 @@ $testFile = $storageSrc . '/.write_test';
 if (@file_put_contents($testFile, 'ok') !== false) {
     @unlink($testFile);
     out("OK: Storage is writable");
-} else {
-    out("WARNING: Storage not writable - run: chmod 775 $storageSrc");
+}
+
+// Sync public/images to public_html/images
+$appImagesDir = $appRoot . '/public/images';
+$publicHtmlImagesDir = $publicHtmlDir . '/images';
+if (is_dir($appImagesDir)) {
+    if (!is_dir($publicHtmlImagesDir)) {
+        @mkdir($publicHtmlImagesDir, 0755, true);
+    }
+    foreach (scandir($appImagesDir) as $imgFile) {
+        if ($imgFile !== '.' && $imgFile !== '..') {
+            @copy($appImagesDir . '/' . $imgFile, $publicHtmlImagesDir . '/' . $imgFile);
+        }
+    }
+    out("OK: Synced public/images to public_html/images");
 }
 
 // List files

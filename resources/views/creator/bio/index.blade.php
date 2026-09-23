@@ -1298,7 +1298,16 @@
                                         <input type="radio" name="bio_theme" value="{{ $key }}" {{ $currentTheme === $key ? 'checked' : '' }} style="display:none;" onchange="this.closest('form').submit()">
                                         <div class="theme-mockup {{ $key }}">
                                             @if($key === 'theme5')
-                                                <img src="{{ asset('images/theme5-mockup.jpg') }}" alt="Web Profesional" style="width:100%; height:100%; object-fit:cover; object-position:top;">
+                                                @php
+                                                    $t5MockupPath = public_path('images/theme5-mockup.jpg');
+                                                    if (!file_exists($t5MockupPath)) {
+                                                        $t5MockupPath = base_path('public/images/theme5-mockup.jpg');
+                                                    }
+                                                    $t5MockupSrc = file_exists($t5MockupPath)
+                                                        ? 'data:image/jpeg;base64,' . base64_encode(file_get_contents($t5MockupPath))
+                                                        : asset('images/theme5-mockup.jpg');
+                                                @endphp
+                                                <img src="{{ $t5MockupSrc }}" alt="Web Profesional" style="width:100%; height:100%; object-fit:cover; object-position:top;">
                                             @else
                                                 <div class="mockup-avatar"></div>
                                                 <div class="mockup-title"></div>
