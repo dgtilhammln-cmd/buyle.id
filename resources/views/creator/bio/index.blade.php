@@ -176,6 +176,8 @@
         }
 
         .form-input {
+            width: 100%;
+            box-sizing: border-box;
             height: 44px;
             padding: 0 1rem;
             border: 1.5px solid #e7f0e7;
@@ -1776,19 +1778,20 @@
                                     </div>
                                 </div>
 
-                                <div style="display:grid; grid-template-columns:1fr; gap:0.85rem;">
-                                    <div>
-                                        <label class="form-label" style="font-size:0.8rem;">Meta Title Beranda</label>
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label class="form-label">Meta Title Beranda</label>
                                         <input type="text" name="theme5_seo_home_title" value="{{ old('theme5_seo_home_title', $cfg['theme5_seo_home_title'] ?? '') }}" placeholder="Contoh: Nama Toko - Solusi Produk Digital Terpercaya" class="form-input">
                                     </div>
-                                    <div>
-                                        <label class="form-label" style="font-size:0.8rem;">Meta Description Beranda</label>
-                                        <textarea name="theme5_seo_home_desc" rows="2" placeholder="Deskripsi singkat toko untuk hasil pencarian Google..." class="form-input">{{ old('theme5_seo_home_desc', $cfg['theme5_seo_home_desc'] ?? '') }}</textarea>
-                                    </div>
-                                    <div>
-                                        <label class="form-label" style="font-size:0.8rem;">Meta Keywords Beranda</label>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label class="form-label">Meta Keywords Beranda</label>
                                         <input type="text" name="theme5_seo_home_keywords" value="{{ old('theme5_seo_home_keywords', $cfg['theme5_seo_home_keywords'] ?? '') }}" placeholder="Contoh: toko digital, jasa desain, ebook, template" class="form-input">
                                     </div>
+                                </div>
+
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label class="form-label">Meta Description Beranda</label>
+                                    <textarea name="theme5_seo_home_desc" rows="3" placeholder="Deskripsi singkat toko untuk hasil pencarian Google..." class="form-input">{{ old('theme5_seo_home_desc', $cfg['theme5_seo_home_desc'] ?? '') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -2407,20 +2410,22 @@
                                 <span style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase;">Khusus Tema 5</span>
                             </div>
                             <div class="card-body" style="padding:1.25rem;">
-                                <p style="font-size:0.78rem; color:#64748b; margin-bottom:1rem;">Tentukan judul dan deskripsi pencarian Google khusus untuk halaman katalog produk (URL: <code>/{{ $profile->store_slug }}/produk</code>).</p>
-                                <div style="display:grid; grid-template-columns:1fr; gap:0.85rem;">
-                                    <div>
-                                        <label class="form-label" style="font-size:0.8rem;">Meta Title Katalog Produk</label>
+                                <p style="font-size:0.78rem; color:#64748b; margin-bottom:1.25rem;">Tentukan judul dan deskripsi pencarian Google khusus untuk halaman katalog produk (URL: <code>/{{ $profile->store_slug }}/produk</code>).</p>
+                                
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label class="form-label">Meta Title Halaman Produk</label>
                                         <input type="text" name="theme5_seo_products_title" value="{{ old('theme5_seo_products_title', $cfg['theme5_seo_products_title'] ?? '') }}" placeholder="Contoh: Semua Produk & Layanan Digital - Nama Toko" class="form-input">
                                     </div>
-                                    <div>
-                                        <label class="form-label" style="font-size:0.8rem;">Meta Description Katalog Produk</label>
-                                        <textarea name="theme5_seo_products_desc" rows="2" placeholder="Deskripsi lengkap katalog produk digital dan layanan..." class="form-input">{{ old('theme5_seo_products_desc', $cfg['theme5_seo_products_desc'] ?? '') }}</textarea>
-                                    </div>
-                                    <div>
-                                        <label class="form-label" style="font-size:0.8rem;">Meta Keywords Katalog Produk</label>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label class="form-label">Meta Keywords Halaman Produk</label>
                                         <input type="text" name="theme5_seo_products_keywords" value="{{ old('theme5_seo_products_keywords', $cfg['theme5_seo_products_keywords'] ?? '') }}" placeholder="Contoh: produk digital, beli ebook, software, katalog" class="form-input">
                                     </div>
+                                </div>
+
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label class="form-label">Meta Description Halaman Produk</label>
+                                    <textarea name="theme5_seo_products_desc" rows="3" placeholder="Deskripsi lengkap katalog produk digital dan layanan..." class="form-input">{{ old('theme5_seo_products_desc', $cfg['theme5_seo_products_desc'] ?? '') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -2441,20 +2446,22 @@
                                 <span style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase;">Khusus Tema 5</span>
                             </div>
                             <div class="card-body" style="padding:1.25rem;">
-                                <p style="font-size:0.78rem; color:#64748b; margin-bottom:1rem;">Tentukan judul dan deskripsi pencarian Google khusus untuk halaman kontak (URL: <code>/{{ $profile->store_slug }}/kontak</code>).</p>
-                                <div style="display:grid; grid-template-columns:1fr; gap:0.85rem;">
-                                    <div>
-                                        <label class="form-label" style="font-size:0.8rem;">Meta Title Halaman Kontak</label>
+                                <p style="font-size:0.78rem; color:#64748b; margin-bottom:1.25rem;">Tentukan judul dan deskripsi pencarian Google khusus untuk halaman kontak (URL: <code>/{{ $profile->store_slug }}/kontak</code>).</p>
+                                
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label class="form-label">Meta Title Halaman Kontak</label>
                                         <input type="text" name="theme5_seo_contact_title" value="{{ old('theme5_seo_contact_title', $cfg['theme5_seo_contact_title'] ?? '') }}" placeholder="Contoh: Hubungi Kami & Layanan Pelanggan - Nama Toko" class="form-input">
                                     </div>
-                                    <div>
-                                        <label class="form-label" style="font-size:0.8rem;">Meta Description Halaman Kontak</label>
-                                        <textarea name="theme5_seo_contact_desc" rows="2" placeholder="Dapatkan bantuan, konsultasi, alamat kantor, dan kontak resmi..." class="form-input">{{ old('theme5_seo_contact_desc', $cfg['theme5_seo_contact_desc'] ?? '') }}</textarea>
-                                    </div>
-                                    <div>
-                                        <label class="form-label" style="font-size:0.8rem;">Meta Keywords Halaman Kontak</label>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label class="form-label">Meta Keywords Halaman Kontak</label>
                                         <input type="text" name="theme5_seo_contact_keywords" value="{{ old('theme5_seo_contact_keywords', $cfg['theme5_seo_contact_keywords'] ?? '') }}" placeholder="Contoh: kontak, alamat kantor, maps, hubungi kami" class="form-input">
                                     </div>
+                                </div>
+
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label class="form-label">Meta Description Halaman Kontak</label>
+                                    <textarea name="theme5_seo_contact_desc" rows="3" placeholder="Dapatkan bantuan, konsultasi, alamat kantor, dan kontak resmi..." class="form-input">{{ old('theme5_seo_contact_desc', $cfg['theme5_seo_contact_desc'] ?? '') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -2462,13 +2469,13 @@
                         <div class="prof-card">
                             <div class="prof-card-head">Informasi Alamat &amp; Lokasi Maps (Halaman Kontak)</div>
                             <div class="card-body" style="padding:1.25rem;">
-                                <div style="margin-bottom:0.85rem;">
-                                    <label class="form-label" style="font-size:0.8rem;">Alamat Lengkap Kantor / Toko</label>
+                                <div class="form-group" style="margin-bottom:1.25rem;">
+                                    <label class="form-label">Alamat Lengkap Kantor / Toko</label>
                                     <textarea name="theme5_contact_address" rows="3" placeholder="Contoh: Jl. Sudirman No. 123, Lantai 4, Jakarta Selatan, 12190" class="form-input">{{ old('theme5_contact_address', $cfg['theme5_contact_address'] ?? ($cfg['location'] ?? '')) }}</textarea>
                                 </div>
 
-                                <div>
-                                    <label class="form-label" style="font-size:0.8rem;">Embed Code Google Maps (iFrame / Share Map URL)</label>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label class="form-label">Embed Code Google Maps (iFrame / Share Map URL)</label>
                                     <textarea name="theme5_contact_maps_embed" rows="3" placeholder='Contoh: <iframe src="https://www.google.com/maps/embed?..." width="600" height="450"></iframe>' class="form-input">{{ old('theme5_contact_maps_embed', $cfg['theme5_contact_maps_embed'] ?? ($cfg['embed_location'] ?? '')) }}</textarea>
                                     <span style="font-size:0.72rem; color:#64748b; margin-top:4px; display:block;">Petunjuk: Buka Google Maps > Bagikan > Sematkan Peta (Embed a map) > Salin HTML iframe dan tempel di atas.</span>
                                 </div>
