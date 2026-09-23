@@ -976,18 +976,20 @@
         </div>
     </div>
 
-    {{-- ── TAB NAVIGATION ────────────────────────────────────────────── --}}
-    <div class="rp-tab-nav" style="display:flex; gap:0.5rem; margin-bottom:1.5rem; border-bottom:2px solid #e2e8f0; padding-bottom:0.25rem;">
-        <button type="button" class="rp-tab-btn {{ $activeTab === 'pembeli' ? 'active' : '' }}" onclick="switchReportTab('pembeli')" id="tabBtnPembeli" style="padding:0.65rem 1.25rem; font-weight:700; font-size:0.9rem; border:none; background:none; color:{{ $activeTab === 'pembeli' ? '#1eb349' : '#64748b' }}; border-bottom:3px solid {{ $activeTab === 'pembeli' ? '#1eb349' : 'transparent' }}; cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:all 0.2s;">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-            <span>Data Pembeli</span>
-            <span style="background:#1eb349; color:#fff; font-size:0.72rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($buyers ?? []) }}</span>
-        </button>
-        <button type="button" class="rp-tab-btn {{ $activeTab === 'leads' ? 'active' : '' }}" onclick="switchReportTab('leads')" id="tabBtnLeads" style="padding:0.65rem 1.25rem; font-weight:700; font-size:0.9rem; border:none; background:none; color:{{ $activeTab === 'leads' ? '#1eb349' : '#64748b' }}; border-bottom:3px solid {{ $activeTab === 'leads' ? '#1eb349' : 'transparent' }}; cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:all 0.2s;">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <span>Data Leads</span>
-            <span style="background:#1eb349; color:#fff; font-size:0.72rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($leads ?? []) }}</span>
-        </button>
+    {{-- ── MAIN TAB NAVIGATION ────────────────────────────────────────── --}}
+    <div class="rp-tab-nav" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; background:#fff; padding:0.5rem 0.75rem; border-radius:14px; border:1px solid #e2e8f0; box-shadow:0 2px 8px rgba(0,0,0,0.03); flex-wrap:wrap; gap:1rem;">
+        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+            <button type="button" class="rp-tab-btn {{ $activeTab === 'pembeli' ? 'active' : '' }}" onclick="switchReportTab('pembeli')" id="tabBtnPembeli" style="padding:0.6rem 1.25rem; font-weight:700; font-size:0.88rem; border:none; border-radius:10px; background:{{ $activeTab === 'pembeli' ? '#F0FDF4' : 'transparent' }}; color:{{ $activeTab === 'pembeli' ? '#15803D' : '#64748b' }}; cursor:pointer; display:flex; align-items:center; gap:0.6rem; transition:all 0.2s;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                <span>Data Pembeli</span>
+                <span style="background:{{ $activeTab === 'pembeli' ? '#1eb349' : '#94a3b8' }}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($buyers ?? []) }}</span>
+            </button>
+            <button type="button" class="rp-tab-btn {{ $activeTab === 'leads' ? 'active' : '' }}" onclick="switchReportTab('leads')" id="tabBtnLeads" style="padding:0.6rem 1.25rem; font-weight:700; font-size:0.88rem; border:none; border-radius:10px; background:{{ $activeTab === 'leads' ? '#F0FDF4' : 'transparent' }}; color:{{ $activeTab === 'leads' ? '#15803D' : '#64748b' }}; cursor:pointer; display:flex; align-items:center; gap:0.6rem; transition:all 0.2s;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span>Data Leads</span>
+                <span style="background:{{ $activeTab === 'leads' ? '#1eb349' : '#94a3b8' }}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($leads ?? []) }}</span>
+            </button>
+        </div>
     </div>
 
     {{-- ── TAB 1: DATA PEMBELI & ANALYTICS ─────────────────────────────── --}}
@@ -1147,7 +1149,7 @@
             {{-- Buyers Table --}}
             <div class="panel-card">
                 <div class="panel-head">
-                    <h3 class="panel-title">Data Pembeli</h3>
+                    <h3 class="panel-title">Daftar Transaksi Pembeli</h3>
                     <div class="export-group">
                         <a href="{{ route('creator.sales.report.export', array_merge(request()->query(), ['type' => 'pembeli', 'format' => 'xls'])) }}"
                             class="btn-export">
@@ -1539,13 +1541,17 @@
                 if (leadsContent) leadsContent.style.display = 'block';
                 if (tabBtnPembeli) {
                     tabBtnPembeli.style.color = '#64748b';
-                    tabBtnPembeli.style.borderBottomColor = 'transparent';
+                    tabBtnPembeli.style.background = 'transparent';
                     tabBtnPembeli.classList.remove('active');
+                    const badge = tabBtnPembeli.querySelector('span:last-child');
+                    if (badge) badge.style.background = '#94a3b8';
                 }
                 if (tabBtnLeads) {
-                    tabBtnLeads.style.color = '#1eb349';
-                    tabBtnLeads.style.borderBottomColor = '#1eb349';
+                    tabBtnLeads.style.color = '#15803D';
+                    tabBtnLeads.style.background = '#F0FDF4';
                     tabBtnLeads.classList.add('active');
+                    const badge = tabBtnLeads.querySelector('span:last-child');
+                    if (badge) badge.style.background = '#1eb349';
                 }
                 if (modalTabInput) modalTabInput.value = 'leads';
                 updateFilterUrls('leads');
@@ -1553,14 +1559,18 @@
                 if (pembeliContent) pembeliContent.style.display = 'block';
                 if (leadsContent) leadsContent.style.display = 'none';
                 if (tabBtnPembeli) {
-                    tabBtnPembeli.style.color = '#1eb349';
-                    tabBtnPembeli.style.borderBottomColor = '#1eb349';
+                    tabBtnPembeli.style.color = '#15803D';
+                    tabBtnPembeli.style.background = '#F0FDF4';
                     tabBtnPembeli.classList.add('active');
+                    const badge = tabBtnPembeli.querySelector('span:last-child');
+                    if (badge) badge.style.background = '#1eb349';
                 }
                 if (tabBtnLeads) {
                     tabBtnLeads.style.color = '#64748b';
-                    tabBtnLeads.style.borderBottomColor = 'transparent';
+                    tabBtnLeads.style.background = 'transparent';
                     tabBtnLeads.classList.remove('active');
+                    const badge = tabBtnLeads.querySelector('span:last-child');
+                    if (badge) badge.style.background = '#94a3b8';
                 }
                 if (modalTabInput) modalTabInput.value = 'pembeli';
                 updateFilterUrls('pembeli');
