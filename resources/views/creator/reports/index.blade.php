@@ -223,6 +223,62 @@
         }
 
         /* ── Metric Cards & Luxury Banking Card ──────────────────── */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            border-color: #cbd5e1;
+        }
+
+        .metric-card.dark {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #ffffff;
+            border-color: #334155;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.6rem;
+        }
+
+        .metric-card.dark .metric-label {
+            color: #94a3b8;
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.1;
+        }
+
+        .metric-card.dark .metric-value {
+            color: #ffffff;
+        }
+
         .rp-hero-section {
             display: grid;
             grid-template-columns: minmax(320px, 440px) 1fr;
@@ -1405,7 +1461,7 @@
                 <div class="metric-label">Leads Hari Ini</div>
                 <div class="metric-value">{{ number_format(collect($leads ?? [])->filter(fn($l) => \Carbon\Carbon::parse($l->created_at)->isToday())->count()) }}</div>
             </div>
-            <div class="metric-card dark" style="grid-column: span 2;">
+            <div class="metric-card dark">
                 <div class="metric-label">Leads Bulan Ini</div>
                 <div class="metric-value">{{ number_format(collect($leads ?? [])->filter(fn($l) => \Carbon\Carbon::parse($l->created_at)->isCurrentMonth())->count()) }}</div>
             </div>
