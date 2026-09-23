@@ -553,41 +553,8 @@
 
 <body>
 
-    {{-- HEADER NAVBAR --}}
-    <header class="t5-header">
-        <div class="t5-header-container">
-            <a href="{{ $homeUrl }}" class="t5-brand">
-                @if ($avatarUrl)
-                    <img src="{{ $avatarUrl }}" alt="{{ $bioName }}" class="t5-brand-avatar">
-                @else
-                    <div class="t5-brand-avatar-fallback">
-                        {{ strtoupper(substr($bioName, 0, 1)) }}
-                    </div>
-                @endif
-                <span class="t5-brand-title">{{ $bioName }}</span>
-            </a>
-
-            <nav class="t5-nav-desktop">
-                <a href="{{ $homeUrl }}" class="t5-nav-link">Beranda</a>
-                <a href="{{ $productsUrl }}" class="t5-nav-link">Semua Produk</a>
-                <a href="{{ $contactUrl }}" class="t5-nav-link active">Kontak</a>
-            </nav>
-
-            <div class="t5-header-actions">
-                @if (!empty($config['wa']))
-                    @php
-                        $cleanWa = preg_replace('/[^0-9]/', '', $config['wa']);
-                        if (str_starts_with($cleanWa, '0')) $cleanWa = '62' . substr($cleanWa, 1);
-                    @endphp
-                    <a href="https://wa.me/{{ $cleanWa }}" target="_blank" class="t5-action-btn t5-btn-wa">
-                        <i class="ph-bold ph-whatsapp-logo" style="font-size: 1.1rem; color: #15803d;">
-                        </i>
-                        WhatsApp
-                    </a>
-                @endif
-            </div>
-        </div>
-    </header>
+    {{-- HEADER NAVBAR (SAME AS HOME & PRODUCTS PAGE) --}}
+    @include('bio.theme5.header', ['products' => collect(), 'blocks' => collect(), 'config' => $config, 'profile' => $profile, 'username' => $username])
 
     {{-- BREADCRUMB --}}
     <div class="t5-breadcrumb-wrap">
@@ -718,7 +685,7 @@
                         Kirim Pesan &amp; Konsultasi
                     </h2>
                     <p style="font-size: 0.88rem; color: var(--t5-slate-600); margin-bottom: 1.5rem;">
-                        Isi formulir di bawah ini dengan lengkap. Tim kami akan segera merespons pesan Anda via WhatsApp atau Email.
+                        Isi formulir di bawah ini dengan lengkap. Tim kami akan segera merespons pesan Anda via WhatsApp.
                     </p>
 
                     @if(session('success'))
@@ -752,11 +719,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Alamat Email (Opsional)</label>
-                            <input type="email" name="email" value="{{ old('email') }}" placeholder="nama@email.com" class="form-control">
-                        </div>
-
-                        <div class="form-group">
                             <label class="form-label">Kota / Perusahaan (Opsional)</label>
                             <input type="text" name="city" value="{{ old('city') }}" placeholder="Contoh: Jakarta / PT Maju Jaya" class="form-control">
                         </div>
@@ -776,19 +738,14 @@
         </div>
     </main>
 
-    {{-- FOOTER --}}
-    <footer class="t5-footer">
-        <div class="t5-footer-inner">
-            <div class="t5-footer-text">
-                &copy; {{ date('Y') }} <strong>{{ $bioName }}</strong>. All rights reserved. Powered by <a href="https://buyle.id" style="color: var(--t5-emerald); text-decoration: none; font-weight: 600;">buyle.id</a>
-            </div>
-            <div class="t5-footer-links">
-                <a href="{{ $homeUrl }}">Beranda</a>
-                <a href="{{ $productsUrl }}">Semua Produk</a>
-                <a href="{{ $contactUrl }}">Kontak</a>
-            </div>
-        </div>
-    </footer>
+    {{-- FOOTER TEMA 5 (SAME AS HOME & PRODUCTS PAGE) --}}
+    @include('bio.theme5.footer', ['products' => collect(), 'config' => $config, 'profile' => $profile, 'username' => $username])
 
+    <script>
+        function toggleT5Drawer() {
+            var drawer = document.getElementById('t5MobileDrawer');
+            if (drawer) drawer.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>

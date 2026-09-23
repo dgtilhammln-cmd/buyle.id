@@ -1599,6 +1599,24 @@
                         </svg>
                         Homepage / Beranda (Tema 5)
                     </button>
+                    <button type="button" class="prof-subtab-btn" id="btn-subtab-products"
+                        onclick="switchProfileSubtab('subtab-products-main', this)">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                        Halaman Produk (Tema 5)
+                    </button>
+                    <button type="button" class="prof-subtab-btn" id="btn-subtab-contact"
+                        onclick="switchProfileSubtab('subtab-contact-main', this)">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                        Halaman Kontak (Tema 5)
+                    </button>
                 </div>
 
                 {{-- SUBTAB 1: INFORMASI PROFIL --}}
@@ -1713,147 +1731,7 @@
                             </div>
                         </div>
 
-                        @if(($profile->bio_theme ?? '') === 'theme5')
-                        <!-- DEDICATED TEMA 5 SETTINGS: FAVICON, SEO META PER PAGE & HALAMAN KONTAK -->
-                        <div class="prof-card" style="margin-top: 1.5rem; border: 1.5px solid #1eb349; background: #fafdfb;">
-                            <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center; background:linear-gradient(135deg, #1eb349 0%, #15803d 100%); color:#ffffff; padding:0.9rem 1.25rem; border-radius:14px 14px 0 0;">
-                                <span style="font-weight:700; font-size:0.95rem; display:flex; align-items:center; gap:0.5rem;">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                                    Pengaturan & SEO Tema 5 (Web Profesional)
-                                </span>
-                                <span style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase; letter-spacing:0.05em;">Khusus Tema 5</span>
-                            </div>
 
-                            <div class="card-body" style="padding:1.25rem;">
-                                {{-- 1. FAVICON WEBSITE --}}
-                                <div style="margin-bottom: 1.75rem; background:#ffffff; padding:1.1rem; border-radius:12px; border:1px solid #e2e8f0;">
-                                    <label style="display:block; font-weight:700; color:#0f172a; margin-bottom:0.35rem; font-size:0.9rem;">
-                                        Favicon Custom Website (Tema 5)
-                                    </label>
-                                    <p style="font-size:0.78rem; color:#64748b; margin-bottom:0.85rem;">Icon tab browser khusus untuk toko Tema 5 Anda (Format PNG, ICO, SVG, WEBP, maks 2MB).</p>
-                                    <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
-                                        <div style="width:48px; height:48px; border-radius:10px; border:1.5px dashed #cbd5e1; background:#f8fafc; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
-                                            @if(!empty($cfg['theme5_favicon']))
-                                                <img src="{{ asset('storage/' . $cfg['theme5_favicon']) }}" alt="Favicon" style="max-width:100%; max-height:100%; object-fit:contain;">
-                                            @else
-                                                <img src="{{ asset('favicon.png') }}" alt="Default Favicon" style="max-width:28px; max-height:28px; opacity:0.6;">
-                                            @endif
-                                        </div>
-                                        <div style="flex:1; min-width:220px;">
-                                            <input type="file" name="theme5_favicon" accept="image/x-icon,image/png,image/jpeg,image/webp,image/svg+xml" class="form-input" style="height:auto; padding:0.45rem;">
-                                        </div>
-                                        @if(!empty($cfg['theme5_favicon']))
-                                            <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.8rem; color:#ef4444; cursor:pointer;">
-                                                <input type="checkbox" name="delete_theme5_favicon" value="1"> Hapus Favicon
-                                            </label>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                {{-- 2. SEO META TAGS PER PAGE --}}
-                                <div style="margin-bottom: 1.75rem; background:#ffffff; padding:1.1rem; border-radius:12px; border:1px solid #e2e8f0;">
-                                    <label style="display:block; font-weight:700; color:#0f172a; margin-bottom:0.25rem; font-size:0.92rem;">
-                                        Pengaturan SEO Meta Tags Per Page (Tema 5)
-                                    </label>
-                                    <p style="font-size:0.78rem; color:#64748b; margin-bottom:1rem;">Tentukan Meta Title, Meta Description, dan Meta Keywords terpisah untuk masing-masing halaman.</p>
-
-                                    {{-- Sub-tab navigation for SEO Pages --}}
-                                    <div style="display:flex; gap:0.5rem; border-bottom:2px solid #e2e8f0; margin-bottom:1.25rem; flex-wrap:wrap;">
-                                        <button type="button" class="t5-seo-tab-btn active" onclick="switchT5SeoTab(event, 'seo-home-pane')" style="padding:0.5rem 0.85rem; font-size:0.82rem; font-weight:600; border:none; background:none; border-bottom:2.5px solid #1eb349; color:#1eb349; cursor:pointer; margin-bottom:-2px;">Halaman Beranda (Home)</button>
-                                        <button type="button" class="t5-seo-tab-btn" onclick="switchT5SeoTab(event, 'seo-products-pane')" style="padding:0.5rem 0.85rem; font-size:0.82rem; font-weight:600; border:none; background:none; border-bottom:2.5px solid transparent; color:#64748b; cursor:pointer; margin-bottom:-2px;">Halaman Katalog Produk</button>
-                                        <button type="button" class="t5-seo-tab-btn" onclick="switchT5SeoTab(event, 'seo-contact-pane')" style="padding:0.5rem 0.85rem; font-size:0.82rem; font-weight:600; border:none; background:none; border-bottom:2.5px solid transparent; color:#64748b; cursor:pointer; margin-bottom:-2px;">Halaman Kontak</button>
-                                    </div>
-
-                                    {{-- SEO HOME PANE --}}
-                                    <div id="seo-home-pane" class="t5-seo-tab-pane">
-                                        <div style="margin-bottom:0.85rem;">
-                                            <label class="form-label" style="font-size:0.8rem;">Meta Title Beranda</label>
-                                            <input type="text" name="theme5_seo_home_title" value="{{ old('theme5_seo_home_title', $cfg['theme5_seo_home_title'] ?? '') }}" placeholder="Contoh: Nama Toko - Solusi Produk Digital Terpercaya" class="form-input">
-                                        </div>
-                                        <div style="margin-bottom:0.85rem;">
-                                            <label class="form-label" style="font-size:0.8rem;">Meta Description Beranda</label>
-                                            <textarea name="theme5_seo_home_desc" rows="2" placeholder="Deskripsi singkat toko untuk hasil pencarian Google..." class="form-input">{{ old('theme5_seo_home_desc', $cfg['theme5_seo_home_desc'] ?? '') }}</textarea>
-                                        </div>
-                                        <div>
-                                            <label class="form-label" style="font-size:0.8rem;">Meta Keywords Beranda</label>
-                                            <input type="text" name="theme5_seo_home_keywords" value="{{ old('theme5_seo_home_keywords', $cfg['theme5_seo_home_keywords'] ?? '') }}" placeholder="Contoh: toko digital, jasa desain, ebook, template, lisensi" class="form-input">
-                                        </div>
-                                    </div>
-
-                                    {{-- SEO PRODUCTS PANE --}}
-                                    <div id="seo-products-pane" class="t5-seo-tab-pane" style="display:none;">
-                                        <div style="margin-bottom:0.85rem;">
-                                            <label class="form-label" style="font-size:0.8rem;">Meta Title Halaman Katalog Produk</label>
-                                            <input type="text" name="theme5_seo_products_title" value="{{ old('theme5_seo_products_title', $cfg['theme5_seo_products_title'] ?? '') }}" placeholder="Contoh: Semua Produk & Layanan Katalog Digital - Nama Toko" class="form-input">
-                                        </div>
-                                        <div style="margin-bottom:0.85rem;">
-                                            <label class="form-label" style="font-size:0.8rem;">Meta Description Halaman Katalog Produk</label>
-                                            <textarea name="theme5_seo_products_desc" rows="2" placeholder="Deskripsi lengkap katalog produk digital dan layanan..." class="form-input">{{ old('theme5_seo_products_desc', $cfg['theme5_seo_products_desc'] ?? '') }}</textarea>
-                                        </div>
-                                        <div>
-                                            <label class="form-label" style="font-size:0.8rem;">Meta Keywords Halaman Katalog Produk</label>
-                                            <input type="text" name="theme5_seo_products_keywords" value="{{ old('theme5_seo_products_keywords', $cfg['theme5_seo_products_keywords'] ?? '') }}" placeholder="Contoh: produk digital, katalog produk, beli ebook, software" class="form-input">
-                                        </div>
-                                    </div>
-
-                                    {{-- SEO CONTACT PANE --}}
-                                    <div id="seo-contact-pane" class="t5-seo-tab-pane" style="display:none;">
-                                        <div style="margin-bottom:0.85rem;">
-                                            <label class="form-label" style="font-size:0.8rem;">Meta Title Halaman Kontak</label>
-                                            <input type="text" name="theme5_seo_contact_title" value="{{ old('theme5_seo_contact_title', $cfg['theme5_seo_contact_title'] ?? '') }}" placeholder="Contoh: Hubungi Kami & Layanan Pelanggan - Nama Toko" class="form-input">
-                                        </div>
-                                        <div style="margin-bottom:0.85rem;">
-                                            <label class="form-label" style="font-size:0.8rem;">Meta Description Halaman Kontak</label>
-                                            <textarea name="theme5_seo_contact_desc" rows="2" placeholder="Dapatkan bantuan, konsultasi, alamat kantor, dan kontak resmi..." class="form-input">{{ old('theme5_seo_contact_desc', $cfg['theme5_seo_contact_desc'] ?? '') }}</textarea>
-                                        </div>
-                                        <div>
-                                            <label class="form-label" style="font-size:0.8rem;">Meta Keywords Halaman Kontak</label>
-                                            <input type="text" name="theme5_seo_contact_keywords" value="{{ old('theme5_seo_contact_keywords', $cfg['theme5_seo_contact_keywords'] ?? '') }}" placeholder="Contoh: kontak, alamat kantor, maps, hubungi kami, cs" class="form-input">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {{-- 3. INFORMASI HALAMAN KONTAK --}}
-                                <div style="background:#ffffff; padding:1.1rem; border-radius:12px; border:1px solid #e2e8f0;">
-                                    <label style="display:block; font-weight:700; color:#0f172a; margin-bottom:0.25rem; font-size:0.92rem;">
-                                        Informasi Halaman Kontak Baru (Tema 5)
-                                    </label>
-                                    <p style="font-size:0.78rem; color:#64748b; margin-bottom:1rem;">Halaman kontak dapat diakses pengunjung di URL <code>/{{ $profile->store_slug }}/kontak</code>.</p>
-
-                                    <div style="margin-bottom:0.85rem;">
-                                        <label class="form-label" style="font-size:0.8rem;">Alamat Lengkap Kantor / Toko</label>
-                                        <textarea name="theme5_contact_address" rows="3" placeholder="Contoh: Jl. Sudirman No. 123, Lantai 4, Jakarta Selatan, 12190" class="form-input">{{ old('theme5_contact_address', $cfg['theme5_contact_address'] ?? ($cfg['location'] ?? '')) }}</textarea>
-                                    </div>
-
-                                    <div>
-                                        <label class="form-label" style="font-size:0.8rem;">Embed Code Google Maps (iFrame / Share Map URL)</label>
-                                        <textarea name="theme5_contact_maps_embed" rows="3" placeholder='Contoh: <iframe src="https://www.google.com/maps/embed?..." width="600" height="450"></iframe>' class="form-input">{{ old('theme5_contact_maps_embed', $cfg['theme5_contact_maps_embed'] ?? ($cfg['embed_location'] ?? '')) }}</textarea>
-                                        <span style="font-size:0.72rem; color:#64748b; margin-top:4px; display:block;">Petunjuk: Buka Google Maps > Bagikan > Sematkan Peta (Embed a map) > Salin HTML iframe dan tempel di atas.</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <script>
-                        function switchT5SeoTab(evt, paneId) {
-                            evt.preventDefault();
-                            var parent = evt.currentTarget.closest('.card-body');
-                            parent.querySelectorAll('.t5-seo-tab-btn').forEach(function(btn) {
-                                btn.classList.remove('active');
-                                btn.style.borderBottomColor = 'transparent';
-                                btn.style.color = '#64748b';
-                            });
-                            parent.querySelectorAll('.t5-seo-tab-pane').forEach(function(pane) {
-                                pane.style.display = 'none';
-                            });
-                            evt.currentTarget.classList.add('active');
-                            evt.currentTarget.style.borderBottomColor = '#1eb349';
-                            evt.currentTarget.style.color = '#1eb349';
-                            var targetPane = document.getElementById(paneId);
-                            if(targetPane) targetPane.style.display = 'block';
-                        }
-                        </script>
-                        @endif
 
                         <div style="display:flex; justify-content:flex-end; margin-top: 1rem;">
                             <button type="submit" class="btn-submit-sm">Simpan Profil</button>
@@ -1868,6 +1746,53 @@
                         @csrf
                         <input type="hidden" name="about_enabled_present" value="1">
                         <input type="hidden" name="services_enabled_present" value="1">
+
+                        @if(($profile->bio_theme ?? '') === 'theme5')
+                        {{-- FAVICON & SEO HOME PANE --}}
+                        <div class="prof-card" style="margin-bottom: 1.5rem; border: 1.5px solid #1eb349; background: #fafdfb;">
+                            <div class="prof-card-head" style="background:linear-gradient(135deg, #1eb349 0%, #15803d 100%); color:#ffffff; padding:0.85rem 1.25rem; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
+                                <span>Favicon Custom &amp; SEO Meta Tags (Halaman Utama / Beranda)</span>
+                                <span style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase;">Khusus Tema 5</span>
+                            </div>
+                            <div class="card-body" style="padding:1.25rem;">
+                                <div style="margin-bottom: 1.25rem; background:#ffffff; padding:1rem; border-radius:10px; border:1px solid #e2e8f0;">
+                                    <label style="display:block; font-weight:700; color:#0f172a; margin-bottom:0.35rem; font-size:0.88rem;">Favicon Custom Website (Tema 5)</label>
+                                    <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+                                        <div style="width:42px; height:42px; border-radius:8px; border:1.5px dashed #cbd5e1; background:#f8fafc; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+                                            @if(!empty($cfg['theme5_favicon']))
+                                                <img src="{{ asset('storage/' . $cfg['theme5_favicon']) }}" alt="Favicon" style="max-width:100%; max-height:100%; object-fit:contain;">
+                                            @else
+                                                <img src="{{ asset('favicon.png') }}" alt="Default Favicon" style="max-width:24px; max-height:24px; opacity:0.6;">
+                                            @endif
+                                        </div>
+                                        <div style="flex:1; min-width:200px;">
+                                            <input type="file" name="theme5_favicon" accept="image/x-icon,image/png,image/jpeg,image/webp,image/svg+xml" class="form-input" style="height:auto; padding:0.4rem;">
+                                        </div>
+                                        @if(!empty($cfg['theme5_favicon']))
+                                            <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.8rem; color:#ef4444; cursor:pointer;">
+                                                <input type="checkbox" name="delete_theme5_favicon" value="1"> Hapus Favicon
+                                            </label>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div style="display:grid; grid-template-columns:1fr; gap:0.85rem;">
+                                    <div>
+                                        <label class="form-label" style="font-size:0.8rem;">Meta Title Beranda</label>
+                                        <input type="text" name="theme5_seo_home_title" value="{{ old('theme5_seo_home_title', $cfg['theme5_seo_home_title'] ?? '') }}" placeholder="Contoh: Nama Toko - Solusi Produk Digital Terpercaya" class="form-input">
+                                    </div>
+                                    <div>
+                                        <label class="form-label" style="font-size:0.8rem;">Meta Description Beranda</label>
+                                        <textarea name="theme5_seo_home_desc" rows="2" placeholder="Deskripsi singkat toko untuk hasil pencarian Google..." class="form-input">{{ old('theme5_seo_home_desc', $cfg['theme5_seo_home_desc'] ?? '') }}</textarea>
+                                    </div>
+                                    <div>
+                                        <label class="form-label" style="font-size:0.8rem;">Meta Keywords Beranda</label>
+                                        <input type="text" name="theme5_seo_home_keywords" value="{{ old('theme5_seo_home_keywords', $cfg['theme5_seo_home_keywords'] ?? '') }}" placeholder="Contoh: toko digital, jasa desain, ebook, template" class="form-input">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
 
                         {{-- Sub-Subtab Switcher Bar --}}
                         <style>
@@ -2471,6 +2396,90 @@
                         </div>
                     </form>
                 </div> {{-- End #subtab-homepage-main --}}
+
+                {{-- SUBTAB 3: HALAMAN PRODUK (TEMA 5) --}}
+                <div class="prof-subtab-pane" id="subtab-products-main" style="display:none;">
+                    <form action="{{ route('creator.bio.save-profile') }}" method="POST">
+                        @csrf
+                        <div class="prof-card" style="border: 1.5px solid #1eb349; background: #fafdfb;">
+                            <div class="prof-card-head" style="background:linear-gradient(135deg, #1eb349 0%, #15803d 100%); color:#ffffff; padding:0.85rem 1.25rem; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
+                                <span>Pengaturan SEO Meta Tags (Halaman Katalog Produk / Layanan)</span>
+                                <span style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase;">Khusus Tema 5</span>
+                            </div>
+                            <div class="card-body" style="padding:1.25rem;">
+                                <p style="font-size:0.78rem; color:#64748b; margin-bottom:1rem;">Tentukan judul dan deskripsi pencarian Google khusus untuk halaman katalog produk (URL: <code>/{{ $profile->store_slug }}/produk</code>).</p>
+                                <div style="display:grid; grid-template-columns:1fr; gap:0.85rem;">
+                                    <div>
+                                        <label class="form-label" style="font-size:0.8rem;">Meta Title Katalog Produk</label>
+                                        <input type="text" name="theme5_seo_products_title" value="{{ old('theme5_seo_products_title', $cfg['theme5_seo_products_title'] ?? '') }}" placeholder="Contoh: Semua Produk & Layanan Digital - Nama Toko" class="form-input">
+                                    </div>
+                                    <div>
+                                        <label class="form-label" style="font-size:0.8rem;">Meta Description Katalog Produk</label>
+                                        <textarea name="theme5_seo_products_desc" rows="2" placeholder="Deskripsi lengkap katalog produk digital dan layanan..." class="form-input">{{ old('theme5_seo_products_desc', $cfg['theme5_seo_products_desc'] ?? '') }}</textarea>
+                                    </div>
+                                    <div>
+                                        <label class="form-label" style="font-size:0.8rem;">Meta Keywords Katalog Produk</label>
+                                        <input type="text" name="theme5_seo_products_keywords" value="{{ old('theme5_seo_products_keywords', $cfg['theme5_seo_products_keywords'] ?? '') }}" placeholder="Contoh: produk digital, beli ebook, software, katalog" class="form-input">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end; margin-top: 1.5rem; padding-top:1rem; border-top:1.5px solid #e2e8f0;">
+                            <button type="submit" class="btn-submit-sm" style="padding:0.75rem 2.2rem; font-size:0.9rem; font-weight:700;">Simpan Pengaturan Produk</button>
+                        </div>
+                    </form>
+                </div>
+
+                {{-- SUBTAB 4: HALAMAN KONTAK (TEMA 5) --}}
+                <div class="prof-subtab-pane" id="subtab-contact-main" style="display:none;">
+                    <form action="{{ route('creator.bio.save-profile') }}" method="POST">
+                        @csrf
+                        <div class="prof-card" style="border: 1.5px solid #1eb349; background: #fafdfb; margin-bottom: 1.5rem;">
+                            <div class="prof-card-head" style="background:linear-gradient(135deg, #1eb349 0%, #15803d 100%); color:#ffffff; padding:0.85rem 1.25rem; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
+                                <span>Pengaturan SEO Meta Tags (Halaman Kontak)</span>
+                                <span style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase;">Khusus Tema 5</span>
+                            </div>
+                            <div class="card-body" style="padding:1.25rem;">
+                                <p style="font-size:0.78rem; color:#64748b; margin-bottom:1rem;">Tentukan judul dan deskripsi pencarian Google khusus untuk halaman kontak (URL: <code>/{{ $profile->store_slug }}/kontak</code>).</p>
+                                <div style="display:grid; grid-template-columns:1fr; gap:0.85rem;">
+                                    <div>
+                                        <label class="form-label" style="font-size:0.8rem;">Meta Title Halaman Kontak</label>
+                                        <input type="text" name="theme5_seo_contact_title" value="{{ old('theme5_seo_contact_title', $cfg['theme5_seo_contact_title'] ?? '') }}" placeholder="Contoh: Hubungi Kami & Layanan Pelanggan - Nama Toko" class="form-input">
+                                    </div>
+                                    <div>
+                                        <label class="form-label" style="font-size:0.8rem;">Meta Description Halaman Kontak</label>
+                                        <textarea name="theme5_seo_contact_desc" rows="2" placeholder="Dapatkan bantuan, konsultasi, alamat kantor, dan kontak resmi..." class="form-input">{{ old('theme5_seo_contact_desc', $cfg['theme5_seo_contact_desc'] ?? '') }}</textarea>
+                                    </div>
+                                    <div>
+                                        <label class="form-label" style="font-size:0.8rem;">Meta Keywords Halaman Kontak</label>
+                                        <input type="text" name="theme5_seo_contact_keywords" value="{{ old('theme5_seo_contact_keywords', $cfg['theme5_seo_contact_keywords'] ?? '') }}" placeholder="Contoh: kontak, alamat kantor, maps, hubungi kami" class="form-input">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="prof-card">
+                            <div class="prof-card-head">Informasi Alamat &amp; Lokasi Maps (Halaman Kontak)</div>
+                            <div class="card-body" style="padding:1.25rem;">
+                                <div style="margin-bottom:0.85rem;">
+                                    <label class="form-label" style="font-size:0.8rem;">Alamat Lengkap Kantor / Toko</label>
+                                    <textarea name="theme5_contact_address" rows="3" placeholder="Contoh: Jl. Sudirman No. 123, Lantai 4, Jakarta Selatan, 12190" class="form-input">{{ old('theme5_contact_address', $cfg['theme5_contact_address'] ?? ($cfg['location'] ?? '')) }}</textarea>
+                                </div>
+
+                                <div>
+                                    <label class="form-label" style="font-size:0.8rem;">Embed Code Google Maps (iFrame / Share Map URL)</label>
+                                    <textarea name="theme5_contact_maps_embed" rows="3" placeholder='Contoh: <iframe src="https://www.google.com/maps/embed?..." width="600" height="450"></iframe>' class="form-input">{{ old('theme5_contact_maps_embed', $cfg['theme5_contact_maps_embed'] ?? ($cfg['embed_location'] ?? '')) }}</textarea>
+                                    <span style="font-size:0.72rem; color:#64748b; margin-top:4px; display:block;">Petunjuk: Buka Google Maps > Bagikan > Sematkan Peta (Embed a map) > Salin HTML iframe dan tempel di atas.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end; margin-top: 1.5rem; padding-top:1rem; border-top:1.5px solid #e2e8f0;">
+                            <button type="submit" class="btn-submit-sm" style="padding:0.75rem 2.2rem; font-size:0.9rem; font-weight:700;">Simpan Pengaturan Kontak</button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
 
@@ -4262,7 +4271,9 @@
             var paneEl = document.getElementById(savedProfileSubtab);
             var btnMap = {
                 'subtab-profile-info': 'btn-subtab-info',
-                'subtab-homepage-main': 'btn-subtab-homepage'
+                'subtab-homepage-main': 'btn-subtab-homepage',
+                'subtab-products-main': 'btn-subtab-products',
+                'subtab-contact-main': 'btn-subtab-contact'
             };
             var btnEl = document.getElementById(btnMap[savedProfileSubtab]);
             if (paneEl) switchProfileSubtab(savedProfileSubtab, btnEl);
