@@ -302,15 +302,18 @@
     $isHome = request()->is($username) || request()->path() === '/' || request()->path() === '';
     $homeUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') : url('/' . $username);
     $productsUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') . '/produk' : url('/' . $username . '/produk');
-    
+    // Contact page selalu ke halaman /kontak yang dedicated (bukan scroll anchor)
+    $contactPageUrl = !empty($profile->custom_domain) ? 'https://' . rtrim($profile->custom_domain, '/') . '/kontak' : url('/' . $username . '/kontak');
+
     $berandaLink = $isHome ? 'javascript:void(0)' : $homeUrl;
     $aboutLink   = $isHome ? 'javascript:void(0)' : $homeUrl . '?scroll=about';
-    $contactLink = $isHome ? 'javascript:void(0)' : $homeUrl . '?scroll=contact';
+    $contactLink = $contactPageUrl;
 
     $berandaOnClick = $isHome ? "t5ScrollTo('top'); return false;" : "";
     $aboutOnClick   = $isHome ? "t5ScrollTo('about-section'); return false;" : "";
-    $contactOnClick = $isHome ? "t5ScrollTo('contact-section'); return false;" : "";
+    $contactOnClick = '';
 @endphp
+
 
 <header class="t5-header">
     <div class="t5-header-container">
@@ -348,7 +351,7 @@
                 @endforeach
             @endif
 
-            <a href="{{ $contactLink }}" onclick="{{ $contactOnClick }}" class="t5-nav-link">Kontak</a>
+            <a href="{{ $contactLink }}" class="t5-nav-link {{ request()->is('*/kontak') || request()->is('*/contact') ? 'active' : '' }}">Kontak</a>
         </nav>
 
         {{-- Action Buttons --}}

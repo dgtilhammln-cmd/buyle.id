@@ -172,10 +172,40 @@ class CreatorBioController extends Controller
             'footer_bg_color2'   => 'nullable|string|max:50',
             'footer_bg_image'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:8192',
             'footer_bg_opacity'  => 'nullable|numeric|min:0|max:100',
+            // Dedicated Theme 5 Favicon, SEO & Contact Page Validation
+            'theme5_favicon'              => 'nullable|file|mimes:jpg,jpeg,png,webp,ico,svg|max:2048',
+            'theme5_seo_home_title'       => 'nullable|string|max:255',
+            'theme5_seo_home_desc'        => 'nullable|string|max:500',
+            'theme5_seo_home_keywords'    => 'nullable|string|max:500',
+            'theme5_seo_products_title'   => 'nullable|string|max:255',
+            'theme5_seo_products_desc'    => 'nullable|string|max:500',
+            'theme5_seo_products_keywords'=> 'nullable|string|max:500',
+            'theme5_seo_contact_title'    => 'nullable|string|max:255',
+            'theme5_seo_contact_desc'     => 'nullable|string|max:500',
+            'theme5_seo_contact_keywords' => 'nullable|string|max:500',
+            'theme5_contact_address'      => 'nullable|string|max:1000',
+            'theme5_contact_maps_embed'   => 'nullable|string|max:2000',
         ]);
 
         $profile = $this->getProfile();
         $config  = $profile->bio_config ?? [];
+
+        // Handle Theme 5 Favicon upload / deletion
+        if ($request->has('delete_theme5_favicon') && !empty($config['theme5_favicon'])) {
+            Storage::disk('public')->delete($config['theme5_favicon']);
+            $config['theme5_favicon'] = null;
+        } elseif ($request->hasFile('theme5_favicon')) {
+            if (!empty($config['theme5_favicon'])) {
+                Storage::disk('public')->delete($config['theme5_favicon']);
+            }
+            $favFile = $request->file('theme5_favicon');
+            $ext = strtolower($favFile->getClientOriginalExtension());
+            if (in_array($ext, ['ico', 'svg'])) {
+                $config['theme5_favicon'] = $favFile->store('bio/favicons', 'public');
+            } else {
+                $config['theme5_favicon'] = $this->convertToWebp($favFile, 'bio/favicons');
+            }
+        }
 
         // Handle avatar upload / deletion
         if ($request->has('delete_avatar') && !empty($config['avatar'])) {
@@ -370,7 +400,24 @@ class CreatorBioController extends Controller
             }
         }
 
+        // Save Theme 5 Dedicated SEO Metas Per Page & Contact Page fields
+        if ($request->has('theme5_seo_home_title'))        $config['theme5_seo_home_title']        = $request->theme5_seo_home_title;
+        if ($request->has('theme5_seo_home_desc'))         $config['theme5_seo_home_desc']         = $request->theme5_seo_home_desc;
+        if ($request->has('theme5_seo_home_keywords'))     $config['theme5_seo_home_keywords']     = $request->theme5_seo_home_keywords;
+
+        if ($request->has('theme5_seo_products_title'))    $config['theme5_seo_products_title']    = $request->theme5_seo_products_title;
+        if ($request->has('theme5_seo_products_desc'))     $config['theme5_seo_products_desc']     = $request->theme5_seo_products_desc;
+        if ($request->has('theme5_seo_products_keywords')) $config['theme5_seo_products_keywords'] = $request->theme5_seo_products_keywords;
+
+        if ($request->has('theme5_seo_contact_title'))     $config['theme5_seo_contact_title']     = $request->theme5_seo_contact_title;
+        if ($request->has('theme5_seo_contact_desc'))      $config['theme5_seo_contact_desc']      = $request->theme5_seo_contact_desc;
+        if ($request->has('theme5_seo_contact_keywords'))  $config['theme5_seo_contact_keywords']  = $request->theme5_seo_contact_keywords;
+
+        if ($request->has('theme5_contact_address'))       $config['theme5_contact_address']       = $request->theme5_contact_address;
+        if ($request->has('theme5_contact_maps_embed'))    $config['theme5_contact_maps_embed']    = $request->theme5_contact_maps_embed;
+
         // Handle username (store_slug used as bio URL slug)
+
         if ($request->filled('bio_username')) {
             $slug = $request->bio_username;
             $exists = CreatorProfile::where('store_slug', $slug)->where('id', '!=', $profile->id)->exists();

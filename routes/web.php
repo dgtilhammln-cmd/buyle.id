@@ -642,7 +642,20 @@ Route::get('/{username}/produk/{identifier}', [\App\Http\Controllers\BioProductC
 Route::get('/{username}/p/{identifier}', [\App\Http\Controllers\BioProductController::class, 'show'])
     ->where('username', '[a-zA-Z0-9_\-]+');
 
+// Contact page: /{username}/kontak
+Route::get('/{username}/kontak', [\App\Http\Controllers\BioContactPageController::class, 'show'])
+    ->name('bio.contact.page')
+    ->where('username', '[a-zA-Z0-9_\-]+');
+
+Route::get('/{username}/contact', [\App\Http\Controllers\BioContactPageController::class, 'show'])
+    ->where('username', '[a-zA-Z0-9_\-]+');
+
+Route::post('/{username}/contact/lead', [\App\Http\Controllers\BioContactPageController::class, 'storeLead'])
+    ->name('bio.contact.lead')
+    ->where('username', '[a-zA-Z0-9_\-]+');
+
 Route::get('/{username}', [\App\Http\Controllers\BioPageController::class, 'show'])
     ->name('bio.public')
     ->where('username', '[a-zA-Z0-9_\-]+');
+
 

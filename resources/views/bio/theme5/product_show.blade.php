@@ -66,9 +66,14 @@
     <meta property="og:type" content="product">
     <meta property="product:price:amount" content="{{ $price }}">
     <meta property="product:price:currency" content="IDR">
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=4">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=4">
+    @if(!empty($config['theme5_favicon']))
+        <link rel="icon" href="{{ asset('storage/' . $config['theme5_favicon']) }}">
+    @else
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=4">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=4">
+    @endif
     <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ url('/sitemap.xml') }}">
+
 
     <script type="application/ld+json">
     {

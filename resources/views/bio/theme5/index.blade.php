@@ -3,26 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $seoTitle ?? (($config['name'] ?? $profile->store_name) . ' - Professional Digital Store') }}</title>
-    <meta name="description" content="{{ $seoDesc ?? ($profile->store_description ?? 'Situs resmi dan katalog produk digital terpercaya.') }}">
+    @php
+        $t5SeoTitle = !empty($config['theme5_seo_home_title']) ? $config['theme5_seo_home_title'] : ($seoTitle ?? (($config['name'] ?? $profile->store_name) . ' - Professional Digital Store'));
+        $t5SeoDesc  = !empty($config['theme5_seo_home_desc']) ? $config['theme5_seo_home_desc'] : ($seoDesc ?? ($profile->store_description ?? 'Situs resmi dan katalog produk digital terpercaya.'));
+        $t5SeoKw    = $config['theme5_seo_home_keywords'] ?? '';
+    @endphp
+    <title>{{ $t5SeoTitle }}</title>
+    <meta name="description" content="{{ $t5SeoDesc }}">
+    @if(!empty($t5SeoKw))<meta name="keywords" content="{{ $t5SeoKw }}">@endif
     <link rel="canonical" href="{{ $canonical ?? url()->current() }}">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ url('/sitemap.xml') }}">
 
-    {{-- Favicon --}}
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=4">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=4">
+    {{-- Favicon (Custom Theme 5 jika ada, fallback ke default) --}}
+    @if(!empty($config['theme5_favicon']))
+        <link rel="icon" href="{{ asset('storage/' . $config['theme5_favicon']) }}">
+    @else
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=4">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=4">
+    @endif
 
     {{-- Open Graph --}}
-    <meta property="og:title" content="{{ $seoTitle ?? ($profile->store_name . ' - Professional Digital Store') }}">
-    <meta property="og:description" content="{{ $seoDesc ?? '' }}">
+    <meta property="og:title" content="{{ $t5SeoTitle }}">
+    <meta property="og:description" content="{{ $t5SeoDesc }}">
     <meta property="og:image" content="{{ $ogImage ?? asset('images/buyle-og.png') }}">
     <meta property="og:url" content="{{ $canonical ?? url()->current() }}">
     <meta property="og:type" content="website">
 
     {{-- Twitter Cards --}}
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $seoTitle ?? ($profile->store_name . ' - Professional Digital Store') }}">
-    <meta name="twitter:description" content="{{ $seoDesc ?? '' }}">
+    <meta name="twitter:title" content="{{ $t5SeoTitle }}">
+    <meta name="twitter:description" content="{{ $t5SeoDesc }}">
     <meta name="twitter:image" content="{{ $ogImage ?? asset('images/buyle-og.png') }}">
 
     {{-- Google Fonts: Montserrat --}}
