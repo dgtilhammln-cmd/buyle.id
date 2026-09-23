@@ -992,23 +992,13 @@
 
         /* Theme 5: Web Profesional */
         .theme-mockup.theme5 {
-            background: linear-gradient(135deg, #0b1215, #111e25);
-            border: 1px solid rgba(30, 179, 73, 0.4);
-        }
-
-        .theme-mockup.theme5 .mockup-avatar {
-            background: #1eb349;
-            border-radius: 4px;
-        }
-
-        .theme-mockup.theme5 .mockup-title {
-            background: #ffffff;
-        }
-
-        .theme-mockup.theme5 .mockup-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 6px;
+            background: #0b1215;
+            border: 1.5px solid rgba(30, 179, 73, 0.4);
+            padding-top: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
         }
     </style>
 @endsection
@@ -1307,10 +1297,14 @@
                                     <label class="theme-card {{ $currentTheme === $key ? 'active' : '' }}">
                                         <input type="radio" name="bio_theme" value="{{ $key }}" {{ $currentTheme === $key ? 'checked' : '' }} style="display:none;" onchange="this.closest('form').submit()">
                                         <div class="theme-mockup {{ $key }}">
-                                            <div class="mockup-avatar"></div>
-                                            <div class="mockup-title"></div>
-                                            <div class="mockup-btn"></div>
-                                            <div class="mockup-btn"></div>
+                                            @if($key === 'theme5')
+                                                <img src="{{ asset('images/theme5-mockup.jpg') }}" alt="Web Profesional" style="width:100%; height:100%; object-fit:cover; object-position:top;">
+                                            @else
+                                                <div class="mockup-avatar"></div>
+                                                <div class="mockup-title"></div>
+                                                <div class="mockup-btn"></div>
+                                                <div class="mockup-btn"></div>
+                                            @endif
                                         </div>
                                         <div class="theme-label">
                                             @if($currentTheme === $key) <svg width="14" height="14" fill="#1eb349"
@@ -1327,6 +1321,7 @@
                 </div>
 
                 {{-- Custom Background & Color Customizer --}}
+                @if($currentTheme !== 'theme5')
                 <div class="prof-card" style="margin-top:0;">
                     <div class="prof-card-head">
                         <span>Kustomisasi Background & Warna</span>
@@ -1535,6 +1530,7 @@
                         </form>
                     </div>
                 </div>
+                @endif
             </div>
 
             {{-- ══ TAB 2: PROFIL (WITH SUBTABS) ══ --}}
