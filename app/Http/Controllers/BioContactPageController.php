@@ -47,14 +47,9 @@ class BioContactPageController extends Controller
 
         $ogImage = asset('images/buyle-og.png');
 
-        // Address & Embed Maps
-        $contactAddress = !empty($config['theme5_contact_address'])
-            ? $config['theme5_contact_address']
-            : ($config['location'] ?? '');
-
-        $contactMapsEmbed = !empty($config['theme5_contact_maps_embed'])
-            ? $config['theme5_contact_maps_embed']
-            : ($config['embed_location'] ?? '');
+        // Address & Embed Maps (Fetched directly from Profile Location & Embed Maps)
+        $contactAddress   = !empty($config['location']) ? $config['location'] : ($profile->store_location ?? $profile->address ?? '');
+        $contactMapsEmbed = !empty($config['embed_location']) ? $config['embed_location'] : '';
 
         return view('bio.theme5.contact_page', compact(
             'profile', 'config', 'username', 'bioName',

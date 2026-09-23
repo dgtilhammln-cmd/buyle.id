@@ -2466,18 +2466,23 @@
                             </div>
                         </div>
 
-                        <div class="prof-card">
-                            <div class="prof-card-head">Informasi Alamat &amp; Lokasi Maps (Halaman Kontak)</div>
+                        <div class="prof-card" style="border: 1px solid #cbd5e1; background: #ffffff;">
+                            <div class="prof-card-head" style="font-weight:700; color:#0f172a;">📍 Lokasi Kantor &amp; Embed Google Maps</div>
                             <div class="card-body" style="padding:1.25rem;">
-                                <div class="form-group" style="margin-bottom:1.25rem;">
-                                    <label class="form-label">Alamat Lengkap Kantor / Toko</label>
-                                    <textarea name="theme5_contact_address" rows="3" placeholder="Contoh: Jl. Sudirman No. 123, Lantai 4, Jakarta Selatan, 12190" class="form-input">{{ old('theme5_contact_address', $cfg['theme5_contact_address'] ?? ($cfg['location'] ?? '')) }}</textarea>
-                                </div>
-
-                                <div class="form-group" style="margin-bottom:0;">
-                                    <label class="form-label">Embed Code Google Maps (iFrame / Share Map URL)</label>
-                                    <textarea name="theme5_contact_maps_embed" rows="3" placeholder='Contoh: <iframe src="https://www.google.com/maps/embed?..." width="600" height="450"></iframe>' class="form-input">{{ old('theme5_contact_maps_embed', $cfg['theme5_contact_maps_embed'] ?? ($cfg['embed_location'] ?? '')) }}</textarea>
-                                    <span style="font-size:0.72rem; color:#64748b; margin-top:4px; display:block;">Petunjuk: Buka Google Maps > Bagikan > Sematkan Peta (Embed a map) > Salin HTML iframe dan tempel di atas.</span>
+                                <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:1.1rem; display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+                                    <div style="background:#e0f2fe; color:#0284c7; width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    </div>
+                                    <div style="flex:1; min-width:250px;">
+                                        <h4 style="font-size:0.9rem; font-weight:700; color:#0f172a; margin-bottom:0.3rem;">Alamat &amp; Embed Maps Otomatis Terhubung</h4>
+                                        <p style="font-size:0.8rem; color:#64748b; line-height:1.5; margin-bottom:0.85rem;">
+                                            Alamat lokasi kantor dan peta interaktif Google Maps untuk Halaman Kontak diambil langsung dari data <strong>Lokasi</strong> dan <strong>Embed Maps</strong> pada menu <strong>Informasi Profil</strong> / <strong>Embed Map</strong>.
+                                        </p>
+                                        <button type="button" class="btn-submit-sm" onclick="switchProfileSubtab('subtab-profile-info', document.getElementById('btn-subtab-info'))" style="background:#0f172a; color:#ffffff; font-size:0.8rem; padding:0.55rem 1.1rem; border-radius:8px; display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer;">
+                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                            Kelola Lokasi &amp; Embed Maps di Informasi Profil
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
