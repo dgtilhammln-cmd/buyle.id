@@ -32,6 +32,7 @@ class UpdateProductRequest extends FormRequest
             'creator_group_id'    => ['nullable', 'exists:creator_product_groups,id'],
             'file_type'           => ['nullable', 'string', 'max:50'],
             'image'               => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
+            'og_image'            => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'gallery'             => ['nullable', 'array', 'max:6'],
             'product_type'        => ['nullable', 'string', 'in:digital,physical,makanan,service,ticket,external_link'],
             'sku'                 => ['nullable', 'string', 'max:100'],

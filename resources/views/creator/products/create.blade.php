@@ -735,6 +735,48 @@
                                     onchange="previewSingleThumb(event)" style="display:none;">
                             </div>
 
+                            <div class="form-group" id="posterUploadWrap" style="display:none; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1.25rem; margin-bottom:1.25rem;">
+                                <label class="form-label" style="color:#166534; font-weight:800; display:flex; align-items:center; gap:0.4rem;">
+                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24">
+                                        <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                        <polygon points="10,9 15,12 10,15"/>
+                                    </svg>
+                                    Upload Poster Event (Landscape 16:9) <span style="color:#ef4444;">*</span>
+                                </label>
+                                <span class="form-hint" style="margin-bottom:0.75rem; color:#15803d; font-weight:600;">Khusus tipe produk Tiket Event / Wisata / Webinar. Diupload dalam format landscape 16:9.</span>
+                                <div class="img-upload-area" id="posterDropzone"
+                                    onclick="document.getElementById('poster-input').click()" style="margin-bottom:0.75rem; background:#fff;">
+                                    <div>
+                                        <svg width="32" height="32" fill="none" stroke="#1eb349" stroke-width="1.6"
+                                            viewBox="0 0 24 24">
+                                            <rect x="2" y="4" width="20" height="16" rx="2" />
+                                            <circle cx="8" cy="10" r="2" />
+                                            <path d="M22 15l-5-5-8 8" />
+                                        </svg>
+                                        <p style="font-size:0.82rem; color:#1E293B; margin-top:0.4rem; font-weight:700;">
+                                            Pilih Poster Event Landscape (16:9)</p>
+                                    </div>
+                                </div>
+                                <div id="posterPreviewWrap" style="display:none; margin-bottom:0.5rem;">
+                                    <div
+                                        style="position:relative; display:inline-block; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08);">
+                                        <img id="posterPreviewImg" src=""
+                                            style="width:240px; height:135px; object-fit:cover; display:block;">
+                                        <div
+                                            style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
+                                            <button type="button" onclick="document.getElementById('poster-input').click()"
+                                                style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
+                                                title="Ganti Poster">✎</button>
+                                            <button type="button" onclick="removePoster()"
+                                                style="background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
+                                                title="Hapus Poster">✕</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="file" name="og_image" id="poster-input" accept="image/*"
+                                    onchange="previewPosterThumb(event)" style="display:none;">
+                            </div>
+
                             <div class="form-group">
                                 <label class="form-label">Upload Foto Galeri / Screenshot (Opsional)</label>
                                 <div class="img-upload-area" id="galleryDropzone"
@@ -1068,9 +1110,48 @@
             }
         }
 
+        function previewPosterThumb(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.getElementById('posterPreviewImg');
+                    const wrap = document.getElementById('posterPreviewWrap');
+                    const drop = document.getElementById('posterDropzone');
+                    if (img) img.src = e.target.result;
+                    if (wrap) wrap.style.display = 'block';
+                    if (drop) drop.style.display = 'none';
+
+                    if (typeof initImageCropper === 'function') {
+                        initImageCropper(input, {
+                            aspectRatio: 16 / 9,
+                            width: 1280,
+                            height: 720,
+                            title: 'Crop Poster Event (16:9 Landscape)',
+                            onCropSuccess: function (file, dataUrl) {
+                                if (img) img.src = dataUrl;
+                            }
+                        });
+                    }
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function removePoster() {
+            const pInput = document.getElementById('poster-input');
+            if (pInput) pInput.value = '';
+            const pWrap = document.getElementById('posterPreviewWrap');
+            if (pWrap) pWrap.style.display = 'none';
+            const pDrop = document.getElementById('posterDropzone');
+            if (pDrop) pDrop.style.display = 'block';
+        }
+
         // Product Type Toggle
         function toggleProductTypeFields(val) {
+            const isPhysicalOrFood = val === 'physical' || val === 'makanan';
+            const isService = val === 'service';
             const wrap = document.getElementById('ticketFieldsWrap');
+            const posterWrap = document.getElementById('posterUploadWrap');
             const digitalCard = document.getElementById('digitalAccessCard');
             const whitelabelCard = document.getElementById('whitelabelCard');
             const extInput = document.getElementById('externalLink');
@@ -1131,6 +1212,7 @@
 
             if (val === 'ticket') {
                 if (wrap) wrap.style.display = 'block';
+                if (posterWrap) posterWrap.style.display = 'block';
                 if (digitalCard) digitalCard.style.display = 'none';
                 if (whitelabelCard) whitelabelCard.style.display = 'none';
                 if (wlCheck) {
@@ -1141,12 +1223,14 @@
                 if (evType) toggleEventTypeFields(evType.value);
             } else if (val === 'external_link') {
                 if (wrap) wrap.style.display = 'none';
+                if (posterWrap) posterWrap.style.display = 'none';
                 if (digitalCard) digitalCard.style.display = 'block';
                 if (whitelabelCard) whitelabelCard.style.display = 'block';
                 if (extInput) extInput.setAttribute('required', 'required');
             } else {
                 // physical, makanan, service
                 if (wrap) wrap.style.display = 'none';
+                if (posterWrap) posterWrap.style.display = 'none';
                 if (digitalCard) digitalCard.style.display = 'none';
                 if (whitelabelCard) whitelabelCard.style.display = 'none';
                 if (extInput) extInput.removeAttribute('required');

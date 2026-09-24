@@ -69,6 +69,11 @@ class SellerProductController extends Controller
             }
         }
 
+        // Handle poster landscape (og_image)
+        if ($request->hasFile('og_image') && $request->file('og_image')->isValid()) {
+            $data['og_image'] = $request->file('og_image')->store('products/posters', 'public');
+        }
+
         // Handle gallery (opsional, maks 6)
         unset($data['gallery']);
         $galleryFiles = collect($request->file('gallery', []))->filter(fn($f) => $f && $f->isValid());
@@ -198,6 +203,14 @@ class SellerProductController extends Controller
                 Storage::disk('public')->delete($product->image);
             }
             $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        // Handle poster landscape (og_image)
+        if ($request->hasFile('og_image') && $request->file('og_image')->isValid()) {
+            if ($product->og_image) {
+                Storage::disk('public')->delete($product->og_image);
+            }
+            $data['og_image'] = $request->file('og_image')->store('products/posters', 'public');
         }
 
         // Handle gallery upload (jika ada file baru)
