@@ -127,7 +127,7 @@
                 position: relative;
                 width: 100%;
                 max-width: 1050px;
-                height: 480px;
+                height: 530px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -179,11 +179,12 @@
                 justify-content: center;
             }
 
-            /* Video Card Item Base */
+            /* Video Card Item Base (9:16 Portrait Phone Aspect Ratio) */
             .t5-tiktok-card {
                 position: absolute;
-                width: clamp(230px, 30vw, 270px);
-                height: clamp(380px, 48vw, 450px);
+                width: clamp(220px, 28vw, 260px);
+                height: clamp(390px, 50vw, 462px);
+                aspect-ratio: 9 / 16;
                 border-radius: 28px;
                 overflow: hidden;
                 cursor: pointer;
@@ -209,34 +210,43 @@
             .t5-tiktok-card-overlay {
                 position: absolute;
                 inset: 0;
-                background: linear-gradient(180deg, rgba(15, 23, 42, 0.5) 0%, rgba(15, 23, 42, 0.1) 40%, rgba(15, 23, 42, 0.85) 100%);
-                padding: 1.5rem 1.25rem;
+                background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.15) 35%, rgba(15, 23, 42, 0.25) 65%, rgba(15, 23, 42, 0.92) 100%);
+                padding: 2.3rem 1.1rem 1.1rem 1.1rem;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
                 color: #ffffff;
                 text-align: center;
+                box-sizing: border-box;
             }
 
             .t5-tiktok-card-head-text {
-                font-size: 1.05rem;
+                font-size: 0.92rem;
                 font-weight: 700;
                 color: #ffffff;
-                line-height: 1.35;
-                text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+                line-height: 1.3;
+                text-shadow: 0 2px 6px rgba(0,0,0,0.6);
                 margin-bottom: 0.2rem;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                word-break: break-word;
             }
 
             .t5-tiktok-card-author-text {
-                font-size: 0.78rem;
+                font-size: 0.75rem;
                 font-weight: 500;
-                color: rgba(255, 255, 255, 0.82);
+                color: rgba(255, 255, 255, 0.85);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             /* Play Button Icon */
             .t5-tiktok-play-btn {
-                width: 52px;
-                height: 52px;
+                width: 48px;
+                height: 48px;
                 border-radius: 50%;
                 background: rgba(255, 255, 255, 0.95);
                 color: #0f172a;
@@ -263,11 +273,11 @@
             .t5-tiktok-phone-btn {
                 margin-top: auto;
                 width: 100%;
-                padding: 0.65rem 1rem;
+                padding: 0.6rem 1rem;
                 background: rgba(255, 255, 255, 0.92);
                 color: #0f172a !important;
                 border-radius: 50px;
-                font-size: 0.82rem;
+                font-size: 0.8rem;
                 font-weight: 700;
                 text-decoration: none !important;
                 display: inline-flex;
@@ -284,15 +294,16 @@
                 box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
             }
 
-            /* ── PHONE FRAME MOCKUP (CENTER ITEM) ── */
+            /* ── PHONE FRAME MOCKUP (CENTER ITEM — EXACT 9:16 RATIO) ── */
             .t5-tiktok-card.is-center {
-                width: clamp(240px, 32vw, 280px);
-                height: clamp(400px, 50vw, 470px);
-                transform: translateX(0) scale(1.08) translateY(-6px);
+                width: clamp(235px, 30vw, 275px);
+                height: clamp(418px, 53.3vw, 489px);
+                aspect-ratio: 9 / 16;
+                transform: translateX(0) scale(1.05) translateY(-4px);
                 z-index: 25;
                 opacity: 1;
-                border-radius: 38px;
-                border: 8px solid #0f172a;
+                border-radius: 36px;
+                border: 7px solid #0f172a;
                 box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
             }
 
@@ -300,11 +311,11 @@
             .t5-tiktok-card.is-center::before {
                 content: '';
                 position: absolute;
-                top: 8px;
+                top: 7px;
                 left: 50%;
                 transform: translateX(-50%);
-                width: 80px;
-                height: 18px;
+                width: 72px;
+                height: 16px;
                 background: #0f172a;
                 border-radius: 20px;
                 z-index: 30;
@@ -467,22 +478,29 @@
                 border: none;
             }
 
-            /* Responsive */
+            /* Responsive (Mobile Phone Aspect Ratio 9:16) */
             @media (max-width: 768px) {
                 .t5-tiktok-stage-wrap {
-                    height: 420px;
+                    height: 470px;
+                }
+                .t5-tiktok-card {
+                    width: 210px;
+                    height: 373px;
                 }
                 .t5-tiktok-card.is-center {
-                    width: 220px;
-                    height: 380px;
+                    width: 225px;
+                    height: 400px;
                     border-width: 6px;
-                    border-radius: 28px;
+                    border-radius: 30px;
+                }
+                .t5-tiktok-card-overlay {
+                    padding: 1.8rem 0.9rem 0.9rem 0.9rem;
                 }
                 .t5-tiktok-card.is-left-1 {
-                    transform: translateX(-100px) rotateY(12deg) scale(0.82);
+                    transform: translateX(-105px) rotateY(12deg) scale(0.85);
                 }
                 .t5-tiktok-card.is-right-1 {
-                    transform: translateX(100px) rotateY(-12deg) scale(0.82);
+                    transform: translateX(105px) rotateY(-12deg) scale(0.85);
                 }
                 .t5-tiktok-card.is-left-2, .t5-tiktok-card.is-right-2 {
                     opacity: 0.25;
@@ -491,19 +509,44 @@
 
             @media (max-width: 480px) {
                 .t5-tiktok-stage-wrap {
-                    height: 370px;
+                    height: 430px;
+                }
+                .t5-tiktok-card {
+                    width: 190px;
+                    height: 338px;
                 }
                 .t5-tiktok-card.is-center {
-                    width: 200px;
-                    height: 340px;
+                    width: 205px;
+                    height: 364px;
+                    border-width: 5px;
+                    border-radius: 26px;
+                }
+                .t5-tiktok-card.is-center::before {
+                    width: 56px;
+                    height: 13px;
+                    top: 5px;
+                }
+                .t5-tiktok-card-overlay {
+                    padding: 1.5rem 0.75rem 0.75rem 0.75rem;
+                }
+                .t5-tiktok-card-head-text {
+                    font-size: 0.82rem;
+                }
+                .t5-tiktok-phone-btn {
+                    padding: 0.5rem 0.75rem;
+                    font-size: 0.75rem;
+                }
+                .t5-tiktok-play-btn {
+                    width: 42px;
+                    height: 42px;
                 }
                 .t5-tiktok-card.is-left-1 {
-                    transform: translateX(-65px) scale(0.78);
-                    opacity: 0.5;
+                    transform: translateX(-70px) scale(0.82);
+                    opacity: 0.4;
                 }
                 .t5-tiktok-card.is-right-1 {
-                    transform: translateX(65px) scale(0.78);
-                    opacity: 0.5;
+                    transform: translateX(70px) scale(0.82);
+                    opacity: 0.4;
                 }
                 .t5-tiktok-card.is-left-2, .t5-tiktok-card.is-right-2 {
                     opacity: 0;
