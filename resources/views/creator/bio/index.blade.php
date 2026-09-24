@@ -1119,8 +1119,8 @@
                     'about_section' => ['label' => 'About Us / Tentang Kami', 'icon' => 'M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z'],
                     'products_grid' => ['label' => 'Katalog Produk / Etalase', 'icon' => 'M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z'],
                     'services_section' => ['label' => 'Jasa & Layanan', 'icon' => 'M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'],
-                    'gallery_section' => ['label' => 'Galeri 3D Coverflow', 'icon' => 'M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z'],
-                    'tiktok_section' => ['label' => 'TikTok 3D Reel Video', 'icon' => 'M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z'],
+                    'gallery_section' => ['label' => 'Galeri Coverflow', 'icon' => 'M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z'],
+                    'tiktok_section' => ['label' => 'TikTok Reel Video', 'icon' => 'M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z'],
                     'teams_section' => ['label' => 'Tim Kami / Teams', 'icon' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'],
                 ];
                 $currSecOrder = $cfg['homepage_sections_order'] ?? array_keys($allSecDef);
@@ -1900,56 +1900,6 @@
                         <input type="hidden" name="services_enabled_present" value="1">
                         <div id="secReorderHiddenContainer"></div>
 
-                        @if(($profile->bio_theme ?? '') === 'theme5')
-                        {{-- FAVICON & SEO HOME PANE --}}
-                        <div class="prof-card" style="margin-bottom: 1.5rem; border: 1.5px solid #1eb349; background: #fafdfb;">
-                            <div class="prof-card-head" style="background:linear-gradient(135deg, #1eb349 0%, #15803d 100%); color:#ffffff; padding:0.85rem 1.25rem; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
-                                <span>Favicon Custom &amp; SEO Meta Tags (Halaman Utama / Beranda)</span>
-                                <span style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase;">Khusus Tema 5</span>
-                            </div>
-                            <div class="card-body" style="padding:1.25rem;">
-                                <div style="margin-bottom: 1.25rem; background:#ffffff; padding:1rem; border-radius:10px; border:1px solid #e2e8f0;">
-                                    <label style="display:block; font-weight:700; color:#0f172a; margin-bottom:0.35rem; font-size:0.88rem;">Favicon Custom Website (Tema 5)</label>
-                                    <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
-                                        <div style="width:42px; height:42px; border-radius:8px; border:1.5px dashed #cbd5e1; background:#f8fafc; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
-                                            @if(!empty($cfg['theme5_favicon']))
-                                                <img src="{{ asset('storage/' . $cfg['theme5_favicon']) }}" alt="Favicon" style="max-width:100%; max-height:100%; object-fit:contain;">
-                                            @else
-                                                <img src="{{ asset('favicon.png') }}" alt="Default Favicon" style="max-width:24px; max-height:24px; opacity:0.6;">
-                                            @endif
-                                        </div>
-                                        <div style="flex:1; min-width:200px;">
-                                            <input type="file" name="theme5_favicon" accept="image/x-icon,image/png,image/jpeg,image/webp,image/svg+xml" class="form-input" style="height:auto; padding:0.4rem;">
-                                        </div>
-                                        @if(!empty($cfg['theme5_favicon']))
-                                            <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.8rem; color:#ef4444; cursor:pointer;">
-                                                <input type="checkbox" name="delete_theme5_favicon" value="1"> Hapus Favicon
-                                            </label>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label class="form-label">Meta Title Beranda</label>
-                                        <input type="text" name="theme5_seo_home_title" value="{{ old('theme5_seo_home_title', $cfg['theme5_seo_home_title'] ?? '') }}" placeholder="Contoh: Nama Toko - Solusi Produk Digital Terpercaya" class="form-input">
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label class="form-label">Meta Keywords Beranda</label>
-                                        <input type="text" name="theme5_seo_home_keywords" value="{{ old('theme5_seo_home_keywords', $cfg['theme5_seo_home_keywords'] ?? '') }}" placeholder="Contoh: toko digital, jasa desain, ebook, template" class="form-input">
-                                    </div>
-                                </div>
-
-                                <div class="form-group" style="margin-bottom:0;">
-                                    <label class="form-label">Meta Description Beranda</label>
-                                    <textarea name="theme5_seo_home_desc" rows="3" placeholder="Deskripsi singkat toko untuk hasil pencarian Google..." class="form-input">{{ old('theme5_seo_home_desc', $cfg['theme5_seo_home_desc'] ?? '') }}</textarea>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-
-
-
                         {{-- Sub-Subtab Switcher Bar --}}
                         <style>
                             .hp-subtab-bar {
@@ -2050,7 +2000,7 @@
                                     <circle cx="8.5" cy="8.5" r="1.5"/>
                                     <polyline points="21 15 16 10 5 21"/>
                                 </svg>
-                                Galeri 3D
+                                Galeri
                             </button>
                             <button type="button" class="hp-subtab-btn" id="btn-hpsub-tiktok"
                                 onclick="switchHomepageSubSubtab('hpsub-tiktok', this)">
@@ -2059,7 +2009,7 @@
                                     <rect x="6" y="2" width="12" height="20" rx="3" ry="3"/>
                                     <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/>
                                 </svg>
-                                TikTok 3D
+                                TikTok
                             </button>
                             <button type="button" class="hp-subtab-btn" id="btn-hpsub-teams"
                                 onclick="switchHomepageSubSubtab('hpsub-teams', this)">
@@ -2454,14 +2404,14 @@
                             </div>
                         </div> {{-- End #hpsub-services --}}
 
-                        {{-- SUB-SUBTAB 3: SECTION GALERI 3D (TEMA 5) --}}
+                        {{-- SUB-SUBTAB 3: SECTION GALERI (TEMA 5) --}}
                         <div class="hpsub-pane" id="hpsub-gallery" style="display:none;">
                             <input type="hidden" name="gallery_enabled_present" value="1">
 
                             {{-- Card Toggle Active --}}
                             <div class="prof-card">
                                 <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
-                                    <span>Status Section Galeri 3D Carousel (Tema 5)</span>
+                                    <span>Status Section Galeri Carousel (Tema 5)</span>
                                     <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
                                         <input type="checkbox" name="gallery_enabled" value="1" {{ ($cfg['gallery_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
                                         Aktifkan Section Galeri
@@ -2469,8 +2419,8 @@
                                 </div>
                                 <div class="card-body">
                                     <p style="font-size:0.8rem; color:#64748b; margin:0;">
-                                        Tampilkan section Galeri Portofolio &amp; Dokumentasi 3D Stack Carousel interaktif pada Beranda (Tema 5). 
-                                        Pengunjung dapat melakukan klik / swipe slide foto dengan animasi 3D coverflow modern.
+                                        Tampilkan section Galeri Portofolio &amp; Dokumentasi Stack Carousel interaktif pada Beranda (Tema 5). 
+                                        Pengunjung dapat melakukan klik / swipe slide foto dengan animasi coverflow modern.
                                     </p>
                                 </div>
                             </div>
@@ -2588,14 +2538,14 @@
                             </div>
                         </div> {{-- End #hpsub-gallery --}}
 
-                        {{-- SUB-SUBTAB: SECTION TIKTOK 3D PHONE REEL (TEMA 5) --}}
+                        {{-- SUB-SUBTAB: SECTION TIKTOK PHONE REEL (TEMA 5) --}}
                         <div class="hpsub-pane" id="hpsub-tiktok" style="display:none;">
                             <input type="hidden" name="tiktok_section_enabled_present" value="1">
 
                             {{-- Card Toggle Active --}}
                             <div class="prof-card">
                                 <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
-                                    <span>Status Section TikTok 3D Phone Carousel (Tema 5)</span>
+                                    <span>Status Section TikTok Phone Carousel (Tema 5)</span>
                                     <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
                                         <input type="checkbox" name="tiktok_section_enabled" value="1" {{ ($cfg['tiktok_section_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
                                         Aktifkan Section TikTok
@@ -2603,7 +2553,7 @@
                                 </div>
                                 <div class="card-body">
                                     <p style="font-size:0.8rem; color:#64748b; margin:0;">
-                                        Tampilkan section video TikTok 3D Phone Reel Carousel interaktif dengan Frame iPhone modern pada Beranda (Tema 5).
+                                        Tampilkan section video TikTok Phone Reel Carousel interaktif dengan Frame iPhone modern pada Beranda (Tema 5).
                                     </p>
                                 </div>
                             </div>
@@ -3118,6 +3068,54 @@
                             </div>
                         </div> {{-- End #hpsub-footer --}}
 
+                        @if(($profile->bio_theme ?? '') === 'theme5')
+                        {{-- FAVICON & SEO HOME PANE (DIPINDAHKAN KE PALING BAWAH FORM) --}}
+                        <div class="prof-card" style="margin-top: 1.5rem; margin-bottom: 1.5rem; border: 1.5px solid #1eb349; background: #fafdfb;">
+                            <div class="prof-card-head" style="background:linear-gradient(135deg, #1eb349 0%, #15803d 100%); color:#ffffff; padding:0.85rem 1.25rem; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
+                                <span>Favicon Custom &amp; SEO Meta Tags (Halaman Utama / Beranda)</span>
+                                <span style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase;">Khusus Tema 5</span>
+                            </div>
+                            <div class="card-body" style="padding:1.25rem;">
+                                <div style="margin-bottom: 1.25rem; background:#ffffff; padding:1rem; border-radius:10px; border:1px solid #e2e8f0;">
+                                    <label style="display:block; font-weight:700; color:#0f172a; margin-bottom:0.35rem; font-size:0.88rem;">Favicon Custom Website (Tema 5)</label>
+                                    <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+                                        <div style="width:42px; height:42px; border-radius:8px; border:1.5px dashed #cbd5e1; background:#f8fafc; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+                                            @if(!empty($cfg['theme5_favicon']))
+                                                <img src="{{ asset('storage/' . $cfg['theme5_favicon']) }}" alt="Favicon" style="max-width:100%; max-height:100%; object-fit:contain;">
+                                            @else
+                                                <img src="{{ asset('favicon.png') }}" alt="Default Favicon" style="max-width:24px; max-height:24px; opacity:0.6;">
+                                            @endif
+                                        </div>
+                                        <div style="flex:1; min-width:200px;">
+                                            <input type="file" name="theme5_favicon" accept="image/x-icon,image/png,image/jpeg,image/webp,image/svg+xml" class="form-input" style="height:auto; padding:0.4rem;">
+                                        </div>
+                                        @if(!empty($cfg['theme5_favicon']))
+                                            <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.8rem; color:#ef4444; cursor:pointer;">
+                                                <input type="checkbox" name="delete_theme5_favicon" value="1"> Hapus Favicon
+                                            </label>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label class="form-label">Meta Title Beranda</label>
+                                        <input type="text" name="theme5_seo_home_title" value="{{ old('theme5_seo_home_title', $cfg['theme5_seo_home_title'] ?? '') }}" placeholder="Contoh: Nama Toko - Solusi Produk Digital Terpercaya" class="form-input">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label class="form-label">Meta Keywords Beranda</label>
+                                        <input type="text" name="theme5_seo_home_keywords" value="{{ old('theme5_seo_home_keywords', $cfg['theme5_seo_home_keywords'] ?? '') }}" placeholder="Contoh: toko digital, jasa desain, ebook, template" class="form-input">
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label class="form-label">Meta Description Beranda</label>
+                                    <textarea name="theme5_seo_home_desc" rows="3" placeholder="Deskripsi singkat toko untuk hasil pencarian Google..." class="form-input">{{ old('theme5_seo_home_desc', $cfg['theme5_seo_home_desc'] ?? '') }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
                         {{-- SINGLE SUBMIT BUTTON FOR HOMEPAGE (TEMA 5) --}}
                         <div
                             style="display:flex; justify-content:flex-end; margin-top:1.5rem; padding-top:1rem; border-top:1.5px solid #e2e8f0;">
@@ -3169,7 +3167,28 @@
                 <div class="prof-subtab-pane" id="subtab-contact-main" style="display:none;">
                     <form action="{{ route('creator.bio.save-profile') }}" method="POST">
                         @csrf
-                        <div class="prof-card" style="border: 1.5px solid #1eb349; background: #fafdfb; margin-bottom: 1.5rem;">
+                        <div class="prof-card" style="border: 1px solid #cbd5e1; background: #ffffff; margin-bottom: 1.5rem;">
+                            <div class="prof-card-head" style="font-weight:700; color:#0f172a;">📍 Lokasi Kantor &amp; Embed Google Maps</div>
+                            <div class="card-body" style="padding:1.25rem;">
+                                <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:1.1rem; display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+                                    <div style="background:#e0f2fe; color:#0284c7; width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    </div>
+                                    <div style="flex:1; min-width:250px;">
+                                        <h4 style="font-size:0.9rem; font-weight:700; color:#0f172a; margin-bottom:0.3rem;">Alamat &amp; Embed Maps Otomatis Terhubung</h4>
+                                        <p style="font-size:0.8rem; color:#64748b; line-height:1.5; margin-bottom:0.85rem;">
+                                            Alamat lokasi kantor dan peta interaktif Google Maps untuk Halaman Kontak diambil langsung dari data <strong>Lokasi</strong> dan <strong>Embed Maps</strong> pada menu <strong>Informasi Profil</strong> / <strong>Embed Map</strong>.
+                                        </p>
+                                        <button type="button" class="btn-submit-sm" onclick="switchProfileSubtab('subtab-profile-info', document.getElementById('btn-subtab-info'))" style="background:#0f172a; color:#ffffff; font-size:0.8rem; padding:0.55rem 1.1rem; border-radius:8px; display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer;">
+                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                            Kelola Lokasi &amp; Embed Maps di Informasi Profil
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="prof-card" style="border: 1.5px solid #1eb349; background: #fafdfb;">
                             <div class="prof-card-head" style="background:linear-gradient(135deg, #1eb349 0%, #15803d 100%); color:#ffffff; padding:0.85rem 1.25rem; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
                                 <span>Pengaturan SEO Meta Tags (Halaman Kontak)</span>
                                 <span style="background:rgba(255,255,255,0.25); color:#ffffff; font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; text-transform:uppercase;">Khusus Tema 5</span>
@@ -3191,27 +3210,6 @@
                                 <div class="form-group" style="margin-bottom:0;">
                                     <label class="form-label">Meta Description Halaman Kontak</label>
                                     <textarea name="theme5_seo_contact_desc" rows="3" placeholder="Dapatkan bantuan, konsultasi, alamat kantor, dan kontak resmi..." class="form-input">{{ old('theme5_seo_contact_desc', $cfg['theme5_seo_contact_desc'] ?? '') }}</textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="prof-card" style="border: 1px solid #cbd5e1; background: #ffffff;">
-                            <div class="prof-card-head" style="font-weight:700; color:#0f172a;">📍 Lokasi Kantor &amp; Embed Google Maps</div>
-                            <div class="card-body" style="padding:1.25rem;">
-                                <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:1.1rem; display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
-                                    <div style="background:#e0f2fe; color:#0284c7; width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                    </div>
-                                    <div style="flex:1; min-width:250px;">
-                                        <h4 style="font-size:0.9rem; font-weight:700; color:#0f172a; margin-bottom:0.3rem;">Alamat &amp; Embed Maps Otomatis Terhubung</h4>
-                                        <p style="font-size:0.8rem; color:#64748b; line-height:1.5; margin-bottom:0.85rem;">
-                                            Alamat lokasi kantor dan peta interaktif Google Maps untuk Halaman Kontak diambil langsung dari data <strong>Lokasi</strong> dan <strong>Embed Maps</strong> pada menu <strong>Informasi Profil</strong> / <strong>Embed Map</strong>.
-                                        </p>
-                                        <button type="button" class="btn-submit-sm" onclick="switchProfileSubtab('subtab-profile-info', document.getElementById('btn-subtab-info'))" style="background:#0f172a; color:#ffffff; font-size:0.8rem; padding:0.55rem 1.1rem; border-radius:8px; display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer;">
-                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                                            Kelola Lokasi &amp; Embed Maps di Informasi Profil
-                                        </button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
