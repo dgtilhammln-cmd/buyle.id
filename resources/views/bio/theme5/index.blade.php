@@ -1345,6 +1345,9 @@
 
         {{-- 7. 3D TikTok Phone Reel Carousel Section (Tema 5) --}}
         @include('bio.theme5.tiktok_section')
+
+        {{-- 8. Teams / Tim Kami Section (Tema 5) --}}
+        @include('bio.theme5.teams_section')
     </main>
 
     {{-- FLOATING WHATSAPP BUTTON --}}

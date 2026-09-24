@@ -468,7 +468,31 @@ class CreatorBioController extends Controller
             }
         }
 
-        // Save Theme 5 Dedicated SEO Metas Per Page & Contact Page fields
+        // Teams Section fields (Tema 5 - Maks 10 Slot Anggota Tim)
+        if ($request->has('teams_enabled_present')) {
+            $config['teams_enabled'] = $request->has('teams_enabled') ? 1 : 0;
+        }
+        if ($request->has('teams_headline'))    $config['teams_headline']    = $request->teams_headline;
+        if ($request->has('teams_description')) $config['teams_description'] = $request->teams_description;
+
+        for ($i = 1; $i <= 10; $i++) {
+            if ($request->has("team_member_{$i}_name"))       $config["team_member_{$i}_name"]       = $request->input("team_member_{$i}_name");
+            if ($request->has("team_member_{$i}_position"))   $config["team_member_{$i}_position"]   = $request->input("team_member_{$i}_position");
+            if ($request->has("team_member_{$i}_bio"))        $config["team_member_{$i}_bio"]        = $request->input("team_member_{$i}_bio");
+            if ($request->has("team_member_{$i}_grad_start")) $config["team_member_{$i}_grad_start"] = $request->input("team_member_{$i}_grad_start");
+            if ($request->has("team_member_{$i}_grad_end"))   $config["team_member_{$i}_grad_end"]   = $request->input("team_member_{$i}_grad_end");
+
+            // Handle team member photo uploads & deletions (Auto WebP compression!)
+            if ($request->has("delete_team_member_{$i}_photo") && !empty($config["team_member_{$i}_photo"])) {
+                Storage::disk('public')->delete($config["team_member_{$i}_photo"]);
+                $config["team_member_{$i}_photo"] = null;
+            } elseif ($request->hasFile("team_member_{$i}_photo")) {
+                if (!empty($config["team_member_{$i}_photo"])) Storage::disk('public')->delete($config["team_member_{$i}_photo"]);
+                $config["team_member_{$i}_photo"] = $this->convertToWebp($request->file("team_member_{$i}_photo"), 'bio/teams', 85);
+            }
+        }
+
+
         if ($request->has('theme5_seo_home_title'))        $config['theme5_seo_home_title']        = $request->theme5_seo_home_title;
         if ($request->has('theme5_seo_home_desc'))         $config['theme5_seo_home_desc']         = $request->theme5_seo_home_desc;
         if ($request->has('theme5_seo_home_keywords'))     $config['theme5_seo_home_keywords']     = $request->theme5_seo_home_keywords;

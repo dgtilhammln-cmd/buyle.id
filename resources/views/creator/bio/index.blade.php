@@ -1908,6 +1908,17 @@
                                 </svg>
                                 TikTok 3D
                             </button>
+                            <button type="button" class="hp-subtab-btn" id="btn-hpsub-teams"
+                                onclick="switchHomepageSubSubtab('hpsub-teams', this)">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                Tim Kami
+                            </button>
                             <button type="button" class="hp-subtab-btn" id="btn-hpsub-footer"
                                 onclick="switchHomepageSubSubtab('hpsub-footer', this)">
                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
@@ -2642,6 +2653,149 @@
                                 </div>
                             </div>
                         </div> {{-- End #hpsub-clients --}}
+
+                        {{-- SUB-SUBTAB: SECTION TIM KAMI (TEAMS - TEMA 5) --}}
+                        <div class="hpsub-pane" id="hpsub-teams" style="display:none;">
+                            <input type="hidden" name="teams_enabled_present" value="1">
+
+                            {{-- Status Section --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span>Status Section Tim Kami (Tema 5)</span>
+                                    <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                        <input type="checkbox" name="teams_enabled" value="1" {{ ($cfg['teams_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
+                                        Aktifkan Section Tim Kami
+                                    </label>
+                                </div>
+                                <div class="card-body">
+                                    <p style="font-size:0.8rem; color:#64748b; margin:0;">
+                                        Tampilkan kartu anggota tim profesional di halaman utama Tema 5. Kartu menampilkan foto, nama, dan posisi. Saat di-hover, akan muncul bio singkat dengan latar gradasi warna yang bisa dikustomisasi.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {{-- Headline & Deskripsi Section --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head">
+                                    <span style="display:flex;align-items:center;gap:0.5rem;">
+                                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                            <circle cx="9" cy="7" r="4"/>
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                        </svg>
+                                        Teks Header Section Tim
+                                    </span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label class="form-label">Headline Section</label>
+                                        <input type="text" name="teams_headline" value="{{ old('teams_headline', $cfg['teams_headline'] ?? 'Temui Tim Profesional Kami') }}" class="form-input" placeholder="Contoh: Temui Tim Profesional Kami">
+                                    </div>
+                                    <div class="form-group" style="margin-top:1rem;">
+                                        <label class="form-label">Deskripsi Singkat</label>
+                                        <textarea name="teams_description" class="form-input" rows="2" placeholder="Deskripsi ringkas tentang tim...">{{ old('teams_description', $cfg['teams_description'] ?? 'Talenta terbaik kami yang berdedikasi tinggi untuk memberikan hasil luar biasa.') }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- 10 Slot Anggota Tim --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head">
+                                    <span style="display:flex;align-items:center;gap:0.5rem;">
+                                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <circle cx="12" cy="8" r="4"/>
+                                            <path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
+                                        </svg>
+                                        Data Anggota Tim (Maks. 10 Orang)
+                                    </span>
+                                </div>
+                                <div class="card-body">
+                                    <p style="font-size:0.78rem; color:#64748b; margin-bottom:1.5rem; line-height:1.5;">
+                                        📸 Foto: Otomatis dikonversi ke WebP (4:3 landscape). &nbsp;🎨 Warna Gradasi: Pilih 2 warna untuk overlay saat hover. &nbsp;📝 Bio: Maks. 30 kata ditampilkan di kartu.
+                                    </p>
+                                    <div style="display:flex; flex-direction:column; gap:1.5rem;">
+                                        @for($i = 1; $i <= 10; $i++)
+                                            @php
+                                                $tmPhoto   = $cfg["team_member_{$i}_photo"] ?? null;
+                                                $tmName    = $cfg["team_member_{$i}_name"] ?? null;
+                                                $tmPos     = $cfg["team_member_{$i}_position"] ?? null;
+                                                $tmBio     = $cfg["team_member_{$i}_bio"] ?? null;
+                                                $tmGS      = $cfg["team_member_{$i}_grad_start"] ?? '#2563eb';
+                                                $tmGE      = $cfg["team_member_{$i}_grad_end"] ?? '#1d4ed8';
+                                            @endphp
+                                            <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:1.25rem; position:relative;">
+                                                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
+                                                    <span style="background:linear-gradient(135deg,{{ $tmGS }},{{ $tmGE }}); color:#fff; width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0;">{{ $i }}</span>
+                                                    <span style="font-size:0.85rem; font-weight:700; color:#1e293b;">Anggota Tim #{{ $i }}</span>
+                                                    @if(!empty($tmName))
+                                                        <span style="font-size:0.72rem; color:#1eb349; font-weight:600; background:#f0fdf4; border:1px solid #bbf7d0; padding:0.1rem 0.5rem; border-radius:999px;">{{ $tmName }}</span>
+                                                    @endif
+                                                </div>
+
+                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                                                    {{-- Left: Photo --}}
+                                                    <div>
+                                                        <label class="form-label" style="font-size:0.78rem;">Foto (4:3)</label>
+                                                        @if(!empty($tmPhoto))
+                                                            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; background:#fff; padding:0.5rem; border-radius:8px; border:1px solid #e2e8f0;">
+                                                                <img src="{{ asset('storage/' . $tmPhoto) }}" style="width:72px; height:54px; object-fit:cover; border-radius:6px;">
+                                                                <div>
+                                                                    <span style="font-size:0.72rem; color:#475569; display:block; font-weight:600;">Foto Terpasang (.webp)</span>
+                                                                    <label style="font-size:0.7rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin-top:2px;">
+                                                                        <input type="checkbox" name="delete_team_member_{{ $i }}_photo" value="1"> Hapus
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                        <input type="file" name="team_member_{{ $i }}_photo" accept="image/*" class="form-input" style="height:auto; padding:0.35rem; font-size:0.75rem;">
+                                                        <span style="font-size:0.68rem; color:#94a3b8; margin-top:2px; display:block;">JPG/PNG → otomatis WebP</span>
+                                                    </div>
+
+                                                    {{-- Right: Gradient Colors --}}
+                                                    <div>
+                                                        <label class="form-label" style="font-size:0.78rem;">Warna Gradasi Hover</label>
+                                                        <div style="display:flex; gap:0.75rem; align-items:center; margin-bottom:0.5rem;">
+                                                            <div style="flex:1;">
+                                                                <label style="font-size:0.68rem; color:#64748b; display:block; margin-bottom:3px;">Warna 1</label>
+                                                                <input type="color" name="team_member_{{ $i }}_grad_start" value="{{ $tmGS }}" style="width:100%; height:36px; border-radius:6px; border:1.5px solid #e2e8f0; cursor:pointer; padding:2px;">
+                                                            </div>
+                                                            <div style="flex:1;">
+                                                                <label style="font-size:0.68rem; color:#64748b; display:block; margin-bottom:3px;">Warna 2</label>
+                                                                <input type="color" name="team_member_{{ $i }}_grad_end" value="{{ $tmGE }}" style="width:100%; height:36px; border-radius:6px; border:1.5px solid #e2e8f0; cursor:pointer; padding:2px;">
+                                                            </div>
+                                                        </div>
+                                                        {{-- Gradient Preview --}}
+                                                        <div style="height:22px; border-radius:6px; background:linear-gradient(135deg,{{ $tmGS }},{{ $tmGE }}); border:1px solid rgba(0,0,0,0.05);"></div>
+                                                    </div>
+                                                </div>
+
+                                                {{-- Name & Position --}}
+                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-top:0.85rem;">
+                                                    <div>
+                                                        <label class="form-label" style="font-size:0.78rem;">Nama</label>
+                                                        <input type="text" name="team_member_{{ $i }}_name" value="{{ old('team_member_' . $i . '_name', $tmName) }}" class="form-input" placeholder="Contoh: Manuel Ravier" style="font-size:0.82rem;">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label" style="font-size:0.78rem;">Posisi / Divisi</label>
+                                                        <input type="text" name="team_member_{{ $i }}_position" value="{{ old('team_member_' . $i . '_position', $tmPos) }}" class="form-input" placeholder="Contoh: Performance Coach" style="font-size:0.82rem;">
+                                                    </div>
+                                                </div>
+
+                                                {{-- Bio --}}
+                                                <div style="margin-top:0.85rem;">
+                                                    <label class="form-label" style="font-size:0.78rem; display:flex; justify-content:space-between; align-items:center;">
+                                                        <span>Bio Singkat</span>
+                                                        <span style="font-size:0.68rem; color:#94a3b8; font-weight:400;">Maks. 30 kata ditampilkan di kartu hover</span>
+                                                    </label>
+                                                    <textarea name="team_member_{{ $i }}_bio" class="form-input" rows="2" placeholder="Ceritakan secara singkat peran dan keahlian anggota ini..." style="font-size:0.82rem;">{{ old('team_member_' . $i . '_bio', $tmBio) }}</textarea>
+                                                </div>
+                                            </div>
+                                        @endfor
+                                    </div>
+                                </div>
+                            </div>
+                        </div> {{-- End #hpsub-teams --}}
 
                         {{-- SUB-SUBTAB 4: KUSTOMISASI FOOTER (TEMA 5) --}}
                         <div class="hpsub-pane" id="hpsub-footer" style="display:none;">
