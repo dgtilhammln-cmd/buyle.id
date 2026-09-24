@@ -1875,6 +1875,15 @@
                                 </svg>
                                 Section Galeri 3D (Tema 5)
                             </button>
+                            <button type="button" class="hp-subtab-btn" id="btn-hpsub-tiktok"
+                                onclick="switchHomepageSubSubtab('hpsub-tiktok', this)">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <rect x="6" y="2" width="12" height="20" rx="3" ry="3"/>
+                                    <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/>
+                                </svg>
+                                Section TikTok 3D (Tema 5)
+                            </button>
                             <button type="button" class="hp-subtab-btn" id="btn-hpsub-footer"
                                 onclick="switchHomepageSubSubtab('hpsub-footer', this)">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
@@ -2390,6 +2399,141 @@
                                 </div>
                             </div>
                         </div> {{-- End #hpsub-gallery --}}
+
+                        {{-- SUB-SUBTAB: SECTION TIKTOK 3D PHONE REEL (TEMA 5) --}}
+                        <div class="hpsub-pane" id="hpsub-tiktok" style="display:none;">
+                            <input type="hidden" name="tiktok_section_enabled_present" value="1">
+
+                            {{-- Card Toggle Active --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span>Status Section TikTok 3D Phone Carousel (Tema 5)</span>
+                                    <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                        <input type="checkbox" name="tiktok_section_enabled" value="1" {{ ($cfg['tiktok_section_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
+                                        Aktifkan Section TikTok
+                                    </label>
+                                </div>
+                                <div class="card-body">
+                                    <p style="font-size:0.8rem; color:#64748b; margin:0;">
+                                        Tampilkan section video TikTok 3D Phone Reel Carousel interaktif dengan Frame iPhone modern pada Beranda (Tema 5).
+                                    </p>
+                                </div>
+                            </div>
+
+                            {{-- Panduan Input Link TikTok (Ref Capture 2) --}}
+                            <div class="prof-card" style="border: 1.5px solid #1eb349; background: #f0fdf4;">
+                                <div class="prof-card-head" style="background: linear-gradient(135deg, #1eb349 0%, #15803d 100%); color: #ffffff; display: flex; align-items: center; justify-content: space-between;">
+                                    <span style="display:flex; align-items:center; gap:0.5rem;">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        Panduan Input Link Video TikTok (Auto Fetch Thumbnail)
+                                    </span>
+                                    <span style="font-size:0.7rem; font-weight:700; background:rgba(255,255,255,0.2); padding:0.2rem 0.6rem; border-radius:12px;">Sama Seperti Tema 1</span>
+                                </div>
+                                <div class="card-body">
+                                    <div style="font-size:0.83rem; color:#166534; line-height:1.65; display:flex; flex-direction:column; gap:0.6rem;">
+                                        <div><strong>📌 Cara Mengambil Link TikTok:</strong> Salin URL video dari aplikasi TikTok atau browser (Contoh: <code>https://www.tiktok.com/@username/video/1234567890</code>).</div>
+                                        <div><strong>⚡ Otomatisasi Thumbnail:</strong> Sistem secara otomatis menarik <strong>Thumbnail Video, Judul, dan Username</strong> dari TikTok oEmbed API secara instan (persis seperti fitur TikTok pada Tema 1).</div>
+                                        <div><strong>📱 Pengaturan Tombol Frame HP:</strong> Anda dapat mengatur teks &amp; link tombol yang muncul di bagian bawah mockup HP (misal: <em>View all</em> atau <em>Lihat Semua Video</em>).</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Card Header & Description --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head">1. Header &amp; Deskripsi Section TikTok</div>
+                                <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                                    <div class="form-group" style="grid-column:1/-1;">
+                                        <label class="form-label">Judul Utama H2 (Headline)</label>
+                                        <input type="text" name="tiktok_section_headline" value="{{ old('tiktok_section_headline', $cfg['tiktok_section_headline'] ?? 'Find mental health insights & video reels') }}" class="form-input" placeholder="Misal: Find mental health insights">
+                                    </div>
+                                    <div class="form-group" style="grid-column:1/-1;">
+                                        <label class="form-label">Deskripsi Ringkas Section</label>
+                                        <textarea name="tiktok_section_description" class="form-input" rows="2" placeholder="Deskripsi ringkas video...">{{ old('tiktok_section_description', $cfg['tiktok_section_description'] ?? 'Tonton kumpulan video singkat pilihan dan konten edukasi terbaik kami.') }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Teks Tombol Frame HP (Bawah)</label>
+                                        <input type="text" name="tiktok_section_btn_text" value="{{ old('tiktok_section_btn_text', $cfg['tiktok_section_btn_text'] ?? 'View all') }}" class="form-input" placeholder="View all">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Link Tombol Frame HP (Bawah)</label>
+                                        <input type="text" name="tiktok_section_btn_link" value="{{ old('tiktok_section_btn_link', $cfg['tiktok_section_btn_link'] ?? '#') }}" class="form-input" placeholder="https://tiktok.com/@username atau #products">
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Card Upload Video TikTok (Maksimal 6 Video) --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span>2. Daftar Video TikTok (Maksimal 6 Video)</span>
+                                    <span style="font-size:0.75rem; color:#1eb349; font-weight:700; background:#ffffff; padding:0.25rem 0.65rem; border-radius:12px; border:1px solid #bbf7d0;">🎬 3D Phone Reel Carousel</span>
+                                </div>
+                                <div class="card-body">
+                                    <div style="display:flex; flex-direction:column; gap:1.25rem;">
+                                        @for($i = 1; $i <= 6; $i++)
+                                            @php
+                                                $tUrl    = $cfg["tiktok_video_{$i}_url"] ?? null;
+                                                $tTitle  = $cfg["tiktok_video_{$i}_title"] ?? null;
+                                                $tAuthor = $cfg["tiktok_video_{$i}_author"] ?? null;
+                                                $tThumb  = $cfg["tiktok_video_{$i}_thumb"] ?? null;
+
+                                                if (empty($tUrl) && empty($tTitle)) {
+                                                    $sampleVids = [
+                                                        1 => ['title' => 'Top 10 tips to reduce Stress', 'author' => 'Dr. Jenni Jacobsen'],
+                                                        2 => ['title' => 'How to choose a therapist?', 'author' => 'Calmery Studio'],
+                                                        3 => ['title' => 'Interview with CEO Olffi', 'author' => 'Calmery Media'],
+                                                        4 => ['title' => 'Financial Freedom & Wellness', 'author' => 'Mindset Daily']
+                                                    ];
+                                                    if (isset($sampleVids[$i])) {
+                                                        $tTitle  = $sampleVids[$i]['title'];
+                                                        $tAuthor = $sampleVids[$i]['author'];
+                                                    }
+                                                }
+                                            @endphp
+
+                                            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:1.25rem; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid #f1f5f9; padding-bottom:0.5rem;">
+                                                    <div style="font-weight:800; font-size:0.88rem; color:#0f172a; display:flex; align-items:center; gap:0.5rem;">
+                                                        <span style="background:linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; font-size:0.7rem; font-weight:800; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">{{ $i }}</span>
+                                                        Video TikTok #{{ $i }}
+                                                    </div>
+                                                    @if($tThumb)
+                                                        <label style="font-size:0.75rem; color:#ef4444; font-weight:600; display:flex; align-items:center; gap:0.35rem; cursor:pointer;">
+                                                            <input type="checkbox" name="delete_tiktok_video_{{ $i }}_thumb" value="1"> Hapus Custom Thumb
+                                                        </label>
+                                                    @endif
+                                                </div>
+
+                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                                                    <div style="grid-column:1/-1;">
+                                                        <label class="form-label" style="font-size:0.78rem;">URL Video TikTok</label>
+                                                        <input type="text" name="tiktok_video_{{ $i }}_url" value="{{ old('tiktok_video_' . $i . '_url', $tUrl) }}" class="form-input" placeholder="https://www.tiktok.com/@username/video/1234567890">
+                                                        <small style="color:#94a3b8; font-size:0.7rem;">Thumbnail &amp; judul akan ditarik otomatis dari link jika dikosongkan.</small>
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label" style="font-size:0.78rem;">Judul Video (Opsional Override)</label>
+                                                        <input type="text" name="tiktok_video_{{ $i }}_title" value="{{ old('tiktok_video_' . $i . '_title', $tTitle) }}" class="form-input" placeholder="Contoh: Top 10 tips to reduce Stress">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label" style="font-size:0.78rem;">Nama Author / Subtitle (Opsional Override)</label>
+                                                        <input type="text" name="tiktok_video_{{ $i }}_author" value="{{ old('tiktok_video_' . $i . '_author', $tAuthor) }}" class="form-input" placeholder="Contoh: Dr. Jenni Jacobsen">
+                                                    </div>
+                                                    <div style="grid-column:1/-1;">
+                                                        <label class="form-label" style="font-size:0.78rem;">Custom Thumbnail Gambar (Opsional Upload - Auto WebP)</label>
+                                                        <input type="file" name="tiktok_video_{{ $i }}_thumb" accept="image/*" class="form-input" style="height:auto; padding:0.35rem; font-size:0.75rem;">
+                                                        @if($tThumb)
+                                                            <div style="margin-top:0.4rem; display:flex; align-items:center; gap:0.5rem;">
+                                                                <img src="{{ asset('storage/' . $tThumb) }}" style="height:36px; border-radius:4px; object-fit:cover;">
+                                                                <span style="font-size:0.7rem; color:#1eb349; font-weight:600;">Custom Thumbnail WebP Aktif</span>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endfor
+                                    </div>
+                                </div>
+                            </div>
+                        </div> {{-- End #hpsub-tiktok --}}
 
                         {{-- SUB-SUBTAB 4: KUSTOMISASI FOOTER (TEMA 5) --}}
                         <div class="hpsub-pane" id="hpsub-footer" style="display:none;">

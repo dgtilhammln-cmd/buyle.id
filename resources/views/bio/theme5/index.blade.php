@@ -1338,6 +1338,9 @@
 
         {{-- 6. 3D Coverflow Gallery Section (Tema 5) --}}
         @include('bio.theme5.gallery_section')
+
+        {{-- 7. 3D TikTok Phone Reel Carousel Section (Tema 5) --}}
+        @include('bio.theme5.tiktok_section')
     </main>
 
     {{-- FLOATING WHATSAPP BUTTON --}}

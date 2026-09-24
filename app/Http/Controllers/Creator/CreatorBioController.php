@@ -424,6 +424,30 @@ class CreatorBioController extends Controller
             }
         }
 
+        // TikTok Section fields (Tema 5 - 3D Phone Reel Carousel)
+        if ($request->has('tiktok_section_enabled_present')) {
+            $config['tiktok_section_enabled'] = $request->has('tiktok_section_enabled') ? 1 : 0;
+        }
+        if ($request->has('tiktok_section_headline'))    $config['tiktok_section_headline']    = $request->tiktok_section_headline;
+        if ($request->has('tiktok_section_description')) $config['tiktok_section_description'] = $request->tiktok_section_description;
+        if ($request->has('tiktok_section_btn_text'))    $config['tiktok_section_btn_text']    = $request->tiktok_section_btn_text;
+        if ($request->has('tiktok_section_btn_link'))    $config['tiktok_section_btn_link']    = $request->tiktok_section_btn_link;
+
+        for ($i = 1; $i <= 6; $i++) {
+            if ($request->has("tiktok_video_{$i}_url"))    $config["tiktok_video_{$i}_url"]    = $request->input("tiktok_video_{$i}_url");
+            if ($request->has("tiktok_video_{$i}_title"))  $config["tiktok_video_{$i}_title"]  = $request->input("tiktok_video_{$i}_title");
+            if ($request->has("tiktok_video_{$i}_author")) $config["tiktok_video_{$i}_author"] = $request->input("tiktok_video_{$i}_author");
+
+            // Handle custom thumbnail uploads & deletions
+            if ($request->has("delete_tiktok_video_{$i}_thumb") && !empty($config["tiktok_video_{$i}_thumb"])) {
+                Storage::disk('public')->delete($config["tiktok_video_{$i}_thumb"]);
+                $config["tiktok_video_{$i}_thumb"] = null;
+            } elseif ($request->hasFile("tiktok_video_{$i}_thumb")) {
+                if (!empty($config["tiktok_video_{$i}_thumb"])) Storage::disk('public')->delete($config["tiktok_video_{$i}_thumb"]);
+                $config["tiktok_video_{$i}_thumb"] = $this->convertToWebp($request->file("tiktok_video_{$i}_thumb"), 'bio/tiktok', 85);
+            }
+        }
+
         // Save Theme 5 Dedicated SEO Metas Per Page & Contact Page fields
         if ($request->has('theme5_seo_home_title'))        $config['theme5_seo_home_title']        = $request->theme5_seo_home_title;
         if ($request->has('theme5_seo_home_desc'))         $config['theme5_seo_home_desc']         = $request->theme5_seo_home_desc;
