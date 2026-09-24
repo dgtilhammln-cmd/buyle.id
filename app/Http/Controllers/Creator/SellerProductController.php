@@ -26,12 +26,24 @@ class SellerProductController extends Controller
     {
         $seller = auth()->user();
 
+        $search = $request->input('search', $request->input('q'));
+        $status = $request->input('status');
+        $type   = $request->input('type');
+
         $products = Product::where('seller_id', $seller->id)
             ->with('category:id,name')
-            ->when($request->q, fn($q, $search) => $q->where('name', 'like', "%{$search}%"))
-            ->when($request->status, fn($q, $s) => $q->where('is_active', $s === 'active'))
-            ->latest()
-            ->simplePaginate(15)
+            ->when($search, function($q, $s) {
+                $q->where(function($sub) use ($s) {
+                    $sub->where('name', 'like', "%{$s}%")
+                        ->orWhere('slug', 'like', "%{$s}%")
+                        ->orWhere('short_desc', 'like', "%{$s}%");
+                });
+            })
+            ->when($status, fn($q, $s) => $q->where('is_active', $s === 'active'))
+            ->when($type, fn($q, $t) => $q->where('product_type', $t))
+            ->orderBy('order', 'asc')
+            ->latest('id')
+            ->paginate(50)
             ->withQueryString();
 
         return view('creator.products.index', compact('products'));

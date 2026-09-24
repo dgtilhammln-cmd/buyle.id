@@ -1,7 +1,7 @@
-﻿@extends('creator.layout')
+@extends('creator.layout')
 @section('title', 'Produk Saya')
 @section('page_title', 'Produk Saya')
-@section('page_subtitle', $products->count() . ' produk/layanan terdaftar')
+@section('page_subtitle', (method_exists($products, 'total') ? $products->total() : $products->count()) . ' produk/layanan terdaftar')
 
 @section('topbar_actions')
   <div class="prod-actions-row">
@@ -708,7 +708,33 @@
 
 @section('content')
 
-
+  {{-- FILTER PILLS TIPE PRODUK --}}
+  <div style="display:flex; align-items:center; gap:0.4rem; overflow-x:auto; margin-bottom:1.25rem; padding-bottom:0.25rem; scrollbar-width:none;">
+    <a href="{{ route('creator.products.index', array_merge(request()->except('type', 'page'))) }}" 
+       style="padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ !request('type') ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
+       Semua Tipe Produk
+    </a>
+    <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'makanan'])) }}" 
+       style="padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'makanan' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
+       🍔 Makanan / Resto
+    </a>
+    <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'external_link'])) }}" 
+       style="padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'external_link' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
+       ⚡ Digital / Link Access
+    </a>
+    <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'physical'])) }}" 
+       style="padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'physical' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
+       📦 Barang Fisik
+    </a>
+    <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'service'])) }}" 
+       style="padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'service' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
+       💼 Jasa & Layanan
+    </a>
+    <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'ticket'])) }}" 
+       style="padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'ticket' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
+       🎟️ Tiket Event
+    </a>
+  </div>
 
   {{-- TABLE CARD (LIST VIEW) --}}
   <div id="view-list" class="view-container"
@@ -972,6 +998,13 @@
       </div>
     @endif
   </div>
+
+  {{-- PAGINATION LINKS --}}
+  @if(method_exists($products, 'hasPages') && $products->hasPages())
+    <div style="margin-top:1.5rem; display:flex; justify-content:center;">
+      {{ $products->links() }}
+    </div>
+  @endif
 
   <script>
     function switchView(type, isUserAction = false) {
