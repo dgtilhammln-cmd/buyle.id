@@ -984,7 +984,7 @@
             display: block;
         }
 
-        /* RESPONSIVE LAYOUT BREAKPOINTS */
+        /* RESPONSIVE LAYOUT BREAKPOINTS (MOBILE COMPACT & PROPORTIONAL) */
         @media (max-width: 1200px) {
             .pp-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -994,13 +994,19 @@
         @media (max-width: 991px) {
             .pp-main-layout {
                 grid-template-columns: 1fr;
-                gap: 1.25rem;
+                gap: 1rem;
             }
 
             .pp-sidebar-card {
                 position: static;
-                padding: 1.1rem 1rem;
-                border-radius: 16px;
+                padding: 0.75rem 0.85rem;
+                border-radius: 14px;
+                box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+            }
+
+            .pp-sidebar-heading {
+                font-size: 0.85rem;
+                margin-bottom: 0.4rem;
             }
 
             .pp-sidebar-menu {
@@ -1008,8 +1014,8 @@
                 flex-direction: row;
                 flex-wrap: nowrap;
                 overflow-x: auto;
-                gap: 0.5rem;
-                padding-bottom: 0.4rem;
+                gap: 0.4rem;
+                padding-bottom: 0.2rem;
                 -webkit-overflow-scrolling: touch;
             }
 
@@ -1020,7 +1026,8 @@
             .pp-sidebar-item {
                 flex-shrink: 0;
                 width: auto;
-                padding: 0.55rem 0.9rem;
+                padding: 0.45rem 0.8rem;
+                font-size: 0.78rem;
                 border-radius: 999px;
             }
 
@@ -1034,13 +1041,94 @@
 
             .pp-grid {
                 grid-template-columns: repeat(3, 1fr);
+                gap: 0.85rem;
             }
         }
 
         @media (max-width: 768px) {
+            .t5-breadcrumb-wrap {
+                padding: 0.75rem 0.85rem 0;
+            }
+
+            .t5-breadcrumb {
+                font-size: 0.78rem;
+            }
+
+            .pp-page-wrap {
+                padding: 0 0.85rem;
+                margin: 0.75rem auto 2.5rem;
+            }
+
+            .pp-controls {
+                padding: 0.65rem 0.75rem;
+                border-radius: 14px;
+                gap: 0.5rem;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .pp-search-wrap {
+                flex: 1 1 180px;
+                min-width: 0;
+            }
+
+            .pp-search-input {
+                padding: 0.5rem 0.75rem 0.5rem 2.2rem;
+                font-size: 0.8rem;
+            }
+
+            .pp-search-icon {
+                left: 0.65rem;
+            }
+
+            .pp-sort-select {
+                padding: 0.5rem 1.8rem 0.5rem 0.65rem;
+                font-size: 0.78rem;
+                min-width: 110px;
+                flex: 1 1 110px;
+            }
+
+            .pp-submit-btn {
+                padding: 0.5rem 0.85rem;
+                font-size: 0.78rem;
+            }
+
             .pp-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 0.85rem;
+                gap: 0.75rem;
+            }
+
+            .pp-card {
+                border-radius: 14px;
+            }
+
+            .pp-card-img-wrap {
+                aspect-ratio: 1 / 1;
+            }
+
+            .pp-card-body {
+                padding: 0.65rem;
+                gap: 0.3rem;
+            }
+
+            .pp-card-name {
+                font-size: 0.82rem;
+                line-height: 1.3;
+            }
+
+            .pp-price-main {
+                font-size: 0.85rem;
+            }
+
+            .pp-price-old {
+                font-size: 0.65rem;
+            }
+
+            .pp-buy-btn {
+                padding: 0.35rem 0.6rem;
+                font-size: 0.72rem;
+                border-radius: 6px;
             }
 
             .t5-footer-main {
@@ -1049,29 +1137,27 @@
             }
         }
 
-        @media (max-width: 576px) {
-            .pp-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .pp-search-wrap {
-                max-width: 100%;
-            }
-
+        @media (max-width: 480px) {
             .pp-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 0.75rem;
+                gap: 0.55rem;
             }
 
             .pp-card-body {
-                padding: 0.7rem 0.75rem;
-                gap: 0.35rem;
+                padding: 0.55rem;
+            }
+
+            .pp-card-name {
+                font-size: 0.78rem;
+            }
+
+            .pp-price-main {
+                font-size: 0.82rem;
             }
 
             .pp-buy-btn {
-                padding: 0.35rem 0.6rem;
-                font-size: 0.72rem;
+                padding: 0.3rem 0.5rem;
+                font-size: 0.68rem;
             }
         }
     </style>
