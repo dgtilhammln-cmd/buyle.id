@@ -400,6 +400,30 @@ class CreatorBioController extends Controller
             }
         }
 
+        // Gallery Section fields (Tema 5 - Maks 10 Foto Auto Compress)
+        if ($request->has('gallery_enabled_present')) {
+            $config['gallery_enabled'] = $request->has('gallery_enabled') ? 1 : 0;
+        }
+        if ($request->has('gallery_eyebrow'))     $config['gallery_eyebrow']     = $request->gallery_eyebrow;
+        if ($request->has('gallery_headline'))    $config['gallery_headline']    = $request->gallery_headline;
+        if ($request->has('gallery_description')) $config['gallery_description'] = $request->gallery_description;
+
+        for ($i = 1; $i <= 10; $i++) {
+            if ($request->has("gallery_{$i}_title"))    $config["gallery_{$i}_title"]    = $request->input("gallery_{$i}_title");
+            if ($request->has("gallery_{$i}_subtitle")) $config["gallery_{$i}_subtitle"] = $request->input("gallery_{$i}_subtitle");
+            if ($request->has("gallery_{$i}_desc"))     $config["gallery_{$i}_desc"]     = $request->input("gallery_{$i}_desc");
+            if ($request->has("gallery_{$i}_link"))     $config["gallery_{$i}_link"]     = $request->input("gallery_{$i}_link");
+
+            // Handle gallery image uploads & deletions (Auto WebP compression!)
+            if ($request->has("delete_gallery_{$i}_image") && !empty($config["gallery_{$i}_image"])) {
+                Storage::disk('public')->delete($config["gallery_{$i}_image"]);
+                $config["gallery_{$i}_image"] = null;
+            } elseif ($request->hasFile("gallery_{$i}_image")) {
+                if (!empty($config["gallery_{$i}_image"])) Storage::disk('public')->delete($config["gallery_{$i}_image"]);
+                $config["gallery_{$i}_image"] = $this->convertToWebp($request->file("gallery_{$i}_image"), 'bio/gallery', 85);
+            }
+        }
+
         // Save Theme 5 Dedicated SEO Metas Per Page & Contact Page fields
         if ($request->has('theme5_seo_home_title'))        $config['theme5_seo_home_title']        = $request->theme5_seo_home_title;
         if ($request->has('theme5_seo_home_desc'))         $config['theme5_seo_home_desc']         = $request->theme5_seo_home_desc;

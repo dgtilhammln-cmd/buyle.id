@@ -1335,6 +1335,9 @@
 
         {{-- 5. Services Section (Tema 5) --}}
         @include('bio.theme5.services_section')
+
+        {{-- 6. 3D Coverflow Gallery Section (Tema 5) --}}
+        @include('bio.theme5.gallery_section')
     </main>
 
     {{-- FLOATING WHATSAPP BUTTON --}}

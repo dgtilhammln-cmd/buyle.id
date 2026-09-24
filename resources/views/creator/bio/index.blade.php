@@ -1865,6 +1865,16 @@
                                 </svg>
                                 Section Jasa &amp; Layanan (Tema 5)
                             </button>
+                            <button type="button" class="hp-subtab-btn" id="btn-hpsub-gallery"
+                                onclick="switchHomepageSubSubtab('hpsub-gallery', this)">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21 15 16 10 5 21"/>
+                                </svg>
+                                Section Galeri 3D (Tema 5)
+                            </button>
                             <button type="button" class="hp-subtab-btn" id="btn-hpsub-footer"
                                 onclick="switchHomepageSubSubtab('hpsub-footer', this)">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
@@ -2247,7 +2257,145 @@
                             </div>
                         </div> {{-- End #hpsub-services --}}
 
-                        {{-- SUB-SUBTAB 3: KUSTOMISASI FOOTER (TEMA 5) --}}
+                        {{-- SUB-SUBTAB 3: SECTION GALERI 3D (TEMA 5) --}}
+                        <div class="hpsub-pane" id="hpsub-gallery" style="display:none;">
+                            <input type="hidden" name="gallery_enabled_present" value="1">
+
+                            {{-- Card Toggle Active --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span>Status Section Galeri 3D Carousel (Tema 5)</span>
+                                    <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                        <input type="checkbox" name="gallery_enabled" value="1" {{ ($cfg['gallery_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
+                                        Aktifkan Section Galeri
+                                    </label>
+                                </div>
+                                <div class="card-body">
+                                    <p style="font-size:0.8rem; color:#64748b; margin:0;">
+                                        Tampilkan section Galeri Portofolio &amp; Dokumentasi 3D Stack Carousel interaktif pada Beranda (Tema 5). 
+                                        Pengunjung dapat melakukan klik / swipe slide foto dengan animasi 3D coverflow modern.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {{-- Card Header & Description --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head">1. Header &amp; Deskripsi Section Galeri</div>
+                                <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                                    <div class="form-group" style="grid-column:1/-1;">
+                                        <label class="form-label">Sub-Judul / Tagline (Eyebrow)</label>
+                                        <input type="text" name="gallery_eyebrow" value="{{ old('gallery_eyebrow', $cfg['gallery_eyebrow'] ?? 'Dokumentasi & Portofolio') }}" class="form-input" placeholder="Dokumentasi & Portofolio">
+                                    </div>
+                                    <div class="form-group" style="grid-column:1/-1;">
+                                        <label class="form-label">Judul Utama H2 (Headline)</label>
+                                        <input type="text" name="gallery_headline" value="{{ old('gallery_headline', $cfg['gallery_headline'] ?? 'Popular Beach Holiday Destinations for 2026/2027') }}" class="form-input" placeholder="Misal: Galeri Foto Proyek & Momen Terbaik Kami">
+                                    </div>
+                                    <div class="form-group" style="grid-column:1/-1;">
+                                        <label class="form-label">Deskripsi Ringkas Section</label>
+                                        <textarea name="gallery_description" class="form-input" rows="2" placeholder="Deskripsi umum galeri...">{{ old('gallery_description', $cfg['gallery_description'] ?? 'Browse our most popular beach destinations for UK travellers') }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Card Upload Foto Galeri (Maksimal 10 Foto) --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span>2. Daftar Foto Galeri (Maksimal 10 Foto - Auto Compress WebP)</span>
+                                    <span style="font-size:0.75rem; color:#1eb349; font-weight:700; background:#f0fdf4; padding:0.25rem 0.65rem; border-radius:12px; border:1px solid #bbf7d0;">✨ WebP Auto Compress Active</span>
+                                </div>
+                                <div class="card-body">
+                                    <p style="font-size:0.78rem; color:#64748b; margin-bottom:1.25rem;">
+                                        Upload hingga 10 foto terbaik Anda. Gambar yang Anda upload akan <strong>secara otomatis dikompresi ke format WebP</strong> untuk menjamin kecepatan load super kencang di HP maupun PC.
+                                    </p>
+
+                                    <div style="display:flex; flex-direction:column; gap:1.25rem;">
+                                        @for($i = 1; $i <= 10; $i++)
+                                            @php
+                                                $gImg      = $cfg["gallery_{$i}_image"] ?? null;
+                                                $gTitle    = $cfg["gallery_{$i}_title"] ?? null;
+                                                $gSubtitle = $cfg["gallery_{$i}_subtitle"] ?? null;
+                                                $gDesc     = $cfg["gallery_{$i}_desc"] ?? null;
+                                                $gLink     = $cfg["gallery_{$i}_link"] ?? null;
+
+                                                if (empty($gImg) && empty($gTitle)) {
+                                                    $sampleTitles    = [1 => 'Indonesia', 2 => 'Italy', 3 => 'Croatia', 4 => 'Malta', 5 => 'Mauritius'];
+                                                    $sampleSubtitles = [1 => 'Bali & Raja Ampat', 2 => 'Amalfi Coast & Sicily', 3 => 'Dubrovnik Old Town', 4 => 'Valletta Blue Lagoon', 5 => 'Le Morne Peninsula'];
+                                                    $sampleDescs     = [
+                                                        1 => "Indonesia's tropical paradise featuring pristine beaches, lush rice terraces, and crystal turquoise waters.",
+                                                        2 => "Sardinia's white sand, the Amalfi Coast, and Sicily's golden shores. Plan your beach holiday with us.",
+                                                        3 => "Explore Croatia's stunning Dalmatian Coast with historic stone villages and clear Adriatic sea.",
+                                                        4 => "Malta offers sunny Mediterranean beaches, rich history, and vibrant coastal resorts.",
+                                                        5 => "Mauritius features powder-soft sand, coral reefs, and luxury island retreats."
+                                                    ];
+                                                    if (isset($sampleTitles[$i])) {
+                                                        $gTitle    = $sampleTitles[$i];
+                                                        $gSubtitle = $sampleSubtitles[$i];
+                                                        $gDesc     = $sampleDescs[$i];
+                                                    }
+                                                }
+                                            @endphp
+
+                                            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:1.25rem; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid #f1f5f9; padding-bottom:0.5rem;">
+                                                    <div style="font-weight:800; font-size:0.88rem; color:#0f172a; display:flex; align-items:center; gap:0.5rem;">
+                                                        <span style="background:linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; font-size:0.7rem; font-weight:800; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">{{ $i }}</span>
+                                                        Foto Galeri #{{ $i }}
+                                                    </div>
+                                                    @if($gImg)
+                                                        <label style="font-size:0.75rem; color:#ef4444; font-weight:600; display:flex; align-items:center; gap:0.35rem; cursor:pointer;">
+                                                            <input type="checkbox" name="delete_gallery_{{ $i }}_image" value="1"> Hapus Foto Ini
+                                                        </label>
+                                                    @endif
+                                                </div>
+
+                                                <div style="display:grid; grid-template-columns:180px 1fr; gap:1.25rem; align-items:start;">
+                                                    {{-- Image Preview & Upload --}}
+                                                    <div>
+                                                        <div style="width:100%; height:130px; border-radius:10px; border:1.5px dashed #cbd5e1; background:#f8fafc; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:0.5rem; position:relative;">
+                                                            @if($gImg)
+                                                                <img src="{{ asset('storage/' . $gImg) }}" alt="Preview" style="width:100%; height:100%; object-fit:cover;">
+                                                            @else
+                                                                <div style="text-align:center; padding:0.5rem;">
+                                                                    <svg width="28" height="28" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24" style="margin:0 auto 0.25rem;">
+                                                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                                                        <polyline points="21 15 16 10 5 21"/>
+                                                                    </svg>
+                                                                    <span style="font-size:0.7rem; color:#94a3b8; display:block;">Pilih Foto</span>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                        <input type="file" name="gallery_{{ $i }}_image" accept="image/*" class="form-input" style="height:auto; padding:0.35rem; font-size:0.75rem;">
+                                                    </div>
+
+                                                    {{-- Details Fields --}}
+                                                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem;">
+                                                        <div>
+                                                            <label class="form-label" style="font-size:0.78rem;">Judul Foto / Tempat</label>
+                                                            <input type="text" name="gallery_{{ $i }}_title" value="{{ old('gallery_' . $i . '_title', $gTitle) }}" class="form-input" placeholder="Contoh: Indonesia">
+                                                        </div>
+                                                        <div>
+                                                            <label class="form-label" style="font-size:0.78rem;">Sub-Judul / Lokasi / Aksinya</label>
+                                                            <input type="text" name="gallery_{{ $i }}_subtitle" value="{{ old('gallery_' . $i . '_subtitle', $gSubtitle) }}" class="form-input" placeholder="Contoh: Click to learn more">
+                                                        </div>
+                                                        <div style="grid-column:1/-1;">
+                                                            <label class="form-label" style="font-size:0.78rem;">Deskripsi Detail (Tampil di Bawah Carousel)</label>
+                                                            <textarea name="gallery_{{ $i }}_desc" rows="2" class="form-input" placeholder="Deskripsi penjelasan foto...">{!! old('gallery_' . $i . '_desc', $gDesc) !!}</textarea>
+                                                        </div>
+                                                        <div style="grid-column:1/-1;">
+                                                            <label class="form-label" style="font-size:0.78rem;">Link URL (Opsional / Saat Foto Diklik)</label>
+                                                            <input type="text" name="gallery_{{ $i }}_link" value="{{ old('gallery_' . $i . '_link', $gLink) }}" class="form-input" placeholder="https://... atau #products">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endfor
+                                    </div>
+                                </div>
+                            </div>
+                        </div> {{-- End #hpsub-gallery --}}
+
+                        {{-- SUB-SUBTAB 4: KUSTOMISASI FOOTER (TEMA 5) --}}
                         <div class="hpsub-pane" id="hpsub-footer" style="display:none;">
                             {{-- Card: Warna Gradasi Footer --}}
                             <div class="prof-card">
@@ -4314,6 +4462,7 @@
             var hpSubMap = {
                 'hpsub-about': 'btn-hpsub-about',
                 'hpsub-services': 'btn-hpsub-services',
+                'hpsub-gallery': 'btn-hpsub-gallery',
                 'hpsub-footer': 'btn-hpsub-footer'
             };
             var hpBtnEl = document.getElementById(hpSubMap[savedHpSubsubtab]);
