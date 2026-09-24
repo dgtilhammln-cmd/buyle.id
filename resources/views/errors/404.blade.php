@@ -26,20 +26,20 @@ body { background: var(--c-bg); font-family: var(--font); }
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 5rem 1.5rem;
+    padding: 4rem 1.5rem;
     text-align: center;
     position: relative;
     overflow: hidden;
-    background: radial-gradient(circle at 50% 30%, #f0fdf4 0%, #f8fafc 70%);
+    background: radial-gradient(circle at 50% 30%, #f0fdf4 0%, #f8fafc 75%);
 }
 
 /* Floating ambient background circles */
 .err-orb-1 {
     position: absolute;
-    top: -100px;
-    right: -100px;
-    width: 450px;
-    height: 450px;
+    top: -120px;
+    right: -120px;
+    width: 480px;
+    height: 480px;
     background: radial-gradient(circle, rgba(30,179,73,0.12) 0%, rgba(165,207,55,0.02) 70%);
     border-radius: 50%;
     animation: orbFloat 8s infinite alternate ease-in-out;
@@ -47,10 +47,10 @@ body { background: var(--c-bg); font-family: var(--font); }
 }
 .err-orb-2 {
     position: absolute;
-    bottom: -120px;
-    left: -120px;
-    width: 550px;
-    height: 550px;
+    bottom: -140px;
+    left: -140px;
+    width: 580px;
+    height: 580px;
     background: radial-gradient(circle, rgba(165,207,55,0.12) 0%, rgba(30,179,73,0.02) 70%);
     border-radius: 50%;
     animation: orbFloat 10s infinite alternate-reverse ease-in-out;
@@ -65,7 +65,7 @@ body { background: var(--c-bg); font-family: var(--font); }
 .err-inner {
     position: relative;
     z-index: 2;
-    max-width: 640px;
+    max-width: 680px;
     width: 100%;
 }
 
@@ -79,8 +79,8 @@ body { background: var(--c-bg); font-family: var(--font); }
     font-weight: 500;
     color: var(--c-muted);
     margin-bottom: 2rem;
-    padding: 0.4rem 1rem;
-    background: rgba(255, 255, 255, 0.8);
+    padding: 0.4rem 1.1rem;
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(8px);
     border-radius: 999px;
     border: 1px solid var(--c-border);
@@ -90,63 +90,86 @@ body { background: var(--c-bg); font-family: var(--font); }
 .err-breadcrumb-sep { font-size: 0.65rem; opacity: 0.5; }
 .err-breadcrumb-current { color: var(--c-text); font-weight: 600; }
 
-/* Interactive 404 Visual Hero */
-.err-hero-visual {
+/* ── ANIMATED DISCONNECTED CABLE & PLUG VECTOR HERO ── */
+.err-cable-wrapper {
     position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-    perspective: 1000px;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto 1.25rem auto;
+    cursor: pointer;
+    user-select: none;
 }
 
-.err-404-digit {
-    font-size: clamp(6rem, 18vw, 10rem);
+.err-cable-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+}
+
+/* Cable Left/Right animation */
+.err-plug-left {
+    animation: plugLeftMove 3.5s infinite ease-in-out;
+    transform-origin: left center;
+}
+.err-plug-right {
+    animation: plugRightMove 3.5s infinite ease-in-out;
+    transform-origin: right center;
+}
+
+@keyframes plugLeftMove {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-12px); }
+}
+
+@keyframes plugRightMove {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(12px); }
+}
+
+/* Electric Sparks animation */
+.err-sparks {
+    animation: sparkPulse 1.2s infinite ease-in-out;
+    transform-origin: center center;
+}
+
+@keyframes sparkPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.75); }
+}
+
+.err-spark-line {
+    animation: sparkFlicker 0.6s infinite alternate ease-in-out;
+}
+
+@keyframes sparkFlicker {
+    0% { opacity: 0.4; }
+    100% { opacity: 1; stroke-width: 4px; }
+}
+
+/* 404 Bold Text */
+.err-404-text {
+    font-size: clamp(4.5rem, 14vw, 7.5rem);
     font-weight: 900;
     line-height: 1;
-    letter-spacing: -0.06em;
-    background: var(--c-gradient);
+    letter-spacing: -0.05em;
+    color: var(--c-text);
+    margin-bottom: 0.5rem;
+    position: relative;
+    display: inline-block;
+    background: linear-gradient(180deg, #0F172A 0%, #334155 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: 0 10px 30px rgba(30,179,73,0.15);
-    display: inline-block;
-    animation: digitPulse 4s infinite ease-in-out;
+    text-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
 }
 
-.err-404-center {
-    width: clamp(70px, 16vw, 120px);
-    height: clamp(70px, 16vw, 120px);
+.err-404-shadow {
+    width: 140px;
+    height: 12px;
+    background: radial-gradient(ellipse at center, rgba(15, 23, 42, 0.15) 0%, transparent 70%);
+    margin: -10px auto 1.5rem auto;
     border-radius: 50%;
-    background: var(--c-gradient);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    box-shadow: 0 16px 35px rgba(30, 179, 73, 0.35);
-    animation: centerFloat 3.5s infinite ease-in-out;
-    margin: 0 0.25rem;
-    cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.err-404-center:hover {
-    transform: scale(1.15) rotate(15deg);
-}
-
-.err-404-center i {
-    font-size: clamp(2.5rem, 6vw, 4rem);
-}
-
-@keyframes centerFloat {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-14px) rotate(6deg); }
-}
-
-@keyframes digitPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.02); }
 }
 
 /* Badge Label */
@@ -187,7 +210,7 @@ body { background: var(--c-bg); font-family: var(--font); }
     color: var(--c-text);
     line-height: 1.25;
     letter-spacing: -0.03em;
-    margin-bottom: 1rem;
+    margin-bottom: 0.85rem;
 }
 
 .err-desc {
@@ -281,14 +304,96 @@ body { background: var(--c-bg); font-family: var(--font); }
             <span class="err-breadcrumb-current">Halaman Tidak Ditemukan</span>
         </nav>
 
-        {{-- Interactive 404 Visual Hero --}}
-        <div class="err-hero-visual" id="errInteractiveHero">
-            <span class="err-404-digit">4</span>
-            <div class="err-404-center" title="Klik untuk efek interaktif!">
-                <i class="ph-bold ph-compass-rose"></i>
-            </div>
-            <span class="err-404-digit">4</span>
+        {{-- Animated Cable & Plug Vector Illustration --}}
+        <div class="err-cable-wrapper" id="errCableWrapper" title="Klik untuk menghubungkan kabel!">
+            <svg class="err-cable-svg" viewBox="0 0 520 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="plugGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#1eb349" />
+                        <stop offset="100%" stop-color="#a5cf37" />
+                    </linearGradient>
+                    <linearGradient id="cableGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#0F172A" />
+                        <stop offset="100%" stop-color="#334155" />
+                    </linearGradient>
+                    <filter id="sparkGlow" x="-30%" y="-30%" width="160%" height="160%">
+                        <feGaussianBlur stdDeviation="3" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                </defs>
+
+                <!-- Left Cable & Socket Plug -->
+                <g class="err-plug-left" id="plugLeftGroup">
+                    <!-- Left Cable Curve -->
+                    <path d="M 0,70 Q 120,55 195,70" stroke="url(#cableGrad)" stroke-width="6" stroke-linecap="round"/>
+                    <path d="M 0,70 Q 120,55 195,70" stroke="#1eb349" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+                    
+                    <!-- Strain Relief -->
+                    <rect x="185" y="62" width="16" height="16" rx="4" fill="#0F172A"/>
+                    <rect x="195" y="60" width="8" height="20" rx="3" fill="#334155"/>
+                    
+                    <!-- Socket Body (Female Plug) -->
+                    <rect x="200" y="42" width="45" height="56" rx="10" fill="#0F172A"/>
+                    <rect x="205" y="47" width="35" height="46" rx="7" fill="url(#plugGrad)"/>
+                    
+                    <!-- Socket Grip Ridges -->
+                    <line x1="214" y1="54" x2="214" y2="86" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                    <line x1="222" y1="54" x2="222" y2="86" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                    <line x1="230" y1="54" x2="230" y2="86" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                    
+                    <!-- Socket Collar Ring -->
+                    <rect x="242" y="38" width="12" height="64" rx="5" fill="#0F172A"/>
+                </g>
+
+                <!-- Electric Spark Burst in the middle gap -->
+                <g class="err-sparks" id="sparkGroup" filter="url(#sparkGlow)">
+                    <!-- Radiating Spark Rays -->
+                    <line class="err-spark-line" x1="260" y1="32" x2="260" y2="12" stroke="#a5cf37" stroke-width="3.5" stroke-linecap="round"/>
+                    <line class="err-spark-line" x1="244" y1="38" x2="234" y2="24" stroke="#1eb349" stroke-width="3" stroke-linecap="round"/>
+                    <line class="err-spark-line" x1="276" y1="38" x2="286" y2="24" stroke="#1eb349" stroke-width="3" stroke-linecap="round"/>
+                    
+                    <line class="err-spark-line" x1="260" y1="108" x2="260" y2="128" stroke="#a5cf37" stroke-width="3.5" stroke-linecap="round"/>
+                    <line class="err-spark-line" x1="244" y1="102" x2="234" y2="116" stroke="#1eb349" stroke-width="3" stroke-linecap="round"/>
+                    <line class="err-spark-line" x1="276" y1="102" x2="286" y2="116" stroke="#1eb349" stroke-width="3" stroke-linecap="round"/>
+
+                    <!-- Center Electric Spark Bolt -->
+                    <path d="M 258,56 L 264,67 L 256,73 L 263,84" stroke="#a5cf37" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+
+                <!-- Right Cable & Male Plug -->
+                <g class="err-plug-right" id="plugRightGroup">
+                    <!-- Male Prongs -->
+                    <rect x="264" y="52" width="18" height="9" rx="3" fill="#0F172A"/>
+                    <rect x="264" y="79" width="18" height="9" rx="3" fill="#0F172A"/>
+                    <rect x="266" y="54" width="14" height="5" rx="1.5" fill="#a5cf37"/>
+                    <rect x="266" y="81" width="14" height="5" rx="1.5" fill="#a5cf37"/>
+                    
+                    <!-- Plug Collar Ring -->
+                    <rect x="280" y="38" width="12" height="64" rx="5" fill="#0F172A"/>
+                    
+                    <!-- Plug Main Body -->
+                    <rect x="290" y="42" width="45" height="56" rx="10" fill="#0F172A"/>
+                    <rect x="295" y="47" width="35" height="46" rx="7" fill="url(#plugGrad)"/>
+                    
+                    <!-- Plug Grip Ridges -->
+                    <line x1="304" y1="54" x2="304" y2="86" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                    <line x1="312" y1="54" x2="312" y2="86" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                    <line x1="320" y1="54" x2="320" y2="86" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                    
+                    <!-- Strain Relief -->
+                    <rect x="330" y="60" width="8" height="20" rx="3" fill="#334155"/>
+                    <rect x="334" y="62" width="16" height="16" rx="4" fill="#0F172A"/>
+                    
+                    <!-- Right Cable Curve -->
+                    <path d="M 345,70 Q 400,85 520,70" stroke="url(#cableGrad)" stroke-width="6" stroke-linecap="round"/>
+                    <path d="M 345,70 Q 400,85 520,70" stroke="#1eb349" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+                </g>
+            </svg>
         </div>
+
+        <!-- Bold 404 Text -->
+        <div class="err-404-text">404</div>
+        <div class="err-404-shadow"></div>
 
         <div class="err-badge">
             <span class="err-badge-dot"></span>
@@ -316,24 +421,38 @@ body { background: var(--c-bg); font-family: var(--font); }
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const hero = document.getElementById('errInteractiveHero');
-        const icon = hero ? hero.querySelector('.err-404-center') : null;
+        const wrapper = document.getElementById('errCableWrapper');
+        const leftPlug = document.getElementById('plugLeftGroup');
+        const rightPlug = document.getElementById('plugRightGroup');
+        const sparks = document.getElementById('sparkGroup');
 
-        if (hero && icon) {
-            // Interactive tilt on mousemove
+        if (wrapper && leftPlug && rightPlug) {
+            // Interactive mouse move parallax
             document.addEventListener('mousemove', function(e) {
-                const x = (e.clientX / window.innerWidth - 0.5) * 20;
-                const y = (e.clientY / window.innerHeight - 0.5) * 20;
-                hero.style.transform = `translate3d(${x * 0.5}px, ${y * 0.5}px, 0)`;
+                const x = (e.clientX / window.innerWidth - 0.5) * 16;
+                const y = (e.clientY / window.innerHeight - 0.5) * 16;
+                wrapper.style.transform = `translate3d(${x * 0.4}px, ${y * 0.4}px, 0)`;
             });
 
-            // Interactive spin on click
-            icon.addEventListener('click', function() {
-                icon.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                icon.style.transform = 'scale(1.3) rotate(360deg)';
+            // Interactive plug connect/spark flash on click
+            wrapper.addEventListener('click', function() {
+                leftPlug.style.transition = 'transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                rightPlug.style.transition = 'transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                sparks.style.transition = 'all 0.25s ease';
+
+                // Snap together
+                leftPlug.style.transform = 'translateX(18px)';
+                rightPlug.style.transform = 'translateX(-18px)';
+                sparks.style.opacity = '1';
+                sparks.style.transform = 'scale(1.5)';
+
+                // Release back after 450ms
                 setTimeout(() => {
-                    icon.style.transform = 'none';
-                }, 800);
+                    leftPlug.style.transform = 'none';
+                    rightPlug.style.transform = 'none';
+                    sparks.style.opacity = '0.7';
+                    sparks.style.transform = 'none';
+                }, 450);
             });
         }
     });
