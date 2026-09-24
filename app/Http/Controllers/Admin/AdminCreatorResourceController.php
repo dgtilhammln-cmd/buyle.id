@@ -510,6 +510,127 @@ class AdminCreatorResourceController extends Controller
             }
         }
 
+        // 5. Berkas Config Theme & Bio Settings (Theme 5 Gallery, TikTok, Client Logos, Banners, Favicon, etc.)
+        if ($creatorProfile && !empty($creatorProfile->config)) {
+            $config = is_array($creatorProfile->config) 
+                ? $creatorProfile->config 
+                : (json_decode($creatorProfile->config ?? '[]', true) ?: []);
+            
+            $configLabels = [
+                'avatar'                => 'Avatar Bio Theme',
+                'bg_image'              => 'Background Bio Custom',
+                'theme5_favicon'        => 'Favicon Tema 5',
+                'footer_bg_image'       => 'Footer Background Image (Tema 5)',
+                'about_card1_logo_image'=> 'About Us Card 1 Logo (Tema 5)',
+                'about_card1_bg_image'  => 'About Us Card 1 Background (Tema 5)',
+                'about_card2_image'      => 'About Us Card 2 Image (Tema 5)',
+            ];
+
+            foreach ($configLabels as $key => $label) {
+                if (!empty($config[$key]) && is_string($config[$key])) {
+                    $assets[] = [
+                        'type'       => $label,
+                        'raw_path'   => $config[$key],
+                        'used_in'    => [
+                            ['label' => 'Kustomisasi Tema 5', 'sub' => "Key: {$key}", 'url' => url('/' . $creatorProfile->store_slug)]
+                        ],
+                        'product_id' => null,
+                        'block_id'   => null,
+                    ];
+                }
+            }
+
+            // 3D Gallery Section Images
+            for ($i = 1; $i <= 10; $i++) {
+                if (!empty($config["gallery_{$i}_image"]) && is_string($config["gallery_{$i}_image"])) {
+                    $gTitle = $config["gallery_{$i}_title"] ?? "Slot #{$i}";
+                    $assets[] = [
+                        'type'       => "Galeri 3D #{$i} (Tema 5)",
+                        'raw_path'   => $config["gallery_{$i}_image"],
+                        'used_in'    => [
+                            ['label' => "Section Galeri 3D: {$gTitle}", 'sub' => "gallery_{$i}_image", 'url' => url('/' . $creatorProfile->store_slug)]
+                        ],
+                        'product_id' => null,
+                        'block_id'   => null,
+                    ];
+                }
+            }
+
+            // TikTok Reels Custom Thumbnails
+            for ($i = 1; $i <= 6; $i++) {
+                if (!empty($config["tiktok_video_{$i}_thumb"]) && is_string($config["tiktok_video_{$i}_thumb"])) {
+                    $tTitle = $config["tiktok_video_{$i}_title"] ?? "Video #{$i}";
+                    $assets[] = [
+                        'type'       => "Thumbnail TikTok #{$i} (Tema 5)",
+                        'raw_path'   => $config["tiktok_video_{$i}_thumb"],
+                        'used_in'    => [
+                            ['label' => "Section TikTok 3D: {$tTitle}", 'sub' => "tiktok_video_{$i}_thumb", 'url' => url('/' . $creatorProfile->store_slug)]
+                        ],
+                        'product_id' => null,
+                        'block_id'   => null,
+                    ];
+                }
+            }
+
+            // Client Logos / Brand Partners
+            for ($i = 1; $i <= 10; $i++) {
+                if (!empty($config["client_logo_{$i}_image"]) && is_string($config["client_logo_{$i}_image"])) {
+                    $cName = $config["client_logo_{$i}_name"] ?? "Mitra #{$i}";
+                    $assets[] = [
+                        'type'       => "Logo Client / Mitra #{$i} (Tema 5)",
+                        'raw_path'   => $config["client_logo_{$i}_image"],
+                        'used_in'    => [
+                            ['label' => "Section Client Logos: {$cName}", 'sub' => "client_logo_{$i}_image", 'url' => url('/' . $creatorProfile->store_slug)]
+                        ],
+                        'product_id' => null,
+                        'block_id'   => null,
+                    ];
+                }
+            }
+
+            // Banners array
+            if (!empty($config['banners']) && is_array($config['banners'])) {
+                foreach ($config['banners'] as $bIdx => $bItem) {
+                    if (!empty($bItem['image']) && is_string($bItem['image'])) {
+                        $bTitle = $bItem['title'] ?? ("Banner Slide #" . ($bIdx + 1));
+                        $assets[] = [
+                            'type'       => "Hero Banner Slide #" . ($bIdx + 1),
+                            'raw_path'   => $bItem['image'],
+                            'used_in'    => [
+                                ['label' => "Hero Slider: {$bTitle}", 'sub' => 'Banner Slider Tema', 'url' => url('/' . $creatorProfile->store_slug)]
+                            ],
+                            'product_id' => null,
+                            'block_id'   => null,
+                        ];
+                    }
+                }
+            }
+
+            // Fallback scanner for any other image path in $config
+            foreach ($config as $cfgKey => $cfgVal) {
+                if (is_string($cfgVal) && !empty($cfgVal) && preg_match('/\.(jpg|jpeg|png|webp|gif|svg|ico)$/i', $cfgVal)) {
+                    $alreadyAdded = false;
+                    foreach ($assets as $a) {
+                        if ($a['raw_path'] === $cfgVal) {
+                            $alreadyAdded = true;
+                            break;
+                        }
+                    }
+                    if (!$alreadyAdded) {
+                        $assets[] = [
+                            'type'       => 'Berkas Kustomisasi Config (' . $cfgKey . ')',
+                            'raw_path'   => $cfgVal,
+                            'used_in'    => [
+                                ['label' => 'Kustomisasi Tema Bio', 'sub' => "Key: {$cfgKey}", 'url' => url('/' . $creatorProfile->store_slug)]
+                            ],
+                            'product_id' => null,
+                            'block_id'   => null,
+                        ];
+                    }
+                }
+            }
+        }
+
         // Olah Detail Aset (Hitung Size, URL, Traffic/Hits)
         $detailedAssets = [];
         $totalBytes = 0;
