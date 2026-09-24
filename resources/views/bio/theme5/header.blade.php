@@ -300,49 +300,71 @@
     /* ── ACTIONS DROPDOWN STYLE ── */
     .t5-nav-dropdown-wrap {
         position: relative;
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
     }
     .t5-actions-dropdown-btn {
-        text-decoration: none;
+        font-family: inherit;
         font-size: 0.85rem;
         font-weight: 500;
         color: #475569;
-        transition: all 0.2s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        background: none;
+        background: transparent;
         border: none;
         cursor: pointer;
         padding: 0;
-        font-family: inherit;
+        margin: 0;
+        line-height: inherit;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        transition: color 0.2s ease;
+        appearance: none;
+        -webkit-appearance: none;
     }
-    .t5-actions-dropdown-btn:hover, .t5-nav-dropdown-wrap.open .t5-actions-dropdown-btn {
+    .t5-actions-dropdown-btn:hover,
+    .t5-nav-dropdown-wrap:hover .t5-actions-dropdown-btn,
+    .t5-nav-dropdown-wrap.open .t5-actions-dropdown-btn {
         color: #15803d;
         font-weight: 600;
     }
+    .t5-actions-dropdown-btn svg {
+        transition: transform 0.2s ease;
+    }
+    .t5-nav-dropdown-wrap:hover .t5-actions-dropdown-btn svg,
+    .t5-nav-dropdown-wrap.open .t5-actions-dropdown-btn svg {
+        transform: rotate(180deg);
+        stroke: #15803d;
+    }
     .t5-actions-dropdown-menu {
         position: absolute;
-        top: calc(100% + 14px);
+        top: calc(100% + 4px);
         left: 50%;
-        transform: translateX(-50%) translateY(-6px);
+        transform: translateX(-50%) translateY(4px);
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
         background: #ffffff;
         border: 1px solid #e2e8f0;
-        border-radius: 16px;
-        box-shadow: 0 12px 36px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
-        min-width: 220px;
-        padding: 0.5rem 0;
-        z-index: 99999;
-        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        border-radius: 14px;
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
+        min-width: 210px;
+        padding: 0.4rem 0;
+        z-index: 999999;
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    }
+    .t5-actions-dropdown-menu::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 0;
+        right: 0;
+        height: 10px;
     }
     .t5-nav-dropdown-wrap:hover .t5-actions-dropdown-menu,
     .t5-nav-dropdown-wrap.open .t5-actions-dropdown-menu {
         opacity: 1;
         visibility: visible;
-        pointer-events: all;
+        pointer-events: auto;
         transform: translateX(-50%) translateY(0);
     }
     .t5-dropdown-item {
@@ -421,11 +443,16 @@
 
     // Filter active custom link blocks for Theme 5 Actions Menu
     $activeCustomLinkBlocks = collect();
-    if (isset($blocks) && is_iterable($blocks) && count($blocks) > 0) {
-        foreach ($blocks as $b) {
+    $sourceBlocks = (isset($blocks) && is_iterable($blocks) && count($blocks) > 0)
+        ? $blocks
+        : (isset($profile) && method_exists($profile, 'bioBlocks') ? $profile->bioBlocks : collect());
+
+    if (is_iterable($sourceBlocks) && count($sourceBlocks) > 0) {
+        foreach ($sourceBlocks as $b) {
             $bData = is_array($b->data_json ?? null) ? $b->data_json : (json_decode($b->data_json ?? '[]', true) ?: []);
-            $bType = $b->type ?? '';
-            if (in_array($bType, ['link', 'url', 'custom_link', 'shopee', 'affiliate', 'external']) || (!empty($bData['url']) && empty($bData['product_id']))) {
+            $bType = strtolower($b->type ?? '');
+            $bActive = !isset($b->is_active) || $b->is_active == 1 || $b->is_active === true;
+            if ($bActive && (in_array($bType, ['link', 'url', 'custom_link', 'shopee', 'affiliate', 'external']) || (!empty($bData['url']) && empty($bData['product_id'])))) {
                 $activeCustomLinkBlocks->push($b);
             }
         }
@@ -460,7 +487,7 @@
             {{-- Actions Dropdown (Hanya Tampil Jika Ada Block Custom Link Button Aktif) --}}
             @if($hasActiveCustomLinks)
                 <div class="t5-nav-dropdown-wrap" id="t5ActionsDropdownWrap">
-                    <button type="button" class="t5-actions-dropdown-btn">
+                    <button type="button" class="t5-actions-dropdown-btn" onclick="toggleT5ActionsDropdown(event)">
                         <span>Actions</span>
                         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                             <path d="M6 9l6 6 6-6"/>
@@ -601,6 +628,26 @@
 </div>
 
 <script>
+    window.toggleT5ActionsDropdown = function(event) {
+        if (event) {
+            if (typeof event.preventDefault === 'function') event.preventDefault();
+            if (typeof event.stopPropagation === 'function') event.stopPropagation();
+        }
+        var wrap = document.getElementById('t5ActionsDropdownWrap');
+        if (wrap) {
+            wrap.classList.toggle('open');
+        }
+    };
+
+    document.addEventListener('click', function(e) {
+        var wrap = document.getElementById('t5ActionsDropdownWrap');
+        if (wrap && wrap.classList.contains('open')) {
+            if (!wrap.contains(e.target)) {
+                wrap.classList.remove('open');
+            }
+        }
+    });
+
     function t5ScrollTo(targetId) {
         if (targetId === 'top') {
             window.scrollTo({ top: 0, behavior: 'smooth' });
