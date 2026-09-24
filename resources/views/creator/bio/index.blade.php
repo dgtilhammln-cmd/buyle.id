@@ -1797,6 +1797,175 @@
                         </div>
                         @endif
 
+                        {{-- ATUR URUTAN SECTION INTERAKTIF CARD --}}
+                        @php
+                            $allSecDef = [
+                                'hero_slider' => ['label' => 'Banner Slider Hero', 'icon' => 'M4 6h16M4 12h16M4 18h16'],
+                                'client_logos' => ['label' => 'Client Logos / Brand Partners', 'icon' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87'],
+                                'about_section' => ['label' => 'About Us / Tentang Kami', 'icon' => 'M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z'],
+                                'products_grid' => ['label' => 'Katalog Produk / Etalase', 'icon' => 'M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z'],
+                                'services_section' => ['label' => 'Jasa & Layanan', 'icon' => 'M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'],
+                                'gallery_section' => ['label' => 'Galeri 3D Coverflow', 'icon' => 'M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z'],
+                                'tiktok_section' => ['label' => 'TikTok 3D Reel Video', 'icon' => 'M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z'],
+                                'teams_section' => ['label' => 'Tim Kami / Teams', 'icon' => 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'],
+                            ];
+                            $currSecOrder = $cfg['homepage_sections_order'] ?? array_keys($allSecDef);
+                            if (!is_array($currSecOrder) || empty($currSecOrder)) {
+                                $currSecOrder = array_keys($allSecDef);
+                            } else {
+                                $currSecOrder = array_values(array_unique(array_merge($currSecOrder, array_keys($allSecDef))));
+                            }
+                        @endphp
+
+                        <div class="prof-card" style="margin-bottom: 1.5rem; border: 1.5px solid #0f172a; background: #ffffff; border-radius:18px; box-shadow:0 4px 20px rgba(15,23,42,0.06); overflow:hidden;">
+                            <div class="prof-card-head" style="background: #0f172a; color:#ffffff; padding:0.9rem 1.25rem; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
+                                <div style="display:flex; align-items:center; gap:0.55rem;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+                                    </svg>
+                                    <span>Atur Urutan Tampilan Section Homepage (Tema 5)</span>
+                                </div>
+                                <span style="background:rgba(255,255,255,0.15); color:#ffffff; font-size:0.72rem; font-weight:600; padding:0.25rem 0.65rem; border-radius:20px;">Interactive Reorder</span>
+                            </div>
+
+                            <div class="card-body" style="padding:1.25rem;">
+                                {{-- Panduan Alert --}}
+                                <div style="background:#f0f9ff; border:1px solid #bae6fd; border-radius:12px; padding:1rem; margin-bottom:1.25rem; font-size:0.83rem; color:#0369a1; line-height:1.5;">
+                                    <div style="font-weight:700; display:flex; align-items:center; gap:0.4rem; margin-bottom:0.35rem; font-size:0.88rem; color:#0284c7;">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <line x1="12" y1="16" x2="12" y2="12"/>
+                                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                        </svg>
+                                        Panduan Atur Urutan Section Homepage:
+                                    </div>
+                                    Geser / drag kartu section di bawah ini ke posisi awal, tengah, atau akhir. Atau gunakan tombol navigasi 
+                                    <span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.75rem;">Ke Awal</span>, 
+                                    <span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.75rem;">Naik ↑</span>, 
+                                    <span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.75rem;">Turun ↓</span>, dan 
+                                    <span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.75rem;">Ke Akhir</span>. 
+                                    <br><em>*Setelah mengatur urutan, wajib mengeklik tombol <strong>"Simpan Perubahan"</strong> di bagian bawah halaman agar perubahan tersimpan permanen.</em>
+                                </div>
+
+                                <style>
+                                    .sec-reorder-list {
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 0.65rem;
+                                    }
+                                    .sec-reorder-item {
+                                        background: #f8fafc;
+                                        border: 1.5px solid #e2e8f0;
+                                        border-radius: 12px;
+                                        padding: 0.75rem 1rem;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: space-between;
+                                        gap: 0.75rem;
+                                        transition: all 0.2s ease;
+                                        cursor: grab;
+                                        user-select: none;
+                                    }
+                                    .sec-reorder-item:hover {
+                                        border-color: #1eb349;
+                                        background: #ffffff;
+                                    }
+                                    .sec-reorder-item.dragging {
+                                        opacity: 0.4;
+                                        border-style: dashed;
+                                        border-color: #1eb349;
+                                        background: #f0fdf4;
+                                    }
+                                    .sec-reorder-left {
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 0.75rem;
+                                    }
+                                    .sec-grip-icon {
+                                        color: #94a3b8;
+                                        cursor: grab;
+                                        display: flex;
+                                        align-items: center;
+                                    }
+                                    .sec-reorder-title {
+                                        font-weight: 700;
+                                        font-size: 0.88rem;
+                                        color: #0f172a;
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 0.5rem;
+                                    }
+                                    .sec-reorder-actions {
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 0.35rem;
+                                        flex-wrap: wrap;
+                                    }
+                                    .sec-btn-move {
+                                        background: #ffffff;
+                                        border: 1px solid #cbd5e1;
+                                        color: #475569;
+                                        font-size: 0.72rem;
+                                        font-weight: 700;
+                                        padding: 0.35rem 0.65rem;
+                                        border-radius: 6px;
+                                        cursor: pointer;
+                                        display: inline-flex;
+                                        align-items: center;
+                                        gap: 0.25rem;
+                                        transition: all 0.15s ease;
+                                    }
+                                    .sec-btn-move:hover {
+                                        background: #1eb349;
+                                        color: #ffffff;
+                                        border-color: #1eb349;
+                                    }
+                                </style>
+
+                                <div class="sec-reorder-list" id="secReorderList">
+                                    @foreach($currSecOrder as $sKey)
+                                        @if(isset($allSecDef[$sKey]))
+                                            <div class="sec-reorder-item" draggable="true">
+                                                <input type="hidden" name="homepage_sections_order[]" value="{{ $sKey }}">
+                                                <div class="sec-reorder-left">
+                                                    <span class="sec-grip-icon" title="Geser / drag untuk mengubah urutan">
+                                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                            <circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/>
+                                                            <circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/>
+                                                        </svg>
+                                                    </span>
+                                                    <div class="sec-reorder-title">
+                                                        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                                                            <path d="{{ $allSecDef[$sKey]['icon'] }}"/>
+                                                        </svg>
+                                                        <span>{{ $allSecDef[$sKey]['label'] }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="sec-reorder-actions">
+                                                    <button type="button" class="sec-btn-move" onclick="moveSecItem(this, 'top')" title="Pindahkan ke urutan teratas">
+                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/><line x1="6" y1="6" x2="18" y2="6"/></svg>
+                                                        Ke Awal
+                                                    </button>
+                                                    <button type="button" class="sec-btn-move" onclick="moveSecItem(this, 'up')" title="Naik satu tingkat">
+                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+                                                        Naik ↑
+                                                    </button>
+                                                    <button type="button" class="sec-btn-move" onclick="moveSecItem(this, 'down')" title="Turun satu tingkat">
+                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                                                        Turun ↓
+                                                    </button>
+                                                    <button type="button" class="sec-btn-move" onclick="moveSecItem(this, 'bottom')" title="Pindahkan ke urutan terbawah">
+                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/><line x1="6" y1="18" x2="18" y2="18"/></svg>
+                                                        Ke Akhir
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
                         {{-- Sub-Subtab Switcher Bar --}}
                         <style>
                             .hp-subtab-bar {
@@ -7025,7 +7194,69 @@
                         style="flex:1.5; height:42px; background:linear-gradient(135deg,#1eb349,#a5cf37); border:none; color:#fff; border-radius:10px; font-size:0.85rem; font-weight:600; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,.3);">Simpan
                         & Tambahkan</button>
                 </div>
-            </form>
-        </div>
-    </div>
+    <script>
+        function moveSecItem(btn, direction) {
+            const item = btn.closest('.sec-reorder-item');
+            const container = document.getElementById('secReorderList');
+            if (!item || !container) return;
+
+            if (direction === 'up') {
+                const prev = item.previousElementSibling;
+                if (prev) container.insertBefore(item, prev);
+            } else if (direction === 'down') {
+                const next = item.nextElementSibling;
+                if (next) container.insertBefore(next, item);
+            } else if (direction === 'top') {
+                container.insertBefore(item, container.firstElementChild);
+            } else if (direction === 'bottom') {
+                container.appendChild(item);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const list = document.getElementById('secReorderList');
+            if (!list) return;
+
+            let dragItem = null;
+
+            list.addEventListener('dragstart', function(e) {
+                dragItem = e.target.closest('.sec-reorder-item');
+                if (dragItem) {
+                    dragItem.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                }
+            });
+
+            list.addEventListener('dragend', function(e) {
+                if (dragItem) {
+                    dragItem.classList.remove('dragging');
+                    dragItem = null;
+                }
+            });
+
+            list.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                if (!dragItem) return;
+                const afterElement = getDragAfterElement(list, e.clientY);
+                if (afterElement == null) {
+                    list.appendChild(dragItem);
+                } else {
+                    list.insertBefore(dragItem, afterElement);
+                }
+            });
+
+            function getDragAfterElement(container, y) {
+                const draggableElements = [...container.querySelectorAll('.sec-reorder-item:not(.dragging)')];
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+        });
+    </script>
 @endsection

@@ -492,6 +492,13 @@ class CreatorBioController extends Controller
             }
         }
 
+        // Homepage Section Order (Tema 5 & Multicreator Theme)
+        if ($request->has('homepage_sections_order')) {
+            $secOrder = $request->input('homepage_sections_order');
+            if (is_array($secOrder)) {
+                $config['homepage_sections_order'] = array_values(array_filter($secOrder));
+            }
+        }
 
         if ($request->has('theme5_seo_home_title'))        $config['theme5_seo_home_title']        = $request->theme5_seo_home_title;
         if ($request->has('theme5_seo_home_desc'))         $config['theme5_seo_home_desc']         = $request->theme5_seo_home_desc;

@@ -1325,29 +1325,44 @@
     @include('bio.theme5.header')
 
     <main>
-        {{-- 2. Hero Banner Slider Section --}}
-        @include('bio.theme5.hero_slider')
+        @php
+            $defaultT5Sections = [
+                'hero_slider',
+                'client_logos',
+                'about_section',
+                'products_grid',
+                'services_section',
+                'gallery_section',
+                'tiktok_section',
+                'teams_section',
+            ];
+            $userT5Sections = $config['homepage_sections_order'] ?? [];
+            if (!is_array($userT5Sections) || empty($userT5Sections)) {
+                $userT5Sections = $defaultT5Sections;
+            } else {
+                $userT5Sections = array_values(array_unique(array_merge($userT5Sections, $defaultT5Sections)));
+            }
+        @endphp
 
-        {{-- 2.5 Client Logos / Brand Partners Section (Tema 5) --}}
-        @include('bio.theme5.client_logos_section')
-
-        {{-- 3. About Us Section (Tema 5) --}}
-        @include('bio.theme5.about_section')
-
-        {{-- 4. Products Catalog Grid --}}
-        @include('bio.theme5.products_grid')
-
-        {{-- 5. Services Section (Tema 5) --}}
-        @include('bio.theme5.services_section')
-
-        {{-- 6. 3D Coverflow Gallery Section (Tema 5) --}}
-        @include('bio.theme5.gallery_section')
-
-        {{-- 7. 3D TikTok Phone Reel Carousel Section (Tema 5) --}}
-        @include('bio.theme5.tiktok_section')
-
-        {{-- 8. Teams / Tim Kami Section (Tema 5) --}}
-        @include('bio.theme5.teams_section')
+        @foreach($userT5Sections as $secKey)
+            @if($secKey === 'hero_slider')
+                @include('bio.theme5.hero_slider')
+            @elseif($secKey === 'client_logos')
+                @include('bio.theme5.client_logos_section')
+            @elseif($secKey === 'about_section')
+                @include('bio.theme5.about_section')
+            @elseif($secKey === 'products_grid')
+                @include('bio.theme5.products_grid')
+            @elseif($secKey === 'services_section')
+                @include('bio.theme5.services_section')
+            @elseif($secKey === 'gallery_section')
+                @include('bio.theme5.gallery_section')
+            @elseif($secKey === 'tiktok_section')
+                @include('bio.theme5.tiktok_section')
+            @elseif($secKey === 'teams_section')
+                @include('bio.theme5.teams_section')
+            @endif
+        @endforeach
     </main>
 
     {{-- FLOATING WHATSAPP BUTTON --}}

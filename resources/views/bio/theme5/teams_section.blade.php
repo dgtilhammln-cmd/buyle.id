@@ -12,48 +12,60 @@
         $tDesc       = !empty($config['teams_description']) ? $config['teams_description'] : 'Talenta terbaik kami yang berdedikasi tinggi untuk memberikan hasil luar biasa.';
 
         $teams = [];
+        $hasCustomMember = false;
+        for ($i = 1; $i <= 10; $i++) {
+            if (!empty($config["team_member_{$i}_name"]) || !empty($config["team_member_{$i}_photo"])) {
+                $hasCustomMember = true;
+                break;
+            }
+        }
+
         for ($i = 1; $i <= 10; $i++) {
             $photo     = $config["team_member_{$i}_photo"] ?? null;
             $name      = $config["team_member_{$i}_name"] ?? null;
             $position  = $config["team_member_{$i}_position"] ?? null;
             $bio       = $config["team_member_{$i}_bio"] ?? null;
-            $gradStart = $config["team_member_{$i}_grad_start"] ?? null;
-            $gradEnd   = $config["team_member_{$i}_grad_end"] ?? null;
+            $gradStart = $config["team_member_{$i}_grad_start"] ?? '#0052D4';
+            $gradEnd   = $config["team_member_{$i}_grad_end"] ?? '#4364F7';
 
-            // Default samples if all slots are empty
-            if (empty($photo) && empty($name)) {
+            if ($hasCustomMember) {
+                if (!empty($name) || !empty($photo)) {
+                    $teams[] = [
+                        'id' => $i,
+                        'name' => $name ?: "Anggota Tim #{$i}",
+                        'position' => $position ?: 'Spesialis',
+                        'bio' => $bio ?: 'Berdedikasi untuk memberikan layanan profesional terbaik untuk Anda.',
+                        'photo' => $photo ? asset('storage/' . $photo) : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+                        'grad_start' => $gradStart,
+                        'grad_end' => $gradEnd,
+                    ];
+                }
+            } else {
+                // Default samples if all slots are empty
                 $samples = [
                     1 => [
                         'name' => 'Manuel Ravier',
                         'position' => 'Performance Coach',
                         'bio' => 'As CEO and co-founder, Manuel leads the overall vision and strategic direction, specializing in leadership performance and growth.',
                         'photo' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
-                        'grad_start' => '#2563eb',
-                        'grad_end' => '#1d4ed8'
                     ],
                     2 => [
                         'name' => 'David Sequiera',
                         'position' => 'Recovery Specialist',
                         'bio' => 'As co-founder, David manages operations and client recovery systems, ensuring all workflows run seamlessly and deliver high-impact results.',
                         'photo' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
-                        'grad_start' => '#3b82f6',
-                        'grad_end' => '#1d4ed8'
                     ],
                     3 => [
                         'name' => 'Sarah Jenkins',
                         'position' => 'Head of Creative',
                         'bio' => 'Sarah shapes the visual identity and brand experience, crafting compelling aesthetic designs that connect deeply with audiences worldwide.',
                         'photo' => 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80',
-                        'grad_start' => '#059669',
-                        'grad_end' => '#047857'
                     ],
                     4 => [
                         'name' => 'Marcus Vance',
                         'position' => 'Tech Lead & Developer',
                         'bio' => 'Marcus oversees system architecture and software engineering, building scalable, high-performance web applications and digital tools.',
                         'photo' => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80',
-                        'grad_start' => '#7c3aed',
-                        'grad_end' => '#6d28d9'
                     ]
                 ];
                 if (isset($samples[$i])) {
@@ -63,20 +75,10 @@
                         'position' => $samples[$i]['position'],
                         'bio' => $samples[$i]['bio'],
                         'photo' => $samples[$i]['photo'],
-                        'grad_start' => $samples[$i]['grad_start'],
-                        'grad_end' => $samples[$i]['grad_end'],
+                        'grad_start' => $gradStart,
+                        'grad_end' => $gradEnd,
                     ];
                 }
-            } elseif (!empty($name) || !empty($photo)) {
-                $teams[] = [
-                    'id' => $i,
-                    'name' => $name ?: "Anggota Tim #{$i}",
-                    'position' => $position ?: 'Spesialis',
-                    'bio' => $bio ?: 'Berdedikasi untuk memberikan layanan profesional terbaik untuk Anda.',
-                    'photo' => $photo ? asset('storage/' . $photo) : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
-                    'grad_start' => $gradStart ?: '#2563eb',
-                    'grad_end' => $gradEnd ?: '#1d4ed8',
-                ];
             }
         }
     @endphp
