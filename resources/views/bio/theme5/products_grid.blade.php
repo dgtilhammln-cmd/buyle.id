@@ -17,12 +17,71 @@
 @endphp
 
 @if($catalogProducts->count() > 0)
+    <style>
+        .t5-products-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            text-align: left;
+            margin-bottom: 2rem;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .t5-products-header .t5-section-title-wrap {
+            text-align: left;
+        }
+        .t5-products-header .t5-section-title {
+            text-align: left;
+            margin: 0;
+        }
+        .t5-products-header .t5-section-sub {
+            text-align: left;
+            margin-top: 0.35rem;
+        }
+        .t5-see-all-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.65rem 1.35rem;
+            background: #0f172a;
+            color: #ffffff;
+            border-radius: 999px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.15);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+        .t5-see-all-btn:hover {
+            background: #1eb349;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 179, 73, 0.25);
+        }
+    </style>
     <section class="t5-products-section" id="products-section">
-        <div class="t5-section-header">
+        <div class="t5-products-header">
             <div class="t5-section-title-wrap">
                 <h2 class="t5-section-title">Produk Unggulan</h2>
                 <p class="t5-section-sub">Katalog produk pilihan terbaik.</p>
             </div>
+            @php
+                $storeUsername = $profile->store_slug ?? ($username ?? 'creator');
+                if (!empty($profile->custom_domain)) {
+                    $allProductsUrl = 'https://' . rtrim($profile->custom_domain, '/') . '/produk';
+                } else {
+                    $allProductsUrl = url($storeUsername . '/produk');
+                }
+            @endphp
+            <a href="{{ $allProductsUrl }}" class="t5-see-all-btn">
+                <span>Lihat Semua</span>
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                </svg>
+            </a>
         </div>
 
         <div class="t5-products-grid">
