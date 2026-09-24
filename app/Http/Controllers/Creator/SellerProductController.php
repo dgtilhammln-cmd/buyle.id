@@ -405,10 +405,27 @@ class SellerProductController extends Controller
     /**
      * Hapus semua produk digital milik seller yang sedang login.
      */
-    public function destroyAll()
+    public function destroyAll(Request $request)
     {
         $sellerId = auth()->id();
-        $products = Product::where('seller_id', $sellerId)->get();
+        $query = Product::where('seller_id', $sellerId);
+
+        if ($request->filled('type')) {
+            $type = $request->type;
+            if ($type === 'makanan') {
+                $query->where(function($q) {
+                    $q->where('product_type', 'makanan')
+                      ->orWhere('category', 'makanan');
+                });
+            } else {
+                $query->where(function($q) use ($type) {
+                    $q->where('product_type', $type)
+                      ->orWhere('category', $type);
+                });
+            }
+        }
+
+        $products = $query->get();
 
         foreach ($products as $product) {
             if ($product->image && !Str::startsWith($product->image, 'http')) {
@@ -425,7 +442,11 @@ class SellerProductController extends Controller
         Cache::forget('catalog_main');
         Cache::forget("seller_products_{$sellerId}");
 
-        return back()->with('success', 'Berhasil menghapus semua produk digital!');
+        $msg = $request->filled('type')
+            ? 'Berhasil menghapus semua produk tipe ' . $request->type . '!'
+            : 'Berhasil menghapus semua produk!';
+
+        return back()->with('success', $msg);
     }
 
     /**

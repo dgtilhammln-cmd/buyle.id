@@ -82,6 +82,9 @@
       align-items: center;
       gap: 0.75rem;
       flex-wrap: wrap;
+      flex: 1;
+      justify-content: flex-end;
+      min-width: 0;
     }
 
     .prod-search-form {
@@ -92,6 +95,9 @@
       border-radius: 12px;
       padding: 4px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+      flex: 1;
+      min-width: 160px;
+      max-width: 280px;
     }
 
     .prod-search-input {
@@ -99,7 +105,9 @@
       outline: none;
       padding: 8px 12px;
       font-size: 0.875rem;
-      width: 200px;
+      width: 100%;
+      flex: 1;
+      min-width: 0;
       font-family: 'Montserrat', sans-serif;
     }
 
@@ -709,30 +717,35 @@
 @section('content')
 
   {{-- FILTER PILLS TIPE PRODUK --}}
-  <div style="display:flex; align-items:center; gap:0.4rem; overflow-x:auto; margin-bottom:1.25rem; padding-bottom:0.25rem; scrollbar-width:none;">
+  <div style="display:flex; align-items:center; gap:0.5rem; overflow-x:auto; margin-bottom:1.25rem; padding-bottom:0.25rem; scrollbar-width:none;">
     <a href="{{ route('creator.products.index', array_merge(request()->except('type', 'page'))) }}" 
-       style="padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ !request('type') ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
+       style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ !request('type') ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
        Semua Tipe Produk
     </a>
     <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'makanan'])) }}" 
-       style="padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'makanan' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
-       🍔 Makanan / Resto
+       style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'makanan' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
+       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+       Makanan / Resto
     </a>
     <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'external_link'])) }}" 
-       style="padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'external_link' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
-       ⚡ Digital / Link Access
+       style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'external_link' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
+       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+       Digital / Link Access
     </a>
     <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'physical'])) }}" 
-       style="padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'physical' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
-       📦 Barang Fisik
+       style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'physical' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
+       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+       Barang Fisik
     </a>
     <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'service'])) }}" 
-       style="padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'service' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
-       💼 Jasa & Layanan
+       style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'service' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
+       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+       Jasa & Layanan
     </a>
     <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['type' => 'ticket'])) }}" 
-       style="padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'ticket' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
-       🎟️ Tiket Event
+       style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; border-radius:20px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s; white-space:nowrap; {{ request('type') == 'ticket' ? 'background:#1eb349; color:#fff; box-shadow:0 3px 10px rgba(30,179,73,0.25);' : 'background:#ffffff; color:#64748b; border:1px solid #e2e8f0;' }}">
+       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"></path><line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2 2"></line></svg>
+       Tiket Event
     </a>
   </div>
 

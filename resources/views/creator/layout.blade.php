@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -927,10 +927,9 @@
     {{-- MAIN CANVAS WRAPPER --}}
     <div class="cr-main-wrapper">
         <main class="cr-main-canvas">
-            {{-- Header Area: Title & Actions --}}
-            <div
-                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-                <div>
+            <div class="cr-topbar-header-row"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; width: 100%;">
+                <div class="cr-topbar-title-box">
                     <h1
                         style="font-size: 1.5rem; font-weight: 600; color: #0b120c; margin: 0 0 0.25rem; font-family: 'Montserrat', sans-serif;">
                         @yield('page_title', 'Dashboard')
@@ -941,7 +940,7 @@
                         </p>
                     @endif
                 </div>
-                <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <div class="cr-topbar-actions-wrapper" style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; flex: 1; justify-content: flex-end; min-width: 0;">
                     @yield('topbar_actions')
 
                     @php
