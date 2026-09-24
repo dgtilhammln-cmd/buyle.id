@@ -673,7 +673,18 @@ class CreatorBioController extends Controller
                     'description'  => $data['description'] ?? '',
                     'image'        => !empty($data['images'][0]) ? $data['images'][0] : ($data['image'] ?? null),
                     'is_active'    => true,
-                    'product_type' => ($data['category'] === 'Barang') ? 'physical' : (($data['category'] === 'Jasa') ? 'service' : 'makanan'),
+                    'product_type' => (function($cat) {
+                        $c = strtolower(trim($cat ?? ''));
+                        return match($c) {
+                            'barang', 'fisik', 'physical' => 'physical',
+                            'jasa', 'service'            => 'service',
+                            'makanan'                    => 'makanan',
+                            'digital'                    => 'digital',
+                            'link', 'external_link'      => 'external_link',
+                            'tiket', 'ticket'            => 'ticket',
+                            default                      => 'physical',
+                        };
+                    })($data['category'] ?? null),
                 ]);
                 $data['product_id'] = $product->id;
             }
@@ -875,12 +886,15 @@ class CreatorBioController extends Controller
             if (!empty($data['product_id'])) {
                 $p = \App\Models\Product::find($data['product_id']);
                 if ($p) {
-                    $catName = strtolower(trim($data['category'] ?? 'makanan'));
+                    $catName = strtolower(trim($data['category'] ?? ''));
                     $productType = match ($catName) {
-                        'barang' => 'physical',
-                        'jasa'   => 'service',
-                        'makanan' => 'makanan',
-                        default  => 'makanan',
+                        'barang', 'fisik', 'physical' => 'physical',
+                        'jasa', 'service'            => 'service',
+                        'makanan'                    => 'makanan',
+                        'digital'                    => 'digital',
+                        'link', 'external_link'      => 'external_link',
+                        'tiket', 'ticket'            => 'ticket',
+                        default                      => 'physical',
                     };
 
                     $p->update([

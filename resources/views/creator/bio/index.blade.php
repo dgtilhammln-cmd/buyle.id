@@ -26,14 +26,13 @@
             align-items: flex-start;
         }
 
+        .bio-sidebar-column,
         .bio-sidebar {
             width: 320px;
             flex-shrink: 0;
-            background: #fff;
-            border-radius: 20px;
-            padding: 1.25rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
             position: sticky;
             top: 1.5rem;
             max-height: calc(100vh - 3rem);
@@ -41,8 +40,17 @@
             scrollbar-width: none;
         }
 
+        .bio-sidebar-column::-webkit-scrollbar,
         .bio-sidebar::-webkit-scrollbar {
             display: none;
+        }
+
+        .bio-sidebar-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 1.25rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e2e8f0;
         }
 
         .bio-content {
@@ -1015,109 +1023,93 @@
 
     <div class="bio-layout">
 
-        {{-- Sidebar Nav --}}
-        <div class="bio-sidebar">
-            <div class="bio-tabs-list">
-                <button class="tab-btn active" data-tab="tab-domain">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" />
-                        <path
-                            d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                    </svg>
-                    <span class="tab-text-full">Beli Custom Domain</span>
-                    <small class="tab-text-mob">Domain</small>
-                </button>
-                <button class="tab-btn" data-tab="tab-theme">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="3" />
-                        <path
-                            d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-                    </svg>
-                    <span class="tab-text-full">Tampilan & Tema</span>
-                    <small class="tab-text-mob">Tema</small>
-                </button>
-                <button class="tab-btn" data-tab="tab-profile">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <circle cx="12" cy="8" r="4" />
-                        <path d="M20 21a8 8 0 1 0-16 0" />
-                    </svg>
-                    <span class="tab-text-full">Pengaturan Profil</span>
-                    <small class="tab-text-mob">Profil</small>
-                </button>
-                <button class="tab-btn" data-tab="tab-social">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M22 12A10 10 0 1 0 12 22a10 10 0 0 0 10-10zM8 12a4 4 0 1 0 8 0 4 4 0 0 0-8 0z" />
-                    </svg>
-                    <span class="tab-text-full">Social Links</span>
-                    <small class="tab-text-mob">Social</small>
-                </button>
-                <button class="tab-btn" data-tab="tab-blocks">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <rect x="3" y="3" width="7" height="7" />
-                        <rect x="14" y="3" width="7" height="7" />
-                        <rect x="14" y="14" width="7" height="7" />
-                        <rect x="3" y="14" width="7" height="7" />
-                    </svg>
-                    <span class="tab-text-full">Kelola Block</span>
-                    <small class="tab-text-mob">Block</small>
-                </button>
-                <button class="tab-btn" data-tab="tab-catalog">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                        <line x1="3" y1="6" x2="21" y2="6" />
-                        <path d="M16 10a4 4 0 0 1-8 0" />
-                    </svg>
-                    <span class="tab-text-full">Katalog & Affiliate</span>
-                    <small class="tab-text-mob">Katalog</small>
-                </button>
-                <button class="tab-btn" data-tab="tab-embed">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                        <circle cx="12" cy="10" r="3" />
-                    </svg>
-                    <span class="tab-text-full">Lokasi / Map</span>
-                    <small class="tab-text-mob">Lokasi</small>
-                </button>
-            </div>
-
-            <div class="sidebar-extra-info" style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid #e7f0e7;">
-                <div
-                    style="font-size:0.7rem; color:#94a3b8; font-weight: 500; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem;">
-                    Tipe Profil</div>
-                <div style="font-size:0.82rem; font-weight: 500; color:#1eb349;">
-                    {{ $roleLabels[$profile->bio_role] ?? '-' }}
-                </div>
-                @if($bioUrl)
-                    <a href="{{ $bioUrl }}" target="_blank"
-                        style="display:flex; align-items:center; gap:0.4rem; margin-top:0.5rem; font-size:0.72rem; color:#64748b; text-decoration:none; word-break:break-all;">
-                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke-linecap="round" />
-                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke-linecap="round" />
+        {{-- Sidebar Nav Column --}}
+        <div class="bio-sidebar-column">
+            <div class="bio-sidebar-card">
+                <div class="bio-tabs-list">
+                    <button class="tab-btn active" data-tab="tab-domain">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <path
+                                d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                         </svg>
-                        {{ $bioUrl }}
-                    </a>
-                @endif
+                        <span class="tab-text-full">Beli Custom Domain</span>
+                        <small class="tab-text-mob">Domain</small>
+                    </button>
+                    <button class="tab-btn" data-tab="tab-theme">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3" />
+                            <path
+                                d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                        </svg>
+                        <span class="tab-text-full">Tampilan & Tema</span>
+                        <small class="tab-text-mob">Tema</small>
+                    </button>
+                    <button class="tab-btn" data-tab="tab-profile">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="8" r="4" />
+                            <path d="M20 21a8 8 0 1 0-16 0" />
+                        </svg>
+                        <span class="tab-text-full">Pengaturan Profil</span>
+                        <small class="tab-text-mob">Profil</small>
+                    </button>
+                    <button class="tab-btn" data-tab="tab-social">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M22 12A10 10 0 1 0 12 22a10 10 0 0 0 10-10zM8 12a4 4 0 0 0-8 0z" />
+                        </svg>
+                        <span class="tab-text-full">Social Links</span>
+                        <small class="tab-text-mob">Social</small>
+                    </button>
+                    <button class="tab-btn" data-tab="tab-blocks">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="7" height="7" />
+                            <rect x="14" y="3" width="7" height="7" />
+                            <rect x="14" y="14" width="7" height="7" />
+                            <rect x="3" y="14" width="7" height="7" />
+                        </svg>
+                        <span class="tab-text-full">Kelola Block</span>
+                        <small class="tab-text-mob">Block</small>
+                    </button>
+                    <button class="tab-btn" data-tab="tab-catalog">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <path d="M16 10a4 4 0 0 1-8 0" />
+                        </svg>
+                        <span class="tab-text-full">Katalog & Affiliate</span>
+                        <small class="tab-text-mob">Katalog</small>
+                    </button>
+                    <button class="tab-btn" data-tab="tab-embed">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        <span class="tab-text-full">Lokasi / Map</span>
+                        <small class="tab-text-mob">Lokasi</small>
+                    </button>
+                </div>
+
+                <div class="sidebar-extra-info" style="margin-top:1.25rem; padding-top:1rem; border-top:1px solid #e7f0e7;">
+                    <div
+                        style="font-size:0.7rem; color:#94a3b8; font-weight: 500; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem;">
+                        Tipe Profil</div>
+                    <div style="font-size:0.82rem; font-weight: 500; color:#1eb349;">
+                        {{ $roleLabels[$profile->bio_role] ?? '-' }}
+                    </div>
+                    @if($bioUrl)
+                        <a href="{{ $bioUrl }}" target="_blank"
+                            style="display:flex; align-items:center; gap:0.4rem; margin-top:0.5rem; font-size:0.72rem; color:#64748b; text-decoration:none; word-break:break-all;">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke-linecap="round" />
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke-linecap="round" />
+                            </svg>
+                            {{ $bioUrl }}
+                        </a>
+                    @endif
+                </div>
             </div>
 
-            {{-- Mobile Preview Mockup --}}
-            @if($bioUrl)
-                <div class="bio-mockup-wrapper" style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7;">
-                    <div
-                        style="font-size:0.7rem; color:#94a3b8; font-weight: 500; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:1rem; text-align:center;">
-                        Live Preview</div>
-                    <div
-                        style="width: 260px; height: 530px; margin: 0 auto; border: 12px solid #1a1a1a; border-radius: 36px; overflow: hidden; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1); background:#fff;">
-                        {{-- Notch --}}
-                        <div
-                            style="position:absolute; top:0; left:50%; transform:translateX(-50%); width:100px; height:20px; background:#1a1a1a; border-bottom-left-radius:12px; border-bottom-right-radius:12px; z-index:10;">
-                        </div>
-                        <iframe src="{{ $bioUrl }}" style="width:100%; height:100%; border:none; background:#fff;"
-                            id="bioPreviewFrame"></iframe>
-                    </div>
-                    <p style="text-align:center; font-size:0.7rem; color:#94a3b8; margin-top:0.75rem;">Perubahan profil akan
-                        terupdate otomatis saat disimpan.</p>
-                </div>
-            @endif
+
 
             {{-- COMPACT SIDEBAR REORDER CARD (Khusus Tab Profil & Tema 5) --}}
             @php
@@ -1139,123 +1131,141 @@
                 }
             @endphp
 
-            <div id="sidebarSecReorderCard" style="display: none; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid #e7f0e7;">
-                <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 0.85rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);">
-                    {{-- Card Header --}}
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.65rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f1f5f9;">
-                        <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 700; color: #0f172a;">
-                            <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
-                            </svg>
-                            <span>Urutan Section Homepage</span>
-                        </div>
-                        <span style="font-size: 0.65rem; background: #f0fdf4; color: #15803d; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 6px; border: 1px solid #bbf7d0;">
-                            Tema 5
-                        </span>
+            <div id="sidebarSecReorderCard" class="bio-sidebar-card" style="display: none;">
+                {{-- Card Header --}}
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.65rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f1f5f9;">
+                    <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 700; color: #0f172a;">
+                        <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+                        </svg>
+                        <span>Urutan Section Homepage</span>
                     </div>
+                    <span style="font-size: 0.65rem; background: #f0fdf4; color: #15803d; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 6px; border: 1px solid #bbf7d0;">
+                        Tema 5
+                    </span>
+                </div>
 
-                    <p style="font-size: 0.72rem; color: #64748b; margin-bottom: 0.65rem; line-height: 1.35;">
-                        Geser kartu atau tekan tombol panah untuk ubah urutan section. Wajib klik <strong>"Simpan Perubahan"</strong>.
-                    </p>
+                <p style="font-size: 0.72rem; color: #64748b; margin-bottom: 0.65rem; line-height: 1.35;">
+                    Geser kartu atau tekan tombol panah untuk ubah urutan section. Wajib klik <strong>"Simpan Perubahan"</strong>.
+                </p>
 
-                    <style>
-                        .sec-reorder-list-compact {
-                            display: flex;
-                            flex-direction: column;
-                            gap: 0.4rem;
-                        }
-                        .sec-reorder-item-compact {
-                            background: #f8fafc;
-                            border: 1px solid #e2e8f0;
-                            border-radius: 8px;
-                            padding: 0.45rem 0.6rem;
-                            display: flex;
-                            align-items: center;
-                            justify-content: space-between;
-                            gap: 0.4rem;
-                            transition: all 0.15s ease;
-                            cursor: grab;
-                            user-select: none;
-                        }
-                        .sec-reorder-item-compact:hover {
-                            border-color: #1eb349;
-                            background: #ffffff;
-                            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-                        }
-                        .sec-reorder-item-compact.dragging {
-                            opacity: 0.4;
-                            border-style: dashed;
-                            border-color: #1eb349;
-                            background: #f0fdf4;
-                        }
-                        .sec-reorder-compact-left {
-                            display: flex;
-                            align-items: center;
-                            gap: 0.4rem;
-                            min-width: 0;
-                            flex: 1;
-                        }
-                        .sec-reorder-compact-handle {
-                            color: #94a3b8;
-                            cursor: grab;
-                            display: flex;
-                            align-items: center;
-                            flex-shrink: 0;
-                        }
-                        .sec-reorder-compact-title {
-                            font-size: 0.75rem;
-                            font-weight: 600;
-                            color: #334155;
-                            white-space: nowrap;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                        }
-                        .sec-reorder-compact-btn {
-                            width: 22px;
-                            height: 22px;
-                            border-radius: 5px;
-                            border: 1px solid #cbd5e1;
-                            background: #ffffff;
-                            color: #475569;
-                            display: inline-flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-size: 0.7rem;
-                            font-weight: 700;
-                            cursor: pointer;
-                            transition: all 0.15s ease;
-                            padding: 0;
-                        }
-                        .sec-reorder-compact-btn:hover {
-                            background: #1eb349;
-                            color: #ffffff;
-                            border-color: #1eb349;
-                        }
-                    </style>
+                <style>
+                    .sec-reorder-list-compact {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0.4rem;
+                    }
+                    .sec-reorder-item-compact {
+                        background: #f8fafc;
+                        border: 1px solid #e2e8f0;
+                        border-radius: 8px;
+                        padding: 0.45rem 0.6rem;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 0.4rem;
+                        transition: all 0.15s ease;
+                        cursor: grab;
+                        user-select: none;
+                    }
+                    .sec-reorder-item-compact:hover {
+                        border-color: #1eb349;
+                        background: #ffffff;
+                        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+                    }
+                    .sec-reorder-item-compact.dragging {
+                        opacity: 0.4;
+                        border-style: dashed;
+                        border-color: #1eb349;
+                        background: #f0fdf4;
+                    }
+                    .sec-reorder-compact-left {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.4rem;
+                        min-width: 0;
+                        flex: 1;
+                    }
+                    .sec-reorder-compact-handle {
+                        color: #94a3b8;
+                        cursor: grab;
+                        display: flex;
+                        align-items: center;
+                        flex-shrink: 0;
+                    }
+                    .sec-reorder-compact-title {
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                        color: #334155;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                    .sec-reorder-compact-btn {
+                        width: 22px;
+                        height: 22px;
+                        border-radius: 5px;
+                        border: 1px solid #cbd5e1;
+                        background: #ffffff;
+                        color: #475569;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 0.7rem;
+                        font-weight: 700;
+                        cursor: pointer;
+                        transition: all 0.15s ease;
+                        padding: 0;
+                    }
+                    .sec-reorder-compact-btn:hover {
+                        background: #1eb349;
+                        color: #ffffff;
+                        border-color: #1eb349;
+                    }
+                </style>
 
-                    <div class="sec-reorder-list-compact" id="secReorderListCompact">
-                        @foreach($currSecOrder as $secKey)
-                            @if(isset($allSecDef[$secKey]))
-                                @php $secInfo = $allSecDef[$secKey]; @endphp
-                                <div class="sec-reorder-item-compact" draggable="true" data-sec-key="{{ $secKey }}">
-                                    <div class="sec-reorder-compact-left">
-                                        <span class="sec-reorder-compact-handle" title="Geser untuk mengubah urutan">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                                <path d="M8 6h.01M8 12h.01M8 18h.01M16 6h.01M16 12h.01M16 18h.01"/>
-                                            </svg>
-                                        </span>
-                                        <span class="sec-reorder-compact-title" title="{{ $secInfo['label'] }}">{{ $secInfo['label'] }}</span>
-                                    </div>
-                                    <div style="display:flex; align-items:center; gap:2px; flex-shrink:0;">
-                                        <button type="button" class="sec-reorder-compact-btn" onclick="moveSecItem(this, 'up')" title="Naik">↑</button>
-                                        <button type="button" class="sec-reorder-compact-btn" onclick="moveSecItem(this, 'down')" title="Turun">↓</button>
-                                    </div>
+                <div class="sec-reorder-list-compact" id="secReorderListCompact">
+                    @foreach($currSecOrder as $secKey)
+                        @if(isset($allSecDef[$secKey]))
+                            @php $secInfo = $allSecDef[$secKey]; @endphp
+                            <div class="sec-reorder-item-compact" draggable="true" data-sec-key="{{ $secKey }}">
+                                <div class="sec-reorder-compact-left">
+                                    <span class="sec-reorder-compact-handle" title="Geser untuk mengubah urutan">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <path d="M8 6h.01M8 12h.01M8 18h.01M16 6h.01M16 12h.01M16 18h.01"/>
+                                        </svg>
+                                    </span>
+                                    <span class="sec-reorder-compact-title" title="{{ $secInfo['label'] }}">{{ $secInfo['label'] }}</span>
                                 </div>
-                            @endif
-                        @endforeach
-                    </div>
+                                <div style="display:flex; align-items:center; gap:2px; flex-shrink:0;">
+                                    <button type="button" class="sec-reorder-compact-btn" onclick="moveSecItem(this, 'up')" title="Naik">↑</button>
+                                    <button type="button" class="sec-reorder-compact-btn" onclick="moveSecItem(this, 'down')" title="Turun">↓</button>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
                 </div>
             </div>
+
+            {{-- Card 3: Mobile Preview Mockup --}}
+            @if($bioUrl)
+                <div class="bio-sidebar-card bio-mockup-wrapper">
+                    <div
+                        style="font-size:0.7rem; color:#94a3b8; font-weight: 500; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:1rem; text-align:center;">
+                        Live Preview</div>
+                    <div
+                        style="width: 260px; height: 530px; margin: 0 auto; border: 12px solid #1a1a1a; border-radius: 36px; overflow: hidden; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1); background:#fff;">
+                        {{-- Notch --}}
+                        <div
+                            style="position:absolute; top:0; left:50%; transform:translateX(-50%); width:100px; height:20px; background:#1a1a1a; border-bottom-left-radius:12px; border-bottom-right-radius:12px; z-index:10;">
+                        </div>
+                        <iframe src="{{ $bioUrl }}" style="width:100%; height:100%; border:none; background:#fff;"
+                            id="bioPreviewFrame"></iframe>
+                    </div>
+                    <p style="text-align:center; font-size:0.7rem; color:#94a3b8; margin-top:0.75rem;">Perubahan profil akan
+                        terupdate otomatis saat disimpan.</p>
+                </div>
+            @endif
         </div>
 
         {{-- Main Content --}}
@@ -4943,7 +4953,7 @@
             const activeTab = activeTabBtn ? activeTabBtn.dataset.tab : '';
             const sidebarCard = document.getElementById('sidebarSecReorderCard');
             if (sidebarCard) {
-                if (activeTab === 'tab-profile') {
+                if (activeTab === 'tab-profile' || activeTab === 'tab-theme') {
                     sidebarCard.style.display = 'block';
                 } else {
                     sidebarCard.style.display = 'none';
