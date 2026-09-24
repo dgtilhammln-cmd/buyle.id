@@ -153,15 +153,14 @@ body { background: var(--c-bg); font-family: var(--font); }
     font-weight: 900;
     line-height: 1;
     letter-spacing: -0.05em;
-    color: var(--c-text);
     margin-bottom: 0.5rem;
     position: relative;
     display: inline-block;
-    background: linear-gradient(180deg, #0F172A 0%, #334155 100%);
+    background: var(--c-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    text-shadow: 0 10px 25px rgba(30, 179, 73, 0.2);
 }
 
 .err-404-shadow {
@@ -297,13 +296,6 @@ body { background: var(--c-bg); font-family: var(--font); }
 
     <div class="err-inner">
 
-        {{-- Breadcrumb --}}
-        <nav class="err-breadcrumb" aria-label="Breadcrumb">
-            <a href="{{ route_locale('home') }}">Beranda</a>
-            <span class="err-breadcrumb-sep">›</span>
-            <span class="err-breadcrumb-current">Halaman Tidak Ditemukan</span>
-        </nav>
-
         {{-- Animated Cable & Plug Vector Illustration --}}
         <div class="err-cable-wrapper" id="errCableWrapper" title="Klik untuk menghubungkan kabel!">
             <svg class="err-cable-svg" viewBox="0 0 520 140" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -394,11 +386,6 @@ body { background: var(--c-bg); font-family: var(--font); }
         <!-- Bold 404 Text -->
         <div class="err-404-text">404</div>
         <div class="err-404-shadow"></div>
-
-        <div class="err-badge">
-            <span class="err-badge-dot"></span>
-            Halaman Tidak Ditemukan
-        </div>
 
         <h1 class="err-title">Ups! Halaman ini<br>tidak ada.</h1>
         <p class="err-desc">
