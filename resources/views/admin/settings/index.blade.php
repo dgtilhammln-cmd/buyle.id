@@ -808,37 +808,41 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       </div>
     </div>
 
-    {{-- Footer Logos (Payment & Expedition) --}}
+    {{-- Footer Logos (Payment QRIS/GoPay & Expedition J&T/JNE) --}}
     <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
         <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Logo Pembayaran & Ekspedisi (Footer)</div>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Logo Metode Pembayaran & Pengiriman (Footer)</div>
       </div>
-      <p style="font-size:.75rem;color:#94A3B8;margin-bottom:1.25rem;line-height:1.6;">Upload gambar berlatar transparan (PNG) untuk ditampilkan di bagian footer bawah.</p>
+      <p style="font-size:.75rem;color:#94A3B8;margin-bottom:1.25rem;line-height:1.6;">
+        Upload logo metode pembayaran (seperti <strong>QRIS, GoPay</strong>) dan logo jasa pengiriman fisik (seperti <strong>J&T, JNE</strong>). Sistem otomatis mengkompresi gambar ke format <strong>WebP</strong> untuk performa maksimal.
+      </p>
       
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
-        {{-- Payment Logo --}}
+        {{-- Payment Logo (QRIS, GoPay, dll) --}}
         <div>
-          <label class="form-label" style="display:block;margin-bottom:.5rem;">Logo Metode Pembayaran</label>
+          <label class="form-label" style="display:block;margin-bottom:.5rem;font-weight:700;">Logo Pembayaran (QRIS, GoPay, E-Wallet)</label>
           @if(!empty($settings['payment_logos']))
             <div style="margin-bottom:1rem;padding:.75rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;">
-              <img src="{{ asset('storage/'.$settings['payment_logos']) }}" alt="Payment Logos" style="max-height:40px;object-fit:contain;">
-              <div style="font-size:.7rem;color:#94A3B8;margin-top:.25rem;">Logo saat ini</div>
+              <img src="{{ asset('storage/'.$settings['payment_logos']) }}" alt="Logo Pembayaran" style="max-height:45px;object-fit:contain;">
+              <div style="font-size:.7rem;color:#1eb349;font-weight:600;margin-top:.35rem;">✓ File WebP Aktif</div>
             </div>
           @endif
           <input type="file" name="payment_logos" class="form-input" accept="image/*" style="padding:.5rem;">
+          <p style="font-size:.7rem;color:#94A3B8;margin-top:.35rem;">Disarankan PNG/WebP transparan berisikan logo QRIS, GoPay, OVO, ShopeePay, dll.</p>
         </div>
 
-        {{-- Expedition Logo --}}
+        {{-- Expedition Logo (J&T, JNE, Pos, dll) --}}
         <div>
-          <label class="form-label" style="display:block;margin-bottom:.5rem;">Logo Jasa Pengiriman</label>
+          <label class="form-label" style="display:block;margin-bottom:.5rem;font-weight:700;">Logo Pengiriman Fisik (J&T, JNE, SiCepat)</label>
           @if(!empty($settings['expedition_logos']))
             <div style="margin-bottom:1rem;padding:.75rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;">
-              <img src="{{ asset('storage/'.$settings['expedition_logos']) }}" alt="Expedition Logos" style="max-height:40px;object-fit:contain;">
-              <div style="font-size:.7rem;color:#94A3B8;margin-top:.25rem;">Logo saat ini</div>
+              <img src="{{ asset('storage/'.$settings['expedition_logos']) }}" alt="Logo Pengiriman" style="max-height:45px;object-fit:contain;">
+              <div style="font-size:.7rem;color:#1eb349;font-weight:600;margin-top:.35rem;">✓ File WebP Aktif</div>
             </div>
           @endif
           <input type="file" name="expedition_logos" class="form-input" accept="image/*" style="padding:.5rem;">
+          <p style="font-size:.7rem;color:#94A3B8;margin-top:.35rem;">Disarankan PNG/WebP transparan berisikan logo J&T Express, JNE, SiCepat, Anteraja, dll.</p>
         </div>
       </div>
     </div>

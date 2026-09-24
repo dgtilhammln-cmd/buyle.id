@@ -1,5 +1,5 @@
-﻿# 🛒 buyle.id — E-Commerce & Platform Bisnis
-**PT. Hiranatha Makmur Sukses** | [buyle.id](https://buyle.id)
+# 🛒 buyle.id — E-Commerce & Platform Bisnis
+[buyle.id](https://buyle.id)
 
 Platform e-commerce dan website bisnis komprehensif untuk buyle.id. Dibangun menggunakan Laravel 13, dioptimalkan untuk performa tinggi, pengalaman berbelanja pengguna (UI/UX modern), SEO, dan kemudahan manajemen melalui panel admin yang lengkap.
 

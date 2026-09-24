@@ -133,6 +133,12 @@ class AdminSettingsController extends Controller
                 continue;
             }
 
+            if (in_array($key, ['payment_logos', 'expedition_logos', 'footer_payment_logo', 'footer_shipping_logo'])) {
+                $path = $this->storeWebPNoCrop($file, 'settings', 2000, 1000, 95);
+                Setting::set($key, $path, 'image');
+                continue;
+            }
+
             if ($key === 'adsense_custom_image') {
                 // NO AUTO-CROP: preserve 100% full original aspect ratio for custom ad banners/posters
                 $path = $this->storeWebPNoCrop($file, 'settings', 2000, 2000, 95);
