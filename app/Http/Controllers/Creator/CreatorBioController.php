@@ -448,6 +448,26 @@ class CreatorBioController extends Controller
             }
         }
 
+        // Client Logos / Brand Partners Section fields (Tema 5 - Max 10 Slots)
+        if ($request->has('client_logos_enabled_present')) {
+            $config['client_logos_enabled'] = $request->has('client_logos_enabled') ? 1 : 0;
+        }
+        if ($request->has('client_logos_headline')) $config['client_logos_headline'] = $request->client_logos_headline;
+
+        for ($i = 1; $i <= 10; $i++) {
+            if ($request->has("client_logo_{$i}_name")) $config["client_logo_{$i}_name"] = $request->input("client_logo_{$i}_name");
+            if ($request->has("client_logo_{$i}_link")) $config["client_logo_{$i}_link"] = $request->input("client_logo_{$i}_link");
+
+            // Handle client logo image uploads & deletions (Auto WebP compression!)
+            if ($request->has("delete_client_logo_{$i}_image") && !empty($config["client_logo_{$i}_image"])) {
+                Storage::disk('public')->delete($config["client_logo_{$i}_image"]);
+                $config["client_logo_{$i}_image"] = null;
+            } elseif ($request->hasFile("client_logo_{$i}_image")) {
+                if (!empty($config["client_logo_{$i}_image"])) Storage::disk('public')->delete($config["client_logo_{$i}_image"]);
+                $config["client_logo_{$i}_image"] = $this->convertToWebp($request->file("client_logo_{$i}_image"), 'bio/clients', 85);
+            }
+        }
+
         // Save Theme 5 Dedicated SEO Metas Per Page & Contact Page fields
         if ($request->has('theme5_seo_home_title'))        $config['theme5_seo_home_title']        = $request->theme5_seo_home_title;
         if ($request->has('theme5_seo_home_desc'))         $config['theme5_seo_home_desc']         = $request->theme5_seo_home_desc;

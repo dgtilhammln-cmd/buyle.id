@@ -1847,6 +1847,17 @@
 
                         <div
                             style="background:#f1f5f9; padding:0.4rem; border-radius:14px; border:1px solid #cbd5e1; display:flex; gap:0.5rem; margin-bottom:1.5rem;">
+                            <button type="button" class="hp-subtab-btn" id="btn-hpsub-clients"
+                                onclick="switchHomepageSubSubtab('hpsub-clients', this)">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg>
+                                Client Logos / Mitra (Tema 5)
+                            </button>
                             <button type="button" class="hp-subtab-btn active" id="btn-hpsub-about"
                                 onclick="switchHomepageSubSubtab('hpsub-about', this)">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
@@ -2534,6 +2545,90 @@
                                 </div>
                             </div>
                         </div> {{-- End #hpsub-tiktok --}}
+
+                        {{-- SUB-SUBTAB: SECTION CLIENT LOGOS / MITRA (TEMA 5) --}}
+                        <div class="hpsub-pane" id="hpsub-clients" style="display:none;">
+                            <input type="hidden" name="client_logos_enabled_present" value="1">
+
+                            {{-- Status Section --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span>Status Section Client Logos &amp; Mitra (Tema 5)</span>
+                                    <label style="display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; font-weight:600; color:#1eb349;">
+                                        <input type="checkbox" name="client_logos_enabled" value="1" {{ ($cfg['client_logos_enabled'] ?? 1) ? 'checked' : '' }} style="width:18px; height:18px; accent-color:#1eb349;">
+                                        Aktifkan Section Client Logos
+                                    </label>
+                                </div>
+                                <div class="card-body">
+                                    <p style="font-size:0.8rem; color:#64748b; margin:0;">
+                                        Tampilkan logo perusahaan, brand, atau mitra kerja sama di bawah Hero Banner (Tema 5). Gambar logo otomatis di-compress ke format WebP agar loading super cepat.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {{-- Card Header & Headline --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head">1. Judul Section Client Logos</div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label class="form-label">Judul Utama H2 (Headline)</label>
+                                        <input type="text" name="client_logos_headline" value="{{ old('client_logos_headline', $cfg['client_logos_headline'] ?? 'Dipercaya Oleh Brand & Mitra Terkemuka') }}" class="form-input" placeholder="Misal: Dipercaya Oleh Perusahaan Terkemuka">
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Card Upload Client Logos (Maksimal 10 Slot) --}}
+                            <div class="prof-card">
+                                <div class="prof-card-head" style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span>2. Daftar Logo Client &amp; Mitra (Maksimal 10 Slot)</span>
+                                    <span style="font-size:0.75rem; color:#1eb349; font-weight:700; background:#ffffff; padding:0.25rem 0.65rem; border-radius:12px; border:1px solid #bbf7d0;">⚡ Auto Compress WebP</span>
+                                </div>
+                                <div class="card-body">
+                                    <div style="display:flex; flex-direction:column; gap:1.25rem;">
+                                        @for($i = 1; $i <= 10; $i++)
+                                            @php
+                                                $cName  = $cfg["client_logo_{$i}_name"] ?? null;
+                                                $cLink  = $cfg["client_logo_{$i}_link"] ?? null;
+                                                $cImg   = $cfg["client_logo_{$i}_image"] ?? null;
+                                            @endphp
+                                            <div style="border:1px solid #e2e8f0; border-radius:12px; padding:1.25rem; background:#f8fafc;">
+                                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom:1px solid #e2e8f0; padding-bottom:0.6rem;">
+                                                    <strong style="font-size:0.88rem; color:#0f172a;">Slot Logo Client #{{ $i }}</strong>
+                                                    @if(!empty($cImg))
+                                                        <label style="font-size:0.75rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                            <input type="checkbox" name="delete_client_logo_{{ $i }}_image" value="1"> Hapus Logo Ini
+                                                        </label>
+                                                    @endif
+                                                </div>
+
+                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                                                    <div class="form-group">
+                                                        <label class="form-label" style="font-size:0.78rem;">Nama Perusahaan / Client</label>
+                                                        <input type="text" name="client_logo_{{ $i }}_name" value="{{ old('client_logo_' . $i . '_name', $cName) }}" class="form-input" placeholder="Misal: Google / PT Indonesia Jaya">
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="form-label" style="font-size:0.78rem;">Link URL (Opsional / Saat Logo Diklik)</label>
+                                                        <input type="text" name="client_logo_{{ $i }}_link" value="{{ old('client_logo_' . $i . '_link', $cLink) }}" class="form-input" placeholder="https://...">
+                                                    </div>
+
+                                                    <div class="form-group" style="grid-column:1/-1;">
+                                                        <label class="form-label" style="font-size:0.78rem;">Upload Logo (Otomatis Compress ke WebP)</label>
+                                                        <input type="file" name="client_logo_{{ $i }}_image" class="form-input" accept="image/*">
+                                                        @if(!empty($cImg))
+                                                            <div style="margin-top:0.4rem; display:flex; align-items:center; gap:0.5rem;">
+                                                                <img src="{{ asset('storage/' . $cImg) }}" style="height:32px; max-width:120px; object-fit:contain; border-radius:4px; background:#fff; padding:2px; border:1px solid #e2e8f0;">
+                                                                <span style="font-size:0.7rem; color:#1eb349; font-weight:600;">WebP Compressed</span>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endfor
+                                    </div>
+                                </div>
+                            </div>
+                        </div> {{-- End #hpsub-clients --}}
 
                         {{-- SUB-SUBTAB 4: KUSTOMISASI FOOTER (TEMA 5) --}}
                         <div class="hpsub-pane" id="hpsub-footer" style="display:none;">

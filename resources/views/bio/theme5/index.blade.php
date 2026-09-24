@@ -1328,6 +1328,9 @@
         {{-- 2. Hero Banner Slider Section --}}
         @include('bio.theme5.hero_slider')
 
+        {{-- 2.5 Client Logos / Brand Partners Section (Tema 5) --}}
+        @include('bio.theme5.client_logos_section')
+
         {{-- 3. About Us Section (Tema 5) --}}
         @include('bio.theme5.about_section')
 
