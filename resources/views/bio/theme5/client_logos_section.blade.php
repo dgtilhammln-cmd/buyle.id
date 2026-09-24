@@ -49,9 +49,12 @@
                 ];
             }
         }
+
+        $totalLogos = count($logos);
+        $isCenterGrid = $totalLogos <= 4;
     @endphp
 
-    @if(count($logos) > 0)
+    @if($totalLogos > 0)
         <style>
             /* ═════════════════════════════════════════
                TEMA 5 — CLIENT LOGOS SECTION STYLES
@@ -68,7 +71,7 @@
             .t5-logos-header {
                 text-align: center;
                 max-width: 680px;
-                margin: 0 auto 2rem auto;
+                margin: 0 auto 1.75rem auto;
             }
 
             .t5-logos-headline {
@@ -83,18 +86,21 @@
                 margin-right: auto;
             }
 
-            /* Marquee Track Container */
+            /* Container Wrapper */
             .t5-logos-container {
                 position: relative;
                 width: 100%;
+                padding: 0.5rem 0;
+            }
+
+            /* Marquee Scroll Mode (Used when > 4 logos) */
+            .t5-logos-container.is-marquee {
                 overflow: hidden;
-                padding: 0.75rem 0;
-                /* Soft fade gradient edges */
                 mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
                 -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
             }
 
-            .t5-logos-track {
+            .t5-logos-track.is-marquee {
                 display: flex;
                 align-items: center;
                 gap: 1.5rem;
@@ -102,13 +108,24 @@
                 animation: t5LogosScroll 28s linear infinite;
             }
 
-            .t5-logos-track:hover {
+            .t5-logos-track.is-marquee:hover {
                 animation-play-state: paused;
             }
 
             @keyframes t5LogosScroll {
                 0% { transform: translateX(0); }
                 100% { transform: translateX(-50%); }
+            }
+
+            /* Centered Flex Grid Mode (Used when <= 4 logos) */
+            .t5-logos-grid-center {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 1.25rem;
+                width: 100%;
+                margin: 0 auto;
             }
 
             /* Individual Logo Card */
@@ -127,7 +144,7 @@
                 flex-shrink: 0;
                 user-select: none;
                 filter: grayscale(100%);
-                opacity: 0.75;
+                opacity: 0.78;
             }
 
             .t5-logo-card:hover {
@@ -170,7 +187,7 @@
                 .t5-logos-section {
                     margin: 2rem auto 2.5rem auto;
                 }
-                .t5-logos-track {
+                .t5-logos-track.is-marquee {
                     gap: 1rem;
                     animation-duration: 20s;
                 }
@@ -194,11 +211,10 @@
                 <h2 class="t5-logos-headline">{{ $headline }}</h2>
             </div>
 
-            {{-- Ticker Marquee Track --}}
-            <div class="t5-logos-container">
-                <div class="t5-logos-track">
-                    {{-- Loop twice for infinite seamless scroll --}}
-                    @for ($repeat = 0; $repeat < 2; $repeat++)
+            @if($isCenterGrid)
+                {{-- Centered Flex Mode (1-4 Logos: Perfect Center, No Duplicate) --}}
+                <div class="t5-logos-container">
+                    <div class="t5-logos-grid-center">
                         @foreach($logos as $logo)
                             @php
                                 $hasUrl = !empty($logo['link']) && $logo['link'] !== '#';
@@ -217,9 +233,35 @@
                                 <span class="t5-logo-name">{{ $logo['name'] }}</span>
                             </{!! $tag !!}>
                         @endforeach
-                    @endfor
+                    </div>
                 </div>
-            </div>
+            @else
+                {{-- Infinite Marquee Mode (> 4 Logos: Smooth Infinite Scroll) --}}
+                <div class="t5-logos-container is-marquee">
+                    <div class="t5-logos-track is-marquee">
+                        @for ($repeat = 0; $repeat < 2; $repeat++)
+                            @foreach($logos as $logo)
+                                @php
+                                    $hasUrl = !empty($logo['link']) && $logo['link'] !== '#';
+                                    $tag = $hasUrl ? 'a' : 'div';
+                                    $hrefAttr = $hasUrl ? "href='{$logo['link']}' target='_blank' rel='noopener'" : "";
+                                @endphp
+
+                                <{!! $tag !!} {!! $hrefAttr !!} class="t5-logo-card" title="{{ $logo['name'] }}">
+                                    @if(!empty($logo['image']))
+                                        <img src="{{ $logo['image'] }}" alt="{{ $logo['name'] }}" class="t5-logo-img" loading="lazy" draggable="false">
+                                    @elseif(!empty($logo['sample_icon']))
+                                        <div class="t5-logo-icon-badge" style="background: {{ $logo['sample_bg'] }};">
+                                            {{ $logo['sample_icon'] }}
+                                        </div>
+                                    @endif
+                                    <span class="t5-logo-name">{{ $logo['name'] }}</span>
+                                </{!! $tag !!}>
+                            @endforeach
+                        @endfor
+                    </div>
+                </div>
+            @endif
         </section>
     @endif
 @endif

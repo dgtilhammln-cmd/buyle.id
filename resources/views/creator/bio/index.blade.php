@@ -1799,22 +1799,36 @@
 
                         {{-- Sub-Subtab Switcher Bar --}}
                         <style>
+                            .hp-subtab-bar {
+                                background: #f1f5f9;
+                                padding: 0.35rem;
+                                border-radius: 12px;
+                                border: 1px solid #cbd5e1;
+                                display: flex;
+                                gap: 0.35rem;
+                                margin-bottom: 1.25rem;
+                                overflow-x: auto;
+                                flex-wrap: nowrap;
+                                scrollbar-width: thin;
+                            }
                             .hp-subtab-btn {
                                 flex: 1;
                                 display: inline-flex;
                                 align-items: center;
                                 justify-content: center;
-                                gap: 0.5rem;
-                                padding: 0.7rem 1.2rem;
-                                border-radius: 10px;
+                                gap: 0.4rem;
+                                padding: 0.5rem 0.8rem;
+                                border-radius: 8px;
                                 border: none;
                                 background: transparent;
                                 color: #64748b;
                                 font-family: 'Montserrat', sans-serif;
-                                font-size: 0.85rem;
+                                font-size: 0.78rem;
                                 font-weight: 600;
                                 cursor: pointer;
-                                transition: all 0.25s ease;
+                                transition: all 0.2s ease;
+                                white-space: nowrap;
+                                flex-shrink: 0;
                             }
 
                             .hp-subtab-btn:hover {
@@ -1845,64 +1859,63 @@
                             }
                         </style>
 
-                        <div
-                            style="background:#f1f5f9; padding:0.4rem; border-radius:14px; border:1px solid #cbd5e1; display:flex; gap:0.5rem; margin-bottom:1.5rem;">
+                        <div class="hp-subtab-bar">
                             <button type="button" class="hp-subtab-btn" id="btn-hpsub-clients"
                                 onclick="switchHomepageSubSubtab('hpsub-clients', this)">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                                     viewBox="0 0 24 24">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                     <circle cx="9" cy="7" r="4" />
                                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                                 </svg>
-                                Client Logos / Mitra (Tema 5)
+                                Client Logos
                             </button>
                             <button type="button" class="hp-subtab-btn active" id="btn-hpsub-about"
                                 onclick="switchHomepageSubSubtab('hpsub-about', this)">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                                     viewBox="0 0 24 24">
                                     <path d="M12 20h9" />
                                     <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
                                 </svg>
-                                Section About Us (Tema 5)
+                                About Us
                             </button>
                             <button type="button" class="hp-subtab-btn" id="btn-hpsub-services"
                                 onclick="switchHomepageSubSubtab('hpsub-services', this)">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                                     viewBox="0 0 24 24">
                                     <path
                                         d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                                 </svg>
-                                Section Jasa &amp; Layanan (Tema 5)
+                                Jasa &amp; Layanan
                             </button>
                             <button type="button" class="hp-subtab-btn" id="btn-hpsub-gallery"
                                 onclick="switchHomepageSubSubtab('hpsub-gallery', this)">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                                     viewBox="0 0 24 24">
                                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                                     <circle cx="8.5" cy="8.5" r="1.5"/>
                                     <polyline points="21 15 16 10 5 21"/>
                                 </svg>
-                                Section Galeri 3D (Tema 5)
+                                Galeri 3D
                             </button>
                             <button type="button" class="hp-subtab-btn" id="btn-hpsub-tiktok"
                                 onclick="switchHomepageSubSubtab('hpsub-tiktok', this)">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                                     viewBox="0 0 24 24">
                                     <rect x="6" y="2" width="12" height="20" rx="3" ry="3"/>
                                     <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/>
                                 </svg>
-                                Section TikTok 3D (Tema 5)
+                                TikTok 3D
                             </button>
                             <button type="button" class="hp-subtab-btn" id="btn-hpsub-footer"
                                 onclick="switchHomepageSubSubtab('hpsub-footer', this)">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                                     viewBox="0 0 24 24">
                                     <rect x="3" y="14" width="18" height="7" rx="2"/>
                                     <path d="M3 10h18M3 6h18"/>
                                 </svg>
-                                Kustomisasi Footer (Tema 5)
+                                Footer
                             </button>
                         </div>
 
