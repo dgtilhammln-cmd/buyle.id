@@ -2761,21 +2761,40 @@
                                     <span style="font-size:0.75rem; color:#1eb349; font-weight:700; background:#ffffff; padding:0.25rem 0.65rem; border-radius:12px; border:1px solid #bbf7d0;">⚡ Auto Compress WebP</span>
                                 </div>
                                 <div class="card-body">
-                                    <div style="display:flex; flex-direction:column; gap:1.25rem;">
+                                    @php
+                                        $visibleClientCount = 1;
+                                        for ($chk = 10; $chk >= 1; $chk--) {
+                                            if (!empty($cfg["client_logo_{$chk}_name"]) || !empty($cfg["client_logo_{$chk}_image"]) || !empty($cfg["client_logo_{$chk}_link"])) {
+                                                $visibleClientCount = max($visibleClientCount, $chk);
+                                                break;
+                                            }
+                                        }
+                                    @endphp
+                                    <div id="clientLogoSlotsContainer" style="display:flex; flex-direction:column; gap:1.25rem;">
                                         @for($i = 1; $i <= 10; $i++)
                                             @php
                                                 $cName  = $cfg["client_logo_{$i}_name"] ?? null;
                                                 $cLink  = $cfg["client_logo_{$i}_link"] ?? null;
                                                 $cImg   = $cfg["client_logo_{$i}_image"] ?? null;
+                                                $hasClientData = !empty($cName) || !empty($cImg) || !empty($cLink);
+                                                $isClientVisible = ($i <= $visibleClientCount) || $hasClientData;
                                             @endphp
-                                            <div style="border:1px solid #e2e8f0; border-radius:12px; padding:1.25rem; background:#f8fafc;">
+                                            <div class="client-logo-slot-box" id="client-logo-slot-{{ $i }}" style="display: {{ $isClientVisible ? 'block' : 'none' }}; border:1px solid #e2e8f0; border-radius:12px; padding:1.25rem; background:#f8fafc;">
                                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom:1px solid #e2e8f0; padding-bottom:0.6rem;">
                                                     <strong style="font-size:0.88rem; color:#0f172a;">Slot Logo Client #{{ $i }}</strong>
-                                                    @if(!empty($cImg))
-                                                        <label style="font-size:0.75rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
-                                                            <input type="checkbox" name="delete_client_logo_{{ $i }}_image" value="1"> Hapus Logo Ini
-                                                        </label>
-                                                    @endif
+                                                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                                                        @if(!empty($cImg))
+                                                            <label style="font-size:0.75rem; color:#ef4444; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                                <input type="checkbox" name="delete_client_logo_{{ $i }}_image" value="1"> Hapus Logo Ini
+                                                            </label>
+                                                        @endif
+                                                        @if($i > 1)
+                                                            <button type="button" onclick="removeClientLogoSlot({{ $i }})" style="background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; border-radius:6px; padding:0.25rem 0.6rem; font-size:0.72rem; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                                                Hapus Slot
+                                                            </button>
+                                                        @endif
+                                                    </div>
                                                 </div>
 
                                                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
@@ -2802,6 +2821,13 @@
                                                 </div>
                                             </div>
                                         @endfor
+                                    </div>
+
+                                    <div style="margin-top:1.25rem; text-align:center;">
+                                        <button type="button" id="btnAddClientLogoSlot" onclick="addNextClientLogoSlot()" style="display:inline-flex; align-items:center; gap:0.5rem; background:#ffffff; color:#1eb349; border:1.5px solid #1eb349; padding:0.6rem 1.25rem; border-radius:12px; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s; box-shadow:0 2px 8px rgba(30,179,73,0.12);">
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                            Tambah Slot Logo Client Baru (Maksimal 10)
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -4950,6 +4976,41 @@
 
 @section('scripts')
     <script>
+        function addNextClientLogoSlot() {
+            for (let i = 1; i <= 10; i++) {
+                const slot = document.getElementById('client-logo-slot-' + i);
+                if (slot && (slot.style.display === 'none' || slot.style.display === '')) {
+                    slot.style.display = 'block';
+                    slot.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    break;
+                }
+            }
+            updateClientLogoAddBtnState();
+        }
+
+        function removeClientLogoSlot(index) {
+            const slot = document.getElementById('client-logo-slot-' + index);
+            if (!slot) return;
+            slot.querySelectorAll('input[type="text"]').forEach(inp => inp.value = '');
+            slot.querySelectorAll('input[type="file"]').forEach(inp => inp.value = '');
+            const delCheckbox = slot.querySelector('input[type="checkbox"]');
+            if (delCheckbox) delCheckbox.checked = true;
+            slot.style.display = 'none';
+            updateClientLogoAddBtnState();
+        }
+
+        function updateClientLogoAddBtnState() {
+            const visibleSlots = document.querySelectorAll('.client-logo-slot-box:not([style*="display: none"])');
+            const btn = document.getElementById('btnAddClientLogoSlot');
+            if (btn) {
+                if (visibleSlots.length >= 10) {
+                    btn.style.display = 'none';
+                } else {
+                    btn.style.display = 'inline-flex';
+                }
+            }
+        }
+
         function toggleSidebarSecReorderVisibility() {
             const activeTabBtn = document.querySelector('.tab-btn.active');
             const activeTab = activeTabBtn ? activeTabBtn.dataset.tab : '';

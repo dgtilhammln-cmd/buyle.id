@@ -352,9 +352,8 @@
         .nav-logo-img-wrap img { height: 100%; width: auto; max-width: none; object-fit: contain; }
         
         /* Actions pill */
-        .nav-pill-actions { grid-area: actions; padding: 0 !important; height: 32px !important; justify-content: flex-end; }
-        .auth-solid-btn { padding: 0 0.85rem; font-size: 0.75rem; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 999px; margin: 0; line-height: 1; flex-shrink: 0; background: #fff; color: #1eb349; border: 1.5px solid #1eb349; box-shadow: none; font-weight: 700; }
-        .auth-solid-btn:hover { background: #1eb349; color: #fff; box-shadow: 0 4px 12px rgba(30,179,73,0.2); }
+        .auth-solid-btn { padding: 0 0.95rem; font-size: 0.78rem; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 999px; margin: 0; line-height: 1; flex-shrink: 0; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #ffffff; border: none; box-shadow: 0 4px 14px rgba(30,179,73,0.35); font-weight: 700; }
+        .auth-solid-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(30,179,73,0.45); }
         
         /* Search pill — Huge and modern */
         .nav-pill-search { grid-area: search; max-width: none; width: 100%; padding: 0 !important; min-width: 0; height: auto !important; }
