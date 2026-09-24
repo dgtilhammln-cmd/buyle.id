@@ -297,6 +297,90 @@
         background: #f0fdf4;
         color: #1eb349;
     }
+    /* ── ACTIONS DROPDOWN STYLE ── */
+    .t5-nav-dropdown-wrap {
+        position: relative;
+        display: inline-block;
+    }
+    .t5-actions-dropdown-btn {
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #475569;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        font-family: inherit;
+    }
+    .t5-actions-dropdown-btn:hover, .t5-nav-dropdown-wrap.open .t5-actions-dropdown-btn {
+        color: #15803d;
+        font-weight: 600;
+    }
+    .t5-actions-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 14px);
+        left: 50%;
+        transform: translateX(-50%) translateY(-6px);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow: 0 12px 36px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
+        min-width: 220px;
+        padding: 0.5rem 0;
+        z-index: 99999;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .t5-nav-dropdown-wrap:hover .t5-actions-dropdown-menu,
+    .t5-nav-dropdown-wrap.open .t5-actions-dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
+        transform: translateX(-50%) translateY(0);
+    }
+    .t5-dropdown-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.65rem 1rem;
+        color: #334155;
+        font-size: 0.82rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: background 0.15s, color 0.15s;
+    }
+    .t5-dropdown-item:hover {
+        background: #f0fdf4;
+        color: #1eb349;
+    }
+    .t5-dropdown-item-left {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+    }
+    .t5-dropdown-item-icon {
+        width: 18px;
+        height: 18px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    /* Mobile Drawer Actions Section */
+    .t5-drawer-actions-header {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin: 0.85rem 0 0.35rem 0.85rem;
+    }
 </style>
 
 @php
@@ -334,6 +418,19 @@
             } catch (\Throwable $e) {}
         }
     }
+
+    // Filter active custom link blocks for Theme 5 Actions Menu
+    $activeCustomLinkBlocks = collect();
+    if (isset($blocks) && is_iterable($blocks) && count($blocks) > 0) {
+        foreach ($blocks as $b) {
+            $bData = is_array($b->data_json ?? null) ? $b->data_json : (json_decode($b->data_json ?? '[]', true) ?: []);
+            $bType = $b->type ?? '';
+            if (in_array($bType, ['link', 'url', 'custom_link', 'shopee', 'affiliate', 'external']) || (!empty($bData['url']) && empty($bData['product_id']))) {
+                $activeCustomLinkBlocks->push($b);
+            }
+        }
+    }
+    $hasActiveCustomLinks = $activeCustomLinkBlocks->count() > 0;
 @endphp
 
 
@@ -360,20 +457,44 @@
                 <a href="{{ $productsUrl }}" class="t5-nav-link {{ request()->is('*/produk*') || request()->is('produk*') ? 'active' : '' }}">Produk / Layanan</a>
             @endif
             
-            @if(isset($blocks) && $blocks->count() > 0)
-                @foreach($blocks as $b)
-                    @php $bData = $b->data_json ?? []; @endphp
-                    @if(in_array($b->type, ['link', 'url', 'custom_link', 'shopee', 'affiliate', 'external']) || (!empty($bData['url']) && empty($bData['product_id'])))
-                        @php
-                            $bUrl = $bData['url'] ?? ($bData['link'] ?? ($b->url ?? '#'));
-                            if ($bUrl !== '#' && !\Illuminate\Support\Str::startsWith($bUrl, ['http://', 'https://', '/', '#'])) {
-                                $bUrl = 'https://' . $bUrl;
-                            }
-                            $bTitle = $b->title ?? ($bData['title'] ?? ($bData['label'] ?? 'Link'));
-                        @endphp
-                        <a href="{{ $bUrl }}" target="_blank" rel="noopener noreferrer" class="t5-nav-link t5-custom-block-link">{{ $bTitle }}</a>
-                    @endif
-                @endforeach
+            {{-- Actions Dropdown (Hanya Tampil Jika Ada Block Custom Link Button Aktif) --}}
+            @if($hasActiveCustomLinks)
+                <div class="t5-nav-dropdown-wrap" id="t5ActionsDropdownWrap">
+                    <button type="button" class="t5-actions-dropdown-btn">
+                        <span>Actions</span>
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="t5-actions-dropdown-menu">
+                        <div style="padding:0.4rem 1rem; font-size:0.68rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.06em; border-bottom:1px solid #f1f5f9; margin-bottom:0.25rem;">Quick Actions & Links</div>
+                        @foreach($activeCustomLinkBlocks as $b)
+                            @php
+                                $bData = is_array($b->data_json ?? null) ? $b->data_json : (json_decode($b->data_json ?? '[]', true) ?: []);
+                                $bUrl = $bData['url'] ?? ($bData['link'] ?? ($b->url ?? '#'));
+                                if ($bUrl !== '#' && !\Illuminate\Support\Str::startsWith($bUrl, ['http://', 'https://', '/', '#'])) {
+                                    $bUrl = 'https://' . $bUrl;
+                                }
+                                $bTitle = $b->title ?? ($bData['title'] ?? ($bData['label'] ?? 'Link'));
+                                $bIconClass = $b->icon_class ?? ($bData['icon_class'] ?? null);
+                                $bImg = $b->image ?? ($bData['image'] ?? null);
+                            @endphp
+                            <a href="{{ $bUrl }}" target="_blank" rel="noopener noreferrer" class="t5-dropdown-item">
+                                <span class="t5-dropdown-item-left">
+                                    @if(!empty($bImg))
+                                        <img src="{{ Str::startsWith($bImg, ['http://', 'https://']) ? $bImg : asset('storage/' . $bImg) }}" class="t5-dropdown-item-icon">
+                                    @elseif(!empty($bIconClass))
+                                        <i class="{{ $bIconClass }}" style="font-size:0.95rem; color:#1eb349;"></i>
+                                    @else
+                                        <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                    @endif
+                                    <span>{{ $bTitle }}</span>
+                                </span>
+                                <svg width="12" height="12" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
             @endif
 
             <a href="{{ $contactLink }}" class="t5-nav-link {{ request()->is('*/kontak') || request()->is('*/contact') ? 'active' : '' }}">Kontak</a>
@@ -455,21 +576,25 @@
                     <span class="t5-drawer-cart-badge" id="t5DrawerCartBadge" style="{{ (isset($cartBadgeVal) && $cartBadgeVal > 0) ? '' : 'display:none;' }}">{{ $cartBadgeVal ?? 0 }}</span>
                 </a>
             @endif
-            @if(isset($blocks) && $blocks->count() > 0)
-                @foreach($blocks as $b)
-                    @php $bData = $b->data_json ?? []; @endphp
-                    @if(in_array($b->type, ['link', 'url', 'custom_link', 'shopee', 'affiliate', 'external']) || (!empty($bData['url']) && empty($bData['product_id'])))
-                        @php
-                            $bUrl = $bData['url'] ?? ($bData['link'] ?? ($b->url ?? '#'));
-                            if ($bUrl !== '#' && !\Illuminate\Support\Str::startsWith($bUrl, ['http://', 'https://', '/', '#'])) {
-                                $bUrl = 'https://' . $bUrl;
-                            }
-                            $bTitle = $b->title ?? ($bData['title'] ?? ($bData['label'] ?? 'Link'));
-                        @endphp
-                        <a href="{{ $bUrl }}" target="_blank" rel="noopener noreferrer" onclick="toggleT5Drawer()" class="t5-drawer-link t5-drawer-custom-link">{{ $bTitle }}</a>
-                    @endif
+
+            @if($hasActiveCustomLinks)
+                <div class="t5-drawer-actions-header">Actions Menu</div>
+                @foreach($activeCustomLinkBlocks as $b)
+                    @php
+                        $bData = is_array($b->data_json ?? null) ? $b->data_json : (json_decode($b->data_json ?? '[]', true) ?: []);
+                        $bUrl = $bData['url'] ?? ($bData['link'] ?? ($b->url ?? '#'));
+                        if ($bUrl !== '#' && !\Illuminate\Support\Str::startsWith($bUrl, ['http://', 'https://', '/', '#'])) {
+                            $bUrl = 'https://' . $bUrl;
+                        }
+                        $bTitle = $b->title ?? ($bData['title'] ?? ($bData['label'] ?? 'Link'));
+                    @endphp
+                    <a href="{{ $bUrl }}" target="_blank" rel="noopener noreferrer" onclick="toggleT5Drawer()" class="t5-drawer-link t5-drawer-custom-link" style="padding-left:1.5rem; display:flex; justify-content:space-between; align-items:center;">
+                        <span>{{ $bTitle }}</span>
+                        <svg width="12" height="12" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                    </a>
                 @endforeach
             @endif
+
             <a href="{{ $contactLink }}" onclick="{{ $contactOnClick }} toggleT5Drawer();" class="t5-drawer-link">Kontak</a>
         </nav>
     </div>

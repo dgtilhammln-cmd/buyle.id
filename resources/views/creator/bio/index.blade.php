@@ -4236,10 +4236,12 @@
                     <label class="form-label">Tipe Block</label>
                     <select name="type" class="form-input" id="blockType" onchange="handleTypeChange(this.value)">
                         <option value="link">Custom Link / Button</option>
-                        <option value="pdf">File / Dokumen PDF</option>
-                        <option value="tiktok">TikTok Video</option>
-                        <option value="reels">Instagram Reels</option>
-                        <option value="image">Gambar / Banner (Poster)</option>
+                        @if(($theme ?? 'default') !== 'theme5')
+                            <option value="pdf">File / Dokumen PDF</option>
+                            <option value="tiktok">TikTok Video</option>
+                            <option value="reels">Instagram Reels</option>
+                            <option value="image">Gambar / Banner (Poster)</option>
+                        @endif
                     </select>
                 </div>
 
