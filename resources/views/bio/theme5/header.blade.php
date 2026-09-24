@@ -65,10 +65,11 @@
         flex-direction: column;
     }
     .t5-brand-title {
-        font-size: 0.95rem;
-        font-weight: 600;
+        font-size: 1.25rem;
+        font-weight: 700;
         color: #0f172a;
         letter-spacing: -0.02em;
+        line-height: 1.2;
     }
     .t5-nav-desktop {
         display: flex;
