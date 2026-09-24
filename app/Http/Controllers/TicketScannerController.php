@@ -88,30 +88,40 @@ class TicketScannerController extends Controller
 
     /**
      * API untuk validasi QR Code / Kode Tiket via Scanner.
-     * Dilindungi dengan DB transaction + lockForUpdate() untuk mencegah race condition
-     * (dua request scan simultan tidak bisa keduanya menandai 'used').
+     * Dilindungi dengan DB transaction + lockForUpdate() untuk mencegah race condition.
      */
     public function verify(Request $request): JsonResponse
     {
-        $token = trim($request->input('code') ?? $request->input('qr_token') ?? '');
+        $rawInput = trim($request->input('code') ?? $request->input('qr_token') ?? '');
 
-        if (empty($token)) {
+        if (empty($rawInput)) {
             return response()->json([
                 'status'  => 'invalid',
                 'title'   => 'Kode Kosong',
-                'message' => 'Kode tiket atau QR Code tidak valid.'
+                'message' => 'Kode tiket atau QR Code tidak terdeteksi.'
             ], 400);
+        }
+
+        // Ekstraksi kandidat token pintar dari URL, JSON, atau teks biasa
+        $tokensToSearch = array_values(array_unique(array_filter($this->extractCandidateTokens($rawInput))));
+        if (empty($tokensToSearch)) {
+            $tokensToSearch = [$rawInput];
         }
 
         $result = null;
 
         try {
-            DB::transaction(function () use ($token, &$result) {
+            DB::transaction(function () use ($tokensToSearch, $rawInput, &$result) {
                 // 1. Cari tiket milik seller yang sedang login (prioritas)
                 $ticket = TicketPass::with(['product', 'buyer'])
                     ->where('seller_id', auth()->id())
-                    ->where(function ($q) use ($token) {
-                        $q->where('qr_token', $token)->orWhere('ticket_code', $token);
+                    ->where(function ($q) use ($tokensToSearch) {
+                        foreach ($tokensToSearch as $t) {
+                            $q->orWhere('qr_token', $t)
+                              ->orWhere('ticket_code', $t)
+                              ->orWhere('ticket_code', strtoupper($t))
+                              ->orWhere('qr_token', strtolower($t));
+                        }
                     })
                     ->lockForUpdate()
                     ->first();
@@ -119,8 +129,13 @@ class TicketScannerController extends Controller
                 // 2. Fallback: cari di seluruh sistem (misal saat cross-event scanning)
                 if (!$ticket) {
                     $ticket = TicketPass::with(['product', 'buyer'])
-                        ->where(function ($q) use ($token) {
-                            $q->where('qr_token', $token)->orWhere('ticket_code', $token);
+                        ->where(function ($q) use ($tokensToSearch) {
+                            foreach ($tokensToSearch as $t) {
+                                $q->orWhere('qr_token', $t)
+                                  ->orWhere('ticket_code', $t)
+                                  ->orWhere('ticket_code', strtoupper($t))
+                                  ->orWhere('qr_token', strtolower($t));
+                            }
                         })
                         ->lockForUpdate()
                         ->first();
@@ -150,7 +165,7 @@ class TicketScannerController extends Controller
                     return;
                 }
 
-                // 4. Tiket sudah digunakan (termasuk yang baru saja di-scan bersamaan — dilindungi oleh lock)
+                // 4. Tiket sudah digunakan (termasuk yang baru saja di-scan bersamaan)
                 if ($ticket->status === 'used') {
                     $time = $ticket->checked_in_at ? $ticket->checked_in_at->format('H:i (d M Y)') : '-';
                     $result = response()->json([
@@ -167,7 +182,7 @@ class TicketScannerController extends Controller
                     return;
                 }
 
-                // 5. Tiket valid — tandai sebagai used (di dalam transaction, aman dari race condition)
+                // 5. Tiket valid — tandai sebagai used
                 $ticket->update([
                     'status'        => 'used',
                     'checked_in_at' => now(),
@@ -201,6 +216,61 @@ class TicketScannerController extends Controller
         }
 
         return $result;
+    }
+
+    /**
+     * Helper pintar untuk mengekstrak token dari URL, JSON, atau Teks Biasa
+     */
+    private function extractCandidateTokens(string $raw): array
+    {
+        $candidates = [$raw, trim($raw)];
+
+        // Parsing JSON jika payload berupa string JSON
+        if (\Illuminate\Support\Str::startsWith($raw, '{') && \Illuminate\Support\Str::endsWith($raw, '}')) {
+            $json = json_decode($raw, true);
+            if (is_array($json)) {
+                foreach (['code', 'qr_token', 'token', 'ticket_code', 'id'] as $k) {
+                    if (!empty($json[$k])) {
+                        $candidates[] = (string) $json[$k];
+                    }
+                }
+            }
+        }
+
+        // Parsing URL jika berupa link (misal: https://buyle.id/verify?token=XYZ atau https://buyle.id/t/XYZ)
+        if (\Illuminate\Support\Str::startsWith($raw, ['http://', 'https://'])) {
+            $parsedUrl = parse_url($raw);
+            if (!empty($parsedUrl['query'])) {
+                parse_str($parsedUrl['query'], $queryParams);
+                foreach (['token', 'qr_token', 'code', 'ticket_code', 't'] as $key) {
+                    if (!empty($queryParams[$key])) {
+                        $candidates[] = (string) $queryParams[$key];
+                    }
+                }
+            }
+            if (!empty($parsedUrl['path'])) {
+                $pathSegments = array_values(array_filter(explode('/', $parsedUrl['path'])));
+                if (!empty($pathSegments)) {
+                    $lastSegment = end($pathSegments);
+                    if (strlen($lastSegment) > 3) {
+                        $candidates[] = $lastSegment;
+                    }
+                }
+            }
+        }
+
+        // Tambahkan variasi UPPERCASE, lowercase, dan stripped format
+        $expanded = [];
+        foreach ($candidates as $c) {
+            $c = trim($c);
+            if (!empty($c)) {
+                $expanded[] = $c;
+                $expanded[] = strtoupper($c);
+                $expanded[] = strtolower($c);
+            }
+        }
+
+        return array_unique($expanded);
     }
 
     /**

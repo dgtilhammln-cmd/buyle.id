@@ -17,7 +17,8 @@
         top: 0;
         left: 0;
         width: 100%;
-        z-index: 999;
+        z-index: 10000;
+        isolation: isolate;
         background: rgba(255, 255, 255, 0.96);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
@@ -75,6 +76,7 @@
         display: flex;
         align-items: center;
         gap: 1.5rem;
+        overflow: visible;
     }
     .t5-nav-link {
         text-decoration: none;
@@ -336,21 +338,23 @@
         stroke: #15803d;
     }
     .t5-actions-dropdown-menu {
-        position: absolute;
-        top: calc(100% + 4px);
-        left: 50%;
-        transform: translateX(-50%) translateY(4px);
+        position: fixed;
+        top: auto;
+        left: auto;
+        transform: none;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 14px;
-        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
-        min-width: 210px;
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.15), 0 4px 16px rgba(0, 0, 0, 0.08);
+        min-width: 220px;
         padding: 0.4rem 0;
-        z-index: 999999;
-        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+        z-index: 99999;
+        transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.15s ease;
+        transform-origin: top center;
+        transform: scale(0.97) translateY(-4px);
     }
     .t5-actions-dropdown-menu::before {
         content: '';
@@ -365,7 +369,7 @@
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
-        transform: translateX(-50%) translateY(0);
+        transform: scale(1) translateY(0);
     }
     .t5-dropdown-item {
         display: flex;
@@ -628,16 +632,45 @@
 </div>
 
 <script>
+    function t5PositionDropdown() {
+        var wrap = document.getElementById('t5ActionsDropdownWrap');
+        var menu = wrap ? wrap.querySelector('.t5-actions-dropdown-menu') : null;
+        if (!wrap || !menu) return;
+        var rect = wrap.getBoundingClientRect();
+        var menuWidth = 220;
+        var left = rect.left + (rect.width / 2) - (menuWidth / 2);
+        var maxLeft = window.innerWidth - menuWidth - 12;
+        left = Math.max(8, Math.min(left, maxLeft));
+        menu.style.top  = (rect.bottom + 6) + 'px';
+        menu.style.left = left + 'px';
+        menu.style.width = menuWidth + 'px';
+    }
+
     window.toggleT5ActionsDropdown = function(event) {
         if (event) {
             if (typeof event.preventDefault === 'function') event.preventDefault();
             if (typeof event.stopPropagation === 'function') event.stopPropagation();
         }
         var wrap = document.getElementById('t5ActionsDropdownWrap');
-        if (wrap) {
-            wrap.classList.toggle('open');
+        if (!wrap) return;
+        var isOpen = wrap.classList.contains('open');
+        if (isOpen) {
+            wrap.classList.remove('open');
+        } else {
+            t5PositionDropdown();
+            wrap.classList.add('open');
         }
     };
+
+    // Reposisi saat hover (desktop) masuk ke wrap
+    document.addEventListener('DOMContentLoaded', function() {
+        var wrap = document.getElementById('t5ActionsDropdownWrap');
+        if (wrap) {
+            wrap.addEventListener('mouseenter', function() {
+                t5PositionDropdown();
+            });
+        }
+    });
 
     document.addEventListener('click', function(e) {
         var wrap = document.getElementById('t5ActionsDropdownWrap');
@@ -645,6 +678,13 @@
             if (!wrap.contains(e.target)) {
                 wrap.classList.remove('open');
             }
+        }
+    });
+
+    window.addEventListener('resize', function() {
+        var wrap = document.getElementById('t5ActionsDropdownWrap');
+        if (wrap && wrap.classList.contains('open')) {
+            t5PositionDropdown();
         }
     });
 

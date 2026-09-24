@@ -690,10 +690,16 @@
                             <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
                             Viewport Live QR Scanner
                         </div>
-                        <button type="button" id="toggleCamBtn" onclick="toggleCameraFacing()" style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 99px; font-weight: 700; font-size: 0.8rem; cursor: pointer; box-shadow: 0 4px 12px rgba(30,179,73,0.25); transition: all 0.2s;">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-                            Balik Kamera (<span id="camFacingLabel">Belakang</span>)
-                        </button>
+                        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                            <label style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.78rem; font-weight:700; color:#475569; background:#ffffff; padding:0.4rem 0.8rem; border-radius:999px; border:1.5px solid #e2e8f0; cursor:pointer; user-select:none;">
+                                <input type="checkbox" id="autoScanToggle" style="accent-color:#1eb349; width:15px; height:15px;">
+                                Fast Mode (Auto Next)
+                            </label>
+                            <button type="button" id="toggleCamBtn" onclick="toggleCameraFacing()" style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 99px; font-weight: 700; font-size: 0.8rem; cursor: pointer; box-shadow: 0 4px 12px rgba(30,179,73,0.25); transition: all 0.2s;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                                Balik Kamera (<span id="camFacingLabel">Belakang</span>)
+                            </button>
+                        </div>
                     </div>
 
                     {{-- Camera Viewport --}}
@@ -979,7 +985,18 @@
     });
 
     function initCamera(facingMode) {
-        const config = { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1 };
+        const config = {
+            fps: 15,
+            qrbox: function(viewfinderWidth, viewfinderHeight) {
+                const minDim = Math.min(viewfinderWidth, viewfinderHeight);
+                const boxSize = Math.max(200, Math.floor(minDim * 0.78));
+                return { width: boxSize, height: boxSize };
+            },
+            aspectRatio: 1.0,
+            experimentalFeatures: {
+                useBarCodeDetectorIfSupported: true
+            }
+        };
 
         const doStart = () => {
             Html5Qrcode.getCameras().then(cameras => {
@@ -992,7 +1009,15 @@
                 let cameraId = cameras[0].id;
                 if (cameras.length > 1) {
                     if (facingMode === 'environment') {
-                        cameraId = cameras[cameras.length - 1].id;
+                        // Cari kamera belakang utama (hindari kamera wide/macro jika ada label)
+                        const backCam = cameras.find(c => {
+                            const lbl = (c.label || '').toLowerCase();
+                            return (lbl.includes('back') || lbl.includes('rear') || lbl.includes('environment') || lbl.includes('0')) && !lbl.includes('wide') && !lbl.includes('macro');
+                        }) || cameras.find(c => {
+                            const lbl = (c.label || '').toLowerCase();
+                            return lbl.includes('back') || lbl.includes('rear') || lbl.includes('environment');
+                        }) || cameras[cameras.length - 1];
+                        cameraId = backCam.id;
                     } else {
                         cameraId = cameras[0].id;
                     }
@@ -1008,7 +1033,7 @@
                         isCameraSwitching = false;
                     })
                     .catch(err => {
-                        console.warn('[Scanner] Camera start by ID failed:', err);
+                        console.warn('[Scanner] Camera start by ID failed, retrying facingMode constraint:', err);
                         html5QrCode = new Html5Qrcode("reader");
                         html5QrCode.start({ facingMode: facingMode }, config, onScanSuccess, onScanFailure)
                             .then(() => { isCameraSwitching = false; })
@@ -1026,7 +1051,7 @@
         };
 
         if (html5QrCode) {
-            const stopFn = () => setTimeout(doStart, 350);
+            const stopFn = () => setTimeout(doStart, 300);
             try {
                 const maybePromise = html5QrCode.stop();
                 if (maybePromise && typeof maybePromise.then === 'function') {
@@ -1078,9 +1103,42 @@
         initCamera(currentFacingMode);
     }
 
+    function parseScannedToken(rawText) {
+        if (!rawText) return '';
+        let str = String(rawText).trim();
+
+        // Dekode JSON jika payload QR berbentuk JSON string
+        if (str.startsWith('{') && str.endsWith('}')) {
+            try {
+                const json = JSON.parse(str);
+                str = json.code || json.qr_token || json.token || json.ticket_code || json.id || str;
+            } catch(e) {}
+        }
+
+        // Dekode URL jika QR berisi full link
+        if (str.startsWith('http://') || str.startsWith('https://')) {
+            try {
+                const url = new URL(str);
+                const p = url.searchParams;
+                const tokenParam = p.get('code') || p.get('qr_token') || p.get('token') || p.get('t') || p.get('ticket');
+                if (tokenParam) {
+                    return tokenParam.trim();
+                }
+                const segments = url.pathname.split('/').filter(Boolean);
+                if (segments.length > 0) {
+                    const last = segments[segments.length - 1];
+                    if (last.length > 3) return last.trim();
+                }
+            } catch(e) {}
+        }
+
+        return str.replace(/^["']|["']$/g, '').trim();
+    }
+
     function onScanSuccess(decodedText, decodedResult) {
         if (isProcessing) return;
-        verifyCode(decodedText);
+        const cleanToken = parseScannedToken(decodedText);
+        verifyCode(cleanToken || decodedText);
     }
 
     function onScanFailure(error) {
@@ -1090,8 +1148,9 @@
     function handleManualSubmit(e) {
         e.preventDefault();
         if (isProcessing) return;
-        const code = document.getElementById('manualCodeInput').value.trim();
-        if (code) verifyCode(code);
+        const raw = document.getElementById('manualCodeInput').value.trim();
+        const cleanToken = parseScannedToken(raw);
+        if (cleanToken) verifyCode(cleanToken);
     }
 
     function verifyCode(code) {
@@ -1138,6 +1197,17 @@
     }
 
     function playScanBeep(status = 'valid') {
+        // Haptic Vibration Feedback
+        if (navigator.vibrate) {
+            try {
+                if (status === 'valid') {
+                    navigator.vibrate([100, 40, 100]);
+                } else {
+                    navigator.vibrate([200, 60, 200]);
+                }
+            } catch(e) {}
+        }
+
         try {
             const AudioCtx = window.AudioContext || window.webkitAudioContext;
             if (!AudioCtx) return;
@@ -1217,7 +1287,15 @@
             </div>`;
         }
 
-        openScanModal(data);
+        const autoScan = document.getElementById('autoScanToggle')?.checked;
+        if (autoScan && data.status === 'valid') {
+            // Fast mode: tampilkan pesan ringkas lalu siap scan berikutnya secara otomatis
+            setTimeout(() => {
+                isProcessing = false;
+            }, 1600);
+        } else {
+            openScanModal(data);
+        }
     }
 
     function openScanModal(data) {
