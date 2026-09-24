@@ -2283,10 +2283,6 @@
                                 <div class="prof-card-head">1. Header &amp; Deskripsi Section Galeri</div>
                                 <div class="card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
                                     <div class="form-group" style="grid-column:1/-1;">
-                                        <label class="form-label">Sub-Judul / Tagline (Eyebrow)</label>
-                                        <input type="text" name="gallery_eyebrow" value="{{ old('gallery_eyebrow', $cfg['gallery_eyebrow'] ?? 'Dokumentasi & Portofolio') }}" class="form-input" placeholder="Dokumentasi & Portofolio">
-                                    </div>
-                                    <div class="form-group" style="grid-column:1/-1;">
                                         <label class="form-label">Judul Utama H2 (Headline)</label>
                                         <input type="text" name="gallery_headline" value="{{ old('gallery_headline', $cfg['gallery_headline'] ?? 'Popular Beach Holiday Destinations for 2026/2027') }}" class="form-input" placeholder="Misal: Galeri Foto Proyek & Momen Terbaik Kami">
                                     </div>

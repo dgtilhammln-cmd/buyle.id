@@ -1,6 +1,6 @@
 {{-- ════════════════════════════════════════════════════════════════
      THEME 5 — 3D COVERFLOW GALLERY SECTION (STRICTLY THEME 5)
-     buyle.id | PT Hiranatha / HVM Digital
+     buyle.id | HVM Digital
 ════════════════════════════════════════════════════════════════ --}}
 @php
     $galleryEnabled = $config['gallery_enabled'] ?? 1;
@@ -8,7 +8,6 @@
 
 @if($galleryEnabled)
     @php
-        $gEyebrow   = !empty($config['gallery_eyebrow']) ? $config['gallery_eyebrow'] : 'Dokumentasi & Portofolio';
         $gHeadline  = !empty($config['gallery_headline']) ? $config['gallery_headline'] : 'Popular Beach Holiday Destinations for 2026/2027';
         $gSectionDesc = !empty($config['gallery_description']) ? $config['gallery_description'] : 'Browse our most popular beach destinations for UK travellers';
 
@@ -25,36 +24,36 @@
                 $samples = [
                     1 => [
                         'title' => 'Indonesia',
-                        'subtitle' => 'Click to learn more',
-                        'desc' => "Indonesia's tropical paradise featuring pristine beaches, lush rice terraces, and crystal turquoise waters in Bali & Raja Ampat.",
+                        'subtitle' => 'Bali & Raja Ampat',
+                        'desc' => "Indonesia's tropical paradise featuring pristine beaches, lush rice terraces, and crystal turquoise waters.",
                         'img' => 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80',
                         'flag' => '🇮🇩'
                     ],
                     2 => [
                         'title' => 'Italy',
-                        'subtitle' => 'Click to learn more',
-                        'desc' => "Sardinia's white sand, the Amalfi Coast, and Sicily's golden shores. Plan your Italy beach holiday with flights, hotels, weather, and travel tips.",
+                        'subtitle' => 'Amalfi Coast & Sicily',
+                        'desc' => "Sardinia's white sand, the Amalfi Coast, and Sicily's golden shores. Plan your Italy beach holiday with us.",
                         'img' => 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=800&q=80',
                         'flag' => '🇮🇹'
                     ],
                     3 => [
                         'title' => 'Croatia',
-                        'subtitle' => 'Click to learn more',
-                        'desc' => "Explore Croatia's stunning Dalmatian Coast with historic stone villages, crystal clear Adriatic sea, and secluded islands.",
+                        'subtitle' => 'Dubrovnik Old Town',
+                        'desc' => "Explore Croatia's stunning Dalmatian Coast with historic stone villages and clear Adriatic sea.",
                         'img' => 'https://images.unsplash.com/photo-1555990538-1e428c0373e3?auto=format&fit=crop&w=800&q=80',
                         'flag' => '🇭🇷'
                     ],
                     4 => [
                         'title' => 'Malta',
-                        'subtitle' => 'Click to learn more',
-                        'desc' => "Malta offers sunny Mediterranean beaches, rich 7,000-year history, and vibrant coastal resorts surrounded by clear azure waters.",
+                        'subtitle' => 'Valletta Blue Lagoon',
+                        'desc' => "Malta offers sunny Mediterranean beaches, rich history, and vibrant coastal resorts.",
                         'img' => 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=80',
                         'flag' => '🇲🇹'
                     ],
                     5 => [
                         'title' => 'Mauritius',
-                        'subtitle' => 'Click to learn more',
-                        'desc' => "Mauritius features powder-soft white sand, coral-filled lagoons, and luxury island retreats set against dramatic mountain backdrops.",
+                        'subtitle' => 'Le Morne Peninsula',
+                        'desc' => "Mauritius features powder-soft sand, coral reefs, and luxury island retreats.",
                         'img' => 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80',
                         'flag' => '🇲🇺'
                     ]
@@ -74,7 +73,7 @@
                 $items[] = [
                     'id' => $i,
                     'title' => $title ?: "Dokumentasi #{$i}",
-                    'subtitle' => $subtitle ?: 'Lihat detail',
+                    'subtitle' => $subtitle ?: 'Klik untuk melihat',
                     'desc' => $desc ?: $gSectionDesc,
                     'img' => $img ? asset('storage/' . $img) : 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
                     'link' => $link ?: '#',
@@ -91,7 +90,7 @@
             ═════════════════════════════════════════ */
             .t5-gallery-section {
                 max-width: 1200px;
-                margin: 4.5rem auto;
+                margin: 4rem auto;
                 padding: 0 1.5rem;
                 font-family: 'Montserrat', sans-serif;
                 color: #0f172a;
@@ -100,22 +99,12 @@
 
             .t5-gallery-header {
                 text-align: center;
-                max-width: 760px;
-                margin: 0 auto 3rem auto;
-            }
-
-            .t5-gallery-eyebrow {
-                font-size: 0.82rem;
-                font-weight: 700;
-                letter-spacing: 0.12em;
-                text-transform: uppercase;
-                color: #1eb349;
-                margin-bottom: 0.65rem;
-                display: block;
+                max-width: 780px;
+                margin: 0 auto 2.5rem auto;
             }
 
             .t5-gallery-headline {
-                font-size: clamp(1.6rem, 3.8vw, 2.5rem);
+                font-size: clamp(1.75rem, 4vw, 2.6rem);
                 font-weight: 800;
                 line-height: 1.25;
                 color: #0f172a;
@@ -123,15 +112,11 @@
                 margin-bottom: 0.85rem;
             }
 
-            .t5-gallery-headline span {
-                color: #1eb349;
-                position: relative;
-            }
-
             .t5-gallery-subdesc {
-                font-size: 0.95rem;
+                font-size: 0.98rem;
                 color: #64748b;
                 line-height: 1.6;
+                margin: 0;
             }
 
             /* Carousel Container Wrapper */
@@ -139,7 +124,7 @@
                 position: relative;
                 width: 100%;
                 margin: 0 auto;
-                padding: 2rem 0;
+                padding: 1rem 0;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -165,7 +150,7 @@
                 width: 44px;
                 height: 44px;
                 border-radius: 50%;
-                background: rgba(255, 255, 255, 0.92);
+                background: rgba(255, 255, 255, 0.95);
                 backdrop-filter: blur(8px);
                 border: 1px solid #e2e8f0;
                 color: #0f172a;
@@ -179,11 +164,11 @@
             }
 
             .t5-gallery-nav:hover {
-                background: #1eb349;
+                background: #0f172a;
                 color: #ffffff;
-                border-color: #1eb349;
+                border-color: #0f172a;
                 transform: translateY(-50%) scale(1.1);
-                box-shadow: 0 8px 20px rgba(30, 179, 73, 0.3);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             }
 
             .t5-gallery-nav.prev { left: 10px; }
@@ -258,74 +243,51 @@
                 font-weight: 500;
                 color: rgba(255, 255, 255, 0.82);
                 margin: 0;
-                transition: color 0.3s;
             }
 
             /* ── Card Positioning Classes for 3D Stack ── */
-            /* Center Active Card */
             .t5-gallery-card.is-center {
                 transform: translateX(0) scale(1.12) translateY(-8px);
                 z-index: 20;
                 opacity: 1;
                 box-shadow: 0 22px 50px rgba(0, 0, 0, 0.22);
-                border-color: rgba(255, 255, 255, 0.4);
+                border-color: rgba(255, 255, 255, 0.5);
             }
 
             .t5-gallery-card.is-center:hover {
                 transform: translateX(0) scale(1.16) translateY(-14px);
-                border-color: #1eb349;
-                box-shadow: 0 28px 60px rgba(30, 179, 73, 0.35);
+                border-color: #ffffff;
+                box-shadow: 0 28px 60px rgba(0, 0, 0, 0.35);
             }
 
             .t5-gallery-card.is-center img {
                 transform: scale(1.04);
             }
 
-            /* Left 1 */
             .t5-gallery-card.is-left-1 {
                 transform: translateX(-160px) rotateY(14deg) scale(0.92) translateY(0);
                 z-index: 12;
                 opacity: 0.85;
             }
-            .t5-gallery-card.is-left-1:hover {
-                opacity: 0.95;
-                transform: translateX(-155px) rotateY(10deg) scale(0.96) translateY(-4px);
-            }
 
-            /* Left 2 */
             .t5-gallery-card.is-left-2 {
                 transform: translateX(-300px) rotateY(24deg) scale(0.78) translateY(10px);
                 z-index: 6;
                 opacity: 0.55;
             }
-            .t5-gallery-card.is-left-2:hover {
-                opacity: 0.75;
-                transform: translateX(-290px) rotateY(18deg) scale(0.83);
-            }
 
-            /* Right 1 */
             .t5-gallery-card.is-right-1 {
                 transform: translateX(160px) rotateY(-14deg) scale(0.92) translateY(0);
                 z-index: 12;
                 opacity: 0.85;
             }
-            .t5-gallery-card.is-right-1:hover {
-                opacity: 0.95;
-                transform: translateX(155px) rotateY(-10deg) scale(0.96) translateY(-4px);
-            }
 
-            /* Right 2 */
             .t5-gallery-card.is-right-2 {
                 transform: translateX(300px) rotateY(-24deg) scale(0.78) translateY(10px);
                 z-index: 6;
                 opacity: 0.55;
             }
-            .t5-gallery-card.is-right-2:hover {
-                opacity: 0.75;
-                transform: translateX(290px) rotateY(-18deg) scale(0.83);
-            }
 
-            /* Hidden items */
             .t5-gallery-card.is-hidden {
                 transform: translateX(0) scale(0.5);
                 z-index: 1;
@@ -335,7 +297,7 @@
 
             /* Description text below active card */
             .t5-gallery-active-desc {
-                max-width: 620px;
+                max-width: 640px;
                 margin: 2rem auto 1.5rem auto;
                 text-align: center;
                 font-size: 0.95rem;
@@ -365,8 +327,126 @@
             .t5-gallery-dot.active {
                 width: 24px;
                 border-radius: 12px;
-                background: linear-gradient(135deg, #1eb349, #a5cf37);
-                box-shadow: 0 2px 8px rgba(30, 179, 73, 0.4);
+                background: #0f172a;
+                box-shadow: 0 2px 8px rgba(15, 23, 42, 0.3);
+            }
+
+            /* ── LIGHTBOX POPUP MODAL STYLES ── */
+            .t5-gallery-modal {
+                position: fixed;
+                inset: 0;
+                z-index: 99999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 1.5rem;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .t5-gallery-modal.is-open {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .t5-gallery-modal-backdrop {
+                position: absolute;
+                inset: 0;
+                background: rgba(15, 23, 42, 0.85);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+
+            .t5-gallery-modal-content {
+                position: relative;
+                z-index: 2;
+                background: #ffffff;
+                border-radius: 24px;
+                max-width: 850px;
+                width: 100%;
+                max-height: 90vh;
+                overflow: hidden;
+                display: grid;
+                grid-template-columns: 1.2fr 1fr;
+                box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+                transform: scale(0.92) translateY(20px);
+                transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .t5-gallery-modal.is-open .t5-gallery-modal-content {
+                transform: scale(1) translateY(0);
+            }
+
+            .t5-gallery-modal-close {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                background: rgba(15, 23, 42, 0.6);
+                color: #ffffff;
+                border: none;
+                font-size: 1.4rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                z-index: 10;
+                transition: all 0.2s ease;
+            }
+
+            .t5-gallery-modal-close:hover {
+                background: #ef4444;
+                transform: scale(1.1);
+            }
+
+            .t5-gallery-modal-img-wrap {
+                width: 100%;
+                height: 100%;
+                min-height: 320px;
+                max-height: 520px;
+                background: #0f172a;
+            }
+
+            .t5-gallery-modal-img-wrap img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+            .t5-gallery-modal-info {
+                padding: 2.25rem 2rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                background: #ffffff;
+            }
+
+            .t5-gallery-modal-title {
+                font-size: 1.75rem;
+                font-weight: 800;
+                color: #0f172a;
+                margin-bottom: 0.35rem;
+                letter-spacing: -0.02em;
+            }
+
+            .t5-gallery-modal-sub {
+                font-size: 0.88rem;
+                font-weight: 700;
+                color: #1eb349;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-bottom: 1.25rem;
+            }
+
+            .t5-gallery-modal-desc {
+                font-size: 0.95rem;
+                color: #64748b;
+                line-height: 1.75;
+                margin: 0;
             }
 
             /* Mobile Responsive Styles */
@@ -403,6 +483,21 @@
 
                 .t5-gallery-nav.prev { left: 0px; }
                 .t5-gallery-nav.next { right: 0px; }
+
+                .t5-gallery-modal-content {
+                    grid-template-columns: 1fr;
+                    max-height: 85vh;
+                    overflow-y: auto;
+                }
+
+                .t5-gallery-modal-img-wrap {
+                    height: 240px;
+                    min-height: 240px;
+                }
+
+                .t5-gallery-modal-info {
+                    padding: 1.5rem;
+                }
             }
 
             @media (max-width: 480px) {
@@ -432,23 +527,9 @@
         </style>
 
         <section class="t5-gallery-section" id="t5-gallery-section">
-            {{-- Header --}}
+            {{-- Header (Headline & Description Only) --}}
             <div class="t5-gallery-header">
-                <span class="t5-gallery-eyebrow">{{ $gEyebrow }}</span>
-                <h2 class="t5-gallery-headline">
-                    @php
-                        // Highlight phrase in headline if space exists
-                        $words = explode(' ', e($gHeadline));
-                        if (count($words) > 3) {
-                            $highlightIndex = count($words) - 2;
-                            $words[$highlightIndex] = '<span>' . $words[$highlightIndex] . '</span>';
-                            $formattedHeadline = implode(' ', $words);
-                        } else {
-                            $formattedHeadline = e($gHeadline);
-                        }
-                    @endphp
-                    {!! $formattedHeadline !!}
-                </h2>
+                <h2 class="t5-gallery-headline">{{ $gHeadline }}</h2>
                 <p class="t5-gallery-subdesc">{{ $gSectionDesc }}</p>
             </div>
 
@@ -463,7 +544,13 @@
 
                     <div class="t5-gallery-track" id="t5GalleryTrack">
                         @foreach($items as $index => $item)
-                            <div class="t5-gallery-card" data-index="{{ $index }}" data-desc="{{ e($item['desc']) }}" data-link="{{ $item['link'] }}">
+                            <div class="t5-gallery-card" 
+                                 data-index="{{ $index }}" 
+                                 data-title="{{ e($item['title']) }}"
+                                 data-sub="{{ e($item['subtitle']) }}"
+                                 data-desc="{{ e($item['desc']) }}" 
+                                 data-img="{{ $item['img'] }}"
+                                 data-link="{{ $item['link'] }}">
                                 <img src="{{ $item['img'] }}" alt="{{ $item['title'] }}" loading="lazy">
                                 <div class="t5-gallery-card-overlay">
                                     <div class="t5-gallery-card-title">
@@ -497,6 +584,22 @@
             </div>
         </section>
 
+        {{-- Lightbox Popup Modal --}}
+        <div class="t5-gallery-modal" id="t5GalleryModal">
+            <div class="t5-gallery-modal-backdrop" id="t5GalleryModalBackdrop"></div>
+            <div class="t5-gallery-modal-content">
+                <button type="button" class="t5-gallery-modal-close" id="t5GalleryModalClose" aria-label="Tutup">&times;</button>
+                <div class="t5-gallery-modal-img-wrap">
+                    <img id="t5ModalImg" src="" alt="Popup Preview">
+                </div>
+                <div class="t5-gallery-modal-info">
+                    <h3 class="t5-gallery-modal-title" id="t5ModalTitle"></h3>
+                    <p class="t5-gallery-modal-sub" id="t5ModalSub"></p>
+                    <p class="t5-gallery-modal-desc" id="t5ModalDesc"></p>
+                </div>
+            </div>
+        </div>
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const cards = Array.from(document.querySelectorAll('.t5-gallery-card'));
@@ -506,6 +609,15 @@
                 const nextBtn = document.getElementById('t5GalleryNext');
                 const stage = document.getElementById('t5GalleryStage');
 
+                // Modal elements
+                const modal = document.getElementById('t5GalleryModal');
+                const modalBackdrop = document.getElementById('t5GalleryModalBackdrop');
+                const modalClose = document.getElementById('t5GalleryModalClose');
+                const modalImg = document.getElementById('t5ModalImg');
+                const modalTitle = document.getElementById('t5ModalTitle');
+                const modalSub = document.getElementById('t5ModalSub');
+                const modalDesc = document.getElementById('t5ModalDesc');
+
                 if (!cards.length) return;
 
                 let currentIndex = 0;
@@ -513,10 +625,8 @@
 
                 function updateCarousel() {
                     cards.forEach((card, i) => {
-                        // Reset all positioning classes
                         card.className = 't5-gallery-card';
 
-                        // Calculate relative position from currentIndex with wrapping
                         let diff = i - currentIndex;
                         if (diff < -Math.floor(total / 2)) diff += total;
                         if (diff > Math.floor(total / 2)) diff -= total;
@@ -536,12 +646,10 @@
                         }
                     });
 
-                    // Update active dot
                     dots.forEach((dot, i) => {
                         dot.classList.toggle('active', i === currentIndex);
                     });
 
-                    // Update active description with smooth fade
                     if (descEl && cards[currentIndex]) {
                         descEl.style.opacity = '0';
                         setTimeout(() => {
@@ -564,14 +672,37 @@
                 if (nextBtn) nextBtn.addEventListener('click', nextSlide);
                 if (prevBtn) prevBtn.addEventListener('click', prevSlide);
 
-                // Click card interaction
+                // Open Modal Function
+                function openModal(card) {
+                    if (!modal || !card) return;
+                    modalImg.src = card.getAttribute('data-img') || '';
+                    modalTitle.textContent = card.getAttribute('data-title') || '';
+                    modalSub.textContent = card.getAttribute('data-sub') || '';
+                    modalDesc.textContent = card.getAttribute('data-desc') || '';
+                    modal.classList.add('is-open');
+                    document.body.style.overflow = 'hidden';
+                }
+
+                function closeModal() {
+                    if (!modal) return;
+                    modal.classList.remove('is-open');
+                    document.body.style.overflow = '';
+                }
+
+                if (modalClose) modalClose.addEventListener('click', closeModal);
+                if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal);
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && modal && modal.classList.contains('is-open')) {
+                        closeModal();
+                    }
+                });
+
+                // Click card interaction: center opens modal, side rotates
                 cards.forEach((card, i) => {
                     card.addEventListener('click', function(e) {
                         if (i === currentIndex) {
-                            const link = card.getAttribute('data-link');
-                            if (link && link !== '#' && link !== 'javascript:void(0)') {
-                                window.location.href = link;
-                            }
+                            openModal(card);
                         } else {
                             currentIndex = i;
                             updateCarousel();
@@ -587,7 +718,7 @@
                     });
                 });
 
-                // Touch Swipe Support for Mobile
+                // Touch Swipe Support
                 let touchStartX = 0;
                 let touchEndX = 0;
 
@@ -599,14 +730,13 @@
                     stage.addEventListener('touchend', (e) => {
                         touchEndX = e.changedTouches[0].screenX;
                         if (touchStartX - touchEndX > 45) {
-                            nextSlide(); // Swipe left
+                            nextSlide();
                         } else if (touchEndX - touchStartX > 45) {
-                            prevSlide(); // Swipe right
+                            prevSlide();
                         }
                     }, { passive: true });
                 }
 
-                // Initial setup
                 updateCarousel();
             });
         </script>
