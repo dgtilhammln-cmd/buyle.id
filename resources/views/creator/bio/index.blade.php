@@ -1699,17 +1699,19 @@
                     .prof-subtab-btn {
                         display: inline-flex;
                         align-items: center;
-                        gap: 0.5rem;
-                        padding: 0.65rem 1.25rem;
+                        gap: 0.45rem;
+                        padding: 0.5rem 0.85rem;
                         border-radius: 12px;
                         border: 1.5px solid #cbd5e1;
                         background: #f8fafc;
                         color: #475569;
                         font-family: 'Montserrat', sans-serif;
-                        font-size: 0.85rem;
+                        font-size: 0.78rem;
                         font-weight: 600;
                         cursor: pointer;
                         transition: all 0.2s ease;
+                        white-space: nowrap;
+                        flex-shrink: 0;
                     }
 
                     .prof-subtab-btn:hover {
@@ -1730,10 +1732,10 @@
                     }
                 </style>
                 <div
-                    style="display:flex; gap:0.6rem; margin-bottom:1.5rem; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.85rem; flex-wrap:wrap;">
+                    style="display:flex; gap:0.5rem; margin-bottom:1.5rem; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.85rem; overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none;">
                     <button type="button" class="prof-subtab-btn active" id="btn-subtab-info"
                         onclick="switchProfileSubtab('subtab-profile-info', this)">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                             viewBox="0 0 24 24">
                             <circle cx="12" cy="8" r="4" />
                             <path d="M20 21a8 8 0 1 0-16 0" />
@@ -1742,30 +1744,30 @@
                     </button>
                     <button type="button" class="prof-subtab-btn" id="btn-subtab-homepage"
                         onclick="switchProfileSubtab('subtab-homepage-main', this)">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                             viewBox="0 0 24 24">
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                             <polyline points="9 22 9 12 15 12 15 22" />
                         </svg>
-                        Homepage / Beranda (Tema 5)
+                        Beranda
                     </button>
                     <button type="button" class="prof-subtab-btn" id="btn-subtab-products"
                         onclick="switchProfileSubtab('subtab-products-main', this)">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                             viewBox="0 0 24 24">
                             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
                             <line x1="3" y1="6" x2="21" y2="6"/>
                             <path d="M16 10a4 4 0 0 1-8 0"/>
                         </svg>
-                        Halaman Produk (Tema 5)
+                        Halaman Produk
                     </button>
                     <button type="button" class="prof-subtab-btn" id="btn-subtab-contact"
                         onclick="switchProfileSubtab('subtab-contact-main', this)">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                             viewBox="0 0 24 24">
                             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                         </svg>
-                        Halaman Kontak (Tema 5)
+                        Halaman Kontak
                     </button>
                 </div>
 
