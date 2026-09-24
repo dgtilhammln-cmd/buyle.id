@@ -104,21 +104,20 @@
             }
 
             .t5-gallery-headline {
-                font-size: clamp(1.75rem, 4vw, 2.6rem);
-                font-weight: 800;
-                line-height: 1.25;
+                font-size: clamp(1.35rem, 2.8vw, 1.75rem);
+                font-weight: 700;
+                line-height: 1.3;
                 color: #0f172a;
-                letter-spacing: -0.03em;
-                margin-bottom: 0.85rem;
-                /* Balance: baris 1 lebih pendek dari baris 2 */
+                letter-spacing: -0.02em;
+                margin-bottom: 0.6rem;
                 text-wrap: balance;
-                max-width: 520px;
+                max-width: 560px;
                 margin-left: auto;
                 margin-right: auto;
             }
 
             .t5-gallery-subdesc {
-                font-size: 0.98rem;
+                font-size: 0.95rem;
                 color: #64748b;
                 line-height: 1.6;
                 margin: 0;
@@ -129,7 +128,7 @@
                 position: relative;
                 width: 100%;
                 margin: 0 auto;
-                padding: 1rem 0;
+                padding: 1.5rem 0;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -141,7 +140,7 @@
                 position: relative;
                 width: 100%;
                 max-width: 1050px;
-                height: 380px;
+                height: 470px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -264,7 +263,7 @@
             }
 
             .t5-gallery-card.is-center:hover {
-                transform: translateX(0) scale(1.16) translateY(-14px);
+                transform: translateX(0) scale(1.14) translateY(-6px);
                 border-color: #ffffff;
                 box-shadow: 0 28px 60px rgba(0, 0, 0, 0.35);
             }
@@ -461,7 +460,7 @@
             /* Mobile Responsive Styles */
             @media (max-width: 768px) {
                 .t5-gallery-stage-wrap {
-                    height: 330px;
+                    height: 390px;
                 }
 
                 .t5-gallery-card {
@@ -511,7 +510,7 @@
 
             @media (max-width: 480px) {
                 .t5-gallery-stage-wrap {
-                    height: 300px;
+                    height: 350px;
                 }
 
                 .t5-gallery-card {

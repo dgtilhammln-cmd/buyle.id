@@ -313,6 +313,27 @@
     $berandaOnClick = $isHome ? "t5ScrollTo('top'); return false;" : "";
     $aboutOnClick   = $isHome ? "t5ScrollTo('about-section'); return false;" : "";
     $contactOnClick = '';
+
+    // Check if creator has any active products or services
+    $hasProductsOrServices = false;
+    if (isset($products) && is_iterable($products) && count($products) > 0) {
+        $hasProductsOrServices = true;
+    } else {
+        $sellerIds = array_values(array_unique(array_filter([
+            $profile->user_id ?? null,
+            isset($profile->user) ? $profile->user->id : null,
+            $profile->id ?? null,
+        ])));
+        if (!empty($sellerIds)) {
+            try {
+                $hasProductsOrServices = \App\Models\Product::whereIn('seller_id', $sellerIds)
+                    ->where(function($q) {
+                        $q->where('is_active', true)->orWhereNull('is_active');
+                    })
+                    ->exists();
+            } catch (\Throwable $e) {}
+        }
+    }
 @endphp
 
 
@@ -334,7 +355,10 @@
         <nav class="t5-nav-desktop">
             <a href="{{ $berandaLink }}" onclick="{{ $berandaOnClick }}" class="t5-nav-link {{ $isHome ? 'active' : '' }}">Beranda</a>
             <a href="{{ $aboutLink }}" onclick="{{ $aboutOnClick }}" class="t5-nav-link">Profil</a>
-            <a href="{{ $productsUrl }}" class="t5-nav-link {{ request()->is('*/produk*') || request()->is('produk*') ? 'active' : '' }}">Produk / Layanan</a>
+            
+            @if($hasProductsOrServices)
+                <a href="{{ $productsUrl }}" class="t5-nav-link {{ request()->is('*/produk*') || request()->is('produk*') ? 'active' : '' }}">Produk / Layanan</a>
+            @endif
             
             @if(isset($blocks) && $blocks->count() > 0)
                 @foreach($blocks as $b)
@@ -357,23 +381,25 @@
 
         {{-- Action Buttons --}}
         <div class="t5-header-actions">
-            {{-- Cart Button --}}
-            @php
-                $cartBadgeVal = 0;
-                try {
-                    if (class_exists(\App\Services\CartService::class)) {
-                        $cartBadgeVal = (int) app(\App\Services\CartService::class)->getItems()->sum('qty');
-                    }
-                } catch (\Throwable $e) {}
-            @endphp
-            <a href="https://buyle.id/keranjang" class="t5-action-btn t5-btn-cart" title="Keranjang Belanja">
-                <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                    <line x1="3" y1="6" x2="21" y2="6"/>
-                    <path d="M16 10a4 4 0 0 1-8 0"/>
-                </svg>
-                <span class="t5-cart-badge" id="t5HeaderCartBadge" style="{{ $cartBadgeVal > 0 ? '' : 'display:none;' }}">{{ $cartBadgeVal }}</span>
-            </a>
+            {{-- Cart Button (Only shown if products/services exist) --}}
+            @if($hasProductsOrServices)
+                @php
+                    $cartBadgeVal = 0;
+                    try {
+                        if (class_exists(\App\Services\CartService::class)) {
+                            $cartBadgeVal = (int) app(\App\Services\CartService::class)->getItems()->sum('qty');
+                        }
+                    } catch (\Throwable $e) {}
+                @endphp
+                <a href="https://buyle.id/keranjang" class="t5-action-btn t5-btn-cart" title="Keranjang Belanja">
+                    <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 0 1-8 0"/>
+                    </svg>
+                    <span class="t5-cart-badge" id="t5HeaderCartBadge" style="{{ $cartBadgeVal > 0 ? '' : 'display:none;' }}">{{ $cartBadgeVal }}</span>
+                </a>
+            @endif
 
             @if(!empty($config['wa']))
                 <a href="javascript:void(0)" onclick="openT5LeadModal('Halo, saya ingin berkonsultasi via WhatsApp.')" class="t5-action-btn t5-btn-wa" title="Hubungi via WhatsApp">
@@ -403,7 +429,7 @@
 
 </header>
 
-{{-- Mobile Nav Drawer (Positioned outside <header> to avoid backdrop-filter containing block trap) --}}
+{{-- Mobile Nav Drawer --}}
 <div class="t5-mobile-drawer" id="t5MobileDrawer">
     <div class="t5-drawer-overlay" onclick="toggleT5Drawer()"></div>
     <div class="t5-drawer-content">
@@ -414,18 +440,21 @@
         <nav class="t5-drawer-nav">
             <a href="{{ $berandaLink }}" onclick="{{ $berandaOnClick }} toggleT5Drawer();" class="t5-drawer-link">Beranda</a>
             <a href="{{ $aboutLink }}" onclick="{{ $aboutOnClick }} toggleT5Drawer();" class="t5-drawer-link">Profil</a>
-            <a href="{{ $productsUrl }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Produk / Layanan</a>
-            <a href="https://buyle.id/keranjang" class="t5-drawer-link t5-drawer-cart-link">
-                <span style="display:inline-flex; align-items:center; gap:0.45rem;">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#1eb349;">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                        <line x1="3" y1="6" x2="21" y2="6"/>
-                        <path d="M16 10a4 4 0 0 1-8 0"/>
-                    </svg>
-                    Keranjang
-                </span>
-                <span class="t5-drawer-cart-badge" id="t5DrawerCartBadge" style="{{ $cartBadgeVal > 0 ? '' : 'display:none;' }}">{{ $cartBadgeVal }}</span>
-            </a>
+            
+            @if($hasProductsOrServices)
+                <a href="{{ $productsUrl }}" onclick="toggleT5Drawer()" class="t5-drawer-link">Produk / Layanan</a>
+                <a href="https://buyle.id/keranjang" class="t5-drawer-link t5-drawer-cart-link">
+                    <span style="display:inline-flex; align-items:center; gap:0.45rem;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#1eb349;">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                        Keranjang
+                    </span>
+                    <span class="t5-drawer-cart-badge" id="t5DrawerCartBadge" style="{{ (isset($cartBadgeVal) && $cartBadgeVal > 0) ? '' : 'display:none;' }}">{{ $cartBadgeVal ?? 0 }}</span>
+                </a>
+            @endif
             @if(isset($blocks) && $blocks->count() > 0)
                 @foreach($blocks as $b)
                     @php $bData = $b->data_json ?? []; @endphp

@@ -74,11 +74,12 @@
         }
 
         .t5-about-headline {
-            font-size: 2rem;
+            font-size: clamp(1.35rem, 2.8vw, 1.75rem);
             font-weight: 700;
-            line-height: 1.25;
+            line-height: 1.3;
             color: #0f172a;
-            letter-spacing: -0.03em;
+            letter-spacing: -0.02em;
+            text-wrap: balance;
         }
 
         .t5-about-right {
