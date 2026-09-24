@@ -96,6 +96,11 @@
                 color: #0f172a;
                 letter-spacing: -0.03em;
                 margin-bottom: 0.85rem;
+                /* Balance: baris 1 lebih pendek dari baris 2 */
+                text-wrap: balance;
+                max-width: 520px;
+                margin-left: auto;
+                margin-right: auto;
             }
 
             .t5-tiktok-subdesc {
@@ -114,6 +119,8 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                /* Lock horizontal overflow on mobile */
+                overflow: hidden;
             }
 
             .t5-tiktok-stage-wrap {
@@ -126,6 +133,8 @@
                 justify-content: center;
                 perspective: 1300px;
                 user-select: none;
+                /* Prevent 3D cards from causing horizontal scroll */
+                overflow: hidden;
             }
 
             /* Nav Buttons */
@@ -597,35 +606,50 @@
                 let currentIndex = 0;
                 const total = cards.length;
 
-                // Auto fetch TikTok oEmbed thumbnails & titles for URLs if no custom thumb set (Same as Tema 1!)
+                // Auto fetch TikTok thumbnails via server-side proxy /api/tiktok-thumb
+                // Proxy ini menghindari CORS karena request dilakukan dari server PHP
                 cards.forEach(card => {
                     const url = card.getAttribute('data-url');
                     const hasCustomThumb = card.getAttribute('data-thumb');
 
                     if (url && url.includes('tiktok.com') && !hasCustomThumb) {
-                        fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`)
+                        const proxyUrl = `/api/tiktok-thumb?url=${encodeURIComponent(url)}`;
+
+                        fetch(proxyUrl)
                             .then(res => res.json())
                             .then(data => {
-                                if (data) {
+                                if (data && data.thumbnail_url) {
                                     const imgEl = card.querySelector('.t5-tiktok-card-img');
                                     const titleEl = card.querySelector('.t5-tiktok-card-head-text');
                                     const authorEl = card.querySelector('.t5-tiktok-card-author-text');
 
-                                    if (data.thumbnail_url && imgEl) {
+                                    if (imgEl) {
                                         imgEl.style.backgroundImage = `url('${data.thumbnail_url}')`;
+                                        imgEl.style.backgroundSize = 'cover';
+                                        imgEl.style.backgroundPosition = 'center';
                                         card.setAttribute('data-thumb', data.thumbnail_url);
                                     }
                                     if (data.title && titleEl && !card.getAttribute('data-title-custom')) {
-                                        titleEl.textContent = data.title.length > 50 ? data.title.substring(0, 50) + '...' : data.title;
+                                        const shortTitle = data.title.length > 60 ? data.title.substring(0, 60) + '...' : data.title;
+                                        titleEl.textContent = shortTitle;
                                     }
                                     if (data.author_name && authorEl && !card.getAttribute('data-author-custom')) {
                                         authorEl.textContent = '@' + data.author_name;
                                     }
+                                } else {
+                                    // Fallback gradient jika thumbnail tidak tersedia
+                                    const imgEl = card.querySelector('.t5-tiktok-card-img');
+                                    if (imgEl && !imgEl.style.backgroundImage) {
+                                        imgEl.style.background = 'linear-gradient(145deg, #1a1a2e, #16213e, #0f3460)';
+                                    }
                                 }
                             })
-                            .catch(err => {});
+                            .catch(err => {
+                                // Silent fail — keep existing placeholder background
+                            });
                     }
                 });
+
 
                 function updateCarousel() {
                     cards.forEach((card, i) => {

@@ -110,6 +110,11 @@
                 color: #0f172a;
                 letter-spacing: -0.03em;
                 margin-bottom: 0.85rem;
+                /* Balance: baris 1 lebih pendek dari baris 2 */
+                text-wrap: balance;
+                max-width: 520px;
+                margin-left: auto;
+                margin-right: auto;
             }
 
             .t5-gallery-subdesc {
@@ -128,6 +133,8 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                /* Lock horizontal overflow on mobile */
+                overflow: hidden;
             }
 
             .t5-gallery-stage-wrap {
@@ -140,6 +147,8 @@
                 justify-content: center;
                 perspective: 1200px;
                 user-select: none;
+                /* Prevent 3D cards from causing horizontal scroll */
+                overflow: hidden;
             }
 
             /* Nav Buttons */

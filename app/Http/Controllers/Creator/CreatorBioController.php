@@ -1358,5 +1358,42 @@ class CreatorBioController extends Controller
             return response()->json(['error' => 'Gagal scrape: ' . $e->getMessage()], 500);
         }
     }
+
+    /**
+     * Server-side proxy untuk TikTok oEmbed API.
+     * Browser tidak bisa langsung fetch ke tiktok.com/oembed (CORS),
+     * tapi PHP server bisa. Endpoint ini menjadi jembatannya.
+     */
+    public function tiktokOembed(Request $request)
+    {
+        $url = $request->query('url');
+
+        if (!$url || !str_contains($url, 'tiktok.com')) {
+            return response()->json(['error' => 'URL TikTok tidak valid'], 422);
+        }
+
+        try {
+            $response = Http::timeout(8)
+                ->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (compatible; oEmbed fetcher)',
+                    'Accept'     => 'application/json',
+                ])
+                ->get('https://www.tiktok.com/oembed', ['url' => $url]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                return response()->json([
+                    'thumbnail_url' => $data['thumbnail_url'] ?? null,
+                    'title'         => $data['title'] ?? null,
+                    'author_name'   => $data['author_name'] ?? null,
+                    'author_url'    => $data['author_url'] ?? null,
+                ]);
+            }
+
+            return response()->json(['error' => 'TikTok oEmbed gagal', 'status' => $response->status()], 502);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Timeout atau error: ' . $e->getMessage()], 500);
+        }
+    }
 }
 

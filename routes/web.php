@@ -267,6 +267,38 @@ Route::get('/api/ig-thumb', function (\Illuminate\Http\Request $request) {
         ->header('Access-Control-Allow-Origin', '*');
 })->name('api.ig-thumb');
 
+// TikTok oEmbed proxy — server-side fetch to bypass CORS (same pattern as ig-thumb above)
+Route::get('/api/tiktok-thumb', function (\Illuminate\Http\Request $request) {
+    $url = $request->query('url');
+    if (!$url || !str_contains($url, 'tiktok.com')) {
+        return response()->json(['error' => 'URL TikTok tidak valid'], 422);
+    }
+
+    try {
+        $response = \Illuminate\Support\Facades\Http::timeout(8)
+            ->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (compatible; oEmbed/1.0; +https://oembed.com)',
+                'Accept'     => 'application/json',
+            ])
+            ->get('https://www.tiktok.com/oembed', ['url' => $url]);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            return response()->json([
+                'thumbnail_url' => $data['thumbnail_url'] ?? null,
+                'title'         => $data['title'] ?? null,
+                'author_name'   => $data['author_name'] ?? null,
+            ])->header('Cache-Control', 'public, max-age=86400')
+              ->header('Access-Control-Allow-Origin', '*');
+        }
+    } catch (\Exception $e) {
+        // Fallback below
+    }
+
+    return response()->json(['error' => 'Gagal mengambil data TikTok'], 502)
+        ->header('Access-Control-Allow-Origin', '*');
+})->name('api.tiktok-thumb');
+
 // Webhook Midtrans — DEDICATED controller, reply < 1 detik, proses di queue
 // (Route ini dikecualikan dari CSRF di bootstrap/app.php)
 Route::post('/payment/callback', [\App\Http\Controllers\PaymentWebhookController::class, 'midtrans'])->name('payment.callback');
@@ -607,6 +639,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::patch('/bio/blocks/{block}/toggle', [\App\Http\Controllers\Creator\CreatorBioController::class, 'toggleBlock'])->name('bio.blocks.toggle');
     Route::post('/bio/blocks/reorder', [\App\Http\Controllers\Creator\CreatorBioController::class, 'reorderBlocks'])->name('bio.blocks.reorder');
     Route::post('/bio/scrape-url', [\App\Http\Controllers\Creator\CreatorBioController::class, 'scrapeUrl'])->name('bio.scrape-url');
+    Route::get('/bio/tiktok-oembed', [\App\Http\Controllers\Creator\CreatorBioController::class, 'tiktokOembed'])->name('bio.tiktok-oembed');
 
     // Custom Domain Search & Purchase (WhoisJSON & Midtrans)
     Route::post('/domain/check',    [\App\Http\Controllers\Creator\CreatorDomainController::class, 'checkAvailability'])->name('domain.check')->middleware('throttle:domain-check');
