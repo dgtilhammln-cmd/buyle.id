@@ -2,6 +2,8 @@
 <html lang="id">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @php
         $t5SeoTitle = !empty($config['theme5_seo_products_title']) ? $config['theme5_seo_products_title'] : $seoTitle;
         $t5SeoDesc  = !empty($config['theme5_seo_products_desc'])  ? $config['theme5_seo_products_desc']  : $seoDesc;
