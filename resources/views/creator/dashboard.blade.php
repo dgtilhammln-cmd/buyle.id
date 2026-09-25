@@ -943,7 +943,7 @@
         <div class="bio-card">
             <div class="section-card-title">
                 <span>Penjualan Terbaru (30 Hari)</span>
-                <a href="{{ route('creator.orders.index') }}" style="font-size: 0.78rem; color: var(--brand-green); font-weight: 700; text-decoration: none;">
+                <a href="{{ route('creator.sales.report') }}" style="font-size: 0.78rem; color: var(--brand-green); font-weight: 700; text-decoration: none;">
                     Lihat Semua &rarr;
                 </a>
             </div>
