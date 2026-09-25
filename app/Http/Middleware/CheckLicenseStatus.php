@@ -10,8 +10,13 @@ class CheckLicenseStatus
 {
     public function handle(Request $request, Closure $next)
     {
-        // Bypass untuk semua URL admin agar admin tetap bisa akses
-        if ($request->is('admin*')) {
+        // Bypass untuk semua URL admin, auth/login, dan preview agar admin tetap bisa bekerja
+        if ($request->is('admin*') || $request->is('login') || $request->is('logout') || $request->is('preview-coming-soon')) {
+            return $next($request);
+        }
+
+        // Bypass jika user yang sedang aktif adalah Admin
+        if (auth()->check() && (auth()->user()->role === 'admin' || auth()->user()->role === 'super_admin')) {
             return $next($request);
         }
 
@@ -32,6 +37,20 @@ class CheckLicenseStatus
 
         if ($status === 'suspended') {
             abort(503);
+        }
+
+        // Cek Status Coming Soon / Maintenance Mode dari Cache
+        $csEnabled = Cache::remember('cs_enabled', 15, function () {
+            try {
+                $setting = \App\Models\Setting::where('key', 'cs_enabled')->first();
+                return $setting ? (string)$setting->value : '0';
+            } catch (\Exception $e) {
+                return '0';
+            }
+        });
+
+        if ($csEnabled === '1') {
+            return response()->view('components.coming-soon', [], 503);
         }
 
         return $next($request);

@@ -1,8 +1,36 @@
-﻿{{-- ============================================================
-COMING SOON — Countdown Page Component
-Usage: @include('components.coming-soon')
-Target: 26 Oktober 2026, 08:00 WIB
-============================================================ --}}
+@php
+    $csSettings      = \App\Models\Setting::getAllAsArray();
+    $csMode          = $csSettings['cs_mode'] ?? 'coming_soon';
+    $csBadge         = $csSettings['cs_badge'] ?? 'Segera Hadir • 26 Oktober 2026';
+    $csHeadline      = $csSettings['cs_headline'] ?? 'Platform Kreator';
+    $csHeadlineGreen = $csSettings['cs_headline_green'] ?? 'Terbaik Indonesia';
+    $csSubtext       = $csSettings['cs_subtext'] ?? 'Kami sedang mempersiapkan pengalaman belanja & kreator terbaik untuk Anda. Marketplace buyle.id akan segera hadir dan siap melayani jutaan transaksi.';
+    $csTargetDate    = $csSettings['cs_target_date'] ?? '2026-10-26 08:00:00';
+    $csStartDate     = $csSettings['cs_start_date'] ?? '2026-09-01 00:00:00';
+    $csProgress      = $csSettings['cs_progress'] ?? '45';
+    $csBtnText       = $csSettings['cs_btn_text'] ?? '';
+    $csBtnLink       = $csSettings['cs_btn_link'] ?? '';
+
+    // Features array from settings
+    $featuresRaw = $csSettings['cs_features'] ?? 'Ribuan Kreator Digital, Produk Digital, Transaksi Aman, Web Builder + Affiliate';
+    $features = array_filter(array_map('trim', explode(',', $featuresRaw)));
+
+    // Parse target date to ISO format for JS
+    try {
+        $targetCarbon = \Carbon\Carbon::parse($csTargetDate);
+    } catch (\Exception $e) {
+        $targetCarbon = \Carbon\Carbon::parse('2026-10-26 08:00:00');
+    }
+    $targetIso = $targetCarbon->format('Y-m-d\TH:i:sP');
+
+    try {
+        $startCarbon = \Carbon\Carbon::parse($csStartDate);
+    } catch (\Exception $e) {
+        $startCarbon = \Carbon\Carbon::parse('2026-09-01 00:00:00');
+    }
+    $startIso = $startCarbon->format('Y-m-d\TH:i:sP');
+@endphp
+
 <style>
     /* ---------- Reset & Base ---------- */
     .cs-wrapper * {
@@ -89,13 +117,10 @@ Target: 26 Oktober 2026, 08:00 WIB
     }
 
     @keyframes cs-pulse {
-
-        0%,
-        100% {
+        0%, 100% {
             transform: scale(1);
             opacity: 0.7;
         }
-
         50% {
             transform: scale(1.15);
             opacity: 1;
@@ -152,13 +177,10 @@ Target: 26 Oktober 2026, 08:00 WIB
     }
 
     @keyframes cs-blink {
-
-        0%,
-        100% {
+        0%, 100% {
             opacity: 1;
             transform: scale(1);
         }
-
         50% {
             opacity: 0.3;
             transform: scale(0.7);
@@ -219,7 +241,7 @@ Target: 26 Oktober 2026, 08:00 WIB
         color: rgba(255, 255, 255, 0.55);
         line-height: 1.65;
         margin-bottom: 2.5rem;
-        max-width: 520px;
+        max-width: 540px;
         margin-left: auto;
         margin-right: auto;
     }
@@ -283,7 +305,6 @@ Target: 26 Oktober 2026, 08:00 WIB
             transform: translateY(-8px);
             opacity: 0;
         }
-
         100% {
             transform: translateY(0);
             opacity: 1;
@@ -312,7 +333,7 @@ Target: 26 Oktober 2026, 08:00 WIB
     .cs-progress-wrap {
         width: 100%;
         max-width: 420px;
-        margin: 0 auto 2.5rem;
+        margin: 0 auto 2.25rem;
     }
 
     .cs-progress-label {
@@ -339,13 +360,34 @@ Target: 26 Oktober 2026, 08:00 WIB
         transition: width 0.5s ease;
     }
 
+    /* ---------- CTA Button ---------- */
+    .cs-btn-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+        color: #ffffff !important;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.92rem;
+        font-weight: 700;
+        padding: 0.8rem 1.75rem;
+        border-radius: 14px;
+        text-decoration: none;
+        box-shadow: 0 4px 20px rgba(30, 179, 73, 0.4);
+        transition: all 0.25s ease;
+    }
+    .cs-btn-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(30, 179, 73, 0.55);
+    }
+
     /* ---------- CTA Features ---------- */
     .cs-features {
         display: flex;
-        gap: 1.25rem;
+        gap: 1rem;
         justify-content: center;
         flex-wrap: wrap;
-        margin-bottom: 2.5rem;
+        margin-bottom: 2.25rem;
     }
 
     .cs-feat {
@@ -408,7 +450,7 @@ Target: 26 Oktober 2026, 08:00 WIB
         {{-- Badge --}}
         <div class="cs-badge">
             <span class="cs-badge-dot"></span>
-            Segera Hadir &bull; 26 Oktober 2026
+            {{ $csBadge }}
         </div>
 
         {{-- Logo --}}
@@ -427,13 +469,12 @@ Target: 26 Oktober 2026, 08:00 WIB
 
         {{-- Headline --}}
         <h1 class="cs-headline">
-            Platform Kreator<br>
-            <span class="cs-hl-green">Terbaik Indonesia</span>
+            {!! nl2br(e($csHeadline)) !!}<br>
+            <span class="cs-hl-green">{{ $csHeadlineGreen }}</span>
         </h1>
 
         <p class="cs-sub">
-            Kami sedang mempersiapkan pengalaman belanja & kreator terbaik untuk Anda.
-            Marketplace buyle.id akan segera hadir dan siap melayani jutaan transaksi.
+            {{ $csSubtext }}
         </p>
 
         {{-- Countdown --}}
@@ -463,53 +504,43 @@ Target: 26 Oktober 2026, 08:00 WIB
         <div class="cs-progress-wrap">
             <div class="cs-progress-label">
                 <span>Progress Persiapan</span>
-                <span id="cs-pct">0%</span>
+                <span id="cs-pct">{{ $csProgress }}%</span>
             </div>
             <div class="cs-progress-bar">
-                <div class="cs-progress-fill" id="cs-fill" style="width:0%"></div>
+                <div class="cs-progress-fill" id="cs-fill" style="width: {{ $csProgress }}%"></div>
             </div>
         </div>
 
-        {{-- Features --}}
-        <div class="cs-features">
-            <div class="cs-feat">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-                Ribuan Kreator Digital
-            </div>
-            <div class="cs-feat">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="2" y="7" width="20" height="14" rx="2" />
-                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                    <line x1="12" y1="12" x2="12" y2="16" />
-                    <line x1="10" y1="14" x2="14" y2="14" />
-                </svg>
-                Produk Digital
-            </div>
-            <div class="cs-feat">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-                Transaksi Aman
-            </div>
-            <div class="cs-feat">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                    <polyline points="17 6 23 6 23 12" />
-                </svg>
-                Web Builder + Affiliate
-            </div>
+        {{-- CTA Button if set --}}
+        @if(!empty($csBtnText))
+        <div style="margin-bottom: 2rem;">
+            <a href="{{ $csBtnLink ?: '#' }}" class="cs-btn-cta">
+                {{ $csBtnText }} &rarr;
+            </a>
         </div>
+        @endif
+
+        {{-- Features --}}
+        @if(!empty($features))
+        <div class="cs-features">
+            @foreach($features as $feat)
+            <div class="cs-feat">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                {{ $feat }}
+            </div>
+            @endforeach
+        </div>
+        @endif
 
         {{-- Footer note --}}
         <p class="cs-footer-note">
             Sudah punya akun kreator?
             <a href="{{ route('creator.dashboard') }}">Masuk ke Dashboard</a>
             &nbsp;&bull;&nbsp;
-            <a href="{{ route('home') }}">Beranda</a>
+            <a href="{{ route('admin.dashboard') }}">Area Admin</a>
         </p>
 
     </div>
@@ -517,10 +548,10 @@ Target: 26 Oktober 2026, 08:00 WIB
 
 <script>
     (function () {
-        // Target: 26 Oktober 2026 08:00 WIB (UTC+7)
-        var target = new Date('2026-10-26T08:00:00+07:00').getTime();
-        // Start: approx Sep 2026 (project start)
-        var start = new Date('2026-09-01T00:00:00+07:00').getTime();
+        // Target Datetime from Admin Settings
+        var target = new Date('{{ $targetIso }}').getTime();
+        var start  = new Date('{{ $startIso }}').getTime();
+        var fixedProgress = {{ (int)$csProgress }};
 
         function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
@@ -542,7 +573,8 @@ Target: 26 Oktober 2026, 08:00 WIB
 
             if (diff <= 0) {
                 ['cs-days', 'cs-hours', 'cs-mins', 'cs-secs'].forEach(function (id) {
-                    document.getElementById(id).textContent = '00';
+                    var el = document.getElementById(id);
+                    if (el) el.textContent = '00';
                 });
                 var fill = document.getElementById('cs-fill');
                 var pct = document.getElementById('cs-pct');
@@ -561,14 +593,19 @@ Target: 26 Oktober 2026, 08:00 WIB
             tick('cs-mins', mins);
             tick('cs-secs', secs);
 
-            // Progress 0-100% between start and target
-            var total = target - start;
-            var elapsed = now - start;
-            var progress = Math.min(100, Math.max(0, Math.round((elapsed / total) * 100)));
             var fill = document.getElementById('cs-fill');
             var pctEl = document.getElementById('cs-pct');
-            if (fill) fill.style.width = progress + '%';
-            if (pctEl) pctEl.textContent = progress + '%';
+
+            if (fixedProgress > 0) {
+                if (fill) fill.style.width = fixedProgress + '%';
+                if (pctEl) pctEl.textContent = fixedProgress + '%';
+            } else {
+                var total = target - start;
+                var elapsed = now - start;
+                var progress = Math.min(100, Math.max(0, Math.round((elapsed / total) * 100)));
+                if (fill) fill.style.width = progress + '%';
+                if (pctEl) pctEl.textContent = progress + '%';
+            }
         }
 
         update();

@@ -265,5 +265,36 @@ class AdminSettingsController extends Controller
         }
         return back()->with('error', $result['message']);
     }
+
+    public function extendComingSoon(Request $request)
+    {
+        $days = (int) $request->input('days', 7);
+        $currentDateStr = Setting::where('key', 'cs_target_date')->value('value') ?? '2026-10-26 08:00:00';
+        
+        try {
+            $carbon = \Carbon\Carbon::parse($currentDateStr);
+            if ($carbon->isPast()) {
+                $carbon = now();
+            }
+        } catch (\Exception $e) {
+            $carbon = now();
+        }
+        
+        $newCarbon = $carbon->addDays($days);
+        $newDateStr = $newCarbon->format('Y-m-d H:i:s');
+        
+        Setting::set('cs_target_date', $newDateStr, 'text');
+        
+        $formattedDate = $newCarbon->translatedFormat('d F Y');
+        Setting::set('cs_badge', "Segera Hadir • {$formattedDate}", 'text');
+        
+        Setting::clearCache();
+        \Illuminate\Support\Facades\Cache::forget('cs_enabled');
+        \Illuminate\Support\Facades\Cache::forget('cs_target_date');
+        \Illuminate\Support\Facades\Cache::flush();
+
+        $displayNewDate = $newCarbon->translatedFormat('d F Y, H:i') . ' WIB';
+        return back()->with('success', "Target tanggal berhasil diperpanjang +{$days} hari! Target baru: {$displayNewDate}");
+    }
 }
 

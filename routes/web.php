@@ -372,6 +372,10 @@ Route::prefix('admin')->group(function () {
         Route::post('/settings', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
         Route::post('/settings/test-email', [AdminSettingsController::class, 'testEmail'])->name('admin.settings.test-email');
         Route::post('/settings/test-ai', [AdminSettingsController::class, 'testAi'])->name('admin.settings.test-ai');
+        Route::post('/settings/extend-coming-soon', [AdminSettingsController::class, 'extendComingSoon'])->name('admin.settings.extend-coming-soon');
+        Route::get('/preview-coming-soon', function() {
+            return view('components.coming-soon');
+        })->name('admin.preview-coming-soon');
         Route::post('upload-image', [\App\Http\Controllers\Admin\AdminUploadController::class, 'uploadImage'])->name('admin.upload.image');
 
         // ⚡ Secret license management page (tidak ada di sidebar)
