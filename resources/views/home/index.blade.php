@@ -1867,7 +1867,7 @@
                         Tips praktis, panduan jualan produk digital, dan berita tren terkini dari buyle.id
                     </p>
                 </div>
-                <a href="{{ route('articles.index') }}" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.825rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
+                <a href="{{ route_locale('articles') }}" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.825rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
                     Semua Artikel
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
                 </a>
@@ -1925,7 +1925,7 @@
                         ];
                     @endphp
                     @foreach($demoArticles as $dA)
-                        <a href="{{ route('articles.index') }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column;" class="article-card-link">
+                        <a href="{{ route_locale('articles') }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column;" class="article-card-link">
                             <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);" class="article-card-box">
                                 <div style="position: relative; width: 100%; height: 140px; background: #F1F5F9; overflow: hidden;">
                                     <img src="{{ $dA['img'] }}" alt="{{ $dA['title'] }}" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;" class="article-banner-img">
