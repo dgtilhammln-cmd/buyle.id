@@ -24,7 +24,7 @@ class HomeController extends Controller
         
         // Return empty collections for legacy sections to prevent view crashes
         $gallery      = collect();
-        $articles     = Article::published()->latest()->limit(4)->get();
+        $articles     = Article::published()->with('translations')->latest()->limit(4)->get();
         
         // Fetch ONLY Ticket, Event, Workshop, Wisata & Webinar Products
         $ticketProducts = Product::active()

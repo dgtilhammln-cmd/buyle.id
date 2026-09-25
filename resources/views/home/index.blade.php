@@ -1751,9 +1751,7 @@
                     <h2 class="responsive-section-title">
                         Rekomendasi Tiket & Event Popular
                     </h2>
-                    <p class="responsive-section-subtitle">
-                        Temukan tiket konser, workshop, webinar & wahana rekreasi seru dari kreator terpercaya
-                    </p>
+
                 </div>
                 <a href="{{ route_locale('products') }}?category=tiket" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
                     Lihat Semua Tiket
@@ -1907,9 +1905,7 @@
                     <h2 class="responsive-section-title">
                         Artikel & Panduan Kreator Terkini
                     </h2>
-                    <p class="responsive-section-subtitle">
-                        Tips praktis, panduan jualan produk digital, dan berita tren terkini dari buyle.id
-                    </p>
+
                 </div>
                 <a href="{{ route_locale('articles') }}" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
                     Semua Artikel
@@ -1926,10 +1922,10 @@
                 @if($arts->count() > 0)
                     @foreach($arts as $art)
                         @php
-                            $artTitle = $art->title;
-                            $artImg   = $art->featured_image ? asset('storage/'.$art->featured_image) : asset('assets/images/default-article.webp');
+                            $artTitle = $art->title ?: 'Artikel Terbaru';
+                            $artImg   = $art->image ? asset('storage/'.$art->image) : asset('assets/images/default-article.webp');
                             $artCat   = $art->category ?: 'Panduan';
-                            $artDate  = \Carbon\Carbon::parse($art->created_at)->isoFormat('D MMMM Y');
+                            $artDate  = \Carbon\Carbon::parse($art->published_at ?? $art->created_at)->isoFormat('D MMMM Y');
                         @endphp
                         <a href="{{ route('articles.show', $art->slug) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column;" class="article-card-swipe-item">
                             <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);" class="article-card-box">
@@ -1945,7 +1941,7 @@
                                             {{ $artTitle }}
                                         </h3>
                                         <p style="font-size: 0.78rem; color: #64748B; margin: 0 0 1rem; line-height: 1.5; height: 3em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                            {{ Str::limit(strip_tags($art->content ?? $art->description ?? ''), 90) }}
+                                            {{ Str::limit(strip_tags($art->excerpt ?? $art->content ?? ''), 90) }}
                                         </p>
                                     </div>
                                     <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #F1F5F9; padding-top: 0.75rem; margin-top: auto;">
