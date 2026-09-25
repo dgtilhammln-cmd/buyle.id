@@ -1,3 +1,4 @@
+@if((\App\Models\Setting::get('cs_enabled', '0')) === '1')
 {{-- ============================================================
 COMING SOON INLINE — Light theme, fits inside white page sections
 Target: 26 Oktober 2026, 08:00 WIB
@@ -349,3 +350,4 @@ Target: 26 Oktober 2026, 08:00 WIB
         setInterval(update, 1000);
     })();
 </script>
+@endif

@@ -1577,12 +1577,14 @@
     }
     </style>
 
+    @if((\App\Models\Setting::get('cs_enabled', '0')) === '1')
     {{-- ════ COMING SOON - KATALOG & REKOMENDASI PRODUK ════ --}}
     <div style="background: #fff; padding: 2.5rem 0 3.5rem; border-top: none; box-shadow: none;">
         <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;" class="cv-rekomendasi-container">
             @include('components.coming-soon-inline')
         </div>
     </div>
+    @endif
 
     <style>
         /* ── Catalog Cards ── */
