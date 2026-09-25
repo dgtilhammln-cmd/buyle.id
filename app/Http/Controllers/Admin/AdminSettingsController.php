@@ -161,6 +161,7 @@ class AdminSettingsController extends Controller
         \App\Services\MailConfigService::apply();
 
         Setting::clearCache();
+        \Illuminate\Support\Facades\Cache::flush();
         return back()->with('success', 'Pengaturan berhasil disimpan!');
     }
 

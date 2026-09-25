@@ -77,6 +77,7 @@
 
     .ai-banner-actions {
         display: flex;
+    }
     .btn-dropdown-trigger {
         background: var(--brand-gradient);
         color: #ffffff !important;

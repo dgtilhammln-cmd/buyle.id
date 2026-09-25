@@ -39,15 +39,8 @@ class CheckLicenseStatus
             abort(503);
         }
 
-        // Cek Status Coming Soon / Maintenance Mode dari Cache
-        $csEnabled = Cache::remember('cs_enabled', 15, function () {
-            try {
-                $setting = \App\Models\Setting::where('key', 'cs_enabled')->first();
-                return $setting ? (string)$setting->value : '0';
-            } catch (\Exception $e) {
-                return '0';
-            }
-        });
+        // Cek Status Coming Soon / Maintenance Mode secara real-time dari Setting
+        $csEnabled = (string) \App\Models\Setting::get('cs_enabled', '0');
 
         if ($csEnabled === '1') {
             return response()->view('components.coming-soon', [], 503);
