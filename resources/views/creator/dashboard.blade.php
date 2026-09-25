@@ -27,18 +27,18 @@
     .cr-dash-container {
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 1.25rem;
     }
 
-    /* ── WIDGET 1: WELCOME & BUYLE AI BANNER HEADER ── */
+    /* ── WIDGET 1: WELCOME & LINK BIO SOSMED BANNER HEADER ── */
     .ai-header-banner {
         background: linear-gradient(135deg, #0b120c 0%, #152718 100%);
-        border-radius: 24px;
-        padding: 2rem 2.25rem;
+        border-radius: 20px;
+        padding: 1.75rem 2rem;
         color: #ffffff;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+        box-shadow: 0 8px 25px rgba(15, 23, 42, 0.12);
         border: 1px solid rgba(165, 207, 55, 0.2);
         display: flex;
         align-items: center;
@@ -58,107 +58,98 @@
         pointer-events: none;
     }
 
-    .ai-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: rgba(165, 207, 55, 0.15);
-        color: #a3e635;
-        border: 1px solid rgba(163, 230, 53, 0.35);
-        padding: 0.35rem 0.85rem;
-        border-radius: 999px;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        margin-bottom: 0.75rem;
-    }
-
     .ai-banner-title {
-        font-size: 1.65rem;
+        font-size: 1.5rem;
         font-weight: 600;
         color: #ffffff;
         letter-spacing: -0.01em;
-        margin: 0 0 0.4rem 0;
-        line-height: 1.25;
+        margin: 0 0 0.35rem 0;
+        line-height: 1.2;
     }
 
     .ai-banner-sub {
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         color: #94a3b8;
         font-weight: 500;
-        max-width: 600px;
+        max-width: 580px;
         margin: 0;
     }
 
     .ai-banner-actions {
         display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        flex-wrap: wrap;
+        flex-direction: column;
+        gap: 0.6rem;
         z-index: 2;
+    }
+
+    .link-group-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
     }
 
     .btn-bio-primary {
         background: var(--brand-gradient);
         color: #ffffff !important;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.825rem;
+        font-size: 0.78rem;
         font-weight: 600;
-        padding: 0.75rem 1.25rem;
-        border-radius: 14px;
+        padding: 0.6rem 1.1rem;
+        border-radius: 12px;
         border: none;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+        gap: 0.4rem;
+        box-shadow: 0 3px 12px rgba(30, 179, 73, 0.3);
         transition: all 0.2s ease;
     }
 
     .btn-bio-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(30, 179, 73, 0.45);
+        box-shadow: 0 5px 16px rgba(30, 179, 73, 0.4);
     }
 
     .btn-bio-secondary {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.1);
         color: #ffffff !important;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.825rem;
+        font-size: 0.78rem;
         font-weight: 600;
-        padding: 0.75rem 1.15rem;
-        border-radius: 14px;
+        padding: 0.6rem 1rem;
+        border-radius: 12px;
         border: 1px solid rgba(255, 255, 255, 0.2);
         text-decoration: none;
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.4rem;
         transition: all 0.2s ease;
         cursor: pointer;
     }
 
     .btn-bio-secondary:hover {
-        background: rgba(255, 255, 255, 0.16);
-        border-color: rgba(255, 255, 255, 0.35);
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.4);
     }
 
     /* ── GRID ROW 1: SALDO (WIDGET 2) & TRAFFIC WAVE (WIDGET 5) ── */
     .cr-grid-main {
         display: grid;
         grid-template-columns: 1.25fr 1fr;
-        gap: 1.5rem;
+        gap: 1.25rem;
     }
 
     .bio-card {
         background: #ffffff;
-        border-radius: 24px;
-        padding: 1.75rem;
+        border-radius: 20px;
+        padding: 1.5rem;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
         border: 1px solid var(--border-color);
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-start;
+        gap: 1rem;
         position: relative;
         overflow: hidden;
     }
@@ -169,11 +160,10 @@
         align-items: flex-start;
         justify-content: space-between;
         gap: 1rem;
-        margin-bottom: 1rem;
     }
 
     .balance-label {
-        font-size: 0.78rem;
+        font-size: 0.75rem;
         font-weight: 700;
         color: var(--text-muted);
         text-transform: uppercase;
@@ -181,11 +171,11 @@
     }
 
     .balance-val {
-        font-size: 2.1rem;
+        font-size: 1.9rem;
         font-weight: 700;
         color: var(--dark-slate);
         letter-spacing: -0.02em;
-        margin: 0.2rem 0 0.5rem 0;
+        margin: 0.15rem 0 0.4rem 0;
     }
 
     .balance-sub-info {
@@ -205,15 +195,15 @@
         background: #f0fdf4;
         color: var(--brand-green) !important;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.8rem;
+        font-size: 0.78rem;
         font-weight: 700;
-        padding: 0.55rem 1rem;
+        padding: 0.5rem 0.9rem;
         border-radius: 12px;
         border: 1.5px solid #bbf7d0;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
-        gap: 0.4rem;
+        gap: 0.35rem;
         transition: all 0.2s ease;
     }
 
@@ -225,14 +215,14 @@
 
     /* Chart SVG Slow-mo */
     .balance-chart-box {
-        margin-top: 1rem;
         position: relative;
         width: 100%;
+        margin-top: 0.5rem;
     }
 
     .balance-chart-svg {
         width: 100%;
-        height: 90px;
+        height: 75px;
         display: block;
         overflow: visible;
     }
@@ -260,36 +250,35 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 1.25rem;
     }
 
     .wave-title {
-        font-size: 0.8rem;
+        font-size: 0.78rem;
         font-weight: 700;
         color: var(--dark-slate);
         letter-spacing: 0.06em;
         text-transform: uppercase;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.4rem;
     }
 
     .live-dot-badge {
         background: #f0fdf4;
         color: var(--brand-green);
         border: 1px solid #dcfce7;
-        font-size: 0.68rem;
+        font-size: 0.65rem;
         font-weight: 700;
-        padding: 0.25rem 0.65rem;
+        padding: 0.2rem 0.65rem;
         border-radius: 999px;
         display: inline-flex;
         align-items: center;
-        gap: 0.4rem;
+        gap: 0.35rem;
     }
 
     .pulse-dot {
-        width: 7px;
-        height: 7px;
+        width: 6px;
+        height: 6px;
         background: var(--brand-green);
         border-radius: 50%;
         animation: livePulse 1.8s infinite;
@@ -303,28 +292,27 @@
     .stats-counter-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 0.75rem;
-        margin-top: 1.25rem;
+        gap: 0.65rem;
     }
 
     .counter-item {
         background: #f8fafc;
         border: 1px solid #f1f5f9;
-        border-radius: 16px;
-        padding: 0.85rem;
+        border-radius: 14px;
+        padding: 0.75rem 0.5rem;
         text-align: center;
     }
 
     .counter-item-label {
-        font-size: 0.68rem;
+        font-size: 0.65rem;
         font-weight: 700;
         color: var(--text-muted);
         text-transform: uppercase;
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.15rem;
     }
 
     .counter-item-val {
-        font-size: 1.25rem;
+        font-size: 1.15rem;
         font-weight: 700;
         color: var(--dark-slate);
     }
@@ -332,10 +320,10 @@
     /* ── WIDGET 3: BUYLE AI SMART ASSISTANT (OPTIMASI TOKO) ── */
     .ai-assistant-card {
         background: #ffffff;
-        border-radius: 24px;
-        padding: 1.75rem;
+        border-radius: 20px;
+        padding: 1.5rem;
         border: 1.5px solid rgba(30, 179, 73, 0.25);
-        box-shadow: 0 4px 20px rgba(30, 179, 73, 0.06);
+        box-shadow: 0 4px 16px rgba(30, 179, 73, 0.05);
         position: relative;
     }
 
@@ -345,42 +333,42 @@
         justify-content: space-between;
         flex-wrap: wrap;
         gap: 1rem;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.85rem;
         border-bottom: 1px solid var(--border-color);
     }
 
     .ai-assistant-title-group {
         display: flex;
         align-items: center;
-        gap: 0.85rem;
+        gap: 0.75rem;
     }
 
     .ai-icon-wrapper {
-        width: 44px;
-        height: 44px;
-        border-radius: 14px;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
         background: var(--brand-gradient);
         color: #ffffff;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.4rem;
-        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3);
+        font-size: 1.25rem;
+        box-shadow: 0 4px 10px rgba(30, 179, 73, 0.25);
     }
 
     .ai-card-title {
-        font-size: 1.15rem;
+        font-size: 1.05rem;
         font-weight: 700;
         color: var(--dark-slate);
         margin: 0;
     }
 
     .ai-card-sub {
-        font-size: 0.78rem;
+        font-size: 0.75rem;
         color: var(--text-muted);
         font-weight: 500;
-        margin-top: 0.15rem;
+        margin-top: 0.1rem;
     }
 
     .btn-ai-scan {
@@ -388,14 +376,14 @@
         color: var(--brand-green);
         border: 1.5px solid #bbf7d0;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         font-weight: 700;
-        padding: 0.55rem 1rem;
-        border-radius: 12px;
+        padding: 0.45rem 0.85rem;
+        border-radius: 10px;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
-        gap: 0.4rem;
+        gap: 0.35rem;
         transition: all 0.2s ease;
     }
 
@@ -408,36 +396,36 @@
     .ai-health-row {
         display: flex;
         align-items: center;
-        gap: 1.5rem;
+        gap: 1.25rem;
         background: #f8fafc;
         border: 1px solid #f1f5f9;
-        border-radius: 18px;
-        padding: 1.15rem 1.5rem;
-        margin-bottom: 1.5rem;
+        border-radius: 16px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.25rem;
     }
 
     .score-circle-box {
         position: relative;
-        width: 64px;
-        height: 64px;
+        width: 56px;
+        height: 56px;
         flex-shrink: 0;
     }
 
     .score-circle-svg {
-        width: 64px;
-        height: 64px;
+        width: 56px;
+        height: 56px;
         transform: rotate(-90deg);
     }
 
     .score-circle-bg {
         stroke: #e2e8f0;
-        stroke-width: 6;
+        stroke-width: 5.5;
         fill: none;
     }
 
     .score-circle-val {
         stroke: url(#aiScoreGrad);
-        stroke-width: 6;
+        stroke-width: 5.5;
         fill: none;
         stroke-linecap: round;
         transition: stroke-dasharray 1s ease;
@@ -448,7 +436,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        font-size: 0.95rem;
+        font-size: 0.85rem;
         font-weight: 800;
         color: var(--dark-slate);
     }
@@ -458,24 +446,27 @@
     }
 
     .ai-health-title {
-        font-size: 0.95rem;
+        font-size: 0.88rem;
         font-weight: 700;
         color: var(--dark-slate);
-        margin: 0 0 0.25rem 0;
+        margin: 0 0 0.2rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
     }
 
     .ai-health-desc {
-        font-size: 0.78rem;
+        font-size: 0.75rem;
         color: var(--text-muted);
         margin: 0;
-        line-height: 1.4;
+        line-height: 1.35;
     }
 
     /* AI Suggestions Checklist */
     .ai-recs-list {
         display: flex;
         flex-direction: column;
-        gap: 0.85rem;
+        gap: 0.75rem;
     }
 
     .ai-rec-item {
@@ -483,8 +474,8 @@
         align-items: center;
         justify-content: space-between;
         gap: 1rem;
-        padding: 1rem 1.15rem;
-        border-radius: 16px;
+        padding: 0.85rem 1rem;
+        border-radius: 14px;
         background: #ffffff;
         border: 1px solid var(--border-color);
         transition: all 0.2s ease;
@@ -492,23 +483,23 @@
 
     .ai-rec-item:hover {
         border-color: #cbd5e1;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.03);
     }
 
     .ai-rec-left {
         display: flex;
         align-items: center;
-        gap: 0.85rem;
+        gap: 0.75rem;
     }
 
     .ai-rec-status-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 10px;
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.1rem;
+        font-size: 1rem;
         flex-shrink: 0;
     }
 
@@ -523,29 +514,29 @@
     }
 
     .ai-rec-title {
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         font-weight: 700;
         color: var(--dark-slate);
-        margin: 0 0 0.15rem 0;
+        margin: 0 0 0.1rem 0;
     }
 
     .ai-rec-desc {
-        font-size: 0.75rem;
+        font-size: 0.72rem;
         color: var(--text-muted);
         margin: 0;
     }
 
     .btn-ai-action {
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.75rem;
+        font-size: 0.72rem;
         font-weight: 700;
-        padding: 0.45rem 0.85rem;
-        border-radius: 10px;
+        padding: 0.4rem 0.75rem;
+        border-radius: 9px;
         text-decoration: none;
         white-space: nowrap;
         display: inline-flex;
         align-items: center;
-        gap: 0.35rem;
+        gap: 0.3rem;
         transition: all 0.2s ease;
     }
 
@@ -564,18 +555,18 @@
         transform: translateY(-1px);
     }
 
-    /* ── GRID ROW 3: RECENT ORDERS & RECENT PRODUCTS ── */
+    /* ── GRID ROW 3: RECENT SALES & RECENT PRODUCTS ── */
     .cr-grid-bottom {
         display: grid;
         grid-template-columns: 1.3fr 1fr;
-        gap: 1.5rem;
+        gap: 1.25rem;
     }
 
     .section-card-title {
-        font-size: 1rem;
+        font-size: 0.95rem;
         font-weight: 700;
         color: var(--dark-slate);
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -584,21 +575,21 @@
     .table-custom {
         width: 100%;
         border-collapse: collapse;
-        font-size: 0.8rem;
+        font-size: 0.78rem;
     }
 
     .table-custom th {
         text-align: left;
-        padding: 0.6rem 0.85rem;
+        padding: 0.5rem 0.75rem;
         color: var(--text-muted);
         font-weight: 700;
         text-transform: uppercase;
-        font-size: 0.68rem;
+        font-size: 0.65rem;
         border-bottom: 1px solid var(--border-color);
     }
 
     .table-custom td {
-        padding: 0.85rem;
+        padding: 0.75rem;
         border-bottom: 1px solid #f1f5f9;
         color: var(--dark-slate);
         font-weight: 500;
@@ -607,15 +598,15 @@
     .product-mini-item {
         display: flex;
         align-items: center;
-        gap: 0.85rem;
-        padding: 0.75rem 0;
+        gap: 0.75rem;
+        padding: 0.65rem 0;
         border-bottom: 1px solid #f1f5f9;
     }
 
     .product-mini-img {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
         object-fit: cover;
         background: #f1f5f9;
     }
@@ -632,11 +623,14 @@
 
     @media (max-width: 768px) {
         .ai-header-banner {
-            padding: 1.5rem;
+            padding: 1.25rem;
             flex-direction: column;
             align-items: flex-start;
         }
         .ai-banner-actions {
+            width: 100%;
+        }
+        .link-group-row {
             width: 100%;
         }
         .btn-bio-primary, .btn-bio-secondary {
@@ -644,7 +638,7 @@
             justify-content: center;
         }
         .balance-val {
-            font-size: 1.65rem;
+            font-size: 1.5rem;
         }
         .ai-health-row {
             flex-direction: column;
@@ -657,10 +651,10 @@
         .btn-ai-action {
             width: 100%;
             justify-content: center;
-            margin-top: 0.4rem;
+            margin-top: 0.35rem;
         }
         .stats-counter-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(3, 1fr);
         }
     }
 </style>
@@ -676,8 +670,12 @@
     $hasPayout  = !empty($seller->bank_account_number) || !empty($seller->ewallet_number);
     $hasBioLink = !empty($cp?->bio_title) || !empty($cp?->bio_description);
 
+    // Links for bio & digital store
+    $bioUrl   = $storeSlug ? url('/' . $storeSlug) : '';
+    $storeUrl = $storeSlug ? url('/c/' . $storeSlug) : '';
+
     // Dynamic Buyle AI Score Calculation (Smart Local Logic)
-    $score = 40; // Base score
+    $score = 40;
     if ($hasBioLink) $score += 15;
     if ($totalProducts > 0) $score += 20;
     if ($totalProducts >= 3) $score += 10;
@@ -690,31 +688,43 @@
 
 <div class="cr-dash-container">
 
-    {{-- ── WIDGET 1: WELCOME & BUYLE AI BANNER HEADER ── --}}
+    {{-- ── WIDGET 1: WELCOME & LINK BIO / TOKO SOSMED BANNER ── --}}
     <div class="ai-header-banner">
         <div>
-            <div class="ai-badge">
-                <i class="ph ph-sparkle"></i> BUYLE AI SYSTEM ACTIVE
-            </div>
             <h1 class="ai-banner-title">Halo, {{ $storeName }}!</h1>
             <p class="ai-banner-sub">
-                Sistem Pintar Buyle AI memantau performa toko & bio Anda secara real-time tanpa menyedot token AI.
+                Gunakan link resmi di bawah ini untuk dipasang pada Bio Instagram, TikTok, atau WhatsApp Anda agar calon pembeli dapat langsung bertransaksi.
             </p>
         </div>
         <div class="ai-banner-actions">
             @if($storeSlug)
-                <a href="{{ url('/' . $storeSlug) }}" target="_blank" class="btn-bio-primary">
-                    <i class="ph ph-arrow-square-out" style="font-size: 1.1rem;"></i>
-                    Lihat Bio Anda
-                </a>
-                <button onclick="copyStoreUrl('{{ url('/' . $storeSlug) }}')" class="btn-bio-secondary">
-                    <i class="ph ph-copy" style="font-size: 1.1rem;"></i>
-                    Salin Link
-                </button>
+                {{-- Group 1: Link Bio --}}
+                <div class="link-group-row">
+                    <button onclick="copyStoreUrl('{{ $bioUrl }}', 'Link Bio')" class="btn-bio-primary">
+                        <i class="ph ph-copy" style="font-size: 1rem;"></i>
+                        Salin Link Bio
+                    </button>
+                    <a href="{{ $bioUrl }}" target="_blank" class="btn-bio-secondary">
+                        <i class="ph ph-arrow-square-out" style="font-size: 1rem;"></i>
+                        Buka Bio
+                    </a>
+                </div>
+
+                {{-- Group 2: Link Toko Digital --}}
+                <div class="link-group-row">
+                    <button onclick="copyStoreUrl('{{ $storeUrl }}', 'Toko Digital')" class="btn-bio-secondary">
+                        <i class="ph ph-shopping-bag-open" style="font-size: 1rem;"></i>
+                        Salin Link Toko
+                    </button>
+                    <a href="{{ $storeUrl }}" target="_blank" class="btn-bio-secondary">
+                        <i class="ph ph-arrow-square-out" style="font-size: 1rem;"></i>
+                        Buka Toko
+                    </a>
+                </div>
             @else
                 <a href="{{ route('creator.bio.index') }}" class="btn-bio-primary">
                     <i class="ph ph-plus-circle" style="font-size: 1.1rem;"></i>
-                    Set Up Link Bio
+                    Set Up Link Bio & Toko
                 </a>
             @endif
         </div>
@@ -767,7 +777,7 @@
             <div>
                 <div class="wave-header">
                     <div class="wave-title">
-                        <i class="ph ph-chart-line-up" style="color: var(--brand-green); font-size: 1.2rem;"></i>
+                        <i class="ph ph-chart-line-up" style="color: var(--brand-green); font-size: 1.1rem;"></i>
                         TRAFFIC WAVE
                     </div>
                     <div class="live-dot-badge">
@@ -776,7 +786,7 @@
                 </div>
 
                 {{-- Smooth Wave SVG --}}
-                <svg viewBox="0 0 500 90" preserveAspectRatio="none" style="width:100%; height:75px; overflow:visible;">
+                <svg viewBox="0 0 500 90" preserveAspectRatio="none" style="width:100%; height:65px; overflow:visible;">
                     <defs>
                         <linearGradient id="trafficGrad" x1="0%" y1="0%" x2="0%" y2="100%">
                             <stop offset="0%" stop-color="#1eb349" stop-opacity="0.3"/>
@@ -852,11 +862,14 @@
             <div class="ai-health-info">
                 <h4 class="ai-health-title" id="aiHealthStatusTitle">
                     @if($score >= 80)
-                        Sangat Bagus! Toko & Bio Siap Menghasilkan Max Konversi 🔥
+                        Sangat Bagus! Toko & Bio Siap Menghasilkan Max Konversi
+                        <i class="ph ph-fire" style="color:#e11d48; margin-left:0.25rem;"></i>
                     @elseif($score >= 50)
-                        Performa Cukup Baik - Tingkatkan Beberapa Langkah Lagi 🚀
+                        Performa Cukup Baik - Tingkatkan Beberapa Langkah Lagi
+                        <i class="ph ph-rocket-launch" style="color:var(--brand-green); margin-left:0.25rem;"></i>
                     @else
-                        Optimasi Diperlukan Agar Toko Lebih Menarik Pembeli ⚠️
+                        Optimasi Diperlukan Agar Toko Lebih Menarik Pembeli
+                        <i class="ph ph-warning-circle" style="color:#d97706; margin-left:0.25rem;"></i>
                     @endif
                 </h4>
                 <p class="ai-health-desc">
@@ -948,7 +961,7 @@
                 </a>
             </div>
             @if($recentSales->count() > 0)
-                <div style="overflow-x: auto;">
+                <div style="overflow-x: auto; margin-top: 0.25rem;">
                     <table class="table-custom">
                         <thead>
                             <tr>
@@ -960,14 +973,18 @@
                         </thead>
                         <tbody>
                             @foreach($recentSales as $sale)
+                                @php
+                                    $saleTotal = $sale->items->sum('subtotal') ?: ($sale->total ?: 0);
+                                    $custName  = $sale->user?->name ?: ($sale->shipping_address['receiver_name'] ?? ($sale->shipping_address['name'] ?? 'Pembeli'));
+                                @endphp
                                 <tr>
                                     <td style="font-weight:700;">#{{ $sale->order_number ?: $sale->id }}</td>
-                                    <td>{{ $sale->customer_name ?: 'Pembeli' }}</td>
+                                    <td>{{ $custName }}</td>
                                     <td style="color: var(--brand-green); font-weight: 700;">
-                                        Rp {{ number_format($sale->total_amount, 0, ',', '.') }}
+                                        Rp {{ number_format($saleTotal, 0, ',', '.') }}
                                     </td>
                                     <td>
-                                        <span style="background: #f0fdf4; color: var(--brand-green); padding: 0.2rem 0.6rem; border-radius: 999px; font-weight:700; font-size:0.7rem;">
+                                        <span style="background: #f0fdf4; color: var(--brand-green); padding: 0.2rem 0.6rem; border-radius: 999px; font-weight:700; font-size:0.68rem;">
                                             LUNAS
                                         </span>
                                     </td>
@@ -993,13 +1010,13 @@
                 </a>
             </div>
             @if($recentProducts->count() > 0)
-                <div style="display: flex; flex-direction: column;">
+                <div style="display: flex; flex-direction: column; margin-top: 0.25rem;">
                     @foreach($recentProducts as $prod)
                         <div class="product-mini-item">
                             <img src="{{ $prod->image_url ?: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=120&q=80' }}"
                                  alt="{{ $prod->name }}" class="product-mini-img">
                             <div style="flex: 1; min-width: 0;">
-                                <div style="font-size: 0.85rem; font-weight: 700; color: var(--dark-slate); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <div style="font-size: 0.82rem; font-weight: 700; color: var(--dark-slate); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                     {{ $prod->name }}
                                 </div>
                                 <div style="font-size: 0.75rem; color: var(--brand-green); font-weight: 700;">
@@ -1024,12 +1041,13 @@
 
 @section('scripts')
 <script>
-    // Copy Bio Link Toast
-    function copyStoreUrl(url) {
+    // Copy Bio / Store Link Toast
+    function copyStoreUrl(url, label) {
+        if (!url) return;
         navigator.clipboard.writeText(url).then(() => {
-            alert('Link Bio berhasil disalin ke clipboard:\n' + url);
+            alert((label || 'Link') + ' berhasil disalin! Pasang link ini di Bio Instagram/TikTok Anda:\n' + url);
         }).catch(() => {
-            prompt('Salin link Bio berikut:', url);
+            prompt('Salin ' + (label || 'link') + ' berikut:', url);
         });
     }
 
