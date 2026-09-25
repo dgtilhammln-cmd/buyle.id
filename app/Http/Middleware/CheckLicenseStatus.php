@@ -39,13 +39,6 @@ class CheckLicenseStatus
             abort(503);
         }
 
-        // Cek Status Coming Soon / Maintenance Mode
-        $csEnabled = (string) \App\Models\Setting::get('cs_enabled', '0');
-
-        if ($csEnabled === '1') {
-            return response()->view('components.coming-soon', [], 503);
-        }
-
         return $next($request);
     }
 }

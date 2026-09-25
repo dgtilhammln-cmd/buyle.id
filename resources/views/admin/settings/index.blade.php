@@ -231,7 +231,6 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
   @php
     $tabs = [
       'general' => ['Umum', 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z'],
-      'coming_soon' => ['Maintenance & Launching', 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
       'seo'     => ['SEO', 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'],
       'hero'    => ['Hero & Konten', 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'],
       'contact' => ['Kontak', 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z'],
@@ -1555,126 +1554,6 @@ function testAiConnection() {
 @keyframes spin { 100% { transform: rotate(360deg); } }
 </style>
 
-{{-- ======== TAB: MAINTENANCE & LAUNCHING ======== --}}
-<div id="tab-coming_soon" class="tab-section" style="display:none;">
-  <div style="display:flex;flex-direction:column;gap:1.25rem;">
-
-    {{-- Card 1: Status Mode Situs & Jenis Mode --}}
-    <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.5rem;">
-        <div style="display:flex;align-items:center;gap:.5rem;">
-          <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
-          <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Status Mode Situs & Kategori Tampilan</div>
-        </div>
-        <a href="{{ route('admin.preview-coming-soon') }}" target="_blank" style="display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .85rem;font-size:.75rem;font-weight:700;background:#F1F5F9;color:#334155;border-radius:6px;text-decoration:none;border:1px solid #CBD5E1;">
-          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-          Preview Halaman
-        </a>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
-        <div>
-          <label class="form-label">Aktifkan Maintenance / Coming Soon <span style="color:red;">*</span></label>
-          <select name="cs_enabled" class="form-input" style="font-weight:700;">
-            <option value="0" {{ ($settings['cs_enabled'] ?? '0') == '0' ? 'selected' : '' }}>NONAKTIF — Situs Berjalan Normal</option>
-            <option value="1" {{ ($settings['cs_enabled'] ?? '0') == '1' ? 'selected' : '' }}>AKTIF — Pengunjung Diarahkan ke Coming Soon</option>
-          </select>
-          <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Admin & halaman /admin tetap bisa diakses normal tanpa terpengaruh mode ini.</p>
-        </div>
-
-        <div>
-          <label class="form-label">Pilih Jenis Mode Tampilan</label>
-          <select name="cs_mode" class="form-input">
-            <option value="launching" {{ ($settings['cs_mode'] ?? 'launching') == 'launching' ? 'selected' : '' }}>Launching Marketplace (Hitung Mundur Peluncuran)</option>
-            <option value="maintenance" {{ ($settings['cs_mode'] ?? 'launching') == 'maintenance' ? 'selected' : '' }}>Maintenance Sistem (Pemeliharaan Rutin)</option>
-          </select>
-          <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Menyesuaikan nuansa visual halaman untuk peluncuran atau perbaikan.</p>
-        </div>
-      </div>
-    </div>
-
-    {{-- Card 2: Perpanjang Durasi Otomatis --}}
-    <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
-      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Perpanjang Durasi Otomatis</div>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;background:linear-gradient(135deg,rgba(30,179,73,.06),rgba(165,207,55,.1));border:1.5px dashed rgba(30,179,73,.4);border-radius:10px;padding:1rem 1.25rem;">
-        <div>
-          <div style="font-size:.85rem;font-weight:800;color:#166534;">Perpanjang Target Tanggal Hitung Mundur</div>
-          <div style="font-size:.78rem;color:#374151;margin-top:.2rem;">Target saat ini: <strong>{{ \Carbon\Carbon::parse($settings['cs_target_date'] ?? '2026-10-26 08:00:00')->isoFormat('D MMMM Y, HH:mm') }} WIB</strong></div>
-        </div>
-        <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
-          <button type="submit" formaction="{{ route('admin.settings.extend-coming-soon') }}" name="days" value="7" style="background:#fff;border:1.5px solid #1eb349;color:#166534;font-weight:700;font-size:.78rem;padding:.45rem .85rem;border-radius:8px;cursor:pointer;" onclick="return confirm('Perpanjang +7 Hari?')">+7 Hari</button>
-          <button type="submit" formaction="{{ route('admin.settings.extend-coming-soon') }}" name="days" value="14" style="background:#fff;border:1.5px solid #1eb349;color:#166534;font-weight:700;font-size:.78rem;padding:.45rem .85rem;border-radius:8px;cursor:pointer;" onclick="return confirm('Perpanjang +14 Hari?')">+14 Hari</button>
-          <button type="submit" formaction="{{ route('admin.settings.extend-coming-soon') }}" name="days" value="30" style="background:#fff;border:1.5px solid #1eb349;color:#166534;font-weight:700;font-size:.78rem;padding:.45rem .85rem;border-radius:8px;cursor:pointer;" onclick="return confirm('Perpanjang +30 Hari?')">+30 Hari</button>
-          <button type="submit" formaction="{{ route('admin.settings.extend-coming-soon') }}" name="days" value="60" style="background:#1eb349;border:none;color:#fff;font-weight:700;font-size:.78rem;padding:.45rem .85rem;border-radius:8px;cursor:pointer;" onclick="return confirm('Perpanjang +60 Hari?')">+60 Hari</button>
-        </div>
-      </div>
-    </div>
-
-    {{-- Card 3: Copywriting Halaman --}}
-    <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
-      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Copywriting Halaman</div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
-        <div>
-          <label class="form-label">Headline Utama</label>
-          <input type="text" name="cs_headline" class="form-input" value="{{ $settings['cs_headline'] ?? 'Marketplace Segera' }}" placeholder="Marketplace Segera">
-        </div>
-        <div>
-          <label class="form-label">Highlight Warna Hijau</label>
-          <input type="text" name="cs_headline_green" class="form-input" value="{{ $settings['cs_headline_green'] ?? 'Launching!' }}" placeholder="Launching!">
-        </div>
-      </div>
-      <div style="margin-bottom:1.25rem;">
-        <label class="form-label">Deskripsi / Subtext</label>
-        <textarea name="cs_subtext" class="form-input" rows="3" placeholder="Kami sedang menyiapkan ribuan produk pilihan...">{{ $settings['cs_subtext'] ?? 'Kami sedang menyiapkan ribuan produk pilihan dari kreator terbaik Indonesia.' }}</textarea>
-        <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Gunakan <code>[TANGGAL]</code> untuk menyisipkan tanggal target otomatis.</p>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;">
-        <div>
-          <label class="form-label">Target Tanggal & Waktu</label>
-          <input type="datetime-local" name="cs_target_date" class="form-input" value="{{ \Carbon\Carbon::parse($settings['cs_target_date'] ?? '2026-10-26 08:00:00')->format('Y-m-d\TH:i') }}">
-        </div>
-        <div>
-          <label class="form-label">Progress Persiapan (%)</label>
-          <input type="number" name="cs_progress" class="form-input" min="0" max="100" value="{{ $settings['cs_progress'] ?? '45' }}">
-        </div>
-        <div>
-          <label class="form-label">Teks Badge Atas</label>
-          <input type="text" name="cs_badge" class="form-input" value="{{ $settings['cs_badge'] ?? 'Marketplace Segera Launching!' }}">
-        </div>
-      </div>
-    </div>
-
-    {{-- Card 4: Tombol CTA & Fitur Highlights --}}
-    <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
-      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
-        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"/></svg>
-        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Tombol CTA & Fitur Highlights</div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
-        <div>
-          <label class="form-label">Teks Tombol (Opsional)</label>
-          <input type="text" name="cs_btn_text" class="form-input" value="{{ $settings['cs_btn_text'] ?? '' }}" placeholder="Misal: Hubungi Tim CS">
-        </div>
-        <div>
-          <label class="form-label">Link Tombol (Opsional)</label>
-          <input type="text" name="cs_btn_link" class="form-input" value="{{ $settings['cs_btn_link'] ?? '' }}" placeholder="https://wa.me/6281234567890">
-        </div>
-      </div>
-      <div>
-        <label class="form-label">Daftar Fitur Badge <span style="font-weight:400;color:#94A3B8;">(pisahkan dengan koma)</span></label>
-        <input type="text" name="cs_features" class="form-input" value="{{ $settings['cs_features'] ?? 'Ribuan Kreator Digital, Produk Digital, Transaksi Aman, Affiliate & Web Builder' }}" placeholder="Ribuan Kreator Digital, Produk Digital, Transaksi Aman">
-        <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Item ditampilkan dalam bentuk badge capsule di halaman coming soon.</p>
-      </div>
-    </div>
-
-  </div>
-</div>
 
 
 </form>
