@@ -1721,19 +1721,23 @@
 
             {{-- Ticket Category Pills (Image 1 Style) --}}
             <div style="display: flex; gap: 0.6rem; overflow-x: auto; padding-bottom: 0.75rem; margin-bottom: 1.5rem; scrollbar-width: none;" class="no-scrollbar">
-                <a href="{{ route_locale('products') }}?q=konser" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 1rem; background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 99px; font-size: 0.78rem; font-weight: 700; color: #334155; text-decoration: none; white-space: nowrap; transition: all 0.2s;" onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E2E8F0';this.style.color='#334155'">
+                <a href="{{ route_locale('products') }}?q=konser" style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.45rem 1rem; background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 99px; font-size: 0.78rem; font-weight: 700; color: #334155; text-decoration: none; white-space: nowrap; transition: all 0.2s;" onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E2E8F0';this.style.color='#334155'">
                     <span style="background: #EF4444; color: #fff; font-size: 0.6rem; font-weight: 800; padding: 0.15rem 0.4rem; border-radius: 99px; text-transform: lowercase;">terpopuler</span>
-                    🎵 Tiket Konser & Musik
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13E9 18zm0 0a3 3 0 11-6 0 3 3 0 016 0zm12 0a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Tiket Konser & Musik
                 </a>
-                <a href="{{ route_locale('products') }}?q=workshop" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 1rem; background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 99px; font-size: 0.78rem; font-weight: 700; color: #334155; text-decoration: none; white-space: nowrap; transition: all 0.2s;" onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E2E8F0';this.style.color='#334155'">
-                    📅 Event & Workshop Edukasi
+                <a href="{{ route_locale('products') }}?q=workshop" style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.45rem 1rem; background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 99px; font-size: 0.78rem; font-weight: 700; color: #334155; text-decoration: none; white-space: nowrap; transition: all 0.2s;" onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E2E8F0';this.style.color='#334155'">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    Event & Workshop Edukasi
                 </a>
-                <a href="{{ route_locale('products') }}?q=wisata" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 1rem; background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 99px; font-size: 0.78rem; font-weight: 700; color: #334155; text-decoration: none; white-space: nowrap; transition: all 0.2s;" onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E2E8F0';this.style.color='#334155'">
+                <a href="{{ route_locale('products') }}?q=wisata" style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.45rem 1rem; background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 99px; font-size: 0.78rem; font-weight: 700; color: #334155; text-decoration: none; white-space: nowrap; transition: all 0.2s;" onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E2E8F0';this.style.color='#334155'">
                     <span style="background: #EF4444; color: #fff; font-size: 0.6rem; font-weight: 800; padding: 0.15rem 0.4rem; border-radius: 99px; text-transform: lowercase;">naik-daun</span>
-                    📍 Tiket Wisata & Rekreasi
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Tiket Wisata & Rekreasi
                 </a>
-                <a href="{{ route_locale('products') }}?q=webinar" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 1rem; background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 99px; font-size: 0.78rem; font-weight: 700; color: #334155; text-decoration: none; white-space: nowrap; transition: all 0.2s;" onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E2E8F0';this.style.color='#334155'">
-                    💻 Webinar & Pass Online
+                <a href="{{ route_locale('products') }}?q=webinar" style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.45rem 1rem; background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 99px; font-size: 0.78rem; font-weight: 700; color: #334155; text-decoration: none; white-space: nowrap; transition: all 0.2s;" onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E2E8F0';this.style.color='#334155'">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    Webinar & Pass Online
                 </a>
             </div>
 
