@@ -26,29 +26,33 @@ class HomeController extends Controller
         $gallery      = collect();
         $articles     = Article::published()->latest()->limit(4)->get();
         
-        // Fetch Ticket & Event Products
+        // Fetch ONLY Ticket, Event, Workshop, Wisata & Webinar Products
         $ticketProducts = Product::active()
             ->with(['seller.creatorProfile', 'category'])
             ->where(function($q) {
                 $q->whereHas('category', function($catQ) {
                     $catQ->where('name', 'LIKE', '%tik%')
                          ->orWhere('name', 'LIKE', '%event%')
+                         ->orWhere('name', 'LIKE', '%wisata%')
+                         ->orWhere('name', 'LIKE', '%webinar%')
+                         ->orWhere('name', 'LIKE', '%workshop%')
                          ->orWhere('slug', 'LIKE', '%tik%')
-                         ->orWhere('slug', 'LIKE', '%event%');
-                })->orWhere('name', 'LIKE', '%tiket%')
-                  ->orWhere('name', 'LIKE', '%event%')
-                  ->orWhere('name', 'LIKE', '%konser%');
+                         ->orWhere('slug', 'LIKE', '%event%')
+                         ->orWhere('slug', 'LIKE', '%wisata%')
+                         ->orWhere('slug', 'LIKE', '%webinar%');
+                })
+                ->orWhere('product_type', 'LIKE', '%ticket%')
+                ->orWhere('product_type', 'LIKE', '%event%')
+                ->orWhere('name', 'LIKE', '%tiket%')
+                ->orWhere('name', 'LIKE', '%event%')
+                ->orWhere('name', 'LIKE', '%konser%')
+                ->orWhere('name', 'LIKE', '%wisata%')
+                ->orWhere('name', 'LIKE', '%webinar%')
+                ->orWhere('name', 'LIKE', '%workshop%');
             })
             ->latest()
-            ->limit(4)
+            ->limit(8)
             ->get();
-
-        if ($ticketProducts->count() < 4) {
-            $needed = 4 - $ticketProducts->count();
-            $existingIds = $ticketProducts->pluck('id')->toArray();
-            $moreProds = Product::active()->with(['seller.creatorProfile', 'category'])->whereNotIn('id', $existingIds)->latest()->limit($needed)->get();
-            $ticketProducts = $ticketProducts->concat($moreProds);
-        }
 
         $clients      = collect();
         $testimonials = collect();
