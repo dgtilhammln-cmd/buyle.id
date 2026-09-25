@@ -37,7 +37,7 @@
         padding: 1.75rem 2rem;
         color: #ffffff;
         position: relative;
-        overflow: hidden;
+        overflow: visible;
         box-shadow: 0 8px 25px rgba(15, 23, 42, 0.12);
         border: 1px solid rgba(165, 207, 55, 0.2);
         display: flex;
@@ -56,6 +56,7 @@
         height: 220px;
         background: radial-gradient(circle, rgba(165, 207, 55, 0.25) 0%, rgba(30, 179, 73, 0) 70%);
         pointer-events: none;
+        border-radius: 50%;
     }
 
     .ai-banner-title {
@@ -77,6 +78,9 @@
 
     .ai-banner-actions {
         display: flex;
+        align-items: center;
+    }
+
     .btn-dropdown-trigger {
         background: var(--brand-gradient);
         color: #ffffff !important;
@@ -112,12 +116,12 @@
         background: #ffffff;
         border-radius: 18px;
         padding: 0.6rem;
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
         border: 1px solid var(--border-color);
         display: none;
         flex-direction: column;
         gap: 0.25rem;
-        z-index: 100;
+        z-index: 999;
         animation: dropFade 0.2s ease;
     }
 
@@ -215,7 +219,6 @@
         justify-content: flex-start;
         gap: 1rem;
         position: relative;
-        overflow: hidden;
     }
 
     /* Card Saldo */
@@ -245,9 +248,13 @@
     .balance-sub-info {
         display: flex;
         align-items: center;
-        gap: 1.25rem;
+        gap: 1rem;
         font-size: 0.78rem;
         color: #64748b;
+        font-weight: 500;
+        margin-top: 0.25rem;
+        flex-wrap: wrap;
+    }
         font-weight: 500;
     }
 
@@ -834,13 +841,13 @@
 
                 <div class="balance-sub-info">
                     <span>Total Pendapatan: <strong>Rp {{ number_format($gmv ?? 0, 0, ',', '.') }}</strong></span>
-                    <span>Penarikan: <strong>Rp {{ number_format($totalPayout ?? 0, 0, ',', '.') }}</strong></span>
+                    <span style="margin-left: 0.85rem;">Penarikan: <strong>Rp {{ number_format($totalPayout ?? 0, 0, ',', '.') }}</strong></span>
                 </div>
             </div>
 
             {{-- Slow-mo Revenue SVG Growth Chart --}}
-            <div class="balance-chart-box">
-                <svg class="balance-chart-svg" viewBox="0 0 500 100" preserveAspectRatio="none">
+            <div class="balance-chart-box" style="height: 65px; overflow: hidden; border-radius: 12px; margin-top: 0.5rem;">
+                <svg class="balance-chart-svg" viewBox="0 0 500 100" preserveAspectRatio="none" style="height: 65px;">
                     <defs>
                         <linearGradient id="balChartGrad" x1="0%" y1="0%" x2="0%" y2="100%">
                             <stop offset="0%" stop-color="#1eb349" stop-opacity="0.35"/>
