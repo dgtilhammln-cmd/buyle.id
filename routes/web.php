@@ -338,9 +338,10 @@ Route::get('/robots.txt', function () {
 // Deployment Helper
 Route::get('/deploy-hostinger', function () {
     try {
+        $gitOutput = shell_exec('git fetch origin main 2>&1 && git reset --hard origin/main 2>&1');
         \Illuminate\Support\Facades\Artisan::call('storage:link');
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
-        return 'SUKSES! Symlink storage berhasil dibuat dan Cache berhasil dibersihkan.';
+        return 'SUKSES! Sync Git & Clear Cache Berhasil.<br><pre>' . $gitOutput . '</pre>';
     } catch (\Exception $e) {
         return 'ERROR: ' . $e->getMessage();
     }
