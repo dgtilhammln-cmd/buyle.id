@@ -77,60 +77,124 @@
 
     .ai-banner-actions {
         display: flex;
-        flex-direction: column;
-        gap: 0.6rem;
-        z-index: 2;
-    }
-
-    .link-group-row {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-    }
-
-    .btn-bio-primary {
+    .btn-dropdown-trigger {
         background: var(--brand-gradient);
         color: #ffffff !important;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.78rem;
-        font-weight: 600;
-        padding: 0.6rem 1.1rem;
-        border-radius: 12px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        padding: 0.65rem 1.15rem;
+        border-radius: 14px;
         border: none;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        box-shadow: 0 3px 12px rgba(30, 179, 73, 0.3);
-        transition: all 0.2s ease;
-    }
-
-    .btn-bio-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 16px rgba(30, 179, 73, 0.4);
-    }
-
-    .btn-bio-secondary {
-        background: rgba(255, 255, 255, 0.1);
-        color: #ffffff !important;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.78rem;
-        font-weight: 600;
-        padding: 0.6rem 1rem;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        transition: all 0.2s ease;
         cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+        transition: all 0.2s ease;
     }
 
-    .btn-bio-secondary:hover {
-        background: rgba(255, 255, 255, 0.2);
-        border-color: rgba(255, 255, 255, 0.4);
+    .btn-dropdown-trigger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(30, 179, 73, 0.45);
+    }
+
+    .banner-dropdown-wrapper {
+        position: relative;
+        z-index: 50;
+    }
+
+    .banner-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        right: 0;
+        min-width: 270px;
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 0.6rem;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        border: 1px solid var(--border-color);
+        display: none;
+        flex-direction: column;
+        gap: 0.25rem;
+        z-index: 100;
+        animation: dropFade 0.2s ease;
+    }
+
+    .banner-dropdown-menu.show {
+        display: flex;
+    }
+
+    @keyframes dropFade {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dropdown-section-header {
+        font-size: 0.65rem;
+        font-weight: 800;
+        color: var(--text-muted);
+        letter-spacing: 0.08em;
+        padding: 0.4rem 0.6rem 0.2rem 0.6rem;
+        text-transform: uppercase;
+    }
+
+    .dropdown-menu-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 0.75rem;
+        border-radius: 12px;
+        text-decoration: none;
+        color: var(--dark-slate);
+        background: transparent;
+        border: none;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        transition: background 0.15s ease;
+    }
+
+    .dropdown-menu-item:hover {
+        background: #f8fafc;
+    }
+
+    .dropdown-item-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.05rem;
+        flex-shrink: 0;
+    }
+
+    .dropdown-item-icon.green { background: #f0fdf4; color: var(--brand-green); }
+    .dropdown-item-icon.lime  { background: #f7fee7; color: #65a30d; }
+    .dropdown-item-icon.blue  { background: #f0f9ff; color: #0284c7; }
+
+    .dropdown-item-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dropdown-item-text .title {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--dark-slate);
+    }
+
+    .dropdown-item-text .sub {
+        font-size: 0.68rem;
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+
+    .dropdown-divider {
+        height: 1px;
+        background: #f1f5f9;
+        margin: 0.2rem 0;
     }
 
     /* ── GRID ROW 1: SALDO (WIDGET 2) & TRAFFIC WAVE (WIDGET 5) ── */
@@ -698,31 +762,52 @@
         </div>
         <div class="ai-banner-actions">
             @if($storeSlug)
-                {{-- Group 1: Link Bio --}}
-                <div class="link-group-row">
-                    <button onclick="copyStoreUrl('{{ $bioUrl }}', 'Link Bio')" class="btn-bio-primary">
-                        <i class="ph ph-copy" style="font-size: 1rem;"></i>
-                        Salin Link Bio
+                <div class="banner-dropdown-wrapper">
+                    <button type="button" class="btn-dropdown-trigger" onclick="toggleLinkDropdown(event)">
+                        <i class="ph ph-share-network" style="font-size: 1.15rem;"></i>
+                        <span>Bagikan / Kelola Link</span>
+                        <i class="ph ph-caret-down" style="font-size: 0.85rem; margin-left: 0.15rem;"></i>
                     </button>
-                    <a href="{{ $bioUrl }}" target="_blank" class="btn-bio-secondary">
-                        <i class="ph ph-arrow-square-out" style="font-size: 1rem;"></i>
-                        Buka Bio
-                    </a>
-                </div>
+                    <div class="banner-dropdown-menu" id="linkDropdownMenu">
+                        <div class="dropdown-section-header">PILIHAN LINK TOKO SOSMED</div>
+                        
+                        <button type="button" class="dropdown-menu-item" onclick="copyStoreUrl('{{ $bioUrl }}', 'Link Bio'); hideLinkDropdown();">
+                            <div class="dropdown-item-icon green"><i class="ph ph-copy"></i></div>
+                            <div class="dropdown-item-text">
+                                <span class="title">Salin Link Bio</span>
+                                <span class="sub">Untuk Bio Instagram / TikTok / WA</span>
+                            </div>
+                        </button>
 
-                {{-- Group 2: Link Toko Digital --}}
-                <div class="link-group-row">
-                    <button onclick="copyStoreUrl('{{ $storeUrl }}', 'Toko Digital')" class="btn-bio-secondary">
-                        <i class="ph ph-shopping-bag-open" style="font-size: 1rem;"></i>
-                        Salin Link Toko
-                    </button>
-                    <a href="{{ $storeUrl }}" target="_blank" class="btn-bio-secondary">
-                        <i class="ph ph-arrow-square-out" style="font-size: 1rem;"></i>
-                        Buka Toko
-                    </a>
+                        <a href="{{ $bioUrl }}" target="_blank" class="dropdown-menu-item" onclick="hideLinkDropdown();">
+                            <div class="dropdown-item-icon blue"><i class="ph ph-arrow-square-out"></i></div>
+                            <div class="dropdown-item-text">
+                                <span class="title">Buka Halaman Bio</span>
+                                <span class="sub">Pratinjau tampilan bio Anda</span>
+                            </div>
+                        </a>
+
+                        <div class="dropdown-divider"></div>
+
+                        <button type="button" class="dropdown-menu-item" onclick="copyStoreUrl('{{ $storeUrl }}', 'Toko Digital'); hideLinkDropdown();">
+                            <div class="dropdown-item-icon lime"><i class="ph ph-shopping-bag-open"></i></div>
+                            <div class="dropdown-item-text">
+                                <span class="title">Salin Link Toko Digital</span>
+                                <span class="sub">Katalog produk digital Anda</span>
+                            </div>
+                        </button>
+
+                        <a href="{{ $storeUrl }}" target="_blank" class="dropdown-menu-item" onclick="hideLinkDropdown();">
+                            <div class="dropdown-item-icon blue"><i class="ph ph-arrow-square-out"></i></div>
+                            <div class="dropdown-item-text">
+                                <span class="title">Buka Toko Digital</span>
+                                <span class="sub">Pratinjau halaman toko digital</span>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             @else
-                <a href="{{ route('creator.bio.index') }}" class="btn-bio-primary">
+                <a href="{{ route('creator.bio.index') }}" class="btn-dropdown-trigger">
                     <i class="ph ph-plus-circle" style="font-size: 1.1rem;"></i>
                     Set Up Link Bio & Toko
                 </a>
@@ -1041,6 +1126,27 @@
 
 @section('scripts')
 <script>
+    // Toggle Link Share Dropdown
+    function toggleLinkDropdown(e) {
+        if (e) e.stopPropagation();
+        const menu = document.getElementById('linkDropdownMenu');
+        if (menu) menu.classList.toggle('show');
+    }
+
+    function hideLinkDropdown() {
+        const menu = document.getElementById('linkDropdownMenu');
+        if (menu) menu.classList.remove('show');
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener('click', function(e) {
+        const menu = document.getElementById('linkDropdownMenu');
+        const trigger = document.querySelector('.btn-dropdown-trigger');
+        if (menu && trigger && !menu.contains(e.target) && !trigger.contains(e.target)) {
+            menu.classList.remove('show');
+        }
+    });
+
     // Copy Bio / Store Link Toast
     function copyStoreUrl(url, label) {
         if (!url) return;
