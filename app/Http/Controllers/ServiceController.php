@@ -49,36 +49,68 @@ class ServiceController extends Controller
                                     return $pct;
                                 })->values();
 
-            // Pass 1: Exact LIKE
-            $exactQuery = (clone $query)->where(function($q) use ($rawQ) {
+            // Pass 1: Comprehensive Multi-word & Token matching
+            $tokens = array_filter(explode(' ', strtolower(preg_replace('/[^a-zA-Z0-9]/', ' ', $rawQ))));
+
+            $searchQuery = (clone $query)->where(function($q) use ($rawQ, $tokens) {
+                // Exact raw phrase match
                 $q->where('name', 'like', '%' . $rawQ . '%')
                   ->orWhere('description', 'like', '%' . $rawQ . '%')
-                  ->orWhere('short_desc', 'like', '%' . $rawQ . '%');
+                  ->orWhere('short_desc', 'like', '%' . $rawQ . '%')
+                  ->orWhereHas('category', function($catQ) use ($rawQ) {
+                      $catQ->where('name', 'like', '%' . $rawQ . '%')
+                           ->orWhere('slug', 'like', '%' . $rawQ . '%');
+                  })
+                  ->orWhereHas('seller', function($sellQ) use ($rawQ) {
+                      $sellQ->where('name', 'like', '%' . $rawQ . '%')
+                            ->orWhereHas('creatorProfile', function($cpQ) use ($rawQ) {
+                                $cpQ->where('store_name', 'like', '%' . $rawQ . '%');
+                            });
+                  });
+
+                // Tokenized individual word matches
+                if (count($tokens) > 0) {
+                    $q->orWhere(function($subQ) use ($tokens) {
+                        foreach ($tokens as $token) {
+                            if (strlen($token) >= 2) {
+                                $subQ->orWhere('name', 'like', '%' . $token . '%')
+                                     ->orWhere('short_desc', 'like', '%' . $token . '%')
+                                     ->orWhere('description', 'like', '%' . $token . '%')
+                                     ->orWhereHas('category', function($catQ) use ($token) {
+                                         $catQ->where('name', 'like', '%' . $token . '%')
+                                              ->orWhere('slug', 'like', '%' . $token . '%');
+                                     });
+                            }
+                        }
+                    });
+                }
             });
 
-            if ($exactQuery->count() > 0) {
-                $query = $exactQuery;
+            if ($searchQuery->count() > 0) {
+                $query = $searchQuery;
             } else {
                 // Pass 2: Fuzzy fallback
-                $allNames = Product::active()->pluck('name');
-                [$bestKeyword, $bestScore] = $this->findBestMatch($rawQ, $allNames->toArray());
+                $allNames = Product::active()->pluck('name')->toArray();
+                [$bestKeyword, $bestScore] = $this->findBestMatch($rawQ, $allNames);
 
-                if ($bestScore >= 40 && $bestKeyword) {
+                if ($bestScore >= 20 && !empty($bestKeyword)) {
                     $suggestion = $bestKeyword;
-                    $tokens     = $this->tokenize($bestKeyword);
-                    $query->where(function ($q) use ($tokens, $rawQ) {
-                        foreach ($tokens as $t) {
-                            $q->orWhere('name',       'like', '%' . $t . '%')
+                    $fuzzyTokens = $this->tokenize($bestKeyword);
+                    $query->where(function ($q) use ($fuzzyTokens, $rawQ) {
+                        foreach ($fuzzyTokens as $t) {
+                            $q->orWhere('name', 'like', '%' . $t . '%')
                               ->orWhere('short_desc', 'like', '%' . $t . '%');
                         }
                         foreach ($this->tokenize($rawQ) as $t) {
-                            $q->orWhere('name',       'like', '%' . $t . '%')
+                            $q->orWhere('name', 'like', '%' . $t . '%')
                               ->orWhere('short_desc', 'like', '%' . $t . '%');
                         }
                     });
                     $suggestionApplied = true;
                 } else {
-                    $query->whereRaw('0 = 1');
+                    $suggestion = $rawQ;
+                    // Show latest active products as fallback recommendations rather than breaking with empty page
+                    $query = Product::active()->ordered();
                 }
             }
         }

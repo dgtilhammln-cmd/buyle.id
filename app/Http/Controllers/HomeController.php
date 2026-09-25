@@ -28,7 +28,7 @@ class HomeController extends Controller
         
         // Fetch Ticket & Event Products
         $ticketProducts = Product::active()
-            ->with(['user.creatorProfile', 'category'])
+            ->with(['seller.creatorProfile', 'category'])
             ->where(function($q) {
                 $q->whereHas('category', function($catQ) {
                     $catQ->where('name', 'LIKE', '%tik%')
@@ -46,7 +46,7 @@ class HomeController extends Controller
         if ($ticketProducts->count() < 4) {
             $needed = 4 - $ticketProducts->count();
             $existingIds = $ticketProducts->pluck('id')->toArray();
-            $moreProds = Product::active()->with(['user.creatorProfile', 'category'])->whereNotIn('id', $existingIds)->latest()->limit($needed)->get();
+            $moreProds = Product::active()->with(['seller.creatorProfile', 'category'])->whereNotIn('id', $existingIds)->latest()->limit($needed)->get();
             $ticketProducts = $ticketProducts->concat($moreProds);
         }
 
