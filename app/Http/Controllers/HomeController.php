@@ -24,7 +24,32 @@ class HomeController extends Controller
         
         // Return empty collections for legacy sections to prevent view crashes
         $gallery      = collect();
-        $articles     = collect();
+        $articles     = Article::published()->latest()->limit(4)->get();
+        
+        // Fetch Ticket & Event Products
+        $ticketProducts = Product::active()
+            ->with(['user.creatorProfile', 'category'])
+            ->where(function($q) {
+                $q->whereHas('category', function($catQ) {
+                    $catQ->where('name', 'LIKE', '%tik%')
+                         ->orWhere('name', 'LIKE', '%event%')
+                         ->orWhere('slug', 'LIKE', '%tik%')
+                         ->orWhere('slug', 'LIKE', '%event%');
+                })->orWhere('name', 'LIKE', '%tiket%')
+                  ->orWhere('name', 'LIKE', '%event%')
+                  ->orWhere('name', 'LIKE', '%konser%');
+            })
+            ->latest()
+            ->limit(4)
+            ->get();
+
+        if ($ticketProducts->count() < 4) {
+            $needed = 4 - $ticketProducts->count();
+            $existingIds = $ticketProducts->pluck('id')->toArray();
+            $moreProds = Product::active()->with(['user.creatorProfile', 'category'])->whereNotIn('id', $existingIds)->latest()->limit($needed)->get();
+            $ticketProducts = $ticketProducts->concat($moreProds);
+        }
+
         $clients      = collect();
         $testimonials = collect();
         $uspItems       = UspItem::active()->get();
@@ -49,7 +74,7 @@ class HomeController extends Controller
             'canonical'   => route('home'),
         ];
 
-        return view('home.index', compact('settings', 'products', 'allProducts', 'gallery', 'articles', 'clients', 'testimonials', 'wa', 'seo', 'heroSlides', 'utamaBanners', 'sampingBanners', 'uspItems', 'categoryItems', 'promoSections'));
+        return view('home.index', compact('settings', 'products', 'allProducts', 'gallery', 'articles', 'ticketProducts', 'clients', 'testimonials', 'wa', 'seo', 'heroSlides', 'utamaBanners', 'sampingBanners', 'uspItems', 'categoryItems', 'promoSections'));
     }
 }
 

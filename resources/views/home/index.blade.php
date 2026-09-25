@@ -1693,9 +1693,293 @@
         }
     </style>
 
-    @if($clients->count())
-        {{-- Clients section: REMOVED per user request - only keep promo + footer --}}
-    @endif
+    {{-- ════════════════════════════════════════════════════════════════════════
+         SECTION 1: REKOMENDASI TIKET & EVENT (4 CARDS 1 BARIS - IMAGE 2 STYLE)
+       ════════════════════════════════════════════════════════════════════════ --}}
+    <section style="background: #F8FAFC; padding: 3.5rem 0 3.5rem; border-top: 1px solid #E2E8F0; border-bottom: 1px solid #E2E8F0;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
+            
+            {{-- Header & Subtitle --}}
+            <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.75rem;">
+                <div>
+                    <div style="display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(30,179,73,0.1); color: #1eb349; font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 99px; margin-bottom: 0.5rem;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
+                        Tiket & Event Pilihan
+                    </div>
+                    <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.45rem; font-weight: 900; color: #0F172A; margin: 0 0 0.35rem; letter-spacing: -0.02em;">
+                        Rekomendasi Tiket & Event Popular
+                    </h2>
+                    <p style="font-size: 0.85rem; color: #64748B; margin: 0;">
+                        Temukan tiket konser, workshop, webinar & wahana rekreasi seru dari kreator terpercaya
+                    </p>
+                </div>
+                <a href="{{ route_locale('products') }}?category=tiket" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.825rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
+                    Lihat Semua Tiket
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+                </a>
+            </div>
+
+            {{-- Ticket Category Pills (Image 1 Style) --}}
+            <div style="display: flex; gap: 0.6rem; overflow-x: auto; padding-bottom: 0.75rem; margin-bottom: 1.5rem; scrollbar-width: none;" class="no-scrollbar">
+                <a href="{{ route_locale('products') }}?q=konser" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 1rem; background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 99px; font-size: 0.78rem; font-weight: 700; color: #334155; text-decoration: none; white-space: nowrap; transition: all 0.2s;" onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E2E8F0';this.style.color='#334155'">
+                    <span style="background: #EF4444; color: #fff; font-size: 0.6rem; font-weight: 800; padding: 0.15rem 0.4rem; border-radius: 99px; text-transform: lowercase;">terpopuler</span>
+                    🎵 Tiket Konser & Musik
+                </a>
+                <a href="{{ route_locale('products') }}?q=workshop" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 1rem; background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 99px; font-size: 0.78rem; font-weight: 700; color: #334155; text-decoration: none; white-space: nowrap; transition: all 0.2s;" onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E2E8F0';this.style.color='#334155'">
+                    📅 Event & Workshop Edukasi
+                </a>
+                <a href="{{ route_locale('products') }}?q=wisata" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 1rem; background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 99px; font-size: 0.78rem; font-weight: 700; color: #334155; text-decoration: none; white-space: nowrap; transition: all 0.2s;" onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E2E8F0';this.style.color='#334155'">
+                    <span style="background: #EF4444; color: #fff; font-size: 0.6rem; font-weight: 800; padding: 0.15rem 0.4rem; border-radius: 99px; text-transform: lowercase;">naik-daun</span>
+                    📍 Tiket Wisata & Rekreasi
+                </a>
+                <a href="{{ route_locale('products') }}?q=webinar" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 1rem; background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 99px; font-size: 0.78rem; font-weight: 700; color: #334155; text-decoration: none; white-space: nowrap; transition: all 0.2s;" onmouseover="this.style.borderColor='#1eb349';this.style.color='#1eb349'" onmouseout="this.style.borderColor='#E2E8F0';this.style.color='#334155'">
+                    💻 Webinar & Pass Online
+                </a>
+            </div>
+
+            {{-- 1 Row 4 Cards (Image 2 Style Reference) --}}
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem;" class="ticket-cards-grid">
+                @php
+                    $tProds = isset($ticketProducts) && $ticketProducts->count() > 0 ? $ticketProducts->take(4) : collect();
+                @endphp
+
+                @if($tProds->count() > 0)
+                    @foreach($tProds as $tProd)
+                        @php
+                            $tStoreName = $tProd->user->creatorProfile->store_name ?? ($tProd->user->name ?? 'buyle.id Official');
+                            $tStoreAvatar = $tProd->user->avatar ?? null;
+                            $tPrice = $tProd->sale_price > 0 && $tProd->sale_price < $tProd->price ? $tProd->sale_price : $tProd->price;
+                            $tImage = $tProd->image ? asset('storage/'.$tProd->image) : asset('assets/images/default-ticket.webp');
+                            $tDate = \Carbon\Carbon::parse($tProd->created_at)->addDays(15)->isoFormat('D MMMM Y');
+                        @endphp
+                        <a href="{{ route_locale('products.show', $tProd->slug) }}" style="text-decoration: none; color: inherit; display: block;" class="ticket-card-link">
+                            <div style="background: #F0F7FF; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 0.75rem; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);" class="ticket-card-box">
+                                {{-- Image Banner --}}
+                                <div style="position: relative; width: 100%; height: 130px; border-radius: 12px; overflow: hidden; background: #E2E8F0;">
+                                    <img src="{{ $tImage }}" alt="{{ $tProd->name }}" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;" class="ticket-banner-img">
+                                    <div style="position: absolute; top: 8px; right: 8px; background: rgba(15,23,42,0.75); backdrop-filter: blur(4px); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif;">
+                                        TIKET EVENT
+                                    </div>
+                                </div>
+                                {{-- White Inner Box --}}
+                                <div style="background: #ffffff; border-radius: 14px; padding: 1rem; margin-top: 0.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                                    <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #0F172A; margin: 0 0 0.5rem; line-height: 1.35; height: 2.6em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                        {{ $tProd->name }}
+                                    </h3>
+                                    <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; font-weight: 600; color: #64748B; margin-bottom: 0.5rem;">
+                                        <svg width="15" height="15" fill="none" stroke="#60A5FA" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        {{ $tDate }}
+                                    </div>
+                                    <div style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #0F172A;">
+                                        @if($tPrice > 0)
+                                            Rp {{ number_format($tPrice, 0, ',', '.') }}
+                                        @else
+                                            <span style="color: #1eb349;">GRATIS</span>
+                                        @endif
+                                    </div>
+                                    <div style="border-top: 1.5px dashed #E2E8F0; margin: 0.75rem 0;"></div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 24px; height: 24px; border-radius: 50%; background: #F1F5F9; overflow: hidden; flex-shrink: 0; border: 1px solid #CBD5E1; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: #1eb349;">
+                                            @if($tStoreAvatar)
+                                                <img src="{{ asset('storage/'.$tStoreAvatar) }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                            @else
+                                                {{ strtoupper(substr($tStoreName, 0, 1)) }}
+                                            @endif
+                                        </div>
+                                        <span style="font-size: 0.78rem; font-weight: 600; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            {{ $tStoreName }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                @else
+                    {{-- Demo Cards matching Image 2 Layout --}}
+                    @php
+                        $demoTickets = [
+                            ['title' => 'Canisius College Cup XLI 2026', 'date' => '26 September 2026', 'price' => 'Rp 80.000', 'creator' => 'Canisius College Cup', 'img' => 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&auto=format&fit=crop'],
+                            ['title' => 'MusicFest Jakarta Live Concert 2026', 'date' => '12 Oktober 2026', 'price' => 'Rp 150.000', 'creator' => 'Jakarta Music Live', 'img' => 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop'],
+                            ['title' => 'Digital Creator Masterclass Workshop', 'date' => '05 November 2026', 'price' => 'Rp 125.000', 'creator' => 'Kreator Academy', 'img' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&auto=format&fit=crop'],
+                            ['title' => 'Tiket Rekreasi & Art Exhibition 2026', 'date' => '20 November 2026', 'price' => 'Rp 50.000', 'creator' => 'ArtSpace Indonesia', 'img' => 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop'],
+                        ];
+                    @endphp
+                    @foreach($demoTickets as $dT)
+                        <a href="{{ route_locale('products') }}?category=tiket" style="text-decoration: none; color: inherit; display: block;" class="ticket-card-link">
+                            <div style="background: #F0F7FF; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 0.75rem; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);" class="ticket-card-box">
+                                <div style="position: relative; width: 100%; height: 130px; border-radius: 12px; overflow: hidden; background: #E2E8F0;">
+                                    <img src="{{ $dT['img'] }}" alt="{{ $dT['title'] }}" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;" class="ticket-banner-img">
+                                    <div style="position: absolute; top: 8px; right: 8px; background: rgba(15,23,42,0.75); backdrop-filter: blur(4px); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif;">
+                                        TIKET EVENT
+                                    </div>
+                                </div>
+                                <div style="background: #ffffff; border-radius: 14px; padding: 1rem; margin-top: 0.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                                    <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #0F172A; margin: 0 0 0.5rem; line-height: 1.35; height: 2.6em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                        {{ $dT['title'] }}
+                                    </h3>
+                                    <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; font-weight: 600; color: #64748B; margin-bottom: 0.5rem;">
+                                        <svg width="15" height="15" fill="none" stroke="#60A5FA" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        {{ $dT['date'] }}
+                                    </div>
+                                    <div style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #0F172A;">
+                                        {{ $dT['price'] }}
+                                    </div>
+                                    <div style="border-top: 1.5px dashed #E2E8F0; margin: 0.75rem 0;"></div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 24px; height: 24px; border-radius: 50%; background: #1eb349; color: #fff; font-size: 0.65rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                            {{ strtoupper(substr($dT['creator'], 0, 1)) }}
+                                        </div>
+                                        <span style="font-size: 0.78rem; font-weight: 600; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            {{ $dT['creator'] }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                @endif
+            </div>
+
+        </div>
+    </section>
+
+    {{-- ════════════════════════════════════════════════════════════════════════
+         SECTION 2: ARTIKEL & EDUKASI TERBARU (1 BARIS 4 CARDS)
+       ════════════════════════════════════════════════════════════════════════ --}}
+    <section style="background: #ffffff; padding: 3.5rem 0 4rem; border-bottom: 1px solid #E2E8F0;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
+            
+            {{-- Header & Subtitle --}}
+            <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+                <div>
+                    <div style="display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(30,179,73,0.1); color: #1eb349; font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 99px; margin-bottom: 0.5rem;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6"/></svg>
+                        Wawasan & Edukasi
+                    </div>
+                    <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.45rem; font-weight: 900; color: #0F172A; margin: 0 0 0.35rem; letter-spacing: -0.02em;">
+                        Artikel & Panduan Kreator Terkini
+                    </h2>
+                    <p style="font-size: 0.85rem; color: #64748B; margin: 0;">
+                        Tips praktis, panduan jualan produk digital, dan berita tren terkini dari buyle.id
+                    </p>
+                </div>
+                <a href="{{ route('articles.index') }}" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.825rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
+                    Semua Artikel
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+                </a>
+            </div>
+
+            {{-- 1 Row 4 Article Cards --}}
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem;" class="article-cards-grid">
+                @php
+                    $arts = isset($articles) && $articles->count() > 0 ? $articles->take(4) : collect();
+                @endphp
+
+                @if($arts->count() > 0)
+                    @foreach($arts as $art)
+                        @php
+                            $artTitle = $art->title;
+                            $artImg   = $art->featured_image ? asset('storage/'.$art->featured_image) : asset('assets/images/default-article.webp');
+                            $artCat   = $art->category ?: 'Panduan';
+                            $artDate  = \Carbon\Carbon::parse($art->created_at)->isoFormat('D MMMM Y');
+                        @endphp
+                        <a href="{{ route('articles.show', $art->slug) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column;" class="article-card-link">
+                            <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);" class="article-card-box">
+                                <div style="position: relative; width: 100%; height: 140px; background: #F1F5F9; overflow: hidden;">
+                                    <img src="{{ $artImg }}" alt="{{ $artTitle }}" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;" class="article-banner-img">
+                                    <div style="position: absolute; top: 10px; left: 10px; background: #1eb349; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.55rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; text-transform: uppercase;">
+                                        {{ $artCat }}
+                                    </div>
+                                </div>
+                                <div style="padding: 1.1rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                                    <div>
+                                        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #0F172A; margin: 0 0 0.5rem; line-height: 1.4; height: 2.6em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                            {{ $artTitle }}
+                                        </h3>
+                                        <p style="font-size: 0.78rem; color: #64748B; margin: 0 0 1rem; line-height: 1.5; height: 3em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                            {{ Str::limit(strip_tags($art->content ?? $art->description ?? ''), 90) }}
+                                        </p>
+                                    </div>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #F1F5F9; padding-top: 0.75rem; margin-top: auto;">
+                                        <span style="font-size: 0.72rem; color: #94A3B8; font-weight: 600;">{{ $artDate }}</span>
+                                        <span style="font-size: 0.75rem; font-weight: 700; color: #1eb349; display: inline-flex; align-items: center; gap: 0.2rem;">
+                                            Baca <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                @else
+                    {{-- Demo Article Cards --}}
+                    @php
+                        $demoArticles = [
+                            ['title' => 'Cara Menjual Produk Digital & Ebook Agar Laris Manis di 2026', 'cat' => 'Panduan', 'date' => '24 Sep 2026', 'desc' => 'Simak strategi rahasia meningkatkan omset penjualan produk digital bagi pemula.', 'img' => 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&auto=format&fit=crop'],
+                            ['title' => 'Panduan Sukses Membuat Event & Penjualan Tiket Online Konser', 'cat' => 'Event', 'date' => '20 Sep 2026', 'desc' => 'Langkah praktis manajemen tiket & promosi acara agar kuota penonton langsung habis.', 'img' => 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&auto=format&fit=crop'],
+                            ['title' => 'Strategi Affiliate Marketing Terbaik untuk Kreator Digital Indonesia', 'cat' => 'Affiliate', 'date' => '15 Sep 2026', 'desc' => 'Dapatkan penghasilan pasif dengan sistem komisi affiliate buyle.id yang transparan.', 'img' => 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop'],
+                            ['title' => 'Tips Membangun Personal Branding Berkelas Sebagai Digital Creator', 'cat' => 'Branding', 'date' => '10 Sep 2026', 'desc' => 'Cara efektif membangun kredibilitas dan kepercayaan pelanggan di era digital.', 'img' => 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&auto=format&fit=crop'],
+                        ];
+                    @endphp
+                    @foreach($demoArticles as $dA)
+                        <a href="{{ route('articles.index') }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column;" class="article-card-link">
+                            <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);" class="article-card-box">
+                                <div style="position: relative; width: 100%; height: 140px; background: #F1F5F9; overflow: hidden;">
+                                    <img src="{{ $dA['img'] }}" alt="{{ $dA['title'] }}" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;" class="article-banner-img">
+                                    <div style="position: absolute; top: 10px; left: 10px; background: #1eb349; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.55rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; text-transform: uppercase;">
+                                        {{ $dA['cat'] }}
+                                    </div>
+                                </div>
+                                <div style="padding: 1.1rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                                    <div>
+                                        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #0F172A; margin: 0 0 0.5rem; line-height: 1.4; height: 2.6em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                            {{ $dA['title'] }}
+                                        </h3>
+                                        <p style="font-size: 0.78rem; color: #64748B; margin: 0 0 1rem; line-height: 1.5; height: 3em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                            {{ $dA['desc'] }}
+                                        </p>
+                                    </div>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #F1F5F9; padding-top: 0.75rem; margin-top: auto;">
+                                        <span style="font-size: 0.72rem; color: #94A3B8; font-weight: 600;">{{ $dA['date'] }}</span>
+                                        <span style="font-size: 0.75rem; font-weight: 700; color: #1eb349; display: inline-flex; align-items: center; gap: 0.2rem;">
+                                            Baca <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                @endif
+            </div>
+
+        </div>
+    </section>
+
+    <style>
+        /* Card Hover Effects */
+        .ticket-card-box:hover, .article-card-box:hover {
+            transform: translateY(-4px);
+            border-color: #1eb349 !important;
+            box-shadow: 0 12px 28px rgba(30,179,73,0.12) !important;
+        }
+        .ticket-card-link:hover .ticket-banner-img,
+        .article-card-link:hover .article-banner-img {
+            transform: scale(1.05);
+        }
+        
+        /* Responsive Grid Breakdown */
+        @media (max-width: 1024px) {
+            .ticket-cards-grid, .article-cards-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1rem !important;
+            }
+        }
+        @media (max-width: 640px) {
+            .ticket-cards-grid, .article-cards-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.75rem !important;
+            }
+        }
+    </style>
 
 @include('components.lightbox-assets')
 
