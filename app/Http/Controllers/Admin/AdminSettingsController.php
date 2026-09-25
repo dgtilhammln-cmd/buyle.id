@@ -22,6 +22,15 @@ class AdminSettingsController extends Controller
         $imageKeys = ['hero_bg_image', 'hero_main_image', 'hero_secondary_image', 'about_image', 'about_c3_image', 'og_image_default', 'logo', 'favicon', 'qr_logo', 'coverage_map', 'ad_product_sidebar_1_image', 'ad_product_sidebar_2_image', 'adsense_custom_image'];
         $data      = $request->except(['_token', '_method']);
 
+        // Explicitly handle all cs_* (coming soon / maintenance) keys
+        $csKeys = ['cs_enabled', 'cs_mode', 'cs_badge', 'cs_headline', 'cs_headline_green', 'cs_subtext', 'cs_target_date', 'cs_progress', 'cs_btn_text', 'cs_btn_link', 'cs_features'];
+        foreach ($csKeys as $csKey) {
+            if (array_key_exists($csKey, $data)) {
+                Setting::set($csKey, (string)($data[$csKey] ?? ''), 'text', 'coming_soon');
+                unset($data[$csKey]);
+            }
+        }
+
         foreach ($data as $key => $value) {
             // Jika array, ubah menjadi JSON string agar bisa disimpan di DB
             if (is_array($value)) {
@@ -161,6 +170,9 @@ class AdminSettingsController extends Controller
         \App\Services\MailConfigService::apply();
 
         Setting::clearCache();
+        // Flush coming soon cache so middleware picks up changes immediately
+        \Illuminate\Support\Facades\Cache::forget('cs_enabled');
+        \Illuminate\Support\Facades\Cache::forget('cs_target_date');
         return back()->with('success', 'Pengaturan berhasil disimpan!');
     }
 
