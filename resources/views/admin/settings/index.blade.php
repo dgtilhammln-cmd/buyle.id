@@ -1554,8 +1554,6 @@ function testAiConnection() {
 .spin-anim { animation: spin 1s linear infinite; }
 @keyframes spin { 100% { transform: rotate(360deg); } }
 </style>
-</div>
-</div>
 
 {{-- ======== TAB: MAINTENANCE & LAUNCHING ======== --}}
 <div id="tab-coming_soon" class="tab-section" style="display:none;">
