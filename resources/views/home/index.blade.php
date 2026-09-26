@@ -2609,11 +2609,16 @@
 
             {{-- Header Headline --}}
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
-                <h2 class="responsive-section-title" style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                    🎫 Rekomendasi Tiket & Event
+                <h2 class="responsive-section-title"
+                    style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                    Rekomendasi Tiket & Event
                 </h2>
-                <a href="{{ route_locale('products') }}?category=tiket" style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
-                    Lihat Semua <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+                <a href="{{ route_locale('products') }}?category=tiket"
+                    style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+                    Lihat Semua <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                        viewBox="0 0 24 24">
+                        <path d="M5 12h14m-7-7l7 7-7 7" />
+                    </svg>
                 </a>
             </div>
 
@@ -2630,12 +2635,12 @@
                             $tOrigPrice = $tProd->sale_price > 0 && $tProd->sale_price < $tProd->price ? $tProd->price : null;
                             $tHasDiscount = !empty($tOrigPrice) && $tOrigPrice > $tPrice;
                             $tDiscountPct = $tHasDiscount ? round((($tOrigPrice - $tPrice) / $tOrigPrice) * 100) : 0;
-                            
+
                             // Poster Event (Landscape 16:9), fallback ke gambar utama
                             $tImage = !empty($tProd->og_image) ? asset('storage/' . $tProd->og_image) : ($tProd->image ? asset('storage/' . $tProd->image) : asset('assets/images/default-ticket.webp'));
                             $tDate = \Carbon\Carbon::parse($tProd->created_at)->addDays(15)->isoFormat('D MMMM Y');
                             $tLocation = $tProd->location ?? ($tProd->data_json['location'] ?? ($tProd->seller->creatorProfile->city ?? ($tProd->seller->creatorProfile->store_location ?? 'Indonesia')));
-                            
+
                             // Realtime Dynamic Rating
                             $tRating = ($tProd->rating && $tProd->rating > 0) ? number_format($tProd->rating, 1) : (($tProd->reviews_avg_rating && $tProd->reviews_avg_rating > 0) ? number_format($tProd->reviews_avg_rating, 1) : '5.0');
                         @endphp
@@ -2644,36 +2649,43 @@
                             class="ticket-card-swipe-item">
                             <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
                                 class="article-card-box">
-                                
+
                                 {{-- Image Banner 16:9 Landscape (Poster Event) --}}
-                                <div style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
+                                <div
+                                    style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
                                     <img src="{{ $tImage }}" alt="{{ $tProd->name }}"
                                         style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
                                         class="article-banner-img">
-                                    
+
                                     {{-- Discount / Event Badge Top-Left --}}
                                     @if($tHasDiscount)
-                                        <div style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
+                                        <div
+                                            style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
                                             -{{ $tDiscountPct }}%
                                         </div>
                                     @else
-                                        <div style="position: absolute; top: 8px; left: 8px; background: #1eb349; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
+                                        <div
+                                            style="position: absolute; top: 8px; left: 8px; background: #1eb349; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
                                             EVENT
                                         </div>
                                     @endif
                                 </div>
 
                                 {{-- Card Body --}}
-                                <div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                                <div
+                                    style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
                                     <div>
                                         {{-- Rating & Verified Badge --}}
-                                        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
+                                        <div
+                                            style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
                                             <div style="display: flex; align-items: center; gap: 0.3rem;">
                                                 <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
                                                 <span style="font-family: 'Montserrat', sans-serif;">{{ $tRating }}</span>
                                             </div>
-                                            <div style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <div
+                                                style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                    viewBox="0 0 24 24">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                                                     <polyline points="22 4 12 14.01 9 11.01" />
                                                 </svg>
@@ -2682,19 +2694,32 @@
                                         </div>
 
                                         {{-- Title --}}
-                                        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.35rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                        <h3
+                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.35rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
                                             {{ $tProd->name }}
                                         </h3>
 
                                         {{-- Tanggal & Lokasi Event --}}
-                                        <div style="display: flex; flex-direction: column; gap: 0.2rem; margin: 0.35rem 0 0.4rem; font-size: 0.72rem; color: #64748B; font-weight: 600;">
+                                        <div
+                                            style="display: flex; flex-direction: column; gap: 0.2rem; margin: 0.35rem 0 0.4rem; font-size: 0.72rem; color: #64748B; font-weight: 600;">
                                             <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
-                                                <svg width="12" height="12" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                                <svg width="12" height="12" fill="none" stroke="#1eb349" stroke-width="2.2"
+                                                    viewBox="0 0 24 24">
+                                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                                </svg>
                                                 <span>{{ $tDate }}</span>
                                             </div>
                                             <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
-                                                <svg width="12" height="12" fill="none" stroke="#EF4444" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ Str::limit($tLocation, 25) }}</span>
+                                                <svg width="12" height="12" fill="none" stroke="#EF4444" stroke-width="2.2"
+                                                    viewBox="0 0 24 24">
+                                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                                    <circle cx="12" cy="10" r="3" />
+                                                </svg>
+                                                <span
+                                                    style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ Str::limit($tLocation, 25) }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -2702,14 +2727,17 @@
                                     {{-- Footer Separator & Price CTA --}}
                                     <div>
                                         <div style="border-top: 1px solid #F1F5F9; margin: 0.5rem 0 0.65rem;"></div>
-                                        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
+                                        <div
+                                            style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
                                             <div>
                                                 @if($tHasDiscount)
-                                                    <span style="font-size: 0.72rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500;">
+                                                    <span
+                                                        style="font-size: 0.72rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500;">
                                                         Rp {{ number_format($tOrigPrice, 0, ',', '.') }}
                                                     </span>
                                                 @endif
-                                                <span style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
+                                                <span
+                                                    style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
                                                     @if($tPrice > 0)
                                                         Rp {{ number_format($tPrice, 0, ',', '.') }}
                                                     @else
@@ -2717,9 +2745,13 @@
                                                     @endif
                                                 </span>
                                             </div>
-                                            <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s;"
+                                            <span
+                                                style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s;"
                                                 class="retarget-btn-cta">
-                                                Lihat <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
+                                                Lihat <svg width="12" height="12" fill="none" stroke="currentColor"
+                                                    stroke-width="2.5" viewBox="0 0 24 24">
+                                                    <path d="M5 12h14m-7-7l7 7-7 7" />
+                                                </svg>
                                             </span>
                                         </div>
                                     </div>
@@ -2741,51 +2773,80 @@
                     @endphp
                     @foreach($demoTickets as $dT)
                         <a href="{{ route_locale('products') }}?category=tiket"
-                            style="text-decoration: none; color: inherit; display: flex; flex-direction: column;" class="ticket-card-swipe-item">
+                            style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
+                            class="ticket-card-swipe-item">
                             <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
                                 class="article-card-box">
-                                <div style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
+                                <div
+                                    style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
                                     <img src="{{ $dT['img'] }}" alt="{{ $dT['title'] }}"
                                         style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
                                         class="article-banner-img">
-                                    <div style="position: absolute; top: 8px; left: 8px; background: #1eb349; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
+                                    <div
+                                        style="position: absolute; top: 8px; left: 8px; background: #1eb349; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
                                         EVENT
                                     </div>
                                 </div>
-                                <div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                                <div
+                                    style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
                                     <div>
-                                        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
+                                        <div
+                                            style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
                                             <div style="display: flex; align-items: center; gap: 0.3rem;">
                                                 <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
                                                 <span style="font-family: 'Montserrat', sans-serif;">5.0</span>
                                             </div>
-                                            <div style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                                            <div
+                                                style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                    viewBox="0 0 24 24">
+                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                    <polyline points="22 4 12 14.01 9 11.01" />
+                                                </svg>
                                                 Verified
                                             </div>
                                         </div>
-                                        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.35rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                        <h3
+                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.35rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
                                             {{ $dT['title'] }}
                                         </h3>
-                                        <div style="display: flex; flex-direction: column; gap: 0.2rem; margin: 0.35rem 0 0.4rem; font-size: 0.72rem; color: #64748B; font-weight: 600;">
+                                        <div
+                                            style="display: flex; flex-direction: column; gap: 0.2rem; margin: 0.35rem 0 0.4rem; font-size: 0.72rem; color: #64748B; font-weight: 600;">
                                             <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
-                                                <svg width="12" height="12" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                                <svg width="12" height="12" fill="none" stroke="#1eb349" stroke-width="2.2"
+                                                    viewBox="0 0 24 24">
+                                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                                </svg>
                                                 <span>{{ $dT['date'] }}</span>
                                             </div>
                                             <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
-                                                <svg width="12" height="12" fill="none" stroke="#EF4444" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                                <svg width="12" height="12" fill="none" stroke="#EF4444" stroke-width="2.2"
+                                                    viewBox="0 0 24 24">
+                                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                                    <circle cx="12" cy="10" r="3" />
+                                                </svg>
                                                 <span>{{ $dT['location'] }}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <div style="border-top: 1px solid #F1F5F9; margin: 0.5rem 0 0.65rem;"></div>
-                                        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
-                                            <span style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
+                                        <div
+                                            style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
+                                            <span
+                                                style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
                                                 {{ $dT['price'] }}
                                             </span>
-                                            <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3);" class="retarget-btn-cta">
-                                                Lihat <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
+                                            <span
+                                                style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3);"
+                                                class="retarget-btn-cta">
+                                                Lihat <svg width="12" height="12" fill="none" stroke="currentColor"
+                                                    stroke-width="2.5" viewBox="0 0 24 24">
+                                                    <path d="M5 12h14m-7-7l7 7-7 7" />
+                                                </svg>
                                             </span>
                                         </div>
                                     </div>
