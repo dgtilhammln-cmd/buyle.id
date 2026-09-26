@@ -542,11 +542,11 @@
                                         viewBox="0 0 24 24">
                                         <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                                     </svg>
-                                    Opsional (Bisa Tanpa Akun)
+                                    Opsional (Tanpa Akun)
                                 </div>
                                 <h3
                                     style="font-size:1.05rem; font-weight:800; color:#0F172A; margin:0 0 0.35rem; font-family:var(--font); display:flex; align-items:center; gap:0.4rem;">
-                                    Punya Akun buyle.id? Login Biar Makin Untung!
+                                    Punya Akun = Makin Untung!
                                     <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2"
                                         viewBox="0 0 24 24">
                                         <path d="M20 12v10H4V12" />
@@ -558,8 +558,7 @@
                                 </h3>
                                 <p style="font-size:0.83rem; color:#475569; line-height:1.5; margin:0 0 0.75rem;">
                                     Beli pakai akun bikin file digital kamu <strong>tersimpan selamanya di
-                                        Dashboard</strong> (akses 24/7 tanpa takut link email hilang) + kumpulin poin
-                                    reward!
+                                        Dashboard</strong> & banyak bonusnya!
                                 </p>
                                 <div
                                     style="display:flex; align-items:center; gap:1rem; font-size:0.78rem; font-weight:600; color:#166534; flex-wrap:wrap;">
@@ -596,7 +595,7 @@
                                 </a>
                                 <span
                                     style="font-size:0.72rem; color:#64748B; text-align:center; font-weight:500; display:inline-flex; align-items:center; justify-content:center; gap:3px;">
-                                    atau isi form cepat di bawah
+                                    atau isi form di bawah
                                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
                                         viewBox="0 0 24 24">
                                         <path d="M12 5v14M19 12l-7 7-7-7" />
@@ -644,13 +643,13 @@
                         </div>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
                             <div class="form-group">
-                                <label class="form-label">Email (Tempat Kirim File/Akses) <span
+                                <label class="form-label">Email (Untuk terima File/Akses) <span
                                         style="color:#EF4444;">*</span></label>
                                 <input type="email" name="guest_email" class="form-input" value="{{ old('guest_email') }}"
                                     required placeholder="emailaktif@gmail.com">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">No. WhatsApp <span style="color:#EF4444;">*</span></label>
+                                <label class="form-label">WhatsApp Aktif<span style="color:#EF4444;">*</span></label>
                                 <input type="text" name="guest_phone" class="form-input" value="{{ old('guest_phone') }}"
                                     required placeholder="08xxxxxxxxxx">
                             </div>
@@ -951,12 +950,12 @@
                     {{-- C. FORM DIGITAL / TICKETING / JASA --}}
 
                     {{-- ============================================================ --}}
-                    {{-- Card: Atas Nama Tiket — Support Multi-Qty, Anti-Konflik      --}}
+                    {{-- Card: Atas Nama Tiket — Support Multi-Qty, Anti-Konflik --}}
                     {{-- Nama field: ticket_holders[{product_id}][] (array per produk) --}}
-                    {{-- Tampil HANYA jika ada produk bertipe ticket / tiket / event  --}}
+                    {{-- Tampil HANYA jika ada produk bertipe ticket / tiket / event --}}
                     {{-- ============================================================ --}}
                     @php
-                        $ticketItems = collect($summary['items'])->filter(function($item) {
+                        $ticketItems = collect($summary['items'])->filter(function ($item) {
                             $pType = strtolower($item->product->product_type ?? $item->product->type ?? '');
                             return in_array($pType, ['ticket', 'tiket', 'event']);
                         });
@@ -964,27 +963,33 @@
 
                     @if($ticketItems->count() > 0)
                         @php
-                            $authUserName  = auth()->check() ? auth()->user()->name  : '';
+                            $authUserName = auth()->check() ? auth()->user()->name : '';
                             $authUserEmail = auth()->check() ? auth()->user()->email : '';
                             $ticketSlotCounter = 0; /* global slot index across all items */
                         @endphp
 
                         <div class="co-section" style="margin-bottom:1.5rem;">
                             <div class="co-section-title">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <rect x="2" y="7" width="20" height="14" rx="2"/>
-                                    <path d="M16 3l-4 4-4-4"/><path d="M12 11v6"/>
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" />
+                                    <path d="M16 3l-4 4-4-4" />
+                                    <path d="M12 11v6" />
                                 </svg>
                                 Atas Nama Pemegang Tiket
                             </div>
 
                             {{-- Info bar --}}
-                            <div style="background:#EFF6FF;border:1px dashed #93C5FD;border-radius:10px;padding:0.75rem 1rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:0.6rem;">
-                                <svg width="15" height="15" fill="none" stroke="#2563EB" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;">
-                                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                            <div
+                                style="background:#EFF6FF;border:1px dashed #93C5FD;border-radius:10px;padding:0.75rem 1rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:0.6rem;">
+                                <svg width="15" height="15" fill="none" stroke="#2563EB" stroke-width="2.5" viewBox="0 0 24 24"
+                                    style="flex-shrink:0;margin-top:1px;">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" />
                                 </svg>
                                 <span style="font-size:0.78rem;color:#1D4ED8;line-height:1.5;">
-                                    Isi nama <strong>setiap pemegang tiket</strong> sesuai identitas (KTP/SIM). Nama akan tercetak pada tiket / bukti pembelian.
+                                    Isi nama <strong>setiap pemegang tiket</strong> sesuai identitas (KTP/SIM).
                                     @if(auth()->check()) Tiket pertama diisi otomatis dari akun Anda. @endif
                                 </span>
                             </div>
@@ -992,30 +997,34 @@
                             {{-- Loop setiap item tiket × qty --}}
                             @foreach($ticketItems as $item)
                                 @php
-                                    $pid     = $item->product_id ?? ($item->product->id ?? 0);
-                                    $pname   = $item->product->name ?? 'Produk';
-                                    $qty     = (int)($item->qty ?? 1);
+                                    $pid = $item->product_id ?? ($item->product->id ?? 0);
+                                    $pname = $item->product->name ?? 'Produk';
+                                    $qty = (int) ($item->qty ?? 1);
                                     $oldVals = old("ticket_holders.{$pid}", []);
                                 @endphp
 
                                 @for($ticketIdx = 0; $ticketIdx < $qty; $ticketIdx++)
                                     @php
-                                        $isFirstSlot   = ($ticketSlotCounter === 0);
-                                        $slotLabel     = ($qty > 1 || $ticketItems->count() > 1)
-                                                          ? "{$pname} — Tiket #" . ($ticketIdx + 1)
-                                                          : "Pemegang Tiket";
-                                        $defaultVal    = $isFirstSlot && auth()->check() ? $authUserName : ($oldVals[$ticketIdx] ?? '');
-                                        $inputId       = "ticket_holder_{$pid}_{$ticketIdx}";
+                                        $isFirstSlot = ($ticketSlotCounter === 0);
+                                        $slotLabel = ($qty > 1 || $ticketItems->count() > 1)
+                                            ? "{$pname} — Tiket #" . ($ticketIdx + 1)
+                                            : "Pemegang Tiket";
+                                        $defaultVal = $isFirstSlot && auth()->check() ? $authUserName : ($oldVals[$ticketIdx] ?? '');
+                                        $inputId = "ticket_holder_{$pid}_{$ticketIdx}";
                                         $ticketSlotCounter++;
                                     @endphp
 
-                                    <div class="ticket-holder-row" style="margin-bottom:{{ $ticketIdx < $qty-1 ? '1rem' : '0' }};
-                                        {{ !$loop->last || $ticketIdx < $qty-1 ? 'padding-bottom:1rem;border-bottom:1px dashed #E2E8F0;' : '' }}">
+                                    <div class="ticket-holder-row"
+                                        style="margin-bottom:{{ $ticketIdx < $qty - 1 ? '1rem' : '0' }};
+                                                                                                                                                                                                                                        {{ !$loop->last || $ticketIdx < $qty - 1 ? 'padding-bottom:1rem;border-bottom:1px dashed #E2E8F0;' : '' }}">
 
                                         {{-- Slot label dengan nomor tiket --}}
-                                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
-                                            <label for="{{ $inputId }}" style="font-size:0.82rem;font-weight:700;color:#334155;display:flex;align-items:center;gap:0.4rem;">
-                                                <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:{{ $isFirstSlot ? 'linear-gradient(135deg,#1eb349,#a5cf37)' : '#E2E8F0' }};color:{{ $isFirstSlot ? '#fff' : '#64748B' }};font-size:0.72rem;font-weight:800;flex-shrink:0;">
+                                        <div
+                                            style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+                                            <label for="{{ $inputId }}"
+                                                style="font-size:0.82rem;font-weight:700;color:#334155;display:flex;align-items:center;gap:0.4rem;">
+                                                <span
+                                                    style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:{{ $isFirstSlot ? 'linear-gradient(135deg,#1eb349,#a5cf37)' : '#E2E8F0' }};color:{{ $isFirstSlot ? '#fff' : '#64748B' }};font-size:0.72rem;font-weight:800;flex-shrink:0;">
                                                     {{ $ticketSlotCounter }}
                                                 </span>
                                                 {{ $slotLabel }}
@@ -1024,30 +1033,29 @@
 
                                             {{-- Toggle hanya untuk slot pertama jika login --}}
                                             @if($isFirstSlot && auth()->check())
-                                                <button type="button"
-                                                    id="toggle-slot-{{ $inputId }}"
+                                                <button type="button" id="toggle-slot-{{ $inputId }}"
                                                     onclick="toggleTicketSlot('{{ $inputId }}', '{{ addslashes($authUserName) }}')"
                                                     style="font-size:0.72rem;font-weight:700;color:#1eb349;background:none;border:none;cursor:pointer;padding:0.2rem 0.5rem;border-radius:6px;border:1px solid #BBF7D0;background:#F0FDF4;display:flex;align-items:center;gap:0.3rem;white-space:nowrap;">
-                                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                        viewBox="0 0 24 24">
+                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                                    </svg>
                                                     <span id="toggle-label-{{ $inputId }}">Ganti Nama</span>
                                                 </button>
                                             @endif
                                         </div>
 
                                         {{-- Input field --}}
-                                        <input
-                                            type="text"
-                                            id="{{ $inputId }}"
-                                            name="ticket_holders[{{ $pid }}][]"
-                                            class="form-input"
-                                            value="{{ $defaultVal }}"
-                                            required
-                                            placeholder="{{ $isFirstSlot && auth()->check() ? 'Nama dari akun Anda (bisa diganti)' : 'Nama lengkap pemegang tiket #' . ($ticketIdx+1) . '...' }}"
-                                            {{ $isFirstSlot && auth()->check() ? 'data-auth-name="'.e($authUserName).'"' : '' }}
+                                        <input type="text" id="{{ $inputId }}" name="ticket_holders[{{ $pid }}][]" class="form-input"
+                                            value="{{ $defaultVal }}" required
+                                            placeholder="{{ $isFirstSlot && auth()->check() ? 'Nama dari akun Anda (bisa diganti)' : 'Nama lengkap pemegang tiket #' . ($ticketIdx + 1) . '...' }}"
+                                            {{ $isFirstSlot && auth()->check() ? 'data-auth-name="' . e($authUserName) . '"' : '' }}
                                             style="{{ $isFirstSlot && auth()->check() ? 'background:#F8FAFC;' : '' }}">
 
                                         @if(!$isFirstSlot)
-                                            <div style="font-size:0.72rem;color:#94A3B8;margin-top:0.3rem;">Nama sesuai identitas (KTP/SIM/Paspor) pemegang tiket ini.</div>
+                                            <div style="font-size:0.72rem;color:#94A3B8;margin-top:0.3rem;">Nama sesuai identitas
+                                                (KTP/SIM/Paspor) pemegang tiket ini.</div>
                                         @endif
                                     </div>
                                 @endfor
@@ -1059,11 +1067,12 @@
                     {{-- Card: Info Pengiriman Digital --}}
                     <div class="co-section" style="margin-bottom:1.5rem;background:#F0FDF4;border:1px solid #BBF7D0;">
                         <div class="co-section-title" style="color:#15803D;">
-                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
                                 <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
                                 <polyline points="13 2 13 9 20 9"></polyline>
                             </svg>
-                            Pengiriman Otomatis Produk Digital / Tiket / Jasa
+                            Pengiriman Otomatis Produk Digital / Tiket / Jasa Digital
                         </div>
                         <div style="font-size:0.85rem;color:#166534;line-height:1.5;">
                             Akses file digital, tiket event, atau instruksi layanan jasa Anda akan otomatis dikirimkan
@@ -1150,7 +1159,8 @@
                                 <span class="fee-info-icon" onclick="toggleFeePopover(event, this)">ⓘ</span>
                                 <div class="fee-popover">
                                     <span class="fee-popover-title">Platform Fee</span>
-                                    Biaya pemeliharaan sistem & pemrosesan layanan di buyle.id.
+                                    Kontribusi untuk pengembangan platform buyle.id agar terus berinovasi dan memberikan
+                                    pengalaman terbaik.
                                 </div>
                             </span>
                         </span>
@@ -1165,7 +1175,7 @@
                                 <span class="fee-info-icon" onclick="toggleFeePopover(event, this)">ⓘ</span>
                                 <div class="fee-popover">
                                     <span class="fee-popover-title">Admin Fee</span>
-                                    Biaya penanganan administrasi & gerbang pembayaran (payment gateway).
+                                    Dukungan layanan transaksi kamu diproses dengan aman, cepat, dan terlindungi.
                                 </div>
                             </span>
                         </span>
@@ -2411,27 +2421,27 @@
     // ── Atas Nama Tiket: Toggle antara nama akun vs manual ─────────────
     // State per-input disimpan di dataset.mode (default: 'akun')
     function toggleTicketSlot(inputId, authName) {
-        const input      = document.getElementById(inputId);
-        const toggleBtn  = document.getElementById('toggle-slot-' + inputId);
-        const labelSpan  = document.getElementById('toggle-label-' + inputId);
+        const input = document.getElementById(inputId);
+        const toggleBtn = document.getElementById('toggle-slot-' + inputId);
+        const labelSpan = document.getElementById('toggle-label-' + inputId);
         if (!input || !toggleBtn) return;
 
         const currentMode = input.dataset.mode || 'akun';
 
         if (currentMode === 'akun') {
             // Switch ke manual: kosongkan, aktifkan edit
-            input.dataset.mode      = 'manual';
-            input.value             = '';
-            input.readOnly          = false;
-            input.style.background  = '#fff';
+            input.dataset.mode = 'manual';
+            input.value = '';
+            input.readOnly = false;
+            input.style.background = '#fff';
             input.style.borderColor = '#93C5FD';
-            input.placeholder       = 'Masukkan nama lengkap pemegang tiket ini...';
+            input.placeholder = 'Masukkan nama lengkap pemegang tiket ini...';
             input.focus();
 
             // Update tombol: tampilkan opsi "Pakai Nama Akun"
-            labelSpan.textContent           = 'Pakai Nama Akun';
-            toggleBtn.style.color           = '#64748B';
-            toggleBtn.style.borderColor     = '#E2E8F0';
+            labelSpan.textContent = 'Pakai Nama Akun';
+            toggleBtn.style.color = '#64748B';
+            toggleBtn.style.borderColor = '#E2E8F0';
             toggleBtn.style.backgroundColor = '#F8FAFC';
 
             // Ganti icon ke user-icon
@@ -2440,17 +2450,17 @@
 
         } else {
             // Switch kembali ke akun: isi ulang nama akun, read-only-feel
-            input.dataset.mode      = 'akun';
-            input.value             = authName;
-            input.readOnly          = false;   // tetap editable tapi prefilled
-            input.style.background  = '#F8FAFC';
+            input.dataset.mode = 'akun';
+            input.value = authName;
+            input.readOnly = false;   // tetap editable tapi prefilled
+            input.style.background = '#F8FAFC';
             input.style.borderColor = '';
-            input.placeholder       = 'Nama dari akun Anda (bisa diganti)';
+            input.placeholder = 'Nama dari akun Anda (bisa diganti)';
 
             // Kembalikan tombol
-            labelSpan.textContent           = 'Ganti Nama';
-            toggleBtn.style.color           = '#1eb349';
-            toggleBtn.style.borderColor     = '#BBF7D0';
+            labelSpan.textContent = 'Ganti Nama';
+            toggleBtn.style.color = '#1eb349';
+            toggleBtn.style.borderColor = '#BBF7D0';
             toggleBtn.style.backgroundColor = '#F0FDF4';
 
             // Kembalikan icon ke edit-icon
@@ -2460,7 +2470,7 @@
     }
 
     // Inisialisasi: set mode 'akun' pada semua slot dengan data-auth-name
-    document.querySelectorAll('input[data-auth-name]').forEach(function(input) {
+    document.querySelectorAll('input[data-auth-name]').forEach(function (input) {
         input.dataset.mode = 'akun';
     });
 </script>

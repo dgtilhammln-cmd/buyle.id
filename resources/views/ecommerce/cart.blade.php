@@ -618,7 +618,8 @@
                             <span class="fee-info-icon" onclick="toggleFeePopover(event, this)">ⓘ</span>
                             <div class="fee-popover">
                                 <span class="fee-popover-title">Platform Fee</span>
-                                Biaya pemeliharaan sistem & pemrosesan layanan di buyle.id.
+                                Kontribusi untuk pengembangan platform buyle.id agar terus berinovasi dan memberikan pengalaman
+                                terbaik.
                             </div>
                         </span>
                     </span>
@@ -632,7 +633,7 @@
                             <span class="fee-info-icon" onclick="toggleFeePopover(event, this)">ⓘ</span>
                             <div class="fee-popover">
                                 <span class="fee-popover-title">Admin Fee</span>
-                                Biaya penanganan administrasi & integrated payment.
+                                Dukungan layanan transaksi kamu diproses dengan aman, cepat, dan terlindungi.
                             </div>
                         </span>
                     </span>
