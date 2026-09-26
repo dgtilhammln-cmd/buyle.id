@@ -2618,6 +2618,11 @@
             </div>
 
             <div class="swipe-cards-container">
+                @php
+                    $tProds = isset($ticketProducts) && $ticketProducts->count() > 0
+                        ? $ticketProducts
+                        : (isset($products) ? $products->filter(fn($p) => strtolower($p->product_type ?? $p->type ?? '') === 'ticket') : collect());
+                @endphp
                 @if($tProds->count() > 0)
                     @foreach($tProds as $tProd)
                         @php
