@@ -22,29 +22,11 @@ www.buyle.id
         overflow: hidden;
     }
 
-    /* Wave Top Separator - Smooth seamless curve transition */
-    .cv-footer-wave-wrap {
-        position: relative;
-        width: 100%;
-        line-height: 0;
-        background: #ffffff;
-        /* Matches main page background */
-        overflow: hidden;
-        margin-bottom: -1px;
-    }
-
-    .cv-footer-wave-svg {
-        position: relative;
-        display: block;
-        width: 100%;
-        height: clamp(40px, 6.5vw, 85px);
-    }
-
     /* Main Green Gradient Section */
     .cv-footer-body {
         background: linear-gradient(135deg, #1eb349 0%, #7db928 50%, #a5cf37 100%);
         position: relative;
-        padding-top: 0.5rem;
+        padding-top: 2.5rem;
         padding-bottom: 3.5rem;
         box-shadow: inset 0 10px 30px rgba(0, 0, 0, 0.05);
     }
@@ -228,13 +210,13 @@ www.buyle.id
     }
 
     .cv-footer-trust-img {
-        max-height: 38px;
+        max-height: 24px;
         width: auto;
         object-fit: contain;
         background: rgba(255, 255, 255, 0.95);
-        padding: 0.35rem 0.75rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     }
 
     .cv-footer-badge-item {
@@ -363,20 +345,6 @@ www.buyle.id
 
 <footer class="cv-footer-v2" role="contentinfo">
 
-    {{-- Top Wave Shape Divider - 100% Smooth Single Curve Path --}}
-    <div class="cv-footer-wave-wrap">
-        <svg class="cv-footer-wave-svg" viewBox="0 0 1440 90" fill="none" xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none">
-            <defs>
-                <linearGradient id="footerBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#1eb349" />
-                    <stop offset="50%" stop-color="#7db928" />
-                    <stop offset="100%" stop-color="#a5cf37" />
-                </linearGradient>
-            </defs>
-            <path d="M0,35 C320,80 540,10 820,50 C1100,90 1280,20 1440,40 L1440,90 L0,90 Z" fill="url(#footerBgGrad)" />
-        </svg>
-    </div>
 
     {{-- Main Green Gradient Body --}}
     <div class="cv-footer-body">

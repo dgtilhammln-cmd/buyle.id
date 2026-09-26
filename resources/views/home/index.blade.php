@@ -2610,7 +2610,7 @@
                 style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;">
                 <div>
                     <h2 class="responsive-section-title">
-                        Artikel & Panduan Kreator Terkini
+                        Insight & Tips
                     </h2>
 
                 </div>
