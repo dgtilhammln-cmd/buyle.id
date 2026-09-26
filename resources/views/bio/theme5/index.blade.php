@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @php
-        $t5SeoTitle = !empty($config['theme5_seo_home_title']) ? $config['theme5_seo_home_title'] : ($seoTitle ?? (($config['name'] ?? $profile->store_name) . ' - Professional Digital Store'));
+        $bioName    = $config['name'] ?? $profile->store_name ?? 'Digital Creator';
+        $t5SeoTitle = !empty($config['theme5_seo_home_title']) ? $config['theme5_seo_home_title'] : ($seoTitle ?? ($bioName . ' - Professional Digital Store'));
         $t5SeoDesc  = !empty($config['theme5_seo_home_desc']) ? $config['theme5_seo_home_desc'] : ($seoDesc ?? ($profile->store_description ?? 'Situs resmi dan katalog produk digital terpercaya.'));
         $t5SeoKw    = $config['theme5_seo_home_keywords'] ?? '';
     @endphp
