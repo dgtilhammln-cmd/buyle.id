@@ -181,7 +181,7 @@ class ServiceController extends Controller
                 break;
         }
         
-        $services   = $query->get();
+        $services   = $query->with(['seller.creatorProfile', 'category'])->get();
         $settings   = Setting::getAllAsArray();
         $siteName   = $settings['site_name'] ?? 'buyle.id';
         $wa         = WaSetting::primary();
