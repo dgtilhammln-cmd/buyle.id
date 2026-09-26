@@ -54,6 +54,13 @@ class HomeController extends Controller
             ->limit(8)
             ->get();
 
+        $retargetProducts = Product::marketplace()
+            ->with(['seller.creatorProfile', 'category'])
+            ->latest()
+            ->limit(12)
+            ->get();
+
+
         $clients      = collect();
         $testimonials = collect();
         $uspItems       = UspItem::active()->get();
@@ -78,7 +85,7 @@ class HomeController extends Controller
             'canonical'   => route('home'),
         ];
 
-        return view('home.index', compact('settings', 'products', 'allProducts', 'gallery', 'articles', 'ticketProducts', 'clients', 'testimonials', 'wa', 'seo', 'heroSlides', 'utamaBanners', 'sampingBanners', 'uspItems', 'categoryItems', 'promoSections'));
+        return view('home.index', compact('settings', 'products', 'allProducts', 'retargetProducts', 'gallery', 'articles', 'ticketProducts', 'clients', 'testimonials', 'wa', 'seo', 'heroSlides', 'utamaBanners', 'sampingBanners', 'uspItems', 'categoryItems', 'promoSections'));
     }
 }
 

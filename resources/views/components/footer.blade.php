@@ -418,13 +418,11 @@ www.buyle.id
 
             {{-- Column 2: Informasi & Layanan --}}
             <div>
-                <div class="cv-footer-col-title">Informasi & Layanan</div>
+                <div class="cv-footer-col-title">Informasi Lainnya</div>
                 <ul class="cv-footer-links">
-                    <li><a href="{{ route_locale('about') }}">Tentang Kami</a></li>
-                    <li><a href="{{ route_locale('products') }}">Semua Produk & Jasa</a></li>
-                    <li><a href="{{ route_locale('gallery') }}">Galeri Instalasi</a></li>
+                    <li><a href="{{ route_locale('about') }}">Tentang Buyle.id</a></li>
+                    <li><a href="{{ route_locale('products') }}">Semua Produk Digital</a></li>
                     <li><a href="{{ route_locale('articles') }}">Artikel & Tips</a></li>
-                    <li><a href="{{ route_locale('contact') }}">Lokasi & Alamat</a></li>
                 </ul>
             </div>
 
@@ -436,8 +434,6 @@ www.buyle.id
                     <li><a href="{{ route_locale('faqs') }}">Pusat Bantuan & FAQ</a></li>
                     <li><a href="{{ route_locale('contact') }}#syarat">Syarat & Ketentuan</a></li>
                     <li><a href="{{ route_locale('contact') }}#privasi">Kebijakan Privasi</a></li>
-                    <li><a href="javascript:void(0)" onclick="openOrderModal('Footer Order Check')">Status Pemesanan</a>
-                    </li>
                 </ul>
             </div>
 
@@ -449,7 +445,8 @@ www.buyle.id
             <div class="cv-footer-trust-box">
                 <span class="cv-footer-trust-label">Metode Pembayaran:</span>
                 @if($paymentLogo)
-                    <img src="{{ asset('storage/' . $paymentLogo) }}" alt="Pembayaran QRIS GoPay" class="cv-footer-trust-img">
+                    <img src="{{ asset('storage/' . $paymentLogo) }}" alt="Pembayaran QRIS GoPay"
+                        class="cv-footer-trust-img">
                 @else
                     <div class="cv-footer-badge-item" style="color:#D97706;"><span
                             style="color:#EF4444;font-size:.9rem;">❖</span> QRIS</div>
@@ -462,7 +459,8 @@ www.buyle.id
             <div class="cv-footer-trust-box">
                 <span class="cv-footer-trust-label">Pengiriman Produk Fisik:</span>
                 @if($expeditionLogo)
-                    <img src="{{ asset('storage/' . $expeditionLogo) }}" alt="Pengiriman J&T JNE" class="cv-footer-trust-img">
+                    <img src="{{ asset('storage/' . $expeditionLogo) }}" alt="Pengiriman J&T JNE"
+                        class="cv-footer-trust-img">
                 @else
                     <div class="cv-footer-badge-item" style="color:#DC2626;font-weight:900;">J&T Express</div>
                     <div class="cv-footer-badge-item" style="color:#1D4ED8;font-weight:900;">JNE</div>

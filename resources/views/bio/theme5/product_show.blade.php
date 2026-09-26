@@ -885,6 +885,19 @@
                 return false;
             }
         }, true);
+
+        // Retargeting Tracking System
+        try {
+            var prodId = {{ $product->id ?? 0 }};
+            var catId = {{ $product->category_id ?? 0 }};
+            if (prodId > 0) {
+                var history = JSON.parse(localStorage.getItem('buyle_viewed_history') || '[]');
+                history = history.filter(function(item) { return String(item.id) !== String(prodId); });
+                history.unshift({ id: prodId, category_id: catId, time: Date.now() });
+                if (history.length > 20) history.pop();
+                localStorage.setItem('buyle_viewed_history', JSON.stringify(history));
+            }
+        } catch(e) {}
     </script>
 
     @include('partials.adsense_modal')
