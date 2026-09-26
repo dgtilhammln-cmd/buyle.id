@@ -75,21 +75,125 @@
     <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ url('/sitemap.xml') }}">
 
 
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Product",
-        "name": "{{ e($prodTitle) }}",
-        "image": "{{ $firstImage }}",
-        "description": "{{ e(strip_tags($pageDesc)) }}",
-        "offers": {
-            "@type": "Offer",
-            "url": "{{ url()->current() }}",
-            "priceCurrency": "IDR",
-            "price": "{{ $price }}",
-            "availability": "{{ $isOutOfStock ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock' }}"
+    @php
+        $canonProductUrl = url()->current();
+        $prodImage = $firstImage;
+        $reviewCnt = (int) ($product->sales_count ?? $product->review_count ?? 15);
+        $prodRatingVal = (string) $ratingVal;
+
+        $pNameLower = strtolower($prodTitle);
+        $pTypeLower = strtolower($pType);
+
+        $isFoodProduct = in_array($pTypeLower, ['makanan', 'food', 'kuliner', 'fnb', 'resto', 'minuman']) ||
+                         preg_match('/\b(bakso|mie|nasi|soto|ayam|bebek|es|kopi|makanan|kuliner|resto)\b/i', $pNameLower);
+
+        $isServiceProduct = in_array($pTypeLower, ['jasa', 'service', 'layanan', 'agency', 'software', 'aplikasi']) ||
+                            preg_match('/\b(testgo|website|web|jasa|service|layanan|software|app|design|desain|agency|konsultasi)\b/i', $pNameLower);
+
+        $productSchemaGraph = [
+            [
+                '@type' => 'Product',
+                '@id' => $canonProductUrl . '#product',
+                'name' => $prodTitle,
+                'image' => $prodImage,
+                'description' => strip_tags($pageDesc),
+                'brand' => [
+                    '@type' => 'Brand',
+                    'name' => $bioName,
+                ],
+                'aggregateRating' => [
+                    '@type' => 'AggregateRating',
+                    'ratingValue' => $prodRatingVal,
+                    'reviewCount' => (string) $reviewCnt,
+                    'bestRating' => '5',
+                    'worstRating' => '1',
+                ],
+                'offers' => [
+                    '@type' => 'Offer',
+                    'url' => $canonProductUrl,
+                    'priceCurrency' => 'IDR',
+                    'price' => (string) $price,
+                    'availability' => $isOutOfStock ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+                ]
+            ],
+            [
+                '@type' => 'BreadcrumbList',
+                '@id' => $canonProductUrl . '#breadcrumb',
+                'itemListElement' => [
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 1,
+                        'name' => 'Beranda',
+                        'item' => url('/' . $username),
+                    ],
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 2,
+                        'name' => $category,
+                        'item' => url('/' . $username . '/produk'),
+                    ],
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 3,
+                        'name' => $prodTitle,
+                        'item' => $canonProductUrl,
+                    ]
+                ]
+            ]
+        ];
+
+        if ($isServiceProduct) {
+            $productSchemaGraph[] = [
+                '@type' => 'HowTo',
+                '@id' => $canonProductUrl . '#howto',
+                'name' => 'Cara Menggunakan & Memesan ' . $prodTitle,
+                'description' => 'Panduan langkah demi langkah penggunaan dan pemesanan layanan ' . $prodTitle . ' dari ' . $bioName,
+                'step' => [
+                    [
+                        '@type' => 'HowToStep',
+                        'position' => 1,
+                        'name' => 'Pilih Paket ' . $prodTitle,
+                        'text' => 'Buka rincian produk ' . $prodTitle . ' di buyle.id dan periksa spesifikasi layanan.'
+                    ],
+                    [
+                        '@type' => 'HowToStep',
+                        'position' => 2,
+                        'name' => 'Lakukan Pembayaran / Pesan Sekarang',
+                        'text' => 'Klik tombol Beli / Pesan atau selesaikan instruksi pembayaran secara langsung.'
+                    ],
+                    [
+                        '@type' => 'HowToStep',
+                        'position' => 3,
+                        'name' => 'Serah Terima & Konsultasi Layanan',
+                        'text' => 'Tim ' . $bioName . ' akan langsung memproses serta menyerahkan akses produk ' . $prodTitle . '.'
+                    ]
+                ]
+            ];
         }
-    }
+
+        if ($isFoodProduct) {
+            $productSchemaGraph[] = [
+                '@type' => 'MenuItem',
+                '@id' => $canonProductUrl . '#menuitem',
+                'name' => $prodTitle,
+                'description' => strip_tags($pageDesc),
+                'image' => $prodImage,
+                'offers' => [
+                    '@type' => 'Offer',
+                    'price' => (string) $price,
+                    'priceCurrency' => 'IDR',
+                    'availability' => $isOutOfStock ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+                ]
+            ];
+        }
+
+        $productSchemaJson = [
+            '@context' => 'https://schema.org',
+            '@graph' => $productSchemaGraph,
+        ];
+    @endphp
+    <script type="application/ld+json">
+    {!! json_encode($productSchemaJson, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">

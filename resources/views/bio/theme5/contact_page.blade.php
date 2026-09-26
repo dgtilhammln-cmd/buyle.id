@@ -59,28 +59,18 @@
             : url('/' . $username . '/kontak');
     @endphp
 
+    @php
+        $schemaOrg = \App\Services\BioSchemaBuilder::buildSchema(
+            $profile,
+            $config,
+            null,
+            $canonical ?? null,
+            $seoDesc ?? null,
+            $ogImage ?? null
+        );
+    @endphp
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "WebPage",
-                "@id": "{{ $canonical }}#webpage",
-                "url": "{{ $canonical }}",
-                "name": "{{ $seoTitle }}",
-                "description": "{{ $seoDesc }}",
-                "inLanguage": "id-ID",
-                "isPartOf": {"@type": "WebSite", "url": "{{ $homeUrl }}"}
-            },
-            {
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                    {"@type": "ListItem", "position": 1, "name": "Beranda", "item": "{{ $homeUrl }}"},
-                    {"@type": "ListItem", "position": 2, "name": "Kontak", "item": "{{ $canonical }}"}
-                ]
-            }
-        ]
-    }
+    {!! json_encode($schemaOrg, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>
 
     <style>

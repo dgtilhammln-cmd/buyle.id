@@ -40,97 +40,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    {{-- Dynamic Schema.org JSON-LD Structured Data --}}
+    {{-- Dynamic Schema.org JSON-LD Structured Data (Enriched Entities & Product Type Separation) --}}
     @php
-        $bioName = $config['name'] ?? $profile->store_name ?? 'Digital Creator';
-        $bioRole = $profile->bio_role ?? 'business';
-        $roleTitleMap = [
-            'content_creator' => 'Content Creator',
-            'affiliator'      => 'Affiliator',
-            'business'        => 'Digital Store & Service',
-        ];
-        $roleTitle = $roleTitleMap[$bioRole] ?? 'Digital Store';
-        $sameAs = array_values(array_filter([
-            !empty($config['ig']) ? 'https://instagram.com/' . ltrim($config['ig'], '@') : null,
-            !empty($config['tiktok']) ? 'https://tiktok.com/@' . ltrim($config['tiktok'], '@') : null,
-            !empty($config['youtube']) ? $config['youtube'] : null,
-            !empty($config['wa']) ? 'https://wa.me/' . preg_replace('/[^0-9]/', '', $config['wa']) : null,
-        ]));
-
-        $schemaType = ($bioRole === 'business') ? 'ProfessionalService' : 'Person';
-        $canonUrl = $canonical ?? url()->current();
-
-        $schemaGraph = [
-            [
-                '@type' => 'WebSite',
-                '@id' => $canonUrl . '#website',
-                'url' => $canonUrl,
-                'name' => $bioName,
-                'description' => $seoDesc ?? '',
-                'inLanguage' => 'id-ID',
-            ],
-            [
-                '@type' => $schemaType,
-                '@id' => $canonUrl . '#identity',
-                'name' => $bioName,
-                'url' => $canonUrl,
-                'image' => $ogImage ?? asset('images/buyle-og.png'),
-                'logo' => $ogImage ?? asset('images/buyle-og.png'),
-                'description' => $seoDesc ?? '',
-                'sameAs' => $sameAs,
-            ],
-            [
-                '@type' => 'BreadcrumbList',
-                '@id' => $canonUrl . '#breadcrumb',
-                'itemListElement' => [
-                    [
-                        '@type' => 'ListItem',
-                        'position' => 1,
-                        'name' => 'Beranda',
-                        'item' => $canonUrl,
-                    ]
-                ]
-            ]
-        ];
-
-        if (isset($products) && count($products) > 0) {
-            $itemList = [];
-            $pos = 1;
-            foreach ($products as $p) {
-                $prodImage = !empty($p->image) ? asset('storage/' . $p->image) : ($ogImage ?? asset('images/buyle-og.png'));
-                $prodUrl = !empty($profile->custom_domain) 
-                    ? 'https://' . rtrim($profile->custom_domain, '/') . '/p/' . ($p->slug ?? $p->id)
-                    : url('/' . $profile->store_slug . '/p/' . ($p->slug ?? $p->id));
-                $itemList[] = [
-                    '@type' => 'ListItem',
-                    'position' => $pos++,
-                    'item' => [
-                        '@type' => 'Product',
-                        'name' => $p->name,
-                        'image' => $prodImage,
-                        'description' => strip_tags($p->description ?? $p->name),
-                        'offers' => [
-                            '@type' => 'Offer',
-                            'price' => (string) ($p->price ?? 0),
-                            'priceCurrency' => 'IDR',
-                            'availability' => 'https://schema.org/InStock',
-                            'url' => $prodUrl,
-                        ]
-                    ]
-                ];
-            }
-            $schemaGraph[] = [
-                '@type' => 'ItemList',
-                '@id' => $canonUrl . '#catalog',
-                'name' => 'Katalog Produk Digital ' . $bioName,
-                'itemListElement' => $itemList,
-            ];
-        }
-
-        $schemaOrg = [
-            '@context' => 'https://schema.org',
-            '@graph' => $schemaGraph
-        ];
+        $schemaOrg = \App\Services\BioSchemaBuilder::buildSchema(
+            $profile,
+            $config,
+            $products ?? null,
+            $canonical ?? null,
+            $t5SeoDesc ?? null,
+            $ogImage ?? null
+        );
     @endphp
     <script type="application/ld+json">
     {!! json_encode($schemaOrg, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}

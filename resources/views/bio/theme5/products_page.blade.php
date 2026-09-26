@@ -48,28 +48,18 @@
         }
     @endphp
 
+    @php
+        $schemaOrg = \App\Services\BioSchemaBuilder::buildSchema(
+            $profile,
+            $config,
+            $products ?? null,
+            $canonical ?? null,
+            $seoDesc ?? null,
+            $ogImage ?? null
+        );
+    @endphp
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "WebPage",
-                "@id": "{{ $canonical }}#webpage",
-                "url": "{{ $canonical }}",
-                "name": "{{ $seoTitle }}",
-                "description": "{{ $seoDesc }}",
-                "inLanguage": "id-ID",
-                "isPartOf": {"@type": "WebSite", "url": "{{ url('/' . $username) }}"}
-            },
-            {
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                    {"@type": "ListItem", "position": 1, "name": "Beranda", "item": "{{ url('/' . $username) }}"},
-                    {"@type": "ListItem", "position": 2, "name": "Semua Produk", "item": "{{ $canonical }}"}
-                ]
-            }
-        ]
-    }
+    {!! json_encode($schemaOrg, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>
 
     <style>
