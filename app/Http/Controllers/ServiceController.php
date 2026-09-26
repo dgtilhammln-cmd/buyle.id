@@ -55,18 +55,7 @@ class ServiceController extends Controller
                                     return $pct;
                                 })->values();
 
-            $otherCreators = CreatorProfile::with(['user.products' => function($q) {
-                                    $q->marketplace()->ordered()->take(4);
-                                }])
-                                ->whereNotIn('id', $foundCreators->pluck('id'))
-                                ->whereHas('user.products')
-                                ->get()
-                                ->filter(function ($creator) {
-                                    return $creator->isStoreActive();
-                                })
-                                ->shuffle()
-                                ->take(6)
-                                ->values();
+            $otherCreators = collect();
 
             // Pass 1: Comprehensive Multi-word & Token matching
             $tokens = array_filter(explode(' ', strtolower(preg_replace('/[^a-zA-Z0-9]/', ' ', $rawQ))));
@@ -200,7 +189,7 @@ class ServiceController extends Controller
                 break;
         }
         
-        $services   = $query->with(['seller.creatorProfile', 'category'])->get();
+        $services   = $query->with(['seller.creatorProfile', 'category'])->paginate(12)->appends(request()->query());
         $settings   = Setting::getAllAsArray();
         $siteName   = $settings['site_name'] ?? 'buyle.id';
         $wa         = WaSetting::primary();
