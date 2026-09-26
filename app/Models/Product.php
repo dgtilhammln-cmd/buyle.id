@@ -173,16 +173,18 @@ class Product extends Model
     public function scopeActive(Builder $query): Builder { return $query->where('is_active', true); }
 
     /**
-     * Scope khusus untuk produk yang layak tampil di Marketplace (Digital, Jasa, Tiket, Lisensi, dsb).
-     * Mengecualikan produk fisik, barang UMKM, makanan/minuman/kuliner.
+     * Scope khusus untuk produk yang layak tampil di Marketplace.
+     * HANYA 2 Tipe Produk yang boleh tampil di marketplace buyle.id:
+     * 1. Produk Digital / Link Access (external_link, digital, ebook, dsb)
+     * 2. Tiket Event / Wisata / Webinar (ticket, event, webinar, dsb)
      */
     public function scopeMarketplace(Builder $query): Builder
     {
         return $query->where('is_active', true)
-                     ->where(function($q) {
-                         $q->whereNotIn('product_type', ['physical', 'makanan', 'barang', 'umkm', 'kuliner', 'fnb', 'food', 'resto', 'dapur', 'fisik'])
-                           ->orWhereNull('product_type');
-                     });
+                     ->whereIn('product_type', [
+                         'external_link', 'digital', 'link', 'ebook', 'course', 'license', 'file', 'download',
+                         'ticket', 'event', 'webinar', 'workshop', 'wisata'
+                     ]);
     }
     public function scopeOrdered(Builder $query): Builder { return $query->orderBy('created_at', 'desc'); }
 

@@ -436,12 +436,12 @@
                                     <select name="product_type" id="productTypeSelect" class="form-input"
                                         onchange="toggleProductTypeFields(this.value)" required>
                                         <option value="external_link" {{ old('product_type', 'external_link') == 'external_link' ? 'selected' : '' }}>Produk Digital / Link Access (Marketplace & Store)</option>
-                                        <option value="service" {{ old('product_type') == 'service' ? 'selected' : '' }}>Jasa / Layanan / Service (Marketplace & Store)</option>
                                         <option value="ticket" {{ old('product_type') == 'ticket' ? 'selected' : '' }}>Tiket Event / Wisata / Webinar (Marketplace & Store)</option>
-                                        <option value="physical" {{ old('product_type') == 'physical' ? 'selected' : '' }}>Produk Fisik / Barang / UMKM (Khusus Bio Link / Storefront)</option>
-                                        <option value="makanan" {{ old('product_type') == 'makanan' ? 'selected' : '' }}>Makanan / Minuman / Kuliner (Khusus POS / Storefront)</option>
+                                        <option value="service" {{ old('product_type') == 'service' ? 'selected' : '' }}>Jasa / Layanan / Service (Khusus Storefront Creator)</option>
+                                        <option value="physical" {{ old('product_type') == 'physical' ? 'selected' : '' }}>Produk Fisik / Barang / UMKM (Khusus Storefront Creator)</option>
+                                        <option value="makanan" {{ old('product_type') == 'makanan' ? 'selected' : '' }}>Makanan / Minuman / Kuliner (Khusus POS / Storefront Creator)</option>
                                     </select>
-                                    <span style="font-size: 0.75rem; color: #64748B; margin-top: 0.25rem; display: block;">* Catatan: Marketplace buyle.id khusus menampilkan Produk Digital, Tiket, dan Jasa/Layanan. Produk Fisik & Kuliner hanya tampil di Bio Link / Storefront pribadi Anda.</span>
+                                    <span style="font-size: 0.75rem; color: #64748B; margin-top: 0.25rem; display: block;">* Catatan: Marketplace buyle.id HANYA menampilkan 2 Tipe Produk yaitu: 1) Produk Digital / Link Access dan 2) Tiket Event / Wisata / Webinar. Tipe produk lainnya hanya tampil di Bio Link / Storefront pribadi Anda.</span>
                                 </div>
 
                                 <div class="form-group full" id="buyleCheckoutToggleWrap"
