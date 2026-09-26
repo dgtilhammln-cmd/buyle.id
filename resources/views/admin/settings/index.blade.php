@@ -348,6 +348,32 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       <input type="file" name="coverage_map" class="form-input" accept="image/*" style="padding:.5rem;">
       <p style="font-size:.7rem;color:#94A3B8;margin:.5rem 0 0;">Upload gambar peta Indonesia dengan titik-titik jangkauan. Otomatis dikonversi ke WebP. Tidak ada batas ukuran — gambar tampil penuh.</p>
     </div>
+
+    {{-- Banner Iklan Landscape (Rasio 640 : 131) --}}
+    <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;grid-column:1/-1;">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
+        <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 12h12"/></svg>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Iklan Banner Landscape Homepage (Rasio 640 : 131)</div>
+      </div>
+      @if(!empty($settings['landscape_banner']))
+      <div style="margin-bottom:1rem;padding:1rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:6px;">
+        <img src="{{ asset('storage/'.$settings['landscape_banner']) }}" alt="Banner Landscape" style="width:100%;aspect-ratio:640/131;object-fit:cover;border-radius:6px;margin-bottom:.75rem;">
+        <span style="font-size:.75rem;color:#94A3B8;">Banner landscape saat ini</span>
+      </div>
+      @endif
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div>
+          <label style="font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:.5rem;">Upload Gambar Banner (Rasio 640 : 131)</label>
+          <input type="file" name="landscape_banner" class="form-input" accept="image/*" style="padding:.5rem;">
+          <p style="font-size:.7rem;color:#94A3B8;margin:.5rem 0 0;">Upload gambar banner landscape rasio 640 : 131 (contoh: 1280×262px atau 640×131px). Tampil di atas section Artikel.</p>
+        </div>
+        <div>
+          <label class="form-label" for="s-landscape_banner_url">URL Tujuan Iklan (Opsional)</label>
+          <input type="text" name="landscape_banner_url" id="s-landscape_banner_url" class="form-input" value="{{ $settings['landscape_banner_url'] ?? '' }}" placeholder="https://buyle.id/produk/..." style="padding:.65rem;">
+          <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Link / URL target ketika banner iklan diklik oleh pengguna.</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">

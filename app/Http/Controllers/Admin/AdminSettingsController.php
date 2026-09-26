@@ -19,7 +19,7 @@ class AdminSettingsController extends Controller
 
     public function update(Request $request)
     {
-        $imageKeys = ['hero_bg_image', 'hero_main_image', 'hero_secondary_image', 'about_image', 'about_c3_image', 'og_image_default', 'logo', 'favicon', 'qr_logo', 'coverage_map', 'ad_product_sidebar_1_image', 'ad_product_sidebar_2_image', 'adsense_custom_image'];
+        $imageKeys = ['hero_bg_image', 'hero_main_image', 'hero_secondary_image', 'about_image', 'about_c3_image', 'og_image_default', 'logo', 'favicon', 'qr_logo', 'coverage_map', 'ad_product_sidebar_1_image', 'ad_product_sidebar_2_image', 'adsense_custom_image', 'landscape_banner'];
         $data      = $request->except(['_token', '_method']);
 
         // Explicitly handle all cs_* (coming soon / maintenance) keys
@@ -163,6 +163,13 @@ class AdminSettingsController extends Controller
             if ($key === 'adsense_custom_image') {
                 // NO AUTO-CROP: preserve 100% full original aspect ratio for custom ad banners/posters
                 $path = $this->storeWebPNoCrop($file, 'settings', 2000, 2000, 95);
+                Setting::set($key, $path, 'image');
+                continue;
+            }
+
+            if ($key === 'landscape_banner') {
+                // NO AUTO-CROP: preserve landscape ratio (640:131)
+                $path = $this->storeWebPNoCrop($file, 'settings', 1920, 1080, 95);
                 Setting::set($key, $path, 'image');
                 continue;
             }

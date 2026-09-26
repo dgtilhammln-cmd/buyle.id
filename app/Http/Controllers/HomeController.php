@@ -60,6 +60,17 @@ class HomeController extends Controller
             ->limit(12)
             ->get();
 
+        // Realtime Produk Terlaris berdasarkan data order_items (total_qty_sold) & sold_count
+        $bestsellerProducts = Product::marketplace()
+            ->with(['seller.creatorProfile', 'category'])
+            ->withCount(['orderItems as total_qty_sold' => function($q) {
+                $q->select(\Illuminate\Support\Facades\DB::raw('COALESCE(SUM(qty), 0)'));
+            }])
+            ->orderByDesc('sold_count')
+            ->orderByDesc('total_qty_sold')
+            ->latest()
+            ->limit(12)
+            ->get();
 
         $clients      = collect();
         $testimonials = collect();
@@ -85,7 +96,7 @@ class HomeController extends Controller
             'canonical'   => route('home'),
         ];
 
-        return view('home.index', compact('settings', 'products', 'allProducts', 'retargetProducts', 'gallery', 'articles', 'ticketProducts', 'clients', 'testimonials', 'wa', 'seo', 'heroSlides', 'utamaBanners', 'sampingBanners', 'uspItems', 'categoryItems', 'promoSections'));
+        return view('home.index', compact('settings', 'products', 'allProducts', 'retargetProducts', 'bestsellerProducts', 'gallery', 'articles', 'ticketProducts', 'clients', 'testimonials', 'wa', 'seo', 'heroSlides', 'utamaBanners', 'sampingBanners', 'uspItems', 'categoryItems', 'promoSections'));
     }
 }
 
