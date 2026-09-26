@@ -26,8 +26,13 @@
     <meta property="og:title" content="{{ $t5SeoTitle }}">
     <meta property="og:description" content="{{ $t5SeoDesc }}">
     <meta property="og:image" content="{{ $ogImage ?? asset('images/buyle-og.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:url" content="{{ $canonical ?? url()->current() }}">
     <meta property="og:type" content="website">
+
+    {{-- Google SERP Thumbnail --}}
+    <meta name="thumbnail" content="{{ $ogImage ?? asset('images/buyle-og.png') }}">
 
     {{-- Twitter Cards --}}
     <meta name="twitter:card" content="summary_large_image">

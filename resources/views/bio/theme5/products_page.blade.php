@@ -26,8 +26,13 @@
     <meta property="og:title" content="{{ $t5SeoTitle }}">
     <meta property="og:description" content="{{ $t5SeoDesc }}">
     <meta property="og:image" content="{{ $ogImage }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:url" content="{{ $canonical }}">
     <meta property="og:type" content="website">
+
+    <meta name="thumbnail" content="{{ $ogImage }}">
+
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $t5SeoTitle }}">
     <meta name="twitter:description" content="{{ $t5SeoDesc }}">

@@ -62,10 +62,13 @@
     <meta property="og:title" content="{{ $prodTitle }}">
     <meta property="og:description" content="{{ $pageDesc }}">
     <meta property="og:image" content="{{ $firstImage }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="product">
     <meta property="product:price:amount" content="{{ $price }}">
     <meta property="product:price:currency" content="IDR">
+    <meta name="thumbnail" content="{{ $firstImage }}">
     @if(!empty($config['theme5_favicon']))
         <link rel="icon" href="{{ asset('storage/' . $config['theme5_favicon']) }}">
     @else
