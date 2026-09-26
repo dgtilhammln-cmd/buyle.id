@@ -26,7 +26,7 @@ class HomeController extends Controller
         $gallery      = collect();
         $articles     = Article::published()->with('translations')->latest()->limit(4)->get();
         
-        // Fetch ONLY Ticket, Event, Workshop, Wisata & Webinar Products
+        // Fetch ONLY Ticket, Event, Workshop, Wisata & Webinar Products (10 items)
         $ticketProducts = Product::marketplace()
             ->with(['seller.creatorProfile', 'category'])
             ->where(function($q) {
@@ -51,7 +51,7 @@ class HomeController extends Controller
                 ->orWhere('name', 'LIKE', '%workshop%');
             })
             ->latest()
-            ->limit(8)
+            ->limit(10)
             ->get();
 
         $retargetProducts = Product::marketplace()
@@ -70,6 +70,22 @@ class HomeController extends Controller
             ->orderByDesc('total_qty_sold')
             ->latest()
             ->limit(12)
+            ->get();
+
+        // Produk Terbaru (10 items untuk 2 baris grid)
+        $latestProducts = Product::marketplace()
+            ->with(['seller.creatorProfile', 'category'])
+            ->latest()
+            ->limit(10)
+            ->get();
+
+        // Creator Terpopuler (10 items untuk 2 baris grid)
+        $popularCreators = \App\Models\User::whereHas('creatorProfile')
+            ->with(['creatorProfile'])
+            ->withCount('products')
+            ->orderByDesc('products_count')
+            ->latest()
+            ->limit(10)
             ->get();
 
         $clients      = collect();
@@ -96,7 +112,7 @@ class HomeController extends Controller
             'canonical'   => route('home'),
         ];
 
-        return view('home.index', compact('settings', 'products', 'allProducts', 'retargetProducts', 'bestsellerProducts', 'gallery', 'articles', 'ticketProducts', 'clients', 'testimonials', 'wa', 'seo', 'heroSlides', 'utamaBanners', 'sampingBanners', 'uspItems', 'categoryItems', 'promoSections'));
+        return view('home.index', compact('settings', 'products', 'allProducts', 'retargetProducts', 'bestsellerProducts', 'latestProducts', 'popularCreators', 'gallery', 'articles', 'ticketProducts', 'clients', 'testimonials', 'wa', 'seo', 'heroSlides', 'utamaBanners', 'sampingBanners', 'uspItems', 'categoryItems', 'promoSections'));
     }
 }
 

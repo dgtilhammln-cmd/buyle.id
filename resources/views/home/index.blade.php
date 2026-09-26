@@ -2042,6 +2042,179 @@
         </div>
     </section>
 
+    {{-- ════════════════════════════════════════════════════════════════════════
+    SECTION PRODUK TERBARU (2 BARIS GRID RESPONSIVE)
+    ════════════════════════════════════════════════════════════════════════ --}}
+    @if(isset($latestProducts) && $latestProducts->count() > 0)
+    <section style="background: #ffffff; padding: 2.5rem 0 3rem; border-bottom: 1px solid #E2E8F0;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
+            <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;">
+                <div>
+                    <h2 class="responsive-section-title">
+                        Produk Terbaru
+                    </h2>
+                </div>
+                <a href="{{ route_locale('products') }}?sort=terbaru" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
+                    Lihat Semua Produk
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M5 12h14m-7-7l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+
+            <div class="grid-2-rows-responsive">
+                @foreach($latestProducts as $lProd)
+                    @php
+                        $lPrice = $lProd->sale_price > 0 && $lProd->sale_price < $lProd->price ? $lProd->sale_price : $lProd->effective_price;
+                        $lOrigPrice = $lProd->sale_price > 0 && $lProd->sale_price < $lProd->price ? $lProd->price : null;
+                        $lHasDiscount = !empty($lOrigPrice) && $lOrigPrice > $lPrice;
+                        $lDiscountPct = $lHasDiscount ? round((($lOrigPrice - $lPrice) / $lOrigPrice) * 100) : 0;
+                        $lImage = $lProd->image ? asset('storage/' . $lProd->image) : asset('images/buyle-og.png');
+                        $lRating = ($lProd->rating && $lProd->rating > 0) ? number_format($lProd->rating, 1) : (($lProd->reviews_avg_rating && $lProd->reviews_avg_rating > 0) ? number_format($lProd->reviews_avg_rating, 1) : '5.0');
+                    @endphp
+                    <a href="{{ route_locale('products.show', $lProd->slug) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column;">
+                        <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);" class="article-card-box">
+                            <div style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
+                                <img src="{{ $lImage }}" alt="{{ $lProd->name }}" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;" class="article-banner-img">
+                                @if($lHasDiscount)
+                                    <div style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
+                                        -{{ $lDiscountPct }}%
+                                    </div>
+                                @else
+                                    <div style="position: absolute; top: 8px; left: 8px; background: #3B82F6; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
+                                        BARU
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                                <div>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
+                                        <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                            <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
+                                            <span style="font-family: 'Montserrat', sans-serif;">{{ $lRating }}</span>
+                                        </div>
+                                        <div style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                <polyline points="22 4 12 14.01 9 11.01" />
+                                            </svg>
+                                            Verified
+                                        </div>
+                                    </div>
+                                    <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                        {{ $lProd->name }}
+                                    </h3>
+                                </div>
+
+                                <div>
+                                    <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
+                                    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
+                                        <div>
+                                            @if($lHasDiscount)
+                                                <span style="font-size: 0.72rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500;">
+                                                    Rp {{ number_format($lOrigPrice, 0, ',', '.') }}
+                                                </span>
+                                            @endif
+                                            <span style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
+                                                @if($lPrice > 0)
+                                                    Rp {{ number_format($lPrice, 0, ',', '.') }}
+                                                @else
+                                                    <span style="color: #1eb349;">GRATIS</span>
+                                                @endif
+                                            </span>
+                                        </div>
+                                        <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s;" class="retarget-btn-cta">
+                                            Lihat <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                <path d="M5 12h14m-7-7l7 7-7 7" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- ════════════════════════════════════════════════════════════════════════
+    SECTION CREATOR TERPOPULER (2 BARIS GRID RESPONSIVE)
+    ════════════════════════════════════════════════════════════════════════ --}}
+    @if(isset($popularCreators) && $popularCreators->count() > 0)
+    <section style="background: #F8FAFC; padding: 3rem 0 3.5rem; border-bottom: 1px solid #E2E8F0;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
+            <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;">
+                <div>
+                    <h2 class="responsive-section-title">
+                        Creator Terpopuler
+                    </h2>
+                </div>
+                <a href="{{ route_locale('products') }}?tab=creators" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
+                    Jelajahi Creator
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M5 12h14m-7-7l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+
+            <div class="grid-2-rows-responsive">
+                @foreach($popularCreators as $creatorUser)
+                    @php
+                        $cp = $creatorUser->creatorProfile;
+                        $cName = $cp?->store_name ?: ($creatorUser->name ?: 'Creator');
+                        $cDomain = $cp?->custom_domain ?: ($creatorUser->username ? $creatorUser->username . '.buyle.id' : 'buyle.id');
+                        $cAvatar = $cp?->avatar ?: ($creatorUser->avatar ? asset('storage/' . $creatorUser->avatar) : null);
+                        $cStoreSlug = $cp?->store_slug ?: $creatorUser->username;
+                        $cStoreUrl = $cStoreSlug ? route_locale('store.show', $cStoreSlug) : route_locale('products');
+                        $cProdCount = $creatorUser->products_count ?? ($creatorUser->products ? $creatorUser->products->count() : 0);
+                    @endphp
+                    <a href="{{ $cStoreUrl }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column;">
+                        <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 1rem; display: flex; flex-direction: column; justify-content: space-between; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-3px)'; this.style.borderColor='#1eb349';" onmouseout="this.style.transform='none'; this.style.borderColor='#E2E8F0';">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                    <div style="width: 50px; height: 50px; border-radius: 12px; overflow: hidden; background: #F1F5F9; border: 1.5px solid #E2E8F0; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #1eb349; font-size: 1.1rem;">
+                                        @if($cAvatar)
+                                            <img src="{{ $cAvatar }}" alt="{{ $cName }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                        @else
+                                            {{ strtoupper(substr($cName, 0, 1)) }}
+                                        @endif
+                                    </div>
+                                    <div style="overflow: hidden; flex: 1;">
+                                        <div style="display: flex; align-items: center; gap: 0.25rem;">
+                                            <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 800; color: #0F172A; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                {{ $cName }}
+                                            </h3>
+                                            <svg width="13" height="13" fill="#0D9488" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                        </div>
+                                        <div style="font-size: 0.7rem; color: #64748B; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 0.15rem;">
+                                            {{ $cDomain }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.7rem; color: #64748B; font-weight: 600; margin-bottom: 0.75rem; padding: 0.3rem 0.5rem; background: #F8FAFC; border-radius: 8px;">
+                                    <span>Creator</span>
+                                    <span style="color: #16a34a; font-weight: 800;">{{ $cProdCount }} Produk</span>
+                                </div>
+                            </div>
+
+                            <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 0.85rem; border-radius: 99px; font-size: 0.78rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s;">
+                                Kunjungi Toko
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M5 12h14m-7-7l7 7-7 7" />
+                                </svg>
+                            </span>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
     {{-- ════ PROMO SECTIONS (Dynamic) ════ --}}
     <style>
         .cv-promo-wrap {
@@ -2737,6 +2910,26 @@
                 width: 240px;
             }
         }
+
+        /* 2-Rows Grid Responsive */
+        .grid-2-rows-responsive {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.1rem;
+        }
+
+        @media (max-width: 1024px) {
+            .grid-2-rows-responsive {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .grid-2-rows-responsive {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.75rem !important;
+            }
+        }
     </style>
 
     {{-- ════════════════════════════════════════════════════════════════════════
@@ -2750,11 +2943,11 @@
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
                 <h2 class="responsive-section-title"
                     style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                    Rekomendasi Tiket & Event
+                    Tiket Event & Wisata
                 </h2>
                 <a href="{{ route_locale('products') }}?category=tiket"
                     style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
-                    Lihat Semua <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                    Lihat Semua Tiket <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
                         viewBox="0 0 24 24">
                         <path d="M5 12h14m-7-7l7 7-7 7" />
                     </svg>
