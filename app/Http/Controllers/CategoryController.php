@@ -40,7 +40,7 @@ class CategoryController extends Controller
                 ->firstOrFail();
         }
 
-        $query = Product::active()->ordered()->with(['seller.creatorProfile', 'category']);
+        $query = Product::marketplace()->ordered()->with(['seller.creatorProfile', 'category']);
 
         if ($subcategory) {
             $query->where('product_sub_category_id', $subcategory->id);
@@ -72,11 +72,11 @@ class CategoryController extends Controller
         $products = $query->paginate(24)->withQueryString();
         $categories = ProductCategory::active()
             ->orderBy('order')
-            ->withCount(['products' => function($q) { $q->where('is_active', true); }])
+            ->withCount(['products' => function($q) { $q->marketplace(); }])
             ->with(['subCategories' => function($q) {
                 $q->where('is_active', true)
                   ->orderBy('order')
-                  ->withCount(['products' => function($pq) { $pq->where('is_active', true); }]);
+                  ->withCount(['products' => function($pq) { $pq->marketplace(); }]);
             }])
             ->get();
 
@@ -111,7 +111,7 @@ class CategoryController extends Controller
         if (request()->filled('q')) {
             $rawQ = trim(request('q'));
             $creatorQuery = \App\Models\CreatorProfile::with(['user.products' => function($q) {
-                                    $q->active()->ordered()->take(4);
+                                    $q->marketplace()->ordered()->take(4);
                                 }]);
             $creatorQuery->where(function($q) use ($rawQ) {
                 $q->where('store_name', 'like', '%' . $rawQ . '%')

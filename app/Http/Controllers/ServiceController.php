@@ -12,7 +12,7 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        $query = Product::active()->ordered();
+        $query = Product::marketplace()->ordered();
         
         // Smart Keyword Search
         $suggestion        = null;
@@ -26,7 +26,7 @@ class ServiceController extends Controller
             $tokens = array_filter(explode(' ', strtolower(preg_replace('/[^a-z0-9]/', ' ', $rawQ))));
             
             $creatorQuery = CreatorProfile::with(['user.products' => function($q) {
-                                    $q->active()->ordered()->take(4);
+                                    $q->marketplace()->ordered()->take(4);
                                 }]);
             
             $creatorQuery->where(function($q) use ($rawQ, $tokens) {
@@ -91,7 +91,7 @@ class ServiceController extends Controller
                 $query = $searchQuery;
             } else {
                 // Pass 2: Fuzzy fallback
-                $allNames = Product::active()->pluck('name')->toArray();
+                $allNames = Product::marketplace()->pluck('name')->toArray();
                 [$bestKeyword, $bestScore] = $this->findBestMatch($rawQ, $allNames);
 
                 if ($bestScore >= 20 && !empty($bestKeyword)) {
@@ -111,7 +111,7 @@ class ServiceController extends Controller
                 } else {
                     $suggestion = $rawQ;
                     // Show latest active products as fallback recommendations rather than breaking with empty page
-                    $query = Product::active()->ordered();
+                    $query = Product::marketplace()->ordered();
                 }
             }
         }
@@ -190,11 +190,11 @@ class ServiceController extends Controller
         // Categories with counts and eager-loaded sub-categories
         $categories = \App\Models\ProductCategory::where('is_active', true)
             ->orderBy('order')
-            ->withCount(['products' => function($q) { $q->where('is_active', true); }])
+            ->withCount(['products' => function($q) { $q->marketplace(); }])
             ->with(['subCategories' => function($q) {
                 $q->where('is_active', true)
                   ->orderBy('order')
-                  ->withCount(['products' => function($pq) { $pq->where('is_active', true); }]);
+                  ->withCount(['products' => function($pq) { $pq->marketplace(); }]);
             }])
             ->get()
             ->map(function($cat) {

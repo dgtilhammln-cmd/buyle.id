@@ -19,15 +19,15 @@ class HomeController extends Controller
     public function index()
     {
         $settings     = Setting::getAllAsArray();
-        $products     = Product::active()->latest()->limit(6)->get();
-        $allProducts  = Product::active()->latest()->limit(30)->get();
+        $products     = Product::marketplace()->latest()->limit(6)->get();
+        $allProducts  = Product::marketplace()->latest()->limit(30)->get();
         
         // Return empty collections for legacy sections to prevent view crashes
         $gallery      = collect();
         $articles     = Article::published()->with('translations')->latest()->limit(4)->get();
         
         // Fetch ONLY Ticket, Event, Workshop, Wisata & Webinar Products
-        $ticketProducts = Product::active()
+        $ticketProducts = Product::marketplace()
             ->with(['seller.creatorProfile', 'category'])
             ->where(function($q) {
                 $q->whereHas('category', function($catQ) {

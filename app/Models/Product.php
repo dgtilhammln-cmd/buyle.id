@@ -171,6 +171,19 @@ class Product extends Model
     // =========================================================================
 
     public function scopeActive(Builder $query): Builder { return $query->where('is_active', true); }
+
+    /**
+     * Scope khusus untuk produk yang layak tampil di Marketplace (Digital, Jasa, Tiket, Lisensi, dsb).
+     * Mengecualikan produk fisik, barang UMKM, makanan/minuman/kuliner.
+     */
+    public function scopeMarketplace(Builder $query): Builder
+    {
+        return $query->where('is_active', true)
+                     ->where(function($q) {
+                         $q->whereNotIn('product_type', ['physical', 'makanan', 'barang', 'umkm', 'kuliner', 'fnb', 'food', 'resto', 'dapur', 'fisik'])
+                           ->orWhereNull('product_type');
+                     });
+    }
     public function scopeOrdered(Builder $query): Builder { return $query->orderBy('created_at', 'desc'); }
 
     /**
