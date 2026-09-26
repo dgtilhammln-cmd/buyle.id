@@ -18,6 +18,7 @@ class ServiceController extends Controller
         $suggestion        = null;
         $suggestionApplied = false;
         $foundCreators     = collect();
+        $otherCreators     = collect();
 
         if (request()->filled('q')) {
             $rawQ = trim(request('q'));
@@ -49,6 +50,15 @@ class ServiceController extends Controller
                                     similar_text(mb_strtolower($rawQ), mb_strtolower($creator->store_name), $pct);
                                     return $pct;
                                 })->values();
+
+            $otherCreators = CreatorProfile::with(['user.products' => function($q) {
+                                    $q->marketplace()->ordered()->take(4);
+                                }])
+                                ->whereNotIn('id', $foundCreators->pluck('id'))
+                                ->whereHas('user.products')
+                                ->inRandomOrder()
+                                ->take(6)
+                                ->get();
 
             // Pass 1: Comprehensive Multi-word & Token matching
             $tokens = array_filter(explode(' ', strtolower(preg_replace('/[^a-zA-Z0-9]/', ' ', $rawQ))));
@@ -263,7 +273,7 @@ class ServiceController extends Controller
 
         return view('services.index', compact(
             'services', 'settings', 'seo', 'schema', 'categories', 'wa', 'maxPrice',
-            'suggestion', 'suggestionApplied', 'foundCreators'
+            'suggestion', 'suggestionApplied', 'foundCreators', 'otherCreators'
         ));
     }
 

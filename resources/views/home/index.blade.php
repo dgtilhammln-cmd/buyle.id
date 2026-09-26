@@ -2641,11 +2641,12 @@
                             $tDate = !empty($tProd->data_json['event_date'])
                                 ? \Carbon\Carbon::parse($tProd->data_json['event_date'])->isoFormat('D MMMM Y')
                                 : \Carbon\Carbon::parse($tProd->created_at)->addDays(15)->isoFormat('D MMMM Y');
-                            $tLocation = $tProd->location
-                                ?? ($tProd->data_json['event_location'] ?? null)
-                                ?? ($tProd->data_json['location'] ?? null)
-                                ?? ($tProd->seller?->creatorProfile?->city ?? null)
-                                ?? ($tProd->seller?->creatorProfile?->store_location ?? 'Indonesia');
+                            $tLocation = $tProd->event_location
+                                ?: ($tProd->location
+                                ?: ($tProd->data_json['event_location'] ?? null)
+                                ?: ($tProd->seller?->creatorProfile?->city
+                                ?: ($tProd->seller?->creatorProfile?->store_location
+                                ?: 'Indonesia')));
 
                             // Realtime Dynamic Rating
                             $tRating = ($tProd->rating && $tProd->rating > 0) ? number_format($tProd->rating, 1) : (($tProd->reviews_avg_rating && $tProd->reviews_avg_rating > 0) ? number_format($tProd->reviews_avg_rating, 1) : '5.0');

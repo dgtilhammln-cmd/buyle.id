@@ -1489,80 +1489,163 @@
 
 
 
-            @if(request()->filled('q') && isset($foundCreators) && $foundCreators->count() > 0)
+            {{-- Creator Search Results & Other Creators Section --}}
+            @if(request()->filled('q') && ((isset($foundCreators) && $foundCreators->count() > 0) || (isset($otherCreators) && $otherCreators->count() > 0)))
                 <div style="margin-bottom: 2rem;">
-                    <div style="font-size: 0.78rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem;">
-                        Creators Ditemukan ({{ $foundCreators->count() }})
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                        @foreach($foundCreators as $creator)
-                            <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-                                {{-- Creator Row Header --}}
-                                <div style="display: flex; align-items: center; gap: 0.85rem; padding: 0.85rem 1rem; justify-content: space-between; flex-wrap: nowrap;">
-                                    <div style="display: flex; align-items: center; gap: 0.75rem; min-width: 0; flex: 1;">
-                                        {{-- Avatar --}}
-                                        <div style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #1eb349; flex-shrink: 0; background: #f0fdf4; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800; color: #1eb349; overflow: hidden;">
-                                            @if($creator->user && $creator->user->avatar)
-                                                <img src="{{ asset('storage/' . $creator->user->avatar) }}" alt="{{ $creator->store_name }}" style="width:100%;height:100%;object-fit:cover;">
-                                            @elseif($creator->avatar)
-                                                <img src="{{ asset('storage/' . $creator->avatar) }}" alt="{{ $creator->store_name }}" style="width:100%;height:100%;object-fit:cover;">
-                                            @else
-                                                {{ strtoupper(substr($creator->store_name, 0, 1)) }}
-                                            @endif
+                    @if(isset($foundCreators) && $foundCreators->count() > 0)
+                        <div style="font-size: 0.78rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem;">
+                            Creators Ditemukan ({{ $foundCreators->count() }})
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
+                            @foreach($foundCreators as $creator)
+                                <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                                    {{-- Creator Row Header --}}
+                                    <div style="display: flex; align-items: center; gap: 0.85rem; padding: 0.85rem 1rem; justify-content: space-between; flex-wrap: nowrap;">
+                                        <div style="display: flex; align-items: center; gap: 0.75rem; min-width: 0; flex: 1;">
+                                            {{-- Avatar --}}
+                                            <div style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #1eb349; flex-shrink: 0; background: #f0fdf4; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800; color: #1eb349; overflow: hidden;">
+                                                @if($creator->user && $creator->user->avatar)
+                                                    <img src="{{ asset('storage/' . $creator->user->avatar) }}" alt="{{ $creator->store_name }}" style="width:100%;height:100%;object-fit:cover;">
+                                                @elseif($creator->avatar)
+                                                    <img src="{{ asset('storage/' . $creator->avatar) }}" alt="{{ $creator->store_name }}" style="width:100%;height:100%;object-fit:cover;">
+                                                @else
+                                                    {{ strtoupper(substr($creator->store_name, 0, 1)) }}
+                                                @endif
+                                            </div>
+                                            {{-- Info --}}
+                                            <div style="min-width: 0; flex: 1;">
+                                                <div style="font-size: 0.95rem; font-weight: 800; color: #0F172A; font-family: var(--font, 'Montserrat', sans-serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $creator->store_name }}</div>
+                                                <div style="font-size: 0.75rem; color: #64748B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">{{ Str::limit($creator->store_description ?: 'Kreator Digital Terverifikasi', 40) }}</div>
+                                                <span style="display: inline-block; margin-top: 0.2rem; background: rgba(30,179,73,0.1); color: #1eb349; padding: 0.1rem 0.5rem; border-radius: 5px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.02em;">Official Creator</span>
+                                            </div>
                                         </div>
-                                        {{-- Info --}}
-                                        <div style="min-width: 0; flex: 1;">
-                                            <div style="font-size: 0.95rem; font-weight: 800; color: #0F172A; font-family: var(--font, 'Montserrat', sans-serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $creator->store_name }}</div>
-                                            <div style="font-size: 0.75rem; color: #64748B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">{{ Str::limit($creator->store_description ?: 'Kreator Digital Terverifikasi', 40) }}</div>
-                                            <span style="display: inline-block; margin-top: 0.2rem; background: rgba(30,179,73,0.1); color: #1eb349; padding: 0.1rem 0.5rem; border-radius: 5px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.02em;">Official Creator</span>
-                                        </div>
+                                        {{-- CTA Button --}}
+                                        <a href="{{ route('store.show', $creator->store_slug) }}"
+                                            style="flex-shrink: 0; display: inline-flex; align-items: center; gap: 0.35rem; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #ffffff; padding: 0.5rem 0.95rem; border-radius: 999px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.78rem; text-decoration: none; white-space: nowrap; box-shadow: 0 4px 14px rgba(30,179,73,0.35); transition: transform 0.2s, box-shadow 0.2s;"
+                                            onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(30,179,73,0.45)';"
+                                            onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 14px rgba(30,179,73,0.35)';">
+                                            Kunjungi
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+                                        </a>
                                     </div>
-                                    {{-- CTA Button --}}
-                                    <a href="{{ route('store.show', $creator->store_slug) }}"
-                                        style="flex-shrink: 0; display: inline-flex; align-items: center; gap: 0.3rem; background: #1eb349; color: #fff; padding: 0.5rem 0.9rem; border-radius: 99px; font-family: var(--font, 'Montserrat', sans-serif); font-weight: 700; font-size: 0.78rem; text-decoration: none; white-space: nowrap; box-shadow: 0 3px 10px rgba(30,179,73,0.25);">
-                                        Kunjungi
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
-                                    </a>
-                                </div>
 
-                                {{-- Products Strip --}}
-                                @if($creator->user && $creator->user->products && $creator->user->products->count() > 0)
-                                <div style="border-top: 1px solid #F1F5F9; padding: 0.65rem 1rem 0.8rem;">
-                                    <div style="font-size: 0.7rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Produk dari {{ $creator->store_name }}</div>
-                                    <div style="display: flex; gap: 0.65rem; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 0.25rem;">
-                                        @foreach($creator->user->products->take(6) as $cProd)
-                                            <a href="{{ route_locale('products.show', $cProd->slug) }}"
-                                                style="flex: 0 0 110px; text-decoration: none; color: inherit;">
-                                                <div style="width: 110px; aspect-ratio: 1/1; border-radius: 10px; overflow: hidden; border: 1px solid #E2E8F0; background: #F8FAFC; position: relative; margin-bottom: 0.4rem;">
-                                                    @if($cProd->sale_price > 0 && $cProd->sale_price < $cProd->price)
-                                                        <div style="position: absolute; top: 0.3rem; left: 0.3rem; background: #EF4444; color: #fff; font-size: 0.6rem; font-weight: 700; padding: 0.1rem 0.35rem; border-radius: 4px;">Diskon</div>
-                                                    @endif
-                                                    @if($cProd->image)
-                                                        <img src="{{ asset('storage/' . $cProd->image) }}" alt="{{ $cProd->name }}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-                                                    @else
-                                                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#CBD5E1;">
-                                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                                <div style="font-size: 0.72rem; font-weight: 700; color: #0F172A; font-family: var(--font, 'Montserrat', sans-serif); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0.2rem;">{{ $cProd->name }}</div>
-                                                <div style="font-size: 0.78rem; font-weight: 800; color: #16a34a; font-family: var(--font, 'Montserrat', sans-serif);">
-                                                    @if($cProd->sale_price > 0 && $cProd->sale_price < $cProd->price)
-                                                        Rp {{ number_format($cProd->sale_price, 0, ',', '.') }}
-                                                    @elseif($cProd->price > 0)
-                                                        Rp {{ number_format($cProd->price, 0, ',', '.') }}
-                                                    @else
-                                                        GRATIS
-                                                    @endif
-                                                </div>
-                                            </a>
-                                        @endforeach
+                                    {{-- Products Strip --}}
+                                    @if($creator->user && $creator->user->products && $creator->user->products->count() > 0)
+                                    <div style="border-top: 1px solid #F1F5F9; padding: 0.65rem 1rem 0.8rem;">
+                                        <div style="font-size: 0.7rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Produk dari {{ $creator->store_name }}</div>
+                                        <div style="display: flex; gap: 0.65rem; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 0.25rem;">
+                                            @foreach($creator->user->products->take(6) as $cProd)
+                                                <a href="{{ route_locale('products.show', $cProd->slug) }}"
+                                                    style="flex: 0 0 110px; text-decoration: none; color: inherit;">
+                                                    <div style="width: 110px; aspect-ratio: 1/1; border-radius: 10px; overflow: hidden; border: 1px solid #E2E8F0; background: #F8FAFC; position: relative; margin-bottom: 0.4rem;">
+                                                        @if($cProd->sale_price > 0 && $cProd->sale_price < $cProd->price)
+                                                            <div style="position: absolute; top: 0.3rem; left: 0.3rem; background: #EF4444; color: #fff; font-size: 0.6rem; font-weight: 700; padding: 0.1rem 0.35rem; border-radius: 4px;">Diskon</div>
+                                                        @endif
+                                                        @if($cProd->image)
+                                                            <img src="{{ asset('storage/' . $cProd->image) }}" alt="{{ $cProd->name }}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+                                                        @else
+                                                            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#CBD5E1;">
+                                                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                    <div style="font-size: 0.72rem; font-weight: 700; color: #0F172A; font-family: var(--font, 'Montserrat', sans-serif); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0.2rem;">{{ $cProd->name }}</div>
+                                                    <div style="font-size: 0.78rem; font-weight: 800; color: #16a34a; font-family: var(--font, 'Montserrat', sans-serif);">
+                                                        @if($cProd->sale_price > 0 && $cProd->sale_price < $cProd->price)
+                                                            Rp {{ number_format($cProd->sale_price, 0, ',', '.') }}
+                                                        @elseif($cProd->price > 0)
+                                                            Rp {{ number_format($cProd->price, 0, ',', '.') }}
+                                                        @else
+                                                            GRATIS
+                                                        @endif
+                                                    </div>
+                                                </a>
+                                            @endforeach
+                                        </div>
                                     </div>
+                                    @endif
                                 </div>
-                                @endif
-                            </div>
-                        @endforeach
-                    </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    {{-- Creator Lainnya --}}
+                    @if(isset($otherCreators) && $otherCreators->count() > 0)
+                        <div style="font-size: 0.78rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem;">
+                            Creator Lainnya
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            @foreach($otherCreators as $creator)
+                                <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                                    {{-- Creator Row Header --}}
+                                    <div style="display: flex; align-items: center; gap: 0.85rem; padding: 0.85rem 1rem; justify-content: space-between; flex-wrap: nowrap;">
+                                        <div style="display: flex; align-items: center; gap: 0.75rem; min-width: 0; flex: 1;">
+                                            {{-- Avatar --}}
+                                            <div style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #1eb349; flex-shrink: 0; background: #f0fdf4; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800; color: #1eb349; overflow: hidden;">
+                                                @if($creator->user && $creator->user->avatar)
+                                                    <img src="{{ asset('storage/' . $creator->user->avatar) }}" alt="{{ $creator->store_name }}" style="width:100%;height:100%;object-fit:cover;">
+                                                @elseif($creator->avatar)
+                                                    <img src="{{ asset('storage/' . $creator->avatar) }}" alt="{{ $creator->store_name }}" style="width:100%;height:100%;object-fit:cover;">
+                                                @else
+                                                    {{ strtoupper(substr($creator->store_name, 0, 1)) }}
+                                                @endif
+                                            </div>
+                                            {{-- Info --}}
+                                            <div style="min-width: 0; flex: 1;">
+                                                <div style="font-size: 0.95rem; font-weight: 800; color: #0F172A; font-family: var(--font, 'Montserrat', sans-serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $creator->store_name }}</div>
+                                                <div style="font-size: 0.75rem; color: #64748B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">{{ Str::limit($creator->store_description ?: 'Kreator Digital Terverifikasi', 40) }}</div>
+                                                <span style="display: inline-block; margin-top: 0.2rem; background: rgba(30,179,73,0.1); color: #1eb349; padding: 0.1rem 0.5rem; border-radius: 5px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.02em;">Official Creator</span>
+                                            </div>
+                                        </div>
+                                        {{-- CTA Button --}}
+                                        <a href="{{ route('store.show', $creator->store_slug) }}"
+                                            style="flex-shrink: 0; display: inline-flex; align-items: center; gap: 0.35rem; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #ffffff; padding: 0.5rem 0.95rem; border-radius: 999px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.78rem; text-decoration: none; white-space: nowrap; box-shadow: 0 4px 14px rgba(30,179,73,0.35); transition: transform 0.2s, box-shadow 0.2s;"
+                                            onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(30,179,73,0.45)';"
+                                            onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 14px rgba(30,179,73,0.35)';">
+                                            Kunjungi
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+                                        </a>
+                                    </div>
+
+                                    {{-- Products Strip --}}
+                                    @if($creator->user && $creator->user->products && $creator->user->products->count() > 0)
+                                    <div style="border-top: 1px solid #F1F5F9; padding: 0.65rem 1rem 0.8rem;">
+                                        <div style="font-size: 0.7rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Produk dari {{ $creator->store_name }}</div>
+                                        <div style="display: flex; gap: 0.65rem; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 0.25rem;">
+                                            @foreach($creator->user->products->take(6) as $cProd)
+                                                <a href="{{ route_locale('products.show', $cProd->slug) }}"
+                                                    style="flex: 0 0 110px; text-decoration: none; color: inherit;">
+                                                    <div style="width: 110px; aspect-ratio: 1/1; border-radius: 10px; overflow: hidden; border: 1px solid #E2E8F0; background: #F8FAFC; position: relative; margin-bottom: 0.4rem;">
+                                                        @if($cProd->sale_price > 0 && $cProd->sale_price < $cProd->price)
+                                                            <div style="position: absolute; top: 0.3rem; left: 0.3rem; background: #EF4444; color: #fff; font-size: 0.6rem; font-weight: 700; padding: 0.1rem 0.35rem; border-radius: 4px;">Diskon</div>
+                                                        @endif
+                                                        @if($cProd->image)
+                                                            <img src="{{ asset('storage/' . $cProd->image) }}" alt="{{ $cProd->name }}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+                                                        @else
+                                                            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#CBD5E1;">
+                                                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                    <div style="font-size: 0.72rem; font-weight: 700; color: #0F172A; font-family: var(--font, 'Montserrat', sans-serif); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0.2rem;">{{ $cProd->name }}</div>
+                                                    <div style="font-size: 0.78rem; font-weight: 800; color: #16a34a; font-family: var(--font, 'Montserrat', sans-serif);">
+                                                        @if($cProd->sale_price > 0 && $cProd->sale_price < $cProd->price)
+                                                            Rp {{ number_format($cProd->sale_price, 0, ',', '.') }}
+                                                        @elseif($cProd->price > 0)
+                                                            Rp {{ number_format($cProd->price, 0, ',', '.') }}
+                                                        @else
+                                                            GRATIS
+                                                        @endif
+                                                    </div>
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             @endif
 

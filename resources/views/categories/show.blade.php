@@ -1486,8 +1486,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="{{ route('store.show', $creator->store_slug) }}" style="display: inline-flex; align-items: center; justify-content: center; background: var(--c-gradient); color: #fff; padding: 0.75rem 1.5rem; border-radius: 12px; font-family: var(--font); font-weight: 700; font-size: 0.9rem; text-decoration: none; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
-                                        Kunjungi Creator
+                                    <a href="{{ route('store.show', $creator->store_slug) }}" style="display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; padding: 0.5rem 1rem; border-radius: 999px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.8rem; text-decoration: none; box-shadow: 0 4px 14px rgba(30,179,73,0.35); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(30,179,73,0.45)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 14px rgba(30,179,73,0.35)';">
+                                        Kunjungi
                                     </a>
                                 </div>
                                 
