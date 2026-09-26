@@ -783,16 +783,20 @@ class AdminCreatorResourceController extends Controller
         $rawDomain = trim($request->input('custom_domain', ''));
         $rawVerification = trim($request->input('site_verification_code', ''));
 
-        // Handle Site Verification Code (Extract from Meta Tag if full HTML tag is pasted)
+        // Handle Site Verification Code (Extract clean token from Meta tag, TXT string, or plain token)
         $cleanVerification = null;
         if (!empty($rawVerification)) {
             if (preg_match('/content=["\']([^"\']+)["\']/i', $rawVerification, $matches)) {
-                $cleanVerification = $matches[1];
+                $cleanVerification = trim($matches[1]);
+            } elseif (\Illuminate\Support\Str::contains($rawVerification, 'google-site-verification=')) {
+                $cleanVerification = trim(str_replace('google-site-verification=', '', $rawVerification));
+                $cleanVerification = preg_replace('/["\'>\/].*$/', '', $cleanVerification);
             } else {
-                $cleanVerification = strip_tags($rawVerification);
+                $cleanVerification = trim(strip_tags($rawVerification));
             }
         }
-        $creatorProfile->site_verification_code = $cleanVerification;
+        $creatorProfile->site_verification_code = !empty($cleanVerification) ? $cleanVerification : null;
+
 
         if (empty($rawDomain)) {
             $creatorProfile->custom_domain = null;

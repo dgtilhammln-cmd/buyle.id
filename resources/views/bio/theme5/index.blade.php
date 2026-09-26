@@ -15,6 +15,25 @@
     <link rel="canonical" href="{{ $canonical ?? url()->current() }}">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ url('/sitemap.xml') }}">
 
+    {{-- Google Search Console Meta Verification Tag --}}
+    @php
+        $rawGsc = $profile->site_verification_code ?? $config['site_verification_code'] ?? $config['google_search_console'] ?? null;
+        $gscToken = null;
+        if (!empty($rawGsc)) {
+            if (preg_match('/content=["\']([^"\']+)["\']/i', $rawGsc, $m)) {
+                $gscToken = trim($m[1]);
+            } elseif (\Illuminate\Support\Str::contains($rawGsc, 'google-site-verification=')) {
+                $gscToken = trim(str_replace('google-site-verification=', '', $rawGsc));
+                $gscToken = preg_replace('/["\'>\/].*$/', '', $gscToken);
+            } else {
+                $gscToken = trim(strip_tags($rawGsc));
+            }
+        }
+    @endphp
+    @if(!empty($gscToken))
+        <meta name="google-site-verification" content="{{ $gscToken }}" />
+    @endif
+
     {{-- Favicon (Custom Theme 5 jika ada, fallback ke default) --}}
     @if(!empty($config['theme5_favicon']))
         <link rel="icon" href="{{ asset('storage/' . $config['theme5_favicon']) }}">

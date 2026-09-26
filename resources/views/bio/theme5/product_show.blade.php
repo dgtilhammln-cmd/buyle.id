@@ -59,6 +59,26 @@
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDesc }}">
     <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- Google Search Console Meta Verification Tag --}}
+    @php
+        $rawGsc = $profile->site_verification_code ?? $config['site_verification_code'] ?? $config['google_search_console'] ?? null;
+        $gscToken = null;
+        if (!empty($rawGsc)) {
+            if (preg_match('/content=["\']([^"\']+)["\']/i', $rawGsc, $m)) {
+                $gscToken = trim($m[1]);
+            } elseif (\Illuminate\Support\Str::contains($rawGsc, 'google-site-verification=')) {
+                $gscToken = trim(str_replace('google-site-verification=', '', $rawGsc));
+                $gscToken = preg_replace('/["\'>\/].*$/', '', $gscToken);
+            } else {
+                $gscToken = trim(strip_tags($rawGsc));
+            }
+        }
+    @endphp
+    @if(!empty($gscToken))
+        <meta name="google-site-verification" content="{{ $gscToken }}" />
+    @endif
+
     <meta property="og:title" content="{{ $prodTitle }}">
     <meta property="og:description" content="{{ $pageDesc }}">
     <meta property="og:image" content="{{ $firstImage }}">
