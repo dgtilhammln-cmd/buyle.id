@@ -107,6 +107,22 @@ class CategoryController extends Controller
             'robots'      => 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
         ];
 
-        return view('categories.show', compact('category', 'subcategory', 'products', 'categories', 'seo', 'settings'));
+        $foundCreators = collect();
+        if (request()->filled('q')) {
+            $rawQ = trim(request('q'));
+            $creatorQuery = \App\Models\CreatorProfile::with(['user.products' => function($q) {
+                                    $q->active()->ordered()->take(4);
+                                }]);
+            $creatorQuery->where(function($q) use ($rawQ) {
+                $q->where('store_name', 'like', '%' . $rawQ . '%')
+                  ->orWhere('store_slug', 'like', '%' . $rawQ . '%')
+                  ->orWhereHas('user', function($userQ) use ($rawQ) {
+                      $userQ->where('name', 'like', '%' . $rawQ . '%');
+                  });
+            });
+            $foundCreators = $creatorQuery->get();
+        }
+
+        return view('categories.show', compact('category', 'subcategory', 'products', 'categories', 'foundCreators', 'seo', 'settings'));
     }
 }
