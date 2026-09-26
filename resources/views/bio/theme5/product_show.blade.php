@@ -712,7 +712,18 @@
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                 Deskripsi Produk
             </div>
-            <div class="ps-desc-body">{!! $rawDesc !!}</div>
+            <div class="ps-desc-body">
+                {!! $rawDesc !!}
+
+                @php
+                    $posterImage = !empty($product->og_image) ? asset('storage/' . $product->og_image) : (!empty($block->data_json['og_image']) ? asset('storage/' . $block->data_json['og_image']) : null);
+                @endphp
+                @if(!empty($posterImage))
+                    <div style="margin-top: 1.5rem; width: 100%; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: #F1F5F9; border: 1px solid #E2E8F0; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                        <img src="{{ $posterImage }}" alt="{{ $prodTitle }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                    </div>
+                @endif
+            </div>
         </div>
         @endif
 
@@ -730,6 +741,154 @@
                 <span class="t5-wa-pulse"></span>
             </a>
         @endif
+    @endif
+
+    {{-- SECTION: Lainnya dari [namacreator] - Swipe Card Style (Matching Homepage) --}}
+    @php
+        // Ambil produk lain dari creator yang sama (selain produk ini)
+        $creatorDisplayName = $config['name'] ?? $profile->store_name ?? $username;
+        $otherProducts = \App\Models\CreatorBioBlock::where('creator_id', $profile->id)
+            ->where('is_active', true)
+            ->whereIn('type', ['custom_product', 'buyle_product', 'buyle_affiliate'])
+            ->get();
+    @endphp
+    @if($otherProducts && $otherProducts->count() > 0)
+    <style>
+        /* Swipe Cards Container - Same as Homepage */
+        .t5-swipe-container {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding-bottom: 0.5rem;
+        }
+        .t5-swipe-container::-webkit-scrollbar { display: none; }
+        .t5-swipe-card-item {
+            flex: 0 0 calc(20% - 0.8rem);
+            min-width: 170px;
+            scroll-snap-align: start;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+        @media (max-width: 900px) {
+            .t5-swipe-card-item { flex: 0 0 calc(33.333% - 0.75rem); min-width: 150px; }
+        }
+        @media (max-width: 600px) {
+            .t5-swipe-card-item { flex: 0 0 calc(44% - 0.5rem); min-width: 135px; }
+        }
+        .t5-card-box {
+            background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem;
+            display: flex; flex-direction: column; height: 100%;
+            transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+        .t5-card-box:hover { border-color: #1eb349; box-shadow: 0 8px 25px rgba(30,179,73,0.13); transform: translateY(-3px); }
+        .t5-card-box:hover .t5-card-img { transform: scale(1.04); }
+        .t5-card-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; }
+    </style>
+    <div style="max-width: 1100px; margin: 1.5rem auto 3rem; padding: 0 1.25rem;">
+        {{-- Headline --}}
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
+            <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 900; color: #0F172A; margin: 0;">
+                ✨ Lainnya dari {{ $creatorDisplayName }}
+            </h2>
+            <a href="{{ url('/' . $username) }}" style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+                Lihat Semua <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+            </a>
+        </div>
+
+        {{-- 5-card Swipe Container --}}
+        <div class="t5-swipe-container">
+            @foreach($otherProducts as $op)
+                @php
+                    $opBlock = $op;
+                    $opProd  = null;
+                    if (in_array($op->type, ['buyle_product', 'buyle_affiliate']) && !empty($op->data_json['product_id'])) {
+                        $opProd = \App\Models\Product::find($op->data_json['product_id']);
+                    }
+                    $opTitle  = !empty($op->title) ? $op->title : ($opProd->name ?? 'Produk');
+                    $opSlug   = $opProd->slug ?? null;
+                    $opPrice  = $op->data_json['price'] ?? $op->data_json['custom_price'] ?? ($opProd ? ($opProd->is_on_sale ? $opProd->sale_price : $opProd->effective_price) : 0);
+                    $opOrig   = $op->data_json['original_price'] ?? ($opProd && $opProd->is_on_sale ? $opProd->price : null);
+                    $opHasDisc = !empty($opOrig) && $opOrig > $opPrice;
+                    $opDiscPct = $opHasDisc ? round((($opOrig - $opPrice) / $opOrig) * 100) : 0;
+                    // Image
+                    $opImgs   = $op->data_json['images'] ?? [];
+                    if (empty($opImgs) && !empty($op->data_json['image'])) $opImgs = [$op->data_json['image']];
+                    if (empty($opImgs) && $opProd && $opProd->image) $opImgs = [$opProd->image];
+                    $opImg    = !empty($opImgs[0]) ? (\Illuminate\Support\Str::startsWith($opImgs[0], 'http') ? $opImgs[0] : asset('storage/' . $opImgs[0])) : asset('images/buyle-og.png');
+                    // Rating (Dynamic realtime dari DB)
+                    $opRating = ($opProd && $opProd->rating > 0) ? number_format($opProd->rating, 1) : (($opProd && $opProd->reviews_avg_rating > 0) ? number_format($opProd->reviews_avg_rating, 1) : '5.0');
+                    // Sales
+                    $opSold   = $opProd ? ($opProd->sold_count ?? $opProd->sales_count ?? 0) : 0;
+                    // URL
+                    $opUrl    = $opSlug ? url('/' . $username . '/p/' . $opSlug) : url('/' . $username);
+                @endphp
+                <a href="{{ $opUrl }}" class="t5-swipe-card-item">
+                    <div class="t5-card-box">
+                        {{-- Image 1:1 --}}
+                        <div style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
+                            <img src="{{ $opImg }}" alt="{{ $opTitle }}" class="t5-card-img" loading="lazy">
+                            @if($opHasDisc)
+                                <div style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
+                                    -{{ $opDiscPct }}%
+                                </div>
+                            @endif
+                        </div>
+
+                        {{-- Card Body --}}
+                        <div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                            <div>
+                                {{-- Rating & Verified --}}
+                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                        <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
+                                        <span style="font-family: 'Montserrat', sans-serif;">{{ $opRating }}</span>
+                                    </div>
+                                    <div style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                        Verified
+                                    </div>
+                                </div>
+
+                                {{-- Title --}}
+                                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                    {{ $opTitle }}
+                                </h3>
+                            </div>
+
+                            {{-- Price & CTA --}}
+                            <div>
+                                <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
+                                <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
+                                    <div>
+                                        @if($opHasDisc)
+                                            <span style="font-size: 0.72rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500;">
+                                                Rp {{ number_format($opOrig, 0, ',', '.') }}
+                                            </span>
+                                        @endif
+                                        <span style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
+                                            @if($opPrice > 0)
+                                                Rp {{ number_format($opPrice, 0, ',', '.') }}
+                                            @else
+                                                <span style="color: #1eb349;">GRATIS</span>
+                                            @endif
+                                        </span>
+                                    </div>
+                                    <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 0.9rem; border-radius: 99px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); white-space: nowrap;">
+                                        Lihat <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            @endforeach
+        </div>
+    </div>
     @endif
 
     {{-- FOOTER --}}

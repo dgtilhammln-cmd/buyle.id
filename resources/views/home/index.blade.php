@@ -1785,6 +1785,7 @@
                                             style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
                                             -{{ $rDiscountPct }}%
                                         </div>
+                                    @endif
                                 </div>
 
                                 {{-- Card Body --}}

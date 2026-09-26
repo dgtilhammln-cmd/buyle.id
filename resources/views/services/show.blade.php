@@ -350,34 +350,37 @@
 }
 
 
-/* ─── RELATED ─── */
-.pd-related-title { font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem; font-family: 'Montserrat', sans-serif; }
-.pd-related-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
-@media (max-width: 768px) { 
-    .pd-related-grid { 
-        display: flex; overflow-x: auto; scroll-snap-type: x mandatory; 
-        padding-bottom: 1rem; -webkit-overflow-scrolling: touch; gap: 0.75rem;
+/* ─── RELATED (MATCHING HOMEPAGE 100%) ─── */
+.pd-related-title { font-size: 1.25rem; font-weight: 800; color: #0F172A; margin-bottom: 1rem; font-family: 'Montserrat', sans-serif; }
+.swipe-cards-container {
+    display: flex;
+    gap: 1.1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.25rem 0.25rem 0.85rem;
+    scrollbar-width: thin;
+}
+.swipe-cards-container::-webkit-scrollbar { height: 4px; }
+.swipe-cards-container::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
+.article-card-swipe-item {
+    flex: 0 0 240px;
+    width: 240px;
+    scroll-snap-align: start;
+}
+@media (min-width: 1024px) {
+    .article-card-swipe-item {
+        flex: 0 0 calc(20% - 0.88rem);
+        width: calc(20% - 0.88rem);
     }
-    .pd-related-grid > * { flex: 0 0 160px; scroll-snap-align: start; }
 }
-
-/* Card Design Matching Landing Page */
-.cv-promo-card {
-    display: flex; flex-direction: column; background: #fff;
-    border: 1.5px solid #F1F5F9; border-radius: 14px; overflow: hidden; height: 100%;
-    text-decoration: none; transition: border-color .25s, box-shadow .25s, transform .25s;
+.article-card-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08) !important;
 }
-.cv-promo-card:hover { border-color: var(--primary); box-shadow: 0 8px 24px rgba(30,179,73,.1); transform: translateY(-3px); }
-.cv-promo-card-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
-.cv-promo-card-body { padding: 1rem; display: flex; flex-direction: column; flex: 1; }
-.cv-promo-card-badge { align-self: flex-start; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 6px; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; background: #DBEAFE; color: #2563EB; }
-.cv-promo-card-badge.service { background: #FEF3C7; color: #D97706; }
-.cv-promo-card-name { font-size: 0.85rem; font-weight: 600; color: #1E293B; line-height: 1.4; margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.cv-promo-card-price { font-size: 0.95rem; font-weight: 700; color: #1E293B; margin-top: auto; }
-.cv-promo-card-price-old { font-size: 0.7rem; color: #94A3B8; text-decoration: line-through; font-weight: 400; }
-.cv-promo-card-discount { display: inline-block; font-size: 0.65rem; font-weight: 700; color: #DC2626; background: #FEE2E2; padding: 0.1rem 0.35rem; border-radius: 4px; }
-.cv-promo-card-meta { display: flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; color: #94A3B8; margin-top: 0.25rem; }
-.cv-promo-card-star { color: #FBBF24; }
+.article-card-box:hover .article-banner-img {
+    transform: scale(1.05);
+}
 
 </style>
 
@@ -460,23 +463,30 @@
                 <div class="pd-info">
                     <h1 class="pd-title">{{ $service->name }}</h1>
 
-                    <div class="pd-stats">
-                        @if($service->rating > 0)
-                        <div class="pd-stars">
-                            <span class="pd-stat-val" style="color:var(--primary); border-color:var(--primary);">{{ number_format($service->rating, 1) }}</span>
-                            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <div class="pd-stats" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                        @php
+                            $ratingVal = ($service->rating && $service->rating > 0) ? number_format($service->rating, 1) : (($service->reviews_avg_rating && $service->reviews_avg_rating > 0) ? number_format($service->reviews_avg_rating, 1) : '5.0');
+                            $reviewCnt = $service->reviews_count ?? ($service->review_count ?? 0);
+                        @endphp
+                        {{-- Rating (Realtime dari DB) --}}
+                        <div style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.85rem;">
+                            <span style="color: #F59E0B; font-size: 1rem;">★</span>
+                            <span style="color: #0F172A; font-weight: 700;">{{ $ratingVal }}</span>
+                            @if($reviewCnt > 0)
+                                <span style="font-size: 0.78rem; color: #64748B;">({{ $reviewCnt }} ulasan)</span>
+                            @endif
                         </div>
-                        <div class="pd-stat-sep"></div>
-                        @endif
-                        
-                        @if($service->rating > 0)
-                        <div><span class="pd-stat-val">156</span> Penilaian</div>
-                        <div class="pd-stat-sep"></div>
-                        @endif
-
-                        @if($service->sold_count > 0)
-                        <div>Terjual <span style="color:var(--text-main); font-weight:500;">{{ $service->sold_count >= 1000 ? number_format($service->sold_count/1000, 1, ',', '').'RB' : $service->sold_count }}</span></div>
-                        @endif
+                        <span style="color: #CBD5E1;">|</span>
+                        {{-- Terjual --}}
+                        <div style="font-size: 0.85rem; color: #64748B;">
+                            Terjual <span style="color: var(--text-main); font-weight: 700;">
+                                @if($service->sold_count >= 1000)
+                                    {{ number_format($service->sold_count/1000, 1, ',', '') }}RB
+                                @else
+                                    {{ $service->sold_count > 0 ? $service->sold_count : 0 }}
+                                @endif
+                            </span>
+                        </div>
                     </div>
 
                     {{-- PRICE --}}
@@ -589,6 +599,13 @@
                             <p><b>{{ $service->short_desc }}</b></p>
                             @endif
                             {!! $service->description ?? 'Belum ada deskripsi mendetail.' !!}
+
+                            {{-- Poster Landscape Banner (og_image) --}}
+                            @if(!empty($service->og_image))
+                                <div style="margin-top: 1.5rem; margin-bottom: 1.5rem; width: 100%; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: #F1F5F9; border: 1px solid #E2E8F0; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                                    <img src="{{ asset('storage/' . $service->og_image) }}" alt="{{ $service->name }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                                </div>
+                            @endif
 
                             {{-- Security Notice Paragraph --}}
                             <p style="font-size:0.825rem; color:#475569; line-height:1.6; margin-top:1.75rem; padding:0.875rem 1.25rem; background:#FFFBEB; border:1px solid #FDE68A; border-radius:10px; display:flex; align-items:flex-start; gap:0.65rem;">
@@ -763,58 +780,97 @@
     </div>
     @endif
 
-    {{-- 4. RELATED --}}
-    @if($related->count() > 0)
+    {{-- 4. RELATED (Lainnya dari [namacreator]) --}}
+    @if(isset($related) && $related->count() > 0)
     <div style="max-width:1200px; margin: 0 auto 4rem; padding: 0 1rem;">
-        <div class="pd-related-title">Produk Lain Dari Creator Ini</div>
-        <div class="pd-related-grid">
+        @php
+            $creatorName = optional($service->seller->creatorProfile)->store_name ?: ($service->seller->name ?? ($sellerName ?? 'Creator'));
+        @endphp
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
+            <h2 class="pd-related-title" style="margin:0; font-size: 1.1rem; font-weight: 900; color: #0F172A;">
+                Produk Lain Dari Creator Ini
+            </h2>
+            <a href="{{ $cp?->store_slug ? route('store.show', $cp->store_slug) : (isset($sellerUrl) ? $sellerUrl : '#') }}" style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+                Lihat Semua <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+            </a>
+        </div>
+        <div class="swipe-cards-container">
             @foreach($related as $r)
-            @php
-                $effPrice = ($r->sale_price > 0 && $r->sale_price < $r->price) ? $r->sale_price : $r->price;
-                $discount = ($r->sale_price > 0 && $r->sale_price < $r->price)
-                    ? round((($r->price - $r->sale_price)/$r->price)*100) : 0;
-            @endphp
-            <div>
-                <a href="{{ route('products.show', $r->slug) }}" class="cv-promo-card">
-                    @if($r->image)
-                        <img src="{{ asset('storage/'.$r->image) }}" alt="{{ $r->name }}" class="cv-promo-card-img" loading="lazy">
-                    @else
-                        <div style="width:100%; aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; background:#F1F5F9;">
-                            <svg width="32" height="32" fill="none" stroke="#CBD5E1" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                        </div>
-                    @endif
-                    <div class="cv-promo-card-body">
-                        <span class="cv-promo-card-badge {{ $r->type === 'service' ? 'service' : '' }}">
-                            {{ $r->type === 'service' ? 'Jasa' : 'Produk' }}
-                        </span>
-                        <div class="cv-promo-card-name">{{ $r->name }}</div>
-                        @if($r->price > 0)
-                        <div>
-                            @if($discount > 0)
-                            <div class="cv-promo-card-price-old">Rp{{ number_format($r->price,0,',','.') }}</div>
+                @php
+                    $rPrice = $r->sale_price > 0 && $r->sale_price < $r->price ? $r->sale_price : $r->effective_price;
+                    $rOrigPrice = $r->sale_price > 0 && $r->sale_price < $r->price ? $r->price : null;
+                    $rHasDiscount = !empty($rOrigPrice) && $rOrigPrice > $rPrice;
+                    $rDiscountPct = $rHasDiscount ? round((($rOrigPrice - $rPrice) / $rOrigPrice) * 100) : 0;
+                    $rImage = $r->image ? asset('storage/' . $r->image) : asset('images/buyle-og.png');
+                    $rRating = ($r->rating && $r->rating > 0) ? number_format($r->rating, 1) : (($r->reviews_avg_rating && $r->reviews_avg_rating > 0) ? number_format($r->reviews_avg_rating, 1) : '5.0');
+                @endphp
+                <a href="{{ route('products.show', $r->slug) }}"
+                    style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
+                    class="article-card-swipe-item">
+                    <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
+                        class="article-card-box">
+                        
+                        {{-- Image 1:1 Aspect Ratio --}}
+                        <div style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
+                            <img src="{{ $rImage }}" alt="{{ $r->name }}"
+                                style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
+                                class="article-banner-img">
+                            
+                            {{-- Discount Badge Top-Left --}}
+                            @if($rHasDiscount)
+                                <div style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
+                                    -{{ $rDiscountPct }}%
+                                </div>
                             @endif
-                            <div style="display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;">
-                                <span class="cv-promo-card-price">Rp{{ number_format($effPrice,0,',','.') }}</span>
-                                @if($discount > 0)
-                                    <span class="cv-promo-card-discount">{{ $discount }}%</span>
-                                @endif
+                        </div>
+
+                        {{-- Card Body --}}
+                        <div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                            <div>
+                                {{-- Rating & Verified Badge --}}
+                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                        <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
+                                        <span style="font-family: 'Montserrat', sans-serif;">{{ $rRating }}</span>
+                                    </div>
+                                    <div style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                                        Verified
+                                    </div>
+                                </div>
+
+                                {{-- Title --}}
+                                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                    {{ $r->name }}
+                                </h3>
+                            </div>
+
+                            {{-- Footer Separator & Price CTA --}}
+                            <div>
+                                <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
+                                <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
+                                    <div>
+                                        @if($rHasDiscount)
+                                            <span style="font-size: 0.72rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500;">
+                                                Rp {{ number_format($rOrigPrice, 0, ',', '.') }}
+                                            </span>
+                                        @endif
+                                        <span style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
+                                            @if($rPrice > 0)
+                                                Rp {{ number_format($rPrice, 0, ',', '.') }}
+                                            @else
+                                                <span style="color: #1eb349;">GRATIS</span>
+                                            @endif
+                                        </span>
+                                    </div>
+                                    <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3);" class="retarget-btn-cta">
+                                        Lihat <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                        @endif
-                        @if($r->rating > 0 || $r->sold_count > 0)
-                        <div class="cv-promo-card-meta">
-                            @if($r->rating > 0)
-                                <span class="cv-promo-card-star">★</span>
-                                <span>{{ number_format($r->rating,1) }}</span>
-                            @endif
-                            @if($r->sold_count > 0)
-                                <span>· {{ $r->sold_count >= 1000 ? number_format($r->sold_count/1000,1).'rb' : $r->sold_count }} {{ $r->type === 'service' ? 'dipesan' : 'terjual' }}</span>
-                            @endif
-                        </div>
-                        @endif
                     </div>
                 </a>
-            </div>
             @endforeach
         </div>
     </div>
