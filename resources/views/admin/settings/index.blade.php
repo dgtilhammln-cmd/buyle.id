@@ -408,12 +408,19 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     function formatGscInput(inputEl) {
       let val = inputEl.value.trim();
       if (!val) return;
-      if (val.includes('<meta')) return; // Already HTML format
-      if (val.includes('google-site-verification=')) {
-        let token = val.replace('google-site-verification=', '').trim();
+      
+      let token = '';
+      let match = val.match(/content=["']([^"']+)["']/i);
+      if (match && match[1]) {
+        token = match[1].trim();
+      } else if (val.includes('google-site-verification=')) {
+        token = val.replace(/^.*google-site-verification=/i, '').replace(/["'>\/].*$/, '').trim();
+      } else if (!val.includes('<')) {
+        token = val.replace(/["'>\/].*$/, '').trim();
+      }
+      
+      if (token) {
         inputEl.value = '<meta name="google-site-verification" content="' + token + '" />';
-      } else if (!val.includes('<') && val.length > 10) {
-        inputEl.value = '<meta name="google-site-verification" content="' + val + '" />';
       }
     }
     function autoPasteGscToken() {
