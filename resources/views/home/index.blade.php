@@ -2638,8 +2638,14 @@
 
                             // Poster Event (Landscape 16:9), fallback ke gambar utama
                             $tImage = !empty($tProd->og_image) ? asset('storage/' . $tProd->og_image) : ($tProd->image ? asset('storage/' . $tProd->image) : asset('assets/images/default-ticket.webp'));
-                            $tDate = \Carbon\Carbon::parse($tProd->created_at)->addDays(15)->isoFormat('D MMMM Y');
-                            $tLocation = $tProd->location ?? ($tProd->data_json['location'] ?? ($tProd->seller->creatorProfile->city ?? ($tProd->seller->creatorProfile->store_location ?? 'Indonesia')));
+                            $tDate = !empty($tProd->data_json['event_date'])
+                                ? \Carbon\Carbon::parse($tProd->data_json['event_date'])->isoFormat('D MMMM Y')
+                                : \Carbon\Carbon::parse($tProd->created_at)->addDays(15)->isoFormat('D MMMM Y');
+                            $tLocation = $tProd->location
+                                ?? ($tProd->data_json['event_location'] ?? null)
+                                ?? ($tProd->data_json['location'] ?? null)
+                                ?? ($tProd->seller?->creatorProfile?->city ?? null)
+                                ?? ($tProd->seller?->creatorProfile?->store_location ?? 'Indonesia');
 
                             // Realtime Dynamic Rating
                             $tRating = ($tProd->rating && $tProd->rating > 0) ? number_format($tProd->rating, 1) : (($tProd->reviews_avg_rating && $tProd->reviews_avg_rating > 0) ? number_format($tProd->reviews_avg_rating, 1) : '5.0');
