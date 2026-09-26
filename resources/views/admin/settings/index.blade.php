@@ -391,11 +391,47 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
         <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#10b981;">Google Search Console Verification</div>
       </div>
       <div>
-        <label class="form-label" for="s-google_search_console">Meta Tag Verifikasi</label>
-        <input type="text" name="google_search_console" id="s-google_search_console" class="form-input" value="{{ $settings['google_search_console'] ?? '' }}" placeholder="<meta name=&quot;google-site-verification&quot; content=&quot;...&quot; />">
-        <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Paste meta tag verifikasi HTML dari Google Search Console di sini. Kode ini akan otomatis dipasang di bagian <code>&lt;head&gt;</code> website agar terbaca oleh Google.</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;">
+          <label class="form-label" for="s-google_search_console" style="margin:0;">Kode / Meta Tag Verifikasi</label>
+          <button type="button" onclick="autoPasteGscToken()" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;padding:.3rem .6rem;border-radius:6px;font-size:.75rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:.3rem;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+            Paste dari Clipboard
+          </button>
+        </div>
+        <input type="text" name="google_search_console" id="s-google_search_console" class="form-input" value="{{ $settings['google_search_console'] ?? '' }}" placeholder="Contoh: google-site-verification=FEnPS9... atau <meta name=... />" oninput="formatGscInput(this)">
+        <p style="font-size:.75rem;color:#64748B;margin:.5rem 0 0;line-height:1.4;">
+          <strong>Bisa paste format apa saja:</strong> Tag HTML <code>&lt;meta name="google-site-verification" content="..." /&gt;</code>, string DNS TXT <code>google-site-verification=...</code>, atau token kode verifikasi saja. Sistem akan otomatis memformatnya!
+        </p>
       </div>
     </div>
+    <script>
+    function formatGscInput(inputEl) {
+      let val = inputEl.value.trim();
+      if (!val) return;
+      if (val.includes('<meta')) return; // Already HTML format
+      if (val.includes('google-site-verification=')) {
+        let token = val.replace('google-site-verification=', '').trim();
+        inputEl.value = '<meta name="google-site-verification" content="' + token + '" />';
+      } else if (!val.includes('<') && val.length > 10) {
+        inputEl.value = '<meta name="google-site-verification" content="' + val + '" />';
+      }
+    }
+    function autoPasteGscToken() {
+      if (navigator.clipboard && navigator.clipboard.readText) {
+        navigator.clipboard.readText().then(text => {
+          if (text) {
+            let el = document.getElementById('s-google_search_console');
+            el.value = text;
+            formatGscInput(el);
+          }
+        }).catch(() => {
+          alert('Silakan tekan Ctrl+V di dalam kolom input.');
+        });
+      } else {
+        alert('Silakan tekan Ctrl+V di dalam kolom input.');
+      }
+    }
+    </script>
     @foreach([
       ['key'=>'home','label'=>'Halaman Home','route'=>'/'],
       ['key'=>'about','label'=>'Halaman About','route'=>'/about'],

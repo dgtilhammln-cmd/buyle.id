@@ -42,6 +42,18 @@ class AdminSettingsController extends Controller
                 }
             }
             
+            if ($key === 'google_search_console' && !empty($value)) {
+                $trimmed = trim((string)$value);
+                if (preg_match('/content=["\']([^"\']+)["\']/i', $trimmed, $m)) {
+                    $token = $m[1];
+                } elseif (str_contains($trimmed, 'google-site-verification=')) {
+                    $token = trim(str_replace('google-site-verification=', '', $trimmed));
+                } else {
+                    $token = trim(strip_tags($trimmed));
+                }
+                $value = '<meta name="google-site-verification" content="' . e($token) . '" />';
+            }
+
             $existing = Setting::where('key', $key)->first();
             $type     = $existing?->type ?? 'text';
             if ($type !== 'image') {

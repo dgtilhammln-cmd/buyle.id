@@ -69,7 +69,19 @@ Variables (semua optional): $seo[], $schema, $breadcrumbs[]
 <link rel="canonical" href="{{ $canonical }}">
 
 @if(!empty($settings['google_search_console']))
-    {!! $settings['google_search_console'] !!}
+    @php
+        $gscVal = trim($settings['google_search_console']);
+        if (preg_match('/content=["\']([^"\']+)["\']/i', $gscVal, $m)) {
+            $gscToken = $m[1];
+        } elseif (\Illuminate\Support\Str::contains($gscVal, 'google-site-verification=')) {
+            $gscToken = trim(str_replace('google-site-verification=', '', $gscVal));
+        } else {
+            $gscToken = trim(strip_tags($gscVal));
+        }
+    @endphp
+    @if(!empty($gscToken))
+        <meta name="google-site-verification" content="{{ $gscToken }}" />
+    @endif
 @endif
 
 {{-- Open Graph --}}
