@@ -8,11 +8,22 @@
         }
         $catName = strtolower($p->category->name ?? '');
 
-        return in_array($pType, ['service', 'jasa', 'layanan', 'jasa / layanan / service', 'services'])
+        // Sembunyikan: Jasa / Service
+        if (in_array($pType, ['service', 'jasa', 'layanan', 'jasa / layanan / service', 'services'])
             || in_array($catName, ['service', 'jasa', 'layanan', 'services'])
             || str_contains($pName, 'jasa')
             || str_contains($pName, 'layanan')
-            || str_contains($pName, 'service');
+            || str_contains($pName, 'service')) return true;
+
+        // Sembunyikan: Makanan / Kuliner / FnB
+        if (in_array($pType, ['makanan', 'fnb', 'kuliner', 'food', 'dapur', 'resto'])
+            || in_array($catName, ['makanan', 'fnb', 'kuliner', 'food'])) return true;
+
+        // Sembunyikan: Barang Fisik / UMKM
+        if (in_array($pType, ['physical', 'barang', 'fisik', 'umkm'])
+            || in_array($catName, ['physical', 'barang', 'fisik', 'umkm'])) return true;
+
+        return false;
     });
 @endphp
 

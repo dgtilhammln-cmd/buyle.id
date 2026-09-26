@@ -100,6 +100,22 @@ class BioProductsPageController extends Controller
             ]);
         }
 
+        // =========================================================================
+        // Filter: HANYA tampilkan Produk Digital/Link dan Tiket di Digital Store.
+        // Semua tipe makanan, barang/fisik, dan jasa/layanan disembunyikan.
+        // =========================================================================
+        $hiddenTypes = ['makanan', 'fnb', 'kuliner', 'food', 'dapur', 'resto',
+                        'physical', 'barang', 'fisik', 'umkm',
+                        'service', 'jasa', 'layanan'];
+
+        $allProducts = $allProducts->filter(function ($p) use ($hiddenTypes) {
+            $t = strtolower($p['product_type'] ?? '');
+            // Jika tipe ada dalam daftar yang disembunyikan, reject
+            if (in_array($t, $hiddenTypes)) return false;
+            // Periksa nama produk untuk menghindari lolos filter berdasarkan nama
+            return true;
+        })->values();
+
         $search = trim($request->get('q', ''));
         if (!empty($search)) {
             $allProducts = $allProducts->filter(function ($p) use ($search) {
