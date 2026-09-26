@@ -56,7 +56,11 @@ class CreatorProfile extends Model
     {
         $config = $this->bio_config;
         if (is_array($config) && isset($config['is_store_active'])) {
-            return (bool) $config['is_store_active'];
+            $val = $config['is_store_active'];
+            if ($val === false || $val === 0 || $val === '0' || $val === 'false' || $val === null) {
+                return false;
+            }
+            return true;
         }
         return true;
     }

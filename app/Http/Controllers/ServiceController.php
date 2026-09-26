@@ -45,7 +45,11 @@ class ServiceController extends Controller
                 }
             });
 
-            $foundCreators = $creatorQuery->get()->sortByDesc(function ($creator) use ($rawQ) {
+            $foundCreators = $creatorQuery->get()
+                                ->filter(function ($creator) {
+                                    return $creator->isStoreActive();
+                                })
+                                ->sortByDesc(function ($creator) use ($rawQ) {
                                     // Hitung kemiripan untuk mengurutkan yang paling relevan di atas
                                     similar_text(mb_strtolower($rawQ), mb_strtolower($creator->store_name), $pct);
                                     return $pct;
@@ -56,9 +60,13 @@ class ServiceController extends Controller
                                 }])
                                 ->whereNotIn('id', $foundCreators->pluck('id'))
                                 ->whereHas('user.products')
-                                ->inRandomOrder()
+                                ->get()
+                                ->filter(function ($creator) {
+                                    return $creator->isStoreActive();
+                                })
+                                ->shuffle()
                                 ->take(6)
-                                ->get();
+                                ->values();
 
             // Pass 1: Comprehensive Multi-word & Token matching
             $tokens = array_filter(explode(' ', strtolower(preg_replace('/[^a-zA-Z0-9]/', ' ', $rawQ))));
@@ -344,7 +352,8 @@ class ServiceController extends Controller
 
         $settings     = Setting::getAllAsArray();
         $wa           = WaSetting::primary();
-        $related      = Product::active()->ordered()->where('seller_id', $service->seller_id)->where('id', '!=', $service->id)->limit(10)->get();
+        $related      = Product::marketplace()->ordered()->where('seller_id', $service->seller_id)->where('id', '!=', $service->id)->limit(10)->get();
+        $otherRelated = Product::marketplace()->ordered()->where('seller_id', '!=', $service->seller_id)->where('id', '!=', $service->id)->inRandomOrder()->limit(10)->get();
         $testimonials = Testimonial::active()->ordered()->get()->unique('name');
         $siteName     = $settings['site_name'] ?? 'buyle.id';
         $appUrl       = rtrim(config('app.url'), '/');
@@ -490,6 +499,6 @@ class ServiceController extends Controller
             ['name' => $service->name,     'url' => $productUrl],
         ];
 
-        return view('services.show', compact('service', 'settings', 'related', 'wa', 'seo', 'schema', 'faq', 'breadcrumbs', 'testimonials', 'sellerName', 'sellerUrl'));
+        return view('services.show', compact('service', 'settings', 'related', 'otherRelated', 'wa', 'seo', 'schema', 'faq', 'breadcrumbs', 'testimonials', 'sellerName', 'sellerUrl'));
     }
 }

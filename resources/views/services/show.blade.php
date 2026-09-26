@@ -876,6 +876,99 @@
     </div>
     @endif
 
+    {{-- 5. OTHER RELATED PRODUCTS (Produk Terkait Lainnya dari Creator Lain) --}}
+    @if(isset($otherRelated) && $otherRelated->count() > 0)
+    <div style="max-width:1200px; margin: 0 auto 4rem; padding: 0 1rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
+            <h2 class="pd-related-title" style="margin:0; font-size: 1.1rem; font-weight: 900; color: #0F172A;">
+                Produk Terkait Lainnya
+            </h2>
+            <a href="{{ route('products') }}" style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+                Lihat Semua <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+            </a>
+        </div>
+        <div class="swipe-cards-container">
+            @foreach($otherRelated as $r)
+                @php
+                    $rPrice = $r->sale_price > 0 && $r->sale_price < $r->price ? $r->sale_price : $r->effective_price;
+                    $rOrigPrice = $r->sale_price > 0 && $r->sale_price < $r->price ? $r->price : null;
+                    $rHasDiscount = !empty($rOrigPrice) && $rOrigPrice > $rPrice;
+                    $rDiscountPct = $rHasDiscount ? round((($rOrigPrice - $rPrice) / $rOrigPrice) * 100) : 0;
+                    $rImage = $r->image ? asset('storage/' . $r->image) : asset('images/buyle-og.png');
+                    $rRating = ($r->rating && $r->rating > 0) ? number_format($r->rating, 1) : (($r->reviews_avg_rating && $r->reviews_avg_rating > 0) ? number_format($r->reviews_avg_rating, 1) : '5.0');
+                @endphp
+                <a href="{{ route('products.show', $r->slug) }}"
+                    style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
+                    class="article-card-swipe-item">
+                    <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
+                        class="article-card-box">
+                        
+                        {{-- Image 1:1 Aspect Ratio --}}
+                        <div style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
+                            <img src="{{ $rImage }}" alt="{{ $r->name }}"
+                                style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
+                                class="article-banner-img">
+                            
+                            {{-- Discount Badge Top-Left --}}
+                            @if($rHasDiscount)
+                                <div style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
+                                    -{{ $rDiscountPct }}%
+                                </div>
+                            @endif
+                        </div>
+
+                        {{-- Card Body --}}
+                        <div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                            <div>
+                                {{-- Rating & Verified Badge --}}
+                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                        <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
+                                        <span style="font-family: 'Montserrat', sans-serif;">{{ $rRating }}</span>
+                                    </div>
+                                    <div style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                                        Verified
+                                    </div>
+                                </div>
+
+                                {{-- Title --}}
+                                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                    {{ $r->name }}
+                                </h3>
+                            </div>
+
+                            {{-- Footer Separator & Price CTA --}}
+                            <div>
+                                <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
+                                <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
+                                    <div>
+                                        @if($rHasDiscount)
+                                            <span style="font-size: 0.72rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500;">
+                                                Rp {{ number_format($rOrigPrice, 0, ',', '.') }}
+                                            </span>
+                                        @endif
+                                        <span style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
+                                            @if($rPrice > 0)
+                                                Rp {{ number_format($rPrice, 0, ',', '.') }}
+                                            @else
+                                                <span style="color: #1eb349;">GRATIS</span>
+                                            @endif
+                                        </span>
+                                    </div>
+                                    <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3);" class="retarget-btn-cta">
+                                        Lihat <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
