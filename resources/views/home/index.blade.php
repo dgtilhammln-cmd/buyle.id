@@ -1725,15 +1725,13 @@
     <section style="background: #ffffff; padding: 2.5rem 0 3rem; border-bottom: 1px solid #E2E8F0;">
         <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
 
-            {{-- Header & Subtitle (Samakan 100% dengan style Section Artikel) --}}
-            <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;">
+            {{-- Header (Hanya Headline & Link, tanpa deskripsi/sub) --}}
+            <div
+                style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;">
                 <div>
                     <h2 class="responsive-section-title" id="retargetSectionTitle">
-                        Produk Terkait & Rekomendasi Minat.
+                        Produk Terkait & Rekomendasi.
                     </h2>
-                    <p class="responsive-section-subtitle" id="retargetSectionSubtitle">
-                        Disesuaikan secara cerdas dari riwayat penelusuran produk favorit Anda
-                    </p>
                 </div>
                 <a href="{{ route_locale('products') }}"
                     style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;"
@@ -1759,56 +1757,64 @@
                             $rHasDiscount = !empty($rOrigPrice) && $rOrigPrice > $rPrice;
                             $rDiscountPct = $rHasDiscount ? round((($rOrigPrice - $rPrice) / $rOrigPrice) * 100) : 0;
                             $rImage = $rProd->image ? asset('storage/' . $rProd->image) : asset('images/buyle-og.png');
-                            
+
                             // Realtime Dynamic Rating (Bisa berubah-ubah sesuai data rating produk di DB)
                             $rRating = ($rProd->rating && $rProd->rating > 0) ? number_format($rProd->rating, 1) : (($rProd->reviews_avg_rating && $rProd->reviews_avg_rating > 0) ? number_format($rProd->reviews_avg_rating, 1) : '5.0');
-                            
+
                             // Subdomain / URL Pill text
                             $rSellerDomain = $rProd->seller->creatorProfile->custom_domain ?? ($rProd->seller->creatorProfile->username ? $rProd->seller->creatorProfile->username . '.buyle.id' : 'buyle.id');
                         @endphp
                         <a href="{{ route_locale('products.show', $rProd->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
-                            class="article-card-swipe-item"
-                            data-product-id="{{ $rProd->id }}"
+                            class="article-card-swipe-item" data-product-id="{{ $rProd->id }}"
                             data-category-id="{{ $rProd->category_id }}">
                             <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
                                 class="article-card-box">
-                                
-                                {{-- Image Wrap (Matching Image 1) --}}
-                                <div style="position: relative; width: 100%; height: 160px; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
+
+                                {{-- Image Wrap 1:1 Square (Matching Image 1) --}}
+                                <div
+                                    style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
+
                                     <img src="{{ $rImage }}" alt="{{ $rProd->name }}"
                                         style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
                                         class="article-banner-img">
-                                    
+
                                     {{-- Discount Badge Top-Left (-100% / -XX%) --}}
                                     @if($rHasDiscount)
-                                        <div style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
+                                        <div
+                                            style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
                                             -{{ $rDiscountPct }}%
                                         </div>
                                     @endif
 
                                     {{-- Domain Link Badge Top-Center/Right --}}
-                                    <div style="position: absolute; top: 8px; right: 8px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: #475569; font-size: 0.62rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 20px; font-family: 'Montserrat', sans-serif; display: inline-flex; align-items: center; gap: 0.2rem; border: 1px solid rgba(226, 232, 240, 0.8);">
-                                        <svg width="10" height="10" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                            <polyline points="7 10 12 15 17 10"/>
-                                            <line x1="12" y1="15" x2="12" y2="3"/>
+                                    <div
+                                        style="position: absolute; top: 8px; right: 8px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: #475569; font-size: 0.62rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 20px; font-family: 'Montserrat', sans-serif; display: inline-flex; align-items: center; gap: 0.2rem; border: 1px solid rgba(226, 232, 240, 0.8);">
+                                        <svg width="10" height="10" fill="none" stroke="#1eb349" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                            <polyline points="7 10 12 15 17 10" />
+                                            <line x1="12" y1="15" x2="12" y2="3" />
                                         </svg>
                                         {{ Str::limit($rSellerDomain, 20) }}
                                     </div>
                                 </div>
 
                                 {{-- Card Body --}}
-                                <div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                                <div
+                                    style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
                                     <div>
                                         {{-- Rating & Verified Badge (Exact Image 1) --}}
-                                        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
+                                        <div
+                                            style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
                                             <div style="display: flex; align-items: center; gap: 0.3rem;">
                                                 <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
                                                 <span style="font-family: 'Montserrat', sans-serif;">{{ $rRating }}</span>
                                             </div>
-                                            <div style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <div
+                                                style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                    viewBox="0 0 24 24">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                                                     <polyline points="22 4 12 14.01 9 11.01" />
                                                 </svg>
@@ -1817,7 +1823,8 @@
                                         </div>
 
                                         {{-- Title --}}
-                                        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                        <h3
+                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
                                             {{ $rProd->name }}
                                         </h3>
                                     </div>
@@ -1825,14 +1832,17 @@
                                     {{-- Footer Separator & Price CTA --}}
                                     <div>
                                         <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
-                                        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
+                                        <div
+                                            style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
                                             <div>
                                                 @if($rHasDiscount)
-                                                    <span style="font-size: 0.72rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500;">
+                                                    <span
+                                                        style="font-size: 0.72rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500;">
                                                         Rp {{ number_format($rOrigPrice, 0, ',', '.') }}
                                                     </span>
                                                 @endif
-                                                <span style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
+                                                <span
+                                                    style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
                                                     @if($rPrice > 0)
                                                         Rp {{ number_format($rPrice, 0, ',', '.') }}
                                                     @else
@@ -1840,9 +1850,13 @@
                                                     @endif
                                                 </span>
                                             </div>
-                                            <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s;"
+                                            <span
+                                                style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s;"
                                                 class="retarget-btn-cta">
-                                                Lihat <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
+                                                Lihat <svg width="12" height="12" fill="none" stroke="currentColor"
+                                                    stroke-width="2.5" viewBox="0 0 24 24">
+                                                    <path d="M5 12h14m-7-7l7 7-7 7" />
+                                                </svg>
                                             </span>
                                         </div>
                                     </div>
@@ -1859,17 +1873,17 @@
 
     {{-- Retargeting Client Intelligence Script --}}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             try {
                 var history = JSON.parse(localStorage.getItem('buyle_viewed_history') || '[]');
                 if (history.length > 0) {
-                    var viewedCatIds = history.map(function(item) { return String(item.category_id); }).filter(Boolean);
-                    var viewedProdIds = history.map(function(item) { return String(item.id); }).filter(Boolean);
+                    var viewedCatIds = history.map(function (item) { return String(item.category_id); }).filter(Boolean);
+                    var viewedProdIds = history.map(function (item) { return String(item.id); }).filter(Boolean);
 
                     var container = document.getElementById('retargetItemsContainer');
                     if (container) {
                         var cards = Array.from(container.children);
-                        cards.sort(function(a, b) {
+                        cards.sort(function (a, b) {
                             var aCat = a.getAttribute('data-category-id') || '';
                             var aProd = a.getAttribute('data-product-id') || '';
                             var bCat = b.getAttribute('data-category-id') || '';
@@ -1881,7 +1895,7 @@
                             return bScore - aScore;
                         });
 
-                        cards.forEach(function(card) {
+                        cards.forEach(function (card) {
                             container.appendChild(card);
                         });
 
@@ -1891,7 +1905,7 @@
                         }
                     }
                 }
-            } catch(e) {
+            } catch (e) {
                 console.log('Retargeting script initialized');
             }
         });
@@ -2635,79 +2649,110 @@
                 @if($tProds->count() > 0)
                     @foreach($tProds as $tProd)
                         @php
-                            $tStoreName = $tProd->seller->creatorProfile->store_name ?? ($tProd->seller->name ?? ($tProd->seller_id ? 'Kreator #' . $tProd->seller_id : 'Kreator Terverifikasi'));
-                            $tStoreAvatar = $tProd->seller->creatorProfile->avatar ?? ($tProd->seller->avatar ?? null);
-                            $tPrice = $tProd->sale_price > 0 && $tProd->sale_price < $tProd->price ? $tProd->sale_price : $tProd->price;
-                            $tImage = $tProd->image ? asset('storage/' . $tProd->image) : asset('assets/images/default-ticket.webp');
+                            $tPrice = $tProd->sale_price > 0 && $tProd->sale_price < $tProd->price ? $tProd->sale_price : $tProd->effective_price;
+                            $tOrigPrice = $tProd->sale_price > 0 && $tProd->sale_price < $tProd->price ? $tProd->price : null;
+                            $tHasDiscount = !empty($tOrigPrice) && $tOrigPrice > $tPrice;
+                            $tDiscountPct = $tHasDiscount ? round((($tOrigPrice - $tPrice) / $tOrigPrice) * 100) : 0;
+                            
+                            // Poster Event (Landscape 16:9), fallback ke gambar utama
+                            $tImage = !empty($tProd->og_image) ? asset('storage/' . $tProd->og_image) : ($tProd->image ? asset('storage/' . $tProd->image) : asset('assets/images/default-ticket.webp'));
                             $tDate = \Carbon\Carbon::parse($tProd->created_at)->addDays(15)->isoFormat('D MMMM Y');
+                            
+                            // Realtime Dynamic Rating
+                            $tRating = ($tProd->rating && $tProd->rating > 0) ? number_format($tProd->rating, 1) : (($tProd->reviews_avg_rating && $tProd->reviews_avg_rating > 0) ? number_format($tProd->reviews_avg_rating, 1) : '5.0');
+                            
+                            // Domain Creator Pill
+                            $tSellerDomain = $tProd->seller->creatorProfile->custom_domain ?? ($tProd->seller->creatorProfile->username ? $tProd->seller->creatorProfile->username . '.buyle.id' : 'buyle.id');
                         @endphp
                         <a href="{{ route_locale('products.show', $tProd->slug) }}"
-                            style="text-decoration: none; color: inherit; display: block;" class="ticket-card-swipe-item">
-                            <div style="background: #F0F7FF; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 0.75rem; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02); height: 100%; display: flex; flex-direction: column;"
-                                class="ticket-card-box">
-                                {{-- Image Banner --}}
-                                <div
-                                    style="position: relative; width: 100%; height: 130px; border-radius: 12px; overflow: hidden; background: #E2E8F0;">
+                            style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
+                            class="ticket-card-swipe-item">
+                            <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
+                                class="article-card-box">
+                                
+                                {{-- Image Banner 16:9 Landscape (Poster Event) --}}
+                                <div style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
                                     <img src="{{ $tImage }}" alt="{{ $tProd->name }}"
                                         style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
-                                        class="ticket-banner-img">
-                                    <div
-                                        style="position: absolute; top: 8px; right: 8px; background: rgba(15,23,42,0.75); backdrop-filter: blur(4px); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif;">
-                                        TIKET EVENT
+                                        class="article-banner-img">
+                                    
+                                    {{-- Discount / Event Badge Top-Left --}}
+                                    @if($tHasDiscount)
+                                        <div style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
+                                            -{{ $tDiscountPct }}%
+                                        </div>
+                                    @else
+                                        <div style="position: absolute; top: 8px; left: 8px; background: #1eb349; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
+                                            EVENT
+                                        </div>
+                                    @endif
+
+                                    {{-- Domain Link Badge Top-Right --}}
+                                    <div style="position: absolute; top: 8px; right: 8px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: #475569; font-size: 0.62rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 20px; font-family: 'Montserrat', sans-serif; display: inline-flex; align-items: center; gap: 0.2rem; border: 1px solid rgba(226, 232, 240, 0.8);">
+                                        <svg width="10" height="10" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                            <polyline points="7 10 12 15 17 10"/>
+                                            <line x1="12" y1="15" x2="12" y2="3"/>
+                                        </svg>
+                                        {{ Str::limit($tSellerDomain, 20) }}
                                     </div>
                                 </div>
-                                {{-- White Inner Box --}}
-                                <div
-                                    style="background: #ffffff; border-radius: 14px; padding: 0.9rem; margin-top: 0.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.02); flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+
+                                {{-- Card Body (Matching Image 1) --}}
+                                <div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
                                     <div>
-                                        <h3
-                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.6em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                        {{-- Rating & Verified Badge --}}
+                                        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
+                                            <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                                <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
+                                                <span style="font-family: 'Montserrat', sans-serif;">{{ $tRating }}</span>
+                                            </div>
+                                            <div style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                    <polyline points="22 4 12 14.01 9 11.01" />
+                                                </svg>
+                                                Verified
+                                            </div>
+                                        </div>
+
+                                        {{-- Title --}}
+                                        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
                                             {{ $tProd->name }}
                                         </h3>
-                                        <div
-                                            style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; font-weight: 600; color: #64748B; margin-bottom: 0.4rem;">
-                                            <svg width="14" height="14" fill="none" stroke="#60A5FA" stroke-width="2"
-                                                viewBox="0 0 24 24">
-                                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                                                <line x1="16" y1="2" x2="16" y2="6" />
-                                                <line x1="8" y1="2" x2="8" y2="6" />
-                                                <line x1="3" y1="10" x2="21" y2="10" />
-                                            </svg>
-                                            {{ $tDate }}
-                                        </div>
-                                        <div
-                                            style="font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 900; color: #0F172A;">
-                                            @if($tPrice > 0)
-                                                Rp {{ number_format($tPrice, 0, ',', '.') }}
-                                            @else
-                                                <span style="color: #1eb349;">GRATIS</span>
-                                            @endif
-                                        </div>
                                     </div>
+
+                                    {{-- Footer Separator & Price CTA --}}
                                     <div>
-                                        <div style="border-top: 1.5px dashed #E2E8F0; margin: 0.65rem 0;"></div>
-                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                            <div
-                                                style="width: 24px; height: 24px; border-radius: 50%; background: #F1F5F9; overflow: hidden; flex-shrink: 0; border: 1px solid #CBD5E1; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: #1eb349;">
-                                                @if($tStoreAvatar)
-                                                    <img src="{{ asset('storage/' . $tStoreAvatar) }}"
-                                                        style="width: 100%; height: 100%; object-fit: cover;">
-                                                @else
-                                                    {{ strtoupper(substr($tStoreName, 0, 1)) }}
+                                        <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
+                                        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
+                                            <div>
+                                                @if($tHasDiscount)
+                                                    <span style="font-size: 0.72rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500;">
+                                                        Rp {{ number_format($tOrigPrice, 0, ',', '.') }}
+                                                    </span>
                                                 @endif
+                                                <span style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
+                                                    @if($tPrice > 0)
+                                                        Rp {{ number_format($tPrice, 0, ',', '.') }}
+                                                    @else
+                                                        <span style="color: #1eb349;">GRATIS</span>
+                                                    @endif
+                                                </span>
                                             </div>
-                                            <span
-                                                style="font-size: 0.75rem; font-weight: 600; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                                {{ $tStoreName }}
+                                            <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s;"
+                                                class="retarget-btn-cta">
+                                                Lihat <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
                                             </span>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </a>
                     @endforeach
                 @else
-                    {{-- Demo Cards matching Image 2 Layout --}}
+                    {{-- Demo Cards --}}
                     @php
                         $demoTickets = [
                             ['title' => 'Canisius College Cup XLI 2026', 'date' => '26 September 2026', 'price' => 'Rp 80.000', 'creator' => 'Canisius College Cup', 'img' => 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&auto=format&fit=crop'],
