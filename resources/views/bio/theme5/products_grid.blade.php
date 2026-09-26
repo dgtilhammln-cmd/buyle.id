@@ -122,7 +122,7 @@
                 @endphp
 
                 <div class="t5-product-card">
-                    <a href="{{ $productUrl }}" class="t5-product-img-wrap">
+                    <a href="{{ $productUrl }}" class="t5-product-img-wrap" aria-label="{{ $product->name }}">
                         <img src="{{ $img }}" alt="{{ $product->name }}" loading="lazy" class="t5-product-img" draggable="false">
 
                         @if($hasDiscount)
@@ -162,7 +162,7 @@
                                 <span class="t5-price-main">Rp{{ number_format($effectivePrice, 0, ',', '.') }}</span>
                             </div>
 
-                            <a href="{{ $productUrl }}" class="t5-buy-btn" title="Detail Produk">
+                            <a href="{{ $productUrl }}" class="t5-buy-btn" title="Detail Produk" aria-label="Lihat detail {{ $product->name }}">
                                 <span>Lihat</span>
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
                                     viewBox="0 0 24 24">

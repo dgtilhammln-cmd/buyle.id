@@ -422,10 +422,11 @@
                 <div class="t5-card3-btn-wrap">
                     @if(!empty($card3BtnText))
                         <a href="{{ $card3BtnLink }}" class="t5-card3-main-btn">{{ $card3BtnText }}</a>
-                        <a href="{{ $card3BtnLink }}" class="t5-card3-arrow-btn">
+                        <a href="{{ $card3BtnLink }}" class="t5-card3-arrow-btn" aria-label="{{ $card3BtnText ?: 'Lihat Selengkapnya' }}">
                             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                 <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
                             </svg>
+                            <span class="sr-only">{{ $card3BtnText ?: 'Lihat Selengkapnya' }}</span>
                         </a>
                     @endif
                 </div>

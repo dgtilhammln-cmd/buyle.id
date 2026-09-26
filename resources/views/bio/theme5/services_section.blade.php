@@ -515,7 +515,7 @@
             {{-- CARDS GRID WITH HOVER ANIMATION & SWIPE SUPPORT --}}
             <div class="t5-services-grid">
                 @foreach($servicesList as $idx => $srv)
-                    <a href="{{ $srv['link'] ?? '#' }}" class="t5-service-card {{ $idx === 1 ? 'active' : '' }}">
+                    <a href="{{ $srv['link'] ?? '#' }}" class="t5-service-card {{ $idx === 1 ? 'active' : '' }}" aria-label="{{ $srv['title'] }}">
                         <div class="t5-service-number">{{ $srv['number'] }}</div>
                         
                         <div class="t5-service-img-wrap">

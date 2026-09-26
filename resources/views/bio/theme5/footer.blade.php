@@ -615,7 +615,7 @@
 {{-- POP-UP LEAD FORM MODAL --}}
 <div class="t5-lead-modal-backdrop" id="t5LeadModal">
     <div class="t5-lead-modal-card">
-        <button type="button" class="t5-modal-close-btn" onclick="closeT5LeadModal()">&times;</button>
+        <button type="button" class="t5-modal-close-btn" onclick="closeT5LeadModal()" aria-label="Tutup modal">&times;</button>
 
         <div class="t5-modal-head-box">
             <div class="t5-modal-badge">
