@@ -1536,6 +1536,76 @@
             {{-- Grid --}}
             <div id="spGrid" class="sp-grid">
                 @include('components.coming-soon-inline')
+
+                @if($products->count() > 0)
+                    @foreach($products as $sv)
+                        @php
+                            $svImg    = $sv->image ? asset('storage/'.$sv->image) : null;
+                            $svPrice  = $sv->sale_price > 0 && $sv->sale_price < $sv->price ? $sv->sale_price : $sv->price;
+                            $svSeller = optional(optional($sv->seller)->creatorProfile)->store_name ?? optional($sv->seller)->name ?? 'Kreator';
+                            $svAvatar = optional(optional($sv->seller)->creatorProfile)->avatar ?? optional($sv->seller)->avatar ?? null;
+                            $hasSale  = $sv->sale_price > 0 && $sv->sale_price < $sv->price;
+                        @endphp
+                        <a href="{{ route_locale('products.show', $sv->slug) }}" class="sp-card" style="text-decoration:none; color: inherit;">
+                            {{-- Image --}}
+                            <div class="sp-card-img">
+                                @if($svImg)
+                                    <img src="{{ $svImg }}" alt="{{ $sv->name }}" loading="lazy">
+                                @else
+                                    <div class="sp-card-img-ph">
+                                        <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                    </div>
+                                @endif
+                                @if($hasSale)
+                                    <span class="sp-card-badge diskon">DISKON</span>
+                                @endif
+                            </div>
+                            {{-- Body --}}
+                            <div class="sp-card-body">
+                                {{-- Seller --}}
+                                <div style="display:flex; align-items:center; gap:0.45rem; margin-bottom:0.4rem;">
+                                    <div style="width:20px; height:20px; border-radius:50%; background:#E2E8F0; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:800; color:#1eb349; border:1px solid #CBD5E1;">
+                                        @if($svAvatar)
+                                            <img src="{{ asset('storage/'.$svAvatar) }}" alt="{{ $svSeller }}" style="width:100%;height:100%;object-fit:cover;">
+                                        @else
+                                            {{ strtoupper(substr($svSeller, 0, 1)) }}
+                                        @endif
+                                    </div>
+                                    <span style="font-size:0.7rem; font-weight:600; color:#64748B; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--font);">{{ $svSeller }}</span>
+                                </div>
+                                {{-- Name --}}
+                                <div class="sp-card-name">{{ $sv->name }}</div>
+                                {{-- Footer: Price + Category --}}
+                                <div class="sp-card-footer">
+                                    <div class="sp-card-price">
+                                        @if($hasSale)
+                                            <span class="sp-card-price-old">Rp {{ number_format($sv->price, 0, ',', '.') }}</span>
+                                        @endif
+                                        @if($svPrice > 0)
+                                            <span class="sp-card-price-main">Rp {{ number_format($svPrice, 0, ',', '.') }}</span>
+                                        @else
+                                            <span class="sp-card-price-main" style="color:#1eb349;">GRATIS</span>
+                                        @endif
+                                    </div>
+                                    @if($sv->category)
+                                        <span style="font-size:0.68rem; font-weight:700; color:#94A3B8; margin-top:0.35rem; display:block; font-family:var(--font);">{{ $sv->category->name }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                @else
+                    <div style="grid-column: 1/-1; text-align:center; padding: 4rem 1rem; color: #64748B;">
+                        <svg width="64" height="64" fill="none" stroke="#CBD5E1" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 1rem; display:block;">
+                            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <p style="font-size: 1rem; font-weight: 700; color: #334155; margin: 0 0 0.4rem;">Produk tidak ditemukan</p>
+                        <p style="font-size: 0.85rem; margin: 0 0 1.5rem;">Coba kata kunci lain atau hapus filter yang aktif</p>
+                        <a href="{{ route_locale('products') }}" style="display:inline-flex;align-items:center;gap:0.4rem;background:#1eb349;color:#fff;padding:0.6rem 1.5rem;border-radius:10px;font-weight:700;text-decoration:none;font-size:0.875rem;">
+                            Lihat Semua Produk
+                        </a>
+                    </div>
+                @endif
             </div>
             
             <div style="margin-top:2rem;">

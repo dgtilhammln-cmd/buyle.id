@@ -40,7 +40,7 @@ class CategoryController extends Controller
                 ->firstOrFail();
         }
 
-        $query = Product::active()->ordered();
+        $query = Product::active()->ordered()->with(['seller.creatorProfile', 'category']);
 
         if ($subcategory) {
             $query->where('product_sub_category_id', $subcategory->id);
