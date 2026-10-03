@@ -465,25 +465,29 @@
 
                     <div class="pd-stats" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
                         @php
-                            $ratingVal = ($service->rating && $service->rating > 0) ? number_format($service->rating, 1) : (($service->reviews_avg_rating && $service->reviews_avg_rating > 0) ? number_format($service->reviews_avg_rating, 1) : '5.0');
-                            $reviewCnt = $service->reviews_count ?? ($service->review_count ?? 0);
+                            $hasRealRating = ($service->rating && $service->rating > 0) || ($service->reviews_avg_rating && $service->reviews_avg_rating > 0);
+                            $ratingVal     = $hasRealRating ? number_format($service->rating ?: $service->reviews_avg_rating, 1) : null;
+                            $reviewCnt     = (int) ($service->reviews_count ?? ($service->review_count ?? 0));
+                            $soldCnt       = (int) ($service->sold_count ?? 0);
                         @endphp
-                        {{-- Rating (Realtime dari DB) --}}
-                        <div style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.85rem;">
-                            <span style="color: #F59E0B; font-size: 1rem;">★</span>
-                            <span style="color: #0F172A; font-weight: 700;">{{ $ratingVal }}</span>
-                            @if($reviewCnt > 0)
-                                <span style="font-size: 0.78rem; color: #64748B;">({{ $reviewCnt }} ulasan)</span>
-                            @endif
-                        </div>
-                        <span style="color: #CBD5E1;">|</span>
+                        {{-- Rating (Realtime dari DB jika ada ulasan/rating) --}}
+                        @if($hasRealRating || $reviewCnt > 0)
+                            <div style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.85rem;">
+                                <span style="color: #F59E0B; font-size: 1rem;">★</span>
+                                <span style="color: #0F172A; font-weight: 700;">{{ $ratingVal ?: '5.0' }}</span>
+                                @if($reviewCnt > 0)
+                                    <span style="font-size: 0.78rem; color: #64748B;">({{ $reviewCnt }} ulasan)</span>
+                                @endif
+                            </div>
+                            <span style="color: #CBD5E1;">|</span>
+                        @endif
                         {{-- Terjual --}}
                         <div style="font-size: 0.85rem; color: #64748B;">
                             Terjual <span style="color: var(--text-main); font-weight: 700;">
-                                @if($service->sold_count >= 1000)
-                                    {{ number_format($service->sold_count/1000, 1, ',', '') }}RB
+                                @if($soldCnt >= 1000)
+                                    {{ number_format($soldCnt/1000, 1, ',', '') }}RB
                                 @else
-                                    {{ $service->sold_count > 0 ? $service->sold_count : 0 }}
+                                    {{ $soldCnt }}
                                 @endif
                             </span>
                         </div>

@@ -922,6 +922,205 @@
             width: auto;
         }
 
+        /* ════ TAB SWITCHER ════ */
+        .sp-tab-switcher {
+            display: flex;
+            gap: 0.375rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--c-border);
+            padding-bottom: 0.625rem;
+        }
+
+        .sp-tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.5rem 1.1rem;
+            border-radius: 8px;
+            font-family: var(--font);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-decoration: none;
+            color: var(--c-muted);
+            background: var(--c-surface);
+            border: 1.5px solid transparent;
+            transition: all 0.2s var(--ease);
+            white-space: nowrap;
+        }
+
+        .sp-tab-btn:hover {
+            color: var(--c-accent);
+            background: rgba(30,179,73,0.06);
+            border-color: rgba(30,179,73,0.25);
+        }
+
+        .sp-tab-btn.active {
+            background: linear-gradient(135deg, #1eb349, #7db928);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(30,179,73,0.3);
+        }
+
+        /* ════ CREATOR GRID / LIST ════ */
+        .sp-creator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 1rem;
+        }
+
+        .sp-creator-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.25s var(--ease);
+            cursor: pointer;
+        }
+
+        .sp-creator-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .sp-creator-avatar {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #fff;
+            border: 1.5px solid var(--c-border);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: box-shadow 0.25s, border-color 0.25s;
+        }
+
+        .sp-creator-card:hover .sp-creator-avatar {
+            border-color: var(--c-accent);
+            box-shadow: 0 8px 24px rgba(30,179,73,0.15);
+        }
+
+        .sp-creator-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sp-creator-avatar-ph {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
+            color: var(--c-accent);
+            font-weight: 800;
+            font-size: 1.5rem;
+            font-family: var(--font);
+        }
+
+        .sp-creator-name {
+            margin-top: 0.5rem;
+            font-family: var(--font);
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--c-text);
+            text-align: center;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sp-creator-cta {
+            margin-top: 0.3rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            background: linear-gradient(135deg, #1eb349, #7db928);
+            color: #ffffff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.28rem 0.6rem;
+            border-radius: 99px;
+            box-shadow: 0 3px 10px rgba(30,179,73,0.25);
+            font-family: var(--font);
+            transition: box-shadow 0.2s;
+        }
+
+        .sp-creator-card:hover .sp-creator-cta {
+            box-shadow: 0 5px 16px rgba(30,179,73,0.4);
+        }
+
+        /* Grid mode: .sp-creator-info visible, but sub hidden */
+        .sp-creator-info {
+            width: 100%;
+        }
+
+        .sp-creator-sub {
+            display: none; /* hidden in grid, shown in list */
+        }
+
+        /* Creator LIST view */
+        .sp-creator-grid.list-view {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+
+        .sp-creator-grid.list-view .sp-creator-card {
+            flex-direction: row;
+            align-items: center;
+            gap: 0.875rem;
+            background: var(--c-card);
+            border: 1.5px solid var(--c-border);
+            border-radius: 14px;
+            padding: 0.75rem 1rem;
+            transition: all 0.25s;
+        }
+
+        .sp-creator-grid.list-view .sp-creator-card:hover {
+            transform: none;
+            border-color: var(--c-accent);
+            box-shadow: 0 4px 16px rgba(30,179,73,0.1);
+        }
+
+        .sp-creator-grid.list-view .sp-creator-avatar {
+            width: 52px;
+            aspect-ratio: 1/1;
+            flex-shrink: 0;
+            border-radius: 50%;
+        }
+
+        .sp-creator-grid.list-view .sp-creator-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .sp-creator-grid.list-view .sp-creator-name {
+            margin-top: 0;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .sp-creator-grid.list-view .sp-creator-sub {
+            font-size: 0.75rem;
+            color: var(--c-muted);
+            font-family: var(--font);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sp-creator-grid.list-view .sp-creator-cta {
+            margin-top: 0;
+            flex-shrink: 0;
+            font-size: 0.75rem;
+            padding: 0.4rem 0.875rem;
+        }
+
         /* ════ PAGINATION ════ */
         .sp-pagination { margin-top: 2.5rem; width: 100%; display: flex; justify-content: center; }
         .sp-pagination nav { display: flex; justify-content: center; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
@@ -1211,6 +1410,35 @@
             .sp-grid.list-view .sp-btn-icon {
                 width: 28px;
                 height: 28px;
+            }
+
+            /* Mobile creator grid: 2 columns */
+            .sp-creator-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.75rem;
+            }
+
+            .sp-creator-grid.list-view {
+                grid-template-columns: 1fr;
+            }
+
+            .sp-creator-grid.list-view .sp-creator-avatar {
+                width: 44px;
+            }
+
+            .sp-creator-grid.list-view .sp-creator-name {
+                font-size: 0.82rem;
+            }
+
+            .sp-creator-grid.list-view .sp-creator-cta {
+                font-size: 0.68rem;
+                padding: 0.3rem 0.6rem;
+            }
+
+            /* Mobile tab switcher */
+            .sp-tab-btn {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.78rem;
             }
 
         }
@@ -1514,29 +1742,47 @@
 
 
             {{-- Tab Switcher: Semua Produk vs Daftar Creator --}}
-            <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #E2E8F0; padding-bottom: 0.5rem;">
-                <a href="{{ route_locale('products') }}" 
-                   style="padding: 0.5rem 1.25rem; font-weight: 800; font-size: 0.85rem; font-family: var(--font); text-decoration: none; border-radius: 8px; {{ request('tab') !== 'creators' ? 'background: #1eb349; color: #ffffff;' : 'color: #64748B; background: #F1F5F9;' }}">
+            <div class="sp-tab-switcher">
+                <a href="{{ route_locale('products') }}"
+                   class="sp-tab-btn {{ request('tab') !== 'creators' ? 'active' : '' }}">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                     Semua Produk
                 </a>
-                <a href="{{ route_locale('products') }}?tab=creators" 
-                   style="padding: 0.5rem 1.25rem; font-weight: 800; font-size: 0.85rem; font-family: var(--font); text-decoration: none; border-radius: 8px; {{ request('tab') === 'creators' ? 'background: #1eb349; color: #ffffff;' : 'color: #64748B; background: #F1F5F9;' }}">
+                <a href="{{ route_locale('products') }}?tab=creators"
+                   class="sp-tab-btn {{ request('tab') === 'creators' ? 'active' : '' }}">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/></svg>
                     Daftar Creator
                 </a>
             </div>
 
             @if(request('tab') === 'creators')
                 <div style="margin-bottom: 2.5rem;">
-                    <div style="font-size: 1.1rem; font-weight: 800; color: #0F172A; margin-bottom: 1.25rem; font-family: var(--font);">
-                        Semua Creator Terverifikasi ({{ $allCreators->total() }})
+                    {{-- Creator Tab Header --}}
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+                        <div style="font-size: 1rem; font-weight: 800; color: var(--c-text); font-family: var(--font);">
+                            Semua Creator Terverifikasi
+                            <span style="font-size:0.82rem; font-weight:600; color:var(--c-muted); margin-left:0.4rem;">({{ $allCreators->total() }})</span>
+                        </div>
+                        {{-- View Toggle for Creators --}}
+                        <div class="sp-view-btns">
+                            <button class="sp-view-btn active" id="btnCreatorGrid" onclick="setCreatorView('grid')" title="Grid">
+                                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                            </button>
+                            <button class="sp-view-btn" id="btnCreatorList" onclick="setCreatorView('list')" title="List">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                            </button>
+                        </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1.25rem;">
+
+                    <div id="spCreatorGrid" class="sp-creator-grid">
                         @foreach($allCreators as $creatorUser)
                             @php
                                 $cp = $creatorUser->creatorProfile;
                                 $cName = $cp?->store_name ?: ($creatorUser->name ?: 'Creator');
                                 $cStoreSlug = $cp?->store_slug ?: $creatorUser->username;
-                                
+                                $cDesc = $cp?->store_description ? Str::limit($cp->store_description, 50) : 'Kreator Digital Terverifikasi';
+                                $cProductCount = $creatorUser->products_count ?? 0;
+
                                 $cAvatar = null;
                                 if (!empty($cp?->avatar)) {
                                     $cAvatar = asset('storage/' . $cp->avatar);
@@ -1554,33 +1800,27 @@
                                     $targetUrl = route_locale('products');
                                 }
                             @endphp
-                            <a href="{{ $targetUrl }}" class="popular-creator-card" title="{{ $cName }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; transition: transform 0.25s ease;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
-                                <div class="popular-creator-avatar-wrap" style="width: 100%; aspect-ratio: 1/1; border-radius: 16px; overflow: hidden; background: #fff; border: 1.5px solid #E2E8F0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: center;">
+                            <a href="{{ $targetUrl }}" class="sp-creator-card" title="{{ $cName }}">
+                                <div class="sp-creator-avatar">
                                     @if($cAvatar)
-                                        <img src="{{ $cAvatar }}" alt="{{ $cName }}" class="popular-creator-img" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                        <img src="{{ $cAvatar }}" alt="{{ $cName }}" loading="lazy">
                                     @else
-                                        <div class="popular-creator-avatar-placeholder" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #F0FDF4, #DCFCE7); color: #1eb349; font-weight: 800; font-size: 1.6rem; font-family: var(--font);">
-                                            {{ strtoupper(substr($cName, 0, 1)) }}
-                                        </div>
+                                        <div class="sp-creator-avatar-ph">{{ strtoupper(substr($cName, 0, 1)) }}</div>
                                     @endif
                                 </div>
-                                <div class="popular-creator-info" style="margin-top: 0.55rem; text-align: center; width: 100%;">
-                                    <div class="popular-creator-name" style="font-family: var(--font); font-size: 0.82rem; font-weight: 800; color: #0F172A; display: flex; align-items: center; justify-content: center; gap: 0.2rem;">
-                                        <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{ $cName }}</span>
-                                        <svg class="verified-icon" width="12" height="12" fill="#0D9488" viewBox="0 0 24 24">
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                                        </svg>
-                                    </div>
-                                    <span class="popular-creator-cta-btn" style="margin-top: 0.35rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.2rem; background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; font-size: 0.68rem; font-weight: 700; padding: 0.3rem 0.65rem; border-radius: 99px; box-shadow: 0 3px 10px rgba(30, 179, 73, 0.25); text-decoration: none;">
-                                        Kunjungi Creator
-                                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <path d="M5 12h14m-7-7l7 7-7 7" />
-                                        </svg>
-                                    </span>
+                                {{-- Info wrapper (shown in list view) --}}
+                                <div class="sp-creator-info">
+                                    <div class="sp-creator-name">{{ $cName }}</div>
+                                    <div class="sp-creator-sub">{{ $cDesc }}</div>
                                 </div>
+                                <span class="sp-creator-cta">
+                                    Kunjungi
+                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+                                </span>
                             </a>
                         @endforeach
                     </div>
+
                     <div style="margin-top: 2rem;">
                         {{ $allCreators->links() }}
                     </div>
@@ -1682,7 +1922,8 @@
                             $svDiscountPct = $svHasDiscount ? round((($svOrigPrice - $svPrice) / $svOrigPrice) * 100) : 0;
                             $svSeller     = optional(optional($sv->seller)->creatorProfile)->store_name ?? optional($sv->seller)->name ?? 'Kreator';
                             $svAvatar     = optional(optional($sv->seller)->creatorProfile)->avatar ?? optional($sv->seller)->avatar ?? null;
-                            $svRating     = ($sv->rating && $sv->rating > 0) ? number_format($sv->rating, 1) : (($sv->reviews_avg_rating && $sv->reviews_avg_rating > 0) ? number_format($sv->reviews_avg_rating, 1) : '5.0');
+                            $svRatingVal  = ($sv->rating && $sv->rating > 0) ? $sv->rating : (($sv->reviews_avg_rating && $sv->reviews_avg_rating > 0) ? $sv->reviews_avg_rating : null);
+                            $svRating     = $svRatingVal ? number_format($svRatingVal, 1) : null;
                         @endphp
                         <a href="{{ route_locale('products.show', $sv->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
@@ -1707,12 +1948,16 @@
                                 {{-- Card Body --}}
                                 <div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;" class="sp-card-body-wrap">
                                     <div>
-                                        {{-- Rating & Verified Badge (Exact Image 2a) --}}
+                                        {{-- Rating & Verified Badge --}}
                                         <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
+                                            @if($svRating)
                                             <div style="display: flex; align-items: center; gap: 0.3rem;">
                                                 <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
                                                 <span style="font-family: 'Montserrat', sans-serif;">{{ $svRating }}</span>
                                             </div>
+                                            @else
+                                            <div></div>
+                                            @endif
                                             <div style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
                                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
                                                 Verified
@@ -1805,8 +2050,44 @@
     </div>
 
     <script>
-        function setView(m) { var g = document.getElementById('spGrid'), b1 = document.getElementById('btnGrid'), b2 = document.getElementById('btnList'); if (m === 'list') { g.classList.add('list-view'); b2.classList.add('active'); b1.classList.remove('active'); localStorage.setItem('sp_view', 'list'); } else { g.classList.remove('list-view'); b1.classList.add('active'); b2.classList.remove('active'); localStorage.setItem('sp_view', 'grid'); } }
-        (function () { if (localStorage.getItem('sp_view') === 'list') setView('list'); })();
+        function setView(m) {
+            var g = document.getElementById('spGrid'),
+                b1 = document.getElementById('btnGrid'),
+                b2 = document.getElementById('btnList');
+            if (!g) return;
+            if (m === 'list') {
+                g.classList.add('list-view');
+                b2 && b2.classList.add('active');
+                b1 && b1.classList.remove('active');
+                localStorage.setItem('sp_view', 'list');
+            } else {
+                g.classList.remove('list-view');
+                b1 && b1.classList.add('active');
+                b2 && b2.classList.remove('active');
+                localStorage.setItem('sp_view', 'grid');
+            }
+        }
+        function setCreatorView(m) {
+            var g = document.getElementById('spCreatorGrid'),
+                b1 = document.getElementById('btnCreatorGrid'),
+                b2 = document.getElementById('btnCreatorList');
+            if (!g) return;
+            if (m === 'list') {
+                g.classList.add('list-view');
+                b2 && b2.classList.add('active');
+                b1 && b1.classList.remove('active');
+                localStorage.setItem('sp_creator_view', 'list');
+            } else {
+                g.classList.remove('list-view');
+                b1 && b1.classList.add('active');
+                b2 && b2.classList.remove('active');
+                localStorage.setItem('sp_creator_view', 'grid');
+            }
+        }
+        (function () {
+            if (localStorage.getItem('sp_view') === 'list') setView('list');
+            if (localStorage.getItem('sp_creator_view') === 'list') setCreatorView('list');
+        })();
         function toggleMobileFilter() { document.getElementById('spSidebar').classList.toggle('mobile-open'); }
 
         function openWishlistModal() {
