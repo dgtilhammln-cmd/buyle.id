@@ -852,23 +852,23 @@
                             {{-- Footer Separator & Price CTA --}}
                             <div>
                                 <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
-                                <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
-                                    <div>
+                                <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">
+                                    <div style="white-space: nowrap; min-width: 0; flex: 1;">
                                         @if($rHasDiscount)
-                                            <span style="font-size: 0.72rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500;">
-                                                Rp {{ number_format($rOrigPrice, 0, ',', '.') }}
+                                            <span style="font-size: 0.68rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500; white-space: nowrap;">
+                                                Rp{{ number_format($rOrigPrice, 0, ',', '.') }}
                                             </span>
                                         @endif
-                                        <span style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
+                                        <span style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">
                                             @if($rPrice > 0)
-                                                Rp {{ number_format($rPrice, 0, ',', '.') }}
+                                                Rp{{ number_format($rPrice, 0, ',', '.') }}
                                             @else
                                                 <span style="color: #1eb349;">GRATIS</span>
                                             @endif
                                         </span>
                                     </div>
-                                    <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3);" class="retarget-btn-cta">
-                                        Lihat <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
+                                    <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); flex-shrink: 0; white-space: nowrap;" class="retarget-btn-cta">
+                                        Lihat <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
                                     </span>
                                 </div>
                             </div>
@@ -945,23 +945,23 @@
                             {{-- Footer Separator & Price CTA --}}
                             <div>
                                 <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
-                                <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
-                                    <div>
+                                <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">
+                                    <div style="white-space: nowrap; min-width: 0; flex: 1;">
                                         @if($rHasDiscount)
-                                            <span style="font-size: 0.72rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500;">
-                                                Rp {{ number_format($rOrigPrice, 0, ',', '.') }}
+                                            <span style="font-size: 0.68rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500; white-space: nowrap;">
+                                                Rp{{ number_format($rOrigPrice, 0, ',', '.') }}
                                             </span>
                                         @endif
-                                        <span style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
+                                        <span style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">
                                             @if($rPrice > 0)
-                                                Rp {{ number_format($rPrice, 0, ',', '.') }}
+                                                Rp{{ number_format($rPrice, 0, ',', '.') }}
                                             @else
                                                 <span style="color: #1eb349;">GRATIS</span>
                                             @endif
                                         </span>
                                     </div>
-                                    <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3);" class="retarget-btn-cta">
-                                        Lihat <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
+                                    <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); flex-shrink: 0; white-space: nowrap;" class="retarget-btn-cta">
+                                        Lihat <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
                                     </span>
                                 </div>
                             </div>
