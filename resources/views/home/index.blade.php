@@ -2164,42 +2164,57 @@
     {{-- ════════════════════════════════════════════════════════════════════════
     SECTION CREATOR TERPOPULER (2 BARIS GRID RESPONSIVE)
     ════════════════════════════════════════════════════════════════════════ --}}
+    {{-- ════════════════════════════════════════════════════════════════════════
+    SECTION CREATOR TERPOPULER (1 BARIS SCROLLABLE RESPONSIVE)
+    ════════════════════════════════════════════════════════════════════════ --}}
     @if(isset($popularCreators) && $popularCreators->count() > 0)
         <style>
             .popular-creators-grid {
-                display: grid;
-                grid-template-columns: repeat(5, 1fr);
-                gap: 1.25rem;
+                display: flex;
+                gap: 1rem;
+                overflow-x: auto;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+                padding: 0.35rem 0.25rem 0.85rem;
+            }
+
+            .popular-creators-grid::-webkit-scrollbar {
+                display: none;
             }
 
             .popular-creator-card {
+                flex: 0 0 calc(20% - 0.8rem);
+                min-width: 140px;
+                max-width: 175px;
                 text-decoration: none;
                 color: inherit;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                transition: all 0.25s ease;
+                transition: transform 0.25s ease;
+            }
+
+            .popular-creator-card:hover {
+                transform: translateY(-4px);
             }
 
             .popular-creator-avatar-wrap {
                 width: 100%;
                 aspect-ratio: 1 / 1;
-                border-radius: 18px;
+                border-radius: 16px;
                 overflow: hidden;
                 position: relative;
                 background: #ffffff;
                 border: 1.5px solid #E2E8F0;
                 box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-                transition: all 0.25s ease;
+                transition: box-shadow 0.25s ease;
                 display: flex;
                 align-items: center;
                 justify-content: center;
             }
 
             .popular-creator-card:hover .popular-creator-avatar-wrap {
-                transform: translateY(-4px);
-                border-color: #1eb349;
-                box-shadow: 0 8px 24px rgba(30, 179, 73, 0.2);
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
             }
 
             .popular-creator-img {
@@ -2218,57 +2233,26 @@
                 background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
                 color: #1eb349;
                 font-weight: 800;
-                font-size: 1.8rem;
+                font-size: 1.6rem;
                 font-family: 'Montserrat', sans-serif;
             }
 
-            .popular-creator-badge-icon {
-                position: absolute;
-                bottom: 8px;
-                right: 8px;
-                width: 24px;
-                height: 24px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-                z-index: 2;
-                transition: transform 0.2s;
-            }
-
-            .popular-creator-card:hover .popular-creator-badge-icon {
-                transform: scale(1.1);
-            }
-
-            .badge-store {
-                background: #1eb349;
-                color: #ffffff;
-                border: 1.5px solid #ffffff;
-            }
-
-            .badge-bio {
-                background: #0284c7;
-                color: #ffffff;
-                border: 1.5px solid #ffffff;
-            }
-
             .popular-creator-info {
-                margin-top: 0.6rem;
+                margin-top: 0.55rem;
                 text-align: center;
                 width: 100%;
-                padding: 0 0.25rem;
+                padding: 0 0.2rem;
             }
 
             .popular-creator-name {
                 font-family: 'Montserrat', sans-serif;
-                font-size: 0.82rem;
+                font-size: 0.8rem;
                 font-weight: 800;
                 color: #0F172A;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 0.25rem;
+                gap: 0.2rem;
                 width: 100%;
             }
 
@@ -2283,47 +2267,28 @@
                 flex-shrink: 0;
             }
 
-            .popular-creator-link-action {
-                margin-top: 0.2rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .popular-creator-type-tag {
-                font-size: 0.68rem;
-                font-weight: 700;
+            .popular-creator-cta-btn {
+                margin-top: 0.35rem;
                 display: inline-flex;
                 align-items: center;
-                gap: 0.25rem;
-            }
-
-            .tag-store {
-                color: #16a34a;
-            }
-
-            .tag-bio {
-                color: #0284c7;
+                justify-content: center;
+                gap: 0.2rem;
+                background: linear-gradient(135deg, #1eb349, #7db928);
+                color: #ffffff;
+                font-size: 0.68rem;
+                font-weight: 700;
+                padding: 0.3rem 0.65rem;
+                border-radius: 99px;
+                box-shadow: 0 3px 10px rgba(30, 179, 73, 0.25);
+                transition: all 0.2s ease;
+                white-space: nowrap;
             }
 
             @media (max-width: 768px) {
-                .popular-creators-grid {
-                    display: flex;
-                    gap: 0.85rem;
-                    overflow-x: auto;
-                    scrollbar-width: none;
-                    -webkit-overflow-scrolling: touch;
-                    padding: 0.35rem 0.25rem 0.75rem;
-                    margin: 0 -0.5rem;
-                }
-
-                .popular-creators-grid::-webkit-scrollbar {
-                    display: none;
-                }
-
                 .popular-creator-card {
-                    flex: 0 0 100px;
-                    width: 100px;
+                    flex: 0 0 110px;
+                    min-width: 110px;
+                    max-width: 110px;
                 }
 
                 .popular-creator-avatar-wrap {
@@ -2331,27 +2296,16 @@
                 }
 
                 .popular-creator-avatar-placeholder {
-                    font-size: 1.4rem;
-                }
-
-                .popular-creator-badge-icon {
-                    bottom: 6px;
-                    right: 6px;
-                    width: 20px;
-                    height: 20px;
-                }
-
-                .popular-creator-badge-icon svg {
-                    width: 10px;
-                    height: 10px;
+                    font-size: 1.3rem;
                 }
 
                 .popular-creator-name {
-                    font-size: 0.75rem;
+                    font-size: 0.72rem;
                 }
 
-                .popular-creator-type-tag {
-                    font-size: 0.62rem;
+                .popular-creator-cta-btn {
+                    font-size: 0.6rem;
+                    padding: 0.25rem 0.5rem;
                 }
             }
         </style>
@@ -2399,7 +2353,7 @@
                                 $targetUrl = route_locale('products');
                             }
                         @endphp
-                        <a href="{{ $targetUrl }}" class="popular-creator-card" title="{{ $cName }} - {{ $isStoreActive ? 'Toko Digital' : 'Link in Bio' }}">
+                        <a href="{{ $targetUrl }}" class="popular-creator-card" title="{{ $cName }}">
                             <div class="popular-creator-avatar-wrap">
                                 @if($cAvatar)
                                     <img src="{{ $cAvatar }}" alt="{{ $cName }}" class="popular-creator-img" loading="lazy">
@@ -2408,21 +2362,6 @@
                                         {{ strtoupper(substr($cName, 0, 1)) }}
                                     </div>
                                 @endif
-                                
-                                <div class="popular-creator-badge-icon {{ $isStoreActive ? 'badge-store' : 'badge-bio' }}" title="{{ $isStoreActive ? 'Toko Digital Active' : 'Link in Bio Active' }}">
-                                    @if($isStoreActive)
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                                            <line x1="3" y1="6" x2="21" y2="6"/>
-                                            <path d="M16 10a4 4 0 0 1-8 0"/>
-                                        </svg>
-                                    @else
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-                                        </svg>
-                                    @endif
-                                </div>
                             </div>
 
                             <div class="popular-creator-info">
@@ -2432,24 +2371,12 @@
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                                     </svg>
                                 </div>
-                                <div class="popular-creator-link-action">
-                                    @if($isStoreActive)
-                                        <span class="popular-creator-type-tag tag-store">
-                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                                                <line x1="3" y1="6" x2="21" y2="6"/>
-                                            </svg>
-                                            Toko Digital
-                                        </span>
-                                    @else
-                                        <span class="popular-creator-type-tag tag-bio">
-                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                                            </svg>
-                                            Link in Bio
-                                        </span>
-                                    @endif
-                                </div>
+                                <span class="popular-creator-cta-btn">
+                                    Kunjungi Creator
+                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path d="M5 12h14m-7-7l7 7-7 7" />
+                                    </svg>
+                                </span>
                             </div>
                         </a>
                     @endforeach

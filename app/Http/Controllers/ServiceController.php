@@ -268,9 +268,37 @@ class ServiceController extends Controller
             })->toArray(),
         ]);
 
+        $allCreators = collect();
+        if (request('tab') === 'creators' || request()->filled('q')) {
+            $creatorsQuery = \App\Models\User::whereHas('creatorProfile')
+                ->whereNotIn('role', ['admin', 'super_admin', 'admin_super'])
+                ->where('name', 'NOT LIKE', '%copywriter%')
+                ->whereDoesntHave('creatorProfile', function($q) {
+                    $q->where('store_name', 'LIKE', '%copywriter%')
+                      ->orWhere('store_slug', 'LIKE', '%copywriter%');
+                })
+                ->with(['creatorProfile'])
+                ->withCount('products')
+                ->orderByDesc('products_count')
+                ->latest();
+
+            if (request()->filled('q')) {
+                $rawQ = trim(request('q'));
+                $creatorsQuery->where(function($q) use ($rawQ) {
+                    $q->where('name', 'LIKE', '%'.$rawQ.'%')
+                      ->orWhereHas('creatorProfile', function($cpQ) use ($rawQ) {
+                          $cpQ->where('store_name', 'LIKE', '%'.$rawQ.'%')
+                              ->orWhere('store_slug', 'LIKE', '%'.$rawQ.'%');
+                      });
+                });
+            }
+
+            $allCreators = $creatorsQuery->paginate(20)->appends(request()->query());
+        }
+
         return view('services.index', compact(
             'services', 'settings', 'seo', 'schema', 'categories', 'wa', 'maxPrice',
-            'suggestion', 'suggestionApplied', 'foundCreators', 'otherCreators'
+            'suggestion', 'suggestionApplied', 'foundCreators', 'otherCreators', 'allCreators'
         ));
     }
 

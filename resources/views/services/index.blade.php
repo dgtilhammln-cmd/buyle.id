@@ -1513,6 +1513,80 @@
 
 
 
+            {{-- Tab Switcher: Semua Produk vs Daftar Creator --}}
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #E2E8F0; padding-bottom: 0.5rem;">
+                <a href="{{ route_locale('products') }}" 
+                   style="padding: 0.5rem 1.25rem; font-weight: 800; font-size: 0.85rem; font-family: var(--font); text-decoration: none; border-radius: 8px; {{ request('tab') !== 'creators' ? 'background: #1eb349; color: #ffffff;' : 'color: #64748B; background: #F1F5F9;' }}">
+                    Semua Produk
+                </a>
+                <a href="{{ route_locale('products') }}?tab=creators" 
+                   style="padding: 0.5rem 1.25rem; font-weight: 800; font-size: 0.85rem; font-family: var(--font); text-decoration: none; border-radius: 8px; {{ request('tab') === 'creators' ? 'background: #1eb349; color: #ffffff;' : 'color: #64748B; background: #F1F5F9;' }}">
+                    Daftar Creator
+                </a>
+            </div>
+
+            @if(request('tab') === 'creators')
+                <div style="margin-bottom: 2.5rem;">
+                    <div style="font-size: 1.1rem; font-weight: 800; color: #0F172A; margin-bottom: 1.25rem; font-family: var(--font);">
+                        Semua Creator Terverifikasi ({{ $allCreators->total() }})
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1.25rem;">
+                        @foreach($allCreators as $creatorUser)
+                            @php
+                                $cp = $creatorUser->creatorProfile;
+                                $cName = $cp?->store_name ?: ($creatorUser->name ?: 'Creator');
+                                $cStoreSlug = $cp?->store_slug ?: $creatorUser->username;
+                                
+                                $cAvatar = null;
+                                if (!empty($cp?->avatar)) {
+                                    $cAvatar = asset('storage/' . $cp->avatar);
+                                } elseif (!empty($creatorUser->avatar)) {
+                                    $cAvatar = Str::startsWith($creatorUser->avatar, 'http') ? $creatorUser->avatar : asset('storage/' . $creatorUser->avatar);
+                                } elseif (!empty($cp?->bio_config['avatar'])) {
+                                    $cAvatar = asset('storage/' . $cp->bio_config['avatar']);
+                                }
+
+                                $isStoreActive = $cp ? $cp->isStoreActive() : false;
+
+                                if ($cStoreSlug) {
+                                    $targetUrl = $isStoreActive ? route_locale('store.show', $cStoreSlug) : url('/' . $cStoreSlug);
+                                } else {
+                                    $targetUrl = route_locale('products');
+                                }
+                            @endphp
+                            <a href="{{ $targetUrl }}" class="popular-creator-card" title="{{ $cName }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; transition: transform 0.25s ease;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+                                <div class="popular-creator-avatar-wrap" style="width: 100%; aspect-ratio: 1/1; border-radius: 16px; overflow: hidden; background: #fff; border: 1.5px solid #E2E8F0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: center;">
+                                    @if($cAvatar)
+                                        <img src="{{ $cAvatar }}" alt="{{ $cName }}" class="popular-creator-img" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                    @else
+                                        <div class="popular-creator-avatar-placeholder" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #F0FDF4, #DCFCE7); color: #1eb349; font-weight: 800; font-size: 1.6rem; font-family: var(--font);">
+                                            {{ strtoupper(substr($cName, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="popular-creator-info" style="margin-top: 0.55rem; text-align: center; width: 100%;">
+                                    <div class="popular-creator-name" style="font-family: var(--font); font-size: 0.82rem; font-weight: 800; color: #0F172A; display: flex; align-items: center; justify-content: center; gap: 0.2rem;">
+                                        <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{ $cName }}</span>
+                                        <svg class="verified-icon" width="12" height="12" fill="#0D9488" viewBox="0 0 24 24">
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                                        </svg>
+                                    </div>
+                                    <span class="popular-creator-cta-btn" style="margin-top: 0.35rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.2rem; background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; font-size: 0.68rem; font-weight: 700; padding: 0.3rem 0.65rem; border-radius: 99px; box-shadow: 0 3px 10px rgba(30, 179, 73, 0.25); text-decoration: none;">
+                                        Kunjungi Creator
+                                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <path d="M5 12h14m-7-7l7 7-7 7" />
+                                        </svg>
+                                    </span>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                    <div style="margin-top: 2rem;">
+                        {{ $allCreators->links() }}
+                    </div>
+                </div>
+            @endif
+
             {{-- Creator Search Results --}}
             @if(request()->filled('q') && isset($foundCreators) && $foundCreators->count() > 0)
                 <div style="margin-bottom: 2rem;">
@@ -1593,7 +1667,7 @@
                 </div>
             @endif
 
-
+            @if(request('tab') !== 'creators')
             {{-- Grid --}}
             <div id="spGrid" class="sp-grid">
                 @include('components.coming-soon-inline')
@@ -1697,6 +1771,7 @@
                 <div class="sp-pagination" style="margin-top: 2.5rem; width: 100%; display: flex; justify-content: center;">
                     {{ $services->links() }}
                 </div>
+            @endif
             @endif
         </div>
     </div>

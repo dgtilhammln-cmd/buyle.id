@@ -79,8 +79,14 @@ class HomeController extends Controller
             ->limit(10)
             ->get();
 
-        // Creator Terpopuler (10 items untuk 2 baris grid)
+        // Creator Terpopuler (10 items untuk 1 baris scrollable)
         $popularCreators = \App\Models\User::whereHas('creatorProfile')
+            ->whereNotIn('role', ['admin', 'super_admin', 'admin_super'])
+            ->where('name', 'NOT LIKE', '%copywriter%')
+            ->whereDoesntHave('creatorProfile', function($q) {
+                $q->where('store_name', 'LIKE', '%copywriter%')
+                  ->orWhere('store_slug', 'LIKE', '%copywriter%');
+            })
             ->with(['creatorProfile'])
             ->withCount('products')
             ->orderByDesc('products_count')
