@@ -658,53 +658,41 @@
                 @php
                     $isVerified = $cp?->is_verified ?? false;
                     $tierData = $cp ? $cp->getTierInfo() : ['badge' => 'Perintis', 'header_bg' => 'linear-gradient(135deg, #1eb349 0%, #a5cf37 100%)', 'icon_svg' => ''];
+                    $ratingStats = $cp ? $cp->getRatingStats() : ['rating' => '5.0', 'count' => 0];
                 @endphp
                 <!-- Banner Top Header matching Image 2 reference design -->
-                <div style="width:100%; height:85px; background:{{ $tierData['header_bg'] ?? 'linear-gradient(135deg, #1eb349, #a5cf37)' }}; padding: 0.65rem 1rem; display: flex; align-items: flex-start; justify-content: space-between; position: relative;">
-                    @if($bannerUrl)
-                        <img src="{{ $bannerUrl }}" alt="{{ $displaySellerName }}" style="position: absolute; inset: 0; width:100%; height:100%; object-fit:cover; opacity: 0.75;">
-                    @endif
-                    <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 0.35rem; color: #ffffff; font-weight: 700; font-size: 0.72rem; background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(4px); padding: 0.25rem 0.65rem; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.3);">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15" stroke-width="1"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-                        <span>{{ $isVerified ? 'Verified Creator' : 'Creator' }}</span>
+                <div style="width:100%; height:46px; background:{{ $tierData['header_bg'] ?? 'linear-gradient(135deg, #1eb349 0%, #a5cf37 100%)' }}; padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; position: relative;">
+                    <div style="display: flex; align-items: center; gap: 5px; color: #ffffff; font-weight: 700; font-size: 0.78rem;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15" stroke-width="1"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                        <span>Verified Creator</span>
                     </div>
-                    <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 0.35rem; color: #ffffff; font-weight: 700; font-size: 0.72rem; background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(4px); padding: 0.25rem 0.65rem; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.3);">
-                        {!! $tierData['icon_svg'] ?? '<svg width="13" height="13" viewBox="0 0 24 24" fill="#facc15"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/></svg>' !!}
+                    <div style="display: flex; align-items: center; gap: 5px; color: #ffffff; font-weight: 700; font-size: 0.78rem;">
+                        {!! $tierData['icon_svg'] ?? '<svg width="15" height="15" viewBox="0 0 24 24" fill="#facc15"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/></svg>' !!}
                         <span>{{ $tierData['badge'] }}</span>
                     </div>
                 </div>
 
-                @php
-                    $ratingStats = $cp ? $cp->getRatingStats() : ['rating' => '5.0', 'count' => 0];
-                @endphp
-                <!-- Avatar & Rating Pill (Image 2 style) -->
-                <div style="margin-top:-40px; display:flex; justify-content:center; position:relative; z-index:2;">
+                <!-- Avatar & Realtime Rating Pill (Image 2 style) -->
+                <div style="margin-top:-26px; display:flex; justify-content:center; position:relative; z-index:2;">
                     <div style="position:relative; display:inline-block;">
                         @if($seller?->avatar)
-                            <img src="{{ asset('storage/'.$seller->avatar) }}" style="width:80px; height:80px; border-radius:50%; border:3.5px solid #fff; object-fit:cover; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,0.12); display:block;">
+                            <img src="{{ asset('storage/'.$seller->avatar) }}" style="width:78px; height:78px; border-radius:50%; border:3.5px solid #fff; object-fit:cover; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,0.1); display:block;">
                         @else
-                            <div style="width:80px; height:80px; border-radius:50%; border:3.5px solid #fff; display:flex; align-items:center; justify-content:center; font-size:1.6rem; font-weight:800; color:#1eb349; background:#e7f0e7; box-shadow:0 6px 18px rgba(0,0,0,0.12);">
+                            <div style="width:78px; height:78px; border-radius:50%; border:3.5px solid #fff; display:flex; align-items:center; justify-content:center; font-size:1.6rem; font-weight:800; color:#1eb349; background:#e7f0e7; box-shadow:0 6px 18px rgba(0,0,0,0.1);">
                                 {{ strtoupper(substr($displaySellerName, 0, 2)) }}
                             </div>
                         @endif
                         {{-- Realtime Rating pill badge top-right of avatar --}}
-                        <div style="position:absolute; top:-2px; right:-18px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-size:0.7rem; font-weight:800; padding:0.18rem 0.55rem; border-radius:999px; display:flex; align-items:center; gap:3px; box-shadow:0 3px 8px rgba(0,0,0,0.18); border:2px solid #fff;" title="Rating Real-time: {{ $ratingStats['rating'] }} (Total: {{ $ratingStats['count'] }})">
+                        <div style="position:absolute; top:-2px; right:-16px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-size:0.75rem; font-weight:800; padding:0.18rem 0.55rem; border-radius:999px; display:flex; align-items:center; gap:3px; box-shadow:0 3px 8px rgba(0,0,0,0.15); border:2px solid #fff;" title="Rating Real-time: {{ $ratingStats['rating'] }} (Total: {{ $ratingStats['count'] }})">
                             <span>{{ $ratingStats['rating'] }}</span>
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/></svg>
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/></svg>
                         </div>
                     </div>
                 </div>
                 
-                <div style="text-align:center; padding: 1rem 1.25rem 1.5rem;">
-                    <div style="font-size:1.2rem; font-weight:800; color:var(--text-main); margin-bottom:0.15rem; font-family: var(--font, 'Montserrat', sans-serif);">
+                <div style="text-align:center; padding: 0.85rem 1.25rem 1.25rem;">
+                    <div style="font-size:1.25rem; font-weight:800; color:var(--text-main); margin-bottom:0.25rem; font-family: var(--font, 'Montserrat', sans-serif);">
                         {{ $displaySellerName }}
-                    </div>
-
-                    {{-- Dynamic Rating & Total Reviews Realtime --}}
-                    <div style="font-size:0.75rem; font-weight:700; color:#1eb349; margin-bottom:0.4rem; display:flex; align-items:center; justify-content:center; gap:0.25rem;">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/></svg>
-                        <span>{{ $ratingStats['rating'] }}</span>
-                        <span style="color:#94a3b8; font-weight:500;">({{ $ratingStats['count'] }} {{ $ratingStats['count'] == 1 ? 'ulasan/terjual' : 'total ulasan/terjual' }})</span>
                     </div>
 
                     {{-- Bio / Deskripsi Creator --}}
