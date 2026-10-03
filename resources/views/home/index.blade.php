@@ -2046,173 +2046,416 @@
     SECTION PRODUK TERBARU (2 BARIS GRID RESPONSIVE)
     ════════════════════════════════════════════════════════════════════════ --}}
     @if(isset($latestProducts) && $latestProducts->count() > 0)
-    <section style="background: #ffffff; padding: 2.5rem 0 3rem; border-bottom: 1px solid #E2E8F0;">
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
-            <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;">
-                <div>
-                    <h2 class="responsive-section-title">
-                        Produk Terbaru
-                    </h2>
+        <section style="background: #ffffff; padding: 2.5rem 0 3rem; border-bottom: 1px solid #E2E8F0;">
+            <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
+                <div
+                    style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <h2 class="responsive-section-title">
+                            Produk Terbaru
+                        </h2>
+                    </div>
+                    <a href="{{ route_locale('products') }}?sort=terbaru"
+                        style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;"
+                        onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
+                        Lihat Semua Produk
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M5 12h14m-7-7l7 7-7 7" />
+                        </svg>
+                    </a>
                 </div>
-                <a href="{{ route_locale('products') }}?sort=terbaru" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
-                    Lihat Semua Produk
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path d="M5 12h14m-7-7l7 7-7 7" />
-                    </svg>
-                </a>
-            </div>
 
-            <div class="grid-2-rows-responsive">
-                @foreach($latestProducts as $lProd)
-                    @php
-                        $lPrice = $lProd->sale_price > 0 && $lProd->sale_price < $lProd->price ? $lProd->sale_price : $lProd->effective_price;
-                        $lOrigPrice = $lProd->sale_price > 0 && $lProd->sale_price < $lProd->price ? $lProd->price : null;
-                        $lHasDiscount = !empty($lOrigPrice) && $lOrigPrice > $lPrice;
-                        $lDiscountPct = $lHasDiscount ? round((($lOrigPrice - $lPrice) / $lOrigPrice) * 100) : 0;
-                        $lImage = $lProd->image ? asset('storage/' . $lProd->image) : asset('images/buyle-og.png');
-                        $lRating = ($lProd->rating && $lProd->rating > 0) ? number_format($lProd->rating, 1) : (($lProd->reviews_avg_rating && $lProd->reviews_avg_rating > 0) ? number_format($lProd->reviews_avg_rating, 1) : '5.0');
-                    @endphp
-                    <a href="{{ route_locale('products.show', $lProd->slug) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column;">
-                        <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);" class="article-card-box">
-                            <div style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
-                                <img src="{{ $lImage }}" alt="{{ $lProd->name }}" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;" class="article-banner-img">
-                                @if($lHasDiscount)
-                                    <div style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
-                                        -{{ $lDiscountPct }}%
-                                    </div>
-                                @else
-                                    <div style="position: absolute; top: 8px; left: 8px; background: #3B82F6; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
-                                        BARU
-                                    </div>
-                                @endif
-                            </div>
-
-                            <div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
-                                <div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
-                                        <div style="display: flex; align-items: center; gap: 0.3rem;">
-                                            <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
-                                            <span style="font-family: 'Montserrat', sans-serif;">{{ $lRating }}</span>
+                <div class="grid-2-rows-responsive">
+                    @foreach($latestProducts as $lProd)
+                        @php
+                            $lPrice = $lProd->sale_price > 0 && $lProd->sale_price < $lProd->price ? $lProd->sale_price : $lProd->effective_price;
+                            $lOrigPrice = $lProd->sale_price > 0 && $lProd->sale_price < $lProd->price ? $lProd->price : null;
+                            $lHasDiscount = !empty($lOrigPrice) && $lOrigPrice > $lPrice;
+                            $lDiscountPct = $lHasDiscount ? round((($lOrigPrice - $lPrice) / $lOrigPrice) * 100) : 0;
+                            $lImage = $lProd->image ? asset('storage/' . $lProd->image) : asset('images/buyle-og.png');
+                            $lRating = ($lProd->rating && $lProd->rating > 0) ? number_format($lProd->rating, 1) : (($lProd->reviews_avg_rating && $lProd->reviews_avg_rating > 0) ? number_format($lProd->reviews_avg_rating, 1) : '5.0');
+                        @endphp
+                        <a href="{{ route_locale('products.show', $lProd->slug) }}"
+                            style="text-decoration: none; color: inherit; display: flex; flex-direction: column;">
+                            <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
+                                class="article-card-box">
+                                <div
+                                    style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
+                                    <img src="{{ $lImage }}" alt="{{ $lProd->name }}"
+                                        style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
+                                        class="article-banner-img">
+                                    @if($lHasDiscount)
+                                        <div
+                                            style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
+                                            -{{ $lDiscountPct }}%
                                         </div>
-                                        <div style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
-                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                                <polyline points="22 4 12 14.01 9 11.01" />
-                                            </svg>
-                                            Verified
+                                    @else
+                                        <div
+                                            style="position: absolute; top: 8px; left: 8px; background: #3B82F6; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
+                                            BARU
                                         </div>
-                                    </div>
-                                    <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                        {{ $lProd->name }}
-                                    </h3>
+                                    @endif
                                 </div>
 
-                                <div>
-                                    <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
-                                    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
-                                        <div>
-                                            @if($lHasDiscount)
-                                                <span style="font-size: 0.72rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500;">
-                                                    Rp {{ number_format($lOrigPrice, 0, ',', '.') }}
-                                                </span>
-                                            @endif
-                                            <span style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
-                                                @if($lPrice > 0)
-                                                    Rp {{ number_format($lPrice, 0, ',', '.') }}
-                                                @else
-                                                    <span style="color: #1eb349;">GRATIS</span>
+                                <div
+                                    style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                                    <div>
+                                        <div
+                                            style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
+                                            <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                                <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
+                                                <span style="font-family: 'Montserrat', sans-serif;">{{ $lRating }}</span>
+                                            </div>
+                                            <div
+                                                style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                    viewBox="0 0 24 24">
+                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                    <polyline points="22 4 12 14.01 9 11.01" />
+                                                </svg>
+                                                Verified
+                                            </div>
+                                        </div>
+                                        <h3
+                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                            {{ $lProd->name }}
+                                        </h3>
+                                    </div>
+
+                                    <div>
+                                        <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
+                                        <div
+                                            style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
+                                            <div>
+                                                @if($lHasDiscount)
+                                                    <span
+                                                        style="font-size: 0.72rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500;">
+                                                        Rp {{ number_format($lOrigPrice, 0, ',', '.') }}
+                                                    </span>
                                                 @endif
+                                                <span
+                                                    style="font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 900; color: #16a34a;">
+                                                    @if($lPrice > 0)
+                                                        Rp {{ number_format($lPrice, 0, ',', '.') }}
+                                                    @else
+                                                        <span style="color: #1eb349;">GRATIS</span>
+                                                    @endif
+                                                </span>
+                                            </div>
+                                            <span
+                                                style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s;"
+                                                class="retarget-btn-cta">
+                                                Lihat <svg width="12" height="12" fill="none" stroke="currentColor"
+                                                    stroke-width="2.5" viewBox="0 0 24 24">
+                                                    <path d="M5 12h14m-7-7l7 7-7 7" />
+                                                </svg>
                                             </span>
                                         </div>
-                                        <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s;" class="retarget-btn-cta">
-                                            Lihat <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                <path d="M5 12h14m-7-7l7 7-7 7" />
-                                            </svg>
-                                        </span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
-                @endforeach
+                        </a>
+                    @endforeach
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
     @endif
 
     {{-- ════════════════════════════════════════════════════════════════════════
     SECTION CREATOR TERPOPULER (2 BARIS GRID RESPONSIVE)
     ════════════════════════════════════════════════════════════════════════ --}}
     @if(isset($popularCreators) && $popularCreators->count() > 0)
-    <section style="background: #F8FAFC; padding: 3rem 0 3.5rem; border-bottom: 1px solid #E2E8F0;">
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
-            <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;">
-                <div>
-                    <h2 class="responsive-section-title">
-                        Creator Terpopuler
-                    </h2>
+        <style>
+            .popular-creators-grid {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 1.25rem;
+            }
+
+            .popular-creator-card {
+                text-decoration: none;
+                color: inherit;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                transition: all 0.25s ease;
+            }
+
+            .popular-creator-avatar-wrap {
+                width: 100%;
+                aspect-ratio: 1 / 1;
+                border-radius: 18px;
+                overflow: hidden;
+                position: relative;
+                background: #ffffff;
+                border: 1.5px solid #E2E8F0;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+                transition: all 0.25s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .popular-creator-card:hover .popular-creator-avatar-wrap {
+                transform: translateY(-4px);
+                border-color: #1eb349;
+                box-shadow: 0 8px 24px rgba(30, 179, 73, 0.2);
+            }
+
+            .popular-creator-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+            .popular-creator-avatar-placeholder {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
+                color: #1eb349;
+                font-weight: 800;
+                font-size: 1.8rem;
+                font-family: 'Montserrat', sans-serif;
+            }
+
+            .popular-creator-badge-icon {
+                position: absolute;
+                bottom: 8px;
+                right: 8px;
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+                z-index: 2;
+                transition: transform 0.2s;
+            }
+
+            .popular-creator-card:hover .popular-creator-badge-icon {
+                transform: scale(1.1);
+            }
+
+            .badge-store {
+                background: #1eb349;
+                color: #ffffff;
+                border: 1.5px solid #ffffff;
+            }
+
+            .badge-bio {
+                background: #0284c7;
+                color: #ffffff;
+                border: 1.5px solid #ffffff;
+            }
+
+            .popular-creator-info {
+                margin-top: 0.6rem;
+                text-align: center;
+                width: 100%;
+                padding: 0 0.25rem;
+            }
+
+            .popular-creator-name {
+                font-family: 'Montserrat', sans-serif;
+                font-size: 0.82rem;
+                font-weight: 800;
+                color: #0F172A;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.25rem;
+                width: 100%;
+            }
+
+            .popular-creator-name span {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+            }
+
+            .verified-icon {
+                flex-shrink: 0;
+            }
+
+            .popular-creator-link-action {
+                margin-top: 0.2rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .popular-creator-type-tag {
+                font-size: 0.68rem;
+                font-weight: 700;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.25rem;
+            }
+
+            .tag-store {
+                color: #16a34a;
+            }
+
+            .tag-bio {
+                color: #0284c7;
+            }
+
+            @media (max-width: 768px) {
+                .popular-creators-grid {
+                    display: flex;
+                    gap: 0.85rem;
+                    overflow-x: auto;
+                    scrollbar-width: none;
+                    -webkit-overflow-scrolling: touch;
+                    padding: 0.35rem 0.25rem 0.75rem;
+                    margin: 0 -0.5rem;
+                }
+
+                .popular-creators-grid::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .popular-creator-card {
+                    flex: 0 0 100px;
+                    width: 100px;
+                }
+
+                .popular-creator-avatar-wrap {
+                    border-radius: 14px;
+                }
+
+                .popular-creator-avatar-placeholder {
+                    font-size: 1.4rem;
+                }
+
+                .popular-creator-badge-icon {
+                    bottom: 6px;
+                    right: 6px;
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .popular-creator-badge-icon svg {
+                    width: 10px;
+                    height: 10px;
+                }
+
+                .popular-creator-name {
+                    font-size: 0.75rem;
+                }
+
+                .popular-creator-type-tag {
+                    font-size: 0.62rem;
+                }
+            }
+        </style>
+
+        <section style="background: #F8FAFC; padding: 2.5rem 0 3rem; border-bottom: 1px solid #E2E8F0;">
+            <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
+                <div
+                    style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.25rem;">
+                    <div>
+                        <h2 class="responsive-section-title">
+                            Creator Terpopuler
+                        </h2>
+                    </div>
+                    <a href="{{ route_locale('products') }}?tab=creators"
+                        style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;"
+                        onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
+                        Jelajahi Creator
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M5 12h14m-7-7l7 7-7 7" />
+                        </svg>
+                    </a>
                 </div>
-                <a href="{{ route_locale('products') }}?tab=creators" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
-                    Jelajahi Creator
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path d="M5 12h14m-7-7l7 7-7 7" />
-                    </svg>
-                </a>
-            </div>
 
-            <div class="grid-2-rows-responsive">
-                @foreach($popularCreators as $creatorUser)
-                    @php
-                        $cp = $creatorUser->creatorProfile;
-                        $cName = $cp?->store_name ?: ($creatorUser->name ?: 'Creator');
-                        $cDomain = $cp?->custom_domain ?: ($creatorUser->username ? $creatorUser->username . '.buyle.id' : 'buyle.id');
-                        $cAvatar = $cp?->avatar ?: ($creatorUser->avatar ? asset('storage/' . $creatorUser->avatar) : null);
-                        $cStoreSlug = $cp?->store_slug ?: $creatorUser->username;
-                        $cStoreUrl = $cStoreSlug ? route_locale('store.show', $cStoreSlug) : route_locale('products');
-                        $cProdCount = $creatorUser->products_count ?? ($creatorUser->products ? $creatorUser->products->count() : 0);
-                    @endphp
-                    <a href="{{ $cStoreUrl }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column;">
-                        <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 1rem; display: flex; flex-direction: column; justify-content: space-between; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-3px)'; this.style.borderColor='#1eb349';" onmouseout="this.style.transform='none'; this.style.borderColor='#E2E8F0';">
-                            <div>
-                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
-                                    <div style="width: 50px; height: 50px; border-radius: 12px; overflow: hidden; background: #F1F5F9; border: 1.5px solid #E2E8F0; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #1eb349; font-size: 1.1rem;">
-                                        @if($cAvatar)
-                                            <img src="{{ $cAvatar }}" alt="{{ $cName }}" style="width: 100%; height: 100%; object-fit: cover;">
-                                        @else
-                                            {{ strtoupper(substr($cName, 0, 1)) }}
-                                        @endif
-                                    </div>
-                                    <div style="overflow: hidden; flex: 1;">
-                                        <div style="display: flex; align-items: center; gap: 0.25rem;">
-                                            <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 800; color: #0F172A; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                                {{ $cName }}
-                                            </h3>
-                                            <svg width="13" height="13" fill="#0D9488" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                                        </div>
-                                        <div style="font-size: 0.7rem; color: #64748B; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 0.15rem;">
-                                            {{ $cDomain }}
-                                        </div>
-                                    </div>
-                                </div>
+                <div class="popular-creators-grid">
+                    @foreach($popularCreators as $creatorUser)
+                        @php
+                            $cp = $creatorUser->creatorProfile;
+                            $cName = $cp?->store_name ?: ($creatorUser->name ?: 'Creator');
+                            $cStoreSlug = $cp?->store_slug ?: $creatorUser->username;
+                            
+                            $cAvatar = null;
+                            if (!empty($cp?->avatar)) {
+                                $cAvatar = asset('storage/' . $cp->avatar);
+                            } elseif (!empty($creatorUser->avatar)) {
+                                $cAvatar = Str::startsWith($creatorUser->avatar, 'http') ? $creatorUser->avatar : asset('storage/' . $creatorUser->avatar);
+                            } elseif (!empty($cp?->bio_config['avatar'])) {
+                                $cAvatar = asset('storage/' . $cp->bio_config['avatar']);
+                            }
 
-                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.7rem; color: #64748B; font-weight: 600; margin-bottom: 0.75rem; padding: 0.3rem 0.5rem; background: #F8FAFC; border-radius: 8px;">
-                                    <span>Creator</span>
-                                    <span style="color: #16a34a; font-weight: 800;">{{ $cProdCount }} Produk</span>
+                            $isStoreActive = $cp ? $cp->isStoreActive() : false;
+
+                            if ($cStoreSlug) {
+                                $targetUrl = $isStoreActive ? route_locale('store.show', $cStoreSlug) : url('/' . $cStoreSlug);
+                            } else {
+                                $targetUrl = route_locale('products');
+                            }
+                        @endphp
+                        <a href="{{ $targetUrl }}" class="popular-creator-card" title="{{ $cName }} - {{ $isStoreActive ? 'Toko Digital' : 'Link in Bio' }}">
+                            <div class="popular-creator-avatar-wrap">
+                                @if($cAvatar)
+                                    <img src="{{ $cAvatar }}" alt="{{ $cName }}" class="popular-creator-img" loading="lazy">
+                                @else
+                                    <div class="popular-creator-avatar-placeholder">
+                                        {{ strtoupper(substr($cName, 0, 1)) }}
+                                    </div>
+                                @endif
+                                
+                                <div class="popular-creator-badge-icon {{ $isStoreActive ? 'badge-store' : 'badge-bio' }}" title="{{ $isStoreActive ? 'Toko Digital Active' : 'Link in Bio Active' }}">
+                                    @if($isStoreActive)
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                                            <line x1="3" y1="6" x2="21" y2="6"/>
+                                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                                        </svg>
+                                    @else
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                        </svg>
+                                    @endif
                                 </div>
                             </div>
 
-                            <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.45rem 0.85rem; border-radius: 99px; font-size: 0.78rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s;">
-                                Kunjungi Toko
-                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <path d="M5 12h14m-7-7l7 7-7 7" />
-                                </svg>
-                            </span>
-                        </div>
-                    </a>
-                @endforeach
+                            <div class="popular-creator-info">
+                                <div class="popular-creator-name">
+                                    <span>{{ $cName }}</span>
+                                    <svg class="verified-icon" width="12" height="12" fill="#0D9488" viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                                    </svg>
+                                </div>
+                                <div class="popular-creator-link-action">
+                                    @if($isStoreActive)
+                                        <span class="popular-creator-type-tag tag-store">
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                                                <line x1="3" y1="6" x2="21" y2="6"/>
+                                            </svg>
+                                            Toko Digital
+                                        </span>
+                                    @else
+                                        <span class="popular-creator-type-tag tag-bio">
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                            </svg>
+                                            Link in Bio
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
     @endif
 
     {{-- ════ PROMO SECTIONS (Dynamic) ════ --}}
@@ -2943,7 +3186,7 @@
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
                 <h2 class="responsive-section-title"
                     style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                    Tiket Event & Wisata
+                    Tiket Event & Konser
                 </h2>
                 <a href="{{ route_locale('products') }}?category=tiket"
                     style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
@@ -2975,10 +3218,10 @@
                                 : \Carbon\Carbon::parse($tProd->created_at)->addDays(15)->isoFormat('D MMMM Y');
                             $tLocation = $tProd->event_location
                                 ?: ($tProd->location
-                                ?: ($tProd->data_json['event_location'] ?? null)
-                                ?: ($tProd->seller?->creatorProfile?->city
-                                ?: ($tProd->seller?->creatorProfile?->store_location
-                                ?: 'Indonesia')));
+                                    ?: ($tProd->data_json['event_location'] ?? null)
+                                    ?: ($tProd->seller?->creatorProfile?->city
+                                        ?: ($tProd->seller?->creatorProfile?->store_location
+                                            ?: 'Indonesia')));
 
                             // Realtime Dynamic Rating
                             $tRating = ($tProd->rating && $tProd->rating > 0) ? number_format($tProd->rating, 1) : (($tProd->reviews_avg_rating && $tProd->reviews_avg_rating > 0) ? number_format($tProd->reviews_avg_rating, 1) : '5.0');
@@ -3202,13 +3445,16 @@
     SECTION IKLAN BANNER LANDSCAPE (RASIO 640 : 131)
     ════════════════════════════════════════════════════════════════════════ --}}
     @if(!empty($settings['landscape_banner']))
-    <section style="background: #ffffff; padding: 2.5rem 0 1rem;">
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
-            <a href="{{ $settings['landscape_banner_url'] ?? '#' }}" target="_blank" rel="noopener" style="display: block; width: 100%; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.005)'" onmouseout="this.style.transform='none'">
-                <img src="{{ asset('storage/' . $settings['landscape_banner']) }}" alt="Iklan Banner Landscape" style="width: 100%; aspect-ratio: 640 / 131; object-fit: cover; display: block; border-radius: 16px;">
-            </a>
-        </div>
-    </section>
+        <section style="background: #ffffff; padding: 2.5rem 0 1rem;">
+            <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
+                <a href="{{ $settings['landscape_banner_url'] ?? '#' }}" target="_blank" rel="noopener"
+                    style="display: block; width: 100%; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: transform 0.3s ease;"
+                    onmouseover="this.style.transform='scale(1.005)'" onmouseout="this.style.transform='none'">
+                    <img src="{{ asset('storage/' . $settings['landscape_banner']) }}" alt="Iklan Banner Landscape"
+                        style="width: 100%; aspect-ratio: 640 / 131; object-fit: cover; display: block; border-radius: 16px;">
+                </a>
+            </div>
+        </section>
     @endif
 
     {{-- ════════════════════════════════════════════════════════════════════════
