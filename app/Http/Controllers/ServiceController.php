@@ -491,7 +491,7 @@ class ServiceController extends Controller
             '@type'         => 'Review',
             'reviewRating'  => [
                 '@type'       => 'Rating',
-                'ratingValue' => (string) $ratingValue,
+                'ratingValue' => (string) $ratingVal,
                 'bestRating'  => '5',
             ],
             'author' => [

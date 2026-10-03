@@ -122,7 +122,7 @@
 
             .cv-hero-oval-bg,
             .cv-hero-bg-layer {
-                display: none !important;
+                display: block !important;
             }
         }
 
@@ -144,15 +144,16 @@
 
         @media (max-width: 991px) {
             .cv-hero-modern {
-                padding-top: 0.5rem;
-                padding-bottom: 0.5rem;
+                padding-top: calc(55px + 0.75rem);
+                padding-bottom: 1.25rem;
                 background: transparent !important;
             }
         }
 
         @media (max-width: 480px) {
             .cv-hero-modern {
-                padding-top: 0.5rem;
+                padding-top: calc(50px + 0.5rem);
+                padding-bottom: 1rem;
             }
         }
 
@@ -170,11 +171,16 @@
 
         @media (max-width: 991px) {
             .cv-hero-oval-bg {
-                display: none !important;
+                display: block !important;
+                top: -15%;
+                left: -20%;
+                width: 140%;
+                height: 115%;
+                border-radius: 0 0 50% 50% / 0 0 25% 25%;
             }
 
             .cv-hero-bg-layer {
-                display: none !important;
+                display: block !important;
             }
         }
 
@@ -1498,113 +1504,116 @@
                 @endif
             </div>
         </div>
-    </section>
 
-    {{-- ════ MOBILE BANNER SWIPE (hanya tampil di mobile ≤ 1024px) ════ --}}
-    <style>
-        .mob-banner-swiper-wrap {
-            display: none;
-        }
-
-        @media (max-width: 1024px) {
+        {{-- ════ MOBILE BANNER SWIPE (hanya tampil di mobile ≤ 1024px) ════ --}}
+        <style>
             .mob-banner-swiper-wrap {
-                display: block;
-                padding: 0.5rem 0.75rem 0;
+                display: none;
             }
 
-            .mob-banner-swiper {
-                border-radius: 14px;
-                overflow: hidden;
-                position: relative;
-            }
+            @media (max-width: 1024px) {
+                .mob-banner-swiper-wrap {
+                    display: block;
+                    padding: 0 0.75rem;
+                    position: relative;
+                    z-index: 1;
+                }
 
-            .mob-banner-swiper .swiper-slide {
-                border-radius: 14px;
-                overflow: hidden;
-                aspect-ratio: 2 / 1;
-            }
+                .mob-banner-swiper {
+                    border-radius: 14px;
+                    overflow: hidden;
+                    position: relative;
+                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+                }
 
-            .mob-banner-swiper .swiper-slide a {
-                display: block;
-                width: 100%;
-                height: 100%;
-            }
+                .mob-banner-swiper .swiper-slide {
+                    border-radius: 14px;
+                    overflow: hidden;
+                    aspect-ratio: 2 / 1;
+                }
 
-            .mob-banner-swiper .swiper-slide img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                display: block;
-            }
+                .mob-banner-swiper .swiper-slide a {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                }
 
-            .mob-banner-pg {
-                position: absolute;
-                bottom: 10px !important;
-                left: 0;
-                right: 0;
-                text-align: center;
-                z-index: 10;
-                display: flex;
-                justify-content: center;
-                gap: 5px;
-            }
+                .mob-banner-swiper .swiper-slide img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: block;
+                }
 
-            .mob-banner-pg .swiper-pagination-bullet {
-                background: rgba(255, 255, 255, 0.6);
-                opacity: 1;
-                width: 8px;
-                height: 8px;
-                margin: 0 !important;
-                transition: all 0.3s;
-            }
+                .mob-banner-pg {
+                    position: absolute;
+                    bottom: 10px !important;
+                    left: 0;
+                    right: 0;
+                    text-align: center;
+                    z-index: 10;
+                    display: flex;
+                    justify-content: center;
+                    gap: 5px;
+                }
 
-            .mob-banner-pg .swiper-pagination-bullet-active {
-                background: #fff;
-                width: 22px;
-                border-radius: 4px;
+                .mob-banner-pg .swiper-pagination-bullet {
+                    background: rgba(255, 255, 255, 0.6);
+                    opacity: 1;
+                    width: 8px;
+                    height: 8px;
+                    margin: 0 !important;
+                    transition: all 0.3s;
+                }
+
+                .mob-banner-pg .swiper-pagination-bullet-active {
+                    background: #fff;
+                    width: 22px;
+                    border-radius: 4px;
+                }
             }
-        }
-    </style>
-    <div class="mob-banner-swiper-wrap">
-        <div class="swiper mob-banner-swiper">
-            <div class="swiper-wrapper">
-                {{-- Slide 1: Banner Utama / Hero Slider --}}
-                @if(isset($heroSlides) && $heroSlides->count() > 0)
-                    @php $firstSlide = $heroSlides->first(); @endphp
-                    <div class="swiper-slide"><a href="{{ $firstSlide->button_url ?? '#' }}"
-                            aria-label="{{ $firstSlide->title }}"><img src="{{ asset('storage/' . $firstSlide->image) }}"
-                                alt="{{ $firstSlide->title }}" loading="eager"></a></div>
-                @elseif(!empty($settings['hero_main_image']))
-                    <div class="swiper-slide"><a href="{{ route('products') }}"><img
-                                src="{{ asset('storage/' . $settings['hero_main_image']) }}" alt="Banner Utama"
-                                loading="eager"></a></div>
-                @endif
-                {{-- Slide 2: Banner Kanan Atas --}}
-                @if(isset($utamaBanners) && $utamaBanners->count() > 0)
-                    @php $utama = $utamaBanners->first(); @endphp
-                    <div class="swiper-slide"><a href="{{ $utama->button_url ?? route('products') }}"><img
-                                src="{{ asset('storage/' . $utama->image) }}" alt="{{ $utama->title }}" loading="lazy"></a>
-                    </div>
-                @elseif(!empty($settings['hero_secondary_image']))
-                    <div class="swiper-slide"><a href="{{ route('products') }}"><img
-                                src="{{ asset('storage/' . $settings['hero_secondary_image']) }}" alt="Banner Promo"
-                                loading="lazy"></a></div>
-                @endif
-                {{-- Slide 3: Banner Kanan Bawah --}}
-                @if(isset($sampingBanners) && $sampingBanners->count() > 0)
-                    @php $samping = $sampingBanners->first(); @endphp
-                    <div class="swiper-slide"><a href="{{ $samping->button_url ?? route('products') }}"><img
-                                src="{{ asset('storage/' . $samping->image) }}" alt="{{ $samping->title }}" loading="lazy"></a>
-                    </div>
-                @elseif(!empty($settings['hero_third_image']))
-                    <div class="swiper-slide"><a href="{{ route('products') }}"><img
-                                src="{{ asset('storage/' . $settings['hero_third_image']) }}" alt="Banner Samping"
-                                loading="lazy"></a></div>
-                @endif
+        </style>
+        <div class="mob-banner-swiper-wrap">
+            <div class="swiper mob-banner-swiper">
+                <div class="swiper-wrapper">
+                    {{-- Slide 1: Banner Utama / Hero Slider --}}
+                    @if(isset($heroSlides) && $heroSlides->count() > 0)
+                        @php $firstSlide = $heroSlides->first(); @endphp
+                        <div class="swiper-slide"><a href="{{ $firstSlide->button_url ?? '#' }}"
+                                aria-label="{{ $firstSlide->title }}"><img src="{{ asset('storage/' . $firstSlide->image) }}"
+                                    alt="{{ $firstSlide->title }}" loading="eager"></a></div>
+                    @elseif(!empty($settings['hero_main_image']))
+                        <div class="swiper-slide"><a href="{{ route('products') }}"><img
+                                    src="{{ asset('storage/' . $settings['hero_main_image']) }}" alt="Banner Utama"
+                                    loading="eager"></a></div>
+                    @endif
+                    {{-- Slide 2: Banner Kanan Atas --}}
+                    @if(isset($utamaBanners) && $utamaBanners->count() > 0)
+                        @php $utama = $utamaBanners->first(); @endphp
+                        <div class="swiper-slide"><a href="{{ $utama->button_url ?? route('products') }}"><img
+                                    src="{{ asset('storage/' . $utama->image) }}" alt="{{ $utama->title }}" loading="lazy"></a>
+                        </div>
+                    @elseif(!empty($settings['hero_secondary_image']))
+                        <div class="swiper-slide"><a href="{{ route('products') }}"><img
+                                    src="{{ asset('storage/' . $settings['hero_secondary_image']) }}" alt="Banner Promo"
+                                    loading="lazy"></a></div>
+                    @endif
+                    {{-- Slide 3: Banner Kanan Bawah --}}
+                    @if(isset($sampingBanners) && $sampingBanners->count() > 0)
+                        @php $samping = $sampingBanners->first(); @endphp
+                        <div class="swiper-slide"><a href="{{ $samping->button_url ?? route('products') }}"><img
+                                    src="{{ asset('storage/' . $samping->image) }}" alt="{{ $samping->title }}" loading="lazy"></a>
+                        </div>
+                    @elseif(!empty($settings['hero_third_image']))
+                        <div class="swiper-slide"><a href="{{ route('products') }}"><img
+                                    src="{{ asset('storage/' . $settings['hero_third_image']) }}" alt="Banner Samping"
+                                    loading="lazy"></a></div>
+                    @endif
+                </div>
+                <div class="swiper-pagination mob-banner-pg"></div>
             </div>
-            <div class="swiper-pagination mob-banner-pg"></div>
         </div>
-    </div>
+    </section>
 
     {{-- ════ VISIBLE H1 & SEO SECTION ════ --}}
     <div style="display:none;" class="hide-on-mobile">
