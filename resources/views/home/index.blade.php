@@ -122,7 +122,7 @@
 
             .cv-hero-oval-bg,
             .cv-hero-bg-layer {
-                display: block !important;
+                display: none !important;
             }
         }
 
@@ -144,16 +144,15 @@
 
         @media (max-width: 991px) {
             .cv-hero-modern {
-                padding-top: calc(55px + 0.75rem);
-                padding-bottom: 1.25rem;
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
                 background: transparent !important;
             }
         }
 
         @media (max-width: 480px) {
             .cv-hero-modern {
-                padding-top: calc(50px + 0.5rem);
-                padding-bottom: 1rem;
+                padding-top: 0.5rem;
             }
         }
 
@@ -171,16 +170,11 @@
 
         @media (max-width: 991px) {
             .cv-hero-oval-bg {
-                display: block !important;
-                top: -15%;
-                left: -20%;
-                width: 140%;
-                height: 115%;
-                border-radius: 0 0 50% 50% / 0 0 25% 25%;
+                display: none !important;
             }
 
             .cv-hero-bg-layer {
-                display: block !important;
+                display: none !important;
             }
         }
 
