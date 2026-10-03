@@ -367,6 +367,30 @@ class AdminCreatorResourceController extends Controller
     }
 
     /**
+     * Toggle status Creator Eksklusif (is_exclusive).
+     * Jika aktif, creator dapat mengatur rating & sold_count produk secara manual.
+     */
+    public function toggleExclusive(Request $request, $id)
+    {
+        $user = User::with('creatorProfile')->findOrFail($id);
+
+        if (!$user->creatorProfile) {
+            return response()->json(['success' => false, 'message' => 'Creator profile tidak ditemukan.'], 404);
+        }
+
+        $current = (bool) $user->creatorProfile->is_exclusive;
+        $user->creatorProfile->update(['is_exclusive' => !$current]);
+
+        $label = !$current ? 'Eksklusif' : 'Normal';
+
+        return response()->json([
+            'success'      => true,
+            'is_exclusive' => !$current,
+            'message'      => "Creator " . ($user->creatorProfile->store_name ?: $user->name) . " diubah ke mode {$label}.",
+        ]);
+    }
+
+    /**
      * Tampilkan detail rincian aset, dependency graph, traffic hits, dan omset per creator.
      */
     public function show($id)

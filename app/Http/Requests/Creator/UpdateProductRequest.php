@@ -49,6 +49,10 @@ class UpdateProductRequest extends FormRequest
             // URL produk digital — divalidasi oleh SafeDigitalUrl jika diisi
             'digital_resource'    => ['nullable', 'string', 'max:2000'],
 
+            // Exclusive Creator rating & sold count override
+            'rating'                    => ['nullable', 'numeric', 'min:0', 'max:5'],
+            'sold_count'                => ['nullable', 'integer', 'min:0'],
+
             'is_active'           => ['boolean'],
             'is_featured'         => ['boolean'],
             'is_whitelabel'             => ['nullable', 'boolean'],

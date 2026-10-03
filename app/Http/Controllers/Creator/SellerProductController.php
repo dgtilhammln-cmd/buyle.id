@@ -131,6 +131,16 @@ class SellerProductController extends Controller
             $data['short_desc'] = Str::limit(strip_tags($data['description'] ?? $data['name']), 150);
         }
 
+        // Handle Exclusive Creator custom rating & sold_count
+        if (auth()->user()->creatorProfile?->is_exclusive) {
+            if ($request->has('rating') && $request->input('rating') !== null && $request->input('rating') !== '') {
+                $data['rating'] = (float) $request->input('rating');
+            }
+            if ($request->has('sold_count') && $request->input('sold_count') !== null && $request->input('sold_count') !== '') {
+                $data['sold_count'] = (int) $request->input('sold_count');
+            }
+        }
+
         // Handle White Label status (hanya untuk produk non-tiket)
         if ($data['product_type'] === 'ticket') {
             $data['is_whitelabel'] = false;
@@ -270,6 +280,16 @@ class SellerProductController extends Controller
                 }
             } else {
                 $data['whitelabel_approval_status'] = 'none';
+            }
+        }
+
+        // Handle Exclusive Creator custom rating & sold_count
+        if (auth()->user()->creatorProfile?->is_exclusive || ($product->seller && $product->seller->creatorProfile?->is_exclusive)) {
+            if ($request->has('rating') && $request->input('rating') !== null && $request->input('rating') !== '') {
+                $data['rating'] = (float) $request->input('rating');
+            }
+            if ($request->has('sold_count') && $request->input('sold_count') !== null && $request->input('sold_count') !== '') {
+                $data['sold_count'] = (int) $request->input('sold_count');
             }
         }
 

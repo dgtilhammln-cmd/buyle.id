@@ -39,6 +39,8 @@ class CreatorProfile extends Model
         'bio_role',
         'bio_theme',
         'bio_config',
+        // Exclusive Creator
+        'is_exclusive',
         // AI Scan Metadata
         'last_menu_scan_at',
         'monthly_scan_count',
@@ -48,6 +50,7 @@ class CreatorProfile extends Model
     protected $casts = [
         'social_links' => 'array',
         'bio_config'   => 'array',
+        'is_exclusive' => 'boolean',
         'last_menu_scan_at' => 'datetime',
         'scan_count_reset_at' => 'datetime',
     ];

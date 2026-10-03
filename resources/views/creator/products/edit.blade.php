@@ -678,6 +678,27 @@
                                     </span>
                                 </div>
 
+                                @if(auth()->user()->creatorProfile?->is_exclusive || ($product->seller && $product->seller->creatorProfile?->is_exclusive))
+                                <div class="form-group full" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(217, 119, 6, 0.04)); border: 1.5px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #b45309; font-weight: 700; font-size: 0.95rem;">
+                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                        Fitur Creator Eksklusif — Statistik Bintang & Penjual
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                        <div class="form-group" style="margin-bottom:0;">
+                                            <label class="form-label" style="color:#78350f;">Rating Produk (0.0 - 5.0)</label>
+                                            <input type="number" name="rating" value="{{ old('rating', $product->rating ?? 5.0) }}" class="form-input" min="0" max="5" step="0.1" placeholder="5.0" style="border-color: rgba(245, 158, 11, 0.4);">
+                                            <span class="form-hint" style="color:#92400e;">Atur statistik bintang rating produk secara manual.</span>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom:0;">
+                                            <label class="form-label" style="color:#78350f;">Jumlah Terjual (Sales)</label>
+                                            <input type="number" name="sold_count" value="{{ old('sold_count', $product->sold_count ?? 0) }}" class="form-input" min="0" step="1" placeholder="100" style="border-color: rgba(245, 158, 11, 0.4);">
+                                            <span class="form-hint" style="color:#92400e;">Atur angka jumlah produk terjual secara manual.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
+
                                 <div class="form-group full">
                                     <label class="form-label">Deskripsi Singkat (Exerp) <span>*</span></label>
                                     <textarea name="short_desc" class="form-input" rows="2"

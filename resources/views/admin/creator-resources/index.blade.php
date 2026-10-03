@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'Audit Resource & Revenue Creators')
 @section('page-title', 'Audit Resource, Revenue & Aktivitas Creators')
 
@@ -785,6 +785,23 @@
                         </td>
                         <td style="text-align: right;">
                             <div style="display:inline-flex; gap:0.35rem; align-items:center; flex-wrap:nowrap;">
+                                {{-- Toggle Eksklusif --}}
+                                @php $isExclusive = $profile && $profile->is_exclusive; @endphp
+                                <button type="button"
+                                    id="excl-btn-{{ $user->id }}"
+                                    onclick="toggleExclusive({{ $user->id }}, {{ $isExclusive ? 'true' : 'false' }})"
+                                    title="{{ $isExclusive ? 'Non-aktifkan Creator Eksklusif' : 'Aktifkan Creator Eksklusif (rating & terjual manual)' }}"
+                                    style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.4rem 0.65rem;border-radius:10px;font-size:0.72rem;font-weight:700;border:1.5px solid;cursor:pointer;transition:all 0.2s;white-space:nowrap;
+                                    {{ $isExclusive ? 'background:#FEF9C3;color:#92400E;border-color:#FCD34D;' : 'background:#F8FAFC;color:#475569;border-color:#E2E8F0;' }}">
+                                    @if($isExclusive)
+                                        <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                        Eksklusif ON
+                                    @else
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                        Eksklusif
+                                    @endif
+                                </button>
+
                                 {{-- Direct WA Nudge Button --}}
                                 @if($item['wa_link'])
                                     <a href="{{ $item['wa_link'] }}" target="_blank" class="btn-wa-nudge" title="Kirim Pesan WhatsApp Sapaan & Support Revenue ke Creator Ini">
@@ -1289,6 +1306,66 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+</script>
+
+<script>
+// ── Creator Eksklusif Toggle ────────────────────────────────────────
+function toggleExclusive(userId, currentState) {
+    const btn = document.getElementById('excl-btn-' + userId);
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+
+    fetch('/admin/creator-resources/' + userId + '/toggle-exclusive', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({})
+    })
+    .then(r => r.json())
+    .then(data => {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+
+        if (data.success) {
+            const isNowExclusive = data.is_exclusive;
+
+            if (isNowExclusive) {
+                btn.style.background = '#FEF9C3';
+                btn.style.color      = '#92400E';
+                btn.style.borderColor = '#FCD34D';
+                btn.innerHTML = `<svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Eksklusif ON`;
+                btn.title = 'Non-aktifkan Creator Eksklusif';
+            } else {
+                btn.style.background = '#F8FAFC';
+                btn.style.color      = '#475569';
+                btn.style.borderColor = '#E2E8F0';
+                btn.innerHTML = `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Eksklusif`;
+                btn.title = 'Aktifkan Creator Eksklusif (rating & terjual manual)';
+            }
+
+            btn.setAttribute('onclick', `toggleExclusive(${userId}, ${isNowExclusive})`);
+
+            // Tampilkan notif
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position:fixed;bottom:2rem;right:2rem;z-index:9999;background:#0F172A;color:#fff;padding:0.75rem 1.5rem;border-radius:12px;font-size:0.83rem;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,0.2);animation:fadeIn 0.2s;';
+            toast.textContent = data.message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        } else {
+            alert(data.message || 'Gagal mengubah status.');
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        }
+    })
+    .catch(() => {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        alert('Terjadi kesalahan jaringan. Coba lagi.');
+    });
+}
 </script>
 
 @endsection
