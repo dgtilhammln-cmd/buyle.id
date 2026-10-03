@@ -852,74 +852,62 @@
             background: rgba(37, 211, 102, 0.12);
         }
 
-        /* LIST VIEW */
+        /* ════ PRODUCT LIST VIEW ════ */
         .sp-grid.list-view {
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr !important;
+            gap: 0.85rem !important;
         }
 
         .sp-grid.list-view .sp-card {
-            flex-direction: row;
-            min-height: 180px;
+            min-height: auto;
         }
 
-        .sp-grid.list-view .sp-card-img {
-            width: 200px;
-            min-height: 180px;
-            aspect-ratio: auto;
-            flex-shrink: 0;
+        .sp-grid.list-view .sp-card-inner {
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 1rem !important;
+            padding: 0.75rem !important;
         }
 
-        .sp-grid.list-view .sp-card-body {
-            padding: 1.25rem 1.5rem;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
+        .sp-grid.list-view .sp-card-img-wrap {
+            width: 110px !important;
+            height: 110px !important;
+            min-width: 110px !important;
+            max-width: 110px !important;
+            aspect-ratio: 1/1 !important;
+            flex-shrink: 0 !important;
+            border-radius: 10px !important;
         }
 
-        .sp-grid.list-view .sp-card-name {
-            font-size: 1.125rem;
+        .sp-grid.list-view .sp-card-body-wrap {
+            padding: 0 !important;
+            height: 100% !important;
+            justify-content: space-between !important;
+            flex: 1 !important;
+            min-width: 0 !important;
         }
 
-        .sp-grid.list-view .sp-card-desc {
-            -webkit-line-clamp: 2;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+        .sp-grid.list-view .sp-card-body-wrap h3 {
+            height: auto !important;
+            -webkit-line-clamp: 2 !important;
+            margin-bottom: 0.25rem !important;
+            font-size: 0.88rem !important;
         }
 
-        .sp-grid.list-view .sp-card-meta-row {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 0.75rem;
-            flex-wrap: wrap;
-        }
-
-        .sp-grid.list-view .sp-card-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-            font-size: 0.75rem;
-            color: var(--c-muted);
-            font-family: var(--font);
-        }
-
-        .sp-grid.list-view .sp-card-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-top: auto;
-        }
-
-        .sp-grid.list-view .sp-card-price {
-            margin-bottom: 0;
-        }
-
-        .sp-grid.list-view .sp-card-actions {
-            grid-template-columns: auto auto;
-            width: auto;
+        @media (max-width: 576px) {
+            .sp-grid.list-view .sp-card-img-wrap {
+                width: 90px !important;
+                height: 90px !important;
+                min-width: 90px !important;
+                max-width: 90px !important;
+            }
+            .sp-grid.list-view .sp-card-inner {
+                gap: 0.75rem !important;
+                padding: 0.6rem !important;
+            }
+            .sp-grid.list-view .sp-card-body-wrap h3 {
+                font-size: 0.82rem !important;
+            }
         }
 
         /* ════ TAB SWITCHER ════ */
@@ -1763,15 +1751,6 @@
                             Semua Creator Terverifikasi
                             <span style="font-size:0.82rem; font-weight:600; color:var(--c-muted); margin-left:0.4rem;">({{ $allCreators->total() }})</span>
                         </div>
-                        {{-- View Toggle for Creators --}}
-                        <div class="sp-view-btns">
-                            <button class="sp-view-btn active" id="btnCreatorGrid" onclick="setCreatorView('grid')" title="Grid">
-                                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                            </button>
-                            <button class="sp-view-btn" id="btnCreatorList" onclick="setCreatorView('list')" title="List">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-                            </button>
-                        </div>
                     </div>
 
                     <div id="spCreatorGrid" class="sp-creator-grid">
@@ -2052,41 +2031,25 @@
     <script>
         function setView(m) {
             var g = document.getElementById('spGrid'),
+                cg = document.getElementById('spCreatorGrid'),
                 b1 = document.getElementById('btnGrid'),
                 b2 = document.getElementById('btnList');
-            if (!g) return;
             if (m === 'list') {
-                g.classList.add('list-view');
-                b2 && b2.classList.add('active');
-                b1 && b1.classList.remove('active');
+                if (g) g.classList.add('list-view');
+                if (cg) cg.classList.add('list-view');
+                if (b2) b2.classList.add('active');
+                if (b1) b1.classList.remove('active');
                 localStorage.setItem('sp_view', 'list');
             } else {
-                g.classList.remove('list-view');
-                b1 && b1.classList.add('active');
-                b2 && b2.classList.remove('active');
+                if (g) g.classList.remove('list-view');
+                if (cg) cg.classList.remove('list-view');
+                if (b1) b1.classList.add('active');
+                if (b2) b2.classList.remove('active');
                 localStorage.setItem('sp_view', 'grid');
-            }
-        }
-        function setCreatorView(m) {
-            var g = document.getElementById('spCreatorGrid'),
-                b1 = document.getElementById('btnCreatorGrid'),
-                b2 = document.getElementById('btnCreatorList');
-            if (!g) return;
-            if (m === 'list') {
-                g.classList.add('list-view');
-                b2 && b2.classList.add('active');
-                b1 && b1.classList.remove('active');
-                localStorage.setItem('sp_creator_view', 'list');
-            } else {
-                g.classList.remove('list-view');
-                b1 && b1.classList.add('active');
-                b2 && b2.classList.remove('active');
-                localStorage.setItem('sp_creator_view', 'grid');
             }
         }
         (function () {
             if (localStorage.getItem('sp_view') === 'list') setView('list');
-            if (localStorage.getItem('sp_creator_view') === 'list') setCreatorView('list');
         })();
         function toggleMobileFilter() { document.getElementById('spSidebar').classList.toggle('mobile-open'); }
 

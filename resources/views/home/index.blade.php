@@ -2162,9 +2162,6 @@
     @endif
 
     {{-- ════════════════════════════════════════════════════════════════════════
-    SECTION CREATOR TERPOPULER (2 BARIS GRID RESPONSIVE)
-    ════════════════════════════════════════════════════════════════════════ --}}
-    {{-- ════════════════════════════════════════════════════════════════════════
     SECTION CREATOR TERPOPULER (1 BARIS SCROLLABLE RESPONSIVE)
     ════════════════════════════════════════════════════════════════════════ --}}
     @if(isset($popularCreators) && $popularCreators->count() > 0)
@@ -2183,9 +2180,9 @@
             }
 
             .popular-creator-card {
-                flex: 0 0 calc(20% - 0.8rem);
-                min-width: 140px;
-                max-width: 175px;
+                flex: 0 0 120px;
+                min-width: 100px;
+                max-width: 140px;
                 text-decoration: none;
                 color: inherit;
                 display: flex;
@@ -2207,14 +2204,15 @@
                 background: #ffffff;
                 border: 1.5px solid #E2E8F0;
                 box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-                transition: box-shadow 0.25s ease;
+                transition: box-shadow 0.25s ease, border-color 0.25s ease;
                 display: flex;
                 align-items: center;
                 justify-content: center;
             }
 
             .popular-creator-card:hover .popular-creator-avatar-wrap {
-                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+                border-color: #1eb349;
+                box-shadow: 0 8px 24px rgba(30,179,73,0.15);
             }
 
             .popular-creator-img {
@@ -2238,15 +2236,15 @@
             }
 
             .popular-creator-info {
-                margin-top: 0.55rem;
+                margin-top: 0.45rem;
                 text-align: center;
                 width: 100%;
-                padding: 0 0.2rem;
+                padding: 0 0.15rem;
             }
 
             .popular-creator-name {
                 font-family: 'Montserrat', sans-serif;
-                font-size: 0.8rem;
+                font-size: 0.75rem;
                 font-weight: 800;
                 color: #0F172A;
                 display: flex;
@@ -2260,7 +2258,7 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                max-width: 100%;
+                max-width: calc(100% - 16px);
             }
 
             .verified-icon {
@@ -2268,44 +2266,53 @@
             }
 
             .popular-creator-cta-btn {
-                margin-top: 0.35rem;
+                margin-top: 0.3rem;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
                 gap: 0.2rem;
                 background: linear-gradient(135deg, #1eb349, #7db928);
                 color: #ffffff;
-                font-size: 0.68rem;
+                font-size: 0.62rem;
                 font-weight: 700;
-                padding: 0.3rem 0.65rem;
+                padding: 0.25rem 0.55rem;
                 border-radius: 99px;
                 box-shadow: 0 3px 10px rgba(30, 179, 73, 0.25);
                 transition: all 0.2s ease;
                 white-space: nowrap;
             }
 
+            .popular-creator-card:hover .popular-creator-cta-btn {
+                box-shadow: 0 5px 16px rgba(30,179,73,0.4);
+            }
+
             @media (max-width: 768px) {
                 .popular-creator-card {
-                    flex: 0 0 110px;
-                    min-width: 110px;
-                    max-width: 110px;
+                    flex: 0 0 88px;
+                    min-width: 80px;
+                    max-width: 100px;
                 }
 
                 .popular-creator-avatar-wrap {
-                    border-radius: 14px;
+                    border-radius: 12px;
                 }
 
                 .popular-creator-avatar-placeholder {
-                    font-size: 1.3rem;
+                    font-size: 1.2rem;
                 }
 
                 .popular-creator-name {
-                    font-size: 0.72rem;
+                    font-size: 0.68rem;
                 }
 
                 .popular-creator-cta-btn {
-                    font-size: 0.6rem;
-                    padding: 0.25rem 0.5rem;
+                    font-size: 0.57rem;
+                    padding: 0.2rem 0.45rem;
+                }
+
+                .popular-creators-grid {
+                    gap: 0.625rem;
+                    padding: 0.25rem 0.1rem 0.75rem;
                 }
             }
         </style>
