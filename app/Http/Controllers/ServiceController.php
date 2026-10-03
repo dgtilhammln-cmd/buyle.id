@@ -279,6 +279,13 @@ class ServiceController extends Controller
                 })
                 ->with(['creatorProfile'])
                 ->withCount('products')
+                ->orderByRaw("
+                    CASE 
+                        WHEN name LIKE '%HVM Digital%' OR username LIKE '%hvmdigital%' OR id IN (SELECT user_id FROM creator_profiles WHERE store_name LIKE '%HVM Digital%' OR store_slug LIKE '%hvmdigital%') THEN 1
+                        WHEN name LIKE '%Ilham Maulana%' OR username LIKE '%ilham%' OR id IN (SELECT user_id FROM creator_profiles WHERE store_name LIKE '%Ilham Maulana%' OR store_slug LIKE '%ilham%') THEN 2
+                        ELSE 3
+                    END ASC
+                ")
                 ->orderByDesc('products_count')
                 ->latest();
 

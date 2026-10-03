@@ -1808,7 +1808,7 @@
                                     <div class="sp-creator-sub">{{ $cDesc }}</div>
                                 </div>
                                 <span class="sp-creator-cta">
-                                    Kunjungi
+                                    Visit
                                     <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
                                 </span>
                             </a>

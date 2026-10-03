@@ -79,7 +79,7 @@ class HomeController extends Controller
             ->limit(10)
             ->get();
 
-        // Creator Terpopuler (10 items untuk 1 baris scrollable)
+        // Creator Terpopuler (10 items untuk 1 baris scrollable - HVM Digital #1, Ilham Maulana #2)
         $popularCreators = \App\Models\User::whereHas('creatorProfile')
             ->whereNotIn('role', ['admin', 'super_admin', 'admin_super'])
             ->where('name', 'NOT LIKE', '%copywriter%')
@@ -89,6 +89,13 @@ class HomeController extends Controller
             })
             ->with(['creatorProfile'])
             ->withCount('products')
+            ->orderByRaw("
+                CASE 
+                    WHEN name LIKE '%HVM Digital%' OR username LIKE '%hvmdigital%' OR id IN (SELECT user_id FROM creator_profiles WHERE store_name LIKE '%HVM Digital%' OR store_slug LIKE '%hvmdigital%') THEN 1
+                    WHEN name LIKE '%Ilham Maulana%' OR username LIKE '%ilham%' OR id IN (SELECT user_id FROM creator_profiles WHERE store_name LIKE '%Ilham Maulana%' OR store_slug LIKE '%ilham%') THEN 2
+                    ELSE 3
+                END ASC
+            ")
             ->orderByDesc('products_count')
             ->latest()
             ->limit(10)

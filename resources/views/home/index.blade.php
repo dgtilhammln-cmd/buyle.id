@@ -2315,13 +2315,13 @@
                 }
 
                 .popular-creator-cta-btn {
-                    font-size: 0.57rem;
-                    padding: 0.2rem 0.45rem;
+                    font-size: 0.62rem;
+                    padding: 0.22rem 0.55rem;
                 }
 
                 .popular-creators-grid {
-                    gap: 0.625rem;
-                    padding: 0.25rem 0.1rem 0.75rem;
+                    gap: 0.85rem;
+                    padding: 0.35rem 0.25rem 0.85rem;
                 }
             }
         </style>
@@ -2388,7 +2388,7 @@
                                     </svg>
                                 </div>
                                 <span class="popular-creator-cta-btn">
-                                    Kunjungi Creator
+                                    Visit
                                     <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                         <path d="M5 12h14m-7-7l7 7-7 7" />
                                     </svg>
