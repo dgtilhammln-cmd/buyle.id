@@ -2199,8 +2199,10 @@
             }
 
             .popular-creator-avatar-wrap {
-                width: 100%;
-                aspect-ratio: 1 / 1;
+                width: 100% !important;
+                aspect-ratio: 1 / 1 !important;
+                height: auto !important;
+                min-height: 0 !important;
                 border-radius: 16px;
                 overflow: hidden;
                 position: relative;
@@ -2208,9 +2210,7 @@
                 border: 1.5px solid #E2E8F0;
                 box-shadow: 0 4px 15px rgba(0,0,0,0.03);
                 transition: box-shadow 0.25s ease, border-color 0.25s ease;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                display: block !important;
             }
 
             .popular-creator-card:hover .popular-creator-avatar-wrap {
@@ -2219,10 +2219,13 @@
             }
 
             .popular-creator-img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                display: block;
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+                display: block !important;
+                position: absolute;
+                top: 0;
+                left: 0;
             }
 
             .popular-creator-avatar-placeholder {
@@ -2236,6 +2239,9 @@
                 font-weight: 800;
                 font-size: 1.6rem;
                 font-family: 'Montserrat', sans-serif;
+                position: absolute;
+                top: 0;
+                left: 0;
             }
 
             .popular-creator-info {

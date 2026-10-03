@@ -953,6 +953,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
             gap: 1rem;
+            align-items: start;
         }
 
         .sp-creator-card {
@@ -963,6 +964,7 @@
             color: inherit;
             transition: transform 0.25s var(--ease);
             cursor: pointer;
+            width: 100%;
         }
 
         .sp-creator-card:hover {
@@ -970,16 +972,19 @@
         }
 
         .sp-creator-avatar {
-            width: 100%;
-            aspect-ratio: 1/1;
+            width: 100% !important;
+            aspect-ratio: 1 / 1 !important;
+            height: auto !important;
+            min-height: 0 !important;
+            max-height: none !important;
+            flex-shrink: 0 !important;
             border-radius: 14px;
             overflow: hidden;
             background: #fff;
             border: 1.5px solid var(--c-border);
             box-shadow: 0 4px 14px rgba(0,0,0,0.04);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: block !important;
+            position: relative;
             transition: box-shadow 0.25s, border-color 0.25s;
         }
 
@@ -989,9 +994,13 @@
         }
 
         .sp-creator-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            display: block !important;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         .sp-creator-avatar-ph {
@@ -1005,19 +1014,25 @@
             font-weight: 800;
             font-size: 1.5rem;
             font-family: var(--font);
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         .sp-creator-name {
-            margin-top: 0.5rem;
+            margin-top: 0.45rem;
             font-family: var(--font);
             font-size: 0.78rem;
             font-weight: 700;
             color: var(--c-text);
             text-align: center;
             width: 100%;
-            white-space: nowrap;
+            height: 2.5em;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
             overflow: hidden;
-            text-overflow: ellipsis;
+            line-height: 1.25;
         }
 
         .sp-creator-cta {
