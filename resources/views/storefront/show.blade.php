@@ -94,7 +94,7 @@
     padding-top: 64px; /* offset for fixed header on desktop */
 }
 @media (max-width: 991px) {
-    .sf-page { padding-top: 130px !important; }
+    .sf-page { padding-top: 98px !important; }
     /* Hide footer on mobile storefront per user request */
     footer.cv-footer-v2 { display: none !important; }
     /* Hide promotional banner slider on mobile to prevent duplicate banners */

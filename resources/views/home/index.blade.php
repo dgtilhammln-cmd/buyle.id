@@ -144,7 +144,7 @@
 
         @media (max-width: 991px) {
             .cv-hero-modern {
-                padding-top: calc(125px + 0.5rem) !important;
+                padding-top: 98px !important;
                 padding-bottom: 0.5rem;
                 background: transparent !important;
             }
@@ -152,7 +152,7 @@
 
         @media (max-width: 480px) {
             .cv-hero-modern {
-                padding-top: calc(125px + 0.5rem) !important;
+                padding-top: 98px !important;
             }
         }
 
