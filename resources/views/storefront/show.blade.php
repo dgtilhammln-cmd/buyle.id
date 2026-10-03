@@ -94,7 +94,7 @@
     padding-top: 64px; /* offset for fixed header on desktop */
 }
 @media (max-width: 991px) {
-    .sf-page { padding-top: 0 !important; }
+    .sf-page { padding-top: 130px !important; }
     /* Hide footer on mobile storefront per user request */
     footer.cv-footer-v2 { display: none !important; }
     /* Hide promotional banner slider on mobile to prevent duplicate banners */
@@ -328,9 +328,9 @@
     .sf-profile-text { text-align: center; }
     .sf-store-name { font-size: 1rem; text-align: center; }
     .sf-desc { color: #64748B; font-size: 0.82rem; -webkit-line-clamp: 3; text-align: center; }
-    /* Center social icons on desktop */
+    /* Left-align social icons on desktop */
     .sf-profile-text > div[style*="display:flex"] {
-        justify-content: center !important;
+        justify-content: flex-start !important;
     }
     
     .sf-mobile-tabs { display: none; }
@@ -411,7 +411,7 @@
 
                         {{-- Social Links --}}
                         @php $socials = $profile->social_links ?? []; @endphp
-                        <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0.35rem;margin-top:0.4rem;">
+                        <div style="display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:0.35rem;margin-top:0.4rem;">
                             @if(!empty($profile->store_slug))
                                 <a href="{{ route('store.show', $profile->store_slug) }}" target="_blank" rel="noopener noreferrer" style="width:30px;height:30px;border-radius:50%;background:#F0FDF4;border:1px solid #BBF7D0;display:flex;align-items:center;justify-content:center;color:#1eb349;text-decoration:none;transition:transform 0.2s;" title="Digital Store buyle.id">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
