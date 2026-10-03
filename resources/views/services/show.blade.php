@@ -655,24 +655,41 @@
                 $bannerUrl = optional($cp)->store_banner_1 ? asset('storage/'.$cp->store_banner_1) : null;
             @endphp
             <div class="pd-creator-card" style="background:#fff; border-radius:20px; overflow:hidden; border: 1.5px solid var(--border); box-shadow:0 4px 20px rgba(0,0,0,0.04);">
-                <!-- Banner -->
-                @if($bannerUrl)
-                    <div style="width:100%; aspect-ratio:16/7; overflow:hidden; background:#f8fafc;">
-                        <img src="{{ $bannerUrl }}" alt="{{ $displaySellerName }}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                @php
+                    $isVerified = $cp?->is_verified ?? false;
+                    $tierData = $cp ? $cp->getTierInfo() : ['badge' => 'Perintis'];
+                @endphp
+                <!-- Banner Top Header matching Image 1 design -->
+                <div style="width:100%; height:95px; background:linear-gradient(135deg, #1eb349, #a5cf37); padding: 0.65rem 1rem; display: flex; align-items: flex-start; justify-content: space-between; position: relative;">
+                    @if($bannerUrl)
+                        <img src="{{ $bannerUrl }}" alt="{{ $displaySellerName }}" style="position: absolute; inset: 0; width:100%; height:100%; object-fit:cover; opacity: 0.85;">
+                    @endif
+                    <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 0.35rem; color: #ffffff; font-weight: 700; font-size: 0.72rem; background: rgba(0, 0, 0, 0.25); backdrop-filter: blur(4px); padding: 0.25rem 0.65rem; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.3);">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15" stroke-width="1"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                        <span>{{ $isVerified ? 'Verified Creator' : 'Creator' }}</span>
                     </div>
-                @else
-                    <div style="width:100%; height:95px; background:linear-gradient(135deg, var(--primary), #a5cf37);"></div>
-                @endif
+                    <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 0.35rem; color: #ffffff; font-weight: 700; font-size: 0.72rem; background: rgba(0, 0, 0, 0.25); backdrop-filter: blur(4px); padding: 0.25rem 0.65rem; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.3);">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15" stroke-width="1"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/><path d="M12 15.5l-4 6 4-2 4 2z"/></svg>
+                        <span>{{ $tierData['badge'] }}</span>
+                    </div>
+                </div>
 
                 <!-- Avatar -->
                 <div style="margin-top:-38px; display:flex; justify-content:center; position:relative; z-index:2;">
-                    @if($seller?->avatar)
-                        <img src="{{ asset('storage/'.$seller->avatar) }}" style="width:76px; height:76px; border-radius:50%; border:3.5px solid #fff; object-fit:cover; background:#fff; box-shadow:0 4px 14px rgba(0,0,0,0.12);">
-                    @else
-                        <div style="width:76px; height:76px; border-radius:50%; border:3.5px solid #fff; display:flex; align-items:center; justify-content:center; font-size:1.6rem; font-weight:700; color:var(--primary); background:#e7f0e7; box-shadow:0 4px 14px rgba(0,0,0,0.12);">
-                            {{ strtoupper(substr($displaySellerName, 0, 2)) }}
+                    <div style="position:relative;">
+                        @if($seller?->avatar)
+                            <img src="{{ asset('storage/'.$seller->avatar) }}" style="width:76px; height:76px; border-radius:50%; border:3.5px solid #fff; object-fit:cover; background:#fff; box-shadow:0 4px 14px rgba(0,0,0,0.12);">
+                        @else
+                            <div style="width:76px; height:76px; border-radius:50%; border:3.5px solid #fff; display:flex; align-items:center; justify-content:center; font-size:1.6rem; font-weight:700; color:var(--primary); background:#e7f0e7; box-shadow:0 4px 14px rgba(0,0,0,0.12);">
+                                {{ strtoupper(substr($displaySellerName, 0, 2)) }}
+                            </div>
+                        @endif
+                        {{-- Rating pill --}}
+                        <div style="position:absolute; top:-4px; right:-12px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-size:0.68rem; font-weight:800; padding:0.15rem 0.5rem; border-radius:999px; display:flex; align-items:center; gap:2px; box-shadow:0 2px 6px rgba(0,0,0,0.15); border:1.5px solid #fff;">
+                            <span>4.9</span>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="#facc15"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/></svg>
                         </div>
-                    @endif
+                    </div>
                 </div>
                 
                 <div style="text-align:center; padding: 1rem 1.25rem 1.5rem;">

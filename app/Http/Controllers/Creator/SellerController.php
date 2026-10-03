@@ -37,6 +37,23 @@ class SellerController extends Controller
             $totalTransactions = 0;
         }
 
+        // ── Auto-Verification & Tier Info Check ──────────────────────────────
+        $cp = $seller->creatorProfile;
+        if ($cp) {
+            if (!$cp->is_verified && $totalTransactions >= 100) {
+                $cp->update(['is_verified' => true]);
+                $cp->is_verified = true;
+            }
+            $tierInfo = $cp->getTierInfo($gmv);
+        } else {
+            $tierInfo = [
+                'name'     => 'PERINTIS',
+                'level'    => 1,
+                'subtitle' => 'Matte Silver / Brushed Steel',
+                'badge'    => 'Perintis',
+            ];
+        }
+
         // ── Platform Fee & Saldo ──────────────────────────────────────────────
         // Model A: fee ditanggung buyer → seller menerima full GMV
         $platformFeeRate = 5.0; // 5% (hanya untuk display)
@@ -73,8 +90,34 @@ class SellerController extends Controller
             'seller', 'gmv', 'platformFee', 'platformFeeRate',
             'totalPayout', 'availableBalance',
             'totalProducts', 'activeProducts',
-            'totalTransactions', 'recentSales', 'recentProducts'
+            'totalTransactions', 'recentSales', 'recentProducts',
+            'tierInfo'
         ));
+    }
+
+    /**
+     * Request atau klaim status Verified Creator.
+     */
+    public function requestVerification(Request $request)
+    {
+        $seller = auth()->user();
+        $cp = \App\Models\CreatorProfile::getOrCreateForUser($seller);
+
+        try {
+            $totalTransactions = Order::whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
+                ->whereHas('payment', fn($q) => $q->where('status', \App\Enums\PaymentStatus::Success))
+                ->count();
+        } catch (\Exception $e) {
+            $totalTransactions = 0;
+        }
+
+        if ($totalTransactions >= 100) {
+            $cp->update(['is_verified' => true]);
+            return redirect()->back()->with('success', 'Selamat! Toko Anda telah berhasil terverifikasi sebagai Verified Creator!');
+        }
+
+        $remaining = 100 - $totalTransactions;
+        return redirect()->back()->with('error', "Syarat belum terpenuhi. Diperlukan minimal 100 transaksi order (saat ini: {$totalTransactions}/100, kurang {$remaining} transaksi lagi).");
     }
 
     /**

@@ -39,8 +39,9 @@ class CreatorProfile extends Model
         'bio_role',
         'bio_theme',
         'bio_config',
-        // Exclusive Creator
+        // Exclusive & Verification
         'is_exclusive',
+        'is_verified',
         // AI Scan Metadata
         'last_menu_scan_at',
         'monthly_scan_count',
@@ -51,6 +52,7 @@ class CreatorProfile extends Model
         'social_links' => 'array',
         'bio_config'   => 'array',
         'is_exclusive' => 'boolean',
+        'is_verified'  => 'boolean',
         'last_menu_scan_at' => 'datetime',
         'scan_count_reset_at' => 'datetime',
     ];
@@ -100,5 +102,68 @@ class CreatorProfile extends Model
     public function bioBlocks()
     {
         return $this->hasMany(CreatorBioBlock::class, 'creator_id')->orderBy('order', 'asc')->orderBy('id', 'asc');
+    }
+
+    /**
+     * Hitung Tingkatan Creator berdasarkan total GMV / Penjualan.
+     */
+    public function getTierInfo(?float $gmv = null): array
+    {
+        if ($gmv === null) {
+            $sellerId = $this->user_id;
+            try {
+                $gmv = \App\Models\Order::whereHas('items.product', fn($q) => $q->where('seller_id', $sellerId))
+                    ->whereHas('payment', fn($q) => $q->where('status', \App\Enums\PaymentStatus::Success))
+                    ->with(['items' => fn($q) => $q->whereHas('product', fn($p) => $p->where('seller_id', $sellerId))])
+                    ->get()
+                    ->sum(fn($order) => $order->items->sum('subtotal'));
+            } catch (\Exception $e) {
+                $gmv = 0;
+            }
+        }
+
+        if ($gmv >= 500000000) {
+            return [
+                'name'     => 'FINANCIAL FREEDOM',
+                'level'    => 6,
+                'subtitle' => 'Solid Carbon Fiber Ultra-Card',
+                'badge'    => 'Financial Freedom',
+            ];
+        } elseif ($gmv >= 200000000) {
+            return [
+                'name'     => 'EKSEKUTIF SENIOR',
+                'level'    => 5,
+                'subtitle' => 'Obsidian Matte Black Silver',
+                'badge'    => 'Eksekutif Senior',
+            ];
+        } elseif ($gmv >= 100000000) {
+            return [
+                'name'     => 'EKSEKUTIF MUDA',
+                'level'    => 4,
+                'subtitle' => 'Deep Emerald Platinum',
+                'badge'    => 'Eksekutif Muda',
+            ];
+        } elseif ($gmv >= 50000000) {
+            return [
+                'name'     => 'PENGUSAHA MUDA',
+                'level'    => 3,
+                'subtitle' => 'Rose Gold / Champagne Gold',
+                'badge'    => 'Pengusaha Muda',
+            ];
+        } elseif ($gmv >= 10000000) {
+            return [
+                'name'     => 'PEJUANG / HUSTLER',
+                'level'    => 2,
+                'subtitle' => 'Titanium Gray Metallic',
+                'badge'    => 'Pejuang / Hustler',
+            ];
+        } else {
+            return [
+                'name'     => 'PERINTIS',
+                'level'    => 1,
+                'subtitle' => 'Matte Silver / Brushed Steel',
+                'badge'    => 'Perintis',
+            ];
+        }
     }
 }

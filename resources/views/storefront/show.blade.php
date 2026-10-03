@@ -403,7 +403,23 @@
                         <div class="sf-avatar">{{ strtoupper(substr($profile->store_name ?: $seller->name, 0, 2)) }}</div>
                     @endif
                     <div class="sf-profile-text">
-                        <h1 class="sf-store-name">{{ $profile->store_name ?: $seller->name }}</h1>
+                        <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.25rem;">
+                            <h1 class="sf-store-name" style="margin:0;">{{ $profile->store_name ?: $seller->name }}</h1>
+                            @php
+                                $isVerified = $profile->is_verified ?? false;
+                                $tierData = $profile->getTierInfo();
+                            @endphp
+                            @if($isVerified)
+                                <span style="display:inline-flex; align-items:center; gap:4px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-size:0.68rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px; box-shadow:0 2px 6px rgba(30,179,73,0.25);" title="Verified Creator">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                                    Verified Creator
+                                </span>
+                            @endif
+                            <span style="display:inline-flex; align-items:center; gap:4px; background:#f0fdf4; border:1px solid #bbf7d0; color:#1eb349; font-size:0.68rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="#1eb349"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/><path d="M12 15.5l-4 6 4-2 4 2z"/></svg>
+                                {{ $tierData['badge'] }}
+                            </span>
+                        </div>
                         
                         @if($profile->store_description)
                             <p class="sf-desc">{{ $profile->store_description }}</p>
