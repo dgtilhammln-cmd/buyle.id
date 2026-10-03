@@ -682,8 +682,8 @@
                                 {{ strtoupper(substr($displaySellerName, 0, 2)) }}
                             </div>
                         @endif
-                        {{-- Realtime Rating pill badge top-right of avatar --}}
-                        <div style="position:absolute; top:-2px; right:-16px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-size:0.75rem; font-weight:800; padding:0.18rem 0.55rem; border-radius:999px; display:flex; align-items:center; gap:3px; box-shadow:0 3px 8px rgba(0,0,0,0.15); border:2px solid #fff;" title="Rating Real-time: {{ $ratingStats['rating'] }} (Total: {{ $ratingStats['count'] }})">
+                        {{-- Realtime Rating pill badge top-right of avatar (NO WHITE BORDER OUTLINE!) --}}
+                        <div style="position:absolute; top:-2px; right:-14px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-size:0.75rem; font-weight:800; padding:0.18rem 0.55rem; border-radius:999px; display:flex; align-items:center; gap:3px; box-shadow:0 3px 8px rgba(0,0,0,0.15);" title="Rating Real-time: {{ $ratingStats['rating'] }} (Total: {{ $ratingStats['count'] }})">
                             <span>{{ $ratingStats['rating'] }}</span>
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/></svg>
                         </div>

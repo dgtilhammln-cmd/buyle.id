@@ -117,14 +117,14 @@
     width: 100%;
 }
 .sf-profile {
-    background: #fff;
+    background: #ffffff;
     padding: 0;
-    border-radius: 16px;
+    border-radius: 20px;
     color: #1E293B;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     border: 1px solid #e2e8f0;
     overflow: hidden;
-    margin: 0 0.5rem;
+    margin: 0 0 1rem 0;
 }
 
 /* Store cover banner */
@@ -400,7 +400,7 @@
 
         {{-- ── Sidebar ── --}}
         <aside class="sf-sidebar">
-        <div class="sf-profile" style="background:#fff; border-radius:24px; overflow:hidden; border: 1.5px solid #e2e8f0; box-shadow:0 8px 30px rgba(0,0,0,0.06); margin: 0 0.5rem 1rem;">
+        <div class="sf-profile">
             @php
                 $isVerified = $profile->is_verified ?? false;
                 $tierData = $profile->getTierInfo();
@@ -429,8 +429,8 @@
                             {{ strtoupper(substr($profile->store_name ?: $seller->name, 0, 2)) }}
                         </div>
                     @endif
-                    {{-- Realtime Rating pill badge top-right of avatar --}}
-                    <div style="position:absolute; top:-2px; right:-16px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-size:0.75rem; font-weight:800; padding:0.18rem 0.55rem; border-radius:999px; display:flex; align-items:center; gap:3px; box-shadow:0 3px 8px rgba(0,0,0,0.15); border:2px solid #fff;" title="Rating Real-time: {{ $ratingStats['rating'] }} (Total: {{ $ratingStats['count'] }})">
+                    {{-- Realtime Rating pill badge top-right of avatar (NO WHITE BORDER OUTLINE!) --}}
+                    <div style="position:absolute; top:-2px; right:-14px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-size:0.75rem; font-weight:800; padding:0.18rem 0.55rem; border-radius:999px; display:flex; align-items:center; gap:3px; box-shadow:0 3px 8px rgba(0,0,0,0.15);" title="Rating Real-time: {{ $ratingStats['rating'] }} (Total: {{ $ratingStats['count'] }})">
                         <span>{{ $ratingStats['rating'] }}</span>
                         <svg width="11" height="11" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/></svg>
                     </div>
