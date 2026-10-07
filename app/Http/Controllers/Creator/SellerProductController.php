@@ -176,6 +176,9 @@ class SellerProductController extends Controller
 
         $product = Product::create($data);
 
+        // Simpan variasi produk (jika ada)
+        $this->saveProductVariants($product, $request);
+
         // Invalidate cache katalog
         Cache::forget('catalog_main');
         Cache::forget("seller_products_{$product->seller_id}");
@@ -205,6 +208,7 @@ class SellerProductController extends Controller
     public function edit(Product $product)
     {
         $this->authorizeProduct($product);
+        $product->load(['variantOptions.values']);
         $groups         = \App\Models\CreatorProductGroup::where('seller_id', auth()->id())->where('is_active', true)->orderBy('order')->get(['id', 'name']);
         $categories     = ProductCategory::where('is_active', true)->with('subCategories:id,category_id,name')->orderBy('order', 'asc')->orderBy('name', 'asc')->get(['id', 'name', 'tab']);
         $allowedDomains = DigitalLinkValidator::getAllowedDomains();
@@ -309,6 +313,9 @@ class SellerProductController extends Controller
 
         $product->update($data);
 
+        // Simpan variasi produk (jika ada)
+        $this->saveProductVariants($product, $request);
+
         // Invalidate cache
         Cache::forget('catalog_main');
         Cache::forget("seller_products_{$product->seller_id}");
@@ -322,6 +329,79 @@ class SellerProductController extends Controller
         return redirect()
             ->route('creator.products.edit', $product)
             ->with('success', $msg);
+    }
+
+    /**
+     * Simpan variasi produk (maksimal 6).
+     */
+    protected function saveProductVariants(Product $product, Request $request): void
+    {
+        $variantsData = $request->input('variants', []);
+        if (!is_array($variantsData)) {
+            return;
+        }
+
+        // Filter variasi yang punya nama dan tidak kosong, maks 6
+        $validVariants = [];
+        foreach ($variantsData as $index => $v) {
+            if (is_array($v) && !empty(trim($v['name'] ?? ''))) {
+                $validVariants[$index] = $v;
+            }
+            if (count($validVariants) >= 6) {
+                break;
+            }
+        }
+
+        if (empty($validVariants)) {
+            // Hapus opsi varian jika tidak ada variasi yang dikirim
+            $product->variantOptions()->delete();
+            return;
+        }
+
+        $option = $product->variantOptions()->firstOrCreate(['name' => 'Pilihan Variasi']);
+
+        $existingValueIds = $option->values()->pluck('id')->toArray();
+        $keptIds = [];
+
+        foreach ($validVariants as $index => $vData) {
+            $valueId = $vData['id'] ?? null;
+            $valName = trim($vData['name']);
+            $valPrice = isset($vData['price']) && $vData['price'] !== '' ? (float)$vData['price'] : (float)$product->price;
+
+            $imagePath = null;
+            if ($request->hasFile("variants.{$index}.image") && $request->file("variants.{$index}.image")->isValid()) {
+                $imagePath = $request->file("variants.{$index}.image")->store('products/variants', 'public');
+            } elseif (!empty($vData['existing_image'])) {
+                $imagePath = $vData['existing_image'];
+            }
+
+            if ($valueId && in_array($valueId, $existingValueIds)) {
+                $valModel = \App\Models\ProductVariantValue::find($valueId);
+                if ($valModel) {
+                    $updatePayload = [
+                        'value' => $valName,
+                        'price' => $valPrice,
+                    ];
+                    if ($imagePath !== null) {
+                        $updatePayload['image'] = $imagePath;
+                    }
+                    $valModel->update($updatePayload);
+                    $keptIds[] = $valModel->id;
+                }
+            } else {
+                $newVal = $option->values()->create([
+                    'value' => $valName,
+                    'price' => $valPrice,
+                    'image' => $imagePath,
+                ]);
+                $keptIds[] = $newVal->id;
+            }
+        }
+
+        $toDelete = array_diff($existingValueIds, $keptIds);
+        if (!empty($toDelete)) {
+            \App\Models\ProductVariantValue::whereIn('id', $toDelete)->delete();
+        }
     }
 
     /**

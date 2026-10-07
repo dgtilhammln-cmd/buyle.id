@@ -647,6 +647,26 @@
                                         autocomplete="off">
                                 </div>
 
+                                {{-- VARIASI PRODUK CARD --}}
+                                <div class="form-group full" style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.25rem 1.5rem; margin-top:0.5rem; margin-bottom:0.75rem;">
+                                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; border-bottom:1px dashed #cbd5e1; padding-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+                                        <div>
+                                            <div style="font-size:0.95rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:0.5rem;">
+                                                <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                                                Variasi Produk (Opsional - Maksimal 6 Variasi)
+                                            </div>
+                                            <span class="form-hint" style="font-size:0.78rem; color:#64748b; margin-top:2px; display:block;">Tambahkan variasi jika produk Anda memiliki pilihan warna, ukuran, atau tipe layanan (misal: Paket Standard, Premium, VIP).</span>
+                                        </div>
+                                        <button type="button" onclick="addVariantRow()" id="btnAddVariant" style="background:#1eb349; color:#fff; border:none; padding:0.5rem 0.9rem; border-radius:8px; font-weight:700; font-size:0.8rem; cursor:pointer; display:flex; align-items:center; gap:4px;">
+                                            + Tambah Variasi
+                                        </button>
+                                    </div>
+
+                                    <div id="variantsContainer" style="display:flex; flex-direction:column; gap:0.85rem;">
+                                        {{-- Row variasi dimasukkan secara dinamis via JavaScript --}}
+                                    </div>
+                                </div>
+
                                 <div id="commissionWrap" class="form-group full">
                                     <label class="form-label">Komisi Affiliate (%) <span>*</span></label>
                                     <div style="position:relative; display:flex; align-items:center;">
@@ -1434,5 +1454,39 @@
                 console.error('Smart Import autofill error:', e);
             }
         });
+
+        function addVariantRow() {
+            const container = document.getElementById('variants-container');
+            const index = container.children.length;
+            const row = document.createElement('div');
+            row.className = 'flex gap-3 items-center variant-row';
+            row.innerHTML = `
+                <div class="flex-1">
+                    <input type="text" name="variants[${index}][name]" placeholder="Nama Varian (misal: 100 Followers / Red)" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none" required>
+                </div>
+                <div class="w-36">
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">Rp</span>
+                        <input type="number" name="variants[${index}][price]" placeholder="Harga" min="1" step="1" class="w-full pl-8 pr-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none" required>
+                    </div>
+                </div>
+                <div class="w-28">
+                    <input type="number" name="variants[${index}][stock]" placeholder="Stok" min="0" step="1" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none">
+                </div>
+                <button type="button" onclick="removeVariantRow(this)" class="p-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            `;
+            container.appendChild(row);
+        }
+
+        function removeVariantRow(btn) {
+            const container = document.getElementById('variants-container');
+            if (container.children.length > 1) {
+                btn.closest('.variant-row').remove();
+            } else {
+                alert('Minimal harus ada 1 varian produk.');
+            }
+        }
     </script>
 @endsection

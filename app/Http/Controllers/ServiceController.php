@@ -358,7 +358,7 @@ class ServiceController extends Controller
 
     public function show(string $slug)
     {
-        $service      = Product::where('slug', $slug)->where('is_active', true)->with(['seller.creatorProfile', 'subCategory', 'category'])->firstOrFail();
+        $service      = Product::where('slug', $slug)->where('is_active', true)->with(['seller.creatorProfile', 'subCategory', 'category', 'variantOptions.values'])->firstOrFail();
         $service->increment('views_count');
 
         // Track Visit

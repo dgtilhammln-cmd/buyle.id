@@ -12,6 +12,8 @@ class ProductVariantValue extends Model
     protected $fillable = [
         'variant_option_id',
         'value',
+        'image',
+        'price',
         'price_adjustment',
         'stock',
         'sku',
@@ -20,6 +22,7 @@ class ProductVariantValue extends Model
     protected function casts(): array
     {
         return [
+            'price'            => 'decimal:2',
             'price_adjustment' => 'decimal:2',
             'stock'            => 'integer',
         ];
@@ -58,10 +61,13 @@ class ProductVariantValue extends Model
     // =========================================================================
 
     /**
-     * Hitung harga final varian berdasarkan harga dasar produk + price_adjustment.
+     * Hitung harga final varian berdasarkan harga khusus varian atau harga dasar produk + price_adjustment.
      */
     public function finalPrice(): float
     {
+        if ($this->price !== null && (float)$this->price > 0) {
+            return (float)$this->price;
+        }
         $basePrice = $this->variantOption?->product?->price ?? 0;
         return max(0, $basePrice + $this->price_adjustment);
     }
