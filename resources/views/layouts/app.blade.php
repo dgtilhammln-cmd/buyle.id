@@ -351,9 +351,19 @@
             .skel-pd-sidebar-card { width: 100%; border-radius: 16px; height: 260px; }
             .skel-pd-sidebar-banner { width: 100%; border-radius: 16px; aspect-ratio: 3/4; }
         }
-        @media(min-width: 768px) and (max-width: 1023px) {
-            .skel-pd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-            .skel-pd-sidebar { display: none; }
+        /* Creator Storefront Skeleton */
+        .skel-store-layout { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
+        .skel-sf-card { width: 100%; background: #fff; border-radius: 24px; border: 1.5px solid #e2e8f0; overflow: hidden; margin-bottom: 0.5rem; }
+        .skel-sf-banner { width: 100%; height: 44px; background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); opacity: 0.85; }
+        .skel-sf-avatar-wrap { margin-top: -20px; display: flex; justify-content: center; position: relative; z-index: 2; }
+        .skel-sf-avatar { width: 72px; height: 72px; border-radius: 50%; border: 3px solid #fff; background: #cbd5e1; }
+        .skel-sf-body { padding: 0.75rem 1rem 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-align: center; }
+        .skel-sf-pills { display: flex; gap: 0.4rem; overflow-x: hidden; width: 100%; margin-bottom: 0.5rem; }
+        .skel-sf-pill-item { height: 34px; border-radius: 999px; background: #fff; border: 1px solid #e2e8f0; flex-shrink: 0; }
+        
+        @media(min-width: 768px) {
+            .skel-store-layout { display: grid; grid-template-columns: 280px 1fr; gap: 1.25rem; align-items: start; }
+            .skel-sf-pills { display: none; }
         }
     </style>
     
@@ -390,6 +400,54 @@
                     @for($i=0; $i<10; $i++) 
                         <div class="skel-shimmer skel-card {{ $i > 3 ? 'hide-on-mobile' : '' }}"></div> 
                     @endfor
+                </div>
+            @elseif(request()->routeIs('store.show') || request()->is('c/*'))
+                {{-- Storefront Creator Page Skeleton --}}
+                <div class="skel-store-layout">
+                    {{-- Profile Card Skeleton --}}
+                    <div>
+                        <div class="skel-sf-card">
+                            <div class="skel-sf-banner skel-shimmer"></div>
+                            <div class="skel-sf-avatar-wrap">
+                                <div class="skel-sf-avatar skel-shimmer"></div>
+                            </div>
+                            <div class="skel-sf-body">
+                                <div class="skel-shimmer skel-line" style="width:160px; height:20px; border-radius:6px;"></div>
+                                <div class="skel-shimmer skel-line" style="width:220px; height:14px; border-radius:4px;"></div>
+                                <div class="skel-shimmer skel-line" style="width:60px; height:12px; border-radius:999px; margin-top:2px;"></div>
+                                <div style="display:flex; justify-content:center; gap:0.4rem; margin-top:0.4rem;">
+                                    @for($c=0; $c<4; $c++)
+                                        <div class="skel-shimmer" style="width:34px; height:34px; border-radius:50%;"></div>
+                                    @endfor
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Products & Filters Skeleton --}}
+                    <div>
+                        {{-- Mobile Category Filter Pills Skeleton --}}
+                        <div class="skel-sf-pills">
+                            <div class="skel-shimmer skel-sf-pill-item" style="width:80px;"></div>
+                            <div class="skel-shimmer skel-sf-pill-item" style="width:100px;"></div>
+                            <div class="skel-shimmer skel-sf-pill-item" style="width:130px;"></div>
+                            <div class="skel-shimmer skel-sf-pill-item" style="width:90px;"></div>
+                        </div>
+
+                        {{-- Toolbar Sort Skeleton --}}
+                        <div style="display:flex; gap:0.5rem; margin-bottom:0.75rem; align-items:center;">
+                            <div class="skel-shimmer" style="height:34px; width:70px; border-radius:999px;"></div>
+                            <div class="skel-shimmer" style="height:34px; width:70px; border-radius:999px;"></div>
+                            <div class="skel-shimmer" style="height:34px; flex:1; border-radius:999px;"></div>
+                        </div>
+
+                        {{-- Products Grid Skeleton --}}
+                        <div class="skel-grid">
+                            @for($i=0; $i<6; $i++)
+                                <div class="skel-shimmer skel-card {{ $i > 3 ? 'hide-on-mobile' : '' }}"></div>
+                            @endfor
+                        </div>
+                    </div>
                 </div>
             @elseif(request()->routeIs('products.show'))
                 <div class="skel-shimmer skel-breadcrumb"></div>
