@@ -156,15 +156,10 @@
 .sf-social-row {
     display: flex;
     align-items: center;
-    justify-content: center; /* DESKTOP CENTER */
+    justify-content: center !important;
     flex-wrap: wrap;
     gap: 0.4rem;
     margin-top: 0.5rem;
-}
-@media (max-width: 768px) {
-    .sf-social-row {
-        justify-content: flex-start !important; /* MOBILE RATA KIRI */
-    }
 }
 
 .sf-profile-inner {
@@ -468,7 +463,7 @@
                     @endif
                 </div>
 
-                {{-- Social Media Icons (Desktop Center, Mobile Rata Kiri) --}}
+                {{-- Social Media Icons (Always Center) --}}
                 @php $socials = $profile->social_links ?? []; @endphp
                 <div class="sf-social-row">
                     @if(!empty($profile->store_slug))
