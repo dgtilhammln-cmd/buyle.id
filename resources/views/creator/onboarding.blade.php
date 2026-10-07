@@ -229,9 +229,9 @@
                     <div class="form-group full">
                         <label class="form-label">Deskripsi Singkat Toko <span style="color:#ef4444;">*</span></label>
                         <textarea name="store_description" class="form-input" rows="3"
-                            placeholder="Ceritakan tentang keahlian Anda, spesialisasi produk digital, dll." maxlength="60"
+                            placeholder="Ceritakan tentang keahlian Anda, spesialisasi produk digital, dll. (min. 40 - 300 karakter)" minlength="40" maxlength="300"
                             required>{{ old('store_description', $profile->store_description) }}</textarea>
-                        <span class="form-hint">Maksimal 60 karakter.</span>
+                        <span class="form-hint">Minimal 40 karakter, maksimal 300 karakter.</span>
                         @error('store_description')<span class="form-error">{{ $message }}</span>@enderror
                     </div>
                 </div>

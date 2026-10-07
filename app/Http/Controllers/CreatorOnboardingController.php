@@ -44,7 +44,7 @@ class CreatorOnboardingController extends Controller
         $request->validate([
             'store_name' => 'required|string|max:30', // Max 30 chars per user feedback
             'store_slug' => 'required|string|max:30|regex:/^[a-z0-9\-]+$/|unique:creator_profiles,store_slug,' . ($user->creatorProfile->id ?? 'NULL'),
-            'store_description' => 'required|string|max:60', // Max 60 chars
+            'store_description' => 'required|string|min:40|max:300',
             'creator_type' => 'required|string|max:100',
             'social_links' => 'required|array',
             'social_links.instagram' => 'required|string|max:255',
@@ -56,6 +56,9 @@ class CreatorOnboardingController extends Controller
             'subdistrict_id' => 'required|integer',
             'avatar' => 'nullable|image|max:10240',
         ], [
+            'store_description.required' => 'Deskripsi toko wajib diisi (minimal 40 karakter).',
+            'store_description.min' => 'Deskripsi toko minimal 40 karakter.',
+            'store_description.max' => 'Deskripsi toko maksimal 300 karakter.',
             'creator_type.required' => 'Pilih peran / tipe Creator Anda.',
             'social_links.instagram.required' => 'Akun Instagram wajib diisi.',
             'social_links.tiktok.required' => 'Akun TikTok wajib diisi.',

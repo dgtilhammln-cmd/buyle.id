@@ -661,29 +661,29 @@
                     $ratingStats = $cp ? $cp->getRatingStats() : ['rating' => '5.0', 'count' => 0];
                 @endphp
                 <!-- Banner Top Header matching Image 2 reference design -->
-                <div style="width:100%; height:40px; background:{{ $tierData['header_bg'] ?? 'linear-gradient(135deg, #1eb349 0%, #a5cf37 100%)' }}; padding: 0 0.75rem; display: flex; align-items: center; justify-content: space-between;">
-                    <div style="display: flex; align-items: center; gap: 4px; color: #ffffff; font-weight: 700; font-size: 0.7rem; white-space: nowrap; flex-shrink: 0;">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15" stroke-width="1"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                <div style="width:100%; height:44px; background:{{ $tierData['header_bg'] ?? 'linear-gradient(135deg, #1eb349 0%, #a5cf37 100%)' }}; padding: 0 1rem; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 5px; color: #ffffff; font-weight: 700; font-size: 0.75rem; white-space: nowrap;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15" stroke-width="1"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
                         <span>Verified Creator</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 4px; color: #ffffff; font-weight: 700; font-size: 0.7rem; white-space: nowrap; flex-shrink: 0;">
-                        {!! $tierData['icon_svg'] ?? '<svg width="13" height="13" viewBox="0 0 24 24" fill="#facc15"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/></svg>' !!}
+                    <div style="display: flex; align-items: center; gap: 5px; color: #ffffff; font-weight: 700; font-size: 0.75rem; white-space: nowrap;">
+                        {!! $tierData['icon_svg'] ?? '<svg width="14" height="14" viewBox="0 0 24 24" fill="#facc15"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/></svg>' !!}
                         <span>{{ $tierData['badge'] }}</span>
                     </div>
                 </div>
 
-                <!-- Avatar & Realtime Rating Pill (Image 2 style) -->
-                <div style="margin-top:-24px; display:flex; justify-content:center; position:relative; z-index:2;">
+                <!-- Avatar & Rating Pill: overlap HANYA SEDIKIT di bawah green bar -->
+                <div style="margin-top:-18px; display:flex; justify-content:center; position:relative; z-index:2;">
                     <div style="position:relative; display:inline-block;">
                         @if($seller?->avatar)
-                            <img src="{{ asset('storage/'.$seller->avatar) }}" style="width:76px; height:76px; border-radius:50%; border:3.5px solid #fff; object-fit:cover; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,0.1); display:block;">
+                            <img src="{{ asset('storage/'.$seller->avatar) }}" style="width:72px; height:72px; border-radius:50%; border:3px solid #fff; object-fit:cover; background:#fff; box-shadow:0 4px 16px rgba(0,0,0,0.12); display:block;">
                         @else
-                            <div style="width:76px; height:76px; border-radius:50%; border:3.5px solid #fff; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:800; color:#1eb349; background:#e7f0e7; box-shadow:0 6px 18px rgba(0,0,0,0.1);">
+                            <div style="width:72px; height:72px; border-radius:50%; border:3px solid #fff; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:800; color:#1eb349; background:#e7f0e7; box-shadow:0 4px 16px rgba(0,0,0,0.12);">
                                 {{ strtoupper(substr($displaySellerName, 0, 2)) }}
                             </div>
                         @endif
-                        {{-- Realtime Rating pill badge top-right of avatar (NO WHITE BORDER OUTLINE!) --}}
-                        <div style="position:absolute; top:-2px; right:-14px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-size:0.72rem; font-weight:800; padding:0.18rem 0.5rem; border-radius:999px; display:flex; align-items:center; gap:3px; box-shadow:0 3px 8px rgba(0,0,0,0.15); white-space:nowrap;" title="Rating Real-time: {{ $ratingStats['rating'] }} (Total: {{ $ratingStats['count'] }})">
+                        {{-- Rating pill badge top-right of avatar --}}
+                        <div style="position:absolute; top:-4px; right:-20px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-size:0.73rem; font-weight:800; padding:0.2rem 0.55rem; border-radius:999px; display:flex; align-items:center; gap:3px; box-shadow:0 2px 8px rgba(0,0,0,0.18); white-space:nowrap;">
                             <span>{{ $ratingStats['rating'] }}</span>
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/></svg>
                         </div>
@@ -700,34 +700,6 @@
                         {{ optional($cp)->store_description ?: 'Digital Agency Pengusaha Indonesia' }}
                     </div>
 
-                    {{-- Social Icons Row (Desktop CENTER, Mobile RATA KIRI) --}}
-                    @php $socials = optional($cp)->social_links ?? []; @endphp
-                    <div class="creator-social-row">
-                        @if(!empty(optional($cp)->store_slug))
-                            <a href="{{ route('store.show', $cp->store_slug) }}" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#F0FDF4;border:1px solid #BBF7D0;display:flex;align-items:center;justify-content:center;color:#1eb349;text-decoration:none;" title="Toko Digital">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                            </a>
-                        @endif
-                        @if(!empty($socials['instagram']))
-                            @php $igUrl = str_starts_with($socials['instagram'], 'http') ? $socials['instagram'] : 'https://instagram.com/' . ltrim($socials['instagram'], '@'); @endphp
-                            <a href="{{ $igUrl }}" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#FDF2F8;border:1px solid #FBCFE8;display:flex;align-items:center;justify-content:center;color:#E1306C;text-decoration:none;" title="Instagram">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                            </a>
-                        @endif
-                        @if(!empty($socials['tiktok']))
-                            @php $ttUrl = str_starts_with($socials['tiktok'], 'http') ? $socials['tiktok'] : 'https://tiktok.com/@' . ltrim($socials['tiktok'], '@'); @endphp
-                            <a href="{{ $ttUrl }}" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#F1F5F9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;color:#0F172A;text-decoration:none;" title="TikTok">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43 6.2 6.2 0 0 0 1.91-4.42V8.92a8.28 8.28 0 0 0 4.82 1.55v-3.47a4.91 4.91 0 0 1-1-.31z"/></svg>
-                            </a>
-                        @endif
-                        @if(!empty($socials['website']))
-                            @php $webUrl = str_starts_with($socials['website'], 'http') ? $socials['website'] : 'https://' . $socials['website']; @endphp
-                            <a href="{{ $webUrl }}" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#F0FDF4;border:1px solid #BBF7D0;display:flex;align-items:center;justify-content:center;color:#1eb349;text-decoration:none;" title="Website">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            </a>
-                        @endif
-                    </div>
-                    
                     {{-- Status Keaktifan Realtime --}}
                     <div style="font-size:0.8rem; margin-top:0.75rem; margin-bottom:1.25rem;">
                         @if($seller && $seller->last_seen_at && $seller->last_seen_at->gt(now()->subMinutes(10)))

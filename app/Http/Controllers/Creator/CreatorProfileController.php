@@ -29,7 +29,7 @@ class CreatorProfileController extends Controller
         $request->validate([
             'store_name' => 'nullable|string|max:100',
             'store_slug' => 'nullable|string|max:100|regex:/^[a-z0-9\-]+$/|unique:creator_profiles,store_slug,' . ($user->creatorProfile->id ?? 'NULL'),
-            'store_description' => 'nullable|string|max:500',
+            'store_description' => 'required|string|min:40|max:300',
             'creator_type' => 'nullable|string|max:100',
             'social_links' => 'nullable|array',
             'social_links.*' => 'nullable|string|max:255',
@@ -53,6 +53,10 @@ class CreatorProfileController extends Controller
             'avatar' => 'nullable|image|max:10240',
             'store_banner_1' => 'nullable|image|max:10240',
             'store_banner_2' => 'nullable|image|max:10240',
+        ], [
+            'store_description.required' => 'Deskripsi toko wajib diisi (minimal 40 karakter).',
+            'store_description.min' => 'Deskripsi toko minimal 40 karakter.',
+            'store_description.max' => 'Deskripsi toko maksimal 300 karakter.',
         ]);
 
         $detectedIp = $request->input('detected_ip') ?: $request->ip();

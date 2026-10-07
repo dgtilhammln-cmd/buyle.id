@@ -1,4 +1,4 @@
-﻿@extends('creator.layout')
+@extends('creator.layout')
 
 @section('title', 'Profil & Pengaturan Toko')
 @section('page_title', 'Profil & Pengaturan Toko')
@@ -456,11 +456,27 @@ select.form-input { cursor: pointer; }
                     </div>
 
                     <div class="form-group full">
-                        <label class="form-label">Deskripsi Toko</label>
-                        <textarea name="store_description" class="form-input" rows="4" placeholder="Ceritakan tentang toko Anda, spesialisasi, dan produk unggulan...">{{ old('store_description', $profile->store_description) }}</textarea>
-                        <span class="form-hint">Maksimal 500 karakter. Ditampilkan di halaman profil publik Anda.</span>
+                        <label class="form-label">Deskripsi Toko <span style="color:#ef4444;">*</span></label>
+                        <textarea name="store_description" id="storeDescTextarea" class="form-input" rows="4" minlength="40" maxlength="300" placeholder="Ceritakan tentang toko Anda, spesialisasi, dan produk unggulan... (min. 40 - 300 karakter)" required>{{ old('store_description', $profile->store_description) }}</textarea>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                            <span class="form-hint" style="margin:0;">Minimal <strong>40</strong> karakter, maksimal <strong>300</strong> karakter. Ditampilkan di halaman produk Anda.</span>
+                            <span id="storeDescCount" style="font-size:0.75rem; color:#94a3b8; white-space:nowrap; margin-left:0.5rem;">0/300</span>
+                        </div>
                         @error('store_description')<span class="form-error">{{ $message }}</span>@enderror
                     </div>
+                    <script>
+                    (function(){
+                        var ta = document.getElementById('storeDescTextarea');
+                        var ct = document.getElementById('storeDescCount');
+                        function update(){
+                            var len = ta.value.length;
+                            ct.textContent = len + '/300';
+                            ct.style.color = len < 40 ? '#ef4444' : (len > 280 ? '#f59e0b' : '#94a3b8');
+                        }
+                        ta.addEventListener('input', update);
+                        update();
+                    })();
+                    </script>
                 </div>
             </div>
         </div>
