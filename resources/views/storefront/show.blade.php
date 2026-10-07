@@ -119,12 +119,13 @@
 .sf-profile {
     background: #ffffff;
     padding: 0;
-    border-radius: 20px;
+    border-radius: 24px;
     color: #1E293B;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    border: 1px solid #e2e8f0;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    border: 1.5px solid #e2e8f0;
     overflow: hidden;
     margin: 0 0 1rem 0;
+    width: 100%;
 }
 
 /* Store cover banner */
@@ -319,17 +320,24 @@
     .sf-layout { padding: 1rem 1rem 2rem; flex-direction: row; align-items: flex-start; }
     
     .sf-sidebar {
-        width: 260px; flex-shrink: 0; position: sticky; top: 100px; margin-top: 0;
-        background: #fff; border-radius: 20px; padding: 1.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+        width: 280px; flex-shrink: 0; position: sticky; top: 90px; margin-top: 0;
+        display: flex; flex-direction: column; gap: 1rem;
+        background: transparent; border: none; box-shadow: none; padding: 0; border-radius: 0;
     }
     .sf-main {
         flex: 1; min-width: 0; margin-top: 0; padding-top: 0;
     }
-    /* On desktop: hide the mobile profile card (banner+cover inside sidebar) */
     .sf-profile {
-        background: transparent; padding: 0; border-radius: 0;
-        box-shadow: none; text-align: center; margin-bottom: 1.25rem; border: none; margin-top: 0;
+        background: #ffffff;
+        padding: 0;
+        border-radius: 24px;
+        color: #1E293B;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        border: 1.5px solid #e2e8f0;
+        overflow: hidden;
+        margin-bottom: 0;
+        width: 100%;
+        text-align: center;
     }
     /* Hide the cover/banner inside the sidebar on desktop — shown in sf-cover-wrap instead */
     .sf-profile > .sf-cover,
@@ -340,16 +348,14 @@
         box-shadow: 0 8px 16px rgba(30,179,73,0.15); font-size: 1.6rem;
     }
     .sf-profile-text { text-align: center; }
-    .sf-store-name { font-size: 1rem; text-align: center; }
-    .sf-desc { color: #64748B; font-size: 0.82rem; -webkit-line-clamp: 3; text-align: center; }
-    /* Left-align social icons on desktop */
-    .sf-profile-text > div[style*="display:flex"] {
-        justify-content: flex-start !important;
-    }
+    .sf-store-name { font-size: 1.25rem; text-align: center; font-weight: 800 !important; }
+    .sf-desc { color: #64748B; font-size: 0.85rem; -webkit-line-clamp: 3; text-align: center; }
     
     .sf-mobile-tabs { display: none; }
     .sf-desktop-tabs {
         display: flex; flex-direction: column; gap: 0.5rem;
+        background: #ffffff; border-radius: 20px; padding: 1rem;
+        border: 1.5px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.04);
     }
     .sf-tab-sidebar {
         border: none; background: #f8fafc; text-align: left; padding: 0.75rem 1rem;
@@ -444,10 +450,23 @@
                 </h1>
 
                 @if($profile->store_description)
-                    <p style="font-size:0.85rem; color:#64748b; line-height:1.4; margin:0 0 0.75rem 0; text-align:center;">
+                    <p style="font-size:0.85rem; color:#64748b; line-height:1.4; margin:0 0 0.5rem 0; text-align:center;">
                         {{ $profile->store_description }}
                     </p>
                 @endif
+
+                {{-- Status Keaktifan Realtime --}}
+                <div style="font-size:0.8rem; margin-top:0.35rem; margin-bottom:0.75rem;">
+                    @if($seller && $seller->last_seen_at && $seller->last_seen_at->gt(now()->subMinutes(10)))
+                        <span style="color: #1eb349; font-weight: 600; display:inline-flex; align-items:center; gap:5px;">
+                            <span style="width:8px; height:8px; background:#1eb349; border-radius:50%; display:inline-block;"></span> Online
+                        </span>
+                    @else
+                        <span style="color: #64748b;">
+                            Aktif {{ ($seller && $seller->last_seen_at) ? $seller->last_seen_at->diffForHumans() : 'baru saja' }}
+                        </span>
+                    @endif
+                </div>
 
                 {{-- Social Media Icons (Desktop Center, Mobile Rata Kiri) --}}
                 @php $socials = $profile->social_links ?? []; @endphp
