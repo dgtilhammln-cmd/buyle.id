@@ -383,7 +383,7 @@
         .cart-dropdown-wrap, .auth-text-btn, .auth-divider, .nav-article-btn { display: none !important; } /* Hide cart dropdown, article icon, and login text on mobile header since cart has direct mobile icon button */
         .nav-mobile-cart-btn { display: flex !important; }
         
-        body { padding-top: 115px !important; background-color: #F8FAFC !important; }
+        body { padding-top: 130px !important; background-color: #F8FAFC !important; }
     }
     /* RTL support */
     [dir="rtl"] .pill-navbar-inner { flex-direction: row-reverse; }
