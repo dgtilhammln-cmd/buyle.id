@@ -378,8 +378,278 @@
     transform: translateY(-5px);
     box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08) !important;
 }
-.article-card-box:hover .article-banner-img {
-    transform: scale(1.05);
+/* ─── REVIEWS TAB STYLES ─── */
+.pd-reviews-summary-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 220px 1fr 220px;
+    gap: 1.5rem;
+    align-items: center;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.03);
+    margin-bottom: 1.5rem;
+}
+@media (max-width: 900px) {
+    .pd-reviews-summary-card {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        padding: 1.25rem;
+    }
+}
+.pd-score-big-box {
+    text-align: center;
+    padding: 0.5rem;
+    border-right: 1px solid var(--border);
+}
+@media (max-width: 900px) {
+    .pd-score-big-box {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 1rem;
+    }
+}
+.pd-score-big {
+    font-size: 2.75rem;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1;
+    margin-bottom: 0.35rem;
+}
+.pd-stars-row {
+    color: #F59E0B;
+    font-size: 1.15rem;
+    margin-bottom: 0.35rem;
+    letter-spacing: 2px;
+}
+.pd-score-sub {
+    font-size: 0.8rem;
+    color: #64748B;
+    font-weight: 500;
+}
+.pd-progress-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+.pd-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.8rem;
+}
+.pd-bar-label {
+    width: 32px;
+    color: #475569;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+.pd-bar-track {
+    flex: 1;
+    height: 8px;
+    background: #E2E8F0;
+    border-radius: 99px;
+    overflow: hidden;
+    position: relative;
+}
+.pd-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1EB349, #A5CF37);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+}
+.pd-bar-count {
+    width: 30px;
+    text-align: right;
+    color: #64748B;
+    font-size: 0.75rem;
+}
+.pd-reviews-action-box {
+    text-align: center;
+    padding: 0.5rem;
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+@media (max-width: 900px) {
+    .pd-reviews-action-box {
+        border-left: none;
+        border-top: 1px solid var(--border);
+        padding-top: 1rem;
+    }
+}
+
+/* Filter pills */
+.pd-review-filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+.pd-filter-pill {
+    padding: 0.45rem 0.95rem;
+    border-radius: 99px;
+    background: #F8FAFC;
+    border: 1px solid var(--border);
+    color: #475569;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.pd-filter-pill:hover {
+    background: #F1F5F9;
+    border-color: #CBD5E1;
+}
+.pd-filter-pill.active {
+    background: #F0FDF4;
+    border-color: #1EB349;
+    color: #15803D;
+    font-weight: 700;
+}
+
+/* Review Cards Feed */
+.pd-reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.pd-review-card {
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    transition: box-shadow 0.2s;
+}
+.pd-review-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+}
+.pd-review-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.pd-reviewer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.pd-reviewer-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #1EB349;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+.pd-reviewer-name {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 2px;
+}
+.pd-verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    color: #15803D;
+    padding: 1px 7px;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+.pd-review-date {
+    font-size: 0.78rem;
+    color: #94A3B8;
+}
+.pd-review-stars {
+    color: #F59E0B;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+.pd-review-text {
+    font-size: 0.88rem;
+    color: #334155;
+    line-height: 1.7;
+    margin-bottom: 0.85rem;
+    white-space: pre-line;
+}
+.pd-review-media-wrap {
+    margin-top: 0.5rem;
+}
+.pd-review-thumb-box {
+    display: inline-block;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: #F8FAFC;
+    max-width: 140px;
+}
+.pd-review-thumb-box:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+.pd-review-thumb-box img {
+    display: block;
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+}
+.pd-thumb-overlay-hint {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(15,23,42,0.65);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 3px;
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+}
+
+/* In-tab write review card */
+.pd-write-review-card {
+    background: #F8FAFC;
+    border: 1.5px solid #BBF7D0;
+    border-radius: 18px;
+    padding: 1.5rem;
+    margin-bottom: 1.75rem;
+    box-shadow: 0 4px 16px rgba(30,179,73,0.06);
+    display: none;
+    transition: all 0.3s;
 }
 
 </style>
@@ -465,22 +735,17 @@
 
                     <div class="pd-stats" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
                         @php
-                            $hasRealRating = ($service->rating && $service->rating > 0) || ($service->reviews_avg_rating && $service->reviews_avg_rating > 0);
-                            $ratingVal     = $hasRealRating ? number_format($service->rating ?: $service->reviews_avg_rating, 1) : null;
-                            $reviewCnt     = (int) ($service->reviews_count ?? ($service->review_count ?? 0));
-                            $soldCnt       = (int) ($service->sold_count ?? 0);
+                            $ratingVal = number_format($realReviewsAvg ?: 5.0, 1);
+                            $reviewCnt = (int) $realReviewsCount;
+                            $soldCnt   = (int) ($service->sold_count ?? 0);
                         @endphp
                         {{-- Rating (Realtime dari DB jika ada ulasan/rating) --}}
-                        @if($hasRealRating || $reviewCnt > 0)
-                            <div style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.85rem;">
-                                <span style="color: #F59E0B; font-size: 1rem;">★</span>
-                                <span style="color: #0F172A; font-weight: 700;">{{ $ratingVal ?: '5.0' }}</span>
-                                @if($reviewCnt > 0)
-                                    <span style="font-size: 0.78rem; color: #64748B;">({{ $reviewCnt }} ulasan)</span>
-                                @endif
-                            </div>
-                            <span style="color: #CBD5E1;">|</span>
-                        @endif
+                        <a href="javascript:void(0)" onclick="goToReviewsTab()" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; text-decoration:none; cursor:pointer;" title="Lihat Ulasan">
+                            <span style="color: #F59E0B; font-size: 1rem;">★</span>
+                            <span style="color: #0F172A; font-weight: 700;">{{ $ratingVal }}</span>
+                            <span style="font-size: 0.8rem; color: #1eb349; font-weight:600; text-decoration:underline;">({{ $reviewCnt }} ulasan)</span>
+                        </a>
+                        <span style="color: #CBD5E1;">|</span>
                         {{-- Terjual --}}
                         <div style="font-size: 0.85rem; color: #64748B;">
                             Terjual <span style="color: var(--text-main); font-weight: 700;">
@@ -573,9 +838,13 @@
 
             {{-- TABS --}}
             <div class="pd-container pd-tabs-block" style="padding:0;">
-                <div class="pd-tabs-header" style="display:flex; border-bottom:1px solid var(--border); background:#f8fafc;">
-                    <button id="tabBtn-desc" class="pd-tab-btn active" onclick="switchTab('desc')" style="flex:1; padding:1.2rem; background:transparent; border:none; font-weight:700; color:var(--text-main); border-bottom:3px solid var(--primary); cursor:pointer;">DESKRIPSI PRODUK</button>
-                    <button id="tabBtn-creator" class="pd-tab-btn" onclick="switchTab('creator')" style="flex:1; padding:1.2rem; background:transparent; border:none; font-weight:700; color:var(--text-muted); border-bottom:3px solid transparent; cursor:pointer;">PROFIL CREATOR</button>
+                <div class="pd-tabs-header" style="display:flex; border-bottom:1px solid var(--border); background:#f8fafc; overflow-x:auto;">
+                    <button id="tabBtn-desc" class="pd-tab-btn active" onclick="switchTab('desc')" style="flex:1; min-width:140px; padding:1.1rem 0.5rem; background:transparent; border:none; font-weight:700; color:var(--text-main); border-bottom:3px solid var(--primary); cursor:pointer; font-family:inherit; font-size:0.88rem; letter-spacing:0.02em; white-space:nowrap;">DESKRIPSI PRODUK</button>
+                    <button id="tabBtn-reviews" class="pd-tab-btn" onclick="switchTab('reviews')" style="flex:1; min-width:160px; padding:1.1rem 0.5rem; background:transparent; border:none; font-weight:700; color:var(--text-muted); border-bottom:3px solid transparent; cursor:pointer; font-family:inherit; font-size:0.88rem; letter-spacing:0.02em; display:inline-flex; align-items:center; justify-content:center; gap:6px; white-space:nowrap;">
+                        RATING &amp; ULASAN
+                        <span id="tabReviewsBadge" style="background:#e2e8f0; color:#475569; padding:2px 8px; border-radius:99px; font-size:0.75rem; font-weight:700;">{{ $realReviewsCount }}</span>
+                    </button>
+                    <button id="tabBtn-creator" class="pd-tab-btn" onclick="switchTab('creator')" style="flex:1; min-width:140px; padding:1.1rem 0.5rem; background:transparent; border:none; font-weight:700; color:var(--text-muted); border-bottom:3px solid transparent; cursor:pointer; font-family:inherit; font-size:0.88rem; letter-spacing:0.02em; white-space:nowrap;">PROFIL CREATOR</button>
                 </div>
                 <div style="padding: 2rem;">
                     <div id="tab-desc" class="pd-tab-content" style="display:block;">
@@ -621,6 +890,171 @@
                                 </span>
                             </p>
                         </div>
+                    </div>
+
+                    {{-- TAB RATING & ULASAN --}}
+                    <div id="tab-reviews" class="pd-tab-content" style="display:none;">
+                        
+                        {{-- SUMMARY CARD --}}
+                        <div class="pd-reviews-summary-card">
+                            <div class="pd-score-big-box">
+                                <div class="pd-score-big" id="reviewsSummaryScore">{{ number_format($realReviewsAvg ?: 5.0, 1) }}</div>
+                                <div class="pd-stars-row">★★★★★</div>
+                                <div class="pd-score-sub"><span id="reviewsSummaryTotal">{{ $realReviewsCount }}</span> Ulasan Pembeli</div>
+                            </div>
+                            
+                            <div class="pd-progress-bars">
+                                @for($star = 5; $star >= 1; $star--)
+                                    <div class="pd-bar-row">
+                                        <div class="pd-bar-label">{{ $star }} ★</div>
+                                        <div class="pd-bar-track">
+                                            <div class="pd-bar-fill" id="barFill-{{ $star }}" style="width: 0%;"></div>
+                                        </div>
+                                        <div class="pd-bar-count" id="barCount-{{ $star }}">0</div>
+                                    </div>
+                                @endfor
+                            </div>
+
+                            <div class="pd-reviews-action-box">
+                                @if($canReview)
+                                    <button type="button" onclick="toggleWriteReviewForm()" class="pd-btn pd-btn-primary" style="width:100%;height:42px;font-size:0.85rem;border-radius:99px;font-weight:700;">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                        <span>Tulis Ulasan</span>
+                                    </button>
+                                    @if($userReview)
+                                        <div style="font-size:0.75rem;color:#15803d;font-weight:600;margin-top:2px;">
+                                            ✓ Anda sudah mengulas ({{ $userReview->rating }}★)
+                                        </div>
+                                    @endif
+                                @elseif(auth()->check())
+                                    <div style="background:#F1F5F9;border-radius:12px;padding:0.75rem;font-size:0.78rem;color:#64748B;line-height:1.4;">
+                                        Hanya pembeli yang sudah menyelesaikan pesanan produk ini yang dapat memberikan rating & ulasan.
+                                    </div>
+                                @else
+                                    <a href="{{ route('login') }}" class="pd-btn pd-btn-outline" style="width:100%;height:38px;font-size:0.82rem;border-radius:99px;">
+                                        Login untuk Mengulas
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+
+                        {{-- WRITE REVIEW FORM (COLLAPSIBLE FOR BUYERS) --}}
+                        @if($canReview)
+                        <div id="writeReviewCard" class="pd-write-review-card">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;border-bottom:1px solid #DCFCE7;padding-bottom:0.75rem;">
+                                <h4 style="margin:0;font-size:1.05rem;font-weight:800;color:#0F172A;display:flex;align-items:center;gap:6px;">
+                                    <span style="color:#1EB349;">✍️</span> Tulis Rating & Ulasan Produk
+                                </h4>
+                                <button type="button" onclick="toggleWriteReviewForm()" style="background:none;border:none;color:#64748B;font-size:1.25rem;cursor:pointer;">&times;</button>
+                            </div>
+
+                            {{-- Star Picker --}}
+                            <div style="margin-bottom:1rem;text-align:center;">
+                                <label style="display:block;font-size:0.85rem;font-weight:700;color:#334155;margin-bottom:6px;">Berapa bintang yang Anda berikan?</label>
+                                <div style="display:flex;justify-content:center;gap:8px;" id="tabStarContainer">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <button type="button" class="tab-star-btn" data-star="{{ $i }}" onclick="selectTabRating({{ $i }})" onmouseenter="previewTabRating({{ $i }})" onmouseleave="resetPreviewTabRating()" style="background:none;border:none;cursor:pointer;padding:4px;transition:transform 0.15s ease;">
+                                            <svg width="36" height="36" fill="{{ ($userReview && $userReview->rating >= $i) ? '#f59e0b' : '#e2e8f0' }}" stroke="{{ ($userReview && $userReview->rating >= $i) ? '#f59e0b' : '#cbd5e1' }}" stroke-width="1.5" viewBox="0 0 24 24" class="tab-star-svg-{{ $i }}" style="transition:all 0.2s ease;">
+                                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                            </svg>
+                                        </button>
+                                    @endfor
+                                </div>
+                                <div id="tabRatingLabel" style="font-size:0.88rem;font-weight:700;color:#f59e0b;min-height:22px;margin-top:4px;">
+                                    {{ $userReview ? ($userReview->rating . ' Bintang') : 'Pilih Bintang (1 - 5)' }}
+                                </div>
+                                <input type="hidden" id="tabSelectedRatingValue" value="{{ $userReview ? $userReview->rating : 0 }}">
+                            </div>
+
+                            {{-- Review Textarea --}}
+                            <div style="margin-bottom:1rem;">
+                                <label style="display:block;font-size:0.82rem;font-weight:700;color:#334155;margin-bottom:4px;">Ulasan Anda:</label>
+                                <textarea id="tabReviewText" rows="3" placeholder="Ceritakan kepuasan Anda mengenai produk, kecepatan pengerjaan, atau keramahan creator..."
+                                    style="width:100%;box-sizing:border-box;border:1px solid #CBD5E1;border-radius:12px;padding:0.8rem;font-size:0.88rem;font-family:inherit;color:#0F172A;resize:none;outline:none;background:#fff;transition:border-color .2s;"
+                                    onfocus="this.style.borderColor='#1EB349'" onblur="this.style.borderColor='#CBD5E1'">{{ $userReview?->review_text ?? '' }}</textarea>
+                            </div>
+
+                            {{-- Single Photo Upload with Max Compression (Max 1 Image) --}}
+                            <div style="margin-bottom:1.25rem;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                                    <label style="font-size:0.82rem;font-weight:700;color:#334155;">Upload Foto (Maks 1 Foto):</label>
+                                    <span style="font-size:0.74rem;color:#15803D;background:#DCFCE7;padding:2px 8px;border-radius:99px;font-weight:600;">⚡ Otomatis Kompres Maksimal</span>
+                                </div>
+                                
+                                <div id="tabReviewUploadTrigger" onclick="document.getElementById('tabReviewPhotoInput').click()"
+                                    style="border:2px dashed #CBD5E1;border-radius:12px;padding:0.85rem;text-align:center;cursor:pointer;background:#fff;transition:all .2s;"
+                                    onmouseover="this.style.borderColor='#1EB349';this.style.background='#F0FDF4'"
+                                    onmouseout="this.style.borderColor='#CBD5E1';this.style.background='#fff'">
+                                    <div style="display:flex;align-items:center;justify-content:center;gap:6px;color:#475569;font-size:0.84rem;font-weight:600;">
+                                        <svg width="20" height="20" fill="none" stroke="#1EB349" stroke-width="2" viewBox="0 0 24 24">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                                            <polyline points="21 15 16 10 5 21"/>
+                                        </svg>
+                                        <span>Pilih 1 Foto Bukti/Review</span>
+                                    </div>
+                                    <div style="font-size:0.74rem;color:#94A3B8;margin-top:2px;">Format JPG, PNG, atau WebP (akan langsung dikompresi)</div>
+                                </div>
+                                <input type="file" id="tabReviewPhotoInput" accept="image/*" style="display:none;" onchange="handleTabReviewPhoto(this)">
+
+                                {{-- Photo Preview Box --}}
+                                <div id="tabReviewPhotoPreviewWrap" style="{{ ($userReview && !empty($userReview->review_images)) ? 'display:block;' : 'display:none;' }}margin-top:10px;position:relative;width:90px;height:90px;border-radius:12px;overflow:hidden;border:1px solid #CBD5E1;">
+                                    <img id="tabReviewPhotoPreview" src="{{ ($userReview && !empty($userReview->review_images)) ? asset('storage/'.$userReview->review_images[0]) : '' }}" alt="preview" style="width:100%;height:100%;object-fit:cover;">
+                                    <button type="button" onclick="removeTabReviewPhoto()" style="position:absolute;top:3px;right:3px;background:rgba(220,38,38,0.85);color:#fff;border:none;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;line-height:1;">&times;</button>
+                                </div>
+                            </div>
+
+                            <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+                                <button type="button" onclick="toggleWriteReviewForm()" class="pd-btn pd-btn-outline" style="height:40px;font-size:0.85rem;padding:0 1.25rem;">Batal</button>
+                                <button type="button" id="btnSubmitTabReview" onclick="submitTabReview()" class="pd-btn pd-btn-primary" style="height:40px;font-size:0.85rem;padding:0 1.5rem;font-weight:700;">
+                                    Kirim Ulasan
+                                </button>
+                            </div>
+                        </div>
+                        @endif
+
+                        {{-- FILTER PILLS --}}
+                        <div class="pd-review-filter-group">
+                            <button type="button" class="pd-filter-pill active" onclick="applyReviewFilter('all', this)">Semua (<span id="filterCountAll">{{ $realReviewsCount }}</span>)</button>
+                            <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('media', this)">📷 Dengan Foto (<span id="filterCountMedia">0</span>)</button>
+                            <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('5', this)">5 ★</button>
+                            <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('4', this)">4 ★</button>
+                            <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('3', this)">3 ★</button>
+                            <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('2', this)">2 ★</button>
+                            <button type="button" class="pd-filter-pill" onclick="applyReviewFilter('1', this)">1 ★</button>
+                        </div>
+
+                        {{-- REVIEWS FEED CONTAINER --}}
+                        <div id="reviewsListContainer" class="pd-reviews-list">
+                            {{-- Skeleton Loading --}}
+                            <div id="reviewsLoadingSkeleton" style="display:none;padding:2rem;text-align:center;color:#64748B;">
+                                <div style="display:inline-block;width:32px;height:32px;border:3px solid #E2E8F0;border-top-color:#1EB349;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+                                <div style="margin-top:0.75rem;font-size:0.85rem;font-weight:600;">Memuat ulasan...</div>
+                            </div>
+                            
+                            {{-- Empty state --}}
+                            <div id="reviewsEmptyState" style="display:none;text-align:center;padding:3rem 1.5rem;background:#F8FAFC;border-radius:16px;border:1px dashed #CBD5E1;">
+                                <div style="font-size:2.5rem;margin-bottom:0.5rem;">💬</div>
+                                <h4 style="margin:0 0 0.35rem;font-size:1.05rem;font-weight:700;color:#0F172A;">Belum Ada Ulasan</h4>
+                                <p style="margin:0;font-size:0.85rem;color:#64748B;">Belum ada ulasan yang sesuai dengan filter ini.</p>
+                            </div>
+
+                            <div id="reviewsListFeed" class="pd-reviews-list"></div>
+                        </div>
+
+                        {{-- LOAD MORE BUTTON (PAGINATION LAZY LOAD) --}}
+                        <div id="reviewsLoadMoreWrap" style="text-align:center;margin-top:1.5rem;display:none;">
+                            <button type="button" id="btnLoadMoreReviews" onclick="loadMoreReviews()" class="pd-btn pd-btn-outline" style="height:42px;font-size:0.88rem;padding:0 2rem;border-radius:99px;font-weight:600;">
+                                Muat Lebih Banyak Ulasan
+                            </button>
+                        </div>
+
+                        {{-- Sentinel for Infinite Scroll / Lazy Load --}}
+                        <div id="reviewsScrollSentinel" style="height:10px;"></div>
+
                     </div>
                     <div id="tab-creator" class="pd-tab-content" style="display:none;">
                         @if(isset($service->seller) && $service->seller)
@@ -979,30 +1413,67 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 <script>
+let currentReviewPage = 1;
+let currentReviewFilter = 'all';
+let hasMoreReviews = false;
+let isLoadingReviews = false;
+let reviewsInitialized = false;
+let gLightboxInstance = null;
+let tabSelectedStar = {{ $userReview ? $userReview->rating : 0 }};
+let tabReviewCompressedBase64 = null;
+
+const starLabels = {
+    1: '1 Bintang — Sangat Kecewa 😞',
+    2: '2 Bintang — Kurang Puas 🙁',
+    3: '3 Bintang — Cukup Baik 😐',
+    4: '4 Bintang — Puas 😊',
+    5: '5 Bintang — Sangat Puas! 🤩'
+};
+
 function switchTab(tab) {
     const descTab = document.getElementById('tab-desc');
+    const reviewsTab = document.getElementById('tab-reviews');
     const creatorTab = document.getElementById('tab-creator');
+    
     const btnDesc = document.getElementById('tabBtn-desc');
+    const btnReviews = document.getElementById('tabBtn-reviews');
     const btnCreator = document.getElementById('tabBtn-creator');
+
+    // Reset all tabs
+    if (descTab) descTab.style.display = 'none';
+    if (reviewsTab) reviewsTab.style.display = 'none';
+    if (creatorTab) creatorTab.style.display = 'none';
+
+    if (btnDesc) {
+        btnDesc.style.color = 'var(--text-muted)';
+        btnDesc.style.borderBottom = '3px solid transparent';
+    }
+    if (btnReviews) {
+        btnReviews.style.color = 'var(--text-muted)';
+        btnReviews.style.borderBottom = '3px solid transparent';
+    }
+    if (btnCreator) {
+        btnCreator.style.color = 'var(--text-muted)';
+        btnCreator.style.borderBottom = '3px solid transparent';
+    }
 
     if (tab === 'desc') {
         if (descTab) descTab.style.display = 'block';
-        if (creatorTab) creatorTab.style.display = 'none';
         if (btnDesc) {
             btnDesc.style.color = 'var(--text-main)';
             btnDesc.style.borderBottom = '3px solid var(--primary)';
         }
-        if (btnCreator) {
-            btnCreator.style.color = 'var(--text-muted)';
-            btnCreator.style.borderBottom = '3px solid transparent';
+    } else if (tab === 'reviews') {
+        if (reviewsTab) reviewsTab.style.display = 'block';
+        if (btnReviews) {
+            btnReviews.style.color = 'var(--text-main)';
+            btnReviews.style.borderBottom = '3px solid var(--primary)';
         }
-    } else {
-        if (descTab) descTab.style.display = 'none';
+        if (!reviewsInitialized) {
+            fetchReviews(1, 'all', false);
+        }
+    } else if (tab === 'creator') {
         if (creatorTab) creatorTab.style.display = 'block';
-        if (btnDesc) {
-            btnDesc.style.color = 'var(--text-muted)';
-            btnDesc.style.borderBottom = '3px solid transparent';
-        }
         if (btnCreator) {
             btnCreator.style.color = 'var(--text-main)';
             btnCreator.style.borderBottom = '3px solid var(--primary)';
@@ -1010,8 +1481,378 @@ function switchTab(tab) {
     }
 }
 
+function goToReviewsTab() {
+    switchTab('reviews');
+    const tabEl = document.getElementById('tabBtn-reviews');
+    if (tabEl) {
+        tabEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+function applyReviewFilter(filter, el) {
+    currentReviewFilter = filter;
+    currentReviewPage = 1;
+    
+    document.querySelectorAll('.pd-filter-pill').forEach(btn => btn.classList.remove('active'));
+    if (el) el.classList.add('active');
+
+    fetchReviews(1, filter, false);
+}
+
+function fetchReviews(page, filter, append) {
+    if (isLoadingReviews) return;
+    isLoadingReviews = true;
+
+    const skeleton = document.getElementById('reviewsLoadingSkeleton');
+    const emptyState = document.getElementById('reviewsEmptyState');
+    const feed = document.getElementById('reviewsListFeed');
+    const loadMoreWrap = document.getElementById('reviewsLoadMoreWrap');
+    const btnLoadMore = document.getElementById('btnLoadMoreReviews');
+
+    if (!append) {
+        if (skeleton) skeleton.style.display = 'block';
+        if (emptyState) emptyState.style.display = 'none';
+        if (feed) feed.innerHTML = '';
+        if (loadMoreWrap) loadMoreWrap.style.display = 'none';
+    } else {
+        if (btnLoadMore) {
+            btnLoadMore.disabled = true;
+            btnLoadMore.textContent = 'Memuat...';
+        }
+    }
+
+    const url = `{{ route('products.reviews.index', $service->slug) }}?page=${page}&filter=${filter}&per_page=6`;
+
+    fetch(url, { headers: { 'Accept': 'application/json' } })
+        .then(res => res.json())
+        .then(data => {
+            if (skeleton) skeleton.style.display = 'none';
+            isLoadingReviews = false;
+            reviewsInitialized = true;
+
+            if (data.success) {
+                currentReviewPage = data.current_page;
+                hasMoreReviews = data.has_more;
+
+                // Update summary stats
+                if (data.stats) {
+                    const stats = data.stats;
+                    const scoreEl = document.getElementById('reviewsSummaryScore');
+                    const totalEl = document.getElementById('reviewsSummaryTotal');
+                    const badgeEl = document.getElementById('tabReviewsBadge');
+                    const filterAll = document.getElementById('filterCountAll');
+                    const filterMedia = document.getElementById('filterCountMedia');
+
+                    if (scoreEl && stats.average > 0) scoreEl.textContent = Number(stats.average).toFixed(1);
+                    if (totalEl) totalEl.textContent = stats.total_count;
+                    if (badgeEl) badgeEl.textContent = stats.total_count;
+                    if (filterAll) filterAll.textContent = stats.total_count;
+                    if (filterMedia) filterMedia.textContent = stats.with_media_count;
+
+                    // Progress breakdown
+                    if (stats.breakdown && stats.total_count > 0) {
+                        for (let s = 1; s <= 5; s++) {
+                            const count = stats.breakdown[s] || 0;
+                            const pct = Math.round((count / stats.total_count) * 100);
+                            const fill = document.getElementById(`barFill-${s}`);
+                            const countTxt = document.getElementById(`barCount-${s}`);
+                            if (fill) fill.style.width = pct + '%';
+                            if (countTxt) countTxt.textContent = count;
+                        }
+                    }
+                }
+
+                // Render reviews
+                if (data.data && data.data.length > 0) {
+                    if (emptyState) emptyState.style.display = 'none';
+                    let html = '';
+                    data.data.forEach(rev => {
+                        html += buildReviewCardHtml(rev);
+                    });
+
+                    if (append && feed) {
+                        feed.insertAdjacentHTML('beforeend', html);
+                    } else if (feed) {
+                        feed.innerHTML = html;
+                    }
+
+                    // Refresh lightbox for clickable photos
+                    initReviewLightbox();
+
+                    // Load more button visibility
+                    if (loadMoreWrap) {
+                        loadMoreWrap.style.display = data.has_more ? 'block' : 'none';
+                    }
+                    if (btnLoadMore) {
+                        btnLoadMore.disabled = false;
+                        btnLoadMore.textContent = 'Muat Lebih Banyak Ulasan';
+                    }
+                } else {
+                    if (!append && emptyState) {
+                        emptyState.style.display = 'block';
+                    }
+                    if (loadMoreWrap) loadMoreWrap.style.display = 'none';
+                }
+            }
+        })
+        .catch(() => {
+            isLoadingReviews = false;
+            if (skeleton) skeleton.style.display = 'none';
+            if (btnLoadMore) {
+                btnLoadMore.disabled = false;
+                btnLoadMore.textContent = 'Coba Lagi';
+            }
+        });
+}
+
+function loadMoreReviews() {
+    if (!hasMoreReviews || isLoadingReviews) return;
+    fetchReviews(currentReviewPage + 1, currentReviewFilter, true);
+}
+
+function buildReviewCardHtml(rev) {
+    let starsHtml = '';
+    for (let i = 1; i <= 5; i++) {
+        starsHtml += (i <= rev.rating) ? '★' : '<span style="color:#CBD5E1;">★</span>';
+    }
+
+    const initial = (rev.display_name || 'U').charAt(0).toUpperCase();
+    const avatarHtml = rev.avatar_url 
+        ? `<img src="${rev.avatar_url}" alt="${rev.display_name}" class="pd-reviewer-avatar">`
+        : `<div class="pd-reviewer-avatar">${initial}</div>`;
+
+    let imageHtml = '';
+    if (rev.review_images && rev.review_images.length > 0) {
+        const imgUrl = rev.review_images[0];
+        imageHtml = `
+            <div class="pd-review-media-wrap">
+                <a href="${imgUrl}" class="pd-review-thumb-box review-lightbox-img" data-gallery="review-gallery" title="Foto dari ${rev.display_name}">
+                    <img src="${imgUrl}" alt="Foto ulasan" loading="lazy">
+                    <div class="pd-thumb-overlay-hint">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                        <span>Klik Perbesar</span>
+                    </div>
+                </a>
+            </div>
+        `;
+    }
+
+    const reviewText = rev.review_text ? `<div class="pd-review-text">${escapeHtml(rev.review_text)}</div>` : '';
+
+    return `
+        <div class="pd-review-card" id="review-item-${rev.id}">
+            <div class="pd-review-header">
+                <div class="pd-reviewer-left">
+                    ${avatarHtml}
+                    <div>
+                        <div class="pd-reviewer-name">${escapeHtml(rev.display_name)}</div>
+                        <div class="pd-verified-badge">
+                            <svg width="12" height="12" fill="none" stroke="#15803D" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                            <span>Pembeli Terverifikasi</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pd-review-date">${rev.created_at} (${rev.date})</div>
+            </div>
+            <div class="pd-review-stars">${starsHtml}</div>
+            ${reviewText}
+            ${imageHtml}
+        </div>
+    `;
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+function initReviewLightbox() {
+    if (typeof GLightbox !== 'undefined') {
+        GLightbox({
+            selector: '.review-lightbox-img',
+            touchNavigation: true,
+            loop: false,
+            zoomable: true
+        });
+    }
+}
+
+// Write review interactions in tab
+function toggleWriteReviewForm() {
+    const card = document.getElementById('writeReviewCard');
+    if (!card) return;
+    if (card.style.display === 'none' || card.style.display === '') {
+        card.style.display = 'block';
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else {
+        card.style.display = 'none';
+    }
+}
+
+function selectTabRating(val) {
+    tabSelectedStar = val;
+    const input = document.getElementById('tabSelectedRatingValue');
+    if (input) input.value = val;
+    updateTabStarDisplay(val);
+    const label = document.getElementById('tabRatingLabel');
+    if (label) label.textContent = starLabels[val] || (val + ' Bintang');
+}
+
+function previewTabRating(val) {
+    updateTabStarDisplay(val);
+    const label = document.getElementById('tabRatingLabel');
+    if (label) label.textContent = starLabels[val] || (val + ' Bintang');
+}
+
+function resetPreviewTabRating() {
+    updateTabStarDisplay(tabSelectedStar);
+    const label = document.getElementById('tabRatingLabel');
+    if (label) label.textContent = starLabels[tabSelectedStar] || 'Pilih Bintang (1 - 5)';
+}
+
+function updateTabStarDisplay(val) {
+    for (let i = 1; i <= 5; i++) {
+        const svg = document.querySelector(`.tab-star-svg-${i}`);
+        if (svg) {
+            if (i <= val) {
+                svg.setAttribute('fill', '#f59e0b');
+                svg.setAttribute('stroke', '#f59e0b');
+            } else {
+                svg.setAttribute('fill', '#e2e8f0');
+                svg.setAttribute('stroke', '#cbd5e1');
+            }
+        }
+    }
+}
+
+// Canvas MAX Compression for Tab (Max 1 Image)
+function handleTabReviewPhoto(input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+
+    if (!file.type.match(/^image\//i)) {
+        alert('Silakan pilih file gambar (JPG, PNG, WebP).');
+        input.value = '';
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            const maxDim = 1000;
+
+            if (width > maxDim || height > maxDim) {
+                if (width > height) {
+                    height = Math.round((height * maxDim) / width);
+                    width = maxDim;
+                } else {
+                    width = Math.round((width * maxDim) / height);
+                    height = maxDim;
+                }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Maximum compression: JPEG quality 0.75 (~50KB-120KB)
+            tabReviewCompressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+
+            document.getElementById('tabReviewPhotoPreview').src = tabReviewCompressedBase64;
+            document.getElementById('tabReviewPhotoPreviewWrap').style.display = 'block';
+            document.getElementById('tabReviewUploadTrigger').style.display = 'none';
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeTabReviewPhoto() {
+    tabReviewCompressedBase64 = null;
+    const fileInput = document.getElementById('tabReviewPhotoInput');
+    if (fileInput) fileInput.value = '';
+    const preview = document.getElementById('tabReviewPhotoPreview');
+    if (preview) preview.src = '';
+    const wrap = document.getElementById('tabReviewPhotoPreviewWrap');
+    if (wrap) wrap.style.display = 'none';
+    const trigger = document.getElementById('tabReviewUploadTrigger');
+    if (trigger) trigger.style.display = 'block';
+}
+
+function submitTabReview() {
+    const val = parseInt(document.getElementById('tabSelectedRatingValue')?.value || 0);
+    const reviewText = (document.getElementById('tabReviewText')?.value || '').trim();
+
+    if (!val || val < 1) {
+        alert('Silakan pilih rating bintang terlebih dahulu (1 - 5).');
+        return;
+    }
+
+    const btn = document.getElementById('btnSubmitTabReview');
+    btn.disabled = true;
+    btn.textContent = 'Menyimpan...';
+
+    const payload = {
+        product_id: {{ $service->id }},
+        rating: val,
+        review_text: reviewText
+    };
+
+    if (tabReviewCompressedBase64) {
+        payload.review_images_base64 = [tabReviewCompressedBase64];
+    }
+
+    fetch('{{ route("account.orders.rating") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        btn.disabled = false;
+        btn.textContent = 'Kirim Ulasan';
+
+        if (data.success) {
+            alert(data.message || 'Ulasan berhasil disimpan!');
+            toggleWriteReviewForm();
+            // Refresh feed
+            fetchReviews(1, 'all', false);
+        } else {
+            alert(data.message || 'Gagal menyimpan ulasan.');
+        }
+    })
+    .catch(() => {
+        btn.disabled = false;
+        btn.textContent = 'Kirim Ulasan';
+        alert('Terjadi kesalahan koneksi. Silakan coba lagi.');
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     GLightbox({ selector: '.glightbox', touchNavigation: true, loop: true });
+
+    // Initialize IntersectionObserver for Reviews Infinite Scroll / Lazy Load
+    const sentinel = document.getElementById('reviewsScrollSentinel');
+    if (sentinel && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && hasMoreReviews && !isLoadingReviews) {
+                    loadMoreReviews();
+                }
+            });
+        }, { rootMargin: '250px' });
+        observer.observe(sentinel);
+    }
 
     // Auto-resolve city/province name from ID if name is not yet saved in DB
     const locBox = document.getElementById('creator-location-box');

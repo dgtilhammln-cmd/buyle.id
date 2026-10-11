@@ -391,9 +391,11 @@ class AccountController extends Controller
     public function submitRating(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'order_id'   => 'nullable|exists:orders,id',
-            'rating'     => 'required|integer|min:1|max:5',
+            'product_id'     => 'required|exists:products,id',
+            'order_id'       => 'nullable|exists:orders,id',
+            'rating'         => 'required|integer|min:1|max:5',
+            'review_text'    => 'nullable|string|max:3000',
+            'review_images'  => 'nullable',
         ]);
 
         $user = Auth::user();
@@ -409,35 +411,93 @@ class AccountController extends Controller
         if (!$hasPurchased) {
             return response()->json([
                 'success' => false,
-                'message' => 'Anda hanya dapat memberikan rating untuk produk yang telah Anda beli.'
+                'message' => 'Anda hanya dapat memberikan rating & ulasan untuk produk yang telah Anda beli.'
             ], 403);
         }
 
+        // Handle uploaded images (files or base64)
+        $savedImages = [];
         $existing = \App\Models\ProductRating::where('product_id', $productId)->where('user_id', $user->id)->first();
-        if ($existing) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Anda sudah memberikan rating ' . $existing->rating . '★ untuk produk ini.',
-                'rating'  => $existing->rating
-            ]);
+        if ($existing && is_array($existing->review_images)) {
+            $savedImages = $existing->review_images;
         }
 
-        \App\Models\ProductRating::create([
-            'product_id' => $productId,
-            'user_id'    => $user->id,
-            'order_id'   => $request->order_id ?: null,
-            'rating'     => $ratingVal
-        ]);
+        // If new images provided (max 1 photo)
+        if ($request->hasFile('review_images')) {
+            $files = $request->file('review_images');
+            if (is_array($files)) $file = $files[0] ?? null;
+            else $file = $files;
+            
+            if ($file && $file->isValid()) {
+                $ext = $file->getClientOriginalExtension() ?: 'jpg';
+                $filename = 'reviews/' . $productId . '_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $ext;
+                Storage::disk('public')->put($filename, file_get_contents($file->getRealPath()));
+                $savedImages = [$filename];
+            }
+        } elseif ($request->filled('review_images_base64')) {
+            // Compressed base64 images from Canvas (max 1 photo)
+            $b64List = $request->input('review_images_base64');
+            if (is_string($b64List)) {
+                $b64List = json_decode($b64List, true) ?: [$b64List];
+            }
+            if (is_array($b64List) && !empty($b64List)) {
+                $b64 = $b64List[0] ?? null;
+                if ($b64 && preg_match('/^data:image\/(\w+);base64,/', $b64, $type)) {
+                    $imgData = substr($b64, strpos($b64, ',') + 1);
+                    $imgData = base64_decode($imgData);
+                    if ($imgData !== false) {
+                        $ext = strtolower($type[1]) === 'png' ? 'png' : 'jpg';
+                        $filename = 'reviews/' . $productId . '_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $ext;
+                        Storage::disk('public')->put($filename, $imgData);
+                        $savedImages = [$filename];
+                    }
+                }
+            }
+        }
 
-        $avgRating = \App\Models\ProductRating::where('product_id', $productId)->avg('rating');
+        $reviewText = $request->filled('review_text') ? trim($request->review_text) : null;
+
+        $rating = \App\Models\ProductRating::updateOrCreate(
+            [
+                'product_id' => $productId,
+                'user_id'    => $user->id,
+            ],
+            [
+                'order_id'       => $request->order_id ?: ($existing?->order_id ?: null),
+                'rating'         => $ratingVal,
+                'review_text'    => $reviewText,
+                'review_images'  => !empty($savedImages) ? array_values($savedImages) : null,
+                'is_approved'    => true,
+                'reviewer_name'  => $user->name,
+            ]
+        );
+
+        $avgRating = \App\Models\ProductRating::where('product_id', $productId)->where('is_approved', true)->avg('rating');
         if ($avgRating) {
             \App\Models\Product::where('id', $productId)->update(['rating' => round($avgRating, 1)]);
         }
 
+        $imageUrls = [];
+        if (is_array($rating->review_images)) {
+            foreach ($rating->review_images as $img) {
+                $imageUrls[] = asset('storage/' . $img);
+            }
+        }
+
         return response()->json([
             'success' => true,
-            'message' => 'Terima kasih! Rating ' . $ratingVal . ' bintang Anda berhasil disimpan.',
-            'rating'  => $ratingVal
+            'message' => 'Terima kasih! Ulasan & rating ' . $ratingVal . '★ Anda berhasil disimpan.',
+            'rating'  => $ratingVal,
+            'review'  => [
+                'id'            => $rating->id,
+                'rating'        => $rating->rating,
+                'review_text'   => $rating->review_text,
+                'review_images' => $imageUrls,
+                'display_name'  => $rating->display_name,
+                'avatar_url'    => $rating->avatar_url,
+                'created_at'    => $rating->created_at?->diffForHumans() ?? 'Baru saja',
+                'date'          => $rating->created_at?->translatedFormat('d M Y') ?? date('d M Y'),
+            ]
         ]);
     }
 }

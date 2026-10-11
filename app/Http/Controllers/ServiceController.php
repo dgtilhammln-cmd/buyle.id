@@ -526,6 +526,29 @@ class ServiceController extends Controller
             ['name' => $service->name,     'url' => $productUrl],
         ];
 
-        return view('services.show', compact('service', 'settings', 'related', 'otherRelated', 'wa', 'seo', 'schema', 'faq', 'breadcrumbs', 'testimonials', 'sellerName', 'sellerUrl'));
+        // ── Rating & Reviews Data for Tab ──
+        $realReviewsCount = \App\Models\ProductRating::where('product_id', $service->id)->approved()->count();
+        $realReviewsAvg   = $realReviewsCount > 0
+            ? round(\App\Models\ProductRating::where('product_id', $service->id)->approved()->avg('rating'), 1)
+            : (float) ($service->rating ?: 5.0);
+
+        $currentUser = auth()->user();
+        $canReview = false;
+        $userReview = null;
+        if ($currentUser) {
+            $canReview = $currentUser->orders()
+                ->whereIn('status', ['confirmed', 'processing', 'shipped', 'delivered', 'completed'])
+                ->whereHas('items', fn($q) => $q->where('product_id', $service->id))
+                ->exists();
+            $userReview = \App\Models\ProductRating::where('product_id', $service->id)
+                ->where('user_id', $currentUser->id)
+                ->first();
+        }
+
+        return view('services.show', compact(
+            'service', 'settings', 'related', 'otherRelated', 'wa', 'seo', 'schema',
+            'faq', 'breadcrumbs', 'testimonials', 'sellerName', 'sellerUrl',
+            'realReviewsCount', 'realReviewsAvg', 'canReview', 'userReview'
+        ));
     }
 }

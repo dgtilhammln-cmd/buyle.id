@@ -724,8 +724,46 @@
             </div>
 
             {{-- Interactive Satisfaction Indicator Label --}}
-            <div id="ratingIndicatorText" style="font-size:0.9rem;font-weight:700;color:#f59e0b;min-height:24px;margin-bottom:1.5rem;">
+            <div id="ratingIndicatorText" style="font-size:0.9rem;font-weight:700;color:#f59e0b;min-height:22px;margin-bottom:1rem;">
                 Pilih Bintang (1 - 5)
+            </div>
+
+            {{-- Text Review Input --}}
+            <div style="margin-bottom:1rem;text-align:left;">
+                <label style="display:block;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:4px;">Ulasan Kata-kata (Opsional):</label>
+                <textarea id="ratingReviewText" rows="3" placeholder="Ceritakan pengalaman dan kepuasan Anda menggunakan produk/layanan ini..."
+                    style="width:100%;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:12px;padding:0.75rem;font-size:0.85rem;font-family:inherit;color:#0f172a;resize:none;outline:none;transition:border-color .2s;"
+                    onfocus="this.style.borderColor='#1eb349'" onblur="this.style.borderColor='#cbd5e1'"></textarea>
+            </div>
+
+            {{-- Single Photo Upload (Max 1 Image with Max Compression) --}}
+            <div style="margin-bottom:1.25rem;text-align:left;">
+                <label style="display:flex;justify-content:space-between;align-items:center;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:6px;">
+                    <span>Upload Foto Bukti/Review:</span>
+                    <span style="font-size:0.72rem;color:#64748b;font-weight:500;">Maks 1 foto</span>
+                </label>
+                
+                {{-- Drop / Trigger Button --}}
+                <div id="orderRatingUploadTrigger" onclick="document.getElementById('orderRatingImageInput').click()"
+                    style="border:2px dashed #cbd5e1;border-radius:12px;padding:0.75rem;text-align:center;cursor:pointer;background:#f8fafc;transition:all .2s;"
+                    onmouseover="this.style.borderColor='#1eb349';this.style.background='#f0fdf4'"
+                    onmouseout="this.style.borderColor='#cbd5e1';this.style.background='#f8fafc'">
+                    <div style="display:flex;align-items:center;justify-content:center;gap:6px;color:#475569;font-size:0.82rem;font-weight:600;">
+                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        <span>Pilih 1 Foto (Galeri/Kamera)</span>
+                    </div>
+                </div>
+                <input type="file" id="orderRatingImageInput" accept="image/*" style="display:none;" onchange="handleOrderRatingPhoto(this)">
+
+                {{-- Photo Preview Container --}}
+                <div id="orderRatingPhotoPreviewWrap" style="display:none;margin-top:8px;position:relative;width:80px;height:80px;border-radius:10px;overflow:hidden;border:1px solid #cbd5e1;">
+                    <img id="orderRatingPhotoPreview" src="" alt="preview" style="width:100%;height:100%;object-fit:cover;">
+                    <button type="button" onclick="removeOrderRatingPhoto()" style="position:absolute;top:2px;right:2px;background:rgba(220,38,38,0.85);color:#fff;border:none;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;line-height:1;">&times;</button>
+                </div>
             </div>
 
             <input type="hidden" id="ratingProductId" value="">
@@ -733,8 +771,8 @@
             <input type="hidden" id="selectedRatingValue" value="0">
 
             <button type="button" onclick="submitRatingAjax()" id="btnSubmitRating" disabled
-                style="width:100%;padding:0.8rem;background:#cbd5e1;color:#ffffff;border:none;border-radius:999px;font-weight:700;font-size:0.9rem;cursor:not-allowed;transition:all 0.2s ease;">
-                Simpan Rating
+                style="width:100%;padding:0.85rem;background:#cbd5e1;color:#ffffff;border:none;border-radius:999px;font-weight:700;font-size:0.92rem;cursor:not-allowed;transition:all 0.2s ease;">
+                Kirim Rating & Ulasan
             </button>
         </div>
     </div>
@@ -748,12 +786,75 @@
             5: 'Sangat Puas! 🤩'
         };
         let currentSelectedStar = 0;
+        let orderRatingCompressedBase64 = null;
+
+        function handleOrderRatingPhoto(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            
+            if (!file.type.match(/^image\//i)) {
+                alert('Pilih file gambar valid (JPG, PNG, WebP).');
+                input.value = '';
+                return;
+            }
+
+            // Canvas MAX Compression (Max 1000px, JPEG 0.75: ~50KB - 120KB)
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    const maxDim = 1000;
+
+                    if (width > maxDim || height > maxDim) {
+                        if (width > height) {
+                            height = Math.round((height * maxDim) / width);
+                            width = maxDim;
+                        } else {
+                            width = Math.round((width * maxDim) / height);
+                            height = maxDim;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    orderRatingCompressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+
+                    document.getElementById('orderRatingPhotoPreview').src = orderRatingCompressedBase64;
+                    document.getElementById('orderRatingPhotoPreviewWrap').style.display = 'block';
+                    document.getElementById('orderRatingUploadTrigger').style.display = 'none';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeOrderRatingPhoto() {
+            orderRatingCompressedBase64 = null;
+            const fileInput = document.getElementById('orderRatingImageInput');
+            if (fileInput) fileInput.value = '';
+            const preview = document.getElementById('orderRatingPhotoPreview');
+            if (preview) preview.src = '';
+            const wrap = document.getElementById('orderRatingPhotoPreviewWrap');
+            if (wrap) wrap.style.display = 'none';
+            const trigger = document.getElementById('orderRatingUploadTrigger');
+            if (trigger) trigger.style.display = 'block';
+        }
 
         function openProductRatingModal(prodId, prodName, currentRating, orderId) {
             document.getElementById('ratingProductId').value = prodId;
             document.getElementById('ratingOrderId').value = orderId || '';
             document.getElementById('ratingModalProductName').textContent = prodName;
             
+            const reviewInput = document.getElementById('ratingReviewText');
+            if (reviewInput) reviewInput.value = '';
+            removeOrderRatingPhoto();
+
             currentSelectedStar = currentRating || 0;
             selectRating(currentSelectedStar, false);
 
@@ -827,12 +928,24 @@
             const prodId = document.getElementById('ratingProductId').value;
             const orderId = document.getElementById('ratingOrderId').value;
             const val = parseInt(document.getElementById('selectedRatingValue').value);
+            const reviewText = (document.getElementById('ratingReviewText')?.value || '').trim();
 
             if (!val || val < 1) return;
 
             const btn = document.getElementById('btnSubmitRating');
             btn.disabled = true;
-            btn.textContent = 'Simpan...';
+            btn.textContent = 'Menyimpan...';
+
+            const payload = {
+                product_id: prodId,
+                order_id: orderId,
+                rating: val,
+                review_text: reviewText
+            };
+
+            if (orderRatingCompressedBase64) {
+                payload.review_images_base64 = [orderRatingCompressedBase64];
+            }
 
             fetch('{{ route("account.orders.rating") }}', {
                 method: 'POST',
@@ -841,11 +954,7 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     'Accept': 'application/json',
                 },
-                body: JSON.stringify({
-                    product_id: prodId,
-                    order_id: orderId,
-                    rating: val
-                })
+                body: JSON.stringify(payload)
             })
             .then(res => res.json())
             .then(data => {
@@ -869,12 +978,12 @@
                 } else {
                     showRatingErrorModal(data.message || 'Gagal menyimpan rating.');
                     btn.disabled = false;
-                    btn.textContent = 'Simpan Rating';
+                    btn.textContent = 'Kirim Rating & Ulasan';
                 }
             })
             .catch(err => {
                 btn.disabled = false;
-                btn.textContent = 'Simpan Rating';
+                btn.textContent = 'Kirim Rating & Ulasan';
                 showRatingErrorModal('Terjadi kesalahan koneksi. Silakan coba lagi.');
             });
         }

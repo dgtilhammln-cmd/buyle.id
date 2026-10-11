@@ -417,4 +417,17 @@ class Product extends Model
     {
         return $this->type === 'service';
     }
+
+    /**
+     * Rating dan ulasan produk.
+     */
+    public function ratings()
+    {
+        return $this->hasMany(\App\Models\ProductRating::class, 'product_id');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(\App\Models\ProductRating::class, 'product_id')->where('is_approved', true);
+    }
 }
