@@ -10,6 +10,7 @@ DEPLOY_CMD = (
     "cd domains/buyle.id/public_html "
     "&& git checkout . "
     "&& git pull origin main "
+    "&& php artisan migrate --force "
     "&& php artisan optimize:clear"
 )
 
