@@ -62,15 +62,17 @@ class ProductReviewController extends Controller
             }
 
             return [
-                'id'            => $r->id,
-                'rating'        => (int) $r->rating,
-                'review_text'   => $r->review_text,
-                'review_images' => $imageUrls,
-                'display_name'  => $r->display_name,
-                'avatar_url'    => $r->avatar_url,
-                'created_at'    => $r->created_at ? $r->created_at->diffForHumans() : 'Baru saja',
-                'date'          => $r->created_at ? $r->created_at->translatedFormat('d M Y') : date('d M Y'),
-                'is_verified'   => true,
+                'id'                => $r->id,
+                'rating'            => (int) $r->rating,
+                'review_text'       => $r->review_text,
+                'review_images'     => $imageUrls,
+                'display_name'      => $r->display_name,
+                'avatar_url'        => $r->avatar_url,
+                'created_at'        => $r->created_at ? $r->created_at->diffForHumans() : 'Baru saja',
+                'date'              => $r->created_at ? $r->created_at->translatedFormat('d M Y') : date('d M Y'),
+                'is_verified'       => true,
+                'seller_reply'      => $r->seller_reply,
+                'seller_replied_at' => $r->seller_replied_at ? $r->seller_replied_at->translatedFormat('d M Y, H:i') : null,
             ];
         });
 
@@ -104,6 +106,63 @@ class ProductReviewController extends Controller
                 'with_media_count' => $mediaCount,
                 'breakdown'        => $breakdown,
             ],
+        ]);
+    }
+
+    /**
+     * Balas ulasan oleh creator pemilik produk (maks 200 kata).
+     */
+    public function reply($id, Request $request)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Silakan login terlebih dahulu.'], 401);
+        }
+
+        $rating = ProductRating::with('product')->findOrFail($id);
+        $product = $rating->product;
+
+        if (!$product) {
+            return response()->json(['success' => false, 'message' => 'Produk tidak ditemukan.'], 404);
+        }
+
+        // Creator pemilik produk atau admin
+        $isOwner = ($product->user_id && $product->user_id == $user->id)
+                || ($product->seller_id && $product->seller_id == $user->id)
+                || ($user->role === 'admin' || $user->is_admin);
+
+        if (!$isOwner) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya creator pemilik produk ini yang dapat membalas ulasan.'
+            ], 403);
+        }
+
+        $request->validate([
+            'reply' => 'required|string',
+        ]);
+
+        $replyText = trim($request->input('reply'));
+
+        // Cek batas kata maksimal 200 kata
+        $words = preg_split('/\s+/', $replyText, -1, PREG_SPLIT_NO_EMPTY);
+        $wordCount = count($words);
+        if ($wordCount > 200) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Balasan ulasan maksimal 200 kata. Saat ini: ' . $wordCount . ' kata.'
+            ], 422);
+        }
+
+        $rating->seller_reply = $replyText;
+        $rating->seller_replied_at = now();
+        $rating->save();
+
+        return response()->json([
+            'success'           => true,
+            'message'           => 'Balasan berhasil dikirim!',
+            'seller_reply'      => $rating->seller_reply,
+            'seller_replied_at' => $rating->seller_replied_at->translatedFormat('d M Y, H:i'),
         ]);
     }
 }

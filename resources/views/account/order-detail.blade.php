@@ -798,7 +798,7 @@
                 return;
             }
 
-            // Canvas MAX Compression (Max 1000px, JPEG 0.75: ~50KB - 120KB)
+            // Canvas Compression: Low quality (Max 600px, WebP/JPEG 0.5: ~15KB - 30KB)
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
@@ -806,7 +806,7 @@
                     const canvas = document.createElement('canvas');
                     let width = img.width;
                     let height = img.height;
-                    const maxDim = 1000;
+                    const maxDim = 600;
 
                     if (width > maxDim || height > maxDim) {
                         if (width > height) {
@@ -823,7 +823,15 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    orderRatingCompressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+                    let mimeType = 'image/jpeg';
+                    try {
+                        const test = canvas.toDataURL('image/webp', 0.5);
+                        if (test && test.indexOf('data:image/webp') === 0) {
+                            mimeType = 'image/webp';
+                        }
+                    } catch (err) {}
+
+                    orderRatingCompressedBase64 = canvas.toDataURL(mimeType, 0.5);
 
                     document.getElementById('orderRatingPhotoPreview').src = orderRatingCompressedBase64;
                     document.getElementById('orderRatingPhotoPreviewWrap').style.display = 'block';

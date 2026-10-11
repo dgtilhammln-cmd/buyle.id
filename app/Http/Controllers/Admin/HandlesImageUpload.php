@@ -134,12 +134,15 @@ trait HandlesImageUpload
 
     /**
      * Store uploaded image as WebP (scaled down, or exact crop if both maxW & maxH given strictly)
+     * Hero banners: maxW=1280, maxH=640, quality=76
+     * Product covers: maxW=800, maxH=800, quality=80
      */
-    protected function storeWebP(UploadedFile $file, string $folder, int $maxW = 1200, int $maxH = 800, int $quality = 88): string
+    protected function storeWebP(UploadedFile $file, string $folder, int $maxW = 1280, int $maxH = 640, int $quality = 76): string
     {
         try {
             $img      = $this->gdLoad($file);
-            $img      = $this->gdCenterCrop($img, $maxW, $maxH);
+            // Gunakan scaleDown (bukan center crop) agar banner tidak terpotong
+            $img      = $this->gdScaleDown($img, $maxW, $maxH);
             $webp     = $this->gdEncodeWebP($img, $quality);
             $filename = $folder . '/' . Str::random(16) . '.webp';
             Storage::disk('public')->put($filename, $webp);
@@ -154,7 +157,7 @@ trait HandlesImageUpload
     /**
      * Store uploaded image as WebP preserving original aspect ratio (NO cropping - for logos, icons, banners)
      */
-    protected function storeWebPNoCrop(UploadedFile $file, string $folder, int $maxW = 1600, int $maxH = 800, int $quality = 95): string
+    protected function storeWebPNoCrop(UploadedFile $file, string $folder, int $maxW = 1280, int $maxH = 640, int $quality = 78): string
     {
         try {
             $img      = $this->gdLoad($file);

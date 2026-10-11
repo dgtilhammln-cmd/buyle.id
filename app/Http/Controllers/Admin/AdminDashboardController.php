@@ -10,6 +10,8 @@ use App\Models\OrderItem;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class AdminDashboardController extends Controller
 {
@@ -40,104 +42,140 @@ class AdminDashboardController extends Controller
         $daysDiff = $from->diffInDays($to);
         if ($daysDiff > 60) $daysDiff = 60;
 
-        // 1. STAT CARDS
-        // Total Visitor
-        $visitorCount = AnalyticsEvent::ofType('pageview')->whereBetween('created_at', [$from, $to])->count();
-        if ($visitorCount === 0) {
-            $visitorCount = AnalyticsEvent::ofType('pageview')->count();
-        }
+        // Cache key berdasarkan period yang dipilih (bukan custom)
+        $cacheKey = 'admin_dashboard_' . $period . '_' . $from->format('Ymd') . '_' . $to->format('Ymd');
+        $cacheTtl = 300; // 5 menit
 
-        // Total Creators
-        $creatorsCount = User::whereIn('role', ['seller', 'creator'])->count();
-        if ($creatorsCount === 0) {
-            $creatorsCount = User::whereHas('creatorProfile')->count();
-        }
+        [
+            $stats,
+            $labels,
+            $visitorValues,
+            $creatorValues,
+            $transactionValues,
+            $productValues,
+            $recentOrders,
+            $creatorsLeaderboard,
+        ] = Cache::remember($cacheKey, $cacheTtl, function () use ($from, $to, $now, $daysDiff) {
 
-        // Total Transaksi (Count of checkout orders, NOT money)
-        $transactionsCount = Order::whereBetween('created_at', [$from, $to])->count();
-        $allOrdersCount    = Order::count();
-        $displayTransactions = $transactionsCount > 0 ? $transactionsCount : $allOrdersCount;
+            // 1. STAT CARDS
+            $visitorCount = AnalyticsEvent::ofType('pageview')
+                ->whereBetween('created_at', [$from, $to])
+                ->count();
+            if ($visitorCount === 0) {
+                $visitorCount = AnalyticsEvent::ofType('pageview')->count();
+            }
 
-        // Total Produk Digital (mencakup semua kategori)
-        $totalProductsCount = Product::count();
+            $creatorsCount = User::whereIn('role', ['seller', 'creator'])->count();
+            if ($creatorsCount === 0) {
+                $creatorsCount = User::whereHas('creatorProfile')->count();
+            }
 
-        $stats = [
-            'visitor'      => $visitorCount,
-            'creators'     => $creatorsCount,
-            'transactions' => $displayTransactions,
-            'products'     => $totalProductsCount,
-        ];
+            $transactionsCount   = Order::whereBetween('created_at', [$from, $to])->count();
+            $allOrdersCount      = Order::count();
+            $displayTransactions = $transactionsCount > 0 ? $transactionsCount : $allOrdersCount;
+            $totalProductsCount  = Product::count();
 
-        // 2. DAILY CHART DATA
-        $visitorChart = AnalyticsEvent::ofType('pageview')
-            ->whereBetween('created_at', [$from, $to])
-            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
-            ->groupBy('date')->orderBy('date')
-            ->pluck('count', 'date');
+            $stats = [
+                'visitor'      => $visitorCount,
+                'creators'     => $creatorsCount,
+                'transactions' => $displayTransactions,
+                'products'     => $totalProductsCount,
+            ];
 
-        $creatorChart = User::whereIn('role', ['seller', 'creator'])
-            ->whereBetween('created_at', [$from, $to])
-            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
-            ->groupBy('date')->orderBy('date')
-            ->pluck('count', 'date');
+            // 2. DAILY CHART DATA
+            $visitorChart = AnalyticsEvent::ofType('pageview')
+                ->whereBetween('created_at', [$from, $to])
+                ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+                ->groupBy('date')->orderBy('date')
+                ->pluck('count', 'date');
 
-        $transactionChart = Order::whereBetween('created_at', [$from, $to])
-            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
-            ->groupBy('date')->orderBy('date')
-            ->pluck('count', 'date');
+            $creatorChart = User::whereIn('role', ['seller', 'creator'])
+                ->whereBetween('created_at', [$from, $to])
+                ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+                ->groupBy('date')->orderBy('date')
+                ->pluck('count', 'date');
 
-        $productChart = Product::whereBetween('created_at', [$from, $to])
-            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
-            ->groupBy('date')->orderBy('date')
-            ->pluck('count', 'date');
+            $transactionChart = Order::whereBetween('created_at', [$from, $to])
+                ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+                ->groupBy('date')->orderBy('date')
+                ->pluck('count', 'date');
 
-        $labels = [];
-        $visitorValues = [];
-        $creatorValues = [];
-        $transactionValues = [];
-        $productValues = [];
+            $productChart = Product::whereBetween('created_at', [$from, $to])
+                ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+                ->groupBy('date')->orderBy('date')
+                ->pluck('count', 'date');
 
-        for ($i = $daysDiff; $i >= 0; $i--) {
-            $date = $to->copy()->subDays($i)->format('Y-m-d');
-            $labels[] = $to->copy()->subDays($i)->format('d/m');
-            $visitorValues[] = $visitorChart[$date] ?? 0;
-            $creatorValues[] = $creatorChart[$date] ?? 0;
-            $transactionValues[] = $transactionChart[$date] ?? 0;
-            $productValues[] = $productChart[$date] ?? 0;
-        }
+            $labels = $visitorValues = $creatorValues = $transactionValues = $productValues = [];
+            for ($i = $daysDiff; $i >= 0; $i--) {
+                $date = $to->copy()->subDays($i)->format('Y-m-d');
+                $labels[]            = $to->copy()->subDays($i)->format('d/m');
+                $visitorValues[]     = $visitorChart[$date] ?? 0;
+                $creatorValues[]     = $creatorChart[$date] ?? 0;
+                $transactionValues[] = $transactionChart[$date] ?? 0;
+                $productValues[]     = $productChart[$date] ?? 0;
+            }
 
-        // 3. RIWAYAT TRANSAKSI TERBARU (ORDER)
-        $recentOrders = Order::with(['user', 'items.product'])->latestFirst()->limit(25)->get();
+            // 3. RIWAYAT TRANSAKSI TERBARU
+            $recentOrders = Order::with(['user:id,name,email', 'items.product:id,name,slug'])
+                ->latestFirst()
+                ->limit(25)
+                ->get();
 
-        // 4. KLASEMEN CREATOR (Leaderboard - Top Traffic & Orders)
-        $creatorsLeaderboard = User::whereIn('role', ['seller', 'creator'])
-            ->orWhereHas('creatorProfile')
-            ->with(['creatorProfile', 'products'])
-            ->withCount('products')
-            ->get()
-            ->map(function ($user) {
-                $products = $user->products ?? collect();
-                $totalViews = $products->sum('views_count');
-                $totalSoldCount = $products->sum('sold_count');
-                $productIds = $products->pluck('id')->filter()->all();
-                $orderItemsCount = !empty($productIds) ? OrderItem::whereIn('product_id', $productIds)->count() : 0;
+            // 4. LEADERBOARD — 1 query aggregate, TIDAK ada N+1 per creator
+            // Hitung total sold & views per user via JOIN ke products + order_items
+            $leaderRaw = DB::table('users')
+                ->select([
+                    'users.id',
+                    'users.name',
+                    'users.username',
+                    'users.avatar',
+                    DB::raw('COUNT(DISTINCT p.id) as products_count'),
+                    DB::raw('COALESCE(SUM(p.views_count), 0) as total_views'),
+                    DB::raw('COALESCE(SUM(p.sold_count), 0) as total_sold'),
+                    DB::raw('COALESCE(SUM(oi.qty), 0) as total_orders_qty'),
+                ])
+                ->leftJoin('products as p', function ($j) {
+                    $j->on('p.seller_id', '=', 'users.id')
+                      ->where('p.is_active', true);
+                })
+                ->leftJoin('order_items as oi', 'oi.product_id', '=', 'p.id')
+                ->leftJoin('creator_profiles as cp', 'cp.user_id', '=', 'users.id')
+                ->whereNotNull('cp.user_id')
+                ->whereNotIn('users.role', ['admin', 'super_admin', 'admin_super'])
+                ->groupBy('users.id', 'users.name', 'users.username', 'users.avatar')
+                ->orderByDesc(DB::raw('COALESCE(SUM(p.sold_count), 0) + COALESCE(SUM(oi.qty), 0)'))
+                ->limit(10)
+                ->get();
 
-                $storeName = $user->creatorProfile?->store_name ?: ($user->name ?: 'Creator #' . $user->id);
-                $storeSlug = $user->creatorProfile?->store_slug ?: ($user->username ?: $user->id);
+            // Ambil store_name & store_slug dari creator_profiles sekali (bulk)
+            $creatorProfiles = DB::table('creator_profiles')
+                ->whereIn('user_id', $leaderRaw->pluck('id'))
+                ->pluck('store_name', 'user_id')
+                ->toArray();
+            $creatorSlugs = DB::table('creator_profiles')
+                ->whereIn('user_id', $leaderRaw->pluck('id'))
+                ->pluck('store_slug', 'user_id')
+                ->toArray();
 
+            $creatorsLeaderboard = $leaderRaw->map(function ($row) use ($creatorProfiles, $creatorSlugs) {
+                $storeName = $creatorProfiles[$row->id] ?? $row->name ?? 'Creator #' . $row->id;
+                $storeSlug = $creatorSlugs[$row->id] ?? $row->username ?? $row->id;
                 return (object) [
-                    'id'             => $user->id,
+                    'id'             => $row->id,
                     'name'           => $storeName,
                     'slug'           => $storeSlug,
-                    'avatar'         => $user->avatar ? asset('storage/' . $user->avatar) : null,
-                    'total_views'    => $totalViews,
-                    'total_orders'   => max($totalSoldCount, $orderItemsCount),
-                    'products_count' => $user->products_count ?? $products->count(),
+                    'avatar'         => $row->avatar ? asset('storage/' . $row->avatar) : null,
+                    'total_views'    => (int) $row->total_views,
+                    'total_orders'   => (int) $row->total_orders_qty + (int) $row->total_sold,
+                    'products_count' => (int) $row->products_count,
                 ];
-            })
-            ->sortByDesc(fn($c) => ($c->total_orders * 1000) + $c->total_views)
-            ->values()
-            ->take(10);
+            });
+
+            return [
+                $stats, $labels, $visitorValues, $creatorValues,
+                $transactionValues, $productValues, $recentOrders, $creatorsLeaderboard,
+            ];
+        });
 
         return view('admin.dashboard.index', compact(
             'stats',

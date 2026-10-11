@@ -422,17 +422,17 @@ class AccountController extends Controller
             $savedImages = $existing->review_images;
         }
 
-        // If new images provided (max 1 photo)
+        // If new images provided (max 1 photo) — Otomatis dikompres ke WebP low quality
+        $optimizer = app(\App\Services\ImageOptimizer::class);
         if ($request->hasFile('review_images')) {
             $files = $request->file('review_images');
-            if (is_array($files)) $file = $files[0] ?? null;
-            else $file = $files;
+            $file = is_array($files) ? ($files[0] ?? null) : $files;
             
             if ($file && $file->isValid()) {
-                $ext = $file->getClientOriginalExtension() ?: 'jpg';
-                $filename = 'reviews/' . $productId . '_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $ext;
-                Storage::disk('public')->put($filename, file_get_contents($file->getRealPath()));
-                $savedImages = [$filename];
+                $savedPath = $optimizer->storeReviewImage($file, (string) $productId);
+                if ($savedPath) {
+                    $savedImages = [$savedPath];
+                }
             }
         } elseif ($request->filled('review_images_base64')) {
             // Compressed base64 images from Canvas (max 1 photo)
@@ -442,14 +442,10 @@ class AccountController extends Controller
             }
             if (is_array($b64List) && !empty($b64List)) {
                 $b64 = $b64List[0] ?? null;
-                if ($b64 && preg_match('/^data:image\/(\w+);base64,/', $b64, $type)) {
-                    $imgData = substr($b64, strpos($b64, ',') + 1);
-                    $imgData = base64_decode($imgData);
-                    if ($imgData !== false) {
-                        $ext = strtolower($type[1]) === 'png' ? 'png' : 'jpg';
-                        $filename = 'reviews/' . $productId . '_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $ext;
-                        Storage::disk('public')->put($filename, $imgData);
-                        $savedImages = [$filename];
+                if ($b64) {
+                    $savedPath = $optimizer->storeReviewImage($b64, (string) $productId);
+                    if ($savedPath) {
+                        $savedImages = [$savedPath];
                     }
                 }
             }

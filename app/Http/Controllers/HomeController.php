@@ -13,109 +13,108 @@ use App\Models\HeroSlide;
 use App\Models\UspItem;
 use App\Models\CategoryItem;
 use App\Models\PromoSection;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $settings     = Setting::getAllAsArray();
-        $products     = Product::marketplace()->latest()->limit(6)->get();
-        $allProducts  = Product::marketplace()->latest()->limit(30)->get();
-        
-        // Return empty collections for legacy sections to prevent view crashes
-        $gallery      = collect();
-        $articles     = Article::published()->with('translations')->latest()->limit(4)->get();
-        
-        // Fetch ONLY Ticket, Event, Workshop, Wisata & Webinar Products (10 items)
-        $ticketProducts = Product::marketplace()
-            ->with(['seller.creatorProfile', 'category'])
-            ->where(function($q) {
-                $q->whereHas('category', function($catQ) {
-                    $catQ->where('name', 'LIKE', '%tik%')
-                         ->orWhere('name', 'LIKE', '%event%')
-                         ->orWhere('name', 'LIKE', '%wisata%')
-                         ->orWhere('name', 'LIKE', '%webinar%')
-                         ->orWhere('name', 'LIKE', '%workshop%')
-                         ->orWhere('slug', 'LIKE', '%tik%')
-                         ->orWhere('slug', 'LIKE', '%event%')
-                         ->orWhere('slug', 'LIKE', '%wisata%')
-                         ->orWhere('slug', 'LIKE', '%webinar%');
+        $settings = Setting::getAllAsArray();
+
+        // ── CACHE SEMUA DATA BERAT HOMEPAGE (TTL: 5 menit) ──
+        [
+            $products,
+            $allProducts,
+            $retargetProducts,
+            $bestsellerProducts,
+            $latestProducts,
+            $ticketProducts,
+            $popularCreators,
+            $articles,
+            $heroSlides,
+            $utamaBanners,
+            $sampingBanners,
+            $uspItems,
+            $categoryItems,
+            $promoSections,
+        ] = Cache::remember('home_page_data_v3', 300, function () {
+            // Semua produk marketplace sekaligus — cukup 1 query besar, dibagi di PHP
+            $allMp = Product::marketplace()
+                ->with(['seller:id,name,username,avatar', 'seller.creatorProfile:user_id,store_name,store_slug,avatar', 'category:id,name,slug'])
+                ->select(['id','name','slug','image','gallery','price','sale_price','stock','sold_count','views_count','rating','product_category_id','seller_id','product_type','is_active','created_at'])
+                ->latest()
+                ->limit(40)
+                ->get();
+
+            $products           = $allMp->take(6);
+            $allProducts        = $allMp->take(30);
+            $retargetProducts   = $allMp->take(12);
+            $latestProducts     = $allMp->take(10);
+
+            // Bestseller — sort by sold_count (already in query, no extra withCount)
+            $bestsellerProducts = $allMp->sortByDesc('sold_count')->take(12)->values();
+
+            // Ticket/Event produk — from subset of $allMp (already loaded)
+            $ticketKeywords = ['tiket','event','konser','wisata','webinar','workshop','seminar'];
+            $ticketProducts = $allMp->filter(function($p) use ($ticketKeywords) {
+                $name = strtolower($p->name ?? '');
+                $type = strtolower($p->product_type ?? '');
+                $catName = strtolower($p->category->name ?? '');
+                foreach ($ticketKeywords as $kw) {
+                    if (str_contains($name, $kw) || str_contains($type, $kw) || str_contains($catName, $kw)) return true;
+                }
+                return false;
+            })->take(10)->values();
+
+            // Creator populer — 1 query dengan filter DB, tanpa PHP loop order-items per creator
+            $popularCreators = \App\Models\User::whereHas('creatorProfile', function($q) {
+                    $q->where('is_active', true)
+                      ->where('store_name', 'NOT LIKE', '%copywriter%')
+                      ->where('store_slug', 'NOT LIKE', '%copywriter%');
                 })
-                ->orWhere('product_type', 'LIKE', '%ticket%')
-                ->orWhere('product_type', 'LIKE', '%event%')
-                ->orWhere('name', 'LIKE', '%tiket%')
-                ->orWhere('name', 'LIKE', '%event%')
-                ->orWhere('name', 'LIKE', '%konser%')
-                ->orWhere('name', 'LIKE', '%wisata%')
-                ->orWhere('name', 'LIKE', '%webinar%')
-                ->orWhere('name', 'LIKE', '%workshop%');
-            })
-            ->latest()
-            ->limit(10)
-            ->get();
+                ->whereNotIn('role', ['admin', 'super_admin', 'admin_super'])
+                ->where('name', 'NOT LIKE', '%copywriter%')
+                ->with(['creatorProfile:user_id,store_name,store_slug,avatar,banner,is_active'])
+                ->withCount('products')
+                ->orderByRaw("
+                    CASE
+                        WHEN username LIKE '%hvmdigital%' OR id IN (SELECT user_id FROM creator_profiles WHERE store_slug LIKE '%hvmdigital%') THEN 1
+                        WHEN username LIKE '%ilham%' THEN 2
+                        ELSE 3
+                    END ASC
+                ")
+                ->orderByDesc('products_count')
+                ->limit(10)
+                ->get()
+                ->filter(fn($u) => $u->creatorProfile && $u->creatorProfile->isStoreActive())
+                ->values();
 
-        $retargetProducts = Product::marketplace()
-            ->with(['seller.creatorProfile', 'category'])
-            ->latest()
-            ->limit(12)
-            ->get();
+            $articles       = Article::published()->with('translations')->latest()->limit(4)->get();
+            $heroSlides     = HeroSlide::active()->ordered()->where('position', 'hero')->get();
+            $utamaBanners   = HeroSlide::active()->ordered()->where('position', 'utama')->limit(2)->get();
+            $sampingBanners = HeroSlide::active()->ordered()->where('position', 'samping')->limit(2)->get();
+            $uspItems       = UspItem::active()->get();
+            $categoryItems  = \App\Models\ProductCategory::active()
+                ->with(['subCategories' => function($q) { $q->where('is_active', true)->orderBy('order'); }])
+                ->orderBy('order')
+                ->get();
+            $promoSections  = PromoSection::active()->get();
 
-        // Realtime Produk Terlaris berdasarkan data order_items (total_qty_sold) & sold_count
-        $bestsellerProducts = Product::marketplace()
-            ->with(['seller.creatorProfile', 'category'])
-            ->withCount(['orderItems as total_qty_sold' => function($q) {
-                $q->select(\Illuminate\Support\Facades\DB::raw('COALESCE(SUM(qty), 0)'));
-            }])
-            ->orderByDesc('sold_count')
-            ->orderByDesc('total_qty_sold')
-            ->latest()
-            ->limit(12)
-            ->get();
+            return [
+                $products, $allProducts, $retargetProducts, $bestsellerProducts,
+                $latestProducts, $ticketProducts, $popularCreators,
+                $articles, $heroSlides, $utamaBanners, $sampingBanners,
+                $uspItems, $categoryItems, $promoSections,
+            ];
+        });
 
-        // Produk Terbaru (10 items untuk 2 baris grid)
-        $latestProducts = Product::marketplace()
-            ->with(['seller.creatorProfile', 'category'])
-            ->latest()
-            ->limit(10)
-            ->get();
-
-        // Creator Terpopuler (hanya yang mengaktifkan toggle di profil creator & maksimal 10 items)
-        $popularCreators = \App\Models\User::whereHas('creatorProfile')
-            ->whereNotIn('role', ['admin', 'super_admin', 'admin_super'])
-            ->where('name', 'NOT LIKE', '%copywriter%')
-            ->whereDoesntHave('creatorProfile', function($q) {
-                $q->where('store_name', 'LIKE', '%copywriter%')
-                  ->orWhere('store_slug', 'LIKE', '%copywriter%');
-            })
-            ->with(['creatorProfile'])
-            ->withCount('products')
-            ->orderByRaw("
-                CASE 
-                    WHEN name LIKE '%HVM Digital%' OR username LIKE '%hvmdigital%' OR id IN (SELECT user_id FROM creator_profiles WHERE store_name LIKE '%HVM Digital%' OR store_slug LIKE '%hvmdigital%') THEN 1
-                    WHEN name LIKE '%Ilham Maulana%' OR username LIKE '%ilham%' OR id IN (SELECT user_id FROM creator_profiles WHERE store_name LIKE '%Ilham Maulana%' OR store_slug LIKE '%ilham%') THEN 2
-                    ELSE 3
-                END ASC
-            ")
-            ->orderByDesc('products_count')
-            ->latest()
-            ->get()
-            ->filter(fn($u) => $u->creatorProfile && $u->creatorProfile->isStoreActive())
-            ->take(10)
-            ->values();
-
+        // Non-cacheable (user-specific atau selalu fresh)
+        $gallery      = collect();
         $clients      = collect();
         $testimonials = collect();
-        $uspItems       = UspItem::active()->get();
-        $categoryItems  = \App\Models\ProductCategory::active()
-            ->with(['subCategories' => function($q) { $q->where('is_active', true)->orderBy('order'); }])
-            ->orderBy('order')
-            ->get();
-        $promoSections  = PromoSection::active()->get();
-        
         $wa           = WaSetting::primary();
-        $heroSlides     = HeroSlide::active()->ordered()->where('position', 'hero')->get();
-        $utamaBanners   = HeroSlide::active()->ordered()->where('position', 'utama')->limit(2)->get();
-        $sampingBanners = HeroSlide::active()->ordered()->where('position', 'samping')->limit(2)->get();
+        
+        // (replaced by cached block above)
 
         $siteName = $settings['site_name'] ?? 'buyle.id';
 

@@ -1418,8 +1418,11 @@
                         <div class="swiper-pagination hero-swiper-pagination"></div>
                     </div>
                 @elseif(!empty($settings['hero_main_image']))
-                    <img src="{{ asset('storage/' . $settings['hero_main_image']) }}" alt="Promo Utama" class="cv-hero-img-main"
-                        width="800" height="440" fetchpriority="high">
+                    <img src="{{ asset('storage/' . $settings['hero_main_image']) }}"
+                        alt="Promo Utama" class="cv-hero-img-main"
+                        width="800" height="440"
+                        fetchpriority="high" loading="eager" decoding="async"
+                        style="aspect-ratio:800/440; object-fit:cover; width:100%; height:100%;">
                 @else
                     <div
                         style="width:100%; height:100%; min-height:300px; border-radius:16px; background:#F1F5F9; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#64748B; border:2px dashed #CBD5E1;">
@@ -1449,13 +1452,19 @@
                 @if(isset($utamaBanners) && $utamaBanners->count() > 0)
                     @php $utama = $utamaBanners->first(); @endphp
                     <a href="{{ $utama->button_url ?? route('products') }}" class="cv-hero-static-col">
-                        <img src="{{ asset('storage/' . $utama->image) }}" alt="{{ $utama->title }}" class="cv-hero-img-sec"
-                            loading="lazy">
+                        <img src="{{ asset('storage/' . $utama->image) }}"
+                            alt="{{ $utama->title }}" class="cv-hero-img-sec"
+                            width="360" height="210"
+                            loading="lazy" decoding="async"
+                            style="aspect-ratio:360/210; object-fit:cover; width:100%; height:100%;">
                     </a>
                 @elseif(!empty($settings['hero_secondary_image']))
                     <a href="{{ route('products') }}" class="cv-hero-static-col">
-                        <img src="{{ asset('storage/' . $settings['hero_secondary_image']) }}" alt="Promo"
-                            class="cv-hero-img-sec" loading="eager">
+                        <img src="{{ asset('storage/' . $settings['hero_secondary_image']) }}"
+                            alt="Promo" class="cv-hero-img-sec"
+                            width="360" height="210"
+                            loading="lazy" decoding="async"
+                            style="aspect-ratio:360/210; object-fit:cover; width:100%; height:100%;">
                     </a>
                 @else
                     <div
@@ -1475,13 +1484,19 @@
                 @if(isset($sampingBanners) && $sampingBanners->count() > 0)
                     @php $samping = $sampingBanners->first(); @endphp
                     <a href="{{ $samping->button_url ?? route('products') }}" class="cv-hero-static-col">
-                        <img src="{{ asset('storage/' . $samping->image) }}" alt="{{ $samping->title }}" class="cv-hero-img-sec"
-                            loading="lazy">
+                        <img src="{{ asset('storage/' . $samping->image) }}"
+                            alt="{{ $samping->title }}" class="cv-hero-img-sec"
+                            width="360" height="210"
+                            loading="lazy" decoding="async"
+                            style="aspect-ratio:360/210; object-fit:cover; width:100%; height:100%;">
                     </a>
                 @elseif(!empty($settings['hero_third_image']))
                     <a href="{{ route('products') }}" class="cv-hero-static-col">
-                        <img src="{{ asset('storage/' . $settings['hero_third_image']) }}" alt="Promo 2" class="cv-hero-img-sec"
-                            loading="lazy">
+                        <img src="{{ asset('storage/' . $settings['hero_third_image']) }}"
+                            alt="Promo 2" class="cv-hero-img-sec"
+                            width="360" height="210"
+                            loading="lazy" decoding="async"
+                            style="aspect-ratio:360/210; object-fit:cover; width:100%; height:100%;">
                     </a>
                 @else
                     <div

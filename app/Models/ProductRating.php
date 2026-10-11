@@ -18,12 +18,15 @@ class ProductRating extends Model
         'review_images',
         'is_approved',
         'reviewer_name',
+        'seller_reply',
+        'seller_replied_at',
     ];
 
     protected $casts = [
-        'rating'         => 'integer',
-        'review_images'  => 'array',
-        'is_approved'    => 'boolean',
+        'rating'            => 'integer',
+        'review_images'     => 'array',
+        'is_approved'       => 'boolean',
+        'seller_replied_at' => 'datetime',
     ];
 
     public function product()

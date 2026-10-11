@@ -3,175 +3,174 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class OptimizeImages extends Command
 {
-    protected $signature = 'images:optimize {--dry-run : Show what would be optimized without doing it} {--quality=80 : WebP quality (1-100)}';
-    protected $description = 'Compress and resize all images in storage to improve Lighthouse performance score';
+    protected $signature   = 'images:optimize 
+                                {--folder= : Sub-folder in storage/app/public (e.g. hero_slides). Default: all}
+                                {--max-width=1280 : Maximum width in pixels}
+                                {--max-height=1280 : Maximum height in pixels}
+                                {--quality=80 : WebP/JPEG quality (1-100)}
+                                {--dry-run : Show what would be done without actually doing it}';
 
-    // Max dimensions per folder type
-    private array $rules = [
-        'hero_slides'    => ['w' => 800,  'h' => 450,  'q' => 82],
-        'hero_banners'   => ['w' => 800,  'h' => 450,  'q' => 82],
-        'banners'        => ['w' => 800,  'h' => 450,  'q' => 82],
-        'promo_banners'  => ['w' => 600,  'h' => 400,  'q' => 80],
-        'services'       => ['w' => 600,  'h' => 600,  'q' => 80],
-        'products'       => ['w' => 600,  'h' => 600,  'q' => 80],
-        'categories'     => ['w' => 400,  'h' => 400,  'q' => 78],
-        'usp-icons'      => ['w' => 96,   'h' => 96,   'q' => 80],
-        'usp_icons'      => ['w' => 96,   'h' => 96,   'q' => 80],
-        'logos'          => ['w' => 300,  'h' => 300,  'q' => 85],
-        'articles'       => ['w' => 800,  'h' => 500,  'q' => 78],
-        'gallery'        => ['w' => 800,  'h' => 600,  'q' => 78],
-        'avatars'        => ['w' => 200,  'h' => 200,  'q' => 82],
-        'settings'       => ['w' => 400,  'h' => 400,  'q' => 82],
-        '_default'       => ['w' => 900,  'h' => 900,  'q' => 80],
-    ];
+    protected $description = 'Compress & resize oversized images in storage to boost Lighthouse score';
 
-    private int $totalSaved = 0;
-    private int $totalProcessed = 0;
-    private int $totalSkipped = 0;
+    // Only process these extensions
+    private array $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
+    // Skip files already smaller than this (bytes)
+    private int $skipBelowBytes = 80_000; // 80KB — already good
 
     public function handle(): int
     {
-        $dryRun  = $this->option('dry-run');
-        $quality = (int) $this->option('quality');
+        $manager  = new ImageManager(new Driver());
+        $folder   = $this->option('folder');
+        $maxW     = (int) $this->option('max-width');
+        $maxH     = (int) $this->option('max-height');
+        $quality  = (int) $this->option('quality');
+        $dryRun   = $this->option('dry-run');
 
-        $this->info('🔍 Scanning storage/app/public for images...');
+        $basePath = storage_path('app/public');
+        $scanPath = $folder ? $basePath . DIRECTORY_SEPARATOR . $folder : $basePath;
+
+        if (!is_dir($scanPath)) {
+            $this->error("Directory not found: {$scanPath}");
+            return self::FAILURE;
+        }
+
+        $this->info("🔍 Scanning: {$scanPath}");
+        $this->info("📐 Max: {$maxW}x{$maxH}px | Quality: {$quality}% | Dry-run: " . ($dryRun ? 'YES' : 'NO'));
         $this->newLine();
 
-        $storagePath = storage_path('app/public');
-        $files = $this->getImageFiles($storagePath);
+        $files = $this->collectImages($scanPath);
+        $this->info("📁 Found " . count($files) . " image files");
+        $this->newLine();
 
-        $this->info("Found " . count($files) . " image files.");
+        $totalSaved   = 0;
+        $processCount = 0;
+        $skipCount    = 0;
+
         $bar = $this->output->createProgressBar(count($files));
         $bar->start();
 
         foreach ($files as $filePath) {
-            $this->processImage($filePath, $storagePath, $dryRun, $quality);
             $bar->advance();
+
+            $originalSize = filesize($filePath);
+            $ext          = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+
+            // Skip small files — they're already good
+            if ($originalSize < $this->skipBelowBytes) {
+                $skipCount++;
+                continue;
+            }
+
+            try {
+                $img = $manager->read($filePath);
+
+                $w = $img->width();
+                $h = $img->height();
+
+                // Only resize if bigger than max
+                $needsResize = ($w > $maxW || $h > $maxH);
+                $needsCompress = $originalSize > $this->skipBelowBytes;
+
+                if (!$needsResize && !$needsCompress) {
+                    $skipCount++;
+                    continue;
+                }
+
+                if ($needsResize) {
+                    $img->scaleDown($maxW, $maxH);
+                }
+
+                if ($dryRun) {
+                    $relPath = Str::after($filePath, $basePath . DIRECTORY_SEPARATOR);
+                    $savingEstimate = round($originalSize * 0.5 / 1024);
+                    $this->line("\n  [DRY] {$relPath} ({$w}x{$h}, " . round($originalSize/1024) . "KB → ~{$savingEstimate}KB)");
+                    $processCount++;
+                    continue;
+                }
+
+                // Save as WebP for maximum compression (except GIFs)
+                $outputPath = $filePath;
+                if (in_array($ext, ['jpg', 'jpeg', 'png']) && function_exists('imagewebp')) {
+                    // Convert JPG/PNG to WebP
+                    $webpPath = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $filePath);
+                    $img->toWebp($quality)->save($webpPath);
+
+                    // Remove old file if webp is smaller
+                    if (file_exists($webpPath) && filesize($webpPath) < $originalSize) {
+                        if ($filePath !== $webpPath) {
+                            @unlink($filePath);
+                        }
+                        $outputPath = $webpPath;
+                    } else {
+                        @unlink($webpPath); // revert, webp wasn't better
+                        $img->toWebp($quality)->save($filePath);
+                        $outputPath = $filePath;
+                    }
+                } elseif ($ext === 'webp') {
+                    $img->toWebp($quality)->save($filePath);
+                } elseif ($ext === 'png') {
+                    $img->toPng()->save($filePath);
+                } else {
+                    $img->toJpeg($quality)->save($filePath);
+                }
+
+                $newSize   = file_exists($outputPath) ? filesize($outputPath) : $originalSize;
+                $saved     = $originalSize - $newSize;
+                $totalSaved += $saved;
+                $processCount++;
+
+            } catch (\Throwable $e) {
+                $this->newLine();
+                $this->warn("  ⚠ Skipped (error): " . basename($filePath) . " — " . $e->getMessage());
+            }
         }
 
         $bar->finish();
         $this->newLine(2);
 
-        $savedKB  = round($this->totalSaved / 1024, 1);
-        $savedMB  = round($this->totalSaved / (1024 * 1024), 2);
-        $this->info("✅ Processed : {$this->totalProcessed}");
-        $this->info("⏭  Skipped   : {$this->totalSkipped}");
-        $this->info("💾 Saved     : {$savedKB} KB ({$savedMB} MB)");
-        if ($dryRun) {
-            $this->warn("Dry-run mode – no files were modified.");
+        $savedMB = round($totalSaved / 1024 / 1024, 2);
+        $this->info("✅ Done!");
+        $this->table(
+            ['Metric', 'Value'],
+            [
+                ['Files processed',    $processCount],
+                ['Files skipped',      $skipCount],
+                ['Total space saved',  "{$savedMB} MB (" . round($totalSaved/1024) . " KB)"],
+            ]
+        );
+
+        if (!$dryRun) {
+            $this->newLine();
+            $this->info("🚀 Run 'php artisan cache:clear' and redeploy for changes to take effect.");
         }
 
-        return 0;
+        return self::SUCCESS;
     }
 
-    private function getImageFiles(string $base): array
+    private function collectImages(string $dir): array
     {
         $files = [];
-        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($base));
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS)
+        );
+
         foreach ($iterator as $file) {
-            if (!$file->isFile()) continue;
-            $ext = strtolower($file->getExtension());
-            if (in_array($ext, ['jpg','jpeg','png','webp','gif'])) {
-                $files[] = $file->getPathname();
+            if ($file->isFile()) {
+                $ext = strtolower($file->getExtension());
+                if (in_array($ext, $this->allowed)) {
+                    $files[] = $file->getRealPath();
+                }
             }
         }
+
         return $files;
-    }
-
-    private function processImage(string $filePath, string $base, bool $dryRun, int $defaultQuality): void
-    {
-        // Determine rule from folder name
-        $rel = str_replace('\\', '/', substr($filePath, strlen($base) + 1));
-        $folder = explode('/', $rel)[0] ?? '_default';
-        $rule = $this->rules[$folder] ?? $this->rules['_default'];
-        $maxW = $rule['w'];
-        $maxH = $rule['h'];
-        $quality = $rule['q'];
-
-        $originalSize = filesize($filePath);
-        if ($originalSize === false || $originalSize === 0) { $this->totalSkipped++; return; }
-
-        // Load image
-        $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-        $img = match($ext) {
-            'jpg','jpeg' => @imagecreatefromjpeg($filePath),
-            'png'        => @imagecreatefrompng($filePath),
-            'webp'       => @imagecreatefromwebp($filePath),
-            'gif'        => @imagecreatefromgif($filePath),
-            default      => false,
-        };
-
-        if (!$img) { $this->totalSkipped++; return; }
-
-        $origW = imagesx($img);
-        $origH = imagesy($img);
-
-        // Calculate new dimensions keeping aspect ratio
-        [$newW, $newH] = $this->calcDimensions($origW, $origH, $maxW, $maxH);
-
-        // If image is already small enough AND already WebP, skip
-        if ($origW <= $maxW && $origH <= $maxH && $ext === 'webp' && $originalSize < 100 * 1024) {
-            imagedestroy($img);
-            $this->totalSkipped++;
-            return;
-        }
-
-        if ($dryRun) {
-            $this->line(" [DRY] {$rel}: {$origW}x{$origH} → {$newW}x{$newH} @ q{$quality}");
-            imagedestroy($img);
-            $this->totalProcessed++;
-            return;
-        }
-
-        // Resize
-        if ($newW !== $origW || $newH !== $origH) {
-            $resized = imagecreatetruecolor($newW, $newH);
-            // Preserve transparency for PNG/WebP
-            imagealphablending($resized, false);
-            imagesavealpha($resized, true);
-            $transparent = imagecolorallocatealpha($resized, 0, 0, 0, 127);
-            imagefilledrectangle($resized, 0, 0, $newW, $newH, $transparent);
-            imagecopyresampled($resized, $img, 0, 0, 0, 0, $newW, $newH, $origW, $origH);
-            imagedestroy($img);
-            $img = $resized;
-        }
-
-        // Ensure true color for WebP
-        if (!imageistruecolor($img)) {
-            imagepalettetotruecolor($img);
-        }
-
-        // Always save as WebP for best compression
-        $outPath = preg_replace('/\.(jpg|jpeg|png|gif)$/i', '.webp', $filePath);
-        $success = imagewebp($img, $outPath, $quality);
-        imagedestroy($img);
-
-        if (!$success) { $this->totalSkipped++; return; }
-
-        $newSize = filesize($outPath);
-        $saved = $originalSize - $newSize;
-
-        // Remove original non-webp file if converted
-        if (strtolower(pathinfo($filePath, PATHINFO_EXTENSION)) !== 'webp' && $outPath !== $filePath) {
-            if ($saved > -50000) { // Only remove if not massively larger
-                @unlink($filePath);
-            }
-        }
-
-        $this->totalSaved += max(0, $saved);
-        $this->totalProcessed++;
-    }
-
-    private function calcDimensions(int $origW, int $origH, int $maxW, int $maxH): array
-    {
-        if ($origW <= $maxW && $origH <= $maxH) return [$origW, $origH];
-        $ratioW = $origW > $maxW ? $maxW / $origW : 1.0;
-        $ratioH = $origH > $maxH ? $maxH / $origH : 1.0;
-        $ratio  = min($ratioW, $ratioH);
-        return [(int) round($origW * $ratio), (int) round($origH * $ratio)];
     }
 }

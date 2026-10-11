@@ -269,6 +269,126 @@
 .pd-specs td { padding: 0.5rem 0; }
 .pd-specs td:first-child { width: 150px; color: var(--text-muted); }
 .pd-specs td:last-child { color: var(--text-main); }
+@media (max-width: 640px) {
+    .pd-specs td:first-child { width: 110px; font-size: 0.82rem; }
+    .pd-specs td:last-child { font-size: 0.85rem; }
+}
+
+/* ─── TABS COMPONENT (Minimalist & Anti-Collision) ─── */
+.pd-tabs-header {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1.5px solid var(--border);
+    background: #f8fafc;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+.pd-tabs-header::-webkit-scrollbar {
+    display: none;
+}
+.pd-tab-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0.95rem 0.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+.pd-tab-btn:hover {
+    color: var(--primary);
+    background: rgba(30, 179, 73, 0.03);
+}
+.pd-tab-btn.active {
+    color: var(--text-main) !important;
+    border-bottom: 3px solid var(--primary) !important;
+    font-weight: 700;
+    background: #ffffff;
+}
+.pd-tab-badge {
+    background: #e2e8f0;
+    color: #475569;
+    padding: 2px 7px;
+    border-radius: 99px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.2;
+    transition: all 0.2s;
+}
+.pd-tab-btn.active .pd-tab-badge {
+    background: rgba(30, 179, 73, 0.15);
+    color: var(--primary);
+}
+@media (max-width: 640px) {
+    .pd-tab-btn {
+        padding: 0.85rem 0.35rem;
+        font-size: 0.8rem;
+        gap: 4px;
+    }
+    .pd-tab-badge {
+        padding: 1px 6px;
+        font-size: 0.68rem;
+    }
+}
+
+.pd-tab-body {
+    padding: 2rem;
+}
+@media (max-width: 768px) {
+    .pd-tab-body {
+        padding: 1.25rem 1rem;
+    }
+}
+
+/* ─── SEO CALLOUT (Disembunyikan di Mobile) ─── */
+.pd-seo-callout {
+    font-size: 0.875rem;
+    color: #334155;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+    padding: 0.85rem 1.15rem;
+    background: linear-gradient(135deg, #f0fdf4, #e8f5e9);
+    border-left: 4px solid #1eb349;
+    border-radius: 0 10px 10px 0;
+}
+@media (max-width: 768px) {
+    .pd-seo-callout {
+        display: none !important;
+    }
+}
+
+/* ─── SECURITY NOTICE ─── */
+.pd-security-notice {
+    font-size: 0.825rem;
+    color: #475569;
+    line-height: 1.6;
+    margin-top: 1.5rem;
+    padding: 0.75rem 1rem;
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-radius: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+}
+@media (max-width: 640px) {
+    .pd-security-notice {
+        font-size: 0.78rem;
+        padding: 0.65rem 0.85rem;
+        gap: 0.5rem;
+    }
+}
 
 /* Description Content — Prose Typography */
 .pd-desc-content {
@@ -838,15 +958,15 @@
 
             {{-- TABS --}}
             <div class="pd-container pd-tabs-block" style="padding:0;">
-                <div class="pd-tabs-header" style="display:flex; border-bottom:1px solid var(--border); background:#f8fafc; overflow-x:auto;">
-                    <button id="tabBtn-desc" class="pd-tab-btn active" onclick="switchTab('desc')" style="flex:1; min-width:140px; padding:1.1rem 0.5rem; background:transparent; border:none; font-weight:700; color:var(--text-main); border-bottom:3px solid var(--primary); cursor:pointer; font-family:inherit; font-size:0.88rem; letter-spacing:0.02em; white-space:nowrap;">DESKRIPSI PRODUK</button>
-                    <button id="tabBtn-reviews" class="pd-tab-btn" onclick="switchTab('reviews')" style="flex:1; min-width:160px; padding:1.1rem 0.5rem; background:transparent; border:none; font-weight:700; color:var(--text-muted); border-bottom:3px solid transparent; cursor:pointer; font-family:inherit; font-size:0.88rem; letter-spacing:0.02em; display:inline-flex; align-items:center; justify-content:center; gap:6px; white-space:nowrap;">
-                        RATING &amp; ULASAN
-                        <span id="tabReviewsBadge" style="background:#e2e8f0; color:#475569; padding:2px 8px; border-radius:99px; font-size:0.75rem; font-weight:700;">{{ $realReviewsCount }}</span>
+                <div class="pd-tabs-header">
+                    <button id="tabBtn-desc" class="pd-tab-btn active" onclick="switchTab('desc')">Deskripsi</button>
+                    <button id="tabBtn-reviews" class="pd-tab-btn" onclick="switchTab('reviews')">
+                        Ulasan
+                        <span id="tabReviewsBadge" class="pd-tab-badge">{{ $realReviewsCount }}</span>
                     </button>
-                    <button id="tabBtn-creator" class="pd-tab-btn" onclick="switchTab('creator')" style="flex:1; min-width:140px; padding:1.1rem 0.5rem; background:transparent; border:none; font-weight:700; color:var(--text-muted); border-bottom:3px solid transparent; cursor:pointer; font-family:inherit; font-size:0.88rem; letter-spacing:0.02em; white-space:nowrap;">PROFIL CREATOR</button>
+                    <button id="tabBtn-creator" class="pd-tab-btn" onclick="switchTab('creator')">Creator</button>
                 </div>
-                <div style="padding: 2rem;">
+                <div class="pd-tab-body">
                     <div id="tab-desc" class="pd-tab-content" style="display:block;">
                         @if(is_array($service->specifications) && count($service->specifications) > 0)
                         <table class="pd-specs">
@@ -860,13 +980,13 @@
                         @endif
 
                         <div class="pd-desc-content">
-                            {{-- SEO Prefix Paragraph --}}
-                             @php
+                            {{-- SEO Prefix Paragraph (Khusus desktop, otomatis tersembunyi di mobile) --}}
+                            @php
                                 $catName = $service->subCategory?->name ?? $service->category?->name ?? $service->type_label ?? 'Produk Digital';
                             @endphp
-                            <p style="font-size:0.9rem; color:#334155; line-height:1.8; margin-bottom:1.25rem; padding:1rem 1.25rem; background:linear-gradient(135deg,#f0fdf4,#e8f5e9); border-left:4px solid #1eb349; border-radius:0 12px 12px 0;">
-                                Cari berbagai macam dari pilihan terlengkap <strong>{{ $catName }}</strong>. Temukan {{ $catName }} terbaik, termurah, dan berkualitas tinggi hanya di <strong>BUYLE.ID</strong>, marketplace produk dan jasa digital terpercaya untuk para Konten Kreator dan Freelancer Indonesia.
-                            </p>
+                            <div class="pd-seo-callout">
+                                Cari berbagai macam pilihan <strong>{{ $catName }}</strong> terbaik dan berkualitas di <strong>BUYLE.ID</strong>.
+                            </div>
 
                             @if($service->short_desc)
                             <p><b>{{ $service->short_desc }}</b></p>
@@ -881,12 +1001,12 @@
                             @endif
 
                             {{-- Security Notice Paragraph --}}
-                            <p style="font-size:0.825rem; color:#475569; line-height:1.6; margin-top:1.75rem; padding:0.875rem 1.25rem; background:#FFFBEB; border:1px solid #FDE68A; border-radius:10px; display:flex; align-items:flex-start; gap:0.65rem;">
+                            <p class="pd-security-notice">
                                 <svg width="18" height="18" fill="none" stroke="#D97706" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;">
                                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                                 </svg>
                                 <span>
-                                    <strong style="color:#B45309;">Jaminan Transaksi Aman:</strong> Untuk transaksi yang aman dan terlindungi, selalu lakukan pembayaran melalui platform resmi <strong>buyle.id</strong>. Kerugian akibat transaksi atau pembayaran di luar platform menjadi tanggung jawab pribadi.
+                                    <strong style="color:#B45309;">Transaksi Aman:</strong> Selalu lakukan pembayaran melalui platform resmi <strong>buyle.id</strong> demi keamanan transaksi Anda.
                                 </span>
                             </p>
                         </div>
@@ -1412,7 +1532,15 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+@php
+    $isCreatorOwner = auth()->check() && (
+        auth()->id() == ($service->seller_id ?? 0) ||
+        auth()->id() == ($service->user_id ?? 0) ||
+        (auth()->user()->role === 'admin' || auth()->user()->is_admin)
+    );
+@endphp
 <script>
+const isCreatorOwner = {{ $isCreatorOwner ? 'true' : 'false' }};
 let currentReviewPage = 1;
 let currentReviewFilter = 'all';
 let hasMoreReviews = false;
@@ -1444,40 +1572,27 @@ function switchTab(tab) {
     if (reviewsTab) reviewsTab.style.display = 'none';
     if (creatorTab) creatorTab.style.display = 'none';
 
-    if (btnDesc) {
-        btnDesc.style.color = 'var(--text-muted)';
-        btnDesc.style.borderBottom = '3px solid transparent';
-    }
-    if (btnReviews) {
-        btnReviews.style.color = 'var(--text-muted)';
-        btnReviews.style.borderBottom = '3px solid transparent';
-    }
-    if (btnCreator) {
-        btnCreator.style.color = 'var(--text-muted)';
-        btnCreator.style.borderBottom = '3px solid transparent';
-    }
+    [btnDesc, btnReviews, btnCreator].forEach(btn => {
+        if (btn) {
+            btn.classList.remove('active');
+            btn.style.color = '';
+            btn.style.borderBottom = '';
+            btn.style.background = '';
+        }
+    });
 
     if (tab === 'desc') {
         if (descTab) descTab.style.display = 'block';
-        if (btnDesc) {
-            btnDesc.style.color = 'var(--text-main)';
-            btnDesc.style.borderBottom = '3px solid var(--primary)';
-        }
+        if (btnDesc) btnDesc.classList.add('active');
     } else if (tab === 'reviews') {
         if (reviewsTab) reviewsTab.style.display = 'block';
-        if (btnReviews) {
-            btnReviews.style.color = 'var(--text-main)';
-            btnReviews.style.borderBottom = '3px solid var(--primary)';
-        }
+        if (btnReviews) btnReviews.classList.add('active');
         if (!reviewsInitialized) {
             fetchReviews(1, 'all', false);
         }
     } else if (tab === 'creator') {
         if (creatorTab) creatorTab.style.display = 'block';
-        if (btnCreator) {
-            btnCreator.style.color = 'var(--text-main)';
-            btnCreator.style.borderBottom = '3px solid var(--primary)';
-        }
+        if (btnCreator) btnCreator.classList.add('active');
     }
 }
 
@@ -1639,6 +1754,57 @@ function buildReviewCardHtml(rev) {
 
     const reviewText = rev.review_text ? `<div class="pd-review-text">${escapeHtml(rev.review_text)}</div>` : '';
 
+    // Seller Reply Box (jika sudah ada balasan)
+    let replyBoxHtml = '';
+    if (rev.seller_reply) {
+        replyBoxHtml = `
+            <div class="pd-seller-reply-box" id="sellerReplyWrap-${rev.id}" style="margin-top:1rem; padding:0.85rem 1rem; background:#F8FAFC; border-left:3.5px solid #1EB349; border-radius:0 12px 12px 0; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem; gap:0.5rem; flex-wrap:wrap;">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span style="font-weight:700; font-size:0.82rem; color:#1EB349; display:inline-flex; align-items:center; gap:4px;">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
+                            Respon Penjual
+                        </span>
+                        <span style="font-size:0.72rem; color:#94A3B8;">${rev.seller_replied_at || ''}</span>
+                    </div>
+                    ${isCreatorOwner ? `<button type="button" onclick="openReplyForm(${rev.id})" style="background:none; border:none; color:#15803D; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:underline;">Ubah Balasan</button>` : ''}
+                </div>
+                <div class="pd-seller-reply-text" id="sellerReplyText-${rev.id}" style="font-size:0.85rem; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(rev.seller_reply)}</div>
+            </div>
+        `;
+    }
+
+    // Tombol Balas (jika belum ada balasan & yang melihat adalah Creator pemilik produk)
+    let actionBtnHtml = '';
+    if (isCreatorOwner && !rev.seller_reply) {
+        actionBtnHtml = `
+            <div class="pd-creator-reply-action" id="replyActionBtnWrap-${rev.id}" style="margin-top:0.85rem;">
+                <button type="button" onclick="openReplyForm(${rev.id})" style="background:#F0FDF4; border:1px solid #BBF7D0; color:#15803D; font-size:0.78rem; font-weight:700; padding:0.35rem 0.85rem; border-radius:99px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.2s;">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <span>Balas Ulasan</span>
+                </button>
+            </div>
+        `;
+    }
+
+    // Form Balas Ulasan (interaktif, max 200 kata)
+    let replyFormHtml = '';
+    if (isCreatorOwner) {
+        replyFormHtml = `
+            <div class="pd-reply-form-wrap" id="replyFormWrap-${rev.id}" style="display:none; margin-top:0.85rem; padding:1rem; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:12px;">
+                <div style="font-size:0.82rem; font-weight:700; color:#0F172A; margin-bottom:0.4rem; display:flex; align-items:center; justify-content:space-between;">
+                    <span>Balas Ulasan sebagai Penjual</span>
+                    <span id="replyWordCount-${rev.id}" style="font-size:0.75rem; color:#64748B; font-weight:600;">0 / 200 kata</span>
+                </div>
+                <textarea id="replyTextarea-${rev.id}" rows="3" placeholder="Tulis balasan atau terima kasih untuk pembeli (maksimal 200 kata)..." style="width:100%; border:1px solid #CBD5E1; border-radius:8px; padding:0.6rem; font-size:0.85rem; font-family:inherit; resize:vertical; background:#fff; outline:none;" oninput="countReplyWords(${rev.id})">${rev.seller_reply ? escapeHtml(rev.seller_reply) : ''}</textarea>
+                <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:0.6rem;">
+                    <button type="button" onclick="closeReplyForm(${rev.id})" style="padding:0.4rem 0.85rem; font-size:0.78rem; border-radius:99px; border:1px solid #CBD5E1; background:#fff; color:#64748B; cursor:pointer;">Batal</button>
+                    <button type="button" id="btnSubmitReply-${rev.id}" onclick="submitReply(${rev.id})" style="padding:0.4rem 1rem; font-size:0.78rem; font-weight:700; border-radius:99px; border:none; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; cursor:pointer; box-shadow:0 2px 8px rgba(30,179,73,0.3);">Kirim Balasan</button>
+                </div>
+            </div>
+        `;
+    }
+
     return `
         <div class="pd-review-card" id="review-item-${rev.id}">
             <div class="pd-review-header">
@@ -1657,8 +1823,128 @@ function buildReviewCardHtml(rev) {
             <div class="pd-review-stars">${starsHtml}</div>
             ${reviewText}
             ${imageHtml}
+            ${replyBoxHtml}
+            ${actionBtnHtml}
+            ${replyFormHtml}
         </div>
     `;
+}
+
+function countReplyWords(reviewId) {
+    const textarea = document.getElementById(`replyTextarea-${reviewId}`);
+    const counter = document.getElementById(`replyWordCount-${reviewId}`);
+    const btn = document.getElementById(`btnSubmitReply-${reviewId}`);
+    if (!textarea || !counter) return;
+
+    const text = textarea.value.trim();
+    const words = text ? text.split(/\s+/).filter(Boolean) : [];
+    const count = words.length;
+
+    counter.textContent = `${count} / 200 kata`;
+    if (count > 200) {
+        counter.style.color = '#ef4444';
+        if (btn) btn.disabled = true;
+    } else {
+        counter.style.color = '#64748b';
+        if (btn) btn.disabled = false;
+    }
+}
+
+function openReplyForm(reviewId) {
+    const form = document.getElementById(`replyFormWrap-${reviewId}`);
+    const actionBtn = document.getElementById(`replyActionBtnWrap-${reviewId}`);
+    if (form) {
+        form.style.display = 'block';
+        countReplyWords(reviewId);
+        const textarea = document.getElementById(`replyTextarea-${reviewId}`);
+        if (textarea) textarea.focus();
+    }
+    if (actionBtn) actionBtn.style.display = 'none';
+}
+
+function closeReplyForm(reviewId) {
+    const form = document.getElementById(`replyFormWrap-${reviewId}`);
+    const actionBtn = document.getElementById(`replyActionBtnWrap-${reviewId}`);
+    if (form) form.style.display = 'none';
+    if (actionBtn) actionBtn.style.display = 'block';
+}
+
+function submitReply(reviewId) {
+    const textarea = document.getElementById(`replyTextarea-${reviewId}`);
+    const btn = document.getElementById(`btnSubmitReply-${reviewId}`);
+    if (!textarea || !btn) return;
+
+    const reply = textarea.value.trim();
+    if (!reply) {
+        alert('Tuliskan balasan ulasan terlebih dahulu.');
+        return;
+    }
+
+    const words = reply.split(/\s+/).filter(Boolean);
+    if (words.length > 200) {
+        alert('Balasan ulasan maksimal 200 kata (saat ini: ' + words.length + ' kata).');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Mengirim...';
+
+    fetch(`/produk/reviews/${reviewId}/reply`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({ reply: reply })
+    })
+    .then(res => res.json())
+    .then(data => {
+        btn.disabled = false;
+        btn.textContent = 'Kirim Balasan';
+
+        if (data.success) {
+            closeReplyForm(reviewId);
+            let replyBox = document.getElementById(`sellerReplyWrap-${reviewId}`);
+            if (replyBox) {
+                const textEl = document.getElementById(`sellerReplyText-${reviewId}`);
+                if (textEl) textEl.textContent = data.seller_reply;
+                replyBox.style.display = 'block';
+            } else {
+                const card = document.getElementById(`review-item-${reviewId}`);
+                const html = `
+                    <div class="pd-seller-reply-box" id="sellerReplyWrap-${reviewId}" style="margin-top:1rem; padding:0.85rem 1rem; background:#F8FAFC; border-left:3.5px solid #1EB349; border-radius:0 12px 12px 0; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem; gap:0.5rem; flex-wrap:wrap;">
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="font-weight:700; font-size:0.82rem; color:#1EB349; display:inline-flex; align-items:center; gap:4px;">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
+                                    Respon Penjual
+                                </span>
+                                <span style="font-size:0.72rem; color:#94A3B8;">${data.seller_replied_at || 'Baru saja'}</span>
+                            </div>
+                            <button type="button" onclick="openReplyForm(${reviewId})" style="background:none; border:none; color:#15803D; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:underline;">Ubah Balasan</button>
+                        </div>
+                        <div class="pd-seller-reply-text" id="sellerReplyText-${reviewId}" style="font-size:0.85rem; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(data.seller_reply)}</div>
+                    </div>
+                `;
+                const formWrap = document.getElementById(`replyFormWrap-${reviewId}`);
+                if (formWrap) {
+                    formWrap.insertAdjacentHTML('beforebegin', html);
+                } else if (card) {
+                    card.insertAdjacentHTML('beforeend', html);
+                }
+            }
+            const actionBtn = document.getElementById(`replyActionBtnWrap-${reviewId}`);
+            if (actionBtn) actionBtn.style.display = 'none';
+        } else {
+            alert(data.message || 'Gagal mengirim balasan.');
+        }
+    })
+    .catch(() => {
+        btn.disabled = false;
+        btn.textContent = 'Kirim Balasan';
+        alert('Terjadi kesalahan jaringan.');
+    });
 }
 
 function escapeHtml(text) {
@@ -1744,7 +2030,7 @@ function handleTabReviewPhoto(input) {
             const canvas = document.createElement('canvas');
             let width = img.width;
             let height = img.height;
-            const maxDim = 1000;
+            const maxDim = 600;
 
             if (width > maxDim || height > maxDim) {
                 if (width > height) {
@@ -1761,8 +2047,16 @@ function handleTabReviewPhoto(input) {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
 
-            // Maximum compression: JPEG quality 0.75 (~50KB-120KB)
-            tabReviewCompressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+            let mimeType = 'image/jpeg';
+            try {
+                const test = canvas.toDataURL('image/webp', 0.5);
+                if (test && test.indexOf('data:image/webp') === 0) {
+                    mimeType = 'image/webp';
+                }
+            } catch (err) {}
+
+            // Auto-compress low quality (max 600px, WebP/JPEG 0.5: ~15KB - 30KB)
+            tabReviewCompressedBase64 = canvas.toDataURL(mimeType, 0.5);
 
             document.getElementById('tabReviewPhotoPreview').src = tabReviewCompressedBase64;
             document.getElementById('tabReviewPhotoPreviewWrap').style.display = 'block';
