@@ -1761,8 +1761,11 @@
                             $rDiscountPct = $rHasDiscount ? round((($rOrigPrice - $rPrice) / $rOrigPrice) * 100) : 0;
                             $rImage = $rProd->image ? asset('storage/' . $rProd->image) : asset('images/buyle-og.png');
 
-                            // Realtime Dynamic Rating (Bisa berubah-ubah sesuai data rating produk di DB)
-                            $rRating = ($rProd->rating && $rProd->rating > 0) ? number_format($rProd->rating, 1) : (($rProd->reviews_avg_rating && $rProd->reviews_avg_rating > 0) ? number_format($rProd->reviews_avg_rating, 1) : '5.0');
+                            // Realtime Dynamic Rating & Seller Verification
+                            $rSellerCp = $rProd->seller?->creatorProfile;
+                            $rIsVerified = $rSellerCp ? (bool)$rSellerCp->is_verified : false;
+                            $rRatingVal = ($rProd->rating && $rProd->rating > 0) ? $rProd->rating : (($rProd->reviews_avg_rating && $rProd->reviews_avg_rating > 0) ? $rProd->reviews_avg_rating : null);
+                            $rRating = $rRatingVal ? number_format((float)$rRatingVal, 1, '.', '') : ($rSellerCp ? $rSellerCp->getRatingStats()['rating'] : '5.0');
 
                             // Subdomain / URL Pill text
                             $rSellerDomain = $rProd->seller->creatorProfile->custom_domain ?? ($rProd->seller->creatorProfile->username ? $rProd->seller->creatorProfile->username . '.buyle.id' : 'buyle.id');
@@ -1795,22 +1798,24 @@
                                 <div
                                     style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
                                     <div>
-                                        {{-- Rating & Verified Badge (Exact Image 1) --}}
+                                        {{-- Rating & Verified Badge (Synchronized with DB) --}}
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
                                             <div style="display: flex; align-items: center; gap: 0.3rem;">
                                                 <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
                                                 <span style="font-family: 'Montserrat', sans-serif;">{{ $rRating }}</span>
                                             </div>
-                                            <div
-                                                style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                    viewBox="0 0 24 24">
-                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                                    <polyline points="22 4 12 14.01 9 11.01" />
-                                                </svg>
-                                                Verified
-                                            </div>
+                                            @if($rIsVerified)
+                                                <div
+                                                    style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                        viewBox="0 0 24 24">
+                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                        <polyline points="22 4 12 14.01 9 11.01" />
+                                                    </svg>
+                                                    Verified
+                                                </div>
+                                            @endif
                                         </div>
 
                                         {{-- Title --}}
@@ -1943,8 +1948,11 @@
                             $bDiscountPct = $bHasDiscount ? round((($bOrigPrice - $bPrice) / $bOrigPrice) * 100) : 0;
                             $bImage = $bProd->image ? asset('storage/' . $bProd->image) : asset('images/buyle-og.png');
 
-                            // Realtime Dynamic Rating
-                            $bRating = ($bProd->rating && $bProd->rating > 0) ? number_format($bProd->rating, 1) : (($bProd->reviews_avg_rating && $bProd->reviews_avg_rating > 0) ? number_format($bProd->reviews_avg_rating, 1) : '5.0');
+                            // Realtime Dynamic Rating & Seller Verification
+                            $bSellerCp = $bProd->seller?->creatorProfile;
+                            $bIsVerified = $bSellerCp ? (bool)$bSellerCp->is_verified : false;
+                            $bRatingVal = ($bProd->rating && $bProd->rating > 0) ? $bProd->rating : (($bProd->reviews_avg_rating && $bProd->reviews_avg_rating > 0) ? $bProd->reviews_avg_rating : null);
+                            $bRating = $bRatingVal ? number_format((float)$bRatingVal, 1, '.', '') : ($bSellerCp ? $bSellerCp->getRatingStats()['rating'] : '5.0');
                         @endphp
                         <a href="{{ route_locale('products.show', $bProd->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
@@ -1985,15 +1993,17 @@
                                                 <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
                                                 <span style="font-family: 'Montserrat', sans-serif;">{{ $bRating }}</span>
                                             </div>
-                                            <div
-                                                style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                    viewBox="0 0 24 24">
-                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                                    <polyline points="22 4 12 14.01 9 11.01" />
-                                                </svg>
-                                                Verified
-                                            </div>
+                                            @if($bIsVerified)
+                                                <div
+                                                    style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                        viewBox="0 0 24 24">
+                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                        <polyline points="22 4 12 14.01 9 11.01" />
+                                                    </svg>
+                                                    Verified
+                                                </div>
+                                            @endif
                                         </div>
 
                                         {{-- Title --}}
@@ -2076,7 +2086,12 @@
                             $lHasDiscount = !empty($lOrigPrice) && $lOrigPrice > $lPrice;
                             $lDiscountPct = $lHasDiscount ? round((($lOrigPrice - $lPrice) / $lOrigPrice) * 100) : 0;
                             $lImage = $lProd->image ? asset('storage/' . $lProd->image) : asset('images/buyle-og.png');
-                            $lRating = ($lProd->rating && $lProd->rating > 0) ? number_format($lProd->rating, 1) : (($lProd->reviews_avg_rating && $lProd->reviews_avg_rating > 0) ? number_format($lProd->reviews_avg_rating, 1) : '5.0');
+
+                            // Realtime Dynamic Rating & Seller Verification
+                            $lSellerCp = $lProd->seller?->creatorProfile;
+                            $lIsVerified = $lSellerCp ? (bool)$lSellerCp->is_verified : false;
+                            $lRatingVal = ($lProd->rating && $lProd->rating > 0) ? $lProd->rating : (($lProd->reviews_avg_rating && $lProd->reviews_avg_rating > 0) ? $lProd->reviews_avg_rating : null);
+                            $lRating = $lRatingVal ? number_format((float)$lRatingVal, 1, '.', '') : ($lSellerCp ? $lSellerCp->getRatingStats()['rating'] : '5.0');
                         @endphp
                         <a href="{{ route_locale('products.show', $lProd->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;">
@@ -2109,15 +2124,17 @@
                                                 <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
                                                 <span style="font-family: 'Montserrat', sans-serif;">{{ $lRating }}</span>
                                             </div>
-                                            <div
-                                                style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                    viewBox="0 0 24 24">
-                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                                    <polyline points="22 4 12 14.01 9 11.01" />
-                                                </svg>
-                                                Verified
-                                            </div>
+                                            @if($lIsVerified)
+                                                <div
+                                                    style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                        viewBox="0 0 24 24">
+                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                        <polyline points="22 4 12 14.01 9 11.01" />
+                                                    </svg>
+                                                    Verified
+                                                </div>
+                                            @endif
                                         </div>
                                         <h3
                                             style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
@@ -2370,6 +2387,11 @@
                             $cSalesCount = $cp?->total_sales ?? ($creatorUser->products_sum_sold_count ?? 0);
                             $cProductCount = $creatorUser->products_count ?? 0;
                             
+                            // Realtime Creator Rating & Verification Status from DB
+                            $cIsVerified = $cp ? (bool)$cp->is_verified : false;
+                            $cRatingStats = $cp ? $cp->getRatingStats() : ['rating' => '5.0', 'count' => 0];
+                            $cRating = $cRatingStats['rating'] ?? '5.0';
+
                             $cAvatar = null;
                             if (!empty($cp?->avatar)) {
                                 $cAvatar = asset('storage/' . $cp->avatar);
@@ -2407,15 +2429,17 @@
                             <div class="popular-creator-info">
                                 <div class="popular-creator-name">
                                     <span>{{ $cName }}</span>
-                                    <svg class="verified-icon" width="13" height="13" fill="#0D9488" viewBox="0 0 24 24">
-                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                                    </svg>
+                                    @if($cIsVerified)
+                                        <svg class="verified-icon" width="13" height="13" fill="#0D9488" viewBox="0 0 24 24" title="Verified Creator">
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                                        </svg>
+                                    @endif
                                 </div>
                                 
                                 <div class="popular-creator-stats">
                                     <span class="popular-creator-rating">
                                         <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                        5.0
+                                        {{ $cRating }}
                                     </span>
                                     <span>•</span>
                                     <span>{{ $cSalesCount > 0 ? $cSalesCount . ' Terjual' : ($cProductCount . ' Produk') }}</span>
@@ -3200,8 +3224,11 @@
                                         ?: ($tProd->seller?->creatorProfile?->store_location
                                             ?: 'Indonesia')));
 
-                            // Realtime Dynamic Rating
-                            $tRating = ($tProd->rating && $tProd->rating > 0) ? number_format($tProd->rating, 1) : (($tProd->reviews_avg_rating && $tProd->reviews_avg_rating > 0) ? number_format($tProd->reviews_avg_rating, 1) : '5.0');
+                            // Realtime Dynamic Rating & Seller Verification
+                            $tSellerCp = $tProd->seller?->creatorProfile;
+                            $tIsVerified = $tSellerCp ? (bool)$tSellerCp->is_verified : false;
+                            $tRatingVal = ($tProd->rating && $tProd->rating > 0) ? $tProd->rating : (($tProd->reviews_avg_rating && $tProd->reviews_avg_rating > 0) ? $tProd->reviews_avg_rating : null);
+                            $tRating = $tRatingVal ? number_format((float)$tRatingVal, 1, '.', '') : ($tSellerCp ? $tSellerCp->getRatingStats()['rating'] : '5.0');
                         @endphp
                         <a href="{{ route_locale('products.show', $tProd->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
@@ -3241,15 +3268,17 @@
                                                 <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
                                                 <span style="font-family: 'Montserrat', sans-serif;">{{ $tRating }}</span>
                                             </div>
-                                            <div
-                                                style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                    viewBox="0 0 24 24">
-                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                                    <polyline points="22 4 12 14.01 9 11.01" />
-                                                </svg>
-                                                Verified
-                                            </div>
+                                            @if($tIsVerified)
+                                                <div
+                                                    style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                        viewBox="0 0 24 24">
+                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                        <polyline points="22 4 12 14.01 9 11.01" />
+                                                    </svg>
+                                                    Verified
+                                                </div>
+                                            @endif
                                         </div>
 
                                         {{-- Title --}}
@@ -3354,15 +3383,6 @@
                                             <div style="display: flex; align-items: center; gap: 0.3rem;">
                                                 <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
                                                 <span style="font-family: 'Montserrat', sans-serif;">5.0</span>
-                                            </div>
-                                            <div
-                                                style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                    viewBox="0 0 24 24">
-                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                                    <polyline points="22 4 12 14.01 9 11.01" />
-                                                </svg>
-                                                Verified
                                             </div>
                                         </div>
                                         <h3
