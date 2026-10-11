@@ -32,14 +32,14 @@
 
     /* ── WIDGET 1: WELCOME & LINK BIO SOSMED BANNER HEADER ── */
     .ai-header-banner {
-        background: linear-gradient(135deg, #0b120c 0%, #152718 100%);
+        background: #ffffff;
         border-radius: 20px;
         padding: 1.75rem 2rem;
-        color: #ffffff;
+        color: #0f172a;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 8px 25px rgba(15, 23, 42, 0.12);
-        border: 1px solid rgba(165, 207, 55, 0.2);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        border: 1.5px solid var(--border-color);
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -54,14 +54,14 @@
         right: -60px;
         width: 220px;
         height: 220px;
-        background: radial-gradient(circle, rgba(165, 207, 55, 0.25) 0%, rgba(30, 179, 73, 0) 70%);
+        background: radial-gradient(circle, rgba(30, 179, 73, 0.08) 0%, rgba(30, 179, 73, 0) 70%);
         pointer-events: none;
     }
 
     .ai-banner-title {
         font-size: 1.5rem;
-        font-weight: 600;
-        color: #ffffff;
+        font-weight: 700;
+        color: #0f172a;
         letter-spacing: -0.01em;
         margin: 0 0 0.35rem 0;
         line-height: 1.2;
@@ -69,7 +69,7 @@
 
     .ai-banner-sub {
         font-size: 0.82rem;
-        color: #94a3b8;
+        color: #64748b;
         font-weight: 500;
         max-width: 580px;
         margin: 0;

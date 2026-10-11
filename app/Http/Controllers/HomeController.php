@@ -79,7 +79,7 @@ class HomeController extends Controller
             ->limit(10)
             ->get();
 
-        // Creator Terpopuler (10 items untuk 1 baris scrollable - HVM Digital #1, Ilham Maulana #2)
+        // Creator Terpopuler (hanya yang mengaktifkan toggle di profil creator & maksimal 10 items)
         $popularCreators = \App\Models\User::whereHas('creatorProfile')
             ->whereNotIn('role', ['admin', 'super_admin', 'admin_super'])
             ->where('name', 'NOT LIKE', '%copywriter%')
@@ -98,8 +98,10 @@ class HomeController extends Controller
             ")
             ->orderByDesc('products_count')
             ->latest()
-            ->limit(10)
-            ->get();
+            ->get()
+            ->filter(fn($u) => $u->creatorProfile && $u->creatorProfile->isStoreActive())
+            ->take(10)
+            ->values();
 
         $clients      = collect();
         $testimonials = collect();

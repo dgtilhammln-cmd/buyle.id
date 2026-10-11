@@ -2170,62 +2170,65 @@
     @if(isset($popularCreators) && $popularCreators->count() > 0)
         <style>
             .popular-creators-grid {
-                display: flex;
-                gap: 1rem;
-                overflow-x: auto;
-                scrollbar-width: none;
-                -webkit-overflow-scrolling: touch;
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 1.15rem;
                 padding: 0.35rem 0.25rem 0.85rem;
             }
 
-            .popular-creators-grid::-webkit-scrollbar {
-                display: none;
-            }
-
             .popular-creator-card {
-                flex: 0 0 120px;
-                min-width: 100px;
-                max-width: 140px;
                 text-decoration: none;
                 color: inherit;
                 display: flex;
                 flex-direction: column;
-                align-items: center;
-                transition: transform 0.25s ease;
+                background: #ffffff;
+                border-radius: 18px;
+                border: 1px solid #E2E8F0;
+                overflow: hidden;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+                transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+                position: relative;
             }
 
             .popular-creator-card:hover {
                 transform: translateY(-4px);
+                box-shadow: 0 10px 28px rgba(30, 179, 73, 0.12);
+                border-color: #1eb349;
+            }
+
+            .popular-creator-banner {
+                height: 55px;
+                width: 100%;
+                background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1eb349 100%);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .popular-creator-banner-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
             }
 
             .popular-creator-avatar-wrap {
-                width: 100% !important;
-                aspect-ratio: 1 / 1 !important;
-                height: auto !important;
-                min-height: 0 !important;
-                border-radius: 16px;
+                width: 58px;
+                height: 58px;
+                border-radius: 50%;
                 overflow: hidden;
                 position: relative;
+                margin: -29px auto 0;
+                border: 3px solid #ffffff;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                 background: #ffffff;
-                border: 1.5px solid #E2E8F0;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-                transition: box-shadow 0.25s ease, border-color 0.25s ease;
-                display: block !important;
-            }
-
-            .popular-creator-card:hover .popular-creator-avatar-wrap {
-                border-color: #1eb349;
-                box-shadow: 0 8px 24px rgba(30,179,73,0.15);
+                z-index: 2;
+                flex-shrink: 0;
             }
 
             .popular-creator-img {
-                width: 100% !important;
-                height: 100% !important;
-                object-fit: cover !important;
-                display: block !important;
-                position: absolute;
-                top: 0;
-                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
             }
 
             .popular-creator-avatar-placeholder {
@@ -2234,32 +2237,32 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
-                color: #1eb349;
+                background: linear-gradient(135deg, #1eb349, #a5cf37);
+                color: #ffffff;
                 font-weight: 800;
-                font-size: 1.6rem;
+                font-size: 1.25rem;
                 font-family: 'Montserrat', sans-serif;
-                position: absolute;
-                top: 0;
-                left: 0;
             }
 
             .popular-creator-info {
-                margin-top: 0.45rem;
+                padding: 0.6rem 0.75rem 0.85rem;
                 text-align: center;
-                width: 100%;
-                padding: 0 0.15rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.35rem;
+                flex: 1;
             }
 
             .popular-creator-name {
                 font-family: 'Montserrat', sans-serif;
-                font-size: 0.75rem;
+                font-size: 0.82rem;
                 font-weight: 800;
                 color: #0F172A;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 0.2rem;
+                gap: 0.25rem;
                 width: 100%;
             }
 
@@ -2270,58 +2273,70 @@
                 max-width: calc(100% - 16px);
             }
 
-            .verified-icon {
-                flex-shrink: 0;
+            .popular-creator-stats {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                font-size: 0.72rem;
+                color: #64748B;
+                font-weight: 600;
+            }
+
+            .popular-creator-rating {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.2rem;
+                color: #F59E0B;
+                font-weight: 700;
             }
 
             .popular-creator-cta-btn {
-                margin-top: 0.3rem;
+                margin-top: 0.25rem;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                gap: 0.2rem;
+                gap: 0.3rem;
                 background: linear-gradient(135deg, #1eb349, #7db928);
                 color: #ffffff;
-                font-size: 0.62rem;
+                font-size: 0.7rem;
                 font-weight: 700;
-                padding: 0.25rem 0.55rem;
+                padding: 0.32rem 0.85rem;
                 border-radius: 99px;
                 box-shadow: 0 3px 10px rgba(30, 179, 73, 0.25);
                 transition: all 0.2s ease;
                 white-space: nowrap;
+                width: 100%;
             }
 
             .popular-creator-card:hover .popular-creator-cta-btn {
-                box-shadow: 0 5px 16px rgba(30,179,73,0.4);
+                box-shadow: 0 5px 16px rgba(30, 179, 73, 0.4);
+                transform: scale(1.02);
             }
 
-            @media (max-width: 768px) {
-                .popular-creator-card {
-                    flex: 0 0 88px;
-                    min-width: 80px;
-                    max-width: 100px;
-                }
-
-                .popular-creator-avatar-wrap {
-                    border-radius: 12px;
-                }
-
-                .popular-creator-avatar-placeholder {
-                    font-size: 1.2rem;
-                }
-
-                .popular-creator-name {
-                    font-size: 0.68rem;
-                }
-
-                .popular-creator-cta-btn {
-                    font-size: 0.62rem;
-                    padding: 0.22rem 0.55rem;
-                }
-
+            @media (max-width: 1024px) {
                 .popular-creators-grid {
+                    grid-template-columns: repeat(3, 1fr);
+                }
+            }
+
+            @media (max-width: 640px) {
+                .popular-creators-grid {
+                    display: flex;
+                    overflow-x: auto;
+                    scrollbar-width: none;
+                    -webkit-overflow-scrolling: touch;
                     gap: 0.85rem;
                     padding: 0.35rem 0.25rem 0.85rem;
+                }
+
+                .popular-creators-grid::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .popular-creator-card {
+                    flex: 0 0 160px;
+                    min-width: 150px;
                 }
             }
         </style>
@@ -2351,6 +2366,9 @@
                             $cp = $creatorUser->creatorProfile;
                             $cName = $cp?->store_name ?: ($creatorUser->name ?: 'Creator');
                             $cStoreSlug = $cp?->store_slug ?: $creatorUser->username;
+                            $cBanner = !empty($cp?->store_banner) ? asset('storage/' . $cp->store_banner) : null;
+                            $cSalesCount = $cp?->total_sales ?? ($creatorUser->products_sum_sold_count ?? 0);
+                            $cProductCount = $creatorUser->products_count ?? 0;
                             
                             $cAvatar = null;
                             if (!empty($cp?->avatar)) {
@@ -2370,6 +2388,12 @@
                             }
                         @endphp
                         <a href="{{ $targetUrl }}" class="popular-creator-card" title="{{ $cName }}">
+                            <div class="popular-creator-banner">
+                                @if($cBanner)
+                                    <img src="{{ $cBanner }}" alt="{{ $cName }}" class="popular-creator-banner-img" loading="lazy">
+                                @endif
+                            </div>
+
                             <div class="popular-creator-avatar-wrap">
                                 @if($cAvatar)
                                     <img src="{{ $cAvatar }}" alt="{{ $cName }}" class="popular-creator-img" loading="lazy">
@@ -2383,12 +2407,22 @@
                             <div class="popular-creator-info">
                                 <div class="popular-creator-name">
                                     <span>{{ $cName }}</span>
-                                    <svg class="verified-icon" width="12" height="12" fill="#0D9488" viewBox="0 0 24 24">
+                                    <svg class="verified-icon" width="13" height="13" fill="#0D9488" viewBox="0 0 24 24">
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                                     </svg>
                                 </div>
+                                
+                                <div class="popular-creator-stats">
+                                    <span class="popular-creator-rating">
+                                        <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                        5.0
+                                    </span>
+                                    <span>•</span>
+                                    <span>{{ $cSalesCount > 0 ? $cSalesCount . ' Terjual' : ($cProductCount . ' Produk') }}</span>
+                                </div>
+
                                 <span class="popular-creator-cta-btn">
-                                    Visit
+                                    Kunjungi Toko
                                     <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                         <path d="M5 12h14m-7-7l7 7-7 7" />
                                     </svg>

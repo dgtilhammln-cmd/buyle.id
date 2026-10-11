@@ -1307,6 +1307,7 @@
                                     </td>
                                     <td>
                                         @php
+                                            $isFnbOrder = $order->items->contains(fn($i) => in_array($i->product?->product_type ?? $i->product?->type, ['makanan', 'fnb', 'kuliner', 'food', 'pos'])) || !empty($addr['fnb_service_type']);
                                             $orderDataJson = json_encode([
                                                 'id' => $order->id,
                                                 'order_number' => $order->order_number ?? ('BYL-' . $order->id),
@@ -1316,6 +1317,7 @@
                                                 'user_name' => $addr['name'] ?? $order->user?->name ?? 'Pembeli',
                                                 'phone' => $addr['phone'] ?? $order->user?->phone ?? '',
                                                 'email' => $order->user?->email ?? '',
+                                                'notes' => $order->notes ?: ($addr['notes'] ?? ''),
                                                 'shipping_address' => $addr,
                                                 'items' => $order->items->map(fn($i) => [
                                                     'name' => $i->product_name,
@@ -1354,18 +1356,20 @@
                                                 </svg>
                                                 Detail & Edit
                                             </button>
-                                            <button type="button" onclick="printReceipt({{ $orderDataJson }})" class="btn-export"
-                                                style="background:#1eb349; color:#fff; border:none; padding:0.4rem 0.65rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap;"
-                                                title="Cetak / Download e-Receipt Pesanan">
-                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
-                                                    viewBox="0 0 24 24" style="vertical-align:middle;margin-right:3px;">
-                                                    <polyline points="6 9 6 2 18 2 18 9" />
-                                                    <path
-                                                        d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-                                                    <rect x="6" y="14" width="12" height="8" />
-                                                </svg>
-                                                e-Receipt
-                                            </button>
+                                            @if($isFnbOrder)
+                                                <button type="button" onclick="printReceipt({{ $orderDataJson }})" class="btn-export"
+                                                    style="background:#1eb349; color:#fff; border:none; padding:0.4rem 0.65rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap;"
+                                                    title="Cetak / Download e-Receipt Pesanan">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
+                                                        viewBox="0 0 24 24" style="vertical-align:middle;margin-right:3px;">
+                                                        <polyline points="6 9 6 2 18 2 18 9" />
+                                                        <path
+                                                            d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                                                        <rect x="6" y="14" width="12" height="8" />
+                                                    </svg>
+                                                    e-Receipt
+                                                </button>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -1809,16 +1813,14 @@
             if (data.email) contactInfo.push(data.email);
             document.getElementById('od_user_contact').innerText = contactInfo.join('  •  ');
 
-            // WA Button link
-            const waBtn = document.getElementById('od_wa_btn');
-            if (data.phone) {
-                let cleanPhone = data.phone.replace(/[^0-9]/g, '');
-                if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.substring(1);
-                const waText = encodeURIComponent(`Halo ${data.user_name}, mengenai pesanan #${data.order_number} di buyle.id...`);
-                waBtn.href = `https://wa.me/${cleanPhone}?text=${waText}`;
-                waBtn.style.display = 'inline-flex';
-            } else {
-                waBtn.style.display = 'none';
+            // Cetak e-Receipt button: Hanya tampil khusus produk tipe 3 (Makanan/Minuman/Kuliner/FnB/POS)
+            const isFnbProduct = (data.items || []).some(item =>
+                ['makanan', 'fnb', 'kuliner', 'food', 'pos'].includes(item.product_type)
+            ) || (data.shipping_address && data.shipping_address.fnb_service_type);
+
+            const printBtn = document.getElementById('od_btn_print_receipt');
+            if (printBtn) {
+                printBtn.style.display = isFnbProduct ? 'inline-flex' : 'none';
             }
 
             // Check if order contains physical items vs digital/service/ticket
@@ -1835,12 +1837,24 @@
                 if (sa.address) lines.push(sa.address);
                 let locParts = [sa.district, sa.city, sa.province, sa.postal_code].filter(Boolean);
                 if (locParts.length) lines.push(locParts.join(', '));
-                if (sa.notes) lines.push(`<em>Catatan: ${sa.notes}</em>`);
 
                 addrContent.innerHTML = lines.join('<br>');
                 addrBox.style.display = 'block';
             } else {
                 addrBox.style.display = 'none';
+            }
+
+            // Catatan Pesanan / Pembeli Box
+            const notesBox = document.getElementById('od_notes_box');
+            const notesContent = document.getElementById('od_notes_content');
+            const noteVal = data.notes || sa.notes;
+            if (notesBox && notesContent) {
+                if (noteVal && noteVal.toString().trim()) {
+                    notesContent.innerText = noteVal.toString().trim();
+                    notesBox.style.display = 'block';
+                } else {
+                    notesBox.style.display = 'none';
+                }
             }
 
             // Toggle status & shipping form for physical products only (digital/service/ticket auto-completed)
@@ -2103,8 +2117,8 @@
                     <div style="font-size:0.75rem; color:#64748b; margin-top:2px;" id="od_date"></div>
                 </div>
                 <div style="display:flex; align-items:center; gap:0.5rem;">
-                    <button type="button" onclick="printReceipt(currentOrderData)"
-                        style="background:#1eb349; color:#fff; border:none; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.78rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;"
+                    <button type="button" id="od_btn_print_receipt" onclick="printReceipt(currentOrderData)"
+                        style="display:none; background:#1eb349; color:#fff; border:none; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.78rem; font-weight:700; cursor:pointer; align-items:center; gap:4px;"
                         title="Cetak / Download e-Receipt">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
                         Cetak e-Receipt
@@ -2115,7 +2129,7 @@
             </div>
 
             <div style="max-height:75vh; overflow-y:auto; padding-right:4px;">
-                <!-- Customer Info & WA Chat Button -->
+                <!-- Customer Info -->
                 <div
                     style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1rem; margin-bottom:1rem;">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
@@ -2127,10 +2141,6 @@
                                 id="od_user_name"></div>
                             <div style="font-size:0.8rem; color:#475569; margin-top:1px;" id="od_user_contact"></div>
                         </div>
-                        <a id="od_wa_btn" href="#" target="_blank"
-                            style="display:inline-flex; align-items:center; gap:6px; background:#25d366; color:#fff; padding:0.45rem 0.85rem; border-radius:10px; text-decoration:none; font-size:0.78rem; font-weight:700; box-shadow:0 2px 6px rgba(37,211,102,0.3);">
-                            <i class="fab fa-whatsapp" style="font-size:14px;"></i> Hubungi WA
-                        </a>
                     </div>
                 </div>
 
@@ -2143,6 +2153,17 @@
                         Alamat Pengiriman
                     </div>
                     <div id="od_address_content" style="font-size:0.82rem; color:#1e293b; line-height:1.5;"></div>
+                </div>
+
+                <!-- Order Notes / Catatan Pembeli (if available) -->
+                <div id="od_notes_box"
+                    style="display:none; background:#fffbeb; border:1.5px solid #fde68a; border-radius:14px; padding:1rem; margin-bottom:1rem;">
+                    <div
+                        style="font-size:0.72rem; font-weight:800; color:#d97706; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.35rem; display:flex; align-items:center; gap:5px;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Catatan Pesanan / Pembeli
+                    </div>
+                    <div id="od_notes_content" style="font-size:0.85rem; color:#78350f; font-weight:600; line-height:1.5;"></div>
                 </div>
 
                 <!-- Products List -->
