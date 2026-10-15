@@ -37,8 +37,8 @@ class QrCodeController extends Controller
             $data = 'buyle-id-ticket';
         }
 
-        // Generate crisp pixel-perfect QR without any center logo for 100% scan compatibility
-        $cacheKey = 'qr_crisp_v3_' . md5($data);
+        // Generate crisp pixel-perfect QR with Level H (30% recovery) without any center logo
+        $cacheKey = 'qr_crisp_v4_high_' . md5($data);
 
         return Cache::remember($cacheKey, 86400, function () use ($data) {
             return SimpleQrCode::base64($data, 320);

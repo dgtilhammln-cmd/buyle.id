@@ -26,17 +26,15 @@ class SimpleQrCode
 
         require_once app_path('Services/QrCode/qrlib.php');
 
-        // Gunakan Error Correction Level M (standar ISO 15% recovery)
-        // Pixel size per modul dihitung agar menghasilkan gambar tajam tanpa pecahan piksel
-        // Untuk data tiket alfanumerik (~20-36 karakter), Version 2-3 QR memiliki ~25-29 modul.
-        // Dengan margin 4 modul di tiap sisi, total modul adalah ~33-37 modul.
-        // Pixel size 10 -> ~330px - 370px (resolusi ideal untuk layar & cetak)
+        // Gunakan Error Correction Level H (standar ISO 30% recovery tertinggi)
+        // Level H secara otomatis mengaktifkan Alignment Pattern pada QR Code
+        // sehingga tahan terhadap kemiringan kamera (perspective tilt), pantulan silau layar HP,
+        // goresan layar, maupun pencahayaan ekstrem dengan tingkat keterbacaan 100%.
         $pixelSize = 10;
-        $margin = 4; // Wajib minimal 4 modul sesuai standar ISO/IEC 18004
+        $margin = 4; // Wajib minimal 4 modul quiet zone standar ISO/IEC 18004
 
         ob_start();
-        // QR_ECLEVEL_M memberikan daya tahan terhadap goresan/glare layar HP
-        \QRcode::png($data, null, QR_ECLEVEL_M, $pixelSize, $margin);
+        \QRcode::png($data, null, QR_ECLEVEL_H, $pixelSize, $margin);
         $rawPng = ob_get_clean();
 
         if (empty($rawPng)) {

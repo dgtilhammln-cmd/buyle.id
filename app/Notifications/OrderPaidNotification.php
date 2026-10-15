@@ -97,7 +97,7 @@ class OrderPaidNotification extends Notification
                 </div>';
             
             foreach ($ticketPasses as $pass) {
-                $qrUrl = route('qr.code', ['data' => $pass->ticket_code ?: $pass->qr_token]);
+                $qrUrl = route('qr.code', ['data' => $pass->ticket_code ?: $pass->qr_token, 'v' => 'v4']);
                 $eventName = htmlspecialchars($pass->product?->name ?? 'Tiket Event');
                 $eventDate = $pass->product?->event_date?->format('d M Y') ?? 'Sesuai Jadwal';
                 $eventTime = htmlspecialchars($pass->product?->event_time ?? '-');
@@ -107,8 +107,8 @@ class OrderPaidNotification extends Notification
                 <div style="background-color: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 18px; margin-bottom: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); font-family: \'Montserrat\', -apple-system, sans-serif; font-weight: 300;">
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
-                            <td width="140" align="center" valign="top" style="padding-right: 14px;">
-                                <img src="' . $qrUrl . '" alt="QR Code Tiket" width="130" height="130" style="display: block; margin: 0 auto; border-radius: 8px; border: 1px solid #E2E8F0; background: #fff; padding: 4px;">
+                            <td width="155" align="center" valign="top" style="padding-right: 14px;">
+                                <img src="' . $qrUrl . '" alt="QR Code Tiket" width="145" height="145" style="display: block; margin: 0 auto; border-radius: 8px; border: 1px solid #E2E8F0; background: #fff; padding: 6px;">
                                 <div style="font-family: \'Montserrat\', monospace; font-size: 11px; font-weight: 400; color: #475569; margin-top: 8px; text-align: center; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 3px 6px; border-radius: 6px; letter-spacing: 0.03em;">
                                     ' . htmlspecialchars($pass->ticket_code) . '
                                 </div>
