@@ -1220,8 +1220,7 @@
                 disableFlip: false,
                 rememberLastUsedCamera: true,
                 showTorchButtonIfSupported: true,
-                showZoomSliderIfSupported: true,
-                formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ]
+                showZoomSliderIfSupported: true
             }, false);
 
             html5QrcodeScanner.render(onScanSuccess, onScanFailure);
