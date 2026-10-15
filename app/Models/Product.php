@@ -26,6 +26,7 @@ class Product extends Model
         'product_type', 'file_type', 'digital_resource', 'seller_id', 'creator_group_id', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating', 'tiktok_video_url',
         // Event / Ticket fields
         'event_date', 'event_time', 'event_location', 'event_type',
+        'gate_scanner_key', 'gate_scanner_enabled',
         // Kolom White Label & Reseller
         'is_whitelabel', 'whitelabel_price', 'whitelabel_terms', 'whitelabel_approval_status', 'whitelabel_rejection_reason',
         // Affiliate Commission
@@ -52,11 +53,24 @@ class Product extends Model
         'max_order'      => 'integer',
         'rating'         => 'decimal:1',
         'event_date'     => 'date',
+        'gate_scanner_enabled' => 'boolean',
         // White Label casts
         'is_whitelabel'             => 'boolean',
         'whitelabel_price'          => 'decimal:2',
         'affiliate_commission_rate' => 'decimal:2',
     ];
+
+    /**
+     * Dapatkan atau generate kunci akses Gate Scanner untuk panitia event ini.
+     */
+    public function getOrGenerateGateKey(): string
+    {
+        if (empty($this->gate_scanner_key)) {
+            $this->gate_scanner_key = Str::random(32);
+            $this->saveQuietly();
+        }
+        return $this->gate_scanner_key;
+    }
 
     /**
      * Hitung berat efektif produk (menggunakan max antara berat fisik dan berat volume dimensional).

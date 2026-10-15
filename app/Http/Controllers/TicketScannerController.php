@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 
@@ -457,5 +458,267 @@ class TicketScannerController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Tampilkan Halaman Scanner Khusus Panitia / Gate Staff (Mobile Friendly, No Login Required).
+     */
+    public function gateIndex(Request $request, string $key)
+    {
+        $event = Product::where('gate_scanner_key', $key)
+            ->where('product_type', 'ticket')
+            ->first();
+
+        if (!$event) {
+            abort(404, 'Link Gate Scanner tidak valid atau telah diganti oleh penyelenggara event.');
+        }
+
+        if (!$event->gate_scanner_enabled) {
+            $seo = [
+                'title'  => 'Gate Scanner Dinonaktifkan · ' . $event->name,
+                'robots' => 'noindex, nofollow',
+            ];
+            return view('gate.disabled', compact('event', 'seo'));
+        }
+
+        // Tiket khusus event ini untuk 0ms instant scan & offline-ready lookup
+        $eventTickets = TicketPass::where('product_id', $event->id)->get();
+
+        $totalTickets   = $eventTickets->count();
+        $totalCheckedIn = $eventTickets->where('status', 'used')->count();
+        $totalUnchecked = $eventTickets->where('status', 'valid')->count();
+        $attendanceRate = $totalTickets > 0 ? round(($totalCheckedIn / $totalTickets) * 100, 1) : 0;
+
+        $stats = [
+            'total'      => $totalTickets,
+            'checked_in' => $totalCheckedIn,
+            'unchecked'  => $totalUnchecked,
+            'rate'       => $attendanceRate,
+        ];
+
+        $cachedTickets = $eventTickets->map(function ($t) use ($event) {
+            return [
+                'id'            => $t->id,
+                'code'          => $t->ticket_code,
+                'qr_token'      => $t->qr_token,
+                'product_id'    => $t->product_id,
+                'event_name'    => $event->name,
+                'holder_name'   => $t->holder_name ?? '-',
+                'holder_email'  => $t->holder_email ?? '-',
+                'holder_phone'  => $t->holder_phone ?? '-',
+                'status'        => $t->status,
+                'checked_in_at' => $t->checked_in_at ? $t->checked_in_at->format('H:i:s (d M Y)') : null,
+            ];
+        });
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'stats'   => $stats,
+                'tickets' => $cachedTickets,
+            ]);
+        }
+
+        $seo = [
+            'title'  => 'Gate Scanner · ' . $event->name,
+            'robots' => 'noindex, nofollow',
+        ];
+
+        return view('gate.scanner', compact('event', 'key', 'stats', 'cachedTickets', 'seo'));
+    }
+
+    /**
+     * Verifikasi Tiket di Gate Scanner oleh Panitia (Akses Terisolasi ke Event ini saja).
+     * Terlindungi dengan DB Transaction & lockForUpdate() agar tidak pernah dobel check-in.
+     */
+    public function gateVerify(Request $request, string $key): JsonResponse
+    {
+        $event = Product::where('gate_scanner_key', $key)
+            ->where('product_type', 'ticket')
+            ->first();
+
+        if (!$event || !$event->gate_scanner_enabled) {
+            return response()->json([
+                'status'  => 'invalid',
+                'title'   => 'Akses Gate Ditolak',
+                'message' => 'Akses Gate Scanner ini tidak aktif atau telah diubah oleh Creator.'
+            ], 403);
+        }
+
+        $rawInput = trim($request->input('code') ?? $request->input('qr_token') ?? '');
+        if (empty($rawInput)) {
+            return response()->json([
+                'status'  => 'invalid',
+                'title'   => 'Kode Kosong',
+                'message' => 'Kode tiket atau QR Code tidak terdeteksi.'
+            ], 400);
+        }
+
+        $tokensToSearch = array_values(array_unique(array_filter($this->extractCandidateTokens($rawInput))));
+        if (empty($tokensToSearch)) {
+            $tokensToSearch = [$rawInput];
+        }
+
+        $result = null;
+
+        try {
+            DB::transaction(function () use ($tokensToSearch, $event, &$result) {
+                // 1. Cari tiket KHUSUS untuk event ini dengan Pessimistic Lock
+                $ticket = TicketPass::with(['product', 'buyer'])
+                    ->where('product_id', $event->id)
+                    ->where(function ($q) use ($tokensToSearch) {
+                        foreach ($tokensToSearch as $t) {
+                            $q->orWhere('qr_token', $t)
+                              ->orWhere('ticket_code', $t)
+                              ->orWhere('ticket_code', strtoupper($t))
+                              ->orWhere('qr_token', strtolower($t));
+                        }
+                    })
+                    ->lockForUpdate()
+                    ->first();
+
+                // 2. Jika tidak ditemukan di event ini, cek apakah tiket milik event lain
+                if (!$ticket) {
+                    $otherTicket = TicketPass::with('product')
+                        ->where(function ($q) use ($tokensToSearch) {
+                            foreach ($tokensToSearch as $t) {
+                                $q->orWhere('qr_token', $t)
+                                  ->orWhere('ticket_code', $t)
+                                  ->orWhere('ticket_code', strtoupper($t))
+                                  ->orWhere('qr_token', strtolower($t));
+                            }
+                        })
+                        ->first();
+
+                    if ($otherTicket) {
+                        $otherName = $otherTicket->product?->name ?? 'Event Lain';
+                        $result = response()->json([
+                            'status'  => 'invalid',
+                            'title'   => 'Bukan Tiket Event Ini!',
+                            'message' => "Tiket {$otherTicket->ticket_code} ini terdaftar untuk event \"{$otherName}\", bukan untuk \"{$event->name}\".",
+                            'ticket'  => [
+                                'code'        => $otherTicket->ticket_code,
+                                'holder_name' => $otherTicket->holder_name ?? '-',
+                                'event_name'  => $otherName,
+                            ]
+                        ]);
+                        return;
+                    }
+
+                    $result = response()->json([
+                        'status'  => 'invalid',
+                        'title'   => 'Tiket Tidak Ditemukan',
+                        'message' => 'Kode tiket atau QR Code ini tidak terdaftar di sistem buyle.id.'
+                    ]);
+                    return;
+                }
+
+                // 3. Tiket dibatalkan
+                if ($ticket->status === 'cancelled') {
+                    $result = response()->json([
+                        'status'  => 'invalid',
+                        'title'   => 'Tiket Dibatalkan',
+                        'message' => 'Tiket ini telah dibatalkan atau direfund. Tidak dapat check-in.',
+                        'ticket'  => [
+                            'code'        => $ticket->ticket_code,
+                            'event_name'  => $event->name,
+                            'holder_name' => $ticket->holder_name ?? '-',
+                        ]
+                    ]);
+                    return;
+                }
+
+                // 4. Tiket sudah digunakan sebelumnya (mencegah tabrakan antar panitia)
+                if ($ticket->status === 'used') {
+                    $time = $ticket->checked_in_at ? $ticket->checked_in_at->format('H:i (d M Y)') : '-';
+                    $result = response()->json([
+                        'status'  => 'used',
+                        'title'   => 'Tiket Sudah Digunakan',
+                        'message' => "Tiket a.n {$ticket->holder_name} sudah dipindai sebelumnya pada pukul {$time}.",
+                        'ticket'  => [
+                            'code'          => $ticket->ticket_code,
+                            'event_name'    => $event->name,
+                            'holder_name'   => $ticket->holder_name ?? '-',
+                            'checked_in_at' => $time,
+                        ]
+                    ]);
+                    return;
+                }
+
+                // 5. Tiket valid -> tandai sebagai used
+                $ticket->update([
+                    'status'        => 'used',
+                    'checked_in_at' => now(),
+                ]);
+
+                $result = response()->json([
+                    'status'  => 'valid',
+                    'title'   => 'Check-In Berhasil! ✓',
+                    'message' => "Selamat datang, {$ticket->holder_name}! Tiket diverifikasi.",
+                    'ticket'  => [
+                        'code'           => $ticket->ticket_code,
+                        'event_name'     => $event->name,
+                        'holder_name'    => $ticket->holder_name ?? '-',
+                        'holder_email'   => $ticket->holder_email ?? '-',
+                        'holder_phone'   => $ticket->holder_phone ?? '-',
+                        'holder_nik'     => $ticket->holder_nik ?? '-',
+                        'checked_in_at'  => now()->format('H:i:s (d M Y)'),
+                    ]
+                ]);
+            });
+        } catch (\Throwable $e) {
+            Log::error('Gate Scanner Error: ' . $e->getMessage());
+            return response()->json([
+                'status'  => 'error',
+                'title'   => 'Kesalahan Sistem',
+                'message' => 'Gagal memproses verifikasi. Silakan coba lagi.'
+            ], 500);
+        }
+
+        return $result ?? response()->json(['status' => 'error', 'message' => 'Terjadi kesalahan.'], 500);
+    }
+
+    /**
+     * Creator me-reset Gate Key untuk event ini (agar panitia lama otomatis terputus).
+     */
+    public function resetGateKey(Request $request, Product $product): JsonResponse
+    {
+        if ($product->seller_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $newKey = Str::random(32);
+        $product->update([
+            'gate_scanner_key' => $newKey,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Kunci akses Gate Scanner berhasil diperbarui. Link panitia sebelumnya otomatis tidak berlaku.',
+            'new_key' => $newKey,
+            'new_url' => route('gate.scanner', ['key' => $newKey]),
+        ]);
+    }
+
+    /**
+     * Creator mengaktifkan / menonaktifkan Gate Scanner untuk event ini.
+     */
+    public function toggleGateEnabled(Request $request, Product $product): JsonResponse
+    {
+        if ($product->seller_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $product->update([
+            'gate_scanner_enabled' => !$product->gate_scanner_enabled,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'enabled' => $product->gate_scanner_enabled,
+            'message' => $product->gate_scanner_enabled 
+                ? 'Akses Gate Scanner untuk panitia diaktifkan.' 
+                : 'Akses Gate Scanner untuk panitia dinonaktifkan.',
+        ]);
     }
 }

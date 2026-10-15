@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ $seo['title'] ?? 'Gate Scanner · buyle.id' }}</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #ecfdf5;
+            --dark: #0f172a;
+            --slate: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #d97706;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* ── Top Navbar ── */
+        .gate-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        .brand-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #10b981, #047857);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+        .brand-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+        }
+        .brand-title span { color: var(--primary); }
+
+        .gate-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: #f1f5f9;
+            color: #334155;
+            padding: 0.3rem 0.65rem;
+            border-radius: 9999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            border: 1px solid #cbd5e1;
+        }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25);
+            animation: pulse-ring 1.8s infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+
+        /* ── Event Header ── */
+        .event-header {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem;
+        }
+        .event-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+            line-height: 1.3;
+        }
+        .event-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+        .meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* ── Progress & Stats ── */
+        .stats-bar {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            text-align: center;
+        }
+        .stat-box {
+            background: #f8fafc;
+            border-radius: 0.75rem;
+            padding: 0.5rem 0.25rem;
+            border: 1px solid var(--border);
+        }
+        .stat-val {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+        .stat-val.checked { color: var(--primary); }
+        .stat-val.remain { color: #f59e0b; }
+        .stat-lbl {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-top: 2px;
+        }
+
+        /* ── Main Layout ── */
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid-view {
+                display: grid;
+                grid-template-columns: 1.15fr 0.85fr;
+                gap: 1.25rem;
+                align-items: start;
+            }
+        }
+
+        /* ── Camera Viewport Card ── */
+        .scanner-card {
+            background: #ffffff;
+            border-radius: 1.25rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            position: relative;
+        }
+        .card-header {
+            padding: 0.85rem 1rem;
+            background: #f8fafc;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .card-header h2 {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .viewport-box {
+            position: relative;
+            background: #090d16;
+            min-height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        #gate-reader {
+            width: 100% !important;
+            border: none !important;
+        }
+        #gate-reader video {
+            width: 100% !important;
+            height: auto !important;
+            max-height: 480px !important;
+            object-fit: contain !important;
+            display: block !important;
+            margin: 0 auto !important;
+            transition: transform 0.2s ease;
+        }
+        .video-mirrored video {
+            transform: scaleX(-1) !important;
+        }
+
+        /* Controls bar */
+        .viewport-controls {
+            padding: 0.75rem 1rem;
+            background: #ffffff;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .ctrl-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.45rem 0.85rem;
+            border-radius: 0.65rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .ctrl-btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
+        .ctrl-btn.active {
+            background: var(--primary-light);
+            border-color: #86efac;
+            color: #166534;
+        }
+
+        /* ── Result & Verification Card ── */
+        .result-panel {
+            background: #ffffff;
+            border-radius: 1.25rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .result-banner {
+            border-radius: 1rem;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: none;
+        }
+        .result-banner.show { display: block; animation: popIn 0.25s ease-out; }
+
+        @keyframes popIn {
+            0% { transform: scale(0.96); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .result-banner.status-valid {
+            background: #f0fdf4;
+            border: 2px solid #22c55e;
+            color: #15803d;
+        }
+        .result-banner.status-used {
+            background: #fffbeb;
+            border: 2px solid #f59e0b;
+            color: #b45309;
+        }
+        .result-banner.status-invalid {
+            background: #fef2f2;
+            border: 2px solid #ef4444;
+            color: #b91c1c;
+        }
+
+        .result-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.65rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .status-valid .result-icon { background: #22c55e; color: white; }
+        .status-used .result-icon { background: #f59e0b; color: white; }
+        .status-invalid .result-icon { background: #ef4444; color: white; }
+
+        .result-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.25rem; }
+        .result-msg { font-size: 0.88rem; line-height: 1.4; opacity: 0.95; }
+
+        .ticket-info-card {
+            background: #f8fafc;
+            border-radius: 0.85rem;
+            border: 1px solid var(--border);
+            padding: 0.85rem;
+            margin-top: 0.75rem;
+            text-align: left;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.35rem 0;
+            border-bottom: 1px dashed var(--border);
+            font-size: 0.82rem;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: var(--muted); font-weight: 600; }
+        .info-val { font-weight: 700; color: var(--dark); text-align: right; }
+
+        /* Idle State */
+        .idle-state {
+            padding: 2.5rem 1rem;
+            text-align: center;
+            color: var(--muted);
+        }
+        .idle-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 1rem;
+            background: #f1f5f9;
+            color: #94a3b8;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+        }
+
+        /* ── Manual Code Input ── */
+        .manual-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: #0f172a;
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            transition: all 0.15s ease;
+        }
+        .manual-btn:hover { background: #1e293b; }
+
+        /* ── Modal Manual ── */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            z-index: 100;
+        }
+        .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+        .modal-box {
+            background: #ffffff;
+            border-radius: 1.25rem;
+            max-width: 440px;
+            width: 100%;
+            padding: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        .modal-header h3 { font-size: 1.1rem; font-weight: 800; color: var(--dark); }
+        .btn-close {
+            background: none; border: none; color: #94a3b8; cursor: pointer; padding: 0.25rem;
+        }
+        .input-code {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .input-code:focus { border-color: var(--primary); }
+
+        .btn-verify-manual {
+            margin-top: 1rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.85rem;
+            border-radius: 0.75rem;
+            font-weight: 800;
+            font-size: 0.95rem;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+        }
+        .btn-verify-manual:hover { background: var(--primary-dark); }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <header class="gate-nav">
+        <a href="/" class="brand-badge">
+            <div class="brand-logo">B</div>
+            <div class="brand-title">buyle<span>.id</span></div>
+        </a>
+        <div class="gate-pill">
+            <div class="pulse-dot"></div>
+            <span>GATE PASS AKTIF</span>
+        </div>
+    </header>
+
+    <!-- Event Info Header -->
+    <section class="event-header">
+        <div style="max-width: 900px; margin: 0 auto;">
+            <h1 class="event-title">{{ $event->name }}</h1>
+            <div class="event-meta">
+                @if($event->event_date)
+                    <div class="meta-item">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        <span>{{ $event->event_date->format('d M Y') }}</span>
+                    </div>
+                @endif
+                @if($event->event_time)
+                    <div class="meta-item">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        <span>{{ $event->event_time }}</span>
+                    </div>
+                @endif
+                @if($event->event_location)
+                    <div class="meta-item">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        <span>{{ $event->event_location }}</span>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Stats Bar -->
+    <section class="stats-bar">
+        <div class="stat-box">
+            <div class="stat-val checked" id="stat-checked">{{ $stats['checked_in'] }}</div>
+            <div class="stat-lbl">Hadir ({{ $stats['rate'] }}%)</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-val remain" id="stat-remain">{{ $stats['unchecked'] }}</div>
+            <div class="stat-lbl">Belum Hadir</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-val" id="stat-total">{{ $stats['total'] }}</div>
+            <div class="stat-lbl">Total Tiket</div>
+        </div>
+    </section>
+
+    <!-- Main Workspace -->
+    <main class="container">
+        <div class="grid-view">
+            
+            <!-- Left Column: Scanner Viewport -->
+            <div class="scanner-card">
+                <div class="card-header">
+                    <h2>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                            <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                            <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                            <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                        </svg>
+                        Live QR Scanner
+                    </h2>
+                    <select id="camera-select" style="font-size:0.75rem; font-weight:600; padding:0.3rem 0.5rem; border-radius:0.5rem; border:1px solid #cbd5e1; outline:none; max-width:180px;">
+                        <option value="">Pilih Kamera...</option>
+                    </select>
+                </div>
+
+                <div class="viewport-box" id="viewport-box">
+                    <div id="gate-reader"></div>
+                </div>
+
+                <div class="viewport-controls">
+                    <button type="button" class="ctrl-btn" id="btn-mirror" onclick="toggleMirror()">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <polyline points="9 21 3 21 3 15"></polyline>
+                            <line x1="21" y1="3" x2="14" y2="10"></line>
+                            <line x1="3" y1="21" x2="10" y2="14"></line>
+                        </svg>
+                        <span id="mirror-lbl">Mirror: ON</span>
+                    </button>
+
+                    <label style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.75rem; font-weight:700; color:#166534; cursor:pointer;">
+                        <input type="checkbox" id="fast-mode" checked style="accent-color:#10b981;">
+                        <span>Fast Mode (0.8s)</span>
+                    </label>
+
+                    <button type="button" class="ctrl-btn" onclick="openManualModal()">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        Ketik Manual
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column: Verification Result Panel -->
+            <div class="result-panel">
+                
+                <!-- Idle Placeholder -->
+                <div class="idle-state" id="idle-box">
+                    <div class="idle-icon">
+                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                    </div>
+                    <div style="font-weight:700; font-size:0.95rem; color:#334155;">Siap Memindai Tiket</div>
+                    <p style="font-size:0.8rem; margin-top:0.3rem;">Arahkan kamera ke QR Code tiket peserta atau klik Ketik Manual di bawah.</p>
+                </div>
+
+                <!-- Dynamic Status Result Banner -->
+                <div class="result-banner" id="result-banner">
+                    <div class="result-icon" id="banner-icon">✓</div>
+                    <h3 class="result-title" id="banner-title">Check-In Berhasil!</h3>
+                    <p class="result-msg" id="banner-msg">Selamat datang di event ini.</p>
+
+                    <div class="ticket-info-card" id="ticket-info-box">
+                        <div class="info-row">
+                            <span class="info-label">Nama Peserta</span>
+                            <span class="info-val" id="val-holder">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Kode Tiket</span>
+                            <span class="info-val" id="val-code">-</span>
+                        </div>
+                        <div class="info-row" id="row-nik">
+                            <span class="info-label">NIK / Identitas</span>
+                            <span class="info-val" id="val-nik">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Waktu Scan</span>
+                            <span class="info-val" id="val-time">-</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-verify-manual" style="margin-top:0.85rem;" onclick="resumeScannerNow()">
+                        Scan Berikutnya
+                    </button>
+                </div>
+
+                <!-- Manual Input Fallback Button on Mobile -->
+                <button type="button" class="manual-btn" onclick="openManualModal()">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    Ketik Kode Tiket / NIK Manual
+                </button>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal Ketik Manual -->
+    <div class="modal-overlay" id="manual-modal" onclick="if(event.target===this) closeManualModal()">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Ketik Manual Kode Tiket</h3>
+                <button type="button" class="btn-close" onclick="closeManualModal()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">
+                Masukkan Kode Tiket (misal: <code>TKT-20261015-XYZ</code>) atau NIK peserta jika barcode rusak.
+            </p>
+            <input type="text" id="manual-code-input" class="input-code" placeholder="TKT-XXXXXX" autofocus>
+            <button type="button" class="btn-verify-manual" onclick="submitManualCode()">
+                Verifikasi Tiket Sekarang
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        const VERIFY_URL = "{{ route('gate.scanner.verify', ['key' => $key]) }}";
+        const CSRF_TOKEN = "{{ csrf_token() }}";
+
+        // In-Memory Client-side Cache for 0ms crowd scanning
+        let localTickets = @json($cachedTickets);
+
+        let html5QrCode = null;
+        let isProcessing = false;
+        let isMirrored = localStorage.getItem('gate_scanner_mirror') !== 'false'; // default ON for webcam
+
+        // Audio Context Synthesizer (Instant 0ms sound, no mp3 file loading delay)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'success') {
+                    // Harmonious double chime
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+                    osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1); // A5
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                } else if (type === 'used') {
+                    // Warning low buzzer
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(260, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                } else {
+                    // Error buzz
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                }
+            } catch(e) {}
+        }
+
+        function triggerHaptic(type) {
+            if ('vibrate' in navigator) {
+                if (type === 'success') navigator.vibrate(100);
+                else if (type === 'used') navigator.vibrate([120, 60, 120]);
+                else navigator.vibrate([200, 80, 200]);
+            }
+        }
+
+        // Apply Mirror
+        function applyMirror() {
+            const vBox = document.getElementById('viewport-box');
+            const lbl = document.getElementById('mirror-lbl');
+            const btn = document.getElementById('btn-mirror');
+            if (isMirrored) {
+                vBox.classList.add('video-mirrored');
+                lbl.innerText = 'Mirror: ON';
+                btn.classList.add('active');
+            } else {
+                vBox.classList.remove('video-mirrored');
+                lbl.innerText = 'Mirror: OFF';
+                btn.classList.remove('active');
+            }
+        }
+
+        function toggleMirror() {
+            isMirrored = !isMirrored;
+            localStorage.setItem('gate_scanner_mirror', isMirrored);
+            applyMirror();
+        }
+
+        // Camera init
+        async function initScanner() {
+            applyMirror();
+            const cameraSelect = document.getElementById('camera-select');
+
+            try {
+                const devices = await Html5Qrcode.getCameras();
+                if (!devices || devices.length === 0) {
+                    alert('Tidak ada kamera yang ditemukan pada perangkat ini.');
+                    return;
+                }
+
+                cameraSelect.innerHTML = '';
+                devices.forEach((dev, idx) => {
+                    const opt = document.createElement('option');
+                    opt.value = dev.id;
+                    opt.text = dev.label || `Kamera ${idx + 1}`;
+                    cameraSelect.appendChild(opt);
+                });
+
+                // Pick back camera by default on mobile, or first camera on desktop
+                let preferredCamId = devices[0].id;
+                const backCam = devices.find(d => /back|rear|environment/i.test(d.label));
+                if (backCam) {
+                    preferredCamId = backCam.id;
+                    cameraSelect.value = preferredCamId;
+                    // Auto turn off mirror on back cam
+                    isMirrored = false;
+                    applyMirror();
+                }
+
+                cameraSelect.addEventListener('change', () => {
+                    startCamera(cameraSelect.value);
+                });
+
+                startCamera(preferredCamId);
+
+            } catch (err) {
+                console.error('Camera init error:', err);
+            }
+        }
+
+        async function startCamera(cameraId) {
+            if (html5QrCode) {
+                try {
+                    await html5QrCode.stop();
+                } catch(e) {}
+            }
+
+            html5QrCode = new Html5Qrcode("gate-reader");
+            const config = {
+                fps: 15,
+                qrbox: (viewfinderWidth, viewfinderHeight) => {
+                    const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+                    return {
+                        width: Math.floor(minEdge * 0.85),
+                        height: Math.floor(minEdge * 0.85)
+                    };
+                },
+                aspectRatio: 1.0,
+                disableFlip: false
+            };
+
+            html5QrCode.start(
+                cameraId,
+                config,
+                onScanSuccess,
+                () => {} // silent on frame skip
+            ).catch(err => {
+                console.error("Camera start failed:", err);
+            });
+        }
+
+        // Handle QR Scan
+        async function onScanSuccess(decodedText) {
+            if (isProcessing) return;
+            isProcessing = true;
+            await processVerification(decodedText);
+        }
+
+        async function processVerification(rawCode) {
+            // Check local in-memory cache for instant feedback
+            const clean = rawCode.trim();
+
+            try {
+                const res = await fetch(VERIFY_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': CSRF_TOKEN,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ code: clean })
+                });
+
+                const data = await res.json();
+                renderResult(data);
+
+            } catch (err) {
+                renderResult({
+                    status: 'invalid',
+                    title: 'Koneksi Terganggu',
+                    message: 'Tidak dapat menghubungi server. Periksa koneksi internet.'
+                });
+            }
+        }
+
+        function renderResult(data) {
+            const idle = document.getElementById('idle-box');
+            const banner = document.getElementById('result-banner');
+            const icon = document.getElementById('banner-icon');
+            const title = document.getElementById('banner-title');
+            const msg = document.getElementById('banner-msg');
+            const infoBox = document.getElementById('ticket-info-box');
+
+            idle.style.display = 'none';
+            banner.className = `result-banner show status-${data.status}`;
+
+            if (data.status === 'valid') {
+                icon.innerHTML = '✓';
+                title.innerText = data.title || 'Check-In Berhasil!';
+                msg.innerText = data.message || 'Tiket valid.';
+                infoBox.style.display = 'block';
+
+                const t = data.ticket || {};
+                document.getElementById('val-holder').innerText = t.holder_name || '-';
+                document.getElementById('val-code').innerText = t.code || '-';
+                document.getElementById('val-time').innerText = t.checked_in_at || new Date().toLocaleTimeString();
+                
+                const nikRow = document.getElementById('row-nik');
+                if (t.holder_nik) {
+                    nikRow.style.display = 'flex';
+                    document.getElementById('val-nik').innerText = t.holder_nik;
+                } else {
+                    nikRow.style.display = 'none';
+                }
+
+                playSound('success');
+                triggerHaptic('success');
+                incrementCounter();
+
+            } else if (data.status === 'used') {
+                icon.innerHTML = '⚠️';
+                title.innerText = data.title || 'Sudah Digunakan';
+                msg.innerText = data.message || 'Tiket sudah dipindai sebelumnya.';
+                infoBox.style.display = 'block';
+
+                const t = data.ticket || {};
+                document.getElementById('val-holder').innerText = t.holder_name || '-';
+                document.getElementById('val-code').innerText = t.code || '-';
+                document.getElementById('val-time').innerText = t.checked_in_at || '-';
+                document.getElementById('row-nik').style.display = 'none';
+
+                playSound('used');
+                triggerHaptic('used');
+
+            } else {
+                icon.innerHTML = '✕';
+                title.innerText = data.title || 'Tiket Tidak Valid';
+                msg.innerText = data.message || 'Tiket tidak ditemukan.';
+                infoBox.style.display = 'none';
+
+                playSound('invalid');
+                triggerHaptic('invalid');
+            }
+
+            // Fast auto resume after delay
+            const isFast = document.getElementById('fast-mode').checked;
+            const delay = data.status === 'valid' ? (isFast ? 800 : 1800) : 2200;
+
+            setTimeout(() => {
+                resumeScannerNow();
+            }, delay);
+        }
+
+        function resumeScannerNow() {
+            isProcessing = false;
+        }
+
+        function incrementCounter() {
+            const elChecked = document.getElementById('stat-checked');
+            const elRemain = document.getElementById('stat-remain');
+            const elTotal = document.getElementById('stat-total');
+
+            let checked = parseInt(elChecked.innerText) || 0;
+            let remain = parseInt(elRemain.innerText) || 0;
+            let total = parseInt(elTotal.innerText) || 0;
+
+            checked++;
+            remain = Math.max(0, remain - 1);
+            elChecked.innerText = checked;
+            elRemain.innerText = remain;
+        }
+
+        // Manual modal
+        function openManualModal() {
+            document.getElementById('manual-modal').classList.add('open');
+            setTimeout(() => {
+                document.getElementById('manual-code-input').focus();
+            }, 100);
+        }
+
+        function closeManualModal() {
+            document.getElementById('manual-modal').classList.remove('open');
+            document.getElementById('manual-code-input').value = '';
+        }
+
+        function submitManualCode() {
+            const val = document.getElementById('manual-code-input').value.trim();
+            if (!val) return;
+            closeManualModal();
+            processVerification(val);
+        }
+
+        // Enter key in manual input
+        document.getElementById('manual-code-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') submitManualCode();
+        });
+
+        // Initialize on DOM load
+        document.addEventListener('DOMContentLoaded', () => {
+            initScanner();
+        });
+    </script>
+</body>
+</html>

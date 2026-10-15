@@ -119,7 +119,7 @@ class OrderPaidNotification extends Notification
                                 <div style="margin-bottom: 4px;"><strong>Tanggal & Waktu:</strong> ' . $eventDate . ' (' . $eventTime . ')</div>
                                 <div style="margin-bottom: 6px;"><strong>Lokasi / Venue:</strong> ' . $eventLocation . '</div>
                                 <div style="display: inline-block; margin-top: 4px; background-color: #DCFCE7; color: #166534; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 99px; text-transform: uppercase;">
-                                    Status: TIKET VALID / BISA SCANNED
+                                    Status: VALID
                                 </div>
                             </td>
                         </tr>
@@ -143,11 +143,11 @@ class OrderPaidNotification extends Notification
             $subject          = "Pembayaran Berhasil! E-Ticket Event #{$orderNumber} Siap Digunakan | buyle.id";
             $badgeText        = 'E-TICKET EVENT ACTIVE';
             $title            = 'E-Ticket Kamu Sudah Aktif!';
-            $subtitle         = "Pembayaran terverifikasi. Tunjukkan QR Code ini saat masuk lokasi acara #{$orderNumber}";
-            $introText        = "Halo <strong>{$buyerName}</strong>, pembayaran tiket event kamu sudah terverifikasi. Berikut adalah akses E-Ticket resmi beserta QR Code unik untuk masuk ke tempat acara:";
+            $subtitle         = "Pembayaran terverifikasi untuk #{$orderNumber}";
+            $introText        = "Halo <strong>{$buyerName}</strong>, pembayaran tiket event kamu sudah terverifikasi. Berikut adalah akses E-Ticket resmi untuk masuk ke tempat acara:";
             $ctaText          = 'Buka & Simpan E-Ticket Saya';
             $promptMsg        = "Silakan simpan email ini atau tunjukkan QR Code di atas saat proses check-in di lokasi acara:";
-            $footerNote       = 'Ada kendala terkait lokasi, jadwal event, atau tiket? Balas email ini aja, tim kami siap bantu!';
+            $footerNote       = 'Thankyou Brother & Sister!';
         } elseif ($hasFood) {
             $subject          = "Pembayaran Berhasil! Pesanan Kuliner #{$orderNumber} Siap Diproses | buyle.id";
             $badgeText        = 'PESANAN KULINER / F&B';
@@ -181,7 +181,7 @@ class OrderPaidNotification extends Notification
             $title            = 'Pembayaran Produk Digital Berhasil!';
             $subtitle         = "Produk digital kamu sudah siap diunduh dan dipelajari #{$orderNumber}";
             $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih banyak telah berbelanja di <strong>buyle.id</strong>. Pembayaran kamu untuk produk digital <strong>#{$orderNumber}</strong> sudah terverifikasi:";
-            $ctaText          = 'Unduh & Akses Produk Digital';
+            $ctaText          = 'Unduh & Akses Disini!';
             $promptMsg        = "Klik tombol di bawah untuk langsung mengunduh file atau membuka tautan akses produk digital kamu:";
         }
 

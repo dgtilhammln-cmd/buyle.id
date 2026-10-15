@@ -11,8 +11,8 @@
     style="margin: 0; padding: 0; background-color: #F8FAFC; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; color: #1E293B;">
     @php
         $logo = \App\Models\Setting::get('logo');
-        $logoUrl = file_exists(public_path('images/buyle-logo.png')) 
-            ? url('images/buyle-logo.png') 
+        $logoUrl = file_exists(public_path('images/buyle-logo.png'))
+            ? url('images/buyle-logo.png')
             : ($logo ? url('storage/' . $logo) : url('images/buyle-logo.png'));
         $siteName = \App\Models\Setting::get('site_name', 'buyle.id');
     @endphp
@@ -85,11 +85,11 @@
                                     <tr>
                                         <td align="center" style="padding-top: 28px; padding-bottom: 12px;">
                                             <!--[if mso]>
-                                                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ $ctaUrl }}" style="height:46px;v-text-anchor:middle;width:240px;" arcsize="50%" stroke="f" fillcolor="#1eb349">
-                                                <w:anchorlock/>
-                                                <center style="color:#ffffff;font-family:sans-serif;font-size:14px;font-weight:700;">{{ $ctaText }}</center>
-                                                </v:roundrect>
-                                                <![endif]-->
+                                                        <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ $ctaUrl }}" style="height:46px;v-text-anchor:middle;width:240px;" arcsize="50%" stroke="f" fillcolor="#1eb349">
+                                                        <w:anchorlock/>
+                                                        <center style="color:#ffffff;font-family:sans-serif;font-size:14px;font-weight:700;">{{ $ctaText }}</center>
+                                                        </v:roundrect>
+                                                        <![endif]-->
                                             <a href="{{ $ctaUrl }}"
                                                 style="background-color: #1eb349; background-image: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color: #FFFFFF !important; font-size: 14px; font-weight: 700; text-decoration: none; padding: 14px 36px; border-radius: 50px; display: inline-block; text-align: center; box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35); mso-hide: all; border: none;">
                                                 {{ $ctaText }}
@@ -133,7 +133,7 @@
                                     <td align="center" style="padding-bottom: 6px;">
                                         <p
                                             style="margin: 0; font-size: 12px; color: #94A3B8; line-height: 1.5; font-weight: 400;">
-                                            Digital Creator Platform - Marketplace, Web Builder, Ticketing & Website
+                                            Digital Creator Platform - Marketplace, Ticketing & Website
                                             Builder
                                             Kreator
                                         </p>
@@ -146,7 +146,7 @@
                                             &copy; {{ date('Y') }} {{ $siteName }} &nbsp;|&nbsp; Developed by <a
                                                 href="https://instagram.com/hvmdigital.id" target="_blank"
                                                 style="color: #94A3B8; font-weight: 500; text-decoration: underline;">HVM
-                                                Digital</a>
+                                                Digital | Digital Solution Pengusaha Indonesia</a>
                                         </p>
                                     </td>
                                 </tr>

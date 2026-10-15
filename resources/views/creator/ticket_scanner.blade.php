@@ -708,6 +708,11 @@
                 <span class="tab-text-full">Data Kehadiran & Event</span>
                 <small class="tab-text-mob">Data Kehadiran</small>
             </button>
+            <button type="button" class="tab-btn {{ $activeTab === 'gate' ? 'active' : '' }}" onclick="switchTab('tab-gate', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                <span class="tab-text-full">Link Gate Panitia</span>
+                <small class="tab-text-mob">Gate Staff</small>
+            </button>
         </div>
 
         <div class="sidebar-tips-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 1rem; font-size: 0.78rem; color: #64748b; margin-top: 1.25rem;">
@@ -1130,6 +1135,111 @@
     </div>
 </div>
 
+        {{-- TAB 3: GATE SCANNER ACCESS FOR CREW/STAFF --}}
+        <div id="tab-gate" class="payout-tab-pane" style="display: {{ $activeTab === 'gate' ? 'block' : 'none' }}; margin-bottom: 2rem;">
+            <div class="prof-card" style="padding:1.5rem; background:#ffffff; border-radius:18px; border:1px solid #e2e8f0; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:1.25rem;">
+                    <div>
+                        <h3 style="font-size:1.15rem; font-weight:800; color:#0f172a; margin:0 0 0.35rem; display:flex; align-items:center; gap:0.5rem;">
+                            <svg width="22" height="22" fill="none" stroke="#10b981" stroke-width="2.2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                            Link Scanner Panitia Lapangan (Gate Crew Pass)
+                        </h3>
+                        <p style="font-size:0.82rem; color:#64748b; margin:0; line-height:1.5;">
+                            Bagikan link khusus ini ke 5–10 panitia gate di lapangan. Panitia bisa langsung scan tiket di HP masing-masing tanpa butuh login/password creator, tanpa akses saldo/penarikan, dan terlindungi dari bentrok data!
+                        </p>
+                    </div>
+                </div>
+
+                @if($events->count() === 0)
+                    <div style="text-align:center; padding:2.5rem 1rem; color:#94a3b8;">
+                        <svg width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:0.75rem;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        <div style="font-weight:700; color:#334155;">Belum Ada Event Tiket</div>
+                        <p style="font-size:0.82rem; margin-top:0.25rem;">Buat produk tiket terlebih dahulu untuk menggunakan fitur Gate Scanner.</p>
+                    </div>
+                @else
+                    <div style="display:flex; flex-direction:column; gap:1.25rem;">
+                        @foreach($events as $ev)
+                            @php
+                                $gateKey = $ev->getOrGenerateGateKey();
+                                $gateUrl = route('gate.scanner', ['key' => $gateKey]);
+                                $qrGateUrl = route('qr.code', ['data' => $gateUrl]);
+                            @endphp
+                            <div class="gate-event-card" id="gate-card-{{ $ev->id }}" style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.25rem; transition:all 0.2s;">
+                                <div style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
+                                    <div>
+                                        <div style="font-weight:800; font-size:1.05rem; color:#0f172a;">{{ $ev->name }}</div>
+                                        <div style="font-size:0.78rem; color:#64748b; margin-top:0.25rem; display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+                                            <span>📅 {{ $ev->event_date ? $ev->event_date->format('d M Y') : 'Jadwal belum diset' }}</span>
+                                            <span>📍 {{ $ev->event_location ?? 'Lokasi belum diset' }}</span>
+                                            <span id="gate-status-badge-{{ $ev->id }}" class="badge-status {{ $ev->gate_scanner_enabled ? 'badge-used' : 'badge-cancelled' }}">
+                                                {{ $ev->gate_scanner_enabled ? 'Gate Aktif' : 'Gate Dinonaktifkan' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                                        <a href="{{ $gateUrl }}" target="_blank" class="btn-action-sm btn-toggle-checkin" style="background:#0f172a; text-decoration:none; padding:0.5rem 1rem;">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                            Buka Scanner Panitia
+                                        </a>
+                                    </div>
+                                </div>
+
+                                {{-- URL Field & Copy Button --}}
+                                <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; margin-bottom:1rem;">
+                                    <div style="flex:1; min-width:260px; position:relative;">
+                                        <input type="text" id="gate-url-{{ $ev->id }}" value="{{ $gateUrl }}" readonly style="width:100%; padding:0.65rem 0.85rem; font-size:0.8rem; font-weight:700; color:#334155; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:10px; font-family:monospace; outline:none;" onclick="this.select()">
+                                    </div>
+                                    <button type="button" class="btn-action-sm" onclick="copyGateUrl('gate-url-{{ $ev->id }}', this)" style="background:#10b981; color:white; padding:0.65rem 1rem; border-radius:10px;">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                        Salin Link
+                                    </button>
+                                    <button type="button" class="btn-action-sm" onclick="showGateQrModal('{{ $ev->name }}', '{{ $gateUrl }}', '{{ $qrGateUrl }}')" style="background:#ffffff; color:#334155; border:1.5px solid #cbd5e1; padding:0.65rem 1rem; border-radius:10px;">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                                        Tampilkan QR Code Link
+                                    </button>
+                                </div>
+
+                                {{-- Security & Controls --}}
+                                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; padding-top:0.75rem; border-top:1px dashed #cbd5e1; font-size:0.78rem;">
+                                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                                        <label style="display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer; font-weight:700; color:#334155;">
+                                            <input type="checkbox" onchange="toggleGateEnabled('{{ $ev->id }}', this)" {{ $ev->gate_scanner_enabled ? 'checked' : '' }} style="accent-color:#10b981; width:16px; height:16px;">
+                                            <span>Izinkan Panitia Memindai (Aktif)</span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <button type="button" onclick="resetGateKey('{{ $ev->id }}')" style="background:none; border:none; color:#ef4444; font-size:0.76rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                            Reset Kunci (Kick Semua Panitia Lama)
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        {{-- MODAL QR CODE UNTUK LINK PANITIA --}}
+        <div id="gateQrModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center; padding:1rem;" onclick="if(event.target===this) closeGateQrModal()">
+            <div style="background:#ffffff; border-radius:20px; padding:2rem; max-width:380px; width:100%; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);">
+                <div style="font-weight:800; font-size:1.15rem; color:#0f172a; margin-bottom:0.25rem;">Scan untuk Buka Scanner Panitia</div>
+                <div id="gateQrEventTitle" style="font-size:0.85rem; color:#64748b; margin-bottom:1.25rem; font-weight:600;"></div>
+                <div style="background:#ffffff; padding:0.75rem; border:2px solid #e2e8f0; border-radius:16px; display:inline-block; margin-bottom:1.25rem;">
+                    <img id="gateQrImg" src="" alt="QR Gate Link" style="width:200px; height:200px; display:block;">
+                </div>
+                <p style="font-size:0.78rem; color:#64748b; line-height:1.5; margin-bottom:1.5rem;">
+                    Arahkan kamera HP panitia ke QR Code di layar ini untuk langsung membuka scanner tanpa harus login atau memasukkan password.
+                </p>
+                <button type="button" onclick="closeGateQrModal()" style="width:100%; padding:0.75rem; background:#0f172a; color:#ffffff; border:none; border-radius:999px; font-weight:700; font-size:0.88rem; cursor:pointer;">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <script>
     // ══════════════════════════════════════════════════════════════════════
@@ -1173,13 +1283,97 @@
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(tabId).style.display = 'block';
         btn.classList.add('active');
-        const tabName = tabId === 'tab-data' ? 'data' : 'scanner';
+        const tabName = tabId === 'tab-data' ? 'data' : (tabId === 'tab-gate' ? 'gate' : 'scanner');
         const url = new URL(window.location);
         url.searchParams.set('tab', tabName);
         window.history.pushState({}, '', url);
 
         if (tabId === 'tab-data') {
             runInstantFilter();
+        }
+    }
+
+    // ── Helper Gate Link & Modal ──
+    function copyGateUrl(inputId, btn) {
+        const input = document.getElementById(inputId);
+        input.select();
+        input.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(input.value).then(() => {
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '✓ Disalin!';
+            btn.style.background = '#059669';
+            setTimeout(() => {
+                btn.innerHTML = origHtml;
+                btn.style.background = '#10b981';
+            }, 2000);
+        }).catch(() => {
+            document.execCommand('copy');
+            alert('Link berhasil disalin ke clipboard!');
+        });
+    }
+
+    function showGateQrModal(name, url, qrUrl) {
+        document.getElementById('gateQrEventTitle').innerText = name;
+        document.getElementById('gateQrImg').src = qrUrl;
+        document.getElementById('gateQrModal').style.display = 'flex';
+    }
+
+    function closeGateQrModal() {
+        document.getElementById('gateQrModal').style.display = 'none';
+    }
+
+    async function toggleGateEnabled(eventId, checkbox) {
+        const originalChecked = !checkbox.checked;
+        try {
+            const res = await fetch(`/creator/scanner/toggle-gate-enabled/${eventId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            });
+            const data = await res.json();
+            if (data.success) {
+                const badge = document.getElementById(`gate-status-badge-${eventId}`);
+                if (badge) {
+                    badge.className = `badge-status ${data.enabled ? 'badge-used' : 'badge-cancelled'}`;
+                    badge.innerText = data.enabled ? 'Gate Aktif' : 'Gate Dinonaktifkan';
+                }
+            } else {
+                checkbox.checked = originalChecked;
+                alert(data.message || 'Gagal mengubah status gate.');
+            }
+        } catch(e) {
+            checkbox.checked = originalChecked;
+            alert('Terjadi kesalahan jaringan.');
+        }
+    }
+
+    async function resetGateKey(eventId) {
+        if (!confirm('PERINGATAN: Mengganti kunci akan memutuskan akses SEMUA panitia lama yang sedang membuka link ini. Lanjutkan buat link baru?')) {
+            return;
+        }
+
+        try {
+            const res = await fetch(`/creator/scanner/reset-gate-key/${eventId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            });
+            const data = await res.json();
+            if (data.success) {
+                const input = document.getElementById(`gate-url-${eventId}`);
+                if (input) input.value = data.new_url;
+                alert('Kunci Gate berhasil diperbarui! Bagikan link baru ke panitia.');
+            } else {
+                alert(data.message || 'Gagal mereset kunci.');
+            }
+        } catch(e) {
+            alert('Terjadi kesalahan jaringan.');
         }
     }
 

@@ -61,6 +61,11 @@ Route::prefix('api/region')->group(function() {
 });
 
 Route::get('/qr-code', [\App\Http\Controllers\QrCodeController::class, 'generate'])->name('qr.code');
+
+// Gate Scanner Khusus Panitia / Kru Lapangan (Tanpa Login, Diotorisasi via Secret Key Per Event)
+Route::get('/gate-scanner/{key}', [\App\Http\Controllers\TicketScannerController::class, 'gateIndex'])->name('gate.scanner');
+Route::post('/gate-scanner/{key}/verify', [\App\Http\Controllers\TicketScannerController::class, 'gateVerify'])->name('gate.scanner.verify');
+
 Route::post('/lead/store', [\App\Http\Controllers\LeadController::class, 'store'])->name('lead.store');
 
 Route::middleware(['track.pageview'])->group(function () {
@@ -637,6 +642,8 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/scanner/verify', [\App\Http\Controllers\TicketScannerController::class, 'verify'])->name('ticket.scanner.verify');
     Route::post('/scanner/toggle-checkin/{ticket}', [\App\Http\Controllers\TicketScannerController::class, 'toggleCheckin'])->name('ticket.scanner.toggle-checkin');
     Route::get('/scanner/export', [\App\Http\Controllers\TicketScannerController::class, 'exportCsv'])->name('ticket.scanner.export');
+    Route::post('/scanner/reset-gate-key/{product}', [\App\Http\Controllers\TicketScannerController::class, 'resetGateKey'])->name('ticket.scanner.reset-gate-key');
+    Route::post('/scanner/toggle-gate-enabled/{product}', [\App\Http\Controllers\TicketScannerController::class, 'toggleGateEnabled'])->name('ticket.scanner.toggle-gate-enabled');
 
     // ── Link in Bio ──────────────────────────────────────────────────────
     Route::get('/bio',          [\App\Http\Controllers\Creator\CreatorBioController::class, 'index'])->name('bio.index');

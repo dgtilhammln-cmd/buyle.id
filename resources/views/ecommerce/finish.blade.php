@@ -246,7 +246,7 @@ body { background-color: #F8FAFC !important; }
                     @else
                         <p class="fin-sub">
                             Terima kasih sudah berbelanja di buyle.id.<br>
-                            Akses produk digital atau jasa Anda melalui link di bawah ini.
+                            Akses melalui link di bawah ini.
                         </p>
 
                         <div style="background: linear-gradient(135deg, #1eb349, #a5cf37); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; color: #fff; text-align: left; box-shadow: 0 10px 30px rgba(30,179,73,0.3);">
