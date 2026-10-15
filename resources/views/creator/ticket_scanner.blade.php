@@ -772,8 +772,9 @@
                                 <input type="checkbox" id="autoScanToggle" checked style="accent-color:#1eb349; width:16px; height:16px;" onchange="handleFastModeChange(this.checked)">
                                 ⚡ Fast Mode (Auto Next)
                             </label>
-                            <button type="button" id="mirrorToggleBtn" onclick="toggleMirror()" style="display:inline-flex; align-items:center; gap:0.3rem; font-size:0.78rem; font-weight:700; color:#166534; background:#f0fdf4; padding:0.4rem 0.85rem; border-radius:999px; border:1.5px solid #bbf7d0; cursor:pointer; user-select:none; transition: all 0.2s;" title="Cerminkan tampilan kamera (mirror) untuk webcam desktop">
-                                🪞 Mirror: ON
+                            <button type="button" id="mirrorToggleBtn" onclick="toggleMirror()" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.78rem; font-weight:700; color:#166534; background:#f0fdf4; padding:0.4rem 0.85rem; border-radius:999px; border:1.5px solid #bbf7d0; cursor:pointer; user-select:none; transition: all 0.2s;" title="Cerminkan tampilan kamera (mirror) untuk webcam desktop">
+                                <svg id="mirrorIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M12 2v20"/><path d="M8 12h-.01M16 12h.01"/></svg>
+                                <span id="mirrorLabel">Mirror: ON</span>
                             </button>
                         </div>
                     </div>
@@ -1214,20 +1215,13 @@
             }
 
             html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
-                fps: 12, 
+                fps: 10, 
                 qrbox: { width: 250, height: 250 },
                 disableFlip: false,
                 rememberLastUsedCamera: true,
                 showTorchButtonIfSupported: true,
                 showZoomSliderIfSupported: true,
-                videoConstraints: {
-                    facingMode: "environment",
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 }
-                },
-                experimentalFeatures: {
-                    useBarCodeDetectorIfSupported: true
-                }
+                formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ]
             }, false);
 
             html5QrcodeScanner.render(onScanSuccess, onScanFailure);
@@ -1266,8 +1260,11 @@
                 readerEl.classList.remove('mirror-on');
             }
         }
+        const mirrorLabel = document.getElementById('mirrorLabel');
+        if (mirrorLabel) {
+            mirrorLabel.textContent = isMirrorOn ? 'Mirror: ON' : 'Mirror: OFF';
+        }
         if (mirrorBtn) {
-            mirrorBtn.textContent = isMirrorOn ? '🪞 Mirror: ON' : '🪞 Mirror: OFF';
             mirrorBtn.style.background = isMirrorOn ? '#f0fdf4' : '#f8fafc';
             mirrorBtn.style.borderColor = isMirrorOn ? '#bbf7d0' : '#e2e8f0';
             mirrorBtn.style.color = isMirrorOn ? '#166534' : '#64748b';
