@@ -102,32 +102,98 @@
         box-sizing: border-box;
     }
 
-    /* ── SCANNER VIEWPORT ── */
+    /* ── SCANNER 2-COLUMN WORKSPACE (COMPACT & PROPORTIONAL) ── */
+    .scanner-workspace-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 1.25rem;
+        align-items: stretch;
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 991px) {
+        .scanner-workspace-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+    }
+
+    .scanner-camera-col {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    .scanner-data-col {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    /* ── SCANNER VIEWPORT (COMPACT & PROPORTIONAL) ── */
     #reader {
         width: 100% !important;
         max-width: 100% !important;
-        border-radius: 18px;
+        border-radius: 18px !important;
         overflow: hidden !important;
         border: 2px dashed #bbf7d0 !important;
-        background: #f8fafc;
-        padding: 1.25rem 0.75rem !important;
+        background: #0f172a !important;
+        padding: 0.65rem !important;
         text-align: center;
-        margin-bottom: 1.5rem;
+        margin: 0 !important;
         box-sizing: border-box !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 320px;
+    }
+
+    #reader video {
+        width: 100% !important;
+        max-height: 360px !important;
+        height: auto !important;
+        object-fit: cover !important;
+        border-radius: 14px !important;
+        display: block !important;
+        margin: 0 auto !important;
+    }
+
+    #reader__scan_region {
+        border-radius: 14px !important;
+        overflow: hidden !important;
+        background: #020617 !important;
+        max-height: 360px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    #reader__scan_region img {
+        max-height: 240px !important;
+        object-fit: contain !important;
+    }
+
+    #reader__dashboard {
+        padding: 0.6rem 0.5rem 0.25rem !important;
+        background: #ffffff !important;
+        border-radius: 14px !important;
+        margin-top: 0.5rem !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
     #reader select {
-        height: 44px;
-        padding: 0 2rem 0 1rem;
-        border-radius: 12px;
+        height: 40px;
+        padding: 0 2rem 0 0.85rem;
+        border-radius: 10px;
         border: 1.5px solid #e2e8f0 !important;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.83rem;
+        font-size: 0.82rem;
         font-weight: 600;
         color: #0f172a;
         background: #ffffff;
         outline: none;
-        margin: 0.5rem 0;
+        margin: 0.35rem 0;
         cursor: pointer;
         transition: all 0.2s;
         max-width: 100% !important;
@@ -142,17 +208,17 @@
     }
 
     #reader button {
-        height: 44px;
-        padding: 0 1.5rem !important;
+        height: 40px;
+        padding: 0 1.25rem !important;
         border-radius: 999px !important;
         background: linear-gradient(135deg, #1eb349, #a5cf37) !important;
         border: none !important;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.82rem;
+        font-size: 0.8rem;
         font-weight: 700;
         color: #ffffff !important;
         cursor: pointer;
-        margin: 0.5rem auto;
+        margin: 0.35rem auto;
         box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35) !important;
         transition: all 0.2s;
         display: inline-flex;
@@ -163,20 +229,41 @@
         max-width: 100% !important;
     }
 
-    .res-box {
-        margin-top: 1rem;
-        margin-bottom: 1.25rem;
-        padding: 1.25rem 1.5rem;
-        border-radius: 16px;
-        display: none;
-        animation: fadeIn 0.3s ease;
-        max-width: 100%;
+    /* ── SCANNER RESULT PANEL (RIGHT COLUMN COMPACT) ── */
+    .scanner-result-panel {
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 1.25rem;
+        height: 100%;
+        min-height: 360px;
         box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        transition: all 0.25s ease;
+        position: relative;
+        overflow: hidden;
     }
 
-    .res-valid { background: #f0fdf4; border: 1.5px solid #bbf7d0; color: #166534; }
-    .res-used { background: #f8fafc; border: 1.5px solid #e2e8f0; color: #475569; }
-    .res-invalid { background: #fef2f2; border: 1.5px solid #fecaca; color: #991b1b; }
+    .scanner-result-panel.status-valid {
+        border-color: #86efac;
+        background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%);
+        box-shadow: 0 8px 30px rgba(34, 197, 94, 0.14);
+    }
+
+    .scanner-result-panel.status-used {
+        border-color: #fde68a;
+        background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%);
+        box-shadow: 0 8px 30px rgba(245, 158, 11, 0.14);
+    }
+
+    .scanner-result-panel.status-invalid {
+        border-color: #fca5a5;
+        background: linear-gradient(180deg, #fef2f2 0%, #ffffff 100%);
+        box-shadow: 0 8px 30px rgba(239, 68, 68, 0.14);
+    }
 
     .form-input-code {
         height: 44px;
@@ -660,8 +747,8 @@
                 </div>
 
                 <div class="form-body">
-                    {{-- Input Manual --}}
-                    <form id="manualScanForm" class="mb-4" onsubmit="handleManualSubmit(event)">
+                    {{-- Input Manual (Full Width di Atas) --}}
+                    <form id="manualScanForm" style="margin-bottom: 1.25rem;" onsubmit="handleManualSubmit(event)">
                         <label class="form-label" style="font-size:0.82rem; font-weight:700; color:#334155; margin-bottom:0.5rem; display:block;">Pemeriksaan Kode Tiket / Token (Manual)</label>
                         <div style="display: flex;">
                             <input type="text" id="manualCodeInput" class="form-input-code" placeholder="Ketik Kode Tiket (misal: TKT-20260905-XXXX)...">
@@ -671,18 +758,6 @@
                             </button>
                         </div>
                     </form>
-
-                    {{-- Result Box (Terletak TEPAT di Atas Kamera) --}}
-                    <div id="resultBox" class="res-box">
-                        <div style="display: flex; align-items: flex-start; gap: 1rem;">
-                            <div id="resultIcon" style="flex-shrink: 0; margin-top: 2px;"></div>
-                            <div style="flex: 1;">
-                                <h5 id="resultTitle" style="font-weight: 800; font-size: 1rem; margin-bottom: 0.25rem;"></h5>
-                                <p id="resultMsg" style="font-size: 0.85rem; margin-bottom: 0.75rem; line-height: 1.4;"></p>
-                                <div id="ticketDetails" style="font-size: 0.8rem; background: #ffffff; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid #e2e8f0; display: none;"></div>
-                            </div>
-                        </div>
-                    </div>
 
                     {{-- Header & Camera Switch Control --}}
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
@@ -698,8 +773,101 @@
                         </div>
                     </div>
 
-                    {{-- Camera Viewport --}}
-                    <div id="reader"></div>
+                    {{-- 2-COLUMN WORKSPACE: KIRI KAMERA, KANAN HASIL SCAN (COMPACT & PROPORTIONAL) --}}
+                    <div class="scanner-workspace-grid">
+                        {{-- Kolom Kiri: Kamera Viewport --}}
+                        <div class="scanner-camera-col">
+                            <div id="reader"></div>
+                        </div>
+
+                        {{-- Kolom Kanan: Live Data Hasil Scan --}}
+                        <div class="scanner-data-col">
+                            <div id="scannerResultPanel" class="scanner-result-panel">
+                                
+                                {{-- 1. State Idle (Menunggu Scan) --}}
+                                <div id="resStateIdle" style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 1.25rem 0.75rem;">
+                                    <div style="width: 64px; height: 64px; border-radius: 20px; background: #f0fdf4; border: 1.5px solid #bbf7d0; display: flex; align-items: center; justify-content: center; color: #1eb349; margin-bottom: 1rem; box-shadow: 0 8px 20px rgba(30, 179, 73, 0.12);">
+                                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1.5"/></svg>
+                                    </div>
+                                    <div style="display: inline-flex; align-items: center; gap: 6px; padding: 0.25rem 0.75rem; border-radius: 999px; background: #e0f2fe; color: #0369a1; font-size: 0.73rem; font-weight: 700; margin-bottom: 0.65rem;">
+                                        <span style="width: 7px; height: 7px; border-radius: 50%; background: #0284c7; display: inline-block;"></span>
+                                        Kamera Siap Memindai
+                                    </div>
+                                    <h4 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin: 0 0 0.35rem 0;">Menunggu Scan Tiket</h4>
+                                    <p style="font-size: 0.8rem; color: #64748b; line-height: 1.5; margin: 0 0 1.25rem 0; max-width: 300px;">
+                                        Arahkan QR Code pengunjung ke kamera di sebelah kiri, atau ketik kode tiket pada kolom di atas.
+                                    </p>
+                                    <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 0.75rem 0.85rem; width: 100%; box-sizing: border-box; text-align: left;">
+                                        <div style="font-size: 0.74rem; font-weight: 700; color: #334155; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 5px;">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                            Tips Verifikasi Cepat:
+                                        </div>
+                                        <div style="font-size: 0.73rem; color: #64748b; line-height: 1.4;">
+                                            Posisikan layar pengunjung lurus dengan kamera. Tiket valid akan langsung tercatat dan berbunyi lonceng sukses.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- 2. State Loading --}}
+                                <div id="resStateLoading" style="display: none; flex-direction: column; align-items: center; text-align: center; padding: 2.5rem 1rem;">
+                                    <svg width="44" height="44" stroke="#1eb349" stroke-width="2.5" fill="none" viewBox="0 0 24 24" style="animation:spin 1s linear infinite; margin-bottom: 1rem;">
+                                        <circle cx="12" cy="12" r="10" stroke-dasharray="31" stroke-dashoffset="10"/>
+                                    </svg>
+                                    <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 0.35rem;">Memverifikasi Tiket...</h4>
+                                    <p id="resLoadingCode" style="font-size: 0.82rem; color: #64748b; font-family: monospace;"></p>
+                                </div>
+
+                                {{-- 3. State Active Result (Muncul Data Saat Scan) --}}
+                                <div id="resStateActive" style="display: none; flex-direction: column; justify-content: space-between; height: 100%;">
+                                    <div>
+                                        {{-- Status Banner --}}
+                                        <div id="resActiveBanner" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem; border-radius: 14px; margin-bottom: 0.85rem;">
+                                            <div id="resActiveIcon" style="flex-shrink: 0;"></div>
+                                            <div style="flex: 1; min-width: 0;">
+                                                <div id="resActiveStatusTag" style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;"></div>
+                                                <h4 id="resActiveTitle" style="font-size: 0.96rem; font-weight: 800; margin: 0; line-height: 1.25;"></h4>
+                                            </div>
+                                        </div>
+
+                                        {{-- Message --}}
+                                        <p id="resActiveMsg" style="font-size: 0.8rem; color: #475569; line-height: 1.45; margin: 0 0 0.85rem 0;"></p>
+
+                                        {{-- Ticket Details Card --}}
+                                        <div id="resActiveDetailsCard" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 0.85rem 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 0.6rem;">
+                                            <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px dashed #f1f5f9; padding-bottom: 0.45rem;">
+                                                <span style="font-size: 0.74rem; font-weight: 600; color: #64748b;">Nama Pemegang</span>
+                                                <strong id="resActiveName" style="font-size: 0.9rem; font-weight: 800; color: #0f172a; text-align: right;">-</strong>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #f1f5f9; padding-bottom: 0.45rem;">
+                                                <span style="font-size: 0.74rem; font-weight: 600; color: #64748b;">Kode Tiket</span>
+                                                <code id="resActiveCode" style="font-size: 0.83rem; font-weight: 700; color: #166534; background: #f0fdf4; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #bbf7d0;">-</code>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; border-bottom: 1px dashed #f1f5f9; padding-bottom: 0.45rem;">
+                                                <span style="font-size: 0.74rem; font-weight: 600; color: #64748b; flex-shrink: 0;">Event</span>
+                                                <span id="resActiveEvent" style="font-size: 0.78rem; font-weight: 700; color: #334155; text-align: right;">-</span>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <span style="font-size: 0.74rem; font-weight: 600; color: #64748b;">Waktu Check-In</span>
+                                                <span id="resActiveTime" style="font-size: 0.78rem; font-weight: 700; color: #0f172a;">-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {{-- Footer Controls & Auto Next Indicator --}}
+                                    <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between;">
+                                        <span id="resActiveNextIndicator" style="font-size: 0.74rem; color: #166534; font-weight: 600; display: flex; align-items: center; gap: 5px;">
+                                            <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #16a34a;"></span>
+                                            Siap scan berikutnya
+                                        </span>
+                                        <button type="button" onclick="resetToIdleState()" style="background: #f8fafc; border: 1px solid #e2e8f0; font-size: 0.73rem; font-weight: 700; color: #475569; border-radius: 999px; padding: 0.3rem 0.75rem; cursor: pointer; transition: all 0.2s;">
+                                            Reset View
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1042,7 +1210,8 @@
 
             html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
                 fps: 15, 
-                qrbox: { width: 250, height: 250 },
+                qrbox: { width: 220, height: 220 },
+                aspectRatio: 1.333333,
                 rememberLastUsedCamera: true,
                 showTorchButtonIfSupported: true,
                 showZoomSliderIfSupported: true
@@ -1052,6 +1221,24 @@
         } catch (err) {
             console.error('[Scanner] Initialization failed:', err);
         }
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // RESET PANEL HASIL SCAN KE IDLE (MENUNGGU SCAN)
+    // ══════════════════════════════════════════════════════════════════════
+    function resetToIdleState() {
+        const panel = document.getElementById('scannerResultPanel');
+        const stateIdle = document.getElementById('resStateIdle');
+        const stateLoading = document.getElementById('resStateLoading');
+        const stateActive = document.getElementById('resStateActive');
+
+        if (panel) {
+            panel.className = 'scanner-result-panel';
+        }
+        if (stateLoading) stateLoading.style.display = 'none';
+        if (stateActive) stateActive.style.display = 'none';
+        if (stateIdle) stateIdle.style.display = 'flex';
+        isProcessing = false;
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -1107,17 +1294,20 @@
         if (isProcessing) return;
         isProcessing = true;
 
-        const resultBox = document.getElementById('resultBox');
-        if (resultBox) {
-            resultBox.className = 'res-box';
-            resultBox.style.background = '#f8fafc';
-            resultBox.style.border = '1.5px solid #e2e8f0';
-            resultBox.style.display = 'block';
-            resultBox.innerHTML = `<div style="display:flex;align-items:center;gap:0.75rem;color:#334155;font-weight:600;font-size:0.88rem;">
-                <svg width="20" height="20" stroke="#1eb349" stroke-width="2.5" fill="none" viewBox="0 0 24 24" style="animation:spin 1s linear infinite;">
-                    <circle cx="12" cy="12" r="10" stroke-dasharray="31" stroke-dashoffset="10"/>
-                </svg>
-                Memverifikasi tiket: <strong style="color:#0f172a;margin-left:4px;">${code}</strong>...</div>`;
+        const panel = document.getElementById('scannerResultPanel');
+        const stateIdle = document.getElementById('resStateIdle');
+        const stateLoading = document.getElementById('resStateLoading');
+        const stateActive = document.getElementById('resStateActive');
+        const loadingCode = document.getElementById('resLoadingCode');
+
+        if (panel) {
+            panel.className = 'scanner-result-panel';
+            if (stateIdle) stateIdle.style.display = 'none';
+            if (stateActive) stateActive.style.display = 'none';
+            if (stateLoading) {
+                stateLoading.style.display = 'flex';
+                if (loadingCode) loadingCode.textContent = code;
+            }
         }
 
         fetch("{{ route('creator.ticket.scanner.verify') }}", {
@@ -1146,7 +1336,7 @@
             renderResult({
                 status: 'invalid',
                 title: 'Koneksi Lemot / Terputus',
-                message: 'Gagal terhubung ke server. Silakan coba periksa kembali dalam beberapa saat.'
+                message: 'Gagal terhubung ke server. Silakan periksa kembali koneksi internet Anda.'
             });
         });
     }
@@ -1204,57 +1394,107 @@
     }
 
     // ══════════════════════════════════════════════════════════════════════
-    // RENDER HASIL SCAN (FAST MODE TANPA POPUP BLOCKING)
+    // RENDER HASIL SCAN (SIDE-BY-SIDE PANEL TANPA POPUP BLOCKING)
     // ══════════════════════════════════════════════════════════════════════
     function renderResult(data) {
         playScanBeep(data.status);
 
         const isFast = document.getElementById('autoScanToggle')?.checked ?? true;
-        const box = document.getElementById('resultBox');
+        const panel = document.getElementById('scannerResultPanel');
+        const stateIdle = document.getElementById('resStateIdle');
+        const stateLoading = document.getElementById('resStateLoading');
+        const stateActive = document.getElementById('resStateActive');
 
-        if (box) {
-            box.style.display = 'block';
-            let bgClass = 'res-invalid';
+        if (panel && stateActive) {
+            if (stateIdle) stateIdle.style.display = 'none';
+            if (stateLoading) stateLoading.style.display = 'none';
+            stateActive.style.display = 'flex';
+
+            let statusClass = 'status-invalid';
+            let statusTagText = 'TIKET DITOLAK';
             let iconSvg = '';
+            let bannerBg = '#fef2f2';
+            let bannerBorder = '1.5px solid #fecaca';
+            let tagColor = '#991b1b';
 
             if (data.status === 'valid') {
-                bgClass = 'res-valid';
+                statusClass = 'status-valid';
+                statusTagText = 'CHECK-IN BERHASIL';
+                bannerBg = '#f0fdf4';
+                bannerBorder = '1.5px solid #bbf7d0';
+                tagColor = '#166534';
                 iconSvg = `<svg width="34" height="34" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
             } else if (data.status === 'used') {
-                bgClass = 'res-used';
+                statusClass = 'status-used';
+                statusTagText = 'SUDAH DIGUNAKAN';
+                bannerBg = '#fffbeb';
+                bannerBorder = '1.5px solid #fde68a';
+                tagColor = '#b45309';
                 iconSvg = `<svg width="34" height="34" fill="none" stroke="#b45309" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
             } else {
-                bgClass = 'res-invalid';
+                statusClass = 'status-invalid';
+                statusTagText = 'TIKET TIDAK VALID';
+                bannerBg = '#fef2f2';
+                bannerBorder = '1.5px solid #fecaca';
+                tagColor = '#991b1b';
                 iconSvg = `<svg width="34" height="34" fill="none" stroke="#991B1B" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
             }
 
-            box.className = 'res-box ' + bgClass;
+            panel.className = 'scanner-result-panel ' + statusClass;
 
-            let detailsHtml = '';
-            if (data.ticket) {
-                detailsHtml = `<div style="font-size:0.8rem;background:#ffffff;padding:0.6rem 0.85rem;border-radius:10px;border:1px solid #e2e8f0;margin-top:0.5rem;display:flex;gap:1rem;flex-wrap:wrap;">
-                    <div><strong>Kode:</strong> ${data.ticket.code || '-'}</div>
-                    <div><strong>Event:</strong> ${data.ticket.event_name || '-'}</div>
-                    <div><strong>Pemegang:</strong> ${data.ticket.holder_name || '-'}</div>
-                    ${data.ticket.checked_in_at ? `<div><strong>Jam:</strong> ${data.ticket.checked_in_at}</div>` : ''}
-                </div>`;
+            const banner = document.getElementById('resActiveBanner');
+            if (banner) {
+                banner.style.background = bannerBg;
+                banner.style.border = bannerBorder;
+            }
+            const tag = document.getElementById('resActiveStatusTag');
+            if (tag) {
+                tag.textContent = statusTagText;
+                tag.style.color = tagColor;
+            }
+            const iconWrap = document.getElementById('resActiveIcon');
+            if (iconWrap) iconWrap.innerHTML = iconSvg;
+
+            const titleEl = document.getElementById('resActiveTitle');
+            if (titleEl) {
+                titleEl.textContent = data.title || (data.status === 'valid' ? 'Tiket Valid' : (data.status === 'used' ? 'Tiket Sudah Check-In' : 'Tiket Tidak Valid'));
+                titleEl.style.color = tagColor;
             }
 
-            box.innerHTML = `<div style="display:flex;align-items:flex-start;gap:0.85rem;">
-                <div style="flex-shrink:0;margin-top:2px;">${iconSvg}</div>
-                <div style="flex:1;">
-                    <h5 style="font-weight:800;font-size:0.95rem;margin-bottom:0.2rem;">${data.title || 'Status Tiket'}</h5>
-                    <p style="font-size:0.82rem;margin-bottom:0;line-height:1.4;">${data.message || ''}</p>
-                    ${detailsHtml}
-                </div>
-            </div>`;
+            const msgEl = document.getElementById('resActiveMsg');
+            if (msgEl) msgEl.textContent = data.message || '';
+
+            const detailsCard = document.getElementById('resActiveDetailsCard');
+            if (data.ticket) {
+                if (detailsCard) detailsCard.style.display = 'flex';
+                const nameEl = document.getElementById('resActiveName');
+                if (nameEl) nameEl.textContent = data.ticket.holder_name || '-';
+
+                const codeEl = document.getElementById('resActiveCode');
+                if (codeEl) codeEl.textContent = data.ticket.code || '-';
+
+                const eventEl = document.getElementById('resActiveEvent');
+                if (eventEl) eventEl.textContent = data.ticket.event_name || '-';
+
+                const timeEl = document.getElementById('resActiveTime');
+                if (timeEl) timeEl.textContent = data.ticket.checked_in_at || 'Baru saja';
+            } else {
+                if (detailsCard) detailsCard.style.display = 'none';
+            }
+
+            const nextIndicator = document.getElementById('resActiveNextIndicator');
+            if (nextIndicator) {
+                nextIndicator.innerHTML = isFast ? 
+                    `<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#16a34a;animation:pulse 1s infinite;"></span> Siap scan berikutnya (Auto)` :
+                    `<span style="color:#64748b;">Mode Manual Aktif</span>`;
+            }
         }
 
-        // MODE FAST: Siap scan tiket berikutnya dalam 800ms tanpa popup menghalangi
+        // MODE FAST: Siap scan tiket berikutnya dalam 900ms tanpa popup modal menghalangi
         if (isFast) {
             setTimeout(() => {
                 isProcessing = false;
-            }, 850);
+            }, 900);
         } else {
             // Mode Manual: Buka popup modal detail
             openScanModal(data);
