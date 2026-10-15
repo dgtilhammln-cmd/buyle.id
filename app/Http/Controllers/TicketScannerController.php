@@ -523,7 +523,7 @@ class TicketScannerController extends Controller
 
         $requiresPin = !empty($event->gate_scanner_pin) && !session('gate_auth_' . $event->id);
 
-        return view('gate.scanner', compact('event', 'key', 'stats', 'cachedTickets', 'seo', 'gateStatus', 'requiresPin'));
+        return view('gate.scanner', compact('event', 'key', 'stats', 'cachedTickets', 'gateStatus', 'requiresPin'));
     }
 
     /**
