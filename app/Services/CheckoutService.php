@@ -30,7 +30,7 @@ class CheckoutService
     /**
      * Memproses checkout: validasi, buat order, item, payment, kurangi stok, kosongkan cart.
      */
-    public function processCheckout(array $data, User $user): Order
+    public function processCheckout(array $data, ?User $user): Order
     {
         $summary = $this->cartService->getSummary();
         $items = $summary['items'];
@@ -40,11 +40,13 @@ class CheckoutService
         }
 
         // Proteksi: Creator tidak boleh melakukan checkout / membeli produk milik sendiri
-        foreach ($items as $cartItem) {
-            if ($cartItem->product) {
-                $sellerId = $cartItem->product->seller_id;
-                if ($sellerId && (int)$sellerId === (int)$user->id) {
-                    throw new Exception('Sistem mendeteksi Anda mencoba membeli produk Anda sendiri ("' . $cartItem->product->name . '"). Creator tidak diperbolehkan melakukan checkout produk milik sendiri.');
+        if ($user) {
+            foreach ($items as $cartItem) {
+                if ($cartItem->product) {
+                    $sellerId = $cartItem->product->seller_id;
+                    if ($sellerId && (int)$sellerId === (int)$user->id) {
+                        throw new Exception('Sistem mendeteksi Anda mencoba membeli produk Anda sendiri ("' . $cartItem->product->name . '"). Creator tidak diperbolehkan melakukan checkout produk milik sendiri.');
+                    }
                 }
             }
         }
@@ -107,8 +109,8 @@ class CheckoutService
 
         if ($summary['has_food_or_service']) {
             $fnbType = $data['fnb_service_type'] ?? 'delivery';
-            $fnbReceiver = $data['guest_name'] ?? $user->name ?? 'Pembeli';
-            $fnbPhone    = $data['guest_phone'] ?? $user->phone ?? '';
+            $fnbReceiver = $data['guest_name'] ?? $user?->name ?? 'Pembeli';
+            $fnbPhone    = $data['guest_phone'] ?? $user?->phone ?? '';
 
             if ($fnbType === 'dine_in') {
                 $tableNo = !empty($data['fnb_table_number']) ? $data['fnb_table_number'] : 'Meja Kasir / Bebas';
@@ -154,8 +156,8 @@ class CheckoutService
             
             if (empty($shippingAddressArray)) {
                 $shippingAddressArray = [
-                    'receiver_name' => $data['new_address_receiver'] ?? ($data['guest_name'] ?? $user->name ?? ''),
-                    'phone'         => $data['new_address_phone'] ?? ($data['guest_phone'] ?? $user->phone ?? ''),
+                    'receiver_name' => $data['new_address_receiver'] ?? ($data['guest_name'] ?? $user?->name ?? ''),
+                    'phone'         => $data['new_address_phone'] ?? ($data['guest_phone'] ?? $user?->phone ?? ''),
                     'province'      => $data['new_address_province'] ?? '',
                     'city'          => $data['new_address_city'] ?? '',
                     'district'      => $data['new_address_district'] ?? '',
@@ -164,7 +166,7 @@ class CheckoutService
                     'label'         => $data['new_address_label'] ?? 'Rumah',
                 ];
 
-                if ($user->id) {
+                if ($user && $user->id) {
                     try {
                         Address::create([
                             'user_id'       => $user->id,
@@ -185,8 +187,8 @@ class CheckoutService
             }
         } else {
             $shippingAddressArray = [
-                'receiver_name' => $data['guest_name'] ?? ($user->name ?? 'Pembeli'),
-                'phone'         => $data['guest_phone'] ?? ($user->phone ?? ''),
+                'receiver_name' => $data['guest_name'] ?? ($user?->name ?? 'Pembeli'),
+                'phone'         => $data['guest_phone'] ?? ($user?->phone ?? ''),
                 'address'       => 'Pengiriman Otomatis via Email (Produk Digital / Tiket / Jasa Digital)',
                 'label'         => 'Digital Direct Access',
             ];
@@ -198,7 +200,8 @@ class CheckoutService
             // 1. Buat Order
             $order = Order::create([
                 'order_number'     => Order::generateOrderNumber(),
-                'user_id'          => $user->id,
+                'user_id'          => $user?->id ?? null,
+                'customer_email'   => $user?->email ?? ($data['guest_email'] ?? null),
                 'status'           => OrderStatus::Pending,
                 'subtotal'         => $subtotal,
                 'shipping_cost'    => $shippingCost,
@@ -298,7 +301,7 @@ class CheckoutService
                 CouponUsage::create([
                     'coupon_id'       => $coupon->id,
                     'order_id'        => $order->id,
-                    'user_id'         => $user->id,
+                    'user_id'         => $user?->id ?? null,
                     'discount_amount' => $discount,
                 ]);
                 $coupon->increment('used_count');
@@ -307,14 +310,37 @@ class CheckoutService
             // 5. Kosongkan Cart
             $this->cartService->emptyCart();
 
-            // 5. Minta Snap Token dari Midtrans
+            // =========================================================
+            // GRATIS / Rp 0 → Bypass Midtrans, langsung Confirmed
+            // =========================================================
+            if ($total <= 0) {
+                $order->update(['status' => OrderStatus::Confirmed]);
+
+                Payment::create([
+                    'order_id'       => $order->id,
+                    'payment_number' => Payment::generatePaymentNumber(),
+                    'gateway'        => 'free',
+                    'status'         => PaymentStatus::Success,
+                    'amount'         => 0,
+                    'paid_at'        => now(),
+                ]);
+
+                DB::commit();
+
+                // Trigger post-order logic (tiket, notif, dll)
+                $this->markOrderConfirmed($order->fresh(['items.product']));
+
+                return $order->fresh();
+            }
+
+            // 6. Minta Snap Token dari Midtrans (hanya jika total > 0)
             $snapToken = $this->midtransService->createSnapToken($order);
 
             if (!$snapToken) {
                 throw new Exception('Gagal mendapatkan token pembayaran dari Midtrans.');
             }
 
-            // 6. Buat Record Payment
+            // 7. Buat Record Payment (Midtrans)
             Payment::create([
                 'order_id'       => $order->id,
                 'payment_number' => Payment::generatePaymentNumber(),

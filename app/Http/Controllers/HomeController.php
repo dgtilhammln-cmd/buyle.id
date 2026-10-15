@@ -72,8 +72,11 @@ class HomeController extends Controller
                       ->where('store_slug', 'NOT LIKE', '%copywriter%');
                 })
                 ->where('is_active', true)
-                ->whereNotIn('role', ['admin', 'super_admin', 'admin_super'])
+                ->whereNotIn('role', ['admin', 'super_admin', 'admin_super', 'buyer'])
                 ->where('name', 'NOT LIKE', '%copywriter%')
+                ->whereHas('products', function($q) {
+                    $q->where('is_active', true);
+                })
                 ->with(['creatorProfile:id,user_id,store_name,store_slug,is_verified,store_banner_1,bio_config'])
                 ->withCount('products')
                 ->orderByRaw("
@@ -86,7 +89,7 @@ class HomeController extends Controller
                 ->orderByDesc('products_count')
                 ->limit(10)
                 ->get()
-                ->filter(fn($u) => $u->creatorProfile && $u->creatorProfile->isStoreActive())
+                ->filter(fn($u) => $u->creatorProfile && $u->creatorProfile->isStoreActive() && $u->products_count > 0)
                 ->values();
 
             $articles       = Article::published()->with('translations')->latest()->limit(4)->get();

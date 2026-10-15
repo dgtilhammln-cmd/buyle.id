@@ -1,6 +1,7 @@
 {{-- 
     VARIASI PRODUK MANAGER
     Berlaku untuk semua jenis produk: Digital, Tiket, Jasa, Fisik, Makanan.
+    Maksimal 7 variasi per produk, layout compact & proporsional.
 --}}
 @php
     $initialVariants = [];
@@ -21,117 +22,136 @@
     }
 @endphp
 
-<div class="form-group full" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:18px; padding:1.35rem 1.6rem; margin-top:0.75rem; margin-bottom:1.25rem; box-shadow:0 4px 16px rgba(15,23,42,0.02);">
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; border-bottom:1px dashed #cbd5e1; padding-bottom:1rem; flex-wrap:wrap; gap:0.75rem;">
+<div class="form-group full" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:18px; padding:1.25rem 1.4rem; margin-top:0.75rem; margin-bottom:1.25rem; box-shadow:0 4px 16px rgba(15,23,42,0.02); width:100%; box-sizing:border-box;">
+    
+    {{-- Header --}}
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.85rem; border-bottom:1px dashed #cbd5e1; padding-bottom:0.85rem; flex-wrap:wrap; gap:0.75rem;">
         <div>
-            <div style="font-size:1rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:0.5rem;">
-                <span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:8px; background:rgba(30,179,73,0.12); color:#1eb349;">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            <div style="font-size:0.95rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                <span style="display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:8px; background:rgba(30,179,73,0.12); color:#1eb349;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </span>
-                Variasi Produk (Opsional - Maksimal 20 Variasi)
-                <span style="font-size:0.68rem; font-weight:700; background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; padding:0.15rem 0.55rem; border-radius:99px;">Semua Tipe Produk</span>
+                Variasi Produk (Opsional)
+                <span id="variantCountBadge" style="font-size:0.72rem; font-weight:700; background:#f1f5f9; color:#475569; border:1px solid #e2e8f0; padding:0.12rem 0.55rem; border-radius:99px;">0 / 7</span>
             </div>
-            <span class="form-hint" style="font-size:0.78rem; color:#64748b; margin-top:4px; display:block; line-height:1.45;">
-                Tambahkan pilihan varian seperti ukuran, warna, paket lisensi, porsi menu, atau tipe tiket dengan harga & stok masing-masing.
+            <span class="form-hint" style="font-size:0.76rem; color:#64748b; margin-top:3px; display:block; line-height:1.4;">
+                Tambahkan pilihan varian (maksimal 7 opsi). Setiap varian dapat memiliki harga dan stok khusus.
             </span>
         </div>
+        
         <button type="button" onclick="addVariantRow()" id="btnAddVariant"
-            style="background:linear-gradient(135deg, #1eb349, #16a34a); color:#fff; border:none; padding:0.55rem 1.1rem; border-radius:10px; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(30,179,73,0.25); transition:all 0.2s;"
-            onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            style="background:linear-gradient(135deg, #1eb349, #16a34a); color:#fff; border:none; padding:0.5rem 1rem; border-radius:10px; font-weight:700; font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(30,179,73,0.22); transition:all 0.2s;"
+            onmouseover="if(!this.disabled) this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             + Tambah Variasi
         </button>
     </div>
 
-    {{-- Type Examples Guide --}}
-    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem; margin-bottom:1.1rem; display:flex; flex-direction:column; gap:0.35rem; font-size:0.75rem; color:#64748b;">
-        <div style="font-weight:700; color:#334155; display:flex; align-items:center; gap:0.35rem;">
-            <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-            Contoh Penggunaan Variasi di Setiap Tipe Produk:
-        </div>
-        <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:2px;">
-            <span style="background:#fff; border:1px solid #cbd5e1; padding:0.2rem 0.6rem; border-radius:6px;"><b>Digital:</b> Basic / Pro / VIP / Lifetime</span>
-            <span style="background:#fff; border:1px solid #cbd5e1; padding:0.2rem 0.6rem; border-radius:6px;"><b>Tiket:</b> Presale 1 / Presale 2 / VIP Pass / Day 1</span>
-            <span style="background:#fff; border:1px solid #cbd5e1; padding:0.2rem 0.6rem; border-radius:6px;"><b>Fisik:</b> Merah - M / Hitam - XL / Bundle 3 Pcs</span>
-            <span style="background:#fff; border:1px solid #cbd5e1; padding:0.2rem 0.6rem; border-radius:6px;"><b>Makanan:</b> Regular / Jumbo / Level 1-5 / Extra Keju</span>
-            <span style="background:#fff; border:1px solid #cbd5e1; padding:0.2rem 0.6rem; border-radius:6px;"><b>Jasa:</b> 1 Sesi (60 Menit) / Paket Lengkap / Express</span>
+    {{-- Contoh Penggunaan Sesuai Tipe Produk yang Dipilih --}}
+    <div id="variantTypeExampleBox" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:0.6rem 0.85rem; margin-bottom:0.85rem; display:flex; align-items:center; gap:0.5rem; font-size:0.76rem; color:#166534; line-height:1.45;">
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; background:rgba(22,101,52,0.1); color:#15803d; flex-shrink:0;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        </span>
+        <div id="variantTypeExampleContent">
+            {{-- Diisi secara dinamis via JS berdasarkan pilihan Tipe Produk --}}
+            <b>Contoh Variasi:</b> Paket Basic / Pro / VIP / Lifetime Access
         </div>
     </div>
 
-    <div id="variantsContainer" style="display:flex; flex-direction:column; gap:0.85rem;">
-        {{-- Rows dimasukkan secara dinamis via JavaScript --}}
+    {{-- Tabel Variasi Compact & Proporsional --}}
+    <div style="width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+        <table style="width:100%; min-width:580px; border-collapse:separate; border-spacing:0 6px;">
+            <thead>
+                <tr style="font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.04em;">
+                    <th style="width:44px; text-align:center; padding:0 4px 4px;">Foto</th>
+                    <th style="padding:0 6px 4px; text-align:left;">Nama Variasi <span style="color:#ef4444;">*</span></th>
+                    <th style="width:135px; padding:0 6px 4px; text-align:left;">Harga (Rp)</th>
+                    <th style="width:90px; padding:0 6px 4px; text-align:left;">Stok</th>
+                    <th style="width:90px; padding:0 6px 4px; text-align:left;">SKU</th>
+                    <th style="width:36px; text-align:center; padding:0 4px 4px;"></th>
+                </tr>
+            </thead>
+            <tbody id="variantsContainer">
+                {{-- Baris dimasukkan dinamis via JavaScript --}}
+            </tbody>
+        </table>
     </div>
 
-    <div id="noVariantsPlaceholder" style="display:none; text-align:center; padding:1.5rem 1rem; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:12px; color:#94a3b8; font-size:0.82rem;">
-        Belum ada variasi. Klik tombol <b>"+ Tambah Variasi"</b> jika produk memiliki pilihan opsi, ukuran, paket, atau warna.
+    <div id="noVariantsPlaceholder" style="display:none; text-align:center; padding:1.25rem 1rem; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; color:#94a3b8; font-size:0.8rem; margin-top:4px;">
+        Belum ada variasi. Klik tombol <b>"+ Tambah Variasi"</b> jika produk memiliki pilihan paket, opsi, ukuran, atau warna.
     </div>
 </div>
 
 <style>
-    .variant-row-card {
+    .variant-tr-row td {
         background: #ffffff;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 14px;
-        padding: 0.9rem 1.1rem;
-        display: grid;
-        grid-template-columns: 58px 1fr 140px 100px 100px 36px;
-        gap: 0.75rem;
-        align-items: center;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        border-top: 1.5px solid #e2e8f0;
+        border-bottom: 1.5px solid #e2e8f0;
+        padding: 6px;
+        vertical-align: middle;
+        transition: background 0.15s;
     }
-    .variant-row-card:hover {
+    .variant-tr-row td:first-child {
+        border-left: 1.5px solid #e2e8f0;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+        text-align: center;
+    }
+    .variant-tr-row td:last-child {
+        border-right: 1.5px solid #e2e8f0;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        text-align: center;
+    }
+    .variant-tr-row:hover td {
+        background: #fcfdfc;
         border-color: #cbd5e1;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+    .variant-compact-input {
+        width: 100%;
+        height: 38px;
+        padding: 0.45rem 0.65rem;
+        font-size: 0.81rem;
+        font-family: 'Montserrat', sans-serif;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 8px;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        background: #ffffff;
+        color: #0f172a;
+    }
+    .variant-compact-input:focus {
+        border-color: #1eb349;
+        box-shadow: 0 0 0 2.5px rgba(30,179,73,0.12);
+    }
+    .variant-compact-input::placeholder {
+        color: #94a3b8;
+        font-size: 0.76rem;
     }
     .variant-img-upload-box {
-        position: relative;
-        width: 54px;
-        height: 54px;
-        border-radius: 10px;
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
         border: 1.5px dashed #cbd5e1;
         background: #f8fafc;
-        display: flex;
-        flex-direction: column;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         overflow: hidden;
+        position: relative;
+        margin: 0 auto;
         transition: all 0.2s;
     }
     .variant-img-upload-box:hover {
         border-color: #1eb349;
         background: #f0fdf4;
     }
-    .variant-img-upload-box img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    .variant-input {
-        width: 100%;
-        padding: 0.55rem 0.75rem;
-        font-size: 0.82rem;
-        font-family: 'Montserrat', sans-serif;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 9px;
-        outline: none;
-        box-sizing: border-box;
-        transition: border-color 0.2s;
-        background: #ffffff;
-        color: #0f172a;
-    }
-    .variant-input:focus {
-        border-color: #1eb349;
-        box-shadow: 0 0 0 3px rgba(30,179,73,0.12);
-    }
-    .variant-input::placeholder {
-        color: #94a3b8;
-    }
     .variant-del-btn {
-        width: 34px;
-        height: 34px;
-        border-radius: 8px;
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
         border: none;
         background: rgba(239, 68, 68, 0.08);
         color: #ef4444;
@@ -139,35 +159,91 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: all 0.15s;
     }
     .variant-del-btn:hover {
         background: rgba(239, 68, 68, 0.18);
         transform: scale(1.05);
     }
-    @media (max-width: 900px) {
-        .variant-row-card {
-            grid-template-columns: 54px 1fr 1fr;
-            gap: 0.6rem;
-            padding: 0.85rem;
-        }
-        .variant-row-card .full-mobile {
-            grid-column: 1 / -1;
-        }
-    }
 </style>
 
 <script>
     const INITIAL_VARIANTS = @json($initialVariants);
+    const MAX_VARIANTS = 7;
+
+    const VARIANT_EXAMPLES = {
+        'service': '<b>Contoh Variasi Jasa:</b> 1 Sesi (60 Menit) &bull; Paket Lengkap &bull; Express (1 Hari) &bull; Revisi Unlimited',
+        'external_link': '<b>Contoh Variasi Digital:</b> Lisensi Personal &bull; Lisensi Komersial &bull; Paket Pro &bull; Lifetime Access',
+        'digital': '<b>Contoh Variasi Digital:</b> Lisensi Personal &bull; Lisensi Komersial &bull; Paket Pro &bull; Lifetime Access',
+        'ticket': '<b>Contoh Variasi Tiket:</b> Presale 1 &bull; Presale 2 &bull; VIP Pass &bull; Day 1 &bull; All Days Access',
+        'physical': '<b>Contoh Variasi Fisik:</b> Merah - M &bull; Hitam - XL &bull; Bundle 3 Pcs &bull; Ukuran 500ml',
+        'makanan': '<b>Contoh Variasi Makanan:</b> Regular &bull; Jumbo &bull; Level Pedas 1-5 &bull; Extra Topping Keju'
+    };
+
+    function updateVariantTypeExample(type) {
+        const contentBox = document.getElementById('variantTypeExampleContent');
+        if (!contentBox) return;
+
+        const exampleHtml = VARIANT_EXAMPLES[type] || VARIANT_EXAMPLES['external_link'];
+        contentBox.innerHTML = exampleHtml;
+    }
+
+    function updateVariantCountUI() {
+        const container = document.getElementById('variantsContainer');
+        const countBadge = document.getElementById('variantCountBadge');
+        const btnAdd = document.getElementById('btnAddVariant');
+        const placeholder = document.getElementById('noVariantsPlaceholder');
+
+        const count = container ? container.children.length : 0;
+
+        if (countBadge) {
+            countBadge.innerText = `${count} / ${MAX_VARIANTS}`;
+            if (count >= MAX_VARIANTS) {
+                countBadge.style.background = '#fef2f2';
+                countBadge.style.color = '#dc2626';
+                countBadge.style.borderColor = '#fecaca';
+            } else {
+                countBadge.style.background = '#f1f5f9';
+                countBadge.style.color = '#475569';
+                countBadge.style.borderColor = '#e2e8f0';
+            }
+        }
+
+        if (btnAdd) {
+            if (count >= MAX_VARIANTS) {
+                btnAdd.disabled = true;
+                btnAdd.style.opacity = '0.55';
+                btnAdd.style.cursor = 'not-allowed';
+                btnAdd.title = 'Maksimal 7 variasi per produk';
+            } else {
+                btnAdd.disabled = false;
+                btnAdd.style.opacity = '1';
+                btnAdd.style.cursor = 'pointer';
+                btnAdd.title = '';
+            }
+        }
+
+        if (placeholder) {
+            placeholder.style.display = count === 0 ? 'block' : 'none';
+        }
+    }
 
     function addVariantRow(data = null) {
         const container = document.getElementById('variantsContainer');
-        const placeholder = document.getElementById('noVariantsPlaceholder');
         if (!container) return;
 
         const currentCount = container.children.length;
-        if (currentCount >= 20) {
-            alert('Maksimal 20 variasi produk.');
+        if (currentCount >= MAX_VARIANTS) {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Batas Maksimal Variasi',
+                    text: `Maksimal hanya diperbolehkan ${MAX_VARIANTS} variasi per produk.`,
+                    confirmButtonColor: '#1eb349'
+                });
+            } else {
+                alert(`Maksimal ${MAX_VARIANTS} variasi per produk.`);
+            }
             return;
         }
 
@@ -182,54 +258,54 @@
         const vImg = data && data.existing_image ? data.existing_image : '';
         const vImgUrl = vImg ? (vImg.startsWith('http') ? vImg : ('{{ asset("storage") }}/' + vImg.replace(/^\/+/, ''))) : '';
 
-        const row = document.createElement('div');
-        row.className = 'variant-row-card';
-        row.id = rowId;
+        const tr = document.createElement('tr');
+        tr.className = 'variant-tr-row';
+        tr.id = rowId;
 
-        row.innerHTML = `
-            ${vId ? `<input type="hidden" name="variants[${index}][id]" value="${vId}">` : ''}
-            <input type="hidden" name="variants[${index}][existing_image]" value="${vImg}">
-            
-            {{-- Image Box --}}
-            <label class="variant-img-upload-box" title="Upload foto varian (opsional)">
-                <input type="file" name="variants[${index}][image]" accept="image/*" style="display:none;" onchange="previewVariantImage(this, '${rowId}_img')">
-                <img id="${rowId}_img" src="${vImgUrl}" style="${vImgUrl ? 'display:block;' : 'display:none;'}">
-                <div id="${rowId}_ph" style="${vImgUrl ? 'display:none;' : 'display:flex; flex-direction:column; align-items:center; justify-content:center;'}">
-                    <svg width="18" height="18" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    <span style="font-size:8px; color:#94a3b8; font-weight:700; margin-top:2px;">FOTO</span>
-                </div>
-            </label>
+        tr.innerHTML = `
+            {{-- Foto Thumbnail Box --}}
+            <td>
+                ${vId ? `<input type="hidden" name="variants[${index}][id]" value="${vId}">` : ''}
+                <input type="hidden" name="variants[${index}][existing_image]" value="${vImg}">
+                <label class="variant-img-upload-box" title="Foto varian (opsional)">
+                    <input type="file" name="variants[${index}][image]" accept="image/*" style="display:none;" onchange="previewVariantImage(this, '${rowId}_img')">
+                    <img id="${rowId}_img" src="${vImgUrl}" style="${vImgUrl ? 'display:block;' : 'display:none;'} width:100%; height:100%; object-fit:cover;">
+                    <div id="${rowId}_ph" style="${vImgUrl ? 'display:none;' : 'display:flex; flex-direction:column; align-items:center; justify-content:center;'}">
+                        <svg width="15" height="15" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                </label>
+            </td>
 
-            {{-- Nama Varian --}}
-            <div>
-                <input type="text" name="variants[${index}][name]" value="${escapeHtml(vName)}" class="variant-input" placeholder="Nama Varian (cth: Merah - XL / Paket VIP / Jumbo)" required autocomplete="off">
-            </div>
+            {{-- Nama Variasi --}}
+            <td>
+                <input type="text" name="variants[${index}][name]" value="${escapeHtml(vName)}" class="variant-compact-input" placeholder="Nama variasi (cth: XL / VIP / Sesi 1)" required autocomplete="off">
+            </td>
 
             {{-- Harga Khusus --}}
-            <div>
-                <input type="text" name="variants[${index}][price]" value="${vPrice ? formatNumber(vPrice) : ''}" class="variant-input currency-input" placeholder="Harga (Rp) / Ikut Utama" autocomplete="off" oninput="formatCurrencyInput(this)">
-            </div>
+            <td>
+                <input type="text" name="variants[${index}][price]" value="${vPrice ? formatNumber(vPrice) : ''}" class="variant-compact-input currency-input" placeholder="Ikut harga utama" autocomplete="off" oninput="formatCurrencyInput(this)">
+            </td>
 
             {{-- Stok --}}
-            <div>
-                <input type="number" name="variants[${index}][stock]" value="${vStock}" class="variant-input" placeholder="Stok (∞)" min="0" step="1">
-            </div>
+            <td>
+                <input type="number" name="variants[${index}][stock]" value="${vStock}" class="variant-compact-input" placeholder="∞ (Unlimited)" min="0" step="1">
+            </td>
 
             {{-- SKU --}}
-            <div>
-                <input type="text" name="variants[${index}][sku]" value="${escapeHtml(vSku)}" class="variant-input" placeholder="SKU (opsional)">
-            </div>
+            <td>
+                <input type="text" name="variants[${index}][sku]" value="${escapeHtml(vSku)}" class="variant-compact-input" placeholder="Opsional">
+            </td>
 
-            {{-- Hapus --}}
-            <div style="text-align:center;">
+            {{-- Tombol Hapus --}}
+            <td>
                 <button type="button" onclick="removeVariantRow('${rowId}')" class="variant-del-btn" title="Hapus varian ini">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                 </button>
-            </div>
+            </td>
         `;
 
-        container.appendChild(row);
-        if (placeholder) placeholder.style.display = 'none';
+        container.appendChild(tr);
+        updateVariantCountUI();
     }
 
     function removeVariantRow(rowId) {
@@ -237,11 +313,7 @@
         if (row) {
             row.remove();
         }
-        const container = document.getElementById('variantsContainer');
-        const placeholder = document.getElementById('noVariantsPlaceholder');
-        if (container && container.children.length === 0 && placeholder) {
-            placeholder.style.display = 'block';
-        }
+        updateVariantCountUI();
     }
 
     function previewVariantImage(input, imgId) {
@@ -285,13 +357,20 @@
             .replace(/'/g, "&#039;");
     }
 
-    // Auto-populate on DOM load
+    // Auto-populate on DOM load and attach type listener
     document.addEventListener('DOMContentLoaded', function() {
         if (Array.isArray(INITIAL_VARIANTS) && INITIAL_VARIANTS.length > 0) {
             INITIAL_VARIANTS.forEach(v => addVariantRow(v));
-        } else {
-            const placeholder = document.getElementById('noVariantsPlaceholder');
-            if (placeholder) placeholder.style.display = 'block';
+        }
+        updateVariantCountUI();
+
+        // Listen to product type select changes
+        const pTypeSelect = document.getElementById('productTypeSelect');
+        if (pTypeSelect) {
+            updateVariantTypeExample(pTypeSelect.value);
+            pTypeSelect.addEventListener('change', function() {
+                updateVariantTypeExample(this.value);
+            });
         }
     });
 </script>

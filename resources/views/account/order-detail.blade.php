@@ -493,7 +493,8 @@
                     Pembayaran</h3>
                 <div style="margin-bottom: 1.5rem;">
                     <div class="summary-row">
-                        <span>Total Harga Barang</span>
+                        <span>Total Harga Produk
+                        </span>
                         <span>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span>
                     </div>
                     <div class="summary-row">

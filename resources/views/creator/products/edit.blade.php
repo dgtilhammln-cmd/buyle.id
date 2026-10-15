@@ -1364,6 +1364,10 @@
                     extInput.removeAttribute('required');
                 }
             }
+
+            if (typeof updateVariantTypeExample === 'function') {
+                updateVariantTypeExample(val);
+            }
         }
 
         function handleBuyleCheckoutToggle(checked) {

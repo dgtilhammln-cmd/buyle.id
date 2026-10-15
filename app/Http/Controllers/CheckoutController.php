@@ -50,38 +50,21 @@ class CheckoutController extends Controller
     public function store(CheckoutRequest $request)
     {
         $data = $request->validated();
-        $oldSessionId = session()->getId();
 
         try {
             if (auth()->guest()) {
-                $email = $data['guest_email'];
-                $user = User::where('email', $email)->first();
-
-                if (!$user) {
-                    $password = !empty($data['guest_password']) ? $data['guest_password'] : Str::random(12);
-                    $user = User::create([
-                        'name'     => $data['guest_name'],
-                        'email'    => $email,
-                        'phone'    => $data['guest_phone'] ?? null,
-                        'password' => Hash::make($password),
-                        'role'     => 'buyer',
-                    ]);
-
-                    Auth::login($user, true);
-                    $user->notify(new \App\Notifications\WelcomeNotification($password));
-                } else {
-                    Auth::login($user, true);
-                }
-
-                $request->session()->regenerate();
-                $this->cartService->mergeGuestCart($user->id, $oldSessionId);
+                // Guest checkout: JANGAN buat akun, cukup simpan email di order
+                $user = null;
             } else {
                 $user = auth()->user();
             }
 
             $order = $this->checkoutService->processCheckout($data, $user);
-            
-            // Redirect ke halaman finish yang akan menampilkan popup Midtrans
+
+            // Simpan order_number di session agar guest bisa akses halaman finish
+            session(['guest_order_number' => $order->order_number]);
+
+            // Redirect ke halaman finish
             return redirect()->route('checkout.finish', $order->order_number);
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage())->withInput();
@@ -93,19 +76,34 @@ class CheckoutController extends Controller
      */
     public function finish(string $orderNumber)
     {
-        if (!auth()->check()) {
-            return redirect()->route('login')->with('error', 'Silakan login untuk melihat detail pesanan Anda.');
+        // Temukan order
+        $orderQuery = Order::with(['payment', 'items.product.seller', 'items.variantValue.option', 'user'])
+                          ->where('order_number', $orderNumber);
+
+        if (auth()->check()) {
+            // User login: cari by user_id ATAU customer_email (jaga-jaga)
+            $orderQuery->where(function($q) {
+                $q->where('user_id', auth()->id())
+                  ->orWhere('customer_email', auth()->user()->email);
+            });
+        } else {
+            // Guest: izinkan jika order_number tersimpan di session
+            $guestOrderNumber = session('guest_order_number');
+            if ($guestOrderNumber !== $orderNumber) {
+                return redirect()->route('home')->with('error', 'Pesanan tidak ditemukan.');
+            }
         }
 
-        $order = Order::with(['payment', 'items.product.seller', 'items.variantValue.option', 'user'])->where('order_number', $orderNumber)
-                      ->where('user_id', auth()->id())
-                      ->firstOrFail();
+        $order = $orderQuery->firstOrFail();
+
+        // Jika sudah gratis / confirmed, langsung tampilkan tanpa cek Midtrans
+        $isFree = ($order->total <= 0 || ($order->payment && $order->payment->gateway === 'free'));
 
         // Auto-sync status dari Midtrans jika di database belum tercatat Lunas/Success
         $isPaidInDb = ($order->payment && $order->payment->status === PaymentStatus::Success)
             || in_array($order->status, [OrderStatus::Confirmed, OrderStatus::Delivered, OrderStatus::Processing]);
 
-        if (!$isPaidInDb) {
+        if (!$isFree && !$isPaidInDb) {
             try {
                 $midtrans = app(\App\Services\MidtransService::class);
                 $midtransOrderId = 'BUYLE-' . $order->id;
@@ -140,11 +138,14 @@ class CheckoutController extends Controller
                         });
 
                         try {
+                            $buyerEmail = $order->user?->email ?? $order->customer_email ?? '';
+                            $buyerName  = $order->user?->name ?? ($order->shipping_address['receiver_name'] ?? 'Pembeli');
+                            $buyerPhone = $order->user?->phone ?? '';
                             \App\Jobs\ProcessSuccessfulOrderJob::dispatchSync(
                                 orderId:    $order->id,
-                                buyerEmail: $order->user->email,
-                                buyerName:  $order->user->name,
-                                buyerPhone: $order->user->phone ?? '',
+                                buyerEmail: $buyerEmail,
+                                buyerName:  $buyerName,
+                                buyerPhone: $buyerPhone,
                             );
                         } catch (\Throwable $e) {
                             \Log::error("ProcessSuccessfulOrderJob dispatchSync error: " . $e->getMessage());

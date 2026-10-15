@@ -62,7 +62,7 @@ class UpdateProductRequest extends FormRequest
             'meta_title'                => ['nullable', 'string', 'max:255'],
             'meta_desc'                 => ['nullable', 'string', 'max:1000'],
             'meta_keywords'             => ['nullable', 'string', 'max:500'],
-            'variants'                  => ['nullable', 'array', 'max:20'],
+            'variants'                  => ['nullable', 'array', 'max:7'],
             'variants.*.id'             => ['nullable'],
             'variants.*.name'           => ['nullable', 'string', 'max:100'],
             'variants.*.price'          => ['nullable', 'numeric', 'min:0'],
@@ -91,6 +91,7 @@ class UpdateProductRequest extends FormRequest
             'meta_title.max'                 => 'Meta Title SEO maksimal 255 karakter.',
             'meta_desc.max'                  => 'Meta Description SEO maksimal 1000 karakter.',
             'meta_keywords.max'              => 'Meta Keywords SEO maksimal 500 karakter.',
+            'variants.max'                   => 'Maksimal 7 variasi per produk.',
         ];
     }
 

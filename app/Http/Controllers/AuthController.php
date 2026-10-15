@@ -205,6 +205,15 @@ class AuthController extends Controller
             \Log::warning('WelcomeNotification failed: ' . $e->getMessage());
         }
 
+        // Link order guest (yang checkout tanpa akun) ke akun baru ini
+        try {
+            \App\Models\Order::where('customer_email', $user->email)
+                ->whereNull('user_id')
+                ->update(['user_id' => $user->id]);
+        } catch (\Throwable $e) {
+            \Log::warning('Link guest orders on register failed: ' . $e->getMessage());
+        }
+
         $oldSessionId = $pending['old_session_id'] ?? null;
         session()->forget(['pending_register', 'otp_expires_at', 'otp_email']);
 
@@ -218,6 +227,7 @@ class AuthController extends Controller
                 \Log::warning('Merge guest cart on register failed: ' . $e->getMessage());
             }
         }
+
 
         $redirectRoute = route('account.profile');
         if ($user->role === 'super_admin' || $user->role === 'admin') {

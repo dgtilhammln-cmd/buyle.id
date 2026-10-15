@@ -271,11 +271,14 @@ class ServiceController extends Controller
         $allCreators = collect();
         if (request('tab') === 'creators' || request()->filled('q')) {
             $creatorsQuery = \App\Models\User::whereHas('creatorProfile')
-                ->whereNotIn('role', ['admin', 'super_admin', 'admin_super'])
+                ->whereNotIn('role', ['admin', 'super_admin', 'admin_super', 'buyer'])
                 ->where('name', 'NOT LIKE', '%copywriter%')
                 ->whereDoesntHave('creatorProfile', function($q) {
                     $q->where('store_name', 'LIKE', '%copywriter%')
                       ->orWhere('store_slug', 'LIKE', '%copywriter%');
+                })
+                ->whereHas('products', function($q) {
+                    $q->where('is_active', true);
                 })
                 ->with(['creatorProfile'])
                 ->withCount('products')

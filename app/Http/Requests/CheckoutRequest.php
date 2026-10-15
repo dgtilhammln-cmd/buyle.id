@@ -35,10 +35,9 @@ class CheckoutRequest extends FormRequest
         ];
 
         if (!auth()->check()) {
-            $rules['guest_name']     = 'required|string|max:100';
-            $rules['guest_email']    = 'required|email';
-            $rules['guest_phone']    = 'required|string|max:20';
-            $rules['guest_password'] = 'nullable|string|min:6';
+            $rules['guest_email'] = 'required|email';
+            $rules['guest_name']  = 'nullable|string|max:100';
+            $rules['guest_phone'] = 'nullable|string|max:20';
         }
 
         return $rules;
@@ -48,11 +47,8 @@ class CheckoutRequest extends FormRequest
     {
         return [
             'coupon_code.exists'   => 'Kode kupon tidak valid atau tidak ditemukan.',
-            'guest_name.required'  => 'Nama lengkap wajib diisi.',
             'guest_email.required' => 'Email wajib diisi.',
             'guest_email.email'    => 'Format email tidak valid.',
-            'guest_phone.required' => 'No. WhatsApp wajib diisi.',
-            'guest_password.min'   => 'Kata sandi minimal 6 karakter.',
         ];
     }
 }

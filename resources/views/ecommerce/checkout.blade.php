@@ -637,24 +637,16 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Nama Lengkap <span style="color:#EF4444;">*</span></label>
-                            <input type="text" name="guest_name" class="form-input" value="{{ old('guest_name') }}" required
-                                placeholder="Masukkan nama lengkap Anda">
+                            <label class="form-label">Nama (Opsional)</label>
+                            <input type="text" name="guest_name" class="form-input" value="{{ old('guest_name') }}"
+                                placeholder="Nama Anda (boleh dikosongkan)">
                         </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                            <div class="form-group">
-                                <label class="form-label">Email (Untuk terima File/Akses) <span
-                                        style="color:#EF4444;">*</span></label>
-                                <input type="email" name="guest_email" class="form-input" value="{{ old('guest_email') }}"
-                                    required placeholder="emailaktif@gmail.com">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">WhatsApp Aktif<span style="color:#EF4444;">*</span></label>
-                                <input type="text" name="guest_phone" class="form-input" value="{{ old('guest_phone') }}"
-                                    required placeholder="08xxxxxxxxxx">
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label">Email (Wajib) <span style="color:#EF4444;">*</span></label>
+                            <input type="email" name="guest_email" class="form-input" value="{{ old('guest_email') }}"
+                                required placeholder="emailaktif@gmail.com">
+                            <div style="font-size:0.75rem;color:#64748B;margin-top:0.35rem;">📩 File/akses digital akan dikirim ke email ini setelah pembayaran berhasil.</div>
                         </div>
-                        <input type="hidden" name="guest_password" value="">
                     </div>
                 @else
                 {{-- LOGGED IN BUYER INFO --}}
@@ -1016,7 +1008,7 @@
 
                                     <div class="ticket-holder-row"
                                         style="margin-bottom:{{ $ticketIdx < $qty - 1 ? '1rem' : '0' }};
-                                                                                                                                                                                                                                        {{ !$loop->last || $ticketIdx < $qty - 1 ? 'padding-bottom:1rem;border-bottom:1px dashed #E2E8F0;' : '' }}">
+                                                                                                                                                                                                                                                                        {{ !$loop->last || $ticketIdx < $qty - 1 ? 'padding-bottom:1rem;border-bottom:1px dashed #E2E8F0;' : '' }}">
 
                                         {{-- Slot label dengan nomor tiket --}}
                                         <div
@@ -1129,9 +1121,14 @@
                                 <div style="flex:1;">
                                     <div class="summary-title">{{ $item->product->name ?? 'Produk Telah Dihapus' }}</div>
                                     @if($item->variantValue)
-                                        <div style="font-size:0.75rem; color:#1eb349; font-weight:600; margin-bottom:0.2rem; display:inline-flex; align-items:center; gap:3px;">
-                                            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                                            {{ $item->variantValue->variantOption->name ?? 'Varian' }}: {{ $item->variantValue->value }}
+                                        <div
+                                            style="font-size:0.75rem; color:#1eb349; font-weight:600; margin-bottom:0.2rem; display:inline-flex; align-items:center; gap:3px;">
+                                            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                viewBox="0 0 24 24">
+                                                <polyline points="20 6 9 17 4 12" />
+                                            </svg>
+                                            {{ $item->variantValue->variantOption->name ?? 'Varian' }}:
+                                            {{ $item->variantValue->value }}
                                         </div>
                                     @endif
                                     <div class="summary-meta">{{ $item->qty }} x Rp
@@ -1147,7 +1144,7 @@
                     <input type="hidden" name="shipping_cost" value="0" id="shipping_cost_input">
 
                     <div class="summary-row">
-                        <span>Total Harga Barang</span>
+                        <span>Total Harga Produk</span>
                         <span>Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
                     </div>
 
@@ -1295,10 +1292,19 @@
                     <div class="checkout-sticky-footer" style="margin-top: 1.5rem;">
                         <div class="summary-total" style="margin-top:0; padding-top:1rem;">
                             <span>Total Belanja</span>
-                            <span id="total-row-val">Rp
-                                {{ number_format($summary['subtotal'] + $pfAmt + $afAmt, 0, ',', '.') }}</span>
+                            @if($summary['subtotal'] <= 0)
+                                <span id="total-row-val" style="color:#16a34a;font-size:1.3rem;font-weight:900;letter-spacing:-0.5px;">🎉 GRATIS</span>
+                            @else
+                                <span id="total-row-val">Rp
+                                    {{ number_format($summary['subtotal'] + $pfAmt + $afAmt, 0, ',', '.') }}</span>
+                            @endif
                         </div>
-                        <button type="submit" class="btn-pay" onclick="prepareSubmit(event)">Pilih Pembayaran</button>
+                        @if($summary['subtotal'] <= 0)
+                            <button type="submit" class="btn-pay" onclick="prepareSubmit(event)"
+                                style="background:linear-gradient(135deg,#16a34a,#22c55e);">🎁 Dapatkan Sekarang (Gratis)</button>
+                        @else
+                            <button type="submit" class="btn-pay" onclick="prepareSubmit(event)">Pilih Pembayaran</button>
+                        @endif
                     </div>
 
                     <div class="secure-badge"
@@ -1946,17 +1952,15 @@
 
         // Validate guest contact info
         if (isGuest) {
-            const guestName = document.querySelector('input[name="guest_name"]')?.value?.trim();
             const guestEmail = document.querySelector('input[name="guest_email"]')?.value?.trim();
-            const guestPhone = document.querySelector('input[name="guest_phone"]')?.value?.trim();
 
-            if (!guestName || !guestEmail || !guestPhone) {
+            if (!guestEmail) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Data Pembeli Belum Lengkap',
-                    text: 'Mohon lengkapi Nama Lengkap, Email, dan No. WhatsApp aktif Anda.',
+                    title: 'Email Belum Diisi',
+                    text: 'Mohon isi Email aktif Anda untuk menerima file/akses digital.',
                     confirmButtonColor: '#1eb349',
-                    confirmButtonText: 'Lengkapi Data'
+                    confirmButtonText: 'Isi Sekarang'
                 });
                 e.preventDefault();
                 return;
