@@ -22,7 +22,7 @@ Sistem tiket Buyle dirancang untuk menangani alur menyeluruh acara/konser mulai 
        │
        ▼ (Hari-H Konser)
 [ Scanner Gate Check-in ] ──────► Triple-Engine (Native BarcodeDetector + Adaptive jsQR + Html5Qrcode)
-                                  Hardware USB Webcam Auto-Switching + Audio Synthesizer
+                                  Hardware USB External Cam Auto-Switching + Audio Synthesizer
 ```
 
 ---

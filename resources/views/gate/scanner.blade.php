@@ -284,6 +284,13 @@
             flex-direction: column;
             gap: 1rem;
         }
+
+        @media (max-width: 767px) {
+            /* Khusus Mobile: info hasil scan ditampilkan sebagai popup modal, bukan di bawah kamera */
+            .result-panel {
+                display: none !important;
+            }
+        }
         
         .result-banner {
             border-radius: 1rem;
@@ -633,6 +640,44 @@
             <button type="button" class="btn-verify-manual" onclick="submitManualCode()">
                 Verifikasi Tiket Sekarang
             </button>
+        </div>
+    </div>
+
+    <!-- POPUP RESULT MODAL KHUSUS MOBILE (INFO POP UP BUKAN DI BAWAH & TOMBOL KECIL NEXT) -->
+    <div id="gateMobileResultModal" onclick="if(event.target===this) closeGateMobileModal()" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.72); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:1rem; opacity:0; transition:all 0.25s ease;">
+        <div id="gateMobileResultBox" style="background:#ffffff; border-radius:22px; padding:1.35rem 1.25rem; width:100%; max-width:340px; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.35); transform:scale(0.92); transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);">
+            
+            <div id="gateMobBubble" style="width:54px; height:54px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; margin-bottom:0.85rem;"></div>
+
+            <h3 id="gateMobTitle" style="font-size:1.18rem; font-weight:800; margin:0 0 0.25rem; font-family:'Montserrat',sans-serif;"></h3>
+            <p id="gateMobMsg" style="font-size:0.8rem; color:#64748B; margin:0 0 0.85rem; line-height:1.45;"></p>
+
+            <div id="gateMobCard" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem; text-align:left; font-size:0.82rem; margin-bottom:1.15rem; display:none;">
+                <div style="margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:#64748B; font-size:0.78rem;">Peserta</span>
+                    <strong id="mob-val-holder" style="color:#0F172A; font-size:0.82rem;">-</strong>
+                </div>
+                <div style="margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:#64748B; font-size:0.78rem;">Kode Tiket</span>
+                    <code id="mob-val-code" style="color:#166534; font-family:monospace; font-size:0.82rem; background:#f0fdf4; padding:2px 6px; border-radius:4px; border:1px solid #bbf7d0;">-</code>
+                </div>
+                <div id="mob-row-nik" style="margin-bottom:6px; display:none; justify-content:space-between; align-items:center;">
+                    <span style="color:#64748B; font-size:0.78rem;">NIK</span>
+                    <span id="mob-val-nik" style="color:#0F172A; font-size:0.8rem; font-weight:600;">-</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-top:6px; border-top:1px dashed #E2E8F0; margin-top:4px;">
+                    <span style="color:#64748B; font-size:0.78rem;">Waktu</span>
+                    <strong id="mob-val-time" style="color:#166534; font-size:0.8rem;">-</strong>
+                </div>
+            </div>
+
+            {{-- Button kecil Next jika scan berhasil --}}
+            <div style="display:flex; justify-content:center; align-items:center;">
+                <button type="button" id="gateMobNextBtn" onclick="closeGateMobileModal()" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:0.45rem 1.35rem; background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; border-radius:999px; font-weight:700; font-size:0.82rem; cursor:pointer; box-shadow:0 3px 12px rgba(16,185,129,0.3); transition:all 0.15s ease;">
+                    <span id="gateMobBtnText">Next</span>
+                    <svg id="gateMobBtnIcon" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1013,6 +1058,16 @@
         }
 
         function renderResult(data) {
+            const isMobile = window.innerWidth <= 767;
+
+            // KHUSUS MOBILE: Munculkan info hasil scan dalam bentuk POP UP bukan di bawahnya,
+            // dan jika scan berhasil, ada button kecil "Next" untuk lanjut scan.
+            if (isMobile) {
+                openGateMobileModal(data);
+                return;
+            }
+
+            // DESKTOP: Render side-by-side panel
             const idle = document.getElementById('idle-box');
             const banner = document.getElementById('result-banner');
             const icon = document.getElementById('banner-icon');
@@ -1071,13 +1126,122 @@
                 triggerHaptic('invalid');
             }
 
-            // Fast auto resume after delay
+            // Fast auto resume after delay on desktop
             const isFast = document.getElementById('fast-mode').checked;
             const delay = data.status === 'valid' ? (isFast ? 800 : 1800) : 2200;
 
             setTimeout(() => {
                 resumeScannerNow();
             }, delay);
+        }
+
+        function openGateMobileModal(data) {
+            const overlay = document.getElementById('gateMobileResultModal');
+            const box     = document.getElementById('gateMobileResultBox');
+            const bubble  = document.getElementById('gateMobBubble');
+            const title   = document.getElementById('gateMobTitle');
+            const msg     = document.getElementById('gateMobMsg');
+            const card    = document.getElementById('gateMobCard');
+            const nextBtn = document.getElementById('gateMobNextBtn');
+            const btnText = document.getElementById('gateMobBtnText');
+            const btnIcon = document.getElementById('gateMobBtnIcon');
+
+            const isValid = (data.status === 'valid');
+
+            if (isValid) {
+                bubble.style.background = '#f0fdf4';
+                bubble.style.border = '1.5px solid #bbf7d0';
+                bubble.innerHTML = '<svg width="30" height="30" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+                title.style.color = '#15803d';
+                title.innerText = data.title || 'Check-In Berhasil!';
+                msg.innerText = data.message || 'Tiket valid.';
+
+                // Button kecil Next khusus scan berhasil di mobile
+                if (nextBtn) {
+                    nextBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    nextBtn.style.boxShadow = '0 3px 12px rgba(16,185,129,0.3)';
+                }
+                if (btnText) btnText.innerText = 'Next';
+                if (btnIcon) btnIcon.style.display = 'inline-block';
+
+                playSound('success');
+                triggerHaptic('success');
+                incrementCounter();
+            } else if (data.status === 'used') {
+                bubble.style.background = '#fffbeb';
+                bubble.style.border = '1.5px solid #fde68a';
+                bubble.innerHTML = '<svg width="30" height="30" fill="none" stroke="#d97706" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+                title.style.color = '#b45309';
+                title.innerText = data.title || 'Sudah Digunakan';
+                msg.innerText = data.message || 'Tiket sudah dipindai sebelumnya.';
+
+                if (nextBtn) {
+                    nextBtn.style.background = '#0f172a';
+                    nextBtn.style.boxShadow = 'none';
+                }
+                if (btnText) btnText.innerText = 'Tutup';
+                if (btnIcon) btnIcon.style.display = 'none';
+
+                playSound('used');
+                triggerHaptic('used');
+            } else {
+                bubble.style.background = '#fef2f2';
+                bubble.style.border = '1.5px solid #fecaca';
+                bubble.innerHTML = '<svg width="30" height="30" fill="none" stroke="#dc2626" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+                title.style.color = '#b91c1c';
+                title.innerText = data.title || 'Tiket Tidak Valid';
+                msg.innerText = data.message || 'Tiket tidak ditemukan.';
+
+                if (nextBtn) {
+                    nextBtn.style.background = '#0f172a';
+                    nextBtn.style.boxShadow = 'none';
+                }
+                if (btnText) btnText.innerText = 'Tutup';
+                if (btnIcon) btnIcon.style.display = 'none';
+
+                playSound('invalid');
+                triggerHaptic('invalid');
+            }
+
+            const t = data.ticket;
+            if (t) {
+                card.style.display = 'block';
+                document.getElementById('mob-val-holder').innerText = t.holder_name || '-';
+                document.getElementById('mob-val-code').innerText = t.code || '-';
+                document.getElementById('mob-val-time').innerText = t.checked_in_at || new Date().toLocaleTimeString();
+
+                const nikRow = document.getElementById('mob-row-nik');
+                if (t.holder_nik) {
+                    nikRow.style.display = 'flex';
+                    document.getElementById('mob-val-nik').innerText = t.holder_nik;
+                } else {
+                    nikRow.style.display = 'none';
+                }
+            } else {
+                card.style.display = 'none';
+            }
+
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+                box.style.transform   = 'scale(1)';
+            }, 20);
+        }
+
+        function closeGateMobileModal() {
+            const overlay = document.getElementById('gateMobileResultModal');
+            const box     = document.getElementById('gateMobileResultBox');
+
+            if (overlay && box) {
+                overlay.style.opacity = '0';
+                box.style.transform   = 'scale(0.92)';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    resumeScannerNow();
+                }, 200);
+            } else {
+                resumeScannerNow();
+            }
         }
 
         function resumeScannerNow() {

@@ -122,6 +122,13 @@
         }
     }
 
+    @media (max-width: 768px) {
+        /* Khusus Mobile: Info hasil scan tampil sebagai pop up modal, bukan di bawah kamera */
+        .scanner-data-col {
+            display: none !important;
+        }
+    }
+
     .scanner-camera-col {
         display: flex;
         flex-direction: column;
@@ -1303,24 +1310,27 @@
 
 </div> {{-- Close .bio-layout --}}
 
-{{-- POPUP MODAL RESULT SCANNER (MOBILE FRIENDLY & TEMA BUYLE) --}}
-<div id="scanResultModal" onclick="if(event.target===this)closeScanModal()" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.75); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:1rem; opacity:0; transition:all 0.25s ease;">
-    <div id="scanResultModalBox" style="background:#ffffff; border-radius:24px; padding:1.75rem; width:100%; max-width:420px; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.3); transform:scale(0.9); transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);">
+{{-- POPUP MODAL RESULT SCANNER (KHUSUS MOBILE: INFO POP UP BUKAN DI BAWAH & TOMBOL KECIL NEXT) --}}
+<div id="scanResultModal" onclick="if(event.target===this)closeScanModal()" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.72); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:1rem; opacity:0; transition:all 0.25s ease;">
+    <div id="scanResultModalBox" style="background:#ffffff; border-radius:22px; padding:1.35rem 1.25rem; width:100%; max-width:350px; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.35); transform:scale(0.92); transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);">
         
         {{-- Icon Bubble --}}
-        <div id="modalIconBubble" style="width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;"></div>
+        <div id="modalIconBubble" style="width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 0.85rem;"></div>
 
         {{-- Status Title & Message --}}
-        <h3 id="modalTitle" style="font-size:1.35rem; font-weight:800; margin:0 0 0.35rem; font-family:'Montserrat',sans-serif;"></h3>
-        <p id="modalMsg" style="font-size:0.875rem; color:#64748B; margin:0 0 1.25rem; line-height:1.5;"></p>
+        <h3 id="modalTitle" style="font-size:1.18rem; font-weight:800; margin:0 0 0.25rem; font-family:'Montserrat',sans-serif;"></h3>
+        <p id="modalMsg" style="font-size:0.8rem; color:#64748B; margin:0 0 0.85rem; line-height:1.45;"></p>
 
         {{-- Ticket Detail Card --}}
-        <div id="modalDetailsCard" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:1rem; text-align:left; margin-bottom:1.5rem; font-size:0.85rem; display:none;"></div>
+        <div id="modalDetailsCard" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem; text-align:left; margin-bottom:1.15rem; font-size:0.82rem; display:none;"></div>
 
-        {{-- Action Button --}}
-        <button type="button" onclick="closeScanModal()" style="width:100%; padding:0.8rem; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; border:none; border-radius:999px; font-weight:700; font-size:0.95rem; cursor:pointer; box-shadow:0 4px 14px rgba(30,179,73,0.3); transition:all 0.2s;">
-            Scan Tiket Berikutnya
-        </button>
+        {{-- Action Button (Khusus Mobile: Button Kecil Next Saat Scan Berhasil) --}}
+        <div style="display:flex; justify-content:center; align-items:center;">
+            <button type="button" id="modalNextBtn" onclick="closeScanModal()" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:0.45rem 1.35rem; background:linear-gradient(135deg, #1eb349, #15803d); color:#fff; border:none; border-radius:999px; font-weight:700; font-size:0.82rem; cursor:pointer; box-shadow:0 3px 12px rgba(30,179,73,0.3); transition:all 0.15s ease;">
+                <span id="modalBtnText">Next</span>
+                <svg id="modalBtnIcon" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -2253,13 +2263,15 @@
     function renderResult(data) {
         playScanBeep(data.status);
 
+        const isMobile = window.innerWidth <= 768;
         const isFast = document.getElementById('autoScanToggle')?.checked ?? true;
         const panel = document.getElementById('scannerResultPanel');
         const stateIdle = document.getElementById('resStateIdle');
         const stateLoading = document.getElementById('resStateLoading');
         const stateActive = document.getElementById('resStateActive');
 
-        if (panel && stateActive) {
+        // DESKTOP ONLY: Update side-by-side result panel
+        if (!isMobile && panel && stateActive) {
             if (stateIdle) stateIdle.style.display = 'none';
             if (stateLoading) stateLoading.style.display = 'none';
             stateActive.style.display = 'flex';
@@ -2344,14 +2356,20 @@
             }
         }
 
-        // MODE FAST: Siap scan tiket berikutnya dalam 900ms tanpa popup modal menghalangi
-        if (isFast) {
-            setTimeout(() => {
-                isProcessing = false;
-            }, 900);
-        } else {
-            // Mode Manual: Buka popup modal detail
+        // KHUSUS MOBILE:
+        // Info hasil scan dimunculkan dalam bentuk POPUP (bukan di bawahnya),
+        // lengkap dengan button kecil "Next" untuk melanjutkan scan jika berhasil.
+        if (isMobile) {
             openScanModal(data);
+        } else {
+            // DESKTOP: Side-by-side mode
+            if (isFast) {
+                setTimeout(() => {
+                    isProcessing = false;
+                }, 900);
+            } else {
+                openScanModal(data);
+            }
         }
     }
 
@@ -2362,47 +2380,74 @@
         const titleEl = document.getElementById('modalTitle');
         const msgEl   = document.getElementById('modalMsg');
         const card    = document.getElementById('modalDetailsCard');
+        const nextBtn = document.getElementById('modalNextBtn');
+        const btnText = document.getElementById('modalBtnText');
+        const btnIcon = document.getElementById('modalBtnIcon');
 
-        if (data.status === 'valid') {
+        const isValid = (data.status === 'valid');
+
+        if (isValid) {
             bubble.style.background = '#F0FDF4';
-            bubble.style.border = '1px solid #BBF7D0';
-            bubble.innerHTML = `<svg width="40" height="40" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+            bubble.style.border = '1.5px solid #BBF7D0';
+            bubble.innerHTML = `<svg width="30" height="30" fill="none" stroke="#166534" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
             titleEl.style.color = '#166534';
+
+            // Button kecil Next khusus mobile jika scan berhasil
+            if (nextBtn) {
+                nextBtn.style.background = 'linear-gradient(135deg, #1eb349, #15803d)';
+                nextBtn.style.boxShadow = '0 3px 12px rgba(30,179,73,0.3)';
+            }
+            if (btnText) btnText.textContent = 'Next';
+            if (btnIcon) btnIcon.style.display = 'inline-block';
         } else if (data.status === 'used') {
             bubble.style.background = '#FEF3C7';
-            bubble.style.border = '1px solid #FDE68A';
-            bubble.innerHTML = `<svg width="40" height="40" fill="none" stroke="#B45309" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+            bubble.style.border = '1.5px solid #FDE68A';
+            bubble.innerHTML = `<svg width="30" height="30" fill="none" stroke="#B45309" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
             titleEl.style.color = '#B45309';
+
+            if (nextBtn) {
+                nextBtn.style.background = '#0F172A';
+                nextBtn.style.boxShadow = 'none';
+            }
+            if (btnText) btnText.textContent = 'Tutup';
+            if (btnIcon) btnIcon.style.display = 'none';
         } else {
             bubble.style.background = '#FEE2E2';
-            bubble.style.border = '1px solid #FECACA';
-            bubble.innerHTML = `<svg width="40" height="40" fill="none" stroke="#DC2626" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+            bubble.style.border = '1.5px solid #FECACA';
+            bubble.innerHTML = `<svg width="30" height="30" fill="none" stroke="#DC2626" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
             titleEl.style.color = '#DC2626';
+
+            if (nextBtn) {
+                nextBtn.style.background = '#0F172A';
+                nextBtn.style.boxShadow = 'none';
+            }
+            if (btnText) btnText.textContent = 'Tutup';
+            if (btnIcon) btnIcon.style.display = 'none';
         }
 
-        titleEl.textContent = data.title || 'Status Tiket';
+        titleEl.textContent = data.title || (isValid ? 'Tiket Valid' : (data.status === 'used' ? 'Sudah Check-In' : 'Tiket Tidak Valid'));
         msgEl.textContent   = data.message || '';
 
         if (data.ticket) {
             card.style.display = 'block';
             const t = data.ticket;
             card.innerHTML = `
-                <div style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
-                    <span style="color:#64748B;font-size:0.82rem;">Kode Tiket</span>
-                    <strong style="color:#0F172A;font-family:monospace;font-size:0.88rem;">${t.code || '-'}</strong>
+                <div style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
+                    <span style="color:#64748B;font-size:0.78rem;">Kode Tiket</span>
+                    <strong style="color:#166534;font-family:monospace;font-size:0.83rem;background:#f0fdf4;padding:2px 6px;border-radius:4px;border:1px solid #bbf7d0;">${t.code || '-'}</strong>
                 </div>
-                <div style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
-                    <span style="color:#64748B;font-size:0.82rem;flex-shrink:0;">Nama Event</span>
-                    <strong style="color:#0F172A;font-size:0.82rem;text-align:right;">${t.event_name || '-'}</strong>
+                <div style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                    <span style="color:#64748B;font-size:0.78rem;flex-shrink:0;">Nama Event</span>
+                    <strong style="color:#0F172A;font-size:0.8rem;text-align:right;">${t.event_name || '-'}</strong>
                 </div>
-                <div style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
-                    <span style="color:#64748B;font-size:0.82rem;">Pemegang</span>
+                <div style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
+                    <span style="color:#64748B;font-size:0.78rem;">Pemegang</span>
                     <strong style="color:#0F172A;font-size:0.82rem;">${t.holder_name || '-'}</strong>
                 </div>
                 ${t.checked_in_at ? `
-                <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid #E2E8F0;margin-top:4px;">
-                    <span style="color:#64748B;font-size:0.82rem;">Check-In</span>
-                    <strong style="color:#166534;font-size:0.82rem;">${t.checked_in_at}</strong>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px dashed #E2E8F0;margin-top:4px;">
+                    <span style="color:#64748B;font-size:0.78rem;">Check-In</span>
+                    <strong style="color:#166534;font-size:0.8rem;">${t.checked_in_at}</strong>
                 </div>` : ''}
             `;
         } else {
@@ -2420,12 +2465,16 @@
         const overlay = document.getElementById('scanResultModal');
         const box     = document.getElementById('scanResultModalBox');
 
-        overlay.style.opacity   = '0';
-        box.style.transform     = 'scale(0.9)';
-        setTimeout(() => {
-            overlay.style.display = 'none';
+        if (overlay && box) {
+            overlay.style.opacity   = '0';
+            box.style.transform     = 'scale(0.92)';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                isProcessing = false;
+            }, 200);
+        } else {
             isProcessing = false;
-        }, 220);
+        }
     }
 
     // ══════════════════════════════════════════════════════════════════════
