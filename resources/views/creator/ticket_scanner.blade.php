@@ -1124,19 +1124,16 @@
                     </div>
                 </div>
 
-                <div class="prof-card-body" style="padding:1.5rem;">
-                    <p style="font-size:0.84rem; color:#64748b; margin-bottom:1.5rem; line-height:1.6;">
-                        Bagikan link khusus ini ke 5–10 panitia gate di lapangan. Panitia bisa langsung scan tiket di HP/laptop masing-masing tanpa butuh login akun creator, tanpa akses ke saldo/penarikan, dan terlindungi dari bentrok data.
-                    </p>
+                <div class="prof-card-body" style="padding:1rem 1.5rem;">
 
                     @if($events->count() === 0)
-                        <div style="text-align:center; padding:3rem 1rem; color:#94a3b8;">
-                            <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:0.75rem;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                            <div style="font-weight:700; color:#334155; font-size:1rem;">Belum Ada Event Tiket</div>
-                            <p style="font-size:0.82rem; margin-top:0.25rem;">Buat produk bertipe tiket terlebih dahulu untuk mengaktifkan Gate Scanner.</p>
+                        <div style="text-align:center; padding:2rem 1rem; color:#94a3b8;">
+                            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:0.5rem;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            <div style="font-weight:600; color:#334155; font-size:0.9rem;">Belum Ada Event Tiket</div>
+                            <p style="font-size:0.8rem; margin-top:0.2rem;">Buat produk bertipe tiket untuk mengaktifkan Gate Scanner.</p>
                         </div>
                     @else
-                        <div style="display:flex; flex-direction:column; gap:1.5rem;">
+                        <div style="display:flex; flex-direction:column; gap:0.85rem;">
                             @foreach($events as $ev)
                                 @php
                                     $gateKey = $ev->getOrGenerateGateKey();
@@ -1144,120 +1141,102 @@
                                     $qrGateUrl = route('qr.code', ['data' => $gateUrl]);
                                     $gStatus = $ev->getGateStatus();
                                 @endphp
-                                <div class="gate-event-card" id="gate-card-{{ $ev->id }}" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.02);">
+                                <div class="gate-event-card" id="gate-card-{{ $ev->id }}" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.9rem; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
                                     
-                                    {{-- Card Top: Title, Meta, and Status --}}
-                                    <div style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:1.25rem; padding-bottom:1rem; border-bottom:1px solid #f1f5f9;">
+                                    {{-- Row 1: Title + meta + status + open button --}}
+                                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.65rem;">
                                         <div>
-                                            <h3 style="font-weight:800; font-size:1.1rem; color:#0f172a; margin:0 0 0.35rem;">{{ $ev->name }}</h3>
-                                            <div style="display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap; font-size:0.8rem; color:#64748b;">
-                                                <span style="display:inline-flex; align-items:center; gap:0.35rem;">
-                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                            <h3 style="font-weight:600; font-size:0.95rem; color:#0f172a; margin:0 0 0.15rem;">{{ $ev->name }}</h3>
+                                            <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; font-size:0.74rem; color:#64748b;">
+                                                <span style="display:inline-flex; align-items:center; gap:0.25rem;">
+                                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                                                     {{ $ev->event_date ? $ev->event_date->format('d M Y') : 'Jadwal belum diset' }}
                                                 </span>
-                                                <span style="display:inline-flex; align-items:center; gap:0.35rem;">
-                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                                    {{ $ev->event_location ?? 'Lokasi belum diset' }}
+                                                @if($ev->event_location)
+                                                <span style="display:inline-flex; align-items:center; gap:0.25rem;">
+                                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                                    {{ $ev->event_location }}
                                                 </span>
-                                                <span id="gate-status-badge-{{ $ev->id }}" class="badge-status {{ $gStatus['is_open'] ? 'badge-used' : 'badge-cancelled' }}">
-                                                    {{ $gStatus['reason'] }}
-                                                </span>
+                                                @endif
+                                                <span id="gate-status-badge-{{ $ev->id }}" class="badge-status {{ $gStatus['is_open'] ? 'badge-used' : 'badge-cancelled' }}">{{ $gStatus['reason'] }}</span>
                                             </div>
                                         </div>
-
-                                        <a href="{{ $gateUrl }}" target="_blank" class="btn-action-sm btn-toggle-checkin" style="background:#0f172a; color:#ffffff; padding:0.55rem 1.1rem; text-decoration:none;">
-                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                        <a href="{{ $gateUrl }}" target="_blank" style="display:inline-flex; align-items:center; gap:0.3rem; background:#0f172a; color:#fff; padding:0.45rem 0.8rem; border-radius:8px; font-size:0.76rem; font-weight:600; text-decoration:none; white-space:nowrap; flex-shrink:0;">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                             Buka Layar Panitia
                                         </a>
                                     </div>
 
-                                    {{-- 1. Link & Share Area --}}
-                                    <div style="margin-bottom:1.25rem;">
-                                        <label style="display:block; font-size:0.78rem; font-weight:800; color:#334155; margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.04em;">
-                                            Link Scanner Lapangan
-                                        </label>
-                                        <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
-                                            <input type="text" id="gate-url-{{ $ev->id }}" value="{{ $gateUrl }}" readonly style="flex:1; min-width:260px; padding:0.65rem 0.85rem; font-size:0.82rem; font-weight:700; color:#334155; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:10px; font-family:monospace; outline:none;" onclick="this.select()">
-                                            <button type="button" class="btn-action-sm" onclick="copyGateUrl('gate-url-{{ $ev->id }}', this)" style="background:#1eb349; color:#ffffff; padding:0.65rem 1.1rem; border-radius:10px;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                                Salin Link
-                                            </button>
-                                            <button type="button" class="btn-action-sm" onclick="showGateQrModal('{{ $ev->name }}', '{{ $gateUrl }}', '{{ $qrGateUrl }}')" style="background:#ffffff; color:#334155; border:1.5px solid #cbd5e1; padding:0.65rem 1.1rem; border-radius:10px;">
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                                                Tampilkan QR Link
-                                            </button>
-                                        </div>
+                                    {{-- Row 2: Link Scanner --}}
+                                    <div style="display:flex; gap:0.4rem; align-items:center; margin-bottom:0.65rem; flex-wrap:wrap;">
+                                        <input type="text" id="gate-url-{{ $ev->id }}" value="{{ $gateUrl }}" readonly style="flex:1; min-width:180px; padding:0.45rem 0.65rem; font-size:0.77rem; font-weight:500; color:#334155; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; font-family:monospace; outline:none;" onclick="this.select()">
+                                        <button type="button" onclick="copyGateUrl('gate-url-{{ $ev->id }}', this)" style="display:inline-flex; align-items:center; gap:0.3rem; background:#1eb349; color:#fff; border:none; padding:0.45rem 0.8rem; border-radius:8px; font-size:0.76rem; font-weight:600; cursor:pointer; white-space:nowrap;">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                            Salin Link
+                                        </button>
+                                        <button type="button" onclick="showGateQrModal('{{ $ev->name }}', '{{ $gateUrl }}', '{{ $qrGateUrl }}')" style="display:inline-flex; align-items:center; gap:0.3rem; background:#fff; color:#334155; border:1px solid #cbd5e1; padding:0.45rem 0.8rem; border-radius:8px; font-size:0.76rem; font-weight:600; cursor:pointer; white-space:nowrap;">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                                            QR Link
+                                        </button>
                                     </div>
 
-                                    {{-- 2. PIN / Password Akses Gate & Open/Close Gate Schedule --}}
-                                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; background:#f8fafc; border-radius:12px; padding:1.1rem; border:1px solid #e2e8f0; margin-bottom:1.25rem;">
-                                        
-                                        {{-- PIN / Password Box --}}
-                                        <div>
-                                            <label style="display:flex; align-items:center; gap:0.35rem; font-size:0.78rem; font-weight:800; color:#334155; margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.04em;">
-                                                <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                                Password / PIN Gate Panitia
-                                            </label>
-                                            <div style="display:flex; gap:0.4rem;">
-                                                <input type="text" id="gate-pin-{{ $ev->id }}" value="{{ $ev->gate_scanner_pin }}" placeholder="Contoh: 1234 (Kosongkan jika tanpa PIN)" style="flex:1; padding:0.55rem 0.75rem; font-size:0.82rem; font-weight:700; border:1.5px solid #cbd5e1; border-radius:8px; outline:none; background:#ffffff;">
-                                                <button type="button" class="btn-action-sm" onclick="saveGatePin('{{ $ev->id }}', this)" style="background:#0f172a; color:#ffffff; padding:0.55rem 0.95rem; border-radius:8px;">
-                                                    Simpan PIN
-                                                </button>
+                                    {{-- Row 3: PIN + Jadwal inline satu baris --}}
+                                    <div style="display:flex; gap:0.65rem; flex-wrap:wrap; align-items:flex-start; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:0.7rem; margin-bottom:0.55rem;">
+
+                                        {{-- PIN Box --}}
+                                        <div style="flex:1; min-width:170px;">
+                                            <div style="font-size:0.71rem; font-weight:600; color:#475569; margin-bottom:0.25rem; display:flex; align-items:center; gap:0.25rem;">
+                                                <svg width="11" height="11" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                                PIN Gate
                                             </div>
-                                            <span style="font-size:0.72rem; color:#64748b; margin-top:0.25rem; display:block;">
-                                                Jika diisi, panitia wajib memasukkan PIN ini sebelum membuka scanner di HP.
-                                            </span>
+                                            <div style="display:flex; gap:0.3rem;">
+                                                <input type="text" id="gate-pin-{{ $ev->id }}" value="{{ $ev->gate_scanner_pin }}" placeholder="Kosong = tanpa PIN" style="flex:1; padding:0.4rem 0.55rem; font-size:0.78rem; font-weight:400; border:1px solid #cbd5e1; border-radius:7px; outline:none; background:#fff; min-width:0;">
+                                                <button type="button" onclick="saveGatePin('{{ $ev->id }}', this)" style="background:#0f172a; color:#fff; border:none; padding:0.4rem 0.65rem; border-radius:7px; font-size:0.73rem; font-weight:600; cursor:pointer; white-space:nowrap;">Simpan</button>
+                                            </div>
                                         </div>
 
-                                        {{-- Open & Close Gate Schedule --}}
-                                        <div>
-                                            <label style="display:flex; align-items:center; gap:0.35rem; font-size:0.78rem; font-weight:800; color:#334155; margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.04em;">
-                                                <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                                Jadwal Buka & Tutup Gate
-                                            </label>
-                                            <div style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap;">
-                                                <div style="display:flex; align-items:center; gap:0.3rem;">
-                                                    <span style="font-size:0.75rem; color:#64748b; font-weight:700;">Buka:</span>
-                                                    <input type="time" id="gate-open-{{ $ev->id }}" value="{{ $ev->gate_open_time }}" style="padding:0.45rem 0.6rem; font-size:0.82rem; font-weight:700; border:1.5px solid #cbd5e1; border-radius:8px; outline:none; background:#ffffff;">
-                                                </div>
-                                                <div style="display:flex; align-items:center; gap:0.3rem;">
-                                                    <span style="font-size:0.75rem; color:#64748b; font-weight:700;">Tutup:</span>
-                                                    <input type="time" id="gate-close-{{ $ev->id }}" value="{{ $ev->gate_close_time }}" style="padding:0.45rem 0.6rem; font-size:0.82rem; font-weight:700; border:1.5px solid #cbd5e1; border-radius:8px; outline:none; background:#ffffff;">
-                                                </div>
-                                                <button type="button" class="btn-action-sm" onclick="saveGateSchedule('{{ $ev->id }}', this)" style="background:#1eb349; color:#ffffff; padding:0.45rem 0.85rem; border-radius:8px;">
-                                                    Simpan
-                                                </button>
-                                            </div>
+                                        <div style="width:1px; background:#e2e8f0; align-self:stretch; flex-shrink:0;"></div>
 
-                                            {{-- Emergency Quick Extension & Bypass --}}
-                                            <div style="display:flex; align-items:center; gap:0.85rem; margin-top:0.5rem; flex-wrap:wrap; font-size:0.75rem;">
-                                                <button type="button" onclick="quickExtendGate('{{ $ev->id }}', this)" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#0f172a; padding:0.3rem 0.65rem; border-radius:6px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                                    Perpanjang +30 Menit
+                                        {{-- Jadwal Box --}}
+                                        <div style="flex:1; min-width:200px;">
+                                            <div style="font-size:0.71rem; font-weight:600; color:#475569; margin-bottom:0.25rem; display:flex; align-items:center; gap:0.25rem;">
+                                                <svg width="11" height="11" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                                Jadwal Gate
+                                            </div>
+                                            <div style="display:flex; gap:0.3rem; align-items:center; flex-wrap:wrap;">
+                                                <div style="display:flex; align-items:center; gap:0.2rem;">
+                                                    <span style="font-size:0.71rem; color:#64748b; font-weight:500;">Buka:</span>
+                                                    <input type="time" id="gate-open-{{ $ev->id }}" value="{{ $ev->gate_open_time }}" style="padding:0.38rem 0.45rem; font-size:0.78rem; font-weight:400; border:1px solid #cbd5e1; border-radius:7px; outline:none; background:#fff;">
+                                                </div>
+                                                <div style="display:flex; align-items:center; gap:0.2rem;">
+                                                    <span style="font-size:0.71rem; color:#64748b; font-weight:500;">Tutup:</span>
+                                                    <input type="time" id="gate-close-{{ $ev->id }}" value="{{ $ev->gate_close_time }}" style="padding:0.38rem 0.45rem; font-size:0.78rem; font-weight:400; border:1px solid #cbd5e1; border-radius:7px; outline:none; background:#fff;">
+                                                </div>
+                                                <button type="button" onclick="saveGateSchedule('{{ $ev->id }}', this)" style="background:#1eb349; color:#fff; border:none; padding:0.38rem 0.65rem; border-radius:7px; font-size:0.73rem; font-weight:600; cursor:pointer;">Simpan</button>
+                                            </div>
+                                            <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.35rem; flex-wrap:wrap;">
+                                                <button type="button" onclick="quickExtendGate('{{ $ev->id }}', this)" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#334155; padding:0.22rem 0.5rem; border-radius:5px; font-size:0.7rem; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:0.2rem;">
+                                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                                    +30 Menit
                                                 </button>
-                                                <label style="display:inline-flex; align-items:center; gap:0.3rem; cursor:pointer; font-weight:700; color:#d97706;">
-                                                    <input type="checkbox" onchange="toggleGateBypass('{{ $ev->id }}', this)" {{ $ev->gate_bypass_time ? 'checked' : '' }} style="accent-color:#d97706; width:15px; height:15px;">
-                                                    <span>Bypass Jam (Buka Terus Darurat)</span>
+                                                <label style="display:inline-flex; align-items:center; gap:0.2rem; cursor:pointer; font-size:0.7rem; font-weight:500; color:#d97706;">
+                                                    <input type="checkbox" onchange="toggleGateBypass('{{ $ev->id }}', this)" {{ $ev->gate_bypass_time ? 'checked' : '' }} style="accent-color:#d97706; width:12px; height:12px;">
+                                                    Bypass Jam
                                                 </label>
                                             </div>
                                         </div>
-
                                     </div>
 
-                                    {{-- 3. Security Bottom Controls --}}
-                                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; padding-top:0.85rem; border-top:1px dashed #e2e8f0; font-size:0.78rem;">
-                                        <div style="display:flex; align-items:center; gap:0.5rem;">
-                                            <label style="display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer; font-weight:700; color:#334155;">
-                                                <input type="checkbox" onchange="toggleGateEnabled('{{ $ev->id }}', this)" {{ $ev->gate_scanner_enabled ? 'checked' : '' }} style="accent-color:#1eb349; width:16px; height:16px;">
-                                                <span>Akses Gate Scanner Aktif</span>
-                                            </label>
-                                        </div>
-                                        <div>
-                                            <button type="button" onclick="resetGateKey('{{ $ev->id }}')" style="background:none; border:none; color:#ef4444; font-size:0.76rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                                                Reset Kunci (Kick Semua Panitia Lama)
-                                            </button>
-                                        </div>
+                                    {{-- Row 4: Footer Controls --}}
+                                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.4rem; padding-top:0.45rem; border-top:1px dashed #e2e8f0;">
+                                        <label style="display:inline-flex; align-items:center; gap:0.3rem; cursor:pointer; font-size:0.76rem; font-weight:500; color:#334155;">
+                                            <input type="checkbox" onchange="toggleGateEnabled('{{ $ev->id }}', this)" {{ $ev->gate_scanner_enabled ? 'checked' : '' }} style="accent-color:#1eb349; width:13px; height:13px;">
+                                            Akses Gate Scanner Aktif
+                                        </label>
+                                        <button type="button" onclick="resetGateKey('{{ $ev->id }}')" style="background:none; border:none; color:#ef4444; font-size:0.73rem; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:0.2rem; padding:0;">
+                                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                            Reset Kunci
+                                        </button>
                                     </div>
 
                                 </div>
