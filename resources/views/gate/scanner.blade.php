@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $seo['title'] ?? 'Gate Scanner · buyle.id' }}</title>
+    <title>Gate Scanner · {{ $event->name ?? 'buyle.id' }}</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/html5-qrcode"></script>
 
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; font-weight: 400; }
         
         :root {
             --primary: #10b981;
@@ -472,17 +472,7 @@
     </div>
     @endif
 
-    <!-- Top Navigation -->
-    <header class="gate-nav">
-        <a href="/" class="brand-badge">
-            <div class="brand-logo">B</div>
-            <div class="brand-title">buyle<span>.id</span></div>
-        </a>
-        <div class="gate-pill">
-            <div class="pulse-dot"></div>
-            <span>GATE PASS AKTIF</span>
-        </div>
-    </header>
+    <!-- Header Removed -->
 
     <!-- Event Info Header -->
     <section class="event-header">
@@ -535,7 +525,7 @@
             <div class="scanner-card">
                 <div class="card-header">
                     <h2>
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                             <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
                             <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
                             <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
@@ -543,35 +533,32 @@
                         </svg>
                         Live QR Scanner
                     </h2>
-                    <select id="camera-select" style="font-size:0.75rem; font-weight:600; padding:0.3rem 0.5rem; border-radius:0.5rem; border:1px solid #cbd5e1; outline:none; max-width:180px;">
-                        <option value="">Pilih Kamera...</option>
-                    </select>
+                    <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+                        <select id="camera-select" style="font-family:'Montserrat',sans-serif; font-size:0.72rem; font-weight:600; padding:0.28rem 0.45rem; border-radius:0.5rem; border:1px solid #cbd5e1; outline:none; max-width:150px;">
+                            <option value="">Pilih Kamera...</option>
+                        </select>
+                        <button type="button" class="ctrl-btn" id="btn-mirror" onclick="toggleMirror()" style="padding:0.28rem 0.55rem; font-size:0.7rem;">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <polyline points="9 21 3 21 3 15"></polyline>
+                                <line x1="21" y1="3" x2="14" y2="10"></line>
+                                <line x1="3" y1="21" x2="10" y2="14"></line>
+                            </svg>
+                            <span id="mirror-lbl">Mirror</span>
+                        </button>
+                        <label style="display:inline-flex; align-items:center; gap:0.3rem; font-size:0.7rem; font-weight:600; color:#166534; cursor:pointer; background:#ecfdf5; border:1px solid #86efac; border-radius:0.5rem; padding:0.28rem 0.55rem;">
+                            <input type="checkbox" id="fast-mode" checked style="accent-color:#10b981; width:12px; height:12px;">
+                            <span>Fast</span>
+                        </label>
+                        <button type="button" class="ctrl-btn" onclick="openManualModal()" style="padding:0.28rem 0.55rem; font-size:0.7rem;">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            Input Manual
+                        </button>
+                    </div>
                 </div>
 
                 <div class="viewport-box" id="viewport-box">
                     <div id="gate-reader"></div>
-                </div>
-
-                <div class="viewport-controls">
-                    <button type="button" class="ctrl-btn" id="btn-mirror" onclick="toggleMirror()">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <polyline points="15 3 21 3 21 9"></polyline>
-                            <polyline points="9 21 3 21 3 15"></polyline>
-                            <line x1="21" y1="3" x2="14" y2="10"></line>
-                            <line x1="3" y1="21" x2="10" y2="14"></line>
-                        </svg>
-                        <span id="mirror-lbl">Mirror: ON</span>
-                    </button>
-
-                    <label style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.75rem; font-weight:700; color:#166534; cursor:pointer;">
-                        <input type="checkbox" id="fast-mode" checked style="accent-color:#10b981;">
-                        <span>Fast Mode (0.8s)</span>
-                    </label>
-
-                    <button type="button" class="ctrl-btn" onclick="openManualModal()">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        Ketik Manual
-                    </button>
                 </div>
             </div>
 
@@ -588,8 +575,7 @@
                             <rect x="3" y="14" width="7" height="7"></rect>
                         </svg>
                     </div>
-                    <div style="font-weight:700; font-size:0.95rem; color:#334155;">Siap Memindai Tiket</div>
-                    <p style="font-size:0.8rem; margin-top:0.3rem;">Arahkan kamera ke QR Code tiket peserta atau klik Ketik Manual di bawah.</p>
+                    <div style="font-weight:600; font-size:0.9rem; color:#334155;">Siap Memindai Tiket</div>
                 </div>
 
                 <!-- Dynamic Status Result Banner -->
@@ -622,10 +608,10 @@
                     </button>
                 </div>
 
-                <!-- Manual Input Fallback Button on Mobile -->
-                <button type="button" class="manual-btn" onclick="openManualModal()">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                    Ketik Kode Tiket / NIK Manual
+                <!-- Manual Input Compact Button -->
+                <button type="button" onclick="openManualModal()" style="display:inline-flex; align-items:center; gap:0.4rem; background:#f1f5f9; color:#334155; border:1px solid #e2e8f0; border-radius:0.65rem; padding:0.5rem 0.9rem; font-size:0.78rem; font-weight:600; cursor:pointer; font-family:'Montserrat',sans-serif; transition:all 0.15s; width:auto; align-self:flex-start;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    Input Manual
                 </button>
 
             </div>
@@ -642,9 +628,7 @@
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
-            <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">
-                Masukkan Kode Tiket (misal: <code>TKT-20261015-XYZ</code>) atau NIK peserta jika barcode rusak.
-            </p>
+
             <input type="text" id="manual-code-input" class="input-code" placeholder="TKT-XXXXXX" autofocus>
             <button type="button" class="btn-verify-manual" onclick="submitManualCode()">
                 Verifikasi Tiket Sekarang
