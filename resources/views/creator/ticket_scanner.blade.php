@@ -968,12 +968,7 @@
     </div>
 </div>
 
-<script src="{{ asset('js/html5-qrcode.min.js') }}"></script>
-<script>
-    if (typeof Html5Qrcode === 'undefined') {
-        document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"><\/script>');
-    }
-</script>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <script>
     // ══════════════════════════════════════════════════════════════════════
     // DATA CACHE & OFFLINE-READY DATASET (CROWDED & LOW INTERNET SHIELD)
@@ -1004,7 +999,7 @@
     let html5QrCode = null;
     let availableCameras = [];
     let currentCameraId = null;
-    let currentFacingMode = "user";
+    let currentFacingMode = "user"; // Default user (webcam/laptop) agar langsung nyala di desktop
     let isProcessing = false;
     let isCameraSwitching = false;
 
@@ -1029,7 +1024,7 @@
             runInstantFilter();
         } else if (tabId === 'tab-scanner') {
             if (!html5QrCode || !html5QrCode.isScanning) {
-                requestCameraAndInit();
+                initCamera(currentFacingMode);
             }
         }
     }
@@ -1041,10 +1036,10 @@
             fastToggle.checked = isFastMode;
         }
 
-        // Jalankan inisialisasi kamera jika di tab scanner
-        if (INITIAL_ACTIVE_TAB === 'scanner') {
-            requestCameraAndInit();
-        } else {
+        // Langsung nyalakan kamera seketika!
+        initCamera(currentFacingMode);
+
+        if (INITIAL_ACTIVE_TAB === 'data') {
             runInstantFilter();
         }
     });
@@ -1057,48 +1052,12 @@
     }
 
     // ══════════════════════════════════════════════════════════════════════
-    // INISIALISASI KAMERA & WEBCAM DESKTOP PINTAR
+    // INISIALISASI & LANGSUNG NYALAKAN KAMERA
     // ══════════════════════════════════════════════════════════════════════
-    async function requestCameraAndInit() {
-        if (isCameraSwitching) return;
-        isCameraSwitching = true;
-
-        const reader = document.getElementById('reader');
-        if (reader) {
-            reader.innerHTML = `<div style="padding:2.5rem 1rem; text-align:center; color:#475569;">
-                <svg width="32" height="32" stroke="#1eb349" stroke-width="2.5" fill="none" viewBox="0 0 24 24" style="animation:spin 1s linear infinite; margin-bottom:0.75rem;">
-                    <circle cx="12" cy="12" r="10" stroke-dasharray="31" stroke-dashoffset="10"/>
-                </svg>
-                <div style="font-weight:700; font-size:0.92rem; color:#0f172a;">Menghubungkan Kamera...</div>
-                <div style="font-size:0.78rem; color:#64748b; margin-top:4px;">Meminta izin browser & mengaktifkan video stream</div>
-            </div>`;
-        }
-
-        // 1. Cek Permission Status via Permissions API jika didukung browser
-        let isPermanentlyDenied = false;
-        if (navigator.permissions && navigator.permissions.query) {
-            try {
-                const p = await navigator.permissions.query({ name: 'camera' });
-                if (p.state === 'denied') {
-                    isPermanentlyDenied = true;
-                }
-            } catch(e) {}
-        }
-
-        if (isPermanentlyDenied) {
-            isCameraSwitching = false;
-            showCameraBlockedError();
-            return;
-        }
-
-        // 2. Siapkan config scanner
+    function initCamera(facingMode) {
         const config = {
-            fps: 20,
-            qrbox: function(viewfinderWidth, viewfinderHeight) {
-                const minDim = Math.min(viewfinderWidth, viewfinderHeight);
-                const boxSize = Math.max(220, Math.floor(minDim * 0.8));
-                return { width: boxSize, height: boxSize };
-            },
+            fps: 15,
+            qrbox: { width: 250, height: 250 },
             aspectRatio: 1.0,
             experimentalFeatures: {
                 useBarCodeDetectorIfSupported: true
@@ -1106,75 +1065,85 @@
         };
 
         if (html5QrCode) {
-            try { await html5QrCode.stop(); } catch(e) {}
-            try { html5QrCode.clear(); } catch(e) {}
-        }
+            const stopPromise = (html5QrCode.isScanning || typeof html5QrCode.stop === 'function')
+                ? html5QrCode.stop().catch(() => {})
+                : Promise.resolve();
 
-        if (reader) reader.innerHTML = '';
-        html5QrCode = new Html5Qrcode("reader");
-
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const savedCamId = localStorage.getItem('buyle_chosen_camera_id');
-
-        // Pilih sumber awal: ID tersimpan ATAU default facingMode
-        let initialCamera = savedCamId || { facingMode: isMobile ? "environment" : "user" };
-
-        try {
-            await html5QrCode.start(initialCamera, config, onScanSuccess, onScanFailure);
-            isCameraSwitching = false;
-            await afterCameraStarted();
-        } catch (err) {
-            console.warn('[Camera] Percobaan awal start gagal:', err);
-            const errStr = String(err && (err.name || err.message || err)).toLowerCase();
-
-            if (errStr.includes('notallowed') || errStr.includes('permission') || errStr.includes('denied')) {
-                isCameraSwitching = false;
-                showCameraBlockedError();
-                return;
-            }
-
-            // Jika device ID spesifik gagal (misal USB webcam dicabut/berganti port), fallback ke constraint generic
-            try {
-                await html5QrCode.start({ facingMode: isMobile ? "environment" : "user" }, config, onScanSuccess, onScanFailure);
-                isCameraSwitching = false;
-                await afterCameraStarted();
-            } catch (err2) {
-                console.error('[Camera] Fallback start gagal:', err2);
-                const err2Str = String(err2 && (err2.name || err2.message || err2)).toLowerCase();
-                isCameraSwitching = false;
-                if (err2Str.includes('notallowed') || err2Str.includes('permission') || err2Str.includes('denied')) {
-                    showCameraBlockedError();
-                } else {
-                    showCameraGeneralError(err2.message || 'Kamera tidak dapat diakses. Pastikan kamera laptop / webcam USB tidak digunakan oleh aplikasi lain.');
-                }
-            }
+            stopPromise.finally(() => {
+                setTimeout(() => startCameraStream(facingMode, config), 200);
+            });
+        } else {
+            const readerEl = document.getElementById('reader');
+            if (readerEl) readerEl.innerHTML = '';
+            html5QrCode = new Html5Qrcode("reader");
+            startCameraStream(facingMode, config);
         }
     }
 
-    async function afterCameraStarted() {
-        // Kamera berhasil aktif! Sekarang izin sudah granted, deteksi seluruh perangkat kamera
-        try {
-            const cameras = await Html5Qrcode.getCameras();
+    function startCameraStream(facingMode, config) {
+        const savedCamId = localStorage.getItem('buyle_chosen_camera_id');
+
+        const tryStart = (target) => {
+            return html5QrCode.start(target, config, onScanSuccess, onScanFailure);
+        };
+
+        const onStarted = () => {
+            isCameraSwitching = false;
+            // Populasikan daftar kamera ke dropdown (Integrated Camera & External USB)
+            Html5Qrcode.getCameras().then(cameras => {
+                if (cameras && cameras.length > 0) {
+                    availableCameras = cameras;
+                    populateCameraDropdown(cameras);
+                }
+            }).catch(() => {});
+        };
+
+        // Jika ada saved camera ID (misal Webcam USB), coba langsung
+        if (savedCamId) {
+            tryStart(savedCamId)
+                .then(onStarted)
+                .catch(() => {
+                    // Fallback ke facingMode
+                    tryStart({ facingMode: facingMode })
+                        .then(onStarted)
+                        .catch(() => fallbackEnumerateAndStart(config, onStarted));
+                });
+        } else {
+            // Langsung nyalakan kamera
+            tryStart({ facingMode: facingMode })
+                .then(onStarted)
+                .catch(() => fallbackEnumerateAndStart(config, onStarted));
+        }
+    }
+
+    function fallbackEnumerateAndStart(config, onSuccess) {
+        Html5Qrcode.getCameras().then(cameras => {
             if (cameras && cameras.length > 0) {
                 availableCameras = cameras;
                 populateCameraDropdown(cameras);
 
-                // Sinkronkan dropdown dengan kamera aktif
-                const select = document.getElementById('cameraDeviceSelect');
-                if (select) {
-                    const saved = localStorage.getItem('buyle_chosen_camera_id');
-                    if (saved && cameras.some(c => c.id === saved)) {
-                        select.value = saved;
-                        currentCameraId = saved;
-                    } else if (cameras.length > 0) {
-                        select.value = cameras[0].id;
-                        currentCameraId = cameras[0].id;
-                    }
+                let selectedId = cameras[0].id;
+                // Jika environment di HP dengan multiple kamera, pilih kamera belakang
+                if (currentFacingMode === 'environment' && cameras.length > 1) {
+                    selectedId = cameras[cameras.length - 1].id;
                 }
+                currentCameraId = selectedId;
+                const select = document.getElementById('cameraDeviceSelect');
+                if (select) select.value = selectedId;
+
+                html5QrCode.start(selectedId, config, onScanSuccess, onScanFailure)
+                    .then(onSuccess)
+                    .catch(e => {
+                        console.warn('Fallback camera start failed:', e);
+                        isCameraSwitching = false;
+                    });
+            } else {
+                isCameraSwitching = false;
             }
-        } catch(e) {
-            console.warn('[Camera] Deteksi list kamera warning:', e);
-        }
+        }).catch(err => {
+            console.warn('getCameras failed:', err);
+            isCameraSwitching = false;
+        });
     }
 
     function populateCameraDropdown(cameras) {
@@ -1195,25 +1164,22 @@
             }
             select.appendChild(opt);
         });
+
+        if (currentCameraId) {
+            select.value = currentCameraId;
+        }
     }
 
-    async function changeSelectedCamera(cameraId) {
-        if (!cameraId || cameraId === currentCameraId) return;
+    function changeSelectedCamera(cameraId) {
+        if (!cameraId) return;
         currentCameraId = cameraId;
         try {
             localStorage.setItem('buyle_chosen_camera_id', cameraId);
         } catch(e) {}
-        await startCameraWithId(cameraId);
-    }
 
-    async function startCameraWithId(cameraId) {
         const config = {
-            fps: 20,
-            qrbox: function(viewfinderWidth, viewfinderHeight) {
-                const minDim = Math.min(viewfinderWidth, viewfinderHeight);
-                const boxSize = Math.max(220, Math.floor(minDim * 0.8));
-                return { width: boxSize, height: boxSize };
-            },
+            fps: 15,
+            qrbox: { width: 250, height: 250 },
             aspectRatio: 1.0,
             experimentalFeatures: {
                 useBarCodeDetectorIfSupported: true
@@ -1221,35 +1187,24 @@
         };
 
         if (html5QrCode) {
-            try { await html5QrCode.stop(); } catch (e) {}
-            try { html5QrCode.clear(); } catch (e) {}
-        }
+            const stopPromise = (html5QrCode.isScanning || typeof html5QrCode.stop === 'function')
+                ? html5QrCode.stop().catch(() => {})
+                : Promise.resolve();
 
-        const reader = document.getElementById('reader');
-        if (reader) reader.innerHTML = '';
-
-        html5QrCode = new Html5Qrcode("reader");
-
-        try {
-            await html5QrCode.start(cameraId, config, onScanSuccess, onScanFailure);
-            isCameraSwitching = false;
-        } catch (err) {
-            console.warn('[Camera] start by ID failed, trying fallback generic:', err);
-            try {
-                await html5QrCode.start({ facingMode: currentFacingMode }, config, onScanSuccess, onScanFailure);
-                isCameraSwitching = false;
-            } catch (err2) {
-                console.error('[Camera] generic start fallback failed:', err2);
-                showCameraGeneralError('Gagal memuat video stream kamera terpilih. Pastikan kamera tidak dipakai aplikasi lain.');
-                isCameraSwitching = false;
-            }
+            stopPromise.finally(() => {
+                setTimeout(() => {
+                    html5QrCode.start(cameraId, config, onScanSuccess, onScanFailure)
+                        .catch(e => console.warn('Switch camera error:', e))
+                        .finally(() => { isCameraSwitching = false; });
+                }, 200);
+            });
         }
     }
 
     function toggleCameraFacing() {
         if (isCameraSwitching) return;
+        isCameraSwitching = true;
 
-        // Jika ada list kamera lebih dari 1 di dropdown, switch ke device berikutnya
         if (availableCameras.length > 1) {
             const currentIndex = availableCameras.findIndex(c => c.id === currentCameraId);
             const nextIndex = (currentIndex + 1) % availableCameras.length;
@@ -1266,95 +1221,7 @@
         const label = document.getElementById("camFacingLabel");
         if (label) label.textContent = (currentFacingMode === "environment") ? "Kamera Belakang" : "Kamera Depan";
 
-        startCameraWithId({ facingMode: currentFacingMode });
-    }
-
-    function showCameraBlockedError() {
-        isCameraSwitching = false;
-        const reader = document.getElementById('reader');
-        if (!reader) return;
-
-        reader.innerHTML = `
-            <div style="padding: 2rem 1.25rem; text-align: center; max-width: 530px; margin: 0 auto;">
-                <div style="width: 54px; height: 54px; background: #fef2f2; border: 2px solid #fecaca; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.85rem; color: #dc2626;">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                </div>
-                
-                <h4 style="font-weight: 800; font-size: 1.05rem; color: #991b1b; margin-bottom: 0.35rem;">
-                    Izin Kamera Belum Diizinkan di Chrome
-                </h4>
-                <p style="font-size: 0.82rem; color: #64748b; line-height: 1.45; margin-bottom: 1.25rem;">
-                    Browser Chrome <strong>secara otomatis tidak menampilkan pop-up lagi</strong> jika izin pernah ditutup atau diblokir sebelumnya. Anda hanya perlu membukanya sekali lewat menu address bar.
-                </p>
-
-                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 1.15rem; text-align: left; font-size: 0.82rem; color: #334155; margin-bottom: 1.25rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
-                    <div style="font-weight: 800; color: #0f172a; margin-bottom: 0.75rem; font-size: 0.85rem; display:flex; align-items:center; gap:6px;">
-                        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                        Langkah Mudah Membuka Akses (5 Detik):
-                    </div>
-                    <div style="display: flex; gap: 0.65rem; margin-bottom: 0.65rem; align-items: flex-start;">
-                        <span style="background: #1eb349; color: #fff; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 800; flex-shrink: 0; margin-top: 1px;">1</span>
-                        <div>Klik icon <strong>Setelan / Gembok (🔒)</strong> di sebelah kiri URL <code>buyle.id</code> pada bar atas Chrome (seperti kotak hitam yang sempat Anda buka).</div>
-                    </div>
-                    <div style="display: flex; gap: 0.65rem; margin-bottom: 0.65rem; align-items: flex-start;">
-                        <span style="background: #1eb349; color: #fff; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 800; flex-shrink: 0; margin-top: 1px;">2</span>
-                        <div>Klik tombol <strong>"Reset izin"</strong> ATAU klik <strong>"Setelan situs"</strong> lalu ubah opsi <strong>Kamera</strong> menjadi <strong>"Izinkan" (Allow)</strong>.</div>
-                    </div>
-                    <div style="display: flex; gap: 0.65rem; align-items: flex-start;">
-                        <span style="background: #1eb349; color: #fff; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 800; flex-shrink: 0; margin-top: 1px;">3</span>
-                        <div>Klik tombol hijau <strong>"Muat Ulang Halaman"</strong> di bawah ini agar Chrome membaca izin baru tersebut.</div>
-                    </div>
-                </div>
-
-                <div style="display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
-                    <button type="button" onclick="window.location.reload()" style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border: none; padding: 0.65rem 1.4rem; border-radius: 999px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 4px 14px rgba(30,179,73,0.35);">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-                        Muat Ulang Halaman (F5)
-                    </button>
-                    <button type="button" onclick="directForceRequest()" style="display: inline-flex; align-items: center; gap: 6px; background: #ffffff; color: #334155; border: 1.5px solid #cbd5e1; padding: 0.65rem 1.25rem; border-radius: 999px; font-weight: 700; font-size: 0.85rem; cursor: pointer;">
-                        Coba Buka Kamera Lagi
-                    </button>
-                </div>
-            </div>
-        `;
-    }
-
-    async function directForceRequest() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            stream.getTracks().forEach(t => t.stop());
-            requestCameraAndInit();
-        } catch(err) {
-            console.warn('[Camera] Direct force failed:', err);
-            showCameraBlockedError();
-        }
-    }
-
-    function showCameraGeneralError(msg) {
-        isCameraSwitching = false;
-        const reader = document.getElementById('reader');
-        if (!reader) return;
-
-        reader.innerHTML = `
-            <div style="padding: 2.5rem 1rem; text-align: center;">
-                <div style="margin-bottom: 0.75rem; display: flex; justify-content: center;">
-                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.8"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                </div>
-                <div style="font-size: 0.95rem; font-weight: 800; color: #991b1b; margin-bottom: 0.4rem;">Kamera Belum Dapat Diakses</div>
-                <div style="font-size: 0.82rem; color: #64748b; line-height: 1.5; margin-bottom: 1.25rem; max-width: 420px; margin-left: auto; margin-right: auto;">
-                    ${msg || 'Browser membutuhkan izin untuk membuka kamera laptop atau webcam USB Anda.'}
-                </div>
-                <div style="display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap;">
-                    <button type="button" onclick="requestCameraAndInit()" style="display: inline-flex; align-items: center; gap: 0.4rem; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border: none; padding: 0.6rem 1.5rem; border-radius: 999px; font-size: 0.84rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(30,179,73,0.35);">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                        Coba Buka Kamera
-                    </button>
-                    <button type="button" onclick="showCameraBlockedError()" style="display: inline-flex; align-items: center; gap: 0.4rem; background: #fff; color: #64748b; border: 1.5px solid #cbd5e1; padding: 0.6rem 1.25rem; border-radius: 999px; font-size: 0.84rem; font-weight: 600; cursor: pointer;">
-                        Panduan Izin Chrome
-                    </button>
-                </div>
-            </div>
-        `;
+        initCamera(currentFacingMode);
     }
 
     // ══════════════════════════════════════════════════════════════════════
