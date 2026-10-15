@@ -1545,18 +1545,26 @@
                             $svSeller = optional(optional($sv->seller)->creatorProfile)->store_name ?? optional($sv->seller)->name ?? 'Kreator';
                             $svAvatar = optional(optional($sv->seller)->creatorProfile)->avatar ?? optional($sv->seller)->avatar ?? null;
                             $hasSale  = $sv->sale_price > 0 && $sv->sale_price < $sv->price;
+                            // Expired hanya untuk produk tipe ticket/konser
+                            $svIsTicket = in_array(strtolower($sv->product_type ?? $sv->type ?? ''), ['ticket', 'tiket', 'event']);
+                            $svEventRaw = $sv->event_date ?: (!empty($sv->data_json['event_date']) ? $sv->data_json['event_date'] : null);
+                            $svIsExpired = $svIsTicket && $svEventRaw && \Carbon\Carbon::parse($svEventRaw)->endOfDay()->isPast();
                         @endphp
-                        <a href="{{ route_locale('products.show', $sv->slug) }}" class="sp-card" style="text-decoration:none; color: inherit;">
+                        <a href="{{ route_locale('products.show', $sv->slug) }}" class="sp-card" style="text-decoration:none; color: inherit; {{ $svIsExpired ? 'opacity:0.7; pointer-events:none;' : '' }}">
                             {{-- Image --}}
                             <div class="sp-card-img">
                                 @if($svImg)
-                                    <img src="{{ $svImg }}" alt="{{ $sv->name }}" loading="lazy">
+                                    <img src="{{ $svImg }}" alt="{{ $sv->name }}" loading="lazy" style="{{ $svIsExpired ? 'filter:grayscale(100%);' : '' }}">
                                 @else
                                     <div class="sp-card-img-ph">
                                         <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                                     </div>
                                 @endif
-                                @if($hasSale)
+                                @if($svIsExpired)
+                                    <div style="position:absolute;inset:0;background:rgba(15,23,42,0.38);display:flex;align-items:center;justify-content:center;z-index:3;">
+                                        <span style="background:rgba(20,20,30,0.85);color:#94A3B8;font-size:0.65rem;font-weight:800;padding:0.25rem 0.65rem;border-radius:99px;font-family:'Montserrat',sans-serif;letter-spacing:0.07em;border:1px solid rgba(148,163,184,0.25);">&#127937; SELESAI</span>
+                                    </div>
+                                @elseif($hasSale)
                                     <span class="sp-card-badge diskon">DISKON</span>
                                 @endif
                             </div>
@@ -1574,17 +1582,21 @@
                                     <span style="font-size:0.7rem; font-weight:600; color:#64748B; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--font);">{{ $svSeller }}</span>
                                 </div>
                                 {{-- Name --}}
-                                <div class="sp-card-name">{{ $sv->name }}</div>
+                                <div class="sp-card-name" style="{{ $svIsExpired ? 'color:#94A3B8;' : '' }}">{{ $sv->name }}</div>
                                 {{-- Footer: Price + Category --}}
                                 <div class="sp-card-footer">
                                     <div class="sp-card-price">
-                                        @if($hasSale)
-                                            <span class="sp-card-price-old">Rp {{ number_format($sv->price, 0, ',', '.') }}</span>
-                                        @endif
-                                        @if($svPrice > 0)
-                                            <span class="sp-card-price-main">Rp {{ number_format($svPrice, 0, ',', '.') }}</span>
+                                        @if($svIsExpired)
+                                            <span class="sp-card-price-main" style="color:#94A3B8;">Event Selesai</span>
                                         @else
-                                            <span class="sp-card-price-main" style="color:#1eb349;">GRATIS</span>
+                                            @if($hasSale)
+                                                <span class="sp-card-price-old">Rp {{ number_format($sv->price, 0, ',', '.') }}</span>
+                                            @endif
+                                            @if($svPrice > 0)
+                                                <span class="sp-card-price-main">Rp {{ number_format($svPrice, 0, ',', '.') }}</span>
+                                            @else
+                                                <span class="sp-card-price-main" style="color:#1eb349;">GRATIS</span>
+                                            @endif
                                         @endif
                                     </div>
                                     @if($sv->category)

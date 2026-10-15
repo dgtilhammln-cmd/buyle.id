@@ -480,8 +480,16 @@
 
             {{-- GALLERY --}}
             <div class="ps-gallery">
-                <div class="ps-slider-wrap" id="psWrap">
-                    @if($hasDiscount)
+                <div class="ps-slider-wrap" id="psWrap" style="{{ ($psIsExpired ?? false) ? 'filter:grayscale(100%); opacity:0.75;' : '' }}">
+                    @if($psIsExpired ?? false)
+                        {{-- Expired full overlay on product image --}}
+                        <div style="position:absolute;inset:0;background:rgba(15,23,42,0.42);display:flex;align-items:center;justify-content:center;z-index:10;border-radius:inherit;">
+                            <div style="text-align:center;">
+                                <div style="font-size:2rem;margin-bottom:0.5rem;">&#127937;</div>
+                                <div style="background:rgba(20,20,30,0.88);color:#94A3B8;font-size:0.82rem;font-weight:800;padding:0.4rem 1.25rem;border-radius:99px;font-family:'Montserrat',sans-serif;letter-spacing:0.08em;border:1px solid rgba(148,163,184,0.3);">EVENT TELAH BERAKHIR</div>
+                            </div>
+                        </div>
+                    @elseif($hasDiscount)
                         <span class="ps-disc-badge">-{{ $discountPct }}%</span>
                     @endif
 
@@ -630,6 +638,9 @@
                         @php
                             $isWarActive = $product && ($product->product_type ?? '') === 'ticket' && !empty($product->ticket_war_start) && now()->lt($product->ticket_war_start);
                             $warTimestamp = $isWarActive ? $product->ticket_war_start->timestamp * 1000 : 0;
+                            // Deteksi event expired — khusus tipe ticket
+                            $psEventRaw = isset($product) ? ($product->event_date ?: (!empty($product->data_json['event_date']) ? $product->data_json['event_date'] : null)) : null;
+                            $psIsExpired = isset($product) && ($product->product_type ?? '') === 'ticket' && $psEventRaw && \Carbon\Carbon::parse($psEventRaw)->endOfDay()->isPast();
                         @endphp
 
                         {{-- TICKET WAR REAL-TIME COUNTDOWN CARD --}}
@@ -668,7 +679,17 @@
                         </div>
                         @endif
 
-                        <div class="ps-cta-row">
+                        {{-- Expired Banner: tampil di atas CTA jika event sudah berlalu --}}
+                        @if($psIsExpired ?? false)
+                        <div style="background:linear-gradient(135deg,#F1F5F9,#E2E8F0);border:1.5px solid #CBD5E1;border-radius:14px;padding:1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;">
+                            <span style="font-size:1.4rem;">&#127937;</span>
+                            <div>
+                                <div style="font-family:'Montserrat',sans-serif;font-size:0.88rem;font-weight:800;color:#64748B;margin-bottom:0.15rem;">Event Telah Berakhir</div>
+                                <div style="font-size:0.75rem;color:#94A3B8;font-weight:500;">Penjualan tiket untuk event ini sudah ditutup.</div>
+                            </div>
+                        </div>
+                        @endif
+                        <div class="ps-cta-row" style="{{ ($psIsExpired ?? false) ? 'pointer-events:none;opacity:0.45;' : '' }}">
                             <form action="{{ route('cart.add') }}" method="POST" id="bio-cart-form" style="display:contents;" class="ps-add-cart-form">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $prodId }}">

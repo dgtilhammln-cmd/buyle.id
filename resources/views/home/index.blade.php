@@ -3229,9 +3229,17 @@
 
                             // Poster Event (Landscape 16:9), fallback ke gambar utama
                             $tImage = !empty($tProd->og_image) ? asset('storage/' . $tProd->og_image) : ($tProd->image ? asset('storage/' . $tProd->image) : asset('assets/images/default-ticket.webp'));
-                            $tDate = !empty($tProd->data_json['event_date'])
-                                ? \Carbon\Carbon::parse($tProd->data_json['event_date'])->isoFormat('D MMMM Y')
-                                : \Carbon\Carbon::parse($tProd->created_at)->addDays(15)->isoFormat('D MMMM Y');
+
+                            // Deteksi event_date — prioritas: kolom event_date > data_json['event_date'] > created_at+15
+                            // $tIsExpired hanya berlaku untuk produk tipe ticket/konser
+                            $tRawEventDate = $tProd->event_date
+                                ?: (!empty($tProd->data_json['event_date']) ? $tProd->data_json['event_date'] : null);
+                            $tDateCarbon = $tRawEventDate
+                                ? \Carbon\Carbon::parse($tRawEventDate)
+                                : \Carbon\Carbon::parse($tProd->created_at)->addDays(15);
+                            $tDate      = $tDateCarbon->isoFormat('D MMMM Y');
+                            $tIsExpired = $tDateCarbon->endOfDay()->isPast();
+
                             $tLocation = $tProd->event_location
                                 ?: ($tProd->location
                                     ?: ($tProd->data_json['event_location'] ?? null)
@@ -3248,27 +3256,36 @@
                         <a href="{{ route_locale('products.show', $tProd->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
                             class="ticket-card-swipe-item">
-                            <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
+                            <div style="background: {{ $tIsExpired ? '#F8FAFC' : '#ffffff' }}; border: 1.5px solid {{ $tIsExpired ? '#CBD5E1' : '#E2E8F0' }}; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02); {{ $tIsExpired ? 'opacity:0.72;' : '' }}"
                                 class="article-card-box">
 
                                 {{-- Image Banner 16:9 Landscape (Poster Event) --}}
                                 <div
                                     style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
                                     <img src="{{ $tImage }}" alt="{{ $tProd->name }}"
-                                        style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
+                                        style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; {{ $tIsExpired ? 'filter:grayscale(100%);' : '' }}"
                                         class="article-banner-img">
 
-                                    {{-- Discount / Event Badge Top-Left --}}
-                                    @if($tHasDiscount)
-                                        <div
-                                            style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
+                                    {{-- Expired overlay (hanya ticket yang sudah berlalu) --}}
+                                    @if($tIsExpired)
+                                        <div style="position:absolute;inset:0;background:rgba(15,23,42,0.38);display:flex;align-items:center;justify-content:center;z-index:3;">
+                                            <span style="background:rgba(20,20,30,0.85);color:#94A3B8;font-size:0.7rem;font-weight:800;padding:0.28rem 0.75rem;border-radius:99px;font-family:'Montserrat',sans-serif;letter-spacing:0.08em;border:1px solid rgba(148,163,184,0.25);">&#127937; EVENT SELESAI</span>
+                                        </div>
+                                    @endif
+
+                                    {{-- Discount / Event Badge Top-Left (hidden if event expired) --}}
+                                    @if(!$tIsExpired)
+                                        @if($tHasDiscount)
+                                            <div
+                                                style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
                                             -{{ $tDiscountPct }}%
-                                        </div>
-                                    @else
-                                        <div
-                                            style="position: absolute; top: 8px; left: 8px; background: #1eb349; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
+                                            </div>
+                                        @else
+                                            <div
+                                                style="position: absolute; top: 8px; left: 8px; background: #1eb349; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
                                             EVENT
-                                        </div>
+                                            </div>
+                                        @endif
                                     @endif
                                 </div>
 
@@ -3280,10 +3297,10 @@
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
                                             <div style="display: flex; align-items: center; gap: 0.3rem;">
-                                                <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
-                                                <span style="font-family: 'Montserrat', sans-serif;">{{ $tRating }}</span>
+                                                <span style="color: {{ $tIsExpired ? '#94A3B8' : '#F59E0B' }}; font-size: 0.95rem;">★</span>
+                                                <span style="font-family: 'Montserrat', sans-serif; color: {{ $tIsExpired ? '#94A3B8' : '#1E293B' }};">{{ $tRating }}</span>
                                             </div>
-                                            @if($tIsVerified)
+                                            @if($tIsVerified && !$tIsExpired)
                                                 <div
                                                     style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
                                                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -3298,15 +3315,15 @@
 
                                         {{-- Title --}}
                                         <h3
-                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.35rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: {{ $tIsExpired ? '#94A3B8' : '#0F172A' }}; margin: 0 0 0.35rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
                                             {{ $tProd->name }}
                                         </h3>
 
                                         {{-- Tanggal & Lokasi Event --}}
                                         <div
-                                            style="display: flex; flex-direction: column; gap: 0.2rem; margin: 0.35rem 0 0.4rem; font-size: 0.72rem; color: #64748B; font-weight: 600;">
+                                            style="display: flex; flex-direction: column; gap: 0.2rem; margin: 0.35rem 0 0.4rem; font-size: 0.72rem; color: {{ $tIsExpired ? '#94A3B8' : '#64748B' }}; font-weight: 600;">
                                             <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
-                                                <svg width="12" height="12" fill="none" stroke="#1eb349" stroke-width="2.2"
+                                                <svg width="12" height="12" fill="none" stroke="{{ $tIsExpired ? '#94A3B8' : '#1eb349' }}" stroke-width="2.2"
                                                     viewBox="0 0 24 24">
                                                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                                                     <line x1="16" y1="2" x2="16" y2="6" />
@@ -3316,7 +3333,7 @@
                                                 <span>{{ $tDate }}</span>
                                             </div>
                                             <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
-                                                <svg width="12" height="12" fill="none" stroke="#EF4444" stroke-width="2.2"
+                                                <svg width="12" height="12" fill="none" stroke="{{ $tIsExpired ? '#94A3B8' : '#EF4444' }}" stroke-width="2.2"
                                                     viewBox="0 0 24 24">
                                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                                                     <circle cx="12" cy="10" r="3" />
@@ -3333,29 +3350,37 @@
                                         <div
                                             style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">
                                             <div style="white-space: nowrap; min-width: 0; flex: 1;">
-                                                @if($tHasDiscount)
+                                                @if($tHasDiscount && !$tIsExpired)
                                                     <span
                                                         style="font-size: 0.68rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500; white-space: nowrap;">
                                                         Rp{{ number_format($tOrigPrice, 0, ',', '.') }}
                                                     </span>
                                                 @endif
                                                 <span
-                                                    style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">
-                                                    @if($tPrice > 0)
+                                                    style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: {{ $tIsExpired ? '#94A3B8' : '#16a34a' }}; white-space: nowrap; display: block;">
+                                                    @if($tIsExpired)
+                                                        Selesai
+                                                    @elseif($tPrice > 0)
                                                         Rp{{ number_format($tPrice, 0, ',', '.') }}
                                                     @else
                                                         <span style="color: #1eb349;">GRATIS</span>
                                                     @endif
                                                 </span>
                                             </div>
-                                            <span
-                                                style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
-                                                class="retarget-btn-cta">
-                                                Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
-                                                    stroke-width="2.5" viewBox="0 0 24 24">
-                                                    <path d="M5 12h14m-7-7l7 7-7 7" />
-                                                </svg>
-                                            </span>
+                                            @if($tIsExpired)
+                                                <span style="background:#E2E8F0; color:#94A3B8; padding:0.35rem 0.75rem; border-radius:99px; font-size:0.75rem; font-weight:700; display:inline-flex; align-items:center; flex-shrink:0; white-space:nowrap; pointer-events:none; cursor:not-allowed;">
+                                                    Selesai
+                                                </span>
+                                            @else
+                                                <span
+                                                    style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
+                                                    class="retarget-btn-cta">
+                                                    Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
+                                                        stroke-width="2.5" viewBox="0 0 24 24">
+                                                        <path d="M5 12h14m-7-7l7 7-7 7" />
+                                                    </svg>
+                                                </span>
+                                            @endif
                                         </div>
                                     </div>
 
