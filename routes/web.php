@@ -125,6 +125,9 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/api/coupons', [\App\Http\Controllers\CouponApiController::class, 'index'])->name('api.coupons.index');
     Route::post('/api/coupons/validate', [\App\Http\Controllers\CouponApiController::class, 'validate'])->name('api.coupons.validate');
 
+    // Smart Retargeting & Recommendations Engine API
+    Route::match(['get', 'post'], '/api/retargeting/recommendations', [\App\Http\Controllers\RecommendationController::class, 'getRetargetedProducts'])->name('api.retargeting.recommendations');
+
     // Cek Resi
     Route::get('/cek-resi', [\App\Http\Controllers\ResiController::class, 'index'])->name('cek-resi');
     Route::post('/cek-ongkir', [App\Http\Controllers\ResiController::class, 'cekOngkir'])->name('cek.ongkir');

@@ -958,6 +958,40 @@
         };
     </script>
 
+    {{-- SMART RETARGETING TRACKER --}}
+    <script>
+        (function() {
+            try {
+                const prodData = {
+                    id: {{ (int)$product->id }},
+                    name: {!! json_encode($prodTitle) !!},
+                    slug: {!! json_encode($product->slug) !!},
+                    category_id: {{ (int)($product->product_category_id ?? 0) }},
+                    seller_id: {{ (int)($product->seller_id ?? 0) }},
+                    timestamp: Date.now()
+                };
+
+                let history = JSON.parse(localStorage.getItem('buyle_viewed_history') || '[]');
+                history = history.filter(item => item && item.id !== prodData.id);
+                history.unshift(prodData);
+                if (history.length > 20) history = history.slice(0, 20);
+                localStorage.setItem('buyle_viewed_history', JSON.stringify(history));
+
+                let catMap = JSON.parse(localStorage.getItem('buyle_cat_interests') || '{}');
+                if (prodData.category_id) {
+                    catMap[prodData.category_id] = (catMap[prodData.category_id] || 0) + 1;
+                    localStorage.setItem('buyle_cat_interests', JSON.stringify(catMap));
+                }
+
+                let sellerMap = JSON.parse(localStorage.getItem('buyle_seller_interests') || '{}');
+                if (prodData.seller_id) {
+                    sellerMap[prodData.seller_id] = (sellerMap[prodData.seller_id] || 0) + 1;
+                    localStorage.setItem('buyle_seller_interests', JSON.stringify(sellerMap));
+                }
+            } catch(e) {}
+        })();
+    </script>
+
     @include('partials.adsense_modal')
     @include('partials.report_modal', ['reportType' => 'product', 'targetName' => $prodTitle])
 </body>

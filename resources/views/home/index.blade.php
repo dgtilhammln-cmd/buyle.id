@@ -1882,39 +1882,105 @@
         </div>
     </section>
 
-    {{-- Retargeting Client Intelligence Script --}}
+    {{-- Smart Retargeting Client Intelligence Engine --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             try {
                 var history = JSON.parse(localStorage.getItem('buyle_viewed_history') || '[]');
-                if (history.length > 0) {
-                    var viewedCatIds = history.map(function (item) { return String(item.category_id); }).filter(Boolean);
-                    var viewedProdIds = history.map(function (item) { return String(item.id); }).filter(Boolean);
+                var catInterests = JSON.parse(localStorage.getItem('buyle_cat_interests') || '{}');
+                var sellerInterests = JSON.parse(localStorage.getItem('buyle_seller_interests') || '{}');
 
-                    var container = document.getElementById('retargetItemsContainer');
-                    if (container) {
-                        var cards = Array.from(container.children);
-                        cards.sort(function (a, b) {
-                            var aCat = a.getAttribute('data-category-id') || '';
-                            var aProd = a.getAttribute('data-product-id') || '';
-                            var bCat = b.getAttribute('data-category-id') || '';
-                            var bProd = b.getAttribute('data-product-id') || '';
+                if (history.length > 0 || Object.keys(catInterests).length > 0) {
+                    var viewedIds = history.map(function(item) { return item.id; }).filter(Boolean);
+                    var catIds = Object.keys(catInterests).map(Number).filter(Boolean);
+                    var sellerIds = Object.keys(sellerInterests).map(Number).filter(Boolean);
 
-                            var aScore = (viewedProdIds.includes(aProd) ? 10 : 0) + (viewedCatIds.includes(aCat) ? 5 : 0);
-                            var bScore = (viewedProdIds.includes(bProd) ? 10 : 0) + (viewedCatIds.includes(bCat) ? 5 : 0);
-
-                            return bScore - aScore;
-                        });
-
-                        cards.forEach(function (card) {
-                            container.appendChild(card);
-                        });
-
-                        var sub = document.getElementById('retargetSectionSubtitle');
-                        if (sub && (viewedCatIds.length > 0 || viewedProdIds.length > 0)) {
-                            sub.innerHTML = '<span style="background: #DEF7EC; color: #03543F; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 99px; margin-right: 0.4rem; display: inline-flex; align-items: center; gap: 0.2rem;">✨ Disesuaikan Minat Anda</span> Berdasarkan riwayat penelusuran & produk yang Anda sukai';
+                    fetch('{{ route('api.retargeting.recommendations') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            viewed_ids: viewedIds,
+                            category_ids: catIds,
+                            seller_ids: sellerIds
+                        })
+                    })
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) {
+                        if (data && data.status === 'success' && data.products && data.products.length > 0) {
+                            renderSmartRetargetCards(data.products);
+                            if (data.is_personalized) {
+                                var titleEl = document.getElementById('retargetSectionTitle');
+                                if (titleEl) {
+                                    titleEl.innerHTML = 'Produk Terkait & Rekomendasi <span style="background: #DEF7EC; color: #03543F; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 99px; vertical-align: middle; margin-left: 0.4rem; display: inline-flex; align-items: center; gap: 0.25rem;">✨ Untuk Anda</span>';
+                                }
+                            }
                         }
-                    }
+                    })
+                    .catch(function(err) {});
+                }
+
+                function escapeHtml(str) {
+                    if (!str) return '';
+                    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+                }
+
+                function renderSmartRetargetCards(products) {
+                    var container = document.getElementById('retargetItemsContainer');
+                    if (!container) return;
+
+                    var html = '';
+                    products.forEach(function(p) {
+                        var discBadge = p.has_discount 
+                            ? '<div style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: \'Montserrat\', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">' + '-' + p.discount_pct + '%</div>'
+                            : '';
+                        var verifiedBadge = p.is_verified
+                            ? '<div style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg> Verified</div>'
+                            : '';
+                        var strikePrice = p.has_discount && p.orig_price_formatted
+                            ? '<span style="font-size: 0.68rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500; white-space: nowrap;">' + p.orig_price_formatted + '</span>'
+                            : '';
+
+                        html += '<a href="' + p.url + '" style="text-decoration: none; color: inherit; display: flex; flex-direction: column;" data-product-id="' + p.id + '" data-category-id="' + p.category_id + '">' +
+                            '<div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);" class="article-card-box">' +
+                                '<div style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">' +
+                                    '<img src="' + p.image + '" alt="' + escapeHtml(p.name) + '" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;" class="article-banner-img">' +
+                                    discBadge +
+                                '</div>' +
+                                '<div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">' +
+                                    '<div>' +
+                                        '<div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">' +
+                                            '<div style="display: flex; align-items: center; gap: 0.3rem;">' +
+                                                '<span style="color: #F59E0B; font-size: 0.95rem;">★</span>' +
+                                                '<span style="font-family: \'Montserrat\', sans-serif;">' + p.rating + '</span>' +
+                                            '</div>' +
+                                            verifiedBadge +
+                                        '</div>' +
+                                        '<h3 style="font-family: \'Montserrat\', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">' +
+                                            escapeHtml(p.name) +
+                                        '</h3>' +
+                                    '</div>' +
+                                    '<div>' +
+                                        '<div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>' +
+                                        '<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">' +
+                                            '<div style="white-space: nowrap; min-width: 0; flex: 1;">' +
+                                                strikePrice +
+                                                '<span style="font-family: \'Montserrat\', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">' +
+                                                    p.price_formatted +
+                                                '</span>' +
+                                            '</div>' +
+                                            '<span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;" class="retarget-btn-cta">' +
+                                                'Lihat <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>' +
+                                            '</span>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</a>';
+                    });
+                    container.innerHTML = html;
                 }
             } catch (e) {
                 console.log('Retargeting script initialized');
