@@ -4,6 +4,10 @@
 
 @section('styles')
 <style>
+    /* ── Keyframes ── */
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
     /* ── Bright Light Gray Scrollbar ── */
     ::-webkit-scrollbar { width: 10px; height: 10px; }
     ::-webkit-scrollbar-button { display: none !important; width: 0 !important; height: 0 !important; }
@@ -130,7 +134,7 @@
         min-width: 0;
     }
 
-    /* ── SCANNER VIEWPORT (COMPACT & PROPORTIONAL) ── */
+    /* ── SCANNER VIEWPORT (SHARP & PROPORTIONAL — NO BLUR) ── */
     #reader {
         width: 100% !important;
         max-width: 100% !important;
@@ -143,30 +147,28 @@
         margin: 0 !important;
         box-sizing: border-box !important;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        min-height: 320px;
     }
 
+    /* VIDEO: JANGAN pakai object-fit:cover / max-height ketat = penyebab BLUR */
     #reader video {
         width: 100% !important;
-        max-height: 360px !important;
         height: auto !important;
-        object-fit: cover !important;
+        max-height: 420px !important;
+        object-fit: contain !important;
         border-radius: 14px !important;
         display: block !important;
         margin: 0 auto !important;
+    }
+
+    /* Mirror mode toggle via class */
+    #reader.mirror-on video {
+        transform: scaleX(-1) !important;
     }
 
     #reader__scan_region {
         border-radius: 14px !important;
         overflow: hidden !important;
         background: #020617 !important;
-        max-height: 360px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
     }
 
     #reader__scan_region img {
@@ -770,6 +772,9 @@
                                 <input type="checkbox" id="autoScanToggle" checked style="accent-color:#1eb349; width:16px; height:16px;" onchange="handleFastModeChange(this.checked)">
                                 ⚡ Fast Mode (Auto Next)
                             </label>
+                            <button type="button" id="mirrorToggleBtn" onclick="toggleMirror()" style="display:inline-flex; align-items:center; gap:0.3rem; font-size:0.78rem; font-weight:700; color:#166534; background:#f0fdf4; padding:0.4rem 0.85rem; border-radius:999px; border:1.5px solid #bbf7d0; cursor:pointer; user-select:none; transition: all 0.2s;" title="Cerminkan tampilan kamera (mirror) untuk webcam desktop">
+                                🪞 Mirror: ON
+                            </button>
                         </div>
                     </div>
 
@@ -1200,7 +1205,7 @@
     }
 
     // ══════════════════════════════════════════════════════════════════════
-    // ORIGINAL HTML5 QRCODE SCANNER (USER GESTURE RESMI & ANTI PERMISSION BLOCK)
+    // ORIGINAL HTML5 QRCODE SCANNER (SHARP HD + MIRROR + NATIVE BARCODE)
     // ══════════════════════════════════════════════════════════════════════
     function startOriginalScanner() {
         try {
@@ -1209,17 +1214,63 @@
             }
 
             html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
-                fps: 15, 
-                qrbox: { width: 220, height: 220 },
-                aspectRatio: 1.333333,
+                fps: 12, 
+                qrbox: { width: 250, height: 250 },
+                disableFlip: false,
                 rememberLastUsedCamera: true,
                 showTorchButtonIfSupported: true,
-                showZoomSliderIfSupported: true
+                showZoomSliderIfSupported: true,
+                videoConstraints: {
+                    facingMode: "environment",
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                },
+                experimentalFeatures: {
+                    useBarCodeDetectorIfSupported: true
+                }
             }, false);
 
             html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+
+            // Aktifkan mirror default untuk webcam desktop
+            setTimeout(() => {
+                applyMirrorState();
+            }, 1200);
         } catch (err) {
             console.error('[Scanner] Initialization failed:', err);
+        }
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // MIRROR CAMERA TOGGLE (WEBCAM DESKTOP BUTUH MIRROR AGAR NATURAL)
+    // ══════════════════════════════════════════════════════════════════════
+    let isMirrorOn = true;
+    try {
+        const savedMirror = localStorage.getItem('buyle_scanner_mirror');
+        isMirrorOn = (savedMirror !== null) ? (savedMirror === '1') : true;
+    } catch(e) {}
+
+    function toggleMirror() {
+        isMirrorOn = !isMirrorOn;
+        try { localStorage.setItem('buyle_scanner_mirror', isMirrorOn ? '1' : '0'); } catch(e) {}
+        applyMirrorState();
+    }
+
+    function applyMirrorState() {
+        const readerEl = document.getElementById('reader');
+        const mirrorBtn = document.getElementById('mirrorToggleBtn');
+        if (readerEl) {
+            if (isMirrorOn) {
+                readerEl.classList.add('mirror-on');
+            } else {
+                readerEl.classList.remove('mirror-on');
+            }
+        }
+        if (mirrorBtn) {
+            mirrorBtn.textContent = isMirrorOn ? '🪞 Mirror: ON' : '🪞 Mirror: OFF';
+            mirrorBtn.style.background = isMirrorOn ? '#f0fdf4' : '#f8fafc';
+            mirrorBtn.style.borderColor = isMirrorOn ? '#bbf7d0' : '#e2e8f0';
+            mirrorBtn.style.color = isMirrorOn ? '#166534' : '#64748b';
         }
     }
 
