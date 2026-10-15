@@ -1787,7 +1787,7 @@
                         @endphp
                         <a href="{{ route_locale('products.show', $rProd->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
-                            class="article-card-swipe-item" data-product-id="{{ $rProd->id }}"
+                            data-product-id="{{ $rProd->id }}"
                             data-category-id="{{ $rProd->category_id }}">
                             <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
                                 class="article-card-box">
@@ -1970,8 +1970,7 @@
                             $bRating = $bRatingVal ? number_format((float)$bRatingVal, 1, '.', '') : ($bSellerCp ? $bSellerCp->getRatingStats()['rating'] : '5.0');
                         @endphp
                         <a href="{{ route_locale('products.show', $bProd->slug) }}"
-                            style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
-                            class="article-card-swipe-item">
+                            style="text-decoration: none; color: inherit; display: flex; flex-direction: column;">
                             <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
                                 class="article-card-box">
 
@@ -3190,20 +3189,28 @@
             }
         }
 
-        /* 1-Row 5-Cards Responsive (Desktop: 1 baris pas 5 cards, Mobile/Tablet: 1 baris horizontal scroll) */
+        /* 1-Row 5-Cards Responsive (Desktop: 1 baris pas 5 cards matching Produk Terbaru, Mobile: 1 baris horizontal scroll) */
         .products-single-row-5 {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 1.1rem;
             align-items: stretch;
+            width: 100%;
         }
 
         .products-single-row-5 > a {
             display: flex !important;
             flex-direction: column !important;
-            text-decoration: none;
-            color: inherit;
-            min-width: 0;
+            text-decoration: none !important;
+            color: inherit !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        .products-single-row-5 .article-card-box {
+            width: 100% !important;
+            box-sizing: border-box !important;
         }
 
         @media (max-width: 1024px) {
@@ -3226,7 +3233,8 @@
             .products-single-row-5 > a {
                 flex: 0 0 210px !important;
                 width: 210px !important;
-                min-width: 200px !important;
+                min-width: 210px !important;
+                max-width: 210px !important;
                 scroll-snap-align: start;
             }
         }
@@ -3240,7 +3248,8 @@
             .products-single-row-5 > a {
                 flex: 0 0 165px !important;
                 width: 165px !important;
-                min-width: 160px !important;
+                min-width: 165px !important;
+                max-width: 165px !important;
             }
         }
     </style>
