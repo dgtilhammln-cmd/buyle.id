@@ -101,6 +101,89 @@
     .pd-product-block { flex-direction: column; padding: 1rem; gap: 1rem; }
 }
 
+/* ── TICKET WAR COUNTDOWN (REAL-TIME LIVE DROP) ── */
+.ticket-war-card {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border: 1.5px solid #334155;
+    border-radius: 14px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #ffffff;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
+    text-align: center;
+}
+.ticket-war-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px dashed rgba(255,255,255,0.15);
+}
+.ticket-war-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+}
+.live-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: #ef4444;
+    box-shadow: 0 0 8px #ef4444;
+    animation: pulse-dot 1.2s infinite ease-in-out;
+}
+@keyframes pulse-dot { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.6; } }
+.ticket-war-title { font-size: 0.76rem; font-weight: 600; color: #94a3b8; }
+.ticket-war-timer-grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin: 0.5rem 0 0.4rem;
+}
+.war-timer-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 0.5rem 0.65rem;
+    min-width: 52px;
+    text-align: center;
+}
+.war-timer-val {
+    display: block;
+    font-family: monospace;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #38bdf8;
+    line-height: 1;
+}
+.war-timer-lbl {
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 3px;
+}
+.war-timer-sep {
+    font-weight: 800;
+    color: #475569;
+    font-size: 1.1rem;
+    margin-top: -10px;
+}
+.ticket-war-date {
+    font-size: 0.73rem;
+    color: #64748b;
+    margin-top: 0.35rem;
+}
+
 /* ── GALLERY (Left) ── */
 .pd-gallery { width: 360px; flex-shrink: 0; }
 @media (max-width: 768px) { .pd-gallery { width: 100%; } }
@@ -789,10 +872,19 @@
     <div class="pd-layout-grid">
         
         {{-- MAIN COLUMN (Kiri & Tengah) --}}
+        @php
+            $isTicket = ($service->product_type ?? '') === 'ticket';
+            $isWarActive = $isTicket && !empty($service->ticket_war_start) && now()->lt($service->ticket_war_start);
+            $warTimestamp = $isWarActive ? $service->ticket_war_start->timestamp * 1000 : 0;
+            
+            // Deteksi event expired — khusus tipe ticket
+            $eventRaw = $service->event_date ?: (!empty($service->data_json['event_date']) ? $service->data_json['event_date'] : null);
+            $isExpired = $isTicket && $eventRaw && \Carbon\Carbon::parse($eventRaw)->endOfDay()->isPast();
+        @endphp
         <div class="pd-main-col">
             <div class="pd-container pd-product-block">
                 {{-- LEFT: Gallery --}}
-                <div class="pd-gallery">
+                <div class="pd-gallery" style="{{ $isExpired ? 'filter: grayscale(100%); opacity: 0.85; position: relative;' : '' }}">
                     @php
                         $imgs = [];
                         if ($service->image) $imgs[] = asset('storage/'.$service->image);
@@ -803,6 +895,13 @@
                     @endphp
 
                     <div class="pd-gallery-main swiper" id="pd-swiper-main">
+                        @if($isExpired)
+                        <div style="position: absolute; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; pointer-events: none; background: rgba(15,23,42,0.45); backdrop-filter: blur(2px);">
+                            <span style="background: rgba(15, 23, 42, 0.9); color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.08em; padding: 0.5rem 1.25rem; border-radius: 999px; border: 1.5px solid rgba(255,255,255,0.25); box-shadow: 0 4px 15px rgba(0,0,0,0.4); text-transform: uppercase;">
+                                🏁 EVENT SELESAI
+                            </span>
+                        </div>
+                        @endif
                         <div class="swiper-wrapper">
                             @foreach($imgs as $img)
                             <div class="swiper-slide">
@@ -1011,6 +1110,76 @@
                             </div>
                         </div>
 
+                        {{-- TICKET EXPIRED BANNER --}}
+                        @if($isExpired)
+                        <div style="background:linear-gradient(135deg,#F1F5F9,#E2E8F0);border:1.5px solid #CBD5E1;border-radius:14px;padding:1rem 1.25rem;margin-top:1.5rem;display:flex;align-items:center;gap:0.75rem;">
+                            <span style="font-size:1.4rem;">🏁</span>
+                            <div>
+                                <div style="font-family:'Montserrat',sans-serif;font-size:0.88rem;font-weight:800;color:#64748B;margin-bottom:0.15rem;">Event Telah Berakhir</div>
+                                <div style="font-size:0.75rem;color:#94A3B8;font-weight:500;">Penjualan tiket untuk event ini sudah ditutup karena tanggal event telah berlalu.</div>
+                            </div>
+                        </div>
+                        @endif
+
+                        {{-- TICKET WAR REAL-TIME COUNTDOWN CARD --}}
+                        @if($isWarActive)
+                        <div id="ticketWarCard" class="ticket-war-card">
+                            <div class="ticket-war-header">
+                                <span class="ticket-war-badge">
+                                    <span class="live-dot"></span> LIVE DROP
+                                </span>
+                                <span class="ticket-war-title">Penjualan Tiket Dibuka Dalam:</span>
+                            </div>
+                            <div class="ticket-war-timer-grid">
+                                <div class="war-timer-box">
+                                    <span id="warDays" class="war-timer-val">00</span>
+                                    <span class="war-timer-lbl">Hari</span>
+                                </div>
+                                <span class="war-timer-sep">:</span>
+                                <div class="war-timer-box">
+                                    <span id="warHours" class="war-timer-val">00</span>
+                                    <span class="war-timer-lbl">Jam</span>
+                                </div>
+                                <span class="war-timer-sep">:</span>
+                                <div class="war-timer-box">
+                                    <span id="warMins" class="war-timer-val">00</span>
+                                    <span class="war-timer-lbl">Menit</span>
+                                </div>
+                                <span class="war-timer-sep">:</span>
+                                <div class="war-timer-box">
+                                    <span id="warSecs" class="war-timer-val">00</span>
+                                    <span class="war-timer-lbl">Detik</span>
+                                </div>
+                            </div>
+                            <div class="ticket-war-date">
+                                Jadwal: {{ $service->ticket_war_start->isoFormat('dddd, D MMMM Y — HH:mm') }} WIB
+                            </div>
+                        </div>
+                        @endif
+
+                        @if($isExpired)
+                        <div class="pd-actions" style="margin-top:1.25rem; display:flex; gap:0.75rem;">
+                            <button type="button" class="pd-btn" style="flex:1; background:#94A3B8; color:#fff; border-color:#94A3B8; cursor:not-allowed;" disabled>
+                                Event Selesai (Penjualan Ditutup)
+                            </button>
+                        </div>
+                        @elseif($isWarActive)
+                        <div class="pd-actions" style="margin-top:1.25rem; display:flex; gap:0.75rem;">
+                            <button type="button" id="btnTicketWarLocked" class="pd-btn" style="flex:1; background:#0f172a; color:#94a3b8; border:1px solid #334155; cursor:not-allowed; display:flex; align-items:center; justify-content:center; gap:8px;" disabled>
+                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                <span id="warBtnLabel">Penjualan Tiket Belum Dibuka</span>
+                            </button>
+                            <div id="normalActions" style="display: none; gap:0.75rem; flex:1;">
+                                <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;" onclick="submitPdCart('cart')">
+                                    Tambah Keranjang
+                                </button>
+                                <button type="button" id="pd-btn-buy" class="pd-btn pd-btn-primary" style="flex:1;" onclick="submitPdCart('buy')">
+                                    Beli Sekarang
+                                </button>
+                            </div>
+                            <input type="hidden" name="action" id="pd_action_input" value="cart">
+                        </div>
+                        @else
                         <div class="pd-actions" style="margin-top:1.5rem; display:flex; gap:0.75rem;">
                             <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;"
                                 @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif
@@ -1024,6 +1193,7 @@
                             </button>
                             <input type="hidden" name="action" id="pd_action_input" value="cart">
                         </div>
+                        @endif
                     </form>
 
                     <script>
@@ -1098,6 +1268,68 @@
                         };
                     })();
                     </script>
+                    @if($isWarActive)
+                    <script>
+                    (function() {
+                        const targetTime = {{ $warTimestamp }};
+                        function updateWarCountdown() {
+                            const now = Date.now();
+                            const diff = targetTime - now;
+
+                            if (diff <= 0) {
+                                const warCard = document.getElementById('ticketWarCard');
+                                if (warCard) {
+                                    warCard.style.transition = 'all 0.4s ease';
+                                    warCard.style.opacity = '0';
+                                    setTimeout(() => warCard.style.display = 'none', 400);
+                                }
+
+                                const lockedBtn = document.getElementById('btnTicketWarLocked');
+                                const normalActions = document.getElementById('normalActions');
+
+                                if (lockedBtn) lockedBtn.style.display = 'none';
+                                if (normalActions) normalActions.style.display = 'flex';
+
+                                try {
+                                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                                    if (AudioCtx) {
+                                        const ctx = new AudioCtx();
+                                        const osc = ctx.createOscillator();
+                                        const gain = ctx.createGain();
+                                        osc.type = 'sine';
+                                        osc.frequency.setValueAtTime(880, ctx.currentTime);
+                                        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                                        osc.connect(gain); gain.connect(ctx.destination);
+                                        osc.start(); osc.stop(ctx.currentTime + 0.4);
+                                    }
+                                } catch(e) {}
+
+                                return;
+                            }
+
+                            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                            const dEl = document.getElementById('warDays');
+                            const hEl = document.getElementById('warHours');
+                            const mEl = document.getElementById('warMins');
+                            const sEl = document.getElementById('warSecs');
+
+                            if (dEl) dEl.textContent = String(d).padStart(2, '0');
+                            if (hEl) hEl.textContent = String(h).padStart(2, '0');
+                            if (mEl) mEl.textContent = String(m).padStart(2, '0');
+                            if (sEl) sEl.textContent = String(s).padStart(2, '0');
+
+                            setTimeout(updateWarCountdown, 1000);
+                        }
+                        updateWarCountdown();
+                    })();
+                    </script>
+                    @endif
+
                     <style>
                     @keyframes shake {
                         0%,100% { transform: translateX(0); }
