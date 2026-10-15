@@ -1761,10 +1761,10 @@
                 </a>
             </div>
 
-            {{-- 1 Row Swipe Container (Mobile & Desktop Touch Swipeable) --}}
-            <div class="swipe-cards-container" id="retargetItemsContainer">
+            {{-- 1 Row 5 Cards Responsive (Desktop: 1 baris 5 cards, Mobile: 1 baris scrollable) --}}
+            <div class="products-single-row-5" id="retargetItemsContainer">
                 @php
-                    $rList = isset($retargetProducts) && $retargetProducts->count() > 0 ? $retargetProducts : (isset($products) && $products->count() > 0 ? $products : collect());
+                    $rList = (isset($retargetProducts) && $retargetProducts->count() > 0 ? $retargetProducts : (isset($products) && $products->count() > 0 ? $products : collect()))->take(5);
                 @endphp
 
                 @if($rList->count() > 0)
@@ -1946,12 +1946,12 @@
                 </a>
             </div>
 
-            {{-- 1 Row Swipe Container --}}
-            <div class="swipe-cards-container">
+            {{-- 1 Row 5 Cards Responsive (Desktop: 1 baris 5 cards, Mobile: 1 baris scrollable) --}}
+            <div class="products-single-row-5">
                 @php
-                    $bsList = isset($bestsellerProducts) && $bestsellerProducts->count() > 0
+                    $bsList = (isset($bestsellerProducts) && $bestsellerProducts->count() > 0
                         ? $bestsellerProducts
-                        : (isset($products) && $products->count() > 0 ? $products : collect());
+                        : (isset($products) && $products->count() > 0 ? $products : collect()))->take(5);
                 @endphp
 
                 @if($bsList->count() > 0)
@@ -3187,6 +3187,60 @@
             .grid-2-rows-responsive {
                 grid-template-columns: repeat(2, 1fr) !important;
                 gap: 0.75rem !important;
+            }
+        }
+
+        /* 1-Row 5-Cards Responsive (Desktop: 1 baris pas 5 cards, Mobile/Tablet: 1 baris horizontal scroll) */
+        .products-single-row-5 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.1rem;
+            align-items: stretch;
+        }
+
+        .products-single-row-5 > a {
+            display: flex !important;
+            flex-direction: column !important;
+            text-decoration: none;
+            color: inherit;
+            min-width: 0;
+        }
+
+        @media (max-width: 1024px) {
+            .products-single-row-5 {
+                display: flex !important;
+                overflow-x: auto !important;
+                flex-wrap: nowrap !important;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                gap: 0.85rem !important;
+                padding: 0.25rem 0.25rem 0.85rem !important;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            .products-single-row-5::-webkit-scrollbar {
+                display: none !important;
+            }
+
+            .products-single-row-5 > a {
+                flex: 0 0 210px !important;
+                width: 210px !important;
+                min-width: 200px !important;
+                scroll-snap-align: start;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .products-single-row-5 {
+                gap: 0.75rem !important;
+                padding: 0.2rem 0.15rem 0.75rem !important;
+            }
+
+            .products-single-row-5 > a {
+                flex: 0 0 165px !important;
+                width: 165px !important;
+                min-width: 160px !important;
             }
         }
     </style>
