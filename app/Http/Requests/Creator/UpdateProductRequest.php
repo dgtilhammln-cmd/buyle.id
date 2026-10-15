@@ -45,6 +45,8 @@ class UpdateProductRequest extends FormRequest
             'event_time'          => ['nullable', 'string', 'max:100'],
             'event_location'      => ['nullable', 'string', 'max:1000'],
             'event_type'          => ['nullable', 'string', 'in:online,offline'],
+            'ticket_war_start'      => ['nullable', 'date'],
+            'max_tickets_per_order' => ['nullable', 'integer', 'min:1', 'max:20'],
 
             // URL produk digital — divalidasi oleh SafeDigitalUrl jika diisi
             'digital_resource'    => ['nullable', 'string', 'max:2000'],

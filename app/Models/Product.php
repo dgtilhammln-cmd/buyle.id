@@ -28,6 +28,7 @@ class Product extends Model
         'event_date', 'event_time', 'event_location', 'event_type',
         'gate_scanner_key', 'gate_scanner_enabled', 'gate_scanner_pin',
         'gate_open_time', 'gate_close_time', 'gate_bypass_time',
+        'ticket_war_start', 'max_tickets_per_order',
         // Kolom White Label & Reseller
         'is_whitelabel', 'whitelabel_price', 'whitelabel_terms', 'whitelabel_approval_status', 'whitelabel_rejection_reason',
         // Affiliate Commission
@@ -54,6 +55,8 @@ class Product extends Model
         'max_order'      => 'integer',
         'rating'         => 'decimal:1',
         'event_date'     => 'date',
+        'ticket_war_start' => 'datetime',
+        'max_tickets_per_order' => 'integer',
         'gate_scanner_enabled' => 'boolean',
         'gate_bypass_time'     => 'boolean',
         // White Label casts

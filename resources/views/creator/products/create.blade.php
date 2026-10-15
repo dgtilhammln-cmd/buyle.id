@@ -548,8 +548,29 @@
                                             <input type="text" name="event_location_online" id="eventLocationOnline"
                                                 value="{{ old('event_location_online') }}" class="form-input"
                                                 placeholder="Contoh: https://zoom.us/j/123456789 atau Link Youtube Live">
-                                            <span class="form-hint">Tautan ini hanya akan dikirimkan / dapat diakses oleh
-                                                pembeli tiket online.</span>
+                                            <span class="form-hint">Tautan ini hanya akan dikirimkan / dapat diakses oleh pembeli tiket online.</span>
+                                        </div>
+
+                                        <div class="form-group" style="margin-top:0.5rem;">
+                                            <label class="form-label" style="display:flex; align-items:center; gap:0.4rem; color:#b45309;">
+                                                <svg width="15" height="15" fill="none" stroke="#d97706" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                Jadwal Mulai Penjualan (Ticket War / Live Drop)
+                                            </label>
+                                            <input type="datetime-local" name="ticket_war_start"
+                                                value="{{ old('ticket_war_start') }}"
+                                                class="form-input">
+                                            <span class="form-hint">Kosongkan jika tiket langsung bisa dibeli saat ini. Isi jika ingin ada countdown hitung mundur sebelum tombol beli aktif otomatis.</span>
+                                        </div>
+
+                                        <div class="form-group" style="margin-top:0.5rem;">
+                                            <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
+                                                <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                                Maksimal Tiket Per Transaksi (Anti Calo)
+                                            </label>
+                                            <input type="number" name="max_tickets_per_order" min="1" max="20"
+                                                value="{{ old('max_tickets_per_order', 4) }}"
+                                                class="form-input" placeholder="Default: 4">
+                                            <span class="form-hint">Mencegah bot atau calo memborong tiket sekaligus. Default 4 tiket per order.</span>
                                         </div>
                                     </div>
                                 </div>

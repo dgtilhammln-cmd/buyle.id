@@ -447,6 +447,97 @@
         .ps-btn-disabled { background: var(--s2); color: var(--s4); cursor: not-allowed; border-color: var(--s2); box-shadow: none; }
         @media (max-width: 380px) { .ps-cta-row { grid-template-columns: 1fr; } }
 
+        /* ── TICKET WAR COUNTDOWN (REAL-TIME LIVE DROP) ── */
+        .ticket-war-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border: 1.5px solid #334155;
+            border-radius: 14px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
+            text-align: center;
+        }
+        .ticket-war-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px dashed rgba(255,255,255,0.15);
+        }
+        .ticket-war-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            letter-spacing: 0.05em;
+        }
+        .live-dot {
+            width: 7px; height: 7px; border-radius: 50%; background: #ef4444;
+            box-shadow: 0 0 8px #ef4444;
+            animation: pulse-dot 1.2s infinite ease-in-out;
+        }
+        @keyframes pulse-dot { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.6; } }
+        .ticket-war-title { font-size: 0.76rem; font-weight: 600; color: #94a3b8; }
+        .ticket-war-timer-grid {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            margin: 0.5rem 0 0.4rem;
+        }
+        .war-timer-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 0.5rem 0.65rem;
+            min-width: 52px;
+            text-align: center;
+        }
+        .war-timer-val {
+            display: block;
+            font-family: monospace;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #38bdf8;
+            line-height: 1;
+        }
+        .war-timer-lbl {
+            font-size: 0.62rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-top: 3px;
+            display: block;
+        }
+        .war-timer-sep {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+        .ticket-war-date {
+            font-size: 0.72rem;
+            color: #cbd5e1;
+            margin-top: 0.45rem;
+            font-weight: 500;
+        }
+        .ps-btn-war-locked {
+            background: #334155 !important;
+            color: #94a3b8 !important;
+            cursor: not-allowed !important;
+            opacity: 0.85;
+            box-shadow: none !important;
+        }
+
         /* ── DESCRIPTION CARD (BELOW) ── */
         .ps-desc-card {
             background: var(--wh); border-radius: var(--r16); border: 1px solid var(--s2); box-shadow: var(--shd);
@@ -676,21 +767,142 @@
                         </button>
                     </div>
                 @elseif($prodId)
+                    @php
+                        $isWarActive = $product && ($product->product_type ?? '') === 'ticket' && !empty($product->ticket_war_start) && now()->lt($product->ticket_war_start);
+                        $warTimestamp = $isWarActive ? $product->ticket_war_start->timestamp * 1000 : 0;
+                    @endphp
+
+                    {{-- TICKET WAR REAL-TIME COUNTDOWN CARD --}}
+                    @if($isWarActive)
+                    <div id="t5TicketWarCard" class="ticket-war-card">
+                        <div class="ticket-war-header">
+                            <span class="ticket-war-badge">
+                                <span class="live-dot"></span> LIVE DROP
+                            </span>
+                            <span class="ticket-war-title">Penjualan Tiket Dibuka Dalam:</span>
+                        </div>
+                        <div class="ticket-war-timer-grid">
+                            <div class="war-timer-box">
+                                <span id="t5WarDays" class="war-timer-val">00</span>
+                                <span class="war-timer-lbl">Hari</span>
+                            </div>
+                            <span class="war-timer-sep">:</span>
+                            <div class="war-timer-box">
+                                <span id="t5WarHours" class="war-timer-val">00</span>
+                                <span class="war-timer-lbl">Jam</span>
+                            </div>
+                            <span class="war-timer-sep">:</span>
+                            <div class="war-timer-box">
+                                <span id="t5WarMins" class="war-timer-val">00</span>
+                                <span class="war-timer-lbl">Menit</span>
+                            </div>
+                            <span class="war-timer-sep">:</span>
+                            <div class="war-timer-box">
+                                <span id="t5WarSecs" class="war-timer-val">00</span>
+                                <span class="war-timer-lbl">Detik</span>
+                            </div>
+                        </div>
+                        <div class="ticket-war-date">
+                            Jadwal: {{ $product->ticket_war_start->isoFormat('dddd, D MMMM Y — HH:mm') }} WIB
+                        </div>
+                    </div>
+                    @endif
+
                     <div class="ps-cta-row">
                         <form action="{{ route('cart.add') }}" method="POST" style="display:contents;" class="t5-add-cart-form">
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $prodId }}">
                             <input type="hidden" name="qty" value="1">
-                            <button type="submit" class="ps-btn-cart">
+                            <button type="submit" class="ps-btn-cart" id="t5BtnCart" {{ $isWarActive ? 'disabled style=opacity:0.5;cursor:not-allowed;' : '' }}>
                                 <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                                 Keranjang
                             </button>
                         </form>
-                        <a href="https://buyle.id/keranjang" class="ps-btn-checkout">
-                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                            Checkout
-                        </a>
+
+                        @if($isWarActive)
+                            <button type="button" id="t5BtnWarLocked" class="ps-btn-checkout ps-btn-war-locked" disabled>
+                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                <span id="t5WarBtnLabel">Penjualan Belum Dibuka</span>
+                            </button>
+                            <a href="https://buyle.id/keranjang" id="t5BtnWarReady" class="ps-btn-checkout" style="display: none;">
+                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                Beli Tiket Sekarang
+                            </a>
+                        @else
+                            <a href="https://buyle.id/keranjang" class="ps-btn-checkout">
+                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                                Checkout
+                            </a>
+                        @endif
                     </div>
+
+                    @if($isWarActive)
+                    <script>
+                        (function() {
+                            const targetTime = {{ $warTimestamp }};
+                            function updateT5WarCountdown() {
+                                const now = Date.now();
+                                const diff = targetTime - now;
+
+                                if (diff <= 0) {
+                                    const warCard = document.getElementById('t5TicketWarCard');
+                                    if (warCard) {
+                                        warCard.style.transition = 'all 0.4s ease';
+                                        warCard.style.opacity = '0';
+                                        setTimeout(() => warCard.style.display = 'none', 400);
+                                    }
+
+                                    const lockedBtn = document.getElementById('t5BtnWarLocked');
+                                    const readyBtn = document.getElementById('t5BtnWarReady');
+                                    const cartBtn = document.getElementById('t5BtnCart');
+
+                                    if (lockedBtn) lockedBtn.style.display = 'none';
+                                    if (readyBtn) readyBtn.style.display = 'flex';
+                                    if (cartBtn) {
+                                        cartBtn.removeAttribute('disabled');
+                                        cartBtn.style.opacity = '1';
+                                        cartBtn.style.cursor = 'pointer';
+                                    }
+
+                                    try {
+                                        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                                        if (AudioCtx) {
+                                            const ctx = new AudioCtx();
+                                            const osc = ctx.createOscillator();
+                                            const gain = ctx.createGain();
+                                            osc.type = 'sine';
+                                            osc.frequency.setValueAtTime(880, ctx.currentTime);
+                                            gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                                            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                                            osc.connect(gain); gain.connect(ctx.destination);
+                                            osc.start(); osc.stop(ctx.currentTime + 0.4);
+                                        }
+                                    } catch(e) {}
+
+                                    return;
+                                }
+
+                                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                                const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                                const dEl = document.getElementById('t5WarDays');
+                                const hEl = document.getElementById('t5WarHours');
+                                const mEl = document.getElementById('t5WarMins');
+                                const sEl = document.getElementById('t5WarSecs');
+
+                                if (dEl) dEl.textContent = String(d).padStart(2, '0');
+                                if (hEl) hEl.textContent = String(h).padStart(2, '0');
+                                if (mEl) mEl.textContent = String(m).padStart(2, '0');
+                                if (sEl) sEl.textContent = String(s).padStart(2, '0');
+
+                                setTimeout(updateT5WarCountdown, 1000);
+                            }
+                            updateT5WarCountdown();
+                        })();
+                    </script>
+                    @endif
                 @else
                     <div class="ps-cta-row" style="grid-template-columns: 1fr;">
                         <button type="button" class="ps-btn-checkout" onclick='openT5LeadModal({{ json_encode($waLeadMessage) }})' style="background:linear-gradient(135deg, #25D366 0%, #128C7E 100%); font-size:0.92rem; padding:0.9rem; gap:0.6rem;">

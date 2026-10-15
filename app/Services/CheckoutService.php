@@ -232,13 +232,36 @@ class CheckoutService
                     throw new Exception("Produk \"{$cartItem->product_name}\" tidak ditemukan.");
                 }
 
-                // Proteksi race condition pada stok tiket & produk
+                // Proteksi Ticket War: Penjualan belum dibuka
+                if ($product->product_type === 'ticket' && !empty($product->ticket_war_start)) {
+                    if (now()->lt($product->ticket_war_start)) {
+                        throw new Exception("Penjualan tiket \"{$product->name}\" baru akan dibuka pada " . $product->ticket_war_start->format('d M Y, H:i') . " WIB.");
+                    }
+                }
+
+                // Proteksi Anti-Bot & Calo: Batasan maksimal tiket per transaksi
+                if ($product->product_type === 'ticket') {
+                    $maxPerOrder = $product->max_tickets_per_order ?: 4;
+                    if ($cartItem->qty > $maxPerOrder) {
+                        throw new Exception("Maksimal pembelian tiket \"{$product->name}\" adalah {$maxPerOrder} tiket per transaksi.");
+                    }
+                }
+
+                // Proteksi race condition pada stok tiket & produk (Atomic Safe Decrement)
                 if (in_array($product->product_type, ['ticket', 'physical', 'external_link']) || $product->type === 'product') {
                     if ($product->stock !== null) {
-                        if ((int)$product->stock < $cartItem->qty) {
-                            throw new Exception("Stok produk \"{$product->name}\" tidak mencukupi (Sisa: {$product->stock}).");
+                        $affected = \App\Models\Product::where('id', $product->id)
+                            ->where('stock', '>=', $cartItem->qty)
+                            ->decrement('stock', $cartItem->qty);
+
+                        if ($affected === 0) {
+                            $latestStock = (int) \App\Models\Product::where('id', $product->id)->value('stock');
+                            if ($latestStock === 0) {
+                                throw new Exception("Maaf, kuota tiket \"{$product->name}\" baru saja habis terjual!");
+                            } else {
+                                throw new Exception("Stok tiket \"{$product->name}\" tidak mencukupi (Tersisa: {$latestStock}).");
+                            }
                         }
-                        $product->decrement('stock', $cartItem->qty);
                     }
                 }
                 
