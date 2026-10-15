@@ -142,6 +142,9 @@ class BioProductController extends Controller
         $product = null;
         if (!empty($block->data_json['product_id'])) {
             $product = Product::find($block->data_json['product_id']);
+            if ($product && !$product->is_active) {
+                abort(404, 'Produk ini sedang tidak tersedia atau diarsipkan.');
+            }
         }
 
         // Auto-heal: If custom_product missing product_id or product model, create Product entry now

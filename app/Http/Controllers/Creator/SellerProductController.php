@@ -30,8 +30,13 @@ class SellerProductController extends Controller
         $status = $request->input('status');
         $type   = $request->input('type');
 
+        $baseQuery = Product::where('seller_id', $seller->id);
+        $totalCount    = (clone $baseQuery)->count();
+        $activeCount   = (clone $baseQuery)->where('is_active', true)->count();
+        $archivedCount = (clone $baseQuery)->where('is_active', false)->count();
+
         $products = Product::where('seller_id', $seller->id)
-            ->with('category:id,name')
+            ->with('category:id,name', 'variantOptions.values')
             ->when($search, function($q, $s) {
                 $q->where(function($sub) use ($s) {
                     $sub->where('name', 'like', "%{$s}%")
@@ -39,14 +44,15 @@ class SellerProductController extends Controller
                         ->orWhere('short_desc', 'like', "%{$s}%");
                 });
             })
-            ->when($status, fn($q, $s) => $q->where('is_active', $s === 'active'))
+            ->when($status === 'active', fn($q) => $q->where('is_active', true))
+            ->when($status === 'archived', fn($q) => $q->where('is_active', false))
             ->when($type, fn($q, $t) => $q->where('product_type', $t))
             ->orderBy('order', 'asc')
             ->latest('id')
             ->paginate(50)
             ->withQueryString();
 
-        return view('creator.products.index', compact('products'));
+        return view('creator.products.index', compact('products', 'totalCount', 'activeCount', 'archivedCount'));
     }
 
     /**
@@ -332,7 +338,43 @@ class SellerProductController extends Controller
     }
 
     /**
-     * Simpan variasi produk (maksimal 6).
+     * Toggle status aktif / arsip produk.
+     */
+    public function toggleStatus(Product $product, Request $request)
+    {
+        $this->authorizeProduct($product);
+
+        $product->is_active = !$product->is_active;
+        $product->save();
+
+        // Sync active state ke bio block jika ada
+        \App\Models\CreatorBioBlock::where(function ($q) use ($product) {
+            $q->where('data_json->product_id', $product->id)
+              ->orWhere('data_json->product_id', (string)$product->id);
+        })->update(['is_active' => $product->is_active]);
+
+        Cache::forget('catalog_main');
+        Cache::forget('home_page_data_v3');
+        Cache::forget("seller_products_{$product->seller_id}");
+        Cache::forget("product_{$product->id}");
+
+        $statusText = $product->is_active ? 'diaktifkan' : 'diarsipkan';
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success'   => true,
+                'is_active' => $product->is_active,
+                'status'    => $product->is_active ? 'active' : 'archived',
+                'label'     => $product->is_active ? 'Aktif' : 'Diarsipkan',
+                'message'   => "Produk \"{$product->name}\" berhasil {$statusText}.",
+            ]);
+        }
+
+        return back()->with('success', "Produk \"{$product->name}\" berhasil {$statusText}.");
+    }
+
+    /**
+     * Simpan variasi produk (berlaku untuk semua tipe produk: digital, tiket, fisik, makanan, jasa).
      */
     protected function saveProductVariants(Product $product, Request $request): void
     {
@@ -341,13 +383,13 @@ class SellerProductController extends Controller
             return;
         }
 
-        // Filter variasi yang punya nama dan tidak kosong, maks 6
+        // Filter variasi yang punya nama dan tidak kosong, maks 20
         $validVariants = [];
         foreach ($variantsData as $index => $v) {
             if (is_array($v) && !empty(trim($v['name'] ?? ''))) {
                 $validVariants[$index] = $v;
             }
-            if (count($validVariants) >= 6) {
+            if (count($validVariants) >= 20) {
                 break;
             }
         }
@@ -366,7 +408,22 @@ class SellerProductController extends Controller
         foreach ($validVariants as $index => $vData) {
             $valueId = $vData['id'] ?? null;
             $valName = trim($vData['name']);
-            $valPrice = isset($vData['price']) && $vData['price'] !== '' ? (float)$vData['price'] : (float)$product->price;
+
+            // Parse price cleanly (numeric or from Indonesian currency format)
+            $rawPrice = $vData['price'] ?? null;
+            if ($rawPrice !== null && $rawPrice !== '') {
+                $cleanPrice = preg_replace('/[^\d]/', '', (string)$rawPrice);
+                $valPrice = $cleanPrice !== '' ? (float)$cleanPrice : (float)$product->price;
+            } else {
+                $valPrice = (float) $product->price;
+            }
+
+            // Parse stock cleanly
+            $rawStock = $vData['stock'] ?? null;
+            $valStock = ($rawStock !== null && $rawStock !== '') ? (int) $rawStock : null;
+
+            // Optional SKU
+            $valSku = !empty($vData['sku']) ? trim($vData['sku']) : null;
 
             $imagePath = null;
             if ($request->hasFile("variants.{$index}.image") && $request->file("variants.{$index}.image")->isValid()) {
@@ -381,6 +438,8 @@ class SellerProductController extends Controller
                     $updatePayload = [
                         'value' => $valName,
                         'price' => $valPrice,
+                        'stock' => $valStock,
+                        'sku'   => $valSku,
                     ];
                     if ($imagePath !== null) {
                         $updatePayload['image'] = $imagePath;
@@ -392,6 +451,8 @@ class SellerProductController extends Controller
                 $newVal = $option->values()->create([
                     'value' => $valName,
                     'price' => $valPrice,
+                    'stock' => $valStock,
+                    'sku'   => $valSku,
                     'image' => $imagePath,
                 ]);
                 $keptIds[] = $newVal->id;

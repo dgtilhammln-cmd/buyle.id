@@ -254,7 +254,15 @@ body { background-color: #F8FAFC !important; }
                             @foreach($order->items as $item)
                                 @if($item->product && $item->product->digital_resource)
                                     <div style="margin-bottom: 0.75rem;">
-                                        <strong style="display:block; font-size: 0.9rem; margin-bottom: 0.25rem;">{{ $item->product_name }}</strong>
+                                        <strong style="display:block; font-size: 0.9rem; margin-bottom: 0.25rem;">
+                                            {{ $item->product_name }}
+                                            @php
+                                                $vLabel = $item->variant_name ?? ($item->variantValue ? $item->variantValue->value : null);
+                                            @endphp
+                                            @if($vLabel)
+                                                <span style="display:inline-block; font-size:0.75rem; background:rgba(255,255,255,0.25); padding:2px 8px; border-radius:12px; margin-left:6px; font-weight:600;">🏷 {{ $vLabel }}</span>
+                                            @endif
+                                        </strong>
                                         <a href="{{ $item->product->digital_resource }}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #1eb349; padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem;">
                                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
                                             Buka Link / WhatsApp
@@ -363,6 +371,29 @@ body { background-color: #F8FAFC !important; }
                     <div class="fin-order-row">
                         <span class="label">Jumlah Item</span>
                         <span class="value">{{ $order->items->count() }} produk</span>
+                    </div>
+
+                    {{-- Item list breakdown --}}
+                    <div style="margin: 0.85rem 0; padding: 0.75rem 0; border-top: 1px dashed var(--border); border-bottom: 1px dashed var(--border);">
+                        @foreach($order->items as $item)
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.65rem; font-size:0.88rem;">
+                                <div style="flex:1; padding-right:10px;">
+                                    <div style="font-weight:600; color:var(--text); line-height:1.3;">{{ $item->product_name }}</div>
+                                    @php
+                                        $vLabel = $item->variant_name ?? ($item->variantValue ? ($item->variantValue->option?->name ? $item->variantValue->option->name . ': ' : '') . $item->variantValue->value : null);
+                                    @endphp
+                                    @if($vLabel)
+                                        <div style="display:inline-block; font-size:0.75rem; font-weight:600; color:#15803d; background:#ecfdf5; border:1px solid #bbf7d0; border-radius:6px; padding:1px 6px; margin-top:3px;">
+                                            🏷 {{ $vLabel }}
+                                        </div>
+                                    @endif
+                                    <div style="font-size:0.78rem; color:var(--muted); margin-top:2px;">{{ $item->qty }} &times; Rp {{ number_format($item->price, 0, ',', '.') }}</div>
+                                </div>
+                                <div style="font-weight:700; color:var(--text); white-space:nowrap;">
+                                    Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                     
                     @if($order->shipping_cost > 0)

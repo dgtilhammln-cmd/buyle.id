@@ -301,6 +301,108 @@
       }
     }
 
+    /* Status Tabs & Toggle Pill */
+    .status-tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #64748b;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .status-tab-btn:hover {
+      color: #0f172a;
+      background: rgba(255,255,255,0.7);
+    }
+    .status-tab-btn.active {
+      background: #ffffff;
+      color: #0f172a;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .status-tab-btn .tab-badge {
+      font-size: 0.72rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 99px;
+      background: #e2e8f0;
+      color: #475569;
+      font-weight: 700;
+    }
+    .status-toggle-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 99px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: transparent;
+      outline: none;
+    }
+    .status-toggle-pill.active {
+      background: rgba(16, 185, 129, 0.12);
+      color: #059669;
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+    .status-toggle-pill.active:hover {
+      background: rgba(16, 185, 129, 0.22);
+      transform: scale(1.03);
+    }
+    .status-toggle-pill.archived {
+      background: rgba(245, 158, 11, 0.12);
+      color: #d97706;
+      border-color: rgba(245, 158, 11, 0.25);
+    }
+    .status-toggle-pill.archived:hover {
+      background: rgba(245, 158, 11, 0.22);
+      transform: scale(1.03);
+    }
+    .status-indicator-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+      transition: background 0.2s;
+    }
+    .status-toggle-pill.active .status-indicator-dot {
+      background: #10b981;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+    .status-toggle-pill.archived .status-indicator-dot {
+      background: #f59e0b;
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+    }
+    .grid-status-btn {
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 0.22rem 0.55rem;
+      border-radius: 100px;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.15s;
+      backdrop-filter: blur(6px);
+    }
+    .grid-status-btn:hover {
+      transform: scale(1.05);
+      opacity: 0.95;
+    }
+    .grid-status-btn.active {
+      background: rgba(16, 185, 129, 0.95);
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
+    }
+    .grid-status-btn.archived {
+      background: rgba(245, 158, 11, 0.95);
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.35);
+    }
+
     /* Smart Import Button (Clean Light White Neutral Theme) */
     .btn-smart-import {
       display: inline-flex;
@@ -716,6 +818,33 @@
 
 @section('content')
 
+  {{-- FILTER STATUS TAB: SEMUA / AKTIF / ARSIP --}}
+  <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
+    <div style="display:flex; align-items:center; gap:0.35rem; background:#f1f5f9; padding:0.25rem; border-radius:12px;">
+      <a href="{{ route('creator.products.index', array_merge(request()->except('status', 'page'))) }}"
+         class="status-tab-btn {{ !request('status') ? 'active' : '' }}">
+         Semua <span class="tab-badge">{{ $totalCount ?? $products->total() }}</span>
+      </a>
+      <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['status' => 'active'])) }}"
+         class="status-tab-btn {{ request('status') === 'active' ? 'active' : '' }}">
+         <span style="width:7px; height:7px; border-radius:50%; background:#10B981; display:inline-block;"></span>
+         Aktif <span class="tab-badge" style="background:rgba(16,185,129,0.15); color:#047857;">{{ $activeCount ?? 0 }}</span>
+      </a>
+      <a href="{{ route('creator.products.index', array_merge(request()->except('page'), ['status' => 'archived'])) }}"
+         class="status-tab-btn {{ request('status') === 'archived' ? 'active' : '' }}">
+         <span style="width:7px; height:7px; border-radius:50%; background:#F59E0B; display:inline-block;"></span>
+         Diarsipkan <span class="tab-badge" style="background:rgba(245,158,11,0.15); color:#B45309;">{{ $archivedCount ?? 0 }}</span>
+      </a>
+    </div>
+
+    @if(request('status') === 'archived')
+      <div style="font-size:0.78rem; color:#92400e; display:flex; align-items:center; gap:0.4rem; background:#fef3c7; padding:0.35rem 0.75rem; border-radius:8px; border:1px solid #fde68a;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Produk yang diarsipkan tidak akan muncul di marketplace dan storefront pembeli.
+      </div>
+    @endif
+  </div>
+
   {{-- FILTER PILLS TIPE PRODUK --}}
   <div style="display:flex; align-items:center; gap:0.5rem; overflow-x:auto; margin-bottom:1.25rem; padding-bottom:0.25rem; scrollbar-width:none;">
     <a href="{{ route('creator.products.index', array_merge(request()->except('type', 'page'))) }}" 
@@ -857,17 +986,15 @@
               </form>
             </td>
             <td style="padding:1.25rem 1.5rem;text-align:center;">
-              @if($s->is_active)
-                <span
-                  style="display:inline-flex;align-items:center;gap:.375rem;font-size:.75rem;font-weight: 500;padding:.3rem .875rem;border-radius:100px;background:rgba(16,185,129,0.1);color:#10B981;">
-                  <span style="width:6px;height:6px;background:#10B981;border-radius:50%;"></span>Aktif
-                </span>
-              @else
-                <span
-                  style="display:inline-flex;align-items:center;gap:.375rem;font-size:.75rem;font-weight: 500;padding:.3rem .875rem;border-radius:100px;background:rgba(239,68,68,0.1);color:#EF4444;">
-                  <span style="width:6px;height:6px;background:#EF4444;border-radius:50%;"></span>Nonaktif
-                </span>
-              @endif
+              <form action="{{ route('creator.products.toggle-status', $s->id) }}" method="POST" class="form-toggle-status" style="margin:0; display:inline-block;" data-product-id="{{ $s->id }}">
+                @csrf
+                @method('PATCH')
+                <button type="submit" class="status-toggle-pill {{ $s->is_active ? 'active' : 'archived' }}"
+                  title="{{ $s->is_active ? 'Status: Aktif. Klik untuk arsipkan produk ini' : 'Status: Diarsipkan. Klik untuk aktifkan produk ini kembali' }}">
+                  <span class="status-indicator-dot"></span>
+                  <span class="status-label-text">{{ $s->is_active ? 'Aktif' : 'Diarsipkan' }}</span>
+                </button>
+              </form>
             </td>
             <td style="padding:1.25rem 1.5rem;text-align:center;">
               <div style="display:inline-flex;gap:.5rem;align-items:center;">
@@ -933,10 +1060,14 @@
         style="background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06);overflow:hidden;border:1px solid #F1F5F9;display:flex;flex-direction:column;position:relative;transition:transform 0.2s,box-shadow 0.2s;"
         onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.1)'"
         onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 10px rgba(0,0,0,0.06)'">
-        <div
-          style="position:absolute;top:6px;right:6px;font-size:.6rem;font-weight:600;padding:.2rem .5rem;border-radius:100px;background:{{ $s->is_active ? 'rgba(16,185,129,0.9)' : 'rgba(239,68,68,0.9)' }};color:#fff;z-index:10;backdrop-filter:blur(4px);">
-          {{ $s->is_active ? 'Aktif' : 'Nonaktif' }}
-        </div>
+        <form action="{{ route('creator.products.toggle-status', $s->id) }}" method="POST" class="form-toggle-status" style="position:absolute;top:6px;right:6px;z-index:10;margin:0;" data-product-id="{{ $s->id }}">
+          @csrf
+          @method('PATCH')
+          <button type="submit" class="grid-status-btn {{ $s->is_active ? 'active' : 'archived' }}"
+            title="{{ $s->is_active ? 'Aktif. Klik untuk arsipkan' : 'Diarsipkan. Klik untuk aktifkan' }}">
+            {{ $s->is_active ? 'Aktif' : 'Diarsipkan' }}
+          </button>
+        </form>
         <div
           style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-bottom:1px solid #F1F5F9;background:#ffffff;display:flex;align-items:center;justify-content:center;">
           <img src="{{ $s->image_url }}" alt="{{ $s->name }}"
@@ -1658,4 +1789,54 @@
         alert(err.message);
       });
   }
+
+  // Interactive Live Status Toggle (Aktif / Arsip)
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.form-toggle-status').forEach(form => {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = form.querySelector('button');
+        btn.style.opacity = '0.5';
+        btn.disabled = true;
+
+        fetch(form.action, {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+          },
+          body: new FormData(form)
+        })
+        .then(res => res.json())
+        .then(data => {
+          btn.style.opacity = '1';
+          btn.disabled = false;
+          if (data.success) {
+            const isActive = data.is_active;
+            const pid = form.dataset.productId;
+            document.querySelectorAll(`.form-toggle-status[data-product-id="${pid}"]`).forEach(f => {
+              const b = f.querySelector('button');
+              if (b.classList.contains('status-toggle-pill')) {
+                b.className = 'status-toggle-pill ' + (isActive ? 'active' : 'archived');
+                b.title = isActive ? 'Status: Aktif. Klik untuk arsipkan produk ini' : 'Status: Diarsipkan. Klik untuk aktifkan produk ini kembali';
+                const label = b.querySelector('.status-label-text');
+                if (label) label.textContent = isActive ? 'Aktif' : 'Diarsipkan';
+              } else if (b.classList.contains('grid-status-btn')) {
+                b.className = 'grid-status-btn ' + (isActive ? 'active' : 'archived');
+                b.title = isActive ? 'Aktif. Klik untuk arsipkan' : 'Diarsipkan. Klik untuk aktifkan';
+                b.textContent = isActive ? 'Aktif' : 'Diarsipkan';
+              }
+            });
+          } else {
+            alert(data.message || 'Gagal memperbarui status produk.');
+          }
+        })
+        .catch(() => {
+          btn.style.opacity = '1';
+          btn.disabled = false;
+          form.submit();
+        });
+      });
+    });
+  });
 </script>

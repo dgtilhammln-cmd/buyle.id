@@ -97,7 +97,7 @@ class CheckoutController extends Controller
             return redirect()->route('login')->with('error', 'Silakan login untuk melihat detail pesanan Anda.');
         }
 
-        $order = Order::with(['payment', 'items.product.seller', 'user'])->where('order_number', $orderNumber)
+        $order = Order::with(['payment', 'items.product.seller', 'items.variantValue.option', 'user'])->where('order_number', $orderNumber)
                       ->where('user_id', auth()->id())
                       ->firstOrFail();
 

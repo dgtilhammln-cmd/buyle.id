@@ -232,6 +232,18 @@ class CheckoutService
                         $product->decrement('stock', $cartItem->qty);
                     }
                 }
+                
+                // Proteksi race condition pada stok variasi jika dipilih
+                if ($cartItem->variant_value_id) {
+                    $variantVal = \App\Models\ProductVariantValue::where('id', $cartItem->variant_value_id)->lockForUpdate()->first();
+                    if ($variantVal && $variantVal->stock !== null) {
+                        if ((int)$variantVal->stock < $cartItem->qty) {
+                            throw new Exception("Stok variasi \"{$variantVal->value}\" tidak mencukupi (Sisa: {$variantVal->stock}).");
+                        }
+                        $variantVal->decrement('stock', $cartItem->qty);
+                    }
+                }
+
                 $product->increment('sold_count', $cartItem->qty);
 
                 // Margin Split Calculation (White Label & Reseller)
@@ -248,6 +260,12 @@ class CheckoutService
                     $creatorEarnings = $baseWhitelabelPrice * $cartItem->qty;
                 }
 
+                $variantLabel = null;
+                if ($cartItem->variantValue) {
+                    $optName = $cartItem->variantValue->option?->name;
+                    $variantLabel = $optName ? "{$optName}: {$cartItem->variantValue->value}" : $cartItem->variantValue->value;
+                }
+
                 OrderItem::create([
                     'order_id'              => $order->id,
                     'product_id'            => $product->id,
@@ -255,7 +273,7 @@ class CheckoutService
                     'seller_id'             => $sellerId,
                     'reseller_id'           => $resellerId,
                     'product_name'          => $product->name,
-                    'variant_name'          => $cartItem->variantValue?->value,
+                    'variant_name'          => $variantLabel ?? $cartItem->variantValue?->value,
                     'price'                 => $cartItem->unit_price,
                     'base_whitelabel_price' => $baseWhitelabelPrice,
                     'reseller_margin'       => $resellerMargin,

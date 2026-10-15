@@ -56,10 +56,14 @@ class StoreProductRequest extends FormRequest
             'meta_title'                => ['nullable', 'string', 'max:255'],
             'meta_desc'                 => ['nullable', 'string', 'max:1000'],
             'meta_keywords'             => ['nullable', 'string', 'max:500'],
-            'variants'                  => ['nullable', 'array', 'max:6'],
+            'variants'                  => ['nullable', 'array', 'max:20'],
+            'variants.*.id'             => ['nullable'],
             'variants.*.name'           => ['nullable', 'string', 'max:100'],
             'variants.*.price'          => ['nullable', 'numeric', 'min:0'],
+            'variants.*.stock'          => ['nullable', 'integer', 'min:0'],
+            'variants.*.sku'            => ['nullable', 'string', 'max:100'],
             'variants.*.image'          => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'variants.*.existing_image' => ['nullable', 'string'],
             'faqs'                      => ['nullable', 'array'],
             'faqs.*.question'           => ['nullable', 'string', 'max:500'],
             'faqs.*.answer'             => ['nullable', 'string'],
@@ -153,6 +157,19 @@ class StoreProductRequest extends FormRequest
         if ($this->has('sale_price')) {
             $rawSale = preg_replace('/[^\d]/', '', (string)$this->input('sale_price'));
             $merge['sale_price'] = $rawSale !== '' ? $rawSale : null;
+        }
+
+        if ($this->has('variants') && is_array($this->input('variants'))) {
+            $cleanedVariants = $this->input('variants');
+            foreach ($cleanedVariants as $k => $v) {
+                if (isset($v['price']) && $v['price'] !== null && $v['price'] !== '') {
+                    $cleanedVariants[$k]['price'] = preg_replace('/[^\d]/', '', (string)$v['price']);
+                }
+                if (isset($v['stock']) && $v['stock'] !== null && $v['stock'] !== '') {
+                    $cleanedVariants[$k]['stock'] = (int) $v['stock'];
+                }
+            }
+            $merge['variants'] = $cleanedVariants;
         }
 
         $this->merge($merge);

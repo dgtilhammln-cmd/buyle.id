@@ -40,7 +40,7 @@ class HomeController extends Controller
         ] = Cache::remember('home_page_data_v3', 300, function () {
             // Semua produk marketplace sekaligus — cukup 1 query besar, dibagi di PHP
             $allMp = Product::marketplace()
-                ->with(['seller:id,name,username,avatar', 'seller.creatorProfile:user_id,store_name,store_slug,avatar', 'category:id,name,slug'])
+                ->with(['seller:id,name,username,avatar', 'seller.creatorProfile:id,user_id,store_name,store_slug,is_verified,store_banner_1', 'category:id,name,slug'])
                 ->select(['id','name','slug','image','gallery','price','sale_price','stock','sold_count','views_count','rating','product_category_id','seller_id','product_type','is_active','created_at'])
                 ->latest()
                 ->limit(40)
@@ -68,13 +68,13 @@ class HomeController extends Controller
 
             // Creator populer — 1 query dengan filter DB, tanpa PHP loop order-items per creator
             $popularCreators = \App\Models\User::whereHas('creatorProfile', function($q) {
-                    $q->where('is_active', true)
-                      ->where('store_name', 'NOT LIKE', '%copywriter%')
+                    $q->where('store_name', 'NOT LIKE', '%copywriter%')
                       ->where('store_slug', 'NOT LIKE', '%copywriter%');
                 })
+                ->where('is_active', true)
                 ->whereNotIn('role', ['admin', 'super_admin', 'admin_super'])
                 ->where('name', 'NOT LIKE', '%copywriter%')
-                ->with(['creatorProfile:user_id,store_name,store_slug,avatar,banner,is_active'])
+                ->with(['creatorProfile:id,user_id,store_name,store_slug,is_verified,store_banner_1,bio_config'])
                 ->withCount('products')
                 ->orderByRaw("
                     CASE

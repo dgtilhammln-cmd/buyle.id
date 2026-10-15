@@ -112,6 +112,11 @@
                             <img src="{{ $productImg }}" alt="Product" class="order-item-img" onerror="this.src='https://placehold.co/150x150/f1f5f9/94a3b8?text=No+Image'">
                             <div class="order-item-info">
                                 <div class="order-item-title">{{ $productName }}</div>
+                                @if($firstItem && ($firstItem->variant_name || ($firstItem->variantValue)))
+                                    <div style="font-size:0.75rem; color:#1eb349; font-weight:600; margin-bottom:0.1rem;">
+                                        🏷 {{ $firstItem->variant_name ?: ($firstItem->variantValue ? ($firstItem->variantValue->variantOption->name ?? 'Varian') . ': ' . $firstItem->variantValue->value : '') }}
+                                    </div>
+                                @endif
                                 <div class="order-item-variant">x {{ $qty }}</div>
                                 @if($otherCount > 0)
                                 <div class="order-item-more">+ {{ $otherCount }} produk lainnya</div>

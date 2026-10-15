@@ -32,9 +32,32 @@ class CartService
     public function add(int $productId, ?int $variantValueId = null, int $qty = 1): Cart
     {
         $product = Product::findOrFail($productId);
+        
+        if (!$product->is_active) {
+            throw new \Exception('Produk tidak tersedia atau sedang diarsipkan.');
+        }
 
         if (auth()->check() && $product->seller_id && (int)$product->seller_id === (int)auth()->id()) {
             throw new \Exception('Anda tidak dapat membeli produk milik Anda sendiri.');
+        }
+
+        // Pastikan wajib pilih variasi jika produk memiliki variasi
+        if ($product->variantOptions()->has('values')->exists()) {
+            if (!$variantValueId) {
+                throw new \Exception('Silakan pilih variasi produk terlebih dahulu.');
+            }
+
+            $validVariant = \App\Models\ProductVariantValue::where('id', $variantValueId)
+                ->whereHas('option', fn($q) => $q->where('product_id', $productId))
+                ->first();
+
+            if (!$validVariant) {
+                throw new \Exception('Varian yang dipilih tidak valid.');
+            }
+
+            if ($validVariant->stock !== null && $validVariant->stock < $qty) {
+                throw new \Exception('Stok varian yang dipilih tidak mencukupi.');
+            }
         }
 
         if (! $product->is_available) {

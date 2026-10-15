@@ -591,6 +591,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::delete('/products/destroy-all', [\App\Http\Controllers\Creator\SellerProductController::class, 'destroyAll'])->name('products.destroy-all');
     Route::patch('/products/{product}/stock', [\App\Http\Controllers\Creator\SellerProductController::class, 'updateStock'])->name('products.stock');
     Route::patch('/products/{product}/order', [\App\Http\Controllers\Creator\SellerProductController::class, 'updateOrder'])->name('products.order');
+    Route::patch('/products/{product}/toggle-status', [\App\Http\Controllers\Creator\SellerProductController::class, 'toggleStatus'])->name('products.toggle-status');
     Route::post('/products/scan-menu', [\App\Http\Controllers\Creator\MenuScanController::class, 'scan'])->name('products.scan-menu');
     Route::post('/products/scan-url', [\App\Http\Controllers\Creator\MenuScanController::class, 'scanUrl'])->name('products.scan-url');
     Route::post('/products/scan-lynk', [\App\Http\Controllers\Creator\MenuScanController::class, 'scanLynk'])->name('products.scan-lynk');

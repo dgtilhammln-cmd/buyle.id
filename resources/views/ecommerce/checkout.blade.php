@@ -1128,6 +1128,12 @@
                                 @endif
                                 <div style="flex:1;">
                                     <div class="summary-title">{{ $item->product->name ?? 'Produk Telah Dihapus' }}</div>
+                                    @if($item->variantValue)
+                                        <div style="font-size:0.75rem; color:#1eb349; font-weight:600; margin-bottom:0.2rem; display:inline-flex; align-items:center; gap:3px;">
+                                            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                            {{ $item->variantValue->variantOption->name ?? 'Varian' }}: {{ $item->variantValue->value }}
+                                        </div>
+                                    @endif
                                     <div class="summary-meta">{{ $item->qty }} x Rp
                                         {{ number_format($item->unit_price, 0, ',', '.') }}
                                     </div>

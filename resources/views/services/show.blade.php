@@ -908,6 +908,73 @@
                     <form id="pd-cart-form" action="{{ route('cart.add') }}" method="POST">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $service->id }}">
+                        <input type="hidden" name="variant_value_id" id="pd_selected_variant_id" value="">
+
+                        {{-- VARIANT SELECTOR (tampil jika ada varian) --}}
+                        @if($service->variantOptions && $service->variantOptions->count() > 0)
+                        @php
+                            $hasVariants = true;
+                            $basePrice = $service->sale_price > 0 && $service->sale_price < $service->price
+                                ? $service->sale_price : $service->price;
+                        @endphp
+                        <div id="pd-variant-section" style="margin-bottom:1.5rem;">
+                            @foreach($service->variantOptions as $option)
+                            <div class="pd-attr-row" style="align-items:flex-start;">
+                                <div class="pd-attr-label" style="padding-top:4px;">{{ $option->name }}</div>
+                                <div class="pd-attr-content" style="flex-wrap:wrap; gap:0.5rem;">
+                                    @foreach($option->values as $val)
+                                    <button type="button"
+                                        class="pd-variant-pill"
+                                        data-variant-id="{{ $val->id }}"
+                                        data-price="{{ $val->finalPrice() }}"
+                                        data-stock="{{ $val->stock }}"
+                                        data-label="{{ $option->name }}: {{ $val->value }}"
+                                        @if($val->stock !== null && $val->stock <= 0) disabled style="opacity:0.4;cursor:not-allowed;" @endif
+                                        onclick="selectPdVariant(this)">
+                                        {{ $val->value }}
+                                        @if($val->price > 0 && $val->price != $basePrice)
+                                            <span style="font-size:0.7rem; opacity:0.75; margin-left:2px;">+Rp{{ number_format($val->price - $basePrice, 0, ',', '.') }}</span>
+                                        @endif
+                                        @if($val->stock !== null && $val->stock <= 0)
+                                            <span style="font-size:0.7rem; margin-left:2px;">(Habis)</span>
+                                        @endif
+                                    </button>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @endforeach
+                            <div id="pd-variant-error" style="display:none; color:#EF4444; font-size:0.82rem; margin-top:0.25rem; padding:0.4rem 0.75rem; background:#FEF2F2; border-radius:8px; border:1px solid #FCA5A5;">
+                                ⚠ Silakan pilih varian terlebih dahulu sebelum melanjutkan.
+                            </div>
+                            <div id="pd-variant-info" style="display:none; font-size:0.82rem; color:#1eb349; margin-top:0.35rem; font-weight:600;"></div>
+                        </div>
+                        <style>
+                        .pd-variant-pill {
+                            padding: 0.4rem 0.9rem;
+                            border: 1.5px solid var(--border, #E2E8F0);
+                            border-radius: 99px;
+                            background: #fff;
+                            color: var(--text-main, #0F172A);
+                            font-size: 0.83rem;
+                            font-weight: 500;
+                            font-family: inherit;
+                            cursor: pointer;
+                            transition: all 0.18s;
+                        }
+                        .pd-variant-pill:hover:not(:disabled) {
+                            border-color: var(--primary, #1eb349);
+                            color: var(--primary, #1eb349);
+                            background: rgba(30,179,73,0.05);
+                        }
+                        .pd-variant-pill.selected {
+                            border-color: var(--primary, #1eb349);
+                            background: linear-gradient(135deg, rgba(30,179,73,0.12), rgba(165,207,55,0.08));
+                            color: var(--primary, #1eb349);
+                            font-weight: 700;
+                            box-shadow: 0 2px 8px rgba(30,179,73,0.2);
+                        }
+                        </style>
+                        @endif
 
                         <div class="pd-attr-row" style="align-items:center;">
                             <div class="pd-attr-label">Kuantitas</div>
@@ -920,7 +987,7 @@
                                         @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
                                     <button type="button" class="pd-qty-btn" onclick="document.getElementById('qty_input').stepUp()">+</button>
                                 </div>
-                                <div class="pd-stock">
+                                <div class="pd-stock" id="pd-stock-info">
                                     @if($service->type === 'service')
                                         Jasa / Layanan
                                     @elseif(is_null($service->stock))
@@ -935,16 +1002,101 @@
                         </div>
 
                         <div class="pd-actions" style="margin-top:1.5rem; display:flex; gap:0.75rem;">
-                            <button type="submit" name="action" value="cart" class="pd-btn pd-btn-outline" style="flex:1;"
-                                @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
+                            <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;"
+                                @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif
+                                onclick="submitPdCart('cart')">
                                 Tambah Keranjang
                             </button>
-                            <button type="submit" name="action" value="buy" class="pd-btn pd-btn-primary" style="flex:1;"
-                                @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
+                            <button type="button" id="pd-btn-buy" class="pd-btn pd-btn-primary" style="flex:1;"
+                                @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif
+                                onclick="submitPdCart('buy')">
                                 Beli Sekarang
                             </button>
+                            <input type="hidden" name="action" id="pd_action_input" value="cart">
                         </div>
                     </form>
+
+                    <script>
+                    (function() {
+                        var hasVariants = {{ ($service->variantOptions && $service->variantOptions->count() > 0) ? 'true' : 'false' }};
+
+                        window.selectPdVariant = function(btn) {
+                            // Deselect siblings in same option group
+                            var parent = btn.closest('.pd-attr-content');
+                            parent.querySelectorAll('.pd-variant-pill').forEach(function(p) {
+                                p.classList.remove('selected');
+                            });
+                            btn.classList.add('selected');
+
+                            var vid = btn.dataset.variantId;
+                            var price = parseFloat(btn.dataset.price) || 0;
+                            var stock = btn.dataset.stock;
+                            var label = btn.dataset.label;
+
+                            document.getElementById('pd_selected_variant_id').value = vid;
+
+                            // Update price display
+                            if (price > 0) {
+                                var priceEl = document.querySelector('.pd-price-main');
+                                if (priceEl) {
+                                    priceEl.textContent = 'Rp' + price.toLocaleString('id-ID');
+                                }
+                            }
+
+                            // Update stock info
+                            var stockEl = document.getElementById('pd-stock-info');
+                            var qtyInput = document.getElementById('qty_input');
+                            if (stockEl) {
+                                if (stock === '' || stock === null || parseInt(stock) > 0) {
+                                    var stockNum = (stock === '' || stock === null) ? null : parseInt(stock);
+                                    if (stockNum === null) {
+                                        stockEl.innerHTML = '<span style="color:#10B981;">Stok Tersedia</span>';
+                                        if (qtyInput) { qtyInput.removeAttribute('max'); qtyInput.disabled = false; }
+                                    } else {
+                                        stockEl.textContent = 'Sisa ' + stockNum + ' buah';
+                                        if (qtyInput) { qtyInput.max = stockNum; qtyInput.disabled = false; }
+                                    }
+                                } else {
+                                    stockEl.innerHTML = '<span style="color:#EE4D2D;">Habis</span>';
+                                    if (qtyInput) qtyInput.disabled = true;
+                                }
+                            }
+
+                            // Variant info text
+                            var infoEl = document.getElementById('pd-variant-info');
+                            if (infoEl) { infoEl.style.display = 'block'; infoEl.textContent = '✓ Dipilih: ' + label; }
+
+                            // Hide error
+                            var errEl = document.getElementById('pd-variant-error');
+                            if (errEl) errEl.style.display = 'none';
+                        };
+
+                        window.submitPdCart = function(action) {
+                            if (hasVariants) {
+                                var vid = document.getElementById('pd_selected_variant_id').value;
+                                if (!vid) {
+                                    var errEl = document.getElementById('pd-variant-error');
+                                    if (errEl) { errEl.style.display = 'block'; errEl.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+                                    // Shake effect
+                                    var sec = document.getElementById('pd-variant-section');
+                                    if (sec) { sec.style.animation = 'shake 0.3s'; setTimeout(function(){ sec.style.animation = ''; }, 400); }
+                                    return false;
+                                }
+                            }
+                            document.getElementById('pd_action_input').value = action;
+                            document.getElementById('pd-cart-form').submit();
+                        };
+                    })();
+                    </script>
+                    <style>
+                    @keyframes shake {
+                        0%,100% { transform: translateX(0); }
+                        20% { transform: translateX(-6px); }
+                        40% { transform: translateX(6px); }
+                        60% { transform: translateX(-4px); }
+                        80% { transform: translateX(4px); }
+                    }
+                    </style>
                     @else
                     <div class="pd-price-box">
                         <div class="pd-price-main">Konsultasi Penawaran</div>

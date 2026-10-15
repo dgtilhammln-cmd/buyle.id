@@ -369,6 +369,15 @@
                                 onerror="this.src='https://placehold.co/150x150/f1f5f9/94a3b8?text=No+Image'">
                             <div class="od-item-info">
                                 <div class="od-item-title">{{ $item->product_name }}</div>
+                                @if($item->variant_name)
+                                    <div style="font-size:0.78rem; color:#1eb349; font-weight:600; margin-bottom:0.2rem;">
+                                        🏷 {{ $item->variant_name }}
+                                    </div>
+                                @elseif($item->variantValue)
+                                    <div style="font-size:0.78rem; color:#1eb349; font-weight:600; margin-bottom:0.2rem;">
+                                        🏷 {{ $item->variantValue->variantOption->name ?? 'Varian' }}: {{ $item->variantValue->value }}
+                                    </div>
+                                @endif
                                 <div class="od-item-meta">{{ $item->qty }} x Rp {{ number_format($item->price, 0, ',', '.') }}
                                 </div>
                             </div>

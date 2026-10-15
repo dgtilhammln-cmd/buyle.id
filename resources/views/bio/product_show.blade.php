@@ -496,12 +496,54 @@
                             Beli via WhatsApp
                         </a>
                     @elseif($prodId)
+                        {{-- VARIANT SELECTOR BIO --}}
+                        @if($product && $product->variantOptions && $product->variantOptions->count() > 0)
+                        @php
+                            $bioHasVariants = true;
+                            $bioProdId = $prodId;
+                        @endphp
+                        <div id="bio-variant-section" style="margin-bottom:1rem;">
+                            <style>
+                            .bio-variant-group { margin-bottom:0.65rem; }
+                            .bio-variant-label { font-size:0.78rem; font-weight:700; color:#475569; margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.03em; }
+                            .bio-variant-pills { display:flex; flex-wrap:wrap; gap:0.4rem; }
+                            .bio-variant-pill {
+                                padding:0.3rem 0.75rem; border:1.5px solid #E2E8F0; border-radius:99px;
+                                background:#fff; color:#0F172A; font-size:0.8rem; font-weight:500; font-family:inherit; cursor:pointer; transition:all 0.15s;
+                            }
+                            .bio-variant-pill:hover:not(:disabled) { border-color:#1eb349; color:#1eb349; }
+                            .bio-variant-pill.selected { border-color:#1eb349; background:rgba(30,179,73,0.1); color:#1eb349; font-weight:700; }
+                            .bio-variant-pill:disabled { opacity:0.4; cursor:not-allowed; }
+                            .bio-variant-err { display:none; color:#EF4444; font-size:0.78rem; background:#FEF2F2; border:1px solid #FCA5A5; border-radius:8px; padding:0.35rem 0.7rem; margin-bottom:0.5rem; }
+                            </style>
+                            @foreach($product->variantOptions as $opt)
+                            <div class="bio-variant-group">
+                                <div class="bio-variant-label">{{ $opt->name }}</div>
+                                <div class="bio-variant-pills">
+                                    @foreach($opt->values as $val)
+                                    <button type="button" class="bio-variant-pill"
+                                        data-variant-id="{{ $val->id }}"
+                                        data-price="{{ $val->finalPrice() }}"
+                                        data-label="{{ $opt->name }}: {{ $val->value }}"
+                                        @if($val->stock !== null && $val->stock <= 0) disabled @endif
+                                        onclick="selectBioVariant(this)">
+                                        {{ $val->value }}
+                                    </button>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @endforeach
+                            <div id="bio-variant-err" class="bio-variant-err">⚠ Pilih varian dulu sebelum lanjut.</div>
+                        </div>
+                        @endif
+
                         <div class="ps-cta-row">
-                            <form action="{{ route('cart.add') }}" method="POST" style="display:contents;" class="ps-add-cart-form">
+                            <form action="{{ route('cart.add') }}" method="POST" id="bio-cart-form" style="display:contents;" class="ps-add-cart-form">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $prodId }}">
                                 <input type="hidden" name="qty" value="1">
-                                <button type="submit" class="ps-btn-cart">
+                                <input type="hidden" name="variant_value_id" id="bio_selected_variant_id" value="">
+                                <button type="button" class="ps-btn-cart" onclick="submitBioCart()">
                                     <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                                     Keranjang
                                 </button>
@@ -643,6 +685,41 @@
                 return false;
             }
         }, true);
+
+        // ── BIO VARIANT SELECTOR ──────────────────────────────────────
+        var bioHasVariants = document.getElementById('bio-variant-section') !== null;
+
+        window.selectBioVariant = function(btn) {
+            var pills = btn.closest('.bio-variant-pills').querySelectorAll('.bio-variant-pill');
+            pills.forEach(function(p){ p.classList.remove('selected'); });
+            btn.classList.add('selected');
+            document.getElementById('bio_selected_variant_id').value = btn.dataset.variantId;
+
+            // Update price display
+            var price = parseFloat(btn.dataset.price) || 0;
+            if (price > 0) {
+                var priceEl = document.querySelector('.ps-price');
+                if (priceEl) priceEl.textContent = 'Rp ' + price.toLocaleString('id-ID');
+            }
+            // Hide error
+            var errEl = document.getElementById('bio-variant-err');
+            if (errEl) errEl.style.display = 'none';
+        };
+
+        window.submitBioCart = function() {
+            if (bioHasVariants) {
+                var vid = document.getElementById('bio_selected_variant_id').value;
+                if (!vid) {
+                    var errEl = document.getElementById('bio-variant-err');
+                    if (errEl) { errEl.style.display = 'block'; }
+                    var sec = document.getElementById('bio-variant-section');
+                    if (sec) { sec.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+                    return false;
+                }
+            }
+            var form = document.getElementById('bio-cart-form');
+            if (form) form.submit();
+        };
     </script>
 
     @include('partials.adsense_modal')

@@ -656,6 +656,8 @@
                                         autocomplete="off">
                                 </div>
 
+                                @include('creator.products.partials.variants-manager', ['product' => $product])
+
                                 <div id="commissionWrap" class="form-group full">
                                     <label class="form-label">Komisi Affiliate (%) <span>*</span></label>
                                     <div style="position:relative; display:flex; align-items:center;">

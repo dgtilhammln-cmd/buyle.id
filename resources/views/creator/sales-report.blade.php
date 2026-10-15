@@ -74,7 +74,18 @@
                     @foreach($order->items as $item)
                     <tr>
                         <td style="font-weight:700;color:#0f1f0f;white-space:nowrap;">#{{ $order->order_number ?? $order->id }}</td>
-                        <td style="min-width:160px;">{{ Str::limit($item->product->name ?? '—', 40) }}</td>
+                        <td style="min-width:160px;">
+                            <div style="font-weight:600;">{{ Str::limit($item->product_name ?? $item->product->name ?? '—', 40) }}</div>
+                            @php
+                                $vLabel = $item->variant_name ?? ($item->variantValue ? ($item->variantValue->option?->name ? $item->variantValue->option->name . ': ' : '') . $item->variantValue->value : null);
+                            @endphp
+                            @if($vLabel)
+                                <span style="display:inline-block; font-size:0.7rem; color:#15803d; background:#ecfdf5; border:1px solid #bbf7d0; padding:1px 6px; border-radius:4px; font-weight:700; margin-top:2px;">
+                                    🏷 {{ $vLabel }}
+                                </span>
+                            @endif
+                            <div style="font-size:0.72rem; color:#64748B; margin-top:2px;">x{{ $item->quantity }}</div>
+                        </td>
                         <td style="color:#64748B;white-space:nowrap;">{{ $order->user->name ?? '—' }}</td>
                         <td style="font-weight:700;color:#1eb349;white-space:nowrap;">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
                         <td style="color:#94A3B8;white-space:nowrap;">{{ $order->created_at->format('d M Y, H:i') }}</td>

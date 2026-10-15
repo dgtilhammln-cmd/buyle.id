@@ -1281,9 +1281,17 @@
                                     </td>
                                     <td>
                                         @foreach($order->items as $item)
-                                            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;">
+                                            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:3px;">
                                                 <span class="badge"
                                                     style="font-weight:600;">{{ Str::limit($item->product_name, 28) }}</span>
+                                                @php
+                                                    $vLabel = $item->variant_name ?? ($item->variantValue ? ($item->variantValue->option?->name ? $item->variantValue->option->name . ': ' : '') . $item->variantValue->value : null);
+                                                @endphp
+                                                @if($vLabel)
+                                                    <span style="font-size:0.65rem;color:#15803d;background:#ecfdf5;border:1px solid #bbf7d0;padding:1px 5px;border-radius:4px;font-weight:700;">
+                                                        🏷 {{ $vLabel }}
+                                                    </span>
+                                                @endif
                                                 <span style="font-size:0.68rem;color:#64748b;">(x{{ $item->quantity }})</span>
                                             </div>
                                         @endforeach
@@ -1321,6 +1329,7 @@
                                                 'shipping_address' => $addr,
                                                 'items' => $order->items->map(fn($i) => [
                                                     'name' => $i->product_name,
+                                                    'variant_name' => $i->variant_name ?? ($i->variantValue ? ($i->variantValue->option?->name ? $i->variantValue->option->name . ': ' : '') . $i->variantValue->value : null),
                                                     'quantity' => $i->quantity,
                                                     'price' => $i->price,
                                                     'subtotal' => $i->subtotal,
@@ -1888,12 +1897,20 @@
                         <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Hak Pemilik Produk: <strong>Rp ${Number(item.creator_earnings).toLocaleString('id-ID')}</strong></div>
                     </div>`;
                 }
+                let variantBadge = '';
+                if (item.variant_name) {
+                    variantBadge = `<span style="background:#ecfdf5;color:#15803d;border:1px solid #bbf7d0;padding:1px 6px;border-radius:4px;font-size:0.7rem;font-weight:700;display:inline-flex;align-items:center;gap:3px;margin-left:4px;">🏷 ${item.variant_name}</span>`;
+                }
+
                 itemsHtml += `
                 <div style="padding:0.6rem 0.85rem; border-bottom:1px solid #f1f5f9; font-size:0.82rem;">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                         <div>
-                            <strong style="color:#0f172a;">${item.name}</strong>
-                            <div style="font-size:0.72rem; color:#64748b;">Rp ${Number(item.price).toLocaleString('id-ID')} x ${item.quantity}</div>
+                            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+                                <strong style="color:#0f172a;">${item.name}</strong>
+                                ${variantBadge}
+                            </div>
+                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Rp ${Number(item.price).toLocaleString('id-ID')} x ${item.quantity}</div>
                             <div style="display:flex;flex-wrap:wrap;gap:3px;">${wlBadges}</div>
                             ${wlBreakdown}
                         </div>
