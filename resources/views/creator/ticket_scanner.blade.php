@@ -831,6 +831,15 @@
                     <div class="scanner-workspace-grid">
                         {{-- Kolom Kiri: Kamera Viewport --}}
                         <div class="scanner-camera-col">
+                            {{-- Smart Real-Time Video Guidance Banner (Pencahayaan & Jarak QR Presisi) --}}
+                            <div id="smartGuideBanner" class="smart-guide-banner">
+                                <svg id="smartGuideIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                <span id="smartGuideText" style="flex:1;">Pencahayaan Baik: Arahkan QR Code ke kamera</span>
+                            </div>
                             <div id="reader"></div>
                         </div>
 
@@ -1655,8 +1664,8 @@
                 html5QrcodeScanner = null;
             }
 
-            // Inisialisasi Full-Frame Scanner: Tanpa pembatasan qrbox kaku
-            // Memindai 100% seluruh frame kamera sehingga QR di posisi mana saja langsung terbaca
+            // Inisialisasi Full-Frame Scanner:
+            // JANGAN gunakan facingMode agar kamera eksternal USB (seperti JETE-W7) tidak ditolak oleh browser
             html5QrcodeScanner = new Html5QrcodeScanner("reader", {
                 fps: 10,                             // 10 FPS = optimal balance decoding & CPU performance
                 disableFlip: false,
@@ -1664,7 +1673,6 @@
                 showTorchButtonIfSupported: true,
                 showZoomSliderIfSupported: true,
                 videoConstraints: {
-                    facingMode: "environment",
                     width: { ideal: 1280, min: 640 },
                     height: { ideal: 720, min: 480 },
                 }
@@ -1672,7 +1680,10 @@
 
             html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 
-            // Jalankan Engine 2: jsQR Direct Frame Grabber (Toleransi tinggi pada layar HP & Glare)
+            // Pasang pengawas pergantian kamera agar pilihan user (misal JETE-W7) konsisten
+            setupCameraPersistence();
+
+            // Jalankan Engine 2: jsQR Direct Frame Grabber + Smart Precision Guidance
             startJsQrAssistLoop();
 
             setTimeout(() => {
@@ -1687,6 +1698,7 @@
                     rememberLastUsedCamera: true,
                 }, false);
                 html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+                setupCameraPersistence();
                 startJsQrAssistLoop();
                 setTimeout(() => { applyMirrorState(); }, 1000);
             } catch(e2) {
@@ -1696,9 +1708,79 @@
     }
 
     /**
-     * Engine 2: jsQR Parallel Binarizer
-     * Membaca langsung raw buffer dari video tag setiap 120ms dengan algoritma attemptBoth
-     * Sangat ampuh mendeteksi QR pada layar HP yang memantulkan cahaya atau webcam laptop fixed-focus.
+     * Memastikan pilihan kamera user (seperti JETE-W7) tersimpan dan aktif tanpa revert ke default laptop
+     */
+    function setupCameraPersistence() {
+        const readerEl = document.getElementById('reader');
+        if (!readerEl) return;
+
+        const observer = new MutationObserver(() => {
+            const sel = readerEl.querySelector('select');
+            if (sel && !sel._buyleHooked) {
+                sel._buyleHooked = true;
+                const savedCam = localStorage.getItem('buyle_chosen_camera_id');
+                if (savedCam && sel.value !== savedCam) {
+                    const optExists = Array.from(sel.options).some(o => o.value === savedCam);
+                    if (optExists) {
+                        sel.value = savedCam;
+                        sel.dispatchEvent(new Event('change'));
+                    }
+                }
+                sel.addEventListener('change', function() {
+                    if (this.value) {
+                        localStorage.setItem('buyle_chosen_camera_id', this.value);
+                    }
+                });
+            }
+        });
+        observer.observe(readerEl, { childList: true, subtree: true });
+    }
+
+    /**
+     * Update Tampilan Smart Real-Time Video Guidance (Pencahayaan & Jarak QR Presisi)
+     */
+    let lastGuideType = '';
+    let guideThrottleTimer = 0;
+
+    function updateSmartGuide(className, type, message) {
+        const now = Date.now();
+        if (type !== lastGuideType && (now - guideThrottleTimer > 250)) {
+            lastGuideType = type;
+            guideThrottleTimer = now;
+
+            const banner = document.getElementById('smartGuideBanner');
+            const txt = document.getElementById('smartGuideText');
+            const icon = document.getElementById('smartGuideIcon');
+            if (!banner || !txt) return;
+
+            banner.className = `smart-guide-banner ${className}`;
+            txt.textContent = message;
+
+            // Ikon presisi dinamis
+            if (icon) {
+                if (type === 'dark') {
+                    // Ikon redup / lampu
+                    icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+                } else if (type === 'far') {
+                    // Ikon panah mendekat
+                    icon.innerHTML = '<polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>';
+                } else if (type === 'close') {
+                    // Ikon panah menjauh
+                    icon.innerHTML = '<polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/>';
+                } else if (type === 'optimal') {
+                    // Ikon centang hijau sukses
+                    icon.innerHTML = '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>';
+                } else {
+                    // Ikon netral info
+                    icon.innerHTML = '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>';
+                }
+            }
+        }
+    }
+
+    /**
+     * Engine 2: jsQR Parallel Binarizer + Smart Precision Computer Vision
+     * Menghitung luminance real-time dan rasio jarak bounding-box QR secara matematis presisi
      */
     function startJsQrAssistLoop() {
         if (jsQrAssistInterval) clearInterval(jsQrAssistInterval);
@@ -1728,13 +1810,52 @@
 
             try {
                 const imgData = assistCtx.getImageData(0, 0, vw, vh);
+
+                // 1. Analisis Pencahayaan Real-Time (Luminance ITU-R BT.601)
+                const data = imgData.data;
+                const totalPixels = vw * vh;
+                const step = Math.max(1, Math.floor(totalPixels / 1000));
+                let sumLum = 0;
+                let sampleCount = 0;
+                for (let p = 0; p < data.length; p += step * 4) {
+                    sumLum += (0.299 * data[p] + 0.587 * data[p+1] + 0.114 * data[p+2]);
+                    sampleCount++;
+                }
+                const avgLum = sampleCount > 0 ? (sumLum / sampleCount) : 128;
+
+                // 2. Analisis QR & Jarak (Distance / Proximity)
                 const code = window.jsQR(imgData.data, vw, vh, {
                     inversionAttempts: "attemptBoth"
                 });
 
-                if (code && code.data && !isProcessing) {
-                    console.log('[Dual-Engine jsQR Detected]:', code.data);
-                    onScanSuccess(code.data);
+                if (code && code.location) {
+                    const loc = code.location;
+                    const wTop = Math.hypot(loc.topRightCorner.x - loc.topLeftCorner.x, loc.topRightCorner.y - loc.topLeftCorner.y);
+                    const wBot = Math.hypot(loc.bottomRightCorner.x - loc.bottomLeftCorner.x, loc.bottomRightCorner.y - loc.bottomLeftCorner.y);
+                    const qrWidth = (wTop + wBot) / 2;
+                    const ratio = qrWidth / vw; // Rasio lebar QR terhadap lebar frame kamera
+
+                    if (ratio < 0.20) {
+                        updateSmartGuide('guide-far', 'far', 'QR Terlalu Jauh: Dekatkan layar HP ke arah kamera');
+                    } else if (ratio > 0.82) {
+                        updateSmartGuide('guide-close', 'close', 'QR Terlalu Dekat: Mundurkan sedikit HP agar seluruh QR terlihat');
+                    } else {
+                        updateSmartGuide('guide-optimal', 'optimal', 'Jarak Pas & Presisi! Memindai...');
+                    }
+
+                    if (code.data && !isProcessing) {
+                        console.log('[Dual-Engine jsQR Detected]:', code.data);
+                        onScanSuccess(code.data);
+                    }
+                } else {
+                    // QR belum terdeteksi -> Evaluasi kondisi pencahayaan lingkungan
+                    if (avgLum < 45) {
+                        updateSmartGuide('guide-dark', 'dark', 'Kamera Terlalu Gelap: Pastikan pencahayaan cukup atau nyalakan lampu');
+                    } else if (avgLum > 225) {
+                        updateSmartGuide('guide-glare', 'glare', 'Layar Terlalu Silau: Kurangi kecerahan layar HP pengunjung');
+                    } else {
+                        updateSmartGuide('guide-idle', 'idle', 'Pencahayaan Baik: Arahkan QR Code ke kamera');
+                    }
                 }
             } catch (err) {
                 // Abaikan frame error jika video sedang di-switch
@@ -1910,40 +2031,52 @@
             const AudioCtx = window.AudioContext || window.webkitAudioContext;
             if (!AudioCtx) return;
             const ctx = new AudioCtx();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
 
             if (status === 'valid') {
-                // High bright double chime
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, ctx.currentTime);
-                gain.gain.setValueAtTime(0.25, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.08);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.08);
+                // Suara "CENTING" kristal bel ding yang sangat renyah, nyaring, dan bersih
+                const now = ctx.currentTime;
 
+                // Nada Utama (C7 ~2093Hz) dengan exponential decay alami
+                const osc1 = ctx.createOscillator();
+                const gain1 = ctx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(2093, now);
+                osc1.frequency.exponentialRampToValueAtTime(2060, now + 0.45);
+
+                gain1.gain.setValueAtTime(0.4, now);
+                gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+
+                osc1.connect(gain1);
+                gain1.connect(ctx.destination);
+                osc1.start(now);
+                osc1.stop(now + 0.5);
+
+                // Harmoni Kilau Kristal Overtone (G7 ~3136Hz)
                 const osc2 = ctx.createOscillator();
                 const gain2 = ctx.createGain();
                 osc2.type = 'sine';
-                osc2.frequency.setValueAtTime(1174, ctx.currentTime + 0.1);
-                gain2.gain.setValueAtTime(0.3, ctx.currentTime + 0.1);
-                gain2.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.22);
+                osc2.frequency.setValueAtTime(3136, now);
+                gain2.gain.setValueAtTime(0.2, now);
+                gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+
                 osc2.connect(gain2);
                 gain2.connect(ctx.destination);
-                osc2.start(ctx.currentTime + 0.1);
-                osc2.stop(ctx.currentTime + 0.22);
+                osc2.start(now);
+                osc2.stop(now + 0.3);
             } else {
-                // Warning low buzzer
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(220, ctx.currentTime);
-                gain.gain.setValueAtTime(0.25, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
+                // Warning low tone
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.setValueAtTime(180, now + 0.1);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
                 osc.connect(gain);
                 gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.25);
+                osc.start(now);
+                osc.stop(now + 0.3);
             }
         } catch(e) {}
     }
