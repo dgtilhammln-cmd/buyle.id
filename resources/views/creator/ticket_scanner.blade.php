@@ -691,22 +691,10 @@
                             Viewport Live QR Scanner
                         </div>
                         <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-                            {{-- Dropdown Pilih Kamera (Desktop & External Webcam Support) --}}
-                            <div class="input-icon-wrap" style="width: auto;">
-                                <select id="cameraDeviceSelect" class="filter-select" onchange="changeSelectedCamera(this.value)" style="height:36px; padding:0 0.85rem; border-radius:999px; border:1.5px solid #cbd5e1; font-size:0.78rem; font-weight:700; color:#1e293b; background:#fff; cursor:pointer; max-width:210px;" title="Pilih Kamera / Webcam">
-                                    <option value="">Deteksi Kamera...</option>
-                                </select>
-                            </div>
-
                             <label style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.78rem; font-weight:700; color:#166534; background:#f0fdf4; padding:0.4rem 0.85rem; border-radius:999px; border:1.5px solid #bbf7d0; cursor:pointer; user-select:none;" title="Scan cepat otomatis tanpa popup modal yang memblokir">
                                 <input type="checkbox" id="autoScanToggle" checked style="accent-color:#1eb349; width:16px; height:16px;" onchange="handleFastModeChange(this.checked)">
                                 ⚡ Fast Mode (Auto Next)
                             </label>
-
-                            <button type="button" id="toggleCamBtn" onclick="toggleCameraFacing()" style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border: none; padding: 0.45rem 0.95rem; border-radius: 99px; font-weight: 700; font-size: 0.78rem; cursor: pointer; box-shadow: 0 4px 12px rgba(30,179,73,0.25); transition: all 0.2s;">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-                                <span id="camFacingLabel">Balik Kamera</span>
-                            </button>
                         </div>
                     </div>
 
@@ -996,12 +984,8 @@
     // ══════════════════════════════════════════════════════════════════════
     // STATE SCANNER & KAMERA
     // ══════════════════════════════════════════════════════════════════════
-    let html5QrCode = null;
-    let availableCameras = [];
-    let currentCameraId = null;
-    let currentFacingMode = "user"; // Default user (webcam/laptop) agar langsung nyala di desktop
+    let html5QrcodeScanner = null;
     let isProcessing = false;
-    let isCameraSwitching = false;
 
     // Fast Mode (Default ON & Tersimpan di LocalStorage)
     let isFastMode = true;
@@ -1022,10 +1006,6 @@
 
         if (tabId === 'tab-data') {
             runInstantFilter();
-        } else if (tabId === 'tab-scanner') {
-            if (!html5QrCode || !html5QrCode.isScanning) {
-                initCamera(currentFacingMode);
-            }
         }
     }
 
@@ -1036,8 +1016,8 @@
             fastToggle.checked = isFastMode;
         }
 
-        // Langsung nyalakan kamera seketika!
-        initCamera(currentFacingMode);
+        // Aktifkan Original Html5QrcodeScanner (Resmi & Terbukti Stabil di Desktop & HP)
+        startOriginalScanner();
 
         if (INITIAL_ACTIVE_TAB === 'data') {
             runInstantFilter();
@@ -1052,216 +1032,26 @@
     }
 
     // ══════════════════════════════════════════════════════════════════════
-    // INISIALISASI & LANGSUNG NYALAKAN KAMERA (DESKTOP WEBCAM & HP KOMPATIBEL)
+    // ORIGINAL HTML5 QRCODE SCANNER (USER GESTURE RESMI & ANTI PERMISSION BLOCK)
     // ══════════════════════════════════════════════════════════════════════
-    function initCamera(facingMode) {
-        const config = {
-            fps: 15,
-            qrbox: { width: 250, height: 250 },
-            aspectRatio: 1.0,
-            experimentalFeatures: {
-                useBarCodeDetectorIfSupported: true
-            }
-        };
-
-        const doStart = () => {
-            // Selalu deteksi kamera perangkat terlebih dahulu (Krusial agar webcam desktop/laptop langsung aktif)
-            Html5Qrcode.getCameras().then(cameras => {
-                if (!cameras || cameras.length === 0) {
-                    // Jika getCameras kosong, fallback constraint
-                    if (html5QrCode) { try { html5QrCode.clear(); } catch(e){} }
-                    html5QrCode = new Html5Qrcode("reader");
-                    html5QrCode.start({ facingMode: facingMode }, config, onScanSuccess, onScanFailure)
-                        .catch(e => console.warn('facingMode start error:', e))
-                        .finally(() => { isCameraSwitching = false; });
-                    return;
-                }
-
-                availableCameras = cameras;
-                populateCameraDropdown(cameras);
-
-                // Prioritas: Pilihan yang tersimpan -> Kamera belakang HP (jika HP) -> Kamera 1 (Webcam Laptop/Desktop)
-                const savedCamId = localStorage.getItem('buyle_chosen_camera_id');
-                let cameraId = cameras[0].id;
-
-                if (savedCamId && cameras.some(c => c.id === savedCamId)) {
-                    cameraId = savedCamId;
-                } else if (cameras.length > 1 && facingMode === 'environment') {
-                    cameraId = cameras[cameras.length - 1].id;
-                } else {
-                    cameraId = cameras[0].id;
-                }
-
-                currentCameraId = cameraId;
-                const select = document.getElementById('cameraDeviceSelect');
-                if (select) select.value = cameraId;
-
-                if (html5QrCode) {
-                    try { html5QrCode.clear(); } catch(e) {}
-                }
-                html5QrCode = new Html5Qrcode("reader");
-
-                html5QrCode.start(cameraId, config, onScanSuccess, onScanFailure)
-                    .then(() => {
-                        isCameraSwitching = false;
-                    })
-                    .catch(err => {
-                        console.warn('[Scanner] Start by ID failed, trying fallback:', err);
-                        html5QrCode.start({ facingMode: facingMode }, config, onScanSuccess, onScanFailure)
-                            .then(() => { isCameraSwitching = false; })
-                            .catch(e2 => {
-                                console.error('[Scanner] All start methods failed:', e2);
-                                showPermissionDeniedUI(e2);
-                            });
-                    });
-            }).catch(err => {
-                console.warn('[Scanner] getCameras failed:', err);
-                if (html5QrCode) { try { html5QrCode.clear(); } catch(e){} }
-                html5QrCode = new Html5Qrcode("reader");
-                html5QrCode.start({ facingMode: facingMode }, config, onScanSuccess, onScanFailure)
-                    .then(() => { isCameraSwitching = false; })
-                    .catch(e => {
-                        console.error('Direct fallback failed:', e);
-                        showPermissionDeniedUI(e);
-                    });
-            });
-        };
-
-        if (html5QrCode) {
-            const stopPromise = (html5QrCode.isScanning || typeof html5QrCode.stop === 'function')
-                ? html5QrCode.stop().catch(() => {})
-                : Promise.resolve();
-
-            stopPromise.finally(() => {
-                setTimeout(doStart, 250);
-            });
-        } else {
-            doStart();
-        }
-    }
-
-    function showPermissionDeniedUI(err) {
-        isCameraSwitching = false;
-        const reader = document.getElementById('reader');
-        if (!reader) return;
-
-        reader.innerHTML = `
-            <div style="padding: 2.25rem 1.25rem; text-align: center; max-width: 520px; margin: 0 auto;">
-                <div style="width: 56px; height: 56px; background: #fef2f2; border: 2px solid #fecaca; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.85rem; color: #dc2626;">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                </div>
-                <h4 style="font-weight: 800; font-size: 1.05rem; color: #991b1b; margin-bottom: 0.35rem;">
-                    Akses Kamera Ditolak (Permission Denied)
-                </h4>
-                <p style="font-size: 0.82rem; color: #64748b; line-height: 1.5; margin-bottom: 1.25rem;">
-                    Sistem mendeteksi akses kamera ditolak oleh Windows 11 atau browser Google Chrome.
-                </p>
-
-                <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 1.15rem; text-align: left; font-size: 0.82rem; color: #334155; margin-bottom: 1.25rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
-                    <div style="font-weight: 800; color: #0f172a; margin-bottom: 0.75rem; font-size: 0.85rem;">
-                        Periksa 2 Titik Ini:
-                    </div>
-                    <div style="margin-bottom: 0.75rem; line-height: 1.5;">
-                        <strong style="color: #0f172a;">1. Di Windows 11 (Foto Pengaturan Kamera Anda):</strong><br>
-                        Scroll ke paling bawah halaman tersebut, cari bagian <strong>"Biarkan aplikasi desktop mengakses kamera Anda"</strong> lalu pastikan <strong>AKTIF</strong> dan <strong>Google Chrome</strong> dalam posisi <strong>Aktif</strong>.
-                    </div>
-                    <div style="line-height: 1.5;">
-                        <strong style="color: #0f172a;">2. Di Browser Chrome:</strong><br>
-                        Klik icon setelan di samping URL <code>buyle.id</code> -> <strong>Setelan situs</strong> -> ubah <strong>Kamera</strong> menjadi <strong>Izinkan (Allow)</strong>.
-                    </div>
-                </div>
-
-                <div style="display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
-                    <button type="button" onclick="initCamera(currentFacingMode)" style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border: none; padding: 0.65rem 1.4rem; border-radius: 999px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 4px 14px rgba(30,179,73,0.35);">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-                        Klik Coba Nyalakan Lagi
-                    </button>
-                    <button type="button" onclick="window.location.reload()" style="display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; color: #334155; border: 1.5px solid #cbd5e1; padding: 0.65rem 1.25rem; border-radius: 999px; font-weight: 700; font-size: 0.85rem; cursor: pointer;">
-                        Muat Ulang Halaman
-                    </button>
-                </div>
-            </div>
-        `;
-    }
-
-    function populateCameraDropdown(cameras) {
-        const select = document.getElementById('cameraDeviceSelect');
-        if (!select) return;
-
-        select.innerHTML = '';
-        cameras.forEach((cam, idx) => {
-            const opt = document.createElement('option');
-            opt.value = cam.id;
-            let label = cam.label || `Kamera ${idx + 1}`;
-            if (label.toLowerCase().includes('usb') || label.toLowerCase().includes('external')) {
-                opt.textContent = `📷 ${label}`;
-            } else if (label.toLowerCase().includes('integrated') || label.toLowerCase().includes('front') || label.toLowerCase().includes('user') || label.toLowerCase().includes('depan')) {
-                opt.textContent = `💻 ${label}`;
-            } else {
-                opt.textContent = `📹 ${label}`;
-            }
-            select.appendChild(opt);
-        });
-
-        if (currentCameraId) {
-            select.value = currentCameraId;
-        }
-    }
-
-    function changeSelectedCamera(cameraId) {
-        if (!cameraId || cameraId === currentCameraId) return;
-        currentCameraId = cameraId;
+    function startOriginalScanner() {
         try {
-            localStorage.setItem('buyle_chosen_camera_id', cameraId);
-        } catch(e) {}
-
-        const config = {
-            fps: 15,
-            qrbox: { width: 250, height: 250 },
-            aspectRatio: 1.0,
-            experimentalFeatures: {
-                useBarCodeDetectorIfSupported: true
+            if (html5QrcodeScanner) {
+                try { html5QrcodeScanner.clear(); } catch(e) {}
             }
-        };
 
-        if (html5QrCode) {
-            const stopPromise = (html5QrCode.isScanning || typeof html5QrCode.stop === 'function')
-                ? html5QrCode.stop().catch(() => {})
-                : Promise.resolve();
+            html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
+                fps: 15, 
+                qrbox: { width: 250, height: 250 },
+                rememberLastUsedCamera: true,
+                showTorchButtonIfSupported: true,
+                showZoomSliderIfSupported: true
+            }, false);
 
-            stopPromise.finally(() => {
-                setTimeout(() => {
-                    if (html5QrCode) { try { html5QrCode.clear(); } catch(e){} }
-                    html5QrCode = new Html5Qrcode("reader");
-                    html5QrCode.start(cameraId, config, onScanSuccess, onScanFailure)
-                        .catch(e => console.warn('Switch camera error:', e))
-                        .finally(() => { isCameraSwitching = false; });
-                }, 250);
-            });
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        } catch (err) {
+            console.error('[Scanner] Initialization failed:', err);
         }
-    }
-
-    function toggleCameraFacing() {
-        if (isCameraSwitching) return;
-        isCameraSwitching = true;
-
-        if (availableCameras.length > 1) {
-            const currentIndex = availableCameras.findIndex(c => c.id === currentCameraId);
-            const nextIndex = (currentIndex + 1) % availableCameras.length;
-            const nextCam = availableCameras[nextIndex];
-            if (nextCam) {
-                const select = document.getElementById('cameraDeviceSelect');
-                if (select) select.value = nextCam.id;
-                changeSelectedCamera(nextCam.id);
-                return;
-            }
-        }
-
-        currentFacingMode = (currentFacingMode === "environment") ? "user" : "environment";
-        const label = document.getElementById("camFacingLabel");
-        if (label) label.textContent = (currentFacingMode === "environment") ? "Kamera Belakang" : "Kamera Depan";
-
-        initCamera(currentFacingMode);
     }
 
     // ══════════════════════════════════════════════════════════════════════
