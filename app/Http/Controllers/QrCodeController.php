@@ -37,47 +37,11 @@ class QrCodeController extends Controller
             $data = 'buyle-id-ticket';
         }
 
-        $favPath = null;
-        
-        // 1. Check custom QR Logo from Admin Settings
-        $dbQrLogo = \App\Models\Setting::get('qr_logo');
-        if (!empty($dbQrLogo)) {
-            $checkPath = storage_path('app/public/' . ltrim($dbQrLogo, '/'));
-            if (file_exists($checkPath)) {
-                $favPath = $checkPath;
-            }
-        }
+        // Generate clean QR without any center logo for maximum scan compatibility
+        $cacheKey = 'qr_clean_nologo_v1_' . md5($data);
 
-        // 2. Fallback to Favicon setting
-        if (!$favPath) {
-            $dbFav = \App\Models\Setting::get('favicon');
-            if (!empty($dbFav)) {
-                $checkPath = storage_path('app/public/' . ltrim($dbFav, '/'));
-                if (file_exists($checkPath)) {
-                    $favPath = $checkPath;
-                }
-            }
-        }
-
-        // 3. Fallback to default static paths
-        if (!$favPath || !file_exists($favPath)) {
-            $favPath = storage_path('app/public/settings/favicon.png');
-        }
-        if (!file_exists($favPath)) {
-            $favPath = public_path('favicon.png');
-        }
-        if (!file_exists($favPath)) {
-            $favPath = public_path('favicon.ico');
-        }
-        if (!file_exists($favPath)) {
-            $favPath = base_path('public_html/favicon.png');
-        }
-
-        $mtime = file_exists($favPath) ? filemtime($favPath) : 0;
-        $cacheKey = 'qr_clean_iso_v9_' . md5($data . '_' . $favPath . '_' . $mtime);
-
-        return Cache::remember($cacheKey, 86400, function () use ($data, $favPath) {
-            return SimpleQrCode::base64($data, 300, $favPath);
+        return Cache::remember($cacheKey, 86400, function () use ($data) {
+            return SimpleQrCode::base64($data, 300);
         });
     }
 }

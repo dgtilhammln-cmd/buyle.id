@@ -805,6 +805,70 @@
         const REQUIRES_PIN = {{ $requiresPin ? 'true' : 'false' }};
         const AUTH_PIN_URL = "{{ route('gate.scanner.auth-pin', ['key' => $key]) }}";
 
+        // Progressive PIN lockout state (persisted in sessionStorage)
+        const LOCKOUT_KEY = 'gate_pin_lockout_{{ $key }}';
+
+        function getPinState() {
+            try { return JSON.parse(sessionStorage.getItem(LOCKOUT_KEY)) || { attempts: 0, lockedUntil: 0 }; }
+            catch(e) { return { attempts: 0, lockedUntil: 0 }; }
+        }
+        function savePinState(s) { sessionStorage.setItem(LOCKOUT_KEY, JSON.stringify(s)); }
+
+        function getLockoutDuration(attempts) {
+            if (attempts >= 7) return 300;  // 5 menit setelah 7+ salah
+            if (attempts >= 5) return 60;   // 1 menit setelah 5-6 salah
+            if (attempts >= 3) return 30;   // 30 detik setelah 3-4 salah
+            return 0;
+        }
+
+        function formatLockCountdown(secs) {
+            if (secs >= 60) return `${Math.ceil(secs/60)} menit`;
+            return `${secs} detik`;
+        }
+
+        let lockoutTimer = null;
+
+        function checkAndApplyLockout() {
+            const state = getPinState();
+            const now = Math.floor(Date.now() / 1000);
+            const remaining = state.lockedUntil - now;
+            if (remaining > 0) {
+                applyLockout(remaining, state.attempts);
+                return true;
+            }
+            return false;
+        }
+
+        function applyLockout(remainingSecs, attempts) {
+            const pinInput = document.getElementById('gate-pin-input');
+            const submitBtn = document.getElementById('btn-submit-pin');
+            const errMsg = document.getElementById('pin-error-msg');
+
+            pinInput.disabled = true;
+            submitBtn.disabled = true;
+
+            let secs = remainingSecs;
+            errMsg.style.display = 'block';
+
+            function tick() {
+                const attemptsText = attempts >= 7 ? 'Terlalu banyak percobaan' : `${attempts}x salah`;
+                errMsg.innerText = `${attemptsText}. Coba lagi dalam ${formatLockCountdown(secs)}.`;
+                if (secs <= 0) {
+                    pinInput.disabled = false;
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'Buka Scanner';
+                    errMsg.innerText = 'Silakan coba lagi.';
+                    pinInput.focus();
+                    clearInterval(lockoutTimer);
+                } else {
+                    secs--;
+                }
+            }
+            tick();
+            clearInterval(lockoutTimer);
+            lockoutTimer = setInterval(tick, 1000);
+        }
+
         async function submitGatePin(e) {
             if (e) e.preventDefault();
             const pinInput = document.getElementById('gate-pin-input');
@@ -817,6 +881,9 @@
                 errMsg.style.display = 'block';
                 return;
             }
+
+            // Check active lockout before attempting
+            if (checkAndApplyLockout()) return;
 
             submitBtn.disabled = true;
             submitBtn.innerText = 'Memverifikasi...';
@@ -833,16 +900,32 @@
                 });
                 const data = await res.json();
                 if (data.success) {
+                    // Clear lockout on success
+                    sessionStorage.removeItem(LOCKOUT_KEY);
                     currentGatePin = pin;
                     const overlay = document.getElementById('gate-pin-overlay');
                     if (overlay) overlay.style.display = 'none';
                     initScanner();
                 } else {
-                    errMsg.innerText = data.message || 'PIN yang Anda masukkan salah.';
-                    errMsg.style.display = 'block';
-                    submitBtn.disabled = false;
-                    submitBtn.innerText = 'Buka Scanner';
-                    pinInput.select();
+                    const state = getPinState();
+                    state.attempts++;
+                    const lockDuration = getLockoutDuration(state.attempts);
+                    if (lockDuration > 0) {
+                        state.lockedUntil = Math.floor(Date.now() / 1000) + lockDuration;
+                    }
+                    savePinState(state);
+
+                    if (lockDuration > 0) {
+                        pinInput.value = '';
+                        applyLockout(lockDuration, state.attempts);
+                    } else {
+                        const remaining = 3 - state.attempts;
+                        errMsg.innerText = (data.message || 'PIN yang Anda masukkan salah.') + (remaining > 0 ? ` (${remaining}x lagi sebelum dikunci)` : '');
+                        errMsg.style.display = 'block';
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = 'Buka Scanner';
+                        pinInput.select();
+                    }
                 }
             } catch(err) {
                 errMsg.innerText = 'Gagal menghubungi server. Periksa koneksi internet.';
@@ -851,6 +934,10 @@
                 submitBtn.innerText = 'Buka Scanner';
             }
         }
+
+        // Check lockout on page load
+        if (REQUIRES_PIN) { checkAndApplyLockout(); }
+
 
         async function processVerification(rawCode) {
             const clean = rawCode.trim();
