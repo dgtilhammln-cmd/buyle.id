@@ -91,8 +91,8 @@ class OrderPaidNotification extends Notification
         $ticketsHtml = '';
         if ($hasTickets) {
             $ticketsHtml = '
-            <div style="margin: 24px 0;">
-                <div style="font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 14px;">
+            <div style="margin: 24px 0; font-family: \'Montserrat\', -apple-system, BlinkMacSystemFont, \'Segoe UI\', sans-serif;">
+                <div style="font-size: 15px; font-weight: 400; color: #334155; margin-bottom: 14px; letter-spacing: -0.01em;">
                     E-Ticket Digital Pass (QR Code Check-In Masuk Acara)
                 </div>';
             
@@ -104,22 +104,22 @@ class OrderPaidNotification extends Notification
                 $eventLocation = htmlspecialchars($pass->product?->event_location ?? 'Venue / Online');
 
                 $ticketsHtml .= '
-                <div style="background-color: #FFFFFF; border: 2px solid #1eb349; border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 14px rgba(30,179,73,0.1);">
+                <div style="background-color: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 18px; margin-bottom: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); font-family: \'Montserrat\', -apple-system, sans-serif; font-weight: 300;">
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td width="140" align="center" valign="top" style="padding-right: 14px;">
-                                <img src="' . $qrUrl . '" alt="QR Code Tiket" width="130" height="130" style="display: block; margin: 0 auto; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #fff; padding: 4px;">
-                                <div style="font-family: monospace; font-size: 11px; font-weight: 800; color: #0F172A; margin-top: 8px; text-align: center; background: #F1F5F9; padding: 3px 6px; border-radius: 6px;">
+                                <img src="' . $qrUrl . '" alt="QR Code Tiket" width="130" height="130" style="display: block; margin: 0 auto; border-radius: 8px; border: 1px solid #E2E8F0; background: #fff; padding: 4px;">
+                                <div style="font-family: \'Montserrat\', monospace; font-size: 11px; font-weight: 400; color: #475569; margin-top: 8px; text-align: center; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 3px 6px; border-radius: 6px; letter-spacing: 0.03em;">
                                     ' . htmlspecialchars($pass->ticket_code) . '
                                 </div>
                             </td>
-                            <td valign="top" style="font-size: 13px; color: #334155; line-height: 1.6;">
-                                <div style="font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 8px;">' . $eventName . '</div>
-                                <div style="margin-bottom: 4px;"><strong>Pemegang Tiket:</strong> ' . htmlspecialchars($pass->holder_name) . '</div>
-                                <div style="margin-bottom: 4px;"><strong>Tanggal & Waktu:</strong> ' . $eventDate . ' (' . $eventTime . ')</div>
-                                <div style="margin-bottom: 6px;"><strong>Lokasi / Venue:</strong> ' . $eventLocation . '</div>
-                                <div style="display: inline-block; margin-top: 4px; background-color: #DCFCE7; color: #166534; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 99px; text-transform: uppercase;">
-                                    Status: VALID
+                            <td valign="top" style="font-size: 13px; color: #475569; line-height: 1.6; font-family: \'Montserrat\', -apple-system, sans-serif; font-weight: 300;">
+                                <div style="font-size: 15px; font-weight: 500; color: #0F172A; margin-bottom: 8px; letter-spacing: -0.01em;">' . $eventName . '</div>
+                                <div style="margin-bottom: 4px;"><span style="color: #64748B; font-weight: 300;">Pemegang Tiket:</span> <span style="color: #0F172A; font-weight: 400;">' . htmlspecialchars($pass->holder_name) . '</span></div>
+                                <div style="margin-bottom: 4px;"><span style="color: #64748B; font-weight: 300;">Tanggal & Waktu:</span> <span style="color: #334155; font-weight: 300;">' . $eventDate . ' (' . $eventTime . ')</span></div>
+                                <div style="margin-bottom: 6px;"><span style="color: #64748B; font-weight: 300;">Lokasi / Venue:</span> <span style="color: #334155; font-weight: 300;">' . $eventLocation . '</span></div>
+                                <div style="display: inline-block; margin-top: 4px; background-color: #F1F5F9; color: #334155; font-size: 11px; font-weight: 400; padding: 3px 10px; border-radius: 99px; letter-spacing: 0.04em;">
+                                    STATUS: VALID
                                 </div>
                             </td>
                         </tr>

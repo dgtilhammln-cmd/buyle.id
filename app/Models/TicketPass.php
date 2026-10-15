@@ -54,6 +54,8 @@ class TicketPass extends Model
             $order->load('items.product');
         }
 
+        $allHolders = $order->shipping_address['ticket_holders'] ?? [];
+
         foreach ($order->items as $item) {
             if ($item->product && $item->product->product_type === 'ticket') {
                 $existingCount = static::where('order_id', $order->id)
@@ -61,14 +63,19 @@ class TicketPass extends Model
                     ->count();
 
                 $qtyNeeded = $item->qty - $existingCount;
+                $holdersForProduct = $allHolders[$item->product_id] ?? [];
+
                 for ($i = 0; $i < $qtyNeeded; $i++) {
+                    $slotIndex = $existingCount + $i;
+                    $customHolder = !empty($holdersForProduct[$slotIndex]) ? trim($holdersForProduct[$slotIndex]) : null;
+
                     static::create([
                         'order_id'      => $order->id,
                         'order_item_id' => $item->id,
                         'product_id'    => $item->product_id,
                         'user_id'       => $order->user_id,
                         'seller_id'     => $item->product->seller_id,
-                        'holder_name'   => $order->user?->name ?? 'Pemegang Tiket',
+                        'holder_name'   => $customHolder ?: ($order->user?->name ?? 'Pemegang Tiket'),
                         'holder_email'  => $order->user?->email,
                         'holder_phone'  => $order->user?->phone,
                         'status'        => 'valid',

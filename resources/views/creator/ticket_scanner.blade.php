@@ -231,6 +231,48 @@
         max-width: 100% !important;
     }
 
+    /* ── REAL-TIME SMART GUIDANCE OVERLAY (Pencahayaan & Jarak QR Presisi) ── */
+    .smart-guide-banner {
+        margin-bottom: 0.65rem;
+        padding: 0.55rem 0.85rem;
+        border-radius: 12px;
+        font-size: 0.76rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        transition: all 0.25s ease;
+        border: 1.5px solid #e2e8f0;
+        background: #ffffff;
+        color: #475569;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+    .smart-guide-banner.guide-dark {
+        background: #fffbeb !important;
+        border-color: #fde68a !important;
+        color: #b45309 !important;
+    }
+    .smart-guide-banner.guide-glare {
+        background: #fef2f2 !important;
+        border-color: #fecaca !important;
+        color: #b91c1c !important;
+    }
+    .smart-guide-banner.guide-far {
+        background: #fff7ed !important;
+        border-color: #fed7aa !important;
+        color: #c2410c !important;
+    }
+    .smart-guide-banner.guide-close {
+        background: #fff7ed !important;
+        border-color: #fed7aa !important;
+        color: #c2410c !important;
+    }
+    .smart-guide-banner.guide-optimal {
+        background: #f0fdf4 !important;
+        border-color: #86efac !important;
+        color: #15803d !important;
+    }
+
     /* ── SCANNER RESULT PANEL (RIGHT COLUMN COMPACT) ── */
     .scanner-result-panel {
         background: #ffffff;

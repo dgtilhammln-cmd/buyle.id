@@ -194,6 +194,12 @@ class CheckoutService
             ];
         }
 
+        // Simpan input nama-nama pemegang tiket (ticket_holders) ke snapshot order
+        $ticketHoldersInput = $data['ticket_holders'] ?? request()->input('ticket_holders', []);
+        if (!empty($ticketHoldersInput)) {
+            $shippingAddressArray['ticket_holders'] = $ticketHoldersInput;
+        }
+
         DB::beginTransaction();
 
         try {
@@ -479,16 +485,22 @@ class CheckoutService
             }
 
             // Generate TicketPass jika terdapat produk bertipe ticket
+            $ticketHoldersSnapshot = $order->shipping_address['ticket_holders'] ?? [];
+
             foreach ($order->items as $item) {
                 if ($item->product && $item->product->product_type === 'ticket') {
+                    $holdersForProduct = $ticketHoldersSnapshot[$item->product_id] ?? [];
+
                     for ($i = 0; $i < $item->qty; $i++) {
+                        $customHolder = !empty($holdersForProduct[$i]) ? trim($holdersForProduct[$i]) : null;
+
                         \App\Models\TicketPass::create([
                             'order_id'      => $order->id,
                             'order_item_id' => $item->id,
                             'product_id'    => $item->product_id,
                             'user_id'       => $order->user_id,
                             'seller_id'     => $item->product->seller_id,
-                            'holder_name'   => $order->user?->name ?? 'Pemegang Tiket',
+                            'holder_name'   => $customHolder ?: ($order->user?->name ?? 'Pemegang Tiket'),
                             'holder_email'  => $order->user?->email,
                             'holder_phone'  => $order->user?->phone,
                             'status'        => 'valid',
