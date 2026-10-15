@@ -6,9 +6,9 @@
 
     <style>
         /* ══════════════════════════════════════
-       PRODUCT SHOW — buyle.id (Shopee Style)
-       Font: Montserrat
-    ══════════════════════════════════════ */
+           PRODUCT SHOW — buyle.id (Shopee Style)
+           Font: Montserrat
+        ══════════════════════════════════════ */
 
         *,
         *::before,
@@ -145,84 +145,91 @@
         }
 
         /* ── TICKET WAR COUNTDOWN (MINIMALIS LIGHT 1-BARIS TEMA BUYLE) ── */
-.ticket-war-light-bar {
-    background: linear-gradient(135deg, rgba(30,179,73,0.06), rgba(165,207,55,0.06));
-    border: 1.5px solid rgba(30,179,73,0.3);
-    border-radius: 12px;
-    padding: 0.65rem 1rem;
-    margin-top: 1.25rem;
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    box-sizing: border-box;
-}
-.tw-light-left {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #166534;
-    font-size: 0.82rem;
-    font-weight: 700;
-    white-space: nowrap;
-}
-.tw-light-timer {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    flex-wrap: nowrap;
-}
-.tw-light-box {
-    background: #FFFFFF;
-    border: 1px solid rgba(30,179,73,0.35);
-    border-radius: 6px;
-    padding: 0.2rem 0.45rem;
-    min-width: 38px;
-    text-align: center;
-    display: inline-flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 2px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-}
-.tw-light-val {
-    font-family: 'Montserrat', monospace;
-    font-size: 0.95rem;
-    font-weight: 800;
-    color: #15803D;
-    line-height: 1;
-}
-.tw-light-lbl {
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: #64748B;
-    text-transform: lowercase;
-}
-.tw-light-sep {
-    font-weight: 800;
-    color: #16A34A;
-    font-size: 0.85rem;
-}
-.pd-btn-locked-buyle {
-    flex: 1;
-    background: #F8FAFC;
-    color: #64748B;
-    border: 1.5px dashed #CBD5E1;
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    font-size: 0.88rem;
-    font-weight: 700;
-    cursor: not-allowed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-family: inherit;
-    transition: all 0.2s;
-}
+        .ticket-war-light-bar {
+            background: linear-gradient(135deg, rgba(30, 179, 73, 0.06), rgba(165, 207, 55, 0.06));
+            border: 1.5px solid rgba(30, 179, 73, 0.3);
+            border-radius: 12px;
+            padding: 0.65rem 1rem;
+            margin-top: 1.25rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            box-sizing: border-box;
+        }
 
-/* ── GALLERY (Left) ── */
+        .tw-light-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #166534;
+            font-size: 0.82rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .tw-light-timer {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            flex-wrap: nowrap;
+        }
+
+        .tw-light-box {
+            background: #FFFFFF;
+            border: 1px solid rgba(30, 179, 73, 0.35);
+            border-radius: 6px;
+            padding: 0.2rem 0.45rem;
+            min-width: 38px;
+            text-align: center;
+            display: inline-flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 2px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        }
+
+        .tw-light-val {
+            font-family: 'Montserrat', monospace;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #15803D;
+            line-height: 1;
+        }
+
+        .tw-light-lbl {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: lowercase;
+        }
+
+        .tw-light-sep {
+            font-weight: 800;
+            color: #16A34A;
+            font-size: 0.85rem;
+        }
+
+        .pd-btn-locked-buyle {
+            flex: 1;
+            background: #F8FAFC;
+            color: #64748B;
+            border: 1.5px dashed #CBD5E1;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: not-allowed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        /* ── GALLERY (Left) ── */
         .pd-gallery {
             width: 360px;
             flex-shrink: 0;
@@ -1627,47 +1634,64 @@
                                     </div>
                                 @endif
 
-                                                        {{-- TICKET WAR REAL-TIME COUNTDOWN (MINIMALIS LIGHT 1-BARIS TEMA BUYLE) --}}
-                        @if($isWarActive)
-                        <div id="ticketWarCard" class="ticket-war-light-bar">
-                            <div class="tw-light-left">
-                                <svg width="17" height="17" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                <span>Penjualan Tiket Dibuka Dalam:</span>
-                            </div>
-                            <div class="tw-light-timer">
-                                <div class="tw-light-box"><span id="warDays" class="tw-light-val">00</span><span class="tw-light-lbl">h</span></div>
-                                <span class="tw-light-sep">:</span>
-                                <div class="tw-light-box"><span id="warHours" class="tw-light-val">00</span><span class="tw-light-lbl">j</span></div>
-                                <span class="tw-light-sep">:</span>
-                                <div class="tw-light-box"><span id="warMins" class="tw-light-val">00</span><span class="tw-light-lbl">m</span></div>
-                                <span class="tw-light-sep">:</span>
-                                <div class="tw-light-box"><span id="warSecs" class="tw-light-val">00</span><span class="tw-light-lbl">d</span></div>
-                            </div>
-                        </div>
-                        @endif
+                                {{-- TICKET WAR REAL-TIME COUNTDOWN (MINIMALIS LIGHT 1-BARIS TEMA BUYLE) --}}
+                                @if($isWarActive)
+                                    <div id="ticketWarCard" class="ticket-war-light-bar">
+                                        <div class="tw-light-left">
+                                            <svg width="17" height="17" fill="none" stroke="#16a34a" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <polyline points="12 6 12 12 16 14" />
+                                            </svg>
+                                            <span>Countdown:</span>
+                                        </div>
+                                        <div class="tw-light-timer">
+                                            <div class="tw-light-box"><span id="warDays" class="tw-light-val">00</span><span
+                                                    class="tw-light-lbl">h</span></div>
+                                            <span class="tw-light-sep">:</span>
+                                            <div class="tw-light-box"><span id="warHours" class="tw-light-val">00</span><span
+                                                    class="tw-light-lbl">j</span></div>
+                                            <span class="tw-light-sep">:</span>
+                                            <div class="tw-light-box"><span id="warMins" class="tw-light-val">00</span><span
+                                                    class="tw-light-lbl">m</span></div>
+                                            <span class="tw-light-sep">:</span>
+                                            <div class="tw-light-box"><span id="warSecs" class="tw-light-val">00</span><span
+                                                    class="tw-light-lbl">d</span></div>
+                                        </div>
+                                    </div>
+                                @endif
 
-                        @if($isExpired)
-                        <div class="pd-actions" style="margin-top:1.25rem; display:flex; gap:0.75rem;">
-                            <button type="button" class="pd-btn" style="flex:1; background:#94A3B8; color:#fff; border-color:#94A3B8; cursor:not-allowed;" disabled>
-                                Event Selesai (Penjualan Ditutup)
-                            </button>
-                        </div>
-                        @elseif($isWarActive)
-                        <div class="pd-actions" style="margin-top:1.25rem; display:flex; gap:0.75rem;">
-                            <button type="button" id="btnTicketWarLocked" class="pd-btn-locked-buyle" disabled>
-                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                                <span id="warBtnLabel">Penjualan Dibuka {{ $service->ticket_war_start->isoFormat('D MMMM Y, HH:mm') }} WIB</span>
-                            </button>
-                            <div id="normalActions" style="display: none; gap:0.75rem; flex:1;">
-                                <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;" onclick="submitPdCart('cart')">
-                                    Tambah Keranjang
-                                </button>
-                                <button type="button" id="pd-btn-buy" class="pd-btn pd-btn-primary" style="flex:1;" onclick="submitPdCart('buy')">
-                                    Beli Sekarang
-                                </button>
-                            </div>
-                            <input type="hidden" name="action" id="pd_action_input" value="cart">
-                        </div>
+                                @if($isExpired)
+                                    <div class="pd-actions" style="margin-top:1.25rem; display:flex; gap:0.75rem;">
+                                        <button type="button" class="pd-btn"
+                                            style="flex:1; background:#94A3B8; color:#fff; border-color:#94A3B8; cursor:not-allowed;"
+                                            disabled>
+                                            Event Selesai (Penjualan Ditutup)
+                                        </button>
+                                    </div>
+                                @elseif($isWarActive)
+                                    <div class="pd-actions" style="margin-top:1.25rem; display:flex; gap:0.75rem;">
+                                        <button type="button" id="btnTicketWarLocked" class="pd-btn-locked-buyle" disabled>
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                viewBox="0 0 24 24">
+                                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                            </svg>
+                                            <span id="warBtnLabel">Penjualan Dibuka
+                                                {{ $service->ticket_war_start->isoFormat('D MMMM Y, HH:mm') }} WIB</span>
+                                        </button>
+                                        <div id="normalActions" style="display: none; gap:0.75rem; flex:1;">
+                                            <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;"
+                                                onclick="submitPdCart('cart')">
+                                                Tambah Keranjang
+                                            </button>
+                                            <button type="button" id="pd-btn-buy" class="pd-btn pd-btn-primary" style="flex:1;"
+                                                onclick="submitPdCart('buy')">
+                                                Beli Sekarang
+                                            </button>
+                                        </div>
+                                        <input type="hidden" name="action" id="pd_action_input" value="cart">
+                                    </div>
                                 @else
                                     <div class="pd-actions" style="margin-top:1.5rem; display:flex; gap:0.75rem;">
                                         <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;"
@@ -1924,7 +1948,8 @@
                             <div class="pd-reviews-summary-card">
                                 <div class="pd-score-big-box">
                                     <div class="pd-score-big" id="reviewsSummaryScore">
-                                        {{ number_format($realReviewsAvg ?: 5.0, 1) }}</div>
+                                        {{ number_format($realReviewsAvg ?: 5.0, 1) }}
+                                    </div>
                                     <div class="pd-stars-row">★★★★★</div>
                                     <div class="pd-score-sub"><span id="reviewsSummaryTotal">{{ $realReviewsCount }}</span>
                                         Ulasan Pembeli</div>
@@ -2151,11 +2176,13 @@
                                     @else
                                         <div
                                             style="width:80px;height:80px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#64748b;font-weight:600;">
-                                            {{ strtoupper(substr($seller->name, 0, 2)) }}</div>
+                                            {{ strtoupper(substr($seller->name, 0, 2)) }}
+                                        </div>
                                     @endif
                                     <div>
                                         <h3 style="margin:0 0 0.5rem; font-size:1.2rem;">
-                                            {{ optional($cp)->store_name ?: $seller->name }}</h3>
+                                            {{ optional($cp)->store_name ?: $seller->name }}
+                                        </h3>
                                         <p
                                             style="margin:0 0 1rem; color:var(--text-muted); font-size:0.95rem; line-height:1.6;">
                                             {{ optional($cp)->store_description ?: 'Creator ini belum menuliskan deskripsi profilnya.' }}
@@ -2174,7 +2201,7 @@
             {{-- RIGHT COLUMN: Creator Card --}}
             <div class="pd-sidebar-col">
                 @php 
-                                    $seller = $service->seller;
+                                                        $seller = $service->seller;
                     $cp = $seller?->creatorProfile;
                     $displaySellerName = optional($cp)->store_name ?: ($seller?->name ?? ($settings['site_name'] ?? 'buyle.id Official'));
                     $displayPhone = $seller?->phone ?? ($wa?->phone_number ?? '');
@@ -2803,16 +2830,16 @@
             if (rev.review_images && rev.review_images.length > 0) {
                 const imgUrl = rev.review_images[0];
                 imageHtml = `
-                <div class="pd-review-media-wrap">
-                    <a href="${imgUrl}" class="pd-review-thumb-box review-lightbox-img" data-gallery="review-gallery" title="Foto dari ${rev.display_name}">
-                        <img src="${imgUrl}" alt="Foto ulasan" loading="lazy">
-                        <div class="pd-thumb-overlay-hint">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                            <span>Klik Perbesar</span>
-                        </div>
-                    </a>
-                </div>
-            `;
+                    <div class="pd-review-media-wrap">
+                        <a href="${imgUrl}" class="pd-review-thumb-box review-lightbox-img" data-gallery="review-gallery" title="Foto dari ${rev.display_name}">
+                            <img src="${imgUrl}" alt="Foto ulasan" loading="lazy">
+                            <div class="pd-thumb-overlay-hint">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                                <span>Klik Perbesar</span>
+                            </div>
+                        </a>
+                    </div>
+                `;
             }
 
             const reviewText = rev.review_text ? `<div class="pd-review-text">${escapeHtml(rev.review_text)}</div>` : '';
@@ -2821,76 +2848,76 @@
             let replyBoxHtml = '';
             if (rev.seller_reply) {
                 replyBoxHtml = `
-                <div class="pd-seller-reply-box" id="sellerReplyWrap-${rev.id}" style="margin-top:1rem; padding:0.85rem 1rem; background:#F8FAFC; border-left:3.5px solid #1EB349; border-radius:0 12px 12px 0; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem; gap:0.5rem; flex-wrap:wrap;">
-                        <div style="display:flex; align-items:center; gap:6px;">
-                            <span style="font-weight:700; font-size:0.82rem; color:#1EB349; display:inline-flex; align-items:center; gap:4px;">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
-                                Respon Penjual
-                            </span>
-                            <span style="font-size:0.72rem; color:#94A3B8;">${rev.seller_replied_at || ''}</span>
+                    <div class="pd-seller-reply-box" id="sellerReplyWrap-${rev.id}" style="margin-top:1rem; padding:0.85rem 1rem; background:#F8FAFC; border-left:3.5px solid #1EB349; border-radius:0 12px 12px 0; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem; gap:0.5rem; flex-wrap:wrap;">
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="font-weight:700; font-size:0.82rem; color:#1EB349; display:inline-flex; align-items:center; gap:4px;">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
+                                    Respon Penjual
+                                </span>
+                                <span style="font-size:0.72rem; color:#94A3B8;">${rev.seller_replied_at || ''}</span>
+                            </div>
+                            ${isCreatorOwner ? `<button type="button" onclick="openReplyForm(${rev.id})" style="background:none; border:none; color:#15803D; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:underline;">Ubah Balasan</button>` : ''}
                         </div>
-                        ${isCreatorOwner ? `<button type="button" onclick="openReplyForm(${rev.id})" style="background:none; border:none; color:#15803D; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:underline;">Ubah Balasan</button>` : ''}
+                        <div class="pd-seller-reply-text" id="sellerReplyText-${rev.id}" style="font-size:0.85rem; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(rev.seller_reply)}</div>
                     </div>
-                    <div class="pd-seller-reply-text" id="sellerReplyText-${rev.id}" style="font-size:0.85rem; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(rev.seller_reply)}</div>
-                </div>
-            `;
+                `;
             }
 
             // Tombol Balas (jika belum ada balasan & yang melihat adalah Creator pemilik produk)
             let actionBtnHtml = '';
             if (isCreatorOwner && !rev.seller_reply) {
                 actionBtnHtml = `
-                <div class="pd-creator-reply-action" id="replyActionBtnWrap-${rev.id}" style="margin-top:0.85rem;">
-                    <button type="button" onclick="openReplyForm(${rev.id})" style="background:#F0FDF4; border:1px solid #BBF7D0; color:#15803D; font-size:0.78rem; font-weight:700; padding:0.35rem 0.85rem; border-radius:99px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.2s;">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                        <span>Balas Ulasan</span>
-                    </button>
-                </div>
-            `;
+                    <div class="pd-creator-reply-action" id="replyActionBtnWrap-${rev.id}" style="margin-top:0.85rem;">
+                        <button type="button" onclick="openReplyForm(${rev.id})" style="background:#F0FDF4; border:1px solid #BBF7D0; color:#15803D; font-size:0.78rem; font-weight:700; padding:0.35rem 0.85rem; border-radius:99px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.2s;">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            <span>Balas Ulasan</span>
+                        </button>
+                    </div>
+                `;
             }
 
             // Form Balas Ulasan (interaktif, max 200 kata)
             let replyFormHtml = '';
             if (isCreatorOwner) {
                 replyFormHtml = `
-                <div class="pd-reply-form-wrap" id="replyFormWrap-${rev.id}" style="display:none; margin-top:0.85rem; padding:1rem; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:12px;">
-                    <div style="font-size:0.82rem; font-weight:700; color:#0F172A; margin-bottom:0.4rem; display:flex; align-items:center; justify-content:space-between;">
-                        <span>Balas Ulasan sebagai Penjual</span>
-                        <span id="replyWordCount-${rev.id}" style="font-size:0.75rem; color:#64748B; font-weight:600;">0 / 200 kata</span>
+                    <div class="pd-reply-form-wrap" id="replyFormWrap-${rev.id}" style="display:none; margin-top:0.85rem; padding:1rem; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:12px;">
+                        <div style="font-size:0.82rem; font-weight:700; color:#0F172A; margin-bottom:0.4rem; display:flex; align-items:center; justify-content:space-between;">
+                            <span>Balas Ulasan sebagai Penjual</span>
+                            <span id="replyWordCount-${rev.id}" style="font-size:0.75rem; color:#64748B; font-weight:600;">0 / 200 kata</span>
+                        </div>
+                        <textarea id="replyTextarea-${rev.id}" rows="3" placeholder="Tulis balasan atau terima kasih untuk pembeli (maksimal 200 kata)..." style="width:100%; border:1px solid #CBD5E1; border-radius:8px; padding:0.6rem; font-size:0.85rem; font-family:inherit; resize:vertical; background:#fff; outline:none;" oninput="countReplyWords(${rev.id})">${rev.seller_reply ? escapeHtml(rev.seller_reply) : ''}</textarea>
+                        <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:0.6rem;">
+                            <button type="button" onclick="closeReplyForm(${rev.id})" style="padding:0.4rem 0.85rem; font-size:0.78rem; border-radius:99px; border:1px solid #CBD5E1; background:#fff; color:#64748B; cursor:pointer;">Batal</button>
+                            <button type="button" id="btnSubmitReply-${rev.id}" onclick="submitReply(${rev.id})" style="padding:0.4rem 1rem; font-size:0.78rem; font-weight:700; border-radius:99px; border:none; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; cursor:pointer; box-shadow:0 2px 8px rgba(30,179,73,0.3);">Kirim Balasan</button>
+                        </div>
                     </div>
-                    <textarea id="replyTextarea-${rev.id}" rows="3" placeholder="Tulis balasan atau terima kasih untuk pembeli (maksimal 200 kata)..." style="width:100%; border:1px solid #CBD5E1; border-radius:8px; padding:0.6rem; font-size:0.85rem; font-family:inherit; resize:vertical; background:#fff; outline:none;" oninput="countReplyWords(${rev.id})">${rev.seller_reply ? escapeHtml(rev.seller_reply) : ''}</textarea>
-                    <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:0.6rem;">
-                        <button type="button" onclick="closeReplyForm(${rev.id})" style="padding:0.4rem 0.85rem; font-size:0.78rem; border-radius:99px; border:1px solid #CBD5E1; background:#fff; color:#64748B; cursor:pointer;">Batal</button>
-                        <button type="button" id="btnSubmitReply-${rev.id}" onclick="submitReply(${rev.id})" style="padding:0.4rem 1rem; font-size:0.78rem; font-weight:700; border-radius:99px; border:none; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; cursor:pointer; box-shadow:0 2px 8px rgba(30,179,73,0.3);">Kirim Balasan</button>
-                    </div>
-                </div>
-            `;
+                `;
             }
 
             return `
-            <div class="pd-review-card" id="review-item-${rev.id}">
-                <div class="pd-review-header">
-                    <div class="pd-reviewer-left">
-                        ${avatarHtml}
-                        <div>
-                            <div class="pd-reviewer-name">${escapeHtml(rev.display_name)}</div>
-                            <div class="pd-verified-badge">
-                                <svg width="12" height="12" fill="none" stroke="#15803D" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-                                <span>Pembeli Terverifikasi</span>
+                <div class="pd-review-card" id="review-item-${rev.id}">
+                    <div class="pd-review-header">
+                        <div class="pd-reviewer-left">
+                            ${avatarHtml}
+                            <div>
+                                <div class="pd-reviewer-name">${escapeHtml(rev.display_name)}</div>
+                                <div class="pd-verified-badge">
+                                    <svg width="12" height="12" fill="none" stroke="#15803D" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                                    <span>Pembeli Terverifikasi</span>
+                                </div>
                             </div>
                         </div>
+                        <div class="pd-review-date">${rev.created_at} (${rev.date})</div>
                     </div>
-                    <div class="pd-review-date">${rev.created_at} (${rev.date})</div>
+                    <div class="pd-review-stars">${starsHtml}</div>
+                    ${reviewText}
+                    ${imageHtml}
+                    ${replyBoxHtml}
+                    ${actionBtnHtml}
+                    ${replyFormHtml}
                 </div>
-                <div class="pd-review-stars">${starsHtml}</div>
-                ${reviewText}
-                ${imageHtml}
-                ${replyBoxHtml}
-                ${actionBtnHtml}
-                ${replyFormHtml}
-            </div>
-        `;
+            `;
         }
 
         function countReplyWords(reviewId) {
@@ -2976,20 +3003,20 @@
                         } else {
                             const card = document.getElementById(`review-item-${reviewId}`);
                             const html = `
-                        <div class="pd-seller-reply-box" id="sellerReplyWrap-${reviewId}" style="margin-top:1rem; padding:0.85rem 1rem; background:#F8FAFC; border-left:3.5px solid #1EB349; border-radius:0 12px 12px 0; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
-                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem; gap:0.5rem; flex-wrap:wrap;">
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <span style="font-weight:700; font-size:0.82rem; color:#1EB349; display:inline-flex; align-items:center; gap:4px;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
-                                        Respon Penjual
-                                    </span>
-                                    <span style="font-size:0.72rem; color:#94A3B8;">${data.seller_replied_at || 'Baru saja'}</span>
+                            <div class="pd-seller-reply-box" id="sellerReplyWrap-${reviewId}" style="margin-top:1rem; padding:0.85rem 1rem; background:#F8FAFC; border-left:3.5px solid #1EB349; border-radius:0 12px 12px 0; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
+                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem; gap:0.5rem; flex-wrap:wrap;">
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span style="font-weight:700; font-size:0.82rem; color:#1EB349; display:inline-flex; align-items:center; gap:4px;">
+                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
+                                            Respon Penjual
+                                        </span>
+                                        <span style="font-size:0.72rem; color:#94A3B8;">${data.seller_replied_at || 'Baru saja'}</span>
+                                    </div>
+                                    <button type="button" onclick="openReplyForm(${reviewId})" style="background:none; border:none; color:#15803D; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:underline;">Ubah Balasan</button>
                                 </div>
-                                <button type="button" onclick="openReplyForm(${reviewId})" style="background:none; border:none; color:#15803D; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:underline;">Ubah Balasan</button>
+                                <div class="pd-seller-reply-text" id="sellerReplyText-${reviewId}" style="font-size:0.85rem; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(data.seller_reply)}</div>
                             </div>
-                            <div class="pd-seller-reply-text" id="sellerReplyText-${reviewId}" style="font-size:0.85rem; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(data.seller_reply)}</div>
-                        </div>
-                    `;
+                        `;
                             const formWrap = document.getElementById(`replyFormWrap-${reviewId}`);
                             if (formWrap) {
                                 formWrap.insertAdjacentHTML('beforebegin', html);
