@@ -1464,12 +1464,14 @@
     <div class="sp-topbar">
         <div class="sp-topbar-inner">
             <div class="sp-topbar-left">
-                <h1>Cari Produk</h1>
+                <h1>{{ request('tab') === 'creators' ? 'Daftar Creator' : 'Cari Produk' }}</h1>
                 <nav class="sp-breadcrumb" aria-label="breadcrumb">
                     <a href="{{ route_locale('home') }}">Beranda</a>
                     <span class="sp-breadcrumb-sep">/</span>
                     @if(request()->filled('q'))
                         <span class="sp-breadcrumb-cur">Hasil: "{{ request('q') }}"</span>
+                    @elseif(request('tab') === 'creators')
+                        <span class="sp-breadcrumb-cur">Daftar Creator</span>
                     @elseif(request('type') === 'jasa')
                         <span class="sp-breadcrumb-cur">Layanan Jasa</span>
                     @elseif(request('type') === 'produk')
@@ -1695,7 +1697,7 @@
                 <div class="sp-active-filters">
                     <span style="font-size:0.8rem;color:var(--c-muted);font-family:var(--font);font-weight:600;">Filter:</span>
                     @if(request()->filled('q'))
-                        <a href="{{ route_locale('products') }}?{{ http_build_query(request()->except('q')) }}"
+                        <a href="{{ route('products', request()->except('q')) }}"
                             class="sp-filter-chip">
                             "{{ request('q') }}" <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                 <line x1="18" y1="6" x2="6" y2="18" />
@@ -1746,12 +1748,12 @@
 
             {{-- Tab Switcher: Semua Produk vs Daftar Creator --}}
             <div class="sp-tab-switcher">
-                <a href="{{ route_locale('products') }}"
+                <a href="{{ route('products', request()->except(['tab', 'page'])) }}"
                    class="sp-tab-btn {{ request('tab') !== 'creators' ? 'active' : '' }}">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                     Semua Produk
                 </a>
-                <a href="{{ route_locale('products') }}?tab=creators"
+                <a href="{{ route('products', array_merge(request()->except('page'), ['tab' => 'creators'])) }}"
                    class="sp-tab-btn {{ request('tab') === 'creators' ? 'active' : '' }}">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/></svg>
                     Daftar Creator
@@ -1763,12 +1765,30 @@
                     {{-- Creator Tab Header --}}
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
                         <div style="font-size: 1rem; font-weight: 800; color: var(--c-text); font-family: var(--font);">
-                            Semua Creator Terverifikasi
+                            @if(request()->filled('q'))
+                                Creator dengan Produk / Keahlian "{{ request('q') }}"
+                            @else
+                                Semua Creator Terverifikasi
+                            @endif
                             <span style="font-size:0.82rem; font-weight:600; color:var(--c-muted); margin-left:0.4rem;">({{ $allCreators->total() }})</span>
                         </div>
                     </div>
 
-                    <div id="spCreatorGrid" class="sp-creator-grid">
+                    @if($allCreators->isEmpty())
+                        <div style="text-align: center; padding: 3.5rem 1.5rem; background: #ffffff; border-radius: 16px; border: 1.5px solid #e2e8f0; margin-bottom: 1.5rem;">
+                            <div style="width: 56px; height: 56px; border-radius: 50%; background: #f1f5f9; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem; color: #64748b;">
+                                <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            </div>
+                            <div style="font-weight: 800; font-size: 1.05rem; color: #0f172a; margin-bottom: 0.35rem;">Tidak Ada Creator Ditemukan</div>
+                            <p style="font-size: 0.85rem; color: #64748b; max-width: 440px; margin: 0 auto 1.25rem; line-height: 1.5;">
+                                Tidak ada creator atau produk creator yang cocok dengan pencarian <strong>"{{ request('q') }}"</strong>.
+                            </p>
+                            <a href="{{ route('products', ['tab' => 'creators']) }}" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1.25rem; border-radius: 999px; background: #f8fafc; border: 1.5px solid #e2e8f0; font-size: 0.82rem; font-weight: 700; color: #0f172a; text-decoration: none;">
+                                Tampilkan Semua Creator
+                            </a>
+                        </div>
+                    @else
+                        <div id="spCreatorGrid" class="sp-creator-grid">
                         @foreach($allCreators as $creatorUser)
                             @php
                                 $cp = $creatorUser->creatorProfile;
@@ -1818,6 +1838,7 @@
                     <div style="margin-top: 2rem;">
                         {{ $allCreators->links() }}
                     </div>
+                    @endif
                 </div>
             @endif
 

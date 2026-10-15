@@ -294,12 +294,48 @@ class ServiceController extends Controller
 
             if (request()->filled('q')) {
                 $rawQ = trim(request('q'));
-                $creatorsQuery->where(function($q) use ($rawQ) {
-                    $q->where('name', 'LIKE', '%'.$rawQ.'%')
+                $tokens = array_filter(explode(' ', strtolower(preg_replace('/[^a-zA-Z0-9]/', ' ', $rawQ))));
+
+                $creatorsQuery->where(function($q) use ($rawQ, $tokens) {
+                    // 1. Match creator profile / identity
+                    $q->where('name', 'LIKE', '%' . $rawQ . '%')
+                      ->orWhere('username', 'LIKE', '%' . $rawQ . '%')
                       ->orWhereHas('creatorProfile', function($cpQ) use ($rawQ) {
-                          $cpQ->where('store_name', 'LIKE', '%'.$rawQ.'%')
-                              ->orWhere('store_slug', 'LIKE', '%'.$rawQ.'%');
+                          $cpQ->where('store_name', 'LIKE', '%' . $rawQ . '%')
+                              ->orWhere('store_slug', 'LIKE', '%' . $rawQ . '%')
+                              ->orWhere('store_description', 'LIKE', '%' . $rawQ . '%');
+                      })
+                      // 2. Intelligent classification: Creator offers products/services matching search keyword
+                      ->orWhereHas('products', function($pq) use ($rawQ, $tokens) {
+                          $pq->where('is_active', true)
+                             ->where(function($subPq) use ($rawQ, $tokens) {
+                                 $subPq->where('name', 'LIKE', '%' . $rawQ . '%')
+                                       ->orWhere('short_desc', 'LIKE', '%' . $rawQ . '%')
+                                       ->orWhere('description', 'LIKE', '%' . $rawQ . '%')
+                                       ->orWhereHas('category', function($catQ) use ($rawQ) {
+                                           $catQ->where('name', 'LIKE', '%' . $rawQ . '%')
+                                                ->orWhere('slug', 'LIKE', '%' . $rawQ . '%');
+                                       });
+
+                                 foreach ($tokens as $t) {
+                                     if (strlen($t) >= 2) {
+                                         $subPq->orWhere('name', 'LIKE', '%' . $t . '%')
+                                               ->orWhere('short_desc', 'LIKE', '%' . $t . '%');
+                                     }
+                                 }
+                             });
                       });
+
+                    foreach ($tokens as $t) {
+                        if (strlen($t) >= 2) {
+                            $q->orWhere('name', 'LIKE', '%' . $t . '%')
+                              ->orWhere('username', 'LIKE', '%' . $t . '%')
+                              ->orWhereHas('creatorProfile', function($cpQ) use ($t) {
+                                  $cpQ->where('store_name', 'LIKE', '%' . $t . '%')
+                                      ->orWhere('store_description', 'LIKE', '%' . $t . '%');
+                              });
+                        }
+                    }
                 });
             }
 

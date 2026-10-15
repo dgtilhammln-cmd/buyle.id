@@ -483,6 +483,21 @@
             .fc-widget {
                 display: none !important;
             }
+
+            /* Hide site-wide footer on mobile - cart has its own sticky footer */
+            .cv-footer-v2 {
+                display: none !important;
+            }
+
+            /* Fix card image 4 floating/hanging - push down with proper margin */
+            .cart-items-wrap .cart-item:nth-child(4) {
+                margin-top: 0.5rem;
+            }
+
+            /* Ensure last cart item doesn't get cut off by sticky footer */
+            .cart-items-wrap {
+                padding-bottom: 1rem;
+            }
         }
     </style>
 

@@ -373,6 +373,11 @@
             display: none !important;
         }
 
+        /* Hide site-wide footer on mobile - checkout has its own sticky footer */
+        .cv-footer-v2 {
+            display: none !important;
+        }
+
         .summary-meta,
         .summary-price {
             font-size: 0.78rem;
