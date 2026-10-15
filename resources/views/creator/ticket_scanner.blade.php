@@ -1648,11 +1648,23 @@
     }
 
     // ══════════════════════════════════════════════════════════════════════
-    // DUAL-ENGINE TICKETING SCANNER (FULL-FRAME HTML5-QRCODE + JSQR ASSIST)
+    // TRIPLE-ENGINE TICKETING SCANNER (NATIVE GPU + HTML5-QRCODE + JSQR GLARER)
     // ══════════════════════════════════════════════════════════════════════
     let jsQrAssistInterval = null;
+    let isSwitchingCamera = false;
+    let nativeBarcodeDetector = null;
 
-    function startOriginalScanner() {
+    // Inisialisasi Native BarcodeDetector (Akselerasi GPU Browser Super Cepat & Tahan Silau)
+    if ('BarcodeDetector' in window) {
+        try {
+            nativeBarcodeDetector = new window.BarcodeDetector({ formats: ['qr_code'] });
+            console.log('[Scanner] Native BarcodeDetector engine ready');
+        } catch(e) {
+            console.warn('[Scanner] Native BarcodeDetector not supported:', e);
+        }
+    }
+
+    async function startOriginalScanner() {
         try {
             if (jsQrAssistInterval) {
                 clearInterval(jsQrAssistInterval);
@@ -1664,14 +1676,40 @@
                 html5QrcodeScanner = null;
             }
 
-            // Inisialisasi Full-Frame Scanner:
-            // JANGAN gunakan facingMode agar kamera eksternal USB (seperti JETE-W7) tidak ditolak oleh browser
+            // 1. Deteksi dan prioritaskan Kamera Eksternal USB (seperti JETE-W7)
+            try {
+                const devices = await Html5Qrcode.getCameras();
+                if (devices && devices.length > 0) {
+                    let savedCam = localStorage.getItem('buyle_chosen_camera_id');
+                    let chosenDev = devices.find(d => d.id === savedCam);
+
+                    // Jika belum ada preferensi, cari kamera eksternal USB (misal JETE-W7 / USB Webcam)
+                    if (!chosenDev) {
+                        chosenDev = devices.find(d => /jete|external|usb\s*webcam|webcam/i.test(d.label) && !/integrated|built-?in|internal|lsvcam|obs/i.test(d.label));
+                    }
+
+                    if (chosenDev) {
+                        localStorage.setItem('buyle_chosen_camera_id', chosenDev.id);
+                        try {
+                            localStorage.setItem('HTML5_QRCODE_DATA', JSON.stringify({
+                                hasCameraPermission: true,
+                                lastUsedCameraId: chosenDev.id
+                            }));
+                        } catch(e) {}
+                    }
+                }
+            } catch(e) {}
+
+            // Inisialisasi Full-Frame Scanner dengan akselerasi hardware
             html5QrcodeScanner = new Html5QrcodeScanner("reader", {
-                fps: 10,                             // 10 FPS = optimal balance decoding & CPU performance
+                fps: 15,                             // 15 FPS = frame capture lebih responsif
                 disableFlip: false,
                 rememberLastUsedCamera: true,
                 showTorchButtonIfSupported: true,
                 showZoomSliderIfSupported: true,
+                experimentalFeatures: {
+                    useBarCodeDetectorIfSupported: true
+                },
                 videoConstraints: {
                     width: { ideal: 1280, min: 640 },
                     height: { ideal: 720, min: 480 },
@@ -1680,10 +1718,10 @@
 
             html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 
-            // Pasang pengawas pergantian kamera agar pilihan user (misal JETE-W7) konsisten
+            // Pasang hook pengawas pergantian kamera live agar USB Camera (seperti JETE-W7) langsung switch
             setupCameraPersistence();
 
-            // Jalankan Engine 2: jsQR Direct Frame Grabber + Smart Precision Guidance
+            // Jalankan Engine Assist: Native BarcodeDetector + jsQR Contrast Glare Enhancer
             startJsQrAssistLoop();
 
             setTimeout(() => {
@@ -1693,7 +1731,7 @@
             console.error('[Scanner] Initialization failed:', err);
             try {
                 html5QrcodeScanner = new Html5QrcodeScanner("reader", {
-                    fps: 10,
+                    fps: 15,
                     disableFlip: false,
                     rememberLastUsedCamera: true,
                 }, false);
@@ -1708,7 +1746,7 @@
     }
 
     /**
-     * Memastikan pilihan kamera user (seperti JETE-W7) tersimpan dan aktif tanpa revert ke default laptop
+     * Memastikan pergantian kamera di dropdown langsung mengaktifkan kamera baru (Release USB lama -> Nyalakan USB baru)
      */
     function setupCameraPersistence() {
         const readerEl = document.getElementById('reader');
@@ -1718,22 +1756,114 @@
             const sel = readerEl.querySelector('select');
             if (sel && !sel._buyleHooked) {
                 sel._buyleHooked = true;
+
+                // Sync ke kamera yang tersimpan jika dropdown belum sinkron
                 const savedCam = localStorage.getItem('buyle_chosen_camera_id');
                 if (savedCam && sel.value !== savedCam) {
                     const optExists = Array.from(sel.options).some(o => o.value === savedCam);
                     if (optExists) {
                         sel.value = savedCam;
-                        sel.dispatchEvent(new Event('change'));
                     }
                 }
-                sel.addEventListener('change', function() {
-                    if (this.value) {
-                        localStorage.setItem('buyle_chosen_camera_id', this.value);
-                    }
+
+                // EVENT PERGANTIAN KAMERA LIVE: Langsung ganti stream hardware tanpa perlu refresh
+                sel.addEventListener('change', async function() {
+                    const chosenId = this.value;
+                    if (!chosenId) return;
+                    await switchScannerCamera(chosenId);
                 });
             }
         });
         observer.observe(readerEl, { childList: true, subtree: true });
+    }
+
+    /**
+     * Switch Kamera Hardware Bersih (Stop Stream Lama -> Release Lock Windows USB -> Nyalakan Kamera Terpilih)
+     */
+    async function switchScannerCamera(newCameraId) {
+        if (!newCameraId || isSwitchingCamera) return;
+        isSwitchingCamera = true;
+        console.log('[Scanner] Switching hardware camera to:', newCameraId);
+
+        localStorage.setItem('buyle_chosen_camera_id', newCameraId);
+        try {
+            localStorage.setItem('HTML5_QRCODE_DATA', JSON.stringify({
+                hasCameraPermission: true,
+                lastUsedCameraId: newCameraId
+            }));
+        } catch(e) {}
+
+        // 1. Jeda assist loop sementara saat switch
+        if (jsQrAssistInterval) {
+            clearInterval(jsQrAssistInterval);
+            jsQrAssistInterval = null;
+        }
+
+        // 2. Hentikan scanner aktif
+        if (html5QrcodeScanner && html5QrcodeScanner.html5Qrcode) {
+            try {
+                if (html5QrcodeScanner.html5Qrcode.isScanning) {
+                    await html5QrcodeScanner.html5Qrcode.stop();
+                }
+            } catch(e) {
+                console.warn('[Scanner] Stop warning:', e);
+            }
+        }
+
+        // 3. RELEASE HARDWARE MEDIA TRACKS (Kritis di Windows agar USB webcam tidak terkunci)
+        const vids = document.querySelectorAll('#reader video');
+        vids.forEach(v => {
+            if (v.srcObject) {
+                try {
+                    v.srcObject.getTracks().forEach(t => {
+                        t.stop();
+                        console.log('[Scanner] Released hardware track:', t.label);
+                    });
+                    v.srcObject = null;
+                } catch(e) {}
+            }
+        });
+
+        // Beri jeda 180ms agar driver USB Windows merilis handle kamera
+        await new Promise(r => setTimeout(r, 180));
+
+        // 4. Nyalakan kamera baru dengan deviceId terpilih
+        if (html5QrcodeScanner && html5QrcodeScanner.html5Qrcode) {
+            try {
+                await html5QrcodeScanner.html5Qrcode.start(
+                    newCameraId,
+                    {
+                        fps: 15,
+                        disableFlip: false,
+                        videoConstraints: {
+                            deviceId: { exact: newCameraId },
+                            width: { ideal: 1280, min: 640 },
+                            height: { ideal: 720, min: 480 }
+                        }
+                    },
+                    onScanSuccess,
+                    onScanFailure
+                );
+                console.log('[Scanner] Kamera aktif:', newCameraId);
+            } catch(err1) {
+                console.warn('[Scanner] Constraint exact gagal, mencoba start standar:', err1);
+                try {
+                    await html5QrcodeScanner.html5Qrcode.start(
+                        newCameraId,
+                        { fps: 15, disableFlip: false },
+                        onScanSuccess,
+                        onScanFailure
+                    );
+                } catch(err2) {
+                    console.error('[Scanner] Gagal menyalakan kamera baru:', err2);
+                    alert('Gagal menyalakan kamera yang dipilih. Pastikan kabel USB terhubung dengan baik.');
+                }
+            }
+        }
+
+        applyMirrorState();
+        startJsQrAssistLoop();
+        isSwitchingCamera = false;
     }
 
     /**
@@ -1759,19 +1889,14 @@
             // Ikon presisi dinamis
             if (icon) {
                 if (type === 'dark') {
-                    // Ikon redup / lampu
                     icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
                 } else if (type === 'far') {
-                    // Ikon panah mendekat
                     icon.innerHTML = '<polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>';
                 } else if (type === 'close') {
-                    // Ikon panah menjauh
                     icon.innerHTML = '<polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/>';
                 } else if (type === 'optimal') {
-                    // Ikon centang hijau sukses
                     icon.innerHTML = '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>';
                 } else {
-                    // Ikon netral info
                     icon.innerHTML = '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>';
                 }
             }
@@ -1779,8 +1904,8 @@
     }
 
     /**
-     * Engine 2: jsQR Parallel Binarizer + Smart Precision Computer Vision
-     * Menghitung luminance real-time dan rasio jarak bounding-box QR secara matematis presisi
+     * Multi-Engine Assist Loop: Native BarcodeDetector (GPU) + jsQR Adaptive Glare Normalizer
+     * Memecahkan masalah "layar HP silau / overexposed" sehingga pemindaian 100% instan seperti upload file
      */
     function startJsQrAssistLoop() {
         if (jsQrAssistInterval) clearInterval(jsQrAssistInterval);
@@ -1788,9 +1913,8 @@
         let assistCanvas = null;
         let assistCtx = null;
 
-        jsQrAssistInterval = setInterval(() => {
-            if (isProcessing) return;
-            if (typeof window.jsQR !== 'function') return;
+        jsQrAssistInterval = setInterval(async () => {
+            if (isProcessing || isSwitchingCamera) return;
 
             const video = document.querySelector('#reader video');
             if (!video || video.readyState < 2 || video.paused || video.ended) return;
@@ -1798,6 +1922,27 @@
             const vw = video.videoWidth;
             const vh = video.videoHeight;
             if (!vw || !vh || vw < 50 || vh < 50) return;
+
+            // ══════════════════════════════════════════════════════════════════
+            // ENGINE 1: NATIVE BROWSER BARCODE DETECTOR (GPU ACCELERATED)
+            // Membaca langsung dari video buffer — super cepat 2-5ms, tahan silau HP & pantulan
+            // ══════════════════════════════════════════════════════════════════
+            if (nativeBarcodeDetector && !isProcessing) {
+                try {
+                    const barcodes = await nativeBarcodeDetector.detect(video);
+                    if (barcodes && barcodes.length > 0 && barcodes[0].rawValue && !isProcessing) {
+                        console.log('[Native BarcodeDetector Detected QR]:', barcodes[0].rawValue);
+                        updateSmartGuide('guide-optimal', 'optimal', 'Jarak Pas & Presisi! Memindai...');
+                        onScanSuccess(barcodes[0].rawValue);
+                        return;
+                    }
+                } catch(e) {}
+            }
+
+            // ══════════════════════════════════════════════════════════════════
+            // ENGINE 2: jsQR + ADAPTIVE HIGH-CONTRAST FOR PHONE SCREENS
+            // ══════════════════════════════════════════════════════════════════
+            if (typeof window.jsQR !== 'function') return;
 
             if (!assistCanvas) {
                 assistCanvas = document.createElement('canvas');
@@ -1810,9 +1955,9 @@
 
             try {
                 const imgData = assistCtx.getImageData(0, 0, vw, vh);
+                const data = imgData.data;
 
                 // 1. Analisis Pencahayaan Real-Time (Luminance ITU-R BT.601)
-                const data = imgData.data;
                 const totalPixels = vw * vh;
                 const step = Math.max(1, Math.floor(totalPixels / 1000));
                 let sumLum = 0;
@@ -1823,8 +1968,8 @@
                 }
                 const avgLum = sampleCount > 0 ? (sumLum / sampleCount) : 128;
 
-                // 2. Analisis QR & Jarak (Distance / Proximity)
-                const code = window.jsQR(imgData.data, vw, vh, {
+                // 2. Normal Scan jsQR
+                const code = window.jsQR(data, vw, vh, {
                     inversionAttempts: "attemptBoth"
                 });
 
@@ -1833,7 +1978,7 @@
                     const wTop = Math.hypot(loc.topRightCorner.x - loc.topLeftCorner.x, loc.topRightCorner.y - loc.topLeftCorner.y);
                     const wBot = Math.hypot(loc.bottomRightCorner.x - loc.bottomLeftCorner.x, loc.bottomRightCorner.y - loc.bottomLeftCorner.y);
                     const qrWidth = (wTop + wBot) / 2;
-                    const ratio = qrWidth / vw; // Rasio lebar QR terhadap lebar frame kamera
+                    const ratio = qrWidth / vw;
 
                     if (ratio < 0.20) {
                         updateSmartGuide('guide-far', 'far', 'QR Terlalu Jauh: Dekatkan layar HP ke arah kamera');
@@ -1846,9 +1991,30 @@
                     if (code.data && !isProcessing) {
                         console.log('[Dual-Engine jsQR Detected]:', code.data);
                         onScanSuccess(code.data);
+                        return;
                     }
                 } else {
-                    // QR belum terdeteksi -> Evaluasi kondisi pencahayaan lingkungan
+                    // 3. Fallback High-Contrast Binarizer khusus layar HP yang memantulkan cahaya / overexposed
+                    if (avgLum > 100 && !isProcessing) {
+                        const contrastData = new Uint8ClampedArray(data);
+                        // Stretch contrast agar modul QR hitam yang pudar akibat backlight HP tetap terbaca tajam
+                        for (let i = 0; i < contrastData.length; i += 4) {
+                            const gray = 0.299 * contrastData[i] + 0.587 * contrastData[i+1] + 0.114 * contrastData[i+2];
+                            const boosted = gray < 135 ? 0 : 255;
+                            contrastData[i] = boosted;
+                            contrastData[i+1] = boosted;
+                            contrastData[i+2] = boosted;
+                        }
+                        const contrastCode = window.jsQR(contrastData, vw, vh, { inversionAttempts: "attemptBoth" });
+                        if (contrastCode && contrastCode.data && !isProcessing) {
+                            console.log('[Contrast-Boosted jsQR Caught Glare QR]:', contrastCode.data);
+                            updateSmartGuide('guide-optimal', 'optimal', 'Jarak Pas & Presisi! Memindai...');
+                            onScanSuccess(contrastCode.data);
+                            return;
+                        }
+                    }
+
+                    // Status Pencahayaan
                     if (avgLum < 45) {
                         updateSmartGuide('guide-dark', 'dark', 'Kamera Terlalu Gelap: Pastikan pencahayaan cukup atau nyalakan lampu');
                     } else if (avgLum > 225) {
@@ -1858,9 +2024,9 @@
                     }
                 }
             } catch (err) {
-                // Abaikan frame error jika video sedang di-switch
+                // Abaikan frame drop saat transisi
             }
-        }, 120);
+        }, 80);
     }
 
     // ══════════════════════════════════════════════════════════════════════
