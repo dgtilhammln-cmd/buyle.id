@@ -23,7 +23,9 @@ class QrCodeController extends Controller
 
         return response($rawPng, 200)
             ->header('Content-Type', 'image/png')
-            ->header('Cache-Control', 'public, max-age=86400');
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate, private')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
 
     /**
@@ -72,7 +74,7 @@ class QrCodeController extends Controller
         }
 
         $mtime = file_exists($favPath) ? filemtime($favPath) : 0;
-        $cacheKey = 'qr_code_base64_v7_real_' . md5($data . '_' . $favPath . '_' . $mtime);
+        $cacheKey = 'qr_clean_iso_v9_' . md5($data . '_' . $favPath . '_' . $mtime);
 
         return Cache::remember($cacheKey, 86400, function () use ($data, $favPath) {
             return SimpleQrCode::base64($data, 300, $favPath);

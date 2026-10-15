@@ -450,6 +450,27 @@
     </style>
 </head>
 <body>
+    @if($requiresPin)
+    <!-- PIN Protection Lock Screen Overlay -->
+    <div id="gate-pin-overlay" style="position:fixed; inset:0; z-index:99999; background:rgba(15,23,42,0.94); backdrop-filter:blur(10px); display:flex; align-items:center; justify-content:center; padding:1.25rem;">
+        <div style="background:#ffffff; border-radius:1.5rem; max-width:400px; width:100%; padding:2rem; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); text-align:center;">
+            <div style="width:60px; height:60px; border-radius:50%; background:#ecfdf5; border:2px solid #a7f3d0; color:#10b981; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
+                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+            <h2 style="font-size:1.2rem; font-weight:800; color:#0f172a; margin-bottom:0.35rem;">Akses Gate Dilindungi PIN</h2>
+            <p style="font-size:0.82rem; color:#64748b; margin-bottom:1.25rem; line-height:1.5;">
+                Masukkan PIN akses yang diberikan oleh penyelenggara event <strong>{{ $event->name }}</strong>.
+            </p>
+            <div id="pin-error-msg" style="display:none; background:#fef2f2; border:1px solid #fecaca; color:#dc2626; padding:0.6rem 0.85rem; border-radius:0.65rem; font-size:0.8rem; font-weight:700; margin-bottom:1rem;"></div>
+            <form onsubmit="submitGatePin(event)">
+                <input type="password" id="gate-pin-input" placeholder="Masukkan PIN Gate..." autofocus autocomplete="off" style="width:100%; box-sizing:border-box; padding:0.85rem 1rem; border:2px solid #e2e8f0; border-radius:0.75rem; font-size:1.15rem; font-weight:800; text-align:center; letter-spacing:0.2em; outline:none; transition:border-color 0.2s; margin-bottom:1.1rem;">
+                <button type="submit" id="btn-submit-pin" style="width:100%; padding:0.85rem; background:linear-gradient(135deg, #10b981, #047857); color:white; border:none; border-radius:0.75rem; font-size:0.95rem; font-weight:800; cursor:pointer; box-shadow:0 4px 14px rgba(16,185,129,0.35); transition:all 0.15s;">
+                    Buka Scanner
+                </button>
+            </form>
+        </div>
+    </div>
+    @endif
 
     <!-- Top Navigation -->
     <header class="gate-nav">
@@ -796,19 +817,73 @@
             await processVerification(decodedText);
         }
 
-        async function processVerification(rawCode) {
-            // Check local in-memory cache for instant feedback
-            const clean = rawCode.trim();
+        let currentGatePin = '';
+        const REQUIRES_PIN = {{ $requiresPin ? 'true' : 'false' }};
+        const AUTH_PIN_URL = "{{ route('gate.scanner.auth-pin', ['key' => $key]) }}";
+
+        async function submitGatePin(e) {
+            if (e) e.preventDefault();
+            const pinInput = document.getElementById('gate-pin-input');
+            const pin = pinInput.value.trim();
+            const errMsg = document.getElementById('pin-error-msg');
+            const submitBtn = document.getElementById('btn-submit-pin');
+
+            if (!pin) {
+                errMsg.innerText = 'Silakan ketik PIN Gate.';
+                errMsg.style.display = 'block';
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Memverifikasi...';
 
             try {
-                const res = await fetch(VERIFY_URL, {
+                const res = await fetch(AUTH_PIN_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': CSRF_TOKEN,
                         'Accept': 'application/json'
                     },
-                    body: JSON.stringify({ code: clean })
+                    body: JSON.stringify({ pin: pin })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    currentGatePin = pin;
+                    const overlay = document.getElementById('gate-pin-overlay');
+                    if (overlay) overlay.style.display = 'none';
+                    initScanner();
+                } else {
+                    errMsg.innerText = data.message || 'PIN yang Anda masukkan salah.';
+                    errMsg.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'Buka Scanner';
+                    pinInput.select();
+                }
+            } catch(err) {
+                errMsg.innerText = 'Gagal menghubungi server. Periksa koneksi internet.';
+                errMsg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Buka Scanner';
+            }
+        }
+
+        async function processVerification(rawCode) {
+            const clean = rawCode.trim();
+            const headers = {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': CSRF_TOKEN,
+                'Accept': 'application/json'
+            };
+            if (currentGatePin) {
+                headers['X-Gate-Pin'] = currentGatePin;
+            }
+
+            try {
+                const res = await fetch(VERIFY_URL, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({ code: clean, gate_pin: currentGatePin })
                 });
 
                 const data = await res.json();
@@ -835,7 +910,7 @@
             banner.className = `result-banner show status-${data.status}`;
 
             if (data.status === 'valid') {
-                icon.innerHTML = '✓';
+                icon.innerHTML = '<svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
                 title.innerText = data.title || 'Check-In Berhasil!';
                 msg.innerText = data.message || 'Tiket valid.';
                 infoBox.style.display = 'block';
@@ -858,7 +933,7 @@
                 incrementCounter();
 
             } else if (data.status === 'used') {
-                icon.innerHTML = '⚠️';
+                icon.innerHTML = '<svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
                 title.innerText = data.title || 'Sudah Digunakan';
                 msg.innerText = data.message || 'Tiket sudah dipindai sebelumnya.';
                 infoBox.style.display = 'block';
@@ -873,7 +948,7 @@
                 triggerHaptic('used');
 
             } else {
-                icon.innerHTML = '✕';
+                icon.innerHTML = '<svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
                 title.innerText = data.title || 'Tiket Tidak Valid';
                 msg.innerText = data.message || 'Tiket tidak ditemukan.';
                 infoBox.style.display = 'none';
@@ -935,9 +1010,11 @@
             if (e.key === 'Enter') submitManualCode();
         });
 
-        // Initialize on DOM load
+        // Initialize on DOM load if no PIN required
         document.addEventListener('DOMContentLoaded', () => {
-            initScanner();
+            if (!REQUIRES_PIN) {
+                initScanner();
+            }
         });
     </script>
 </body>

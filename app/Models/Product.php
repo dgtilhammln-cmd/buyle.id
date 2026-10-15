@@ -26,7 +26,8 @@ class Product extends Model
         'product_type', 'file_type', 'digital_resource', 'seller_id', 'creator_group_id', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating', 'tiktok_video_url',
         // Event / Ticket fields
         'event_date', 'event_time', 'event_location', 'event_type',
-        'gate_scanner_key', 'gate_scanner_enabled',
+        'gate_scanner_key', 'gate_scanner_enabled', 'gate_scanner_pin',
+        'gate_open_time', 'gate_close_time', 'gate_bypass_time',
         // Kolom White Label & Reseller
         'is_whitelabel', 'whitelabel_price', 'whitelabel_terms', 'whitelabel_approval_status', 'whitelabel_rejection_reason',
         // Affiliate Commission
@@ -54,11 +55,79 @@ class Product extends Model
         'rating'         => 'decimal:1',
         'event_date'     => 'date',
         'gate_scanner_enabled' => 'boolean',
+        'gate_bypass_time'     => 'boolean',
         // White Label casts
         'is_whitelabel'             => 'boolean',
         'whitelabel_price'          => 'decimal:2',
         'affiliate_commission_rate' => 'decimal:2',
     ];
+
+    /**
+     * Periksa apakah Gate saat ini berstatus Buka (Open) atau Tutup (Closed).
+     */
+    public function getGateStatus(): array
+    {
+        if (!$this->gate_scanner_enabled) {
+            return [
+                'is_open' => false,
+                'status'  => 'disabled',
+                'reason'  => 'Akses Gate dinonaktifkan oleh penyelenggara event.'
+            ];
+        }
+
+        if ($this->gate_bypass_time) {
+            return [
+                'is_open' => true,
+                'status'  => 'bypassed',
+                'reason'  => 'Gate dibuka manual (Bypass Waktu aktif).'
+            ];
+        }
+
+        if (empty($this->gate_open_time) && empty($this->gate_close_time)) {
+            return [
+                'is_open' => true,
+                'status'  => 'open',
+                'reason'  => 'Gate aktif (Tanpa batasan jam).'
+            ];
+        }
+
+        $now = now();
+        $currentTime = $now->format('H:i');
+
+        if ($this->event_date) {
+            $eventDateStr = $this->event_date->format('Y-m-d');
+            $todayStr = $now->format('Y-m-d');
+            if ($todayStr < $eventDateStr) {
+                return [
+                    'is_open' => false,
+                    'status'  => 'before_date',
+                    'reason'  => 'Event dijadwalkan pada ' . $this->event_date->format('d M Y') . '. Gate belum dibuka.'
+                ];
+            }
+        }
+
+        if (!empty($this->gate_open_time) && $currentTime < $this->gate_open_time) {
+            return [
+                'is_open' => false,
+                'status'  => 'before_open',
+                'reason'  => 'Gate belum dibuka. Jadwal buka gate pukul ' . $this->gate_open_time . ' WIB.'
+            ];
+        }
+
+        if (!empty($this->gate_close_time) && $currentTime > $this->gate_close_time) {
+            return [
+                'is_open' => false,
+                'status'  => 'after_close',
+                'reason'  => 'Gate telah ditutup pada pukul ' . $this->gate_close_time . ' WIB.'
+            ];
+        }
+
+        return [
+            'is_open' => true,
+            'status'  => 'open',
+            'reason'  => 'Gate dibuka.'
+        ];
+    }
 
     /**
      * Dapatkan atau generate kunci akses Gate Scanner untuk panitia event ini.

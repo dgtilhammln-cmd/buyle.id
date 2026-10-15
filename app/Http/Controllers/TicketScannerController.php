@@ -473,12 +473,13 @@ class TicketScannerController extends Controller
             abort(404, 'Link Gate Scanner tidak valid atau telah diganti oleh penyelenggara event.');
         }
 
-        if (!$event->gate_scanner_enabled) {
+        $gateStatus = $event->getGateStatus();
+        if (!$gateStatus['is_open'] && $gateStatus['status'] === 'disabled') {
             $seo = [
                 'title'  => 'Gate Scanner Dinonaktifkan · ' . $event->name,
                 'robots' => 'noindex, nofollow',
             ];
-            return view('gate.disabled', compact('event', 'seo'));
+            return view('gate.disabled', compact('event', 'seo', 'gateStatus'));
         }
 
         // Tiket khusus event ini untuk 0ms instant scan & offline-ready lookup
@@ -513,18 +514,16 @@ class TicketScannerController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'success' => true,
-                'stats'   => $stats,
-                'tickets' => $cachedTickets,
+                'success'     => true,
+                'stats'       => $stats,
+                'gate_status' => $gateStatus,
+                'tickets'     => $cachedTickets,
             ]);
         }
 
-        $seo = [
-            'title'  => 'Gate Scanner · ' . $event->name,
-            'robots' => 'noindex, nofollow',
-        ];
+        $requiresPin = !empty($event->gate_scanner_pin) && !session('gate_auth_' . $event->id);
 
-        return view('gate.scanner', compact('event', 'key', 'stats', 'cachedTickets', 'seo'));
+        return view('gate.scanner', compact('event', 'key', 'stats', 'cachedTickets', 'seo', 'gateStatus', 'requiresPin'));
     }
 
     /**
@@ -537,12 +536,34 @@ class TicketScannerController extends Controller
             ->where('product_type', 'ticket')
             ->first();
 
-        if (!$event || !$event->gate_scanner_enabled) {
+        if (!$event) {
             return response()->json([
                 'status'  => 'invalid',
-                'title'   => 'Akses Gate Ditolak',
-                'message' => 'Akses Gate Scanner ini tidak aktif atau telah diubah oleh Creator.'
+                'title'   => 'Akses Tidak Valid',
+                'message' => 'Link Gate Scanner tidak ditemukan.'
+            ], 404);
+        }
+
+        $gateStatus = $event->getGateStatus();
+        if (!$gateStatus['is_open']) {
+            return response()->json([
+                'status'      => 'gate_closed',
+                'title'       => 'Pintu Masuk (Gate) Ditutup',
+                'message'     => $gateStatus['reason'],
+                'gate_status' => $gateStatus
             ], 403);
+        }
+
+        // Cek PIN Akses Gate jika event diproteksi password
+        if (!empty($event->gate_scanner_pin) && !session('gate_auth_' . $event->id)) {
+            $providedPin = $request->header('X-Gate-Pin') ?? $request->input('gate_pin');
+            if ($providedPin !== (string) $event->gate_scanner_pin) {
+                return response()->json([
+                    'status'  => 'auth_required',
+                    'title'   => 'PIN Gate Diperlukan',
+                    'message' => 'Silakan masukkan PIN Gate sebelum melakukan verifikasi tiket.'
+                ], 401);
+            }
         }
 
         $rawInput = trim($request->input('code') ?? $request->input('qr_token') ?? '');
@@ -653,7 +674,7 @@ class TicketScannerController extends Controller
 
                 $result = response()->json([
                     'status'  => 'valid',
-                    'title'   => 'Check-In Berhasil! ✓',
+                    'title'   => 'Check-In Berhasil!',
                     'message' => "Selamat datang, {$ticket->holder_name}! Tiket diverifikasi.",
                     'ticket'  => [
                         'code'           => $ticket->ticket_code,
@@ -719,6 +740,138 @@ class TicketScannerController extends Controller
             'message' => $product->gate_scanner_enabled 
                 ? 'Akses Gate Scanner untuk panitia diaktifkan.' 
                 : 'Akses Gate Scanner untuk panitia dinonaktifkan.',
+        ]);
+    }
+
+    /**
+     * Creator mengatur jadwal Open Gate & Close Gate untuk event ini.
+     */
+    public function updateGateSchedule(Request $request, Product $product): JsonResponse
+    {
+        if ($product->seller_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $openTime = $request->input('open_time') ? trim($request->input('open_time')) : null;
+        $closeTime = $request->input('close_time') ? trim($request->input('close_time')) : null;
+        $bypass = $request->boolean('bypass', false);
+
+        $product->update([
+            'gate_open_time'   => $openTime,
+            'gate_close_time'  => $closeTime,
+            'gate_bypass_time' => $bypass,
+        ]);
+
+        return response()->json([
+            'success'     => true,
+            'message'     => 'Jadwal Gate Scanner berhasil diperbarui.',
+            'gate_status' => $product->getGateStatus(),
+        ]);
+    }
+
+    /**
+     * Creator memperpanjang Close Gate secara cepat (+30 Menit) saat antrean padat.
+     */
+    public function quickExtendGate(Request $request, Product $product): JsonResponse
+    {
+        if ($product->seller_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $now = now();
+        if (!empty($product->gate_close_time)) {
+            $parts = explode(':', $product->gate_close_time);
+            $closeCarbon = now()->setTime((int)($parts[0] ?? 0), (int)($parts[1] ?? 0));
+            $base = $closeCarbon->isPast() ? $now : $closeCarbon;
+        } else {
+            $base = $now;
+        }
+
+        $newCloseTime = $base->copy()->addMinutes(30)->format('H:i');
+
+        $product->update([
+            'gate_close_time'  => $newCloseTime,
+            'gate_bypass_time' => false,
+        ]);
+
+        return response()->json([
+            'success'        => true,
+            'new_close_time' => $newCloseTime,
+            'message'        => 'Waktu tutup gate diperpanjang hingga ' . $newCloseTime . ' WIB (+30 Menit).',
+            'gate_status'    => $product->getGateStatus(),
+        ]);
+    }
+
+    /**
+     * Creator mengaktifkan/menonaktifkan Bypass Waktu Darurat (Buka Terus Tanpa Batasan Jam).
+     */
+    public function toggleGateBypass(Request $request, Product $product): JsonResponse
+    {
+        if ($product->seller_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $product->update([
+            'gate_bypass_time' => !$product->gate_bypass_time,
+        ]);
+
+        return response()->json([
+            'success'     => true,
+            'bypass'      => $product->gate_bypass_time,
+            'message'     => $product->gate_bypass_time 
+                ? 'Mode Darurat: Gate sekarang dibuka tanpa batasan jam (Bypass Aktif).' 
+                : 'Mode Normal: Gate kembali mengikuti jadwal jam buka/tutup.',
+            'gate_status' => $product->getGateStatus(),
+        ]);
+    }
+
+    /**
+     * Autentikasi PIN / Password Gate untuk Panitia di HP.
+     */
+    public function gateAuthPin(Request $request, string $key): JsonResponse
+    {
+        $event = Product::where('gate_scanner_key', $key)
+            ->where('product_type', 'ticket')
+            ->first();
+
+        if (!$event) {
+            return response()->json(['success' => false, 'message' => 'Event tidak ditemukan.'], 404);
+        }
+
+        if (empty($event->gate_scanner_pin)) {
+            return response()->json(['success' => true]);
+        }
+
+        $inputPin = trim($request->input('pin', ''));
+        if ($inputPin === (string) $event->gate_scanner_pin) {
+            session(['gate_auth_' . $event->id => true]);
+            return response()->json(['success' => true, 'message' => 'PIN Benar.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'PIN / Password Gate salah.'], 401);
+    }
+
+    /**
+     * Creator mengupdate PIN / Password Gate untuk event ini.
+     */
+    public function updateGatePin(Request $request, Product $product): JsonResponse
+    {
+        if ($product->seller_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $pin = trim($request->input('pin', ''));
+        $product->update([
+            'gate_scanner_pin' => !empty($pin) ? $pin : null,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'has_pin' => !empty($pin),
+            'pin'     => $pin,
+            'message' => !empty($pin) 
+                ? 'Password Gate berhasil disimpan: ' . $pin
+                : 'Proteksi PIN dinonaktifkan (Gate terbuka langsung).',
         ]);
     }
 }

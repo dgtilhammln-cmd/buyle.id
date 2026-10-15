@@ -406,7 +406,7 @@
                                 {{-- QR CODE --}}
                                 <div
                                     style="text-align: center; background: #fff; padding: 0.75rem; border-radius: 14px; border: 1px solid #E2E8F0; width: 160px;">
-                                    <img src="{{ route('qr.code', ['data' => $pass->qr_token]) }}" alt="QR Code Tiket"
+                                    <img src="{{ route('qr.code', ['data' => $pass->qr_token, 'v' => 'v9_' . ($pass->updated_at?->timestamp ?? time())]) }}" alt="QR Code Tiket"
                                         style="width: 130px; height: 130px; display: block; margin: 0 auto 0.5rem; border-radius: 8px;">
                                     <div style="font-family: monospace; font-size: 0.75rem; font-weight: 700; color: #475569;">
                                         {{ $pass->ticket_code }}</div>

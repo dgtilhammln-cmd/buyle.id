@@ -65,6 +65,7 @@ Route::get('/qr-code', [\App\Http\Controllers\QrCodeController::class, 'generate
 // Gate Scanner Khusus Panitia / Kru Lapangan (Tanpa Login, Diotorisasi via Secret Key Per Event)
 Route::get('/gate-scanner/{key}', [\App\Http\Controllers\TicketScannerController::class, 'gateIndex'])->name('gate.scanner');
 Route::post('/gate-scanner/{key}/verify', [\App\Http\Controllers\TicketScannerController::class, 'gateVerify'])->name('gate.scanner.verify');
+Route::post('/gate-scanner/{key}/auth-pin', [\App\Http\Controllers\TicketScannerController::class, 'gateAuthPin'])->name('gate.scanner.auth-pin');
 
 Route::post('/lead/store', [\App\Http\Controllers\LeadController::class, 'store'])->name('lead.store');
 
@@ -644,6 +645,10 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::get('/scanner/export', [\App\Http\Controllers\TicketScannerController::class, 'exportCsv'])->name('ticket.scanner.export');
     Route::post('/scanner/reset-gate-key/{product}', [\App\Http\Controllers\TicketScannerController::class, 'resetGateKey'])->name('ticket.scanner.reset-gate-key');
     Route::post('/scanner/toggle-gate-enabled/{product}', [\App\Http\Controllers\TicketScannerController::class, 'toggleGateEnabled'])->name('ticket.scanner.toggle-gate-enabled');
+    Route::post('/scanner/update-schedule/{product}', [\App\Http\Controllers\TicketScannerController::class, 'updateGateSchedule'])->name('ticket.scanner.update-schedule');
+    Route::post('/scanner/extend-gate/{product}', [\App\Http\Controllers\TicketScannerController::class, 'quickExtendGate'])->name('ticket.scanner.extend-gate');
+    Route::post('/scanner/toggle-bypass/{product}', [\App\Http\Controllers\TicketScannerController::class, 'toggleGateBypass'])->name('ticket.scanner.toggle-bypass');
+    Route::post('/scanner/update-pin/{product}', [\App\Http\Controllers\TicketScannerController::class, 'updateGatePin'])->name('ticket.scanner.update-pin');
 
     // ── Link in Bio ──────────────────────────────────────────────────────
     Route::get('/bio',          [\App\Http\Controllers\Creator\CreatorBioController::class, 'index'])->name('bio.index');
