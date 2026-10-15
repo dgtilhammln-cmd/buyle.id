@@ -327,11 +327,29 @@ class CheckoutService
 
                 DB::commit();
 
-                // Trigger post-order logic (tiket, notif, dll)
+                // Trigger post-order logic (tiket, dll)
                 $this->markOrderConfirmed($order->fresh(['items.product']));
+
+                // Kirim email notifikasi ke buyer
+                $buyerEmail = $user?->email ?? ($data['guest_email'] ?? null);
+                $buyerName  = $user?->name ?? ($data['guest_name'] ?? 'Pembeli');
+                $buyerPhone = $user?->phone ?? '';
+                if ($buyerEmail) {
+                    try {
+                        \App\Jobs\ProcessSuccessfulOrderJob::dispatchSync(
+                            orderId:    $order->id,
+                            buyerEmail: $buyerEmail,
+                            buyerName:  $buyerName,
+                            buyerPhone: $buyerPhone,
+                        );
+                    } catch (\Throwable $e) {
+                        \Log::error("ProcessSuccessfulOrderJob (free order) error: " . $e->getMessage());
+                    }
+                }
 
                 return $order->fresh();
             }
+
 
             // 6. Minta Snap Token dari Midtrans (hanya jika total > 0)
             $snapToken = $this->midtransService->createSnapToken($order);

@@ -265,7 +265,7 @@ body { background-color: #F8FAFC !important; }
                                         </strong>
                                         <a href="{{ $item->product->digital_resource }}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #1eb349; padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.85rem;">
                                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                                            Buka Link / WhatsApp
+                                            Buka Akses Produk / Jasa Digital.
                                         </a>
                                     </div>
                                 @endif

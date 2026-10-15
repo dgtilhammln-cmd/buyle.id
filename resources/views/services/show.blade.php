@@ -879,9 +879,18 @@
                     </div>
 
                     {{-- PRICE --}}
-                    @if($service->price > 0)
+                    @if($service->price > 0 || $service->sale_price !== null)
+                    @php
+                        $isFreeProduct = $service->sale_price !== null && (float)$service->sale_price <= 0;
+                        $hasDiscount   = !$isFreeProduct && $service->sale_price !== null && (float)$service->sale_price > 0 && (float)$service->sale_price < (float)$service->price;
+                    @endphp
                     <div class="pd-price-box">
-                        @if($service->sale_price > 0 && $service->sale_price < $service->price)
+                        @if($isFreeProduct)
+                            {{-- GRATIS: harga normal dicoret, lalu GRATIS --}}
+                            <div class="pd-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
+                            <div class="pd-price-main" style="color:#16a34a;">GRATIS</div>
+                            <span class="pd-discount">100% OFF</span>
+                        @elseif($hasDiscount)
                             <div class="pd-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
                             <div class="pd-price-main">Rp{{ number_format($service->sale_price, 0, ',', '.') }}</div>
                             <span class="pd-discount">{{ round((($service->price - $service->sale_price)/$service->price)*100) }}% OFF</span>
@@ -914,8 +923,9 @@
                         @if($service->variantOptions && $service->variantOptions->count() > 0)
                         @php
                             $hasVariants = true;
-                            $basePrice = $service->sale_price > 0 && $service->sale_price < $service->price
-                                ? $service->sale_price : $service->price;
+                            $isFreeProduct = $service->sale_price !== null && (float)$service->sale_price <= 0;
+                            $basePrice = (!$isFreeProduct && $service->sale_price > 0 && $service->sale_price < $service->price)
+                                ? (float)$service->sale_price : (float)$service->price;
                         @endphp
                         <div id="pd-variant-section" style="margin-bottom:1.5rem;">
                             @foreach($service->variantOptions as $option)

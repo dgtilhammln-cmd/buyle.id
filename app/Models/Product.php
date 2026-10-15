@@ -350,11 +350,24 @@ class Product extends Model
     // =========================================================================
 
     /**
-     * Harga yang ditampilkan (sale_price jika ada, jika tidak price).
+     * Harga yang ditampilkan (sale_price jika set, termasuk 0 untuk gratis; jika null pakai price).
      */
     public function getEffectivePriceAttribute(): float
     {
-        return (float) ($this->sale_price ?? $this->price ?? 0);
+        // sale_price === null berarti tidak ada promo, pakai price
+        // sale_price = 0 berarti GRATIS
+        if ($this->sale_price !== null) {
+            return (float) $this->sale_price;
+        }
+        return (float) ($this->price ?? 0);
+    }
+
+    /**
+     * Apakah produk gratis (harga efektif = 0).
+     */
+    public function getIsFreeAttribute(): bool
+    {
+        return $this->effective_price <= 0;
     }
 
     /**
@@ -362,7 +375,7 @@ class Product extends Model
      */
     public function getIsOnSaleAttribute(): bool
     {
-        return $this->sale_price !== null && (float) $this->sale_price < (float) $this->price;
+        return $this->sale_price !== null && (float) $this->sale_price < (float) $this->price && (float) $this->sale_price > 0;
     }
 
     /**
@@ -370,12 +383,19 @@ class Product extends Model
      */
     public function getDiscountPercentageAttribute(): int
     {
-        if (! $this->is_on_sale || (float) $this->price === 0.0) {
+        if ((float) $this->price <= 0) {
+            return 0;
+        }
+        if ($this->sale_price !== null && (float) $this->sale_price <= 0) {
+            return 100; // gratis = 100% off
+        }
+        if (! $this->is_on_sale) {
             return 0;
         }
 
         return (int) round((1 - (float) $this->sale_price / (float) $this->price) * 100);
     }
+
 
     /**
      * Apakah produk masih tersedia (stok > 0) atau berupa jasa.

@@ -30,9 +30,38 @@ class TicketScannerController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Query TicketPasses milik creator
-        $ticketsQuery = TicketPass::with(['product', 'order', 'buyer'])
-            ->where('seller_id', $sellerId);
+        // Query dasar tiket milik creator (baik sebagai seller tiket atau seller produk)
+        $baseQuery = TicketPass::with(['product', 'buyer', 'organizer'])
+            ->where(function ($q) use ($sellerId) {
+                $q->where('seller_id', $sellerId)
+                  ->orWhereHas('product', function ($pq) use ($sellerId) {
+                      $pq->where('seller_id', $sellerId);
+                  });
+            });
+
+        // Seluruh tiket milik creator ini untuk Offline/Crowded In-Memory Client Cache
+        $allCreatorTickets = (clone $baseQuery)->orderBy('id', 'desc')->get();
+
+        // Format data cache ringan untuk pencarian super cepat (0ms latency di lapangan)
+        $allTicketsCached = $allCreatorTickets->map(function ($t) {
+            return [
+                'id'            => $t->id,
+                'code'          => $t->ticket_code,
+                'qr_token'      => $t->qr_token,
+                'product_id'    => $t->product_id,
+                'event_name'    => $t->product?->name ?? 'Event',
+                'event_date'    => $t->product?->event_date ? $t->product->event_date->format('d M Y') : '-',
+                'holder_name'   => $t->holder_name ?? '-',
+                'holder_email'  => $t->holder_email ?? '-',
+                'holder_phone'  => $t->holder_phone ?? '-',
+                'status'        => $t->status,
+                'checked_in_at' => $t->checked_in_at ? $t->checked_in_at->format('H:i:s (d M Y)') : null,
+                'toggle_url'    => route('creator.ticket.scanner.toggle-checkin', $t->id),
+            ];
+        });
+
+        // Query terfilter untuk server-side fallback
+        $ticketsQuery = clone $baseQuery;
 
         if ($selectedEventId) {
             $ticketsQuery->where('product_id', $selectedEventId);
@@ -51,14 +80,15 @@ class TicketScannerController extends Controller
             });
         }
 
-        $allTickets = (clone $ticketsQuery)->get();
-        $tickets = $ticketsQuery->orderBy('updated_at', 'desc')->paginate(20)->withQueryString();
+        $filteredTickets = (clone $ticketsQuery)->get();
+        $tickets = $ticketsQuery->orderBy('updated_at', 'desc')->paginate(25)->withQueryString();
 
-        // Stats Ringkasan
-        $totalTickets = $allTickets->count();
-        $totalCheckedIn = $allTickets->where('status', 'used')->count();
-        $totalUnchecked = $allTickets->where('status', 'valid')->count();
-        $totalCancelled = $allTickets->where('status', 'cancelled')->count();
+        // Stats Ringkasan (dihitung dari seluruh tiket creator atau per event terpilih)
+        $statSource = $selectedEventId ? $allCreatorTickets->where('product_id', $selectedEventId) : $allCreatorTickets;
+        $totalTickets   = $statSource->count();
+        $totalCheckedIn = $statSource->where('status', 'used')->count();
+        $totalUnchecked = $statSource->where('status', 'valid')->count();
+        $totalCancelled = $statSource->where('status', 'cancelled')->count();
         $attendanceRate = $totalTickets > 0 ? round(($totalCheckedIn / $totalTickets) * 100, 1) : 0;
 
         $stats = [
@@ -68,6 +98,14 @@ class TicketScannerController extends Controller
             'cancelled'     => $totalCancelled,
             'rate'          => $attendanceRate,
         ];
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'stats'   => $stats,
+                'tickets' => $allTicketsCached,
+            ]);
+        }
 
         $seo = [
             'title'   => 'Scan Tiket & Data Kehadiran · Creator Studio',
@@ -82,7 +120,8 @@ class TicketScannerController extends Controller
             'statusFilter',
             'search',
             'activeTab',
-            'stats'
+            'stats',
+            'allTicketsCached'
         ));
     }
 
@@ -112,9 +151,14 @@ class TicketScannerController extends Controller
 
         try {
             DB::transaction(function () use ($tokensToSearch, $rawInput, &$result) {
-                // 1. Cari tiket milik seller yang sedang login (prioritas)
-                $ticket = TicketPass::with(['product', 'buyer'])
-                    ->where('seller_id', auth()->id())
+                // 1. Cari tiket KHUSUS milik creator yang sedang login (baik sebagai seller_id tiket atau pemilik produk)
+                $ticket = TicketPass::with(['product.seller', 'buyer'])
+                    ->where(function ($q) {
+                        $q->where('seller_id', auth()->id())
+                          ->orWhereHas('product', function ($pq) {
+                              $pq->where('seller_id', auth()->id());
+                          });
+                    })
                     ->where(function ($q) use ($tokensToSearch) {
                         foreach ($tokensToSearch as $t) {
                             $q->orWhere('qr_token', $t)
@@ -126,9 +170,9 @@ class TicketScannerController extends Controller
                     ->lockForUpdate()
                     ->first();
 
-                // 2. Fallback: cari di seluruh sistem (misal saat cross-event scanning)
+                // 2. Jika tidak ditemukan di akun ini, cek apakah tiket terdaftar di sistem tapi milik creator LAIN
                 if (!$ticket) {
-                    $ticket = TicketPass::with(['product', 'buyer'])
+                    $otherTicket = TicketPass::with(['product.seller', 'organizer'])
                         ->where(function ($q) use ($tokensToSearch) {
                             foreach ($tokensToSearch as $t) {
                                 $q->orWhere('qr_token', $t)
@@ -137,11 +181,25 @@ class TicketScannerController extends Controller
                                   ->orWhere('qr_token', strtolower($t));
                             }
                         })
-                        ->lockForUpdate()
                         ->first();
-                }
 
-                if (!$ticket) {
+                    if ($otherTicket) {
+                        $eventCreator = $otherTicket->product?->seller?->name ?? $otherTicket->organizer?->name ?? 'Creator Lain';
+                        $eventName = $otherTicket->product?->name ?? 'Event Lain';
+
+                        $result = response()->json([
+                            'status'  => 'invalid',
+                            'title'   => 'Bukan Tiket Event Anda!',
+                            'message' => "Tiket {$otherTicket->ticket_code} ini milik event \"{$eventName}\" yang dikelola oleh {$eventCreator}. Anda tidak memiliki izin untuk memverifikasi tiket ini.",
+                            'ticket'  => [
+                                'code'        => $otherTicket->ticket_code,
+                                'event_name'  => $eventName,
+                                'holder_name' => $otherTicket->holder_name ?? '-',
+                            ]
+                        ]);
+                        return;
+                    }
+
                     $result = response()->json([
                         'status'  => 'invalid',
                         'title'   => 'Tiket Tidak Ditemukan',

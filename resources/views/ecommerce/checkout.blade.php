@@ -1293,7 +1293,7 @@
                         <div class="summary-total" style="margin-top:0; padding-top:1rem;">
                             <span>Total Belanja</span>
                             @if($summary['subtotal'] <= 0)
-                                <span id="total-row-val" style="color:#16a34a;font-size:1.3rem;font-weight:900;letter-spacing:-0.5px;">🎉 GRATIS</span>
+                                <span id="total-row-val" style="color:#16a34a;font-size:1.3rem;font-weight:900;letter-spacing:-0.5px;">GRATIS</span>
                             @else
                                 <span id="total-row-val">Rp
                                     {{ number_format($summary['subtotal'] + $pfAmt + $afAmt, 0, ',', '.') }}</span>
@@ -1301,7 +1301,7 @@
                         </div>
                         @if($summary['subtotal'] <= 0)
                             <button type="submit" class="btn-pay" onclick="prepareSubmit(event)"
-                                style="background:linear-gradient(135deg,#16a34a,#22c55e);">🎁 Dapatkan Sekarang (Gratis)</button>
+                                style="background:linear-gradient(135deg,#16a34a,#22c55e);">Dapatkan Sekarang (Gratis)</button>
                         @else
                             <button type="submit" class="btn-pay" onclick="prepareSubmit(event)">Pilih Pembayaran</button>
                         @endif

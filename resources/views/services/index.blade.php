@@ -1910,10 +1910,11 @@
                     @foreach($services as $sv)
                         @php
                             $svImg        = $sv->image ? asset('storage/'.$sv->image) : asset('images/buyle-og.png');
-                            $svPrice      = $sv->sale_price > 0 && $sv->sale_price < $sv->price ? $sv->sale_price : $sv->price;
-                            $svOrigPrice  = $sv->sale_price > 0 && $sv->sale_price < $sv->price ? $sv->price : null;
+                            $svIsFree     = $sv->sale_price !== null && (float)$sv->sale_price <= 0;
+                            $svPrice      = $svIsFree ? 0 : (($sv->sale_price > 0 && $sv->sale_price < $sv->price) ? (float)$sv->sale_price : (float)$sv->price);
+                            $svOrigPrice  = $svIsFree ? $sv->price : (($sv->sale_price > 0 && $sv->sale_price < $sv->price) ? $sv->price : null);
                             $svHasDiscount = !empty($svOrigPrice) && $svOrigPrice > $svPrice;
-                            $svDiscountPct = $svHasDiscount ? round((($svOrigPrice - $svPrice) / $svOrigPrice) * 100) : 0;
+                            $svDiscountPct = $svIsFree ? 100 : ($svHasDiscount ? round((($svOrigPrice - $svPrice) / $svOrigPrice) * 100) : 0);
                             $svSeller     = optional(optional($sv->seller)->creatorProfile)->store_name ?? optional($sv->seller)->name ?? 'Kreator';
                             $svSellerCp   = $sv->seller?->creatorProfile;
                             $svIsVerified = $svSellerCp ? (bool)$svSellerCp->is_verified : false;
@@ -1932,8 +1933,12 @@
                                         style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
                                         class="article-banner-img" loading="lazy">
 
-                                    {{-- Discount Badge Top-Left (-XX%) --}}
-                                    @if($svHasDiscount)
+                                    {{-- Discount / Free Badge Top-Left --}}
+                                    @if($svIsFree)
+                                        <div style="position: absolute; top: 8px; left: 8px; background: #16a34a; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(22,163,74,0.3);">
+                                            GRATIS
+                                        </div>
+                                    @elseif($svHasDiscount)
                                         <div style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
                                             -{{ $svDiscountPct }}%
                                         </div>
@@ -1968,16 +1973,18 @@
                                         <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
                                         <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">
                                             <div style="white-space: nowrap; min-width: 0; flex: 1;">
-                                                @if($svHasDiscount)
+                                                @if($svHasDiscount || $svIsFree)
                                                     <span style="font-size: 0.68rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500; white-space: nowrap;">
                                                         Rp{{ number_format($svOrigPrice, 0, ',', '.') }}
                                                     </span>
                                                 @endif
                                                 <span style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">
-                                                    @if($svPrice > 0)
+                                                    @if($svIsFree)
+                                                        GRATIS
+                                                    @elseif($svPrice > 0)
                                                         Rp{{ number_format($svPrice, 0, ',', '.') }}
                                                     @else
-                                                        <span style="color: #1eb349;">GRATIS</span>
+                                                        GRATIS
                                                     @endif
                                                 </span>
                                             </div>

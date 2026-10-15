@@ -22,8 +22,11 @@ class OrderPaidNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $orderNumber = $this->order->order_number;
-        $totalFormatted = 'Rp ' . number_format($this->order->total, 0, ',', '.');
-        $buyerName = htmlspecialchars($notifiable->name ?? 'Teman buyle.id');
+        $totalFormatted = ($this->order->total <= 0)
+            ? 'GRATIS'
+            : 'Rp ' . number_format($this->order->total, 0, ',', '.');
+        $buyerName = htmlspecialchars($notifiable->name ?? ($this->order->shipping_address['receiver_name'] ?? 'Teman buyle.id'));
+
 
         // Pastikan TicketPass telah ter-generate jika ada produk tiket
         try {

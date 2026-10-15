@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -11,7 +11,9 @@
     style="margin: 0; padding: 0; background-color: #F8FAFC; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; color: #1E293B;">
     @php
         $logo = \App\Models\Setting::get('logo');
-        $logoUrl = $logo ? url('storage/' . $logo) : null;
+        $logoUrl = file_exists(public_path('images/buyle-logo.png')) 
+            ? url('images/buyle-logo.png') 
+            : ($logo ? url('storage/' . $logo) : url('images/buyle-logo.png'));
         $siteName = \App\Models\Setting::get('site_name', 'buyle.id');
     @endphp
 
@@ -27,21 +29,14 @@
                     <!-- Clean Header Logo -->
                     <tr>
                         <td align="center"
-                            style="padding: 32px 32px 20px 32px; background-color: #FFFFFF; border-bottom: 1px solid #F1F5F9;">
+                            style="padding: 28px 32px 20px 32px; background-color: #FFFFFF; border-bottom: 1px solid #F1F5F9;">
                             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                 <tr>
                                     <td align="center">
-                                        @if($logoUrl)
-                                            <a href="{{ url('/') }}" style="text-decoration: none; display: inline-block;">
-                                                <img src="{{ $logoUrl }}" alt="{{ $siteName }}"
-                                                    style="height: 38px; max-height: 48px; width: auto; display: block; border: 0; outline: none; text-decoration: none; background-color: transparent;">
-                                            </a>
-                                        @else
-                                            <a href="{{ url('/') }}"
-                                                style="text-decoration: none; font-size: 22px; font-weight: 700; color: #0F172A;">
-                                                buyle<span style="color: #10B981;">.id</span>
-                                            </a>
-                                        @endif
+                                        <a href="{{ url('/') }}" style="text-decoration: none; display: inline-block;">
+                                            <img src="{{ $logoUrl }}" alt="{{ $siteName }}"
+                                                style="height: 38px; max-height: 44px; width: auto; display: block; border: 0; outline: none; text-decoration: none; background-color: transparent;">
+                                        </a>
                                     </td>
                                 </tr>
                             </table>

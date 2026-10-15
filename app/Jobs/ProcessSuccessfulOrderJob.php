@@ -12,6 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class ProcessSuccessfulOrderJob implements ShouldQueue
@@ -37,21 +38,10 @@ class ProcessSuccessfulOrderJob implements ShouldQueue
             return;
         }
 
-        // 1. Auto-Generate atau Temukan Akun Buyer
-        $user = User::firstOrCreate(
-            ['email' => $this->buyerEmail],
-            [
-                'name'     => $this->buyerName,
-                'phone'    => $this->buyerPhone,
-                'password' => Hash::make(Str::random(12)),
-                'role'     => 'buyer',
-            ]
-        );
+        // 1. Cari akun User yang sudah ada — JANGAN buat baru untuk guest
+        $user = User::where('email', $this->buyerEmail)->first();
 
-        $wasNewlyCreated = $user->wasRecentlyCreated;
-
-        // 2. Tautkan order ke buyer dan tentukan status berdasarkan jenis produk
-        // Produk digital (external_link) tidak butuh pengiriman fisik — langsung Delivered
+        // 2. Tentukan status berdasarkan jenis produk
         $order->load('items.product');
         $allDigital = $order->items->every(function ($item) {
             $type = $item->product?->product_type ?? $item->product?->type ?? '';
@@ -62,10 +52,12 @@ class ProcessSuccessfulOrderJob implements ShouldQueue
             ? \App\Enums\OrderStatus::Delivered
             : \App\Enums\OrderStatus::Confirmed;
 
-        $order->update([
-            'user_id' => $user->id,
-            'status'  => $newStatus,
-        ]);
+        // Update status & link user_id jika user ditemukan dan belum terlink
+        $updateData = ['status' => $newStatus];
+        if ($user && !$order->user_id) {
+            $updateData['user_id'] = $user->id;
+        }
+        $order->update($updateData);
 
         // Generate E-Ticket Pass jika terdapat produk tipe ticket
         try {
@@ -74,23 +66,35 @@ class ProcessSuccessfulOrderJob implements ShouldQueue
             Log::warning("Gagal generate TicketPass for order #{$order->id}: " . $e->getMessage());
         }
 
-        // 3. Generate Magic Login Token (password reset token dipakai ulang)
-        $loginToken = Str::random(64);
-        \DB::table('password_reset_tokens')->updateOrInsert(
-            ['email' => $user->email],
-            ['token' => \Hash::make($loginToken), 'created_at' => now()]
-        );
+        // 3. Generate Magic Login URL (hanya jika user punya akun)
+        $magicLoginUrl = route('account.orders');
+        if ($user) {
+            $loginToken = Str::random(64);
+            \DB::table('password_reset_tokens')->updateOrInsert(
+                ['email' => $user->email],
+                ['token' => Hash::make($loginToken), 'created_at' => now()]
+            );
+            $magicLoginUrl = route('buyer.magic.login', [
+                'token' => $loginToken,
+                'email' => $user->email,
+            ]);
+        }
 
-        $magicLoginUrl = route('buyer.magic.login', [
-            'token' => $loginToken,
-            'email' => $user->email,
-        ]);
-
-        // 4. Kirim Email Notifikasi ke Buyer (Akses Produk)
+        // 4. Kirim Email Notifikasi ke Buyer
         try {
-            $user->notify(new OrderPaidNotification($order, $magicLoginUrl, $wasNewlyCreated));
+            if ($user) {
+                // User terdaftar → kirim via User notifiable
+                $user->notify(new OrderPaidNotification($order, $magicLoginUrl, false));
+            } else {
+                // Guest → kirim langsung ke email tanpa akun
+                $guestEmail = $order->customer_email ?? $this->buyerEmail;
+                if ($guestEmail) {
+                    Notification::route('mail', $guestEmail)
+                        ->notify(new OrderPaidNotification($order, $magicLoginUrl, false));
+                }
+            }
         } catch (\Throwable $e) {
-            Log::warning("Gagal mengirim OrderPaidNotification to buyer: " . $e->getMessage());
+            Log::warning("Gagal mengirim OrderPaidNotification ke {$this->buyerEmail}: " . $e->getMessage());
         }
 
         // 5. Kirim Email Notifikasi Order Masuk ke Seller
@@ -109,7 +113,8 @@ class ProcessSuccessfulOrderJob implements ShouldQueue
             Log::warning("Gagal mengirim SellerNewOrderNotification: " . $e->getMessage());
         }
 
-        Log::info("ProcessSuccessfulOrderJob: Order #{$order->order_number} berhasil diproses untuk user {$user->email}.");
+        $recipientEmail = $user?->email ?? $this->buyerEmail;
+        Log::info("ProcessSuccessfulOrderJob: Order #{$order->order_number} berhasil diproses untuk {$recipientEmail}.");
     }
 
     public function failed(\Throwable $exception): void
