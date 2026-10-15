@@ -1291,6 +1291,7 @@
 </div>
 
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js" type="text/javascript"></script>
 <script>
     // ══════════════════════════════════════════════════════════════════════
     // DATA CACHE & OFFLINE-READY DATASET (CROWDED & LOW INTERNET SHIELD)
@@ -1596,32 +1597,107 @@
     }
 
     // ══════════════════════════════════════════════════════════════════════
-    // ORIGINAL HTML5 QRCODE SCANNER (SHARP HD + MIRROR + NATIVE BARCODE)
+    // DUAL-ENGINE TICKETING SCANNER (FULL-FRAME HTML5-QRCODE + JSQR ASSIST)
     // ══════════════════════════════════════════════════════════════════════
+    let jsQrAssistInterval = null;
+
     function startOriginalScanner() {
         try {
-            if (html5QrcodeScanner) {
-                try { html5QrcodeScanner.clear(); } catch(e) {}
+            if (jsQrAssistInterval) {
+                clearInterval(jsQrAssistInterval);
+                jsQrAssistInterval = null;
             }
 
-            html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
-                fps: 10, 
-                qrbox: { width: 250, height: 250 },
+            if (html5QrcodeScanner) {
+                try { html5QrcodeScanner.clear(); } catch(e) {}
+                html5QrcodeScanner = null;
+            }
+
+            // Inisialisasi Full-Frame Scanner: Tanpa pembatasan qrbox kaku
+            // Memindai 100% seluruh frame kamera sehingga QR di posisi mana saja langsung terbaca
+            html5QrcodeScanner = new Html5QrcodeScanner("reader", {
+                fps: 10,                             // 10 FPS = optimal balance decoding & CPU performance
                 disableFlip: false,
                 rememberLastUsedCamera: true,
                 showTorchButtonIfSupported: true,
-                showZoomSliderIfSupported: true
+                showZoomSliderIfSupported: true,
+                videoConstraints: {
+                    facingMode: "environment",
+                    width: { ideal: 1280, min: 640 },
+                    height: { ideal: 720, min: 480 },
+                }
             }, false);
 
             html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 
-            // Aktifkan mirror default untuk webcam desktop
+            // Jalankan Engine 2: jsQR Direct Frame Grabber (Toleransi tinggi pada layar HP & Glare)
+            startJsQrAssistLoop();
+
             setTimeout(() => {
                 applyMirrorState();
-            }, 1200);
+            }, 1000);
         } catch (err) {
             console.error('[Scanner] Initialization failed:', err);
+            try {
+                html5QrcodeScanner = new Html5QrcodeScanner("reader", {
+                    fps: 10,
+                    disableFlip: false,
+                    rememberLastUsedCamera: true,
+                }, false);
+                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+                startJsQrAssistLoop();
+                setTimeout(() => { applyMirrorState(); }, 1000);
+            } catch(e2) {
+                console.error('[Scanner] Fallback failed:', e2);
+            }
         }
+    }
+
+    /**
+     * Engine 2: jsQR Parallel Binarizer
+     * Membaca langsung raw buffer dari video tag setiap 120ms dengan algoritma attemptBoth
+     * Sangat ampuh mendeteksi QR pada layar HP yang memantulkan cahaya atau webcam laptop fixed-focus.
+     */
+    function startJsQrAssistLoop() {
+        if (jsQrAssistInterval) clearInterval(jsQrAssistInterval);
+
+        let assistCanvas = null;
+        let assistCtx = null;
+
+        jsQrAssistInterval = setInterval(() => {
+            if (isProcessing) return;
+            if (typeof window.jsQR !== 'function') return;
+
+            const video = document.querySelector('#reader video');
+            if (!video || video.readyState < 2 || video.paused || video.ended) return;
+
+            const vw = video.videoWidth;
+            const vh = video.videoHeight;
+            if (!vw || !vh || vw < 50 || vh < 50) return;
+
+            if (!assistCanvas) {
+                assistCanvas = document.createElement('canvas');
+                assistCtx = assistCanvas.getContext('2d', { willReadFrequently: true });
+            }
+
+            assistCanvas.width = vw;
+            assistCanvas.height = vh;
+            assistCtx.drawImage(video, 0, 0, vw, vh);
+
+            try {
+                const imgData = assistCtx.getImageData(0, 0, vw, vh);
+                const code = window.jsQR(imgData.data, vw, vh, {
+                    inversionAttempts: "attemptBoth"
+                });
+
+                if (code && code.data && !isProcessing) {
+                    console.log('[Dual-Engine jsQR Detected]:', code.data);
+                    onScanSuccess(code.data);
+                }
+            } catch (err) {
+                // Abaikan frame error jika video sedang di-switch
+            }
+        }, 120);
     }
 
     // ══════════════════════════════════════════════════════════════════════

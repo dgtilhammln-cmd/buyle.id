@@ -405,10 +405,10 @@
                                 style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1.5px solid #CBD5E1; border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center;">
                                 {{-- QR CODE --}}
                                 <div
-                                    style="text-align: center; background: #fff; padding: 0.75rem; border-radius: 14px; border: 1px solid #E2E8F0; width: 160px;">
-                                    <img src="{{ route('qr.code', ['data' => $pass->qr_token, 'v' => 'v9_' . ($pass->updated_at?->timestamp ?? time())]) }}" alt="QR Code Tiket"
-                                        style="width: 130px; height: 130px; display: block; margin: 0 auto 0.5rem; border-radius: 8px;">
-                                    <div style="font-family: monospace; font-size: 0.75rem; font-weight: 700; color: #475569;">
+                                    style="text-align: center; background: #fff; padding: 0.75rem; border-radius: 14px; border: 1.5px solid #CBD5E1; width: 170px;">
+                                    <img src="{{ route('qr.code', ['data' => $pass->ticket_code ?: $pass->qr_token, 'v' => 'v3_' . ($pass->updated_at?->timestamp ?? time())]) }}" alt="QR Code Tiket"
+                                        style="width: 140px; height: 140px; display: block; margin: 0 auto 0.5rem; border-radius: 8px; image-rendering: pixelated;">
+                                    <div style="font-family: monospace; font-size: 0.78rem; font-weight: 800; color: #0F172A; letter-spacing: 0.04em;">
                                         {{ $pass->ticket_code }}</div>
                                 </div>
 

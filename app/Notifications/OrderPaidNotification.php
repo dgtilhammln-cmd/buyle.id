@@ -97,7 +97,7 @@ class OrderPaidNotification extends Notification
                 </div>';
             
             foreach ($ticketPasses as $pass) {
-                $qrUrl = route('qr.code', ['data' => $pass->qr_token]);
+                $qrUrl = route('qr.code', ['data' => $pass->ticket_code ?: $pass->qr_token]);
                 $eventName = htmlspecialchars($pass->product?->name ?? 'Tiket Event');
                 $eventDate = $pass->product?->event_date?->format('d M Y') ?? 'Sesuai Jadwal';
                 $eventTime = htmlspecialchars($pass->product?->event_time ?? '-');

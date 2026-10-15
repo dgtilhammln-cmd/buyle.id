@@ -370,9 +370,8 @@
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
             Kembali ke Profil
         </a>
-        <a href="{{ $homeUrl }}" class="ps-topbar-brand">
-            <img src="{{ asset('images/buyle-logo.png') }}" alt="buyle.id" onerror="this.style.display='none'">
-            buyle.id
+        <a href="{{ url('/keranjang') }}" class="ps-topbar-brand" title="Keranjang Belanja" style="background:none; border:none; padding:0.35rem; display:inline-flex; align-items:center; justify-content:center; position:relative;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         </a>
     </nav>
 

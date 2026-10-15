@@ -7,9 +7,9 @@
     <title>Gate Scanner · {{ $event->name ?? 'buyle.id' }}</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; font-weight: 400; }
@@ -763,7 +763,14 @@
             }
         }
 
+        let gateJsQrInterval = null;
+
         async function startCamera(cameraId) {
+            if (gateJsQrInterval) {
+                clearInterval(gateJsQrInterval);
+                gateJsQrInterval = null;
+            }
+
             if (html5QrCode) {
                 try {
                     await html5QrCode.stop();
@@ -772,16 +779,13 @@
 
             html5QrCode = new Html5Qrcode("gate-reader");
             const config = {
-                fps: 15,
-                qrbox: (viewfinderWidth, viewfinderHeight) => {
-                    const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
-                    return {
-                        width: Math.floor(minEdge * 0.85),
-                        height: Math.floor(minEdge * 0.85)
-                    };
-                },
-                aspectRatio: 1.0,
-                disableFlip: false
+                fps: 10,
+                disableFlip: false,
+                videoConstraints: {
+                    facingMode: "environment",
+                    width: { ideal: 1280, min: 640 },
+                    height: { ideal: 720, min: 480 },
+                }
             };
 
             html5QrCode.start(
@@ -789,9 +793,48 @@
                 config,
                 onScanSuccess,
                 () => {} // silent on frame skip
-            ).catch(err => {
+            ).then(() => {
+                startGateJsQrAssistLoop();
+            }).catch(err => {
                 console.error("Camera start failed:", err);
             });
+        }
+
+        function startGateJsQrAssistLoop() {
+            if (gateJsQrInterval) clearInterval(gateJsQrInterval);
+            let gCanvas = null;
+            let gCtx = null;
+
+            gateJsQrInterval = setInterval(() => {
+                if (isProcessing) return;
+                if (typeof window.jsQR !== 'function') return;
+
+                const video = document.querySelector('#gate-reader video');
+                if (!video || video.readyState < 2 || video.paused || video.ended) return;
+
+                const vw = video.videoWidth;
+                const vh = video.videoHeight;
+                if (!vw || !vh || vw < 50 || vh < 50) return;
+
+                if (!gCanvas) {
+                    gCanvas = document.createElement('canvas');
+                    gCtx = gCanvas.getContext('2d', { willReadFrequently: true });
+                }
+
+                gCanvas.width = vw;
+                gCanvas.height = vh;
+                gCtx.drawImage(video, 0, 0, vw, vh);
+
+                try {
+                    const imgData = gCtx.getImageData(0, 0, vw, vh);
+                    const code = window.jsQR(imgData.data, vw, vh, {
+                        inversionAttempts: "attemptBoth"
+                    });
+                    if (code && code.data && !isProcessing) {
+                        onScanSuccess(code.data);
+                    }
+                } catch(e) {}
+            }, 120);
         }
 
         // Handle QR Scan
