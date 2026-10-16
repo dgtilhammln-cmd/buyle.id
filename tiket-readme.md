@@ -189,9 +189,104 @@ Pengaturan dapat diedit langsung oleh Creator/Event Organizer di menu Produk:
      - 🟢 **VALID / BELUM DIGUNAKAN**
      - 🔴 **SUDAH DIGUNAKAN (Waktu & Petugas tercatat)**
      - ⚠️ **KODE TIDAK DITEMUKAN**
-   - Rincian Nama Pembeli dan Nomor Order muncul di layar.
-   - Petugas gerbang mencocokkan nama dengan kartu fisik (KTP/SIM/Kartu Pelajar).
+     - ❌ **BUKAN TIKET EVENT ANDA** (tiket valid tapi milik event lain / pengelola berbeda)
+   - Petugas gerbang mencocokkan data dengan kartu fisik (KTP/SIM/Kartu Pelajar).
    - Tombol satu sentuhan **"CHECK-IN TIKET"** memanggil endpoint update status tiket (`status = 'used'`, `used_at = now()`).
+
+---
+
+## 🔐 6. Privasi & UX Panel Scan (Update 16 Oktober 2026)
+
+### A. Penghapusan Info Sensitif pada Tiket Tidak Valid
+
+**Latar Belakang:**
+Ketika scanner memindai tiket yang bukan milik event-nya (tiket valid tapi dari pengelola/event lain), sebelumnya sistem menampilkan **Nama Pemegang** dan **Waktu Check-In**. Ini bermasalah karena:
+- Creator tidak memiliki izin untuk melihat data pengunjung event lain.
+- Label "Waktu Check-In: Baru saja" menyesatkan — karena tidak ada check-in yang terjadi.
+
+**Perubahan:**
+
+| Field | Sebelum | Sesudah |
+|:---|:---|:---|
+| Nama Pemegang | ✅ Tampil | ❌ Dihapus |
+| Waktu Check-In | ✅ Tampil ("Baru saja") | ❌ Dihapus |
+| Kode Tiket | ✅ Tampil | ✅ Tetap tampil |
+| Nama Event | ✅ Tampil | ✅ Tetap tampil |
+
+Panel hasil scan kini hanya menampilkan **Kode Tiket** dan **Nama Event** — cukup untuk menginformasikan bahwa tiket itu milik event berbeda, tanpa membocorkan data pribadi pengunjung.
+
+**File yang diubah:**
+- [`resources/views/creator/ticket_scanner.blade.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/resources/views/creator/ticket_scanner.blade.php)
+  - Baris HTML desktop: `resActiveDetailsCard` — dihapus row Nama Pemegang & Waktu Check-In
+  - Baris JS mobile modal: `openScanModal()` — dihapus row Pemegang & Check-In dari template HTML
+
+---
+
+## 📶 7. Indikator Kekuatan Sinyal Internet Realtime (Update 16 Oktober 2026)
+
+Widget sinyal internet ditambahkan di header card **Live Camera QR Ticket Scanner** agar petugas gate dapat memantau kondisi jaringan secara realtime — penting di venue outdoor dengan sinyal 4G yang fluktuatif.
+
+### Desain Widget
+
+```
+[ ▂▄▆▇█  Cepat ]   ← header card scanner, kanan atas
+```
+
+- **5 bar sinyal** bergaya indikator HP, dengan tinggi progresif (4px → 16px)
+- **Warna dinamis** berdasarkan level:
+  - 🔴 Merah → Tidak Ada Koneksi / Sangat Lemot
+  - 🟡 Kuning → Lemot / Standar
+  - 🟢 Hijau → Cepat / Sangat Cepat
+- **Label teks**: "Mengukur...", "Sangat Lemot", "Lemot", "Standar", "Cepat", "Sangat Cepat"
+
+### Klasifikasi Level Berdasarkan RTT
+
+| Level | Label | RTT |
+|:---:|:---|:---|
+| 0 | Tidak Ada Koneksi | Offline |
+| 1 | Sangat Lemot | ≥ 2000ms |
+| 2 | Lemot | ≥ 600ms |
+| 3 | Standar | ≥ 200ms |
+| 4 | Cepat | ≥ 80ms |
+| 5 | Sangat Cepat | < 80ms |
+
+### Metode Pengukuran (Gabungan / Hybrid)
+
+```
+navigator.connection (Chrome/Android)
+    ├─ effectiveType: 'slow-2g' | '2g' | '3g' | '4g'
+    └─ rtt: number (ms)
+         │
+         ▼ Jika tidak tersedia (Safari/iOS/Firefox)
+    Favicon Ping: fetch('/favicon.ico?_p=timestamp')
+    Ukur performance.now() → RTT actual
+```
+
+1. **`navigator.connection` API** (prioritas utama):
+   - Zero request ke server.
+   - Membaca langsung dari OS/network adapter browser.
+   - Didukung Chrome, Android WebView, Edge.
+
+2. **Favicon Ping Fallback** (untuk Safari/iOS/Firefox):
+   - Fetch `/favicon.ico` dengan `cache: 'no-store'` setiap **8 detik**.
+   - Karena favicon sudah dicache browser, bandwidth overhead **≈ 0 byte** (hanya mengukur RTT TCP).
+   - Tidak membebani server — hanya 1 request kecil per 8 detik.
+
+### Event Listener Tambahan
+
+```javascript
+navigator.connection.addEventListener('change', measure); // Saat tipe jaringan berubah
+window.addEventListener('online',  () => measure());      // Saat koneksi pulih
+window.addEventListener('offline', () => applyLevel(0));  // Saat koneksi putus
+setInterval(measure, 8000);                               // Polling tiap 8 detik
+```
+
+**Estimasi overhead bandwidth**: < 0.5 KB per 8 detik (hanya jika favicon cache miss). Setara < 1% dari satu request scan tiket.
+
+**File yang diubah:**
+- [`resources/views/creator/ticket_scanner.blade.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/resources/views/creator/ticket_scanner.blade.php)
+  - HTML: Tambah `div#signalWidget` dengan `div#bar1`–`div#bar5` + `span#signalLabel` di `prof-card-head`
+  - JS: Tambah IIFE `initSignalStrength()` di akhir script block
 
 ---
 

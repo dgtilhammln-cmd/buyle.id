@@ -800,17 +800,6 @@
                         <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
                         Live Camera QR Ticket Scanner
                     </div>
-                    {{-- Signal Strength Widget --}}
-                    <div id="signalWidget" title="Kekuatan Sinyal Internet" style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.74rem; font-weight:700; padding:0.3rem 0.75rem; border-radius:999px; background:#f8fafc; border:1.5px solid #e2e8f0; cursor:default; user-select:none; transition:all 0.3s;">
-                        <div id="signalBars" style="display:flex; align-items:flex-end; gap:2px; height:16px;">
-                            <div id="bar1" style="width:3px; height:4px; border-radius:2px; background:#cbd5e1;"></div>
-                            <div id="bar2" style="width:3px; height:7px; border-radius:2px; background:#cbd5e1;"></div>
-                            <div id="bar3" style="width:3px; height:10px; border-radius:2px; background:#cbd5e1;"></div>
-                            <div id="bar4" style="width:3px; height:13px; border-radius:2px; background:#cbd5e1;"></div>
-                            <div id="bar5" style="width:3px; height:16px; border-radius:2px; background:#cbd5e1;"></div>
-                        </div>
-                        <span id="signalLabel" style="color:#64748b;">Mengukur...</span>
-                    </div>
                 </div>
 
                 <div class="form-body">
@@ -828,10 +817,25 @@
 
                     {{-- Header & Camera Switch Control --}}
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
-                        <div style="font-weight: 700; font-size: 0.85rem; color: #334155; display: flex; align-items: center; gap: 6px;">
-                            <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-                            Viewport Live QR Scanner
+                        {{-- Kiri: Label + Signal Widget --}}
+                        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                            <div style="font-weight: 700; font-size: 0.85rem; color: #334155; display: flex; align-items: center; gap: 6px;">
+                                <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                                Viewport Live QR Scanner
+                            </div>
+                            {{-- Signal Strength Widget (dekat label kamera, tidak nabrak kontrol) --}}
+                            <div id="signalWidget" title="Kekuatan Sinyal Internet" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.72rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#f8fafc; border:1.5px solid #e2e8f0; cursor:default; user-select:none; transition:all 0.3s;">
+                                <div id="signalBars" style="display:flex; align-items:flex-end; gap:1.5px; height:13px;">
+                                    <div id="bar1" style="width:2.5px; height:3px; border-radius:1.5px; background:#cbd5e1;"></div>
+                                    <div id="bar2" style="width:2.5px; height:5.5px; border-radius:1.5px; background:#cbd5e1;"></div>
+                                    <div id="bar3" style="width:2.5px; height:8px; border-radius:1.5px; background:#cbd5e1;"></div>
+                                    <div id="bar4" style="width:2.5px; height:10.5px; border-radius:1.5px; background:#cbd5e1;"></div>
+                                    <div id="bar5" style="width:2.5px; height:13px; border-radius:1.5px; background:#cbd5e1;"></div>
+                                </div>
+                                <span id="signalLabel" style="color:#64748b;">Mengukur...</span>
+                            </div>
                         </div>
+                        {{-- Kanan: Fast Mode + Mirror --}}
                         <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
                             <label style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.78rem; font-weight:700; color:#166534; background:#f0fdf4; padding:0.4rem 0.85rem; border-radius:999px; border:1.5px solid #bbf7d0; cursor:pointer; user-select:none;" title="Scan cepat otomatis tanpa popup modal yang memblokir">
                                 <input type="checkbox" id="autoScanToggle" checked style="accent-color:#1eb349; width:16px; height:16px;" onchange="handleFastModeChange(this.checked)">
