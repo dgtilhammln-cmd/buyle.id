@@ -1230,3 +1230,227 @@ storage/
 
 *Dokumentasi ini mencakup seluruh implementasi fitur e-KYC creator dan manajemen verifikasi admin.*
 
+---
+
+## 🔒 10. Pembatasan Tab Berdasarkan Status KYC (Update 16 Oktober 2026)
+
+### Latar Belakang
+
+Fitur **Live QR Scanner**, **Data Kehadiran & Event**, dan **Link Gate Panitia** di Gatekeeper Studio hanya relevan bagi penyelenggara yang identitasnya sudah terverifikasi. Creator yang belum menyelesaikan e-KYC tidak seharusnya dapat mengakses alat-alat tersebut.
+
+### Perubahan Tampilan Tab
+
+**Sebelum:**
+```
+Sidebar Gatekeeper Studio selalu menampilkan 4 tab:
+  • Pengaturan & e-KYC
+  • Live QR Scanner
+  • Data Kehadiran & Event
+  • Link Gate Panitia
+```
+
+**Sesudah:**
+| Status KYC | Tab Tampil |
+|:---|:---|
+| Belum ada / `none` | Hanya: Pengaturan & e-KYC |
+| `pending` (sedang review) | Hanya: Pengaturan & e-KYC |
+| `rejected` (ditolak) | Hanya: Pengaturan & e-KYC |
+| `verified` ✅ | Semua 4 tab tampil |
+
+### Notice Card untuk Creator Belum Terverifikasi
+
+Jika creator **belum** berstatus `verified`, sebuah notice card kuning-amber muncul di bawah form e-KYC:
+
+```
+┌────────────────────────────────────────────────────────┐
+│  🛡️  Verifikasi e-KYC Diperlukan                      │
+│                                                        │
+│  Fitur Live QR Scanner, Data Kehadiran & Event,        │
+│  dan Link Gate Panitia hanya tersedia untuk            │
+│  Creator Buyle yang telah menyelesaikan verifikasi     │
+│  identitas (e-KYC).                                    │
+│                                                        │
+│  [ 🛡️ Lengkapi e-KYC Sekarang ]                       │
+│                                                        │
+│  (Jika pending) ⏱ Pengajuan KYC sedang dalam          │
+│  proses review admin.                                  │
+│                                                        │
+│  (Jika rejected) ✖ KYC Anda ditolak. Silakan          │
+│  ajukan ulang dengan data yang valid.                  │
+└────────────────────────────────────────────────────────┘
+```
+
+Tombol "Lengkapi e-KYC Sekarang" mengalihkan fokus ke tab **Pengaturan & e-KYC** secara otomatis.
+
+### Implementasi Teknis
+
+**Kondisi Blade yang digunakan:**
+```php
+// Menampilkan tab button (sidebar)
+@if(isset($kyc) && $kyc->status === 'verified')
+    <button ...>Live QR Scanner</button>
+    <button ...>Data Kehadiran & Event</button>
+    <button ...>Link Gate Panitia</button>
+@endif
+
+// Menampilkan notice card (konten utama)
+@if(!isset($kyc) || $kyc->status !== 'verified')
+    <div id="tab-unverified-notice">
+        {{-- Notice card dengan status pending/rejected --}}
+    </div>
+@endif
+
+// Menyembunyikan tab pane (tidak di-render di DOM)
+@if(isset($kyc) && $kyc->status === 'verified')
+    <div id="tab-scanner">...</div>
+    <div id="tab-data">...</div>
+    <div id="tab-gate">...</div>
+@endif
+```
+
+**Perbedaan penting dari sebelumnya**: Tab pane tidak hanya disembunyikan via CSS (`display:none`), melainkan **tidak di-render sama sekali** di HTML jika creator belum terverifikasi. Ini mencegah akses via developer tools browser.
+
+**File yang diubah:**
+- [`resources/views/creator/ticket_scanner.blade.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/resources/views/creator/ticket_scanner.blade.php)
+  - Baris 764–779 (sebelumnya): Tab buttons scanner, data, gate → dibungkus `@if verified`
+  - Baris 842–1396 (sesudah): Tab panes scanner + data + gate → dibungkus `@if verified`
+  - Baris 814–840 (baru): Notice card unverified ditambahkan antara kyc_tab dan tab-scanner
+
+---
+
+## 🧩 11. Peningkatan Panel Admin KYC (Update 16 Oktober 2026)
+
+### A. Halaman Detail KYC (`/admin/kyc/{id}`) — Enrichment Data
+
+Panel review admin diperkaya dengan data kreator yang sinkron:
+
+**Card Profil Creator (baru)**
+- Nama Store & avatar creator
+- Bio singkat
+- Total produk & kategori
+- Status verifikasi toko
+
+**Card Finansial & Transaksi (baru)**
+- Total pendapatan GMV creator
+- Jumlah order sukses
+- Saldo escrow tiket (jika ada)
+- Riwayat 5 transaksi terakhir
+- Riwayat 5 pengajuan payout terakhir
+- Informasi rekening bank terdaftar (nama & nomor tersamarkan)
+
+**Card KTP Identitas — Compact**
+- Sebelumnya 3 card terpisah (identitas, alamat, penyimpanan)
+- Sekarang dijadikan **1 card terintegrasi** dengan layout grid 2 kolom
+- Lebih hemat ruang, tetap informatif
+
+### B. Sinkronisasi `is_verified` Creator Profile
+
+Saat admin menekan **Setujui KYC**, sistem otomatis:
+```php
+// app/Http/Controllers/Admin/AdminKycController.php — method approve()
+$creatorProfile = \App\Models\CreatorProfile::where('user_id', $kyc->user_id)->first();
+if ($creatorProfile) {
+    $creatorProfile->update(['is_verified' => true]);
+}
+```
+
+Begitu pula saat **Tolak KYC**:
+```php
+if ($creatorProfile) {
+    $creatorProfile->update(['is_verified' => false]);
+}
+```
+
+**File yang diubah:**
+- [`app/Http/Controllers/Admin/AdminKycController.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/app/Http/Controllers/Admin/AdminKycController.php)
+- [`resources/views/admin/kyc/show.blade.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/resources/views/admin/kyc/show.blade.php)
+
+---
+
+## 💬 12. Popup Interaktif e-KYC (Menggantikan Alert Browser Bawaan)
+
+### Latar Belakang
+
+Sebelumnya konfirmasi pengiriman form KYC menggunakan `alert()` dan `confirm()` bawaan browser yang tampilannya generik dan tidak sesuai tema Buyle Light Theme.
+
+### Perubahan
+
+Semua popup diganti dengan **custom modal dialog** bergaya Buyle:
+
+| Trigger | Sebelum | Sesudah |
+|:---|:---|:---:|
+| Konfirmasi kirim form KYC | `confirm('Kirim verifikasi?')` | Modal dengan tombol Batal & Kirim |
+| Kamera tidak tersedia | `alert('Kamera error...')` | Modal informatif dengan ikon & saran |
+| Berhasil submit | Redirect langsung | — (handled via response) |
+
+**Desain modal:**
+```
+┌───────────────────────────────────────┐
+│  🛡️ Kirim Pengajuan Verifikasi?      │
+│                                       │
+│  Pastikan foto KTP dan selfie Anda    │
+│  sudah jelas dan terbaca sebelum      │
+│  mengirim pengajuan.                  │
+│                                       │
+│  [ Batal ]  [ ✓ Ya, Kirim Sekarang ] │
+└───────────────────────────────────────┘
+```
+
+**File yang diubah:**
+- [`resources/views/creator/partials/kyc_tab.blade.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/resources/views/creator/partials/kyc_tab.blade.php)
+
+---
+
+## 🏷️ 13. Perubahan Penamaan UI — "Creator Buyle" (Update 16 Oktober 2026)
+
+### Perubahan Nama
+
+Istilah **"Resource Creator"** (nama generik) diganti menjadi **"Creator Buyle"** di seluruh antarmuka admin:
+
+| Lokasi | Sebelum | Sesudah |
+|:---|:---|:---|
+| Sidebar admin | Resource Creator | Creator Buyle |
+| Judul halaman list | Resource Creator | Creator Buyle |
+| Breadcrumb | Resource Creator | Creator Buyle |
+
+### Perubahan Tampilan Grid Overview
+
+Halaman `/admin/creator-resources` (sekarang: Creator Buyle) sebelumnya menampilkan kartu overview dengan detail yang terlalu panjang dan boros ruang. Sekarang diperbarui menjadi **layout grid compact** — hanya informasi kunci yang ditampilkan (overview) tanpa detail bertele-tele.
+
+**File yang diubah:**
+- [`resources/views/layouts/admin.blade.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/resources/views/layouts/admin.blade.php) — rename sidebar item
+- [`resources/views/admin/creator-resources/index.blade.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/resources/views/admin/creator-resources/index.blade.php) — compact grid + rename title
+
+---
+
+## 🤖 14. Sistem AI Fallback Multi-Provider (Update 16 Oktober 2026)
+
+### Latar Belakang
+
+Sistem AI Buyle.id (untuk fitur seperti analitik, rekomendasi, atau automasi) menggunakan konfigurasi yang tersimpan **langsung di panel admin** (bukan di file `.env`), sehingga admin dapat mengubah provider AI tanpa perlu akses ke server.
+
+### Mekanisme Fallback
+
+Jika kuota/limit provider AI utama habis, sistem otomatis beralih ke provider cadangan:
+
+```
+Provider Utama (kuota habis / timeout)
+         │
+         ▼ (Fallback Tier 1)
+Provider Cadangan 1
+         │
+         ▼ (Fallback Tier 2)
+Provider Cadangan 2
+         │
+         ▼ (Terakhir)
+Respon default/graceful degradation
+```
+
+### Lokasi Konfigurasi
+
+Pengaturan AI (API key, model, provider, timeout, retry) disimpan di panel admin Buyle.id — **bukan** di file `.env`. Ini memungkinkan hot-swap provider tanpa deployment ulang.
+
+---
+
+*Dokumentasi ini mencakup seluruh implementasi fitur e-KYC creator, manajemen verifikasi admin, dan semua pembaruan sistem Gatekeeper Studio per 16 Oktober 2026.*
+
