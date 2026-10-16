@@ -800,6 +800,17 @@
                         <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
                         Live Camera QR Ticket Scanner
                     </div>
+                    {{-- Signal Strength Widget --}}
+                    <div id="signalWidget" title="Kekuatan Sinyal Internet" style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.74rem; font-weight:700; padding:0.3rem 0.75rem; border-radius:999px; background:#f8fafc; border:1.5px solid #e2e8f0; cursor:default; user-select:none; transition:all 0.3s;">
+                        <div id="signalBars" style="display:flex; align-items:flex-end; gap:2px; height:16px;">
+                            <div id="bar1" style="width:3px; height:4px; border-radius:2px; background:#cbd5e1;"></div>
+                            <div id="bar2" style="width:3px; height:7px; border-radius:2px; background:#cbd5e1;"></div>
+                            <div id="bar3" style="width:3px; height:10px; border-radius:2px; background:#cbd5e1;"></div>
+                            <div id="bar4" style="width:3px; height:13px; border-radius:2px; background:#cbd5e1;"></div>
+                            <div id="bar5" style="width:3px; height:16px; border-radius:2px; background:#cbd5e1;"></div>
+                        </div>
+                        <span id="signalLabel" style="color:#64748b;">Mengukur...</span>
+                    </div>
                 </div>
 
                 <div class="form-body">
@@ -904,21 +915,13 @@
 
                                         {{-- Ticket Details Card --}}
                                         <div id="resActiveDetailsCard" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 0.85rem 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 0.6rem;">
-                                            <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px dashed #f1f5f9; padding-bottom: 0.45rem;">
-                                                <span style="font-size: 0.74rem; font-weight: 600; color: #64748b;">Nama Pemegang</span>
-                                                <strong id="resActiveName" style="font-size: 0.9rem; font-weight: 800; color: #0f172a; text-align: right;">-</strong>
-                                            </div>
                                             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #f1f5f9; padding-bottom: 0.45rem;">
                                                 <span style="font-size: 0.74rem; font-weight: 600; color: #64748b;">Kode Tiket</span>
                                                 <code id="resActiveCode" style="font-size: 0.83rem; font-weight: 700; color: #166534; background: #f0fdf4; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #bbf7d0;">-</code>
                                             </div>
-                                            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; border-bottom: 1px dashed #f1f5f9; padding-bottom: 0.45rem;">
+                                            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
                                                 <span style="font-size: 0.74rem; font-weight: 600; color: #64748b; flex-shrink: 0;">Event</span>
                                                 <span id="resActiveEvent" style="font-size: 0.78rem; font-weight: 700; color: #334155; text-align: right;">-</span>
-                                            </div>
-                                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                                <span style="font-size: 0.74rem; font-weight: 600; color: #64748b;">Waktu Check-In</span>
-                                                <span id="resActiveTime" style="font-size: 0.78rem; font-weight: 700; color: #0f172a;">-</span>
                                             </div>
                                         </div>
                                     </div>
@@ -2436,19 +2439,10 @@
                     <span style="color:#64748B;font-size:0.78rem;">Kode Tiket</span>
                     <strong style="color:#166534;font-family:monospace;font-size:0.83rem;background:#f0fdf4;padding:2px 6px;border-radius:4px;border:1px solid #bbf7d0;">${t.code || '-'}</strong>
                 </div>
-                <div style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
                     <span style="color:#64748B;font-size:0.78rem;flex-shrink:0;">Nama Event</span>
                     <strong style="color:#0F172A;font-size:0.8rem;text-align:right;">${t.event_name || '-'}</strong>
                 </div>
-                <div style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
-                    <span style="color:#64748B;font-size:0.78rem;">Pemegang</span>
-                    <strong style="color:#0F172A;font-size:0.82rem;">${t.holder_name || '-'}</strong>
-                </div>
-                ${t.checked_in_at ? `
-                <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px dashed #E2E8F0;margin-top:4px;">
-                    <span style="color:#64748B;font-size:0.78rem;">Check-In</span>
-                    <strong style="color:#166534;font-size:0.8rem;">${t.checked_in_at}</strong>
-                </div>` : ''}
             `;
         } else {
             card.style.display = 'none';
@@ -2660,5 +2654,91 @@
     const style = document.createElement('style');
     style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
     document.head.appendChild(style);
+
+    // ══════════════════════════════════════════════════════════════════════
+    // SIGNAL STRENGTH INDICATOR (navigator.connection + favicon ping fallback)
+    // Interval: 8s, bandwidth overhead minimal (favicon cached by browser)
+    // ══════════════════════════════════════════════════════════════════════
+    (function initSignalStrength() {
+        const BARS = [1,2,3,4,5].map(i => document.getElementById('bar' + i));
+        const LABEL = document.getElementById('signalLabel');
+        const WIDGET = document.getElementById('signalWidget');
+
+        // level: 0=offline, 1=sangat lemot, 2=lemot, 3=standar, 4=cepat, 5=sangat cepat
+        function applyLevel(level) {
+            if (!WIDGET) return;
+            const configs = [
+                { label: 'Tidak Ada Koneksi', barColor: '#ef4444', bgColor: '#fef2f2', borderColor: '#fecaca', textColor: '#dc2626' },
+                { label: 'Sangat Lemot',      barColor: '#ef4444', bgColor: '#fef2f2', borderColor: '#fecaca', textColor: '#dc2626' },
+                { label: 'Lemot',             barColor: '#f59e0b', bgColor: '#fffbeb', borderColor: '#fde68a', textColor: '#d97706' },
+                { label: 'Standar',           barColor: '#f59e0b', bgColor: '#fffbeb', borderColor: '#fde68a', textColor: '#d97706' },
+                { label: 'Cepat',             barColor: '#1eb349', bgColor: '#f0fdf4', borderColor: '#bbf7d0', textColor: '#166534' },
+                { label: 'Sangat Cepat',      barColor: '#1eb349', bgColor: '#f0fdf4', borderColor: '#bbf7d0', textColor: '#166534' },
+            ];
+            const c = configs[level] || configs[3];
+            BARS.forEach((bar, i) => {
+                if (!bar) return;
+                bar.style.background = (i < level) ? c.barColor : '#e2e8f0';
+            });
+            if (LABEL) { LABEL.textContent = c.label; LABEL.style.color = c.textColor; }
+            WIDGET.style.background = c.bgColor;
+            WIDGET.style.borderColor = c.borderColor;
+        }
+
+        function rttToLevel(rttMs) {
+            if (rttMs === null) return 3; // unknown = standar
+            if (rttMs >= 2000)  return 1; // sangat lemot
+            if (rttMs >= 600)   return 2; // lemot
+            if (rttMs >= 200)   return 3; // standar
+            if (rttMs >= 80)    return 4; // cepat
+            return 5;                      // sangat cepat
+        }
+
+        function fromConnection() {
+            const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            if (!conn) return null;
+            // effectiveType: slow-2g=1, 2g=2, 3g=3, 4g=5
+            const typeMap = { 'slow-2g': 1, '2g': 2, '3g': 3, '4g': 5 };
+            if (conn.effectiveType && typeMap[conn.effectiveType] !== undefined) {
+                return typeMap[conn.effectiveType];
+            }
+            if (typeof conn.rtt === 'number') return rttToLevel(conn.rtt);
+            return null;
+        }
+
+        let _pingUrl = '/favicon.ico?_s=' + Date.now();
+        async function pingServer() {
+            if (!navigator.onLine) return 0;
+            try {
+                const t0 = performance.now();
+                await fetch('/favicon.ico?_p=' + Date.now(), { method: 'GET', cache: 'no-store', mode: 'no-cors' });
+                const rtt = performance.now() - t0;
+                return rttToLevel(rtt);
+            } catch(e) { return 0; }
+        }
+
+        async function measure() {
+            if (!navigator.onLine) { applyLevel(0); return; }
+            const fromConn = fromConnection();
+            if (fromConn !== null) {
+                applyLevel(fromConn);
+                // Also run ping in background for better accuracy
+                pingServer().then(l => applyLevel(l)).catch(() => {});
+            } else {
+                const l = await pingServer();
+                applyLevel(l);
+            }
+        }
+
+        // Listen to connection changes (Chrome/Android)
+        const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if (conn) conn.addEventListener('change', measure);
+        window.addEventListener('online',  () => measure());
+        window.addEventListener('offline', () => applyLevel(0));
+
+        // Initial measurement + repeat every 8s
+        measure();
+        setInterval(measure, 8000);
+    })();
 </script>
 @endsection

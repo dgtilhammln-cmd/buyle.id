@@ -583,20 +583,6 @@
     {{-- CONTENT AREA --}}
     <div class="bio-content">
 
-        {{-- Flash Messages --}}
-        @if(session('success'))
-        <div class="alert-notice" style="background:#f0fdf4;border-color:#bbf7d0;color:#15803d;margin-bottom:1.25rem;">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            <span>{{ session('success') }}</span>
-        </div>
-        @endif
-        @if(session('error'))
-        <div class="alert-notice" style="background:#fef2f2;border-color:#fecaca;color:#dc2626;margin-bottom:1.25rem;">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span>{{ session('error') }}</span>
-        </div>
-        @endif
-
         {{-- TAB 1: TARIK SALDO --}}
         <div id="tab-withdraw" class="payout-tab-pane" style="display:block">
 

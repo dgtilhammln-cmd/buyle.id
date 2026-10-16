@@ -78,7 +78,7 @@ class OrderPaidNotification extends Notification
                 </thead>
                 <tbody>';
 
-        foreach ($this->order->items as $item) {
+        foreach ($this->order->items as Pesanan Berhasil$item) {
             $itemsHtml .= '
                     <tr>
                         <td style="padding: 10px 0; border-top: 1px solid #F1F5F9; font-weight: 600; color: #0F172A;">' . htmlspecialchars($item->product_name) . '</td>
@@ -179,13 +179,13 @@ class OrderPaidNotification extends Notification
             $subject          = $isFreeOrder
                 ? "Pesanan Produk #{$orderNumber} Sedang Diproses | buyle.id"
                 : "Pembayaran Berhasil! Pesanan Produk #{$orderNumber} Sedang Diproses | buyle.id";
-            $badgeText        = 'PRODUK FISIK DIPROSES';
-            $title            = $isFreeOrder ? 'Pesanan Produk Fisik Berhasil!' : 'Pembayaran Produk Fisik Berhasil!';
+            $badgeText        = 'SEDANG DIPROSES';
+            $title            = $isFreeOrder ? 'Pesanan Berhasil!' : 'Pembayaran Berhasil!';
             $subtitle         = "Pesanan kamu sudah diterima dan sedang disiapkan oleh penjual #{$orderNumber}";
-            $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih banyak telah memesan produk di <strong>buyle.id</strong>. Pesanan produk fisik <strong>#{$orderNumber}</strong> telah terkonfirmasi:";
+            $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih banyak telah memesan produk di <strong>buyle.id</strong>. Pesanan <strong>#{$orderNumber}</strong> telah terkonfirmasi:";
             $ctaText          = 'Lihat Detail & Status Pesanan';
-            $promptMsg        = "Penjual/UMKM sedang menyiapkan pesanan kamu. Kamu dapat memantau status pesanan dan rincian pengiriman melalui tombol di bawah ini:";
-            $footerNote       = 'Ada pertanyaan terkait pengiriman atau produk fisik ini? Balas email ini aja, tim kami siap membantu!';
+            $promptMsg        = "Penjual sedang menyiapkan pesanan kamu. Kamu dapat memantau status pesanan dan rincian pengiriman melalui tombol di bawah ini:";
+            $footerNote       = 'Ada pertanyaan terkait pengiriman atau produk ini? Balas email ini aja, tim kami siap membantu!';
         } elseif ($hasService) {
             $subject          = $isFreeOrder
                 ? "Pesanan Layanan Jasa #{$orderNumber} Terverifikasi | buyle.id"
