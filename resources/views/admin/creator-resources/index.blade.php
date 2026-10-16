@@ -838,7 +838,7 @@
         </table>
     </div>
 
-    {{-- VIEW MODE 2: Grid Cards View --}}
+    {{-- VIEW MODE 2: Grid Cards View --    {{-- VIEW MODE 2: Compact Overview Grid Cards View --}}
     <div id="viewContainerGrid" class="res-creators-grid" style="display:none;">
         @forelse($creatorResources as $item)
             @php
@@ -849,82 +849,80 @@
                 $cost = $item['est_monthly_cost'];
                 $abandoned = $item['abandoned_cart_value'];
             @endphp
-            <div class="creator-card-box">
+            <div class="creator-card-box" style="padding:1rem; border-radius:16px;">
                 <div>
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
-                        <div class="res-user-info">
-                            <div class="res-avatar-wrap">
+                    {{-- Header: Avatar, Name, Online Badge --}}
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:0.5rem; margin-bottom:0.75rem;">
+                        <div style="display:flex; align-items:center; gap:0.65rem; min-width:0;">
+                            <div class="res-avatar-wrap" style="width:38px; height:38px;">
                                 @if($item['avatar_url'])
-                                    <img src="{{ $item['avatar_url'] }}" alt="{{ $user->name }}" class="res-avatar">
+                                    <img src="{{ $item['avatar_url'] }}" alt="{{ $user->name }}" class="res-avatar" style="width:38px; height:38px;">
                                 @else
-                                    <div class="res-avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+                                    <div class="res-avatar" style="width:38px; height:38px; font-size:0.8rem;">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
                                 @endif
                                 @if($item['is_online_now'])
-                                    <div class="res-online-pulse" title="Online Sekarang"></div>
+                                    <div class="res-online-pulse" style="width:11px; height:11px;" title="Online Sekarang"></div>
                                 @endif
                             </div>
-                            <div>
-                                <div class="res-user-name">{{ $user->name }}</div>
-                                <div class="res-user-sub">{{ $profile ? ($profile->store_name ?: '@' . $user->username) : '@' . ($user->username ?: 'user') }}</div>
-                                <div style="font-size:0.68rem; color:#64748B; margin-top:0.2rem; display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap;">
-                                    @if($item['city_name'] || $item['province_name'])
-                                        <span style="display:inline-flex; align-items:center; gap:0.2rem;">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                            {{ implode(', ', array_filter([$item['city_name'], $item['province_name']])) }}
-                                        </span>
-                                    @endif
-                                    @if($item['detected_ip'])
-                                        <span style="background:#F1F5F9; color:#475569; padding:0.1rem 0.35rem; border-radius:4px; font-weight:700;">IP: {{ $item['detected_ip'] }}</span>
-                                    @endif
-                                    @if($item['gmaps_link'])
-                                        <a href="{{ $item['gmaps_link'] }}" target="_blank" style="color:#1EB349; font-weight:800; text-decoration:underline; display:inline-flex; align-items:center; gap:0.2rem;" title="Buka Koordinat GPS di Google Maps">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
-                                            GPS Maps
-                                        </a>
-                                    @endif
+                            <div style="min-width:0;">
+                                <div class="res-user-name" style="font-size:0.825rem; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                    {{ $user->name }}
+                                </div>
+                                <div class="res-user-sub" style="font-size:0.72rem; color:#64748B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                    {{ $profile ? ($profile->store_name ?: '@' . $user->username) : '@' . ($user->username ?: 'user') }}
                                 </div>
                             </div>
                         </div>
-                        <span class="{{ $item['online_badge_class'] }}">
+                        <span class="{{ $item['online_badge_class'] }}" style="font-size:0.65rem; padding:0.2rem 0.5rem; flex-shrink:0;">
                             {{ $item['online_status_label'] }}
                         </span>
                     </div>
 
-                    <div style="background:#F8FAFC; border-radius:14px; padding:0.85rem; margin-bottom:1rem; display:grid; grid-template-columns: 1fr 1fr; gap:0.6rem; font-size:0.78rem;">
-                        <div>
-                            <div style="color:#64748B; font-size:0.7rem; font-weight:700;">TOTAL OMSET</div>
-                            <div style="font-weight:800; color:#16A34A; font-size:0.9rem;">Rp {{ number_format($rev, 0, ',', '.') }}</div>
+                    {{-- Location Overview Tag --}}
+                    @if($item['city_name'] || $item['province_name'])
+                        <div style="font-size:0.7rem; color:#64748B; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.3rem;">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                {{ implode(', ', array_filter([$item['city_name'], $item['province_name']])) }}
+                            </span>
                         </div>
+                    @endif
+
+                    {{-- Compact Overview Stats Bar --}}
+                    <div style="background:#F8FAFC; border:1px solid #F1F5F9; border-radius:12px; padding:0.65rem 0.75rem; margin-bottom:0.85rem; display:flex; justify-content:space-between; align-items:center;">
                         <div>
-                            <div style="color:#64748B; font-size:0.7rem; font-weight:700;">CART PENDING</div>
+                            <div style="color:#64748B; font-size:0.65rem; font-weight:700;">TOTAL OMSET</div>
+                            <div style="font-weight:800; color:#16A34A; font-size:0.875rem;">
+                                Rp {{ number_format($rev, 0, ',', '.') }}
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="color:#64748B; font-size:0.65rem; font-weight:700;">CART PENDING</div>
                             @if($item['abandoned_cart_count'] > 0)
-                                <div style="font-weight:800; color:#D97706; font-size:0.9rem; cursor:pointer;" onclick="openCartModal({{ json_encode($item['abandoned_cart_items']) }}, '{{ addslashes($user->name) }}', {{ $user->id }})">
+                                <div style="font-weight:800; color:#D97706; font-size:0.85rem; cursor:pointer;" onclick="openCartModal({{ json_encode($item['abandoned_cart_items']) }}, '{{ addslashes($user->name) }}', {{ $user->id }})">
                                     Rp {{ number_format($abandoned, 0, ',', '.') }} &rsaquo;
                                 </div>
                             @else
-                                <div style="font-weight:700; color:#94A3B8; font-size:0.85rem;">Rp 0</div>
+                                <div style="font-weight:700; color:#94A3B8; font-size:0.825rem;">Rp 0</div>
                             @endif
                         </div>
-                        <div>
-                            <div style="color:#64748B; font-size:0.7rem; font-weight:700;">STORAGE DISK</div>
-                            <div style="font-weight:800; color:#0F172A;">{{ $mb }} MB</div>
-                        </div>
-                        <div>
-                            <div style="color:#64748B; font-size:0.7rem; font-weight:700;">BIAYA SERVER</div>
-                            <div style="font-weight:700; color:#475569;">Rp {{ number_format($cost, 0, ',', '.') }}/bln</div>
+                        <div style="text-align:right; border-left:1px solid #E2E8F0; padding-left:0.6rem;">
+                            <div style="color:#64748B; font-size:0.65rem; font-weight:700;">STORAGE</div>
+                            <div style="font-weight:700; color:#475569; font-size:0.8rem;">{{ $mb }} MB</div>
                         </div>
                     </div>
                 </div>
 
-                <div style="display:flex; justify-content:space-between; align-items:center; pt-2; border-top:1px solid #F1F5F9;">
-                    <div style="font-size:0.72rem; color:#64748B; font-weight:600;">
+                {{-- Card Footer --}}
+                <div style="display:flex; justify-content:space-between; align-items:center; pt-2; border-top:1px solid #F1F5F9; padding-top:0.6rem;">
+                    <div style="font-size:0.7rem; color:#64748B; font-weight:600;">
                         {{ $item['product_count'] }} produk &bull; {{ $item['bio_blocks_count'] }} block
                     </div>
                     <div style="display:flex; gap:0.3rem;">
                         @if($item['wa_link'])
-                            <a href="{{ $item['wa_link'] }}" target="_blank" class="btn-wa-nudge" title="Nudge WA">WA</a>
+                            <a href="{{ $item['wa_link'] }}" target="_blank" class="btn-wa-nudge" style="padding:0.3rem 0.55rem; font-size:0.7rem;" title="Hubungi via WhatsApp">WA</a>
                         @endif
-                        <a href="{{ route('admin.creator-resources.show', $user->id) }}" class="btn-detail">Detail</a>
+                        <a href="{{ route('admin.creator-resources.show', $user->id) }}" class="btn-detail" style="padding:0.3rem 0.65rem; font-size:0.7rem;">Detail</a>
                     </div>
                 </div>
             </div>

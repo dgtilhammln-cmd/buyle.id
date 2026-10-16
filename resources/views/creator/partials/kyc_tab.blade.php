@@ -1573,7 +1573,11 @@ async function startKtpCamera() {
 
         startKtpGuidanceLoop();
     } catch(err) {
-        alert('Tidak dapat mengakses kamera: ' + (err.message || 'Periksa izin kamera browser Anda.'));
+        showKycInteractiveModal({
+            type: 'error',
+            title: 'Izin Kamera KTP',
+            message: 'Tidak dapat mengakses kamera: ' + (err.message || 'Harap izinkan akses kamera pada browser Anda.')
+        });
     }
 }
 
@@ -1723,9 +1727,18 @@ function extractKtpWithAi(imgUrl) {
         } else {
             statusBox.className = 'ktp-ai-status-box warn';
             spinner.style.display = 'none';
-            title.textContent = 'AI Belum Dapat Mengekstrak Otomatis';
-            desc.textContent = res.message || 'Silakan lengkapi NIK dan formulir secara manual.';
+            if (res.quota_exceeded) {
+                title.textContent = 'Mode Mandiri Aktif (Kuota AI Penuh)';
+                desc.textContent = res.message || 'Batas kuota AI tercapai. Cukup ketik NIK 16 digit Anda di bawah, sistem lokal akan otomatis mendekode data wilayah KTP.';
+            } else {
+                title.textContent = 'AI Belum Dapat Mengekstrak Otomatis';
+                desc.textContent = res.message || 'Silakan lengkapi NIK dan data formulir secara manual.';
+            }
             retryBtn.style.display = 'inline-flex';
+            const nikInput = document.getElementById('kycNikInput');
+            if (nikInput && !nikInput.value) {
+                setTimeout(() => nikInput.focus(), 300);
+            }
         }
         checkFormReadiness();
     })
@@ -1733,8 +1746,8 @@ function extractKtpWithAi(imgUrl) {
         isAiExtracting = false;
         statusBox.className = 'ktp-ai-status-box warn';
         spinner.style.display = 'none';
-        title.textContent = 'Gagal Menghubungi Layanan AI';
-        desc.textContent = 'Koneksi AI bermasalah. Anda dapat melengkapi data formulir secara manual.';
+        title.textContent = 'Mode Mandiri Aktif';
+        desc.textContent = 'Layanan AI sedang padat. Anda dapat langsung mengetikkan NIK & Nama pada formulir di bawah.';
         retryBtn.style.display = 'inline-flex';
         checkFormReadiness();
     });
@@ -1981,7 +1994,11 @@ async function startFaceCamera() {
 
         startIntelligentFaceLoop();
     } catch(err) {
-        alert('Tidak dapat mengakses kamera selfie: ' + (err.message || 'Periksa izin kamera browser Anda.'));
+        showKycInteractiveModal({
+            type: 'error',
+            title: 'Izin Kamera Selfie',
+            message: 'Tidak dapat mengakses kamera selfie: ' + (err.message || 'Harap izinkan akses kamera pada browser Anda.')
+        });
     }
 }
 
@@ -2330,19 +2347,35 @@ function handleKycFormSubmit(e) {
     const fullName = document.getElementById('kycNameInput').value.trim();
 
     if (!isNikValid || nik.length !== 16) {
-        alert('Harap periksa kembali NIK 16 digit Anda.');
+        showKycInteractiveModal({
+            type: 'warning',
+            title: 'Periksa Kembali NIK',
+            message: 'Harap periksa kembali 16 digit NIK Anda. Pastikan format NIK sudah valid dan terisi lengkap.'
+        });
         return;
     }
     if (!fullName || fullName.length < 3) {
-        alert('Harap masukkan Nama Lengkap sesuai KTP.');
+        showKycInteractiveModal({
+            type: 'warning',
+            title: 'Nama Lengkap Diperlukan',
+            message: 'Harap masukkan Nama Lengkap sesuai yang tertera pada e-KTP fisik Anda.'
+        });
         return;
     }
     if (!capturedKtpBase64) {
-        alert('Foto KTP wajib dipindai / diunggah.');
+        showKycInteractiveModal({
+            type: 'warning',
+            title: 'Foto e-KTP Belum Siap',
+            message: 'Foto fisik e-KTP Anda wajib dipindai melalui kamera atau diunggah terlebih dahulu.'
+        });
         return;
     }
     if (!capturedFaceBase64) {
-        alert('Foto biometrik wajah wajib dipindai / diambil langsung.');
+        showKycInteractiveModal({
+            type: 'warning',
+            title: 'Biometrik Wajah Diperlukan',
+            message: 'Foto biometrik wajah wajib dipindai secara langsung melalui kamera untuk verifikasi keaslian liveness.'
+        });
         return;
     }
 
@@ -2353,7 +2386,11 @@ function handleKycFormSubmit(e) {
         const subdist = document.getElementById('domicileSubdistrictSelect')?.value;
         const addr = document.getElementById('domicileAddressInput')?.value.trim();
         if (!prov || !city || !dist || !subdist || !addr) {
-            alert('Harap lengkapi semua data alamat domisili (Provinsi, Kota/Kab, Kecamatan, Kelurahan, dan Alamat Lengkap).');
+            showKycInteractiveModal({
+                type: 'warning',
+                title: 'Alamat Domisili Belum Lengkap',
+                message: 'Harap lengkapi seluruh data alamat domisili (Provinsi, Kota/Kabupaten, Kecamatan, Kelurahan, dan Alamat Lengkap).'
+            });
             return;
         }
     }
@@ -2406,18 +2443,194 @@ function handleKycFormSubmit(e) {
     .then(r => r.json())
     .then(res => {
         if (res.success) {
-            alert(res.message);
-            window.location.reload();
+            showKycInteractiveModal({
+                type: 'success',
+                title: 'Pengajuan Berhasil Dikirim!',
+                message: res.message || 'Pengajuan verifikasi berhasil dikirim. Admin akan meninjau dalam 1x24 jam.',
+                buttonText: 'Selesai & Muat Ulang',
+                onConfirm: () => window.location.reload()
+            });
         } else {
-            alert(res.message || 'Gagal mengirim pengajuan verifikasi.');
+            showKycInteractiveModal({
+                type: 'error',
+                title: 'Gagal Mengirim Verifikasi',
+                message: res.message || 'Gagal mengirim pengajuan verifikasi. Harap periksa kembali isian Anda.'
+            });
             btn.disabled = false;
             btnText.textContent = 'Kirim Pengajuan Verifikasi';
         }
     })
     .catch(() => {
-        alert('Terjadi kesalahan jaringan saat mengirim data.');
+        showKycInteractiveModal({
+            type: 'error',
+            title: 'Kendala Jaringan',
+            message: 'Terjadi kesalahan jaringan saat mengirim data. Silakan periksa koneksi internet Anda dan coba lagi.'
+        });
         btn.disabled = false;
         btnText.textContent = 'Kirim Pengajuan Verifikasi';
     });
 }
+
+// ── INTERACTIVE MODAL DIALOG CONTROLLER (THEME LIGHT & MOBILE FRIENDLY) ──
+let kycModalCallback = null;
+
+function showKycInteractiveModal(opts = {}) {
+    const overlay = document.getElementById('kycInteractiveModal');
+    const iconContainer = document.getElementById('kycModalIconContainer');
+    const titleEl = document.getElementById('kycModalTitle');
+    const descEl = document.getElementById('kycModalDesc');
+    const confirmBtn = document.getElementById('kycModalConfirmBtn');
+
+    const type = opts.type || 'info';
+    titleEl.textContent = opts.title || 'Pemberitahuan';
+    descEl.textContent = opts.message || '';
+    confirmBtn.textContent = opts.buttonText || 'Oke, Mengerti';
+
+    iconContainer.className = 'kyc-modal-icon-wrap ' + type;
+    if (type === 'success') {
+        iconContainer.innerHTML = '<svg width="34" height="34" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+    } else if (type === 'warning') {
+        iconContainer.innerHTML = '<svg width="34" height="34" fill="none" stroke="#d97706" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+    } else {
+        iconContainer.innerHTML = '<svg width="34" height="34" fill="none" stroke="#dc2626" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+    }
+
+    kycModalCallback = opts.onConfirm || null;
+    overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeKycModal() {
+    const overlay = document.getElementById('kycInteractiveModal');
+    overlay.style.display = 'none';
+    document.body.style.overflow = '';
+    if (typeof kycModalCallback === 'function') {
+        const cb = kycModalCallback;
+        kycModalCallback = null;
+        cb();
+    }
+}
+
+function handleKycModalBackdrop(e) {
+    if (e.target.id === 'kycInteractiveModal') {
+        closeKycModal();
+    }
+}
 </script>
+
+<!-- MODAL DIALOG INTERAKTIF & MOBILE-FRIENDLY TEMA LIGHT BUYLE -->
+<div id="kycInteractiveModal" class="kyc-interactive-overlay" style="display:none;" onclick="handleKycModalBackdrop(event)">
+    <div class="kyc-interactive-card" onclick="event.stopPropagation()">
+        <div id="kycModalIconContainer" class="kyc-modal-icon-wrap success">
+            <svg width="34" height="34" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3 id="kycModalTitle" class="kyc-modal-title">Pengajuan Berhasil Dikirim</h3>
+        <p id="kycModalDesc" class="kyc-modal-desc">Admin akan meninjau verifikasi dalam 1x24 jam.</p>
+        <div class="kyc-modal-btn-wrap">
+            <button type="button" id="kycModalConfirmBtn" class="kyc-modal-btn-primary" onclick="closeKycModal()">
+                Oke, Mengerti
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+.kyc-interactive-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    animation: kycFadeIn 0.2s ease-out;
+}
+@keyframes kycFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes kycPopIn {
+    from { transform: scale(0.92); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+.kyc-interactive-card {
+    background: #ffffff;
+    border-radius: 24px;
+    max-width: 440px;
+    width: 100%;
+    padding: 2.25rem 2rem 1.85rem;
+    text-align: center;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    animation: kycPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    border: 1.5px solid #f1f5f9;
+}
+.kyc-modal-icon-wrap {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    margin: 0 auto 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+.kyc-modal-icon-wrap.success {
+    background: #f0fdf4;
+    border: 3px solid #bbf7d0;
+    color: #16a34a;
+}
+.kyc-modal-icon-wrap.warning {
+    background: #fffbeb;
+    border: 3px solid #fef3c7;
+    color: #d97706;
+}
+.kyc-modal-icon-wrap.error {
+    background: #fef2f2;
+    border: 3px solid #fecaca;
+    color: #dc2626;
+}
+.kyc-modal-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 0.5rem;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+}
+.kyc-modal-desc {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0 0 1.5rem;
+    line-height: 1.55;
+}
+.kyc-modal-btn-wrap {
+    display: flex;
+    gap: 0.75rem;
+}
+.kyc-modal-btn-primary {
+    flex: 1;
+    background: #1eb349;
+    color: #ffffff;
+    border: none;
+    padding: 0.875rem 1.25rem;
+    border-radius: 14px;
+    font-size: 0.9375rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(30, 179, 73, 0.3);
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+.kyc-modal-btn-primary:hover {
+    background: #16a34a;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(30, 179, 73, 0.4);
+}
+.kyc-modal-btn-primary:active {
+    transform: translateY(1px);
+}
+</style>

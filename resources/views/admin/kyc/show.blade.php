@@ -124,44 +124,103 @@
 
         <!-- Right Column: Extracted NIK Data & User Info -->
         <div class="info-column">
-            <!-- Creator Account Summary -->
+            <!-- 1. Profil Creator Buyle -->
             <div class="section-card">
                 <div class="card-header">
                     <div class="card-title">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        <span>Informasi Akun Creator</span>
+                        <span>Profil Creator Buyle</span>
                     </div>
+                    @if($kyc->user && $kyc->user->creatorProfile && $kyc->user->creatorProfile->is_verified)
+                        <span class="badge-subtle" style="background:#dcfce7; color:#166534; font-weight:700;">Toko Terverifikasi</span>
+                    @else
+                        <span class="badge-subtle" style="background:#f1f5f9; color:#475569; font-weight:700;">Creator Buyle</span>
+                    @endif
                 </div>
                 <div class="card-body">
+                    @php
+                        $user = $kyc->user;
+                        $profile = $user?->creatorProfile;
+                        $storeName = $profile->store_name ?? ($user->name ?? 'Creator Buyle');
+                        $storeSlug = $profile->store_slug ?? ($user->username ?? '');
+                        $avatarUrl = $user?->avatar ? (str_starts_with($user->avatar, 'http') ? $user->avatar : asset('storage/' . $user->avatar)) : null;
+                    @endphp
+
+                    <div style="display:flex; align-items:center; gap:0.85rem; padding-bottom:1rem; border-bottom:1px solid #f1f5f9; margin-bottom:1rem;">
+                        <div style="width:50px; height:50px; border-radius:50%; background:#e0e7ff; color:#4338ca; display:flex; align-items:center; justify-content:center; font-size:1.25rem; font-weight:800; overflow:hidden; flex-shrink:0; border:2px solid #e2e8f0;">
+                            @if($avatarUrl)
+                                <img src="{{ $avatarUrl }}" alt="{{ $storeName }}" style="width:100%; height:100%; object-fit:cover;">
+                            @else
+                                {{ strtoupper(substr($storeName, 0, 1)) }}
+                            @endif
+                        </div>
+                        <div style="flex:1; min-width:0;">
+                            <div style="font-size:1rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                {{ $storeName }}
+                            </div>
+                            <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">
+                                @if($user && $user->username)
+                                    <span>{{ '@' . $user->username }}</span> &bull; 
+                                @endif
+                                <span>{{ $user->email ?? '-' }}</span>
+                            </div>
+                            @if($storeSlug)
+                                <a href="{{ url('@' . $storeSlug) }}" target="_blank" style="font-size:0.75rem; color:#1eb349; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:0.25rem; margin-top:4px;">
+                                    <span>Kunjungi Toko Creator &rsaquo;</span>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+
                     <div class="info-list">
                         <div class="info-row">
                             <span class="info-key">Nama Akun</span>
-                            <span class="info-val font-semibold">{{ $kyc->user->name ?? '-' }}</span>
+                            <span class="info-val font-semibold">{{ $user->name ?? '-' }}</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-key">Email</span>
-                            <span class="info-val">{{ $kyc->user->email ?? '-' }}</span>
+                            <span class="info-key">No. WhatsApp</span>
+                            <span class="info-val">
+                                @if($user && $user->phone)
+                                    @php
+                                        $cleanPhone = preg_replace('/[^0-9]/', '', $user->phone);
+                                        if (str_starts_with($cleanPhone, '0')) $cleanPhone = '62' . substr($cleanPhone, 1);
+                                    @endphp
+                                    <a href="https://wa.me/{{ $cleanPhone }}" target="_blank" style="color:#16a34a; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:0.25rem;">
+                                        {{ $user->phone }} &rarr;
+                                    </a>
+                                @else
+                                    -
+                                @endif
+                            </span>
                         </div>
                         <div class="info-row">
-                            <span class="info-key">No. WhatsApp / HP</span>
-                            <span class="info-val">{{ $kyc->user->phone ?? '-' }}</span>
+                            <span class="info-key">Total Produk Aktif</span>
+                            <span class="info-val font-semibold">{{ $user?->products?->count() ?? 0 }} Produk</span>
                         </div>
                         <div class="info-row">
                             <span class="info-key">Terdaftar Sejak</span>
-                            <span class="info-val">{{ $kyc->user->created_at ? $kyc->user->created_at->format('d M Y') : '-' }}</span>
+                            <span class="info-val">{{ $user?->created_at ? $user->created_at->format('d M Y') : '-' }}</span>
                         </div>
                     </div>
+
+                    @if($user)
+                    <div style="margin-top:1rem; pt:0.5rem;">
+                        <a href="{{ route('admin.creator-resources.show', $user->id) }}" target="_blank" style="display:block; text-align:center; background:#f8fafc; border:1px solid #e2e8f0; color:#334155; font-size:0.8125rem; font-weight:700; padding:0.6rem; border-radius:10px; text-decoration:none; transition:all 0.2s ease;">
+                            Buka Detail Lengkap di Creator Buyle &rarr;
+                        </a>
+                    </div>
+                    @endif
                 </div>
             </div>
 
-            <!-- NIK Intelligence & Breakdown -->
-            <div class="section-card">
+            <!-- 2. GABUNGAN 1 CARD: Identitas & Alamat e-KTP (Ringkas & Terpadu) -->
+            <div class="section-card" style="margin-top: 1.25rem;">
                 <div class="card-header">
                     <div class="card-title">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="12" y2="16"/></svg>
-                        <span>Data Hasil Validasi NIK KTP</span>
+                        <span>Data Identitas & Alamat e-KTP</span>
                     </div>
-                    <span class="badge-subtle">Dekode Algoritmik</span>
+                    <span class="badge-subtle">Dekode Algoritmik & AI</span>
                 </div>
                 <div class="card-body">
                     <div class="nik-banner">
@@ -171,6 +230,7 @@
 
                     @php
                         $parsed = $kyc->nik_parsed_data ?? [];
+                        $genderText = (($kyc->gender ?? ($parsed['gender'] ?? '')) === 'L') ? 'Laki-laki' : ((($kyc->gender ?? ($parsed['gender'] ?? '')) === 'P') ? 'Perempuan' : '-');
                     @endphp
 
                     <div class="info-list">
@@ -179,78 +239,40 @@
                             <span class="info-val font-semibold">{{ $kyc->full_name ?? '-' }}</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-key">Provinsi Terdaftar</span>
-                            <span class="info-val">{{ $kyc->province ?? ($parsed['province'] ?? '-') }}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-key">Tanggal Lahir</span>
-                            <span class="info-val">{{ $kyc->dob ? $kyc->dob->format('d F Y') : ($parsed['dob'] ?? '-') }}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-key">Jenis Kelamin</span>
+                            <span class="info-key">Tgl Lahir / Kelamin</span>
                             <span class="info-val">
-                                @if(($kyc->gender ?? ($parsed['gender'] ?? '')) === 'L')
-                                    Laki-laki
-                                @elseif(($kyc->gender ?? ($parsed['gender'] ?? '')) === 'P')
-                                    Perempuan
-                                @else
-                                    -
-                                @endif
+                                {{ $kyc->dob ? $kyc->dob->format('d F Y') : ($parsed['dob'] ?? '-') }} ({{ $genderText }})
                             </span>
                         </div>
-                        <div class="info-row">
-                            <span class="info-key">Waktu Pengajuan</span>
-                            <span class="info-val">{{ $kyc->submitted_at ? $kyc->submitted_at->format('d M Y H:i:s') : '-' }} WIB</span>
-                        </div>
-                        @if($kyc->reviewed_at)
-                        <div class="info-row">
-                            <span class="info-key">Waktu Peninjauan</span>
-                            <span class="info-val">{{ $kyc->reviewed_at->format('d M Y H:i:s') }} WIB</span>
-                        </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            <!-- Alamat e-KTP -->
-            <div class="section-card" style="margin-top: 1.25rem;">
-                <div class="card-header">
-                    <div class="card-title">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                        <span>Alamat Tertera Pada e-KTP</span>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="info-list">
                         <div class="info-row">
                             <span class="info-key">Alamat / Jalan</span>
                             <span class="info-val font-semibold">{{ $kyc->ktp_address ?? '-' }}</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-key">RT / RW</span>
-                            <span class="info-val">{{ $kyc->ktp_rt_rw ?? '-' }}</span>
+                            <span class="info-key">RT / RW & Kelurahan</span>
+                            <span class="info-val">
+                                RT/RW: {{ $kyc->ktp_rt_rw ?? '-' }} &bull; Kel: {{ $kyc->ktp_subdistrict ?? '-' }}
+                            </span>
                         </div>
                         <div class="info-row">
-                            <span class="info-key">Kelurahan / Desa</span>
-                            <span class="info-val">{{ $kyc->ktp_subdistrict ?? '-' }}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-key">Kecamatan</span>
-                            <span class="info-val">{{ $kyc->ktp_district ?? '-' }}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-key">Kota / Kabupaten</span>
-                            <span class="info-val">{{ $kyc->city ?? '-' }}</span>
+                            <span class="info-key">Kecamatan & Kota</span>
+                            <span class="info-val">
+                                Kec. {{ $kyc->ktp_district ?? '-' }}, {{ $kyc->city ?? '-' }}
+                            </span>
                         </div>
                         <div class="info-row">
                             <span class="info-key">Provinsi</span>
-                            <span class="info-val">{{ $kyc->province ?? '-' }}</span>
+                            <span class="info-val">{{ $kyc->province ?? ($parsed['province'] ?? '-') }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-key">Waktu Pengajuan</span>
+                            <span class="info-val">{{ $kyc->submitted_at ? $kyc->submitted_at->format('d M Y H:i:s') : '-' }} WIB</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Alamat Domisili -->
+            <!-- 3. Alamat Domisili (Tempat Tinggal) -->
             <div class="section-card" style="margin-top: 1.25rem;">
                 <div class="card-header">
                     <div class="card-title">
@@ -258,50 +280,110 @@
                         <span>Alamat Domisili (Tempat Tinggal)</span>
                     </div>
                     @if($kyc->is_domicile_same)
-                        <span class="badge-subtle" style="background:#dcfce7; color:#166534; font-weight:700;">Sesuai KTP</span>
+                        <span class="badge-subtle" style="background:#dcfce7; color:#166534; font-weight:700;">Sesuai e-KTP</span>
                     @else
                         <span class="badge-subtle" style="background:#fef3c7; color:#92400e; font-weight:700;">Domisili Berbeda</span>
                     @endif
                 </div>
                 <div class="card-body">
                     @if($kyc->is_domicile_same)
-                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:0.85rem 1rem; color:#166534; font-size:0.8125rem;">
-                            <strong>Alamat domisili sama persis dengan e-KTP.</strong>
+                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:0.85rem 1rem; color:#166534; font-size:0.8125rem; display:flex; align-items:center; gap:0.5rem;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Alamat domisili tinggal saat ini <strong>sama persis</strong> dengan data e-KTP.</span>
                         </div>
                     @else
                         <div class="info-list">
                             <div class="info-row">
-                                <span class="info-key">Alamat Lengkap</span>
+                                <span class="info-key">Alamat Domisili</span>
                                 <span class="info-val font-semibold">{{ $kyc->domicile_address ?? '-' }}</span>
                             </div>
                             <div class="info-row">
-                                <span class="info-key">RT / RW</span>
-                                <span class="info-val">{{ $kyc->domicile_rt_rw ?? '-' }}</span>
+                                <span class="info-key">RT/RW & Kelurahan</span>
+                                <span class="info-val">RT/RW: {{ $kyc->domicile_rt_rw ?? '-' }} &bull; Kel: {{ $kyc->domicile_subdistrict ?? '-' }}</span>
                             </div>
                             <div class="info-row">
-                                <span class="info-key">Kelurahan / Desa</span>
-                                <span class="info-val">{{ $kyc->domicile_subdistrict ?? '-' }}</span>
+                                <span class="info-key">Kecamatan & Kota</span>
+                                <span class="info-val">Kec. {{ $kyc->domicile_district ?? '-' }}, {{ $kyc->domicile_city ?? '-' }}</span>
                             </div>
                             <div class="info-row">
-                                <span class="info-key">Kecamatan</span>
-                                <span class="info-val">{{ $kyc->domicile_district ?? '-' }}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-key">Kabupaten / Kota</span>
-                                <span class="info-val">{{ $kyc->domicile_city ?? '-' }}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-key">Provinsi</span>
-                                <span class="info-val">{{ $kyc->domicile_province ?? '-' }}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-key">Kode Pos</span>
-                                <span class="info-val">{{ $kyc->domicile_postal_code ?? '-' }}</span>
+                                <span class="info-key">Provinsi & Kode Pos</span>
+                                <span class="info-val">{{ $kyc->domicile_province ?? '-' }} ({{ $kyc->domicile_postal_code ?? '-' }})</span>
                             </div>
                         </div>
                     @endif
                 </div>
             </div>
+
+            <!-- 4. Rekening Bank & Verifikasi Pembayaran -->
+            <div class="section-card" style="margin-top: 1.25rem;">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                        <span>Rekening Bank Pencairan Dana</span>
+                    </div>
+                    @if($bankHolder && $kyc->full_name && strcasecmp(trim($bankHolder), trim($kyc->full_name)) === 0)
+                        <span class="badge-subtle" style="background:#dcfce7; color:#166534; font-weight:700;">Nama Sesuai KTP</span>
+                    @elseif($bankHolder)
+                        <span class="badge-subtle" style="background:#fef3c7; color:#92400e; font-weight:700;">Nama Rekening Terdaftar</span>
+                    @else
+                        <span class="badge-subtle" style="background:#f1f5f9; color:#64748b;">Belum Diisi</span>
+                    @endif
+                </div>
+                <div class="card-body">
+                    <div class="info-list">
+                        <div class="info-row">
+                            <span class="info-key">Nama Bank</span>
+                            <span class="info-val font-semibold">{{ $bankName ?? '-' }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-key">Nomor Rekening</span>
+                            <span class="info-val font-mono" style="font-size:0.95rem; font-weight:700; color:#0f172a;">
+                                {{ $bankAccount ?? '-' }}
+                            </span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-key">Atas Nama Rekening</span>
+                            <span class="info-val font-semibold">{{ $bankHolder ?? '-' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Riwayat Transaksi & Pencairan Dana -->
+            <div class="section-card" style="margin-top: 1.25rem;">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        <span>Riwayat Finansial & Pencairan</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
+                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:0.75rem;">
+                            <div style="font-size:0.7rem; color:#166534; font-weight:700;">TOTAL OMSET PENJUALAN</div>
+                            <div style="font-size:1.05rem; font-weight:800; color:#15803d; margin-top:2px;">
+                                Rp {{ number_format($totalRevenue, 0, ',', '.') }}
+                            </div>
+                            <div style="font-size:0.7rem; color:#166534; margin-top:2px;">{{ $totalOrdersCount }} transaksi selesai</div>
+                        </div>
+
+                        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.75rem;">
+                            <div style="font-size:0.7rem; color:#475569; font-weight:700;">SALDO DICAIRKAN</div>
+                            <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-top:2px;">
+                                Rp {{ number_format($totalWithdrawn, 0, ',', '.') }}
+                            </div>
+                            <div style="font-size:0.7rem; color:#d97706; margin-top:2px;">
+                                @if($pendingPayout > 0)
+                                    Rp {{ number_format($pendingPayout, 0, ',', '.') }} pending
+                                @else
+                                    0 pending
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
     </div>
 </div>

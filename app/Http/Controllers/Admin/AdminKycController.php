@@ -14,7 +14,7 @@ class AdminKycController extends Controller
         $status = $request->input('status', 'pending');
         $search = $request->input('search', '');
 
-        $query = CreatorKyc::with('user')
+        $query = CreatorKyc::with(['user.creatorProfile'])
             ->when($status !== 'all', fn($q) => $q->where('status', $status))
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($sub) use ($search) {
@@ -42,11 +42,66 @@ class AdminKycController extends Controller
 
     public function show(CreatorKyc $kyc)
     {
-        $kyc->load('user');
+        $kyc->load(['user.creatorProfile', 'user.products']);
+        $user = $kyc->user;
+
         $ktpUrl    = $kyc->ktp_photo_path    ? route('admin.kyc.photo', ['kyc' => $kyc->id, 'type' => 'ktp'])    : null;
         $selfieUrl = $kyc->selfie_photo_path ? route('admin.kyc.photo', ['kyc' => $kyc->id, 'type' => 'selfie']) : null;
 
-        return view('admin.kyc.show', compact('kyc', 'ktpUrl', 'selfieUrl'));
+        // Finansial & Transaksi
+        $totalRevenue = 0;
+        $totalOrdersCount = 0;
+        $recentOrders = collect();
+        $payouts = collect();
+        $totalWithdrawn = 0;
+        $pendingPayout = 0;
+
+        if ($user) {
+            try {
+                $totalRevenue = \App\Models\OrderItem::whereHas('product', function ($q) use ($user) {
+                    $q->where('seller_id', $user->id);
+                })->whereHas('order', function ($q) {
+                    $q->whereNotIn('status', ['pending', 'cancelled', 'refunded', 'failed', 'expired']);
+                })->sum('subtotal');
+
+                $totalOrdersCount = \App\Models\OrderItem::whereHas('product', function ($q) use ($user) {
+                    $q->where('seller_id', $user->id);
+                })->whereHas('order', function ($q) {
+                    $q->whereNotIn('status', ['pending', 'cancelled', 'refunded', 'failed', 'expired']);
+                })->count();
+
+                $recentOrders = \App\Models\OrderItem::with(['order', 'product'])
+                    ->whereHas('product', function ($q) use ($user) {
+                        $q->where('seller_id', $user->id);
+                    })->latest()->take(5)->get();
+
+                $payouts = \App\Models\PayoutRequest::where('seller_id', $user->id)->latest()->get();
+                $totalWithdrawn = $payouts->whereIn('status', ['approved', 'processed'])->sum('net_amount');
+                $pendingPayout  = $payouts->where('status', 'pending')->sum('amount');
+            } catch (\Exception $e) {
+                // Ignore query failures gracefully
+            }
+        }
+
+        // Rekening Bank
+        $bankName    = $user->bank_name ?? ($payouts->first()?->bank_name ?? null);
+        $bankAccount = $user->bank_account_number ?? ($payouts->first()?->bank_account_number ?? null);
+        $bankHolder  = $user->bank_account_name ?? ($payouts->first()?->bank_account_name ?? null);
+
+        return view('admin.kyc.show', compact(
+            'kyc', 
+            'ktpUrl', 
+            'selfieUrl', 
+            'totalRevenue', 
+            'totalOrdersCount', 
+            'recentOrders', 
+            'payouts', 
+            'totalWithdrawn', 
+            'pendingPayout',
+            'bankName',
+            'bankAccount',
+            'bankHolder'
+        ));
     }
 
     public function photo(CreatorKyc $kyc, string $type)
@@ -71,7 +126,15 @@ class AdminKycController extends Controller
             'rejection_reason' => null,
         ]);
 
-        return response()->json(['success' => true, 'message' => 'Creator berhasil diverifikasi.']);
+        // Sinkronisasi status terverifikasi di Profil Creator
+        if ($kyc->user && $kyc->user->creatorProfile) {
+            $kyc->user->creatorProfile->update(['is_verified' => true]);
+        }
+
+        return response()->json([
+            'success' => true, 
+            'message' => 'e-KYC Creator berhasil disetujui! Status profil creator telah disinkronkan menjadi Terverifikasi.'
+        ]);
     }
 
     public function reject(Request $request, CreatorKyc $kyc)

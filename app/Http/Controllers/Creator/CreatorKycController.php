@@ -58,11 +58,22 @@ class CreatorKycController extends Controller
                 'message'    => 'Data e-KTP berhasil diekstrak dengan AI!',
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::warning('KYC AI Extraction failed: ' . $e->getMessage());
+            $msg = $e->getMessage();
+            $isLimit = str_contains(strtolower($msg), 'limit') || 
+                       str_contains(strtolower($msg), 'quota') || 
+                       str_contains(strtolower($msg), '429') ||
+                       str_contains(strtolower($msg), 'rate') ||
+                       str_contains(strtolower($msg), 'credits');
+
+            \Illuminate\Support\Facades\Log::warning('KYC AI Extraction failed: ' . $msg);
+
             return response()->json([
-                'success' => false,
-                'message' => 'Gagal membaca e-KTP otomatis: ' . $e->getMessage() . '. Silakan periksa kelengkapan formulir.'
-            ], 422);
+                'success'        => false,
+                'quota_exceeded' => $isLimit,
+                'message'        => $isLimit
+                    ? 'Batas kuota layanan AI sementara sedang penuh. Sistem beralih ke Mode Verifikasi Mandiri yang aman: Cukup masukkan 16 digit NIK Anda, sistem lokal akan otomatis mendekode data wilayah KTP.'
+                    : 'AI belum dapat membaca data e-KTP secara otomatis (' . substr($msg, 0, 120) . '). Anda dapat melengkapi formulir secara langsung.'
+            ], 200);
         }
     }
 

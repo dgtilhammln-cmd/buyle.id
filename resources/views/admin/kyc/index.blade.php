@@ -83,8 +83,13 @@
                                         {{ strtoupper(substr($item->user->name ?? 'C', 0, 1)) }}
                                     </div>
                                     <div class="creator-info">
-                                        <div class="creator-name">{{ $item->user->name ?? 'Pengguna' }}</div>
-                                        <div class="creator-email">{{ $item->user->email ?? '-' }}</div>
+                                        <div class="creator-name">{{ $item->user->creatorProfile->store_name ?? ($item->user->name ?? 'Pengguna') }}</div>
+                                        <div class="creator-email">
+                                            @if($item->user && $item->user->username)
+                                                <span style="color:#16a34a; font-weight:700;">{{ '@' . $item->user->username }}</span> &bull; 
+                                            @endif
+                                            {{ $item->user->email ?? '-' }}
+                                        </div>
                                     </div>
                                 </div>
                             </td>

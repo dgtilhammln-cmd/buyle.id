@@ -484,20 +484,79 @@ PROMPT;
     }
 
     /**
-     * Extract Indonesian e-KTP data using AI Vision
+     * Extract Indonesian e-KTP data using AI Vision with Multi-Tier Auto Failover
      */
     public function extractKtpData(string $imagePathOrBase64): array
     {
-        $provider = $this->getProvider();
-        $apiKey   = $this->getApiKey();
-        $model    = $this->getModel();
+        $primaryProvider = $this->getProvider();
+        $primaryKey      = $this->getApiKey();
+        $primaryModel    = $this->getModel();
 
-        if (empty($apiKey)) {
+        // Build list of providers to try in order (Auto-failover when rate-limited/out of quota)
+        $providers = [];
+
+        if (!empty($primaryKey)) {
+            $providers[] = [
+                'provider' => $primaryProvider,
+                'key'      => $primaryKey,
+                'model'    => $primaryModel,
+                'label'    => strtoupper($primaryProvider) . " ({$primaryModel})",
+            ];
+        }
+
+        // Tier 2 Fallback: Groq Cloud if primary was not Groq
+        $groqKey = env('GROQ_API_KEY', '');
+        if ($primaryProvider !== 'groq' && !empty($groqKey)) {
+            $providers[] = [
+                'provider' => 'groq',
+                'key'      => $groqKey,
+                'model'    => self::DEFAULT_GROQ_MODEL,
+                'label'    => 'GROQ Fallback (' . self::DEFAULT_GROQ_MODEL . ')',
+            ];
+        }
+
+        // Tier 3 Fallback: OpenRouter if primary was not OpenRouter
+        $openRouterKey = Setting::get('openrouter_api_key', '');
+        if ($primaryProvider !== 'openrouter' && !empty($openRouterKey)) {
+            $providers[] = [
+                'provider' => 'openrouter',
+                'key'      => $openRouterKey,
+                'model'    => 'google/gemini-2.5-flash',
+                'label'    => 'OpenRouter Fallback (google/gemini-2.5-flash)',
+            ];
+        }
+
+        if (empty($providers)) {
             throw new \Exception('API Key AI belum dikonfigurasi di Pengaturan AI admin.');
         }
 
         $base64Image = $this->prepareBase64Image($imagePathOrBase64);
+        $lastException = null;
 
+        foreach ($providers as $config) {
+            try {
+                Log::info("Attempting e-KTP AI Extraction with: {$config['label']}");
+                return $this->executeKtpExtraction(
+                    $config['provider'],
+                    $config['key'],
+                    $config['model'],
+                    $base64Image
+                );
+            } catch (\Exception $e) {
+                $err = $e->getMessage();
+                Log::warning("AI Provider [{$config['label']}] failed/limited: {$err}. Checking next provider...");
+                $lastException = $e;
+            }
+        }
+
+        throw $lastException ?? new \Exception('Seluruh provider AI sedang mencapai batas kuota.');
+    }
+
+    /**
+     * Execute vision prompt against a specific provider
+     */
+    protected function executeKtpExtraction(string $provider, string $apiKey, string $model, string $base64Image): array
+    {
         $prompt = <<<PROMPT
 Anda adalah asisten AI OCR e-KTP Republik Indonesia (Kartu Tanda Penduduk) profesional dengan akurasi dan ketelitian tingkat tinggi.
 Tugas Anda adalah membaca dan mengekstrak data dari gambar e-KTP berikut.
@@ -533,87 +592,81 @@ PENTING:
 - Jangan berikan kata pengantar atau catatan penutup apapun di luar JSON.
 PROMPT;
 
-        try {
-            $rawText = '';
-            if ($provider === 'gemini') {
-                $endpoint = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}";
-                $response = Http::timeout(45)->post($endpoint, [
-                    'contents' => [
-                        [
-                            'parts' => [
-                                ['text' => $prompt],
-                                [
-                                    'inline_data' => [
-                                        'mime_type' => 'image/jpeg',
-                                        'data' => $base64Image
-                                    ]
+        $rawText = '';
+        if ($provider === 'gemini') {
+            $endpoint = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}";
+            $response = Http::timeout(40)->post($endpoint, [
+                'contents' => [
+                    [
+                        'parts' => [
+                            ['text' => $prompt],
+                            [
+                                'inline_data' => [
+                                    'mime_type' => 'image/jpeg',
+                                    'data' => $base64Image
                                 ]
                             ]
                         ]
-                    ],
-                    'generationConfig' => [
-                        'response_mime_type' => 'application/json',
-                        'temperature' => 0.1,
                     ]
-                ]);
-
-                if (!$response->successful()) {
-                    $errorMsg = $response->json('error.message') ?? $response->body();
-                    throw new \Exception("Gagal membaca e-KTP (Gemini): " . substr($errorMsg, 0, 200));
-                }
-                $rawText = $response->json('candidates.0.content.parts.0.text') ?? '';
-            } else {
-                $baseUrl = match ($provider) {
-                    'groq' => 'https://api.groq.com/openai/v1',
-                    'openrouter' => 'https://openrouter.ai/api/v1',
-                    default => Setting::get('ai_base_url', 'https://api.groq.com/openai/v1'),
-                };
-
-                $headers = [
-                    'Authorization' => "Bearer {$apiKey}",
-                    'Content-Type'  => 'application/json',
-                ];
-
-                if ($provider === 'openrouter') {
-                    $headers['HTTP-Referer'] = config('app.url', 'https://buyle.id');
-                    $headers['X-Title'] = 'Buyle.id Marketplace';
-                }
-
-                $payload = [
-                    'model' => $model,
-                    'messages' => [
-                        [
-                            'role' => 'user',
-                            'content' => [
-                                ['type' => 'text', 'text' => $prompt],
-                                ['type' => 'image_url', 'image_url' => ['url' => "data:image/jpeg;base64,{$base64Image}"]]
-                            ]
-                        ]
-                    ],
+                ],
+                'generationConfig' => [
+                    'response_mime_type' => 'application/json',
                     'temperature' => 0.1,
-                    'max_tokens' => 1000
-                ];
+                ]
+            ]);
 
-                if ($provider === 'groq' || $provider === 'openai') {
-                    $payload['response_format'] = ['type' => 'json_object'];
-                }
+            if (!$response->successful()) {
+                $errorMsg = $response->json('error.message') ?? $response->body();
+                throw new \Exception("Gemini Vision Error (" . $response->status() . "): " . substr($errorMsg, 0, 200));
+            }
+            $rawText = $response->json('candidates.0.content.parts.0.text') ?? '';
+        } else {
+            $baseUrl = match ($provider) {
+                'groq' => 'https://api.groq.com/openai/v1',
+                'openrouter' => 'https://openrouter.ai/api/v1',
+                default => Setting::get('ai_base_url', 'https://api.groq.com/openai/v1'),
+            };
 
-                $response = Http::withHeaders($headers)->timeout(45)->post("{$baseUrl}/chat/completions", $payload);
+            $headers = [
+                'Authorization' => "Bearer {$apiKey}",
+                'Content-Type'  => 'application/json',
+            ];
 
-                if (!$response->successful()) {
-                    $errorText = $response->json('error.message') ?? $response->body();
-                    throw new \Exception("Gagal membaca e-KTP ({$provider}): " . substr($errorText, 0, 200));
-                }
-
-                $rawText = $response->json('choices.0.message.content') ?? '';
+            if ($provider === 'openrouter') {
+                $headers['HTTP-Referer'] = config('app.url', 'https://buyle.id');
+                $headers['X-Title'] = 'Buyle.id Marketplace';
             }
 
-            return $this->parseKtpJsonResponse($rawText);
+            $payload = [
+                'model' => $model,
+                'messages' => [
+                    [
+                        'role' => 'user',
+                        'content' => [
+                            ['type' => 'text', 'text' => $prompt],
+                            ['type' => 'image_url', 'image_url' => ['url' => "data:image/jpeg;base64,{$base64Image}"]]
+                        ]
+                    ]
+                ],
+                'temperature' => 0.1,
+                'max_tokens' => 1000
+            ];
 
-        } catch (\Exception $e) {
-            Log::error("AI KTP Extraction Error: " . $e->getMessage());
-            throw $e;
+            if ($provider === 'groq' || $provider === 'openai') {
+                $payload['response_format'] = ['type' => 'json_object'];
+            }
+
+            $response = Http::withHeaders($headers)->timeout(40)->post("{$baseUrl}/chat/completions", $payload);
+
+            if (!$response->successful()) {
+                $errorText = $response->json('error.message') ?? $response->body();
+                throw new \Exception("{$provider} Vision Error (" . $response->status() . "): " . substr($errorText, 0, 200));
+            }
+
+            $rawText = $response->json('choices.0.message.content') ?? '';
         }
+
+        return $this->parseKtpJsonResponse($rawText);
     }
 
     /**
