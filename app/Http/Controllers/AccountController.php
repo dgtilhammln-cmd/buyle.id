@@ -180,27 +180,57 @@ class AccountController extends Controller
         return back()->with('success', 'Pesanan telah dikonfirmasi selesai. Terima kasih telah berbelanja!');
     }
 
-    // ── Download Ticket E-Receipt PDF ──
+    // ── Download Ticket E-Receipt PDF (Protected by auth) ──
     public function downloadTicketReceipt(\App\Models\Order $order)
     {
         if ($order->user_id !== Auth::id()) {
             abort(403);
         }
 
+        return $this->generateTicketReceiptPdfResponse($order);
+    }
+
+    // ── Download Ticket E-Receipt PDF Public (Signed URL / Email Token / Owner) ──
+    public function downloadTicketReceiptPublic(Request $request, \App\Models\Order $order)
+    {
+        $expectedToken = hash_hmac('sha256', $order->id . '|' . $order->order_number . '|' . ($order->created_at?->timestamp ?? ''), config('app.key'));
+        $isValidToken = hash_equals($expectedToken, (string) $request->query('token'));
+        $hasValidSignature = $request->hasValidSignature();
+        $isOwner = Auth::check() && (Auth::id() === $order->user_id);
+
+        if (!$hasValidSignature && !$isValidToken && !$isOwner) {
+            abort(403, 'Akses tidak sah atau tautan unduh tiket sudah kedaluwarsa.');
+        }
+
+        return $this->generateTicketReceiptPdfResponse($order);
+    }
+
+    /**
+     * Generate & stream/download Ticket E-Receipt PDF
+     */
+    private function generateTicketReceiptPdfResponse(\App\Models\Order $order)
+    {
         $order->load(['items.product', 'payment', 'ticketPasses.product', 'user']);
 
-        // Make sure ticket passes are generated
+        // Pastikan tiket pass sudah di-generate untuk order ini
         try {
             \App\Models\TicketPass::generateForOrder($order);
             $order->load('ticketPasses.product');
         } catch (\Throwable $e) {
-            // Continue even if generation fails
+            // Lanjutkan jika sudah ada
         }
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('account.ticket-receipt-pdf', compact('order'));
         $pdf->setPaper('A4', 'portrait');
+        $pdf->setOptions([
+            'isRemoteEnabled'          => true,
+            'isHtml5ParserEnabled'     => true,
+            'isFontSubsettingEnabled'  => true,
+            'defaultFont'              => 'sans-serif',
+        ]);
 
-        $filename = 'eticket-buyle-' . $order->order_number . '.pdf';
+        $safeOrderNumber = preg_replace('/[^A-Za-z0-9\-]/', '', $order->order_number);
+        $filename = 'eticket-' . ($safeOrderNumber ?: $order->id) . '.pdf';
 
         return $pdf->download($filename);
     }

@@ -344,7 +344,7 @@
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M12 5v10M8 15l4 4 4-4"/><rect x="3" y="18" width="18" height="3" rx="1"/>
                         </svg>
-                        Unduh E-Receipt
+                        Unduh E-Ticket (PDF)
                     </a>
                 @endif
                 <div class="od-status" style="background-color: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0;">

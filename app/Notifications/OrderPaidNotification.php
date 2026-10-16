@@ -78,7 +78,7 @@ class OrderPaidNotification extends Notification
                 </thead>
                 <tbody>';
 
-        foreach ($this->order->items as Pesanan Berhasil$item) {
+        foreach ($this->order->items as $item) {
             $itemsHtml .= '
                     <tr>
                         <td style="padding: 10px 0; border-top: 1px solid #F1F5F9; font-weight: 600; color: #0F172A;">' . htmlspecialchars($item->product_name) . '</td>
@@ -220,9 +220,18 @@ class OrderPaidNotification extends Notification
         }
 
         $orderShowUrl = route('account.orders.show', $this->order->id);
-        $primaryCtaUrl = !empty($digitalResourceUrl) 
-            ? $digitalResourceUrl 
-            : $orderShowUrl;
+        
+        if ($hasTickets) {
+            $downloadToken = hash_hmac('sha256', $this->order->id . '|' . $this->order->order_number . '|' . ($this->order->created_at?->timestamp ?? ''), config('app.key'));
+            $primaryCtaUrl = \Illuminate\Support\Facades\URL::signedRoute('orders.ticket.download.public', [
+                'order' => $this->order->id,
+                'token' => $downloadToken,
+            ]);
+        } elseif (!empty($digitalResourceUrl)) {
+            $primaryCtaUrl = $digitalResourceUrl;
+        } else {
+            $primaryCtaUrl = $orderShowUrl;
+        }
 
         return (new MailMessage)
             ->subject($subject)

@@ -73,6 +73,9 @@ Route::post('/gate-scanner/{key}/staff-logout', [\App\Http\Controllers\GateStaff
 
 Route::post('/lead/store', [\App\Http\Controllers\LeadController::class, 'store'])->name('lead.store');
 
+// Akses Langsung Unduh E-Ticket PDF (via Email Link / Signed URL / Token)
+Route::get('/tiket/{order}/unduh-pdf', [AccountController::class, 'downloadTicketReceiptPublic'])->name('orders.ticket.download.public');
+
 Route::middleware(['track.pageview'])->group(function () {
     // Legacy redirects for cached locale routes
     Route::get('/en', function () { return redirect('/', 301); });
