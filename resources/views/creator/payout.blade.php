@@ -9,68 +9,108 @@
         gap: 2rem;
         align-items: flex-start;
     }
-
     .bio-sidebar {
-        width: 300px;
+        width: 290px;
         flex-shrink: 0;
         background: #fff;
         border-radius: 20px;
         padding: 1.25rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         border: 1px solid #f0fdf4;
         position: sticky;
         top: 1.5rem;
     }
+    .bio-content { flex: 1; min-width: 0; }
 
-    .bio-content {
-        flex: 1;
-        min-width: 0;
+    /* ── Sidebar balance cards ── */
+    .saldo-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem;
+        margin-bottom: 1.25rem;
     }
+    .saldo-card {
+        border-radius: 14px;
+        padding: 0.9rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    .saldo-card.cleared {
+        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+        border: 1px solid #bbf7d0;
+    }
+    .saldo-card.hold {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+    }
+    .saldo-card-label {
+        font-size: 0.67rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .saldo-card.cleared .saldo-card-label { color: #166534; }
+    .saldo-card.hold .saldo-card-label { color: #92400e; }
+    .saldo-card-value {
+        font-size: 1rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+    }
+    .saldo-card.cleared .saldo-card-value { color: #15803d; }
+    .saldo-card.hold .saldo-card-value { color: #b45309; }
+    .saldo-card-sub {
+        font-size: 0.62rem;
+        font-weight: 500;
+        line-height: 1.3;
+    }
+    .saldo-card.cleared .saldo-card-sub { color: #4ade80; }
+    .saldo-card.hold .saldo-card-sub { color: #d97706; }
 
+    /* ── Tab Sidebar ── */
     .tab-btn {
         width: 100%;
         display: flex;
         align-items: center;
-        gap: 0.8rem;
-        padding: 0.85rem 1rem;
+        gap: 0.75rem;
+        padding: 0.8rem 1rem;
         border: none;
         background: transparent;
         color: #64748b;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.85rem;
+        font-size: 0.83rem;
         font-weight: 600;
         border-radius: 12px;
         cursor: pointer;
         text-align: left;
         transition: all 0.2s;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.2rem;
     }
-
-    .tab-btn:hover {
-        background: #f8fafc;
-        color: #1eb349;
-    }
-
+    .tab-btn:hover { background: #f8fafc; color: #1eb349; }
     .tab-btn.active {
         background: linear-gradient(135deg, #1eb349, #a5cf37);
         color: #fff;
         font-weight: 700;
-        box-shadow: 0 4px 12px rgba(30, 179, 73, 0.2);
+        box-shadow: 0 4px 12px rgba(30,179,73,0.2);
     }
 
+    /* ── Content Cards ── */
     .prof-card {
         background: #fff;
         border-radius: 20px;
         border: 1px solid #e7f0e7;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        margin-bottom: 1.25rem;
         overflow: hidden;
     }
-
     .prof-card-head {
-        padding: 1.25rem 1.5rem;
+        padding: 1.1rem 1.5rem;
         border-bottom: 1px solid #f3f7f3;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         font-weight: 800;
         color: #0f172a;
         display: flex;
@@ -79,23 +119,100 @@
         background: #fafdfb;
     }
 
-    .form-body {
-        padding: 1.5rem;
-    }
-
-    .form-group {
+    /* ── Rekening Tersimpan Card ── */
+    .rekening-saved {
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 1rem 1.1rem;
         display: flex;
-        flex-direction: column;
-        gap: 0.4rem;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+        flex-wrap: wrap;
+    }
+    .rekening-info { display: flex; align-items: center; gap: 0.65rem; }
+    .rekening-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #1eb349, #a5cf37);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .rekening-bank { font-weight: 800; font-size: 0.88rem; color: #0f172a; }
+    .rekening-num  { font-size: 0.8rem; color: #64748b; font-weight: 600; letter-spacing: 0.03em; }
+    .rekening-name { font-size: 0.72rem; color: #94a3b8; font-weight: 500; }
+    .btn-ganti {
+        border: 1.5px solid #e2e8f0;
+        background: #fff;
+        color: #64748b;
+        border-radius: 8px;
+        padding: 0.4rem 0.875rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: 'Montserrat', sans-serif;
+        transition: all 0.15s;
+        white-space: nowrap;
+    }
+    .btn-ganti:hover { border-color: #1eb349; color: #1eb349; }
+
+    /* ── Breakdown Box ── */
+    .breakdown-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 1.1rem 1.25rem;
         margin-bottom: 1.25rem;
     }
-
-    .form-label {
+    .breakdown-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.55rem 0;
+        border-bottom: 1px solid #f1f5f9;
         font-size: 0.82rem;
+    }
+    .breakdown-row:last-child { border-bottom: none; }
+    .breakdown-key { color: #64748b; font-weight: 600; }
+    .breakdown-val { font-weight: 700; color: #0f172a; }
+    .breakdown-val.green { color: #1eb349; font-size: 1rem; }
+    .breakdown-val.red   { color: #ef4444; }
+    .breakdown-val.muted { color: #94a3b8; }
+
+    /* ── Quick Amount Buttons ── */
+    .quick-amounts {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.4rem;
+        margin-bottom: 0.5rem;
+    }
+    .btn-quick {
+        height: 36px;
+        border: 1.5px solid #e2e8f0;
+        background: #f8fafc;
+        border-radius: 8px;
+        font-size: 0.7rem;
         font-weight: 700;
-        color: #334155;
+        color: #475569;
+        cursor: pointer;
+        font-family: 'Montserrat', sans-serif;
+        transition: all 0.15s;
+    }
+    .btn-quick:hover {
+        border-color: #1eb349;
+        color: #1eb349;
+        background: #f0fdf4;
     }
 
+    /* ── Form Elements ── */
+    .form-body { padding: 1.5rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.1rem; }
+    .form-label { font-size: 0.8rem; font-weight: 700; color: #334155; }
     .form-input {
         height: 44px;
         padding: 0 1rem;
@@ -107,18 +224,21 @@
         background: #f8fafc;
         outline: none;
         transition: all 0.2s;
+        width: 100%;
+        box-sizing: border-box;
     }
-
     .form-input:focus {
         border-color: #1eb349;
         background: #fff;
-        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.1);
+        box-shadow: 0 0 0 3px rgba(30,179,73,0.1);
     }
+    .form-hint { font-size: 0.72rem; color: #94a3b8; margin-top: 0.25rem; }
 
+    /* ── Submit Button ── */
     .btn-submit-payout {
-        height: 46px;
+        height: 48px;
         padding: 0 1.5rem;
-        border-radius: 999px;
+        border-radius: 12px;
         background: linear-gradient(135deg, #1eb349, #a5cf37);
         border: none;
         font-family: 'Montserrat', sans-serif;
@@ -126,64 +246,30 @@
         font-weight: 700;
         color: #fff;
         cursor: pointer;
-        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+        box-shadow: 0 4px 14px rgba(30,179,73,0.35);
         transition: all 0.2s;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
         width: 100%;
-        margin-top: 0.5rem;
+        margin-top: 0.75rem;
     }
-
     .btn-submit-payout:hover {
         transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(30, 179, 73, 0.45);
+        box-shadow: 0 6px 20px rgba(30,179,73,0.45);
+    }
+    .btn-submit-payout:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
     }
 
-    .info-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.75rem 0;
-        border-bottom: 1px solid #f1f5f9;
-        font-size: 0.85rem;
-    }
-
-    .info-row:last-child {
-        border-bottom: none;
-    }
-
-    .info-label {
-        color: #64748b;
-        font-weight: 600;
-    }
-
-    .info-val {
-        font-weight: 700;
-        color: #0f172a;
-    }
-
-    .alert-notice {
-        background: #f0fdf4;
-        border: 1px solid #bbf7d0;
-        border-radius: 14px;
-        padding: 1rem 1.25rem;
-        font-size: 0.82rem;
-        color: #15803d;
-        margin-bottom: 1.5rem;
-        line-height: 1.5;
-    }
-
-    /* Premium Custom Select Component */
-    .custom-select-wrapper {
-        position: relative;
-        width: 100%;
-    }
-
-    .custom-select-trigger {
+    /* ── Custom Searchable Dropdown ── */
+    .bank-select-wrap { position: relative; }
+    .bank-select-trigger {
         height: 46px;
-        padding: 0 1.15rem;
+        padding: 0 1.1rem;
         border: 1.5px solid #e2e8f0;
         border-radius: 12px;
         font-family: 'Montserrat', sans-serif;
@@ -191,118 +277,184 @@
         font-weight: 600;
         color: #0f172a;
         background: #f8fafc;
-        outline: none;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 0.5rem;
         transition: all 0.2s;
-        box-sizing: border-box;
         user-select: none;
+        box-sizing: border-box;
     }
-
-    .custom-select-trigger:hover,
-    .custom-select-trigger.active {
+    .bank-select-trigger:hover,
+    .bank-select-trigger.open {
         border-color: #1eb349;
         background: #fff;
-        box-shadow: 0 0 0 3px rgba(30, 179, 73, 0.12);
+        box-shadow: 0 0 0 3px rgba(30,179,73,0.1);
     }
-
-    .custom-select-trigger svg {
-        transition: transform 0.2s;
-        color: #64748b;
+    .bank-select-trigger.open svg.chevron { transform: rotate(180deg); color: #1eb349; }
+    .bank-select-trigger svg.chevron { transition: transform 0.2s; flex-shrink: 0; }
+    .bank-select-display { display: flex; align-items: center; gap: 0.5rem; flex: 1; overflow: hidden; }
+    .bank-select-display .bank-type-badge {
+        font-size: 0.6rem;
+        font-weight: 800;
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
         flex-shrink: 0;
     }
 
-    .custom-select-trigger.active svg {
-        transform: rotate(180deg);
-        color: #1eb349;
-    }
-
-    .custom-select-options {
+    .bank-dropdown {
         display: none;
         position: absolute;
         top: calc(100% + 6px);
-        left: 0;
-        right: 0;
-        background: #ffffff;
+        left: 0; right: 0;
+        background: #fff;
         border: 1.5px solid #e2e8f0;
-        border-radius: 14px;
-        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(30, 179, 73, 0.08);
+        border-radius: 16px;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(30,179,73,0.08);
         z-index: 999;
-        max-height: 240px;
+        overflow: hidden;
+    }
+    .bank-dropdown.open { display: block; animation: dropIn 0.15s ease-out; }
+    @keyframes dropIn {
+        from { opacity: 0; transform: translateY(-6px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .bank-search-wrap {
+        padding: 0.75rem 0.875rem 0.5rem;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .bank-search {
+        width: 100%;
+        height: 38px;
+        padding: 0 0.875rem;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.82rem;
+        color: #0f172a;
+        background: #f8fafc;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.15s;
+    }
+    .bank-search:focus { border-color: #1eb349; background: #fff; }
+    .bank-list-scroll {
+        max-height: 260px;
         overflow-y: auto;
-        padding: 6px;
+        padding: 0.4rem;
     }
-
-    .custom-select-options.open {
-        display: block;
-        animation: selectFadeIn 0.15s ease-out;
+    .bank-list-scroll::-webkit-scrollbar { width: 5px; }
+    .bank-list-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .bank-group-label {
+        font-size: 0.62rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #94a3b8;
+        padding: 0.5rem 0.65rem 0.25rem;
     }
-
-    @keyframes selectFadeIn {
-        from { opacity: 0; transform: translateY(-4px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .custom-select-option {
-        padding: 10px 14px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #334155;
-        border-radius: 99px;
-        cursor: pointer;
-        transition: all 0.15s;
+    .bank-option {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        margin-bottom: 2px;
+        gap: 0.5rem;
+        padding: 0.55rem 0.65rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.12s;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #334155;
     }
-
-    .custom-select-option:hover {
-        background: #f0fdf4;
-        color: #1eb349;
-        font-weight: 700;
-    }
-
-    .custom-select-option.selected {
+    .bank-option:hover { background: #f0fdf4; color: #1eb349; }
+    .bank-option.selected {
         background: linear-gradient(135deg, #1eb349, #a5cf37);
-        color: #ffffff;
+        color: #fff;
         font-weight: 700;
     }
+    .bank-option-badge {
+        font-size: 0.58rem;
+        font-weight: 800;
+        padding: 0.1rem 0.35rem;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+    .bank-option.selected .bank-option-badge { background: rgba(255,255,255,0.25); color: #fff; }
+    .bank-option:not(.selected) .bank-option-badge {
+        background: #f1f5f9;
+        color: #64748b;
+    }
+    .bank-no-result {
+        text-align: center;
+        padding: 1.25rem;
+        color: #94a3b8;
+        font-size: 0.8rem;
+    }
 
-    .custom-select-option.custom-other {
-        border-top: 1px dashed #e2e8f0;
-        border-radius: 12px;
-        margin-top: 4px;
-        color: #1eb349;
-        font-weight: 700;
+    /* ── Alert Notice ── */
+    .alert-notice {
         background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 12px;
+        padding: 0.875rem 1.1rem;
+        font-size: 0.8rem;
+        color: #15803d;
+        margin-bottom: 1.25rem;
+        line-height: 1.6;
+        display: flex;
+        gap: 0.6rem;
+        align-items: flex-start;
     }
 
+    /* ── History Table ── */
+    .hist-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.82rem;
+    }
+    .hist-table th {
+        padding: 0.7rem 1rem;
+        text-align: left;
+        font-weight: 700;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #64748b;
+        background: #f8fafc;
+        border-bottom: 1px solid #f1f5f9;
+        white-space: nowrap;
+    }
+    .hist-table td {
+        padding: 0.875rem 1rem;
+        border-bottom: 1px solid #f8fafc;
+        vertical-align: middle;
+        color: #334155;
+    }
+    .hist-table tr:last-child td { border-bottom: none; }
+    .hist-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.25rem 0.6rem;
+        border-radius: 99px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    /* ── Responsive ── */
     .tab-text-full { display: inline-block; }
-    .tab-text-mob { display: none; }
+    .tab-text-mob  { display: none; }
 
-    @media (max-width: 991px) {
-        .bio-layout {
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .bio-sidebar {
-            width: 100%;
-            position: static;
-            padding: 0.5rem;
-            border-radius: 14px;
-            background: #ffffff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            margin-bottom: 0.5rem;
-        }
-
-        .sidebar-balance-card {
-            display: none !important;
-        }
-
+    @media (max-width: 1024px) {
+        .bio-layout { flex-direction: column; gap: 1rem; }
+        .bio-sidebar { width: 100%; position: static; border-radius: 14px; padding: 0.75rem; }
+        .sidebar-balance-hide { display: none !important; }
         .bio-tabs-list {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -311,66 +463,91 @@
             padding: 3px;
             border-radius: 12px;
         }
-
         .tab-btn {
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 0.45rem 0.2rem;
+            padding: 0.5rem 0.25rem;
             gap: 3px;
             border-radius: 8px;
             margin-bottom: 0;
-            width: 100%;
         }
-
-        .tab-btn svg {
-            width: 18px;
-            height: 18px;
-        }
-
         .tab-text-full { display: none !important; }
-        .tab-text-mob { display: block !important; font-size: 0.65rem; font-weight: 600; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+        .tab-text-mob  { display: block !important; font-size: 0.65rem; font-weight: 600; text-align: center; }
+        .saldo-grid { display: none !important; }
+        .quick-amounts { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+        .hist-table th:nth-child(4),
+        .hist-table td:nth-child(4) { display: none; }
     }
 </style>
 @endsection
 
 @section('content')
 @php
-    $presetBanks = ['BCA','BNI','BRI','Mandiri','BSI','CIMB Niaga','Jenius/SMBC','Permata Bank','Bank DKI','Bank BJB','Bank Jatim','Dana','GoPay','OVO','ShopeePay'];
+    $banks = [
+        'E-Wallet' => ['GoPay','OVO','Dana','ShopeePay','LinkAja','AstraPay'],
+        'Bank Nasional' => ['Bank BCA','Bank Mandiri','Bank BRI','Bank BNI','Bank BSI','CIMB Niaga','Permata Bank','Bank Danamon','Bank BTN','Bank Panin','OCBC NISP','Bank Maybank','Bank Mega','Bank Sinarmas'],
+        'Bank Digital' => ['Bank Jago','SeaBank','Blu by BCA Digital','Jenius / SMBC','Allo Bank','Bank Neo Commerce','Line Bank (KEB Hana)','Superbank'],
+        'Bank Daerah' => ['Bank DKI','Bank BJB','Bank Jatim','Bank Jateng','Bank Sumut','Bank Nagari','Bank Kalbar','Bank Sulselbar'],
+    ];
+    $bankTypeColors = [
+        'E-Wallet'     => ['bg' => '#EFF6FF', 'color' => '#1D4ED8'],
+        'Bank Nasional' => ['bg' => '#F0FDF4', 'color' => '#166534'],
+        'Bank Digital' => ['bg' => '#FFF7ED', 'color' => '#C2410C'],
+        'Bank Daerah'  => ['bg' => '#F5F3FF', 'color' => '#6D28D9'],
+    ];
+    $allBanks = collect($banks)->flatMap(fn($b) => $b)->values()->toArray();
+    $savedBank  = $seller->bank_name ?? '';
+    $savedNum   = $seller->bank_account_number ?? '';
+    $savedName  = $seller->bank_account_name ?? '';
+    $hasSaved   = $savedBank && $savedNum && $savedName;
 @endphp
+
 <div class="bio-layout">
 
-    {{-- SUB SIDEBAR --}}
+    {{-- SIDEBAR --}}
     <div class="bio-sidebar">
-        {{-- Balance Card --}}
-        <div class="sidebar-balance-card" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem;">
-            <div style="font-size: 0.72rem; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.35rem;">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-                Saldo Siap Ditarik
-            </div>
-            <div style="font-size: 1.75rem; font-weight: 800; color: #15803d; letter-spacing: -0.03em;">
-                Rp {{ number_format($availableBalance, 0, ',', '.') }}
-            </div>
-            <div style="font-size: 0.72rem; color: #166534; margin-top: 0.4rem; font-weight: 600;">
-                Platform Fee: 5% (Dibayar Pembeli)
+
+        {{-- Saldo Cards (Desktop) --}}
+        <div class="sidebar-balance-hide">
+            <div class="saldo-grid">
+                <div class="saldo-card cleared">
+                    <div class="saldo-card-label">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Siap Ditarik
+                    </div>
+                    <div class="saldo-card-value">Rp {{ number_format($availableBalance, 0, ',', '.') }}</div>
+                    <div class="saldo-card-sub">Transaksi sudah 3 hari</div>
+                </div>
+                <div class="saldo-card hold">
+                    <div class="saldo-card-label">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Menunggu
+                    </div>
+                    <div class="saldo-card-value">Rp {{ number_format($holdBalance, 0, ',', '.') }}</div>
+                    <div class="saldo-card-sub">Otomatis cair 3x24 jam</div>
+                </div>
             </div>
         </div>
 
         <div class="bio-tabs-list">
             <button type="button" class="tab-btn active" onclick="switchPayoutTab('tab-withdraw', this)">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
-                <span class="tab-text-full">Penarikan Saldo</span>
-                <small class="tab-text-mob">Tarik Saldo</small>
+                <span class="tab-text-full">Tarik Saldo</span>
+                <span class="tab-text-mob">Tarik</span>
             </button>
             <button type="button" class="tab-btn" onclick="switchPayoutTab('tab-bank', this)">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                <span class="tab-text-full">Pengaturan Rekening</span>
-                <small class="tab-text-mob">Rekening</small>
+                <span class="tab-text-full">Rekening</span>
+                <span class="tab-text-mob">Rekening</span>
             </button>
             <button type="button" class="tab-btn" onclick="switchPayoutTab('tab-history', this)">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                <span class="tab-text-full">Riwayat Pencairan</span>
-                <small class="tab-text-mob">Riwayat</small>
+                <span class="tab-text-full">Riwayat</span>
+                <span class="tab-text-mob">Riwayat</span>
             </button>
         </div>
     </div>
@@ -378,207 +555,346 @@
     {{-- CONTENT AREA --}}
     <div class="bio-content">
 
-        {{-- TAB 1: PENARIKAN SALDO --}}
-        <div id="tab-withdraw" class="payout-tab-pane" style="display: block;">
+        {{-- Flash Messages --}}
+        @if(session('success'))
+        <div class="alert-notice" style="background:#f0fdf4;border-color:#bbf7d0;color:#15803d;margin-bottom:1.25rem;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>{{ session('success') }}</span>
+        </div>
+        @endif
+        @if(session('error'))
+        <div class="alert-notice" style="background:#fef2f2;border-color:#fecaca;color:#dc2626;margin-bottom:1.25rem;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>{{ session('error') }}</span>
+        </div>
+        @endif
+
+        {{-- TAB 1: TARIK SALDO --}}
+        <div id="tab-withdraw" class="payout-tab-pane" style="display:block">
+
+            {{-- Mobile: Saldo Summary --}}
+            <div style="display:none" class="mobile-saldo-bar">
+                <div class="prof-card" style="margin-bottom:1rem;">
+                    <div class="form-body" style="padding:1rem 1.25rem;">
+                        <div class="saldo-grid" style="display:grid!important">
+                            <div class="saldo-card cleared">
+                                <div class="saldo-card-label">Siap Ditarik</div>
+                                <div class="saldo-card-value">Rp {{ number_format($availableBalance, 0, ',', '.') }}</div>
+                                <div class="saldo-card-sub">Sudah 3x24 jam</div>
+                            </div>
+                            <div class="saldo-card hold">
+                                <div class="saldo-card-label">Menunggu</div>
+                                <div class="saldo-card-value">Rp {{ number_format($holdBalance, 0, ',', '.') }}</div>
+                                <div class="saldo-card-sub">Hold 3 hari</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="prof-card">
                 <div class="prof-card-head">
                     <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
-                    Form Pengajuan Penarikan Saldo
+                    Ajukan Penarikan Dana
                 </div>
                 <div class="form-body">
-                    <div class="alert-notice d-flex align-items-start gap-2">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    {{-- Syarat --}}
+                    <div class="alert-notice">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                         <div>
-                            <strong>Ketentuan Penarikan Saldo:</strong><br>
-                            • Pencairan diproses 1–3 hari kerja setelah diajukan.<br>
-                            • Dikenakan <strong>Biaya Penarikan (Withdrawal Fee)</strong> sebesar <strong>Rp 5.000</strong> per transaksi.<br>
-                            • Minimal jumlah penarikan saldo adalah <strong>Rp 50.000</strong>.
+                            Dana transaksi dapat ditarik setelah <strong>3x24 jam</strong> sejak pembayaran diterima. Pencairan diproses <strong>1-3 hari kerja</strong> tanpa potongan biaya (100% utuh), minimal penarikan <strong>Rp 50.000</strong>.
                         </div>
                     </div>
 
-                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.25rem; margin-bottom:1.5rem;">
-                        <div class="info-row"><span class="info-label">Total Penjualan (GMV)</span><span class="info-val">Rp {{ number_format($gmv, 0, ',', '.') }}</span></div>
-                        <div class="info-row"><span class="info-label">Total Sudah Dicairkan</span><span class="info-val" style="color:#64748B;">- Rp {{ number_format($totalPayout, 0, ',', '.') }}</span></div>
-                        <div class="info-row" style="font-size:1rem;"><span class="info-label" style="color:#0f172a; font-weight:800;">Saldo Siap Ditarik</span><span class="info-val" style="color:#1eb349; font-size:1.15rem;">Rp {{ number_format($availableBalance, 0, ',', '.') }}</span></div>
+                    {{-- Saldo Breakdown --}}
+                    <div class="breakdown-box">
+                        <div class="breakdown-row">
+                            <span class="breakdown-key">Total Penjualan (GMV)</span>
+                            <span class="breakdown-val">Rp {{ number_format($gmv, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span class="breakdown-key">Saldo Menunggu (3 hari)</span>
+                            <span class="breakdown-val muted">Rp {{ number_format($holdBalance, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span class="breakdown-key">Sudah Dicairkan</span>
+                            <span class="breakdown-val muted">Rp {{ number_format($totalPayout, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="breakdown-row" style="font-size:0.95rem;">
+                            <span class="breakdown-key" style="font-weight:800;color:#0f172a;">Saldo Siap Ditarik</span>
+                            <span class="breakdown-val green">Rp {{ number_format($availableBalance, 0, ',', '.') }}</span>
+                        </div>
                     </div>
 
                     @if($availableBalance >= 50000)
+
+                    {{-- Rekening Tujuan Tersimpan --}}
+                    @if($hasSaved)
+                    <div id="savedRekBlock">
+                        <div style="font-size:0.75rem;font-weight:700;color:#334155;margin-bottom:0.5rem;">Rekening Tujuan</div>
+                        <div class="rekening-saved">
+                            <div class="rekening-info">
+                                <div class="rekening-icon">
+                                    <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
+                                </div>
+                                <div>
+                                    <div class="rekening-bank">{{ $savedBank }}</div>
+                                    <div class="rekening-num">{{ $savedNum }}</div>
+                                    <div class="rekening-name">a/n {{ $savedName }}</div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-ganti" onclick="gantiRekening()">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:-2px;margin-right:3px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                Ubah
+                            </button>
+                        </div>
+                    </div>
+                    @endif
+
                     <form action="{{ route('creator.payout.request') }}" method="POST" id="withdrawForm">
                         @csrf
-                        @php
-                            $currentBank1 = $seller->bank_name ?? '';
-                            $isCustomBank1 = $currentBank1 && !in_array($currentBank1, $presetBanks);
-                        @endphp
-                        <div class="form-group">
-                            <label class="form-label">Tujuan Bank / E-Wallet <span>*</span></label>
-                            
-                            <div class="custom-select-wrapper" id="wrapBankTab1">
-                                <div class="custom-select-trigger" onclick="toggleCustomDropdown('wrapBankTab1')">
-                                    <span class="custom-select-text" id="textBankTab1">
-                                        {{ $currentBank1 ? ($isCustomBank1 ? "Lainnya: {$currentBank1}" : $currentBank1) : '— Pilih Bank / E-Wallet —' }}
-                                    </span>
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-                                </div>
-                                <div class="custom-select-options">
-                                    @foreach($presetBanks as $bank)
-                                        <div class="custom-select-option {{ $currentBank1 === $bank ? 'selected' : '' }}" onclick="selectBankOption('wrapBankTab1', '{{ $bank }}', '{{ $bank }}')">
-                                            <span>{{ $bank }}</span>
-                                            @if($currentBank1 === $bank)<span>✓</span>@endif
+
+                        {{-- Bank Fields (hidden if saved account exists) --}}
+                        <div id="bankFieldsBlock" style="{{ $hasSaved ? 'display:none' : '' }}">
+                            <div class="form-group">
+                                <label class="form-label">Bank / E-Wallet Tujuan <span style="color:#ef4444">*</span></label>
+                                <div class="bank-select-wrap" id="bankSelectWrap">
+                                    <div class="bank-select-trigger" id="bankTrigger" onclick="toggleBankDropdown()">
+                                        <div class="bank-select-display" id="bankDisplay">
+                                            @if($savedBank)
+                                                <span>{{ $savedBank }}</span>
+                                            @else
+                                                <span style="color:#94a3b8">Pilih Bank atau E-Wallet</span>
+                                            @endif
                                         </div>
-                                    @endforeach
-                                    <div class="custom-select-option custom-other {{ $isCustomBank1 ? 'selected' : '' }}" onclick="selectBankOption('wrapBankTab1', 'custom', 'Lainnya (Ketik Manual...)')">
-                                        <span>Lainnya (Ketik Manual...)</span>
+                                        <svg class="chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
                                     </div>
+                                    <div class="bank-dropdown" id="bankDropdown">
+                                        <div class="bank-search-wrap">
+                                            <input type="text" class="bank-search" id="bankSearch" placeholder="Cari nama bank atau e-wallet..." oninput="filterBanks()" autocomplete="off">
+                                        </div>
+                                        <div class="bank-list-scroll" id="bankList">
+                                            @foreach($banks as $groupName => $groupBanks)
+                                            <div class="bank-group-label bank-group" data-group="{{ $groupName }}">{{ $groupName }}</div>
+                                            @foreach($groupBanks as $bankItem)
+                                            <div class="bank-option {{ $savedBank === $bankItem ? 'selected' : '' }}" 
+                                                 data-value="{{ $bankItem }}" 
+                                                 data-group="{{ $groupName }}"
+                                                 onclick="selectBank('{{ $bankItem }}', '{{ $groupName }}')">
+                                                {{ $bankItem }}
+                                                <span class="bank-option-badge">{{ $groupName === 'E-Wallet' ? 'EWALLET' : ($groupName === 'Bank Digital' ? 'DIGITAL' : ($groupName === 'Bank Daerah' ? 'DAERAH' : 'BANK')) }}</span>
+                                            </div>
+                                            @endforeach
+                                            @endforeach
+                                            <div class="bank-no-result" id="bankNoResult" style="display:none">Tidak ditemukan</div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="bank_name" id="bankHidden" value="{{ $savedBank }}">
                                 </div>
-                                <input type="hidden" name="bank_name" id="hiddenBankTab1" value="{{ $currentBank1 }}" required>
                             </div>
-
-                            <div id="customInputWrapTab1" style="display: {{ $isCustomBank1 ? 'block' : 'none' }}; margin-top: 0.6rem;">
-                                <input type="text" id="customBankInputTab1" class="form-input" placeholder="Ketik nama Bank / E-Wallet Anda (misal: SeaBank, Blu, Neobank)..." value="{{ $isCustomBank1 ? $currentBank1 : '' }}" oninput="updateCustomBankVal('wrapBankTab1', this.value)">
+                            <div class="form-group">
+                                <label class="form-label">Nomor Rekening / Akun <span style="color:#ef4444">*</span></label>
+                                <input type="text" name="bank_account_number" id="bankNum" class="form-input" value="{{ $savedNum }}" placeholder="Contoh: 1234567890" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Nama Pemilik Rekening <span style="color:#ef4444">*</span></label>
+                                <input type="text" name="bank_account_name" id="bankAccName" class="form-input" value="{{ $savedName ?: $seller->name }}" placeholder="Nama sesuai buku tabungan" required>
                             </div>
                         </div>
 
+                        {{-- If saved, pass hidden fields --}}
+                        @if($hasSaved)
+                        <input type="hidden" name="bank_name" value="{{ $savedBank }}">
+                        <input type="hidden" name="bank_account_number" value="{{ $savedNum }}">
+                        <input type="hidden" name="bank_account_name" value="{{ $savedName }}">
+                        @endif
+
+                        {{-- Quick Amount --}}
                         <div class="form-group">
-                            <label class="form-label">Nomor Rekening / Akun <span>*</span></label>
-                            <input type="text" name="bank_account_number" value="{{ $seller->bank_account_number ?? '' }}" class="form-input" placeholder="Contoh: 1234567890" required>
+                            <label class="form-label">Jumlah Penarikan <span style="color:#ef4444">*</span></label>
+                            <div class="quick-amounts">
+                                <button type="button" class="btn-quick" onclick="setAmount(50000)">Rp 50rb</button>
+                                <button type="button" class="btn-quick" onclick="setAmount(100000)">Rp 100rb</button>
+                                <button type="button" class="btn-quick" onclick="setAmount(500000)">Rp 500rb</button>
+                                <button type="button" class="btn-quick" onclick="setAmount({{ $availableBalance }})">Maks</button>
+                            </div>
+                            <input type="number" name="amount" id="withdrawAmount" class="form-input" 
+                                min="50000" max="{{ $availableBalance }}" 
+                                placeholder="Min. Rp 50.000" 
+                                oninput="updateBreakdown()" required>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Nama Pemilik Rekening <span>*</span></label>
-                            <input type="text" name="bank_account_name" value="{{ $seller->bank_account_name ?? $seller->name }}" class="form-input" placeholder="Nama sesuai di rekening" required>
+
+                        {{-- Live Breakdown --}}
+                        <div class="breakdown-box" id="withdrawBreakdown" style="display:none">
+                            <div class="breakdown-row">
+                                <span class="breakdown-key">Jumlah Penarikan</span>
+                                <span class="breakdown-val" id="bdGross">Rp 0</span>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="breakdown-key">Biaya Pencairan</span>
+                                <span class="breakdown-val" style="color:#1eb349;font-weight:700;">Gratis (Rp 0)</span>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="breakdown-key" style="font-weight:800;color:#0f172a">Dana Diterima (100%)</span>
+                                <span class="breakdown-val green" id="bdNet">Rp 0</span>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="breakdown-key" style="color:#94a3b8">Estimasi Waktu</span>
+                                <span class="breakdown-val muted">1 - 3 Hari Kerja</span>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Jumlah Penarikan (Rp) <span>*</span></label>
-                            <input type="number" name="amount" id="withdrawAmount" class="form-input" min="50000" max="{{ $availableBalance }}" placeholder="Minimum Rp 50.000" oninput="calcNetPayout()" required>
-                            <span style="font-size:0.75rem; color:#64748B; margin-top:0.25rem;" id="netPayoutCalc">Biaya Penarikan: Rp 5.000 | Dana Bersih Diterima: Rp 0</span>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Catatan (Opsional)</label>
-                            <input type="text" name="notes" class="form-input" placeholder="Misal: Penarikan saldo bulan ini">
-                        </div>
-                        <button type="submit" class="btn-submit-payout" onclick="return confirm('Ajukan penarikan saldo?')">
+
+                        <button type="submit" class="btn-submit-payout" id="btnSubmit" onclick="return confirm('Konfirmasi pengajuan penarikan dana?')">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
                             Ajukan Penarikan Dana
                         </button>
                     </form>
+
                     @else
                     <div style="text-align:center; padding:2.5rem 1rem; color:#94A3B8;">
-                        <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:1rem; opacity:0.4;"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                        <h4 style="font-size:0.95rem; font-weight:700; color:#374151; margin-bottom:0.4rem;">Saldo Belum Mencapai Minimum</h4>
-                        <p style="font-size:0.8rem; margin:0;">Batas minimal penarikan saldo adalah Rp 50.000.</p>
+                        <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:1rem;opacity:0.35"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                        <h4 style="font-size:0.95rem;font-weight:700;color:#374151;margin-bottom:0.4rem;">Saldo Belum Cukup</h4>
+                        <p style="font-size:0.8rem;margin:0;">Minimum penarikan Rp 50.000. Saldo siap ditarik kamu saat ini Rp {{ number_format($availableBalance, 0, ',', '.') }}.</p>
+                        @if($holdBalance > 0)
+                        <div style="margin-top:0.875rem;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:0.75rem 1rem;font-size:0.78rem;color:#92400e;display:inline-block;">
+                            Rp {{ number_format($holdBalance, 0, ',', '.') }} sedang dalam masa tunggu 3x24 jam dan akan segera tersedia.
+                        </div>
+                        @endif
                     </div>
                     @endif
                 </div>
             </div>
         </div>
 
-        {{-- TAB 2: PENGATURAN REKENING --}}
-        <div id="tab-bank" class="payout-tab-pane" style="display: none;">
+        {{-- TAB 2: REKENING --}}
+        <div id="tab-bank" class="payout-tab-pane" style="display:none">
             <div class="prof-card">
                 <div class="prof-card-head">
                     <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    Informasi & Pengaturan Rekening Bank
+                    Pengaturan Rekening
                 </div>
                 <div class="form-body">
-                    <form action="{{ route('creator.payout.bank.update') }}" method="POST" id="bankSettingForm">
+                    @if($hasSaved)
+                    <div class="alert-notice" style="background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;margin-bottom:1.25rem;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        <span>Rekening tersimpan dan akan otomatis digunakan sebagai tujuan penarikan dana.</span>
+                    </div>
+                    @endif
+
+                    <form action="{{ route('creator.payout.bank.update') }}" method="POST">
                         @csrf
-                        @php
-                            $currentBank2 = $seller->bank_name ?? '';
-                            $isCustomBank2 = $currentBank2 && !in_array($currentBank2, $presetBanks);
-                        @endphp
                         <div class="form-group">
-                            <label class="form-label">Nama Bank / E-Wallet <span>*</span></label>
-                            
-                            <div class="custom-select-wrapper" id="wrapBankTab2">
-                                <div class="custom-select-trigger" onclick="toggleCustomDropdown('wrapBankTab2')">
-                                    <span class="custom-select-text" id="textBankTab2">
-                                        {{ $currentBank2 ? ($isCustomBank2 ? "Lainnya: {$currentBank2}" : $currentBank2) : '— Pilih Bank / E-Wallet —' }}
-                                    </span>
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                            <label class="form-label">Bank / E-Wallet <span style="color:#ef4444">*</span></label>
+                            <div class="bank-select-wrap" id="bankSelectWrap2">
+                                <div class="bank-select-trigger" id="bankTrigger2" onclick="toggleBankDropdown2()">
+                                    <div class="bank-select-display" id="bankDisplay2">
+                                        @if($savedBank)
+                                            <span>{{ $savedBank }}</span>
+                                        @else
+                                            <span style="color:#94a3b8">Pilih Bank atau E-Wallet</span>
+                                        @endif
+                                    </div>
+                                    <svg class="chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
                                 </div>
-                                <div class="custom-select-options">
-                                    @foreach($presetBanks as $bank)
-                                        <div class="custom-select-option {{ $currentBank2 === $bank ? 'selected' : '' }}" onclick="selectBankOption('wrapBankTab2', '{{ $bank }}', '{{ $bank }}')">
-                                            <span>{{ $bank }}</span>
-                                            @if($currentBank2 === $bank)<span>✓</span>@endif
+                                <div class="bank-dropdown" id="bankDropdown2">
+                                    <div class="bank-search-wrap">
+                                        <input type="text" class="bank-search" id="bankSearch2" placeholder="Cari nama bank atau e-wallet..." oninput="filterBanks2()" autocomplete="off">
+                                    </div>
+                                    <div class="bank-list-scroll" id="bankList2">
+                                        @foreach($banks as $groupName => $groupBanks)
+                                        <div class="bank-group-label bank-group2" data-group="{{ $groupName }}">{{ $groupName }}</div>
+                                        @foreach($groupBanks as $bankItem)
+                                        <div class="bank-option2 bank-option {{ $savedBank === $bankItem ? 'selected' : '' }}" 
+                                             data-value="{{ $bankItem }}" 
+                                             data-group="{{ $groupName }}"
+                                             onclick="selectBank2('{{ $bankItem }}')">
+                                            {{ $bankItem }}
+                                            <span class="bank-option-badge">{{ $groupName === 'E-Wallet' ? 'EWALLET' : ($groupName === 'Bank Digital' ? 'DIGITAL' : ($groupName === 'Bank Daerah' ? 'DAERAH' : 'BANK')) }}</span>
                                         </div>
-                                    @endforeach
-                                    <div class="custom-select-option custom-other {{ $isCustomBank2 ? 'selected' : '' }}" onclick="selectBankOption('wrapBankTab2', 'custom', 'Lainnya (Ketik Manual...)')">
-                                        <span>Lainnya (Ketik Manual...)</span>
+                                        @endforeach
+                                        @endforeach
+                                        <div class="bank-no-result" id="bankNoResult2" style="display:none">Tidak ditemukan</div>
                                     </div>
                                 </div>
-                                <input type="hidden" name="bank_name" id="hiddenBankTab2" value="{{ $currentBank2 }}" required>
-                            </div>
-
-                            <div id="customInputWrapTab2" style="display: {{ $isCustomBank2 ? 'block' : 'none' }}; margin-top: 0.6rem;">
-                                <input type="text" id="customBankInputTab2" class="form-input" placeholder="Ketik nama Bank / E-Wallet Anda (misal: SeaBank, Blu, Neobank)..." value="{{ $isCustomBank2 ? $currentBank2 : '' }}" oninput="updateCustomBankVal('wrapBankTab2', this.value)">
+                                <input type="hidden" name="bank_name" id="bankHidden2" value="{{ $savedBank }}">
                             </div>
                         </div>
-
                         <div class="form-group">
-                            <label class="form-label">Nomor Rekening / Akun E-Wallet <span>*</span></label>
-                            <input type="text" name="bank_account_number" value="{{ $seller->bank_account_number ?? '' }}" class="form-input" placeholder="Contoh: 1234567890" required>
+                            <label class="form-label">Nomor Rekening / Akun <span style="color:#ef4444">*</span></label>
+                            <input type="text" name="bank_account_number" class="form-input" value="{{ $savedNum }}" placeholder="Contoh: 1234567890" required>
                         </div>
-
                         <div class="form-group">
-                            <label class="form-label">Nama Pemilik Rekening <span>*</span></label>
-                            <input type="text" name="bank_account_name" value="{{ $seller->bank_account_name ?? $seller->name }}" class="form-input" placeholder="Nama sesuai di rekening" required>
+                            <label class="form-label">Nama Pemilik Rekening <span style="color:#ef4444">*</span></label>
+                            <input type="text" name="bank_account_name" class="form-input" value="{{ $savedName ?: $seller->name }}" placeholder="Nama sesuai buku tabungan" required>
+                            <div class="form-hint">Isi nama sesuai yang tertera di buku tabungan atau aplikasi bank.</div>
                         </div>
-
-                        <button type="submit" class="btn-submit-payout" style="margin-top:0.75rem;">
+                        <button type="submit" class="btn-submit-payout">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                            Simpan Pengaturan Rekening
+                            Simpan Rekening
                         </button>
                     </form>
-                    <p style="font-size:0.78rem; color:#64748b; margin-top:1.25rem; line-height:1.5;">
-                        Informasi rekening di atas akan otomatis digunakan sebagai tujuan penarikan saldo Anda.
-                    </p>
                 </div>
             </div>
         </div>
 
-        {{-- TAB 3: RIWAYAT PENCAIRAN --}}
-        <div id="tab-history" class="payout-tab-pane" style="display: none;">
+        {{-- TAB 3: RIWAYAT --}}
+        <div id="tab-history" class="payout-tab-pane" style="display:none">
             <div class="prof-card">
                 <div class="prof-card-head">
                     <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    Riwayat Pengajuan Pencairan
+                    Riwayat Pencairan
                 </div>
-                <div class="form-body">
-                    @if(isset($requests) && $requests->count() > 0)
-                        <div style="overflow-x:auto;">
-                            <table class="table align-middle" style="font-size:0.85rem; width:100%;">
-                                <thead>
-                                    <tr style="background:#f8fafc; color:#475569; text-align:left;">
-                                        <th style="padding:0.75rem 1rem;">Tanggal</th>
-                                        <th style="padding:0.75rem 1rem;">Bank</th>
-                                        <th style="padding:0.75rem 1rem;">Jumlah</th>
-                                        <th style="padding:0.75rem 1rem;">Admin Fee</th>
-                                        <th style="padding:0.75rem 1rem;">Bersih</th>
-                                        <th style="padding:0.75rem 1rem;">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($requests as $req)
-                                    <tr style="border-bottom:1px solid #f1f5f9;">
-                                        <td style="padding:0.85rem 1rem;">{{ $req->created_at->format('d M Y, H:i') }}</td>
-                                        <td style="padding:0.85rem 1rem;">{{ $req->bank_name }} ({{ $req->bank_account_number }})</td>
-                                        <td style="padding:0.85rem 1rem;">Rp {{ number_format($req->amount, 0, ',', '.') }}</td>
-                                        <td style="padding:0.85rem 1rem; color:#ef4444;">- Rp {{ number_format($req->admin_fee ?? 5000, 0, ',', '.') }}</td>
-                                        <td style="padding:0.85rem 1rem; font-weight:700; color:#1eb349;">Rp {{ number_format(($req->amount - ($req->admin_fee ?? 5000)), 0, ',', '.') }}</td>
-                                        <td style="padding:0.85rem 1rem;">
-                                            <span style="font-size:0.72rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:99px; text-transform:uppercase; background:{{ $req->status === 'approved' || $req->status === 'processed' ? '#dcfce7' : ($req->status === 'pending' ? '#fef3c7' : '#fef2f2') }}; color:{{ $req->status === 'approved' || $req->status === 'processed' ? '#166534' : ($req->status === 'pending' ? '#92400E' : '#991B1B') }};">
-                                                {{ $req->status_label }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                <div class="form-body" style="padding:0">
+                    @if($requests->count() > 0)
+                    <div style="overflow-x:auto;">
+                        <table class="hist-table">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Bank</th>
+                                    <th>Jumlah</th>
+                                    <th>Bersih</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($requests as $req)
+                                <tr>
+                                    <td style="white-space:nowrap;font-size:0.78rem;color:#64748b">{{ $req->created_at->format('d M Y') }}</td>
+                                    <td style="font-size:0.8rem;font-weight:600;">{{ $req->bank_name }}<br><span style="font-size:0.72rem;color:#94a3b8">{{ $req->bank_account_number }}</span></td>
+                                    <td style="font-weight:700;white-space:nowrap">Rp {{ number_format($req->amount, 0, ',', '.') }}</td>
+                                    <td style="font-weight:800;color:#1eb349;white-space:nowrap">Rp {{ number_format($req->net_amount, 0, ',', '.') }}</td>
+                                    <td>
+                                        @php
+                                            $styles = [
+                                                'pending'   => 'background:#fef9c3;color:#854d0e',
+                                                'approved'  => 'background:#dcfce7;color:#166534',
+                                                'processed' => 'background:#d1fae5;color:#065f46',
+                                                'rejected'  => 'background:#fee2e2;color:#991b1b',
+                                            ];
+                                            $labels = [
+                                                'pending'   => 'Menunggu',
+                                                'approved'  => 'Disetujui',
+                                                'processed' => 'Selesai',
+                                                'rejected'  => 'Ditolak',
+                                            ];
+                                        @endphp
+                                        <span class="hist-badge" style="{{ $styles[$req->status] ?? '' }}">{{ $labels[$req->status] ?? $req->status }}</span>
+                                        @if($req->admin_notes && $req->status === 'rejected')
+                                        <div style="font-size:0.67rem;color:#94a3b8;margin-top:0.25rem;max-width:130px;line-height:1.3;">{{ $req->admin_notes }}</div>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="padding:0.875rem 1.25rem;font-size:0.78rem;color:#94a3b8;">{{ $requests->links() }}</div>
                     @else
-                        <div style="text-align:center; padding:2.5rem 1rem; color:#94A3B8;">
-                            <p style="font-size:0.85rem; margin:0;">Belum ada riwayat penarikan saldo.</p>
-                        </div>
+                    <div style="text-align:center;padding:2.5rem 1rem;color:#94A3B8;">
+                        <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="opacity:0.3;margin-bottom:0.75rem"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <p style="font-size:0.83rem;margin:0;font-weight:600;">Belum ada riwayat pencairan</p>
+                    </div>
                     @endif
                 </div>
             </div>
@@ -587,78 +903,141 @@
     </div>
 </div>
 
+<style>
+@media (max-width:1024px) {
+    .mobile-saldo-bar { display:block !important; }
+    .sidebar-balance-hide { display:none !important; }
+}
+</style>
+
 <script>
-    function switchPayoutTab(tabId, btn) {
-        document.querySelectorAll('.payout-tab-pane').forEach(el => el.style.display = 'none');
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(tabId).style.display = 'block';
-        btn.classList.add('active');
+// ── Tab Switcher ──
+function switchPayoutTab(tabId, btn) {
+    document.querySelectorAll('.payout-tab-pane').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).style.display = 'block';
+    btn.classList.add('active');
+}
+
+// ── Breakdown Calculator ──
+function updateBreakdown() {
+    const val = parseFloat(document.getElementById('withdrawAmount').value) || 0;
+    const box = document.getElementById('withdrawBreakdown');
+    if (val >= 50000) {
+        box.style.display = 'block';
+        document.getElementById('bdGross').textContent = 'Rp ' + val.toLocaleString('id-ID');
+        document.getElementById('bdNet').textContent   = 'Rp ' + val.toLocaleString('id-ID');
+    } else {
+        box.style.display = 'none';
     }
+}
 
-    function calcNetPayout() {
-        const val = parseFloat(document.getElementById('withdrawAmount').value) || 0;
-        const adminFee = 5000;
-        const net = Math.max(0, val - adminFee);
-        document.getElementById('netPayoutCalc').textContent = `Biaya Penarikan: Rp 5.000 | Dana Bersih Diterima: Rp ${net.toLocaleString('id-ID')}`;
+function setAmount(val) {
+    const input = document.getElementById('withdrawAmount');
+    if (input) { input.value = val; updateBreakdown(); }
+}
+
+// ── Ganti Rekening Toggle ──
+function gantiRekening() {
+    document.getElementById('savedRekBlock').style.display = 'none';
+    document.getElementById('bankFieldsBlock').style.display = 'block';
+}
+
+// ── Bank Dropdown (Form 1) ──
+let selectedBank = '{{ $savedBank }}';
+
+function toggleBankDropdown() {
+    const trigger = document.getElementById('bankTrigger');
+    const dropdown = document.getElementById('bankDropdown');
+    const isOpen = dropdown.classList.contains('open');
+    if (isOpen) {
+        dropdown.classList.remove('open');
+        trigger.classList.remove('open');
+    } else {
+        dropdown.classList.add('open');
+        trigger.classList.add('open');
+        document.getElementById('bankSearch').focus();
     }
+}
 
-    function toggleCustomDropdown(wrapperId) {
-        const wrap = document.getElementById(wrapperId);
-        if (!wrap) return;
-        const trigger = wrap.querySelector('.custom-select-trigger');
-        const options = wrap.querySelector('.custom-select-options');
-        
-        const isOpen = options.classList.contains('open');
-        document.querySelectorAll('.custom-select-options').forEach(el => el.classList.remove('open'));
-        document.querySelectorAll('.custom-select-trigger').forEach(el => el.classList.remove('active'));
-
-        if (!isOpen) {
-            options.classList.add('open');
-            trigger.classList.add('active');
-        }
-    }
-
-    function selectBankOption(wrapperId, val, labelText) {
-        const wrap = document.getElementById(wrapperId);
-        if (!wrap) return;
-        const textSpan = wrap.querySelector('.custom-select-text');
-        const hiddenInput = wrap.querySelector('input[type="hidden"]');
-        const options = wrap.querySelector('.custom-select-options');
-        const trigger = wrap.querySelector('.custom-select-trigger');
-        const isTab1 = wrapperId.includes('Tab1');
-        const customInputWrap = document.getElementById(isTab1 ? 'customInputWrapTab1' : 'customInputWrapTab2');
-        const customBankInput = document.getElementById(isTab1 ? 'customBankInputTab1' : 'customBankInputTab2');
-
-        wrap.querySelectorAll('.custom-select-option').forEach(el => el.classList.remove('selected'));
-
-        if (val === 'custom') {
-            textSpan.textContent = '✍️ Lainnya (Ketik Manual...)';
-            customInputWrap.style.display = 'block';
-            customBankInput.focus();
-            hiddenInput.value = customBankInput.value.trim() || 'Lainnya';
-        } else {
-            textSpan.textContent = labelText;
-            customInputWrap.style.display = 'none';
-            hiddenInput.value = val;
-        }
-
-        options.classList.remove('open');
-        trigger.classList.remove('active');
-    }
-
-    function updateCustomBankVal(wrapperId, typedVal) {
-        const wrap = document.getElementById(wrapperId);
-        if (!wrap) return;
-        const hiddenInput = wrap.querySelector('input[type="hidden"]');
-        hiddenInput.value = typedVal.trim() || 'Lainnya';
-    }
-
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.custom-select-wrapper')) {
-            document.querySelectorAll('.custom-select-options').forEach(el => el.classList.remove('open'));
-            document.querySelectorAll('.custom-select-trigger').forEach(el => el.classList.remove('active'));
-        }
+function selectBank(val, group) {
+    selectedBank = val;
+    document.getElementById('bankHidden').value = val;
+    document.getElementById('bankDisplay').innerHTML = '<span>' + val + '</span>';
+    document.querySelectorAll('#bankList .bank-option').forEach(el => {
+        el.classList.toggle('selected', el.dataset.value === val);
     });
+    document.getElementById('bankDropdown').classList.remove('open');
+    document.getElementById('bankTrigger').classList.remove('open');
+}
+
+function filterBanks() {
+    const q = document.getElementById('bankSearch').value.toLowerCase();
+    let anyVisible = false;
+    document.querySelectorAll('#bankList .bank-option').forEach(el => {
+        const match = el.dataset.value.toLowerCase().includes(q);
+        el.style.display = match ? '' : 'none';
+        if (match) anyVisible = true;
+    });
+    document.querySelectorAll('#bankList .bank-group').forEach(el => {
+        const group = el.dataset.group;
+        const anyInGroup = [...document.querySelectorAll(`#bankList .bank-option[data-group="${group}"]`)].some(o => o.style.display !== 'none');
+        el.style.display = anyInGroup ? '' : 'none';
+    });
+    document.getElementById('bankNoResult').style.display = anyVisible ? 'none' : 'block';
+}
+
+// ── Bank Dropdown (Form 2) ──
+function toggleBankDropdown2() {
+    const trigger = document.getElementById('bankTrigger2');
+    const dropdown = document.getElementById('bankDropdown2');
+    const isOpen = dropdown.classList.contains('open');
+    if (isOpen) {
+        dropdown.classList.remove('open');
+        trigger.classList.remove('open');
+    } else {
+        dropdown.classList.add('open');
+        trigger.classList.add('open');
+        document.getElementById('bankSearch2').focus();
+    }
+}
+
+function selectBank2(val) {
+    document.getElementById('bankHidden2').value = val;
+    document.getElementById('bankDisplay2').innerHTML = '<span>' + val + '</span>';
+    document.querySelectorAll('#bankList2 .bank-option2').forEach(el => {
+        el.classList.toggle('selected', el.dataset.value === val);
+    });
+    document.getElementById('bankDropdown2').classList.remove('open');
+    document.getElementById('bankTrigger2').classList.remove('open');
+}
+
+function filterBanks2() {
+    const q = document.getElementById('bankSearch2').value.toLowerCase();
+    let anyVisible = false;
+    document.querySelectorAll('#bankList2 .bank-option2').forEach(el => {
+        const match = el.dataset.value.toLowerCase().includes(q);
+        el.style.display = match ? '' : 'none';
+        if (match) anyVisible = true;
+    });
+    document.querySelectorAll('#bankList2 .bank-group2').forEach(el => {
+        const group = el.dataset.group;
+        const anyInGroup = [...document.querySelectorAll(`#bankList2 .bank-option2[data-group="${group}"]`)].some(o => o.style.display !== 'none');
+        el.style.display = anyInGroup ? '' : 'none';
+    });
+    document.getElementById('bankNoResult2').style.display = anyVisible ? 'none' : 'block';
+}
+
+// ── Close dropdowns on outside click ──
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('#bankSelectWrap')) {
+        document.getElementById('bankDropdown')?.classList.remove('open');
+        document.getElementById('bankTrigger')?.classList.remove('open');
+    }
+    if (!e.target.closest('#bankSelectWrap2')) {
+        document.getElementById('bankDropdown2')?.classList.remove('open');
+        document.getElementById('bankTrigger2')?.classList.remove('open');
+    }
+});
 </script>
 @endsection
