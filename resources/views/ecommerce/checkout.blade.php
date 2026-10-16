@@ -1330,15 +1330,21 @@
                     @php
                         // Cek apakah ada produk gratis dengan syarat follow/join di keranjang
                         $hasFreeRequirements = false;
-                        $freeReqItems = [];
-                        foreach ($summary['items'] as $item) {
+                        $claimSteps = [];
+                        foreach ($summary['items'] as $itemIdx => $item) {
                             if ($item->product && $item->product->require_follow_join && $summary['subtotal'] <= 0) {
-                                $hasFreeRequirements = true;
-                                $freeReqItems[] = [
-                                    'name'               => $item->product->name,
-                                    'social_follow_url'  => $item->product->social_follow_url,
-                                    'community_join_url' => $item->product->community_join_url,
-                                ];
+                                $activeReqs = method_exists($item->product, 'getActiveFreeRequirements') 
+                                    ? $item->product->getActiveFreeRequirements() 
+                                    : [];
+                                if (!empty($activeReqs)) {
+                                    $hasFreeRequirements = true;
+                                    foreach ($activeReqs as $rIdx => $r) {
+                                        $claimSteps[] = array_merge($r, [
+                                            'step_id' => $r['key'] . '_' . $itemIdx . '_' . $rIdx,
+                                            'product_name' => $item->product->name,
+                                        ]);
+                                    }
+                                }
                             }
                         }
                         $needRegister = $summary['subtotal'] <= 0;
@@ -1349,61 +1355,48 @@
                     <div id="freeClaimRequirements" style="margin-top:1.25rem;">
                         <div style="font-size:0.72rem;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:0.65rem;display:flex;align-items:center;gap:0.4rem;">
                             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-                            Selesaikan Syarat Klaim
+                            Selesaikan Syarat Klaim ({{ count($claimSteps) }})
                         </div>
 
-                        @foreach($freeReqItems as $idx => $req)
-                        @if($req['social_follow_url'])
-                        {{-- Syarat 1: Follow Sosmed --}}
-                        <div class="claim-step" id="step_follow_{{ $idx }}" data-type="timer" style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:0.85rem 1rem;margin-bottom:0.6rem;">
+                        @foreach($claimSteps as $step)
+                        <div class="claim-step" id="step_{{ $step['step_id'] }}" data-type="timer" data-step-key="{{ $step['step_id'] }}" style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:0.85rem 1rem;margin-bottom:0.6rem;transition:all 0.25s;">
                             <div style="display:flex;align-items:center;gap:0.65rem;">
-                                <div id="ico_follow_{{ $idx }}" style="width:32px;height:32px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s;">
-                                    <svg width="16" height="16" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                                <div id="ico_{{ $step['step_id'] }}" style="width:34px;height:34px;border-radius:10px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s;">
+                                    @if($step['icon'] === 'instagram')
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                                    @elseif($step['icon'] === 'tiktok')
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#000000"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.29 0 .57.04.84.11V9.41a6.33 6.33 0 0 0-.84-.06 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V9.05a8.27 8.27 0 0 0 4.77 1.52V7.12a4.85 4.85 0 0 1-1-.43z"/></svg>
+                                    @elseif($step['icon'] === 'x')
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#000000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                    @elseif($step['icon'] === 'youtube')
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                                    @elseif($step['icon'] === 'whatsapp')
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+                                    @elseif($step['icon'] === 'telegram')
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#229ED9"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                                    @elseif($step['icon'] === 'discord')
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                                    @else
+                                        <svg width="18" height="18" fill="none" stroke="#16a34a" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                                    @endif
                                 </div>
                                 <div style="flex:1;min-width:0;">
-                                    <div style="font-size:0.8rem;font-weight:700;color:#0f172a;">Follow Akun Sosial Media</div>
-                                    <div style="font-size:0.72rem;color:#64748b;margin-top:1px;">Kunjungi & follow akun kreator</div>
+                                    <div style="font-size:0.8rem;font-weight:700;color:#0f172a;">{{ $step['label'] }}</div>
+                                    <div style="font-size:0.72rem;color:#64748b;margin-top:1px;">{{ $step['sublabel'] }}</div>
                                 </div>
-                                <a href="{{ $req['social_follow_url'] }}" target="_blank" rel="noopener"
-                                   id="btn_follow_{{ $idx }}"
-                                   onclick="startTimer('follow','{{ $idx }}')"
-                                   style="flex-shrink:0;padding:0.4rem 0.75rem;border-radius:8px;font-size:0.75rem;font-weight:700;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:0.35rem;transition:opacity 0.2s;">
+                                <a href="{{ $step['url'] }}" target="_blank" rel="noopener"
+                                   id="btn_{{ $step['step_id'] }}"
+                                   onclick="startTimer('{{ $step['step_id'] }}')"
+                                   style="flex-shrink:0;padding:0.4rem 0.85rem;border-radius:8px;font-size:0.75rem;font-weight:700;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:0.35rem;transition:opacity 0.2s;">
                                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                                    Follow
+                                    {{ $step['action'] }}
                                 </a>
                             </div>
-                            <div id="timer_follow_{{ $idx }}" style="display:none;margin-top:0.6rem;padding:0.45rem 0.65rem;background:#fffbeb;border-radius:8px;font-size:0.72rem;color:#92400e;display:none;align-items:center;gap:0.4rem;">
+                            <div id="timer_{{ $step['step_id'] }}" style="display:none;margin-top:0.6rem;padding:0.45rem 0.65rem;background:#fffbeb;border-radius:8px;font-size:0.72rem;color:#92400e;align-items:center;gap:0.4rem;">
                                 <svg width="12" height="12" fill="none" stroke="#d97706" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                <span id="timer_follow_txt_{{ $idx }}">Tunggu sebentar setelah klik Follow...</span>
+                                <span id="timer_{{ $step['step_id'] }}_txt">Tunggu sebentar setelah klik {{ $step['action'] }}...</span>
                             </div>
                         </div>
-                        @endif
-
-                        @if($req['community_join_url'])
-                        {{-- Syarat 2: Join Komunitas --}}
-                        <div class="claim-step" id="step_join_{{ $idx }}" data-type="timer" style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:0.85rem 1rem;margin-bottom:0.6rem;">
-                            <div style="display:flex;align-items:center;gap:0.65rem;">
-                                <div id="ico_join_{{ $idx }}" style="width:32px;height:32px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s;">
-                                    <svg width="16" height="16" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-                                </div>
-                                <div style="flex:1;min-width:0;">
-                                    <div style="font-size:0.8rem;font-weight:700;color:#0f172a;">Join Grup Komunitas</div>
-                                    <div style="font-size:0.72rem;color:#64748b;margin-top:1px;">WA / Telegram / Discord</div>
-                                </div>
-                                <a href="{{ $req['community_join_url'] }}" target="_blank" rel="noopener"
-                                   id="btn_join_{{ $idx }}"
-                                   onclick="startTimer('join','{{ $idx }}')"
-                                   style="flex-shrink:0;padding:0.4rem 0.75rem;border-radius:8px;font-size:0.75rem;font-weight:700;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:0.35rem;transition:opacity 0.2s;">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                                    Join
-                                </a>
-                            </div>
-                            <div id="timer_join_{{ $idx }}" style="display:none;margin-top:0.6rem;padding:0.45rem 0.65rem;background:#fffbeb;border-radius:8px;font-size:0.72rem;color:#92400e;align-items:center;gap:0.4rem;">
-                                <svg width="12" height="12" fill="none" stroke="#d97706" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                <span id="timer_join_txt_{{ $idx }}">Tunggu sebentar setelah klik Join...</span>
-                            </div>
-                        </div>
-                        @endif
                         @endforeach
 
                         {{-- Syarat 3: Register / Login --}}
@@ -2654,13 +2647,13 @@
     const FREE_TIMER_MS = 5000; // 5 detik
     const freeTimerState = {}; // { 'follow_0': true, 'join_0': true, ... }
 
-    function startTimer(type, idx) {
-        const key = type + '_' + idx;
+    function startTimer(typeOrKey, idx) {
+        const key = idx !== undefined ? (typeOrKey + '_' + idx) : typeOrKey;
         if (freeTimerState[key]) return; // sudah lolos, skip
 
-        const timerEl   = document.getElementById('timer_' + type + '_' + idx);
-        const timerTxt  = document.getElementById('timer_' + type + '_txt_' + idx);
-        const icoEl     = document.getElementById('ico_' + type + '_' + idx);
+        const timerEl   = document.getElementById('timer_' + key);
+        const timerTxt  = document.getElementById('timer_' + key + '_txt') || document.getElementById('timer_' + key + '_txt');
+        const icoEl     = document.getElementById('ico_' + key);
 
         if (timerEl) {
             timerEl.style.display = 'flex';
@@ -2680,11 +2673,11 @@
                 // Update icon to green check
                 if (icoEl) {
                     icoEl.style.background = '#dcfce7';
-                    icoEl.innerHTML = '<svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+                    icoEl.innerHTML = '<svg width="18" height="18" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
                 }
 
                 // Update step border to green
-                const stepEl = document.getElementById('step_' + type + '_' + idx);
+                const stepEl = document.getElementById('step_' + key);
                 if (stepEl) {
                     stepEl.style.background = '#f0fdf4';
                     stepEl.style.borderColor = '#86efac';
@@ -2711,11 +2704,7 @@
         let allDone = true;
 
         allSteps.forEach(function (step) {
-            const id   = step.id; // e.g. step_follow_0 / step_join_0
-            const parts = id.replace('step_', '').split('_');
-            const type  = parts[0];
-            const idx   = parts.slice(1).join('_');
-            const key   = type + '_' + idx;
+            const key = step.getAttribute('data-step-key') || step.id.replace('step_', '');
             if (!freeTimerState[key]) allDone = false;
         });
 

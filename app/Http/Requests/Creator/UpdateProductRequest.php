@@ -50,8 +50,15 @@ class UpdateProductRequest extends FormRequest
 
             // Syarat klaim produk gratis (Follow sosmed & Join grup)
             'require_follow_join'   => ['nullable', 'boolean'],
-            'social_follow_url'     => ['nullable', 'required_if:require_follow_join,1,true', 'url', 'max:500'],
-            'community_join_url'    => ['nullable', 'required_if:require_follow_join,1,true', 'url', 'max:500'],
+            'follow_instagram_url'  => ['nullable', 'url', 'max:500'],
+            'follow_tiktok_url'     => ['nullable', 'url', 'max:500'],
+            'follow_x_url'          => ['nullable', 'url', 'max:500'],
+            'follow_youtube_url'    => ['nullable', 'url', 'max:500'],
+            'join_whatsapp_url'     => ['nullable', 'url', 'max:500'],
+            'join_telegram_url'     => ['nullable', 'url', 'max:500'],
+            'join_discord_url'      => ['nullable', 'url', 'max:500'],
+            'social_follow_url'     => ['nullable', 'url', 'max:500'],
+            'community_join_url'    => ['nullable', 'url', 'max:500'],
 
             // URL produk digital — divalidasi oleh SafeDigitalUrl jika diisi
             'digital_resource'    => ['nullable', 'string', 'max:2000'],
@@ -83,6 +90,27 @@ class UpdateProductRequest extends FormRequest
         ];
     }
 
+    public function withValidator($validator)
+    {
+        $validator->after(function ($v) {
+            if ($this->boolean('require_follow_join')) {
+                $hasAny = !empty($this->input('follow_instagram_url'))
+                    || !empty($this->input('follow_tiktok_url'))
+                    || !empty($this->input('follow_x_url'))
+                    || !empty($this->input('follow_youtube_url'))
+                    || !empty($this->input('join_whatsapp_url'))
+                    || !empty($this->input('join_telegram_url'))
+                    || !empty($this->input('join_discord_url'))
+                    || !empty($this->input('social_follow_url'))
+                    || !empty($this->input('community_join_url'));
+
+                if (!$hasAny) {
+                    $v->errors()->add('require_follow_join', 'Karena syarat klaim gratis diaktifkan, mohon isi minimal salah satu platform sosmed atau komunitas.');
+                }
+            }
+        });
+    }
+
     public function messages(): array
     {
         return [
@@ -99,9 +127,14 @@ class UpdateProductRequest extends FormRequest
             'meta_desc.max'                  => 'Meta Description SEO maksimal 1000 karakter.',
             'meta_keywords.max'              => 'Meta Keywords SEO maksimal 500 karakter.',
             'variants.max'                   => 'Maksimal 7 variasi per produk.',
-            'social_follow_url.required_if'  => 'URL akun sosmed wajib diisi jika syarat klaim gratis diaktifkan.',
+            'follow_instagram_url.url'       => 'Format URL Instagram tidak valid (harus diawali http:// atau https://).',
+            'follow_tiktok_url.url'          => 'Format URL TikTok tidak valid (harus diawali http:// atau https://).',
+            'follow_x_url.url'               => 'Format URL X / Twitter tidak valid (harus diawali http:// atau https://).',
+            'follow_youtube_url.url'         => 'Format URL YouTube tidak valid (harus diawali http:// atau https://).',
+            'join_whatsapp_url.url'          => 'Format URL WhatsApp tidak valid (harus diawali http:// atau https://).',
+            'join_telegram_url.url'          => 'Format URL Telegram tidak valid (harus diawali http:// atau https://).',
+            'join_discord_url.url'           => 'Format URL Discord tidak valid (harus diawali http:// atau https://).',
             'social_follow_url.url'          => 'Format URL akun sosmed tidak valid (harus diawali http:// atau https://).',
-            'community_join_url.required_if' => 'URL grup komunitas wajib diisi jika syarat klaim gratis diaktifkan.',
             'community_join_url.url'         => 'Format URL grup komunitas tidak valid (harus diawali http:// atau https://).',
         ];
     }

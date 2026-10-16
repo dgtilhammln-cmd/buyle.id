@@ -30,7 +30,10 @@ class Product extends Model
         'gate_open_time', 'gate_close_time', 'gate_bypass_time',
         'ticket_war_start', 'max_tickets_per_order',
         // Free Product Follow & Join Requirement
-        'require_follow_join', 'social_follow_url', 'community_join_url',
+        'require_follow_join',
+        'social_follow_url', 'community_join_url', // Legacy fallback
+        'follow_instagram_url', 'follow_tiktok_url', 'follow_x_url', 'follow_youtube_url',
+        'join_whatsapp_url', 'join_telegram_url', 'join_discord_url',
         // Kolom White Label & Reseller
         'is_whitelabel', 'whitelabel_price', 'whitelabel_terms', 'whitelabel_approval_status', 'whitelabel_rejection_reason',
         // Affiliate Commission
@@ -538,5 +541,139 @@ class Product extends Model
     public function reviews()
     {
         return $this->hasMany(\App\Models\ProductRating::class, 'product_id')->where('is_approved', true);
+    }
+
+    /**
+     * Dapatkan daftar syarat klaim gratis yang aktif (berdasarkan platform yang diisi kreator).
+     */
+    public function getActiveFreeRequirements(): array
+    {
+        if (!$this->require_follow_join) {
+            return [];
+        }
+
+        $items = [];
+
+        // 1. Instagram
+        if (!empty($this->follow_instagram_url)) {
+            $items[] = [
+                'key'      => 'ig',
+                'category' => 'sosmed',
+                'platform' => 'Instagram',
+                'action'   => 'Follow',
+                'label'    => 'Follow Akun Instagram',
+                'sublabel' => 'Kunjungi & follow profil Instagram kreator',
+                'url'      => $this->follow_instagram_url,
+                'icon'     => 'instagram',
+            ];
+        } elseif (!empty($this->social_follow_url)) {
+            $items[] = [
+                'key'      => 'legacy_social',
+                'category' => 'sosmed',
+                'platform' => 'Sosial Media',
+                'action'   => 'Follow',
+                'label'    => 'Follow Akun Sosial Media',
+                'sublabel' => 'Kunjungi & follow profil kreator',
+                'url'      => $this->social_follow_url,
+                'icon'     => 'social',
+            ];
+        }
+
+        // 2. TikTok
+        if (!empty($this->follow_tiktok_url)) {
+            $items[] = [
+                'key'      => 'tiktok',
+                'category' => 'sosmed',
+                'platform' => 'TikTok',
+                'action'   => 'Follow',
+                'label'    => 'Follow Akun TikTok',
+                'sublabel' => 'Kunjungi & follow profil TikTok kreator',
+                'url'      => $this->follow_tiktok_url,
+                'icon'     => 'tiktok',
+            ];
+        }
+
+        // 3. X (Twitter)
+        if (!empty($this->follow_x_url)) {
+            $items[] = [
+                'key'      => 'x',
+                'category' => 'sosmed',
+                'platform' => 'X (Twitter)',
+                'action'   => 'Follow',
+                'label'    => 'Follow Akun X (Twitter)',
+                'sublabel' => 'Kunjungi & ikuti akun X kreator',
+                'url'      => $this->follow_x_url,
+                'icon'     => 'x',
+            ];
+        }
+
+        // 4. YouTube
+        if (!empty($this->follow_youtube_url)) {
+            $items[] = [
+                'key'      => 'youtube',
+                'category' => 'sosmed',
+                'platform' => 'YouTube',
+                'action'   => 'Subscribe',
+                'label'    => 'Subscribe Channel YouTube',
+                'sublabel' => 'Kunjungi & subscribe channel YouTube kreator',
+                'url'      => $this->follow_youtube_url,
+                'icon'     => 'youtube',
+            ];
+        }
+
+        // 5. WhatsApp
+        if (!empty($this->join_whatsapp_url)) {
+            $items[] = [
+                'key'      => 'wa',
+                'category' => 'community',
+                'platform' => 'WhatsApp',
+                'action'   => 'Join',
+                'label'    => 'Join Grup / Channel WhatsApp',
+                'sublabel' => 'Bergabung ke komunitas WhatsApp kreator',
+                'url'      => $this->join_whatsapp_url,
+                'icon'     => 'whatsapp',
+            ];
+        } elseif (!empty($this->community_join_url)) {
+            $items[] = [
+                'key'      => 'legacy_community',
+                'category' => 'community',
+                'platform' => 'Komunitas',
+                'action'   => 'Join',
+                'label'    => 'Join Komunitas Kreator',
+                'sublabel' => 'Bergabung ke grup komunitas kreator',
+                'url'      => $this->community_join_url,
+                'icon'     => 'community',
+            ];
+        }
+
+        // 6. Telegram
+        if (!empty($this->join_telegram_url)) {
+            $items[] = [
+                'key'      => 'tele',
+                'category' => 'community',
+                'platform' => 'Telegram',
+                'action'   => 'Join',
+                'label'    => 'Join Channel Telegram',
+                'sublabel' => 'Bergabung ke channel Telegram kreator',
+                'url'      => $this->join_telegram_url,
+                'icon'     => 'telegram',
+            ];
+        }
+
+        // 7. Discord
+        if (!empty($this->join_discord_url)) {
+            $items[] = [
+                'key'      => 'discord',
+                'category' => 'community',
+                'platform' => 'Discord',
+                'action'   => 'Join',
+                'label'    => 'Join Server Discord',
+                'sublabel' => 'Bergabung ke server Discord kreator',
+                'url'      => $this->join_discord_url,
+                'icon'     => 'discord',
+            ];
+        }
+
+        return $items;
     }
 }
