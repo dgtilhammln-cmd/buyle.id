@@ -17,6 +17,17 @@ class SellerPayoutController extends Controller
     public function settings()
     {
         $seller = auth()->user();
+        if ((empty($seller->bank_name) || empty($seller->bank_account_number)) && PayoutRequest::where('seller_id', $seller->id)->exists()) {
+            $lastPayout = PayoutRequest::where('seller_id', $seller->id)->latest()->first();
+            if ($lastPayout && $lastPayout->bank_name) {
+                $seller->update([
+                    'bank_name'           => $lastPayout->bank_name,
+                    'bank_account_number' => $lastPayout->bank_account_number,
+                    'bank_account_name'   => $lastPayout->bank_account_name,
+                ]);
+                $seller->refresh();
+            }
+        }
         $platformFeeRate = 5;
 
         try {
@@ -70,19 +81,31 @@ class SellerPayoutController extends Controller
         ));
     }
 
-    /**
-     * Ajukan request pencairan saldo ke admin.
-     */
     public function requestPayout(Request $request)
     {
-        $validated = $request->validate([
-            'amount'              => 'required|numeric|min:50000',
-            'bank_name'           => 'required|string|max:100',
-            'bank_account_number' => 'required|string|max:50',
-            'bank_account_name'   => 'required|string|max:100',
-        ]);
-
         $seller = auth()->user();
+        $hasSaved = !empty($seller->bank_name) && !empty($seller->bank_account_number) && !empty($seller->bank_account_name);
+
+        $rules = [
+            'amount' => 'required|numeric|min:50000',
+        ];
+
+        // Validasi bank hanya jika belum ada rekening tersimpan atau form mengirim bank baru
+        if (!$hasSaved || $request->filled('bank_name')) {
+            $rules['bank_name']           = 'required|string|max:100';
+            $rules['bank_account_number'] = 'required|string|max:50';
+            $rules['bank_account_name']   = 'required|string|max:100';
+        }
+
+        $validated = $request->validate($rules);
+
+        $bankName          = $validated['bank_name'] ?? $seller->bank_name;
+        $bankAccountNumber = $validated['bank_account_number'] ?? $seller->bank_account_number;
+        $bankAccountName   = $validated['bank_account_name'] ?? $seller->bank_account_name;
+
+        if (!$bankName || !$bankAccountNumber || !$bankAccountName) {
+            return back()->with('error', 'Silakan pilih atau daftarkan rekening tujuan terlebih dahulu.');
+        }
 
         // Hitung ulang saldo siap ditarik (server-side validasi)
         try {
@@ -120,27 +143,29 @@ class SellerPayoutController extends Controller
         $adminFee = 0;
         $netAmount = $validated['amount'];
 
-        // Simpan info rekening ke profil seller
-        $seller->update([
-            'bank_name'           => $validated['bank_name'],
-            'bank_account_number' => $validated['bank_account_number'],
-            'bank_account_name'   => $validated['bank_account_name'],
-        ]);
+        // Simpan info rekening ke profil seller jika baru diinput
+        if (!empty($validated['bank_name'])) {
+            $seller->update([
+                'bank_name'           => $bankName,
+                'bank_account_number' => $bankAccountNumber,
+                'bank_account_name'   => $bankAccountName,
+            ]);
+        }
 
         PayoutRequest::create([
             'seller_id'           => $seller->id,
             'amount'              => $validated['amount'],
             'admin_fee'           => $adminFee,
             'net_amount'          => $netAmount,
-            'bank_name'           => $validated['bank_name'],
-            'bank_account_number' => $validated['bank_account_number'],
-            'bank_account_name'   => $validated['bank_account_name'],
+            'bank_name'           => $bankName,
+            'bank_account_number' => $bankAccountNumber,
+            'bank_account_name'   => $bankAccountName,
             'status'              => 'pending',
         ]);
 
         // Kirim notifikasi email konfirmasi ke creator
         try {
-            $seller->notify(new \App\Notifications\PayoutRequestedNotification($netAmount, $validated['bank_name'], $validated['bank_account_number']));
+            $seller->notify(new \App\Notifications\PayoutRequestedNotification($netAmount, $bankName, $bankAccountNumber));
         } catch (\Throwable $e) {
             \Log::warning('Gagal kirim notifikasi PayoutRequested: ' . $e->getMessage());
         }

@@ -24,78 +24,95 @@
 
     /* ── Sidebar balance cards ── */
     .saldo-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.6rem;
-        margin-bottom: 1.25rem;
-    }
-    .saldo-card {
-        border-radius: 14px;
-        padding: 0.9rem;
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    .saldo-card {
+        border-radius: 16px;
+        padding: 1.1rem 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     }
     .saldo-card.cleared {
-        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-        border: 1px solid #bbf7d0;
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        border: 1.5px solid #86efac;
     }
     .saldo-card.hold {
-        background: #fffbeb;
-        border: 1px solid #fde68a;
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        border: 1.5px solid #fde68a;
     }
     .saldo-card-label {
-        font-size: 0.67rem;
-        font-weight: 700;
+        font-size: 0.72rem;
+        font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.05em;
         display: flex;
         align-items: center;
-        gap: 0.3rem;
+        gap: 0.4rem;
     }
-    .saldo-card.cleared .saldo-card-label { color: #166534; }
+    .saldo-card.cleared .saldo-card-label { color: #15803d; }
     .saldo-card.hold .saldo-card-label { color: #92400e; }
     .saldo-card-value {
-        font-size: 1rem;
+        font-size: 1.35rem;
         font-weight: 800;
         letter-spacing: -0.02em;
         line-height: 1.2;
     }
-    .saldo-card.cleared .saldo-card-value { color: #15803d; }
-    .saldo-card.hold .saldo-card-value { color: #b45309; }
+    .saldo-card.cleared .saldo-card-value { color: #14532d; }
+    .saldo-card.hold .saldo-card-value { color: #78350f; }
     .saldo-card-sub {
-        font-size: 0.62rem;
-        font-weight: 500;
+        font-size: 0.7rem;
+        font-weight: 600;
         line-height: 1.3;
+        margin-top: 0.15rem;
     }
-    .saldo-card.cleared .saldo-card-sub { color: #4ade80; }
+    .saldo-card.cleared .saldo-card-sub { color: #16a34a; }
     .saldo-card.hold .saldo-card-sub { color: #d97706; }
 
     /* ── Tab Sidebar ── */
+    .sidebar-nav-label {
+        font-size: 0.68rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #94a3b8;
+        padding: 0 0.5rem 0.5rem;
+    }
     .tab-btn {
         width: 100%;
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        padding: 0.8rem 1rem;
+        gap: 0.85rem;
+        padding: 0.9rem 1.1rem;
         border: none;
         background: transparent;
-        color: #64748b;
+        color: #475569;
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.83rem;
-        font-weight: 600;
+        font-size: 0.85rem;
+        font-weight: 700;
         border-radius: 12px;
         cursor: pointer;
         text-align: left;
         transition: all 0.2s;
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.35rem;
     }
     .tab-btn:hover { background: #f8fafc; color: #1eb349; }
     .tab-btn.active {
         background: linear-gradient(135deg, #1eb349, #a5cf37);
         color: #fff;
         font-weight: 700;
-        box-shadow: 0 4px 12px rgba(30,179,73,0.2);
+        box-shadow: 0 4px 14px rgba(30,179,73,0.25);
+    }
+    .sidebar-info-card {
+        margin-top: 1.75rem;
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        border-radius: 14px;
+        padding: 1rem 1.1rem;
     }
 
     /* ── Content Cards ── */
@@ -503,7 +520,7 @@
     $savedBank  = $seller->bank_name ?? '';
     $savedNum   = $seller->bank_account_number ?? '';
     $savedName  = $seller->bank_account_name ?? '';
-    $hasSaved   = $savedBank && $savedNum && $savedName;
+    $hasSaved   = !empty($savedBank) && !empty($savedNum);
 @endphp
 
 <div class="bio-layout">
@@ -516,24 +533,25 @@
             <div class="saldo-grid">
                 <div class="saldo-card cleared">
                     <div class="saldo-card-label">
-                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                         Siap Ditarik
                     </div>
                     <div class="saldo-card-value">Rp {{ number_format($availableBalance, 0, ',', '.') }}</div>
-                    <div class="saldo-card-sub">Transaksi sudah 3 hari</div>
+                    <div class="saldo-card-sub">Dapat ditarik kapan saja</div>
                 </div>
                 <div class="saldo-card hold">
                     <div class="saldo-card-label">
-                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        Menunggu
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Menunggu Clearance
                     </div>
                     <div class="saldo-card-value">Rp {{ number_format($holdBalance, 0, ',', '.') }}</div>
-                    <div class="saldo-card-sub">Otomatis cair 3x24 jam</div>
+                    <div class="saldo-card-sub">Otomatis cair setelah 3x24 jam</div>
                 </div>
             </div>
         </div>
 
         <div class="bio-tabs-list">
+            <div class="sidebar-nav-label">Menu Navigasi</div>
             <button type="button" class="tab-btn active" onclick="switchPayoutTab('tab-withdraw', this)">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
                 <span class="tab-text-full">Tarik Saldo</span>
@@ -541,14 +559,24 @@
             </button>
             <button type="button" class="tab-btn" onclick="switchPayoutTab('tab-bank', this)">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                <span class="tab-text-full">Rekening</span>
+                <span class="tab-text-full">Pengaturan Rekening</span>
                 <span class="tab-text-mob">Rekening</span>
             </button>
             <button type="button" class="tab-btn" onclick="switchPayoutTab('tab-history', this)">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                <span class="tab-text-full">Riwayat</span>
+                <span class="tab-text-full">Riwayat Pencairan</span>
                 <span class="tab-text-mob">Riwayat</span>
             </button>
+        </div>
+
+        <div class="sidebar-info-card">
+            <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;font-weight:800;color:#16a34a;margin-bottom:0.35rem;">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                100% Bebas Potongan
+            </div>
+            <div style="font-size:0.7rem;color:#64748b;line-height:1.45;">
+                Dana penjualan creator dicairkan penuh tanpa potongan biaya admin penarikan.
+            </div>
         </div>
     </div>
 
@@ -576,13 +604,13 @@
             <div style="display:none" class="mobile-saldo-bar">
                 <div class="prof-card" style="margin-bottom:1rem;">
                     <div class="form-body" style="padding:1rem 1.25rem;">
-                        <div class="saldo-grid" style="display:grid!important">
-                            <div class="saldo-card cleared">
+                        <div class="saldo-grid" style="display:flex!important;flex-direction:row!important;">
+                            <div class="saldo-card cleared" style="flex:1">
                                 <div class="saldo-card-label">Siap Ditarik</div>
                                 <div class="saldo-card-value">Rp {{ number_format($availableBalance, 0, ',', '.') }}</div>
                                 <div class="saldo-card-sub">Sudah 3x24 jam</div>
                             </div>
-                            <div class="saldo-card hold">
+                            <div class="saldo-card hold" style="flex:1">
                                 <div class="saldo-card-label">Menunggu</div>
                                 <div class="saldo-card-value">Rp {{ number_format($holdBalance, 0, ',', '.') }}</div>
                                 <div class="saldo-card-sub">Hold 3 hari</div>
@@ -630,23 +658,33 @@
 
                     {{-- Rekening Tujuan Tersimpan --}}
                     @if($hasSaved)
-                    <div id="savedRekBlock">
-                        <div style="font-size:0.75rem;font-weight:700;color:#334155;margin-bottom:0.5rem;">Rekening Tujuan</div>
-                        <div class="rekening-saved">
+                    <div id="savedRekBlock" style="margin-bottom:1.25rem;">
+                        <div style="font-size:0.75rem;font-weight:700;color:#334155;margin-bottom:0.5rem;">Rekening Tujuan Pencairan</div>
+                        <div class="rekening-saved" style="background:#f0fdf4;border:1.5px solid #86efac;">
                             <div class="rekening-info">
-                                <div class="rekening-icon">
+                                <div class="rekening-icon" style="background:#16a34a;">
                                     <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
                                 </div>
                                 <div>
-                                    <div class="rekening-bank">{{ $savedBank }}</div>
-                                    <div class="rekening-num">{{ $savedNum }}</div>
-                                    <div class="rekening-name">a/n {{ $savedName }}</div>
+                                    <div style="display:flex;align-items:center;gap:0.4rem;">
+                                        <span class="rekening-bank">{{ $savedBank }}</span>
+                                        <span style="background:#dcfce7;color:#15803d;font-size:0.6rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:4px;">REKENING TERDAFTAR</span>
+                                    </div>
+                                    <div class="rekening-num" style="color:#0f172a;font-weight:700;font-size:0.85rem;">{{ $savedNum }}</div>
+                                    <div class="rekening-name">Atas Nama: <strong>{{ $savedName ?: $seller->name }}</strong></div>
                                 </div>
                             </div>
-                            <button type="button" class="btn-ganti" onclick="gantiRekening()">
+                            <button type="button" class="btn-ganti" onclick="gantiRekening()" id="btnGantiRek">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:-2px;margin-right:3px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                                Ubah
+                                Gunakan Rekening Lain
                             </button>
+                        </div>
+                    </div>
+                    @else
+                    <div class="alert-notice" style="background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;margin-bottom:1.25rem;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        <div>
+                            Kamu belum mendaftarkan rekening. Silakan isi rekening tujuan di bawah ini. Rekening akan <strong>otomatis tersimpan</strong> agar penarikan berikutnya tidak perlu input ulang.
                         </div>
                     </div>
                     @endif
@@ -654,60 +692,61 @@
                     <form action="{{ route('creator.payout.request') }}" method="POST" id="withdrawForm">
                         @csrf
 
-                        {{-- Bank Fields (hidden if saved account exists) --}}
-                        <div id="bankFieldsBlock" style="{{ $hasSaved ? 'display:none' : '' }}">
-                            <div class="form-group">
-                                <label class="form-label">Bank / E-Wallet Tujuan <span style="color:#ef4444">*</span></label>
-                                <div class="bank-select-wrap" id="bankSelectWrap">
-                                    <div class="bank-select-trigger" id="bankTrigger" onclick="toggleBankDropdown()">
-                                        <div class="bank-select-display" id="bankDisplay">
-                                            @if($savedBank)
-                                                <span>{{ $savedBank }}</span>
-                                            @else
-                                                <span style="color:#94a3b8">Pilih Bank atau E-Wallet</span>
-                                            @endif
-                                        </div>
-                                        <svg class="chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-                                    </div>
-                                    <div class="bank-dropdown" id="bankDropdown">
-                                        <div class="bank-search-wrap">
-                                            <input type="text" class="bank-search" id="bankSearch" placeholder="Cari nama bank atau e-wallet..." oninput="filterBanks()" autocomplete="off">
-                                        </div>
-                                        <div class="bank-list-scroll" id="bankList">
-                                            @foreach($banks as $groupName => $groupBanks)
-                                            <div class="bank-group-label bank-group" data-group="{{ $groupName }}">{{ $groupName }}</div>
-                                            @foreach($groupBanks as $bankItem)
-                                            <div class="bank-option {{ $savedBank === $bankItem ? 'selected' : '' }}" 
-                                                 data-value="{{ $bankItem }}" 
-                                                 data-group="{{ $groupName }}"
-                                                 onclick="selectBank('{{ $bankItem }}', '{{ $groupName }}')">
-                                                {{ $bankItem }}
-                                                <span class="bank-option-badge">{{ $groupName === 'E-Wallet' ? 'EWALLET' : ($groupName === 'Bank Digital' ? 'DIGITAL' : ($groupName === 'Bank Daerah' ? 'DAERAH' : 'BANK')) }}</span>
+                        {{-- Bank Fields: Tampil jika belum ada rekening tersimpan atau klik gunakan rekening lain --}}
+                        <div id="bankFieldsBlock" style="{{ $hasSaved ? 'display:none;' : '' }}">
+                            <div style="background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:14px;padding:1.1rem;margin-bottom:1.25rem;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+                                    <span style="font-size:0.78rem;font-weight:700;color:#0f172a;">Input Rekening Penarikan</span>
+                                    @if($hasSaved)
+                                    <button type="button" onclick="batalGantiRekening()" style="border:none;background:transparent;color:#dc2626;font-size:0.72rem;font-weight:700;cursor:pointer;">Batal (Gunakan Rekening Terdaftar)</button>
+                                    @endif
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Bank / E-Wallet Tujuan <span style="color:#ef4444">*</span></label>
+                                    <div class="bank-select-wrap" id="bankSelectWrap">
+                                        <div class="bank-select-trigger" id="bankTrigger" onclick="toggleBankDropdown()">
+                                            <div class="bank-select-display" id="bankDisplay">
+                                                @if($savedBank)
+                                                    <span>{{ $savedBank }}</span>
+                                                @else
+                                                    <span style="color:#94a3b8">Pilih Bank atau E-Wallet</span>
+                                                @endif
                                             </div>
-                                            @endforeach
-                                            @endforeach
-                                            <div class="bank-no-result" id="bankNoResult" style="display:none">Tidak ditemukan</div>
+                                            <svg class="chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
                                         </div>
+                                        <div class="bank-dropdown" id="bankDropdown">
+                                            <div class="bank-search-wrap">
+                                                <input type="text" class="bank-search" id="bankSearch" placeholder="Cari nama bank atau e-wallet..." oninput="filterBanks()" autocomplete="off">
+                                            </div>
+                                            <div class="bank-list-scroll" id="bankList">
+                                                @foreach($banks as $groupName => $groupBanks)
+                                                <div class="bank-group-label bank-group" data-group="{{ $groupName }}">{{ $groupName }}</div>
+                                                @foreach($groupBanks as $bankItem)
+                                                <div class="bank-option {{ $savedBank === $bankItem ? 'selected' : '' }}" 
+                                                     data-value="{{ $bankItem }}" 
+                                                     data-group="{{ $groupName }}"
+                                                     onclick="selectBank('{{ $bankItem }}', '{{ $groupName }}')">
+                                                    {{ $bankItem }}
+                                                    <span class="bank-option-badge">{{ $groupName === 'E-Wallet' ? 'EWALLET' : ($groupName === 'Bank Digital' ? 'DIGITAL' : ($groupName === 'Bank Daerah' ? 'DAERAH' : 'BANK')) }}</span>
+                                                </div>
+                                                @endforeach
+                                                @endforeach
+                                                <div class="bank-no-result" id="bankNoResult" style="display:none">Tidak ditemukan</div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="bank_name" id="bankHidden" value="{{ $hasSaved ? '' : $savedBank }}">
                                     </div>
-                                    <input type="hidden" name="bank_name" id="bankHidden" value="{{ $savedBank }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Nomor Rekening / Akun <span style="color:#ef4444">*</span></label>
+                                    <input type="text" name="bank_account_number" id="bankNum" class="form-input" value="{{ $hasSaved ? '' : $savedNum }}" placeholder="Contoh: 1234567890">
+                                </div>
+                                <div class="form-group" style="margin-bottom:0">
+                                    <label class="form-label">Nama Pemilik Rekening <span style="color:#ef4444">*</span></label>
+                                    <input type="text" name="bank_account_name" id="bankAccName" class="form-input" value="{{ $hasSaved ? '' : ($savedName ?: $seller->name) }}" placeholder="Nama sesuai buku tabungan">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Nomor Rekening / Akun <span style="color:#ef4444">*</span></label>
-                                <input type="text" name="bank_account_number" id="bankNum" class="form-input" value="{{ $savedNum }}" placeholder="Contoh: 1234567890" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Nama Pemilik Rekening <span style="color:#ef4444">*</span></label>
-                                <input type="text" name="bank_account_name" id="bankAccName" class="form-input" value="{{ $savedName ?: $seller->name }}" placeholder="Nama sesuai buku tabungan" required>
-                            </div>
                         </div>
-
-                        {{-- If saved, pass hidden fields --}}
-                        @if($hasSaved)
-                        <input type="hidden" name="bank_name" value="{{ $savedBank }}">
-                        <input type="hidden" name="bank_account_number" value="{{ $savedNum }}">
-                        <input type="hidden" name="bank_account_name" value="{{ $savedName }}">
-                        @endif
 
                         {{-- Quick Amount --}}
                         <div class="form-group">
@@ -939,8 +978,21 @@ function setAmount(val) {
 
 // ── Ganti Rekening Toggle ──
 function gantiRekening() {
-    document.getElementById('savedRekBlock').style.display = 'none';
-    document.getElementById('bankFieldsBlock').style.display = 'block';
+    const saved = document.getElementById('savedRekBlock');
+    const fields = document.getElementById('bankFieldsBlock');
+    if (saved) saved.style.display = 'none';
+    if (fields) fields.style.display = 'block';
+}
+
+function batalGantiRekening() {
+    const saved = document.getElementById('savedRekBlock');
+    const fields = document.getElementById('bankFieldsBlock');
+    if (saved) saved.style.display = 'block';
+    if (fields) fields.style.display = 'none';
+    const hidden = document.getElementById('bankHidden');
+    const num = document.getElementById('bankNum');
+    if (hidden) hidden.value = '';
+    if (num) num.value = '';
 }
 
 // ── Bank Dropdown (Form 1) ──
