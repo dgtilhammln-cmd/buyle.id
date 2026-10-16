@@ -307,3 +307,262 @@ Saat melakukan deploy ke server produksi:
 
 ---
 *Dokumentasi ini dibuat otomatis agar developer atau AI agent berikutnya memiliki gambaran utuh tanpa ada detail teknis yang terlewat.*
+
+---
+
+## 👮 8. Sistem Gate Staff & Atribusi Scan (Update 16 Oktober 2026)
+
+Fitur ini memungkinkan Creator/EO mendaftarkan nama-nama panitia gate (hingga 10 orang), setiap panitia mendapat **PIN 6 digit unik**. Setiap check-in QR terekam oleh siapa dan di gate mana — memberikan full accountability tanpa login akun Buyle.id.
+
+### A. Arsitektur Data
+
+**Tabel Baru: `gate_staff`**
+
+| Kolom | Tipe | Keterangan |
+|:---|:---|:---|
+| `id` | BIGINT PK | |
+| `product_id` | FK → products | Panitia hanya berlaku untuk event ini |
+| `creator_id` | FK → users | Siapa yang mendaftarkan |
+| `name` | VARCHAR(100) | Nama panitia (misal: "Budi Santoso") |
+| `gate_number` | TINYINT | Gate 1 s/d 10 |
+| `pin` | VARCHAR(255) | 6 digit, disimpan **bcrypt hashed** |
+| `is_active` | BOOLEAN | Bisa di-disable tanpa hapus data |
+| `created_at` / `updated_at` | TIMESTAMP | |
+
+**Kolom Baru pada `ticket_passes`**
+
+| Kolom | Tipe | Keterangan |
+|:---|:---|:---|
+| `scanned_by_staff_name` | VARCHAR(100) NULL | Nama panitia yang scan |
+| `scanned_at_gate` | TINYINT NULL | Nomor gate saat scan |
+
+**Kolom Baru pada `ticket_passes` (NIK)**
+
+| Kolom | Tipe | Keterangan |
+|:---|:---|:---|
+| `holder_nik` | TEXT NULL | 16 digit, **terenkripsi AES-256** di database |
+
+---
+
+### B. Alur Registrasi Panitia oleh Creator
+
+```
+Creator Dashboard (Tab "Link Gate Panitia")
+        │
+        ├─ Isi: Nama = "Budi", Gate = 2, [Generate PIN]
+        │         ↓
+        │   ⚠️ PERINGATAN: "Catat PIN ini sekarang!"
+        │      "847291 — PIN tidak dapat dipulihkan."
+        │      "Jika lupa, hapus dan buat ulang staff baru."
+        │      [Salin PIN] [Sudah Dicatat ✓ → Simpan]
+        │
+        └─ Tersimpan di `gate_staff` dengan PIN = bcrypt("847291")
+```
+
+- Maksimal **10 staff** per event
+- PIN hanya ditampilkan **sekali** saat pembuatan
+- Creator dapat melihat daftar staff (nama, gate, status) tapi **tidak bisa melihat PIN kembali**
+- Tombol **Nonaktifkan** untuk mencabut akses tanpa menghapus histori scan
+
+**File Terkait:**
+- [`app/Models/GateStaff.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/app/Models/GateStaff.php)
+- [`app/Http/Controllers/GateStaffController.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/app/Http/Controllers/GateStaffController.php)
+- [`database/migrations/2026_10_16_180000_add_gate_staff_and_scan_attribution.php`](file:///c:/Users/dgtil/Downloads/PENTING/HVM%20Digital/CLIENT%20Local%20WEB%20%26%20Deploy/buyle.id%20ex%20alaatrumah/database/migrations/2026_10_16_180000_add_gate_staff_and_scan_attribution.php)
+
+---
+
+### C. Alur Login Panitia di Gate (PIN Auth)
+
+```
+Panitia buka URL: https://buyle.id/gate-scanner/{key}
+        │
+        ├─ Halaman PIN Gate muncul (jika event dilindungi PIN event)
+        │  LALU muncul form Staff Login:
+        │
+        │   ┌──────────────────────────────┐
+        │   │  Masuk sebagai Panitia        │
+        │   │  Nama Anda: [Budi Santoso ▾]  │
+        │   │  PIN Staff (6 digit): [______]│
+        │   │  [🔑 Masuk ke Gate 2]         │
+        │   └──────────────────────────────┘
+        │
+        ├─ Frontend POST /gate-scanner/{key}/staff-auth
+        │   → Server: GateStaff::where('product_id', event->id)
+        │              ->where('name', name)->where('is_active', true)
+        │              ->first() → Hash::check(pin, staff->pin)
+        │
+        ├─ Jika BENAR → session['gate_staff_{event_id}'] = {name, gate}
+        │
+        └─ Kamera langsung aktif untuk scan
+```
+
+- Session staff **per-event**, tidak cross-event
+- Staff hanya dapat scan tiket event-nya sendiri
+- Jika session habis → diminta PIN ulang tanpa reload halaman (JS modal)
+
+---
+
+### D. Atribusi Scan (Siapa Scan di Gate Mana)
+
+Setiap kali tiket berhasil di-scan dan check-in dilakukan melalui gate scanner:
+
+```php
+// Di gateVerify() setelah tiket valid:
+$staffInfo = session('gate_staff_' . $event->id);
+
+$ticket->update([
+    'status'               => 'used',
+    'checked_in_at'        => now(),
+    'scanned_by_staff_name'=> $staffInfo['name'] ?? null,
+    'scanned_at_gate'      => $staffInfo['gate'] ?? null,
+]);
+```
+
+**Tampil di layar scan hasil:**
+```
+✅ CHECK-IN BERHASIL
+━━━━━━━━━━━━━━━━━━━━━━━━
+Nama       : Andi Firmansyah
+Event      : Konser Malam Akhir Tahun
+NIK        : 3273████████1234
+━━━━━━━━━━━━━━━━━━━━━━━━
+Discan oleh: Budi Santoso · Gate 2
+Waktu      : 19:32:15
+```
+
+**Tampil di Data Kehadiran (Creator Dashboard):**
+- Kolom tambahan: `Petugas Gate` dan `No. Gate`
+- Jika scan dilakukan dari Creator Studio (bukan gate): tampil "Creator Studio"
+
+---
+
+## 🪪 9. NIK Wajib Checkout & Masking Privasi (Update 16 Oktober 2026)
+
+### A. Pengumpulan NIK saat Checkout
+
+NIK (Nomor Induk Kependudukan) wajib diisi **khusus produk bertipe `ticket`**.
+
+**Tampil di form checkout:**
+```
+Atas Nama Pemegang Tiket
+  [1] Pemegang Tiket #1   [Nama: ____________]
+      NIK / Nomor KTP     [________________]
+      ⚠️ 16 digit angka, sesuai KTP/SIM Anda.
+```
+
+**Validasi:**
+- Tepat **16 digit angka** — lebih/kurang langsung ditolak
+- Required hanya jika `$product->product_type === 'ticket'`
+- Tidak ada validasi ke Dukcapil (API eksternal) — cukup format
+
+**Penyimpanan:**
+- Nilai NIK dienkripsi dengan `AES-256-CBC` sebelum masuk database
+- Key enkripsi = `APP_KEY` Laravel (sudah ada, aman)
+- Menggunakan `encrypt()` / `decrypt()` bawaan Laravel (tidak perlu library tambahan)
+- Di `TicketPass` model: `$casts = ['holder_nik' => 'encrypted']`
+
+```php
+// Otomatis encrypt saat simpan, decrypt saat baca:
+protected $casts = [
+    'holder_nik'    => 'encrypted',
+    'checked_in_at' => 'datetime',
+];
+```
+
+**Alur data NIK:**
+```
+User input NIK di checkout
+        │
+        ↓ (validation: 16 digit)
+CheckoutService::store()
+        │
+        ↓ TicketPass::create(['holder_nik' => $nik, ...])
+        │   ← Laravel encrypt() otomatis sebelum INSERT
+        │
+        Database: holder_nik = "eyJpdiI6Ik..." (ciphertext)
+        │
+        ↓ Saat dibaca
+        $ticket->holder_nik → decrypt otomatis = "3273082504980003"
+```
+
+---
+
+### B. NIK Masking (Sensor Tengah)
+
+NIK **16 digit** tidak pernah ditampilkan penuh di antarmuka apapun.
+
+**Formula masking:**
+```
+NIK asli : 3 2 7 3 0 8 2 5 0 4 9 8 0 0 0 3
+Tampil   : 3 2 7 3 █ █ █ █ █ █ █ █ 0 0 0 3
+           ↑↑↑↑                     ↑↑↑↑
+          4 digit awal             4 digit akhir
+              ← 8 digit tengah disensor →
+```
+
+```php
+// Helper function di TicketPass model atau helper.php:
+public static function maskNik(?string $nik): string
+{
+    if (!$nik || strlen($nik) < 8) return '████████████████';
+    return substr($nik, 0, 4) . '████████' . substr($nik, -4);
+}
+
+// Output: "3273████████0003"
+```
+
+**Berlaku di semua tampilan:**
+
+| Halaman | NIK Tampil |
+|:---|:---|
+| Panel scan gate (staff) | `3273████████0003` |
+| Panel scan Creator Studio | `3273████████0003` |
+| Creator Data Kehadiran | `3273████████0003` |
+| Export CSV | `3273████████0003` ← **tidak pernah full** |
+| Email konfirmasi (buyer) | Tidak ditampilkan |
+
+> **Prinsip Zero Full-NIK**: Tidak ada satu pun halaman di Buyle.id — termasuk Admin — yang menampilkan NIK secara penuh. Hanya buyer sendiri yang tahu NIK-nya sendiri.
+
+---
+
+### C. Routes Baru
+
+```
+GET  /gate-scanner/{key}/staff-list  → GateStaffController@list (list nama staff, dropdown)
+POST /gate-scanner/{key}/staff-auth  → GateStaffController@auth (PIN login staff)
+
+(Creator, requires auth):
+GET  /creator/scanner/staff/{product}         → GateStaffController@index
+POST /creator/scanner/staff/{product}         → GateStaffController@store
+PUT  /creator/scanner/staff/{product}/{staff} → GateStaffController@update
+DEL  /creator/scanner/staff/{product}/{staff} → GateStaffController@destroy
+```
+
+---
+
+### D. Keamanan & Audit Trail Lengkap
+
+```
+Setiap check-in tiket kini menyimpan:
+┌──────────────────────────────────────────────┐
+│ ticket_passes.id = 9182                      │
+│ ticket_code      = TKT-20261201-XA8F2K       │
+│ holder_name      = Andi Firmansyah           │
+│ holder_nik       = [encrypted ciphertext]    │ ← AES-256
+│ status           = used                      │
+│ checked_in_at    = 2026-12-01 19:32:15       │
+│ checked_in_by    = 42 (creator user_id)      │ ← jika dari Studio
+│ scanned_by_staff_name = "Budi Santoso"       │ ← jika dari gate
+│ scanned_at_gate  = 2                         │ ← Gate 2
+└──────────────────────────────────────────────┘
+```
+
+**Jika terjadi sengketa** ("Saya tidak pernah masuk!"):
+1. Creator lihat Data Kehadiran → filter `ticket_code`
+2. Terlihat: scan dilakukan oleh `Budi Santoso` di `Gate 2` pukul `19:32:15`
+3. Creator dapat memanggil panitia Gate 2 untuk klarifikasi
+
+---
+
+*Dokumentasi ini dibuat otomatis agar developer atau AI agent berikutnya memiliki gambaran utuh tanpa ada detail teknis yang terlewat.*
+

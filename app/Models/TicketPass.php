@@ -25,11 +25,26 @@ class TicketPass extends Model
         'status',
         'checked_in_at',
         'checked_in_by',
+        'scanned_by_staff_name',
+        'scanned_at_gate',
     ];
 
     protected $casts = [
+        'holder_nik'    => 'encrypted', // AES-256 via APP_KEY, otomatis encrypt/decrypt
         'checked_in_at' => 'datetime',
     ];
+
+    /**
+     * Mask NIK 16 digit: tampilkan 4 awal + 8 sensor tengah + 4 akhir.
+     * Contoh: "3273082504980003" → "3273████████0003"
+     */
+    public static function maskNik(?string $nik): string
+    {
+        if (!$nik || strlen($nik) < 8) {
+            return '████████████████';
+        }
+        return substr($nik, 0, 4) . '████████' . substr($nik, -4);
+    }
 
     protected static function boot()
     {
@@ -55,6 +70,7 @@ class TicketPass extends Model
         }
 
         $allHolders = $order->shipping_address['ticket_holders'] ?? [];
+        $allNiks    = $order->shipping_address['ticket_niks'] ?? [];
 
         foreach ($order->items as $item) {
             if ($item->product && $item->product->product_type === 'ticket') {
@@ -64,10 +80,12 @@ class TicketPass extends Model
 
                 $qtyNeeded = $item->qty - $existingCount;
                 $holdersForProduct = $allHolders[$item->product_id] ?? [];
+                $niksForProduct    = $allNiks[$item->product_id] ?? [];
 
                 for ($i = 0; $i < $qtyNeeded; $i++) {
                     $slotIndex = $existingCount + $i;
                     $customHolder = !empty($holdersForProduct[$slotIndex]) ? trim($holdersForProduct[$slotIndex]) : null;
+                    $customNik    = !empty($niksForProduct[$slotIndex]) ? trim($niksForProduct[$slotIndex]) : null;
 
                     static::create([
                         'order_id'      => $order->id,
@@ -78,6 +96,7 @@ class TicketPass extends Model
                         'holder_name'   => $customHolder ?: ($order->user?->name ?? 'Pemegang Tiket'),
                         'holder_email'  => $order->user?->email,
                         'holder_phone'  => $order->user?->phone,
+                        'holder_nik'    => $customNik,
                         'status'        => 'valid',
                     ]);
                 }

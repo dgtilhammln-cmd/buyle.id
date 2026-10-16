@@ -55,8 +55,12 @@ class TicketScannerController extends Controller
                 'holder_name'   => $t->holder_name ?? '-',
                 'holder_email'  => $t->holder_email ?? '-',
                 'holder_phone'  => $t->holder_phone ?? '-',
+                'holder_nik'    => \App\Models\TicketPass::maskNik($t->holder_nik),
                 'status'        => $t->status,
                 'checked_in_at' => $t->checked_in_at ? $t->checked_in_at->format('H:i:s (d M Y)') : null,
+                'scanned_by'    => $t->scanned_by_staff_name
+                    ? ($t->scanned_by_staff_name . ' · Gate ' . $t->scanned_at_gate)
+                    : ($t->checked_in_by ? 'Creator Studio' : null),
                 'toggle_url'    => route('creator.ticket.scanner.toggle-checkin', $t->id),
             ];
         });
@@ -261,6 +265,7 @@ class TicketScannerController extends Controller
                         'holder_name'    => $ticket->holder_name ?? '-',
                         'holder_email'   => $ticket->holder_email ?? '-',
                         'holder_phone'   => $ticket->holder_phone ?? '-',
+                        'holder_nik'     => \App\Models\TicketPass::maskNik($ticket->holder_nik),
                         'checked_in_at'  => now()->format('H:i:s'),
                     ]
                 ]);
@@ -430,6 +435,8 @@ class TicketScannerController extends Controller
                 'NIK',
                 'Status Kehadiran',
                 'Waktu Check-In',
+                'Petugas Gate',
+                'No. Gate',
                 'Tanggal Pembelian'
             ]);
 
@@ -447,9 +454,11 @@ class TicketScannerController extends Controller
                     $ticket->holder_name ?? '-',
                     $ticket->holder_email ?? '-',
                     $ticket->holder_phone ?? '-',
-                    $ticket->holder_nik ?? '-',
+                    \App\Models\TicketPass::maskNik($ticket->holder_nik),
                     $statusLabel,
                     $ticket->checked_in_at ? $ticket->checked_in_at->format('Y-m-d H:i:s') : '-',
+                    $ticket->scanned_by_staff_name ?? ($ticket->checked_in_by ? 'Creator Studio' : '-'),
+                    $ticket->scanned_at_gate ? ('Gate ' . $ticket->scanned_at_gate) : '-',
                     $ticket->created_at ? $ticket->created_at->format('Y-m-d H:i:s') : '-'
                 ]);
             }
@@ -507,8 +516,12 @@ class TicketScannerController extends Controller
                 'holder_name'   => $t->holder_name ?? '-',
                 'holder_email'  => $t->holder_email ?? '-',
                 'holder_phone'  => $t->holder_phone ?? '-',
+                'holder_nik_masked' => \App\Models\TicketPass::maskNik($t->holder_nik),
                 'status'        => $t->status,
                 'checked_in_at' => $t->checked_in_at ? $t->checked_in_at->format('H:i:s (d M Y)') : null,
+                'scanned_by'    => $t->scanned_by_staff_name
+                    ? ($t->scanned_by_staff_name . ' · Gate ' . $t->scanned_at_gate)
+                    : null,
             ];
         });
 
@@ -521,9 +534,15 @@ class TicketScannerController extends Controller
             ]);
         }
 
-        $requiresPin = !empty($event->gate_scanner_pin) && !session('gate_auth_' . $event->id);
+        $requiresPin        = !empty($event->gate_scanner_pin) && !session('gate_auth_' . $event->id);
+        $hasActiveStaff     = \App\Models\GateStaff::where('product_id', $event->id)->where('is_active', true)->exists();
+        $staffSession       = session('gate_staff_' . $event->id);
+        $requiresStaffLogin = $hasActiveStaff && empty($staffSession);
+        $activeStaffList    = $hasActiveStaff 
+            ? \App\Models\GateStaff::where('product_id', $event->id)->where('is_active', true)->orderBy('gate_number')->orderBy('name')->get(['id', 'name', 'gate_number'])
+            : collect();
 
-        return view('gate.scanner', compact('event', 'key', 'stats', 'cachedTickets', 'gateStatus', 'requiresPin'));
+        return view('gate.scanner', compact('event', 'key', 'stats', 'cachedTickets', 'gateStatus', 'requiresPin', 'requiresStaffLogin', 'staffSession', 'activeStaffList'));
     }
 
     /**
@@ -666,24 +685,34 @@ class TicketScannerController extends Controller
                     return;
                 }
 
-                // 5. Tiket valid -> tandai sebagai used
+                // 5. Tiket valid -> tandai sebagai used + catat atribusi staff
+                $staffInfo = session('gate_staff_' . $event->id);
+
                 $ticket->update([
-                    'status'        => 'used',
-                    'checked_in_at' => now(),
+                    'status'                => 'used',
+                    'checked_in_at'         => now(),
+                    'scanned_by_staff_name' => $staffInfo['name'] ?? null,
+                    'scanned_at_gate'       => $staffInfo['gate'] ?? null,
                 ]);
+
+                $maskedNik = \App\Models\TicketPass::maskNik($ticket->holder_nik);
+                $staffLabel = $staffInfo
+                    ? ($staffInfo['name'] . ' · Gate ' . $staffInfo['gate'])
+                    : 'Panitia (Tidak Login)';
 
                 $result = response()->json([
                     'status'  => 'valid',
                     'title'   => 'Check-In Berhasil!',
                     'message' => "Selamat datang, {$ticket->holder_name}! Tiket diverifikasi.",
                     'ticket'  => [
-                        'code'           => $ticket->ticket_code,
-                        'event_name'     => $event->name,
-                        'holder_name'    => $ticket->holder_name ?? '-',
-                        'holder_email'   => $ticket->holder_email ?? '-',
-                        'holder_phone'   => $ticket->holder_phone ?? '-',
-                        'holder_nik'     => $ticket->holder_nik ?? '-',
-                        'checked_in_at'  => now()->format('H:i:s (d M Y)'),
+                        'code'              => $ticket->ticket_code,
+                        'event_name'        => $event->name,
+                        'holder_name'       => $ticket->holder_name ?? '-',
+                        'holder_email'      => $ticket->holder_email ?? '-',
+                        'holder_phone'      => $ticket->holder_phone ?? '-',
+                        'holder_nik_masked' => $maskedNik,
+                        'checked_in_at'     => now()->format('H:i:s (d M Y)'),
+                        'scanned_by'        => $staffLabel,
                     ]
                 ]);
             });

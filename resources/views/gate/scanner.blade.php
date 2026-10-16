@@ -479,7 +479,58 @@
     </div>
     @endif
 
-    <!-- Header Removed -->
+    <!-- Staff PIN Login Screen Overlay -->
+    <div id="gate-staff-overlay" style="position:fixed; inset:0; z-index:99998; background:rgba(15,23,42,0.94); backdrop-filter:blur(10px); display:{{ $requiresStaffLogin && !$requiresPin ? 'flex' : 'none' }}; align-items:center; justify-content:center; padding:1.25rem;">
+        <div style="background:#ffffff; border-radius:1.5rem; max-width:400px; width:100%; padding:2rem; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); text-align:center;">
+            <div style="width:60px; height:60px; border-radius:50%; background:#ecfdf5; border:2px solid #a7f3d0; color:#10b981; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
+                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <h2 style="font-size:1.2rem; font-weight:800; color:#0f172a; margin-bottom:0.35rem;">Masuk sebagai Panitia Gate</h2>
+            <p style="font-size:0.82rem; color:#64748b; margin-bottom:1.25rem; line-height:1.5;">
+                Pilih nama Anda dan masukkan PIN 6 digit panitia untuk mencatat atribusi scan di gate.
+            </p>
+            <div id="staff-error-msg" style="display:none; background:#fef2f2; border:1px solid #fecaca; color:#dc2626; padding:0.6rem 0.85rem; border-radius:0.65rem; font-size:0.8rem; font-weight:700; margin-bottom:1rem;"></div>
+            <form onsubmit="submitStaffAuth(event)">
+                <div style="margin-bottom:1rem; text-align:left;">
+                    <label style="font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.35rem;">Nama Panitia:</label>
+                    <select id="staff-select" required style="width:100%; box-sizing:border-box; padding:0.75rem 0.85rem; border:2px solid #e2e8f0; border-radius:0.75rem; font-size:0.88rem; font-weight:600; outline:none; background:#fff;">
+                        <option value="">-- Pilih Nama Panitia --</option>
+                        @foreach($activeStaffList as $stf)
+                            <option value="{{ $stf->id }}">Gate {{ $stf->gate_number }} — {{ $stf->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div style="margin-bottom:1.25rem; text-align:left;">
+                    <label style="font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.35rem;">PIN Panitia (6 Digit):</label>
+                    <input type="password" id="staff-pin-input" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required placeholder="Contoh: 123456" autocomplete="off" style="width:100%; box-sizing:border-box; padding:0.85rem 1rem; border:2px solid #e2e8f0; border-radius:0.75rem; font-size:1.15rem; font-weight:800; text-align:center; letter-spacing:0.25em; outline:none; transition:border-color 0.2s;">
+                </div>
+                <button type="submit" id="btn-submit-staff" style="width:100%; padding:0.85rem; background:linear-gradient(135deg, #10b981, #047857); color:white; border:none; border-radius:0.75rem; font-size:0.95rem; font-weight:800; cursor:pointer; box-shadow:0 4px 14px rgba(16,185,129,0.35); transition:all 0.15s;">
+                    Masuk ke Gate
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="gate-nav">
+        <div class="brand-badge">
+            <div class="brand-logo">B</div>
+            <div class="brand-title">buyle<span>.id</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+            @if($staffSession)
+                <div id="staffActiveBadge" style="display:inline-flex; align-items:center; gap:0.35rem; background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; padding:0.25rem 0.6rem; border-radius:999px; font-size:0.72rem; font-weight:700;">
+                    <span style="width:6px; height:6px; background:#10b981; border-radius:50%;"></span>
+                    <span>{{ $staffSession['name'] }} (Gate {{ $staffSession['gate'] }})</span>
+                    <button type="button" onclick="logoutStaff()" title="Keluar / Ganti Panitia" style="background:none; border:none; cursor:pointer; color:#059669; font-size:0.72rem; font-weight:800; padding-left:4px; line-height:1;">✕</button>
+                </div>
+            @endif
+            <div class="gate-pill">
+                <span class="pulse-dot"></span>
+                <span>Gate Live</span>
+            </div>
+        </div>
+    </nav>
 
     <!-- Event Info Header -->
     <section class="event-header">
@@ -604,6 +655,10 @@
                             <span class="info-label">NIK / Identitas</span>
                             <span class="info-val" id="val-nik">-</span>
                         </div>
+                        <div class="info-row" id="row-staff" style="display:none;">
+                            <span class="info-label">Discan Oleh</span>
+                            <span class="info-val" id="val-staff">-</span>
+                        </div>
                         <div class="info-row">
                             <span class="info-label">Waktu Scan</span>
                             <span class="info-val" id="val-time">-</span>
@@ -664,6 +719,10 @@
                 <div id="mob-row-nik" style="margin-bottom:6px; display:none; justify-content:space-between; align-items:center;">
                     <span style="color:#64748B; font-size:0.78rem;">NIK</span>
                     <span id="mob-val-nik" style="color:#0F172A; font-size:0.8rem; font-weight:600;">-</span>
+                </div>
+                <div id="mob-row-staff" style="margin-bottom:6px; display:none; justify-content:space-between; align-items:center;">
+                    <span style="color:#64748B; font-size:0.78rem;">Discan Oleh</span>
+                    <span id="mob-val-staff" style="color:#0F172A; font-size:0.8rem; font-weight:600;">-</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; padding-top:6px; border-top:1px dashed #E2E8F0; margin-top:4px;">
                     <span style="color:#64748B; font-size:0.78rem;">Waktu</span>
@@ -891,7 +950,10 @@
 
         let currentGatePin = '';
         const REQUIRES_PIN = {{ $requiresPin ? 'true' : 'false' }};
+        const REQUIRES_STAFF_LOGIN = {{ $requiresStaffLogin ? 'true' : 'false' }};
         const AUTH_PIN_URL = "{{ route('gate.scanner.auth-pin', ['key' => $key]) }}";
+        const STAFF_AUTH_URL = "{{ route('gate.scanner.staff-auth', ['key' => $key]) }}";
+        const STAFF_LOGOUT_URL = "{{ route('gate.scanner.staff-logout', ['key' => $key]) }}";
 
         // Progressive PIN lockout state (persisted in sessionStorage)
         const LOCKOUT_KEY = 'gate_pin_lockout_{{ $key }}';
@@ -993,7 +1055,12 @@
                     currentGatePin = pin;
                     const overlay = document.getElementById('gate-pin-overlay');
                     if (overlay) overlay.style.display = 'none';
-                    initScanner();
+                    if (REQUIRES_STAFF_LOGIN) {
+                        const staffOverlay = document.getElementById('gate-staff-overlay');
+                        if (staffOverlay) staffOverlay.style.display = 'flex';
+                    } else {
+                        initScanner();
+                    }
                 } else {
                     const state = getPinState();
                     state.attempts++;
@@ -1095,6 +1162,14 @@
                     document.getElementById('val-nik').innerText = t.holder_nik;
                 } else {
                     nikRow.style.display = 'none';
+                }
+
+                const staffRow = document.getElementById('row-staff');
+                if (t.scanned_by) {
+                    staffRow.style.display = 'flex';
+                    document.getElementById('val-staff').innerText = t.scanned_by;
+                } else {
+                    staffRow.style.display = 'none';
                 }
 
                 playSound('success');
@@ -1217,6 +1292,14 @@
                 } else {
                     nikRow.style.display = 'none';
                 }
+
+                const mobStaffRow = document.getElementById('mob-row-staff');
+                if (t.scanned_by) {
+                    mobStaffRow.style.display = 'flex';
+                    document.getElementById('mob-val-staff').innerText = t.scanned_by;
+                } else {
+                    mobStaffRow.style.display = 'none';
+                }
             } else {
                 card.style.display = 'none';
             }
@@ -1288,10 +1371,76 @@
             if (e.key === 'Enter') submitManualCode();
         });
 
-        // Initialize on DOM load if no PIN required
+        async function submitStaffAuth(e) {
+            if (e) e.preventDefault();
+            const staffId = document.getElementById('staff-select').value;
+            const pin = document.getElementById('staff-pin-input').value.trim();
+            const errMsg = document.getElementById('staff-error-msg');
+            const submitBtn = document.getElementById('btn-submit-staff');
+
+            if (!staffId || !pin) {
+                errMsg.innerText = 'Pilih nama panitia dan ketik PIN 6 digit.';
+                errMsg.style.display = 'block';
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Memverifikasi...';
+
+            try {
+                const res = await fetch(STAFF_AUTH_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': CSRF_TOKEN,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ staff_id: staffId, pin: pin })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    location.reload();
+                } else {
+                    errMsg.innerText = data.message || 'PIN staff salah.';
+                    errMsg.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'Masuk ke Gate';
+                    document.getElementById('staff-pin-input').select();
+                }
+            } catch(err) {
+                errMsg.innerText = 'Gagal menghubungi server.';
+                errMsg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Masuk ke Gate';
+            }
+        }
+
+        async function logoutStaff() {
+            if (!confirm('Keluar dari sesi panitia ini?')) return;
+            try {
+                await fetch(STAFF_LOGOUT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': CSRF_TOKEN,
+                        'Accept': 'application/json'
+                    }
+                });
+                location.reload();
+            } catch(e) {
+                location.reload();
+            }
+        }
+
+        // Initialize on DOM load if no PIN / Staff required
         document.addEventListener('DOMContentLoaded', () => {
             if (!REQUIRES_PIN) {
-                initScanner();
+                if (REQUIRES_STAFF_LOGIN) {
+                    const staffOverlay = document.getElementById('gate-staff-overlay');
+                    if (staffOverlay) staffOverlay.style.display = 'flex';
+                } else {
+                    initScanner();
+                }
             }
         });
     </script>

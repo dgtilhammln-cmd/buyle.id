@@ -200,6 +200,12 @@ class CheckoutService
             $shippingAddressArray['ticket_holders'] = $ticketHoldersInput;
         }
 
+        // Simpan input NIK pemegang tiket (ticket_niks) ke snapshot order
+        $ticketNiksInput = $data['ticket_niks'] ?? request()->input('ticket_niks', []);
+        if (!empty($ticketNiksInput)) {
+            $shippingAddressArray['ticket_niks'] = $ticketNiksInput;
+        }
+
         DB::beginTransaction();
 
         try {
@@ -507,13 +513,16 @@ class CheckoutService
 
             // Generate TicketPass jika terdapat produk bertipe ticket
             $ticketHoldersSnapshot = $order->shipping_address['ticket_holders'] ?? [];
+            $ticketNiksSnapshot    = $order->shipping_address['ticket_niks'] ?? [];
 
             foreach ($order->items as $item) {
                 if ($item->product && $item->product->product_type === 'ticket') {
                     $holdersForProduct = $ticketHoldersSnapshot[$item->product_id] ?? [];
+                    $niksForProduct    = $ticketNiksSnapshot[$item->product_id] ?? [];
 
                     for ($i = 0; $i < $item->qty; $i++) {
                         $customHolder = !empty($holdersForProduct[$i]) ? trim($holdersForProduct[$i]) : null;
+                        $customNik    = !empty($niksForProduct[$i]) ? trim($niksForProduct[$i]) : null;
 
                         \App\Models\TicketPass::create([
                             'order_id'      => $order->id,
@@ -524,6 +533,7 @@ class CheckoutService
                             'holder_name'   => $customHolder ?: ($order->user?->name ?? ($order->shipping_address['receiver_name'] ?? 'Pemegang Tiket')),
                             'holder_email'  => $order->user?->email ?? $order->customer_email,
                             'holder_phone'  => $order->user?->phone ?? ($order->shipping_address['phone'] ?? null),
+                            'holder_nik'    => $customNik,
                             'status'        => 'valid',
                         ]);
                     }

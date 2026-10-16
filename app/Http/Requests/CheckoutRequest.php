@@ -35,6 +35,9 @@ class CheckoutRequest extends FormRequest
             'ticket_holders'       => 'nullable|array',
             'ticket_holders.*'     => 'nullable|array',
             'ticket_holders.*.*'   => 'nullable|string|max:100',
+            'ticket_niks'          => 'nullable|array',
+            'ticket_niks.*'        => 'nullable|array',
+            'ticket_niks.*.*'      => 'nullable|string|size:16|regex:/^[0-9]{16}$/',
         ];
 
         if (!auth()->check()) {
@@ -52,6 +55,8 @@ class CheckoutRequest extends FormRequest
             'coupon_code.exists'   => 'Kode kupon tidak valid atau tidak ditemukan.',
             'guest_email.required' => 'Email wajib diisi.',
             'guest_email.email'    => 'Format email tidak valid.',
+            'ticket_niks.*.*.size' => 'NIK harus tepat 16 digit angka sesuai KTP/SIM.',
+            'ticket_niks.*.*.regex'=> 'NIK harus berupa 16 digit angka.',
         ];
     }
 }

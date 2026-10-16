@@ -1044,11 +1044,39 @@
                                         </div>
 
                                         {{-- Input field --}}
+                                        {{-- Input Nama --}}
                                         <input type="text" id="{{ $inputId }}" name="ticket_holders[{{ $pid }}][]" class="form-input"
                                             value="{{ $defaultVal }}" required
                                             placeholder="{{ $isFirstSlot && auth()->check() ? 'Nama dari akun Anda (bisa diganti)' : 'Nama lengkap pemegang tiket #' . ($ticketIdx + 1) . '...' }}"
                                             {{ $isFirstSlot && auth()->check() ? 'data-auth-name="' . e($authUserName) . '"' : '' }}
                                             style="{{ $isFirstSlot && auth()->check() ? 'background:#F8FAFC;' : '' }}">
+
+                                        {{-- Field NIK (wajib untuk produk tiket) --}}
+                                        @php $nikId = "ticket_nik_{$pid}_{$ticketIdx}"; @endphp
+                                        <div style="margin-top:0.65rem;">
+                                            <label for="{{ $nikId }}" style="font-size:0.78rem;font-weight:700;color:#334155;display:flex;align-items:center;gap:0.35rem;margin-bottom:0.35rem;">
+                                                <svg width="13" height="13" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 9h.01M8 13h.01M12 9h4M12 13h4"/></svg>
+                                                NIK / Nomor KTP
+                                                <span style="color:#EF4444;">*</span>
+                                                <span style="font-weight:400;color:#94A3B8;font-size:0.72rem;">(16 digit)</span>
+                                            </label>
+                                            <input type="text"
+                                                id="{{ $nikId }}"
+                                                name="ticket_niks[{{ $pid }}][]"
+                                                class="form-input"
+                                                inputmode="numeric"
+                                                maxlength="16"
+                                                pattern="\d{16}"
+                                                required
+                                                placeholder="Contoh: 3273082504980003"
+                                                style="letter-spacing:0.08em; font-family:monospace;"
+                                                oninput="this.value=this.value.replace(/\D/g,'').slice(0,16)"
+                                                title="NIK harus tepat 16 digit angka sesuai KTP/SIM Anda">
+                                            <div style="font-size:0.71rem;color:#94A3B8;margin-top:0.25rem;display:flex;align-items:center;gap:0.3rem;">
+                                                <svg width="11" height="11" fill="none" stroke="#94A3B8" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                                NIK dienkripsi & disimpan aman. Ditampilkan dalam format tersensor kepada panitia.
+                                            </div>
+                                        </div>
 
                                         @if(!$isFirstSlot)
                                             <div style="font-size:0.72rem;color:#94A3B8;margin-top:0.3rem;">Nama sesuai identitas
