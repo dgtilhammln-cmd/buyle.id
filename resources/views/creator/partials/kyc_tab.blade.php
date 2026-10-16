@@ -41,7 +41,7 @@
                     <div>
                         <h4 style="margin:0 0 0.35rem 0; font-size:1rem; font-weight:800; color:#14532d;">Identitas Creator Terverifikasi Resmi</h4>
                         <p style="margin:0 0 0.75rem 0; font-size:0.8125rem; color:#166534; line-height:1.5;">
-                            Akun Anda telah memenuhi standar keamanan e-KYC Buyle.id. Seluruh fitur penjualan event tiket berbayar dan pencairan saldo telah aktif secara penuh.
+                            Akun Anda telah memenuhi standar kepatuhan e-KYC Buyle.id. Seluruh fitur penjualan event tiket berbayar dan pencairan saldo telah aktif secara penuh.
                         </p>
                         <div class="verified-meta-grid">
                             <div><strong>Nama KTP:</strong> {{ $kyc->full_name }}</div>
@@ -60,7 +60,7 @@
                     <div>
                         <h4 style="margin:0 0 0.35rem 0; font-size:1rem; font-weight:800; color:#78350f;">Dokumen Sedang Ditinjau Tim Verifikator</h4>
                         <p style="margin:0 0 0.75rem 0; font-size:0.8125rem; color:#92400e; line-height:1.5;">
-                            Permohonan e-KYC Anda telah kami terima dan saat ini sedang ditinjau oleh tim keamanan kami. Estimasi proses peninjauan adalah maksimal 1x24 jam kerja.
+                            Permohonan e-KYC Anda telah kami terima dan saat ini sedang ditinjau oleh tim verifikator Buyle.id. Estimasi proses peninjauan adalah maksimal 1x24 jam kerja.
                         </p>
                         <div class="pending-meta-grid">
                             <div><strong>Nama Diajukan:</strong> {{ $kyc->full_name }}</div>
@@ -92,7 +92,7 @@
                         Kenapa Creator Wajib e-KYC?
                     </div>
                     <div class="kyc-intro-text">
-                        Untuk mencegah penipuan tiket, calo, dan melindungi hak pembeli, setiap penyelenggara event wajib memverifikasi KTP asli dan biometrik wajah satu kali. Data foto disimpan secara terenkripsi di private storage, tidak dipublikasikan ke pihak ketiga, dan diproses dengan format WebP efisien (hemat kuota dan memori).
+                        Untuk mencegah penipuan tiket, calo, dan melindungi hak pembeli, setiap penyelenggara event wajib memverifikasi KTP asli dan biometrik wajah satu kali. Data foto disimpan secara aman di private cloud Buyle.id dalam format WebP terkompresi tanpa membebani penyimpanan perangkat Anda.
                     </div>
                 </div>
 
@@ -128,178 +128,247 @@
                         </div>
                     </div>
 
-                    {{-- STEP 2: SCAN SMART KTP --}}
+                    {{-- STEP 2: DUAL-MODE KTP (UPLOAD GAMBAR & LIVE SCANNER) --}}
                     <div class="kyc-form-section">
                         <div class="kyc-section-header">
                             <span class="step-num">2</span>
-                            <div>
-                                <h3 class="step-heading">Pindai / Ambil Foto KTP Asli</h3>
-                                <p class="step-desc">Gunakan kamera HP atau webcam laptop. Sistem panduan pintar kami akan menganalisis pencahayaan dan jarak secara real-time.</p>
+                            <div style="flex:1;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+                                    <div>
+                                        <h3 class="step-heading">Foto Dokumen KTP Asli</h3>
+                                        <p class="step-desc">Unggah file foto KTP atau gunakan kamera live scanner dengan panduan cerdas Buyle.id.</p>
+                                    </div>
+                                    {{-- Mode Selector Tab --}}
+                                    <div class="kyc-mode-selector">
+                                        <button type="button" id="tabModeKtpUpload" class="mode-tab-btn active" onclick="switchKtpMode('upload')">
+                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                            Unggah File Gambar
+                                        </button>
+                                        <button type="button" id="tabModeKtpCam" class="mode-tab-btn" onclick="switchKtpMode('camera')">
+                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                            Pindai Kamera Live
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="scanner-device-container">
-                            {{-- Viewport Kamera KTP --}}
-                            <div class="scanner-viewport-wrap" id="ktpViewportWrap">
-                                <video id="ktpVideo" playsinline autoplay muted class="scanner-live-video" style="display:none;"></video>
-                                <canvas id="ktpCanvas" style="display:none;"></canvas>
+                            {{-- PANE A: UPLOAD FILE GAMBAR KTP --}}
+                            <div id="ktpUploadPane" class="ktp-mode-pane" style="display:block;">
+                                {{-- Drag & Drop Upload Zone Light --}}
+                                <div id="ktpDropZone" class="ktp-dropzone-light" onclick="document.getElementById('ktpFileInput').click()">
+                                    <input type="file" id="ktpFileInput" accept="image/*" style="display:none;" onchange="handleFileUpload(event, 'ktp')">
+                                    <div class="dropzone-icon-circle">
+                                        <svg width="36" height="36" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="12" y2="16"/></svg>
+                                    </div>
+                                    <div class="dropzone-text-primary">Klik untuk memilih foto KTP atau seret gambar ke sini</div>
+                                    <div class="dropzone-text-sub">Format: JPG, PNG, atau WebP. Gambar dipindai dan dikalibrasi otomatis.</div>
+                                    <button type="button" class="btn-select-file" onclick="event.stopPropagation(); document.getElementById('ktpFileInput').click();">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                        Pilih Foto KTP
+                                    </button>
+                                </div>
+                            </div>
 
-                                {{-- Placeholder sebelum kamera dibuka --}}
-                                <div id="ktpPlaceholder" class="scanner-placeholder">
-                                    <svg width="48" height="48" fill="none" stroke="#94a3b8" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 15l-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                                    <span style="font-weight:700; color:#334155; font-size:0.875rem;">Kamera KTP Belum Aktif</span>
-                                    <span style="color:#64748b; font-size:0.75rem; max-width:280px; text-align:center;">Klik tombol di bawah untuk membuka kamera atau unggah file foto KTP dari galeri</span>
-                                    <div style="display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap; justify-content:center;">
-                                        <button type="button" class="btn-activate-cam" onclick="startKtpCamera()">
-                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                                            Buka Kamera KTP
-                                        </button>
-                                        <label class="btn-upload-file">
-                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></label>
-                                            Pilih dari Galeri
-                                            <input type="file" accept="image/*" style="display:none;" onchange="handleFileUpload(event, 'ktp')">
-                                        </label>
+                            {{-- PANE B: LIVE CAMERA SCANNER KTP --}}
+                            <div id="ktpCameraPane" class="ktp-mode-pane" style="display:none;">
+                                <div class="scanner-viewport-wrap light-theme" id="ktpViewportWrap">
+                                    <video id="ktpVideo" playsinline autoplay muted class="scanner-live-video" style="display:none;"></video>
+                                    <canvas id="ktpCanvas" style="display:none;"></canvas>
+
+                                    {{-- Placeholder sebelum kamera dibuka --}}
+                                    <div id="ktpPlaceholder" class="scanner-placeholder light-theme">
+                                        <div class="placeholder-icon-wrap">
+                                            <svg width="38" height="38" fill="none" stroke="#1eb349" stroke-width="1.8" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                        </div>
+                                        <span class="placeholder-title">Kamera KTP Belum Aktif</span>
+                                        <span class="placeholder-sub">Klik tombol di bawah untuk menyalakan kamera atau kembali ke tab unggah file gambar</span>
+                                        <div style="display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap; justify-content:center;">
+                                            <button type="button" class="btn-activate-cam" onclick="startKtpCamera()">
+                                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                                Nyalakan Kamera
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {{-- Overlay Frame Persegi KTP Light --}}
+                                    <div id="ktpFrameOverlay" class="ktp-frame-overlay light-theme" style="display:none;">
+                                        <div class="ktp-card-outline light-theme">
+                                            <div class="ktp-corner top-left"></div>
+                                            <div class="ktp-corner top-right"></div>
+                                            <div class="ktp-corner bottom-left"></div>
+                                            <div class="ktp-corner bottom-right"></div>
+                                            <span class="ktp-frame-hint light-theme">Posisikan Kartu KTP di Dalam Bingkai Ini</span>
+                                        </div>
+                                    </div>
+
+                                    {{-- Banner Panduan Realtime KTP Light --}}
+                                    <div id="ktpGuidanceBanner" class="guidance-banner-light" style="display:none;">
+                                        <svg id="ktpGuideIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                        <span id="ktpGuideText">Menyesuaikan pencahayaan...</span>
                                     </div>
                                 </div>
 
-                                {{-- Overlay Frame Persegi KTP --}}
-                                <div id="ktpFrameOverlay" class="ktp-frame-overlay" style="display:none;">
-                                    <div class="ktp-card-outline">
-                                        <div class="ktp-corner top-left"></div>
-                                        <div class="ktp-corner top-right"></div>
-                                        <div class="ktp-corner bottom-left"></div>
-                                        <div class="ktp-corner bottom-right"></div>
-                                        <span class="ktp-frame-hint">Posisikan Kartu KTP di Dalam Bingkai Ini</span>
-                                    </div>
+                                {{-- Kontrol Kamera KTP --}}
+                                <div class="scanner-controls-bar" id="ktpControlsBar" style="display:none;">
+                                    <button type="button" class="btn-control-secondary" onclick="switchKtpCamera()">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                                        Ganti Kamera
+                                    </button>
+                                    <button type="button" id="btnSnapKtp" class="btn-snap-photo" onclick="snapKtpPhoto()">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                                        Ambil Foto KTP
+                                    </button>
+                                    <button type="button" class="btn-control-secondary" onclick="stopKtpCamera()">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                        Tutup Kamera
+                                    </button>
                                 </div>
+                            </div>
 
-                                {{-- Banner Panduan Realtime KTP --}}
-                                <div id="ktpGuidanceBanner" class="guidance-banner" style="display:none;">
-                                    <svg id="ktpGuideIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                                    <span id="ktpGuideText">Menyesuaikan pencahayaan...</span>
-                                </div>
-
-                                {{-- Preview Foto KTP yang Berhasil Diambil --}}
-                                <div id="ktpResultPreview" class="photo-result-preview" style="display:none;">
+                            {{-- PREVIEW HASIL SCAN / UPLOAD KTP DENGAN SMART FEEDBACK (TEMA LIGHT) --}}
+                            <div id="ktpResultCard" class="photo-result-card-light" style="display:none;">
+                                <div class="result-img-container">
                                     <img id="ktpPreviewImg" src="" alt="Pratinjau KTP">
-                                    <div class="result-badge-success">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                    <div class="result-badge-pill">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                                         Foto KTP Siap
                                     </div>
                                 </div>
-                            </div>
-
-                            {{-- Kontrol Kamera KTP --}}
-                            <div class="scanner-controls-bar" id="ktpControlsBar" style="display:none;">
-                                <button type="button" class="btn-control-secondary" onclick="switchKtpCamera()">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                                    Ganti Kamera
-                                </button>
-                                <button type="button" id="btnSnapKtp" class="btn-snap-photo" onclick="snapKtpPhoto()">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-                                    Ambil Foto KTP
-                                </button>
-                                <button type="button" class="btn-control-secondary" onclick="stopKtpCamera()">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                                    Tutup Kamera
-                                </button>
-                            </div>
-
-                            {{-- Tombol Retake jika sudah diambil --}}
-                            <div id="ktpRetakeWrap" style="display:none; margin-top:0.75rem; text-align:center;">
-                                <button type="button" class="btn-retake" onclick="retakeKtpPhoto()">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-                                    Ulangi Foto KTP
-                                </button>
+                                <div class="result-feedback-bar" id="ktpSmartFeedback">
+                                    <svg width="16" height="16" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span id="ktpSmartFeedbackText">Analisis Cerdas: Foto terdeteksi tajam dengan pencahayaan ideal.</span>
+                                </div>
+                                <div class="result-action-row">
+                                    <button type="button" class="btn-retake-light" onclick="retakeKtpPhoto()">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                                        Ganti / Ambil Ulang Foto KTP
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    {{-- STEP 3: SCAN BIOMETRIK WAJAH LIVENESS --}}
+                    {{-- STEP 3: DUAL-MODE BIOMETRIK WAJAH LIVENESS --}}
                     <div class="kyc-form-section">
                         <div class="kyc-section-header">
                             <span class="step-num">3</span>
-                            <div>
-                                <h3 class="step-heading">Pindai Biometrik Wajah Liveness</h3>
-                                <p class="step-desc">Verifikasi keaslian orang hidup secara profesional. Posisikan wajah Anda pada bingkai oval dan ikuti instruksi kedipan mata santai.</p>
+                            <div style="flex:1;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+                                    <div>
+                                        <h3 class="step-heading">Pindai Biometrik Wajah Liveness</h3>
+                                        <p class="step-desc">Verifikasi keaslian orang hidup dengan bingkai oval cerdas atau unggah foto selfie wajah jelas.</p>
+                                    </div>
+                                    {{-- Mode Selector Tab Wajah --}}
+                                    <div class="kyc-mode-selector">
+                                        <button type="button" id="tabModeFaceCam" class="mode-tab-btn active" onclick="switchFaceMode('camera')">
+                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                            Kamera Selfie Live
+                                        </button>
+                                        <button type="button" id="tabModeFaceUpload" class="mode-tab-btn" onclick="switchFaceMode('upload')">
+                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                            Unggah Foto Wajah
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="scanner-device-container">
-                            {{-- Viewport Kamera Wajah --}}
-                            <div class="scanner-viewport-wrap" id="faceViewportWrap">
-                                <video id="faceVideo" playsinline autoplay muted class="scanner-live-video" style="display:none;"></video>
-                                <canvas id="faceCanvas" style="display:none;"></canvas>
+                            {{-- PANE A: LIVE KAMERA SELFIE BIOMETRIK --}}
+                            <div id="faceCameraPane" class="face-mode-pane" style="display:block;">
+                                <div class="scanner-viewport-wrap light-theme" id="faceViewportWrap">
+                                    <video id="faceVideo" playsinline autoplay muted class="scanner-live-video" style="display:none;"></video>
+                                    <canvas id="faceCanvas" style="display:none;"></canvas>
 
-                                {{-- Placeholder sebelum kamera wajah dibuka --}}
-                                <div id="facePlaceholder" class="scanner-placeholder">
-                                    <svg width="48" height="48" fill="none" stroke="#94a3b8" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-                                    <span style="font-weight:700; color:#334155; font-size:0.875rem;">Kamera Biometrik Wajah Belum Aktif</span>
-                                    <span style="color:#64748b; font-size:0.75rem; max-width:280px; text-align:center;">Pastikan wajah Anda tidak terhalang masker atau kacamata hitam tebal</span>
-                                    <div style="display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap; justify-content:center;">
-                                        <button type="button" class="btn-activate-cam" onclick="startFaceCamera()">
-                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                                            Buka Kamera Selfie
-                                        </button>
-                                        <label class="btn-upload-file">
-                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></label>
-                                            Pilih dari Galeri
-                                            <input type="file" accept="image/*" style="display:none;" onchange="handleFileUpload(event, 'face')">
-                                        </label>
+                                    {{-- Placeholder sebelum kamera wajah dibuka --}}
+                                    <div id="facePlaceholder" class="scanner-placeholder light-theme">
+                                        <div class="placeholder-icon-wrap">
+                                            <svg width="38" height="38" fill="none" stroke="#1eb349" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                                        </div>
+                                        <span class="placeholder-title">Kamera Biometrik Wajah Belum Aktif</span>
+                                        <span class="placeholder-sub">Pastikan wajah tidak terhalang masker atau kacamata hitam tebal untuk verifikasi optimal</span>
+                                        <div style="display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap; justify-content:center;">
+                                            <button type="button" class="btn-activate-cam" onclick="startFaceCamera()">
+                                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                                Buka Kamera Selfie
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {{-- Overlay Oval Frame Wajah Light --}}
+                                    <div id="faceFrameOverlay" class="face-frame-overlay light-theme" style="display:none;">
+                                        <div class="face-oval-outline light-theme" id="faceOvalOutline">
+                                            <span class="face-frame-hint light-theme" id="faceFrameHint">Posisikan Wajah di Tengah Oval</span>
+                                        </div>
+                                    </div>
+
+                                    {{-- Banner Panduan Realtime Wajah Light --}}
+                                    <div id="faceGuidanceBanner" class="guidance-banner-light" style="display:none;">
+                                        <svg id="faceGuideIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                        <span id="faceGuideText">Posisikan wajah menghadap kamera...</span>
+                                    </div>
+
+                                    {{-- Challenge Status Badge Light --}}
+                                    <div id="livenessChallengeBox" class="liveness-challenge-box-light" style="display:none;">
+                                        <div class="challenge-dot" id="challengeDot"></div>
+                                        <span id="challengeInstruction">Tatap Kamera & Kedipkan Mata Perlahan</span>
                                     </div>
                                 </div>
 
-                                {{-- Overlay Oval Frame Wajah --}}
-                                <div id="faceFrameOverlay" class="face-frame-overlay" style="display:none;">
-                                    <div class="face-oval-outline" id="faceOvalOutline">
-                                        <span class="face-frame-hint" id="faceFrameHint">Posisikan Wajah di Tengah Oval</span>
+                                {{-- Kontrol Kamera Wajah --}}
+                                <div class="scanner-controls-bar" id="faceControlsBar" style="display:none;">
+                                    <button type="button" class="btn-control-secondary" onclick="switchFaceCamera()">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                                        Ganti Kamera
+                                    </button>
+                                    <button type="button" id="btnSnapFace" class="btn-snap-photo" onclick="snapFacePhoto()">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                                        Ambil Foto Biometrik
+                                    </button>
+                                    <button type="button" class="btn-control-secondary" onclick="stopFaceCamera()">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                        Tutup Kamera
+                                    </button>
+                                </div>
+                            </div>
+
+                            {{-- PANE B: UPLOAD FOTO WAJAH SELFIE --}}
+                            <div id="faceUploadPane" class="face-mode-pane" style="display:none;">
+                                <div id="faceDropZone" class="ktp-dropzone-light" onclick="document.getElementById('faceFileInput').click()">
+                                    <input type="file" id="faceFileInput" accept="image/*" style="display:none;" onchange="handleFileUpload(event, 'face')">
+                                    <div class="dropzone-icon-circle">
+                                        <svg width="36" height="36" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
                                     </div>
+                                    <div class="dropzone-text-primary">Klik untuk memilih foto selfie wajah atau seret ke sini</div>
+                                    <div class="dropzone-text-sub">Pastikan wajah tampak jelas menghadap depan tanpa penutup wajah.</div>
+                                    <button type="button" class="btn-select-file" onclick="event.stopPropagation(); document.getElementById('faceFileInput').click();">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                        Pilih Foto Selfie Wajah
+                                    </button>
                                 </div>
+                            </div>
 
-                                {{-- Banner Panduan Realtime Wajah Liveness --}}
-                                <div id="faceGuidanceBanner" class="guidance-banner" style="display:none;">
-                                    <svg id="faceGuideIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                                    <span id="faceGuideText">Posisikan wajah menghadap kamera...</span>
-                                </div>
-
-                                {{-- Challenge Status Badge --}}
-                                <div id="livenessChallengeBox" class="liveness-challenge-box" style="display:none;">
-                                    <div class="challenge-dot" id="challengeDot"></div>
-                                    <span id="challengeInstruction">Tatap Kamera & Kedipkan Mata Perlahan</span>
-                                </div>
-
-                                {{-- Preview Foto Selfie yang Berhasil Diambil --}}
-                                <div id="faceResultPreview" class="photo-result-preview" style="display:none;">
+                            {{-- PREVIEW HASIL BIOMETRIK WAJAH DENGAN SMART FEEDBACK (TEMA LIGHT) --}}
+                            <div id="faceResultCard" class="photo-result-card-light" style="display:none;">
+                                <div class="result-img-container">
                                     <img id="facePreviewImg" src="" alt="Pratinjau Biometrik Wajah">
-                                    <div class="result-badge-success">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                    <div class="result-badge-pill">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                                         Biometrik Wajah Siap
                                     </div>
                                 </div>
-                            </div>
-
-                            {{-- Kontrol Kamera Wajah --}}
-                            <div class="scanner-controls-bar" id="faceControlsBar" style="display:none;">
-                                <button type="button" class="btn-control-secondary" onclick="switchFaceCamera()">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                                    Ganti Kamera
-                                </button>
-                                <button type="button" id="btnSnapFace" class="btn-snap-photo" onclick="snapFacePhoto()">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-                                    Ambil Foto Biometrik
-                                </button>
-                                <button type="button" class="btn-control-secondary" onclick="stopFaceCamera()">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                                    Tutup Kamera
-                                </button>
-                            </div>
-
-                            {{-- Tombol Retake jika sudah diambil --}}
-                            <div id="faceRetakeWrap" style="display:none; margin-top:0.75rem; text-align:center;">
-                                <button type="button" class="btn-retake" onclick="retakeFacePhoto()">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-                                    Ulangi Foto Wajah
-                                </button>
+                                <div class="result-feedback-bar" id="faceSmartFeedback">
+                                    <svg width="16" height="16" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span id="faceSmartFeedbackText">Analisis Cerdas: Wajah terdeteksi jelas dan liveness token terverifikasi.</span>
+                                </div>
+                                <div class="result-action-row">
+                                    <button type="button" class="btn-retake-light" onclick="retakeFacePhoto()">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                                        Ganti / Ambil Ulang Foto Wajah
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -308,7 +377,7 @@
                     <div class="kyc-submit-bar">
                         <div class="security-guarantee-note">
                             <svg width="16" height="16" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                            <span>Data Anda dienkripsi secara privat dan hanya digunakan untuk validasi legalitas penyelenggara event.</span>
+                            <span>Data Anda dienkripsi secara privat dan hanya digunakan untuk validasi legalitas penyelenggara event resmi Buyle.id.</span>
                         </div>
                         <button type="submit" id="btnSubmitKyc" class="btn-submit-kyc" disabled>
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
@@ -322,7 +391,7 @@
 </div>
 
 <style>
-/* ── e-KYC COMPONENT STYLING ── */
+/* ── e-KYC LIGHT THEME STYLING (BUYLE.ID DESIGN SYSTEM) ── */
 .kyc-badge-pill {
     display: inline-flex;
     align-items: center;
@@ -481,6 +550,38 @@
     line-height: 1.45;
 }
 
+/* Mode Selector Bar */
+.kyc-mode-selector {
+    display: inline-flex;
+    background: #f1f5f9;
+    border-radius: 10px;
+    padding: 3px;
+    gap: 3px;
+    border: 1px solid #e2e8f0;
+}
+.mode-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #64748b;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.mode-tab-btn:hover {
+    color: #0f172a;
+}
+.mode-tab-btn.active {
+    background: #ffffff;
+    color: #166534;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
 .kyc-input-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -556,18 +657,79 @@
     color: #991b1b;
 }
 
-/* Scanner Viewport */
+/* Light Dropzone Area */
 .scanner-device-container {
     max-width: 580px;
     margin: 0 auto;
 }
-.scanner-viewport-wrap {
+.ktp-dropzone-light {
+    border: 2px dashed #bbf7d0;
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 2.25rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+.ktp-dropzone-light:hover {
+    border-color: #1eb349;
+    background: #f0fdf4;
+}
+.dropzone-icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1.5px solid #bbf7d0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.4rem;
+    box-shadow: 0 4px 12px rgba(30, 179, 73, 0.1);
+}
+.dropzone-text-primary {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+.dropzone-text-sub {
+    font-size: 0.75rem;
+    color: #64748b;
+    max-width: 320px;
+    margin-bottom: 0.5rem;
+}
+.btn-select-file {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.25rem;
+    background: #1eb349;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(30, 179, 73, 0.25);
+    transition: all 0.2s ease;
+}
+.btn-select-file:hover {
+    background: #179b3e;
+}
+
+/* Light Camera Viewport */
+.scanner-viewport-wrap.light-theme {
     position: relative;
     width: 100%;
     aspect-ratio: 4 / 3;
     border-radius: 16px;
     overflow: hidden;
-    background: #0f172a;
+    background: #f8fafc;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -579,20 +741,43 @@
     object-fit: cover;
 }
 
-.scanner-placeholder {
+.scanner-placeholder.light-theme {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 0.35rem;
     padding: 1.5rem;
-    color: #94a3b8;
+    text-align: center;
 }
+.placeholder-icon-wrap {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #f0fdf4;
+    border: 1.5px solid #bbf7d0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.4rem;
+}
+.placeholder-title {
+    font-weight: 800;
+    color: #0f172a;
+    font-size: 0.92rem;
+}
+.placeholder-sub {
+    color: #64748b;
+    font-size: 0.78rem;
+    max-width: 290px;
+    line-height: 1.45;
+}
+
 .btn-activate-cam {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
-    padding: 0.6rem 1.1rem;
+    padding: 0.65rem 1.25rem;
     background: #1eb349;
     color: #ffffff;
     border: none;
@@ -606,26 +791,9 @@
 .btn-activate-cam:hover {
     background: #179b3e;
 }
-.btn-upload-file {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.6rem 1rem;
-    background: #f1f5f9;
-    color: #334155;
-    border: 1px solid #cbd5e1;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.8125rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.btn-upload-file:hover {
-    background: #e2e8f0;
-}
 
-/* KTP Frame Overlay */
-.ktp-frame-overlay {
+/* KTP Frame Overlay Light */
+.ktp-frame-overlay.light-theme {
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -634,17 +802,18 @@
     justify-content: center;
     padding: 1rem;
 }
-.ktp-card-outline {
+.ktp-card-outline.light-theme {
     position: relative;
     width: 85%;
     aspect-ratio: 1.586;
-    border: 2px dashed rgba(255, 255, 255, 0.7);
+    border: 2px dashed #1eb349;
+    background: rgba(30, 179, 73, 0.05);
     border-radius: 12px;
     display: flex;
     align-items: flex-end;
     justify-content: center;
     padding-bottom: 0.75rem;
-    box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.5);
+    box-shadow: 0 0 0 9999px rgba(248, 250, 252, 0.75);
 }
 .ktp-corner {
     position: absolute;
@@ -657,18 +826,20 @@
 .ktp-corner.top-right { top: -2px; right: -2px; border-width: 3px 3px 0 0; border-top-right-radius: 12px; }
 .ktp-corner.bottom-left { bottom: -2px; left: -2px; border-width: 0 0 3px 3px; border-bottom-left-radius: 12px; }
 .ktp-corner.bottom-right { bottom: -2px; right: -2px; border-width: 0 3px 3px 0; border-bottom-right-radius: 12px; }
-.ktp-frame-hint {
-    background: rgba(15, 23, 42, 0.75);
-    color: #ffffff;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 0.25rem 0.6rem;
+
+.ktp-frame-hint.light-theme {
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
     border-radius: 6px;
-    letter-spacing: 0.02em;
 }
 
-/* Face Frame Overlay */
-.face-frame-overlay {
+/* Face Frame Overlay Light */
+.face-frame-overlay.light-theme {
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -677,69 +848,70 @@
     justify-content: center;
     padding: 1rem;
 }
-.face-oval-outline {
+.face-oval-outline.light-theme {
     position: relative;
     width: 62%;
     aspect-ratio: 0.78;
-    border: 3px solid rgba(255, 255, 255, 0.85);
+    border: 3px solid #1eb349;
+    background: rgba(30, 179, 73, 0.04);
     border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
     display: flex;
     align-items: flex-end;
     justify-content: center;
     padding-bottom: 1.25rem;
-    box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.55);
-    transition: border-color 0.3s ease;
+    box-shadow: 0 0 0 9999px rgba(248, 250, 252, 0.75);
+    transition: all 0.3s ease;
 }
-.face-oval-outline.ideal {
-    border-color: #22c55e;
-}
-.face-frame-hint {
-    background: rgba(15, 23, 42, 0.8);
-    color: #ffffff;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 0.25rem 0.6rem;
+.face-frame-hint.light-theme {
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
     border-radius: 6px;
 }
 
-/* Guidance Banners */
-.guidance-banner {
+/* Guidance Banners Light */
+.guidance-banner-light {
     position: absolute;
     top: 0.85rem;
     left: 0.85rem;
     right: 0.85rem;
     padding: 0.5rem 0.85rem;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 0.75rem;
     font-weight: 700;
     display: flex;
     align-items: center;
     gap: 0.45rem;
     z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     transition: all 0.3s ease;
 }
-.guidance-banner.guide-ideal {
-    background: rgba(22, 101, 52, 0.9);
-    color: #ffffff;
-    border: 1px solid #86efac;
+.guidance-banner-light.guide-ideal {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1.5px solid #bbf7d0;
 }
-.guidance-banner.guide-warn {
-    background: rgba(180, 83, 9, 0.9);
-    color: #ffffff;
-    border: 1px solid #fde68a;
+.guidance-banner-light.guide-warn {
+    background: #fffbeb;
+    color: #92400e;
+    border: 1.5px solid #fde68a;
 }
-.guidance-banner.guide-error {
-    background: rgba(185, 28, 28, 0.9);
-    color: #ffffff;
-    border: 1px solid #fca5a5;
+.guidance-banner-light.guide-error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1.5px solid #fca5a5;
 }
 
-.liveness-challenge-box {
+.liveness-challenge-box-light {
     position: absolute;
     bottom: 0.85rem;
-    background: rgba(15, 23, 42, 0.85);
-    color: #ffffff;
-    padding: 0.45rem 0.9rem;
+    background: #ffffff;
+    color: #0f172a;
+    padding: 0.45rem 1rem;
     border-radius: 9999px;
     font-size: 0.75rem;
     font-weight: 700;
@@ -747,7 +919,8 @@
     align-items: center;
     gap: 0.5rem;
     z-index: 10;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1.5px solid #bbf7d0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 .challenge-dot {
     width: 8px;
@@ -765,34 +938,87 @@
     to { opacity: 1; transform: scale(1.2); }
 }
 
-/* Photo Result Preview */
-.photo-result-preview {
-    position: absolute;
-    inset: 0;
-    background: #0f172a;
+/* Light Photo Result Preview Card */
+.photo-result-card-light {
+    background: #ffffff;
+    border: 1.5px solid #bbf7d0;
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: 0 4px 14px rgba(30, 179, 73, 0.08);
+}
+.result-img-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1.586;
+    max-height: 280px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.photo-result-preview img {
+.result-img-container img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
-.result-badge-success {
+.result-badge-pill {
     position: absolute;
-    bottom: 0.85rem;
-    right: 0.85rem;
+    bottom: 0.65rem;
+    right: 0.65rem;
     background: #166534;
     color: #ffffff;
     padding: 0.35rem 0.75rem;
     border-radius: 9999px;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
     display: flex;
     align-items: center;
     gap: 0.35rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.result-feedback-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 0.85rem;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #166534;
+    margin-top: 0.75rem;
+}
+.result-feedback-bar.warn {
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #92400e;
+}
+.result-action-row {
+    margin-top: 0.75rem;
+    text-align: center;
+}
+.btn-retake-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1rem;
+    background: #f8fafc;
+    color: #334155;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.btn-retake-light:hover {
+    background: #ffffff;
+    border-color: #1eb349;
+    color: #166534;
 }
 
 .scanner-controls-bar {
@@ -839,22 +1065,6 @@
 .btn-control-secondary:hover {
     background: #f8fafc;
     border-color: #94a3b8;
-}
-.btn-retake {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.5rem 0.9rem;
-    background: #f8fafc;
-    color: #0f172a;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    cursor: pointer;
-}
-.btn-retake:hover {
-    background: #f1f5f9;
 }
 
 /* Submit Bar */
@@ -921,6 +1131,37 @@ let isNikValid = false;
 let livenessVerified = false;
 let livenessToken = null;
 
+// ── MODE SWITCHER (UPLOAD VS CAMERA) ──
+function switchKtpMode(mode) {
+    document.querySelectorAll('#tabModeKtpUpload, #tabModeKtpCam').forEach(b => b.classList.remove('active'));
+    if (mode === 'upload') {
+        document.getElementById('tabModeKtpUpload').classList.add('active');
+        document.getElementById('ktpUploadPane').style.display = 'block';
+        document.getElementById('ktpCameraPane').style.display = 'none';
+        stopKtpCamera();
+    } else {
+        document.getElementById('tabModeKtpCam').classList.add('active');
+        document.getElementById('ktpUploadPane').style.display = 'none';
+        document.getElementById('ktpCameraPane').style.display = 'block';
+        startKtpCamera();
+    }
+}
+
+function switchFaceMode(mode) {
+    document.querySelectorAll('#tabModeFaceCam, #tabModeFaceUpload').forEach(b => b.classList.remove('active'));
+    if (mode === 'upload') {
+        document.getElementById('tabModeFaceUpload').classList.add('active');
+        document.getElementById('faceUploadPane').style.display = 'block';
+        document.getElementById('faceCameraPane').style.display = 'none';
+        stopFaceCamera();
+    } else {
+        document.getElementById('tabModeFaceCam').classList.add('active');
+        document.getElementById('faceUploadPane').style.display = 'none';
+        document.getElementById('faceCameraPane').style.display = 'block';
+        startFaceCamera();
+    }
+}
+
 // ── NIK REALTIME PARSER ──
 function handleNikInput(nik) {
     const cleanNik = nik.replace(/\D/g, '');
@@ -974,7 +1215,7 @@ function handleNikInput(nik) {
     });
 }
 
-// ── KAMERA KTP ENGINE & LUMINOSITY GUIDANCE ──
+// ── KAMERA KTP ENGINE & LUMINOSITY GUIDANCE (LIGHT THEME) ──
 async function startKtpCamera() {
     try {
         const devices = await navigator.mediaDevices.enumerateDevices();
@@ -997,8 +1238,6 @@ async function startKtpCamera() {
         document.getElementById('ktpFrameOverlay').style.display = 'flex';
         document.getElementById('ktpGuidanceBanner').style.display = 'flex';
         document.getElementById('ktpControlsBar').style.display = 'flex';
-        document.getElementById('ktpResultPreview').style.display = 'none';
-        document.getElementById('ktpRetakeWrap').style.display = 'none';
 
         startKtpGuidanceLoop();
     } catch(err) {
@@ -1029,13 +1268,13 @@ function startKtpGuidanceLoop() {
         const avg = totalBrightness / (data.length / 16);
 
         if (avg < 48) {
-            banner.className = 'guidance-banner guide-error';
+            banner.className = 'guidance-banner-light guide-error';
             text.textContent = 'Pencahayaan Terlalu Gelap: Cari tempat lebih terang atau nyalakan lampu.';
         } else if (avg > 218) {
-            banner.className = 'guidance-banner guide-warn';
+            banner.className = 'guidance-banner-light guide-warn';
             text.textContent = 'Pencahayaan Terlalu Silau: Kurangi pantulan kilau cahaya pada KTP.';
         } else {
-            banner.className = 'guidance-banner guide-ideal';
+            banner.className = 'guidance-banner-light guide-ideal';
             text.textContent = 'Pencahayaan Ideal. Posisikan KTP memenuhi kotak panduan dan tekan Ambil Foto.';
         }
     }, 450);
@@ -1051,22 +1290,29 @@ function snapKtpPhoto() {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Export as WebP image compressed to ~60KB
     capturedKtpBase64 = canvas.toDataURL('image/webp', 0.82);
 
-    document.getElementById('ktpPreviewImg').src = capturedKtpBase64;
-    document.getElementById('ktpResultPreview').style.display = 'flex';
-    document.getElementById('ktpRetakeWrap').style.display = 'block';
-
+    displayKtpResult(capturedKtpBase64, 'Pindai kamera berhasil. Foto KTP siap diverifikasi.');
     stopKtpCamera();
+}
+
+function displayKtpResult(imgUrl, feedbackMsg, isWarn = false) {
+    document.getElementById('ktpPreviewImg').src = imgUrl;
+    document.getElementById('ktpSmartFeedbackText').textContent = feedbackMsg;
+    const feedbackBar = document.getElementById('ktpSmartFeedback');
+    feedbackBar.className = isWarn ? 'result-feedback-bar warn' : 'result-feedback-bar';
+
+    document.getElementById('ktpUploadPane').style.display = 'none';
+    document.getElementById('ktpCameraPane').style.display = 'none';
+    document.getElementById('ktpResultCard').style.display = 'block';
+
     checkFormReadiness();
 }
 
 function retakeKtpPhoto() {
     capturedKtpBase64 = null;
-    document.getElementById('ktpResultPreview').style.display = 'none';
-    document.getElementById('ktpRetakeWrap').style.display = 'none';
-    startKtpCamera();
+    document.getElementById('ktpResultCard').style.display = 'none';
+    switchKtpMode('upload');
     checkFormReadiness();
 }
 
@@ -1080,10 +1326,7 @@ function stopKtpCamera() {
     document.getElementById('ktpFrameOverlay').style.display = 'none';
     document.getElementById('ktpGuidanceBanner').style.display = 'none';
     document.getElementById('ktpControlsBar').style.display = 'none';
-
-    if (!capturedKtpBase64) {
-        document.getElementById('ktpPlaceholder').style.display = 'flex';
-    }
+    document.getElementById('ktpPlaceholder').style.display = 'flex';
 }
 
 async function switchKtpCamera() {
@@ -1097,6 +1340,7 @@ async function switchKtpCamera() {
         const video = document.getElementById('ktpVideo');
         video.srcObject = ktpStream;
         video.style.display = 'block';
+        document.getElementById('ktpPlaceholder').style.display = 'none';
         document.getElementById('ktpFrameOverlay').style.display = 'flex';
         document.getElementById('ktpGuidanceBanner').style.display = 'flex';
         document.getElementById('ktpControlsBar').style.display = 'flex';
@@ -1104,7 +1348,7 @@ async function switchKtpCamera() {
     } catch(e) {}
 }
 
-// ── KAMERA BIOMETRIK WAJAH & LIVENESS CHALLENGE ──
+// ── KAMERA BIOMETRIK WAJAH & LIVENESS CHALLENGE (LIGHT THEME) ──
 async function startFaceCamera() {
     try {
         const devices = await navigator.mediaDevices.enumerateDevices();
@@ -1128,8 +1372,6 @@ async function startFaceCamera() {
         document.getElementById('faceGuidanceBanner').style.display = 'flex';
         document.getElementById('faceControlsBar').style.display = 'flex';
         document.getElementById('livenessChallengeBox').style.display = 'flex';
-        document.getElementById('faceResultPreview').style.display = 'none';
-        document.getElementById('faceRetakeWrap').style.display = 'none';
 
         startFaceLivenessLoop();
     } catch(err) {
@@ -1142,7 +1384,6 @@ function startFaceLivenessLoop() {
     const video = document.getElementById('faceVideo');
     const banner = document.getElementById('faceGuidanceBanner');
     const text = document.getElementById('faceGuideText');
-    const oval = document.getElementById('faceOvalOutline');
     const challengeBox = document.getElementById('challengeInstruction');
     const dot = document.getElementById('challengeDot');
 
@@ -1167,15 +1408,13 @@ function startFaceLivenessLoop() {
         const avg = totalBrightness / (data.length / 16);
 
         if (avg < 45) {
-            banner.className = 'guidance-banner guide-error';
+            banner.className = 'guidance-banner-light guide-error';
             text.textContent = 'Pencahayaan Wajah Terlalu Gelap: Cari sumber cahaya dari depan.';
-            oval.className = 'face-oval-outline';
             return;
         }
 
-        banner.className = 'guidance-banner guide-ideal';
+        banner.className = 'guidance-banner-light guide-ideal';
         text.textContent = 'Pencahayaan Wajah Baik.';
-        oval.className = 'face-oval-outline ideal';
 
         stepTimer++;
         if (challengeStep === 1) {
@@ -1207,17 +1446,25 @@ function snapFacePhoto() {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Export as WebP image compressed to ~50KB
     capturedFaceBase64 = canvas.toDataURL('image/webp', 0.82);
     if (!livenessToken) {
-        livenessToken = 'MANUAL_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+        livenessToken = 'CAM_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
     }
 
-    document.getElementById('facePreviewImg').src = capturedFaceBase64;
-    document.getElementById('faceResultPreview').style.display = 'flex';
-    document.getElementById('faceRetakeWrap').style.display = 'block';
-
+    displayFaceResult(capturedFaceBase64, 'Pindai biometrik berhasil. Wajah terverifikasi dan siap dikirim.');
     stopFaceCamera();
+}
+
+function displayFaceResult(imgUrl, feedbackMsg, isWarn = false) {
+    document.getElementById('facePreviewImg').src = imgUrl;
+    document.getElementById('faceSmartFeedbackText').textContent = feedbackMsg;
+    const feedbackBar = document.getElementById('faceSmartFeedback');
+    feedbackBar.className = isWarn ? 'result-feedback-bar warn' : 'result-feedback-bar';
+
+    document.getElementById('faceCameraPane').style.display = 'none';
+    document.getElementById('faceUploadPane').style.display = 'none';
+    document.getElementById('faceResultCard').style.display = 'block';
+
     checkFormReadiness();
 }
 
@@ -1225,9 +1472,8 @@ function retakeFacePhoto() {
     capturedFaceBase64 = null;
     livenessVerified = false;
     livenessToken = null;
-    document.getElementById('faceResultPreview').style.display = 'none';
-    document.getElementById('faceRetakeWrap').style.display = 'none';
-    startFaceCamera();
+    document.getElementById('faceResultCard').style.display = 'none';
+    switchFaceMode('camera');
     checkFormReadiness();
 }
 
@@ -1242,10 +1488,7 @@ function stopFaceCamera() {
     document.getElementById('faceGuidanceBanner').style.display = 'none';
     document.getElementById('faceControlsBar').style.display = 'none';
     document.getElementById('livenessChallengeBox').style.display = 'none';
-
-    if (!capturedFaceBase64) {
-        document.getElementById('facePlaceholder').style.display = 'flex';
-    }
+    document.getElementById('facePlaceholder').style.display = 'flex';
 }
 
 async function switchFaceCamera() {
@@ -1259,6 +1502,7 @@ async function switchFaceCamera() {
         const video = document.getElementById('faceVideo');
         video.srcObject = faceStream;
         video.style.display = 'block';
+        document.getElementById('facePlaceholder').style.display = 'none';
         document.getElementById('faceFrameOverlay').style.display = 'flex';
         document.getElementById('faceGuidanceBanner').style.display = 'flex';
         document.getElementById('faceControlsBar').style.display = 'flex';
@@ -1267,7 +1511,7 @@ async function switchFaceCamera() {
     } catch(e) {}
 }
 
-// ── ALTERNATIF UPLOAD FILE GALERI (KOMPRESI KE WEBP DI BROWSER) ──
+// ── SMART UPLOAD SCANNER (MENGANALISIS FOTO YANG DIUPLOAD) ──
 function handleFileUpload(event, type) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1294,23 +1538,39 @@ function handleFileUpload(event, type) {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
 
-            const webpData = canvas.toDataURL('image/webp', 0.82);
+            // Analisis kecerahan foto yang diunggah
+            const imgData = ctx.getImageData(0, 0, width, height);
+            const data = imgData.data;
+            let totalBrightness = 0;
+            const step = Math.max(1, Math.floor(data.length / 5000));
+            let count = 0;
+            for (let i = 0; i < data.length; i += step * 4) {
+                totalBrightness += (data[i] * 0.299 + data[i+1] * 0.587 + data[i+2] * 0.114);
+                count++;
+            }
+            const avgBrightness = totalBrightness / count;
+
+            let smartMsg = 'Analisis Cerdas: Gambar tajam dengan pencahayaan seimbang.';
+            let isWarn = false;
+
+            if (avgBrightness < 50) {
+                smartMsg = 'Analisis Cerdas: Foto agak gelap. Pastikan nomor NIK dan tulisan tetap jelas terbaca.';
+                isWarn = true;
+            } else if (avgBrightness > 220) {
+                smartMsg = 'Analisis Cerdas: Foto cukup terang. Pastikan tidak ada pantulan kilau yang menutupi data.';
+                isWarn = true;
+            }
+
+            const webpData = canvas.toDataURL('image/webp', 0.84);
 
             if (type === 'ktp') {
                 capturedKtpBase64 = webpData;
-                document.getElementById('ktpPreviewImg').src = webpData;
-                document.getElementById('ktpPlaceholder').style.display = 'none';
-                document.getElementById('ktpResultPreview').style.display = 'flex';
-                document.getElementById('ktpRetakeWrap').style.display = 'block';
+                displayKtpResult(webpData, smartMsg, isWarn);
             } else {
                 capturedFaceBase64 = webpData;
                 livenessToken = 'UPLOAD_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-                document.getElementById('facePreviewImg').src = webpData;
-                document.getElementById('facePlaceholder').style.display = 'none';
-                document.getElementById('faceResultPreview').style.display = 'flex';
-                document.getElementById('faceRetakeWrap').style.display = 'block';
+                displayFaceResult(webpData, smartMsg, isWarn);
             }
-            checkFormReadiness();
         };
         img.src = e.target.result;
     };
