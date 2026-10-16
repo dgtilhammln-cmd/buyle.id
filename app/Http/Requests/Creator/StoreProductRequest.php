@@ -42,6 +42,11 @@ class StoreProductRequest extends FormRequest
             'ticket_war_start'      => ['nullable', 'date'],
             'max_tickets_per_order' => ['nullable', 'integer', 'min:1', 'max:20'],
 
+            // Syarat klaim produk gratis (Follow sosmed & Join grup)
+            'require_follow_join'   => ['nullable', 'boolean'],
+            'social_follow_url'     => ['nullable', 'required_if:require_follow_join,1,true', 'url', 'max:500'],
+            'community_join_url'    => ['nullable', 'required_if:require_follow_join,1,true', 'url', 'max:500'],
+
             // URL produk digital — divalidasi oleh SafeDigitalUrl jika diisi
             'digital_resource'    => ['nullable', 'string', 'max:2000'],
 
@@ -91,6 +96,10 @@ class StoreProductRequest extends FormRequest
             'meta_desc.max'                  => 'Meta Description SEO maksimal 1000 karakter.',
             'meta_keywords.max'              => 'Meta Keywords SEO maksimal 500 karakter.',
             'variants.max'                   => 'Maksimal 7 variasi per produk.',
+            'social_follow_url.required_if'  => 'URL akun sosmed wajib diisi jika syarat klaim gratis diaktifkan.',
+            'social_follow_url.url'          => 'Format URL akun sosmed tidak valid (harus diawali http:// atau https://).',
+            'community_join_url.required_if' => 'URL grup komunitas wajib diisi jika syarat klaim gratis diaktifkan.',
+            'community_join_url.url'         => 'Format URL grup komunitas tidak valid (harus diawali http:// atau https://).',
         ];
     }
 
@@ -100,6 +109,7 @@ class StoreProductRequest extends FormRequest
             'is_active'          => $this->boolean('is_active', true),
             'is_featured'        => $this->boolean('is_featured', false),
             'is_buyle_checkout' => $this->boolean('is_buyle_checkout', true),
+            'require_follow_join' => $this->boolean('require_follow_join', false),
             'stock'       => ($this->has('stock') && $this->input('stock') !== null && $this->input('stock') !== '') ? (int) $this->input('stock') : null,
             'weight'      => (int) ($this->input('weight') ?? 0),
             'length'      => (float) ($this->input('length') ?? 0),

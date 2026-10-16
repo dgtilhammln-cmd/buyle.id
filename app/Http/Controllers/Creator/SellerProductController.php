@@ -155,7 +155,22 @@ class SellerProductController extends Controller
             $data['is_whitelabel'] = $request->boolean('is_whitelabel');
             $data['whitelabel_approval_status'] = $data['is_whitelabel'] ? 'pending' : 'none';
         }
-        
+
+        // Handle Syarat Klaim Produk Gratis (hanya aktif jika harga = 0)
+        $effectivePrice = isset($data['sale_price']) && $data['sale_price'] !== null && $data['sale_price'] !== ''
+            ? (float) $data['sale_price']
+            : (float) ($data['price'] ?? 0);
+
+        if ($effectivePrice > 0) {
+            $data['require_follow_join'] = false;
+            $data['social_follow_url']   = null;
+            $data['community_join_url']  = null;
+        } else {
+            $data['require_follow_join'] = $request->boolean('require_follow_join');
+            $data['social_follow_url']   = $data['require_follow_join'] ? $request->input('social_follow_url') : null;
+            $data['community_join_url']  = $data['require_follow_join'] ? $request->input('community_join_url') : null;
+        }
+
         // Generate unique slug
         $slug = Str::slug($data['name']);
         $originalSlug = $slug;
@@ -301,6 +316,21 @@ class SellerProductController extends Controller
             if ($request->has('sold_count') && $request->input('sold_count') !== null && $request->input('sold_count') !== '') {
                 $data['sold_count'] = (int) $request->input('sold_count');
             }
+        }
+
+        // Handle Syarat Klaim Produk Gratis (hanya aktif jika harga = 0)
+        $effectivePrice = isset($data['sale_price']) && $data['sale_price'] !== null && $data['sale_price'] !== ''
+            ? (float) $data['sale_price']
+            : (float) ($data['price'] ?? $product->price);
+
+        if ($effectivePrice > 0) {
+            $data['require_follow_join'] = false;
+            $data['social_follow_url']   = null;
+            $data['community_join_url']  = null;
+        } else {
+            $data['require_follow_join'] = $request->boolean('require_follow_join');
+            $data['social_follow_url']   = $data['require_follow_join'] ? $request->input('social_follow_url') : null;
+            $data['community_join_url']  = $data['require_follow_join'] ? $request->input('community_join_url') : null;
         }
 
         // Safety: Truncate fields yang mungkin melebihi batas kolom DB

@@ -29,6 +29,8 @@ class Product extends Model
         'gate_scanner_key', 'gate_scanner_enabled', 'gate_scanner_pin',
         'gate_open_time', 'gate_close_time', 'gate_bypass_time',
         'ticket_war_start', 'max_tickets_per_order',
+        // Free Product Follow & Join Requirement
+        'require_follow_join', 'social_follow_url', 'community_join_url',
         // Kolom White Label & Reseller
         'is_whitelabel', 'whitelabel_price', 'whitelabel_terms', 'whitelabel_approval_status', 'whitelabel_rejection_reason',
         // Affiliate Commission
@@ -59,6 +61,7 @@ class Product extends Model
         'max_tickets_per_order' => 'integer',
         'gate_scanner_enabled' => 'boolean',
         'gate_bypass_time'     => 'boolean',
+        'require_follow_join'  => 'boolean',
         // White Label casts
         'is_whitelabel'             => 'boolean',
         'whitelabel_price'          => 'decimal:2',

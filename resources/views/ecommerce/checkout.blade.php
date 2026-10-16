@@ -1326,6 +1326,115 @@
                         </div>
                     </div>
 
+
+                    @php
+                        // Cek apakah ada produk gratis dengan syarat follow/join di keranjang
+                        $hasFreeRequirements = false;
+                        $freeReqItems = [];
+                        foreach ($summary['items'] as $item) {
+                            if ($item->product && $item->product->require_follow_join && $summary['subtotal'] <= 0) {
+                                $hasFreeRequirements = true;
+                                $freeReqItems[] = [
+                                    'name'               => $item->product->name,
+                                    'social_follow_url'  => $item->product->social_follow_url,
+                                    'community_join_url' => $item->product->community_join_url,
+                                ];
+                            }
+                        }
+                        $needRegister = $summary['subtotal'] <= 0;
+                    @endphp
+
+                    @if($summary['subtotal'] <= 0 && $hasFreeRequirements)
+                    {{-- === SYARAT KLAIM GRATIS === --}}
+                    <div id="freeClaimRequirements" style="margin-top:1.25rem;">
+                        <div style="font-size:0.72rem;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:0.65rem;display:flex;align-items:center;gap:0.4rem;">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                            Selesaikan Syarat Klaim
+                        </div>
+
+                        @foreach($freeReqItems as $idx => $req)
+                        @if($req['social_follow_url'])
+                        {{-- Syarat 1: Follow Sosmed --}}
+                        <div class="claim-step" id="step_follow_{{ $idx }}" data-type="timer" style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:0.85rem 1rem;margin-bottom:0.6rem;">
+                            <div style="display:flex;align-items:center;gap:0.65rem;">
+                                <div id="ico_follow_{{ $idx }}" style="width:32px;height:32px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s;">
+                                    <svg width="16" height="16" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                                </div>
+                                <div style="flex:1;min-width:0;">
+                                    <div style="font-size:0.8rem;font-weight:700;color:#0f172a;">Follow Akun Sosial Media</div>
+                                    <div style="font-size:0.72rem;color:#64748b;margin-top:1px;">Kunjungi & follow akun kreator</div>
+                                </div>
+                                <a href="{{ $req['social_follow_url'] }}" target="_blank" rel="noopener"
+                                   id="btn_follow_{{ $idx }}"
+                                   onclick="startTimer('follow','{{ $idx }}')"
+                                   style="flex-shrink:0;padding:0.4rem 0.75rem;border-radius:8px;font-size:0.75rem;font-weight:700;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:0.35rem;transition:opacity 0.2s;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                    Follow
+                                </a>
+                            </div>
+                            <div id="timer_follow_{{ $idx }}" style="display:none;margin-top:0.6rem;padding:0.45rem 0.65rem;background:#fffbeb;border-radius:8px;font-size:0.72rem;color:#92400e;display:none;align-items:center;gap:0.4rem;">
+                                <svg width="12" height="12" fill="none" stroke="#d97706" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                <span id="timer_follow_txt_{{ $idx }}">Tunggu sebentar setelah klik Follow...</span>
+                            </div>
+                        </div>
+                        @endif
+
+                        @if($req['community_join_url'])
+                        {{-- Syarat 2: Join Komunitas --}}
+                        <div class="claim-step" id="step_join_{{ $idx }}" data-type="timer" style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:0.85rem 1rem;margin-bottom:0.6rem;">
+                            <div style="display:flex;align-items:center;gap:0.65rem;">
+                                <div id="ico_join_{{ $idx }}" style="width:32px;height:32px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s;">
+                                    <svg width="16" height="16" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                                </div>
+                                <div style="flex:1;min-width:0;">
+                                    <div style="font-size:0.8rem;font-weight:700;color:#0f172a;">Join Grup Komunitas</div>
+                                    <div style="font-size:0.72rem;color:#64748b;margin-top:1px;">WA / Telegram / Discord</div>
+                                </div>
+                                <a href="{{ $req['community_join_url'] }}" target="_blank" rel="noopener"
+                                   id="btn_join_{{ $idx }}"
+                                   onclick="startTimer('join','{{ $idx }}')"
+                                   style="flex-shrink:0;padding:0.4rem 0.75rem;border-radius:8px;font-size:0.75rem;font-weight:700;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:0.35rem;transition:opacity 0.2s;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                    Join
+                                </a>
+                            </div>
+                            <div id="timer_join_{{ $idx }}" style="display:none;margin-top:0.6rem;padding:0.45rem 0.65rem;background:#fffbeb;border-radius:8px;font-size:0.72rem;color:#92400e;align-items:center;gap:0.4rem;">
+                                <svg width="12" height="12" fill="none" stroke="#d97706" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                <span id="timer_join_txt_{{ $idx }}">Tunggu sebentar setelah klik Join...</span>
+                            </div>
+                        </div>
+                        @endif
+                        @endforeach
+
+                        {{-- Syarat 3: Register / Login --}}
+                        @guest
+                        <div class="claim-step" id="step_register" style="background:#fef2f2;border:1.5px solid #fca5a5;border-radius:12px;padding:0.85rem 1rem;margin-bottom:0.6rem;">
+                            <div style="display:flex;align-items:center;gap:0.65rem;">
+                                <div style="width:32px;height:32px;border-radius:8px;background:#fee2e2;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                    <svg width="16" height="16" fill="none" stroke="#dc2626" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                </div>
+                                <div style="flex:1;min-width:0;">
+                                    <div style="font-size:0.8rem;font-weight:700;color:#991b1b;">Wajib Login / Daftar</div>
+                                    <div style="font-size:0.72rem;color:#b91c1c;margin-top:1px;">Akun diperlukan untuk klaim produk gratis</div>
+                                </div>
+                                <a href="{{ route('login') }}?redirect={{ urlencode(url()->current()) }}"
+                                   style="flex-shrink:0;padding:0.4rem 0.75rem;border-radius:8px;font-size:0.75rem;font-weight:700;background:#dc2626;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:0.35rem;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                                    Login
+                                </a>
+                            </div>
+                        </div>
+                        @endguest
+
+                        @auth
+                        <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:0.7rem 1rem;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.65rem;">
+                            <svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span style="font-size:0.78rem;font-weight:600;color:#166534;">Sudah masuk sebagai <strong>{{ auth()->user()->name }}</strong></span>
+                        </div>
+                        @endauth
+                    </div>
+                    @endif
+
                     <div class="checkout-sticky-footer" style="margin-top: 1.5rem;">
                         <div class="summary-total" style="margin-top:0; padding-top:1rem;">
                             <span>Total Belanja</span>
@@ -1338,13 +1447,29 @@
                             @endif
                         </div>
                         @if($summary['subtotal'] <= 0)
-                            <button type="submit" class="btn-pay" onclick="prepareSubmit(event)"
-                                style="background:linear-gradient(135deg,#16a34a,#22c55e);">Dapatkan Sekarang
-                                (Gratis)</button>
+                            @if($hasFreeRequirements && auth()->guest())
+                                {{-- Harus login dulu --}}
+                                <button type="button" id="btn-claim-free"
+                                    style="display:block;width:100%;background:#94a3b8;color:#fff;border:none;border-radius:999px;padding:1rem;font-size:1rem;font-weight:700;cursor:not-allowed;text-align:center;margin-top:1.5rem;box-shadow:none;opacity:0.7;"
+                                    disabled>
+                                    Login untuk Klaim Gratis
+                                </button>
+                            @elseif($hasFreeRequirements)
+                                {{-- Ada syarat follow/join, tombol dikontrol JS --}}
+                                <button type="submit" id="btn-claim-free" class="btn-pay" onclick="prepareSubmit(event)"
+                                    style="background:#94a3b8;cursor:not-allowed;box-shadow:none;"
+                                    disabled>
+                                    <span id="btn-claim-text">Selesaikan Syarat Klaim</span>
+                                </button>
+                            @else
+                                <button type="submit" class="btn-pay" onclick="prepareSubmit(event)"
+                                    style="background:linear-gradient(135deg,#16a34a,#22c55e);">Dapatkan Sekarang (Gratis)</button>
+                            @endif
                         @else
                             <button type="submit" class="btn-pay" onclick="prepareSubmit(event)">Pilih Pembayaran</button>
                         @endif
                     </div>
+
 
                     <div class="secure-badge"
                         style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:1.5rem;color:var(--c-muted);font-size:0.75rem;">
@@ -2521,6 +2646,92 @@
     // Inisialisasi: set mode 'akun' pada semua slot dengan data-auth-name
     document.querySelectorAll('input[data-auth-name]').forEach(function (input) {
         input.dataset.mode = 'akun';
+    });
+
+    // ──────────────────────────────────────────────────────────
+    // FREE CLAIM REQUIREMENTS — Psychology Timer (5 detik)
+    // ──────────────────────────────────────────────────────────
+    const FREE_TIMER_MS = 5000; // 5 detik
+    const freeTimerState = {}; // { 'follow_0': true, 'join_0': true, ... }
+
+    function startTimer(type, idx) {
+        const key = type + '_' + idx;
+        if (freeTimerState[key]) return; // sudah lolos, skip
+
+        const timerEl   = document.getElementById('timer_' + type + '_' + idx);
+        const timerTxt  = document.getElementById('timer_' + type + '_txt_' + idx);
+        const icoEl     = document.getElementById('ico_' + type + '_' + idx);
+
+        if (timerEl) {
+            timerEl.style.display = 'flex';
+        }
+
+        let remaining = Math.ceil(FREE_TIMER_MS / 1000);
+        if (timerTxt) timerTxt.textContent = 'Verifikasi dalam ' + remaining + ' detik...';
+
+        const interval = setInterval(function () {
+            remaining--;
+            if (remaining > 0) {
+                if (timerTxt) timerTxt.textContent = 'Verifikasi dalam ' + remaining + ' detik...';
+            } else {
+                clearInterval(interval);
+                freeTimerState[key] = true;
+
+                // Update icon to green check
+                if (icoEl) {
+                    icoEl.style.background = '#dcfce7';
+                    icoEl.innerHTML = '<svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+                }
+
+                // Update step border to green
+                const stepEl = document.getElementById('step_' + type + '_' + idx);
+                if (stepEl) {
+                    stepEl.style.background = '#f0fdf4';
+                    stepEl.style.borderColor = '#86efac';
+                }
+
+                // Update timer text
+                if (timerTxt) timerTxt.textContent = 'Selesai — terima kasih!';
+                if (timerEl) {
+                    timerEl.style.background = '#f0fdf4';
+                    timerEl.style.color = '#166534';
+                }
+
+                checkAllFreeRequirements();
+            }
+        }, 1000);
+    }
+
+    function checkAllFreeRequirements() {
+        const btn = document.getElementById('btn-claim-free');
+        if (!btn) return;
+
+        // Kumpulkan semua step yang perlu divalidasi
+        const allSteps = document.querySelectorAll('.claim-step[data-type="timer"]');
+        let allDone = true;
+
+        allSteps.forEach(function (step) {
+            const id   = step.id; // e.g. step_follow_0 / step_join_0
+            const parts = id.replace('step_', '').split('_');
+            const type  = parts[0];
+            const idx   = parts.slice(1).join('_');
+            const key   = type + '_' + idx;
+            if (!freeTimerState[key]) allDone = false;
+        });
+
+        if (allDone && allSteps.length > 0) {
+            btn.disabled = false;
+            btn.style.background = 'linear-gradient(135deg,#16a34a,#22c55e)';
+            btn.style.cursor = 'pointer';
+            btn.style.boxShadow = '0 6px 20px rgba(30,179,73,.35)';
+            const txt = document.getElementById('btn-claim-text');
+            if (txt) txt.textContent = 'Dapatkan Sekarang (Gratis)';
+        }
+    }
+
+    // Jika tidak ada step timer (no requirements), tidak perlu apa-apa
+    document.addEventListener('DOMContentLoaded', function () {
+        checkAllFreeRequirements();
     });
 </script>
 @endsection

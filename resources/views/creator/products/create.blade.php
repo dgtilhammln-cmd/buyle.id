@@ -668,6 +668,8 @@
                                         autocomplete="off">
                                 </div>
 
+                                @include('creator.products.partials.free-product-requirements', ['product' => null])
+
                                 @include('creator.products.partials.variants-manager')
 
                                 <div id="commissionWrap" class="form-group full">
