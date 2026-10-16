@@ -122,4 +122,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(CouponUsage::class);
     }
+
+    /**
+     * Verifikasi e-KYC creator.
+     */
+    public function kyc(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(CreatorKyc::class);
+    }
+
+    public function isKycVerified(): bool
+    {
+        return $this->kyc?->status === 'verified';
+    }
 }

@@ -581,6 +581,13 @@ Route::prefix('admin')->group(function () {
         Route::post('/admin-users/{adminUser}/password',          [\App\Http\Controllers\Admin\AdminAdminUserController::class, 'updatePassword'])->name('admin.admin-users.password');
         Route::post('/admin-users/{adminUser}/toggle',            [\App\Http\Controllers\Admin\AdminAdminUserController::class, 'toggleActive'])->name('admin.admin-users.toggle');
         Route::delete('/admin-users/{adminUser}',                [\App\Http\Controllers\Admin\AdminAdminUserController::class, 'destroy'])->name('admin.admin-users.destroy');
+
+        // Creator e-KYC Verification Management
+        Route::get('/kyc',                  [\App\Http\Controllers\Admin\AdminKycController::class, 'index'])->name('admin.kyc.index');
+        Route::get('/kyc/{kyc}',            [\App\Http\Controllers\Admin\AdminKycController::class, 'show'])->name('admin.kyc.show');
+        Route::get('/kyc/{kyc}/photo/{type}', [\App\Http\Controllers\Admin\AdminKycController::class, 'photo'])->name('admin.kyc.photo');
+        Route::post('/kyc/{kyc}/approve',   [\App\Http\Controllers\Admin\AdminKycController::class, 'approve'])->name('admin.kyc.approve');
+        Route::post('/kyc/{kyc}/reject',    [\App\Http\Controllers\Admin\AdminKycController::class, 'reject'])->name('admin.kyc.reject');
     });
 });
 
@@ -664,6 +671,11 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/scanner/staff/{product}', [\App\Http\Controllers\GateStaffController::class, 'store'])->name('ticket.scanner.staff.store');
     Route::put('/scanner/staff/{product}/{gateStaff}', [\App\Http\Controllers\GateStaffController::class, 'toggle'])->name('ticket.scanner.staff.toggle');
     Route::delete('/scanner/staff/{product}/{gateStaff}', [\App\Http\Controllers\GateStaffController::class, 'destroy'])->name('ticket.scanner.staff.destroy');
+
+    // Creator e-KYC Verification
+    Route::get('/kyc/status',       [\App\Http\Controllers\Creator\CreatorKycController::class, 'status'])->name('kyc.status');
+    Route::post('/kyc/parse-nik',   [\App\Http\Controllers\Creator\CreatorKycController::class, 'parseNik'])->name('kyc.parse-nik');
+    Route::post('/kyc/submit',      [\App\Http\Controllers\Creator\CreatorKycController::class, 'submit'])->name('kyc.submit');
 
 
     // ── Link in Bio ──────────────────────────────────────────────────────

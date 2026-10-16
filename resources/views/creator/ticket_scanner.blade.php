@@ -747,6 +747,20 @@
         </div>
 
         <div class="bio-tabs-list">
+            <button type="button" class="tab-btn {{ $activeTab === 'settings' ? 'active' : '' }}" onclick="switchTab('tab-settings', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>
+                <span class="tab-text-full">Pengaturan & e-KYC</span>
+                <small class="tab-text-mob">e-KYC</small>
+                @if(isset($kyc) && $kyc->status === 'verified')
+                    <span style="margin-left:auto; font-size:0.68rem; font-weight:800; background:#dcfce7; color:#166534; padding:2px 7px; border-radius:999px;">Terverifikasi</span>
+                @elseif(isset($kyc) && $kyc->status === 'pending')
+                    <span style="margin-left:auto; font-size:0.68rem; font-weight:800; background:#fef3c7; color:#92400e; padding:2px 7px; border-radius:999px;">Review</span>
+                @elseif(isset($kyc) && $kyc->status === 'rejected')
+                    <span style="margin-left:auto; font-size:0.68rem; font-weight:800; background:#fee2e2; color:#991b1b; padding:2px 7px; border-radius:999px;">Ditolak</span>
+                @else
+                    <span style="margin-left:auto; font-size:0.68rem; font-weight:800; background:#f1f5f9; color:#475569; padding:2px 7px; border-radius:999px;">Wajib</span>
+                @endif
+            </button>
             <button type="button" class="tab-btn {{ $activeTab === 'scanner' ? 'active' : '' }}" onclick="switchTab('tab-scanner', this)">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
                 <span class="tab-text-full">Live QR Scanner</span>
@@ -791,6 +805,9 @@
                 {{ session('error') }}
             </div>
         @endif
+
+        {{-- TAB 0: PENGATURAN & VERIFIKASI e-KYC --}}
+        @include('creator.partials.kyc_tab')
 
         {{-- TAB 1: SCANNER --}}
         <div id="tab-scanner" class="payout-tab-pane" style="display: {{ $activeTab === 'scanner' ? 'block' : 'none' }};">
@@ -1496,10 +1513,15 @@
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(tabId).style.display = 'block';
         btn.classList.add('active');
-        const tabName = tabId === 'tab-data' ? 'data' : (tabId === 'tab-gate' ? 'gate' : 'scanner');
+        const tabName = tabId === 'tab-settings' ? 'settings' : (tabId === 'tab-data' ? 'data' : (tabId === 'tab-gate' ? 'gate' : 'scanner'));
         const url = new URL(window.location);
         url.searchParams.set('tab', tabName);
         window.history.pushState({}, '', url);
+
+        if (tabId !== 'tab-settings') {
+            if (typeof stopKtpCamera === 'function') stopKtpCamera();
+            if (typeof stopFaceCamera === 'function') stopFaceCamera();
+        }
 
         if (tabId === 'tab-data') {
             runInstantFilter();

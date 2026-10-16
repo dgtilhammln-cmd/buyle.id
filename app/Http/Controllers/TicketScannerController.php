@@ -112,6 +112,8 @@ class TicketScannerController extends Controller
             ]);
         }
 
+        $kyc = \App\Models\CreatorKyc::where('user_id', $sellerId)->first();
+
         $seo = [
             'title'   => 'Scan Tiket & Data Kehadiran · Creator Studio',
             'robots'  => 'noindex, nofollow',
@@ -126,7 +128,8 @@ class TicketScannerController extends Controller
             'search',
             'activeTab',
             'stats',
-            'allTicketsCached'
+            'allTicketsCached',
+            'kyc'
         ));
     }
 

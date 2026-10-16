@@ -648,3 +648,585 @@ Jika penyelenggara mengumumkan pembatalan konser, atau event terbukti bodong seb
 
 *Dokumentasi ini dibuat otomatis agar developer atau AI agent berikutnya memiliki gambaran utuh tanpa ada detail teknis yang terlewat.*
 
+---
+
+## 🪪 9. Sistem e-KYC Verifikasi Penyelenggara Event (EO Verification — KTP Smart Scan & Biometric Liveness)
+
+### A. Latar Belakang & Tujuan Strategis
+
+Untuk menutup celah risiko **event bodong secara menyeluruh**, tidak cukup hanya mengandalkan proteksi finansial (Escrow H+3). Platform harus dapat **memastikan identitas asli penyelenggara** sebelum event bertipe tiket (`product_type = 'ticket'`) dapat ditayangkan ke publik.
+
+Sistem e-KYC Buyle.id dirancang mengadopsi standar **fintech & perbankan digital modern** (seperti GoPay, DANA, Gojek) namun dengan implementasi **100% mandiri, tanpa biaya API pihak ketiga**, dan terasa sangat simpel bagi pengguna.
+
+Prinsip utama: **"2 Langkah Sahkan Diri — Scan KTP, Kedipkan Mata, Selesai."**
+
+---
+
+### B. Alur & Flow Lengkap Sistem e-KYC
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                  ALUR LENGKAP e-KYC EO VERIFICATION                 │
+└─────────────────────────────────────────────────────────────────────┘
+
+[ Creator Masuk ke Gatekeeper Studio ]
+           │
+           ▼
+[ Tab: 🛡️ Verifikasi & Pengaturan EO ]  ← Tab pertama paling atas
+           │
+           ▼ (Jika belum terverifikasi)
+┌──────────────────────────────────────────────────────┐
+│             LANGKAH 1 — SCAN KTP CERDAS              │
+│                                                      │
+│  Kamera otomatis terbuka                             │
+│  Bingkai panduan proporsi KTP muncul di layar        │
+│                                                      │
+│  Real-time Analyzer (Canvas Detection):              │
+│   ■ Terlalu Gelap   → Banner: "Butuh lebih banyak    │
+│                        cahaya, pindah ke area terang" │
+│   ■ Terlalu Silau   → Banner: "Kurangi pantulan      │
+│                        cahaya di permukaan KTP"      │
+│   ■ Terlalu Jauh    → Banner: "Dekatkan KTP ke bingkai"│
+│   ■ Terlalu Dekat   → Banner: "Jauhkan KTP sedikit"  │
+│   ■ Posisi IDEAL    → Tombol capture menyala HIJAU   │
+│                        Auto-capture setelah 1.5 detik│
+│                                                      │
+│  Hasil: 1 FOTO TAJAM KTP (disimpan sebagai WebP)     │
+└──────────────────────────────────────────────────────┘
+           │
+           ▼ (Setelah foto KTP berhasil diambil)
+[ Parser NIK Otomatis ] ─────► Menampilkan praisi data:
+                               • Provinsi & Kota Asal
+                               • Tanggal Lahir
+                               • Jenis Kelamin
+                               • Validasi 16 Digit Angka
+           │
+           ▼ (Creator mengkonfirmasi data NIK)
+┌──────────────────────────────────────────────────────┐
+│         LANGKAH 2 — VERIFIKASI WAJAH BIOMETRIK       │
+│                   (Liveness Detection)               │
+│                                                      │
+│  Panduan Oval Wajah muncul di layar kamera           │
+│                                                      │
+│  Tantangan Liveness Dinamis (berurutan):             │
+│   1. "Posisikan wajah Anda di dalam lingkaran"       │
+│       (Distance detection — ukur ukuran wajah)       │
+│   2. "Kedipkan mata Anda 1x"                         │
+│       (Motion delta / eye aspect ratio)              │
+│   3. "Tengok sedikit ke kanan"                       │
+│       (Head pose estimation via nose point)          │
+│   4. "Bagus! Tahan posisi 3 detik..."                │
+│       → 📸 Auto-capture selfie biometrik!            │
+│                                                      │
+│  Hasil: 1 FOTO SELFIE WAJAH (disimpan sebagai WebP) │
+└──────────────────────────────────────────────────────┘
+           │
+           ▼ (Kedua foto berhasil diambil)
+[ Submit Pengajuan Verifikasi ke Server ]
+           │
+           ▼
+[ Status: 🔵 "Menunggu Peninjauan Admin" ]
+           │
+           ▼ (Admin buka panel /admin/kyc-review)
+┌──────────────────────────────────────────────────────┐
+│              PANEL ADMIN — REVIEW KYC                │
+│                                                      │
+│  Admin melihat side-by-side:                         │
+│  [Foto KTP] ←→ [Foto Selfie Wajah]                  │
+│                                                      │
+│  Data NIK terurai otomatis di bawah:                 │
+│  NIK: 3273xxxx••••0003                               │
+│  Nama: Budi Santoso                                  │
+│  Provinsi: Jawa Barat, Kota: Bandung                 │
+│  Tgl Lahir: 15 Agustus 1992                          │
+│                                                      │
+│  Tombol Aksi:                                        │
+│  [✅ SETUJUI — Verified Organizer]                    │
+│  [❌ TOLAK — dengan catatan alasan]                  │
+└──────────────────────────────────────────────────────┘
+           │
+           ├─► SETUJUI → Status berubah: 🟢 "Terverifikasi Resmi"
+           │              Badge "Verified Organizer" muncul di
+           │              halaman event yang dibuat creator tsb
+           │              Dana Escrow tiket dapat dicairkan
+           │              (Nama rekening harus sesuai KTP)
+           │
+           └─► TOLAK   → Status: 🔴 "Ditolak"
+                          Creator dapat mengajukan ulang setelah
+                          memperbaiki foto sesuai alasan penolakan
+```
+
+---
+
+### C. Spesifikasi Teknis Modul Smart KTP Scanner
+
+#### C.1 Teknologi Inti
+- **HTML5 WebRTC / `getUserMedia()`**: Mengakses kamera secara langsung di browser (Chrome, Edge, Firefox, Safari) tanpa plugin tambahan, kompatibel dengan webcam internal laptop maupun webcam USB eksternal.
+- **HTML5 Canvas API**: Setiap frame video diambil ke canvas untuk dianalisis secara real-time menggunakan JavaScript.
+- **Format Output**: Foto langsung dikompres dan dikonversi ke **WebP** menggunakan `canvas.toBlob('image/webp', 0.85)` untuk efisiensi ukuran tanpa mengorbankan kejelasan identitas.
+
+#### C.2 Real-time Quality Analyzer (Canvas Pixel Analysis)
+```javascript
+// Analisis Luminance (Kecerahan) — Dijalankan setiap ~200ms
+function analyzeLuminance(canvas) {
+    const ctx = canvas.getContext('2d');
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+    let total = 0;
+    for (let i = 0; i < pixels.length; i += 4) {
+        // Formula luminance perseptual manusia (ITU-R BT.601)
+        total += (pixels[i] * 0.299) + (pixels[i+1] * 0.587) + (pixels[i+2] * 0.114);
+    }
+    const avg = total / (pixels.length / 4);
+
+    if (avg < 60)  return 'TOO_DARK';   // → Banner merah: terlalu gelap
+    if (avg > 200) return 'TOO_BRIGHT'; // → Banner kuning: terlalu silau
+    return 'IDEAL';                     // → Tombol capture menyala hijau
+}
+
+// Analisis Sharpness (Ketajaman) — Deteksi blur via Laplacian
+function analyzeSharpness(canvas) {
+    // High-pass filter sederhana via konvolusi 3x3
+    // Jika variance piksel edge sangat rendah → gambar blur/tidak fokus
+    // Threshold: variance < 100 → "TERLALU BLUR / Fokuskan kamera"
+}
+```
+
+#### C.3 KTP Card Detection & Distance Guide
+```javascript
+// Panduan framing proporsi KTP (rasio standar ISO/IEC 7810 ID-1: 85.6mm × 54mm = ~1.586)
+const KTP_ASPECT_RATIO = 1.586;
+const idealFrameWidth = videoWidth * 0.75; // 75% lebar layar
+const idealFrameHeight = idealFrameWidth / KTP_ASPECT_RATIO;
+
+// Deteksi jarak: jika objek memenuhi < 60% bingkai → "Dekatkan KTP"
+// Jika objek memenuhi > 90% bingkai → "Jauhkan KTP sedikit"
+// Jika 65–85% bingkai → IDEAL → aktifkan tombol capture
+```
+
+#### C.4 Auto-Capture Countdown
+- Sistem tidak mengharuskan user menekan tombol secara manual.
+- Saat analyzer mendeteksi kondisi **IDEAL selama 1.5 detik berturut-turut**, progress bar hijau terisi, lalu kamera **auto-capture** menghasilkan foto terbaik secara otomatis.
+- Pengguna juga dapat menekan tombol manual jika mau mengontrol sendiri.
+
+---
+
+### D. Spesifikasi Teknis Modul Biometric Liveness Detection
+
+#### D.1 Mekanisme Liveness Anti-Spoofing
+Sistem menggunakan kombinasi **motion detection + geometric tracking** yang ringan dan berjalan 100% di sisi klien (browser pengguna), tidak memerlukan model AI berat atau koneksi ke server eksternal.
+
+```
+Frame Video (30fps)
+      │
+      ├─► [Step 1: Face Detection via Oval Bounding]
+      │         Algoritma: Frame-by-frame pixel variance pada zona oval
+      │         Ukuran wajah di oval dihitung via perbandingan area
+      │         Feedback: "Terlalu Jauh" / "Terlalu Dekat" / "IDEAL"
+      │
+      ├─► [Step 2: Blink Detection]
+      │         Algoritma: Deteksi perubahan piksel pada zona mata
+      │         Threshold: Delta piksel zona mata > 15% antara 2 frame
+      │         Deteksi 1 kedipan lengkap (buka → tutup → buka)
+      │
+      ├─► [Step 3: Head Turn Detection]
+      │         Algoritma: Tracking titik pusat wajah (centroid)
+      │         Jika centroid bergeser > 10% horizontal → "Tengok Terdeteksi"
+      │
+      └─► [Step 4: Still Pose Capture]
+                Wajah diam di dalam oval selama 1.5 detik
+                → AUTO-CAPTURE selfie biometrik (format WebP)
+```
+
+#### D.2 Tantangan Liveness (Challenge Sequence)
+Urutan tantangan acak dihasilkan setiap sesi untuk mencegah rekaman video berulang:
+
+| Urutan | Tantangan | Cara Deteksi |
+|--------|-----------|--------------|
+| 1 | Posisikan wajah di oval | Bounding box wajah ≥ 60% area oval |
+| 2 | Kedipkan mata 1x | Pixel delta pada region eye > threshold |
+| 3 | Tengok kanan ATAU kiri (random) | Centroid horizontal shift |
+| 4 | Tahan posisi 1.5 detik | Zero movement dalam 45 frame |
+
+#### D.3 Keamanan Anti-Spoofing
+- **Anti-foto-dicetak**: Foto dicetak tidak bisa memenuhi tantangan kedipan dan tengok karena tidak bergerak.
+- **Anti-video-diputar dari layar lain**: Live capture dilakukan melalui kamera lokal yang aktif, bukan stream input video yang bisa difabrikasi.
+- **Timestamp & Session Token**: Setiap sesi liveness menghasilkan token unik bertanda waktu yang disertakan saat upload, sehingga tidak bisa di-replay pada waktu lain.
+
+---
+
+### E. Spesifikasi Penyimpanan & Format File
+
+#### E.1 Format & Ukuran File
+| Data | Format | Ukuran Rata-rata |
+|------|--------|-----------------|
+| Foto KTP | **WebP** (kualitas 85%) | ~80 KB – 120 KB |
+| Foto Selfie Biometrik | **WebP** (kualitas 85%) | ~70 KB – 100 KB |
+| **Total per creator** | — | **~150 KB – 220 KB** |
+
+> ✅ **TIDAK MENYIMPAN VIDEO APAPUN.** Proses liveness berjalan di RAM browser, hanya 1 frame foto yang diekstrak dan dikirim ke server.
+
+#### E.2 Estimasi Kapasitas Storage Hosting
+| Jumlah Creator KYC | Estimasi Storage |
+|--------------------|-----------------|
+| 100 creator | ~20 MB |
+| 500 creator | ~100 MB |
+| 1.000 creator | ~200 MB |
+| 5.000 creator | ~1 GB |
+| 10.000 creator | ~2 GB |
+
+Dengan paket hosting standar 10–50 GB, platform dapat melayani puluhan ribu verifikasi tanpa perlu upgrade kapasitas storage.
+
+#### E.3 Lokasi Penyimpanan di Server
+```
+storage/
+└── app/
+    └── public/
+        └── kyc/
+            ├── ktp/
+            │   └── {seller_id}_{timestamp}_ktp.webp     ← Foto KTP (non-publik)
+            └── selfie/
+                └── {seller_id}_{timestamp}_selfie.webp  ← Foto Selfie (non-publik)
+```
+
+> **Keamanan Akses File**: Direktori `kyc/` **TIDAK dapat diakses via URL publik langsung**. File hanya ditampilkan melalui route controller dengan middleware `auth` + `role:admin`, sehingga foto KTP tidak bisa diakses oleh siapapun kecuali Admin Buyle.id yang login.
+
+---
+
+### F. Kompatibilitas Platform & Hardware
+
+#### F.1 Dukungan Browser & OS
+| Platform | Browser | Webcam Support | Status |
+|----------|---------|----------------|--------|
+| **Laptop / PC Desktop** (Windows, macOS, Linux) | Chrome ≥ 68, Edge ≥ 79, Firefox ≥ 66 | Internal + USB Eksternal | ✅ Fully Supported |
+| **Smartphone Android** | Chrome Android, Samsung Internet | Kamera Depan & Belakang | ✅ Fully Supported |
+| **iPhone / iPad (iOS ≥ 14.5)** | Safari, Chrome iOS | Kamera Depan | ✅ Supported |
+| **Browser Lama / IE** | Internet Explorer | — | ❌ Tidak Didukung |
+
+#### F.2 Penggunaan di Desktop / Laptop
+Desktop / laptop justru **LEBIH NYAMAN** untuk proses KYC karena:
+1. **Kamera posisi di atas layar** → Pengguna menatap lurus ke kamera saat scan selfie wajah.
+2. **Webcam USB Eksternal (misal: Logitech, JETE-W7)** otomatis terdeteksi, resolusinya bahkan lebih baik dari kamera HP.
+3. **Layar besar** membuat panduan oval wajah dan bingkai KTP lebih mudah dilihat dan dipenuhi.
+4. **Lampu meja** yang bisa diatur posisinya mempermudah pemenuhan syarat pencahayaan ideal.
+
+```javascript
+// Auto-detect dan prioritaskan webcam USB eksternal (sama persis seperti Gate Scanner)
+const devices = await navigator.mediaDevices.enumerateDevices();
+const externalCam = devices.find(d =>
+    d.kind === 'videoinput' &&
+    (d.label.includes('USB') || d.label.includes('External') || d.label.includes('Webcam'))
+);
+const cameraId = externalCam?.deviceId ?? null; // fallback ke webcam internal
+```
+
+---
+
+### G. Skema Database Kolom KYC
+
+Tambahan kolom pada tabel `users` atau tabel terpisah `creator_kyc`:
+
+```sql
+-- Opsi A: Kolom tambahan di tabel users
+ALTER TABLE users ADD COLUMN kyc_status ENUM('none','pending','verified','rejected') DEFAULT 'none';
+ALTER TABLE users ADD COLUMN kyc_nik VARCHAR(16) NULL;
+ALTER TABLE users ADD COLUMN kyc_full_name VARCHAR(255) NULL;
+ALTER TABLE users ADD COLUMN kyc_dob DATE NULL;
+ALTER TABLE users ADD COLUMN kyc_gender ENUM('L','P') NULL;
+ALTER TABLE users ADD COLUMN kyc_province VARCHAR(100) NULL;
+ALTER TABLE users ADD COLUMN kyc_city VARCHAR(100) NULL;
+ALTER TABLE users ADD COLUMN kyc_ktp_photo VARCHAR(500) NULL;       -- path WebP
+ALTER TABLE users ADD COLUMN kyc_selfie_photo VARCHAR(500) NULL;    -- path WebP
+ALTER TABLE users ADD COLUMN kyc_submitted_at TIMESTAMP NULL;
+ALTER TABLE users ADD COLUMN kyc_reviewed_at TIMESTAMP NULL;
+ALTER TABLE users ADD COLUMN kyc_reviewed_by BIGINT NULL;           -- admin user_id
+ALTER TABLE users ADD COLUMN kyc_rejection_reason TEXT NULL;
+
+-- Atau:
+-- Opsi B: Tabel terpisah creator_kyc (lebih rapi & mudah di-audit)
+CREATE TABLE creator_kyc (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL UNIQUE,
+  status ENUM('none','pending','verified','rejected') DEFAULT 'none',
+  nik VARCHAR(16) NULL,
+  full_name VARCHAR(255) NULL,
+  dob DATE NULL,
+  gender ENUM('L','P') NULL,
+  province VARCHAR(100) NULL,
+  city VARCHAR(100) NULL,
+  ktp_photo_path VARCHAR(500) NULL,
+  selfie_photo_path VARCHAR(500) NULL,
+  nik_parsed_data JSON NULL,   -- simpan data terurai lengkap dari NIK parser
+  liveness_token VARCHAR(64) NULL, -- token sesi liveness anti-replay
+  submitted_at TIMESTAMP NULL,
+  reviewed_at TIMESTAMP NULL,
+  reviewed_by BIGINT NULL,
+  rejection_reason TEXT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+```
+
+---
+
+### H. NIK Parser — Validasi & Ekstraksi Data Mandiri (Tanpa API Berbayar)
+
+Sistem **membaca sendiri** 16 digit NIK menggunakan rumus matematika standar Dukcapil RI:
+
+```
+NIK: [2 digit Provinsi][2 digit Kota/Kab][2 digit Kecamatan][2 digit Tanggal Lahir][2 digit Bulan Lahir][2 digit Tahun Lahir][4 digit No. Urut]
+     ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Contoh NIK: 3273260808920003
+- 32    → Provinsi: Jawa Barat
+- 73    → Kota/Kab: Kota Bandung
+- 26    → Kecamatan: Cibeunying Kidul
+- 08    → Tanggal Lahir: 08 (Laki-laki) atau 08+40=48 (Perempuan: tgl 8)
+- 08    → Bulan Lahir: Agustus
+- 92    → Tahun Lahir: 1992
+- 0003  → No. Urut Warga
+```
+
+```javascript
+// NIK Parser — berjalan 100% di sisi client, 0ms, gratis
+function parseNIK(nik) {
+    if (!nik || nik.length !== 16 || !/^\d{16}$/.test(nik)) {
+        return { valid: false, error: 'Format NIK tidak valid (harus 16 digit angka)' };
+    }
+
+    const provinceCode = nik.substring(0, 2);
+    const cityCode     = nik.substring(0, 4);
+    const subdistCode  = nik.substring(0, 6);
+    let   dateRaw      = parseInt(nik.substring(6, 8));
+    const monthRaw     = parseInt(nik.substring(8, 10));
+    const yearRaw      = nik.substring(10, 12);
+    const seqNum       = nik.substring(12, 16);
+
+    // Jenis kelamin: perempuan ditandai dengan tanggal + 40
+    const gender = dateRaw > 40 ? 'P' : 'L';
+    const date   = dateRaw > 40 ? dateRaw - 40 : dateRaw;
+
+    // Estimasi tahun (70+ = 1900an, lainnya = 2000an)
+    const fullYear = parseInt(yearRaw) > 24 ? `19${yearRaw}` : `20${yearRaw}`;
+
+    const dob = `${date.toString().padStart(2,'0')}/${monthRaw.toString().padStart(2,'0')}/${fullYear}`;
+
+    return {
+        valid: true,
+        nik: nik,
+        province_code: provinceCode,
+        city_code: cityCode,
+        subdistrict_code: subdistCode,
+        gender: gender,
+        dob: dob,
+        sequence: seqNum,
+        // Nama provinsi/kota dapat di-lookup dari JSON mapping wilayah Indonesia
+        // yang sudah tersedia offline di banyak repo GitHub open-source
+    };
+}
+```
+
+**PHP Backend Validation:**
+```php
+// app/Services/NikParserService.php
+class NikParserService
+{
+    public static function parse(string $nik): array
+    {
+        if (strlen($nik) !== 16 || !ctype_digit($nik)) {
+            return ['valid' => false, 'error' => 'Format NIK tidak valid'];
+        }
+
+        $dateRaw = (int) substr($nik, 6, 2);
+        $gender  = $dateRaw > 40 ? 'P' : 'L';
+        $date    = $dateRaw > 40 ? $dateRaw - 40 : $dateRaw;
+        $month   = (int) substr($nik, 8, 2);
+        $year    = substr($nik, 10, 2);
+        $fullYear = (int)$year > 24 ? "19{$year}" : "20{$year}";
+
+        return [
+            'valid'          => true,
+            'province_code'  => substr($nik, 0, 2),
+            'city_code'      => substr($nik, 0, 4),
+            'district_code'  => substr($nik, 0, 6),
+            'gender'         => $gender,
+            'dob'            => sprintf('%02d/%02d/%s', $date, $month, $fullYear),
+        ];
+    }
+}
+```
+
+---
+
+### I. Dampak Sistem Terhadap Ekosistem Buyle.id
+
+#### I.1 Efek Berantai (Chain of Trust)
+```
+Creator Verifikasi KTP + Wajah
+         │
+         ▼
+Creator diizinkan publish tiket event
+         │
+         ▼
+Pembeli melihat badge 🛡️ "Verified Organizer"
+         │
+         ▼
+Kepercayaan pembeli meningkat → Konversi tiket lebih tinggi
+         │
+         ▼
+Event sukses diselenggarakan → Gate Scanner mencatat check-in
+         │
+         ▼
+H+3 pasca event → Dana Escrow otomatis cair ke creator
+         │
+         ▼
+Creator mengajukan penarikan → Nama rekening dicocokkan ke nama KTP
+         │
+         ▼
+Admin menyetujui → Transfer 100% utuh (Rp 0 potongan)
+```
+
+#### I.2 Lapisan Perlindungan Berlapis (Defense in Depth)
+| Lapisan | Mekanisme | Perlindungan |
+|---------|-----------|--------------|
+| L1 | Liveness Detection (Kedip + Tengok) | Anti foto/video palsu |
+| L2 | NIK Parser Matematika | Anti NIK fiktif 16 digit sembarang |
+| L3 | Review Manual Admin | Filter dokumen palsu/editan |
+| L4 | Pencocokan Nama KTP ↔ Rekening Bank | Anti transfer ke pihak ketiga |
+| L5 | Escrow H+3 Pasca Event | Anti pencairan sebelum acara terjadi |
+| L6 | Gate Scanner Audit Trail | Bukti eksekusi acara nyata |
+
+#### I.3 Badge "Verified Organizer" di Halaman Event
+```html
+<!-- Contoh tampilan badge di halaman produk tiket -->
+<div class="verified-organizer-badge">
+    <svg ...> <!-- ikon perisai --> </svg>
+    <div>
+        <span class="badge-title">🛡️ Penyelenggara Terverifikasi</span>
+        <span class="badge-sub">KTP & Identitas Diverifikasi Resmi oleh Buyle.id</span>
+    </div>
+</div>
+<!-- Badge ini hanya tampil jika kyc_status = 'verified' -->
+```
+
+---
+
+### J. Penempatan UI di Gatekeeper Studio (`/creator/event-attendance`)
+
+Tab verifikasi diletakkan paling atas pada menu navigasi samping:
+
+```
++-----------------------------------------+
+|   Gatekeeper Studio                     |
+|   Pemindaian live & data kehadiran      |
++-----------------------------------------+
+|   Pengaturan & e-KYC                    | <- Tab 1 (Paling atas)
+|   Live QR Scanner                       | <- Tab 2
+|   Data Kehadiran & Event                | <- Tab 3
+|   Link Gate Panitia                     | <- Tab 4
++-----------------------------------------+
+```
+
+Status yang ditampilkan pada tab dan kartu:
+- `Belum Terverifikasi`: Tombol aktif untuk membuka form identitas, kamera KTP, dan kamera wajah biometrik.
+- `Menunggu Review Admin`: Notifikasi peninjauan dengan estimasi maksimal 1x24 jam kerja.
+- `Terverifikasi`: Tanda centang hijau resmi dengan detail NIK tersamarkan dan nama lengkap.
+- `Verifikasi Ditolak`: Penjelasan alasan penolakan dari admin beserta tombol untuk mengajukan ulang.
+
+---
+
+### K. File dan Controller yang Diterapkan
+
+```
+app/
+├── Services/
+│   └── NikParserService.php              <- Parser 16 digit NIK lokal (algoritmik tanpa API pihak ketiga)
+├── Http/
+│   ├── Controllers/
+│   │   ├── Creator/
+│   │   │   └── CreatorKycController.php  <- Status verifikasi, parse NIK, simpan foto KTP dan wajah
+│   │   └── Admin/
+│   │       └── AdminKycController.php    <- Panel review admin, streaming foto privat, approve/reject
+├── Models/
+│   ├── CreatorKyc.php                    <- Model tabel creator_kyc dengan relasi user & reviewer
+│   └── User.php                          <- Relasi kyc() dan method helper isKycVerified()
+database/
+└── migrations/
+    └── 2026_10_16_190609_create_creator_kyc_table.php <- Migrasi tabel creator_kyc
+resources/
+└── views/
+    ├── creator/
+    │   ├── ticket_scanner.blade.php      <- Tab navigasi dan integrasi partial
+    │   └── partials/
+    │       └── kyc_tab.blade.php         <- Form e-KYC, kamera KTP, kamera wajah, liveness challenge
+    └── admin/
+        └── kyc/
+            ├── index.blade.php           <- Daftar permohonan e-KYC dengan tab status dan filter
+            └── show.blade.php            <- Tampilan detail perbandingan foto, NIK parse, dan aksi
+routes/
+└── web.php                               <- Route creator.kyc.* dan admin.kyc.*
+config/
+└── filesystems.php                       <- Definisi disk private untuk penyimpanan foto aman
+storage/
+└── app/
+    └── private/
+        └── kyc/
+            ├── ktp/                      <- Foto KTP terenkripsi privat (format WebP, sekitar 60 KB)
+            └── selfie/                   <- Foto biometrik liveness (format WebP, sekitar 50 KB)
+```
+
+---
+
+### L. Mekanisme Alur Kerja e-KYC (End-to-End Workflow)
+
+1. **Input Identitas dan Live Parsing NIK**:
+   - Creator memasukkan 16 digit NIK.
+   - Sistem secara otomatis mengirim request ke endpoint `creator.kyc.parse-nik`.
+   - `NikParserService` mendekode kode provinsi (digit 1-2), kode kabupaten/kota (digit 3-4), tanggal lahir dan jenis kelamin (digit 7-12 dengan aturan penambahan 40 pada tanggal untuk wanita), serta tahun lahir empat digit.
+   - Hasil identifikasi langsung ditampilkan di antarmuka tanpa perlu memuat ulang halaman.
+
+2. **Smart KTP Scanner**:
+   - Kamera diakses melalui WebRTC (`navigator.mediaDevices.getUserMedia`).
+   - Algoritma pendeteksi cahaya menghitung luminositas piksel kanvas setiap 450 milidetik:
+     - Rata-rata luminositas di bawah 48: status terlalu gelap.
+     - Rata-rata luminositas di atas 218: status terlalu silau.
+     - Rata-rata luminositas antara 48 hingga 218: status ideal.
+   - Kartu panduan persegi panjang (rasio ID-1 KTP 85.6mm x 53.98mm) membantu posisi kartu.
+   - Pengambilan foto langsung dikonversi ke format WebP dengan kompresi kualitas 82 persen (ukuran file sekitar 60 KB).
+
+3. **Smart Face Biometrics Liveness**:
+   - Kamera selfie diaktifkan dengan bingkai oval proporsional wajah.
+   - Tantangan keaslian manusia (liveness challenge):
+     - Tahap 1: Pengguna memposisikan wajah lurus menghadap kamera di dalam oval.
+     - Tahap 2: Pengguna mengedipkan mata atau menggerakkan kepala secara santai.
+     - Tahap 3: Sistem memvalidasi stabilitas wajah dan menghasilkan token liveness unik.
+   - Pengambilan foto wajah dikompresi ke WebP resolusi terkalibrasi (sekitar 50 KB).
+
+4. **Pengiriman dan Penyimpanan Aman**:
+   - Data dikirim via AJAX POST ke `creator.kyc.submit`.
+   - Foto didekode dan disimpan pada storage disk `private` (`storage/app/private/kyc/`), sehingga tidak dapat diakses secara publik melalui URL langsung.
+   - Status permohonan diset menjadi `pending`.
+
+5. **Peninjauan oleh Admin (`/admin/kyc`)**:
+   - Admin dapat memantau seluruh pengajuan berdasarkan tab: Menunggu Review, Disetujui, Ditolak, dan Semua Data.
+   - Fitur pencarian cepat berdasarkan nama creator, email, maupun nomor NIK.
+   - Pada halaman detail (`/admin/kyc/{id}`), foto KTP dan foto selfie biometrik ditampilkan berdampingan dengan fitur zoom modal resolusi penuh.
+   - Foto dilayani melalui controller khusus yang memeriksa autentikasi admin (`admin.kyc.photo`).
+   - Admin dapat menyetujui (`admin.kyc.approve`) atau menolak (`admin.kyc.reject`) disertai catatan alasan penolakan yang wajib diisi minimal 10 karakter.
+
+---
+
+### M. Efisiensi Memori dan Kompatibilitas Perangkat
+
+- **Penyimpanan**: Sistem tidak menggunakan video rekaman yang menghabiskan ratusan megabyte kuota server. Sebagai gantinya, sistem menggunakan tangkapan kanvas WebP terkompresi dengan metadata liveness. Total data per pengguna hanya sekitar 110 KB untuk dua dokumen.
+- **Kompatibilitas Desktop dan Mobile**:
+  - Desktop: Mendukung webcam eksternal maupun internal dengan tombol penggantian kamera.
+  - Mobile: Mendukung kamera depan (selfie) dan kamera belakang dengan pengaturan orientasi responsif.
+  - Galeri Cadangan: Jika perangkat memiliki keterbatasan hardware atau izin kamera browser terblokir, pengguna tetap dapat mengunggah file foto dari galeri yang otomatis dikompresi menjadi WebP oleh browser sebelum diunggah.
+- **Tampilan Antarmuka**: Seluruh elemen visual menggunakan ikon SVG murni tanpa karakter emoticon, dengan palet warna terstandarisasi Buyle.id serta tata letak ramah perangkat seluler.
+
+---
+
+*Dokumentasi ini mencakup seluruh implementasi fitur e-KYC creator dan manajemen verifikasi admin.*
+
