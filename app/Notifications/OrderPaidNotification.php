@@ -28,6 +28,8 @@ class OrderPaidNotification extends Notification
         $buyerName = htmlspecialchars($notifiable->name ?? ($this->order->shipping_address['receiver_name'] ?? 'Teman buyle.id'));
 
 
+        $isFreeOrder = ($this->order->total <= 0);
+
         // Pastikan TicketPass telah ter-generate jika ada produk tiket
         try {
             \App\Models\TicketPass::generateForOrder($this->order);
@@ -38,25 +40,30 @@ class OrderPaidNotification extends Notification
         $ticketPasses = \App\Models\TicketPass::where('order_id', $this->order->id)->with('product')->get();
 
         $hasTickets = $ticketPasses->isNotEmpty() || $this->order->items->contains(function ($i) {
-            return strtolower($i->product?->product_type ?? '') === 'ticket';
+            $pType = strtolower($i->product?->product_type ?? '');
+            $type  = strtolower($i->product?->type ?? '');
+            return $pType === 'ticket' || $type === 'ticket';
         });
 
         $hasFood = $this->order->items->contains(function ($i) {
-            $type = strtolower($i->product?->product_type ?? $i->product?->type ?? '');
-            $cat  = strtolower($i->product?->category?->name ?? '');
-            return in_array($type, ['makanan', 'fnb', 'food']) || in_array($cat, ['makanan', 'food', 'culinary', 'kuliner', 'resto', 'fnb', 'makanan & minuman']);
+            $pType = strtolower($i->product?->product_type ?? '');
+            $type  = strtolower($i->product?->type ?? '');
+            $cat   = strtolower($i->product?->category?->name ?? '');
+            return in_array($pType, ['makanan', 'fnb', 'food']) || in_array($type, ['makanan', 'fnb', 'food']) || in_array($cat, ['makanan', 'food', 'culinary', 'kuliner', 'resto', 'fnb', 'makanan & minuman']);
         });
 
         $hasPhysical = $this->order->items->contains(function ($i) {
-            $type = strtolower($i->product?->product_type ?? $i->product?->type ?? '');
-            $cat  = strtolower($i->product?->category?->name ?? '');
-            return in_array($type, ['physical', 'product', 'fisik', 'barang']) || in_array($cat, ['barang', 'produk fisik', 'umkm']);
+            $pType = strtolower($i->product?->product_type ?? '');
+            $type  = strtolower($i->product?->type ?? '');
+            $cat   = strtolower($i->product?->category?->name ?? '');
+            return in_array($pType, ['physical', 'product', 'fisik', 'barang']) || in_array($type, ['physical', 'product', 'fisik', 'barang']) || in_array($cat, ['barang', 'produk fisik', 'umkm']);
         });
 
         $hasService = $this->order->items->contains(function ($i) {
-            $type = strtolower($i->product?->product_type ?? $i->product?->type ?? '');
-            $cat  = strtolower($i->product?->category?->name ?? '');
-            return in_array($type, ['service', 'jasa']) || in_array($cat, ['jasa', 'service', 'layanan', 'booking & jasa layanan online', 'booking']);
+            $pType = strtolower($i->product?->product_type ?? '');
+            $type  = strtolower($i->product?->type ?? '');
+            $cat   = strtolower($i->product?->category?->name ?? '');
+            return in_array($pType, ['service', 'jasa']) || in_array($type, ['service', 'jasa']) || in_array($cat, ['jasa', 'service', 'layanan', 'booking & jasa layanan online', 'booking']);
         });
 
         // Render item list table
@@ -83,7 +90,7 @@ class OrderPaidNotification extends Notification
                 </tbody>
             </table>
             <div style="border-top: 2px solid #E2E8F0; margin-top: 12px; padding-top: 12px; font-size: 15px; font-weight: 800; color: #0F172A; text-align: right;">
-                Total Dibayar: <span style="color: #1eb349;">' . $totalFormatted . '</span>
+                ' . ($isFreeOrder ? 'Total: <span style="color: #1eb349;">GRATIS (Rp 0)</span>' : 'Total Dibayar: <span style="color: #1eb349;">' . $totalFormatted . '</span>') . '
             </div>
         </div>';
 
@@ -139,50 +146,68 @@ class OrderPaidNotification extends Notification
                 </div>';
         }
 
+        // Inisialisasi default footerNote agar aman dari undefined variable
+        $footerNote = 'Ada pertanyaan atau kendala terkait pesanan ini? Balas email ini aja, tim kami siap membantu!';
+
         if ($hasTickets) {
-            $subject          = "Pembayaran Berhasil! E-Ticket Event #{$orderNumber} Siap Digunakan | buyle.id";
+            $subject          = $isFreeOrder
+                ? "E-Ticket Event #{$orderNumber} Siap Digunakan | buyle.id"
+                : "Pembayaran Berhasil! E-Ticket Event #{$orderNumber} Siap Digunakan | buyle.id";
             $badgeText        = 'E-TICKET EVENT ACTIVE';
             $title            = 'E-Ticket Kamu Sudah Aktif!';
-            $subtitle         = "Pembayaran terverifikasi untuk #{$orderNumber}";
-            $introText        = "Halo <strong>{$buyerName}</strong>, pembayaran tiket event kamu sudah terverifikasi. Berikut adalah akses E-Ticket resmi untuk masuk ke tempat acara:";
+            $subtitle         = $isFreeOrder
+                ? "Pesanan tiket terkonfirmasi untuk #{$orderNumber}"
+                : "Pembayaran terverifikasi untuk #{$orderNumber}";
+            $introText        = $isFreeOrder
+                ? "Halo <strong>{$buyerName}</strong>, tiket event kamu sudah terverifikasi. Berikut adalah akses E-Ticket resmi untuk masuk ke tempat acara:"
+                : "Halo <strong>{$buyerName}</strong>, pembayaran tiket event kamu sudah terverifikasi. Berikut adalah akses E-Ticket resmi untuk masuk ke tempat acara:";
             $ctaText          = 'Buka & Simpan E-Ticket Saya';
             $promptMsg        = "Silakan simpan email ini atau tunjukkan QR Code di atas saat proses check-in di lokasi acara:";
             $footerNote       = 'Thankyou Brother & Sister!';
         } elseif ($hasFood) {
-            $subject          = "Pembayaran Berhasil! Pesanan Kuliner #{$orderNumber} Siap Diproses | buyle.id";
+            $subject          = $isFreeOrder
+                ? "Pesanan Kuliner #{$orderNumber} Siap Diproses | buyle.id"
+                : "Pembayaran Berhasil! Pesanan Kuliner #{$orderNumber} Siap Diproses | buyle.id";
             $badgeText        = 'PESANAN KULINER / F&B';
-            $title            = 'Pembayaran Pesanan Makanan Berhasil!';
+            $title            = $isFreeOrder ? 'Pesanan Makanan Berhasil!' : 'Pembayaran Pesanan Makanan Berhasil!';
             $subtitle         = "Pesanan kuliner kamu sudah diteruskan ke Dapur / Resto #{$orderNumber}";
-            $introText        = "Halo <strong>{$buyerName}</strong>, pembayaran untuk pesanan makanan/minuman kamu <strong>#{$orderNumber}</strong> telah kami terima dan terverifikasi. Resto sedang memproses pesanan kamu:";
+            $introText        = "Halo <strong>{$buyerName}</strong>, pesanan makanan/minuman kamu <strong>#{$orderNumber}</strong> telah kami terima. Resto sedang memproses pesanan kamu:";
             $ctaText          = 'Lihat Detail Status Pesanan';
             $promptMsg        = "Resto / Dapur sedang menyiapkan pesanan kamu sesuai opsi (Dine-In / Takeaway / Delivery). Pantau statusnya di dashboard:";
             $footerNote       = 'Ada pertanyaan terkait pesanan makanan kamu? Balas email ini aja, tim kami siap bantu!';
         } elseif ($hasPhysical) {
-            $subject          = "Pembayaran Berhasil! Pesanan Produk #{$orderNumber} Sedang Diproses | buyle.id";
+            $subject          = $isFreeOrder
+                ? "Pesanan Produk #{$orderNumber} Sedang Diproses | buyle.id"
+                : "Pembayaran Berhasil! Pesanan Produk #{$orderNumber} Sedang Diproses | buyle.id";
             $badgeText        = 'PRODUK FISIK DIPROSES';
-            $title            = 'Pembayaran Produk Fisik Berhasil!';
+            $title            = $isFreeOrder ? 'Pesanan Produk Fisik Berhasil!' : 'Pembayaran Produk Fisik Berhasil!';
             $subtitle         = "Pesanan kamu sudah diterima dan sedang disiapkan oleh penjual #{$orderNumber}";
-            $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih banyak telah memesan produk di <strong>buyle.id</strong>. Pembayaran kamu untuk pesanan produk fisik <strong>#{$orderNumber}</strong> telah kami terima dan terverifikasi:";
+            $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih banyak telah memesan produk di <strong>buyle.id</strong>. Pesanan produk fisik <strong>#{$orderNumber}</strong> telah terkonfirmasi:";
             $ctaText          = 'Lihat Detail & Status Pesanan';
             $promptMsg        = "Penjual/UMKM sedang menyiapkan pesanan kamu. Kamu dapat memantau status pesanan dan rincian pengiriman melalui tombol di bawah ini:";
             $footerNote       = 'Ada pertanyaan terkait pengiriman atau produk fisik ini? Balas email ini aja, tim kami siap membantu!';
         } elseif ($hasService) {
-            $subject          = "Pembayaran Berhasil! Pesanan Layanan Jasa #{$orderNumber} Terverifikasi | buyle.id";
+            $subject          = $isFreeOrder
+                ? "Pesanan Layanan Jasa #{$orderNumber} Terverifikasi | buyle.id"
+                : "Pembayaran Berhasil! Pesanan Layanan Jasa #{$orderNumber} Terverifikasi | buyle.id";
             $badgeText        = 'LAYANAN JASA / KONSULTASI';
-            $title            = 'Pembayaran Layanan Jasa Berhasil!';
+            $title            = $isFreeOrder ? 'Pesanan Layanan Jasa Berhasil!' : 'Pembayaran Layanan Jasa Berhasil!';
             $subtitle         = "Pesanan layanan / konsultasi kamu sudah terverifikasi #{$orderNumber}";
-            $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih banyak telah menggunakan layanan di <strong>buyle.id</strong>. Pembayaran untuk layanan <strong>#{$orderNumber}</strong> telah kami terima. Penyedia jasa akan segera menghubungi kamu untuk pelaksanaan layanan / konsultasi:";
+            $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih banyak telah menggunakan layanan di <strong>buyle.id</strong>. Pesanan untuk layanan <strong>#{$orderNumber}</strong> telah kami terima. Penyedia jasa akan segera menghubungi kamu untuk pelaksanaan layanan / konsultasi:";
             $ctaText          = 'Lihat Detail Pesanan Jasa';
             $promptMsg        = "Kamu dapat melihat instruksi layanan dan menghubungi penyedia jasa melalui dashboard pembeli di bawah ini:";
             $footerNote       = 'Ada kendala atau pertanyaan terkait layanan jasa ini? Balas email ini aja, kami siap membantu!';
         } else {
-            $subject          = "Pembayaran Berhasil! File Akses Produk Digital #{$orderNumber} Ready | buyle.id";
+            $subject          = $isFreeOrder
+                ? "Akses Produk Digital #{$orderNumber} Siap Diunduh | buyle.id"
+                : "Pembayaran Berhasil! File Akses Produk Digital #{$orderNumber} Ready | buyle.id";
             $badgeText        = 'DIGITAL PRODUCT READY';
-            $title            = 'Pembayaran Produk Digital Berhasil!';
+            $title            = $isFreeOrder ? 'Pesanan Produk Digital Berhasil!' : 'Pembayaran Produk Digital Berhasil!';
             $subtitle         = "Produk digital kamu sudah siap diunduh dan dipelajari #{$orderNumber}";
-            $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih banyak telah berbelanja di <strong>buyle.id</strong>. Pembayaran kamu untuk produk digital <strong>#{$orderNumber}</strong> sudah terverifikasi:";
+            $introText        = "Halo <strong>{$buyerName}</strong>, terima kasih banyak telah berbelanja di <strong>buyle.id</strong>. Pesanan produk digital <strong>#{$orderNumber}</strong> sudah terkonfirmasi:";
             $ctaText          = 'Unduh & Akses Disini!';
             $promptMsg        = "Klik tombol di bawah untuk langsung mengunduh file atau membuka tautan akses produk digital kamu:";
+            $footerNote       = 'Ada pertanyaan atau butuh bantuan terkait produk ini? Balas email ini aja, tim kami siap membantu!';
         }
 
         // Cari tautan langsung file / produk digital jika ada
@@ -195,7 +220,7 @@ class OrderPaidNotification extends Notification
         }
 
         $orderShowUrl = route('account.orders.show', $this->order->id);
-        $primaryCtaUrl = ($ctaText === 'Unduh & Akses Produk Digital' && !empty($digitalResourceUrl)) 
+        $primaryCtaUrl = !empty($digitalResourceUrl) 
             ? $digitalResourceUrl 
             : $orderShowUrl;
 

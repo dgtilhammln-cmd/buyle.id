@@ -343,8 +343,6 @@ class CheckoutService
             // GRATIS / Rp 0 → Bypass Midtrans, langsung Confirmed
             // =========================================================
             if ($total <= 0) {
-                $order->update(['status' => OrderStatus::Confirmed]);
-
                 Payment::create([
                     'order_id'       => $order->id,
                     'payment_number' => Payment::generatePaymentNumber(),
@@ -354,15 +352,15 @@ class CheckoutService
                     'paid_at'        => now(),
                 ]);
 
+                // Trigger post-order logic (status confirmed, tiket, shipment)
+                $this->markOrderConfirmed($order);
+
                 DB::commit();
 
-                // Trigger post-order logic (tiket, dll)
-                $this->markOrderConfirmed($order->fresh(['items.product']));
-
                 // Kirim email notifikasi ke buyer
-                $buyerEmail = $user?->email ?? ($data['guest_email'] ?? null);
-                $buyerName  = $user?->name ?? ($data['guest_name'] ?? 'Pembeli');
-                $buyerPhone = $user?->phone ?? '';
+                $buyerEmail = $user?->email ?? $order->customer_email ?? ($data['guest_email'] ?? null);
+                $buyerName  = $user?->name ?? ($order->shipping_address['receiver_name'] ?? ($data['guest_name'] ?? 'Pembeli'));
+                $buyerPhone = $user?->phone ?? ($order->shipping_address['phone'] ?? ($data['guest_phone'] ?? ''));
                 if ($buyerEmail) {
                     try {
                         \App\Jobs\ProcessSuccessfulOrderJob::dispatchSync(
@@ -523,9 +521,9 @@ class CheckoutService
                             'product_id'    => $item->product_id,
                             'user_id'       => $order->user_id,
                             'seller_id'     => $item->product->seller_id,
-                            'holder_name'   => $customHolder ?: ($order->user?->name ?? 'Pemegang Tiket'),
-                            'holder_email'  => $order->user?->email,
-                            'holder_phone'  => $order->user?->phone,
+                            'holder_name'   => $customHolder ?: ($order->user?->name ?? ($order->shipping_address['receiver_name'] ?? 'Pemegang Tiket')),
+                            'holder_email'  => $order->user?->email ?? $order->customer_email,
+                            'holder_phone'  => $order->user?->phone ?? ($order->shipping_address['phone'] ?? null),
                             'status'        => 'valid',
                         ]);
                     }

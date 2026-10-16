@@ -20,7 +20,8 @@ class SellerNewOrderNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $orderNumber = $this->order->order_number;
-        $totalFormatted = 'Rp ' . number_format($this->order->total, 0, ',', '.');
+        $isFreeOrder = ($this->order->total <= 0);
+        $totalFormatted = $isFreeOrder ? 'GRATIS (Rp 0)' : 'Rp ' . number_format($this->order->total, 0, ',', '.');
         $sellerName = $notifiable->name ?? 'Creator';
 
         // Render item list table
@@ -51,22 +52,26 @@ class SellerNewOrderNotification extends Notification
             </div>
         </div>';
 
+        $title = $isFreeOrder ? 'Hore! Ada Pesanan Baru Masuk' : 'Hore! Ada Cuan Baru Masuk';
+        $subtitle = $isFreeOrder ? "Pembeli baru saja mengklaim pesanan gratis #{$orderNumber}" : "Pembeli baru saja menyelesaikan pembayaran #{$orderNumber}";
+        $introText = $isFreeOrder ? "Kabar gembira! Pembeli baru saja mengklaim produk dari toko kamu." : "Kabar gembira! Pembeli baru saja melunasi pembayaran untuk produk toko kamu.";
+
         return (new MailMessage)
             ->subject("Hore! Ada Pesanan Baru #{$orderNumber} | buyle.id")
             ->view('emails.layout', [
                 'subject'   => "Hore! Ada Pesanan Baru #{$orderNumber} | buyle.id",
                 'badgeText' => 'PESANAN MASUK',
-                'title'     => 'Hore! Ada Cuan Baru Masuk',
-                'subtitle'  => "Pembeli baru saja menyelesaikan pembayaran #{$orderNumber}",
+                'title'     => $title,
+                'subtitle'  => $subtitle,
                 'content'   => "
                     <p>Halo <strong>{$sellerName}</strong>,</p>
-                    <p>Kabar gembira! Pembeli baru saja melunasi pembayaran untuk produk toko kamu.</p>
+                    <p>{$introText}</p>
                     {$itemsHtml}
                     <p>Yuk langsung cek dan kelola detail pesanan ini di dashboard creator kamu!</p>
                 ",
-                'ctaUrl'    => route('creator.orders.index'),
+                'ctaUrl'    => route('creator.sales.report'),
                 'ctaText'   => 'Cek Pesanan di Dashboard Creator',
-                'footerNote' => 'Notifikasi ini otomatis dikirim begitu pembayaran pembeli berhasil diverifikasi oleh sistem.',
+                'footerNote' => 'Notifikasi ini otomatis dikirim begitu pesanan berhasil terkonfirmasi oleh sistem buyle.id.',
             ]);
     }
 }
