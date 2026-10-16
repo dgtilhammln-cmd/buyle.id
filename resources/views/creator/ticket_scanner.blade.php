@@ -761,6 +761,7 @@
                     <span style="margin-left:auto; font-size:0.68rem; font-weight:800; background:#f1f5f9; color:#475569; padding:2px 7px; border-radius:999px;">Wajib</span>
                 @endif
             </button>
+            @if(isset($kyc) && $kyc->status === 'verified')
             <button type="button" class="tab-btn {{ $activeTab === 'scanner' ? 'active' : '' }}" onclick="switchTab('tab-scanner', this)">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
                 <span class="tab-text-full">Live QR Scanner</span>
@@ -776,6 +777,7 @@
                 <span class="tab-text-full">Link Gate Panitia</span>
                 <small class="tab-text-mob">Gate Staff</small>
             </button>
+            @endif
         </div>
 
         <div class="sidebar-tips-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 1rem; font-size: 0.78rem; color: #64748b; margin-top: 1.25rem;">
@@ -809,7 +811,36 @@
         {{-- TAB 0: PENGATURAN & VERIFIKASI e-KYC --}}
         @include('creator.partials.kyc_tab')
 
-        {{-- TAB 1: SCANNER --}}
+        {{-- NOTICE: Fitur Scanner hanya untuk creator terverifikasi --}}
+        @if(!isset($kyc) || $kyc->status !== 'verified')
+        <div id="tab-unverified-notice" style="display: block;">
+            <div style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1.5px solid #fcd34d; border-radius: 18px; padding: 1.75rem 1.5rem; text-align: center; margin-top: 0.5rem;">
+                <div style="width: 56px; height: 56px; background: #fef3c7; border: 2px solid #fcd34d; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                    <svg width="28" height="28" fill="none" stroke="#d97706" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>
+                </div>
+                <h3 style="font-size: 1rem; font-weight: 800; color: #92400e; margin: 0 0 0.5rem;">Verifikasi e-KYC Diperlukan</h3>
+                <p style="font-size: 0.82rem; color: #b45309; line-height: 1.6; margin: 0 0 1.25rem;">Fitur <strong>Live QR Scanner</strong>, <strong>Data Kehadiran & Event</strong>, dan <strong>Link Gate Panitia</strong> hanya tersedia untuk Creator Buyle yang telah menyelesaikan verifikasi identitas (e-KYC).</p>
+                <button type="button" onclick="switchTab('tab-settings', document.querySelector('.tab-btn'))" style="background: linear-gradient(135deg, #d97706, #b45309); color: #fff; border: none; padding: 0.65rem 1.5rem; border-radius: 10px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 12px rgba(217,119,6,0.3);">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>
+                    Lengkapi e-KYC Sekarang
+                </button>
+                @if(isset($kyc) && $kyc->status === 'pending')
+                <p style="font-size: 0.75rem; color: #78350f; margin-top: 0.85rem; background: #fef9c3; padding: 0.5rem 0.85rem; border-radius: 8px; display: inline-block; font-weight: 600;">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline;vertical-align:-1px;margin-right:3px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Pengajuan KYC Anda sedang dalam proses review admin.
+                </p>
+                @elseif(isset($kyc) && $kyc->status === 'rejected')
+                <p style="font-size: 0.75rem; color: #991b1b; margin-top: 0.85rem; background: #fee2e2; padding: 0.5rem 0.85rem; border-radius: 8px; display: inline-block; font-weight: 600;">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline;vertical-align:-1px;margin-right:3px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                    KYC Anda ditolak. Silakan ajukan ulang dengan data yang valid.
+                </p>
+                @endif
+            </div>
+        </div>
+        @endif
+
+        {{-- TAB 1: SCANNER (hanya untuk creator terverifikasi) --}}
+        @if(isset($kyc) && $kyc->status === 'verified')
         <div id="tab-scanner" class="payout-tab-pane" style="display: {{ $activeTab === 'scanner' ? 'block' : 'none' }};">
             <div class="prof-card">
                 <div class="prof-card-head">
@@ -1362,6 +1393,7 @@
                 </div>
             </div>
         </div>
+        @endif {{-- end: verified only tabs --}}
 
     </div> {{-- Close .bio-content --}}
 
