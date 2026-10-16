@@ -65,12 +65,16 @@ class SellerBalanceService
                                 $upcomingEventsInEscrow[$pId] = [
                                     'id'             => $item->product->id,
                                     'name'           => $item->product->name,
+                                    'title'          => $item->product->name,
                                     'event_date'     => $item->product->event_date ? $item->product->event_date->format('d M Y') : 'Belum ditentukan',
                                     'clearance_date' => $clearanceDate->format('d M Y, H:i'),
+                                    'release_date'   => $clearanceDate->format('d M Y, H:i'),
                                     'amount'         => 0,
+                                    'escrow_amount'  => 0,
                                 ];
                             }
                             $upcomingEventsInEscrow[$pId]['amount'] += $subtotal;
+                            $upcomingEventsInEscrow[$pId]['escrow_amount'] += $subtotal;
                         }
                     } else {
                         // PRODUK FISIK / DIGITAL / JASA: Holding standar 72 jam (3 hari)

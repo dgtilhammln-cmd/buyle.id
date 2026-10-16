@@ -661,14 +661,20 @@
                         <div style="background:#fff;border-radius:10px;border:1px solid #dbeafe;padding:0.6rem 0.85rem;">
                             <div style="font-size:0.68rem;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem;">Jadwal Pelepasan Dana Event</div>
                             @foreach($upcomingEvents as $evt)
+                            @php
+                                $evtName = $evt['name'] ?? $evt['title'] ?? 'Event';
+                                $evtAmount = $evt['amount'] ?? $evt['escrow_amount'] ?? 0;
+                                $evtClearance = $evt['clearance_date'] ?? $evt['release_date'] ?? '-';
+                                $evtDate = $evt['event_date'] ?? '-';
+                            @endphp
                             <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;padding:0.35rem 0;border-bottom:1px dashed #f1f5f9;">
                                 <div>
-                                    <span style="font-weight:700;color:#1e293b;">{{ $evt['title'] }}</span>
-                                    <span style="font-size:0.68rem;color:#64748b;margin-left:0.35rem;">(Acara: {{ \Carbon\Carbon::parse($evt['event_date'])->translatedFormat('d M Y') }})</span>
+                                    <span style="font-weight:700;color:#1e293b;">{{ $evtName }}</span>
+                                    <span style="font-size:0.68rem;color:#64748b;margin-left:0.35rem;">(Acara: {{ $evtDate }})</span>
                                 </div>
                                 <div style="text-align:right;">
-                                    <span style="font-weight:700;color:#1e40af;">Rp {{ number_format($evt['escrow_amount'], 0, ',', '.') }}</span>
-                                    <span style="display:block;font-size:0.65rem;color:#059669;font-weight:600;">Cair: {{ \Carbon\Carbon::parse($evt['release_date'])->translatedFormat('d M Y') }}</span>
+                                    <span style="font-weight:700;color:#1e40af;">Rp {{ number_format($evtAmount, 0, ',', '.') }}</span>
+                                    <span style="display:block;font-size:0.65rem;color:#059669;font-weight:600;">Cair: {{ $evtClearance }}</span>
                                 </div>
                             </div>
                             @endforeach
