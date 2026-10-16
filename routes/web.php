@@ -675,6 +675,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     // Creator e-KYC Verification
     Route::get('/kyc/status',       [\App\Http\Controllers\Creator\CreatorKycController::class, 'status'])->name('kyc.status');
     Route::post('/kyc/parse-nik',   [\App\Http\Controllers\Creator\CreatorKycController::class, 'parseNik'])->name('kyc.parse-nik');
+    Route::post('/kyc/extract-ktp', [\App\Http\Controllers\Creator\CreatorKycController::class, 'extractKtp'])->name('kyc.extract-ktp');
     Route::post('/kyc/submit',      [\App\Http\Controllers\Creator\CreatorKycController::class, 'submit'])->name('kyc.submit');
 
 

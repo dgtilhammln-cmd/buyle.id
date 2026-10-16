@@ -98,45 +98,15 @@
 
                 {{-- FORM BODY --}}
                 <form id="kycSubmitForm" onsubmit="handleKycFormSubmit(event)" style="margin-top:1.5rem;">
-                    {{-- STEP 1: INPUT IDENTITAS --}}
+                    {{-- STEP 1: DUAL-MODE KTP (UPLOAD GAMBAR & LIVE SCANNER) + AI SMART VISION EXTRACTOR --}}
                     <div class="kyc-form-section">
                         <div class="kyc-section-header">
                             <span class="step-num">1</span>
-                            <div>
-                                <h3 class="step-heading">Data Identitas KTP</h3>
-                                <p class="step-desc">Masukkan 16 digit NIK dan Nama Lengkap sesuai dokumen kependudukan resmi.</p>
-                            </div>
-                        </div>
-
-                        <div class="kyc-input-grid">
-                            <div class="form-group-custom">
-                                <label class="label-custom" for="kycNikInput">Nomor Induk Kependudukan (NIK 16 Digit) <span class="req">*</span></label>
-                                <div class="input-with-icon">
-                                    <svg width="18" height="18" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="12" y2="16"/></svg>
-                                    <input type="text" id="kycNikInput" maxlength="16" inputmode="numeric" placeholder="Contoh: 320101XXXXXXXXXX" class="input-custom font-mono" oninput="handleNikInput(this.value)">
-                                </div>
-                                <div id="nikFeedback" class="nik-feedback-box" style="display:none;"></div>
-                            </div>
-
-                            <div class="form-group-custom">
-                                <label class="label-custom" for="kycNameInput">Nama Lengkap (Sesuai KTP) <span class="req">*</span></label>
-                                <div class="input-with-icon">
-                                    <svg width="18" height="18" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                                    <input type="text" id="kycNameInput" placeholder="Nama lengkap persis seperti di KTP" class="input-custom" value="{{ auth()->user()->name ?? '' }}" oninput="checkFormReadiness()">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- STEP 2: DUAL-MODE KTP (UPLOAD GAMBAR & LIVE SCANNER) --}}
-                    <div class="kyc-form-section">
-                        <div class="kyc-section-header">
-                            <span class="step-num">2</span>
                             <div style="flex:1;">
                                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
                                     <div>
                                         <h3 class="step-heading">Foto Dokumen KTP Asli</h3>
-                                        <p class="step-desc">Unggah file foto KTP atau gunakan kamera live scanner dengan panduan cerdas Buyle.id.</p>
+                                        <p class="step-desc">Unggah file foto KTP atau gunakan kamera live scanner. AI Vision akan otomatis mengekstrak NIK, Nama, dan Alamat Anda.</p>
                                     </div>
                                     {{-- Mode Selector Tab --}}
                                     <div class="kyc-mode-selector">
@@ -163,7 +133,7 @@
                                         <svg width="36" height="36" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="12" y2="16"/></svg>
                                     </div>
                                     <div class="dropzone-text-primary">Klik untuk memilih foto KTP atau seret gambar ke sini</div>
-                                    <div class="dropzone-text-sub">Format: JPG, PNG, atau WebP. Gambar dipindai dan dikalibrasi otomatis.</div>
+                                    <div class="dropzone-text-sub">Format: JPG, PNG, atau WebP. AI Vision akan otomatis membaca data KTP.</div>
                                     <button type="button" class="btn-select-file" onclick="event.stopPropagation(); document.getElementById('ktpFileInput').click();">
                                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                                         Pilih Foto KTP
@@ -227,7 +197,7 @@
                                 </div>
                             </div>
 
-                            {{-- PREVIEW HASIL SCAN / UPLOAD KTP DENGAN SMART FEEDBACK (TEMA LIGHT) --}}
+                            {{-- PREVIEW HASIL SCAN / UPLOAD KTP DENGAN STATUS AI VISION EXTRACTOR --}}
                             <div id="ktpResultCard" class="photo-result-card-light" style="display:none;">
                                 <div class="result-img-container">
                                     <img id="ktpPreviewImg" src="" alt="Pratinjau KTP">
@@ -236,6 +206,20 @@
                                         Foto KTP Siap
                                     </div>
                                 </div>
+
+                                {{-- Status Ekstraksi AI Vision --}}
+                                <div id="ktpAiExtractStatus" class="ktp-ai-status-box" style="display:none;">
+                                    <div class="ai-status-spinner" id="ktpAiSpinner"></div>
+                                    <div class="ai-status-content">
+                                        <div class="ai-status-title" id="ktpAiStatusTitle">Mengekstrak Data e-KTP dengan AI Smart Vision...</div>
+                                        <div class="ai-status-desc" id="ktpAiStatusDesc">Mohon tunggu beberapa detik, sistem sedang membaca NIK, Nama Lengkap, dan Alamat secara otomatis.</div>
+                                    </div>
+                                    <button type="button" id="btnRetryAiExtract" class="btn-retry-ai" style="display:none;" onclick="triggerKtpAiExtract()">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                                        Ekstrak Ulang AI
+                                    </button>
+                                </div>
+
                                 <div class="result-feedback-bar" id="ktpSmartFeedback">
                                     <svg width="16" height="16" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                                     <span id="ktpSmartFeedbackText">Analisis Cerdas: Foto terdeteksi tajam dengan pencahayaan ideal.</span>
@@ -250,33 +234,200 @@
                         </div>
                     </div>
 
-                    {{-- STEP 3: DUAL-MODE BIOMETRIK WAJAH LIVENESS --}}
+                    {{-- STEP 2: DATA IDENTITAS & ALAMAT SESUAI e-KTP --}}
                     <div class="kyc-form-section">
                         <div class="kyc-section-header">
-                            <span class="step-num">3</span>
+                            <span class="step-num">2</span>
                             <div style="flex:1;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
                                     <div>
-                                        <h3 class="step-heading">Pindai Biometrik Wajah Liveness</h3>
-                                        <p class="step-desc">Verifikasi keaslian orang hidup dengan bingkai oval cerdas atau unggah foto selfie wajah jelas.</p>
+                                        <h3 class="step-heading">Data Identitas & Alamat Sesuai e-KTP</h3>
+                                        <p class="step-desc">Kolom di bawah ini terisi otomatis oleh AI setelah foto KTP diunggah. Anda tetap dapat mengoreksi data jika diperlukan.</p>
                                     </div>
-                                    {{-- Mode Selector Tab Wajah --}}
-                                    <div class="kyc-mode-selector">
-                                        <button type="button" id="tabModeFaceCam" class="mode-tab-btn active" onclick="switchFaceMode('camera')">
-                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                                            Kamera Selfie Live
-                                        </button>
-                                        <button type="button" id="tabModeFaceUpload" class="mode-tab-btn" onclick="switchFaceMode('upload')">
-                                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                                            Unggah Foto Wajah
-                                        </button>
+                                    <div id="aiExtractionBadge" class="ai-extracted-badge" style="display:none;">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                        <span>Terisi Otomatis via AI Vision</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        <div class="kyc-input-grid">
+                            <div class="form-group-custom">
+                                <label class="label-custom" for="kycNikInput">Nomor Induk Kependudukan (NIK 16 Digit) <span class="req">*</span></label>
+                                <div class="input-with-icon">
+                                    <svg width="18" height="18" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="12" y2="16"/></svg>
+                                    <input type="text" id="kycNikInput" maxlength="16" inputmode="numeric" placeholder="Contoh: 320101XXXXXXXXXX" class="input-custom font-mono" oninput="handleNikInput(this.value)">
+                                </div>
+                                <div id="nikFeedback" class="nik-feedback-box" style="display:none;"></div>
+                            </div>
+
+                            <div class="form-group-custom">
+                                <label class="label-custom" for="kycNameInput">Nama Lengkap (Sesuai KTP) <span class="req">*</span></label>
+                                <div class="input-with-icon">
+                                    <svg width="18" height="18" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                    <input type="text" id="kycNameInput" placeholder="Nama lengkap persis seperti di KTP" class="input-custom" value="" oninput="checkFormReadiness()">
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Detail Alamat Tertera di e-KTP --}}
+                        <div style="margin-top:1.25rem; padding-top:1.25rem; border-top:1px dashed #e2e8f0;">
+                            <div style="font-size:0.8125rem; font-weight:800; color:#334155; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem;">
+                                <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                Detail Alamat Tertera Pada e-KTP
+                            </div>
+                            <div class="kyc-input-grid" style="margin-bottom:0.5rem;">
+                                <div class="form-group-custom" style="grid-column: 1 / -1;">
+                                    <label class="label-custom" for="ktpAddressStreet">Alamat Jalan / Dusun / No. Rumah</label>
+                                    <input type="text" id="ktpAddressStreet" placeholder="Contoh: Jl. Bambu Larangan No. 12" class="input-custom" oninput="onKtpAddressChange()">
+                                </div>
+                                <div class="form-group-custom">
+                                    <label class="label-custom" for="ktpAddressRtRw">RT / RW</label>
+                                    <input type="text" id="ktpAddressRtRw" placeholder="Contoh: 004/009" class="input-custom" oninput="onKtpAddressChange()">
+                                </div>
+                                <div class="form-group-custom">
+                                    <label class="label-custom" for="ktpAddressKelurahan">Kelurahan / Desa</label>
+                                    <input type="text" id="ktpAddressKelurahan" placeholder="Contoh: Pegadungan" class="input-custom" oninput="onKtpAddressChange()">
+                                </div>
+                                <div class="form-group-custom">
+                                    <label class="label-custom" for="ktpAddressKecamatan">Kecamatan</label>
+                                    <input type="text" id="ktpAddressKecamatan" placeholder="Contoh: Kalideres" class="input-custom" oninput="onKtpAddressChange()">
+                                </div>
+                                <div class="form-group-custom">
+                                    <label class="label-custom" for="ktpAddressCity">Kabupaten / Kota</label>
+                                    <input type="text" id="ktpAddressCity" placeholder="Contoh: Jakarta Barat" class="input-custom" oninput="onKtpAddressChange()">
+                                </div>
+                                <div class="form-group-custom" style="grid-column: 1 / -1;">
+                                    <label class="label-custom" for="ktpAddressProvince">Provinsi</label>
+                                    <input type="text" id="ktpAddressProvince" placeholder="Contoh: DKI Jakarta" class="input-custom" oninput="onKtpAddressChange()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- STEP 3: FORM KE-2 WAJIB - ALAMAT DOMISILI (TEMPAT TINGGAL SAAT INI) --}}
+                    <div class="kyc-form-section">
+                        <div class="kyc-section-header">
+                            <span class="step-num">3</span>
+                            <div>
+                                <h3 class="step-heading">Alamat Domisili (Tempat Tinggal Saat Ini) <span class="req">*</span></h3>
+                                <p class="step-desc">Tentukan apakah tempat tinggal Anda saat ini sesuai alamat e-KTP atau berada di alamat berbeda.</p>
+                            </div>
+                        </div>
+
+                        {{-- Radio Selector: Sesuai KTP vs Domisili Berbeda --}}
+                        <div class="domicile-choice-grid">
+                            <label class="domicile-radio-card active" id="domicileChoiceSameLabel" onclick="setDomicileMode(true)">
+                                <input type="radio" name="domicile_type" id="domicileChoiceSame" value="1" checked style="display:none;">
+                                <div class="radio-check-indicator">
+                                    <svg width="12" height="12" fill="none" stroke="#ffffff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                </div>
+                                <div>
+                                    <strong class="domicile-card-title">Sesuai Alamat e-KTP</strong>
+                                    <p class="domicile-card-desc">Tempat tinggal saat ini sama persis dengan alamat yang tertera di dokumen e-KTP.</p>
+                                </div>
+                            </label>
+
+                            <label class="domicile-radio-card" id="domicileChoiceDiffLabel" onclick="setDomicileMode(false)">
+                                <input type="radio" name="domicile_type" id="domicileChoiceDiff" value="0" style="display:none;">
+                                <div class="radio-check-indicator">
+                                    <svg width="12" height="12" fill="none" stroke="#ffffff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                </div>
+                                <div>
+                                    <strong class="domicile-card-title">Alamat Domisili Berbeda</strong>
+                                    <p class="domicile-card-desc">Tinggal di alamat berbeda dari e-KTP (Isi form manual via API wilayah).</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        {{-- Pane A: Tampilan Ringkasan Alamat Sesuai KTP --}}
+                        <div id="domicileSamePreviewBox" class="domicile-same-box">
+                            <div class="domicile-same-icon">
+                                <svg width="22" height="22" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                            </div>
+                            <div style="flex:1;">
+                                <div style="font-size:0.875rem; font-weight:800; color:#14532d; margin-bottom:0.25rem;">Alamat Domisili Otomatis Mengikuti e-KTP</div>
+                                <div id="domicileSameSummaryText" style="font-size:0.8125rem; color:#166534; line-height:1.5;">
+                                    Data domisili akan disamakan dengan alamat yang tertera pada e-KTP Anda di atas.
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Pane B: Form Manual Bertingkat Menggunakan API Lokasi Wilayah Indonesia --}}
+                        <div id="domicileDifferentFormPane" class="domicile-diff-box" style="display:none;">
+                            <div style="margin-bottom:1rem; font-size:0.8125rem; color:#475569; display:flex; align-items:center; gap:0.4rem;">
+                                <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                Pilih lokasi domisili Anda secara bertingkat (Provinsi, Kabupaten/Kota, Kecamatan, dan Kelurahan).
+                            </div>
+
+                            <div class="kyc-input-grid">
+                                {{-- Dropdown Provinsi --}}
+                                <div class="form-group-custom">
+                                    <label class="label-custom" for="domicileProvinceSelect">Provinsi Domisili <span class="req">*</span></label>
+                                    <select id="domicileProvinceSelect" class="input-custom" onchange="onDomicileProvinceChange(this.value)">
+                                        <option value="">-- Pilih Provinsi --</option>
+                                    </select>
+                                </div>
+
+                                {{-- Dropdown Kabupaten/Kota --}}
+                                <div class="form-group-custom">
+                                    <label class="label-custom" for="domicileCitySelect">Kabupaten / Kota Domisili <span class="req">*</span></label>
+                                    <select id="domicileCitySelect" class="input-custom" disabled onchange="onDomicileCityChange(this.value)">
+                                        <option value="">-- Pilih Kabupaten/Kota --</option>
+                                    </select>
+                                </div>
+
+                                {{-- Dropdown Kecamatan --}}
+                                <div class="form-group-custom">
+                                    <label class="label-custom" for="domicileDistrictSelect">Kecamatan Domisili <span class="req">*</span></label>
+                                    <select id="domicileDistrictSelect" class="input-custom" disabled onchange="onDomicileDistrictChange(this.value)">
+                                        <option value="">-- Pilih Kecamatan --</option>
+                                    </select>
+                                </div>
+
+                                {{-- Dropdown Kelurahan / Desa --}}
+                                <div class="form-group-custom">
+                                    <label class="label-custom" for="domicileSubdistrictSelect">Kelurahan / Desa Domisili <span class="req">*</span></label>
+                                    <select id="domicileSubdistrictSelect" class="input-custom" disabled onchange="checkFormReadiness()">
+                                        <option value="">-- Pilih Kelurahan/Desa --</option>
+                                    </select>
+                                </div>
+
+                                {{-- RT / RW --}}
+                                <div class="form-group-custom">
+                                    <label class="label-custom" for="domicileRtRwInput">RT / RW Domisili</label>
+                                    <input type="text" id="domicileRtRwInput" class="input-custom" placeholder="Contoh: 004/009" oninput="checkFormReadiness()">
+                                </div>
+
+                                {{-- Kode Pos --}}
+                                <div class="form-group-custom">
+                                    <label class="label-custom" for="domicilePostalCodeInput">Kode Pos</label>
+                                    <input type="text" id="domicilePostalCodeInput" class="input-custom font-mono" maxlength="6" inputmode="numeric" placeholder="Contoh: 11840" oninput="checkFormReadiness()">
+                                </div>
+
+                                {{-- Detail Alamat Lengkap --}}
+                                <div class="form-group-custom" style="grid-column: 1 / -1;">
+                                    <label class="label-custom" for="domicileAddressInput">Alamat Lengkap Domisili (Nama Jalan, No. Rumah, Patokan) <span class="req">*</span></label>
+                                    <textarea id="domicileAddressInput" rows="2" class="input-custom" style="height:auto; padding:0.65rem 0.85rem;" placeholder="Tuliskan nama jalan, blok, nomor rumah, atau patokan tempat tinggal saat ini..." oninput="checkFormReadiness()"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- STEP 4: BIOMETRIK WAJAH LIVENESS (KAMERA LANGSUNG ONLY - SMART SPATIAL AI DETECTOR) --}}
+                    <div class="kyc-form-section">
+                        <div class="kyc-section-header">
+                            <span class="step-num">4</span>
+                            <div style="flex:1;">
+                                <div>
+                                    <h3 class="step-heading">Pindai Biometrik Wajah Liveness (Wajib Kamera Langsung)</h3>
+                                    <p class="step-desc">Untuk keamanan dan validasi identitas, foto wajah wajib diambil secara langsung di depan kamera dengan memposisikan wajah di dalam bingkai oval.</p>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="scanner-device-container">
-                            {{-- PANE A: LIVE KAMERA SELFIE BIOMETRIK --}}
                             <div id="faceCameraPane" class="face-mode-pane" style="display:block;">
                                 <div class="scanner-viewport-wrap light-theme" id="faceViewportWrap">
                                     <video id="faceVideo" playsinline autoplay muted class="scanner-live-video" style="display:none;"></video>
@@ -288,7 +439,7 @@
                                             <svg width="38" height="38" fill="none" stroke="#1eb349" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
                                         </div>
                                         <span class="placeholder-title">Kamera Biometrik Wajah Belum Aktif</span>
-                                        <span class="placeholder-sub">Pastikan wajah tidak terhalang masker atau kacamata hitam tebal untuk verifikasi optimal</span>
+                                        <span class="placeholder-sub">Klik tombol di bawah untuk menyalakan kamera. Sistem akan memeriksa posisi wajah secara cerdas di dalam oval.</span>
                                         <div style="display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap; justify-content:center;">
                                             <button type="button" class="btn-activate-cam" onclick="startFaceCamera()">
                                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
@@ -305,15 +456,15 @@
                                     </div>
 
                                     {{-- Banner Panduan Realtime Wajah Light --}}
-                                    <div id="faceGuidanceBanner" class="guidance-banner-light" style="display:none;">
+                                    <div id="faceGuidanceBanner" class="guidance-banner-light guide-warn" style="display:none;">
                                         <svg id="faceGuideIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                                        <span id="faceGuideText">Posisikan wajah menghadap kamera...</span>
+                                        <span id="faceGuideText">Posisikan wajah tepat di dalam bingkai oval...</span>
                                     </div>
 
                                     {{-- Challenge Status Badge Light --}}
                                     <div id="livenessChallengeBox" class="liveness-challenge-box-light" style="display:none;">
                                         <div class="challenge-dot" id="challengeDot"></div>
-                                        <span id="challengeInstruction">Tatap Kamera & Kedipkan Mata Perlahan</span>
+                                        <span id="challengeInstruction">Posisikan wajah Anda ke tengah bingkai oval</span>
                                     </div>
                                 </div>
 
@@ -323,29 +474,13 @@
                                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
                                         Ganti Kamera
                                     </button>
-                                    <button type="button" id="btnSnapFace" class="btn-snap-photo" onclick="snapFacePhoto()">
+                                    <button type="button" id="btnSnapFace" class="btn-snap-photo" onclick="snapFacePhoto()" disabled title="Posisikan wajah tepat di tengah oval untuk mengaktifkan tombol ini">
                                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
                                         Ambil Foto Biometrik
                                     </button>
                                     <button type="button" class="btn-control-secondary" onclick="stopFaceCamera()">
                                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                                         Tutup Kamera
-                                    </button>
-                                </div>
-                            </div>
-
-                            {{-- PANE B: UPLOAD FOTO WAJAH SELFIE --}}
-                            <div id="faceUploadPane" class="face-mode-pane" style="display:none;">
-                                <div id="faceDropZone" class="ktp-dropzone-light" onclick="document.getElementById('faceFileInput').click()">
-                                    <input type="file" id="faceFileInput" accept="image/*" style="display:none;" onchange="handleFileUpload(event, 'face')">
-                                    <div class="dropzone-icon-circle">
-                                        <svg width="36" height="36" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-                                    </div>
-                                    <div class="dropzone-text-primary">Klik untuk memilih foto selfie wajah atau seret ke sini</div>
-                                    <div class="dropzone-text-sub">Pastikan wajah tampak jelas menghadap depan tanpa penutup wajah.</div>
-                                    <button type="button" class="btn-select-file" onclick="event.stopPropagation(); document.getElementById('faceFileInput').click();">
-                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                                        Pilih Foto Selfie Wajah
                                     </button>
                                 </div>
                             </div>
@@ -366,7 +501,7 @@
                                 <div class="result-action-row">
                                     <button type="button" class="btn-retake-light" onclick="retakeFacePhoto()">
                                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-                                        Ganti / Ambil Ulang Foto Wajah
+                                        Pindai Ulang Wajah
                                     </button>
                                 </div>
                             </div>
@@ -852,7 +987,7 @@
     position: relative;
     width: 62%;
     aspect-ratio: 0.78;
-    border: 3px solid #1eb349;
+    border: 3.5px solid #cbd5e1;
     background: rgba(30, 179, 73, 0.04);
     border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
     display: flex;
@@ -860,8 +995,19 @@
     justify-content: center;
     padding-bottom: 1.25rem;
     box-shadow: 0 0 0 9999px rgba(248, 250, 252, 0.75);
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
+.face-oval-outline.light-theme.ideal {
+    border-color: #1eb349;
+    box-shadow: 0 0 0 9999px rgba(248, 250, 252, 0.75), 0 0 20px rgba(30, 179, 73, 0.35);
+}
+.face-oval-outline.light-theme.warn {
+    border-color: #f59e0b;
+}
+.face-oval-outline.light-theme.error {
+    border-color: #ef4444;
+}
+
 .face-frame-hint.light-theme {
     background: #ffffff;
     color: #0f172a;
@@ -879,7 +1025,7 @@
     top: 0.85rem;
     left: 0.85rem;
     right: 0.85rem;
-    padding: 0.5rem 0.85rem;
+    padding: 0.55rem 0.85rem;
     border-radius: 10px;
     font-size: 0.75rem;
     font-weight: 700;
@@ -1044,10 +1190,18 @@
     box-shadow: 0 4px 14px rgba(30, 179, 73, 0.3);
     transition: all 0.2s ease;
 }
-.btn-snap-photo:hover {
+.btn-snap-photo:hover:not(:disabled) {
     transform: translateY(-1px);
     box-shadow: 0 6px 18px rgba(30, 179, 73, 0.4);
 }
+.btn-snap-photo:disabled {
+    background: #94a3b8 !important;
+    opacity: 0.55;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
 .btn-control-secondary {
     display: inline-flex;
     align-items: center;
@@ -1112,6 +1266,188 @@
     box-shadow: none;
     transform: none;
 }
+
+/* ── KTP AI EXTRACTION STATUS BOX & SPINNER ── */
+.ktp-ai-status-box {
+    margin-top: 0.85rem;
+    padding: 0.9rem 1.1rem;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    transition: all 0.25s ease;
+}
+.ktp-ai-status-box.loading {
+    background: #f0fdf4;
+    border: 1.5px solid #bbf7d0;
+    color: #166534;
+}
+.ktp-ai-status-box.success {
+    background: #dcfce7;
+    border: 1.5px solid #86efac;
+    color: #14532d;
+}
+.ktp-ai-status-box.warn {
+    background: #fefce8;
+    border: 1.5px solid #fef08a;
+    color: #854d0e;
+}
+.ai-status-spinner {
+    width: 22px;
+    height: 22px;
+    border: 2.5px solid #bbf7d0;
+    border-top-color: #1eb349;
+    border-radius: 50%;
+    animation: kycSpin 0.75s linear infinite;
+    flex-shrink: 0;
+}
+@keyframes kycSpin {
+    to { transform: rotate(360deg); }
+}
+.ai-status-content {
+    flex: 1;
+}
+.ai-status-title {
+    font-size: 0.84rem;
+    font-weight: 800;
+    line-height: 1.3;
+}
+.ai-status-desc {
+    font-size: 0.75rem;
+    line-height: 1.45;
+    opacity: 0.9;
+    margin-top: 2px;
+}
+.btn-retry-ai {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.75rem;
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 9px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #334155;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+}
+.btn-retry-ai:hover {
+    border-color: #1eb349;
+    color: #166534;
+    background: #f0fdf4;
+}
+.ai-extracted-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 9999px;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 0.72rem;
+    font-weight: 800;
+    border: 1px solid #86efac;
+}
+
+/* ── DOMICILE CHOICE CARDS & SECTIONS ── */
+.domicile-choice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+@media (max-width: 640px) {
+    .domicile-choice-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.domicile-radio-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.domicile-radio-card:hover {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+}
+.domicile-radio-card.active {
+    border-color: #1eb349;
+    background: #f0fdf4;
+    box-shadow: 0 4px 12px rgba(30, 179, 73, 0.1);
+}
+.radio-check-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #cbd5e1;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.2s ease;
+}
+.domicile-radio-card.active .radio-check-indicator {
+    border-color: #1eb349;
+    background: #1eb349;
+}
+.domicile-radio-card:not(.active) .radio-check-indicator svg {
+    display: none;
+}
+.domicile-card-title {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.2rem;
+}
+.domicile-radio-card.active .domicile-card-title {
+    color: #14532d;
+}
+.domicile-card-desc {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.4;
+}
+.domicile-radio-card.active .domicile-card-desc {
+    color: #166534;
+}
+
+.domicile-same-box {
+    display: flex;
+    gap: 0.85rem;
+    padding: 1.1rem 1.25rem;
+    background: #f0fdf4;
+    border: 1.5px solid #bbf7d0;
+    border-radius: 14px;
+    align-items: flex-start;
+}
+.domicile-same-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #dcfce7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.domicile-diff-box {
+    padding: 1.25rem;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 14px;
+}
 </style>
 
 <script>
@@ -1131,7 +1467,18 @@ let isNikValid = false;
 let livenessVerified = false;
 let livenessToken = null;
 
-// ── MODE SWITCHER (UPLOAD VS CAMERA) ──
+// AI KTP Extraction & Domicile state
+let aiExtractedData = null;
+let isAiExtracting = false;
+let isDomicileSame = true;
+const apiWilayahBase = "https://www.emsifa.com/api-wilayah-indonesia/api";
+
+// Liveness Micro-motion state
+let previousFaceBuffer = null;
+let stableCenterFrames = 0;
+let movementCount = 0;
+
+// ── MODE SWITCHER (UPLOAD VS CAMERA FOR KTP) ──
 function switchKtpMode(mode) {
     document.querySelectorAll('#tabModeKtpUpload, #tabModeKtpCam').forEach(b => b.classList.remove('active'));
     if (mode === 'upload') {
@@ -1144,21 +1491,6 @@ function switchKtpMode(mode) {
         document.getElementById('ktpUploadPane').style.display = 'none';
         document.getElementById('ktpCameraPane').style.display = 'block';
         startKtpCamera();
-    }
-}
-
-function switchFaceMode(mode) {
-    document.querySelectorAll('#tabModeFaceCam, #tabModeFaceUpload').forEach(b => b.classList.remove('active'));
-    if (mode === 'upload') {
-        document.getElementById('tabModeFaceUpload').classList.add('active');
-        document.getElementById('faceUploadPane').style.display = 'block';
-        document.getElementById('faceCameraPane').style.display = 'none';
-        stopFaceCamera();
-    } else {
-        document.getElementById('tabModeFaceCam').classList.add('active');
-        document.getElementById('faceUploadPane').style.display = 'none';
-        document.getElementById('faceCameraPane').style.display = 'block';
-        startFaceCamera();
     }
 }
 
@@ -1306,14 +1638,281 @@ function displayKtpResult(imgUrl, feedbackMsg, isWarn = false) {
     document.getElementById('ktpCameraPane').style.display = 'none';
     document.getElementById('ktpResultCard').style.display = 'block';
 
+    // Otomatis picu AI Vision untuk membaca data KTP
+    extractKtpWithAi(imgUrl);
+
     checkFormReadiness();
 }
 
 function retakeKtpPhoto() {
     capturedKtpBase64 = null;
+    aiExtractedData = null;
+    const statusBox = document.getElementById('ktpAiExtractStatus');
+    if (statusBox) statusBox.style.display = 'none';
+    const badge = document.getElementById('aiExtractionBadge');
+    if (badge) badge.style.display = 'none';
+
     document.getElementById('ktpResultCard').style.display = 'none';
     switchKtpMode('upload');
     checkFormReadiness();
+}
+
+// ── AI VISION KTP AUTO-EXTRACTOR ENGINE ──
+function extractKtpWithAi(imgUrl) {
+    if (!imgUrl) return;
+
+    const statusBox = document.getElementById('ktpAiExtractStatus');
+    const spinner = document.getElementById('ktpAiSpinner');
+    const title = document.getElementById('ktpAiStatusTitle');
+    const desc = document.getElementById('ktpAiStatusDesc');
+    const retryBtn = document.getElementById('btnRetryAiExtract');
+    const badge = document.getElementById('aiExtractionBadge');
+
+    statusBox.style.display = 'flex';
+    statusBox.className = 'ktp-ai-status-box loading';
+    spinner.style.display = 'block';
+    title.textContent = 'Mengekstrak Data e-KTP dengan AI Smart Vision...';
+    desc.textContent = 'Mohon tunggu beberapa detik, sistem sedang membaca NIK, Nama Lengkap, dan Alamat Anda secara otomatis.';
+    retryBtn.style.display = 'none';
+    isAiExtracting = true;
+    checkFormReadiness();
+
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+    fetch('{{ route("creator.kyc.extract-ktp") }}', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': csrf,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ ktp_photo: imgUrl })
+    })
+    .then(r => r.json())
+    .then(res => {
+        isAiExtracting = false;
+        if (res.success && res.data) {
+            aiExtractedData = res.data;
+            statusBox.className = 'ktp-ai-status-box success';
+            spinner.style.display = 'none';
+            title.textContent = 'Ekstraksi AI Berhasil!';
+            desc.textContent = `NIK: ${res.data.nik || '-'} | Nama: ${res.data.full_name || '-'}`;
+            retryBtn.style.display = 'inline-flex';
+            if (badge) badge.style.display = 'inline-flex';
+
+            // Auto-fill NIK
+            if (res.data.nik) {
+                document.getElementById('kycNikInput').value = res.data.nik;
+                handleNikInput(res.data.nik);
+            }
+
+            // Auto-fill Nama Lengkap
+            if (res.data.full_name) {
+                document.getElementById('kycNameInput').value = res.data.full_name;
+            }
+
+            // Auto-fill Alamat KTP
+            if (res.data.address) document.getElementById('ktpAddressStreet').value = res.data.address;
+            if (res.data.rt_rw) document.getElementById('ktpAddressRtRw').value = res.data.rt_rw;
+            if (res.data.subdistrict) document.getElementById('ktpAddressKelurahan').value = res.data.subdistrict;
+            if (res.data.district) document.getElementById('ktpAddressKecamatan').value = res.data.district;
+            if (res.data.city) document.getElementById('ktpAddressCity').value = res.data.city;
+            if (res.data.province) document.getElementById('ktpAddressProvince').value = res.data.province;
+
+            onKtpAddressChange();
+        } else {
+            statusBox.className = 'ktp-ai-status-box warn';
+            spinner.style.display = 'none';
+            title.textContent = 'AI Belum Dapat Mengekstrak Otomatis';
+            desc.textContent = res.message || 'Silakan lengkapi NIK dan formulir secara manual.';
+            retryBtn.style.display = 'inline-flex';
+        }
+        checkFormReadiness();
+    })
+    .catch(() => {
+        isAiExtracting = false;
+        statusBox.className = 'ktp-ai-status-box warn';
+        spinner.style.display = 'none';
+        title.textContent = 'Gagal Menghubungi Layanan AI';
+        desc.textContent = 'Koneksi AI bermasalah. Anda dapat melengkapi data formulir secara manual.';
+        retryBtn.style.display = 'inline-flex';
+        checkFormReadiness();
+    });
+}
+
+function triggerKtpAiExtract() {
+    if (capturedKtpBase64) {
+        extractKtpWithAi(capturedKtpBase64);
+    }
+}
+
+// ── DOMICILE ADDRESS HANDLERS (SESUAI KTP VS BEDA VIA API WILAYAH) ──
+function setDomicileMode(sameAsKtp) {
+    isDomicileSame = sameAsKtp;
+    const sameLabel = document.getElementById('domicileChoiceSameLabel');
+    const diffLabel = document.getElementById('domicileChoiceDiffLabel');
+    const samePreview = document.getElementById('domicileSamePreviewBox');
+    const diffForm = document.getElementById('domicileDifferentFormPane');
+
+    if (sameAsKtp) {
+        sameLabel.classList.add('active');
+        diffLabel.classList.remove('active');
+        samePreview.style.display = 'flex';
+        diffForm.style.display = 'none';
+        document.getElementById('domicileChoiceSame').checked = true;
+    } else {
+        sameLabel.classList.remove('active');
+        diffLabel.classList.add('active');
+        samePreview.style.display = 'none';
+        diffForm.style.display = 'block';
+        document.getElementById('domicileChoiceDiff').checked = true;
+        loadDomicileProvinces();
+    }
+    checkFormReadiness();
+}
+
+function onKtpAddressChange() {
+    const street = document.getElementById('ktpAddressStreet')?.value.trim() || '';
+    const rtrw = document.getElementById('ktpAddressRtRw')?.value.trim() || '';
+    const kel = document.getElementById('ktpAddressKelurahan')?.value.trim() || '';
+    const kec = document.getElementById('ktpAddressKecamatan')?.value.trim() || '';
+    const city = document.getElementById('ktpAddressCity')?.value.trim() || '';
+    const prov = document.getElementById('ktpAddressProvince')?.value.trim() || '';
+
+    const summaryEl = document.getElementById('domicileSameSummaryText');
+    if (!summaryEl) return;
+
+    const parts = [street, rtrw ? `RT/RW ${rtrw}` : '', kel ? `Kel. ${kel}` : '', kec ? `Kec. ${kec}` : '', city, prov].filter(Boolean);
+    if (parts.length > 0) {
+        summaryEl.innerHTML = `<strong>Alamat KTP:</strong> ${parts.join(', ')}`;
+    } else {
+        summaryEl.textContent = 'Data domisili akan disamakan dengan alamat yang tertera pada e-KTP Anda di atas.';
+    }
+}
+
+function loadDomicileProvinces() {
+    const provSelect = document.getElementById('domicileProvinceSelect');
+    if (!provSelect || provSelect.options.length > 1) return;
+
+    provSelect.innerHTML = '<option value="">Memuat daftar provinsi...</option>';
+    fetch(`${apiWilayahBase}/provinces.json`)
+        .then(r => r.json())
+        .then(provinces => {
+            provSelect.innerHTML = '<option value="">-- Pilih Provinsi --</option>';
+            provinces.forEach(p => {
+                let opt = document.createElement('option');
+                opt.value = p.id;
+                opt.dataset.name = p.name;
+                opt.textContent = p.name;
+                provSelect.appendChild(opt);
+            });
+        })
+        .catch(() => {
+            provSelect.innerHTML = '<option value="">Gagal memuat provinsi</option>';
+        });
+}
+
+function onDomicileProvinceChange(provId) {
+    const citySelect = document.getElementById('domicileCitySelect');
+    const distSelect = document.getElementById('domicileDistrictSelect');
+    const villSelect = document.getElementById('domicileSubdistrictSelect');
+
+    citySelect.innerHTML = '<option value="">-- Pilih Kabupaten/Kota --</option>';
+    distSelect.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
+    villSelect.innerHTML = '<option value="">-- Pilih Kelurahan/Desa --</option>';
+
+    citySelect.disabled = true;
+    distSelect.disabled = true;
+    villSelect.disabled = true;
+
+    if (!provId) {
+        checkFormReadiness();
+        return;
+    }
+
+    citySelect.innerHTML = '<option value="">Memuat kabupaten/kota...</option>';
+    fetch(`${apiWilayahBase}/regencies/${provId}.json`)
+        .then(r => r.json())
+        .then(cities => {
+            citySelect.innerHTML = '<option value="">-- Pilih Kabupaten/Kota --</option>';
+            cities.forEach(c => {
+                let opt = document.createElement('option');
+                opt.value = c.id;
+                opt.dataset.name = c.name;
+                opt.textContent = c.name;
+                citySelect.appendChild(opt);
+            });
+            citySelect.disabled = false;
+            checkFormReadiness();
+        })
+        .catch(() => {
+            citySelect.innerHTML = '<option value="">Gagal memuat kabupaten/kota</option>';
+        });
+}
+
+function onDomicileCityChange(cityId) {
+    const distSelect = document.getElementById('domicileDistrictSelect');
+    const villSelect = document.getElementById('domicileSubdistrictSelect');
+
+    distSelect.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
+    villSelect.innerHTML = '<option value="">-- Pilih Kelurahan/Desa --</option>';
+
+    distSelect.disabled = true;
+    villSelect.disabled = true;
+
+    if (!cityId) {
+        checkFormReadiness();
+        return;
+    }
+
+    distSelect.innerHTML = '<option value="">Memuat kecamatan...</option>';
+    fetch(`${apiWilayahBase}/districts/${cityId}.json`)
+        .then(r => r.json())
+        .then(districts => {
+            distSelect.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
+            districts.forEach(d => {
+                let opt = document.createElement('option');
+                opt.value = d.id;
+                opt.dataset.name = d.name;
+                opt.textContent = d.name;
+                distSelect.appendChild(opt);
+            });
+            distSelect.disabled = false;
+            checkFormReadiness();
+        })
+        .catch(() => {
+            distSelect.innerHTML = '<option value="">Gagal memuat kecamatan</option>';
+        });
+}
+
+function onDomicileDistrictChange(distId) {
+    const villSelect = document.getElementById('domicileSubdistrictSelect');
+    villSelect.innerHTML = '<option value="">-- Pilih Kelurahan/Desa --</option>';
+    villSelect.disabled = true;
+
+    if (!distId) {
+        checkFormReadiness();
+        return;
+    }
+
+    villSelect.innerHTML = '<option value="">Memuat kelurahan/desa...</option>';
+    fetch(`${apiWilayahBase}/villages/${distId}.json`)
+        .then(r => r.json())
+        .then(villages => {
+            villSelect.innerHTML = '<option value="">-- Pilih Kelurahan/Desa --</option>';
+            villages.forEach(v => {
+                let opt = document.createElement('option');
+                opt.value = v.id;
+                opt.dataset.name = v.name;
+                opt.textContent = v.name;
+                villSelect.appendChild(opt);
+            });
+            villSelect.disabled = false;
+            checkFormReadiness();
+        })
+        .catch(() => {
+            villSelect.innerHTML = '<option value="">Gagal memuat kelurahan/desa</option>';
+        });
 }
 
 function stopKtpCamera() {
@@ -1348,7 +1947,7 @@ async function switchKtpCamera() {
     } catch(e) {}
 }
 
-// ── KAMERA BIOMETRIK WAJAH & LIVENESS CHALLENGE (LIGHT THEME) ──
+// ── SMART LIVE FACE BIOMETRICS & SPATIAL AI CENTERING ENGINE ──
 async function startFaceCamera() {
     try {
         const devices = await navigator.mediaDevices.enumerateDevices();
@@ -1373,70 +1972,192 @@ async function startFaceCamera() {
         document.getElementById('faceControlsBar').style.display = 'flex';
         document.getElementById('livenessChallengeBox').style.display = 'flex';
 
-        startFaceLivenessLoop();
+        // Reset verification states
+        stableCenterFrames = 0;
+        movementCount = 0;
+        livenessVerified = false;
+        previousFaceBuffer = null;
+        document.getElementById('btnSnapFace').disabled = true;
+
+        startIntelligentFaceLoop();
     } catch(err) {
         alert('Tidak dapat mengakses kamera selfie: ' + (err.message || 'Periksa izin kamera browser Anda.'));
     }
 }
 
-function startFaceLivenessLoop() {
+function startIntelligentFaceLoop() {
     clearInterval(faceGuidanceInterval);
     const video = document.getElementById('faceVideo');
     const banner = document.getElementById('faceGuidanceBanner');
     const text = document.getElementById('faceGuideText');
+    const oval = document.getElementById('faceOvalOutline');
     const challengeBox = document.getElementById('challengeInstruction');
     const dot = document.getElementById('challengeDot');
+    const snapBtn = document.getElementById('btnSnapFace');
 
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    canvas.width = 160;
-    canvas.height = 120;
+    const W = 160;
+    const H = 120;
+    canvas.width = W;
+    canvas.height = H;
 
-    let challengeStep = 1;
-    let stepTimer = 0;
+    // Center oval parameters in analysis buffer
+    const ocx = W * 0.5;   // 80
+    const ocy = H * 0.5;   // 60
+    const orx = W * 0.22;  // ~35.2
+    const ory = H * 0.33;  // ~39.6
 
-    faceGuidanceInterval = setInterval(() => {
+    faceGuidanceInterval = setInterval(async () => {
         if (!faceStream || video.readyState < 2) return;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(video, 0, 0, W, H);
+        const imgData = ctx.getImageData(0, 0, W, H);
         const data = imgData.data;
 
-        let totalBrightness = 0;
-        for (let i = 0; i < data.length; i += 16) {
-            totalBrightness += (data[i] * 0.299 + data[i+1] * 0.587 + data[i+2] * 0.114);
-        }
-        const avg = totalBrightness / (data.length / 16);
+        let skinInOval = 0;
+        let totalOval = 0;
+        let skinLeft = 0;
+        let skinRight = 0;
+        let skinCenter = 0;
+        let brightnessSum = 0;
 
-        if (avg < 45) {
+        // Frame difference for liveness micro-motion
+        let frameDiff = 0;
+
+        for (let y = 0; y < H; y += 2) {
+            for (let x = 0; x < W; x += 2) {
+                const idx = (y * W + x) * 4;
+                const r = data[idx];
+                const g = data[idx+1];
+                const b = data[idx+2];
+                const yVal = 0.299 * r + 0.587 * g + 0.114 * b;
+                brightnessSum += yVal;
+
+                if (previousFaceBuffer) {
+                    frameDiff += Math.abs(yVal - previousFaceBuffer[idx]);
+                }
+
+                // YCbCr skin tone detection:
+                const cb = 128 - 0.168736 * r - 0.331264 * g + 0.5 * b;
+                const cr = 128 + 0.5 * r - 0.418688 * g - 0.081312 * b;
+                const isSkin = (cb >= 75 && cb <= 130 && cr >= 132 && cr <= 175 && r > g && g > b && (r - g) >= 10);
+
+                const dx = (x - ocx) / orx;
+                const dy = (y - ocy) / ory;
+                const inOval = (dx * dx + dy * dy) <= 1.0;
+
+                if (inOval) {
+                    totalOval++;
+                    if (isSkin) skinInOval++;
+                }
+
+                if (isSkin) {
+                    if (x < 52) skinLeft++;
+                    else if (x > 108) skinRight++;
+                    else skinCenter++;
+                }
+            }
+        }
+
+        previousFaceBuffer = new Uint8Array(data);
+
+        const sampleCount = (W / 2) * (H / 2);
+        const avgBrightness = brightnessSum / sampleCount;
+
+        // 1. Cek Pencahayaan
+        if (avgBrightness < 45) {
             banner.className = 'guidance-banner-light guide-error';
             text.textContent = 'Pencahayaan Wajah Terlalu Gelap: Cari sumber cahaya dari depan.';
+            oval.className = 'face-oval-outline light-theme error';
+            resetFaceChallenge('Pencahayaan terlalu gelap');
             return;
         }
 
-        banner.className = 'guidance-banner-light guide-ideal';
-        text.textContent = 'Pencahayaan Wajah Baik.';
+        // 2. Cek apakah posisi wajah berada di samping (Spatial Boundary Check)
+        // Jika piksel kulit terkonsentrasi di sisi kanan atau kiri, tapi sedikit di oval:
+        if (skinRight > 40 && skinRight > (skinCenter * 1.5 + skinInOval * 1.2)) {
+            banner.className = 'guidance-banner-light guide-warn';
+            text.textContent = 'Wajah Terdeteksi di Samping Kanan: Geser kepala Anda tepat ke tengah oval.';
+            oval.className = 'face-oval-outline light-theme warn';
+            resetFaceChallenge('Geser wajah Anda ke tengah bingkai oval');
+            return;
+        }
 
-        stepTimer++;
-        if (challengeStep === 1) {
-            challengeBox.textContent = 'Langkah 1/2: Tatap Lurus ke Kamera';
-            if (stepTimer >= 3) {
-                challengeStep = 2;
-                stepTimer = 0;
+        if (skinLeft > 40 && skinLeft > (skinCenter * 1.5 + skinInOval * 1.2)) {
+            banner.className = 'guidance-banner-light guide-warn';
+            text.textContent = 'Wajah Terdeteksi di Samping Kiri: Geser kepala Anda tepat ke tengah oval.';
+            oval.className = 'face-oval-outline light-theme warn';
+            resetFaceChallenge('Geser wajah Anda ke tengah bingkai oval');
+            return;
+        }
+
+        // 3. Cek Kepadatan Kulit di Dalam Oval (Mencegah objek latar seperti pohon/dinding)
+        const ovalSkinRatio = skinInOval / (totalOval || 1);
+
+        if (ovalSkinRatio < 0.22) {
+            banner.className = 'guidance-banner-light guide-warn';
+            text.textContent = 'Wajah Belum Terdeteksi: Posisikan wajah Anda tepat di dalam bingkai oval.';
+            oval.className = 'face-oval-outline light-theme warn';
+            resetFaceChallenge('Posisikan wajah Anda di dalam oval');
+            return;
+        }
+
+        if (ovalSkinRatio > 0.88) {
+            banner.className = 'guidance-banner-light guide-warn';
+            text.textContent = 'Wajah Terlalu Dekat: Mundurkan sedikit wajah Anda dari kamera.';
+            oval.className = 'face-oval-outline light-theme warn';
+            resetFaceChallenge('Mundurkan sedikit wajah Anda');
+            return;
+        }
+
+        // 4. POSISI WAJAH BERHASIL TERPUSAT DI DALAM BINGKAI OVAL!
+        oval.className = 'face-oval-outline light-theme ideal';
+        stableCenterFrames++;
+
+        if (stableCenterFrames < 4) {
+            banner.className = 'guidance-banner-light guide-ideal';
+            text.textContent = 'Wajah Terpusat Sempurna. Tahan posisi Anda...';
+            challengeBox.textContent = 'Langkah 1/2: Tahan posisi wajah di tengah oval';
+            dot.className = 'challenge-dot';
+            snapBtn.disabled = true;
+        } else {
+            // Langkah 2: Liveness Challenge (Kedipan mata / micro-motion)
+            challengeBox.textContent = 'Langkah 2/2: Kedipkan mata perlahan atau tengok santai';
+            banner.className = 'guidance-banner-light guide-ideal';
+            text.textContent = 'Mendeteksi keaslian biometrik orang hidup...';
+
+            if (frameDiff > 1400) {
+                movementCount++;
             }
-        } else if (challengeStep === 2) {
-            challengeBox.textContent = 'Langkah 2/2: Kedipkan Mata Perlahan atau Tengok Santai';
-            if (stepTimer >= 4) {
-                challengeStep = 3;
+
+            if (movementCount >= 2 || stableCenterFrames >= 9) {
                 livenessVerified = true;
-                livenessToken = 'LIVE_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-                challengeBox.textContent = 'Biometrik Terverifikasi! Siap Ambil Foto.';
+                livenessToken = 'LIVE_STRICT_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+                challengeBox.textContent = 'Biometrik Terverifikasi! Klik tombol Ambil Foto.';
                 dot.className = 'challenge-dot success';
+                banner.className = 'guidance-banner-light guide-ideal';
+                text.textContent = 'Wajah terverifikasi dan siap diambil.';
+                snapBtn.disabled = false;
             }
         }
-    }, 450);
+    }, 320);
+}
+
+function resetFaceChallenge(msg) {
+    stableCenterFrames = 0;
+    movementCount = 0;
+    livenessVerified = false;
+    document.getElementById('challengeInstruction').textContent = msg;
+    document.getElementById('challengeDot').className = 'challenge-dot';
+    document.getElementById('btnSnapFace').disabled = true;
 }
 
 function snapFacePhoto() {
+    if (!livenessVerified) {
+        alert('Posisikan wajah Anda tepat di tengah oval dan selesaikan panduan verifikasi terlebih dahulu.');
+        return;
+    }
+
     const video = document.getElementById('faceVideo');
     if (!faceStream || video.readyState < 2) return;
 
@@ -1447,10 +2168,6 @@ function snapFacePhoto() {
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     capturedFaceBase64 = canvas.toDataURL('image/webp', 0.82);
-    if (!livenessToken) {
-        livenessToken = 'CAM_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-    }
-
     displayFaceResult(capturedFaceBase64, 'Pindai biometrik berhasil. Wajah terverifikasi dan siap dikirim.');
     stopFaceCamera();
 }
@@ -1462,7 +2179,6 @@ function displayFaceResult(imgUrl, feedbackMsg, isWarn = false) {
     feedbackBar.className = isWarn ? 'result-feedback-bar warn' : 'result-feedback-bar';
 
     document.getElementById('faceCameraPane').style.display = 'none';
-    document.getElementById('faceUploadPane').style.display = 'none';
     document.getElementById('faceResultCard').style.display = 'block';
 
     checkFormReadiness();
@@ -1473,7 +2189,8 @@ function retakeFacePhoto() {
     livenessVerified = false;
     livenessToken = null;
     document.getElementById('faceResultCard').style.display = 'none';
-    switchFaceMode('camera');
+    document.getElementById('faceCameraPane').style.display = 'block';
+    startFaceCamera();
     checkFormReadiness();
 }
 
@@ -1507,11 +2224,11 @@ async function switchFaceCamera() {
         document.getElementById('faceGuidanceBanner').style.display = 'flex';
         document.getElementById('faceControlsBar').style.display = 'flex';
         document.getElementById('livenessChallengeBox').style.display = 'flex';
-        startFaceLivenessLoop();
+        startIntelligentFaceLoop();
     } catch(e) {}
 }
 
-// ── SMART UPLOAD SCANNER (MENGANALISIS FOTO YANG DIUPLOAD) ──
+// ── SMART UPLOAD SCANNER UNTUK KTP ──
 function handleFileUpload(event, type) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1538,7 +2255,7 @@ function handleFileUpload(event, type) {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
 
-            // Analisis kecerahan foto yang diunggah
+            // Analisis kecerahan foto KTP yang diunggah
             const imgData = ctx.getImageData(0, 0, width, height);
             const data = imgData.data;
             let totalBrightness = 0;
@@ -1566,10 +2283,6 @@ function handleFileUpload(event, type) {
             if (type === 'ktp') {
                 capturedKtpBase64 = webpData;
                 displayKtpResult(webpData, smartMsg, isWarn);
-            } else {
-                capturedFaceBase64 = webpData;
-                livenessToken = 'UPLOAD_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-                displayFaceResult(webpData, smartMsg, isWarn);
             }
         };
         img.src = e.target.result;
@@ -1585,7 +2298,26 @@ function checkFormReadiness() {
 
     if (!btn) return;
 
-    const isReady = (nik.length === 16 && isNikValid && name.length >= 3 && capturedKtpBase64 && capturedFaceBase64);
+    let domicileValid = true;
+    if (!isDomicileSame) {
+        const prov = document.getElementById('domicileProvinceSelect')?.value;
+        const city = document.getElementById('domicileCitySelect')?.value;
+        const dist = document.getElementById('domicileDistrictSelect')?.value;
+        const subdist = document.getElementById('domicileSubdistrictSelect')?.value;
+        const addr = document.getElementById('domicileAddressInput')?.value.trim() || '';
+        domicileValid = Boolean(prov && city && dist && subdist && addr.length >= 3);
+    }
+
+    const isReady = (
+        nik.length === 16 &&
+        isNikValid &&
+        name.length >= 3 &&
+        capturedKtpBase64 &&
+        capturedFaceBase64 &&
+        domicileValid &&
+        !isAiExtracting
+    );
+
     btn.disabled = !isReady;
 }
 
@@ -1610,14 +2342,57 @@ function handleKycFormSubmit(e) {
         return;
     }
     if (!capturedFaceBase64) {
-        alert('Foto biometrik wajah wajib dipindai / diunggah.');
+        alert('Foto biometrik wajah wajib dipindai / diambil langsung.');
         return;
+    }
+
+    if (!isDomicileSame) {
+        const prov = document.getElementById('domicileProvinceSelect')?.value;
+        const city = document.getElementById('domicileCitySelect')?.value;
+        const dist = document.getElementById('domicileDistrictSelect')?.value;
+        const subdist = document.getElementById('domicileSubdistrictSelect')?.value;
+        const addr = document.getElementById('domicileAddressInput')?.value.trim();
+        if (!prov || !city || !dist || !subdist || !addr) {
+            alert('Harap lengkapi semua data alamat domisili (Provinsi, Kota/Kab, Kecamatan, Kelurahan, dan Alamat Lengkap).');
+            return;
+        }
     }
 
     btn.disabled = true;
     btnText.textContent = 'Mengunggah & Memproses e-KYC...';
 
     const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+    const payload = {
+        nik: nik,
+        full_name: fullName,
+        ktp_photo: capturedKtpBase64,
+        selfie_photo: capturedFaceBase64,
+        liveness_token: livenessToken || ('CLIENT_LIVE_' + Date.now()),
+        is_domicile_same: isDomicileSame ? 1 : 0,
+        ktp_address: document.getElementById('ktpAddressStreet')?.value.trim() || null,
+        ktp_rt_rw: document.getElementById('ktpAddressRtRw')?.value.trim() || null,
+        ktp_subdistrict: document.getElementById('ktpAddressKelurahan')?.value.trim() || null,
+        ktp_district: document.getElementById('ktpAddressKecamatan')?.value.trim() || null,
+        ktp_city: document.getElementById('ktpAddressCity')?.value.trim() || null,
+        ktp_province: document.getElementById('ktpAddressProvince')?.value.trim() || null,
+        ai_extracted_data: aiExtractedData
+    };
+
+    if (!isDomicileSame) {
+        const provEl = document.getElementById('domicileProvinceSelect');
+        const cityEl = document.getElementById('domicileCitySelect');
+        const distEl = document.getElementById('domicileDistrictSelect');
+        const villEl = document.getElementById('domicileSubdistrictSelect');
+
+        payload.domicile_province = provEl.options[provEl.selectedIndex]?.dataset.name || provEl.options[provEl.selectedIndex]?.text || '';
+        payload.domicile_city = cityEl.options[cityEl.selectedIndex]?.dataset.name || cityEl.options[cityEl.selectedIndex]?.text || '';
+        payload.domicile_district = distEl.options[distEl.selectedIndex]?.dataset.name || distEl.options[distEl.selectedIndex]?.text || '';
+        payload.domicile_subdistrict = villEl.options[villEl.selectedIndex]?.dataset.name || villEl.options[villEl.selectedIndex]?.text || '';
+        payload.domicile_rt_rw = document.getElementById('domicileRtRwInput')?.value.trim() || null;
+        payload.domicile_postal_code = document.getElementById('domicilePostalCodeInput')?.value.trim() || null;
+        payload.domicile_address = document.getElementById('domicileAddressInput')?.value.trim() || '';
+    }
 
     fetch('{{ route("creator.kyc.submit") }}', {
         method: 'POST',
@@ -1626,13 +2401,7 @@ function handleKycFormSubmit(e) {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        body: JSON.stringify({
-            nik: nik,
-            full_name: fullName,
-            ktp_photo: capturedKtpBase64,
-            selfie_photo: capturedFaceBase64,
-            liveness_token: livenessToken || ('CLIENT_' + Date.now())
-        })
+        body: JSON.stringify(payload)
     })
     .then(r => r.json())
     .then(res => {

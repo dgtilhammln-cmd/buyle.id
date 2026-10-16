@@ -462,4 +462,209 @@ PROMPT;
 
         return base64_encode($jpegData);
     }
+
+    /**
+     * Prepare Base64 string from path, uploaded file, or raw base64 data URI
+     */
+    public function prepareBase64Image(string $pathOrBase64): string
+    {
+        if (str_starts_with($pathOrBase64, 'data:image') || strlen($pathOrBase64) > 1000) {
+            $clean = preg_replace('/^data:image\/\w+;base64,/', '', $pathOrBase64);
+            $binary = base64_decode($clean);
+            if ($binary) {
+                $tempPath = tempnam(sys_get_temp_dir(), 'ktp_') . '.jpg';
+                file_put_contents($tempPath, $binary);
+                $encoded = $this->compressAndEncodeImage($tempPath);
+                @unlink($tempPath);
+                return $encoded;
+            }
+        }
+
+        return $this->compressAndEncodeImage($pathOrBase64);
+    }
+
+    /**
+     * Extract Indonesian e-KTP data using AI Vision
+     */
+    public function extractKtpData(string $imagePathOrBase64): array
+    {
+        $provider = $this->getProvider();
+        $apiKey   = $this->getApiKey();
+        $model    = $this->getModel();
+
+        if (empty($apiKey)) {
+            throw new \Exception('API Key AI belum dikonfigurasi di Pengaturan AI admin.');
+        }
+
+        $base64Image = $this->prepareBase64Image($imagePathOrBase64);
+
+        $prompt = <<<PROMPT
+Anda adalah asisten AI OCR e-KTP Republik Indonesia (Kartu Tanda Penduduk) profesional dengan akurasi dan ketelitian tingkat tinggi.
+Tugas Anda adalah membaca dan mengekstrak data dari gambar e-KTP berikut.
+
+HASILKAN HANYA SATU JSON OBJECT VALID DENGAN STRUKTUR BERIKUT:
+{
+  "nik": "16 digit angka NIK tanpa spasi atau tanda baca lain",
+  "full_name": "Nama lengkap pemilik KTP sesuai e-KTP",
+  "dob": "YYYY-MM-DD",
+  "gender": "L" atau "P",
+  "address": "Alamat / nama jalan / dusun / nomor rumah",
+  "rt_rw": "RT/RW contoh 004/009",
+  "subdistrict": "Kelurahan atau Desa",
+  "district": "Kecamatan",
+  "city": "Kabupaten atau Kota",
+  "province": "Provinsi"
+}
+
+ATURAN EKSTRAKSI:
+1. "nik": Wajib 16 digit angka murni tanpa spasi atau karakter lain. Perhatikan angka dengan seksama.
+2. "full_name": Nama lengkap persis sesuai e-KTP (huruf kapital rapi).
+3. "dob": Tanggal lahir dari 'Tempat/Tgl Lahir' dalam format YYYY-MM-DD (contoh: JAKARTA, 23-07-2003 -> "2003-07-23").
+4. "gender": "L" untuk LAKI-LAKI, "P" untuk PEREMPUAN.
+5. "address": Alamat jalan/kampung/dusun/gang.
+6. "rt_rw": Format RT/RW (misal: 004/009).
+7. "subdistrict": Kel/Desa (contoh: PEGADUNGAN).
+8. "district": Kecamatan (contoh: KALI DERES).
+9. "city": Kota/Kabupaten (contoh: JAKARTA BARAT).
+10. "province": Provinsi (contoh: DKI JAKARTA).
+
+PENTING:
+- Keluarkan HANYA string JSON valid murni tanpa markdown triple backticks.
+- Jangan berikan kata pengantar atau catatan penutup apapun di luar JSON.
+PROMPT;
+
+        try {
+            $rawText = '';
+            if ($provider === 'gemini') {
+                $endpoint = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}";
+                $response = Http::timeout(45)->post($endpoint, [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $prompt],
+                                [
+                                    'inline_data' => [
+                                        'mime_type' => 'image/jpeg',
+                                        'data' => $base64Image
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    'generationConfig' => [
+                        'response_mime_type' => 'application/json',
+                        'temperature' => 0.1,
+                    ]
+                ]);
+
+                if (!$response->successful()) {
+                    $errorMsg = $response->json('error.message') ?? $response->body();
+                    throw new \Exception("Gagal membaca e-KTP (Gemini): " . substr($errorMsg, 0, 200));
+                }
+                $rawText = $response->json('candidates.0.content.parts.0.text') ?? '';
+            } else {
+                $baseUrl = match ($provider) {
+                    'groq' => 'https://api.groq.com/openai/v1',
+                    'openrouter' => 'https://openrouter.ai/api/v1',
+                    default => Setting::get('ai_base_url', 'https://api.groq.com/openai/v1'),
+                };
+
+                $headers = [
+                    'Authorization' => "Bearer {$apiKey}",
+                    'Content-Type'  => 'application/json',
+                ];
+
+                if ($provider === 'openrouter') {
+                    $headers['HTTP-Referer'] = config('app.url', 'https://buyle.id');
+                    $headers['X-Title'] = 'Buyle.id Marketplace';
+                }
+
+                $payload = [
+                    'model' => $model,
+                    'messages' => [
+                        [
+                            'role' => 'user',
+                            'content' => [
+                                ['type' => 'text', 'text' => $prompt],
+                                ['type' => 'image_url', 'image_url' => ['url' => "data:image/jpeg;base64,{$base64Image}"]]
+                            ]
+                        ]
+                    ],
+                    'temperature' => 0.1,
+                    'max_tokens' => 1000
+                ];
+
+                if ($provider === 'groq' || $provider === 'openai') {
+                    $payload['response_format'] = ['type' => 'json_object'];
+                }
+
+                $response = Http::withHeaders($headers)->timeout(45)->post("{$baseUrl}/chat/completions", $payload);
+
+                if (!$response->successful()) {
+                    $errorText = $response->json('error.message') ?? $response->body();
+                    throw new \Exception("Gagal membaca e-KTP ({$provider}): " . substr($errorText, 0, 200));
+                }
+
+                $rawText = $response->json('choices.0.message.content') ?? '';
+            }
+
+            return $this->parseKtpJsonResponse($rawText);
+
+        } catch (\Exception $e) {
+            Log::error("AI KTP Extraction Error: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Safely parse raw AI output for e-KTP
+     */
+    protected function parseKtpJsonResponse(string $rawText): array
+    {
+        $clean = trim($rawText);
+        if (preg_match('/\{[\s\S]*\}/', $clean, $matches)) {
+            $clean = $matches[0];
+        }
+
+        $data = json_decode($clean, true);
+        if (!is_array($data)) {
+            throw new \Exception("Gagal mengurai respon AI e-KTP.");
+        }
+
+        // Clean NIK
+        $nik = preg_replace('/\D/', '', (string)($data['nik'] ?? ''));
+
+        // Clean full name
+        $fullName = trim((string)($data['full_name'] ?? ''));
+
+        // Clean gender
+        $gender = strtoupper(trim((string)($data['gender'] ?? '')));
+        if (!in_array($gender, ['L', 'P'])) {
+            $gender = (str_contains($gender, 'LAK') || str_contains($gender, 'PRIA') || $gender === 'M') ? 'L' : ($gender === 'F' ? 'P' : null);
+        }
+
+        // Clean DOB
+        $dob = trim((string)($data['dob'] ?? ''));
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $dob)) {
+            if (preg_match('/(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})/', $dob, $dMatches)) {
+                $dob = sprintf('%04d-%02d-%02d', (int)$dMatches[3], (int)$dMatches[2], (int)$dMatches[1]);
+            } else {
+                $dob = null;
+            }
+        }
+
+        return [
+            'nik'         => $nik,
+            'full_name'   => $fullName,
+            'dob'         => $dob,
+            'gender'      => $gender,
+            'address'     => trim((string)($data['address'] ?? '')),
+            'rt_rw'       => trim((string)($data['rt_rw'] ?? '')),
+            'subdistrict' => trim((string)($data['subdistrict'] ?? '')),
+            'district'    => trim((string)($data['district'] ?? '')),
+            'city'        => trim((string)($data['city'] ?? '')),
+            'province'    => trim((string)($data['province'] ?? '')),
+            'raw_json'    => $data,
+        ];
+    }
 }

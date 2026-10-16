@@ -211,6 +211,97 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Alamat e-KTP -->
+            <div class="section-card" style="margin-top: 1.25rem;">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <span>Alamat Tertera Pada e-KTP</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="info-list">
+                        <div class="info-row">
+                            <span class="info-key">Alamat / Jalan</span>
+                            <span class="info-val font-semibold">{{ $kyc->ktp_address ?? '-' }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-key">RT / RW</span>
+                            <span class="info-val">{{ $kyc->ktp_rt_rw ?? '-' }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-key">Kelurahan / Desa</span>
+                            <span class="info-val">{{ $kyc->ktp_subdistrict ?? '-' }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-key">Kecamatan</span>
+                            <span class="info-val">{{ $kyc->ktp_district ?? '-' }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-key">Kota / Kabupaten</span>
+                            <span class="info-val">{{ $kyc->city ?? '-' }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-key">Provinsi</span>
+                            <span class="info-val">{{ $kyc->province ?? '-' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alamat Domisili -->
+            <div class="section-card" style="margin-top: 1.25rem;">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        <span>Alamat Domisili (Tempat Tinggal)</span>
+                    </div>
+                    @if($kyc->is_domicile_same)
+                        <span class="badge-subtle" style="background:#dcfce7; color:#166534; font-weight:700;">Sesuai KTP</span>
+                    @else
+                        <span class="badge-subtle" style="background:#fef3c7; color:#92400e; font-weight:700;">Domisili Berbeda</span>
+                    @endif
+                </div>
+                <div class="card-body">
+                    @if($kyc->is_domicile_same)
+                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:0.85rem 1rem; color:#166534; font-size:0.8125rem;">
+                            <strong>Alamat domisili sama persis dengan e-KTP.</strong>
+                        </div>
+                    @else
+                        <div class="info-list">
+                            <div class="info-row">
+                                <span class="info-key">Alamat Lengkap</span>
+                                <span class="info-val font-semibold">{{ $kyc->domicile_address ?? '-' }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-key">RT / RW</span>
+                                <span class="info-val">{{ $kyc->domicile_rt_rw ?? '-' }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-key">Kelurahan / Desa</span>
+                                <span class="info-val">{{ $kyc->domicile_subdistrict ?? '-' }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-key">Kecamatan</span>
+                                <span class="info-val">{{ $kyc->domicile_district ?? '-' }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-key">Kabupaten / Kota</span>
+                                <span class="info-val">{{ $kyc->domicile_city ?? '-' }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-key">Provinsi</span>
+                                <span class="info-val">{{ $kyc->domicile_province ?? '-' }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-key">Kode Pos</span>
+                                <span class="info-val">{{ $kyc->domicile_postal_code ?? '-' }}</span>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 </div>
