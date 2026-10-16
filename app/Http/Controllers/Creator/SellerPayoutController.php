@@ -30,40 +30,15 @@ class SellerPayoutController extends Controller
         }
         $platformFeeRate = 5;
 
-        try {
-            $sellerOrders = Order::with(['items' => fn($q) => $q->whereHas('product', fn($p) => $p->where('seller_id', $seller->id))])
-                ->whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
-                ->whereHas('payment', fn($q) => $q->where('status', PaymentStatus::Success))
-                ->get();
-        } catch (\Exception $e) {
-            $sellerOrders = collect();
-        }
-
-        // Holding period: 3x24 jam (72 jam) setelah transaksi
-        $threshold = Carbon::now()->subHours(72);
-
-        // Saldo yang SUDAH lewat 72 jam (siap ditarik)
-        $clearedOrders = $sellerOrders->filter(function ($order) use ($threshold) {
-            $paidAt = $order->payment?->paid_at ?? $order->created_at;
-            return Carbon::parse($paidAt)->lte($threshold);
-        });
-        $clearedGmv = $clearedOrders->sum(fn($order) => $order->items->sum('subtotal'));
-
-        // Saldo yang MASIH dalam 72 jam (sedang di-hold)
-        $holdingOrders = $sellerOrders->filter(function ($order) use ($threshold) {
-            $paidAt = $order->payment?->paid_at ?? $order->created_at;
-            return Carbon::parse($paidAt)->gt($threshold);
-        });
-        $holdBalance = $holdingOrders->sum(fn($order) => $order->items->sum('subtotal'));
-
-        // GMV total
-        $gmv = $sellerOrders->sum(fn($order) => $order->items->sum('subtotal'));
-
-        $totalPayout = PayoutRequest::where('seller_id', $seller->id)
-            ->whereIn('status', ['pending', 'approved', 'processed'])
-            ->sum('amount');
-
-        $availableBalance = max(0, $clearedGmv - $totalPayout);
+        $balanceData = \App\Services\SellerBalanceService::calculateBalance($seller);
+        $gmv                 = $balanceData['gmv'];
+        $clearedGmv          = $balanceData['cleared_gmv'];
+        $holdBalance         = $balanceData['total_hold_balance'];
+        $standardHoldBalance = $balanceData['standard_hold_balance'];
+        $ticketEscrowBalance = $balanceData['ticket_escrow_balance'];
+        $totalPayout         = $balanceData['total_payout'];
+        $availableBalance    = $balanceData['available_balance'];
+        $upcomingEvents      = $balanceData['upcoming_events'];
 
         $requests = PayoutRequest::where('seller_id', $seller->id)
             ->latest()
@@ -74,6 +49,9 @@ class SellerPayoutController extends Controller
             'gmv',
             'clearedGmv',
             'holdBalance',
+            'standardHoldBalance',
+            'ticketEscrowBalance',
+            'upcomingEvents',
             'platformFeeRate',
             'totalPayout',
             'availableBalance',
@@ -107,28 +85,16 @@ class SellerPayoutController extends Controller
             return back()->with('error', 'Silakan pilih atau daftarkan rekening tujuan terlebih dahulu.');
         }
 
-        // Hitung ulang saldo siap ditarik (server-side validasi)
-        try {
-            $sellerOrders = Order::with(['items' => fn($q) => $q->whereHas('product', fn($p) => $p->where('seller_id', $seller->id))])
-                ->whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
-                ->whereHas('payment', fn($q) => $q->where('status', PaymentStatus::Success))
-                ->get();
-            $threshold = Carbon::now()->subHours(72);
-            $clearedGmv = $sellerOrders->filter(function ($order) use ($threshold) {
-                $paidAt = $order->payment?->paid_at ?? $order->created_at;
-                return Carbon::parse($paidAt)->lte($threshold);
-            })->sum(fn($order) => $order->items->sum('subtotal'));
-        } catch (\Exception $e) {
-            $clearedGmv = 0;
-        }
-
-        $totalPayout = PayoutRequest::where('seller_id', $seller->id)
-            ->whereIn('status', ['pending', 'approved', 'processed'])
-            ->sum('amount');
-        $availableBalance = max(0, $clearedGmv - $totalPayout);
+        // Hitung ulang saldo siap ditarik (server-side validasi dengan mitigasi anti-fraud tiket event)
+        $balanceData      = \App\Services\SellerBalanceService::calculateBalance($seller);
+        $availableBalance = $balanceData['available_balance'];
 
         if ($validated['amount'] > $availableBalance) {
-            return back()->with('error', 'Jumlah penarikan melebihi saldo yang tersedia (Rp ' . number_format($availableBalance, 0, ',', '.') . ').');
+            $msg = 'Jumlah penarikan melebihi saldo yang tersedia (Rp ' . number_format($availableBalance, 0, ',', '.') . ').';
+            if ($balanceData['ticket_escrow_balance'] > 0) {
+                $msg .= ' Catatan: Saldo penjualan tiket event (Rp ' . number_format($balanceData['ticket_escrow_balance'], 0, ',', '.') . ') masih berada dalam masa Escrow dan otomatis cair H+3 setelah acara sukses terselenggara.';
+            }
+            return back()->with('error', $msg);
         }
 
         // Cek tidak ada payout pending

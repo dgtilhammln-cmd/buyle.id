@@ -650,7 +650,8 @@
                             <label class="form-label">Email (Wajib) <span style="color:#EF4444;">*</span></label>
                             <input type="email" name="guest_email" class="form-input" value="{{ old('guest_email') }}"
                                 required placeholder="emailaktif@gmail.com">
-                            <div style="font-size:0.75rem;color:#64748B;margin-top:0.35rem;">📩 File/akses digital akan dikirim ke email ini setelah pembayaran berhasil.</div>
+                            <div style="font-size:0.75rem;color:#64748B;margin-top:0.35rem;">📩 File/akses digital akan
+                                dikirim ke email ini setelah pembayaran berhasil.</div>
                         </div>
                     </div>
                 @else
@@ -1013,7 +1014,7 @@
 
                                     <div class="ticket-holder-row"
                                         style="margin-bottom:{{ $ticketIdx < $qty - 1 ? '1rem' : '0' }};
-                                                                                                                                                                                                                                                                        {{ !$loop->last || $ticketIdx < $qty - 1 ? 'padding-bottom:1rem;border-bottom:1px dashed #E2E8F0;' : '' }}">
+                                                                                                                                                                                                                                                                                        {{ !$loop->last || $ticketIdx < $qty - 1 ? 'padding-bottom:1rem;border-bottom:1px dashed #E2E8F0;' : '' }}">
 
                                         {{-- Slot label dengan nomor tiket --}}
                                         <div
@@ -1054,27 +1055,30 @@
                                         {{-- Field NIK (wajib untuk produk tiket) --}}
                                         @php $nikId = "ticket_nik_{$pid}_{$ticketIdx}"; @endphp
                                         <div style="margin-top:0.65rem;">
-                                            <label for="{{ $nikId }}" style="font-size:0.78rem;font-weight:700;color:#334155;display:flex;align-items:center;gap:0.35rem;margin-bottom:0.35rem;">
-                                                <svg width="13" height="13" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 9h.01M8 13h.01M12 9h4M12 13h4"/></svg>
+                                            <label for="{{ $nikId }}"
+                                                style="font-size:0.78rem;font-weight:700;color:#334155;display:flex;align-items:center;gap:0.35rem;margin-bottom:0.35rem;">
+                                                <svg width="13" height="13" fill="none" stroke="#1eb349" stroke-width="2.5"
+                                                    viewBox="0 0 24 24">
+                                                    <rect x="3" y="4" width="18" height="16" rx="2" />
+                                                    <path d="M8 9h.01M8 13h.01M12 9h4M12 13h4" />
+                                                </svg>
                                                 NIK / Nomor KTP
                                                 <span style="color:#EF4444;">*</span>
                                                 <span style="font-weight:400;color:#94A3B8;font-size:0.72rem;">(16 digit)</span>
                                             </label>
-                                            <input type="text"
-                                                id="{{ $nikId }}"
-                                                name="ticket_niks[{{ $pid }}][]"
-                                                class="form-input"
-                                                inputmode="numeric"
-                                                maxlength="16"
-                                                pattern="\d{16}"
-                                                required
+                                            <input type="text" id="{{ $nikId }}" name="ticket_niks[{{ $pid }}][]" class="form-input"
+                                                inputmode="numeric" maxlength="16" pattern="\d{16}" required
                                                 placeholder="Contoh: 3273082504980003"
                                                 style="letter-spacing:0.08em; font-family:monospace;"
                                                 oninput="this.value=this.value.replace(/\D/g,'').slice(0,16)"
                                                 title="NIK harus tepat 16 digit angka sesuai KTP/SIM Anda">
-                                            <div style="font-size:0.71rem;color:#94A3B8;margin-top:0.25rem;display:flex;align-items:center;gap:0.3rem;">
-                                                <svg width="11" height="11" fill="none" stroke="#94A3B8" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                                                NIK dienkripsi & disimpan aman. Ditampilkan dalam format tersensor kepada panitia.
+                                            <div
+                                                style="font-size:0.71rem;color:#94A3B8;margin-top:0.25rem;display:flex;align-items:center;gap:0.3rem;">
+                                                <svg width="11" height="11" fill="none" stroke="#94A3B8" stroke-width="2"
+                                                    viewBox="0 0 24 24">
+                                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                                </svg>
+                                                NIK dienkripsi & disimpan aman.
                                             </div>
                                         </div>
 
@@ -1326,7 +1330,8 @@
                         <div class="summary-total" style="margin-top:0; padding-top:1rem;">
                             <span>Total Belanja</span>
                             @if($summary['subtotal'] <= 0)
-                                <span id="total-row-val" style="color:#16a34a;font-size:1.3rem;font-weight:900;letter-spacing:-0.5px;">GRATIS</span>
+                                <span id="total-row-val"
+                                    style="color:#16a34a;font-size:1.3rem;font-weight:900;letter-spacing:-0.5px;">GRATIS</span>
                             @else
                                 <span id="total-row-val">Rp
                                     {{ number_format($summary['subtotal'] + $pfAmt + $afAmt, 0, ',', '.') }}</span>
@@ -1334,7 +1339,8 @@
                         </div>
                         @if($summary['subtotal'] <= 0)
                             <button type="submit" class="btn-pay" onclick="prepareSubmit(event)"
-                                style="background:linear-gradient(135deg,#16a34a,#22c55e);">Dapatkan Sekarang (Gratis)</button>
+                                style="background:linear-gradient(135deg,#16a34a,#22c55e);">Dapatkan Sekarang
+                                (Gratis)</button>
                         @else
                             <button type="submit" class="btn-pay" onclick="prepareSubmit(event)">Pilih Pembayaran</button>
                         @endif

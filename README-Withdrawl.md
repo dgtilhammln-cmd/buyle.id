@@ -49,57 +49,155 @@ Untuk memastikan pengelola platform (Admin) memiliki pencatatan yang rapi antara
 | 2. Platform Fee (5%) | Biaya layanan sistem yang ditanggung saat transaksi produk e-commerce. | 5% x Subtotal Produk | Murni Laba Buyle.id |
 | 3. Biaya Pencairan (Admin Fee) | Biaya administrasi penarikan saldo creator. | Rp 0 (Gratis / 100% Utuh) | Bebas Potongan |
 | 4. Total Laba Bersih Platform | Total keuntungan bersih yang didapatkan Buyle.id dari operasional. | Platform Fee (5%) | Kas Bersih Platform |
-| 5. Saldo Mengendap (Kewajiban) | Total dana hasil penjualan milik seluruh creator yang belum dicairkan. | Total Saldo Siap Ditarik + Total Saldo Menunggu | Uang Titipan Creator |
+| 5. Saldo Mengendap (Kewajiban) | Total dana hasil penjualan milik seluruh creator yang belum dicairkan. | Total Saldo Siap Ditarik + Hold Reguler + Escrow Tiket | Uang Titipan Creator |
+| 6. Saldo Escrow Tiket Event | Dana tiket event yang dikunci hingga acara selesai (H+3). | Total Subtotal Tiket yang belum H+3 | Escrow Titipan Penonton |
 
 ---
 
-## 3. Logika Cerdas Holding Period 3x24 Jam (Smart Clearance)
+## 3. Arsitektur Dual Holding Period & Mitigasi Risiko Event Bodong
 
-### 3.1 Alasan Penerapan 3x24 Jam (72 Jam)
-1. Proteksi Sengketa / Refund: Memberikan jeda waktu jika pembeli mengalami kendala pesanan, tiket bermasalah, atau kendala barang fisik.
-2. Mitigasi Transaksi Bodong / Fraud: Mencegah penipuan pembayaran seperti kartu kredit curian yang ditarik seketika oleh oknum.
-3. Standar Industri: Diterapkan oleh ekosistem marketplace modern untuk keamanan transaksi dua arah.
-
-### 3.2 Klasifikasi Saldo di Dashboard Creator
-
-Di halaman https://buyle.id/creator/payout-settings, saldo creator dibagi menjadi 2 kartu informatif:
+Untuk mencegah kerugian fatal akibat oknum pembuat acara palsu (*event bodong*), Buyle.id menerapkan sistem **Dual Holding Period** yang memisahkan perlakuan dana berdasarkan tipe produk (`product_type`).
 
 ```
-┌──────────────────────────────────────┐  ┌──────────────────────────────────────┐
-│  SALDO SIAP DITARIK                  │  │  SALDO MENUNGGU (HOLD 3 HARI)        │
-│  Rp 1.500.000                        │  │  Rp 450.000                          │
-│  Tersedia dari pesanan > 72 jam      │  │  Otomatis cair setelah 3x24 jam      │
-└──────────────────────────────────────┘  └──────────────────────────────────────┘
+                              [ TRANSAKSI TERKONFIRMASI ]
+                                           │
+                    ┌──────────────────────┴──────────────────────┐
+                    ▼                                             ▼
+         [ PRODUK REGULER ]                              [ TIKET EVENT / KONSER ]
+       (Fisik & Digital Umum)                           (product_type = 'ticket')
+                    │                                             │
+                    ▼                                             ▼
+          [ HOLD 3x24 JAM ]                              [ POST-EVENT ESCROW ]
+      (Terhitung dari paid_at)                   (Terkunci hingga H+3 Pasca Acara)
+                    │                                             │
+                    ▼                                             ▼
+     Setelah 72 jam berlalu                      Acara berlangsung + 3 hari audit
+                    │                                             │
+                    └──────────────────────┬──────────────────────┘
+                                           │
+                                           ▼
+                                 [ SALDO SIAP DITARIK ]
+                            (Masuk ke Available Balance)
 ```
 
-### 3.3 Logika Backend (Eloquent Query)
+### 3.1 Holding Period Reguler (3x24 Jam / 72 Jam)
+- **Berlaku untuk**: Produk fisik dan produk digital umum.
+- **Tujuan**: Proteksi retur barang, dispute pengiriman, atau kartu kredit fraud.
+- **Waktu Pelepasan**: Otomatis cair tepat 72 jam (`paid_at + 72 hours`) setelah pembayaran terkonfirmasi.
+
+### 3.2 Holding Period Tiket Event (Post-Event Settlement: H+3 Pasca Acara)
+- **Berlaku untuk**: Semua produk bertipe `ticket` dengan tanggal acara (`event_date`).
+- **Ancaman Nyata (Event Bodong)**:
+  Jika tiket konser yang dijual 2–3 bulan sebelum acara dilepas dalam 72 jam, oknum penipu dapat menjual tiket ratusan juta rupiah, mencairkan dananya ke rekening pribadi, lalu menghilang tanpa mengadakan konser. Platform akan dituntut oleh ratusan penonton yang kehilangan uang.
+- **Solusi Standar Industri (Escrow Lock)**:
+  Dana hasil penjualan tiket **DIKUNCI 100% DI REKENING PENAMPUNG (ESCROW)** hingga acara selesai diselenggarakan.
+- **Waktu Pelepasan**: `event_date (end of day) + 3 hari` (misal acara tanggal 20 Oktober 2026, dana baru cair pada 23 Oktober 2026 pukul 23:59). Jeda 3 hari berfungsi sebagai masa audit keluhan penonton (*dispute window*).
+- **Fallback**: Jika produk tiket tidak menyertakan tanggal acara spesifik, diberlakukan masa hold 30 hari (`paid_at + 30 days`).
+
+### 3.3 Layanan Terpusat: `App\Services\SellerBalanceService`
+Semua perhitungan saldo creator dipusatkan dalam satu service tunggal (`SellerBalanceService`) untuk memastikan integritas data antara Creator Dashboard, Form Penarikan Dana, Laporan Penjualan, dan Admin Review.
 
 ```php
-// 1. Pesanan Sukses Milik Creator
-$sellerOrders = Order::whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
-    ->whereHas('payment', fn($q) => $q->where('status', PaymentStatus::Success))
-    ->get();
+namespace App\Services;
 
-// 2. Transaksi yang sudah melewati 72 jam (Siap Ditarik)
-$threshold = Carbon::now()->subHours(72);
-$clearedGmv = $sellerOrders->filter(function($order) use ($threshold) {
-    $paidTime = $order->payment?->paid_at ?? $order->created_at;
-    return Carbon::parse($paidTime)->lte($threshold);
-})->sum(fn($order) => $order->items->sum('subtotal'));
+class SellerBalanceService
+{
+    public static function calculateBalance(User $seller): array
+    {
+        // 1. Ambil seluruh pesanan sukses yang memiliki item milik seller
+        $sellerOrders = Order::whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
+            ->whereHas('payment', fn($q) => $q->where('status', PaymentStatus::Success))
+            ->with(['items.product', 'payment'])
+            ->get();
 
-// 3. Transaksi dalam masa tunggu 72 jam (Menunggu Clearance)
-$holdBalance = $sellerOrders->filter(function($order) use ($threshold) {
-    $paidTime = $order->payment?->paid_at ?? $order->created_at;
-    return Carbon::parse($paidTime)->gt($threshold);
-})->sum(fn($order) => $order->items->sum('subtotal'));
+        $now = Carbon::now();
+        $threshold72h = $now->copy()->subHours(72);
 
-// 4. Saldo Bersih Siap Ditarik (dikurangi pengajuan yang sedang diproses / disetujui)
-$totalPayout = PayoutRequest::where('seller_id', $seller->id)
-    ->whereIn('status', ['pending', 'approved', 'processed'])
-    ->sum('amount');
+        // 2. Loop per-item untuk evaluasi tipe produk & jadwal pelepasan
+        foreach ($sellerOrders as $order) {
+            $paidAt = $order->payment?->paid_at ?? $order->created_at;
 
-$availableBalance = max(0, $clearedGmv - $totalPayout);
+            foreach ($order->items as $item) {
+                if ($item->product?->seller_id !== $seller->id) continue;
+
+                $subtotal = (float) $item->subtotal;
+                $isTicket = ($item->product?->product_type === 'ticket');
+
+                if ($isTicket) {
+                    $eventDate = $item->product?->event_date;
+                    // Clearance: Tanggal event + 3 hari (end of day)
+                    $ticketClearance = $eventDate
+                        ? Carbon::parse($eventDate)->endOfDay()->addDays(3)
+                        : Carbon::parse($paidAt)->addDays(30);
+
+                    if ($now->gte($ticketClearance)) {
+                        $clearedGmv += $subtotal;
+                    } else {
+                        $ticketEscrowBalance += $subtotal;
+                    }
+                } else {
+                    // Produk reguler: 72 jam sejak bayar
+                    if (Carbon::parse($paidAt)->lte($threshold72h)) {
+                        $clearedGmv += $subtotal;
+                    } else {
+                        $standardHoldBalance += $subtotal;
+                    }
+                }
+            }
+        }
+
+        // 3. Potong total payout yang sudah diajukan/dicairkan
+        $availableBalance = max(0, $clearedGmv - $totalPayout);
+
+        return [
+            'gmv'                   => $gmv,
+            'cleared_gmv'           => $clearedGmv,
+            'available_balance'     => $availableBalance,
+            'standard_hold_balance' => $standardHoldBalance,
+            'ticket_escrow_balance' => $ticketEscrowBalance,
+            'total_hold_balance'    => $standardHoldBalance + $ticketEscrowBalance,
+            'total_payout'          => $totalPayout,
+            'upcoming_events'       => $upcomingEvents,
+        ];
+    }
+}
 ```
+
+### 3.4 Klasifikasi Saldo di Dashboard Creator
+Di halaman `https://buyle.id/creator/payout-settings`, creator melihat transparansi 3 pos saldo:
+
+```
+┌────────────────────────┐  ┌────────────────────────┐  ┌────────────────────────┐
+│  SALDO SIAP DITARIK    │  │  HOLD REGULER (3 HARI) │  │  ESCROW TIKET EVENT    │
+│  Rp 5.250.000          │  │  Rp 350.000            │  │  Rp 25.000.000         │
+│  Dapat ditarik kapan   │  │  Cair otomatis setelah │  │  Cair H+3 setelah      │
+│  saja (Rp 0 fee)       │  │  3x24 jam sejak order  │  │  acara terlaksana      │
+└────────────────────────┘  └────────────────────────┘  └────────────────────────┘
+```
+
+Jika terdapat event mendatang dengan saldo tertahan, sistem menampilkan tabel jadwal pelepasan dana per-event secara transparan.
+
+### 3.5 Enforcement Server-Side (`SellerPayoutController::requestPayout`)
+Validasi server-side memastikan creator tidak dapat memanipulasi pengajuan penarikan:
+```php
+$balanceData = SellerBalanceService::calculateBalance($seller);
+$availableBalance = $balanceData['available_balance'];
+
+if ($request->amount > $availableBalance) {
+    if ($balanceData['ticket_escrow_balance'] > 0) {
+        return back()->with('error', 'Saldo siap ditarik tidak mencukupi. Dana tiket event sebesar Rp ' .
+            number_format($balanceData['ticket_escrow_balance'], 0, ',', '.') .
+            ' masih berada dalam status Escrow Pengamanan Acara (baru dapat dicairkan H+3 pasca acara).');
+    }
+    return back()->with('error', 'Saldo tidak mencukupi.');
+}
+```
+
+### 3.6 Protokol Pembatalan Acara & Pengembalian Dana (Zero-Loss Guarantee)
+Jika terjadi situasi force majeure atau event terbukti dibatalkan oleh pihak penyelenggara:
+1. **Keamanan Kas Buyle.id**: Karena dana tiket masih terkunci di Escrow Buyle.id, platform **tidak mengalami kerugian finansial sepeser pun**.
+2. **Refund 100% ke Penonton**: Admin dapat mengeksekusi pengembalian dana penuh (*full refund*) kepada seluruh pemegang tiket langsung dari rekening penampung.
+3. **Audit Jejak Check-in Gate**: Gate Scanner Buyle.id berfungsi sebagai bukti autentik apakah acara benar-benar terlaksana (penonton hadir dan ter-scan) sebelum dana dilepas.
 
 ---
 

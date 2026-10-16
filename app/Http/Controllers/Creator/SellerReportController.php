@@ -214,25 +214,9 @@ class SellerReportController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        // ── 8. Saldo Siap Ditarik (Withdrawal Balance) ──────────────────────────
-        try {
-            $sellerOrdersAll = Order::with(['items' => fn($q) => $q->whereHas('product', fn($p) => $p->where('seller_id', $seller->id))])
-                ->whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
-                ->whereHas('payment', fn($q) => $q->where('status', PaymentStatus::Success))
-                ->get();
-            $threshold = Carbon::now()->subHours(72);
-            $clearedGmv = $sellerOrdersAll->filter(function ($order) use ($threshold) {
-                $paidAt = $order->payment?->paid_at ?? $order->created_at;
-                return Carbon::parse($paidAt)->lte($threshold);
-            })->sum(fn($order) => $order->items->sum('subtotal'));
-        } catch (\Exception $e) {
-            $clearedGmv = 0;
-        }
-
-        $totalPayout = \App\Models\PayoutRequest::where('seller_id', $seller->id)
-            ->whereIn('status', ['pending', 'approved', 'processed'])
-            ->sum('amount');
-        $availableBalance = max(0, $clearedGmv - $totalPayout);
+        // ── 8. Saldo Siap Ditarik (Withdrawal Balance dengan proteksi Escrow Tiket) ─
+        $balanceData      = \App\Services\SellerBalanceService::calculateBalance($seller);
+        $availableBalance = $balanceData['available_balance'];
 
         return view('creator.reports.index', compact(
             'filter', 'startDate', 'endDate',

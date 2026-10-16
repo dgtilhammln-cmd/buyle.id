@@ -45,6 +45,10 @@
         background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
         border: 1.5px solid #fde68a;
     }
+    .saldo-card.escrow {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        border: 1.5px solid #93c5fd;
+    }
     .saldo-card-label {
         font-size: 0.72rem;
         font-weight: 800;
@@ -56,6 +60,7 @@
     }
     .saldo-card.cleared .saldo-card-label { color: #15803d; }
     .saldo-card.hold .saldo-card-label { color: #92400e; }
+    .saldo-card.escrow .saldo-card-label { color: #1e40af; }
     .saldo-card-value {
         font-size: 1.35rem;
         font-weight: 800;
@@ -64,6 +69,7 @@
     }
     .saldo-card.cleared .saldo-card-value { color: #14532d; }
     .saldo-card.hold .saldo-card-value { color: #78350f; }
+    .saldo-card.escrow .saldo-card-value { color: #1e3a8a; }
     .saldo-card-sub {
         font-size: 0.7rem;
         font-weight: 600;
@@ -72,6 +78,7 @@
     }
     .saldo-card.cleared .saldo-card-sub { color: #16a34a; }
     .saldo-card.hold .saldo-card-sub { color: #d97706; }
+    .saldo-card.escrow .saldo-card-sub { color: #2563eb; }
 
     /* ── Tab Sidebar ── */
     .sidebar-nav-label {
@@ -542,11 +549,21 @@
                 <div class="saldo-card hold">
                     <div class="saldo-card-label">
                         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        Menunggu Clearance
+                        Hold Reguler (3 Hari)
                     </div>
-                    <div class="saldo-card-value">Rp {{ number_format($holdBalance, 0, ',', '.') }}</div>
+                    <div class="saldo-card-value">Rp {{ number_format($standardHoldBalance ?? 0, 0, ',', '.') }}</div>
                     <div class="saldo-card-sub">Otomatis cair setelah 3x24 jam</div>
                 </div>
+                @if(($ticketEscrowBalance ?? 0) > 0)
+                <div class="saldo-card escrow">
+                    <div class="saldo-card-label">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        Escrow Tiket Event
+                    </div>
+                    <div class="saldo-card-value">Rp {{ number_format($ticketEscrowBalance, 0, ',', '.') }}</div>
+                    <div class="saldo-card-sub">Cair H+3 setelah acara terlaksana</div>
+                </div>
+                @endif
             </div>
         </div>
 
@@ -590,17 +607,27 @@
             <div style="display:none" class="mobile-saldo-bar">
                 <div class="prof-card" style="margin-bottom:1rem;">
                     <div class="form-body" style="padding:1rem 1.25rem;">
-                        <div class="saldo-grid" style="display:flex!important;flex-direction:row!important;">
-                            <div class="saldo-card cleared" style="flex:1">
+                        <div class="saldo-grid" style="display:flex!important;flex-direction:row!important;flex-wrap:wrap;gap:0.5rem;">
+                            <div class="saldo-card cleared" style="flex:1;min-width:130px;">
                                 <div class="saldo-card-label">Siap Ditarik</div>
                                 <div class="saldo-card-value">Rp {{ number_format($availableBalance, 0, ',', '.') }}</div>
-                                <div class="saldo-card-sub">Sudah 3x24 jam</div>
+                                <div class="saldo-card-sub">Dapat ditarik</div>
                             </div>
-                            <div class="saldo-card hold" style="flex:1">
-                                <div class="saldo-card-label">Menunggu</div>
-                                <div class="saldo-card-value">Rp {{ number_format($holdBalance, 0, ',', '.') }}</div>
+                            <div class="saldo-card hold" style="flex:1;min-width:130px;">
+                                <div class="saldo-card-label">Hold Reguler</div>
+                                <div class="saldo-card-value">Rp {{ number_format($standardHoldBalance ?? 0, 0, ',', '.') }}</div>
                                 <div class="saldo-card-sub">Hold 3 hari</div>
                             </div>
+                            @if(($ticketEscrowBalance ?? 0) > 0)
+                            <div class="saldo-card escrow" style="flex:100%;min-width:100%;">
+                                <div class="saldo-card-label">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                    Escrow Tiket Event
+                                </div>
+                                <div class="saldo-card-value">Rp {{ number_format($ticketEscrowBalance, 0, ',', '.') }}</div>
+                                <div class="saldo-card-sub">Cair H+3 setelah acara terlaksana</div>
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -616,9 +643,39 @@
                     <div class="alert-notice">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                         <div>
-                            Dana transaksi dapat ditarik setelah <strong>3x24 jam</strong> sejak pembayaran diterima. Pencairan diproses <strong>1-3 hari kerja</strong> tanpa potongan biaya (100% utuh), minimal penarikan <strong>Rp 50.000</strong>.
+                            Dana produk reguler dapat ditarik setelah <strong>3x24 jam</strong> sejak pembayaran diterima. Khusus <strong>tiket event</strong>, dana di-hold hingga <strong>H+3 pasca event</strong> untuk keamanan bersama. Pencairan diproses <strong>1-3 hari kerja</strong> tanpa potongan biaya (100% utuh), minimal penarikan <strong>Rp 50.000</strong>.
                         </div>
                     </div>
+
+                    @if(($ticketEscrowBalance ?? 0) > 0)
+                    {{-- Escrow Security Protection Alert --}}
+                    <div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:14px;padding:1rem 1.15rem;margin-bottom:1.25rem;">
+                        <div style="display:flex;align-items:center;gap:0.5rem;font-weight:800;color:#1e40af;font-size:0.82rem;margin-bottom:0.35rem;">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            Mitigasi Keamanan Dana Event (Escrow Protection)
+                        </div>
+                        <p style="font-size:0.75rem;color:#1e3a8a;line-height:1.5;margin:0 0 0.75rem 0;">
+                            Untuk melindungi pembeli tiket serta menjamin acara terlaksana dengan aman, seluruh hasil penjualan tiket event dikunci di sistem Escrow dan <strong>baru dapat ditarik H+3 setelah tanggal pelaksanaan acara</strong>.
+                        </p>
+                        @if(!empty($upcomingEvents) && count($upcomingEvents) > 0)
+                        <div style="background:#fff;border-radius:10px;border:1px solid #dbeafe;padding:0.6rem 0.85rem;">
+                            <div style="font-size:0.68rem;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem;">Jadwal Pelepasan Dana Event</div>
+                            @foreach($upcomingEvents as $evt)
+                            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;padding:0.35rem 0;border-bottom:1px dashed #f1f5f9;">
+                                <div>
+                                    <span style="font-weight:700;color:#1e293b;">{{ $evt['title'] }}</span>
+                                    <span style="font-size:0.68rem;color:#64748b;margin-left:0.35rem;">(Acara: {{ \Carbon\Carbon::parse($evt['event_date'])->translatedFormat('d M Y') }})</span>
+                                </div>
+                                <div style="text-align:right;">
+                                    <span style="font-weight:700;color:#1e40af;">Rp {{ number_format($evt['escrow_amount'], 0, ',', '.') }}</span>
+                                    <span style="display:block;font-size:0.65rem;color:#059669;font-weight:600;">Cair: {{ \Carbon\Carbon::parse($evt['release_date'])->translatedFormat('d M Y') }}</span>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        @endif
+                    </div>
+                    @endif
 
                     {{-- Saldo Breakdown --}}
                     <div class="breakdown-box">
@@ -626,10 +683,21 @@
                             <span class="breakdown-key">Total Penjualan (GMV)</span>
                             <span class="breakdown-val">Rp {{ number_format($gmv, 0, ',', '.') }}</span>
                         </div>
+                        @if(($standardHoldBalance ?? 0) > 0)
                         <div class="breakdown-row">
-                            <span class="breakdown-key">Saldo Menunggu (3 hari)</span>
-                            <span class="breakdown-val muted">Rp {{ number_format($holdBalance, 0, ',', '.') }}</span>
+                            <span class="breakdown-key">Hold Reguler (3x24 jam)</span>
+                            <span class="breakdown-val muted">Rp {{ number_format($standardHoldBalance, 0, ',', '.') }}</span>
                         </div>
+                        @endif
+                        @if(($ticketEscrowBalance ?? 0) > 0)
+                        <div class="breakdown-row">
+                            <span class="breakdown-key" style="color:#1e40af;font-weight:700;">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline;vertical-align:-1px;margin-right:2px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                Escrow Tiket Event (H+3 Acara)
+                            </span>
+                            <span class="breakdown-val" style="color:#1e40af;font-weight:700;">Rp {{ number_format($ticketEscrowBalance, 0, ',', '.') }}</span>
+                        </div>
+                        @endif
                         <div class="breakdown-row">
                             <span class="breakdown-key">Sudah Dicairkan</span>
                             <span class="breakdown-val muted">Rp {{ number_format($totalPayout, 0, ',', '.') }}</span>

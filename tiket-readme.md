@@ -564,5 +564,87 @@ Setiap check-in tiket kini menyimpan:
 
 ---
 
+## 🛡️ 8. Mitigasi Risiko Fraud & Event Bodong (Anti-Scam Architecture & Post-Event Settlement)
+
+### A. Latar Belakang & Ancaman "Event Bodong"
+Dalam bisnis penjualan tiket acara (*ticketing*), terdapat risiko keamanan kritis bernama **Event Bodong / Fake Event Syndrome**:
+1. Oknum penipu membuat event fiktif (misal: "Konser Band X" yang dijadwalkan 3 bulan ke depan).
+2. Penjualan tiket dibuka dan menghasilkan puluhan hingga ratusan juta rupiah.
+3. Jika platform menggunakan aturan penarikan e-commerce standar (**72 jam setelah pembayaran**), oknum penipu dapat langsung mencairkan seluruh dana ke rekening pribadi hanya 3 hari setelah tiket terjual.
+4. Menjelang hari-H, oknum kabur membawa uang, konser tidak pernah ada, dan ratusan pembeli tiket menuntut pertanggungjawaban hukum kepada Buyle.id.
+
+---
+
+### B. Arsitektur Post-Event Settlement (Escrow Lock H+3)
+Untuk memutus modus ini secara permanen, Buyle.id menerapkan **Post-Event Settlement Policy**:
+
+```
+[ PEMBELI MEMBAYAR TIKET ]
+           │
+           ▼
+[ DANA MASUK REKENING ESCROW BUYLE.ID ] 
+           │
+           ▼
+[ STATUS: TICKET ESCROW BALANCE ] ──► Uang DIKUNCI 100%, Creator TIDAK BISA menarik dana
+           │
+           │  (Menunggu hingga Hari-H Acara...)
+           ▼
+[ HARI-H: CHECK-IN PENONTON VIA GATE SCANNER ] ──► Rekam jejak audit fisik (Proof of Execution)
+           │
+           ▼
+[ MASA DISPUTE / AUDIT: H+1 s/d H+3 ] ──────────► Mengakomodasi keluhan penonton jika ada wanprestasi
+           │
+           ▼
+[ H+3 PASCA EVENT PUKUL 23:59 ] ───────────────► Dana OTOMATIS BERPINDAH ke "Saldo Siap Ditarik"
+           │
+           ▼
+[ CREATOR AJUKAN PENARIKAN (PAYOUT) ] ──────────► Admin Buyle transfer 100% utuh tanpa potongan
+```
+
+---
+
+### C. Logika Backend (`App\Services\SellerBalanceService`)
+Perhitungan saldo creator dihitung secara dinamis dan deterministik:
+
+```php
+// app/Services/SellerBalanceService.php
+$isTicket = ($item->product?->product_type === 'ticket');
+
+if ($isTicket) {
+    $eventDate = $item->product?->event_date;
+    
+    // Clearance: Tanggal event + 3 hari (end of day)
+    $ticketClearance = $eventDate
+        ? Carbon::parse($eventDate)->endOfDay()->addDays(3)
+        : Carbon::parse($paidAt)->addDays(30);
+
+    if ($now->gte($ticketClearance)) {
+        // Acara sudah selesai lewat H+3 -> Dana Siap Ditarik
+        $clearedGmv += $subtotal;
+    } else {
+        // Acara belum selesai -> Masuk Saldo Escrow Tertahan
+        $ticketEscrowBalance += $subtotal;
+    }
+}
+```
+
+---
+
+### D. Peran Gate Scanner sebagai Bukti Acara (Proof of Event Execution)
+Gate Scanner Buyle.id bukan hanya alat verifikasi pengunjung, melainkan instrumen mitigasi hukum (*audit trail*):
+- Setiap tiket yang di-scan mencatat `checked_in_at`, `scanned_at_gate`, dan nama panitia (`scanned_by_staff_name`).
+- Jika sebuah event mengklaim telah sukses terselenggara namun di database log Gate Scanner memiliki **0 check-in**, Admin Buyle.id berhak membekukan dana escrow untuk investigasi lanjutan.
+- Log scan menjadi bukti otentik yang melindungi platform dari klaim sengketa perdata maupun pidana.
+
+---
+
+### E. Protokol Pembatalan Acara & Pengembalian Dana (Zero-Loss Guarantee)
+Jika penyelenggara mengumumkan pembatalan konser, atau event terbukti bodong sebelum H+3:
+1. **Kas Buyle.id 100% Aman**: Karena dana tiket tidak pernah dicairkan ke creator, Buyle.id tidak mengalami kerugian finansial sepeser pun.
+2. **Refund Otomatis ke Pembeli**: Platform memiliki likuiditas penuh untuk mengembalikan dana 100% kepada setiap pembeli tiket secara tertib.
+3. **Akuntabilitas Creator**: Akun creator bersangkutan langsung dibekukan (*banned*) dan nomor rekeningnya di-blacklist dari sistem Buyle.id.
+
+---
+
 *Dokumentasi ini dibuat otomatis agar developer atau AI agent berikutnya memiliki gambaran utuh tanpa ada detail teknis yang terlewat.*
 
