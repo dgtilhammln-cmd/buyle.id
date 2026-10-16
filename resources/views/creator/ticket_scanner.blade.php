@@ -811,11 +811,9 @@
         {{-- TAB 0: PENGATURAN & VERIFIKASI e-KYC --}}
         @include('creator.partials.kyc_tab')
 
-        {{-- NOTICE: Fitur Scanner hanya untuk creator terverifikasi --}}
-        {{-- Hanya tampil jika belum ada KYC (none) atau KYC ditolak (rejected) --}}
-        {{-- Status pending: kyc_tab sudah menampilkan card "Sedang Ditinjau", tidak perlu card ganda --}}
-        @if(!isset($kyc) || is_null($kyc) || $kyc->status === 'rejected' || (isset($kyc->status) && !in_array($kyc->status, ['verified', 'pending'])))
-        <div id="tab-unverified-notice" style="display: block;">
+        {{-- NOTICE: Fitur Scanner hanya untuk creator yang belum terverifikasi DAN sedang membuka tab selain Pengaturan e-KYC --}}
+        @if((!isset($kyc) || is_null($kyc) || $kyc->status !== 'verified') && $activeTab !== 'settings')
+        <div id="tab-unverified-notice" class="payout-tab-pane" style="display: block;">
             <div style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1.5px solid #fcd34d; border-radius: 18px; padding: 1.75rem 1.5rem; text-align: center; margin-top: 0.5rem;">
                 <div style="width: 56px; height: 56px; background: #fef3c7; border: 2px solid #fcd34d; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
                     <svg width="28" height="28" fill="none" stroke="#d97706" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>
@@ -826,12 +824,6 @@
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>
                     Lengkapi e-KYC Sekarang
                 </button>
-                @if(isset($kyc) && $kyc->status === 'rejected')
-                <p style="font-size: 0.75rem; color: #991b1b; margin-top: 0.85rem; background: #fee2e2; padding: 0.5rem 0.85rem; border-radius: 8px; display: inline-block; font-weight: 600;">
-                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline;vertical-align:-1px;margin-right:3px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                    KYC Anda ditolak. Silakan ajukan ulang dengan data yang valid.
-                </p>
-                @endif
             </div>
         </div>
         @endif

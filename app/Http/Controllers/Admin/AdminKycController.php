@@ -119,35 +119,67 @@ class AdminKycController extends Controller
 
     public function approve(Request $request, CreatorKyc $kyc)
     {
+        $adminId = auth()->id() ?? session('admin_id');
+
         $kyc->update([
             'status'           => 'verified',
             'reviewed_at'      => now(),
-            'reviewed_by'      => auth()->id(),
+            'reviewed_by'      => $adminId,
             'rejection_reason' => null,
         ]);
 
         // Sinkronisasi status terverifikasi di Profil Creator
-        if ($kyc->user && $kyc->user->creatorProfile) {
-            $kyc->user->creatorProfile->update(['is_verified' => true]);
+        if ($kyc->user) {
+            if ($kyc->user->creatorProfile) {
+                $kyc->user->creatorProfile->update(['is_verified' => true]);
+            } else {
+                $kyc->user->creatorProfile()->create([
+                    'store_name'  => $kyc->user->name ?? 'Creator Buyle',
+                    'store_slug'  => $kyc->user->username ?? ('creator-' . $kyc->user->id),
+                    'is_verified' => true,
+                ]);
+            }
         }
 
-        return response()->json([
-            'success' => true, 
-            'message' => 'e-KYC Creator berhasil disetujui! Status profil creator telah disinkronkan menjadi Terverifikasi.'
-        ]);
+        $message = 'e-KYC Creator berhasil disetujui! Status profil creator telah disinkronkan menjadi Terverifikasi.';
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+        }
+
+        return redirect()->route('admin.kyc.show', $kyc)->with('success', $message);
     }
 
     public function reject(Request $request, CreatorKyc $kyc)
     {
         $request->validate(['reason' => 'required|string|min:10|max:1000']);
 
+        $adminId = auth()->id() ?? session('admin_id');
+
         $kyc->update([
             'status'           => 'rejected',
             'reviewed_at'      => now(),
-            'reviewed_by'      => auth()->id(),
+            'reviewed_by'      => $adminId,
             'rejection_reason' => $request->reason,
         ]);
 
-        return response()->json(['success' => true, 'message' => 'Pengajuan ditolak.']);
+        // Nonaktifkan status verifikasi di profil jika ditolak
+        if ($kyc->user && $kyc->user->creatorProfile) {
+            $kyc->user->creatorProfile->update(['is_verified' => false]);
+        }
+
+        $message = 'Pengajuan e-KYC berhasil ditolak.';
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+        }
+
+        return redirect()->route('admin.kyc.show', $kyc)->with('success', $message);
     }
 }

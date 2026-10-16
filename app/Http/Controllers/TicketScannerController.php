@@ -113,6 +113,9 @@ class TicketScannerController extends Controller
         }
 
         $kyc = \App\Models\CreatorKyc::where('user_id', $sellerId)->first();
+        if ((!$kyc || $kyc->status !== 'verified') && !$request->has('tab')) {
+            $activeTab = 'settings';
+        }
 
         $seo = [
             'title'   => 'Scan Tiket & Data Kehadiran · Creator Studio',

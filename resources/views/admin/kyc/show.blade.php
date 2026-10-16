@@ -103,21 +103,68 @@
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
                         <span>Keputusan Verifikasi</span>
                     </div>
+                    @if($kyc->status === 'verified')
+                        <span class="badge-subtle" style="background:#dcfce7; color:#166534; font-weight:700;">Status: Disetujui</span>
+                    @elseif($kyc->status === 'rejected')
+                        <span class="badge-subtle" style="background:#fee2e2; color:#991b1b; font-weight:700;">Status: Ditolak</span>
+                    @else
+                        <span class="badge-subtle" style="background:#fef3c7; color:#92400e; font-weight:700;">Status: Menunggu Review</span>
+                    @endif
                 </div>
                 <div class="card-body">
-                    <p class="actions-hint">
-                        Pastikan keaslian foto KTP dan kesesuaian wajah pada foto biometrik liveness sebelum menyetujui. Setelah disetujui, akun creator akan mendapatkan hak penerbitan tiket dan pencairan saldo.
-                    </p>
-                    <div class="action-buttons-wrap">
-                        <button type="button" class="btn-approve" onclick="confirmApprove()">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                            <span>Setujui Verifikasi</span>
-                        </button>
-                        <button type="button" class="btn-reject" onclick="openRejectModal()">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                            <span>Tolak Permohonan</span>
-                        </button>
-                    </div>
+                    @if($kyc->status === 'verified')
+                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:1rem; margin-bottom:1rem;">
+                            <div style="display:flex; align-items:center; gap:0.5rem; color:#166534; font-weight:700; font-size:0.9rem;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>e-KYC Creator Ini Telah Disetujui Resmi</span>
+                            </div>
+                            <div style="font-size:0.8rem; color:#15803d; margin-top:0.35rem; line-height:1.45;">
+                                Diverifikasi pada {{ $kyc->reviewed_at ? $kyc->reviewed_at->format('d M Y H:i') : '-' }} WIB
+                                @if($kyc->reviewer) oleh {{ $kyc->reviewer->name }} @endif.
+                                Seluruh hak akses fitur Gatekeeper Studio & pencairan saldo telah aktif secara penuh.
+                            </div>
+                        </div>
+                        <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
+                            <button type="button" class="btn-reject" onclick="openRejectModal()" style="font-size:0.8rem; padding:0.55rem 1rem;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                <span>Batalkan & Tolak Verifikasi</span>
+                            </button>
+                        </div>
+                    @elseif($kyc->status === 'rejected')
+                        <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:1rem; margin-bottom:1rem;">
+                            <div style="display:flex; align-items:center; gap:0.5rem; color:#991b1b; font-weight:700; font-size:0.9rem;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                                <span>Pengajuan Ini Sedang Dalam Status Ditolak</span>
+                            </div>
+                            <div style="font-size:0.8rem; color:#7f1d1d; margin-top:0.35rem; line-height:1.45;">
+                                <strong>Alasan Penolakan:</strong> {{ $kyc->rejection_reason }}
+                            </div>
+                        </div>
+                        <div class="action-buttons-wrap">
+                            <button type="button" class="btn-approve" onclick="openApproveModal()">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Setujui Ulang Verifikasi</span>
+                            </button>
+                            <button type="button" class="btn-reject" onclick="openRejectModal()">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                <span>Perbarui Alasan Penolakan</span>
+                            </button>
+                        </div>
+                    @else
+                        <p class="actions-hint">
+                            Pastikan keaslian foto KTP dan kesesuaian wajah pada foto biometrik liveness sebelum menyetujui. Setelah disetujui, akun creator akan mendapatkan hak penerbitan tiket dan pencairan saldo.
+                        </p>
+                        <div class="action-buttons-wrap">
+                            <button type="button" class="btn-approve" onclick="openApproveModal()">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Setujui Verifikasi</span>
+                            </button>
+                            <button type="button" class="btn-reject" onclick="openRejectModal()">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                <span>Tolak Permohonan</span>
+                            </button>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -399,6 +446,35 @@
         </div>
         <div class="kyc-modal-body">
             <img id="modalPhotoImage" src="" alt="Pratinjau" class="modal-full-img">
+        </div>
+    </div>
+</div>
+
+<!-- Modal Approve Confirmation -->
+<div id="approveModal" class="kyc-modal" style="display:none;" onclick="closeApproveModal(event)">
+    <div class="kyc-modal-dialog small" onclick="event.stopPropagation()">
+        <div class="kyc-modal-header">
+            <h3 class="modal-heading">Konfirmasi Persetujuan e-KYC</h3>
+            <button type="button" class="btn-close-modal" onclick="closeApproveModal()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="kyc-modal-body">
+            <div style="display:flex; gap:0.85rem; align-items:flex-start; margin-bottom:1.25rem;">
+                <div style="width:42px; height:42px; border-radius:50%; background:#dcfce7; display:flex; align-items:center; justify-content:center; flex-shrink:0; border:1px solid #bbf7d0;">
+                    <svg width="22" height="22" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                    <h4 style="margin:0 0 0.35rem 0; font-size:0.95rem; font-weight:800; color:#0f172a;">Setujui Verifikasi Identitas Creator?</h4>
+                    <p class="modal-desc" style="margin:0; line-height:1.5;">
+                        Setelah disetujui, akun creator <strong>{{ $kyc->full_name ?? ($kyc->user->name ?? 'Creator') }}</strong> (NIK: <code>{{ $kyc->nik }}</code>) akan langsung berstatus <strong>Terverifikasi Resmi</strong>. Fitur Scanner, Manajemen Event, dan Pencairan Dana akan segera aktif.
+                    </p>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel" onclick="closeApproveModal()">Batal</button>
+                <button type="button" class="btn-modal-submit-approve" id="btnSubmitApprove" onclick="submitApprove()" style="background:#16a34a; color:#fff; border:none; border-radius:8px; padding:0.6rem 1.25rem; font-size:0.8125rem; font-weight:700; cursor:pointer; transition:background 0.2s ease;">Ya, Setujui Sekarang</button>
+            </div>
         </div>
     </div>
 </div>
@@ -949,10 +1025,20 @@ function closeRejectModal(e) {
     }
 }
 
-function confirmApprove() {
-    if (!confirm('Apakah Anda yakin ingin menyetujui verifikasi identitas creator ini?')) {
-        return;
+function openApproveModal() {
+    document.getElementById('approveModal').style.display = 'flex';
+}
+
+function closeApproveModal(e) {
+    if (!e || e.target === document.getElementById('approveModal') || e.target.closest('.btn-close-modal') || e.target.closest('.btn-modal-cancel')) {
+        document.getElementById('approveModal').style.display = 'none';
     }
+}
+
+function submitApprove() {
+    const btn = document.getElementById('btnSubmitApprove');
+    btn.disabled = true;
+    btn.textContent = 'Memproses...';
 
     const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
@@ -962,19 +1048,33 @@ function confirmApprove() {
             'X-CSRF-TOKEN': csrf,
             'Content-Type': 'application/json',
             'Accept': 'application/json'
-        }
+        },
+        body: JSON.stringify({ _token: csrf })
     })
-    .then(res => res.json())
+    .then(async res => {
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+            throw new Error(data.message || ('Server error (' + res.status + ')'));
+        }
+        return data;
+    })
     .then(data => {
         if (data.success) {
-            alert(data.message);
-            window.location.reload();
+            btn.textContent = 'Berhasil Disetujui!';
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
         } else {
             alert(data.message || 'Gagal menyetujui verifikasi.');
+            btn.disabled = false;
+            btn.textContent = 'Ya, Setujui Sekarang';
         }
     })
     .catch(err => {
-        alert('Terjadi kesalahan koneksi.');
+        console.error('Approve error:', err);
+        alert('Terjadi kendala saat menyetujui verifikasi: ' + err.message);
+        btn.disabled = false;
+        btn.textContent = 'Ya, Setujui Sekarang';
     });
 }
 
@@ -998,13 +1098,21 @@ function submitReject() {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        body: JSON.stringify({ reason: reason })
+        body: JSON.stringify({ reason: reason, _token: csrf })
     })
-    .then(res => res.json())
+    .then(async res => {
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+            throw new Error(data.message || ('Server error (' + res.status + ')'));
+        }
+        return data;
+    })
     .then(data => {
         if (data.success) {
-            alert(data.message);
-            window.location.reload();
+            btn.textContent = 'Berhasil Ditolak!';
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
         } else {
             alert(data.message || 'Gagal menolak verifikasi.');
             btn.disabled = false;
@@ -1012,7 +1120,8 @@ function submitReject() {
         }
     })
     .catch(err => {
-        alert('Terjadi kesalahan koneksi.');
+        console.error('Reject error:', err);
+        alert('Terjadi kendala saat menolak verifikasi: ' + err.message);
         btn.disabled = false;
         btn.textContent = 'Kirim Penolakan';
     });
