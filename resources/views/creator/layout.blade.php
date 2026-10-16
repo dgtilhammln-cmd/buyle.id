@@ -865,22 +865,6 @@
                 </svg> @endif
             </a>
 
-            <a href="{{ $isBuyer ? '#' : route('creator.payout.settings') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.payout*') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="2" y="6" width="20" height="12" rx="2" />
-                    <circle cx="16" cy="12" r="2" />
-                    <path d="M6 12h.01" />
-                </svg>
-                Saldo & Pencairan
-                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" style="margin-left:auto;opacity:0.7;">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg> @endif
-            </a>
-
             <a href="{{ $isBuyer ? '#' : route('creator.ticket.scanner') }}"
                 onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.ticket.scanner*') ? 'active' : '' }}">

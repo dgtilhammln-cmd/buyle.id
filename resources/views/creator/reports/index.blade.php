@@ -1143,15 +1143,24 @@
                         <div class="sm-value">{{ number_format($totalVisitors) }}</div>
                     </div>
                 </div>
-                <div class="stat-mini-card">
-                    <div class="sm-icon blue">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <a href="{{ route('creator.payout.settings') }}" class="stat-mini-card stat-mini-card-payout" style="text-decoration:none;position:relative;border:1.5px solid #86efac;background:linear-gradient(135deg,#ffffff 0%,#f0fdf4 100%);cursor:pointer;">
+                    <div class="sm-icon green" style="background:#dcfce7;color:#15803d;box-shadow:0 2px 8px rgba(22,163,74,0.15);">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
                     </div>
-                    <div>
-                        <div class="sm-label">Unique Visitor</div>
-                        <div class="sm-value">{{ number_format($uniqueVisitors) }}</div>
+                    <div style="flex:1;min-width:0;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:0.3rem;">
+                            <div class="sm-label" style="color:#15803d;font-weight:800;">Saldo Siap Ditarik</div>
+                            <span style="background:#16a34a;color:#fff;font-size:0.6rem;font-weight:800;padding:0.15rem 0.45rem;border-radius:6px;letter-spacing:0.02em;">TARIK</span>
+                        </div>
+                        <div class="sm-value" style="color:#14532d;font-size:1.15rem;">
+                            Rp {{ number_format($availableBalance ?? 0, 0, ',', '.') }}
+                        </div>
+                        <div style="font-size:0.68rem;color:#16a34a;font-weight:600;display:flex;align-items:center;gap:0.25rem;margin-top:0.15rem;">
+                            <span>100% Tanpa Potongan</span>
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                        </div>
                     </div>
-                </div>
+                </a>
                 <div class="stat-mini-card">
                     <div class="sm-icon purple">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
