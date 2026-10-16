@@ -295,7 +295,23 @@
         box-shadow: none !important;
     }
 
+    .guest-benefit-desktop {
+        display: block !important;
+    }
+
+    .guest-benefit-mobile {
+        display: none !important;
+    }
+
     @media(max-width:991px) {
+        .guest-benefit-desktop {
+            display: none !important;
+        }
+
+        .guest-benefit-mobile {
+            display: flex !important;
+        }
+
         .co-grid {
             grid-template-columns: 1fr;
         }
@@ -529,14 +545,62 @@
         </div>
     @endif
 
+    @php
+        // Cek apakah ada produk gratis dengan syarat follow/join di keranjang
+        $hasFreeRequirements = false;
+        $claimSteps = [];
+        foreach ($summary['items'] as $itemIdx => $item) {
+            if ($item->product && $item->product->require_follow_join && $summary['subtotal'] <= 0) {
+                $activeReqs = method_exists($item->product, 'getActiveFreeRequirements') 
+                    ? $item->product->getActiveFreeRequirements() 
+                    : [];
+                if (!empty($activeReqs)) {
+                    $hasFreeRequirements = true;
+                    foreach ($activeReqs as $rIdx => $r) {
+                        $claimSteps[] = array_merge($r, [
+                            'step_id' => $r['key'] . '_' . $itemIdx . '_' . $rIdx,
+                            'product_name' => $item->product->name,
+                        ]);
+                    }
+                }
+            }
+        }
+    @endphp
+
     <form action="{{ route('checkout.store') }}" method="POST" id="checkoutForm">
         @csrf
         <div class="co-grid">
             <div class="co-left">
 
                 @guest
-                    {{-- BENEFIT CARD (IMING-IMING AKUN GEN Z) --}}
-                    <div
+                    {{-- 1. TAMPILAN MOBILE (MINIMALIS 1 BARIS) --}}
+                    <div class="guest-benefit-mobile"
+                        style="background: #F0FDF4; border: 1.5px solid #86EFAC; border-radius: 12px; padding: 0.55rem 0.85rem; margin-bottom: 0.85rem; align-items: center; justify-content: space-between; gap: 0.5rem; box-shadow: 0 2px 6px rgba(30,179,73,0.06); height: 46px; box-sizing: border-box;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; min-width: 0; flex: 1;">
+                            <div style="width: 26px; height: 26px; border-radius: 7px; background: #DCFCE7; color: #15803D; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <path d="M20 12v10H4V12"/>
+                                    <path d="M22 7H2v5h20V7z"/>
+                                    <path d="M12 22V7"/>
+                                    <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+                                    <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+                                </svg>
+                            </div>
+                            <div style="font-size: 0.76rem; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2;">
+                                <strong>Punya akun?</strong> <span style="color: #64748B;">Masuk agar file tersimpan</span>
+                            </div>
+                        </div>
+                        <a href="{{ route('checkout.login') }}"
+                            style="padding: 0.38rem 0.75rem; font-size: 0.72rem; font-weight: 700; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #fff; border-radius: 7px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem; flex-shrink: 0; box-shadow: 0 2px 6px rgba(30,179,73,0.2); white-space: nowrap;">
+                            <span>Masuk</span>
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    {{-- 2. TAMPILAN DESKTOP (LENGKAP DENGAN BENEFIT CARD) --}}
+                    <div class="guest-benefit-desktop"
                         style="background: linear-gradient(135deg, #EFF6FF, #F0FDF4); border: 1.5px solid #6EE7B7; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.5rem; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(30,179,73,0.08);">
                         <div
                             style="display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
@@ -609,6 +673,7 @@
                             </div>
                         </div>
                     </div>
+                @endguest
 
                     {{-- GUEST CHECKOUT / FORM SIMPEL DIRECT --}}
                     <div class="co-section" style="margin-bottom:1.5rem;">
@@ -636,7 +701,7 @@
                             </div>
                             <div style="font-size:0.82rem; color:#78350F; line-height:1.45;">
                                 <strong>Double Check Kontak Kamu Ya!</strong><br>
-                                Pastikan <strong>Email & No. WhatsApp aktif</strong> dan bebas dari salah ketik. Link akses
+                                Pastikan <strong>Email aktif</strong> dan bebas dari salah ketik. Link akses
                                 / file digital kamu akan <u>langsung dikirimkan otomatis</u> ke kontak ini setelah bayar.
                             </div>
                         </div>
@@ -1078,7 +1143,7 @@
                                                     viewBox="0 0 24 24">
                                                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                                                 </svg>
-                                                NIK dienkripsi & disimpan aman.
+                                                NIK dienkripsi & disimpan aman. Ditampilkan dalam format tersensor kepada panitia.
                                             </div>
                                         </div>
 
@@ -1110,21 +1175,91 @@
                     </div>
                 @endif
 
-                {{-- CATATAN --}}
-                <div class="co-section">
-                    <div class="co-section-title">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                        </svg>
-                        Catatan Pesanan (Opsional)
+                @if($summary['subtotal'] <= 0 && $hasFreeRequirements)
+                    {{-- SYARAT KLAIM PRODUK GRATIS (LEAD MAGNET) --}}
+                    <div class="co-section" id="freeClaimRequirementsSection" style="margin-bottom:1.5rem; border: 1.5px solid #86EFAC; background: #FAFCF8;">
+                        <div class="co-section-title" style="color: #15803D; margin-bottom: 0.5rem;">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <polyline points="9 12 11 14 15 10"/>
+                            </svg>
+                            Syarat Klaim Produk Gratis ({{ count($claimSteps) }})
+                        </div>
+                        <p style="font-size: 0.82rem; color: #475569; margin: 0 0 1rem; line-height: 1.45;">
+                            Kreator memberikan produk ini secara gratis sebagai apresiasi. Silakan selesaikan syarat di bawah ini untuk membuka akses:
+                        </p>
+
+                        <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+                            @foreach($claimSteps as $step)
+                            <div class="claim-step" id="step_{{ $step['step_id'] }}" data-type="timer" data-step-key="{{ $step['step_id'] }}"
+                                style="background:#fff; border:1.5px solid #E2E8F0; border-radius:12px; padding:0.85rem 1rem; transition:all 0.25s; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                                <div style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; flex-wrap:wrap;">
+                                    <div style="display:flex; align-items:center; gap:0.75rem; min-width:200px; flex:1;">
+                                        <div id="ico_{{ $step['step_id'] }}"
+                                            style="width:38px; height:38px; border-radius:10px; background:#F1F5F9; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.3s;">
+                                            @if($step['icon'] === 'instagram')
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                                            @elseif($step['icon'] === 'tiktok')
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="#000000"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.29 0 .57.04.84.11V9.41a6.33 6.33 0 0 0-.84-.06 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V9.05a8.27 8.27 0 0 0 4.77 1.52V7.12a4.85 4.85 0 0 1-1-.43z"/></svg>
+                                            @elseif($step['icon'] === 'x')
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="#000000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                            @elseif($step['icon'] === 'youtube')
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                                            @elseif($step['icon'] === 'whatsapp')
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+                                            @elseif($step['icon'] === 'telegram')
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="#0088cc"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.96 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                                            @elseif($step['icon'] === 'discord')
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                                            @else
+                                                <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <div style="font-size:0.875rem; font-weight:700; color:#0F172A;">{{ $step['label'] }}</div>
+                                            <div style="font-size:0.75rem; color:#64748B;">{{ $step['sublabel'] }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div style="display:flex; align-items:center; gap:0.5rem; flex-shrink:0;">
+                                        <span id="timer_{{ $step['step_id'] }}"
+                                            style="display:none; font-size:0.75rem; font-weight:700; color:#B45309; background:#FEF3C7; padding:0.35rem 0.65rem; border-radius:8px;">
+                                            <span id="timer_{{ $step['step_id'] }}_txt">Verifikasi dalam 5 detik...</span>
+                                        </span>
+                                        <a href="{{ $step['url'] }}" target="_blank" rel="noopener noreferrer"
+                                            onclick="startTimer('{{ $step['step_id'] }}')"
+                                            id="btn_{{ $step['step_id'] }}"
+                                            style="padding:0.45rem 1rem; border-radius:8px; font-size:0.8rem; font-weight:700; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; text-decoration:none; display:inline-flex; align-items:center; gap:0.35rem; box-shadow:0 2px 8px rgba(30,179,73,0.25); white-space:nowrap;">
+                                            <span>{{ $step['action'] }}</span>
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
                     </div>
-                    <div class="form-group mb-0">
-                        <textarea name="notes" id="notes_input" class="form-input" rows="2"
-                            placeholder="Tuliskan pesan atau instruksi tambahan jika ada..."></textarea>
+                @endif
+
+                @if($summary['checkout_type'] !== 'digital')
+                    {{-- CATATAN PESANAN (Hanya untuk produk barang fisik / makanan, di-hide untuk digital) --}}
+                    <div class="co-section">
+                        <div class="co-section-title">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            </svg>
+                            Catatan Pesanan (Opsional)
+                        </div>
+                        <div class="form-group mb-0">
+                            <textarea name="notes" id="notes_input" class="form-input" rows="2"
+                                placeholder="Tuliskan pesan atau instruksi tambahan jika ada..."></textarea>
+                        </div>
                     </div>
-                </div>
+                @else
+                    <input type="hidden" name="notes" id="notes_input" value="">
+                @endif
             </div>
 
             <div class="co-right">
@@ -1326,108 +1461,6 @@
                         </div>
                     </div>
 
-
-                    @php
-                        // Cek apakah ada produk gratis dengan syarat follow/join di keranjang
-                        $hasFreeRequirements = false;
-                        $claimSteps = [];
-                        foreach ($summary['items'] as $itemIdx => $item) {
-                            if ($item->product && $item->product->require_follow_join && $summary['subtotal'] <= 0) {
-                                $activeReqs = method_exists($item->product, 'getActiveFreeRequirements') 
-                                    ? $item->product->getActiveFreeRequirements() 
-                                    : [];
-                                if (!empty($activeReqs)) {
-                                    $hasFreeRequirements = true;
-                                    foreach ($activeReqs as $rIdx => $r) {
-                                        $claimSteps[] = array_merge($r, [
-                                            'step_id' => $r['key'] . '_' . $itemIdx . '_' . $rIdx,
-                                            'product_name' => $item->product->name,
-                                        ]);
-                                    }
-                                }
-                            }
-                        }
-                        $needRegister = $summary['subtotal'] <= 0;
-                    @endphp
-
-                    @if($summary['subtotal'] <= 0 && $hasFreeRequirements)
-                    {{-- === SYARAT KLAIM GRATIS === --}}
-                    <div id="freeClaimRequirements" style="margin-top:1.25rem;">
-                        <div style="font-size:0.72rem;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:0.65rem;display:flex;align-items:center;gap:0.4rem;">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-                            Selesaikan Syarat Klaim ({{ count($claimSteps) }})
-                        </div>
-
-                        @foreach($claimSteps as $step)
-                        <div class="claim-step" id="step_{{ $step['step_id'] }}" data-type="timer" data-step-key="{{ $step['step_id'] }}" style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:0.85rem 1rem;margin-bottom:0.6rem;transition:all 0.25s;">
-                            <div style="display:flex;align-items:center;gap:0.65rem;">
-                                <div id="ico_{{ $step['step_id'] }}" style="width:34px;height:34px;border-radius:10px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s;">
-                                    @if($step['icon'] === 'instagram')
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                                    @elseif($step['icon'] === 'tiktok')
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#000000"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.29 0 .57.04.84.11V9.41a6.33 6.33 0 0 0-.84-.06 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V9.05a8.27 8.27 0 0 0 4.77 1.52V7.12a4.85 4.85 0 0 1-1-.43z"/></svg>
-                                    @elseif($step['icon'] === 'x')
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#000000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                                    @elseif($step['icon'] === 'youtube')
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                                    @elseif($step['icon'] === 'whatsapp')
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
-                                    @elseif($step['icon'] === 'telegram')
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#229ED9"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-                                    @elseif($step['icon'] === 'discord')
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-                                    @else
-                                        <svg width="18" height="18" fill="none" stroke="#16a34a" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-                                    @endif
-                                </div>
-                                <div style="flex:1;min-width:0;">
-                                    <div style="font-size:0.8rem;font-weight:700;color:#0f172a;">{{ $step['label'] }}</div>
-                                    <div style="font-size:0.72rem;color:#64748b;margin-top:1px;">{{ $step['sublabel'] }}</div>
-                                </div>
-                                <a href="{{ $step['url'] }}" target="_blank" rel="noopener"
-                                   id="btn_{{ $step['step_id'] }}"
-                                   onclick="startTimer('{{ $step['step_id'] }}')"
-                                   style="flex-shrink:0;padding:0.4rem 0.85rem;border-radius:8px;font-size:0.75rem;font-weight:700;background:linear-gradient(135deg,#1eb349,#a5cf37);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:0.35rem;transition:opacity 0.2s;">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                                    {{ $step['action'] }}
-                                </a>
-                            </div>
-                            <div id="timer_{{ $step['step_id'] }}" style="display:none;margin-top:0.6rem;padding:0.45rem 0.65rem;background:#fffbeb;border-radius:8px;font-size:0.72rem;color:#92400e;align-items:center;gap:0.4rem;">
-                                <svg width="12" height="12" fill="none" stroke="#d97706" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                <span id="timer_{{ $step['step_id'] }}_txt">Tunggu sebentar setelah klik {{ $step['action'] }}...</span>
-                            </div>
-                        </div>
-                        @endforeach
-
-                        {{-- Syarat 3: Register / Login --}}
-                        @guest
-                        <div class="claim-step" id="step_register" style="background:#fef2f2;border:1.5px solid #fca5a5;border-radius:12px;padding:0.85rem 1rem;margin-bottom:0.6rem;">
-                            <div style="display:flex;align-items:center;gap:0.65rem;">
-                                <div style="width:32px;height:32px;border-radius:8px;background:#fee2e2;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                                    <svg width="16" height="16" fill="none" stroke="#dc2626" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                                </div>
-                                <div style="flex:1;min-width:0;">
-                                    <div style="font-size:0.8rem;font-weight:700;color:#991b1b;">Wajib Login / Daftar</div>
-                                    <div style="font-size:0.72rem;color:#b91c1c;margin-top:1px;">Akun diperlukan untuk klaim produk gratis</div>
-                                </div>
-                                <a href="{{ route('login') }}?redirect={{ urlencode(url()->current()) }}"
-                                   style="flex-shrink:0;padding:0.4rem 0.75rem;border-radius:8px;font-size:0.75rem;font-weight:700;background:#dc2626;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:0.35rem;">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                                    Login
-                                </a>
-                            </div>
-                        </div>
-                        @endguest
-
-                        @auth
-                        <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:0.7rem 1rem;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.65rem;">
-                            <svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                            <span style="font-size:0.78rem;font-weight:600;color:#166534;">Sudah masuk sebagai <strong>{{ auth()->user()->name }}</strong></span>
-                        </div>
-                        @endauth
-                    </div>
-                    @endif
-
                     <div class="checkout-sticky-footer" style="margin-top: 1.5rem;">
                         <div class="summary-total" style="margin-top:0; padding-top:1rem;">
                             <span>Total Belanja</span>
@@ -1441,14 +1474,12 @@
                         </div>
                         @if($summary['subtotal'] <= 0)
                             @if($hasFreeRequirements && auth()->guest())
-                                {{-- Harus login dulu --}}
-                                <button type="button" id="btn-claim-free"
-                                    style="display:block;width:100%;background:#94a3b8;color:#fff;border:none;border-radius:999px;padding:1rem;font-size:1rem;font-weight:700;cursor:not-allowed;text-align:center;margin-top:1.5rem;box-shadow:none;opacity:0.7;"
-                                    disabled>
-                                    Login untuk Klaim Gratis
-                                </button>
+                                <a href="{{ route('checkout.login') }}" id="btn-claim-free"
+                                    style="display:flex;align-items:center;justify-content:center;gap:0.5rem;width:100%;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:12px;padding:0.9rem;font-size:0.95rem;font-weight:800;text-decoration:none;text-align:center;box-shadow:0 4px 15px rgba(245,158,11,0.25);">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                                    <span>Masuk untuk Klaim Gratis</span>
+                                </a>
                             @elseif($hasFreeRequirements)
-                                {{-- Ada syarat follow/join, tombol dikontrol JS --}}
                                 <button type="submit" id="btn-claim-free" class="btn-pay" onclick="prepareSubmit(event)"
                                     style="background:#94a3b8;cursor:not-allowed;box-shadow:none;"
                                     disabled>
@@ -1462,7 +1493,6 @@
                             <button type="submit" class="btn-pay" onclick="prepareSubmit(event)">Pilih Pembayaran</button>
                         @endif
                     </div>
-
 
                     <div class="secure-badge"
                         style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:1.5rem;color:var(--c-muted);font-size:0.75rem;">
@@ -2642,21 +2672,20 @@
     });
 
     // ──────────────────────────────────────────────────────────
-    // FREE CLAIM REQUIREMENTS — Psychology Timer (5 detik)
+    // FREE CLAIM REQUIREMENTS — Verification Timer (5 detik)
     // ──────────────────────────────────────────────────────────
-    const FREE_TIMER_MS = 5000; // 5 detik
-    const freeTimerState = {}; // { 'follow_0': true, 'join_0': true, ... }
+    const FREE_TIMER_MS = 5000;
+    const freeTimerState = {};
 
-    function startTimer(typeOrKey, idx) {
-        const key = idx !== undefined ? (typeOrKey + '_' + idx) : typeOrKey;
-        if (freeTimerState[key]) return; // sudah lolos, skip
+    function startTimer(stepId) {
+        if (freeTimerState[stepId]) return;
 
-        const timerEl   = document.getElementById('timer_' + key);
-        const timerTxt  = document.getElementById('timer_' + key + '_txt') || document.getElementById('timer_' + key + '_txt');
-        const icoEl     = document.getElementById('ico_' + key);
+        const timerEl = document.getElementById('timer_' + stepId);
+        const timerTxt = document.getElementById('timer_' + stepId + '_txt');
+        const icoEl = document.getElementById('ico_' + stepId);
 
         if (timerEl) {
-            timerEl.style.display = 'flex';
+            timerEl.style.display = 'inline-flex';
         }
 
         let remaining = Math.ceil(FREE_TIMER_MS / 1000);
@@ -2668,26 +2697,23 @@
                 if (timerTxt) timerTxt.textContent = 'Verifikasi dalam ' + remaining + ' detik...';
             } else {
                 clearInterval(interval);
-                freeTimerState[key] = true;
+                freeTimerState[stepId] = true;
 
-                // Update icon to green check
                 if (icoEl) {
-                    icoEl.style.background = '#dcfce7';
-                    icoEl.innerHTML = '<svg width="18" height="18" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+                    icoEl.style.background = '#DCFCE7';
+                    icoEl.innerHTML = '<svg width="20" height="20" fill="none" stroke="#16A34A" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
                 }
 
-                // Update step border to green
-                const stepEl = document.getElementById('step_' + key);
+                const stepEl = document.getElementById('step_' + stepId);
                 if (stepEl) {
-                    stepEl.style.background = '#f0fdf4';
-                    stepEl.style.borderColor = '#86efac';
+                    stepEl.style.background = '#F0FDF4';
+                    stepEl.style.borderColor = '#86EFAC';
                 }
 
-                // Update timer text
-                if (timerTxt) timerTxt.textContent = 'Selesai — terima kasih!';
+                if (timerTxt) timerTxt.textContent = '✓ Terverifikasi';
                 if (timerEl) {
-                    timerEl.style.background = '#f0fdf4';
-                    timerEl.style.color = '#166534';
+                    timerEl.style.background = '#DCFCE7';
+                    timerEl.style.color = '#15803D';
                 }
 
                 checkAllFreeRequirements();
@@ -2697,20 +2723,19 @@
 
     function checkAllFreeRequirements() {
         const btn = document.getElementById('btn-claim-free');
-        if (!btn) return;
+        if (!btn || btn.tagName.toLowerCase() === 'a') return;
 
-        // Kumpulkan semua step yang perlu divalidasi
         const allSteps = document.querySelectorAll('.claim-step[data-type="timer"]');
         let allDone = true;
 
         allSteps.forEach(function (step) {
-            const key = step.getAttribute('data-step-key') || step.id.replace('step_', '');
+            const key = step.getAttribute('data-step-key');
             if (!freeTimerState[key]) allDone = false;
         });
 
         if (allDone && allSteps.length > 0) {
             btn.disabled = false;
-            btn.style.background = 'linear-gradient(135deg,#16a34a,#22c55e)';
+            btn.style.background = 'linear-gradient(135deg,#1eb349,#a5cf37)';
             btn.style.cursor = 'pointer';
             btn.style.boxShadow = '0 6px 20px rgba(30,179,73,.35)';
             const txt = document.getElementById('btn-claim-text');
@@ -2718,7 +2743,6 @@
         }
     }
 
-    // Jika tidak ada step timer (no requirements), tidak perlu apa-apa
     document.addEventListener('DOMContentLoaded', function () {
         checkAllFreeRequirements();
     });
