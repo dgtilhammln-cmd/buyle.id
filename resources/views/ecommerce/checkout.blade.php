@@ -673,7 +673,6 @@
                             </div>
                         </div>
                     </div>
-                @endguest
 
                     {{-- GUEST CHECKOUT / FORM SIMPEL DIRECT --}}
                     <div class="co-section" style="margin-bottom:1.5rem;">
@@ -744,7 +743,7 @@
                         Pesanan Anda akan diproses & tersimpan otomatis di Dashboard Akun Anda.
                     </div>
                 </div>
-                @endauth
+                @endguest
 
                 {{-- CONDITIONAL CHECKOUT FORM BY PRODUCT CATEGORY / TYPE --}}
 
