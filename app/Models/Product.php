@@ -25,7 +25,7 @@ class Product extends Model
         'product_category_id', 'product_sub_category_id', 'is_featured', 'is_buyle_checkout',
         'product_type', 'file_type', 'digital_resource', 'seller_id', 'creator_group_id', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating', 'tiktok_video_url',
         // Event / Ticket fields
-        'event_date', 'event_time', 'event_location', 'event_type',
+        'event_date', 'event_time', 'event_location', 'event_type', 'event_platform',
         'gate_scanner_key', 'gate_scanner_enabled', 'gate_scanner_pin',
         'gate_open_time', 'gate_close_time', 'gate_bypass_time',
         'ticket_war_start', 'max_tickets_per_order',
@@ -541,6 +541,52 @@ class Product extends Model
     public function reviews()
     {
         return $this->hasMany(\App\Models\ProductRating::class, 'product_id')->where('is_approved', true);
+    }
+
+    /**
+     * Hitung rating riil produk (dari ulasan DB yang disetujui atau kolom rating manual jika diatur kreator eksklusif).
+     * Mengembalikan null jika belum ada ulasan/rating sama sekali.
+     */
+    public function getEffectiveRating(): ?float
+    {
+        // 1. Jika sudah dimuat withAvg('reviews', 'rating')
+        if (isset($this->attributes['reviews_avg_rating']) && $this->attributes['reviews_avg_rating'] !== null) {
+            $val = (float) $this->attributes['reviews_avg_rating'];
+            if ($val > 0) {
+                return round($val, 1);
+            }
+        }
+
+        // 2. Jika ada rating manual diatur kreator (> 0)
+        if ($this->rating !== null && (float) $this->rating > 0) {
+            return round((float) $this->rating, 1);
+        }
+
+        // 3. Cek relasi jika sudah di-load
+        if ($this->relationLoaded('reviews')) {
+            $avg = $this->reviews->where('is_approved', true)->avg('rating');
+            if ($avg && $avg > 0) {
+                return round((float) $avg, 1);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Dapatkan jumlah ulasan valid produk.
+     */
+    public function getEffectiveReviewsCount(): int
+    {
+        if (isset($this->attributes['reviews_count']) && $this->attributes['reviews_count'] !== null) {
+            return (int) $this->attributes['reviews_count'];
+        }
+
+        if ($this->relationLoaded('reviews')) {
+            return (int) $this->reviews->where('is_approved', true)->count();
+        }
+
+        return (int) $this->reviews()->count();
     }
 
     /**

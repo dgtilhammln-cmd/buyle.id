@@ -189,7 +189,7 @@ class ServiceController extends Controller
                 break;
         }
         
-        $services   = $query->with(['seller.creatorProfile', 'category'])->paginate(12)->appends(request()->query());
+        $services   = $query->with(['seller.creatorProfile', 'category'])->withAvg('reviews', 'rating')->withCount('reviews')->paginate(12)->appends(request()->query());
         $settings   = Setting::getAllAsArray();
         $siteName   = $settings['site_name'] ?? 'buyle.id';
         $wa         = WaSetting::primary();
@@ -415,8 +415,8 @@ class ServiceController extends Controller
 
         $settings     = Setting::getAllAsArray();
         $wa           = WaSetting::primary();
-        $related      = Product::marketplace()->ordered()->where('seller_id', $service->seller_id)->where('id', '!=', $service->id)->limit(10)->get();
-        $otherRelated = Product::marketplace()->ordered()->where('seller_id', '!=', $service->seller_id)->where('id', '!=', $service->id)->inRandomOrder()->limit(10)->get();
+        $related      = Product::marketplace()->ordered()->where('seller_id', $service->seller_id)->where('id', '!=', $service->id)->with(['seller.creatorProfile'])->withAvg('reviews', 'rating')->withCount('reviews')->limit(10)->get();
+        $otherRelated = Product::marketplace()->ordered()->where('seller_id', '!=', $service->seller_id)->where('id', '!=', $service->id)->with(['seller.creatorProfile'])->withAvg('reviews', 'rating')->withCount('reviews')->inRandomOrder()->limit(10)->get();
         $testimonials = Testimonial::active()->ordered()->get()->unique('name');
         $siteName     = $settings['site_name'] ?? 'buyle.id';
         $appUrl       = rtrim(config('app.url'), '/');
@@ -569,7 +569,7 @@ class ServiceController extends Controller
         $realReviewsCount = \App\Models\ProductRating::where('product_id', $service->id)->approved()->count();
         $realReviewsAvg   = $realReviewsCount > 0
             ? round(\App\Models\ProductRating::where('product_id', $service->id)->approved()->avg('rating'), 1)
-            : (float) ($service->rating ?: 5.0);
+            : ($service->rating && (float) $service->rating > 0 ? (float) $service->rating : null);
 
         $currentUser = auth()->user();
         $canReview = false;

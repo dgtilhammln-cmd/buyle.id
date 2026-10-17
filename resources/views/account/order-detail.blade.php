@@ -370,12 +370,14 @@
                             <div class="od-item-info">
                                 <div class="od-item-title">{{ $item->product_name }}</div>
                                 @if($item->variant_name)
-                                    <div style="font-size:0.78rem; color:#1eb349; font-weight:600; margin-bottom:0.2rem;">
-                                        🏷 {{ $item->variant_name }}
+                                    <div style="font-size:0.78rem; color:#1eb349; font-weight:600; margin-bottom:0.2rem; display:flex; align-items:center; gap:4px;">
+                                        <svg width="12" height="12" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                                        {{ $item->variant_name }}
                                     </div>
                                 @elseif($item->variantValue)
-                                    <div style="font-size:0.78rem; color:#1eb349; font-weight:600; margin-bottom:0.2rem;">
-                                        🏷 {{ $item->variantValue->variantOption->name ?? 'Varian' }}: {{ $item->variantValue->value }}
+                                    <div style="font-size:0.78rem; color:#1eb349; font-weight:600; margin-bottom:0.2rem; display:flex; align-items:center; gap:4px;">
+                                        <svg width="12" height="12" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                                        {{ $item->variantValue->variantOption->name ?? 'Varian' }}: {{ $item->variantValue->value }}
                                     </div>
                                 @endif
                                 <div class="od-item-meta">{{ $item->qty }} x Rp {{ number_format($item->price, 0, ',', '.') }}
@@ -443,9 +445,22 @@
                                         <div>
                                             <div
                                                 style="font-size: 0.7rem; color: #94A3B8; font-weight: 600; text-transform: uppercase;">
-                                                Lokasi / Venue</div>
+                                                Lokasi / Platform</div>
                                             <div style="font-weight: 700; color: #0F172A;">
-                                                {{ $pass->product?->event_location ?? 'Online / Venue Event' }}</div>
+                                                @if($pass->product?->event_type === 'online')
+                                                    <div style="display:flex; align-items:center; gap:5px;">
+                                                        <svg width="14" height="14" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                                        <span>{{ $pass->product?->event_platform ?: 'Online Meeting' }}</span>
+                                                    </div>
+                                                    @if($pass->product?->event_location)
+                                                        <a href="{{ $pass->product->event_location }}" target="_blank" rel="noopener noreferrer" style="font-size:0.8rem; color:#2563eb; text-decoration:underline; font-weight:600; display:inline-block; margin-top:3px;">
+                                                            Buka Tautan Meeting →
+                                                        </a>
+                                                    @endif
+                                                @else
+                                                    {{ $pass->product?->event_location ?? 'Lokasi Ditentukan Panitia' }}
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -433,10 +433,12 @@
                         </div>
                     @endif
                     {{-- Rating pill badge top-right of avatar --}}
-                    <div style="position:absolute; top:-4px; right:-20px; background:{{ $tierData['header_bg'] ?? 'linear-gradient(135deg, #475569, #64748b)' }}; color:#fff; font-size:0.73rem; font-weight:800; padding:0.2rem 0.55rem; border-radius:999px; display:flex; align-items:center; gap:3px; box-shadow:0 2px 8px rgba(0,0,0,0.18); white-space:nowrap;">
-                        <span>{{ $ratingStats['rating'] }}</span>
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/></svg>
-                    </div>
+                    @if(!empty($ratingStats['rating']))
+                        <div style="position:absolute; top:-4px; right:-20px; background:{{ $tierData['header_bg'] ?? 'linear-gradient(135deg, #475569, #64748b)' }}; color:#fff; font-size:0.73rem; font-weight:800; padding:0.2rem 0.55rem; border-radius:999px; display:flex; align-items:center; gap:3px; box-shadow:0 2px 8px rgba(0,0,0,0.18); white-space:nowrap;">
+                            <span>{{ $ratingStats['rating'] }}</span>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/></svg>
+                        </div>
+                    @endif
                 </div>
             </div>
 

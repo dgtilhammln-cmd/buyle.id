@@ -232,16 +232,23 @@ class CreatorProfile extends Model
 
             $products = \App\Models\Product::where('seller_id', $sellerId)->get();
             $validRatings = $products->where('rating', '>', 0);
-            $prodAvg = $validRatings->isNotEmpty() ? $validRatings->avg('rating') : 5.0;
-            $totalSold = $products->sum('sold_count');
+            $prodAvg = $validRatings->isNotEmpty() ? $validRatings->avg('rating') : null;
+            $totalSold = (int)$products->sum('sold_count');
+
+            if ($prodAvg !== null && $prodAvg > 0) {
+                return [
+                    'rating' => number_format((float)$prodAvg, 1, '.', ''),
+                    'count'  => $totalSold,
+                ];
+            }
 
             return [
-                'rating' => number_format((float)($prodAvg ?: 5.0), 1, '.', ''),
-                'count'  => (int)$totalSold,
+                'rating' => null,
+                'count'  => $totalSold,
             ];
         } catch (\Exception $e) {
             return [
-                'rating' => '5.0',
+                'rating' => null,
                 'count'  => 0,
             ];
         }

@@ -1939,8 +1939,7 @@
                             $svSeller     = optional(optional($sv->seller)->creatorProfile)->store_name ?? optional($sv->seller)->name ?? 'Kreator';
                             $svSellerCp   = $sv->seller?->creatorProfile;
                             $svIsVerified = $svSellerCp ? (bool)$svSellerCp->is_verified : false;
-                            $svRatingVal  = ($sv->rating && $sv->rating > 0) ? $sv->rating : (($sv->reviews_avg_rating && $sv->reviews_avg_rating > 0) ? $sv->reviews_avg_rating : null);
-                            $svRating     = $svRatingVal ? number_format((float)$svRatingVal, 1, '.', '') : ($svSellerCp ? $svSellerCp->getRatingStats()['rating'] : '5.0');
+                            $svRatingVal  = $sv->getEffectiveRating();
                         @endphp
                         <a href="{{ route_locale('products.show', $sv->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
@@ -1971,10 +1970,17 @@
                                     <div>
                                         {{-- Rating & Verified Badge --}}
                                         <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
-                                            <div style="display: flex; align-items: center; gap: 0.3rem;">
-                                                <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
-                                                <span style="font-family: 'Montserrat', sans-serif;">{{ $svRating }}</span>
-                                            </div>
+                                            @if($svRatingVal !== null && $svRatingVal > 0)
+                                                <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                                    <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
+                                                    <span style="font-family: 'Montserrat', sans-serif;">{{ number_format($svRatingVal, 1) }}</span>
+                                                </div>
+                                            @else
+                                                <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
+                                                    <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
+                                                    <span>Belum ada ulasan</span>
+                                                </div>
+                                            @endif
                                             @if($svIsVerified)
                                                 <div style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
                                                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>

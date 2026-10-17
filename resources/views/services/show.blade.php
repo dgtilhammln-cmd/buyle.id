@@ -1448,20 +1448,30 @@
 
                         <div class="pd-stats" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
                             @php
-                                $ratingVal = number_format($realReviewsAvg ?: 5.0, 1);
+                                $effRating = $service->getEffectiveRating();
                                 $reviewCnt = (int) $realReviewsCount;
                                 $soldCnt = (int) ($service->sold_count ?? 0);
                             @endphp
                             {{-- Rating (Realtime dari DB jika ada ulasan/rating) --}}
-                            <a href="javascript:void(0)" onclick="goToReviewsTab()"
-                                style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; text-decoration:none; cursor:pointer;"
-                                title="Lihat Ulasan">
-                                <span style="color: #F59E0B; font-size: 1rem;">★</span>
-                                <span style="color: #0F172A; font-weight: 700;">{{ $ratingVal }}</span>
-                                <span
-                                    style="font-size: 0.8rem; color: #1eb349; font-weight:600; text-decoration:underline;">({{ $reviewCnt }}
-                                    ulasan)</span>
-                            </a>
+                            @if($effRating !== null && $effRating > 0)
+                                <a href="javascript:void(0)" onclick="goToReviewsTab()"
+                                    style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; text-decoration:none; cursor:pointer;"
+                                    title="Lihat Ulasan">
+                                    <span style="color: #F59E0B; font-size: 1rem;">★</span>
+                                    <span style="color: #0F172A; font-weight: 700;">{{ number_format($effRating, 1) }}</span>
+                                    <span
+                                        style="font-size: 0.8rem; color: #1eb349; font-weight:600; text-decoration:underline;">({{ $reviewCnt }}
+                                        ulasan)</span>
+                                </a>
+                            @else
+                                <a href="javascript:void(0)" onclick="goToReviewsTab()"
+                                    style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; text-decoration:none; cursor:pointer;"
+                                    title="Tulis Ulasan">
+                                    <span style="color: #CBD5E1; font-size: 1rem;">★</span>
+                                    <span style="color: #64748B; font-weight: 600;">Belum ada ulasan</span>
+                                    <span style="font-size: 0.8rem; color: #1eb349; font-weight:600; text-decoration:underline;">(0)</span>
+                                </a>
+                            @endif
                             <span style="color: #CBD5E1;">|</span>
                             {{-- Terjual --}}
                             <div style="font-size: 0.85rem; color: #64748B;">
@@ -1498,25 +1508,90 @@
                                 @endif
                             </div>
 
-                            {{-- Pengiriman Digital --}}
-                            <div class="pd-attr-row">
-                                <div class="pd-attr-label">Pengiriman</div>
-                                <div class="pd-attr-content">
-                                    <div>
-                                        <div style="display:flex; align-items:center; gap:4px; color:var(--text-main);">
-                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                                viewBox="0 0 24 24">
-                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                                <polyline points="7 10 12 15 17 10" />
-                                                <line x1="12" y1="15" x2="12" y2="3" />
-                                            </svg>
-                                            <b>Akses Instan & Otomatis</b>
+                            @if($service->product_type === 'ticket')
+                                {{-- INFORMASI EVENT (KHUSUS TIKET) --}}
+                                @if($service->event_date)
+                                    <div class="pd-attr-row">
+                                        <div class="pd-attr-label">Pelaksanaan</div>
+                                        <div class="pd-attr-content">
+                                            <div>
+                                                <div style="display:flex; align-items:center; gap:6px; color:var(--text-main); font-weight:700;">
+                                                    <svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24">
+                                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                                        <line x1="16" y1="2" x2="16" y2="6"/>
+                                                        <line x1="8" y1="2" x2="8" y2="6"/>
+                                                        <line x1="3" y1="10" x2="21" y2="10"/>
+                                                    </svg>
+                                                    <span>{{ \Carbon\Carbon::parse($service->event_date)->locale('id')->isoFormat('dddd, D MMMM Y') }}</span>
+                                                    @if($service->event_time)
+                                                        <span style="font-size:0.75rem; background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; padding:2px 8px; border-radius:999px; font-weight:600;">
+                                                            {{ $service->event_time }}
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:3px;">
+                                                    Jadwal tanggal dan waktu berlangsungnya acara / event.
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Produk ini dapat
-                                            langsung diakses/diunduh setelah pembayaran berhasil.</div>
+                                    </div>
+                                @endif
+
+                                <div class="pd-attr-row">
+                                    <div class="pd-attr-label">Lokasi / Venue</div>
+                                    <div class="pd-attr-content">
+                                        <div>
+                                            @if($service->event_type === 'online')
+                                                <div style="display:flex; align-items:center; flex-wrap:wrap; gap:6px; color:var(--text-main);">
+                                                    <svg width="16" height="16" fill="none" stroke="#2563eb" stroke-width="2.2" viewBox="0 0 24 24">
+                                                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                                        <line x1="8" y1="21" x2="16" y2="21"/>
+                                                        <line x1="12" y1="17" x2="12" y2="21"/>
+                                                    </svg>
+                                                    <b style="font-size:0.92rem;">Online Event via {{ $service->event_platform ?: 'Meeting Room / Video Conference' }}</b>
+                                                    <span style="font-size:0.75rem; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; padding:2px 8px; border-radius:999px; font-weight:600;">Online</span>
+                                                </div>
+                                                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:3px; display:flex; align-items:center; gap:5px;">
+                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                                    <span>Link / Tautan meeting akan dikirimkan otomatis ke tiket Anda setelah pemesanan berhasil.</span>
+                                                </div>
+                                            @else
+                                                <div style="display:flex; align-items:center; flex-wrap:wrap; gap:6px; color:var(--text-main);">
+                                                    <svg width="16" height="16" fill="none" stroke="#dc2626" stroke-width="2.2" viewBox="0 0 24 24">
+                                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                                        <circle cx="12" cy="10" r="3" />
+                                                    </svg>
+                                                    <b style="font-size:0.92rem;">{{ $service->event_location ?: 'Lokasi diumumkan oleh penyelenggara' }}</b>
+                                                    <span style="font-size:0.75rem; background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; padding:2px 8px; border-radius:999px; font-weight:600;">Offline Event</span>
+                                                </div>
+                                                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:3px;">
+                                                    Tunjukkan e-tiket resmi beserta QR Code saat tiba di lokasi venue acara.
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @else
+                                {{-- Pengiriman Digital (Khusus Produk Non-Tiket) --}}
+                                <div class="pd-attr-row">
+                                    <div class="pd-attr-label">Pengiriman</div>
+                                    <div class="pd-attr-content">
+                                        <div>
+                                            <div style="display:flex; align-items:center; gap:4px; color:var(--text-main);">
+                                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                                    viewBox="0 0 24 24">
+                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                                    <polyline points="7 10 12 15 17 10" />
+                                                    <line x1="12" y1="15" x2="12" y2="3" />
+                                                </svg>
+                                                <b>Akses Instan & Otomatis</b>
+                                            </div>
+                                            <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Produk ini dapat
+                                                langsung diakses/diunduh setelah pembayaran berhasil.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
 
                             {{-- CART FORM --}}
                             <form id="pd-cart-form" action="{{ route('cart.add') }}" method="POST">
@@ -1945,12 +2020,30 @@
                         <div id="tab-reviews" class="pd-tab-content" style="display:none;">
 
                             {{-- SUMMARY CARD --}}
+                            @php
+                                $hasRealScore = ($realReviewsAvg !== null && $realReviewsAvg > 0);
+                            @endphp
                             <div class="pd-reviews-summary-card">
                                 <div class="pd-score-big-box">
                                     <div class="pd-score-big" id="reviewsSummaryScore">
-                                        {{ number_format($realReviewsAvg ?: 5.0, 1) }}
+                                        {{ $hasRealScore ? number_format($realReviewsAvg, 1) : '0.0' }}
                                     </div>
-                                    <div class="pd-stars-row">★★★★★</div>
+                                    <div class="pd-stars-row" id="reviewsSummaryStars">
+                                        @if($hasRealScore)
+                                            @php
+                                                $roundedStar = (int) round($realReviewsAvg);
+                                            @endphp
+                                            @for($s = 1; $s <= 5; $s++)
+                                                @if($s <= $roundedStar)
+                                                    <span style="color:#F59E0B;">★</span>
+                                                @else
+                                                    <span style="color:#CBD5E1;">★</span>
+                                                @endif
+                                            @endfor
+                                        @else
+                                            <span style="color:#CBD5E1;">★★★★★</span>
+                                        @endif
+                                    </div>
                                     <div class="pd-score-sub"><span id="reviewsSummaryTotal">{{ $realReviewsCount }}</span>
                                         Ulasan Pembeli</div>
                                 </div>
@@ -2212,7 +2305,7 @@
                     @php
                         $isVerified = $cp ? $cp->isVerified() : false;
                         $tierData = $cp ? $cp->getTierInfo() : ['badge' => 'Perintis', 'header_bg' => 'linear-gradient(135deg, #475569 0%, #64748b 100%)', 'icon_svg' => ''];
-                        $ratingStats = $cp ? $cp->getRatingStats() : ['rating' => '5.0', 'count' => 0];
+                        $ratingStats = $cp ? $cp->getRatingStats() : ['rating' => null, 'count' => 0];
                     @endphp
                     <!-- Banner Top Header matching reference design -->
                     <div
@@ -2248,6 +2341,7 @@
                                 </div>
                             @endif
                             {{-- Rating pill badge top-right of avatar --}}
+                            @if(!empty($ratingStats['rating']))
                             <div
                                 style="position:absolute; top:-4px; right:-20px; background:{{ $tierData['header_bg'] ?? 'linear-gradient(135deg, #475569, #64748b)' }}; color:#fff; font-size:0.73rem; font-weight:800; padding:0.2rem 0.55rem; border-radius:999px; display:flex; align-items:center; gap:3px; box-shadow:0 2px 8px rgba(0,0,0,0.18); white-space:nowrap;">
                                 <span>{{ $ratingStats['rating'] }}</span>
@@ -2255,6 +2349,7 @@
                                     <path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z" />
                                 </svg>
                             </div>
+                            @endif
                         </div>
                     </div>
 
@@ -2409,8 +2504,7 @@
                             $rImage = $r->image ? asset('storage/' . $r->image) : asset('images/buyle-og.png');
                             $rSellerCp = $r->seller?->creatorProfile;
                             $rIsVerified = $rSellerCp ? (bool) $rSellerCp->is_verified : false;
-                            $rRatingVal = ($r->rating && $r->rating > 0) ? $r->rating : (($r->reviews_avg_rating && $r->reviews_avg_rating > 0) ? $r->reviews_avg_rating : null);
-                            $rRating = $rRatingVal ? number_format((float) $rRatingVal, 1, '.', '') : ($rSellerCp ? $rSellerCp->getRatingStats()['rating'] : '5.0');
+                            $rRatingVal = $r->getEffectiveRating();
                         @endphp
                         <a href="{{ route('products.show', $r->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
@@ -2441,10 +2535,17 @@
                                         {{-- Rating & Verified Badge --}}
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
-                                            <div style="display: flex; align-items: center; gap: 0.3rem;">
-                                                <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
-                                                <span style="font-family: 'Montserrat', sans-serif;">{{ $rRating }}</span>
-                                            </div>
+                                            @if($rRatingVal !== null && $rRatingVal > 0)
+                                                <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                                    <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
+                                                    <span style="font-family: 'Montserrat', sans-serif;">{{ number_format($rRatingVal, 1) }}</span>
+                                                </div>
+                                            @else
+                                                <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
+                                                    <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
+                                                    <span>Belum ada ulasan</span>
+                                                </div>
+                                            @endif
                                             @if($rIsVerified)
                                                 <div
                                                     style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
@@ -2530,8 +2631,7 @@
                             $rImage = $r->image ? asset('storage/' . $r->image) : asset('images/buyle-og.png');
                             $rSellerCp = $r->seller?->creatorProfile;
                             $rIsVerified = $rSellerCp ? (bool) $rSellerCp->is_verified : false;
-                            $rRatingVal = ($r->rating && $r->rating > 0) ? $r->rating : (($r->reviews_avg_rating && $r->reviews_avg_rating > 0) ? $r->reviews_avg_rating : null);
-                            $rRating = $rRatingVal ? number_format((float) $rRatingVal, 1, '.', '') : ($rSellerCp ? $rSellerCp->getRatingStats()['rating'] : '5.0');
+                            $rRatingVal = $r->getEffectiveRating();
                         @endphp
                         <a href="{{ route('products.show', $r->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
@@ -2562,10 +2662,17 @@
                                         {{-- Rating & Verified Badge --}}
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
-                                            <div style="display: flex; align-items: center; gap: 0.3rem;">
-                                                <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
-                                                <span style="font-family: 'Montserrat', sans-serif;">{{ $rRating }}</span>
-                                            </div>
+                                            @if($rRatingVal !== null && $rRatingVal > 0)
+                                                <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                                    <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
+                                                    <span style="font-family: 'Montserrat', sans-serif;">{{ number_format($rRatingVal, 1) }}</span>
+                                                </div>
+                                            @else
+                                                <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
+                                                    <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
+                                                    <span>Belum ada ulasan</span>
+                                                </div>
+                                            @endif
                                             @if($rIsVerified)
                                                 <div
                                                     style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
@@ -2750,12 +2857,27 @@
                         if (data.stats) {
                             const stats = data.stats;
                             const scoreEl = document.getElementById('reviewsSummaryScore');
+                            const starsEl = document.getElementById('reviewsSummaryStars');
                             const totalEl = document.getElementById('reviewsSummaryTotal');
                             const badgeEl = document.getElementById('tabReviewsBadge');
                             const filterAll = document.getElementById('filterCountAll');
                             const filterMedia = document.getElementById('filterCountMedia');
 
-                            if (scoreEl && stats.average > 0) scoreEl.textContent = Number(stats.average).toFixed(1);
+                            if (scoreEl) {
+                                scoreEl.textContent = (stats.average > 0) ? Number(stats.average).toFixed(1) : '0.0';
+                            }
+                            if (starsEl) {
+                                let starsHtml = '';
+                                const rounded = Math.round(Number(stats.average) || 0);
+                                for (let s = 1; s <= 5; s++) {
+                                    if (rounded > 0 && s <= rounded) {
+                                        starsHtml += '<span style="color:#F59E0B;">★</span>';
+                                    } else {
+                                        starsHtml += '<span style="color:#CBD5E1;">★</span>';
+                                    }
+                                }
+                                starsEl.innerHTML = starsHtml;
+                            }
                             if (totalEl) totalEl.textContent = stats.total_count;
                             if (badgeEl) badgeEl.textContent = stats.total_count;
                             if (filterAll) filterAll.textContent = stats.total_count;

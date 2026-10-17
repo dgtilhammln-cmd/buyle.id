@@ -120,7 +120,7 @@
                     } else {
                         $productUrl = route('bio.product.show', ['username' => $username, 'identifier' => $prodIdentifier]);
                     }
-                    $ratingVal = !empty($product->rating) && $product->rating > 0 ? number_format($product->rating, 1) : '5.0';
+                    $ratingVal = $product ? $product->getEffectiveRating() : null;
                 @endphp
 
                 <div class="t5-product-card">
@@ -134,14 +134,16 @@
 
                     <div class="t5-product-body">
                         <div class="t5-product-meta">
-                            <span class="t5-rating-badge">
-                                <svg width="13" height="13" fill="#f59e0b" stroke="#f59e0b" stroke-width="1"
-                                    viewBox="0 0 24 24">
-                                    <polygon
-                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                                </svg>
-                                {{ $ratingVal }}
-                            </span>
+                            @if($ratingVal !== null && $ratingVal > 0)
+                                <span class="t5-rating-badge">
+                                    <svg width="13" height="13" fill="#f59e0b" stroke="#f59e0b" stroke-width="1"
+                                        viewBox="0 0 24 24">
+                                        <polygon
+                                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                    </svg>
+                                    {{ number_format($ratingVal, 1) }}
+                                </span>
+                            @endif
                             @if($isProfileVerified)
                                 <span class="t5-verified-tag">
                                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"

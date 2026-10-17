@@ -96,8 +96,8 @@ class RecommendationController extends Controller
 
             $sellerCp   = $p->seller?->creatorProfile;
             $isVerified = $sellerCp ? (bool)$sellerCp->is_verified : false;
-            $ratingVal  = ($p->rating && $p->rating > 0) ? $p->rating : (($p->reviews_avg_rating && $p->reviews_avg_rating > 0) ? $p->reviews_avg_rating : null);
-            $rating     = $ratingVal ? number_format((float)$ratingVal, 1, '.', '') : ($sellerCp ? $sellerCp->getRatingStats()['rating'] : '5.0');
+            $ratingVal  = $p->getEffectiveRating();
+            $rating     = $ratingVal ? number_format((float)$ratingVal, 1, '.', '') : null;
 
             $image = $p->image ? asset('storage/' . ltrim($p->image, '/')) : asset('images/buyle-og.png');
 

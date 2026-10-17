@@ -1302,14 +1302,16 @@
                             </a>
                             <div class="pp-card-body">
                                 <div class="pp-card-meta">
-                                    <span class="pp-rating">
-                                        <svg width="12" height="12" fill="#f59e0b" stroke="#f59e0b" stroke-width="1"
-                                            viewBox="0 0 24 24">
-                                            <polygon
-                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                                        </svg>
-                                        {{ $prod['rating'] }}
-                                    </span>
+                                    @if(!empty($prod['rating']) && (float)$prod['rating'] > 0)
+                                        <span class="pp-rating">
+                                            <svg width="12" height="12" fill="#f59e0b" stroke="#f59e0b" stroke-width="1"
+                                                viewBox="0 0 24 24">
+                                                <polygon
+                                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                            </svg>
+                                            {{ number_format((float)$prod['rating'], 1) }}
+                                        </span>
+                                    @endif
                                     @if($isProfileVerified)
                                         <span class="pp-verified">
                                             <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"

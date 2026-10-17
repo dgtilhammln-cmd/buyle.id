@@ -39,6 +39,7 @@ class StoreProductRequest extends FormRequest
             'event_time'          => ['nullable', 'string', 'max:100'],
             'event_location'      => ['nullable', 'string', 'max:1000'],
             'event_type'          => ['nullable', 'string', 'in:online,offline'],
+            'event_platform'      => ['nullable', 'string', 'max:100'],
             'ticket_war_start'      => ['nullable', 'date'],
             'max_tickets_per_order' => ['nullable', 'integer', 'min:1', 'max:20'],
 

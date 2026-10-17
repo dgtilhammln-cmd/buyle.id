@@ -48,7 +48,7 @@
         $pageDesc    = !empty($shortDesc) ? $shortDesc : 'Beli ' . $prodTitle . ' berkualitas dengan harga terbaik dari ' . $bioName . ' di buyle.id.';
         $hasDiscount = !empty($origPrice) && $origPrice > $price;
         $discountPct = $hasDiscount ? round((($origPrice - $price) / $origPrice) * 100) : 0;
-        $ratingVal   = ($product && !empty($product->rating) && $product->rating > 0) ? number_format($product->rating, 1) : '5.0';
+        $ratingVal   = $product ? $product->getEffectiveRating() : null;
         $formattedImages = array_map(function($img) {
             return (\Illuminate\Support\Str::startsWith($img, 'http://') || \Illuminate\Support\Str::startsWith($img, 'https://')) ? $img : asset('storage/' . $img);
         }, $images);
@@ -568,6 +568,86 @@
                     </div>
                     <a href="{{ url('/' . $username) }}" class="ps-seller-link">Lihat Profil →</a>
                 </div>
+
+                @if($product && ($product->product_type ?? '') === 'ticket')
+                    @php
+                        $tEventDate = $product->event_date ?: (!empty($block->data_json['event_date']) ? \Carbon\Carbon::parse($block->data_json['event_date']) : null);
+                        $tEventTime = $product->event_time ?: ($block->data_json['event_time'] ?? null);
+                        $tEventType = $product->event_type ?: ($block->data_json['event_type'] ?? 'offline');
+                        $tEventLoc = $product->event_location ?: ($block->data_json['event_location'] ?? null);
+                        $tEventPlatform = $product->event_platform ?: ($block->data_json['event_platform'] ?? null);
+                    @endphp
+
+                    <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:1rem; margin:1rem 0; display:flex; flex-direction:column; gap:0.75rem; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                        @if($tEventDate)
+                            <div style="display:flex; align-items:flex-start; gap:0.65rem;">
+                                <div style="width:34px; height:34px; border-radius:10px; background:#ecfdf5; color:#059669; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6"/>
+                                        <line x1="8" y1="2" x2="8" y2="6"/>
+                                        <line x1="3" y1="10" x2="21" y2="10"/>
+                                    </svg>
+                                </div>
+                                <div style="flex:1;">
+                                    <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; color:#64748b; font-weight:700;">Waktu Pelaksanaan</div>
+                                    <div style="font-size:0.9rem; font-weight:700; color:#0f172a; margin-top:2px;">
+                                        {{ \Carbon\Carbon::parse($tEventDate)->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                                    </div>
+                                    @if($tEventTime)
+                                        <div style="display:inline-block; margin-top:3px; padding:1px 8px; background:#f0fdf4; color:#166534; border-radius:999px; font-size:0.75rem; font-weight:600; border:1px solid #bbf7d0;">
+                                            {{ $tEventTime }}
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+
+                        <div style="display:flex; align-items:flex-start; gap:0.65rem; padding-top:0.65rem; border-top:1px dashed #e2e8f0;">
+                            @if($tEventType === 'online')
+                                <div style="width:34px; height:34px; border-radius:10px; background:#eff6ff; color:#2563eb; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                        <line x1="8" y1="21" x2="16" y2="21"/>
+                                        <line x1="12" y1="17" x2="12" y2="21"/>
+                                    </svg>
+                                </div>
+                                <div style="flex:1;">
+                                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                        <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; color:#64748b; font-weight:700;">Platform Online</span>
+                                        <span style="font-size:0.7rem; background:#eff6ff; color:#1d4ed8; padding:1px 6px; border-radius:999px; font-weight:600; border:1px solid #bfdbfe;">Virtual</span>
+                                    </div>
+                                    <div style="font-size:0.88rem; font-weight:700; color:#0f172a; margin-top:2px;">
+                                        {{ $tEventPlatform ?: 'Zoom / Google Meet' }}
+                                    </div>
+                                    <div style="font-size:0.75rem; color:#64748b; margin-top:2px; display:flex; align-items:center; gap:4px;">
+                                        <svg width="12" height="12" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                        <span>Link meeting diberikan otomatis setelah e-tiket resmi diterbitkan.</span>
+                                    </div>
+                                </div>
+                            @else
+                                <div style="width:34px; height:34px; border-radius:10px; background:#fef2f2; color:#dc2626; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                        <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                </div>
+                                <div style="flex:1;">
+                                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                        <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; color:#64748b; font-weight:700;">Lokasi / Venue</span>
+                                        <span style="font-size:0.7rem; background:#fef2f2; color:#b91c1c; padding:1px 6px; border-radius:999px; font-weight:600; border:1px solid #fecaca;">Offline</span>
+                                    </div>
+                                    <div style="font-size:0.88rem; font-weight:700; color:#0f172a; margin-top:2px;">
+                                        {{ $tEventLoc ?: 'Venue diumumkan oleh penyelenggara' }}
+                                    </div>
+                                    <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">
+                                        Check-in dengan scan QR code pada e-tiket di gerbang masuk venue.
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
 
                 <div class="ps-cta">
                     @php

@@ -1779,8 +1779,7 @@
                             // Realtime Dynamic Rating & Seller Verification
                             $rSellerCp = $rProd->seller?->creatorProfile;
                             $rIsVerified = $rSellerCp ? (bool)$rSellerCp->is_verified : false;
-                            $rRatingVal = ($rProd->rating && $rProd->rating > 0) ? $rProd->rating : (($rProd->reviews_avg_rating && $rProd->reviews_avg_rating > 0) ? $rProd->reviews_avg_rating : null);
-                            $rRating = $rRatingVal ? number_format((float)$rRatingVal, 1, '.', '') : ($rSellerCp ? $rSellerCp->getRatingStats()['rating'] : '5.0');
+                            $rRatingVal = $rProd->getEffectiveRating();
 
                             // Subdomain / URL Pill text
                             $rSellerDomain = $rProd->seller->creatorProfile->custom_domain ?? ($rProd->seller->creatorProfile->username ? $rProd->seller->creatorProfile->username . '.buyle.id' : 'buyle.id');
@@ -1816,10 +1815,17 @@
                                         {{-- Rating & Verified Badge (Synchronized with DB) --}}
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
-                                            <div style="display: flex; align-items: center; gap: 0.3rem;">
-                                                <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
-                                                <span style="font-family: 'Montserrat', sans-serif;">{{ $rRating }}</span>
-                                            </div>
+                                            @if($rRatingVal !== null && $rRatingVal > 0)
+                                                <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                                    <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
+                                                    <span style="font-family: 'Montserrat', sans-serif;">{{ number_format($rRatingVal, 1) }}</span>
+                                                </div>
+                                            @else
+                                                <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
+                                                    <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
+                                                    <span>Belum ada ulasan</span>
+                                                </div>
+                                            @endif
                                             @if($rIsVerified)
                                                 <div
                                                     style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
@@ -1943,6 +1949,10 @@
                             ? '<span style="font-size: 0.68rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500; white-space: nowrap;">' + p.orig_price_formatted + '</span>'
                             : '';
 
+                        var ratingBlock = (p.rating && parseFloat(p.rating) > 0)
+                            ? '<div style="display: flex; align-items: center; gap: 0.3rem;"><span style="color: #F59E0B; font-size: 0.95rem;">★</span><span style="font-family: \'Montserrat\', sans-serif;">' + p.rating + '</span></div>'
+                            : '<div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;"><span style="color: #CBD5E1; font-size: 0.85rem;">★</span><span>Belum ada ulasan</span></div>';
+
                         html += '<a href="' + p.url + '" style="text-decoration: none; color: inherit; display: flex; flex-direction: column;" data-product-id="' + p.id + '" data-category-id="' + p.category_id + '">' +
                             '<div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);" class="article-card-box">' +
                                 '<div style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">' +
@@ -1952,10 +1962,7 @@
                                 '<div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">' +
                                     '<div>' +
                                         '<div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">' +
-                                            '<div style="display: flex; align-items: center; gap: 0.3rem;">' +
-                                                '<span style="color: #F59E0B; font-size: 0.95rem;">★</span>' +
-                                                '<span style="font-family: \'Montserrat\', sans-serif;">' + p.rating + '</span>' +
-                                            '</div>' +
+                                            ratingBlock +
                                             verifiedBadge +
                                         '</div>' +
                                         '<h3 style="font-family: \'Montserrat\', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">' +
@@ -2032,8 +2039,7 @@
                             // Realtime Dynamic Rating & Seller Verification
                             $bSellerCp = $bProd->seller?->creatorProfile;
                             $bIsVerified = $bSellerCp ? (bool)$bSellerCp->is_verified : false;
-                            $bRatingVal = ($bProd->rating && $bProd->rating > 0) ? $bProd->rating : (($bProd->reviews_avg_rating && $bProd->reviews_avg_rating > 0) ? $bProd->reviews_avg_rating : null);
-                            $bRating = $bRatingVal ? number_format((float)$bRatingVal, 1, '.', '') : ($bSellerCp ? $bSellerCp->getRatingStats()['rating'] : '5.0');
+                            $bRatingVal = $bProd->getEffectiveRating();
                         @endphp
                         <a href="{{ route_locale('products.show', $bProd->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;">
@@ -2069,10 +2075,17 @@
                                         {{-- Rating & Verified Badge --}}
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
-                                            <div style="display: flex; align-items: center; gap: 0.3rem;">
-                                                <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
-                                                <span style="font-family: 'Montserrat', sans-serif;">{{ $bRating }}</span>
-                                            </div>
+                                            @if($bRatingVal !== null && $bRatingVal > 0)
+                                                <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                                    <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
+                                                    <span style="font-family: 'Montserrat', sans-serif;">{{ number_format($bRatingVal, 1) }}</span>
+                                                </div>
+                                            @else
+                                                <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
+                                                    <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
+                                                    <span>Belum ada ulasan</span>
+                                                </div>
+                                            @endif
                                             @if($bIsVerified)
                                                 <div
                                                     style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
@@ -2170,8 +2183,7 @@
                             // Realtime Dynamic Rating & Seller Verification
                             $lSellerCp = $lProd->seller?->creatorProfile;
                             $lIsVerified = $lSellerCp ? (bool)$lSellerCp->is_verified : false;
-                            $lRatingVal = ($lProd->rating && $lProd->rating > 0) ? $lProd->rating : (($lProd->reviews_avg_rating && $lProd->reviews_avg_rating > 0) ? $lProd->reviews_avg_rating : null);
-                            $lRating = $lRatingVal ? number_format((float)$lRatingVal, 1, '.', '') : ($lSellerCp ? $lSellerCp->getRatingStats()['rating'] : '5.0');
+                            $lRatingVal = $lProd->getEffectiveRating();
                         @endphp
                         <a href="{{ route_locale('products.show', $lProd->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;">
@@ -2200,10 +2212,17 @@
                                     <div>
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
-                                            <div style="display: flex; align-items: center; gap: 0.3rem;">
-                                                <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
-                                                <span style="font-family: 'Montserrat', sans-serif;">{{ $lRating }}</span>
-                                            </div>
+                                            @if($lRatingVal !== null && $lRatingVal > 0)
+                                                <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                                    <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
+                                                    <span style="font-family: 'Montserrat', sans-serif;">{{ number_format($lRatingVal, 1) }}</span>
+                                                </div>
+                                            @else
+                                                <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
+                                                    <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
+                                                    <span>Belum ada ulasan</span>
+                                                </div>
+                                            @endif
                                             @if($lIsVerified)
                                                 <div
                                                     style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
@@ -2469,8 +2488,8 @@
                             
                             // Realtime Creator Rating & Verification Status from DB
                             $cIsVerified = $cp ? $cp->isVerified() : false;
-                            $cRatingStats = $cp ? $cp->getRatingStats() : ['rating' => '5.0', 'count' => 0];
-                            $cRating = $cRatingStats['rating'] ?? '5.0';
+                            $cRatingStats = $cp ? $cp->getRatingStats() : ['rating' => null, 'count' => 0];
+                            $cRating = $cRatingStats['rating'] ?? null;
 
                             $cAvatar = null;
                             if (!empty($cp?->avatar)) {
@@ -2517,11 +2536,13 @@
                                 </div>
                                 
                                 <div class="popular-creator-stats">
-                                    <span class="popular-creator-rating">
-                                        <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                        {{ $cRating }}
-                                    </span>
-                                    <span>•</span>
+                                    @if(!empty($cRating))
+                                        <span class="popular-creator-rating">
+                                            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                            {{ $cRating }}
+                                        </span>
+                                        <span>•</span>
+                                    @endif
                                     <span>{{ $cSalesCount > 0 ? $cSalesCount . ' Terjual' : ($cProductCount . ' Produk') }}</span>
                                 </div>
 
@@ -3379,8 +3400,7 @@
                             // Realtime Dynamic Rating & Seller Verification
                             $tSellerCp = $tProd->seller?->creatorProfile;
                             $tIsVerified = $tSellerCp ? (bool)$tSellerCp->is_verified : false;
-                            $tRatingVal = ($tProd->rating && $tProd->rating > 0) ? $tProd->rating : (($tProd->reviews_avg_rating && $tProd->reviews_avg_rating > 0) ? $tProd->reviews_avg_rating : null);
-                            $tRating = $tRatingVal ? number_format((float)$tRatingVal, 1, '.', '') : ($tSellerCp ? $tSellerCp->getRatingStats()['rating'] : '5.0');
+                            $tRatingVal = $tProd->getEffectiveRating();
                         @endphp
                         <a href="{{ route_locale('products.show', $tProd->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
@@ -3425,10 +3445,17 @@
                                         {{-- Rating & Verified Badge --}}
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
-                                            <div style="display: flex; align-items: center; gap: 0.3rem;">
-                                                <span style="color: {{ $tIsExpired ? '#94A3B8' : '#F59E0B' }}; font-size: 0.95rem;">★</span>
-                                                <span style="font-family: 'Montserrat', sans-serif; color: {{ $tIsExpired ? '#94A3B8' : '#1E293B' }};">{{ $tRating }}</span>
-                                            </div>
+                                            @if($tRatingVal !== null && $tRatingVal > 0)
+                                                <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                                    <span style="color: {{ $tIsExpired ? '#94A3B8' : '#F59E0B' }}; font-size: 0.95rem;">★</span>
+                                                    <span style="font-family: 'Montserrat', sans-serif; color: {{ $tIsExpired ? '#94A3B8' : '#1E293B' }};">{{ number_format($tRatingVal, 1) }}</span>
+                                                </div>
+                                            @else
+                                                <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
+                                                    <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
+                                                    <span>Belum ada ulasan</span>
+                                                </div>
+                                            @endif
                                             @if($tIsVerified && !$tIsExpired)
                                                 <div
                                                     style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
@@ -3549,9 +3576,9 @@
                                     <div>
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
-                                            <div style="display: flex; align-items: center; gap: 0.3rem;">
-                                                <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
-                                                <span style="font-family: 'Montserrat', sans-serif;">5.0</span>
+                                            <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
+                                                <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
+                                                <span>Belum ada ulasan</span>
                                             </div>
                                         </div>
                                         <h3

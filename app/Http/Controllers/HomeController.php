@@ -37,10 +37,12 @@ class HomeController extends Controller
             $uspItems,
             $categoryItems,
             $promoSections,
-        ] = Cache::remember('home_page_data_v3', 300, function () {
+        ] = Cache::remember('home_page_data_v4', 300, function () {
             // Semua produk marketplace sekaligus — cukup 1 query besar, dibagi di PHP
             $allMp = Product::marketplace()
                 ->with(['seller:id,name,username,avatar', 'seller.creatorProfile:id,user_id,store_name,store_slug,is_verified,store_banner_1', 'category:id,name,slug'])
+                ->withAvg('reviews', 'rating')
+                ->withCount('reviews')
                 ->select(['id','name','slug','image','gallery','price','sale_price','stock','sold_count','views_count','rating','product_category_id','seller_id','product_type','is_active','created_at'])
                 ->latest()
                 ->limit(40)

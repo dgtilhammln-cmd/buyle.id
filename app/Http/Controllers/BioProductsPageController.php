@@ -68,8 +68,7 @@ class BioProductsPageController extends Controller
             else
                 $productUrl = route('bio.product.show', ['username' => $username, 'identifier' => $slug]);
 
-            $ratingVal = ($product && !empty($product->rating) && $product->rating > 0)
-                ? number_format($product->rating, 1) : '5.0';
+            $ratingVal = $product ? $product->getEffectiveRating() : null;
 
             $productType = $data['category'] ?? ($product->product_type ?? '');
 
@@ -129,7 +128,7 @@ class BioProductsPageController extends Controller
         } elseif ($sort === 'terpopuler') {
             $allProducts = $allProducts->sortByDesc(function ($p) {
                 return [
-                    (float)($p['rating'] ?? 5.0),
+                    (float)($p['rating'] ?? 0),
                     (int)($p['has_discount'] ? 1 : 0),
                     (int)($p['price'] > 0 ? 1 : 0),
                     $p['block_id']
