@@ -448,8 +448,16 @@ class AccountController extends Controller
         // Handle uploaded images (files or base64)
         $savedImages = [];
         $existing = \App\Models\ProductRating::where('product_id', $productId)->where('user_id', $user->id)->first();
-        if ($existing && is_array($existing->review_images)) {
-            $savedImages = $existing->review_images;
+        if ($existing) {
+            if ((int)$existing->edit_count >= 1) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda sudah menggunakan kesempatan edit ulasan (maksimal 1x edit). Ulasan Anda sudah terkunci dan tidak dapat diubah lagi.'
+                ], 403);
+            }
+            if (is_array($existing->review_images)) {
+                $savedImages = $existing->review_images;
+            }
         }
 
         // If new images provided (max 1 photo) — Otomatis dikompres ke WebP low quality
@@ -482,6 +490,8 @@ class AccountController extends Controller
         }
 
         $reviewText = $request->filled('review_text') ? trim($request->review_text) : null;
+        $isEdit = (bool)$existing;
+        $nextEditCount = $isEdit ? ((int)$existing->edit_count + 1) : 0;
 
         $rating = \App\Models\ProductRating::updateOrCreate(
             [
@@ -491,6 +501,7 @@ class AccountController extends Controller
             [
                 'order_id'       => $request->order_id ?: ($existing?->order_id ?: null),
                 'rating'         => $ratingVal,
+                'edit_count'     => $nextEditCount,
                 'review_text'    => $reviewText,
                 'review_images'  => !empty($savedImages) ? array_values($savedImages) : null,
                 'is_approved'    => true,

@@ -1341,6 +1341,126 @@
             display: none;
             transition: all 0.3s;
         }
+
+        /* ── Modern Interactive Rating Popup ── */
+        .pd-rating-success-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+            animation: rsmFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .pd-rating-success-modal-box {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 2.5rem 2rem 2.25rem;
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.28), 0 0 0 1px rgba(226, 232, 240, 0.8);
+            animation: rsmPopIn 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .pd-rsm-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #F1F5F9;
+            border: none;
+            font-size: 20px;
+            line-height: 1;
+            color: #64748B;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .pd-rsm-close:hover {
+            background: #E2E8F0;
+            color: #0F172A;
+            transform: scale(1.08);
+        }
+        .pd-rsm-icon-wrap {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1eb349 0%, #10b981 100%);
+            margin: 0 auto 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 12px 30px rgba(30, 179, 73, 0.38);
+            animation: rsmPulse 2.5s infinite;
+        }
+        .pd-rsm-stars {
+            font-size: 1.85rem;
+            color: #F59E0B;
+            letter-spacing: 5px;
+            margin-bottom: 0.65rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+        .pd-rsm-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #0F172A;
+            margin: 0 0 0.5rem;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: -0.01em;
+        }
+        .pd-rsm-desc {
+            font-size: 0.88rem;
+            color: #64748B;
+            line-height: 1.55;
+            margin: 0 0 1.65rem;
+        }
+        .pd-rsm-btn-primary {
+            background: linear-gradient(135deg, #1eb349 0%, #7db928 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 99px;
+            padding: 0.85rem 2rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 8px 22px rgba(30, 179, 73, 0.32);
+            transition: all 0.25s ease;
+            font-family: 'Montserrat', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .pd-rsm-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(30, 179, 73, 0.42);
+        }
+        @keyframes rsmFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes rsmPopIn {
+            from { opacity: 0; transform: scale(0.85) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes rsmPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
     </style>
 
     <div class="pd-page">
@@ -2060,7 +2180,7 @@
                                     @endfor
                                 </div>
 
-                                <div class="pd-reviews-action-box">
+                                <div class="pd-reviews-action-box" id="pdReviewsActionBox">
                                     @if($canReview)
                                         <button type="button" onclick="toggleWriteReviewForm()" class="pd-btn pd-btn-primary"
                                             style="width:100%;height:42px;font-size:0.85rem;border-radius:99px;font-weight:700;">
@@ -2069,13 +2189,24 @@
                                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                             </svg>
-                                            <span>Tulis Ulasan</span>
+                                            <span>{{ $userReview ? 'Edit Ulasan' : 'Tulis Ulasan' }}</span>
                                         </button>
                                         @if($userReview)
-                                            <div style="font-size:0.75rem;color:#15803d;font-weight:600;margin-top:2px;">
-                                                ✓ Anda sudah mengulas ({{ $userReview->rating }}★)
+                                            <div style="font-size:0.75rem;color:#15803d;font-weight:600;margin-top:5px;display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;">
+                                                <span>✓ Anda sudah mengulas ({{ $userReview->rating }}★)</span>
+                                                <span style="color:#d97706;background:#fef3c7;padding:1px 6px;border-radius:6px;font-size:0.7rem;">Sisa 1x edit</span>
                                             </div>
                                         @endif
+                                    @elseif($userReview)
+                                        <div style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:14px;padding:0.75rem 0.85rem;text-align:center;">
+                                            <div style="font-size:0.85rem;font-weight:800;color:#15803D;display:flex;align-items:center;justify-content:center;gap:6px;">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="#15803D"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                                <span>Ulasan Tersimpan ({{ $userReview->rating }}★)</span>
+                                            </div>
+                                            <div style="font-size:0.72rem;color:#64748B;margin-top:3px;font-weight:500;">
+                                                Batas pengeditan ulasan tercapai (maksimal 1x edit).
+                                            </div>
+                                        </div>
                                     @elseif(auth()->check())
                                         <div
                                             style="background:#F1F5F9;border-radius:12px;padding:0.75rem;font-size:0.78rem;color:#64748B;line-height:1.4;">
@@ -2098,7 +2229,7 @@
                                         style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;border-bottom:1px solid #DCFCE7;padding-bottom:0.75rem;">
                                         <h4
                                             style="margin:0;font-size:1.05rem;font-weight:800;color:#0F172A;display:flex;align-items:center;gap:6px;">
-                                            <span style="color:#1EB349;">✍️</span> Tulis Rating & Ulasan Produk
+                                            <span style="color:#1EB349;">✍️</span> {{ $userReview ? 'Edit Rating & Ulasan (Kesempatan Terakhir)' : 'Tulis Rating & Ulasan Produk' }}
                                         </h4>
                                         <button type="button" onclick="toggleWriteReviewForm()"
                                             style="background:none;border:none;color:#64748B;font-size:1.25rem;cursor:pointer;">&times;</button>
@@ -2195,7 +2326,7 @@
                                         <button type="button" id="btnSubmitTabReview" onclick="submitTabReview()"
                                             class="pd-btn pd-btn-primary"
                                             style="height:40px;font-size:0.85rem;padding:0 1.5rem;font-weight:700;">
-                                            Kirim Ulasan
+                                            {{ $userReview ? 'Simpan Perubahan' : 'Kirim Ulasan' }}
                                         </button>
                                     </div>
                                 </div>
@@ -3031,10 +3162,6 @@
                             ${avatarHtml}
                             <div>
                                 <div class="pd-reviewer-name">${escapeHtml(rev.display_name)}</div>
-                                <div class="pd-verified-badge">
-                                    <svg width="12" height="12" fill="none" stroke="#15803D" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-                                    <span>Pembeli Terverifikasi</span>
-                                </div>
                             </div>
                         </div>
                         <div class="pd-review-date">${rev.created_at} (${rev.date})</div>
@@ -3298,12 +3425,85 @@
             if (trigger) trigger.style.display = 'block';
         }
 
+        function showReviewInteractiveModal(opts) {
+            const modal = document.getElementById('reviewInteractiveModal');
+            if (!modal) return;
+            const isSuccess = opts.success !== false;
+            const iconWrap = document.getElementById('rsmIconWrap');
+            const iconSuccess = document.getElementById('rsmIconSuccess');
+            const iconError = document.getElementById('rsmIconError');
+            const starsEl = document.getElementById('rsmStars');
+            const titleEl = document.getElementById('rsmTitle');
+            const descEl = document.getElementById('rsmMessage');
+            const primaryBtn = document.getElementById('rsmPrimaryBtn');
+
+            if (isSuccess) {
+                if (iconWrap) {
+                    iconWrap.style.background = 'linear-gradient(135deg, #1eb349 0%, #10b981 100%)';
+                    iconWrap.style.boxShadow = '0 12px 30px rgba(30, 179, 73, 0.38)';
+                }
+                if (iconSuccess) iconSuccess.style.display = 'block';
+                if (iconError) iconError.style.display = 'none';
+
+                let starsHtml = '';
+                const starCount = Math.max(1, Math.min(5, parseInt(opts.rating || 5)));
+                for (let i = 1; i <= 5; i++) {
+                    starsHtml += (i <= starCount) ? '★' : '<span style="color:#CBD5E1;">★</span>';
+                }
+                if (starsEl) {
+                    starsEl.style.display = 'flex';
+                    starsEl.innerHTML = starsHtml;
+                }
+
+                if (titleEl) titleEl.textContent = opts.title || 'Ulasan Berhasil Disimpan! 🎉';
+                if (descEl) descEl.textContent = opts.message || 'Terima kasih atas ulasan & rating bintang Anda.';
+                if (primaryBtn) primaryBtn.innerHTML = '<span>Lihat Ulasan Saya</span><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+            } else {
+                if (iconWrap) {
+                    iconWrap.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+                    iconWrap.style.boxShadow = '0 12px 30px rgba(239, 68, 68, 0.38)';
+                }
+                if (iconSuccess) iconSuccess.style.display = 'none';
+                if (iconError) iconError.style.display = 'block';
+                if (starsEl) starsEl.style.display = 'none';
+                if (titleEl) titleEl.textContent = opts.title || 'Perhatian';
+                if (descEl) descEl.textContent = opts.message || 'Gagal memproses ulasan.';
+                if (primaryBtn) primaryBtn.innerHTML = '<span>Tutup</span>';
+            }
+
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeReviewSuccessModal() {
+            const modal = document.getElementById('reviewInteractiveModal');
+            if (modal) modal.style.display = 'none';
+            document.body.style.overflow = '';
+            // Smooth scroll to reviews tab
+            const reviewsTabBtn = document.getElementById('tab-btn-reviews');
+            if (reviewsTabBtn) reviewsTabBtn.click();
+            const listFeed = document.getElementById('reviewsListFeed');
+            if (listFeed) {
+                listFeed.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function handleReviewModalOverlayClick(e) {
+            if (e.target && e.target.id === 'reviewInteractiveModal') {
+                closeReviewSuccessModal();
+            }
+        }
+
         function submitTabReview() {
             const val = parseInt(document.getElementById('tabSelectedRatingValue')?.value || 0);
             const reviewText = (document.getElementById('tabReviewText')?.value || '').trim();
 
             if (!val || val < 1) {
-                alert('Silakan pilih rating bintang terlebih dahulu (1 - 5).');
+                showReviewInteractiveModal({
+                    success: false,
+                    title: 'Pilih Rating Bintang',
+                    message: 'Silakan pilih rating bintang terlebih dahulu (1 - 5 bintang) sebelum mengirim ulasan.'
+                });
                 return;
             }
 
@@ -3333,21 +3533,69 @@
                 .then(res => res.json())
                 .then(data => {
                     btn.disabled = false;
-                    btn.textContent = 'Kirim Ulasan';
+                    btn.textContent = '{{ $userReview ? "Simpan Perubahan" : "Kirim Ulasan" }}';
 
                     if (data.success) {
-                        alert(data.message || 'Ulasan berhasil disimpan!');
-                        toggleWriteReviewForm();
+                        showReviewInteractiveModal({
+                            success: true,
+                            rating: val,
+                            title: 'Ulasan Berhasil Disimpan! 🎉',
+                            message: data.message || `Terima kasih! Ulasan & rating ${val}★ Anda berhasil disimpan.`
+                        });
+
+                        const formCard = document.getElementById('writeReviewCard');
+                        if (formCard) formCard.style.display = 'none';
+
+                        const actionBox = document.getElementById('pdReviewsActionBox');
+                        if (actionBox) {
+                            @if($userReview)
+                                actionBox.innerHTML = `
+                                    <div style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:14px;padding:0.75rem 0.85rem;text-align:center;">
+                                        <div style="font-size:0.85rem;font-weight:800;color:#15803D;display:flex;align-items:center;justify-content:center;gap:6px;">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#15803D"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                            <span>Ulasan Tersimpan (${val}★)</span>
+                                        </div>
+                                        <div style="font-size:0.72rem;color:#64748B;margin-top:3px;font-weight:500;">
+                                            Batas pengeditan ulasan tercapai (maksimal 1x edit).
+                                        </div>
+                                    </div>
+                                `;
+                            @else
+                                actionBox.innerHTML = `
+                                    <button type="button" onclick="toggleWriteReviewForm()" class="pd-btn pd-btn-primary"
+                                        style="width:100%;height:42px;font-size:0.85rem;border-radius:99px;font-weight:700;">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                        <span>Edit Ulasan</span>
+                                    </button>
+                                    <div style="font-size:0.75rem;color:#15803d;font-weight:600;margin-top:5px;display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;">
+                                        <span>✓ Anda sudah mengulas (${val}★)</span>
+                                        <span style="color:#d97706;background:#fef3c7;padding:1px 6px;border-radius:6px;font-size:0.7rem;">Sisa 1x edit</span>
+                                    </div>
+                                `;
+                            @endif
+                        }
+
                         // Refresh feed
                         fetchReviews(1, 'all', false);
                     } else {
-                        alert(data.message || 'Gagal menyimpan ulasan.');
+                        showReviewInteractiveModal({
+                            success: false,
+                            title: 'Pemberitahuan',
+                            message: data.message || 'Gagal menyimpan ulasan.'
+                        });
                     }
                 })
                 .catch(() => {
                     btn.disabled = false;
-                    btn.textContent = 'Kirim Ulasan';
-                    alert('Terjadi kesalahan koneksi. Silakan coba lagi.');
+                    btn.textContent = '{{ $userReview ? "Simpan Perubahan" : "Kirim Ulasan" }}';
+                    showReviewInteractiveModal({
+                        success: false,
+                        title: 'Gangguan Koneksi',
+                        message: 'Terjadi kesalahan koneksi. Silakan periksa jaringan dan coba lagi.'
+                    });
                 });
         }
 
@@ -3455,4 +3703,34 @@
     </script>
 
     @include('partials.report_modal', ['reportType' => 'product', 'targetName' => $service->name])
+
+    {{-- Interactive Review Success / Error Popup Modal --}}
+    <div id="reviewInteractiveModal" class="pd-rating-success-modal-overlay" style="display:none;" onclick="handleReviewModalOverlayClick(event)">
+        <div class="pd-rating-success-modal-box">
+            <button type="button" onclick="closeReviewSuccessModal()" class="pd-rsm-close" aria-label="Tutup">&times;</button>
+            <div class="pd-rsm-icon-wrap" id="rsmIconWrap">
+                <svg id="rsmIconSuccess" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <svg id="rsmIconError" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+            </div>
+            <div class="pd-rsm-stars" id="rsmStars">
+                ★★★★★
+            </div>
+            <h3 class="pd-rsm-title" id="rsmTitle">Ulasan Berhasil Disimpan! 🎉</h3>
+            <p class="pd-rsm-desc" id="rsmMessage">
+                Terima kasih! Ulasan & rating Anda telah berhasil disimpan.
+            </p>
+            <div class="pd-rsm-actions">
+                <button type="button" onclick="closeReviewSuccessModal()" class="pd-rsm-btn-primary" id="rsmPrimaryBtn">
+                    <span>Lihat Ulasan Saya</span>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
 @endsection

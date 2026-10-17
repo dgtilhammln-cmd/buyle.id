@@ -1314,6 +1314,163 @@
             right: 0;
         }
 
+        /* ── Modern Minimalist Subcategory Dropdown Card ── */
+        .cv-cat-dropdown-card {
+            position: fixed;
+            z-index: 99999;
+            background: #ffffff;
+            border: 1.5px solid #BBF7D0;
+            border-radius: 18px;
+            box-shadow: 0 20px 45px -8px rgba(15, 23, 42, 0.2), 0 4px 15px rgba(30, 179, 73, 0.08);
+            width: 270px;
+            max-width: calc(100vw - 24px);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px) scale(0.96);
+            transform-origin: top center;
+            transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.22s;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .cv-cat-dropdown-card.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .cv-cat-dropdown-caret {
+            position: absolute;
+            top: -7px;
+            width: 14px;
+            height: 14px;
+            background: #ffffff;
+            border-top: 1.5px solid #BBF7D0;
+            border-left: 1.5px solid #BBF7D0;
+            transform: rotate(45deg);
+            border-top-left-radius: 3px;
+            z-index: 10;
+            transition: left 0.15s ease;
+        }
+
+        .cv-cat-dd-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #F8FAFC;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .cv-cat-dd-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cv-cat-dd-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #1eb349;
+            box-shadow: 0 0 8px rgba(30, 179, 73, 0.6);
+            flex-shrink: 0;
+        }
+
+        .cv-cat-dd-title {
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: #0F172A;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: -0.01em;
+            max-width: 155px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cv-cat-dd-badge {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #15803D;
+            background: #DCFCE7;
+            padding: 2px 7px;
+            border-radius: 99px;
+            font-family: 'Montserrat', sans-serif;
+            white-space: nowrap;
+        }
+
+        .cv-cat-dd-body {
+            padding: 0.5rem 0.4rem;
+            max-height: 250px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #CBD5E1 transparent;
+        }
+
+        .cv-cat-dd-body::-webkit-scrollbar {
+            width: 4px;
+        }
+        .cv-cat-dd-body::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+
+        .cv-cat-dd-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.75rem;
+            border-radius: 10px;
+            color: #334155;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .cv-cat-dd-item:hover {
+            background: #F0FDF4;
+            color: #1eb349;
+            padding-left: 0.95rem;
+            font-weight: 600;
+        }
+
+        .cv-cat-dd-item svg {
+            opacity: 0;
+            transform: translateX(-4px);
+            transition: all 0.18s ease;
+            color: #1eb349;
+            flex-shrink: 0;
+        }
+
+        .cv-cat-dd-item:hover svg {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .cv-cat-dd-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #F8FAFC;
+            padding: 0.65rem 1rem;
+            border-top: 1px solid #F1F5F9;
+            color: #1eb349;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .cv-cat-dd-footer:hover {
+            background: #DCFCE7;
+            color: #15803D;
+        }
+
         /* Mobile single row category grid */
         @media (max-width: 768px) {
             .cv-cats-section {
@@ -1662,12 +1819,26 @@
     @if($categoryItems->count())
         <section class="cv-cats-section" aria-label="Kategori Produk">
             <div class="cv-cats-inner" style="flex-direction: column; align-items: flex-start; padding: 1rem 1.5rem 1.25rem;">
-                <div class="swiper cats-swiper hidden md:block" id="catsSwiperDesktop" style="width: 100%;">
+                <div class="swiper cats-swiper" id="catsSwiperDesktop" style="width: 100%;">
                     <div class="swiper-wrapper">
                         @foreach($categoryItems as $cat)
+                            @php
+                                $subList = $cat->subCategories ? $cat->subCategories->map(function($sub) {
+                                    return [
+                                        'id' => $sub->id,
+                                        'name' => $sub->name,
+                                        'slug' => $sub->slug,
+                                        'url' => route('category.show', $sub->slug)
+                                    ];
+                                }) : collect();
+                            @endphp
                             <div class="swiper-slide">
                                 <a href="{{ route('category.show', $cat->slug) }}" class="cv-cat-slide"
-                                    aria-label="{{ $cat->name }}">
+                                    aria-label="{{ $cat->name }}"
+                                    data-cat-name="{{ $cat->name }}"
+                                    data-cat-url="{{ route('category.show', $cat->slug) }}"
+                                    data-has-sub="{{ $subList->count() > 0 ? '1' : '0' }}"
+                                    data-subs="{{ json_encode($subList) }}">
                                     <div class="cv-cat-icon-wrap">
                                         @if($cat->icon_type === 'upload' && $cat->icon_value)
                                             <img src="{{ asset('storage/' . $cat->icon_value) }}" alt="" loading="lazy"
@@ -1735,6 +1906,25 @@
                 </button>
             </div>
         </section>
+
+        {{-- Floating Subcategory Dropdown Card (Minimalis & Tema Seragam) --}}
+        <div id="cvCatDropdownCard" class="cv-cat-dropdown-card" aria-hidden="true">
+            <div class="cv-cat-dropdown-caret" id="cvCatDdCaret"></div>
+            <div class="cv-cat-dd-header">
+                <div class="cv-cat-dd-title-wrap">
+                    <span class="cv-cat-dd-dot"></span>
+                    <span class="cv-cat-dd-title" id="cvCatDdTitle">Kategori</span>
+                </div>
+                <span class="cv-cat-dd-badge" id="cvCatDdCount">0 Subkategori</span>
+            </div>
+            <div class="cv-cat-dd-body" id="cvCatDdBody"></div>
+            <a href="#" class="cv-cat-dd-footer" id="cvCatDdAllLink">
+                <span id="cvCatDdAllText">Lihat Semua di Kategori</span>
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M5 12h14m-7-7l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
     @endif
 
     {{-- ════════════════════════════════════════════════════════════════════════
@@ -3849,7 +4039,7 @@
                 });
             }
 
-            // ── Category Swiper (Desktop) ──
+            // ── Category Swiper (Desktop & Mobile) ──
             if (document.querySelector('#catsSwiperDesktop')) {
                 const catsSwiper = new Swiper('#catsSwiperDesktop', {
                     slidesPerView: 'auto',
@@ -3865,6 +4055,149 @@
                     },
                 });
             }
+
+            // ── Category Hover / Touch Dropdown Subcategories ──
+            (function () {
+                const ddCard = document.getElementById('cvCatDropdownCard');
+                if (!ddCard) return;
+
+                const caret = document.getElementById('cvCatDdCaret');
+                const titleEl = document.getElementById('cvCatDdTitle');
+                const countEl = document.getElementById('cvCatDdCount');
+                const bodyEl = document.getElementById('cvCatDdBody');
+                const allLink = document.getElementById('cvCatDdAllLink');
+                const allText = document.getElementById('cvCatDdAllText');
+
+                let hideTimeout = null;
+                let currentSlide = null;
+
+                function showDropdown(slide) {
+                    clearTimeout(hideTimeout);
+                    const hasSub = slide.getAttribute('data-has-sub') === '1';
+                    if (!hasSub) {
+                        hideDropdown(true);
+                        return;
+                    }
+
+                    currentSlide = slide;
+                    const catName = slide.getAttribute('data-cat-name') || '';
+                    const catUrl = slide.getAttribute('data-cat-url') || '#';
+                    let subs = [];
+                    try {
+                        subs = JSON.parse(slide.getAttribute('data-subs') || '[]');
+                    } catch (e) { }
+
+                    if (!subs.length) {
+                        hideDropdown(true);
+                        return;
+                    }
+
+                    titleEl.textContent = catName;
+                    countEl.textContent = `${subs.length} Subkategori`;
+                    allLink.href = catUrl;
+                    allText.textContent = `Lihat Semua di ${catName}`;
+
+                    let itemsHtml = '';
+                    subs.forEach(s => {
+                        itemsHtml += `
+                            <a href="${s.url}" class="cv-cat-dd-item">
+                                <span>${s.name}</span>
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <path d="M9 18l6-6-6-6"/>
+                                </svg>
+                            </a>
+                        `;
+                    });
+                    bodyEl.innerHTML = itemsHtml;
+
+                    // Position dropdown card
+                    const iconWrap = slide.querySelector('.cv-cat-icon-wrap') || slide;
+                    const rect = iconWrap.getBoundingClientRect();
+                    const cardWidth = Math.min(270, window.innerWidth - 24);
+                    const gap = 10;
+
+                    let top = rect.bottom + gap;
+                    // Check if card would overflow bottom of viewport
+                    if (top + 260 > window.innerHeight && rect.top > 260) {
+                        top = Math.max(10, rect.top - 260 - gap);
+                    }
+
+                    let left = rect.left + (rect.width / 2) - (cardWidth / 2);
+                    const minLeft = 12;
+                    const maxLeft = window.innerWidth - cardWidth - 12;
+                    const clampedLeft = Math.max(minLeft, Math.min(left, maxLeft));
+
+                    // Caret position relative to card
+                    const iconCenter = rect.left + (rect.width / 2);
+                    const caretLeft = Math.max(16, Math.min(iconCenter - clampedLeft - 7, cardWidth - 28));
+
+                    ddCard.style.top = `${top}px`;
+                    ddCard.style.left = `${clampedLeft}px`;
+                    ddCard.style.width = `${cardWidth}px`;
+                    if (caret) caret.style.left = `${caretLeft}px`;
+
+                    ddCard.classList.add('active');
+                }
+
+                function hideDropdown(immediate) {
+                    if (immediate) {
+                        clearTimeout(hideTimeout);
+                        ddCard.classList.remove('active');
+                        currentSlide = null;
+                        return;
+                    }
+                    hideTimeout = setTimeout(() => {
+                        ddCard.classList.remove('active');
+                        currentSlide = null;
+                    }, 180);
+                }
+
+                document.querySelectorAll('.cv-cat-slide').forEach(slide => {
+                    slide.addEventListener('mouseenter', () => {
+                        showDropdown(slide);
+                    });
+                    slide.addEventListener('mouseleave', () => {
+                        hideDropdown(false);
+                    });
+
+                    // Mobile touch handler: first tap on category with subs opens dropdown
+                    slide.addEventListener('click', (e) => {
+                        const hasSub = slide.getAttribute('data-has-sub') === '1';
+                        if (hasSub && ('ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth <= 768)) {
+                            if (!ddCard.classList.contains('active') || currentSlide !== slide) {
+                                e.preventDefault();
+                                showDropdown(slide);
+                            }
+                        }
+                    });
+                });
+
+                ddCard.addEventListener('mouseenter', () => {
+                    clearTimeout(hideTimeout);
+                });
+
+                ddCard.addEventListener('mouseleave', () => {
+                    hideDropdown(false);
+                });
+
+                window.addEventListener('scroll', () => {
+                    if (ddCard.classList.contains('active') && currentSlide) {
+                        const iconWrap = currentSlide.querySelector('.cv-cat-icon-wrap') || currentSlide;
+                        const rect = iconWrap.getBoundingClientRect();
+                        if (rect.bottom < 0 || rect.top > window.innerHeight) {
+                            hideDropdown(true);
+                        } else {
+                            showDropdown(currentSlide);
+                        }
+                    }
+                }, { passive: true });
+
+                document.addEventListener('click', (e) => {
+                    if (!ddCard.contains(e.target) && !e.target.closest('.cv-cat-slide')) {
+                        hideDropdown(true);
+                    }
+                });
+            })();
 
             // ── Promo Section Swipers ──
             document.querySelectorAll('.cv-promo-swiper').forEach(function (el) {

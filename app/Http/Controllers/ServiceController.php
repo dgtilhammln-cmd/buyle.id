@@ -573,21 +573,35 @@ class ServiceController extends Controller
 
         $currentUser = auth()->user();
         $canReview = false;
+        $canEditReview = false;
         $userReview = null;
         if ($currentUser) {
-            $canReview = $currentUser->orders()
+            $hasPurchased = $currentUser->orders()
                 ->whereIn('status', ['confirmed', 'processing', 'shipped', 'delivered', 'completed'])
                 ->whereHas('items', fn($q) => $q->where('product_id', $service->id))
                 ->exists();
             $userReview = \App\Models\ProductRating::where('product_id', $service->id)
                 ->where('user_id', $currentUser->id)
                 ->first();
+
+            if ($hasPurchased) {
+                if (!$userReview) {
+                    $canReview = true;
+                    $canEditReview = false;
+                } elseif ((int)$userReview->edit_count < 1) {
+                    $canReview = true;
+                    $canEditReview = true;
+                } else {
+                    $canReview = false;
+                    $canEditReview = false;
+                }
+            }
         }
 
         return view('services.show', compact(
             'service', 'settings', 'related', 'otherRelated', 'wa', 'seo', 'schema',
             'faq', 'breadcrumbs', 'testimonials', 'sellerName', 'sellerUrl',
-            'realReviewsCount', 'realReviewsAvg', 'canReview', 'userReview'
+            'realReviewsCount', 'realReviewsAvg', 'canReview', 'canEditReview', 'userReview'
         ));
     }
 }

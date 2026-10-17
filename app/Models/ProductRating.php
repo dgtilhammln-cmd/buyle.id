@@ -14,6 +14,7 @@ class ProductRating extends Model
         'user_id',
         'order_id',
         'rating',
+        'edit_count',
         'review_text',
         'review_images',
         'is_approved',
@@ -24,6 +25,7 @@ class ProductRating extends Model
 
     protected $casts = [
         'rating'            => 'integer',
+        'edit_count'        => 'integer',
         'review_images'     => 'array',
         'is_approved'       => 'boolean',
         'seller_replied_at' => 'datetime',
