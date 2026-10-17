@@ -1326,11 +1326,11 @@
             max-width: calc(100vw - 24px);
             opacity: 0;
             visibility: hidden;
-            transform: translateY(8px) scale(0.96);
+            transform: translateY(6px) scale(0.96);
             transform-origin: top center;
-            transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s;
+            transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.18s;
             pointer-events: none;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .cv-cat-dropdown-card.active {
@@ -1340,18 +1340,40 @@
             pointer-events: auto;
         }
 
+        .cv-cat-dropdown-card.placement-top {
+            transform-origin: bottom center;
+        }
+
         .cv-cat-dropdown-caret {
             position: absolute;
-            top: -6px;
             width: 12px;
             height: 12px;
             background: #ffffff;
-            border-top: 1.5px solid #BBF7D0;
-            border-left: 1.5px solid #BBF7D0;
             transform: rotate(45deg);
-            border-top-left-radius: 3px;
             z-index: 10;
             transition: left 0.15s ease;
+        }
+
+        /* Default: Card is BELOW category */
+        .cv-cat-dropdown-card:not(.placement-top) .cv-cat-dropdown-caret {
+            top: -6px;
+            bottom: auto;
+            border-top: 1.5px solid #BBF7D0;
+            border-left: 1.5px solid #BBF7D0;
+            border-bottom: none;
+            border-right: none;
+            border-top-left-radius: 3px;
+        }
+
+        /* Card is ABOVE category */
+        .cv-cat-dropdown-card.placement-top .cv-cat-dropdown-caret {
+            bottom: -6px;
+            top: auto;
+            border-bottom: 1.5px solid #BBF7D0;
+            border-right: 1.5px solid #BBF7D0;
+            border-top: none;
+            border-left: none;
+            border-bottom-right-radius: 3px;
         }
 
         .cv-cat-dd-body {
@@ -4031,21 +4053,39 @@
 
                             // Position dropdown card
                             const iconWrap = slide.querySelector('.cv-cat-icon-wrap') || slide;
-                            const rect = iconWrap.getBoundingClientRect();
+                            const iconRect = iconWrap.getBoundingClientRect();
+                            const slideRect = slide.getBoundingClientRect();
                             const cardWidth = Math.min(230, window.innerWidth - 24);
                             const gap = 8;
 
-                            let top = rect.bottom + gap;
-                            if (top + 240 > window.innerHeight && rect.top > 240) {
-                                top = Math.max(10, rect.top - 240 - gap);
+                            // Measure real height with actual items
+                            ddCard.style.width = cardWidth + 'px';
+                            ddCard.style.visibility = 'hidden';
+                            ddCard.style.display = 'block';
+                            const cardHeight = ddCard.offsetHeight || 150;
+
+                            // Determine whether to place above or below
+                            const spaceBelow = window.innerHeight - slideRect.bottom;
+                            const spaceAbove = iconRect.top;
+                            const placeAbove = spaceBelow < (cardHeight + 12) && spaceAbove > (cardHeight + 12);
+
+                            let top = 0;
+                            if (placeAbove) {
+                                top = Math.max(10, iconRect.top - cardHeight - gap);
+                                ddCard.classList.add('placement-top');
+                            } else {
+                                top = slideRect.bottom + gap;
+                                ddCard.classList.remove('placement-top');
                             }
 
-                            let left = rect.left + (rect.width / 2) - (cardWidth / 2);
+                            // Center card on category icon
+                            let left = iconRect.left + (iconRect.width / 2) - (cardWidth / 2);
                             const minLeft = 12;
                             const maxLeft = window.innerWidth - cardWidth - 12;
                             const clampedLeft = Math.max(minLeft, Math.min(left, maxLeft));
 
-                            const iconCenter = rect.left + (rect.width / 2);
+                            // Caret position relative to card, pointing directly to icon center
+                            const iconCenter = iconRect.left + (iconRect.width / 2);
                             const caretLeft = Math.max(16, Math.min(iconCenter - clampedLeft - 6, cardWidth - 28));
 
                             ddCard.style.top = `${top}px`;
@@ -4053,6 +4093,7 @@
                             ddCard.style.width = `${cardWidth}px`;
                             if (caret) caret.style.left = `${caretLeft}px`;
 
+                            ddCard.style.visibility = '';
                             ddCard.classList.add('active');
                         }
 

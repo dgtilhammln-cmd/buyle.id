@@ -313,7 +313,7 @@
         @media(max-width: 768px) { .skel-body { padding: 1rem 1rem 2rem; } }
 
         /* Home Banner Grid */
-        .skel-hero-wrapper { margin-bottom: 2rem; width: 100%; }
+        .skel-hero-wrapper { margin-bottom: 1.5rem; width: 100%; }
         .skel-hero-grid { display: none; }
         .skel-hero-mob-slide { width: 100%; aspect-ratio: 2 / 1; border-radius: 14px; }
         @media(min-width: 1025px) {
@@ -323,8 +323,117 @@
             .skel-hero-side { display: flex; flex-direction: column; gap: 0.75rem; height: 100%; }
             .skel-hero-sub { flex: 1; border-radius: 16px; min-height: 0; }
         }
+
+        /* ── Categories Bar Skeleton ── */
+        .skel-cats-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.5rem 0 1.25rem;
+            border-bottom: 1px solid #F1F5F9;
+            margin-bottom: 1.75rem;
+            overflow: hidden;
+        }
+        .skel-cat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+        .skel-cat-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 16px;
+        }
+        .skel-cat-name {
+            width: 50px;
+            height: 9px;
+            border-radius: 4px;
+        }
+
+        /* ── Section Header Skeleton ── */
+        .skel-sec-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+        .skel-sec-title {
+            width: 230px;
+            height: 24px;
+            border-radius: 6px;
+        }
+        .skel-sec-link {
+            width: 120px;
+            height: 14px;
+            border-radius: 4px;
+        }
+
+        /* ── Product Grid & Cards Skeleton (Matching .article-card-box 1:1) ── */
+        .skel-prod-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.85rem;
+        }
+        @media(min-width: 768px) {
+            .skel-prod-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.1rem;
+            }
+        }
+        @media(min-width: 1025px) {
+            .skel-prod-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 1.1rem;
+            }
+        }
+        .skel-prod-card {
+            background: #ffffff;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            box-sizing: border-box;
+        }
+        .skel-prod-img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 12px;
+        }
+        .skel-prod-body {
+            padding: 0.75rem 0.2rem 0.1rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .skel-prod-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.35rem;
+        }
+        .skel-prod-divider {
+            border-top: 1px solid #F1F5F9;
+            margin: 0.65rem 0 0.75rem;
+        }
+        .skel-prod-footer {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 0.35rem;
+        }
+        .skel-prod-btn {
+            width: 58px;
+            height: 24px;
+            border-radius: 99px;
+            flex-shrink: 0;
+        }
         
-        /* Grid */
+        /* Grid (fallback) */
         .skel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
         @media(min-width: 768px) { .skel-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
         @media(min-width: 1025px) { .skel-grid { grid-template-columns: repeat(5, 1fr); } }
@@ -396,9 +505,45 @@
                     {{-- Mobile Swipe (Visible <= 1024px) --}}
                     <div class="skel-shimmer skel-hero-mob-slide"></div>
                 </div>
-                <div class="skel-grid">
-                    @for($i=0; $i<10; $i++) 
-                        <div class="skel-shimmer skel-card {{ $i > 3 ? 'hide-on-mobile' : '' }}"></div> 
+
+                {{-- Category Swiper Skeleton --}}
+                <div class="skel-cats-bar">
+                    @for($c=0; $c<10; $c++)
+                        <div class="skel-cat-item {{ $c > 5 ? 'hide-on-mobile' : '' }}">
+                            <div class="skel-shimmer skel-cat-icon"></div>
+                            <div class="skel-shimmer skel-cat-name"></div>
+                        </div>
+                    @endfor
+                </div>
+
+                {{-- Product Section Header Skeleton --}}
+                <div class="skel-sec-header">
+                    <div class="skel-shimmer skel-sec-title"></div>
+                    <div class="skel-shimmer skel-sec-link"></div>
+                </div>
+
+                {{-- 5-Column Product Cards Grid (Matching Real Cards 1:1) --}}
+                <div class="skel-prod-grid">
+                    @for($i=0; $i<5; $i++)
+                        <div class="skel-prod-card {{ $i > 1 ? 'hide-on-mobile' : '' }}">
+                            <div class="skel-shimmer skel-prod-img"></div>
+                            <div class="skel-prod-body">
+                                <div class="skel-prod-meta">
+                                    <div class="skel-shimmer" style="width: 45px; height: 12px; border-radius: 4px;"></div>
+                                    <div class="skel-shimmer" style="width: 55px; height: 12px; border-radius: 4px;"></div>
+                                </div>
+                                <div class="skel-shimmer" style="width: 90%; height: 13px; border-radius: 4px; margin-top: 4px;"></div>
+                                <div class="skel-shimmer" style="width: 60%; height: 13px; border-radius: 4px; margin-top: 5px;"></div>
+                                <div class="skel-prod-divider"></div>
+                                <div class="skel-prod-footer">
+                                    <div>
+                                        <div class="skel-shimmer" style="width: 45px; height: 9px; border-radius: 3px; margin-bottom: 4px;"></div>
+                                        <div class="skel-shimmer" style="width: 75px; height: 16px; border-radius: 4px;"></div>
+                                    </div>
+                                    <div class="skel-shimmer skel-prod-btn"></div>
+                                </div>
+                            </div>
+                        </div>
                     @endfor
                 </div>
             @elseif(request()->routeIs('store.show') || request()->is('c/*'))
