@@ -3512,15 +3512,18 @@
                                     // Poster Event (Landscape 16:9), fallback ke gambar utama
                                     $tImage = !empty($tProd->og_image) ? asset('storage/' . $tProd->og_image) : ($tProd->image ? asset('storage/' . $tProd->image) : asset('assets/images/default-ticket.webp'));
 
-                                    // Deteksi event_date — prioritas: kolom event_date > data_json['event_date'] > created_at+15
-                                    // $tIsExpired hanya berlaku untuk produk tipe ticket/konser
+                                    // Deteksi event_date — prioritas: kolom event_date > data_json['event_date']
+                                    // $tIsExpired hanya berlaku jika tanggal pelaksanaan benar-benar sudah lewat
                                     $tRawEventDate = $tProd->event_date
                                         ?: (!empty($tProd->data_json['event_date']) ? $tProd->data_json['event_date'] : null);
-                                    $tDateCarbon = $tRawEventDate
-                                        ? \Carbon\Carbon::parse($tRawEventDate)
-                                        : \Carbon\Carbon::parse($tProd->created_at)->addDays(15);
-                                    $tDate = $tDateCarbon->isoFormat('D MMMM Y');
-                                    $tIsExpired = $tDateCarbon->endOfDay()->isPast();
+                                    if ($tRawEventDate) {
+                                        $tDateCarbon = \Carbon\Carbon::parse($tRawEventDate)->locale('id');
+                                        $tDate = $tDateCarbon->isoFormat('D MMMM Y');
+                                        $tIsExpired = $tDateCarbon->endOfDay()->isPast();
+                                    } else {
+                                        $tDate = 'Segera Hadir';
+                                        $tIsExpired = false;
+                                    }
 
                                     $tLocation = $tProd->event_location
                                         ?: ($tProd->location

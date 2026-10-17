@@ -37,13 +37,18 @@ class HomeController extends Controller
             $uspItems,
             $categoryItems,
             $promoSections,
-        ] = Cache::remember('home_page_data_v4', 300, function () {
+        ] = Cache::remember('home_page_data_v5', 300, function () {
             // Semua produk marketplace sekaligus — cukup 1 query besar, dibagi di PHP
             $allMp = Product::marketplace()
                 ->with(['seller:id,name,username,avatar', 'seller.creatorProfile:id,user_id,store_name,store_slug,is_verified,store_banner_1', 'category:id,name,slug'])
                 ->withAvg('reviews', 'rating')
                 ->withCount('reviews')
-                ->select(['id','name','slug','image','gallery','price','sale_price','stock','sold_count','views_count','rating','product_category_id','seller_id','product_type','is_active','created_at'])
+                ->select([
+                    'id', 'name', 'slug', 'image', 'og_image', 'gallery', 'price', 'sale_price', 'stock',
+                    'sold_count', 'views_count', 'rating', 'product_category_id', 'seller_id', 'product_type',
+                    'is_active', 'created_at', 'event_date', 'event_time', 'event_location', 'event_type',
+                    'event_platform', 'is_buyle_checkout'
+                ])
                 ->latest()
                 ->limit(40)
                 ->get();
@@ -56,8 +61,8 @@ class HomeController extends Controller
             // Bestseller — sort by sold_count (already in query, no extra withCount)
             $bestsellerProducts = $allMp->sortByDesc('sold_count')->take(12)->values();
 
-            // Ticket/Event produk — from subset of $allMp (already loaded)
-            $ticketKeywords = ['tiket','event','konser','wisata','webinar','workshop','seminar'];
+            // Ticket/Event produk — prioritas: filter dari $allMp, jika kosong ambil langsung dari DB
+            $ticketKeywords = ['tiket', 'event', 'konser', 'wisata', 'webinar', 'workshop', 'seminar'];
             $ticketProducts = $allMp->filter(function($p) use ($ticketKeywords) {
                 $name = strtolower($p->name ?? '');
                 $type = strtolower($p->product_type ?? '');
@@ -67,6 +72,28 @@ class HomeController extends Controller
                 }
                 return false;
             })->take(10)->values();
+
+            if ($ticketProducts->isEmpty()) {
+                $ticketProducts = Product::marketplace()
+                    ->where(function($q) {
+                        $q->where('product_type', 'ticket')
+                          ->orWhere('name', 'like', '%tiket%')
+                          ->orWhere('name', 'like', '%konser%')
+                          ->orWhere('name', 'like', '%event%');
+                    })
+                    ->with(['seller:id,name,username,avatar', 'seller.creatorProfile:id,user_id,store_name,store_slug,is_verified,store_banner_1', 'category:id,name,slug'])
+                    ->withAvg('reviews', 'rating')
+                    ->withCount('reviews')
+                    ->select([
+                        'id', 'name', 'slug', 'image', 'og_image', 'gallery', 'price', 'sale_price', 'stock',
+                        'sold_count', 'views_count', 'rating', 'product_category_id', 'seller_id', 'product_type',
+                        'is_active', 'created_at', 'event_date', 'event_time', 'event_location', 'event_type',
+                        'event_platform', 'is_buyle_checkout'
+                    ])
+                    ->latest()
+                    ->take(10)
+                    ->get();
+            }
 
             // Creator populer — 1 query dengan filter DB, tanpa PHP loop order-items per creator
             $popularCreators = \App\Models\User::whereHas('creatorProfile', function($q) {
