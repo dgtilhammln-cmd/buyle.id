@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 
@@ -852,86 +852,87 @@
             {{-- Premium Cards Grid --}}
             <div class="cv-adv-cards">
 
-                {{-- Card 1: Transaksi Aman — Accent --}}
+                {{-- Card 1: E-Ticketing & Event Pass — Accent Green --}}
                 <div class="cv-adv-card-v2 accent" data-aos="fade-up" data-aos-delay="0">
                     <div class="cv-adv-card-icon-wrap white-bg">
                         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
+                            <path d="M13 5v2m0 4v2m0 4v2" />
                         </svg>
                     </div>
                     <div class="cv-adv-card-num white">100%</div>
-                    <div class="cv-adv-card-title white">Transaksi Aman</div>
-                    <div class="cv-adv-card-desc white">Semua transaksi dilindungi. Uang ditahan dulu, baru cair setelah
-                        pembeli konfirmasi puas.</div>
+                    <div class="cv-adv-card-title white">E-Ticketing & Event Pass</div>
+                    <div class="cv-adv-card-desc white">Sistem tiket digital konser, workshop, webinar, hingga tempat wisata. Dilengkapi QR Code scan cepat anti-duplikasi & dashboard check-in gate staff.</div>
                 </div>
 
-                {{-- Card 2: Akses Instan — Gray --}}
+                {{-- Card 2: Web & Bio Link Builder — Gray --}}
                 <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="80">
-                    <div class="cv-adv-card-icon-wrap blue-bg">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                    </div>
-                    <div class="cv-adv-card-num">⚡</div>
-                    <div class="cv-adv-card-title">Akses Instan</div>
-                    <div class="cv-adv-card-desc">Produk digital langsung bisa diunduh atau diakses setelah pembayaran
-                        berhasil. Tidak ada menunggu.</div>
-                </div>
-
-                {{-- Card 3: 24/7 — Gray --}}
-                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="160">
-                    <div class="cv-adv-card-icon-wrap blue-bg">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10" />
-                            <polyline points="12 6 12 12 16 14" />
-                        </svg>
-                    </div>
-                    <div class="cv-adv-card-num">24/7</div>
-                    <div class="cv-adv-card-title">Toko Selalu Buka</div>
-                    <div class="cv-adv-card-desc">Kreator berjualan dan pembeli berbelanja kapan saja, dari mana saja, tanpa
-                        batas waktu.</div>
-                </div>
-
-                {{-- Card 4: Kreator Terverifikasi — Dark --}}
-                <div class="cv-adv-card-v2 accent-dark" data-aos="fade-up" data-aos-delay="240">
-                    <div class="cv-adv-card-icon-wrap dark-bg">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                        </svg>
-                    </div>
-                    <div class="cv-adv-card-num blue">1K+</div>
-                    <div class="cv-adv-card-title light">Kreator Terverifikasi</div>
-                    <div class="cv-adv-card-desc white">Semua kreator di buyle.id telah melewati proses verifikasi untuk
-                        memastikan kualitas karya dan layanan.</div>
-                </div>
-
-                {{-- Card 5: Beragam Produk --}}
-                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="0">
                     <div class="cv-adv-card-icon-wrap blue-bg">
                         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <rect x="3" y="3" width="18" height="18" rx="2" />
                             <path d="M3 9h18M9 21V9" />
                         </svg>
                     </div>
-                    <div class="cv-adv-card-title" style="margin-top:auto;">Beragam Kategori</div>
-                    <div class="cv-adv-card-desc">Template, source code, desain, foto, kursus, jasa penulisan, dan masih
-                        banyak lagi.</div>
+                    <div class="cv-adv-card-num">⚡</div>
+                    <div class="cv-adv-card-title">Web & Bio Link Builder</div>
+                    <div class="cv-adv-card-desc">Bikin landing page dan bio link toko online kustom instan tanpa koding. Dukungan kustom domain, tema estetik, formulir order, dan analitik pengunjung.</div>
                 </div>
 
-                {{-- Card 6: Komisi Kompetitif --}}
+                {{-- Card 3: Whitelabel & Jual Produk Orang (Affiliate / Reseller) — Gray --}}
+                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="160">
+                    <div class="cv-adv-card-icon-wrap blue-bg">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="m17 2 4 4-4 4" />
+                            <path d="M3 11v-1a4 4 0 0 1 4-4h14" />
+                            <path d="m7 22-4-4 4-4" />
+                            <path d="M21 13v1a4 4 0 0 1-4 4H3" />
+                        </svg>
+                    </div>
+                    <div class="cv-adv-card-num">Margin Bebas</div>
+                    <div class="cv-adv-card-title">Whitelabel & Jual Produk Mitra</div>
+                    <div class="cv-adv-card-desc">Mulai bisnis tanpa modal produk sendiri. Jual produk digital kreator lain dengan harga Anda sendiri (whitelabel) atau dapatkan komisi afiliasi otomatis.</div>
+                </div>
+
+                {{-- Card 4: Transaksi Aman Escrow — Dark --}}
+                <div class="cv-adv-card-v2 accent-dark" data-aos="fade-up" data-aos-delay="240">
+                    <div class="cv-adv-card-icon-wrap dark-bg">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+                    </div>
+                    <div class="cv-adv-card-num blue">100%</div>
+                    <div class="cv-adv-card-title light">Transaksi Terlindungi Escrow</div>
+                    <div class="cv-adv-card-desc white">Dana pembeli tersimpan aman di rekening penampung (escrow) sampai produk diterima. Kreator dapat mencairkan saldo kapan saja tanpa risiko.</div>
+                </div>
+
+                {{-- Card 5: Marketplace Produk Digital --}}
+                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="0">
+                    <div class="cv-adv-card-icon-wrap blue-bg">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                    </div>
+                    <div class="cv-adv-card-title" style="margin-top:auto;">Produk Digital & Akses Instan</div>
+                    <div class="cv-adv-card-desc">Template Canva & Notion, source code aplikasi, desain grafis, e-book, hingga course. File langsung terkirim dan bisa diunduh detik itu juga.</div>
+                </div>
+
+                {{-- Card 6: Jasa Kreator & Sesi 1-on-1 --}}
                 <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="80">
                     <div class="cv-adv-card-icon-wrap blue-bg">
                         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <line x1="12" y1="1" x2="12" y2="23" />
-                            <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
                         </svg>
                     </div>
-                    <div class="cv-adv-card-title" style="margin-top:auto;">Komisi Kompetitif</div>
-                    <div class="cv-adv-card-desc">Kreator mendapatkan komisi yang kompetitif dan transparan. Lebih banyak
-                        jual, lebih banyak untung.</div>
+                    <div class="cv-adv-card-title" style="margin-top:auto;">Jasa Kreator & Sesi 1-on-1</div>
+                    <div class="cv-adv-card-desc">Booking jasa freelance profesional dan sesi konsultasi privat dengan kreator favorit lewat kalender jadwal tersinkronisasi dan brief terorganisir.</div>
                 </div>
 
-                {{-- Card 7: Payment Gateway — spans 2 columns --}}
+                {{-- Card 7: Payment Gateway & Payout — spans 2 columns --}}
                 <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="160"
                     style="grid-column: span 2; flex-direction: row; gap: 2rem; align-items: center;">
                     <div class="cv-adv-card-icon-wrap blue-bg" style="flex-shrink:0; width:60px; height:60px;">
@@ -941,10 +942,8 @@
                         </svg>
                     </div>
                     <div>
-                        <div class="cv-adv-card-title" style="font-size:1.125rem; margin-bottom:0.5rem;">Pembayaran Lengkap
-                            & Terjamin</div>
-                        <div class="cv-adv-card-desc">Mendukung transfer bank, e-wallet (GoPay, OVO, DANA), QRIS, dan kartu
-                            kredit. Semua transaksi diproses dengan standar keamanan tertinggi.</div>
+                        <div class="cv-adv-card-title" style="font-size:1.125rem; margin-bottom:0.5rem;">Pembayaran Terlengkap & Payout Cepat</div>
+                        <div class="cv-adv-card-desc">Mendukung pembayaran via QRIS semua bank/e-wallet (GoPay, OVO, DANA, ShopeePay), Virtual Account, dan Kartu Kredit. Pencairan saldo mudah dan transparan.</div>
                     </div>
                 </div>
 
@@ -1207,337 +1206,6 @@
         </section>
     @endif
 
-    <style>
-        .cv-coverage-premium {
-            background: #EAEBED;
-            padding: 6rem 0 0;
-            position: relative;
-        }
-
-        .cv-coverage-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .cv-coverage-header-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .cv-coverage-title-v2 {
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 600;
-            color: #0F172A;
-            line-height: 1.1;
-            letter-spacing: -0.04em;
-            flex-shrink: 0;
-            min-width: 220px;
-        }
-
-        .cv-coverage-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            flex: 1;
-        }
-
-        .cv-stat-card-v2 {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s;
-        }
-
-        .cv-stat-card-v2:hover {
-            transform: translateY(-5px);
-        }
-
-        .cv-stat-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-        }
-
-        .cv-stat-label {
-            font-size: 0.65rem;
-            font-weight: 700;
-            color: #64748B;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .cv-stat-icon {
-            color: #0F172A;
-            opacity: 0.8;
-        }
-
-        .cv-stat-val {
-            font-size: 4rem;
-            font-weight: 400;
-            color: #1eb349;
-            line-height: 1;
-            letter-spacing: -0.05em;
-            display: flex;
-            align-items: baseline;
-            gap: 0.1em;
-        }
-
-        .cv-stat-val span {
-            color: #1eb349;
-            font-size: 2rem;
-            font-weight: 600;
-            line-height: 1;
-        }
-
-        /* Abstract Map BG */
-        .cv-coverage-map-bg {
-            position: absolute;
-            top: 45%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 120%;
-            min-width: 1000px;
-            opacity: 0.6;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        /* Glassmorphism Bottom Box */
-        .cv-coverage-glass-box {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            border-radius: 24px;
-            padding: 3rem;
-            margin-top: 8rem;
-        }
-
-        .cv-glass-box-title {
-            font-size: 2.2rem;
-            font-weight: 500;
-            color: #0F172A;
-            margin-bottom: 2rem;
-            letter-spacing: -0.04em;
-        }
-
-        .cv-cities-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-        }
-
-        .cv-city-item {
-            font-size: 0.9rem;
-            color: #1E293B;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .cv-city-item::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: transparent;
-            border: 1.5px solid #94A3B8;
-        }
-
-        .cv-city-item.active::before {
-            background: #1eb349;
-            border-color: #1eb349;
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .cv-coverage-header-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 2rem;
-            }
-        }
-
-        @media (max-width: 1024px) {
-            .cv-coverage-stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .cv-cities-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .cv-coverage-glass-box {
-                margin-top: 4rem;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .cv-coverage-premium {
-                padding: 4rem 0;
-            }
-
-            .cv-coverage-stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-
-            .cv-stat-card-v2 {
-                padding: 1.25rem;
-            }
-
-            .cv-stat-val {
-                font-size: 2.5rem;
-            }
-
-            .cv-stat-val span {
-                font-size: 1.5rem;
-            }
-
-            .cv-cities-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .cv-coverage-glass-box {
-                padding: 2rem 1.5rem;
-                margin-top: 3rem;
-            }
-        }
-    </style>
-    <section class="cv-coverage-premium" id="jangkauan">
-
-
-        <style>
-            @keyframes pulse {
-                0% {
-                    transform: scale(1);
-                    opacity: 0.6;
-                }
-
-                50% {
-                    transform: scale(1.5);
-                    opacity: 0;
-                }
-
-                100% {
-                    transform: scale(1);
-                    opacity: 0;
-                }
-            }
-        </style>
-
-        <div class="cv-coverage-inner">
-            <div class="cv-coverage-header-row">
-                <h2 class="cv-coverage-title-v2">Melayani<br>seluruh Indonesia</h2>
-
-                <div class="cv-coverage-stats-grid">
-                    {{-- Card 1 --}}
-                    <div class="cv-stat-card-v2" data-aos="fade-up" data-aos-delay="0">
-                        <div class="cv-stat-top">
-                            <span class="cv-stat-label">Berdiri Sejak</span>
-                            <svg class="cv-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2">
-                                <path d="M2 22h20M12 2v20M5 22V10l7-8 7 8v12M8 14h8M8 18h8" />
-                            </svg>
-                        </div>
-                        <div class="cv-stat-val"><span class="count-up"
-                                data-target="{{ \App\Models\Setting::get('founding_year') ?? '2013' }}">0</span></div>
-                    </div>
-
-                    {{-- Card 2 --}}
-                    <div class="cv-stat-card-v2" data-aos="fade-up" data-aos-delay="100">
-                        <div class="cv-stat-top">
-                            <span class="cv-stat-label">Klien Aktif</span>
-                            <svg class="cv-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2">
-                                <path
-                                    d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
-                            </svg>
-                        </div>
-                        <div class="cv-stat-val"><span class="count-up" data-target="500">0</span><span>+</span></div>
-                    </div>
-
-                    {{-- Card 3 --}}
-                    <div class="cv-stat-card-v2" data-aos="fade-up" data-aos-delay="200">
-                        <div class="cv-stat-top">
-                            <span class="cv-stat-label">Kota Dilayani</span>
-                            <svg class="cv-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-                                <circle cx="12" cy="10" r="3" />
-                            </svg>
-                        </div>
-                        <div class="cv-stat-val"><span class="count-up" data-target="50">0</span><span>+</span></div>
-                    </div>
-
-                    {{-- Card 4 --}}
-                    <div class="cv-stat-card-v2" data-aos="fade-up" data-aos-delay="300">
-                        <div class="cv-stat-top">
-                            <span class="cv-stat-label">Tahun Garansi</span>
-                            <svg class="cv-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="8" r="7" />
-                                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
-                            </svg>
-                        </div>
-                        <div class="cv-stat-val"><span class="count-up" data-target="15">0</span><span>+</span></div>
-                    </div>
-                </div>
-            </div>
-            {{-- MAP: from admin upload --}}
-            @php $coverageMap = \App\Models\Setting::get('coverage_map'); @endphp
-            @if($coverageMap)
-                <div style="position:relative; width:100%; margin-top:-6rem;">
-                    <img src="{{ asset('storage/' . $coverageMap) }}" alt="Peta Jangkauan Indonesia"
-                        style="display:block; width:100%; height:auto;" loading="lazy">
-                </div>
-            @endif
-        </div>{{-- end cv-coverage-inner --}}
-
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const counters = document.querySelectorAll('.count-up');
-                const observer = new IntersectionObserver(entries => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const el = entry.target;
-                            if (el.classList.contains('counted')) return;
-                            el.classList.add('counted');
-                            const target = +el.getAttribute('data-target');
-                            const duration = 2000;
-                            const frameRate = 30;
-                            const totalFrames = Math.round((duration / 1000) * frameRate);
-                            let frame = 0;
-                            const counter = setInterval(() => {
-                                frame++;
-                                const progress = frame / totalFrames;
-                                const easeOut = progress * (2 - progress);
-                                const current = Math.round(target * easeOut);
-                                el.innerText = current;
-                                if (frame === totalFrames) {
-                                    clearInterval(counter);
-                                    el.innerText = target;
-                                }
-                            }, 1000 / frameRate);
-                        }
-                    });
-                }, { threshold: 0.5 });
-
-                counters.forEach(c => observer.observe(c));
-            });
-        </script>
-    </section>
-
     {{-- MARQUEE KLIEN --}}
     @if($clients->count())
         <section class="cv-clients-bar">
@@ -1563,432 +1231,5 @@
             </div>
         </section>
     @endif
-
-    <style>
-        /* Card Design */
-        .cv-client-logo-card {
-            background: #F8FAFC;
-            border: 1.5px solid #E2E8F0;
-            border-radius: 16px;
-            padding: 1rem 1.75rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            min-width: 180px;
-            max-width: 220px;
-            height: 110px;
-            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-            text-decoration: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-        }
-
-        .cv-client-logo-card:hover {
-            border-color: #a5cf37;
-            background: #ffffff;
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(30, 179, 73, 0.12);
-        }
-
-        .cv-client-logo-img {
-            max-height: 52px;
-            max-width: 160px;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            filter: grayscale(80%) opacity(0.8);
-            transition: all 0.3s;
-            display: block;
-        }
-
-        .cv-client-logo-card:hover .cv-client-logo-img {
-            filter: grayscale(0%) opacity(1);
-        }
-
-        .cv-client-logo-name {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #64748B;
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 130px;
-        }
-
-        /* Text-only chip */
-        .cv-client-chip-v2 {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            background: #F8FAFC;
-            border: 1.5px solid #E2E8F0;
-            border-radius: 16px;
-            padding: 0 2rem;
-            height: 100px;
-            min-width: 160px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #475569;
-            white-space: nowrap;
-            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .cv-client-chip-v2::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: #a5cf37;
-            border-radius: 50%;
-        }
-
-        .cv-client-chip-v2:hover {
-            background: #F0F9FF;
-            border-color: #bbf7d0;
-            transform: translateY(-2px);
-        }
-
-        /* ── CTA PREMIUM ────────────────────────── */
-        .cv-cta-premium {
-            background: #0F172A;
-            position: relative;
-            overflow: hidden;
-            padding: 6rem 0;
-            color: #ffffff;
-        }
-
-        .cv-cta-bg-glow {
-            position: absolute;
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, rgba(30, 179, 73, 0.15) 0%, transparent 60%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-        }
-
-        .cv-cta-inner-v2 {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-            padding: 0 1.5rem;
-        }
-
-        .cv-cta-title-v2 {
-            font-size: clamp(2rem, 4vw, 3.5rem);
-            font-weight: 500;
-            letter-spacing: -0.03em;
-            line-height: 1.15;
-            margin-bottom: 1.5rem;
-            color: #ffffff !important;
-        }
-
-        .cv-cta-desc-v2 {
-            font-size: 1.125rem;
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.6;
-            margin-bottom: 3rem;
-        }
-
-        .cv-cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .cv-cta-btn-primary {
-            background: #1eb349;
-            color: #ffffff;
-            padding: 1.125rem 2.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            transition: all 0.3s;
-            box-shadow: 0 10px 25px rgba(30, 179, 73, 0.3);
-            text-decoration: none !important;
-        }
-
-        .cv-cta-btn-primary:hover {
-            background: #16a34a;
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(30, 179, 73, 0.4);
-        }
-
-        .cv-cta-btn-outline {
-            background: transparent;
-            color: #ffffff;
-            border: 1.5px solid rgba(255, 255, 255, 0.3);
-            padding: 1.125rem 2.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            transition: all 0.3s;
-            text-decoration: none !important;
-        }
-
-        .cv-cta-btn-outline:hover {
-            border-color: #ffffff;
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-3px);
-        }
-
-        .cv-cta-info {
-            margin-top: 4rem;
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            flex-wrap: wrap;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 3rem;
-        }
-
-        .cv-cta-info-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.875rem;
-        }
-
-        .cv-cta-info-icon {
-            color: #1eb349;
-        }
-
-        /* ── ARTIKEL PREMIUM ────────────────────── */
-        .cv-articles-premium {
-            background: #ffffff;
-            padding: 6rem 0;
-        }
-
-        .cv-articles-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        .cv-articles-header {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 2rem;
-            margin-bottom: 3.5rem;
-            flex-wrap: wrap;
-        }
-
-        .cv-articles-grid-v2 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-
-        .cv-article-card-v2 {
-            background: #F8FAFC;
-            border: 1.5px solid #E2E8F0;
-            border-radius: 24px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-            text-decoration: none !important;
-        }
-
-        .cv-article-card-v2 * {
-            text-decoration: none !important;
-        }
-
-        .cv-article-card-v2:hover {
-            border-color: #1eb349;
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(30, 179, 73, 0.08);
-        }
-
-        .cv-article-img-wrap {
-            width: 100%;
-            aspect-ratio: 16/10;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .cv-article-img-v2 {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .cv-article-card-v2:hover .cv-article-img-v2 {
-            transform: scale(1.08);
-        }
-
-        .cv-article-cat-badge {
-            position: absolute;
-            top: 1.25rem;
-            left: 1.25rem;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(8px);
-            color: #fff;
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.4rem 1rem;
-            border-radius: 50px;
-        }
-
-        .cv-article-content-v2 {
-            padding: 1.75rem;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .cv-article-title-v2 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #0F172A !important;
-            line-height: 1.4;
-            margin-bottom: 0.75rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .cv-article-excerpt-v2 {
-            font-size: 0.9375rem;
-            color: #64748B !important;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            flex-grow: 1;
-        }
-
-        .cv-article-meta-v2 {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid #E2E8F0;
-            padding-top: 1.25rem;
-            font-size: 0.8125rem;
-            font-weight: 600;
-        }
-
-        .cv-article-date-v2 {
-            color: #94A3B8;
-        }
-
-        .cv-article-read-v2 {
-            color: #1eb349;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .cv-article-read-v2 svg {
-            transition: transform 0.3s;
-        }
-
-        .cv-article-card-v2:hover .cv-article-read-v2 svg {
-            transform: translateX(4px);
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .cv-articles-grid-v2 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 640px) {
-
-            .cv-cta-premium,
-            .cv-articles-premium {
-                padding: 4rem 0;
-            }
-
-            .cv-cta-info {
-                gap: 1.5rem;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .cv-articles-grid-v2 {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-    <section class="cv-cta-premium">
-        <div class="cv-cta-bg-glow"></div>
-        <div class="cv-cta-inner-v2" data-aos="zoom-in">
-            <div
-                style="font-size:0.75rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:#a5cf37; margin-bottom:1rem; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
-                <span style="width:4px; height:4px; background:#a5cf37; border-radius:50%;"></span>
-                SIAP MULAI?
-            </div>
-            <h2 class="cv-cta-title-v2" style="margin-top:1rem;">Dapatkan Konsultasi Gratis<br>& Penawaran Terbaik</h2>
-            <p class="cv-cta-desc-v2">Tim teknis buyle.id siap membantu Anda memilih ukuran buyle.id yang tepat dan
-                menghitung jumlah yang dibutuhkan untuk bangunan Anda.</p>
-
-            <div class="cv-cta-buttons">
-                @if($wa)
-                    <a href="javascript:void(0)" onclick="openOrderModal('Bottom CTA WA')" class="cv-cta-btn-primary"
-                        data-track="Bottom CTA WA">
-                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                        </svg>
-                        Chat WhatsApp
-                    </a>
-                @endif
-                <a href="{{ route_locale('contact') }}" class="cv-cta-btn-outline">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                        <polyline points="22,6 12,12 2,6" />
-                    </svg>
-                    Form Konsultasi
-                </a>
-            </div>
-
-            <div class="cv-cta-info">
-                <div class="cv-cta-info-item">
-                    <svg class="cv-cta-info-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path
-                            d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.5 12.05a19.79 19.79 0 01-3.07-8.67A2 2 0 012.41 1.5h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.4a16 16 0 006.69 6.69l1.27-.76a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
-                    </svg>
-                    021-22523334
-                </div>
-                <div class="cv-cta-info-item">
-                    <svg class="cv-cta-info-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" />
-                        <polyline points="12 6 12 12 16 14" />
-                    </svg>
-                    Senin–Sabtu 08.00–18.00 WIB
-                </div>
-                <div class="cv-cta-info-item">
-                    <svg class="cv-cta-info-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    Kalideres, Jakarta Barat
-                </div>
-            </div>
-        </div>
-    </section>
 
 @endsection

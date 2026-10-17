@@ -1837,7 +1837,7 @@
                                         @else
                                             <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
                                                 <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
-                                                <span>Belum ada ulasan</span>
+                                                <span>0.0</span>
                                             </div>
                                         @endif
                                         @if($isSellerVerified)

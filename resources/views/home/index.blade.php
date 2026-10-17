@@ -1314,21 +1314,21 @@
             right: 0;
         }
 
-        /* ── Modern Minimalist Subcategory Dropdown Card ── */
+        /* Floating Subcategory Dropdown Card (Kompak & Minimalis) */
         .cv-cat-dropdown-card {
             position: fixed;
             z-index: 99999;
             background: #ffffff;
             border: 1.5px solid #BBF7D0;
-            border-radius: 18px;
-            box-shadow: 0 20px 45px -8px rgba(15, 23, 42, 0.2), 0 4px 15px rgba(30, 179, 73, 0.08);
-            width: 270px;
+            border-radius: 14px;
+            box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.18), 0 4px 12px rgba(30, 179, 73, 0.08);
+            width: 230px;
             max-width: calc(100vw - 24px);
             opacity: 0;
             visibility: hidden;
-            transform: translateY(10px) scale(0.96);
+            transform: translateY(8px) scale(0.96);
             transform-origin: top center;
-            transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.22s;
+            transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s;
             pointer-events: none;
             overflow: hidden;
         }
@@ -1342,9 +1342,9 @@
 
         .cv-cat-dropdown-caret {
             position: absolute;
-            top: -7px;
-            width: 14px;
-            height: 14px;
+            top: -6px;
+            width: 12px;
+            height: 12px;
             background: #ffffff;
             border-top: 1.5px solid #BBF7D0;
             border-left: 1.5px solid #BBF7D0;
@@ -1354,56 +1354,9 @@
             transition: left 0.15s ease;
         }
 
-        .cv-cat-dd-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #F8FAFC;
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #F1F5F9;
-        }
-
-        .cv-cat-dd-title-wrap {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .cv-cat-dd-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #1eb349;
-            box-shadow: 0 0 8px rgba(30, 179, 73, 0.6);
-            flex-shrink: 0;
-        }
-
-        .cv-cat-dd-title {
-            font-size: 0.82rem;
-            font-weight: 800;
-            color: #0F172A;
-            font-family: 'Montserrat', sans-serif;
-            letter-spacing: -0.01em;
-            max-width: 155px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .cv-cat-dd-badge {
-            font-size: 0.68rem;
-            font-weight: 700;
-            color: #15803D;
-            background: #DCFCE7;
-            padding: 2px 7px;
-            border-radius: 99px;
-            font-family: 'Montserrat', sans-serif;
-            white-space: nowrap;
-        }
-
         .cv-cat-dd-body {
-            padding: 0.5rem 0.4rem;
-            max-height: 250px;
+            padding: 0.4rem;
+            max-height: 260px;
             overflow-y: auto;
             scrollbar-width: thin;
             scrollbar-color: #CBD5E1 transparent;
@@ -1422,7 +1375,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0.5rem 0.75rem;
-            border-radius: 10px;
+            border-radius: 8px;
             color: #334155;
             font-size: 0.8rem;
             font-weight: 500;
@@ -1449,26 +1402,6 @@
         .cv-cat-dd-item:hover svg {
             opacity: 1;
             transform: translateX(0);
-        }
-
-        .cv-cat-dd-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #F8FAFC;
-            padding: 0.65rem 1rem;
-            border-top: 1px solid #F1F5F9;
-            color: #1eb349;
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-decoration: none;
-            font-family: 'Montserrat', sans-serif;
-            transition: all 0.2s;
-        }
-
-        .cv-cat-dd-footer:hover {
-            background: #DCFCE7;
-            color: #15803D;
         }
 
         /* Mobile single row category grid */
@@ -1575,10 +1508,8 @@
                         <div class="swiper-pagination hero-swiper-pagination"></div>
                     </div>
                 @elseif(!empty($settings['hero_main_image']))
-                    <img src="{{ asset('storage/' . $settings['hero_main_image']) }}"
-                        alt="Promo Utama" class="cv-hero-img-main"
-                        width="800" height="440"
-                        fetchpriority="high" loading="eager" decoding="async"
+                    <img src="{{ asset('storage/' . $settings['hero_main_image']) }}" alt="Promo Utama" class="cv-hero-img-main"
+                        width="800" height="440" fetchpriority="high" loading="eager" decoding="async"
                         style="aspect-ratio:800/440; object-fit:cover; width:100%; height:100%;">
                 @else
                     <div
@@ -1609,18 +1540,14 @@
                 @if(isset($utamaBanners) && $utamaBanners->count() > 0)
                     @php $utama = $utamaBanners->first(); @endphp
                     <a href="{{ $utama->button_url ?? route('products') }}" class="cv-hero-static-col">
-                        <img src="{{ asset('storage/' . $utama->image) }}"
-                            alt="{{ $utama->title }}" class="cv-hero-img-sec"
-                            width="360" height="210"
-                            loading="lazy" decoding="async"
+                        <img src="{{ asset('storage/' . $utama->image) }}" alt="{{ $utama->title }}" class="cv-hero-img-sec"
+                            width="360" height="210" loading="lazy" decoding="async"
                             style="aspect-ratio:360/210; object-fit:cover; width:100%; height:100%;">
                     </a>
                 @elseif(!empty($settings['hero_secondary_image']))
                     <a href="{{ route('products') }}" class="cv-hero-static-col">
-                        <img src="{{ asset('storage/' . $settings['hero_secondary_image']) }}"
-                            alt="Promo" class="cv-hero-img-sec"
-                            width="360" height="210"
-                            loading="lazy" decoding="async"
+                        <img src="{{ asset('storage/' . $settings['hero_secondary_image']) }}" alt="Promo"
+                            class="cv-hero-img-sec" width="360" height="210" loading="lazy" decoding="async"
                             style="aspect-ratio:360/210; object-fit:cover; width:100%; height:100%;">
                     </a>
                 @else
@@ -1641,18 +1568,14 @@
                 @if(isset($sampingBanners) && $sampingBanners->count() > 0)
                     @php $samping = $sampingBanners->first(); @endphp
                     <a href="{{ $samping->button_url ?? route('products') }}" class="cv-hero-static-col">
-                        <img src="{{ asset('storage/' . $samping->image) }}"
-                            alt="{{ $samping->title }}" class="cv-hero-img-sec"
-                            width="360" height="210"
-                            loading="lazy" decoding="async"
+                        <img src="{{ asset('storage/' . $samping->image) }}" alt="{{ $samping->title }}" class="cv-hero-img-sec"
+                            width="360" height="210" loading="lazy" decoding="async"
                             style="aspect-ratio:360/210; object-fit:cover; width:100%; height:100%;">
                     </a>
                 @elseif(!empty($settings['hero_third_image']))
                     <a href="{{ route('products') }}" class="cv-hero-static-col">
-                        <img src="{{ asset('storage/' . $settings['hero_third_image']) }}"
-                            alt="Promo 2" class="cv-hero-img-sec"
-                            width="360" height="210"
-                            loading="lazy" decoding="async"
+                        <img src="{{ asset('storage/' . $settings['hero_third_image']) }}" alt="Promo 2" class="cv-hero-img-sec"
+                            width="360" height="210" loading="lazy" decoding="async"
                             style="aspect-ratio:360/210; object-fit:cover; width:100%; height:100%;">
                     </a>
                 @else
@@ -1768,7 +1691,8 @@
                     @if(isset($sampingBanners) && $sampingBanners->count() > 0)
                         @php $samping = $sampingBanners->first(); @endphp
                         <div class="swiper-slide"><a href="{{ $samping->button_url ?? route('products') }}"><img
-                                    src="{{ asset('storage/' . $samping->image) }}" alt="{{ $samping->title }}" loading="lazy"></a>
+                                    src="{{ asset('storage/' . $samping->image) }}" alt="{{ $samping->title }}"
+                                    loading="lazy"></a>
                         </div>
                     @elseif(!empty($settings['hero_third_image']))
                         <div class="swiper-slide"><a href="{{ route('products') }}"><img
@@ -1823,7 +1747,7 @@
                     <div class="swiper-wrapper">
                         @foreach($categoryItems as $cat)
                             @php
-                                $subList = $cat->subCategories ? $cat->subCategories->map(function($sub) {
+                                $subList = $cat->subCategories ? $cat->subCategories->map(function ($sub) {
                                     return [
                                         'id' => $sub->id,
                                         'name' => $sub->name,
@@ -1834,11 +1758,9 @@
                             @endphp
                             <div class="swiper-slide">
                                 <a href="{{ route('category.show', $cat->slug) }}" class="cv-cat-slide"
-                                    aria-label="{{ $cat->name }}"
-                                    data-cat-name="{{ $cat->name }}"
+                                    aria-label="{{ $cat->name }}" data-cat-name="{{ $cat->name }}"
                                     data-cat-url="{{ route('category.show', $cat->slug) }}"
-                                    data-has-sub="{{ $subList->count() > 0 ? '1' : '0' }}"
-                                    data-subs="{{ json_encode($subList) }}">
+                                    data-has-sub="{{ $subList->count() > 0 ? '1' : '0' }}" data-subs="{{ json_encode($subList) }}">
                                     <div class="cv-cat-icon-wrap">
                                         @if($cat->icon_type === 'upload' && $cat->icon_value)
                                             <img src="{{ asset('storage/' . $cat->icon_value) }}" alt="" loading="lazy"
@@ -1907,23 +1829,10 @@
             </div>
         </section>
 
-        {{-- Floating Subcategory Dropdown Card (Minimalis & Tema Seragam) --}}
+        {{-- Floating Subcategory Dropdown Card (Kompak & Minimalis - tanpa header/footer boros) --}}
         <div id="cvCatDropdownCard" class="cv-cat-dropdown-card" aria-hidden="true">
             <div class="cv-cat-dropdown-caret" id="cvCatDdCaret"></div>
-            <div class="cv-cat-dd-header">
-                <div class="cv-cat-dd-title-wrap">
-                    <span class="cv-cat-dd-dot"></span>
-                    <span class="cv-cat-dd-title" id="cvCatDdTitle">Kategori</span>
-                </div>
-                <span class="cv-cat-dd-badge" id="cvCatDdCount">0 Subkategori</span>
-            </div>
             <div class="cv-cat-dd-body" id="cvCatDdBody"></div>
-            <a href="#" class="cv-cat-dd-footer" id="cvCatDdAllLink">
-                <span id="cvCatDdAllText">Lihat Semua di Kategori</span>
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path d="M5 12h14m-7-7l7 7-7 7"/>
-                </svg>
-            </a>
         </div>
     @endif
 
@@ -1968,7 +1877,7 @@
 
                             // Realtime Dynamic Rating & Seller Verification
                             $rSellerCp = $rProd->seller?->creatorProfile;
-                            $rIsVerified = $rSellerCp ? (bool)$rSellerCp->is_verified : false;
+                            $rIsVerified = $rSellerCp ? (bool) $rSellerCp->is_verified : false;
                             $rRatingVal = $rProd->getEffectiveRating();
 
                             // Subdomain / URL Pill text
@@ -1976,8 +1885,7 @@
                         @endphp
                         <a href="{{ route_locale('products.show', $rProd->slug) }}"
                             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
-                            data-product-id="{{ $rProd->id }}"
-                            data-category-id="{{ $rProd->category_id }}">
+                            data-product-id="{{ $rProd->id }}" data-category-id="{{ $rProd->category_id }}">
                             <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
                                 class="article-card-box">
 
@@ -2008,12 +1916,14 @@
                                             @if($rRatingVal !== null && $rRatingVal > 0)
                                                 <div style="display: flex; align-items: center; gap: 0.3rem;">
                                                     <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
-                                                    <span style="font-family: 'Montserrat', sans-serif;">{{ number_format($rRatingVal, 1) }}</span>
+                                                    <span
+                                                        style="font-family: 'Montserrat', sans-serif;">{{ number_format($rRatingVal, 1) }}</span>
                                                 </div>
                                             @else
-                                                <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
+                                                <div
+                                                    style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
                                                     <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
-                                                    <span>Belum ada ulasan</span>
+                                                    <span>0.0</span>
                                                 </div>
                                             @endif
                                             @if($rIsVerified)
@@ -2087,7 +1997,7 @@
                 var sellerInterests = JSON.parse(localStorage.getItem('buyle_seller_interests') || '{}');
 
                 if (history.length > 0 || Object.keys(catInterests).length > 0) {
-                    var viewedIds = history.map(function(item) { return item.id; }).filter(Boolean);
+                    var viewedIds = history.map(function (item) { return item.id; }).filter(Boolean);
                     var catIds = Object.keys(catInterests).map(Number).filter(Boolean);
                     var sellerIds = Object.keys(sellerInterests).map(Number).filter(Boolean);
 
@@ -2103,19 +2013,19 @@
                             seller_ids: sellerIds
                         })
                     })
-                    .then(function(res) { return res.json(); })
-                    .then(function(data) {
-                        if (data && data.status === 'success' && data.products && data.products.length > 0) {
-                            renderSmartRetargetCards(data.products);
-                            if (data.is_personalized) {
-                                var titleEl = document.getElementById('retargetSectionTitle');
-                                if (titleEl) {
-                                    titleEl.innerHTML = 'Produk Terkait & Rekomendasi <span style="background: #DEF7EC; color: #03543F; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 99px; vertical-align: middle; margin-left: 0.4rem; display: inline-flex; align-items: center; gap: 0.25rem;">✨ Untuk Anda</span>';
+                        .then(function (res) { return res.json(); })
+                        .then(function (data) {
+                            if (data && data.status === 'success' && data.products && data.products.length > 0) {
+                                renderSmartRetargetCards(data.products);
+                                if (data.is_personalized) {
+                                    var titleEl = document.getElementById('retargetSectionTitle');
+                                    if (titleEl) {
+                                        titleEl.innerHTML = 'Produk Terkait & Rekomendasi <span style="background: #DEF7EC; color: #03543F; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 99px; vertical-align: middle; margin-left: 0.4rem; display: inline-flex; align-items: center; gap: 0.25rem;">✨ Untuk Anda</span>';
+                                    }
                                 }
                             }
-                        }
-                    })
-                    .catch(function(err) {});
+                        })
+                        .catch(function (err) { });
                 }
 
                 function escapeHtml(str) {
@@ -2128,8 +2038,8 @@
                     if (!container) return;
 
                     var html = '';
-                    products.forEach(function(p) {
-                        var discBadge = p.has_discount 
+                    products.forEach(function (p) {
+                        var discBadge = p.has_discount
                             ? '<div style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: \'Montserrat\', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">' + '-' + p.discount_pct + '%</div>'
                             : '';
                         var verifiedBadge = p.is_verified
@@ -2145,37 +2055,37 @@
 
                         html += '<a href="' + p.url + '" style="text-decoration: none; color: inherit; display: flex; flex-direction: column;" data-product-id="' + p.id + '" data-category-id="' + p.category_id + '">' +
                             '<div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);" class="article-card-box">' +
-                                '<div style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">' +
-                                    '<img src="' + p.image + '" alt="' + escapeHtml(p.name) + '" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;" class="article-banner-img">' +
-                                    discBadge +
-                                '</div>' +
-                                '<div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">' +
-                                    '<div>' +
-                                        '<div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">' +
-                                            ratingBlock +
-                                            verifiedBadge +
-                                        '</div>' +
-                                        '<h3 style="font-family: \'Montserrat\', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">' +
-                                            escapeHtml(p.name) +
-                                        '</h3>' +
-                                    '</div>' +
-                                    '<div>' +
-                                        '<div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>' +
-                                        '<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">' +
-                                            '<div style="white-space: nowrap; min-width: 0; flex: 1;">' +
-                                                strikePrice +
-                                                '<span style="font-family: \'Montserrat\', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">' +
-                                                    p.price_formatted +
-                                                '</span>' +
-                                            '</div>' +
-                                            '<span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;" class="retarget-btn-cta">' +
-                                                'Lihat <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>' +
-                                            '</span>' +
-                                        '</div>' +
-                                    '</div>' +
-                                '</div>' +
+                            '<div style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">' +
+                            '<img src="' + p.image + '" alt="' + escapeHtml(p.name) + '" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;" class="article-banner-img">' +
+                            discBadge +
                             '</div>' +
-                        '</a>';
+                            '<div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">' +
+                            '<div>' +
+                            '<div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">' +
+                            ratingBlock +
+                            verifiedBadge +
+                            '</div>' +
+                            '<h3 style="font-family: \'Montserrat\', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">' +
+                            escapeHtml(p.name) +
+                            '</h3>' +
+                            '</div>' +
+                            '<div>' +
+                            '<div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>' +
+                            '<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">' +
+                            '<div style="white-space: nowrap; min-width: 0; flex: 1;">' +
+                            strikePrice +
+                            '<span style="font-family: \'Montserrat\', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">' +
+                            p.price_formatted +
+                            '</span>' +
+                            '</div>' +
+                            '<span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;" class="retarget-btn-cta">' +
+                            'Lihat <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>' +
+                            '</span>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</a>';
                     });
                     container.innerHTML = html;
                 }
@@ -2213,8 +2123,8 @@
             <div class="products-single-row-5">
                 @php
                     $bsList = (isset($bestsellerProducts) && $bestsellerProducts->count() > 0
-                        ? $bestsellerProducts
-                        : (isset($products) && $products->count() > 0 ? $products : collect()))->take(5);
+                    ? $bestsellerProducts
+                    : (isset($products) && $products->count() > 0 ? $products : collect()))->take(5);
                 @endphp
 
                 @if($bsList->count() > 0)
@@ -2228,7 +2138,7 @@
 
                             // Realtime Dynamic Rating & Seller Verification
                             $bSellerCp = $bProd->seller?->creatorProfile;
-                            $bIsVerified = $bSellerCp ? (bool)$bSellerCp->is_verified : false;
+                            $bIsVerified = $bSellerCp ? (bool) $bSellerCp->is_verified : false;
                             $bRatingVal = $bProd->getEffectiveRating();
                         @endphp
                         <a href="{{ route_locale('products.show', $bProd->slug) }}"
@@ -2268,1999 +2178,2007 @@
                                             @if($bRatingVal !== null && $bRatingVal > 0)
                                                 <div style="display: flex; align-items: center; gap: 0.3rem;">
                                                     <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
-                                                    <span style="font-family: 'Montserrat', sans-serif;">{{ number_format($bRatingVal, 1) }}</span>
+                                                    <span
+                                                        style="font-family: 'Montserrat', sans-serif;">{{ number_format($bRatingVal, 1) }}</span>
                                                 </div>
                                             @else
-                                                <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
-                                                    <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
-                                                    <span>Belum ada ulasan</span>
-                                                </div>
-                                            @endif
-                                            @if($bIsVerified)
                                                 <div
-                                                    style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
-                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                        viewBox="0 0 24 24">
-                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                                        <polyline points="22 4 12 14.01 9 11.01" />
-                                                    </svg>
-                                                    Verified
-                                                </div>
+                                                    style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
+                                                    <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
+                                                    <span>0.0</span>
+                                                                    </div>
                                             @endif
-                                        </div>
+                                                            @if($bIsVerified)
+                                                                <div
+                                                                    style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                                        viewBox="0 0 24 24">
+                                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                                        <polyline points="22 4 12 14.01 9 11.01" />
+                                                                    </svg>
+                                                                    Verified
+                                                                </div>
+                                                            @endif
+                                                        </div>
 
-                                        {{-- Title --}}
-                                        <h3
-                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                            {{ $bProd->name }}
-                                        </h3>
-                                    </div>
+                                                        {{-- Title --}}
+                                                        <h3
+                                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                                            {{ $bProd->name }}
+                                                        </h3>
+                                                    </div>
 
-                                    {{-- Footer Separator & Price CTA --}}
-                                    <div>
-                                        <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
-                                        <div
-                                            style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">
-                                            <div style="white-space: nowrap; min-width: 0; flex: 1;">
-                                                @if($bHasDiscount)
-                                                    <span
-                                                        style="font-size: 0.68rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500; white-space: nowrap;">
-                                                        Rp{{ number_format($bOrigPrice, 0, ',', '.') }}
-                                                    </span>
-                                                @endif
-                                                <span
-                                                    style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">
-                                                    @if($bPrice > 0)
-                                                        Rp{{ number_format($bPrice, 0, ',', '.') }}
-                                                    @else
-                                                        <span style="color: #1eb349;">GRATIS</span>
-                                                    @endif
-                                                </span>
+                                                    {{-- Footer Separator & Price CTA --}}
+                                                    <div>
+                                                        <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
+                                                        <div
+                                                            style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">
+                                                            <div style="white-space: nowrap; min-width: 0; flex: 1;">
+                                                                @if($bHasDiscount)
+                                                                    <span
+                                                                        style="font-size: 0.68rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500; white-space: nowrap;">
+                                                                        Rp{{ number_format($bOrigPrice, 0, ',', '.') }}
+                                                                    </span>
+                                                                @endif
+                                                                <span
+                                                                    style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">
+                                                                    @if($bPrice > 0)
+                                                                        Rp{{ number_format($bPrice, 0, ',', '.') }}
+                                                                    @else
+                                                                        <span style="color: #1eb349;">GRATIS</span>
+                                                                    @endif
+                                                                </span>
+                                                            </div>
+                                                            <span
+                                                                style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
+                                                                class="retarget-btn-cta">
+                                                                Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
+                                                                    stroke-width="2.5" viewBox="0 0 24 24">
+                                                                    <path d="M5 12h14m-7-7l7 7-7 7" />
+                                                                </svg>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
                                             </div>
-                                            <span
-                                                style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
-                                                class="retarget-btn-cta">
-                                                Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
-                                                    stroke-width="2.5" viewBox="0 0 24 24">
-                                                    <path d="M5 12h14m-7-7l7 7-7 7" />
-                                                </svg>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </a>
+                                        </a>
                     @endforeach
                 @endif
-            </div>
-
-        </div>
-    </section>
-
-    {{-- ════════════════════════════════════════════════════════════════════════
-    SECTION PRODUK TERBARU (2 BARIS GRID RESPONSIVE)
-    ════════════════════════════════════════════════════════════════════════ --}}
-    @if(isset($latestProducts) && $latestProducts->count() > 0)
-        <section style="background: #ffffff; padding: 2.5rem 0 3rem; border-bottom: 1px solid #E2E8F0;">
-            <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
-                <div
-                    style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;">
-                    <div>
-                        <h2 class="responsive-section-title">
-                            Produk Terbaru
-                        </h2>
                     </div>
-                    <a href="{{ route_locale('products') }}?sort=terbaru"
-                        style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;"
-                        onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
-                        Lihat Semua Produk
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M5 12h14m-7-7l7 7-7 7" />
-                        </svg>
-                    </a>
+
                 </div>
+            </section>
 
-                <div class="grid-2-rows-responsive">
-                    @foreach($latestProducts as $lProd)
-                        @php
-                            $lPrice = $lProd->sale_price > 0 && $lProd->sale_price < $lProd->price ? $lProd->sale_price : $lProd->effective_price;
-                            $lOrigPrice = $lProd->sale_price > 0 && $lProd->sale_price < $lProd->price ? $lProd->price : null;
-                            $lHasDiscount = !empty($lOrigPrice) && $lOrigPrice > $lPrice;
-                            $lDiscountPct = $lHasDiscount ? round((($lOrigPrice - $lPrice) / $lOrigPrice) * 100) : 0;
-                            $lImage = $lProd->image ? asset('storage/' . $lProd->image) : asset('images/buyle-og.png');
+            {{-- ════════════════════════════════════════════════════════════════════════
+            SECTION PRODUK TERBARU (2 BARIS GRID RESPONSIVE)
+            ════════════════════════════════════════════════════════════════════════ --}}
+            @if(isset($latestProducts) && $latestProducts->count() > 0)
+                <section style="background: #ffffff; padding: 2.5rem 0 3rem; border-bottom: 1px solid #E2E8F0;">
+                    <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
+                        <div
+                            style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;">
+                            <div>
+                                <h2 class="responsive-section-title">
+                                    Produk Terbaru
+                                </h2>
+                            </div>
+                            <a href="{{ route_locale('products') }}?sort=terbaru"
+                                style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;"
+                                onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
+                                Lihat Semua Produk
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M5 12h14m-7-7l7 7-7 7" />
+                                </svg>
+                            </a>
+                        </div>
 
-                            // Realtime Dynamic Rating & Seller Verification
-                            $lSellerCp = $lProd->seller?->creatorProfile;
-                            $lIsVerified = $lSellerCp ? (bool)$lSellerCp->is_verified : false;
-                            $lRatingVal = $lProd->getEffectiveRating();
-                        @endphp
-                        <a href="{{ route_locale('products.show', $lProd->slug) }}"
-                            style="text-decoration: none; color: inherit; display: flex; flex-direction: column;">
-                            <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
-                                class="article-card-box">
-                                <div
-                                    style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
-                                    <img src="{{ $lImage }}" alt="{{ $lProd->name }}"
-                                        style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
-                                        class="article-banner-img">
-                                    @if($lHasDiscount)
-                                        <div
-                                            style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
-                                            -{{ $lDiscountPct }}%
-                                        </div>
-                                    @else
-                                        <div
-                                            style="position: absolute; top: 8px; left: 8px; background: #3B82F6; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
-                                            BARU
-                                        </div>
-                                    @endif
-                                </div>
+                        <div class="grid-2-rows-responsive">
+                            @foreach($latestProducts as $lProd)
+                                @php
+                                    $lPrice = $lProd->sale_price > 0 && $lProd->sale_price < $lProd->price ? $lProd->sale_price : $lProd->effective_price;
+                                    $lOrigPrice = $lProd->sale_price > 0 && $lProd->sale_price < $lProd->price ? $lProd->price : null;
+                                    $lHasDiscount = !empty($lOrigPrice) && $lOrigPrice > $lPrice;
+                                    $lDiscountPct = $lHasDiscount ? round((($lOrigPrice - $lPrice) / $lOrigPrice) * 100) : 0;
+                                    $lImage = $lProd->image ? asset('storage/' . $lProd->image) : asset('images/buyle-og.png');
 
-                                <div
-                                    style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
-                                    <div>
+                                    // Realtime Dynamic Rating & Seller Verification
+                                    $lSellerCp = $lProd->seller?->creatorProfile;
+                                    $lIsVerified = $lSellerCp ? (bool) $lSellerCp->is_verified : false;
+                                    $lRatingVal = $lProd->getEffectiveRating();
+                                @endphp
+                                <a href="{{ route_locale('products.show', $lProd->slug) }}"
+                                    style="text-decoration: none; color: inherit; display: flex; flex-direction: column;">
+                                    <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
+                                        class="article-card-box">
                                         <div
-                                            style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
-                                            @if($lRatingVal !== null && $lRatingVal > 0)
-                                                <div style="display: flex; align-items: center; gap: 0.3rem;">
-                                                    <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
-                                                    <span style="font-family: 'Montserrat', sans-serif;">{{ number_format($lRatingVal, 1) }}</span>
+                                            style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
+                                            <img src="{{ $lImage }}" alt="{{ $lProd->name }}"
+                                                style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
+                                                class="article-banner-img">
+                                            @if($lHasDiscount)
+                                                <div
+                                                    style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
+                                                    -{{ $lDiscountPct }}%
                                                 </div>
                                             @else
-                                                <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
-                                                    <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
-                                                    <span>Belum ada ulasan</span>
-                                                </div>
-                                            @endif
-                                            @if($lIsVerified)
                                                 <div
-                                                    style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
-                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                        viewBox="0 0 24 24">
-                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                                        <polyline points="22 4 12 14.01 9 11.01" />
-                                                    </svg>
-                                                    Verified
+                                                    style="position: absolute; top: 8px; left: 8px; background: #3B82F6; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
+                                                    BARU
                                                 </div>
                                             @endif
                                         </div>
-                                        <h3
-                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                            {{ $lProd->name }}
-                                        </h3>
-                                    </div>
 
-                                    <div>
-                                        <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
                                         <div
-                                            style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">
-                                            <div style="white-space: nowrap; min-width: 0; flex: 1;">
-                                                @if($lHasDiscount)
-                                                    <span
-                                                        style="font-size: 0.68rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500; white-space: nowrap;">
-                                                        Rp{{ number_format($lOrigPrice, 0, ',', '.') }}
-                                                    </span>
-                                                @endif
-                                                <span
-                                                    style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">
-                                                    @if($lPrice > 0)
-                                                        Rp{{ number_format($lPrice, 0, ',', '.') }}
+                                            style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                                            <div>
+                                                <div
+                                                    style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
+                                                    @if($lRatingVal !== null && $lRatingVal > 0)
+                                                        <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                                            <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
+                                                            <span
+                                                                style="font-family: 'Montserrat', sans-serif;">{{ number_format($lRatingVal, 1) }}</span>
+                                                        </div>
                                                     @else
-                                                        <span style="color: #1eb349;">GRATIS</span>
+                                                        <div
+                                                            style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
+                                                            <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
+                                                            <span>Belum ada ulasan</span>
+                                                        </div>
                                                     @endif
-                                                </span>
+                                                    @if($lIsVerified)
+                                                        <div
+                                                            style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                                viewBox="0 0 24 24">
+                                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                                <polyline points="22 4 12 14.01 9 11.01" />
+                                                            </svg>
+                                                            Verified
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <h3
+                                                    style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                                    {{ $lProd->name }}
+                                                </h3>
                                             </div>
-                                            <span
-                                                style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
-                                                class="retarget-btn-cta">
-                                                Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
-                                                    stroke-width="2.5" viewBox="0 0 24 24">
-                                                    <path d="M5 12h14m-7-7l7 7-7 7" />
-                                                </svg>
-                                            </span>
+
+                                            <div>
+                                                <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
+                                                <div
+                                                    style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">
+                                                    <div style="white-space: nowrap; min-width: 0; flex: 1;">
+                                                        @if($lHasDiscount)
+                                                            <span
+                                                                style="font-size: 0.68rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500; white-space: nowrap;">
+                                                                Rp{{ number_format($lOrigPrice, 0, ',', '.') }}
+                                                            </span>
+                                                        @endif
+                                                        <span
+                                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">
+                                                            @if($lPrice > 0)
+                                                                Rp{{ number_format($lPrice, 0, ',', '.') }}
+                                                            @else
+                                                                <span style="color: #1eb349;">GRATIS</span>
+                                                            @endif
+                                                        </span>
+                                                    </div>
+                                                    <span
+                                                        style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
+                                                        class="retarget-btn-cta">
+                                                        Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
+                                                            stroke-width="2.5" viewBox="0 0 24 24">
+                                                            <path d="M5 12h14m-7-7l7 7-7 7" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                </section>
+            @endif
+
+            {{-- ════════════════════════════════════════════════════════════════════════
+            SECTION CREATOR TERPOPULER (1 BARIS SCROLLABLE RESPONSIVE)
+            ════════════════════════════════════════════════════════════════════════ --}}
+            @if(isset($popularCreators) && $popularCreators->count() > 0)
+                <style>
+                    .popular-creators-grid {
+                        display: grid;
+                        grid-template-columns: repeat(5, 1fr);
+                        gap: 1.15rem;
+                        padding: 0.35rem 0.25rem 0.85rem;
+                    }
+
+                    .popular-creator-card {
+                        text-decoration: none;
+                        color: inherit;
+                        display: flex;
+                        flex-direction: column;
+                        background: #ffffff;
+                        border-radius: 18px;
+                        border: 1px solid #E2E8F0;
+                        overflow: hidden;
+                        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+                        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+                        position: relative;
+                    }
+
+                    .popular-creator-card:hover {
+                        transform: translateY(-4px);
+                        box-shadow: 0 10px 28px rgba(30, 179, 73, 0.12);
+                        border-color: #1eb349;
+                    }
+
+                    .popular-creator-banner {
+                        height: 55px;
+                        width: 100%;
+                        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1eb349 100%);
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .popular-creator-banner-img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+
+                    .popular-creator-avatar-wrap {
+                        width: 58px;
+                        height: 58px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        position: relative;
+                        margin: -29px auto 0;
+                        border: 3px solid #ffffff;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                        background: #ffffff;
+                        z-index: 2;
+                        flex-shrink: 0;
+                    }
+
+                    .popular-creator-img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        display: block;
+                    }
+
+                    .popular-creator-avatar-placeholder {
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: linear-gradient(135deg, #1eb349, #a5cf37);
+                        color: #ffffff;
+                        font-weight: 800;
+                        font-size: 1.25rem;
+                        font-family: 'Montserrat', sans-serif;
+                    }
+
+                    .popular-creator-info {
+                        padding: 0.6rem 0.75rem 0.85rem;
+                        text-align: center;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 0.35rem;
+                        flex: 1;
+                    }
+
+                    .popular-creator-name {
+                        font-family: 'Montserrat', sans-serif;
+                        font-size: 0.82rem;
+                        font-weight: 800;
+                        color: #0F172A;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 0.25rem;
+                        width: 100%;
+                    }
+
+                    .popular-creator-name span {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: calc(100% - 16px);
+                    }
+
+                    .popular-creator-stats {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 0.5rem;
+                        font-size: 0.72rem;
+                        color: #64748B;
+                        font-weight: 600;
+                    }
+
+                    .popular-creator-rating {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 0.2rem;
+                        color: #F59E0B;
+                        font-weight: 700;
+                    }
+
+                    .popular-creator-cta-btn {
+                        margin-top: 0.25rem;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 0.3rem;
+                        background: linear-gradient(135deg, #1eb349, #7db928);
+                        color: #ffffff;
+                        font-size: 0.7rem;
+                        font-weight: 700;
+                        padding: 0.32rem 0.85rem;
+                        border-radius: 99px;
+                        box-shadow: 0 3px 10px rgba(30, 179, 73, 0.25);
+                        transition: all 0.2s ease;
+                        white-space: nowrap;
+                        width: 100%;
+                    }
+
+                    .popular-creator-card:hover .popular-creator-cta-btn {
+                        box-shadow: 0 5px 16px rgba(30, 179, 73, 0.4);
+                        transform: scale(1.02);
+                    }
+
+                    @media (max-width: 1024px) {
+                        .popular-creators-grid {
+                            grid-template-columns: repeat(3, 1fr);
+                        }
+                    }
+
+                    @media (max-width: 640px) {
+                        .popular-creators-grid {
+                            display: flex;
+                            overflow-x: auto;
+                            scrollbar-width: none;
+                            -webkit-overflow-scrolling: touch;
+                            gap: 0.85rem;
+                            padding: 0.35rem 0.25rem 0.85rem;
+                        }
+
+                        .popular-creators-grid::-webkit-scrollbar {
+                            display: none;
+                        }
+
+                        .popular-creator-card {
+                            flex: 0 0 160px;
+                            min-width: 150px;
+                        }
+                    }
+                </style>
+
+                <section style="background: #F8FAFC; padding: 2.5rem 0 3rem; border-bottom: 1px solid #E2E8F0;">
+                    <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
+                        <div
+                            style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.25rem;">
+                            <div>
+                                <h2 class="responsive-section-title">
+                                    Creator Terpopuler
+                                </h2>
                             </div>
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
+                            <a href="{{ route_locale('products') }}?tab=creators"
+                                style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;"
+                                onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
+                                Jelajahi Creator
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M5 12h14m-7-7l7 7-7 7" />
+                                </svg>
+                            </a>
+                        </div>
 
-    {{-- ════════════════════════════════════════════════════════════════════════
-    SECTION CREATOR TERPOPULER (1 BARIS SCROLLABLE RESPONSIVE)
-    ════════════════════════════════════════════════════════════════════════ --}}
-    @if(isset($popularCreators) && $popularCreators->count() > 0)
-        <style>
-            .popular-creators-grid {
-                display: grid;
-                grid-template-columns: repeat(5, 1fr);
-                gap: 1.15rem;
-                padding: 0.35rem 0.25rem 0.85rem;
-            }
+                        <div class="popular-creators-grid">
+                            @foreach($popularCreators as $creatorUser)
+                                @php
+                                    $cp = $creatorUser->creatorProfile;
+                                    $cName = $cp?->store_name ?: ($creatorUser->name ?: 'Creator');
+                                    $cStoreSlug = $cp?->store_slug ?: $creatorUser->username;
+                                    $cBanner = !empty($cp?->store_banner) ? asset('storage/' . $cp->store_banner) : null;
+                                    $cSalesCount = $cp?->total_sales ?? ($creatorUser->products_sum_sold_count ?? 0);
+                                    $cProductCount = $creatorUser->products_count ?? 0;
 
-            .popular-creator-card {
-                text-decoration: none;
-                color: inherit;
-                display: flex;
-                flex-direction: column;
-                background: #ffffff;
-                border-radius: 18px;
-                border: 1px solid #E2E8F0;
-                overflow: hidden;
-                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
-                transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-                position: relative;
-            }
+                                    // Realtime Creator Rating & Verification Status from DB
+                                    $cIsVerified = $cp ? $cp->isVerified() : false;
+                                    $cRatingStats = $cp ? $cp->getRatingStats() : ['rating' => null, 'count' => 0];
+                                    $cRating = $cRatingStats['rating'] ?? null;
 
-            .popular-creator-card:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 10px 28px rgba(30, 179, 73, 0.12);
-                border-color: #1eb349;
-            }
+                                    $cAvatar = null;
+                                    if (!empty($cp?->avatar)) {
+                                        $cAvatar = asset('storage/' . $cp->avatar);
+                                    } elseif (!empty($creatorUser->avatar)) {
+                                        $cAvatar = Str::startsWith($creatorUser->avatar, 'http') ? $creatorUser->avatar : asset('storage/' . $creatorUser->avatar);
+                                    } elseif (!empty($cp?->bio_config['avatar'])) {
+                                        $cAvatar = asset('storage/' . $cp->bio_config['avatar']);
+                                    }
 
-            .popular-creator-banner {
-                height: 55px;
-                width: 100%;
-                background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1eb349 100%);
-                position: relative;
-                overflow: hidden;
-            }
+                                    $isStoreActive = $cp ? $cp->isStoreActive() : false;
 
-            .popular-creator-banner-img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
+                                    if ($cStoreSlug) {
+                                        $targetUrl = $isStoreActive ? route_locale('store.show', $cStoreSlug) : url('/' . $cStoreSlug);
+                                    } else {
+                                        $targetUrl = route_locale('products');
+                                    }
+                                @endphp
+                                <a href="{{ $targetUrl }}" class="popular-creator-card" title="{{ $cName }}">
+                                    <div class="popular-creator-banner">
+                                        @if($cBanner)
+                                            <img src="{{ $cBanner }}" alt="{{ $cName }}" class="popular-creator-banner-img" loading="lazy">
+                                        @endif
+                                    </div>
 
-            .popular-creator-avatar-wrap {
-                width: 58px;
-                height: 58px;
-                border-radius: 50%;
-                overflow: hidden;
-                position: relative;
-                margin: -29px auto 0;
-                border: 3px solid #ffffff;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                background: #ffffff;
-                z-index: 2;
-                flex-shrink: 0;
-            }
+                                    <div class="popular-creator-avatar-wrap">
+                                        @if($cAvatar)
+                                            <img src="{{ $cAvatar }}" alt="{{ $cName }}" class="popular-creator-img" loading="lazy">
+                                        @else
+                                            <div class="popular-creator-avatar-placeholder">
+                                                {{ strtoupper(substr($cName, 0, 1)) }}
+                                            </div>
+                                        @endif
+                                    </div>
 
-            .popular-creator-img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                display: block;
-            }
+                                    <div class="popular-creator-info">
+                                        <div class="popular-creator-name">
+                                            <span>{{ $cName }}</span>
+                                            @if($cIsVerified)
+                                                <svg class="verified-icon" width="13" height="13" fill="#0D9488" viewBox="0 0 24 24"
+                                                    title="Verified Creator">
+                                                    <path
+                                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                                                </svg>
+                                            @endif
+                                        </div>
 
-            .popular-creator-avatar-placeholder {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: linear-gradient(135deg, #1eb349, #a5cf37);
-                color: #ffffff;
-                font-weight: 800;
-                font-size: 1.25rem;
-                font-family: 'Montserrat', sans-serif;
-            }
+                                        <div class="popular-creator-stats">
+                                            @if(!empty($cRating))
+                                                <span class="popular-creator-rating">
+                                                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                                    </svg>
+                                                    {{ $cRating }}
+                                                </span>
+                                                <span>•</span>
+                                            @endif
+                                            <span>{{ $cSalesCount > 0 ? $cSalesCount . ' Terjual' : ($cProductCount . ' Produk') }}</span>
+                                        </div>
 
-            .popular-creator-info {
-                padding: 0.6rem 0.75rem 0.85rem;
-                text-align: center;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 0.35rem;
-                flex: 1;
-            }
+                                        <span class="popular-creator-cta-btn">
+                                            Kunjungi Toko
+                                            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                viewBox="0 0 24 24">
+                                                <path d="M5 12h14m-7-7l7 7-7 7" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                </section>
+            @endif
 
-            .popular-creator-name {
-                font-family: 'Montserrat', sans-serif;
-                font-size: 0.82rem;
-                font-weight: 800;
-                color: #0F172A;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.25rem;
-                width: 100%;
-            }
-
-            .popular-creator-name span {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: calc(100% - 16px);
-            }
-
-            .popular-creator-stats {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.5rem;
-                font-size: 0.72rem;
-                color: #64748B;
-                font-weight: 600;
-            }
-
-            .popular-creator-rating {
-                display: inline-flex;
-                align-items: center;
-                gap: 0.2rem;
-                color: #F59E0B;
-                font-weight: 700;
-            }
-
-            .popular-creator-cta-btn {
-                margin-top: 0.25rem;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.3rem;
-                background: linear-gradient(135deg, #1eb349, #7db928);
-                color: #ffffff;
-                font-size: 0.7rem;
-                font-weight: 700;
-                padding: 0.32rem 0.85rem;
-                border-radius: 99px;
-                box-shadow: 0 3px 10px rgba(30, 179, 73, 0.25);
-                transition: all 0.2s ease;
-                white-space: nowrap;
-                width: 100%;
-            }
-
-            .popular-creator-card:hover .popular-creator-cta-btn {
-                box-shadow: 0 5px 16px rgba(30, 179, 73, 0.4);
-                transform: scale(1.02);
-            }
-
-            @media (max-width: 1024px) {
-                .popular-creators-grid {
-                    grid-template-columns: repeat(3, 1fr);
+            {{-- ════ PROMO SECTIONS (Dynamic) ════ --}}
+            <style>
+                .cv-promo-wrap {
+                    background: #ffffff;
+                    padding: 0.625rem 0 0;
+                    border-bottom: none;
                 }
-            }
 
-            @media (max-width: 640px) {
-                .popular-creators-grid {
+                .cv-promo-section {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 1.875rem 1.5rem 2rem;
+                    border-bottom: none;
+                }
+
+                .cv-promo-section:last-child {
+                    border-bottom: none;
+                }
+
+                /* Flash Sale Override: gradient only on card-sized container (same width as regular sections) */
+                .cv-promo-section[style*="linear-gradient"] {
+                    border-radius: 20px;
+                    border-bottom: none;
+                    max-width: 1200px;
+                    /* SAME as regular sections — not full width */
+                    margin: 0 auto 1rem;
+                    padding: 1.25rem 1.5rem 1.5rem;
+                }
+
+                .cv-promo-section[style*="linear-gradient"] .cv-promo-card {
+                    background: #fff;
+                    border: none;
+                    box-shadow: 0 2px 16px rgba(0, 0, 0, .12);
+                }
+
+                .cv-promo-section[style*="linear-gradient"] .cv-promo-card-name {
+                    color: #1E293B;
+                }
+
+                .cv-promo-section[style*="linear-gradient"] .cv-promo-banner-wrap {
+                    border-radius: 14px;
+                    background: rgba(0, 0, 0, .18);
+                }
+
+                .cv-promo-section[style*="linear-gradient"] .cv-promo-nav {
+                    background: #fff;
+                    color: #EF4444;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+                }
+
+                .cv-promo-section.is-flash-section .cv-promo-title {
+                    color: #ffffff;
+                }
+
+                .cv-promo-section.is-flash-section .cv-promo-subtitle {
+                    color: rgba(255, 255, 255, 0.85);
+                }
+
+                .cv-promo-section.is-flash-section .cv-promo-view-all {
+                    color: #ffffff;
+                    opacity: 0.9;
+                }
+
+                .cv-promo-section.is-flash-section .cv-promo-view-all:hover {
+                    opacity: 1;
+                }
+
+                /* Timer compact styling */
+                .cv-flash-timer {
+                    gap: .25rem;
+                }
+
+                .cv-flash-timer .timer-box {
+                    font-family: 'Montserrat', monospace;
+                    font-weight: 800;
+                    font-size: .95rem;
+                    background: rgba(0, 0, 0, .5);
+                    color: #fff;
+                    padding: .15rem .45rem;
+                    border-radius: 5px;
+                    min-width: 30px;
+                    text-align: center;
+                    letter-spacing: .03em;
+                }
+
+                .cv-flash-timer .timer-sep {
+                    color: rgba(255, 255, 255, .9);
+                    font-weight: 800;
+                    font-size: 1rem;
+                }
+
+
+                .cv-section-title-wrap {
                     display: flex;
-                    overflow-x: auto;
-                    scrollbar-width: none;
-                    -webkit-overflow-scrolling: touch;
-                    gap: 0.85rem;
-                    padding: 0.35rem 0.25rem 0.85rem;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 1.5rem;
                 }
 
-                .popular-creators-grid::-webkit-scrollbar {
+                .cv-promo-title {
+                    font-family: 'Montserrat', sans-serif;
+                    font-size: 1.125rem;
+                    font-weight: 600;
+                    color: var(--text, #1E293B);
+                    line-height: 1.2;
+                }
+
+                .cv-promo-subtitle {
+                    font-size: .8rem;
+                    color: #64748B;
+                    margin-top: .15rem;
+                }
+
+                .cv-promo-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 1rem;
+                }
+
+                .cv-promo-view-all {
+                    font-size: .825rem;
+                    font-weight: 600;
+                    color: var(--accent, #1eb349);
+                    text-decoration: none;
+                    white-space: nowrap;
+                    flex-shrink: 0;
+                    transition: opacity .2s;
+                }
+
+                .cv-promo-view-all:hover {
+                    opacity: .7;
+                }
+
+                /* Grid: banner left + swiper right */
+                .cv-promo-grid {
+                    display: flex;
+                    gap: 1rem;
+                    align-items: stretch;
+                }
+
+                /* Banner */
+                .cv-promo-banner-wrap {
+                    border-radius: 14px;
+                    overflow: hidden;
+                    position: relative;
+                    width: 200px;
+                    min-height: 200px;
+                    /* Prevent CLS */
+                    flex-shrink: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    /* apply skeleton to banner */
+                    background: #e2e8f0;
+                    background-image: linear-gradient(90deg, #e2e8f0 0px, #f1f5f9 50%, #e2e8f0 100%);
+                    background-size: 1000px 100%;
+                    animation: cvSkeletonShimmer 2s infinite linear;
+                }
+
+                .cv-promo-banner-wrap.mobile-only {
+                    display: none !important;
+                }
+
+                .cv-promo-banner-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: block;
+                }
+
+                .cv-promo-banner-placeholder {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: .5rem;
+                    color: rgba(255, 255, 255, .5);
+                    font-size: .75rem;
+                    text-align: center;
+                    padding: 1rem;
+                }
+
+                /* Swiper container */
+                .cv-promo-swiper-container {
+                    position: relative;
+                    flex: 1;
+                    min-width: 0;
+                }
+
+                .cv-promo-swiper {
+                    width: 100%;
+                    height: 100%;
+                    padding: 12px 4px;
+                    /* padding for shadow */
+                    overflow: hidden;
+                    /* restore clipping for swipe */
+                }
+
+                .cv-promo-swiper .swiper-wrapper {
+                    align-items: stretch;
+                }
+
+                .cv-promo-swiper .swiper-slide {
+                    height: auto;
+                    width: 172px;
+                    display: flex;
+                    align-items: stretch;
+                }
+
+                @media (max-width: 768px) {
+                    .cv-promo-section {
+                        padding: 1.25rem 0 1.25rem 1rem;
+                        margin-bottom: 0;
+                        border-bottom: none;
+                    }
+
+                    .cv-promo-section.is-flash-section {
+                        margin-bottom: 0;
+                        border-radius: 0;
+                    }
+
+                    .cv-promo-grid {
+                        gap: 0;
+                    }
+
+                    .cv-promo-swiper {
+                        overflow: hidden;
+                        padding: 4px;
+                    }
+
+                    .cv-promo-banner-wrap.desktop-only {
+                        display: none;
+                    }
+
+                    .cv-promo-banner-wrap.mobile-only {
+                        display: flex !important;
+                        width: 155px !important;
+                        margin-right: 0.5rem;
+                        border-radius: 8px;
+                        height: auto;
+                    }
+
+                    .cv-promo-swiper .swiper-slide {
+                        width: 142px !important;
+                    }
+
+                    .cv-promo-swiper .swiper-slide.cv-promo-banner-wrap {
+                        width: 155px !important;
+                    }
+
+                    .cv-promo-card-body {
+                        padding: 0.65rem;
+                    }
+
+                    .cv-promo-card-name {
+                        font-size: 0.75rem;
+                    }
+
+                    .cv-promo-card-price {
+                        font-size: 0.85rem;
+                    }
+
+                    .cv-promo-nav {
+                        display: none !important;
+                    }
+
+                    .cv-promo-header {
+                        align-items: center;
+                        margin-bottom: 0.5rem;
+                        padding-right: 1rem;
+                    }
+
+                    .cv-promo-title {
+                        font-size: 1rem;
+                        font-weight: 600;
+                    }
+
+                    .cv-promo-title.is-flash {
+                        font-style: italic;
+                        text-transform: uppercase;
+                        font-size: 1.1rem;
+                    }
+
+                    .cv-promo-subtitle {
+                        display: none;
+                    }
+
+                    .cv-promo-view-all {
+                        font-size: 0.75rem;
+                    }
+
+                    /* Compact timers for Flash Sale */
+                    .cv-flash-timer .timer-box {
+                        font-size: 0.75rem;
+                        padding: 0.15rem 0.35rem;
+                        border-radius: 4px;
+                        min-width: 24px;
+                        background: #334155;
+                    }
+
+                    .cv-flash-timer .timer-sep {
+                        font-size: 0.8rem;
+                    }
+                }
+
+                /* Product Card */
+                .cv-promo-card {
+                    display: flex;
+                    flex-direction: column;
+                    background: #fff;
+                    border: 1.5px solid #F1F5F9;
+                    border-radius: 14px;
+                    overflow: hidden;
+                    height: 100%;
+                    text-decoration: none;
+                    transition: border-color .25s, box-shadow .25s, transform .25s;
+                }
+
+                .cv-promo-card:hover {
+                    box-shadow: 0 10px 25px rgba(15, 23, 42, .08);
+                    transform: translateY(-4px);
+                }
+
+                .cv-promo-card-img {
+                    width: 100%;
+                    aspect-ratio: 1/1;
+                    object-fit: cover;
+                    display: block;
+                    /* apply skeleton to product image container */
+                    background: #e2e8f0;
+                    background-image: linear-gradient(90deg, #e2e8f0 0px, #f1f5f9 50%, #e2e8f0 100%);
+                    background-size: 1000px 100%;
+                    animation: cvSkeletonShimmer 2s infinite linear;
+                }
+
+                .cv-promo-card-img-placeholder {
+                    width: 100%;
+                    aspect-ratio: 1/1;
+                    background: #F1F5F9;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .cv-promo-card-body {
+                    padding: .75rem .875rem;
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    gap: .25rem;
+                }
+
+                .cv-promo-card-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    align-self: flex-start;
+                    font-size: .65rem;
+                    font-weight: 700;
+                    padding: .2rem .5rem;
+                    border-radius: 100px;
+                    background: rgba(245, 158, 11, 0.1);
+                    color: #D97706;
+                    margin-bottom: .25rem;
+                    line-height: 1;
+                    letter-spacing: .02em;
+                }
+
+                .cv-promo-card-badge.service {
+                    background: rgba(59, 130, 246, 0.1);
+                    color: #2563EB;
+                }
+
+                .cv-promo-card-name {
+                    font-size: .8125rem;
+                    font-weight: 600;
+                    color: #1E293B;
+                    line-height: 1.35;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+
+                .cv-promo-card-price {
+                    font-size: .9rem;
+                    font-weight: 700;
+                    color: #1E293B;
+                    margin-top: auto;
+                }
+
+                .cv-promo-card-price-old {
+                    font-size: .7rem;
+                    color: #94A3B8;
+                    text-decoration: line-through;
+                    font-weight: 400;
+                }
+
+                .cv-promo-card-discount {
+                    display: inline-block;
+                    font-size: .65rem;
+                    font-weight: 700;
+                    color: #DC2626;
+                    background: #FEE2E2;
+                    padding: .1rem .35rem;
+                    border-radius: 4px;
+                }
+
+                .cv-promo-card-meta {
+                    display: flex;
+                    align-items: center;
+                    gap: .3rem;
+                    font-size: .7rem;
+                    color: #94A3B8;
+                    margin-top: .25rem;
+                }
+
+                .cv-promo-card-star {
+                    color: #FBBF24;
+                }
+
+                /* Nav buttons */
+                .cv-promo-nav {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    z-index: 10;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    background: #fff;
+                    border: 1.5px solid #E2E8F0;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    color: #1E293B;
+                    transition: all .2s;
+                }
+
+                .cv-promo-nav:hover {
+                    background: var(--accent, #1eb349);
+                    border-color: var(--accent, #1eb349);
+                    color: #fff;
+                }
+
+                .cv-promo-nav-prev {
+                    right: auto;
+                    left: -16px;
+                }
+
+                .cv-promo-nav-next {
+                    left: auto;
+                    right: -16px;
+                }
+
+                @media (max-width: 768px) {
+                    .cv-promo-grid {
+                        grid-template-columns: 140px 1fr;
+                    }
+
+                    .cv-promo-banner-wrap {
+                        min-height: 200px;
+                    }
+
+                    .cv-promo-swiper .swiper-slide {
+                        width: 140px !important;
+                    }
+
+                    .cv-promo-section {
+                        padding: 1.25rem 1rem;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .cv-promo-grid {
+                        grid-template-columns: 120px 1fr;
+                    }
+
+                    .cv-promo-banner-wrap {
+                        min-height: 180px;
+                    }
+
+                    .cv-promo-swiper .swiper-slide {
+                        width: 130px !important;
+                    }
+                }
+            </style>
+
+            @if((\App\Models\Setting::get('cs_enabled', '0')) === '1')
+                {{-- ════ COMING SOON - KATALOG & REKOMENDASI PRODUK ════ --}}
+                <div style="background: #fff; padding: 2.5rem 0 3.5rem; border-top: none; box-shadow: none;">
+                    <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;" class="cv-rekomendasi-container">
+                        @include('components.coming-soon-inline')
+                    </div>
+                </div>
+            @endif
+
+            <style>
+                /* ── Catalog Cards ── */
+                .catalog-card {
+                    display: flex;
+                    flex-direction: column;
+                    background: #fff;
+                    border: 1.5px solid #F1F5F9;
+                    border-radius: 14px;
+                    overflow: hidden;
+                    text-decoration: none;
+                    transition: border-color .25s, box-shadow .25s, transform .25s;
+                }
+
+                .catalog-card:hover {
+                    box-shadow: 0 10px 25px rgba(15, 23, 42, .08);
+                    transform: translateY(-4px);
+                }
+
+                .catalog-card-img-wrap {
+                    position: relative;
+                    width: 100%;
+                    aspect-ratio: 1/1;
+                    background: #F8FAFC;
+                    overflow: hidden;
+                }
+
+                .catalog-card-no-img {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .catalog-card-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: block;
+                    transition: transform 0.3s ease;
+                }
+
+                .catalog-card:hover .catalog-card-img {
+                    transform: scale(1.04);
+                }
+
+                .catalog-card-badge-discount {
+                    position: absolute;
+                    top: 8px;
+                    left: 8px;
+                    background: #ef4444;
+                    color: #fff;
+                    font-size: 0.65rem;
+                    font-weight: 700;
+                    padding: 0.15rem 0.4rem;
+                    border-radius: 5px;
+                }
+
+                .catalog-card-body {
+                    padding: 0.75rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.2rem;
+                    flex: 1;
+                }
+
+                .catalog-card-name {
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    color: #1E293B;
+                    line-height: 1.35;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+
+                .catalog-card-price-wrap {
+                    margin-top: 0.2rem;
+                }
+
+                .catalog-card-price-old {
+                    font-size: 0.68rem;
+                    color: #94A3B8;
+                    text-decoration: line-through;
+                }
+
+                .catalog-card-price {
+                    font-size: 0.875rem;
+                    font-weight: 700;
+                    color: #1E293B;
+                }
+
+                .catalog-card-meta {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.25rem;
+                    font-size: 0.68rem;
+                    color: #94A3B8;
+                    margin-top: 0.2rem;
+                }
+
+                .catalog-btn-more {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.35rem;
+                    padding: 0.75rem 2.5rem;
+                    background: linear-gradient(135deg, #1eb349, #a5cf37);
+                    color: #fff;
+                    font-family: 'Montserrat', sans-serif;
+                    font-weight: 700;
+                    font-size: 0.9rem;
+                    border-radius: 999px;
+                    text-decoration: none;
+                    transition: opacity 0.2s, transform 0.2s;
+                    box-shadow: 0 4px 16px rgba(30, 179, 73, 0.3);
+                }
+
+                .catalog-btn-more:hover {
+                    opacity: 0.9;
+                    transform: translateY(-1px);
+                }
+
+                @media (max-width: 1024px) {
+                    .catalog-grid {
+                        grid-template-columns: repeat(4, 1fr) !important;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .catalog-grid {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                        gap: 0.5rem !important;
+                    }
+                }
+
+                /* Responsive Section Titles & Horizontal Swipe Carousel */
+                .responsive-section-title {
+                    font-family: 'Montserrat', sans-serif;
+                    font-size: 1.25rem;
+                    font-weight: 900;
+                    color: #0F172A;
+                    margin: 0 0 0.25rem;
+                    letter-spacing: -0.02em;
+                }
+
+                .responsive-section-subtitle {
+                    font-size: 0.82rem;
+                    color: #64748B;
+                    margin: 0;
+                }
+
+                .swipe-cards-container {
+                    display: flex;
+                    gap: 1.1rem;
+                    overflow-x: auto;
+                    scroll-snap-type: x mandatory;
+                    -webkit-overflow-scrolling: touch;
+                    padding: 0.25rem 0.25rem 0.85rem;
+                    scrollbar-width: none;
+                    -ms-overflow-style: none;
+                }
+
+                .swipe-cards-container::-webkit-scrollbar {
                     display: none;
                 }
 
-                .popular-creator-card {
-                    flex: 0 0 160px;
-                    min-width: 150px;
+                .ticket-card-swipe-item,
+                .article-card-swipe-item {
+                    flex: 0 0 260px;
+                    width: 260px;
+                    scroll-snap-align: start;
                 }
-            }
-        </style>
 
-        <section style="background: #F8FAFC; padding: 2.5rem 0 3rem; border-bottom: 1px solid #E2E8F0;">
-            <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
-                <div
-                    style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.25rem;">
-                    <div>
-                        <h2 class="responsive-section-title">
-                            Creator Terpopuler
+                @media (min-width: 1024px) {
+
+                    .ticket-card-swipe-item,
+                    .article-card-swipe-item {
+                        flex: 0 0 calc(25% - 0.85rem);
+                        width: calc(25% - 0.85rem);
+                    }
+                }
+
+                @media (max-width: 640px) {
+                    .responsive-section-title {
+                        font-size: 1.05rem !important;
+                    }
+
+                    .responsive-section-subtitle {
+                        font-size: 0.75rem !important;
+                    }
+
+                    .ticket-card-swipe-item,
+                    .article-card-swipe-item {
+                        flex: 0 0 240px;
+                        width: 240px;
+                    }
+                }
+
+                /* 2-Rows Grid Responsive */
+                .grid-2-rows-responsive {
+                    display: grid;
+                    grid-template-columns: repeat(5, 1fr);
+                    gap: 1.1rem;
+                }
+
+                @media (max-width: 1024px) {
+                    .grid-2-rows-responsive {
+                        grid-template-columns: repeat(3, 1fr) !important;
+                    }
+                }
+
+                @media (max-width: 640px) {
+                    .grid-2-rows-responsive {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                        gap: 0.75rem !important;
+                    }
+                }
+
+                /* 1-Row 5-Cards Responsive (Desktop: 1 baris pas 5 cards matching Produk Terbaru, Mobile: 1 baris horizontal scroll) */
+                .products-single-row-5 {
+                    display: grid;
+                    grid-template-columns: repeat(5, 1fr);
+                    gap: 1.1rem;
+                    align-items: stretch;
+                    width: 100%;
+                }
+
+                .products-single-row-5>a {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    text-decoration: none !important;
+                    color: inherit !important;
+                    width: 100% !important;
+                    min-width: 0 !important;
+                    box-sizing: border-box !important;
+                }
+
+                .products-single-row-5 .article-card-box {
+                    width: 100% !important;
+                    box-sizing: border-box !important;
+                }
+
+                @media (max-width: 1024px) {
+                    .products-single-row-5 {
+                        display: flex !important;
+                        overflow-x: auto !important;
+                        flex-wrap: nowrap !important;
+                        scroll-snap-type: x mandatory;
+                        -webkit-overflow-scrolling: touch;
+                        gap: 0.85rem !important;
+                        padding: 0.25rem 0.25rem 0.85rem !important;
+                        scrollbar-width: none;
+                        -ms-overflow-style: none;
+                    }
+
+                    .products-single-row-5::-webkit-scrollbar {
+                        display: none !important;
+                    }
+
+                    .products-single-row-5>a {
+                        flex: 0 0 210px !important;
+                        width: 210px !important;
+                        min-width: 210px !important;
+                        max-width: 210px !important;
+                        scroll-snap-align: start;
+                    }
+                }
+
+                @media (max-width: 640px) {
+                    .products-single-row-5 {
+                        gap: 0.75rem !important;
+                        padding: 0.2rem 0.15rem 0.75rem !important;
+                    }
+
+                    .products-single-row-5>a {
+                        flex: 0 0 165px !important;
+                        width: 165px !important;
+                        min-width: 165px !important;
+                        max-width: 165px !important;
+                    }
+                }
+            </style>
+
+            {{-- ════════════════════════════════════════════════════════════════════════
+            SECTION 1: REKOMENDASI TIKET & EVENT (1 BARIS 5 CARDS - STYLE CARDS MATCHING PRODUCT)
+            ════════════════════════════════════════════════════════════════════════ --}}
+            <section
+                style="background: #F8FAFC; padding: 3.5rem 0 3.5rem; border-top: 1px solid #E2E8F0; border-bottom: 1px solid #E2E8F0;">
+                <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
+
+                    {{-- Header Headline --}}
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                        <h2 class="responsive-section-title"
+                            style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                            Tiket Event & Konser
                         </h2>
-                    </div>
-                    <a href="{{ route_locale('products') }}?tab=creators"
-                        style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;"
-                        onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
-                        Jelajahi Creator
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M5 12h14m-7-7l7 7-7 7" />
-                        </svg>
-                    </a>
-                </div>
-
-                <div class="popular-creators-grid">
-                    @foreach($popularCreators as $creatorUser)
-                        @php
-                            $cp = $creatorUser->creatorProfile;
-                            $cName = $cp?->store_name ?: ($creatorUser->name ?: 'Creator');
-                            $cStoreSlug = $cp?->store_slug ?: $creatorUser->username;
-                            $cBanner = !empty($cp?->store_banner) ? asset('storage/' . $cp->store_banner) : null;
-                            $cSalesCount = $cp?->total_sales ?? ($creatorUser->products_sum_sold_count ?? 0);
-                            $cProductCount = $creatorUser->products_count ?? 0;
-                            
-                            // Realtime Creator Rating & Verification Status from DB
-                            $cIsVerified = $cp ? $cp->isVerified() : false;
-                            $cRatingStats = $cp ? $cp->getRatingStats() : ['rating' => null, 'count' => 0];
-                            $cRating = $cRatingStats['rating'] ?? null;
-
-                            $cAvatar = null;
-                            if (!empty($cp?->avatar)) {
-                                $cAvatar = asset('storage/' . $cp->avatar);
-                            } elseif (!empty($creatorUser->avatar)) {
-                                $cAvatar = Str::startsWith($creatorUser->avatar, 'http') ? $creatorUser->avatar : asset('storage/' . $creatorUser->avatar);
-                            } elseif (!empty($cp?->bio_config['avatar'])) {
-                                $cAvatar = asset('storage/' . $cp->bio_config['avatar']);
-                            }
-
-                            $isStoreActive = $cp ? $cp->isStoreActive() : false;
-
-                            if ($cStoreSlug) {
-                                $targetUrl = $isStoreActive ? route_locale('store.show', $cStoreSlug) : url('/' . $cStoreSlug);
-                            } else {
-                                $targetUrl = route_locale('products');
-                            }
-                        @endphp
-                        <a href="{{ $targetUrl }}" class="popular-creator-card" title="{{ $cName }}">
-                            <div class="popular-creator-banner">
-                                @if($cBanner)
-                                    <img src="{{ $cBanner }}" alt="{{ $cName }}" class="popular-creator-banner-img" loading="lazy">
-                                @endif
-                            </div>
-
-                            <div class="popular-creator-avatar-wrap">
-                                @if($cAvatar)
-                                    <img src="{{ $cAvatar }}" alt="{{ $cName }}" class="popular-creator-img" loading="lazy">
-                                @else
-                                    <div class="popular-creator-avatar-placeholder">
-                                        {{ strtoupper(substr($cName, 0, 1)) }}
-                                    </div>
-                                @endif
-                            </div>
-
-                            <div class="popular-creator-info">
-                                <div class="popular-creator-name">
-                                    <span>{{ $cName }}</span>
-                                    @if($cIsVerified)
-                                        <svg class="verified-icon" width="13" height="13" fill="#0D9488" viewBox="0 0 24 24" title="Verified Creator">
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                                        </svg>
-                                    @endif
-                                </div>
-                                
-                                <div class="popular-creator-stats">
-                                    @if(!empty($cRating))
-                                        <span class="popular-creator-rating">
-                                            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                            {{ $cRating }}
-                                        </span>
-                                        <span>•</span>
-                                    @endif
-                                    <span>{{ $cSalesCount > 0 ? $cSalesCount . ' Terjual' : ($cProductCount . ' Produk') }}</span>
-                                </div>
-
-                                <span class="popular-creator-cta-btn">
-                                    Kunjungi Toko
-                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                        <path d="M5 12h14m-7-7l7 7-7 7" />
-                                    </svg>
-                                </span>
-                            </div>
+                        <a href="{{ route_locale('products') }}?category=tiket"
+                            style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+                            Lihat Semua Tiket <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <path d="M5 12h14m-7-7l7 7-7 7" />
+                            </svg>
                         </a>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
+                    </div>
 
-    {{-- ════ PROMO SECTIONS (Dynamic) ════ --}}
-    <style>
-        .cv-promo-wrap {
-            background: #ffffff;
-            padding: 0.625rem 0 0;
-            border-bottom: none;
-        }
-
-        .cv-promo-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1.875rem 1.5rem 2rem;
-            border-bottom: none;
-        }
-
-        .cv-promo-section:last-child {
-            border-bottom: none;
-        }
-
-        /* Flash Sale Override: gradient only on card-sized container (same width as regular sections) */
-        .cv-promo-section[style*="linear-gradient"] {
-            border-radius: 20px;
-            border-bottom: none;
-            max-width: 1200px;
-            /* SAME as regular sections — not full width */
-            margin: 0 auto 1rem;
-            padding: 1.25rem 1.5rem 1.5rem;
-        }
-
-        .cv-promo-section[style*="linear-gradient"] .cv-promo-card {
-            background: #fff;
-            border: none;
-            box-shadow: 0 2px 16px rgba(0, 0, 0, .12);
-        }
-
-        .cv-promo-section[style*="linear-gradient"] .cv-promo-card-name {
-            color: #1E293B;
-        }
-
-        .cv-promo-section[style*="linear-gradient"] .cv-promo-banner-wrap {
-            border-radius: 14px;
-            background: rgba(0, 0, 0, .18);
-        }
-
-        .cv-promo-section[style*="linear-gradient"] .cv-promo-nav {
-            background: #fff;
-            color: #EF4444;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
-        }
-
-        .cv-promo-section.is-flash-section .cv-promo-title {
-            color: #ffffff;
-        }
-
-        .cv-promo-section.is-flash-section .cv-promo-subtitle {
-            color: rgba(255, 255, 255, 0.85);
-        }
-
-        .cv-promo-section.is-flash-section .cv-promo-view-all {
-            color: #ffffff;
-            opacity: 0.9;
-        }
-
-        .cv-promo-section.is-flash-section .cv-promo-view-all:hover {
-            opacity: 1;
-        }
-
-        /* Timer compact styling */
-        .cv-flash-timer {
-            gap: .25rem;
-        }
-
-        .cv-flash-timer .timer-box {
-            font-family: 'Montserrat', monospace;
-            font-weight: 800;
-            font-size: .95rem;
-            background: rgba(0, 0, 0, .5);
-            color: #fff;
-            padding: .15rem .45rem;
-            border-radius: 5px;
-            min-width: 30px;
-            text-align: center;
-            letter-spacing: .03em;
-        }
-
-        .cv-flash-timer .timer-sep {
-            color: rgba(255, 255, 255, .9);
-            font-weight: 800;
-            font-size: 1rem;
-        }
-
-
-        .cv-section-title-wrap {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-
-        .cv-promo-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: var(--text, #1E293B);
-            line-height: 1.2;
-        }
-
-        .cv-promo-subtitle {
-            font-size: .8rem;
-            color: #64748B;
-            margin-top: .15rem;
-        }
-
-        .cv-promo-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .cv-promo-view-all {
-            font-size: .825rem;
-            font-weight: 600;
-            color: var(--accent, #1eb349);
-            text-decoration: none;
-            white-space: nowrap;
-            flex-shrink: 0;
-            transition: opacity .2s;
-        }
-
-        .cv-promo-view-all:hover {
-            opacity: .7;
-        }
-
-        /* Grid: banner left + swiper right */
-        .cv-promo-grid {
-            display: flex;
-            gap: 1rem;
-            align-items: stretch;
-        }
-
-        /* Banner */
-        .cv-promo-banner-wrap {
-            border-radius: 14px;
-            overflow: hidden;
-            position: relative;
-            width: 200px;
-            min-height: 200px;
-            /* Prevent CLS */
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* apply skeleton to banner */
-            background: #e2e8f0;
-            background-image: linear-gradient(90deg, #e2e8f0 0px, #f1f5f9 50%, #e2e8f0 100%);
-            background-size: 1000px 100%;
-            animation: cvSkeletonShimmer 2s infinite linear;
-        }
-
-        .cv-promo-banner-wrap.mobile-only {
-            display: none !important;
-        }
-
-        .cv-promo-banner-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .cv-promo-banner-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: .5rem;
-            color: rgba(255, 255, 255, .5);
-            font-size: .75rem;
-            text-align: center;
-            padding: 1rem;
-        }
-
-        /* Swiper container */
-        .cv-promo-swiper-container {
-            position: relative;
-            flex: 1;
-            min-width: 0;
-        }
-
-        .cv-promo-swiper {
-            width: 100%;
-            height: 100%;
-            padding: 12px 4px;
-            /* padding for shadow */
-            overflow: hidden;
-            /* restore clipping for swipe */
-        }
-
-        .cv-promo-swiper .swiper-wrapper {
-            align-items: stretch;
-        }
-
-        .cv-promo-swiper .swiper-slide {
-            height: auto;
-            width: 172px;
-            display: flex;
-            align-items: stretch;
-        }
-
-        @media (max-width: 768px) {
-            .cv-promo-section {
-                padding: 1.25rem 0 1.25rem 1rem;
-                margin-bottom: 0;
-                border-bottom: none;
-            }
-
-            .cv-promo-section.is-flash-section {
-                margin-bottom: 0;
-                border-radius: 0;
-            }
-
-            .cv-promo-grid {
-                gap: 0;
-            }
-
-            .cv-promo-swiper {
-                overflow: hidden;
-                padding: 4px;
-            }
-
-            .cv-promo-banner-wrap.desktop-only {
-                display: none;
-            }
-
-            .cv-promo-banner-wrap.mobile-only {
-                display: flex !important;
-                width: 155px !important;
-                margin-right: 0.5rem;
-                border-radius: 8px;
-                height: auto;
-            }
-
-            .cv-promo-swiper .swiper-slide {
-                width: 142px !important;
-            }
-
-            .cv-promo-swiper .swiper-slide.cv-promo-banner-wrap {
-                width: 155px !important;
-            }
-
-            .cv-promo-card-body {
-                padding: 0.65rem;
-            }
-
-            .cv-promo-card-name {
-                font-size: 0.75rem;
-            }
-
-            .cv-promo-card-price {
-                font-size: 0.85rem;
-            }
-
-            .cv-promo-nav {
-                display: none !important;
-            }
-
-            .cv-promo-header {
-                align-items: center;
-                margin-bottom: 0.5rem;
-                padding-right: 1rem;
-            }
-
-            .cv-promo-title {
-                font-size: 1rem;
-                font-weight: 600;
-            }
-
-            .cv-promo-title.is-flash {
-                font-style: italic;
-                text-transform: uppercase;
-                font-size: 1.1rem;
-            }
-
-            .cv-promo-subtitle {
-                display: none;
-            }
-
-            .cv-promo-view-all {
-                font-size: 0.75rem;
-            }
-
-            /* Compact timers for Flash Sale */
-            .cv-flash-timer .timer-box {
-                font-size: 0.75rem;
-                padding: 0.15rem 0.35rem;
-                border-radius: 4px;
-                min-width: 24px;
-                background: #334155;
-            }
-
-            .cv-flash-timer .timer-sep {
-                font-size: 0.8rem;
-            }
-        }
-
-        /* Product Card */
-        .cv-promo-card {
-            display: flex;
-            flex-direction: column;
-            background: #fff;
-            border: 1.5px solid #F1F5F9;
-            border-radius: 14px;
-            overflow: hidden;
-            height: 100%;
-            text-decoration: none;
-            transition: border-color .25s, box-shadow .25s, transform .25s;
-        }
-
-        .cv-promo-card:hover {
-            box-shadow: 0 10px 25px rgba(15, 23, 42, .08);
-            transform: translateY(-4px);
-        }
-
-        .cv-promo-card-img {
-            width: 100%;
-            aspect-ratio: 1/1;
-            object-fit: cover;
-            display: block;
-            /* apply skeleton to product image container */
-            background: #e2e8f0;
-            background-image: linear-gradient(90deg, #e2e8f0 0px, #f1f5f9 50%, #e2e8f0 100%);
-            background-size: 1000px 100%;
-            animation: cvSkeletonShimmer 2s infinite linear;
-        }
-
-        .cv-promo-card-img-placeholder {
-            width: 100%;
-            aspect-ratio: 1/1;
-            background: #F1F5F9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .cv-promo-card-body {
-            padding: .75rem .875rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: .25rem;
-        }
-
-        .cv-promo-card-badge {
-            display: inline-flex;
-            align-items: center;
-            align-self: flex-start;
-            font-size: .65rem;
-            font-weight: 700;
-            padding: .2rem .5rem;
-            border-radius: 100px;
-            background: rgba(245, 158, 11, 0.1);
-            color: #D97706;
-            margin-bottom: .25rem;
-            line-height: 1;
-            letter-spacing: .02em;
-        }
-
-        .cv-promo-card-badge.service {
-            background: rgba(59, 130, 246, 0.1);
-            color: #2563EB;
-        }
-
-        .cv-promo-card-name {
-            font-size: .8125rem;
-            font-weight: 600;
-            color: #1E293B;
-            line-height: 1.35;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .cv-promo-card-price {
-            font-size: .9rem;
-            font-weight: 700;
-            color: #1E293B;
-            margin-top: auto;
-        }
-
-        .cv-promo-card-price-old {
-            font-size: .7rem;
-            color: #94A3B8;
-            text-decoration: line-through;
-            font-weight: 400;
-        }
-
-        .cv-promo-card-discount {
-            display: inline-block;
-            font-size: .65rem;
-            font-weight: 700;
-            color: #DC2626;
-            background: #FEE2E2;
-            padding: .1rem .35rem;
-            border-radius: 4px;
-        }
-
-        .cv-promo-card-meta {
-            display: flex;
-            align-items: center;
-            gap: .3rem;
-            font-size: .7rem;
-            color: #94A3B8;
-            margin-top: .25rem;
-        }
-
-        .cv-promo-card-star {
-            color: #FBBF24;
-        }
-
-        /* Nav buttons */
-        .cv-promo-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 10;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #fff;
-            border: 1.5px solid #E2E8F0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #1E293B;
-            transition: all .2s;
-        }
-
-        .cv-promo-nav:hover {
-            background: var(--accent, #1eb349);
-            border-color: var(--accent, #1eb349);
-            color: #fff;
-        }
-
-        .cv-promo-nav-prev {
-            right: auto;
-            left: -16px;
-        }
-
-        .cv-promo-nav-next {
-            left: auto;
-            right: -16px;
-        }
-
-        @media (max-width: 768px) {
-            .cv-promo-grid {
-                grid-template-columns: 140px 1fr;
-            }
-
-            .cv-promo-banner-wrap {
-                min-height: 200px;
-            }
-
-            .cv-promo-swiper .swiper-slide {
-                width: 140px !important;
-            }
-
-            .cv-promo-section {
-                padding: 1.25rem 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .cv-promo-grid {
-                grid-template-columns: 120px 1fr;
-            }
-
-            .cv-promo-banner-wrap {
-                min-height: 180px;
-            }
-
-            .cv-promo-swiper .swiper-slide {
-                width: 130px !important;
-            }
-        }
-    </style>
-
-    @if((\App\Models\Setting::get('cs_enabled', '0')) === '1')
-        {{-- ════ COMING SOON - KATALOG & REKOMENDASI PRODUK ════ --}}
-        <div style="background: #fff; padding: 2.5rem 0 3.5rem; border-top: none; box-shadow: none;">
-            <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;" class="cv-rekomendasi-container">
-                @include('components.coming-soon-inline')
-            </div>
-        </div>
-    @endif
-
-    <style>
-        /* ── Catalog Cards ── */
-        .catalog-card {
-            display: flex;
-            flex-direction: column;
-            background: #fff;
-            border: 1.5px solid #F1F5F9;
-            border-radius: 14px;
-            overflow: hidden;
-            text-decoration: none;
-            transition: border-color .25s, box-shadow .25s, transform .25s;
-        }
-
-        .catalog-card:hover {
-            box-shadow: 0 10px 25px rgba(15, 23, 42, .08);
-            transform: translateY(-4px);
-        }
-
-        .catalog-card-img-wrap {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 1/1;
-            background: #F8FAFC;
-            overflow: hidden;
-        }
-
-        .catalog-card-no-img {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .catalog-card-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.3s ease;
-        }
-
-        .catalog-card:hover .catalog-card-img {
-            transform: scale(1.04);
-        }
-
-        .catalog-card-badge-discount {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: #ef4444;
-            color: #fff;
-            font-size: 0.65rem;
-            font-weight: 700;
-            padding: 0.15rem 0.4rem;
-            border-radius: 5px;
-        }
-
-        .catalog-card-body {
-            padding: 0.75rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.2rem;
-            flex: 1;
-        }
-
-        .catalog-card-name {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #1E293B;
-            line-height: 1.35;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .catalog-card-price-wrap {
-            margin-top: 0.2rem;
-        }
-
-        .catalog-card-price-old {
-            font-size: 0.68rem;
-            color: #94A3B8;
-            text-decoration: line-through;
-        }
-
-        .catalog-card-price {
-            font-size: 0.875rem;
-            font-weight: 700;
-            color: #1E293B;
-        }
-
-        .catalog-card-meta {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            font-size: 0.68rem;
-            color: #94A3B8;
-            margin-top: 0.2rem;
-        }
-
-        .catalog-btn-more {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.75rem 2.5rem;
-            background: linear-gradient(135deg, #1eb349, #a5cf37);
-            color: #fff;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            font-size: 0.9rem;
-            border-radius: 999px;
-            text-decoration: none;
-            transition: opacity 0.2s, transform 0.2s;
-            box-shadow: 0 4px 16px rgba(30, 179, 73, 0.3);
-        }
-
-        .catalog-btn-more:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        @media (max-width: 1024px) {
-            .catalog-grid {
-                grid-template-columns: repeat(4, 1fr) !important;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .catalog-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 0.5rem !important;
-            }
-        }
-
-        /* Responsive Section Titles & Horizontal Swipe Carousel */
-        .responsive-section-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.25rem;
-            font-weight: 900;
-            color: #0F172A;
-            margin: 0 0 0.25rem;
-            letter-spacing: -0.02em;
-        }
-
-        .responsive-section-subtitle {
-            font-size: 0.82rem;
-            color: #64748B;
-            margin: 0;
-        }
-
-        .swipe-cards-container {
-            display: flex;
-            gap: 1.1rem;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            padding: 0.25rem 0.25rem 0.85rem;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .swipe-cards-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .ticket-card-swipe-item,
-        .article-card-swipe-item {
-            flex: 0 0 260px;
-            width: 260px;
-            scroll-snap-align: start;
-        }
-
-        @media (min-width: 1024px) {
-
-            .ticket-card-swipe-item,
-            .article-card-swipe-item {
-                flex: 0 0 calc(25% - 0.85rem);
-                width: calc(25% - 0.85rem);
-            }
-        }
-
-        @media (max-width: 640px) {
-            .responsive-section-title {
-                font-size: 1.05rem !important;
-            }
-
-            .responsive-section-subtitle {
-                font-size: 0.75rem !important;
-            }
-
-            .ticket-card-swipe-item,
-            .article-card-swipe-item {
-                flex: 0 0 240px;
-                width: 240px;
-            }
-        }
-
-        /* 2-Rows Grid Responsive */
-        .grid-2-rows-responsive {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1.1rem;
-        }
-
-        @media (max-width: 1024px) {
-            .grid-2-rows-responsive {
-                grid-template-columns: repeat(3, 1fr) !important;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .grid-2-rows-responsive {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 0.75rem !important;
-            }
-        }
-
-        /* 1-Row 5-Cards Responsive (Desktop: 1 baris pas 5 cards matching Produk Terbaru, Mobile: 1 baris horizontal scroll) */
-        .products-single-row-5 {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1.1rem;
-            align-items: stretch;
-            width: 100%;
-        }
-
-        .products-single-row-5 > a {
-            display: flex !important;
-            flex-direction: column !important;
-            text-decoration: none !important;
-            color: inherit !important;
-            width: 100% !important;
-            min-width: 0 !important;
-            box-sizing: border-box !important;
-        }
-
-        .products-single-row-5 .article-card-box {
-            width: 100% !important;
-            box-sizing: border-box !important;
-        }
-
-        @media (max-width: 1024px) {
-            .products-single-row-5 {
-                display: flex !important;
-                overflow-x: auto !important;
-                flex-wrap: nowrap !important;
-                scroll-snap-type: x mandatory;
-                -webkit-overflow-scrolling: touch;
-                gap: 0.85rem !important;
-                padding: 0.25rem 0.25rem 0.85rem !important;
-                scrollbar-width: none;
-                -ms-overflow-style: none;
-            }
-
-            .products-single-row-5::-webkit-scrollbar {
-                display: none !important;
-            }
-
-            .products-single-row-5 > a {
-                flex: 0 0 210px !important;
-                width: 210px !important;
-                min-width: 210px !important;
-                max-width: 210px !important;
-                scroll-snap-align: start;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .products-single-row-5 {
-                gap: 0.75rem !important;
-                padding: 0.2rem 0.15rem 0.75rem !important;
-            }
-
-            .products-single-row-5 > a {
-                flex: 0 0 165px !important;
-                width: 165px !important;
-                min-width: 165px !important;
-                max-width: 165px !important;
-            }
-        }
-    </style>
-
-    {{-- ════════════════════════════════════════════════════════════════════════
-    SECTION 1: REKOMENDASI TIKET & EVENT (1 BARIS 5 CARDS - STYLE CARDS MATCHING PRODUCT)
-    ════════════════════════════════════════════════════════════════════════ --}}
-    <section
-        style="background: #F8FAFC; padding: 3.5rem 0 3.5rem; border-top: 1px solid #E2E8F0; border-bottom: 1px solid #E2E8F0;">
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
-
-            {{-- Header Headline --}}
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
-                <h2 class="responsive-section-title"
-                    style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                    Tiket Event & Konser
-                </h2>
-                <a href="{{ route_locale('products') }}?category=tiket"
-                    style="font-size: 0.85rem; font-weight: 700; color: #1eb349; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
-                    Lihat Semua Tiket <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                        viewBox="0 0 24 24">
-                        <path d="M5 12h14m-7-7l7 7-7 7" />
-                    </svg>
-                </a>
-            </div>
-
-            <div class="swipe-cards-container">
-                @php
-                    $tProds = isset($ticketProducts) && $ticketProducts->count() > 0
-                        ? $ticketProducts
-                        : (isset($products) ? $products->filter(fn($p) => strtolower($p->product_type ?? $p->type ?? '') === 'ticket') : collect());
-                @endphp
-                @if($tProds->count() > 0)
-                    @foreach($tProds as $tProd)
+                    <div class="swipe-cards-container">
                         @php
-                            $tPrice = $tProd->sale_price > 0 && $tProd->sale_price < $tProd->price ? $tProd->sale_price : $tProd->effective_price;
-                            $tOrigPrice = $tProd->sale_price > 0 && $tProd->sale_price < $tProd->price ? $tProd->price : null;
-                            $tHasDiscount = !empty($tOrigPrice) && $tOrigPrice > $tPrice;
-                            $tDiscountPct = $tHasDiscount ? round((($tOrigPrice - $tPrice) / $tOrigPrice) * 100) : 0;
-
-                            // Poster Event (Landscape 16:9), fallback ke gambar utama
-                            $tImage = !empty($tProd->og_image) ? asset('storage/' . $tProd->og_image) : ($tProd->image ? asset('storage/' . $tProd->image) : asset('assets/images/default-ticket.webp'));
-
-                            // Deteksi event_date — prioritas: kolom event_date > data_json['event_date'] > created_at+15
-                            // $tIsExpired hanya berlaku untuk produk tipe ticket/konser
-                            $tRawEventDate = $tProd->event_date
-                                ?: (!empty($tProd->data_json['event_date']) ? $tProd->data_json['event_date'] : null);
-                            $tDateCarbon = $tRawEventDate
-                                ? \Carbon\Carbon::parse($tRawEventDate)
-                                : \Carbon\Carbon::parse($tProd->created_at)->addDays(15);
-                            $tDate      = $tDateCarbon->isoFormat('D MMMM Y');
-                            $tIsExpired = $tDateCarbon->endOfDay()->isPast();
-
-                            $tLocation = $tProd->event_location
-                                ?: ($tProd->location
-                                    ?: ($tProd->data_json['event_location'] ?? null)
-                                    ?: ($tProd->seller?->creatorProfile?->city
-                                        ?: ($tProd->seller?->creatorProfile?->store_location
-                                            ?: 'Indonesia')));
-
-                            // Realtime Dynamic Rating & Seller Verification
-                            $tSellerCp = $tProd->seller?->creatorProfile;
-                            $tIsVerified = $tSellerCp ? (bool)$tSellerCp->is_verified : false;
-                            $tRatingVal = $tProd->getEffectiveRating();
+                            $tProds = isset($ticketProducts) && $ticketProducts->count() > 0
+                                ? $ticketProducts
+                                : (isset($products) ? $products->filter(fn($p) => strtolower($p->product_type ?? $p->type ?? '') === 'ticket') : collect());
                         @endphp
-                        <a href="{{ route_locale('products.show', $tProd->slug) }}"
-                            style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
-                            class="ticket-card-swipe-item">
-                            <div style="background: {{ $tIsExpired ? '#F8FAFC' : '#ffffff' }}; border: 1.5px solid {{ $tIsExpired ? '#CBD5E1' : '#E2E8F0' }}; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02); {{ $tIsExpired ? 'opacity:0.72;' : '' }}"
-                                class="article-card-box">
+                        @if($tProds->count() > 0)
+                            @foreach($tProds as $tProd)
+                                @php
+                                    $tPrice = $tProd->sale_price > 0 && $tProd->sale_price < $tProd->price ? $tProd->sale_price : $tProd->effective_price;
+                                    $tOrigPrice = $tProd->sale_price > 0 && $tProd->sale_price < $tProd->price ? $tProd->price : null;
+                                    $tHasDiscount = !empty($tOrigPrice) && $tOrigPrice > $tPrice;
+                                    $tDiscountPct = $tHasDiscount ? round((($tOrigPrice - $tPrice) / $tOrigPrice) * 100) : 0;
 
-                                {{-- Image Banner 16:9 Landscape (Poster Event) --}}
-                                <div
-                                    style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
-                                    <img src="{{ $tImage }}" alt="{{ $tProd->name }}"
-                                        style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; {{ $tIsExpired ? 'filter:grayscale(100%);' : '' }}"
-                                        class="article-banner-img">
+                                    // Poster Event (Landscape 16:9), fallback ke gambar utama
+                                    $tImage = !empty($tProd->og_image) ? asset('storage/' . $tProd->og_image) : ($tProd->image ? asset('storage/' . $tProd->image) : asset('assets/images/default-ticket.webp'));
 
-                                    {{-- Expired overlay (hanya ticket yang sudah berlalu) --}}
-                                    @if($tIsExpired)
-                                        <div style="position:absolute;inset:0;background:rgba(15,23,42,0.38);display:flex;align-items:center;justify-content:center;z-index:3;">
-                                            <span style="background:rgba(20,20,30,0.85);color:#94A3B8;font-size:0.7rem;font-weight:800;padding:0.28rem 0.75rem;border-radius:99px;font-family:'Montserrat',sans-serif;letter-spacing:0.08em;border:1px solid rgba(148,163,184,0.25);">&#127937; EVENT SELESAI</span>
+                                    // Deteksi event_date — prioritas: kolom event_date > data_json['event_date'] > created_at+15
+                                    // $tIsExpired hanya berlaku untuk produk tipe ticket/konser
+                                    $tRawEventDate = $tProd->event_date
+                                        ?: (!empty($tProd->data_json['event_date']) ? $tProd->data_json['event_date'] : null);
+                                    $tDateCarbon = $tRawEventDate
+                                        ? \Carbon\Carbon::parse($tRawEventDate)
+                                        : \Carbon\Carbon::parse($tProd->created_at)->addDays(15);
+                                    $tDate = $tDateCarbon->isoFormat('D MMMM Y');
+                                    $tIsExpired = $tDateCarbon->endOfDay()->isPast();
+
+                                    $tLocation = $tProd->event_location
+                                        ?: ($tProd->location
+                                            ?: ($tProd->data_json['event_location'] ?? null)
+                                            ?: ($tProd->seller?->creatorProfile?->city
+                                                ?: ($tProd->seller?->creatorProfile?->store_location
+                                                    ?: 'Indonesia')));
+
+                                    // Realtime Dynamic Rating & Seller Verification
+                                    $tSellerCp = $tProd->seller?->creatorProfile;
+                                    $tIsVerified = $tSellerCp ? (bool) $tSellerCp->is_verified : false;
+                                    $tRatingVal = $tProd->getEffectiveRating();
+                                @endphp
+                                <a href="{{ route_locale('products.show', $tProd->slug) }}"
+                                    style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
+                                    class="ticket-card-swipe-item">
+                                    <div style="background: {{ $tIsExpired ? '#F8FAFC' : '#ffffff' }}; border: 1.5px solid {{ $tIsExpired ? '#CBD5E1' : '#E2E8F0' }}; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02); {{ $tIsExpired ? 'opacity:0.72;' : '' }}"
+                                        class="article-card-box">
+
+                                        {{-- Image Banner 16:9 Landscape (Poster Event) --}}
+                                        <div
+                                            style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
+                                            <img src="{{ $tImage }}" alt="{{ $tProd->name }}"
+                                                style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; {{ $tIsExpired ? 'filter:grayscale(100%);' : '' }}"
+                                                class="article-banner-img">
+
+                                            {{-- Expired overlay (hanya ticket yang sudah berlalu) --}}
+                                            @if($tIsExpired)
+                                                <div
+                                                    style="position:absolute;inset:0;background:rgba(15,23,42,0.38);display:flex;align-items:center;justify-content:center;z-index:3;">
+                                                    <span
+                                                        style="background:rgba(20,20,30,0.85);color:#94A3B8;font-size:0.7rem;font-weight:800;padding:0.28rem 0.75rem;border-radius:99px;font-family:'Montserrat',sans-serif;letter-spacing:0.08em;border:1px solid rgba(148,163,184,0.25);">&#127937;
+                                                        EVENT SELESAI</span>
+                                                </div>
+                                            @endif
+
+                                            {{-- Discount / Event Badge Top-Left (hidden if event expired) --}}
+                                            @if(!$tIsExpired)
+                                                @if($tHasDiscount)
+                                                    <div
+                                                        style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
+                                                        -{{ $tDiscountPct }}%
+                                                    </div>
+                                                @else
+                                                    <div
+                                                        style="position: absolute; top: 8px; left: 8px; background: #1eb349; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
+                                                        EVENT
+                                                    </div>
+                                                @endif
+                                            @endif
                                         </div>
-                                    @endif
 
-                                    {{-- Discount / Event Badge Top-Left (hidden if event expired) --}}
-                                    @if(!$tIsExpired)
-                                        @if($tHasDiscount)
-                                            <div
-                                                style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
-                                            -{{ $tDiscountPct }}%
+                                        {{-- Card Body --}}
+                                        <div
+                                            style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                                            <div>
+                                                {{-- Rating & Verified Badge --}}
+                                                <div
+                                                    style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
+                                                    @if($tRatingVal !== null && $tRatingVal > 0)
+                                                        <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                                            <span
+                                                                style="color: {{ $tIsExpired ? '#94A3B8' : '#F59E0B' }}; font-size: 0.95rem;">★</span>
+                                                            <span
+                                                                style="font-family: 'Montserrat', sans-serif; color: {{ $tIsExpired ? '#94A3B8' : '#1E293B' }};">{{ number_format($tRatingVal, 1) }}</span>
+                                                        </div>
+                                                    @else
+                                                        <div
+                                                            style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
+                                                            <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
+                                                            <span>Belum ada ulasan</span>
+                                                        </div>
+                                                    @endif
+                                                    @if($tIsVerified && !$tIsExpired)
+                                                        <div
+                                                            style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
+                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                                viewBox="0 0 24 24">
+                                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                                <polyline points="22 4 12 14.01 9 11.01" />
+                                                            </svg>
+                                                            Verified
+                                                        </div>
+                                                    @endif
+                                                </div>
+
+                                                {{-- Title --}}
+                                                <h3
+                                                    style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: {{ $tIsExpired ? '#94A3B8' : '#0F172A' }}; margin: 0 0 0.35rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                                    {{ $tProd->name }}
+                                                </h3>
+
+                                                {{-- Tanggal & Lokasi Event --}}
+                                                <div
+                                                    style="display: flex; flex-direction: column; gap: 0.2rem; margin: 0.35rem 0 0.4rem; font-size: 0.72rem; color: {{ $tIsExpired ? '#94A3B8' : '#64748B' }}; font-weight: 600;">
+                                                    <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
+                                                        <svg width="12" height="12" fill="none"
+                                                            stroke="{{ $tIsExpired ? '#94A3B8' : '#1eb349' }}" stroke-width="2.2"
+                                                            viewBox="0 0 24 24">
+                                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                                            <line x1="16" y1="2" x2="16" y2="6" />
+                                                            <line x1="8" y1="2" x2="8" y2="6" />
+                                                            <line x1="3" y1="10" x2="21" y2="10" />
+                                                        </svg>
+                                                        <span>{{ $tDate }}</span>
+                                                    </div>
+                                                    <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
+                                                        <svg width="12" height="12" fill="none"
+                                                            stroke="{{ $tIsExpired ? '#94A3B8' : '#EF4444' }}" stroke-width="2.2"
+                                                            viewBox="0 0 24 24">
+                                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                                            <circle cx="12" cy="10" r="3" />
+                                                        </svg>
+                                                        <span
+                                                            style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ Str::limit($tLocation, 25) }}</span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        @else
+
+                                            {{-- Footer Separator & Price CTA --}}
+                                            <div>
+                                                <div style="border-top: 1px solid #F1F5F9; margin: 0.5rem 0 0.65rem;"></div>
+                                                <div
+                                                    style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">
+                                                    <div style="white-space: nowrap; min-width: 0; flex: 1;">
+                                                        @if($tHasDiscount && !$tIsExpired)
+                                                            <span
+                                                                style="font-size: 0.68rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500; white-space: nowrap;">
+                                                                Rp{{ number_format($tOrigPrice, 0, ',', '.') }}
+                                                            </span>
+                                                        @endif
+                                                        <span
+                                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: {{ $tIsExpired ? '#94A3B8' : '#16a34a' }}; white-space: nowrap; display: block;">
+                                                            @if($tIsExpired)
+                                                                Selesai
+                                                            @elseif($tPrice > 0)
+                                                                Rp{{ number_format($tPrice, 0, ',', '.') }}
+                                                            @else
+                                                                <span style="color: #1eb349;">GRATIS</span>
+                                                            @endif
+                                                        </span>
+                                                    </div>
+                                                    @if($tIsExpired)
+                                                        <span
+                                                            style="background:#E2E8F0; color:#94A3B8; padding:0.35rem 0.75rem; border-radius:99px; font-size:0.75rem; font-weight:700; display:inline-flex; align-items:center; flex-shrink:0; white-space:nowrap; pointer-events:none; cursor:not-allowed;">
+                                                            Selesai
+                                                        </span>
+                                                    @else
+                                                        <span
+                                                            style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
+                                                            class="retarget-btn-cta">
+                                                            Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
+                                                                stroke-width="2.5" viewBox="0 0 24 24">
+                                                                <path d="M5 12h14m-7-7l7 7-7 7" />
+                                                            </svg>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
+                        @else
+                            {{-- Demo Cards --}}
+                            @php
+                                $demoTickets = [
+                                    ['title' => 'Canisius College Cup XLI 2026', 'date' => '26 September 2026', 'location' => 'Jakarta Pusat', 'price' => 'Rp 80.000', 'creator' => 'Canisius College Cup', 'img' => 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&auto=format&fit=crop'],
+                                    ['title' => 'MusicFest Live Concert 2026', 'date' => '12 Oktober 2026', 'location' => 'Surabaya', 'price' => 'Rp 150.000', 'creator' => 'Jakarta Music Live', 'img' => 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop'],
+                                    ['title' => 'Digital Creator Masterclass Workshop', 'date' => '05 November 2026', 'location' => 'Online / Webinar', 'price' => 'Rp 125.000', 'creator' => 'Kreator Academy', 'img' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&auto=format&fit=crop'],
+                                    ['title' => 'Tiket Rekreasi & Art Exhibition 2026', 'date' => '20 November 2026', 'location' => 'Bandung', 'price' => 'Rp 50.000', 'creator' => 'ArtSpace Indonesia', 'img' => 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop'],
+                                    ['title' => 'Seminar Edukasi & International Pass', 'date' => '02 Desember 2026', 'location' => 'Bali', 'price' => 'Rp 99.000', 'creator' => 'EduPass Global', 'img' => 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&auto=format&fit=crop'],
+                                ];
+                            @endphp
+                            @foreach($demoTickets as $dT)
+                                <a href="{{ route_locale('products') }}?category=tiket"
+                                    style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
+                                    class="ticket-card-swipe-item">
+                                    <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
+                                        class="article-card-box">
+                                        <div
+                                            style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
+                                            <img src="{{ $dT['img'] }}" alt="{{ $dT['title'] }}"
+                                                style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
+                                                class="article-banner-img">
                                             <div
                                                 style="position: absolute; top: 8px; left: 8px; background: #1eb349; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
-                                            EVENT
+                                                EVENT
                                             </div>
-                                        @endif
-                                    @endif
-                                </div>
-
-                                {{-- Card Body --}}
-                                <div
-                                    style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
-                                    <div>
-                                        {{-- Rating & Verified Badge --}}
-                                        <div
-                                            style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
-                                            @if($tRatingVal !== null && $tRatingVal > 0)
-                                                <div style="display: flex; align-items: center; gap: 0.3rem;">
-                                                    <span style="color: {{ $tIsExpired ? '#94A3B8' : '#F59E0B' }}; font-size: 0.95rem;">★</span>
-                                                    <span style="font-family: 'Montserrat', sans-serif; color: {{ $tIsExpired ? '#94A3B8' : '#1E293B' }};">{{ number_format($tRatingVal, 1) }}</span>
-                                                </div>
-                                            @else
-                                                <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
-                                                    <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
-                                                    <span>Belum ada ulasan</span>
-                                                </div>
-                                            @endif
-                                            @if($tIsVerified && !$tIsExpired)
-                                                <div
-                                                    style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
-                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                        viewBox="0 0 24 24">
-                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                                        <polyline points="22 4 12 14.01 9 11.01" />
-                                                    </svg>
-                                                    Verified
-                                                </div>
-                                            @endif
                                         </div>
-
-                                        {{-- Title --}}
-                                        <h3
-                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: {{ $tIsExpired ? '#94A3B8' : '#0F172A' }}; margin: 0 0 0.35rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                            {{ $tProd->name }}
-                                        </h3>
-
-                                        {{-- Tanggal & Lokasi Event --}}
                                         <div
-                                            style="display: flex; flex-direction: column; gap: 0.2rem; margin: 0.35rem 0 0.4rem; font-size: 0.72rem; color: {{ $tIsExpired ? '#94A3B8' : '#64748B' }}; font-weight: 600;">
-                                            <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
-                                                <svg width="12" height="12" fill="none" stroke="{{ $tIsExpired ? '#94A3B8' : '#1eb349' }}" stroke-width="2.2"
-                                                    viewBox="0 0 24 24">
-                                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                                                    <line x1="16" y1="2" x2="16" y2="6" />
-                                                    <line x1="8" y1="2" x2="8" y2="6" />
-                                                    <line x1="3" y1="10" x2="21" y2="10" />
-                                                </svg>
-                                                <span>{{ $tDate }}</span>
+                                            style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                                            <div>
+                                                <div
+                                                    style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
+                                                    <div
+                                                        style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
+                                                        <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
+                                                        <span>Belum ada ulasan</span>
+                                                    </div>
+                                                </div>
+                                                <h3
+                                                    style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.35rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                                    {{ $dT['title'] }}
+                                                </h3>
+                                                <div
+                                                    style="display: flex; flex-direction: column; gap: 0.2rem; margin: 0.35rem 0 0.4rem; font-size: 0.72rem; color: #64748B; font-weight: 600;">
+                                                    <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
+                                                        <svg width="12" height="12" fill="none" stroke="#1eb349" stroke-width="2.2"
+                                                            viewBox="0 0 24 24">
+                                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                                            <line x1="16" y1="2" x2="16" y2="6" />
+                                                            <line x1="8" y1="2" x2="8" y2="6" />
+                                                            <line x1="3" y1="10" x2="21" y2="10" />
+                                                        </svg>
+                                                        <span>{{ $dT['date'] }}</span>
+                                                    </div>
+                                                    <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
+                                                        <svg width="12" height="12" fill="none" stroke="#EF4444" stroke-width="2.2"
+                                                            viewBox="0 0 24 24">
+                                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                                            <circle cx="12" cy="10" r="3" />
+                                                        </svg>
+                                                        <span>{{ $dT['location'] }}</span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
-                                                <svg width="12" height="12" fill="none" stroke="{{ $tIsExpired ? '#94A3B8' : '#EF4444' }}" stroke-width="2.2"
-                                                    viewBox="0 0 24 24">
-                                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                                    <circle cx="12" cy="10" r="3" />
-                                                </svg>
-                                                <span
-                                                    style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ Str::limit($tLocation, 25) }}</span>
+                                            <div>
+                                                <div style="border-top: 1px solid #F1F5F9; margin: 0.5rem 0 0.65rem;"></div>
+                                                <div
+                                                    style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">
+                                                    <span
+                                                        style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">
+                                                        {{ $dT['price'] }}
+                                                    </span>
+                                                    <span
+                                                        style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); flex-shrink: 0; white-space: nowrap;"
+                                                        class="retarget-btn-cta">
+                                                        Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
+                                                            stroke-width="2.5" viewBox="0 0 24 24">
+                                                            <path d="M5 12h14m-7-7l7 7-7 7" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                            @endforeach
+                        @endif
+                    </div>
 
-                                    {{-- Footer Separator & Price CTA --}}
-                                    <div>
-                                        <div style="border-top: 1px solid #F1F5F9; margin: 0.5rem 0 0.65rem;"></div>
+                </div>
+            </section>
+
+            {{-- ════════════════════════════════════════════════════════════════════════
+            SECTION IKLAN BANNER LANDSCAPE (RASIO 640 : 131)
+            ════════════════════════════════════════════════════════════════════════ --}}
+            @if(!empty($settings['landscape_banner']))
+                <section style="background: #ffffff; padding: 2.5rem 0 1rem;">
+                    <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
+                        <a href="{{ $settings['landscape_banner_url'] ?? '#' }}" target="_blank" rel="noopener"
+                            style="display: block; width: 100%; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.005)'" onmouseout="this.style.transform='none'">
+                            <img src="{{ asset('storage/' . $settings['landscape_banner']) }}" alt="Iklan Banner Landscape"
+                                style="width: 100%; aspect-ratio: 640 / 131; object-fit: cover; display: block; border-radius: 16px;">
+                        </a>
+                    </div>
+                </section>
+            @endif
+
+            {{-- ════════════════════════════════════════════════════════════════════════
+            SECTION 2: ARTIKEL & EDUKASI TERBARU (1 BARIS 4 CARDS)
+            ════════════════════════════════════════════════════════════════════════ --}}
+            <section style="background: #ffffff; padding: 3.5rem 0 4rem; border-bottom: 1px solid #E2E8F0;">
+                <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
+
+                    {{-- Header & Subtitle (No Capsule, Mini Responsive Font) --}}
+                    <div
+                        style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;">
+                        <div>
+                            <h2 class="responsive-section-title">
+                                Insight & Tips
+                            </h2>
+
+                        </div>
+                        <a href="{{ route_locale('articles') }}"
+                            style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;"
+                            onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
+                            Semua Artikel
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path d="M5 12h14m-7-7l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
+
+                    {{-- 1 Row Swipe Container (Mobile & Desktop Touch Swipeable) --}}
+                    <div class="swipe-cards-container">
+                        @php
+                            $arts = isset($articles) && $articles->count() > 0 ? $articles->take(4) : collect();
+                        @endphp
+
+                        @if($arts->count() > 0)
+                            @foreach($arts as $art)
+                                @php
+                                    $artTitle = $art->title ?: 'Artikel Terbaru';
+                                    $artImg = $art->image ? asset('storage/' . $art->image) : asset('assets/images/default-article.webp');
+                                    $artCat = $art->category ?: 'Panduan';
+                                    $artDate = \Carbon\Carbon::parse($art->published_at ?? $art->created_at)->isoFormat('D MMMM Y');
+                                @endphp
+                                <a href="{{ route('articles.show', $art->slug) }}"
+                                    style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
+                                    class="article-card-swipe-item">
+                                    <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
+                                        class="article-card-box">
+                                        <div style="position: relative; width: 100%; height: 140px; background: #F1F5F9; overflow: hidden;">
+                                            <img src="{{ $artImg }}" alt="{{ $artTitle }}"
+                                                style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
+                                                class="article-banner-img">
+                                        </div>
                                         <div
-                                            style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">
-                                            <div style="white-space: nowrap; min-width: 0; flex: 1;">
-                                                @if($tHasDiscount && !$tIsExpired)
-                                                    <span
-                                                        style="font-size: 0.68rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500; white-space: nowrap;">
-                                                        Rp{{ number_format($tOrigPrice, 0, ',', '.') }}
-                                                    </span>
-                                                @endif
-                                                <span
-                                                    style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: {{ $tIsExpired ? '#94A3B8' : '#16a34a' }}; white-space: nowrap; display: block;">
-                                                    @if($tIsExpired)
-                                                        Selesai
-                                                    @elseif($tPrice > 0)
-                                                        Rp{{ number_format($tPrice, 0, ',', '.') }}
-                                                    @else
-                                                        <span style="color: #1eb349;">GRATIS</span>
-                                                    @endif
-                                                </span>
+                                            style="padding: 1.1rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                                            <div>
+                                                <h3
+                                                    style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #0F172A; margin: 0 0 0.5rem; line-height: 1.4; height: 2.6em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                                    {{ $artTitle }}
+                                                </h3>
+                                                <p
+                                                    style="font-size: 0.78rem; color: #64748B; margin: 0 0 1rem; line-height: 1.5; height: 3em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                                    {{ Str::limit(strip_tags($art->excerpt ?? $art->content ?? ''), 90) }}
+                                                </p>
                                             </div>
-                                            @if($tIsExpired)
-                                                <span style="background:#E2E8F0; color:#94A3B8; padding:0.35rem 0.75rem; border-radius:99px; font-size:0.75rem; font-weight:700; display:inline-flex; align-items:center; flex-shrink:0; white-space:nowrap; pointer-events:none; cursor:not-allowed;">
-                                                    Selesai
-                                                </span>
-                                            @else
+                                            <div
+                                                style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #F1F5F9; padding-top: 0.75rem; margin-top: auto;">
+                                                <span style="font-size: 0.72rem; color: #94A3B8; font-weight: 600;">{{ $artDate }}</span>
                                                 <span
-                                                    style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); transition: all 0.2s; flex-shrink: 0; white-space: nowrap;"
-                                                    class="retarget-btn-cta">
-                                                    Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
-                                                        stroke-width="2.5" viewBox="0 0 24 24">
+                                                    style="font-size: 0.75rem; font-weight: 700; color: #1eb349; display: inline-flex; align-items: center; gap: 0.2rem;">
+                                                    Baca <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                        viewBox="0 0 24 24">
                                                         <path d="M5 12h14m-7-7l7 7-7 7" />
                                                     </svg>
                                                 </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
-                @else
-                    {{-- Demo Cards --}}
-                    @php
-                        $demoTickets = [
-                            ['title' => 'Canisius College Cup XLI 2026', 'date' => '26 September 2026', 'location' => 'Jakarta Pusat', 'price' => 'Rp 80.000', 'creator' => 'Canisius College Cup', 'img' => 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&auto=format&fit=crop'],
-                            ['title' => 'MusicFest Live Concert 2026', 'date' => '12 Oktober 2026', 'location' => 'Surabaya', 'price' => 'Rp 150.000', 'creator' => 'Jakarta Music Live', 'img' => 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop'],
-                            ['title' => 'Digital Creator Masterclass Workshop', 'date' => '05 November 2026', 'location' => 'Online / Webinar', 'price' => 'Rp 125.000', 'creator' => 'Kreator Academy', 'img' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&auto=format&fit=crop'],
-                            ['title' => 'Tiket Rekreasi & Art Exhibition 2026', 'date' => '20 November 2026', 'location' => 'Bandung', 'price' => 'Rp 50.000', 'creator' => 'ArtSpace Indonesia', 'img' => 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop'],
-                            ['title' => 'Seminar Edukasi & International Pass', 'date' => '02 Desember 2026', 'location' => 'Bali', 'price' => 'Rp 99.000', 'creator' => 'EduPass Global', 'img' => 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&auto=format&fit=crop'],
-                        ];
-                    @endphp
-                    @foreach($demoTickets as $dT)
-                        <a href="{{ route_locale('products') }}?category=tiket"
-                            style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
-                            class="ticket-card-swipe-item">
-                            <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
-                                class="article-card-box">
-                                <div
-                                    style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
-                                    <img src="{{ $dT['img'] }}" alt="{{ $dT['title'] }}"
-                                        style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
-                                        class="article-banner-img">
-                                    <div
-                                        style="position: absolute; top: 8px; left: 8px; background: #1eb349; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: 'Montserrat', sans-serif; z-index: 2;">
-                                        EVENT
-                                    </div>
-                                </div>
-                                <div
-                                    style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
-                                    <div>
-                                        <div
-                                            style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
-                                            <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
-                                                <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
-                                                <span>Belum ada ulasan</span>
-                                            </div>
-                                        </div>
-                                        <h3
-                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.35rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                            {{ $dT['title'] }}
-                                        </h3>
-                                        <div
-                                            style="display: flex; flex-direction: column; gap: 0.2rem; margin: 0.35rem 0 0.4rem; font-size: 0.72rem; color: #64748B; font-weight: 600;">
-                                            <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
-                                                <svg width="12" height="12" fill="none" stroke="#1eb349" stroke-width="2.2"
-                                                    viewBox="0 0 24 24">
-                                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                                                    <line x1="16" y1="2" x2="16" y2="6" />
-                                                    <line x1="8" y1="2" x2="8" y2="6" />
-                                                    <line x1="3" y1="10" x2="21" y2="10" />
-                                                </svg>
-                                                <span>{{ $dT['date'] }}</span>
-                                            </div>
-                                            <div style="display: inline-flex; align-items: center; gap: 0.3rem;">
-                                                <svg width="12" height="12" fill="none" stroke="#EF4444" stroke-width="2.2"
-                                                    viewBox="0 0 24 24">
-                                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                                    <circle cx="12" cy="10" r="3" />
-                                                </svg>
-                                                <span>{{ $dT['location'] }}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div>
-                                        <div style="border-top: 1px solid #F1F5F9; margin: 0.5rem 0 0.65rem;"></div>
+                                </a>
+                            @endforeach
+                        @else
+                            {{-- Demo Article Cards --}}
+                            @php
+                                $demoArticles = [
+                                    ['title' => 'Cara Menjual Produk Digital & Ebook Agar Laris Manis di 2026', 'cat' => 'Panduan', 'date' => '24 Sep 2026', 'desc' => 'Simak strategi rahasia meningkatkan omset penjualan produk digital bagi pemula.', 'img' => 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&auto=format&fit=crop'],
+                                    ['title' => 'Panduan Sukses Membuat Event & Penjualan Tiket Online Konser', 'cat' => 'Event', 'date' => '20 Sep 2026', 'desc' => 'Langkah praktis manajemen tiket & promosi acara agar kuota penonton langsung habis.', 'img' => 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&auto=format&fit=crop'],
+                                    ['title' => 'Strategi Affiliate Marketing Terbaik untuk Kreator Digital Indonesia', 'cat' => 'Affiliate', 'date' => '15 Sep 2026', 'desc' => 'Dapatkan penghasilan pasif dengan sistem komisi affiliate buyle.id yang transparan.', 'img' => 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop'],
+                                    ['title' => 'Tips Membangun Personal Branding Berkelas Sebagai Digital Creator', 'cat' => 'Branding', 'date' => '10 Sep 2026', 'desc' => 'Cara efektif membangun kredibilitas dan kepercayaan pelanggan di era digital.', 'img' => 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&auto=format&fit=crop'],
+                                ];
+                            @endphp
+                            @foreach($demoArticles as $dA)
+                                <a href="{{ route_locale('articles') }}"
+                                    style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
+                                    class="article-card-swipe-item">
+                                    <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
+                                        class="article-card-box">
+                                        <div style="position: relative; width: 100%; height: 140px; background: #F1F5F9; overflow: hidden;">
+                                            <img src="{{ $dA['img'] }}" alt="{{ $dA['title'] }}"
+                                                style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
+                                                class="article-banner-img">
+                                        </div>
                                         <div
-                                            style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">
-                                            <span
-                                                style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">
-                                                {{ $dT['price'] }}
-                                            </span>
-                                            <span
-                                                style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); flex-shrink: 0; white-space: nowrap;"
-                                                class="retarget-btn-cta">
-                                                Lihat <svg width="11" height="11" fill="none" stroke="currentColor"
-                                                    stroke-width="2.5" viewBox="0 0 24 24">
-                                                    <path d="M5 12h14m-7-7l7 7-7 7" />
-                                                </svg>
-                                            </span>
+                                            style="padding: 1.1rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                                            <div>
+                                                <h3
+                                                    style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #0F172A; margin: 0 0 0.5rem; line-height: 1.4; height: 2.6em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                                    {{ $dA['title'] }}
+                                                </h3>
+                                                <p
+                                                    style="font-size: 0.78rem; color: #64748B; margin: 0 0 1rem; line-height: 1.5; height: 3em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                                    {{ $dA['desc'] }}
+                                                </p>
+                                            </div>
+                                            <div
+                                                style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #F1F5F9; padding-top: 0.75rem; margin-top: auto;">
+                                                <span style="font-size: 0.72rem; color: #94A3B8; font-weight: 600;">{{ $dA['date'] }}</span>
+                                                <span
+                                                    style="font-size: 0.75rem; font-weight: 700; color: #1eb349; display: inline-flex; align-items: center; gap: 0.2rem;">
+                                                    Baca <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                        viewBox="0 0 24 24">
+                                                        <path d="M5 12h14m-7-7l7 7-7 7" />
+                                                    </svg>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                    @endforeach
-                @endif
-            </div>
-
-        </div>
-    </section>
-
-    {{-- ════════════════════════════════════════════════════════════════════════
-    SECTION IKLAN BANNER LANDSCAPE (RASIO 640 : 131)
-    ════════════════════════════════════════════════════════════════════════ --}}
-    @if(!empty($settings['landscape_banner']))
-        <section style="background: #ffffff; padding: 2.5rem 0 1rem;">
-            <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
-                <a href="{{ $settings['landscape_banner_url'] ?? '#' }}" target="_blank" rel="noopener"
-                    style="display: block; width: 100%; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: transform 0.3s ease;"
-                    onmouseover="this.style.transform='scale(1.005)'" onmouseout="this.style.transform='none'">
-                    <img src="{{ asset('storage/' . $settings['landscape_banner']) }}" alt="Iklan Banner Landscape"
-                        style="width: 100%; aspect-ratio: 640 / 131; object-fit: cover; display: block; border-radius: 16px;">
-                </a>
-            </div>
-        </section>
-    @endif
-
-    {{-- ════════════════════════════════════════════════════════════════════════
-    SECTION 2: ARTIKEL & EDUKASI TERBARU (1 BARIS 4 CARDS)
-    ════════════════════════════════════════════════════════════════════════ --}}
-    <section style="background: #ffffff; padding: 3.5rem 0 4rem; border-bottom: 1px solid #E2E8F0;">
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.25rem;">
-
-            {{-- Header & Subtitle (No Capsule, Mini Responsive Font) --}}
-            <div
-                style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;">
-                <div>
-                    <h2 class="responsive-section-title">
-                        Insight & Tips
-                    </h2>
+                                </a>
+                            @endforeach
+                        @endif
+                    </div>
 
                 </div>
-                <a href="{{ route_locale('articles') }}"
-                    style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #1eb349; text-decoration: none; transition: all 0.2s;"
-                    onmouseover="this.style.transform='translateX(3px)'" onmouseout="this.style.transform='none'">
-                    Semua Artikel
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path d="M5 12h14m-7-7l7 7-7 7" />
-                    </svg>
-                </a>
-            </div>
+            </section>
 
-            {{-- 1 Row Swipe Container (Mobile & Desktop Touch Swipeable) --}}
-            <div class="swipe-cards-container">
-                @php
-                    $arts = isset($articles) && $articles->count() > 0 ? $articles->take(4) : collect();
-                @endphp
-
-                @if($arts->count() > 0)
-                    @foreach($arts as $art)
-                        @php
-                            $artTitle = $art->title ?: 'Artikel Terbaru';
-                            $artImg = $art->image ? asset('storage/' . $art->image) : asset('assets/images/default-article.webp');
-                            $artCat = $art->category ?: 'Panduan';
-                            $artDate = \Carbon\Carbon::parse($art->published_at ?? $art->created_at)->isoFormat('D MMMM Y');
-                        @endphp
-                        <a href="{{ route('articles.show', $art->slug) }}"
-                            style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
-                            class="article-card-swipe-item">
-                            <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
-                                class="article-card-box">
-                                <div style="position: relative; width: 100%; height: 140px; background: #F1F5F9; overflow: hidden;">
-                                    <img src="{{ $artImg }}" alt="{{ $artTitle }}"
-                                        style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
-                                        class="article-banner-img">
-                                </div>
-                                <div
-                                    style="padding: 1.1rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
-                                    <div>
-                                        <h3
-                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #0F172A; margin: 0 0 0.5rem; line-height: 1.4; height: 2.6em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                            {{ $artTitle }}
-                                        </h3>
-                                        <p
-                                            style="font-size: 0.78rem; color: #64748B; margin: 0 0 1rem; line-height: 1.5; height: 3em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                            {{ Str::limit(strip_tags($art->excerpt ?? $art->content ?? ''), 90) }}
-                                        </p>
-                                    </div>
-                                    <div
-                                        style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #F1F5F9; padding-top: 0.75rem; margin-top: auto;">
-                                        <span style="font-size: 0.72rem; color: #94A3B8; font-weight: 600;">{{ $artDate }}</span>
-                                        <span
-                                            style="font-size: 0.75rem; font-weight: 700; color: #1eb349; display: inline-flex; align-items: center; gap: 0.2rem;">
-                                            Baca <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                viewBox="0 0 24 24">
-                                                <path d="M5 12h14m-7-7l7 7-7 7" />
-                                            </svg>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
-                @else
-                    {{-- Demo Article Cards --}}
-                    @php
-                        $demoArticles = [
-                            ['title' => 'Cara Menjual Produk Digital & Ebook Agar Laris Manis di 2026', 'cat' => 'Panduan', 'date' => '24 Sep 2026', 'desc' => 'Simak strategi rahasia meningkatkan omset penjualan produk digital bagi pemula.', 'img' => 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&auto=format&fit=crop'],
-                            ['title' => 'Panduan Sukses Membuat Event & Penjualan Tiket Online Konser', 'cat' => 'Event', 'date' => '20 Sep 2026', 'desc' => 'Langkah praktis manajemen tiket & promosi acara agar kuota penonton langsung habis.', 'img' => 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&auto=format&fit=crop'],
-                            ['title' => 'Strategi Affiliate Marketing Terbaik untuk Kreator Digital Indonesia', 'cat' => 'Affiliate', 'date' => '15 Sep 2026', 'desc' => 'Dapatkan penghasilan pasif dengan sistem komisi affiliate buyle.id yang transparan.', 'img' => 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop'],
-                            ['title' => 'Tips Membangun Personal Branding Berkelas Sebagai Digital Creator', 'cat' => 'Branding', 'date' => '10 Sep 2026', 'desc' => 'Cara efektif membangun kredibilitas dan kepercayaan pelanggan di era digital.', 'img' => 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&auto=format&fit=crop'],
-                        ];
-                    @endphp
-                    @foreach($demoArticles as $dA)
-                        <a href="{{ route_locale('articles') }}"
-                            style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
-                            class="article-card-swipe-item">
-                            <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
-                                class="article-card-box">
-                                <div style="position: relative; width: 100%; height: 140px; background: #F1F5F9; overflow: hidden;">
-                                    <img src="{{ $dA['img'] }}" alt="{{ $dA['title'] }}"
-                                        style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
-                                        class="article-banner-img">
-                                </div>
-                                <div
-                                    style="padding: 1.1rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
-                                    <div>
-                                        <h3
-                                            style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #0F172A; margin: 0 0 0.5rem; line-height: 1.4; height: 2.6em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                            {{ $dA['title'] }}
-                                        </h3>
-                                        <p
-                                            style="font-size: 0.78rem; color: #64748B; margin: 0 0 1rem; line-height: 1.5; height: 3em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                            {{ $dA['desc'] }}
-                                        </p>
-                                    </div>
-                                    <div
-                                        style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #F1F5F9; padding-top: 0.75rem; margin-top: auto;">
-                                        <span style="font-size: 0.72rem; color: #94A3B8; font-weight: 600;">{{ $dA['date'] }}</span>
-                                        <span
-                                            style="font-size: 0.75rem; font-weight: 700; color: #1eb349; display: inline-flex; align-items: center; gap: 0.2rem;">
-                                            Baca <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                viewBox="0 0 24 24">
-                                                <path d="M5 12h14m-7-7l7 7-7 7" />
-                                            </svg>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
-                @endif
-            </div>
-
-        </div>
-    </section>
-
-    <style>
-        /* Card Hover Effects */
-        .ticket-card-box:hover,
-        .article-card-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08) !important;
-        }
-
-        .ticket-card-link:hover .ticket-banner-img,
-        .article-card-link:hover .article-banner-img {
-            transform: scale(1.05);
-        }
-
-        /* Responsive Grid Breakdown */
-        @media (max-width: 1024px) {
-
-            .ticket-cards-grid,
-            .article-cards-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 1rem !important;
-            }
-        }
-
-        @media (max-width: 640px) {
-
-            .ticket-cards-grid,
-            .article-cards-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 0.75rem !important;
-            }
-        }
-    </style>
-
-    @include('components.lightbox-assets')
-
-    <script>
-        // Load Swiper lazily after page is interactive — does NOT block LCP
-        function loadSwiper(cb) {
-            if (window.Swiper) { cb(); return; }
-            var s = document.createElement('script');
-            s.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
-            s.onload = cb;
-            document.head.appendChild(s);
-        }
-        (window.requestIdleCallback || function (fn) { setTimeout(fn, 200); })(function () {
-            loadSwiper(initSwipers);
-        });
-        function initSwipers() {
-            // ── Hero Slider with dynamic oval bg color ──
-            var heroOvalBg = document.getElementById('heroOvalBg');
-            if (document.querySelector('.hero-swiper')) {
-                var heroSwiper = new Swiper('.hero-swiper', {
-                    loop: true,
-                    autoplay: {
-                        delay: 4500,
-                        disableOnInteraction: false,
-                    },
-                    pagination: {
-                        el: '.hero-swiper-pagination',
-                        clickable: true,
-                    },
-                    keyboard: { enabled: true },
-                    grabCursor: true,
-                    observer: true,
-                    observeParents: true,
-                    resizeObserver: true,
-                });
-            }
-
-            // ── Category Swiper (Desktop & Mobile) ──
-            if (document.querySelector('#catsSwiperDesktop')) {
-                const catsSwiper = new Swiper('#catsSwiperDesktop', {
-                    slidesPerView: 'auto',
-                    spaceBetween: 12,
-                    grabCursor: true,
-                    freeMode: true,
-                    mousewheel: {
-                        forceToAxis: true,
-                    },
-                    navigation: {
-                        nextEl: '#catsNext',
-                        prevEl: '#catsPrev',
-                    },
-                });
-            }
-
-            // ── Category Hover / Touch Dropdown Subcategories ──
-            (function () {
-                const ddCard = document.getElementById('cvCatDropdownCard');
-                if (!ddCard) return;
-
-                const caret = document.getElementById('cvCatDdCaret');
-                const titleEl = document.getElementById('cvCatDdTitle');
-                const countEl = document.getElementById('cvCatDdCount');
-                const bodyEl = document.getElementById('cvCatDdBody');
-                const allLink = document.getElementById('cvCatDdAllLink');
-                const allText = document.getElementById('cvCatDdAllText');
-
-                let hideTimeout = null;
-                let currentSlide = null;
-
-                function showDropdown(slide) {
-                    clearTimeout(hideTimeout);
-                    const hasSub = slide.getAttribute('data-has-sub') === '1';
-                    if (!hasSub) {
-                        hideDropdown(true);
-                        return;
-                    }
-
-                    currentSlide = slide;
-                    const catName = slide.getAttribute('data-cat-name') || '';
-                    const catUrl = slide.getAttribute('data-cat-url') || '#';
-                    let subs = [];
-                    try {
-                        subs = JSON.parse(slide.getAttribute('data-subs') || '[]');
-                    } catch (e) { }
-
-                    if (!subs.length) {
-                        hideDropdown(true);
-                        return;
-                    }
-
-                    titleEl.textContent = catName;
-                    countEl.textContent = `${subs.length} Subkategori`;
-                    allLink.href = catUrl;
-                    allText.textContent = `Lihat Semua di ${catName}`;
-
-                    let itemsHtml = '';
-                    subs.forEach(s => {
-                        itemsHtml += `
-                            <a href="${s.url}" class="cv-cat-dd-item">
-                                <span>${s.name}</span>
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                    <path d="M9 18l6-6-6-6"/>
-                                </svg>
-                            </a>
-                        `;
-                    });
-                    bodyEl.innerHTML = itemsHtml;
-
-                    // Position dropdown card
-                    const iconWrap = slide.querySelector('.cv-cat-icon-wrap') || slide;
-                    const rect = iconWrap.getBoundingClientRect();
-                    const cardWidth = Math.min(270, window.innerWidth - 24);
-                    const gap = 10;
-
-                    let top = rect.bottom + gap;
-                    // Check if card would overflow bottom of viewport
-                    if (top + 260 > window.innerHeight && rect.top > 260) {
-                        top = Math.max(10, rect.top - 260 - gap);
-                    }
-
-                    let left = rect.left + (rect.width / 2) - (cardWidth / 2);
-                    const minLeft = 12;
-                    const maxLeft = window.innerWidth - cardWidth - 12;
-                    const clampedLeft = Math.max(minLeft, Math.min(left, maxLeft));
-
-                    // Caret position relative to card
-                    const iconCenter = rect.left + (rect.width / 2);
-                    const caretLeft = Math.max(16, Math.min(iconCenter - clampedLeft - 7, cardWidth - 28));
-
-                    ddCard.style.top = `${top}px`;
-                    ddCard.style.left = `${clampedLeft}px`;
-                    ddCard.style.width = `${cardWidth}px`;
-                    if (caret) caret.style.left = `${caretLeft}px`;
-
-                    ddCard.classList.add('active');
+            <style>
+                /* Card Hover Effects */
+                .ticket-card-box:hover,
+                .article-card-box:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08) !important;
                 }
 
-                function hideDropdown(immediate) {
-                    if (immediate) {
-                        clearTimeout(hideTimeout);
-                        ddCard.classList.remove('active');
-                        currentSlide = null;
-                        return;
-                    }
-                    hideTimeout = setTimeout(() => {
-                        ddCard.classList.remove('active');
-                        currentSlide = null;
-                    }, 180);
+                .ticket-card-link:hover .ticket-banner-img,
+                .article-card-link:hover .article-banner-img {
+                    transform: scale(1.05);
                 }
 
-                document.querySelectorAll('.cv-cat-slide').forEach(slide => {
-                    slide.addEventListener('mouseenter', () => {
-                        showDropdown(slide);
-                    });
-                    slide.addEventListener('mouseleave', () => {
-                        hideDropdown(false);
-                    });
+                /* Responsive Grid Breakdown */
+                @media (max-width: 1024px) {
 
-                    // Mobile touch handler: first tap on category with subs opens dropdown
-                    slide.addEventListener('click', (e) => {
-                        const hasSub = slide.getAttribute('data-has-sub') === '1';
-                        if (hasSub && ('ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth <= 768)) {
-                            if (!ddCard.classList.contains('active') || currentSlide !== slide) {
-                                e.preventDefault();
-                                showDropdown(slide);
+                    .ticket-cards-grid,
+                    .article-cards-grid {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                        gap: 1rem !important;
+                    }
+                }
+
+                @media (max-width: 640px) {
+
+                    .ticket-cards-grid,
+                    .article-cards-grid {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                        gap: 0.75rem !important;
+                    }
+                }
+            </style>
+
+            @include('components.lightbox-assets')
+
+            <script>
+                // Load Swiper lazily after page is interactive — does NOT block LCP
+                function loadSwiper(cb) {
+                    if (window.Swiper) { cb(); return; }
+                    var s = document.createElement('script');
+                    s.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
+                    s.onload = cb;
+                    document.head.appendChild(s);
+                }
+                (window.requestIdleCallback || function (fn) { setTimeout(fn, 200); })(function () {
+                    loadSwiper(initSwipers);
+                });
+                function initSwipers() {
+                    // ── Hero Slider with dynamic oval bg color ──
+                    var heroOvalBg = document.getElementById('heroOvalBg');
+                    if (document.querySelector('.hero-swiper')) {
+                        var heroSwiper = new Swiper('.hero-swiper', {
+                            loop: true,
+                            autoplay: {
+                                delay: 4500,
+                                disableOnInteraction: false,
+                            },
+                            pagination: {
+                                el: '.hero-swiper-pagination',
+                                clickable: true,
+                            },
+                            keyboard: { enabled: true },
+                            grabCursor: true,
+                            observer: true,
+                            observeParents: true,
+                            resizeObserver: true,
+                        });
+                    }
+
+                    // ── Category Swiper (Desktop & Mobile) ──
+                    if (document.querySelector('#catsSwiperDesktop')) {
+                        const catsSwiper = new Swiper('#catsSwiperDesktop', {
+                            slidesPerView: 'auto',
+                            spaceBetween: 12,
+                            grabCursor: true,
+                            freeMode: true,
+                            mousewheel: {
+                                forceToAxis: true,
+                            },
+                            navigation: {
+                                nextEl: '#catsNext',
+                                prevEl: '#catsPrev',
+                            },
+                        });
+                    }
+
+                    // ── Category Hover / Touch Dropdown Subcategories (Kompak & Minimalis) ──
+                    (function () {
+                        const ddCard = document.getElementById('cvCatDropdownCard');
+                        if (!ddCard) return;
+
+                        const caret = document.getElementById('cvCatDdCaret');
+                        const bodyEl = document.getElementById('cvCatDdBody');
+
+                        let hideTimeout = null;
+                        let currentSlide = null;
+
+                        function showDropdown(slide) {
+                            clearTimeout(hideTimeout);
+                            const hasSub = slide.getAttribute('data-has-sub') === '1';
+                            if (!hasSub) {
+                                hideDropdown(true);
+                                return;
                             }
+
+                            currentSlide = slide;
+                            let subs = [];
+                            try {
+                                subs = JSON.parse(slide.getAttribute('data-subs') || '[]');
+                            } catch (e) { }
+
+                            if (!subs.length) {
+                                hideDropdown(true);
+                                return;
+                            }
+
+                            let itemsHtml = '';
+                            subs.forEach(s => {
+                                itemsHtml += `
+                                    <a href="${s.url}" class="cv-cat-dd-item">
+                                        <span>${s.name}</span>
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <path d="M9 18l6-6-6-6"/>
+                                        </svg>
+                                    </a>
+                                `;
+                            });
+                            bodyEl.innerHTML = itemsHtml;
+
+                            // Position dropdown card
+                            const iconWrap = slide.querySelector('.cv-cat-icon-wrap') || slide;
+                            const rect = iconWrap.getBoundingClientRect();
+                            const cardWidth = Math.min(230, window.innerWidth - 24);
+                            const gap = 8;
+
+                            let top = rect.bottom + gap;
+                            if (top + 240 > window.innerHeight && rect.top > 240) {
+                                top = Math.max(10, rect.top - 240 - gap);
+                            }
+
+                            let left = rect.left + (rect.width / 2) - (cardWidth / 2);
+                            const minLeft = 12;
+                            const maxLeft = window.innerWidth - cardWidth - 12;
+                            const clampedLeft = Math.max(minLeft, Math.min(left, maxLeft));
+
+                            const iconCenter = rect.left + (rect.width / 2);
+                            const caretLeft = Math.max(16, Math.min(iconCenter - clampedLeft - 6, cardWidth - 28));
+
+                            ddCard.style.top = `${top}px`;
+                            ddCard.style.left = `${clampedLeft}px`;
+                            ddCard.style.width = `${cardWidth}px`;
+                            if (caret) caret.style.left = `${caretLeft}px`;
+
+                            ddCard.classList.add('active');
                         }
+
+                        function hideDropdown(immediate) {
+                            if (immediate) {
+                                clearTimeout(hideTimeout);
+                                ddCard.classList.remove('active');
+                                currentSlide = null;
+                                return;
+                            }
+                            hideTimeout = setTimeout(() => {
+                                ddCard.classList.remove('active');
+                                currentSlide = null;
+                            }, 180);
+                        }
+
+                        document.querySelectorAll('.cv-cat-slide').forEach(slide => {
+                            slide.addEventListener('mouseenter', () => {
+                                showDropdown(slide);
+                            });
+                            slide.addEventListener('mouseleave', () => {
+                                hideDropdown(false);
+                            });
+
+                            // Mobile touch handler: first tap on category with subs opens dropdown
+                            slide.addEventListener('click', (e) => {
+                                const hasSub = slide.getAttribute('data-has-sub') === '1';
+                                if (hasSub && ('ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth <= 768)) {
+                                    if (!ddCard.classList.contains('active') || currentSlide !== slide) {
+                                        e.preventDefault();
+                                        showDropdown(slide);
+                                    }
+                                }
+                            });
+                        });
+
+                        ddCard.addEventListener('mouseenter', () => {
+                            clearTimeout(hideTimeout);
+                        });
+
+                        ddCard.addEventListener('mouseleave', () => {
+                            hideDropdown(false);
+                        });
+
+                        window.addEventListener('scroll', () => {
+                            if (ddCard.classList.contains('active') && currentSlide) {
+                                const iconWrap = currentSlide.querySelector('.cv-cat-icon-wrap') || currentSlide;
+                                const rect = iconWrap.getBoundingClientRect();
+                                if (rect.bottom < 0 || rect.top > window.innerHeight) {
+                                    hideDropdown(true);
+                                } else {
+                                    showDropdown(currentSlide);
+                                }
+                            }
+                        }, { passive: true });
+
+                        document.addEventListener('click', (e) => {
+                            if (!ddCard.contains(e.target) && !e.target.closest('.cv-cat-slide')) {
+                                hideDropdown(true);
+                            }
+                        });
+                    })();
+
+
+                    // ── Promo Section Swipers ──
+                    document.querySelectorAll('.cv-promo-swiper').forEach(function (el) {
+                        const id = el.id.replace('promoSwiper', '');
+                        new Swiper('#promoSwiper' + id, {
+                            slidesPerView: 'auto',
+                            spaceBetween: 10,
+                            grabCursor: true,
+                            freeMode: false,
+                            navigation: {
+                                nextEl: '#promoNext' + id,
+                                prevEl: '#promoPrev' + id,
+                            },
+                        });
                     });
-                });
 
-                ddCard.addEventListener('mouseenter', () => {
-                    clearTimeout(hideTimeout);
-                });
-
-                ddCard.addEventListener('mouseleave', () => {
-                    hideDropdown(false);
-                });
-
-                window.addEventListener('scroll', () => {
-                    if (ddCard.classList.contains('active') && currentSlide) {
-                        const iconWrap = currentSlide.querySelector('.cv-cat-icon-wrap') || currentSlide;
-                        const rect = iconWrap.getBoundingClientRect();
-                        if (rect.bottom < 0 || rect.top > window.innerHeight) {
-                            hideDropdown(true);
-                        } else {
-                            showDropdown(currentSlide);
-                        }
+                    // ── Mobile Banner Swiper (3 banners as swipeable slides on mobile) ──
+                    if (document.querySelector('.mob-banner-swiper')) {
+                        new Swiper('.mob-banner-swiper', {
+                            loop: true,
+                            autoplay: { delay: 3500, disableOnInteraction: false },
+                            pagination: { el: '.mob-banner-pg', clickable: true },
+                            grabCursor: true,
+                            effect: 'slide',
+                        });
                     }
-                }, { passive: true });
+                } // end initSwipers
+                // Flash Sale Timer Logic
+                document.addEventListener('DOMContentLoaded', function () {
+                    const timers = document.querySelectorAll('.cv-flash-timer');
+                    if (timers.length === 0) return;
 
-                document.addEventListener('click', (e) => {
-                    if (!ddCard.contains(e.target) && !e.target.closest('.cv-cat-slide')) {
-                        hideDropdown(true);
-                    }
-                });
-            })();
+                    function updateTimers() {
+                        const now = new Date().getTime();
+                        timers.forEach(timer => {
+                            const endTimeStr = timer.getAttribute('data-endtime');
+                            if (!endTimeStr) return;
+                            const endTime = new Date(endTimeStr).getTime();
+                            const distance = endTime - now;
 
-            // ── Promo Section Swipers ──
-            document.querySelectorAll('.cv-promo-swiper').forEach(function (el) {
-                const id = el.id.replace('promoSwiper', '');
-                new Swiper('#promoSwiper' + id, {
-                    slidesPerView: 'auto',
-                    spaceBetween: 10,
-                    grabCursor: true,
-                    freeMode: false,
-                    navigation: {
-                        nextEl: '#promoNext' + id,
-                        prevEl: '#promoPrev' + id,
-                    },
-                });
-            });
+                            const boxes = timer.querySelectorAll('.timer-box');
+                            if (boxes.length !== 3) return;
 
-            // ── Mobile Banner Swiper (3 banners as swipeable slides on mobile) ──
-            if (document.querySelector('.mob-banner-swiper')) {
-                new Swiper('.mob-banner-swiper', {
-                    loop: true,
-                    autoplay: { delay: 3500, disableOnInteraction: false },
-                    pagination: { el: '.mob-banner-pg', clickable: true },
-                    grabCursor: true,
-                    effect: 'slide',
-                });
-            }
-        } // end initSwipers
-        // Flash Sale Timer Logic
-        document.addEventListener('DOMContentLoaded', function () {
-            const timers = document.querySelectorAll('.cv-flash-timer');
-            if (timers.length === 0) return;
+                            if (distance < 0) {
+                                boxes[0].innerText = '00';
+                                boxes[1].innerText = '00';
+                                boxes[2].innerText = '00';
+                                return;
+                            }
 
-            function updateTimers() {
-                const now = new Date().getTime();
-                timers.forEach(timer => {
-                    const endTimeStr = timer.getAttribute('data-endtime');
-                    if (!endTimeStr) return;
-                    const endTime = new Date(endTimeStr).getTime();
-                    const distance = endTime - now;
+                            const hours = Math.floor(distance / (1000 * 60 * 60));
+                            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                    const boxes = timer.querySelectorAll('.timer-box');
-                    if (boxes.length !== 3) return;
-
-                    if (distance < 0) {
-                        boxes[0].innerText = '00';
-                        boxes[1].innerText = '00';
-                        boxes[2].innerText = '00';
-                        return;
+                            boxes[0].innerText = hours < 10 ? '0' + hours : hours;
+                            boxes[1].innerText = minutes < 10 ? '0' + minutes : minutes;
+                            boxes[2].innerText = seconds < 10 ? '0' + seconds : seconds;
+                        });
                     }
 
-                    const hours = Math.floor(distance / (1000 * 60 * 60));
-                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                    boxes[0].innerText = hours < 10 ? '0' + hours : hours;
-                    boxes[1].innerText = minutes < 10 ? '0' + minutes : minutes;
-                    boxes[2].innerText = seconds < 10 ? '0' + seconds : seconds;
+                    updateTimers();
+                    setInterval(updateTimers, 1000);
                 });
-            }
-
-            updateTimers();
-            setInterval(updateTimers, 1000);
-        });
-    </script>
+            </script>
 
 @endsection
