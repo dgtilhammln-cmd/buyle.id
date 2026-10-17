@@ -185,6 +185,14 @@ class BioProductController extends Controller
             $block->save();
         }
 
+        // ── AFFILIATE TRACKING: Rekam identitas affiliator ke Session & Cookie 30 hari ──
+        $affiliateUserId = null;
+        if ($product && (int)$profile->user_id !== (int)$product->seller_id) {
+            $affiliateUserId = $profile->user_id;
+            session(['buyle_aff_' . $product->id => $affiliateUserId]);
+            cookie()->queue('buyle_aff_' . $product->id, $affiliateUserId, 60 * 24 * 30);
+        }
+
         $config = $profile->bio_config ?? [];
         $theme  = $profile->bio_theme ?? 'theme5';
         $blocks = $profile->bioBlocks;
@@ -198,6 +206,6 @@ class BioProductController extends Controller
         // Themes 1-4 use the shared product_show view (no theme5 header)
         $view = ($theme === 'theme5') ? 'bio.theme5.product_show' : 'bio.product_show';
 
-        return view($view, compact('profile', 'block', 'config', 'theme', 'username', 'product', 'blocks', 'products'));
+        return view($view, compact('profile', 'block', 'config', 'theme', 'username', 'product', 'blocks', 'products', 'affiliateUserId'));
     }
 }

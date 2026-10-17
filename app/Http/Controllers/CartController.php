@@ -27,13 +27,15 @@ class CartController extends Controller
             'product_id'       => 'required|exists:products,id',
             'variant_value_id' => 'nullable|exists:product_variant_values,id',
             'qty'              => 'required|integer|min:1',
+            'affiliate_id'     => 'nullable|exists:users,id',
         ]);
 
         try {
             $this->cartService->add(
-                $request->product_id,
-                $request->variant_value_id,
-                $request->qty
+                (int) $request->product_id,
+                $request->variant_value_id ? (int) $request->variant_value_id : null,
+                (int) $request->qty,
+                $request->affiliate_id ? (int) $request->affiliate_id : null
             );
 
             $summary = $this->cartService->getSummary();

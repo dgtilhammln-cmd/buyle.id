@@ -2468,7 +2468,7 @@
                             $cProductCount = $creatorUser->products_count ?? 0;
                             
                             // Realtime Creator Rating & Verification Status from DB
-                            $cIsVerified = $cp ? (bool)$cp->is_verified : false;
+                            $cIsVerified = $cp ? $cp->isVerified() : false;
                             $cRatingStats = $cp ? $cp->getRatingStats() : ['rating' => '5.0', 'count' => 0];
                             $cRating = $cRatingStats['rating'] ?? '5.0';
 

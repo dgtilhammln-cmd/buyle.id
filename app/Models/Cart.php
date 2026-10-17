@@ -14,6 +14,7 @@ class Cart extends Model
         'product_id',
         'variant_value_id',
         'reseller_id',
+        'affiliate_id',
         'custom_price',
         'qty',
     ];
@@ -52,6 +53,14 @@ class Cart extends Model
     public function reseller(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reseller_id');
+    }
+
+    /**
+     * Affiliator pemilik toko bio / link rekomendasi.
+     */
+    public function affiliate(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'affiliate_id');
     }
 
     /**

@@ -3730,19 +3730,47 @@
                                         @endif
                                     </div>
                                 </div>
-                                <form action="{{ route('creator.bio.blocks.destroy', $affBlock) }}" method="POST"
-                                    class="form-delete-block" style="margin-left:auto;">
-                                    @csrf @method('DELETE')
-                                    <button type="button" class="btn-delete-block"
-                                        style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <polyline points="3 6 5 6 21 6" />
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                @php
+                                    $affBlockSlug = $affBlock->data_json['slug'] ?? ($affProd->slug ?? $affBlock->id);
+                                    $affPromoUrl = !empty($profile->custom_domain) 
+                                        ? 'https://' . rtrim($profile->custom_domain, '/') . '/produk/' . $affBlockSlug 
+                                        : route('bio.product.show', [$profile->store_slug, $affBlockSlug]);
+                                @endphp
+                                <div style="display:flex; align-items:center; gap:0.5rem; margin-left:auto; flex-wrap:wrap;">
+                                    <button type="button"
+                                        onclick="navigator.clipboard.writeText('{{ $affPromoUrl }}'); const old=this.innerHTML; this.innerHTML='<svg width=\'13\' height=\'13\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2.5\' viewBox=\'0 0 24 24\'><polyline points=\'20 6 9 17 4 12\'/></svg> Tersalin!'; setTimeout(()=>this.innerHTML=old, 2000);"
+                                        title="Salin link promosi untuk toko bio Anda"
+                                        style="background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                                         </svg>
-                                        Hapus dari Bio
+                                        Salin Link Promosi
                                     </button>
-                                </form>
+                                    <a href="{{ $affPromoUrl }}" target="_blank"
+                                        title="Buka halaman produk di bio Anda"
+                                        style="background:#F8FAFC; color:#475569; border:1px solid #E2E8F0; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.75rem; font-weight: 500; text-decoration:none; display:inline-flex; align-items:center; gap:0.35rem;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                            <polyline points="15 3 21 3 21 9"/>
+                                            <line x1="10" y1="14" x2="21" y2="3"/>
+                                        </svg>
+                                        Lihat
+                                    </a>
+                                    <form action="{{ route('creator.bio.blocks.destroy', $affBlock) }}" method="POST"
+                                        class="form-delete-block" style="margin:0;">
+                                        @csrf @method('DELETE')
+                                        <button type="button" class="btn-delete-block"
+                                            style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; padding:0.4rem 0.85rem; border-radius:8px; font-size:0.75rem; font-weight: 500; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                viewBox="0 0 24 24">
+                                                <polyline points="3 6 5 6 21 6" />
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                            </svg>
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         @empty
                             <p style="color:#94a3b8; font-size:0.85rem; text-align:center; padding:1.5rem 0; margin:0;">Belum

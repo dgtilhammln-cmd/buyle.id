@@ -695,6 +695,9 @@
                                 <input type="hidden" name="product_id" value="{{ $prodId }}">
                                 <input type="hidden" name="qty" value="1">
                                 <input type="hidden" name="variant_value_id" id="bio_selected_variant_id" value="">
+                                @if(!empty($affiliateUserId))
+                                    <input type="hidden" name="affiliate_id" value="{{ $affiliateUserId }}">
+                                @endif
                                 <button type="button" class="ps-btn-cart" id="btnBioCart" onclick="submitBioCart()" {{ $isWarActive ? 'disabled style=opacity:0.5;cursor:not-allowed;' : '' }}>
                                     <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                                     Keranjang
@@ -706,15 +709,15 @@
                                     <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                                     <span id="warBtnLabel">Penjualan Belum Dibuka</span>
                                 </button>
-                                <a href="https://buyle.id/keranjang" id="btnTicketWarReady" class="ps-btn-checkout" style="display: none;">
+                                <button type="button" onclick="bioDirectCheckout()" id="btnTicketWarReady" class="ps-btn-checkout" style="display: none;">
                                     <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                                    Beli Tiket Sekarang
-                                </a>
+                                    Checkout Sekarang!
+                                </button>
                             @else
-                                <a href="https://buyle.id/keranjang" class="ps-btn-checkout">
+                                <button type="button" class="ps-btn-checkout" onclick="bioDirectCheckout()">
                                     <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                                     Checkout
-                                </a>
+                                </button>
                             @endif
                         </div>
 
@@ -955,6 +958,41 @@
             }
             var form = document.getElementById('bio-cart-form');
             if (form) form.submit();
+        };
+
+        window.bioDirectCheckout = function() {
+            if (bioHasVariants) {
+                var vid = document.getElementById('bio_selected_variant_id').value;
+                if (!vid) {
+                    var errEl = document.getElementById('bio-variant-err');
+                    if (errEl) { errEl.style.display = 'block'; }
+                    var sec = document.getElementById('bio-variant-section');
+                    if (sec) { sec.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+                    return false;
+                }
+            }
+            var form = document.getElementById('bio-cart-form');
+            if (!form) {
+                window.location.href = "{{ route('cart.index') }}";
+                return;
+            }
+            var btn = document.querySelector('.ps-btn-checkout');
+            if (btn) {
+                btn.disabled = true;
+                btn.style.opacity = '0.7';
+            }
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            }).then(function() {
+                window.location.href = "{{ route('cart.index') }}";
+            }).catch(function() {
+                window.location.href = "{{ route('cart.index') }}";
+            });
         };
     </script>
 

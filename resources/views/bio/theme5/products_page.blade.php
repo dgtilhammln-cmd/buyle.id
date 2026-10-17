@@ -1200,6 +1200,7 @@
             else
                 $catCounts['digital']++;
         }
+        $isProfileVerified = isset($profile) && $profile ? $profile->isVerified() : false;
     @endphp
 
     {{-- MAIN PAGE LAYOUT (LEFT SIDEBAR + MAIN CONTENT) --}}
@@ -1309,14 +1310,16 @@
                                         </svg>
                                         {{ $prod['rating'] }}
                                     </span>
-                                    <span class="pp-verified">
-                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                            <polyline points="22 4 12 14.01 9 11.01" />
-                                        </svg>
-                                        Verified
-                                    </span>
+                                    @if($isProfileVerified)
+                                        <span class="pp-verified">
+                                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                viewBox="0 0 24 24">
+                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                <polyline points="22 4 12 14.01 9 11.01" />
+                                            </svg>
+                                            Verified
+                                        </span>
+                                    @endif
                                 </div>
                                 <h3 class="pp-card-name">
                                     <a href="{{ $prod['product_url'] }}">{{ $prod['name'] }}</a>

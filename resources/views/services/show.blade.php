@@ -2210,22 +2210,24 @@
                 <div class="pd-creator-card"
                     style="background:#fff; border-radius:24px; overflow:hidden; border: 1.5px solid var(--border); box-shadow:0 8px 30px rgba(0,0,0,0.06);">
                     @php
-                        $isVerified = $cp?->is_verified ?? false;
-                        $tierData = $cp ? $cp->getTierInfo() : ['badge' => 'Perintis', 'header_bg' => 'linear-gradient(135deg, #1eb349 0%, #a5cf37 100%)', 'icon_svg' => ''];
+                        $isVerified = $cp ? $cp->isVerified() : false;
+                        $tierData = $cp ? $cp->getTierInfo() : ['badge' => 'Perintis', 'header_bg' => 'linear-gradient(135deg, #475569 0%, #64748b 100%)', 'icon_svg' => ''];
                         $ratingStats = $cp ? $cp->getRatingStats() : ['rating' => '5.0', 'count' => 0];
                     @endphp
-                    <!-- Banner Top Header matching Image 2 reference design -->
+                    <!-- Banner Top Header matching reference design -->
                     <div
-                        style="width:100%; height:44px; background:{{ $tierData['header_bg'] ?? 'linear-gradient(135deg, #1eb349 0%, #a5cf37 100%)' }}; padding: 0 1rem; display: flex; align-items: center; justify-content: space-between;">
-                        <div
-                            style="display: flex; align-items: center; gap: 5px; color: #ffffff; font-weight: 700; font-size: 0.75rem; white-space: nowrap;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15"
-                                stroke-width="1">
-                                <path
-                                    d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" />
-                            </svg>
-                            <span>Verified Creator</span>
-                        </div>
+                        style="width:100%; height:44px; background:{{ $tierData['header_bg'] ?? 'linear-gradient(135deg, #475569 0%, #64748b 100%)' }}; padding: 0 1rem; display: flex; align-items: center; justify-content: {{ $isVerified ? 'space-between' : 'flex-end' }};">
+                        @if($isVerified)
+                            <div
+                                style="display: flex; align-items: center; gap: 5px; color: #ffffff; font-weight: 700; font-size: 0.75rem; white-space: nowrap;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15"
+                                    stroke-width="1">
+                                    <path
+                                        d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" />
+                                </svg>
+                                <span>Verified Creator</span>
+                            </div>
+                        @endif
                         <div
                             style="display: flex; align-items: center; gap: 5px; color: #ffffff; font-weight: 700; font-size: 0.75rem; white-space: nowrap;">
                             {!! $tierData['icon_svg'] ?? '<svg width="14" height="14" viewBox="0 0 24 24" fill="#facc15"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/></svg>' !!}
@@ -2233,7 +2235,7 @@
                         </div>
                     </div>
 
-                    <!-- Avatar & Rating Pill: overlap HANYA SEDIKIT di bawah green bar -->
+                    <!-- Avatar & Rating Pill: overlap HANYA SEDIKIT di bawah bar -->
                     <div style="margin-top:-18px; display:flex; justify-content:center; position:relative; z-index:2;">
                         <div style="position:relative; display:inline-block;">
                             @if($seller?->avatar)
@@ -2241,13 +2243,13 @@
                                     style="width:72px; height:72px; border-radius:50%; border:3px solid #fff; object-fit:cover; background:#fff; box-shadow:0 4px 16px rgba(0,0,0,0.12); display:block;">
                             @else
                                 <div
-                                    style="width:72px; height:72px; border-radius:50%; border:3px solid #fff; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:800; color:#1eb349; background:#e7f0e7; box-shadow:0 4px 16px rgba(0,0,0,0.12);">
+                                    style="width:72px; height:72px; border-radius:50%; border:3px solid #fff; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:800; color:#334155; background:#f1f5f9; box-shadow:0 4px 16px rgba(0,0,0,0.12);">
                                     {{ strtoupper(substr($displaySellerName, 0, 2)) }}
                                 </div>
                             @endif
                             {{-- Rating pill badge top-right of avatar --}}
                             <div
-                                style="position:absolute; top:-4px; right:-20px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-size:0.73rem; font-weight:800; padding:0.2rem 0.55rem; border-radius:999px; display:flex; align-items:center; gap:3px; box-shadow:0 2px 8px rgba(0,0,0,0.18); white-space:nowrap;">
+                                style="position:absolute; top:-4px; right:-20px; background:{{ $tierData['header_bg'] ?? 'linear-gradient(135deg, #475569, #64748b)' }}; color:#fff; font-size:0.73rem; font-weight:800; padding:0.2rem 0.55rem; border-radius:999px; display:flex; align-items:center; gap:3px; box-shadow:0 2px 8px rgba(0,0,0,0.18); white-space:nowrap;">
                                 <span>{{ $ratingStats['rating'] }}</span>
                                 <svg width="10" height="10" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15">
                                     <path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z" />
@@ -2258,8 +2260,13 @@
 
                     <div style="text-align:center; padding: 0.85rem 1.25rem 1.25rem;">
                         <div
-                            style="font-size:1.25rem; font-weight:800; color:var(--text-main); margin-bottom:0.25rem; font-family: var(--font, 'Montserrat', sans-serif);">
-                            {{ $displaySellerName }}
+                            style="font-size:1.25rem; font-weight:800; color:var(--text-main); margin-bottom:0.25rem; font-family: var(--font, 'Montserrat', sans-serif); display:inline-flex; align-items:center; justify-content:center; gap:0.4rem;">
+                            <span>{{ $displaySellerName }}</span>
+                            @if($isVerified)
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="#0D9488" title="Verified Creator">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                            @endif
                         </div>
 
                         {{-- Bio / Deskripsi Creator --}}

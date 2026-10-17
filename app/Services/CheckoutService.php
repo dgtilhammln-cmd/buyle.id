@@ -298,6 +298,30 @@ class CheckoutService
                     $creatorEarnings = $baseWhitelabelPrice * $cartItem->qty;
                 }
 
+                // Affiliate Split Calculation (Afiliasi Toko Bio)
+                $affiliateId = null;
+                $affiliateCommissionRate = 0.00;
+                $affiliateCommissionAmount = 0.00;
+
+                // Resolusi: dari keranjang -> fallback ke session -> fallback ke cookie
+                $candidateAffId = $cartItem->affiliate_id 
+                    ?? session('buyle_aff_' . $product->id) 
+                    ?? request()->cookie('buyle_aff_' . $product->id);
+
+                if ($candidateAffId && (int)$candidateAffId !== (int)$sellerId) {
+                    // Proteksi Anti Self-Referral: pembeli bukan affiliator itu sendiri
+                    if (!$user || (int)$user->id !== (int)$candidateAffId) {
+                        $rate = (float)($product->affiliate_commission_rate ?? 0);
+                        if ($rate > 0) {
+                            $affiliateId = (int)$candidateAffId;
+                            $affiliateCommissionRate = $rate;
+                            $affiliateCommissionAmount = round(($cartItem->subtotal * $rate) / 100, 2);
+                            // Potong komisi affiliate dari creator earnings agar tidak minus/double bayar
+                            $creatorEarnings = max(0, $creatorEarnings - $affiliateCommissionAmount);
+                        }
+                    }
+                }
+
                 $variantLabel = null;
                 if ($cartItem->variantValue) {
                     $optName = $cartItem->variantValue->option?->name;
@@ -305,19 +329,22 @@ class CheckoutService
                 }
 
                 OrderItem::create([
-                    'order_id'              => $order->id,
-                    'product_id'            => $product->id,
-                    'variant_value_id'      => $cartItem->variant_value_id,
-                    'seller_id'             => $sellerId,
-                    'reseller_id'           => $resellerId,
-                    'product_name'          => $product->name,
-                    'variant_name'          => $variantLabel ?? $cartItem->variantValue?->value,
-                    'price'                 => $cartItem->unit_price,
-                    'base_whitelabel_price' => $baseWhitelabelPrice,
-                    'reseller_margin'       => $resellerMargin,
-                    'creator_earnings'      => $creatorEarnings,
-                    'qty'                   => $cartItem->qty,
-                    'subtotal'              => $cartItem->subtotal,
+                    'order_id'                    => $order->id,
+                    'product_id'                  => $product->id,
+                    'variant_value_id'            => $cartItem->variant_value_id,
+                    'seller_id'                   => $sellerId,
+                    'reseller_id'                 => $resellerId,
+                    'affiliate_id'                => $affiliateId,
+                    'product_name'                => $product->name,
+                    'variant_name'                => $variantLabel ?? $cartItem->variantValue?->value,
+                    'price'                       => $cartItem->unit_price,
+                    'base_whitelabel_price'       => $baseWhitelabelPrice,
+                    'reseller_margin'             => $resellerMargin,
+                    'creator_earnings'            => $creatorEarnings,
+                    'affiliate_commission_rate'   => $affiliateCommissionRate,
+                    'affiliate_commission_amount' => $affiliateCommissionAmount,
+                    'qty'                         => $cartItem->qty,
+                    'subtotal'                    => $cartItem->subtotal,
                 ]);
             }
 

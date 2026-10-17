@@ -819,7 +819,7 @@
     {{-- ── WIDGET: VERIFIED CREATOR & TINGKATAN CREATOR CARD ── --}}
     <div style="background: #ffffff; border-radius: 20px; overflow: hidden; border: 1.5px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
         {{-- Banner Header Gradient --}}
-        <div style="background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); padding: 0.85rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+        <div style="background: {{ $tierInfo['header_bg'] ?? 'linear-gradient(135deg, #475569 0%, #64748b 100%)' }}; padding: 0.85rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
             <div style="display: flex; align-items: center; gap: 0.5rem; color: #ffffff; font-weight: 700; font-size: 0.82rem; background: rgba(0, 0, 0, 0.18); backdrop-filter: blur(4px); padding: 0.35rem 0.85rem; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.3);">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15" stroke-width="1"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
                 <span>{{ $cp?->is_verified ? 'Verified Creator' : 'Belum Verified' }}</span>
@@ -840,7 +840,7 @@
                             <span>Selamat! Toko Terverifikasi (Verified Creator)</span>
                         </div>
                         <p style="font-size: 0.82rem; color: #64748b; margin: 0;">
-                            Toko Anda secara otomatis telah memenuhi syarat 100+ transaksi order. Badge Verified Creator & Tingkatan <strong>{{ $tierInfo['name'] }}</strong> aktif di halaman toko Anda.
+                            Toko Anda secara otomatis telah memenuhi syarat 10+ transaksi order. Badge Verified Creator & Tingkatan <strong>{{ $tierInfo['name'] }}</strong> aktif di halaman toko Anda.
                         </p>
                     </div>
                     <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 0.55rem 1rem; color: #166534; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; gap: 0.4rem;">
@@ -850,7 +850,7 @@
                 </div>
             @else
                 @php
-                    $targetTrans = 100;
+                    $targetTrans = 10;
                     $currentTrans = min($targetTrans, (int)$totalTransactions);
                     $remainingTrans = max(0, $targetTrans - $currentTrans);
                     $percentTrans = round(($currentTrans / $targetTrans) * 100, 1);
@@ -863,7 +863,7 @@
                                 Fitur Request Verified Creator
                             </div>
                             <div style="font-size: 0.78rem; color: #64748b; margin-top: 0.15rem;">
-                                Syarat minimal: <strong>100 Transaksi Order</strong>. Saat mencapai 100 transaksi, toko Anda akan <strong>otomatis terverifikasi</strong>!
+                                Syarat minimal: <strong>10 Transaksi Order</strong>. Saat mencapai 10 transaksi, toko Anda akan <strong>otomatis terverifikasi</strong>!
                             </div>
                         </div>
                         <div style="font-size: 0.78rem; font-weight: 700; color: #1eb349; background: #f0fdf4; border: 1px solid #dcfce7; padding: 0.35rem 0.75rem; border-radius: 8px;">
@@ -874,14 +874,14 @@
                     {{-- Progress Bar Minimalis --}}
                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 1rem;">
                         <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: #334155; margin-bottom: 0.5rem;">
-                            <span>Transkasi Order: <strong style="color: #1eb349;">{{ $currentTrans }} / {{ $targetTrans }}</strong></span>
+                            <span>Transaksi Order: <strong style="color: #1eb349;">{{ $currentTrans }} / {{ $targetTrans }}</strong></span>
                             @if($remainingTrans > 0)
                                 <span style="color: #d97706; font-size: 0.75rem; font-weight: 600; background: #fffbeb; padding: 0.2rem 0.55rem; border-radius: 6px; border: 1px solid #fef3c7;">
                                     Kurang {{ $remainingTrans }} transaksi order lagi
                                 </span>
                             @else
                                 <span style="color: #166534; font-size: 0.75rem; font-weight: 600; background: #f0fdf4; padding: 0.2rem 0.55rem; border-radius: 6px; border: 1px solid #bbf7d0;">
-                                    Siap Dikalim!
+                                    Siap Diklaim!
                                 </span>
                             @endif
                         </div>
@@ -893,7 +893,7 @@
                     {{-- Action Button --}}
                     <div style="display: flex; align-items: center; justify-content: flex-end;">
                         @if($currentTrans < $targetTrans)
-                            <button type="button" class="btn-verify-disabled" disabled style="background: #f1f5f9; color: #94a3b8; border: 1px solid #cbd5e1; border-radius: 12px; padding: 0.6rem 1.25rem; font-weight: 700; font-size: 0.8rem; cursor: not-allowed; display: inline-flex; align-items: center; gap: 0.4rem;" title="Syarat 100 transaksi belum terpenuhi">
+                            <button type="button" class="btn-verify-disabled" disabled style="background: #f1f5f9; color: #94a3b8; border: 1px solid #cbd5e1; border-radius: 12px; padding: 0.6rem 1.25rem; font-weight: 700; font-size: 0.8rem; cursor: not-allowed; display: inline-flex; align-items: center; gap: 0.4rem;" title="Syarat 10 transaksi belum terpenuhi">
                                 <i class="ph ph-lock-key" style="font-size: 1rem;"></i>
                                 Request Verified Creator (Kurang {{ $remainingTrans }} Transaksi)
                             </button>

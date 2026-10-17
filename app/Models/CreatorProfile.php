@@ -173,10 +173,43 @@ class CreatorProfile extends Model
                 'level'           => 1,
                 'subtitle'        => 'Matte Silver / Brushed Steel',
                 'badge'           => 'Perintis',
-                'header_bg'       => 'linear-gradient(135deg, #1eb349 0%, #a5cf37 100%)',
+                'header_bg'       => 'linear-gradient(135deg, #475569 0%, #64748b 100%)',
                 'icon_svg'        => '<svg width="14" height="14" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15" stroke-width="1"><path d="M12 2l2.4 5.3 5.8.5-4.4 3.9 1.3 5.6-5.1-3-5.1 3 1.3-5.6-4.4-3.9 5.8-.5z"/><path d="M12 15.5l-4 6 4-2 4 2z"/></svg>',
             ];
         }
+    }
+
+    /**
+     * Hitung total transaksi order yang berhasil dibayar (lunas).
+     */
+    public function getSuccessfulTransactionsCount(): int
+    {
+        try {
+            return \App\Models\Order::whereHas('items.product', fn($q) => $q->where('seller_id', $this->user_id))
+                ->whereHas('payment', fn($q) => $q->where('status', \App\Enums\PaymentStatus::Success))
+                ->count();
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Cek apakah creator berstatus Verified Creator.
+     * Otomatis terverifikasi jika sudah mencapai minimal 10 transaksi sukses.
+     */
+    public function isVerified(): bool
+    {
+        if ($this->is_verified) {
+            return true;
+        }
+
+        if ($this->getSuccessfulTransactionsCount() >= 10) {
+            $this->update(['is_verified' => true]);
+            $this->is_verified = true;
+            return true;
+        }
+
+        return false;
     }
 
     /**

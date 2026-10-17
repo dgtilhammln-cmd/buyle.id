@@ -29,7 +29,7 @@ class CartService
     /**
      * Tambah item ke cart.
      */
-    public function add(int $productId, ?int $variantValueId = null, int $qty = 1): Cart
+    public function add(int $productId, ?int $variantValueId = null, int $qty = 1, ?int $affiliateId = null): Cart
     {
         $product = Product::findOrFail($productId);
         
@@ -39,6 +39,21 @@ class CartService
 
         if (auth()->check() && $product->seller_id && (int)$product->seller_id === (int)auth()->id()) {
             throw new \Exception('Anda tidak dapat membeli produk milik Anda sendiri.');
+        }
+
+        // Resolusi identitas Affiliator: Parameter -> Session -> Cookie
+        if (!$affiliateId) {
+            $affiliateId = session('buyle_aff_' . $productId) ?? request()->cookie('buyle_aff_' . $productId);
+        }
+
+        // Proteksi Anti Self-Referral: Affiliator dilarang dapat komisi dari produk sendiri / dibeli sendiri
+        if ($affiliateId) {
+            $affiliateId = (int)$affiliateId;
+            if (auth()->check() && (int)auth()->id() === $affiliateId) {
+                $affiliateId = null;
+            } elseif ($product->seller_id && (int)$product->seller_id === $affiliateId) {
+                $affiliateId = null;
+            }
         }
 
         // Pastikan wajib pilih variasi jika produk memiliki variasi
@@ -91,7 +106,11 @@ class CartService
             if ($product->max_order && $newQty > $product->max_order) {
                 throw new \Exception('Melebihi batas maksimal pembelian: ' . $product->max_order);
             }
-            $cart->update(['qty' => $newQty]);
+            $updateData = ['qty' => $newQty];
+            if ($affiliateId && !$cart->affiliate_id) {
+                $updateData['affiliate_id'] = $affiliateId;
+            }
+            $cart->update($updateData);
             return $cart;
         }
 
@@ -104,6 +123,7 @@ class CartService
             'session_id'       => auth()->check() ? null : Session::getId(),
             'product_id'       => $productId,
             'variant_value_id' => $variantValueId,
+            'affiliate_id'     => $affiliateId,
             'qty'              => $qty,
         ]);
     }

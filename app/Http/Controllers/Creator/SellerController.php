@@ -40,17 +40,18 @@ class SellerController extends Controller
         // ── Auto-Verification & Tier Info Check ──────────────────────────────
         $cp = $seller->creatorProfile;
         if ($cp) {
-            if (!$cp->is_verified && $totalTransactions >= 100) {
+            if (!$cp->is_verified && $totalTransactions >= 10) {
                 $cp->update(['is_verified' => true]);
                 $cp->is_verified = true;
             }
             $tierInfo = $cp->getTierInfo($gmv);
         } else {
             $tierInfo = [
-                'name'     => 'PERINTIS',
-                'level'    => 1,
-                'subtitle' => 'Matte Silver / Brushed Steel',
-                'badge'    => 'Perintis',
+                'name'      => 'PERINTIS',
+                'level'     => 1,
+                'subtitle'  => 'Matte Silver / Brushed Steel',
+                'badge'     => 'Perintis',
+                'header_bg' => 'linear-gradient(135deg, #475569 0%, #64748b 100%)',
             ];
         }
 
@@ -111,13 +112,13 @@ class SellerController extends Controller
             $totalTransactions = 0;
         }
 
-        if ($totalTransactions >= 100) {
+        if ($totalTransactions >= 10) {
             $cp->update(['is_verified' => true]);
             return redirect()->back()->with('success', 'Selamat! Toko Anda telah berhasil terverifikasi sebagai Verified Creator!');
         }
 
-        $remaining = 100 - $totalTransactions;
-        return redirect()->back()->with('error', "Syarat belum terpenuhi. Diperlukan minimal 100 transaksi order (saat ini: {$totalTransactions}/100, kurang {$remaining} transaksi lagi).");
+        $remaining = 10 - $totalTransactions;
+        return redirect()->back()->with('error', "Syarat belum terpenuhi. Diperlukan minimal 10 transaksi order (saat ini: {$totalTransactions}/10, kurang {$remaining} transaksi lagi).");
     }
 
     /**

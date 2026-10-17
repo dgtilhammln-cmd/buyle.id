@@ -20,7 +20,10 @@ class SellerBalanceService
     {
         try {
             $sellerOrders = Order::with(['items.product', 'payment'])
-                ->whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
+                ->where(function ($q) use ($seller) {
+                    $q->whereHas('items.product', fn($p) => $p->where('seller_id', $seller->id))
+                      ->orWhereHas('items', fn($i) => $i->where('affiliate_id', $seller->id));
+                })
                 ->whereHas('payment', fn($q) => $q->where('status', PaymentStatus::Success))
                 ->get();
         } catch (\Throwable $e) {
@@ -40,9 +43,10 @@ class SellerBalanceService
             $orderPaidTime = Carbon::parse($paidAt);
 
             foreach ($order->items as $item) {
-                // Pastikan item produk milik seller ini
+                // A. PENDAPATAN SELLER (Pemilik Asli Produk)
                 if ($item->product && $item->product->seller_id == $seller->id) {
-                    $subtotal = (float) $item->subtotal;
+                    // Gunakan creator_earnings yang sudah dipotong komisi affiliate & reseller margin
+                    $sellerEarnings = (float) ($item->creator_earnings ?? ($item->subtotal - ($item->affiliate_commission_amount ?? 0)));
 
                     if ($item->product->product_type === 'ticket') {
                         // TIKET EVENT: Holding sampai H+3 pasca tanggal acara
@@ -55,11 +59,9 @@ class SellerBalanceService
                             : $orderPaidTime->copy()->addDays(30);
 
                         if ($now->gte($clearanceDate)) {
-                            // Event sudah selesai lebih dari 3 hari -> Saldo cair
-                            $clearedGmv += $subtotal;
+                            $clearedGmv += $sellerEarnings;
                         } else {
-                            // Masih ditahan di Escrow demi keamanan pembeli & proteksi event bodong
-                            $ticketEscrowBalance += $subtotal;
+                            $ticketEscrowBalance += $sellerEarnings;
                             $pId = $item->product->id;
                             if (!isset($upcomingEventsInEscrow[$pId])) {
                                 $upcomingEventsInEscrow[$pId] = [
@@ -73,16 +75,26 @@ class SellerBalanceService
                                     'escrow_amount'  => 0,
                                 ];
                             }
-                            $upcomingEventsInEscrow[$pId]['amount'] += $subtotal;
-                            $upcomingEventsInEscrow[$pId]['escrow_amount'] += $subtotal;
+                            $upcomingEventsInEscrow[$pId]['amount'] += $sellerEarnings;
+                            $upcomingEventsInEscrow[$pId]['escrow_amount'] += $sellerEarnings;
                         }
                     } else {
                         // PRODUK FISIK / DIGITAL / JASA: Holding standar 72 jam (3 hari)
                         if ($orderPaidTime->lte($ecommerceThreshold)) {
-                            $clearedGmv += $subtotal;
+                            $clearedGmv += $sellerEarnings;
                         } else {
-                            $standardHoldBalance += $subtotal;
+                            $standardHoldBalance += $sellerEarnings;
                         }
+                    }
+                }
+
+                // B. PENDAPATAN AFFILIATOR (Komisi Rekomendasi Toko Bio)
+                if ($item->affiliate_id == $seller->id && (float)($item->affiliate_commission_amount ?? 0) > 0) {
+                    $affiliateCommission = (float) $item->affiliate_commission_amount;
+                    if ($orderPaidTime->lte($ecommerceThreshold)) {
+                        $clearedGmv += $affiliateCommission;
+                    } else {
+                        $standardHoldBalance += $affiliateCommission;
                     }
                 }
             }

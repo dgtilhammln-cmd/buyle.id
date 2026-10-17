@@ -13,12 +13,15 @@ class OrderItem extends Model
         'variant_value_id',
         'seller_id',
         'reseller_id',
+        'affiliate_id',
         'product_name',
         'variant_name',
         'price',
         'base_whitelabel_price',
         'reseller_margin',
         'creator_earnings',
+        'affiliate_commission_rate',
+        'affiliate_commission_amount',
         'qty',
         'subtotal',
     ];
@@ -26,12 +29,14 @@ class OrderItem extends Model
     protected function casts(): array
     {
         return [
-            'price'                 => 'decimal:2',
-            'base_whitelabel_price' => 'decimal:2',
-            'reseller_margin'       => 'decimal:2',
-            'creator_earnings'      => 'decimal:2',
-            'qty'                   => 'integer',
-            'subtotal'              => 'decimal:2',
+            'price'                       => 'decimal:2',
+            'base_whitelabel_price'       => 'decimal:2',
+            'reseller_margin'             => 'decimal:2',
+            'creator_earnings'            => 'decimal:2',
+            'affiliate_commission_rate'   => 'decimal:2',
+            'affiliate_commission_amount' => 'decimal:2',
+            'qty'                         => 'integer',
+            'subtotal'                    => 'decimal:2',
         ];
     }
 
@@ -69,6 +74,14 @@ class OrderItem extends Model
     public function reseller(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reseller_id');
+    }
+
+    /**
+     * Affiliator pemilik bio / link rujukan.
+     */
+    public function affiliate(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'affiliate_id');
     }
 
     /**
