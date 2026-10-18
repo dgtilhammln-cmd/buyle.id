@@ -511,7 +511,16 @@ class AdminOrderController extends Controller
                 ->whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59'])
                 ->orderBy('created_at', 'desc')
                 ->get();
-            $pdf = \PDF::loadView('admin.orders.pdf', compact('orders', 'start', 'end'))->setPaper('a4', 'landscape');
+
+            // Hitung total untuk PDF laporan pesanan
+            $pdfTotals = [
+                'subtotal' => $orders->sum('subtotal'),
+                'shipping' => $orders->sum('shipping_cost'),
+                'discount' => $orders->sum('discount'),
+                'total'    => $orders->sum('total'),
+            ];
+
+            $pdf = \PDF::loadView('admin.orders.pdf', compact('orders', 'start', 'end', 'pdfTotals'))->setPaper('a4', 'landscape');
             return $pdf->download("Laporan_Pesanan_{$start}_to_{$end}.pdf");
         }
 
@@ -522,5 +531,200 @@ class AdminOrderController extends Controller
         }
 
         return \Maatwebsite\Excel\Facades\Excel::download($export, "Laporan_Pesanan_{$start}_to_{$end}.xlsx");
+    }
+
+    /**
+     * Export Laporan Omset & Keuangan (Buyer + Domain Creator + Deposit POS)
+     * Menghasilkan laporan lengkap dengan total di baris paling bawah.
+     */
+    public function exportOmset(Request $request)
+    {
+        $start   = $request->get('start_date', now()->subDays(30)->format('Y-m-d'));
+        $end     = $request->get('end_date', now()->format('Y-m-d'));
+        $format  = $request->get('format', 'xlsx');
+        $txType  = $request->get('tx_type', 'all');
+        if (!in_array($txType, ['all', 'buyer', 'creator', 'domain', 'deposit'])) {
+            $txType = 'all';
+        }
+
+        $buyPrices = \App\Http\Controllers\Creator\CreatorDomainController::getBuyPrices();
+
+        // ── Query Buyer Orders ──
+        $buyerQuery = Order::with(['user', 'items.product.seller', 'payment'])
+            ->where('status', '!=', OrderStatus::Pending)
+            ->whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59'])
+            ->orderBy('created_at', 'desc');
+
+        // ── Query Domain Orders ──
+        $domainQuery = DomainOrder::with('user')
+            ->whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59'])
+            ->orderByDesc('created_at');
+
+        // ── Query Pindah Saldo POS ──
+        $payoutDepositQuery = PayoutRequest::with('seller')
+            ->where('bank_name', 'like', '%Deposit Kasir POS%')
+            ->where('status', 'processed')
+            ->whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59'])
+            ->orderByDesc('created_at');
+
+        // ── Query Top-up Deposit POS ──
+        $directPosDepositQuery = PosDeposit::with('creator.user')
+            ->whereIn('status', ['paid', 'success'])
+            ->whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59'])
+            ->orderByDesc('created_at');
+
+        // ── Kumpulkan rows ──
+        $rows = collect();
+
+        if (in_array($txType, ['all', 'buyer'])) {
+            foreach ($buyerQuery->get() as $o) {
+                $types = $o->items->map(function($i) {
+                    $pt = $i->product?->product_type ?? $i->product?->type ?? '';
+                    if ($pt === 'ticket') return 'Tiket';
+                    if (in_array($pt, ['external_link', 'digital', 'file'])) return 'Digital';
+                    return 'Fisik';
+                })->unique()->implode(', ');
+                $txTypeLabel = $types ?: 'Produk';
+                $channel = $o->payment?->method ? strtoupper($o->payment->method) : ($o->payment?->gateway ? strtoupper($o->payment->gateway) : 'MIDTRANS');
+                $profit = (float)($o->admin_fee ?? 0) + (float)($o->platform_fee ?? 0);
+                $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
+                $stBadge = match($statusVal) {
+                    'confirmed', 'processing' => ['Perlu Dikirim'],
+                    'shipped'                 => ['Dikirim'],
+                    'completed', 'delivered'  => ['Selesai'],
+                    'cancelled'               => ['Dibatalkan'],
+                    default                   => [ucfirst($statusVal)]
+                };
+
+                $rows->push((object)[
+                    'created_at'   => $o->created_at,
+                    'ref_number'   => '#' . $o->order_number,
+                    'party_name'   => $o->user->name ?? 'Pembeli',
+                    'party_email'  => $o->user->email ?? '-',
+                    'category'     => 'Pembeli (' . $txTypeLabel . ')',
+                    'channel'      => $channel,
+                    'base_amount'  => (float)$o->subtotal,
+                    'admin_fee'    => (float)($o->admin_fee ?? 0),
+                    'platform_fee' => (float)($o->platform_fee ?? 0),
+                    'tax_amount'   => 0,
+                    'gross'        => (float)$o->total,
+                    'profit'       => $profit,
+                    'status_label' => $stBadge[0],
+                ]);
+            }
+        }
+
+        if (in_array($txType, ['all', 'domain', 'creator'])) {
+            foreach ($domainQuery->get() as $d) {
+                $ext     = strtolower($d->extension ?? '');
+                $buyCost = (float)($buyPrices[$ext] ?? 0);
+                $isPaid  = in_array($d->status, ['paid', 'completed']);
+                $profit  = $isPaid ? max(0, (float)$d->amount - $buyCost) : 0;
+                $stLabel = match($d->status) {
+                    'completed' => 'Sudah Berhasil',
+                    'paid'      => 'Lunas (Paid)',
+                    'pending'   => 'Pending',
+                    'rejected'  => 'Ditolak',
+                    'cancelled' => 'Dibatalkan',
+                    default     => ucfirst($d->status)
+                };
+
+                $rows->push((object)[
+                    'created_at'   => $d->created_at,
+                    'ref_number'   => '#DOM-' . str_pad($d->id, 5, '0', STR_PAD_LEFT),
+                    'party_name'   => $d->user->name ?? 'Creator',
+                    'party_email'  => $d->user->email ?? '-',
+                    'category'     => 'Domain: ' . $d->domain_name,
+                    'channel'      => 'MIDTRANS',
+                    'base_amount'  => (float)$d->base_amount,
+                    'admin_fee'    => (float)($d->admin_fee ?? 0),
+                    'platform_fee' => (float)($d->platform_fee ?? 0),
+                    'tax_amount'   => (float)($d->tax_amount ?? 0),
+                    'gross'        => (float)$d->amount,
+                    'profit'       => $profit,
+                    'status_label' => $stLabel,
+                ]);
+            }
+        }
+
+        if (in_array($txType, ['all', 'deposit', 'creator'])) {
+            foreach ($payoutDepositQuery->get() as $p) {
+                $rows->push((object)[
+                    'created_at'   => $p->created_at,
+                    'ref_number'   => '#TRF-POS-' . $p->id,
+                    'party_name'   => $p->seller->name ?? 'Creator',
+                    'party_email'  => $p->seller->email ?? '-',
+                    'category'     => 'Deposit POS (Pindah Saldo)',
+                    'channel'      => 'SALDO CREATOR',
+                    'base_amount'  => (float)$p->amount,
+                    'admin_fee'    => 0,
+                    'platform_fee' => 0,
+                    'tax_amount'   => 0,
+                    'gross'        => (float)$p->amount,
+                    'profit'       => 0,
+                    'status_label' => 'Berhasil',
+                ]);
+            }
+
+            foreach ($directPosDepositQuery->get() as $dp) {
+                $user = $dp->creator?->user;
+                $rows->push((object)[
+                    'created_at'   => $dp->created_at,
+                    'ref_number'   => '#' . $dp->deposit_number,
+                    'party_name'   => $user->name ?? 'Creator',
+                    'party_email'  => $user->email ?? '-',
+                    'category'     => 'Deposit POS (Top-Up)',
+                    'channel'      => strtoupper($dp->payment_method ?: 'QRIS'),
+                    'base_amount'  => (float)$dp->amount,
+                    'admin_fee'    => 0,
+                    'platform_fee' => 0,
+                    'tax_amount'   => 0,
+                    'gross'        => (float)$dp->amount,
+                    'profit'       => 0,
+                    'status_label' => $dp->status === 'paid' ? 'Lunas' : ucfirst($dp->status),
+                ]);
+            }
+        }
+
+        $rows = $rows->sortByDesc('created_at')->values();
+
+        // ── Hitung Grand Total ──
+        $totals = [
+            'base_amount'  => $rows->sum('base_amount'),
+            'admin_fee'    => $rows->sum('admin_fee'),
+            'platform_fee' => $rows->sum('platform_fee'),
+            'tax_amount'   => $rows->sum('tax_amount'),
+            'gross'        => $rows->sum('gross'),
+            'profit'       => $rows->sum('profit'),
+        ];
+
+        $filterLabel = match($txType) {
+            'buyer'   => 'Pesanan Pembeli',
+            'domain'  => 'Domain Creator',
+            'deposit' => 'Deposit POS Creator',
+            'creator' => 'Semua Creator',
+            default   => 'Semua Transaksi',
+        };
+        $filename = "Laporan_Omset_" . str_replace(' ', '_', $filterLabel) . "_{$start}_sd_{$end}";
+
+        if ($format === 'pdf') {
+            $pdf = \PDF::loadView('admin.orders.omset_pdf', [
+                'rows'    => $rows,
+                'totals'  => $totals,
+                'start'   => $start,
+                'end'     => $end,
+                'txType'  => $filterLabel,
+                'period'  => "$start s/d $end",
+            ])->setPaper('a4', 'landscape');
+            return $pdf->download("{$filename}.pdf");
+        }
+
+        $export = new \App\Exports\OmsetExport($rows, $totals, $start, $end);
+
+        if ($format === 'csv') {
+            return \Maatwebsite\Excel\Facades\Excel::download($export, "{$filename}.csv", \Maatwebsite\Excel\Excel::CSV);
+        }
+
+        return \Maatwebsite\Excel\Facades\Excel::download($export, "{$filename}.xlsx");
     }
 }

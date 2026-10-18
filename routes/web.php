@@ -560,6 +560,7 @@ Route::prefix('admin')->group(function () {
 
         // Order Management
         Route::get('/orders/export',                            [\App\Http\Controllers\Admin\AdminOrderController::class, 'export'])->name('admin.orders.export');
+        Route::get('/orders/export-omset',                      [\App\Http\Controllers\Admin\AdminOrderController::class, 'exportOmset'])->name('admin.orders.export-omset');
         Route::get('/orders',                                   [\App\Http\Controllers\Admin\AdminOrderController::class, 'index'])->name('admin.orders.index');
         Route::get('/orders/{order}',                           [\App\Http\Controllers\Admin\AdminOrderController::class, 'show'])->name('admin.orders.show');
         Route::post('/orders/{order}/status',                   [\App\Http\Controllers\Admin\AdminOrderController::class, 'updateStatus'])->name('admin.orders.status');

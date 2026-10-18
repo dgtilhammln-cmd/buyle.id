@@ -1131,12 +1131,21 @@
 <div id="reportModal" class="rm-overlay">
     <div class="rm-modal">
         <div class="rm-head">
-            <div style="font-weight:600;font-size:0.95rem;color:#0F172A;">Unduh Laporan Pesanan</div>
+            <div style="font-weight:600;font-size:0.95rem;color:#0F172A;" id="reportModalTitle">Unduh Laporan</div>
             <button type="button" onclick="closeReportModal()" style="background:none;border:none;color:#94A3B8;cursor:pointer;">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
-        <form action="{{ route('admin.orders.export') }}" method="GET" class="rm-body">
+
+        {{-- Info Label Jenis Laporan --}}
+        <div id="reportTypeInfo" style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:0.6rem 0.85rem;margin-bottom:1rem;font-size:0.775rem;color:#475569;line-height:1.5;">
+            &mdash;
+        </div>
+
+        <form id="reportForm" action="{{ route('admin.orders.export') }}" method="GET" class="rm-body" style="padding-top:0;">
+            {{-- Hidden fields untuk filter --}}
+            <input type="hidden" name="tx_type" id="exportTxType" value="{{ $txType ?? 'all' }}">
+
             <div style="margin-bottom:1rem;">
                 <label style="font-size:0.775rem;font-weight:600;color:#475569;display:block;margin-bottom:0.35rem;">Format File</label>
                 <select name="format" style="width:100%;padding:0.5rem 0.75rem;border:1px solid #CBD5E1;border-radius:8px;font-family:inherit;font-size:0.8125rem;outline:none;">
@@ -1145,18 +1154,24 @@
                     <option value="pdf">PDF Document (.pdf)</option>
                 </select>
             </div>
+
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;">
                 <div>
                     <label style="font-size:0.775rem;font-weight:600;color:#475569;display:block;margin-bottom:0.35rem;">Dari Tanggal</label>
-                    <input type="date" name="start_date" value="{{ now()->subDays(30)->format('Y-m-d') }}" style="width:100%;padding:0.5rem 0.75rem;border:1px solid #CBD5E1;border-radius:8px;font-family:inherit;font-size:0.8125rem;outline:none;">
+                    <input type="date" name="start_date" id="exportStartDate"
+                        value="{{ $start_date ?: now()->subDays(30)->format('Y-m-d') }}"
+                        style="width:100%;padding:0.5rem 0.75rem;border:1px solid #CBD5E1;border-radius:8px;font-family:inherit;font-size:0.8125rem;outline:none;">
                 </div>
                 <div>
                     <label style="font-size:0.775rem;font-weight:600;color:#475569;display:block;margin-bottom:0.35rem;">Sampai Tanggal</label>
-                    <input type="date" name="end_date" value="{{ now()->format('Y-m-d') }}" style="width:100%;padding:0.5rem 0.75rem;border:1px solid #CBD5E1;border-radius:8px;font-family:inherit;font-size:0.8125rem;outline:none;">
+                    <input type="date" name="end_date" id="exportEndDate"
+                        value="{{ $end_date ?: now()->format('Y-m-d') }}"
+                        style="width:100%;padding:0.5rem 0.75rem;border:1px solid #CBD5E1;border-radius:8px;font-family:inherit;font-size:0.8125rem;outline:none;">
                 </div>
             </div>
+
             <button type="submit" style="width:100%;padding:0.6rem;background:#0F172A;color:#fff;border:none;border-radius:8px;font-weight:600;font-size:0.8125rem;cursor:pointer;font-family:inherit;">
-                Download File Laporan
+                Download Laporan
             </button>
         </form>
     </div>
@@ -1165,6 +1180,41 @@
 @push('scripts')
 <script>
 function openReportModal() {
+    const currentTab   = '{{ $tab }}';
+    const currentType  = '{{ $txType ?? "all" }}';
+    const form         = document.getElementById('reportForm');
+    const titleEl      = document.getElementById('reportModalTitle');
+    const infoEl       = document.getElementById('reportTypeInfo');
+    const txTypeInput  = document.getElementById('exportTxType');
+
+    if (currentTab === 'omset') {
+        // Laporan keuangan lengkap dengan breakdown totals
+        form.action = '{{ route("admin.orders.export-omset") }}';
+        if (txTypeInput) txTypeInput.value = currentType;
+        titleEl.textContent = 'Unduh Laporan Keuangan & Omset';
+
+        const typeLabels = {
+            'all':     'Semua Transaksi (Pembeli + Domain Creator + Deposit POS)',
+            'buyer':   'Pesanan Pembeli (Produk Fisik & Digital)',
+            'domain':  'Domain Creator',
+            'deposit': 'Deposit POS Creator',
+            'creator': 'Semua Creator (Domain + Deposit POS)',
+        };
+        const label = typeLabels[currentType] || 'Semua Transaksi';
+        infoEl.innerHTML =
+            '<strong>Jenis Laporan:</strong> Keuangan &amp; Omset Platform<br>' +
+            '<strong>Filter Sumber:</strong> ' + label + '<br>' +
+            '<span style="color:#059669;font-weight:600;">Laporan ini mencakup rincian transaksi + baris total keseluruhan di bagian bawah.</span>';
+    } else {
+        // Laporan daftar pesanan produk biasa
+        form.action = '{{ route("admin.orders.export") }}';
+        if (txTypeInput) txTypeInput.value = '';
+        titleEl.textContent = 'Unduh Laporan Pesanan';
+        infoEl.innerHTML =
+            '<strong>Jenis Laporan:</strong> Daftar Pesanan Produk<br>' +
+            'Laporan ini berisi pesanan pembeli beserta total pembayaran di bagian bawah.';
+    }
+
     document.getElementById('reportModal').style.display = 'flex';
 }
 function closeReportModal() {

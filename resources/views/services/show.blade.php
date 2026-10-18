@@ -6,9 +6,9 @@
 
     <style>
         /* ══════════════════════════════════════
-                   PRODUCT SHOW — buyle.id (Shopee Style)
-                   Font: Montserrat
-                ══════════════════════════════════════ */
+                       PRODUCT SHOW — buyle.id (Shopee Style)
+                       Font: Montserrat
+                    ══════════════════════════════════════ */
 
         *,
         *::before,
@@ -2275,7 +2275,9 @@
                                     @else
                                         <a href="{{ route('login') }}" class="pd-btn pd-btn-outline"
                                             style="width:100%;height:38px;font-size:0.82rem;border-radius:99px;">
-                                            Login untuk Mengulas
+                                            Hanya pembeli yang sudah menyelesaikan pesanan produk ini yang dapat memberikan
+                                            rating & ulasan.
+
                                         </a>
                                     @endif
                                 </div>
@@ -2485,7 +2487,7 @@
             {{-- RIGHT COLUMN: Creator Card --}}
             <div class="pd-sidebar-col">
                 @php 
-                                                                                                $seller = $service->seller;
+                                                                                                                    $seller = $service->seller;
                     $cp = $seller?->creatorProfile;
                     $displaySellerName = optional($cp)->store_name ?: ($seller?->name ?? ($settings['site_name'] ?? 'buyle.id Official'));
                     $displayPhone = $seller?->phone ?? ($wa?->phone_number ?? '');
@@ -3155,16 +3157,16 @@
             if (rev.review_images && rev.review_images.length > 0) {
                 const imgUrl = rev.review_images[0];
                 imageHtml = `
-                            <div class="pd-review-media-wrap">
-                                <a href="${imgUrl}" class="pd-review-thumb-box review-lightbox-img" data-gallery="review-gallery" title="Foto dari ${rev.display_name}">
-                                    <img src="${imgUrl}" alt="Foto ulasan" loading="lazy">
-                                    <div class="pd-thumb-overlay-hint">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                                        <span>Klik Perbesar</span>
-                                    </div>
-                                </a>
-                            </div>
-                        `;
+                                <div class="pd-review-media-wrap">
+                                    <a href="${imgUrl}" class="pd-review-thumb-box review-lightbox-img" data-gallery="review-gallery" title="Foto dari ${rev.display_name}">
+                                        <img src="${imgUrl}" alt="Foto ulasan" loading="lazy">
+                                        <div class="pd-thumb-overlay-hint">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                                            <span>Klik Perbesar</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            `;
             }
 
             const reviewText = rev.review_text ? `<div class="pd-review-text">${escapeHtml(rev.review_text)}</div>` : '';
@@ -3173,72 +3175,72 @@
             let replyBoxHtml = '';
             if (rev.seller_reply) {
                 replyBoxHtml = `
-                            <div class="pd-seller-reply-box" id="sellerReplyWrap-${rev.id}" style="margin-top:1rem; padding:0.85rem 1rem; background:#F8FAFC; border-left:3.5px solid #1EB349; border-radius:0 12px 12px 0; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
-                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem; gap:0.5rem; flex-wrap:wrap;">
-                                    <div style="display:flex; align-items:center; gap:6px;">
-                                        <span style="font-weight:700; font-size:0.82rem; color:#1EB349; display:inline-flex; align-items:center; gap:4px;">
-                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
-                                            Respon Penjual
-                                        </span>
-                                        <span style="font-size:0.72rem; color:#94A3B8;">${rev.seller_replied_at || ''}</span>
+                                <div class="pd-seller-reply-box" id="sellerReplyWrap-${rev.id}" style="margin-top:1rem; padding:0.85rem 1rem; background:#F8FAFC; border-left:3.5px solid #1EB349; border-radius:0 12px 12px 0; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
+                                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem; gap:0.5rem; flex-wrap:wrap;">
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <span style="font-weight:700; font-size:0.82rem; color:#1EB349; display:inline-flex; align-items:center; gap:4px;">
+                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
+                                                Respon Penjual
+                                            </span>
+                                            <span style="font-size:0.72rem; color:#94A3B8;">${rev.seller_replied_at || ''}</span>
+                                        </div>
+                                        ${isCreatorOwner ? `<button type="button" onclick="openReplyForm(${rev.id})" style="background:none; border:none; color:#15803D; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:underline;">Ubah Balasan</button>` : ''}
                                     </div>
-                                    ${isCreatorOwner ? `<button type="button" onclick="openReplyForm(${rev.id})" style="background:none; border:none; color:#15803D; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:underline;">Ubah Balasan</button>` : ''}
+                                    <div class="pd-seller-reply-text" id="sellerReplyText-${rev.id}" style="font-size:0.85rem; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(rev.seller_reply)}</div>
                                 </div>
-                                <div class="pd-seller-reply-text" id="sellerReplyText-${rev.id}" style="font-size:0.85rem; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(rev.seller_reply)}</div>
-                            </div>
-                        `;
+                            `;
             }
 
             // Tombol Balas (jika belum ada balasan & yang melihat adalah Creator pemilik produk)
             let actionBtnHtml = '';
             if (isCreatorOwner && !rev.seller_reply) {
                 actionBtnHtml = `
-                            <div class="pd-creator-reply-action" id="replyActionBtnWrap-${rev.id}" style="margin-top:0.85rem;">
-                                <button type="button" onclick="openReplyForm(${rev.id})" style="background:#F0FDF4; border:1px solid #BBF7D0; color:#15803D; font-size:0.78rem; font-weight:700; padding:0.35rem 0.85rem; border-radius:99px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.2s;">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                    <span>Balas Ulasan</span>
-                                </button>
-                            </div>
-                        `;
+                                <div class="pd-creator-reply-action" id="replyActionBtnWrap-${rev.id}" style="margin-top:0.85rem;">
+                                    <button type="button" onclick="openReplyForm(${rev.id})" style="background:#F0FDF4; border:1px solid #BBF7D0; color:#15803D; font-size:0.78rem; font-weight:700; padding:0.35rem 0.85rem; border-radius:99px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.2s;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                        <span>Balas Ulasan</span>
+                                    </button>
+                                </div>
+                            `;
             }
 
             // Form Balas Ulasan (interaktif, max 200 kata)
             let replyFormHtml = '';
             if (isCreatorOwner) {
                 replyFormHtml = `
-                            <div class="pd-reply-form-wrap" id="replyFormWrap-${rev.id}" style="display:none; margin-top:0.85rem; padding:1rem; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:12px;">
-                                <div style="font-size:0.82rem; font-weight:700; color:#0F172A; margin-bottom:0.4rem; display:flex; align-items:center; justify-content:space-between;">
-                                    <span>Balas Ulasan sebagai Penjual</span>
-                                    <span id="replyWordCount-${rev.id}" style="font-size:0.75rem; color:#64748B; font-weight:600;">0 / 200 kata</span>
+                                <div class="pd-reply-form-wrap" id="replyFormWrap-${rev.id}" style="display:none; margin-top:0.85rem; padding:1rem; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:12px;">
+                                    <div style="font-size:0.82rem; font-weight:700; color:#0F172A; margin-bottom:0.4rem; display:flex; align-items:center; justify-content:space-between;">
+                                        <span>Balas Ulasan sebagai Penjual</span>
+                                        <span id="replyWordCount-${rev.id}" style="font-size:0.75rem; color:#64748B; font-weight:600;">0 / 200 kata</span>
+                                    </div>
+                                    <textarea id="replyTextarea-${rev.id}" rows="3" placeholder="Tulis balasan atau terima kasih untuk pembeli (maksimal 200 kata)..." style="width:100%; border:1px solid #CBD5E1; border-radius:8px; padding:0.6rem; font-size:0.85rem; font-family:inherit; resize:vertical; background:#fff; outline:none;" oninput="countReplyWords(${rev.id})">${rev.seller_reply ? escapeHtml(rev.seller_reply) : ''}</textarea>
+                                    <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:0.6rem;">
+                                        <button type="button" onclick="closeReplyForm(${rev.id})" style="padding:0.4rem 0.85rem; font-size:0.78rem; border-radius:99px; border:1px solid #CBD5E1; background:#fff; color:#64748B; cursor:pointer;">Batal</button>
+                                        <button type="button" id="btnSubmitReply-${rev.id}" onclick="submitReply(${rev.id})" style="padding:0.4rem 1rem; font-size:0.78rem; font-weight:700; border-radius:99px; border:none; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; cursor:pointer; box-shadow:0 2px 8px rgba(30,179,73,0.3);">Kirim Balasan</button>
+                                    </div>
                                 </div>
-                                <textarea id="replyTextarea-${rev.id}" rows="3" placeholder="Tulis balasan atau terima kasih untuk pembeli (maksimal 200 kata)..." style="width:100%; border:1px solid #CBD5E1; border-radius:8px; padding:0.6rem; font-size:0.85rem; font-family:inherit; resize:vertical; background:#fff; outline:none;" oninput="countReplyWords(${rev.id})">${rev.seller_reply ? escapeHtml(rev.seller_reply) : ''}</textarea>
-                                <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:0.6rem;">
-                                    <button type="button" onclick="closeReplyForm(${rev.id})" style="padding:0.4rem 0.85rem; font-size:0.78rem; border-radius:99px; border:1px solid #CBD5E1; background:#fff; color:#64748B; cursor:pointer;">Batal</button>
-                                    <button type="button" id="btnSubmitReply-${rev.id}" onclick="submitReply(${rev.id})" style="padding:0.4rem 1rem; font-size:0.78rem; font-weight:700; border-radius:99px; border:none; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; cursor:pointer; box-shadow:0 2px 8px rgba(30,179,73,0.3);">Kirim Balasan</button>
-                                </div>
-                            </div>
-                        `;
+                            `;
             }
 
             return `
-                        <div class="pd-review-card" id="review-item-${rev.id}">
-                            <div class="pd-review-header">
-                                <div class="pd-reviewer-left">
-                                    ${avatarHtml}
-                                    <div>
-                                        <div class="pd-reviewer-name">${escapeHtml(rev.display_name)}</div>
+                            <div class="pd-review-card" id="review-item-${rev.id}">
+                                <div class="pd-review-header">
+                                    <div class="pd-reviewer-left">
+                                        ${avatarHtml}
+                                        <div>
+                                            <div class="pd-reviewer-name">${escapeHtml(rev.display_name)}</div>
+                                        </div>
                                     </div>
+                                    <div class="pd-review-date">${rev.created_at} (${rev.date})</div>
                                 </div>
-                                <div class="pd-review-date">${rev.created_at} (${rev.date})</div>
+                                <div class="pd-review-stars">${starsHtml}</div>
+                                ${reviewText}
+                                ${imageHtml}
+                                ${replyBoxHtml}
+                                ${actionBtnHtml}
+                                ${replyFormHtml}
                             </div>
-                            <div class="pd-review-stars">${starsHtml}</div>
-                            ${reviewText}
-                            ${imageHtml}
-                            ${replyBoxHtml}
-                            ${actionBtnHtml}
-                            ${replyFormHtml}
-                        </div>
-                    `;
+                        `;
         }
 
         function countReplyWords(reviewId) {
@@ -3324,20 +3326,20 @@
                         } else {
                             const card = document.getElementById(`review-item-${reviewId}`);
                             const html = `
-                                    <div class="pd-seller-reply-box" id="sellerReplyWrap-${reviewId}" style="margin-top:1rem; padding:0.85rem 1rem; background:#F8FAFC; border-left:3.5px solid #1EB349; border-radius:0 12px 12px 0; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
-                                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem; gap:0.5rem; flex-wrap:wrap;">
-                                            <div style="display:flex; align-items:center; gap:6px;">
-                                                <span style="font-weight:700; font-size:0.82rem; color:#1EB349; display:inline-flex; align-items:center; gap:4px;">
-                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
-                                                    Respon Penjual
-                                                </span>
-                                                <span style="font-size:0.72rem; color:#94A3B8;">${data.seller_replied_at || 'Baru saja'}</span>
+                                        <div class="pd-seller-reply-box" id="sellerReplyWrap-${reviewId}" style="margin-top:1rem; padding:0.85rem 1rem; background:#F8FAFC; border-left:3.5px solid #1EB349; border-radius:0 12px 12px 0; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;">
+                                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem; gap:0.5rem; flex-wrap:wrap;">
+                                                <div style="display:flex; align-items:center; gap:6px;">
+                                                    <span style="font-weight:700; font-size:0.82rem; color:#1EB349; display:inline-flex; align-items:center; gap:4px;">
+                                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
+                                                        Respon Penjual
+                                                    </span>
+                                                    <span style="font-size:0.72rem; color:#94A3B8;">${data.seller_replied_at || 'Baru saja'}</span>
+                                                </div>
+                                                <button type="button" onclick="openReplyForm(${reviewId})" style="background:none; border:none; color:#15803D; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:underline;">Ubah Balasan</button>
                                             </div>
-                                            <button type="button" onclick="openReplyForm(${reviewId})" style="background:none; border:none; color:#15803D; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:underline;">Ubah Balasan</button>
+                                            <div class="pd-seller-reply-text" id="sellerReplyText-${reviewId}" style="font-size:0.85rem; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(data.seller_reply)}</div>
                                         </div>
-                                        <div class="pd-seller-reply-text" id="sellerReplyText-${reviewId}" style="font-size:0.85rem; color:#334155; line-height:1.6; white-space:pre-line;">${escapeHtml(data.seller_reply)}</div>
-                                    </div>
-                                `;
+                                    `;
                             const formWrap = document.getElementById(`replyFormWrap-${reviewId}`);
                             if (formWrap) {
                                 formWrap.insertAdjacentHTML('beforebegin', html);
@@ -3615,33 +3617,33 @@
                         if (actionBox) {
                             @if($userReview)
                                 actionBox.innerHTML = `
-                                                    <div style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:14px;padding:0.75rem 0.85rem;text-align:center;">
-                                                        <div style="font-size:0.85rem;font-weight:800;color:#15803D;display:flex;align-items:center;justify-content:center;gap:6px;">
-                                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#15803D"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                                                            <span>Ulasan Tersimpan (${val}★)</span>
-                                                        </div>
-                                                        <div style="font-size:0.72rem;color:#64748B;margin-top:3px;font-weight:500;">
-                                                            Batas pengeditan ulasan tercapai (maksimal 1x edit).
-                                                        </div>
-                                                    </div>
-                                                `;
+                                                            <div style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:14px;padding:0.75rem 0.85rem;text-align:center;">
+                                                                <div style="font-size:0.85rem;font-weight:800;color:#15803D;display:flex;align-items:center;justify-content:center;gap:6px;">
+                                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#15803D"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                                                    <span>Ulasan Tersimpan (${val}★)</span>
+                                                                </div>
+                                                                <div style="font-size:0.72rem;color:#64748B;margin-top:3px;font-weight:500;">
+                                                                    Batas pengeditan ulasan tercapai (maksimal 1x edit).
+                                                                </div>
+                                                            </div>
+                                                        `;
                             @else
                                 actionBox.innerHTML = `
-                                                    <button type="button" onclick="toggleWriteReviewForm()" class="pd-btn pd-btn-primary"
-                                                        style="width:100%;height:42px;font-size:0.85rem;border-radius:99px;font-weight:700;">
-                                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                                        </svg>
-                                                        <span>Edit Ulasan</span>
-                                                    </button>
-                                                    <div style="font-size:0.75rem;color:#15803d;font-weight:600;margin-top:5px;display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;">
-                                                        <span>✓ Anda sudah mengulas (${val}★)</span>
-                                                        <span style="color:#d97706;background:#fef3c7;padding:1px 6px;border-radius:6px;font-size:0.7rem;">Sisa 1x edit</span>
-                                                    </div>
-                                                `;
+                                                            <button type="button" onclick="toggleWriteReviewForm()" class="pd-btn pd-btn-primary"
+                                                                style="width:100%;height:42px;font-size:0.85rem;border-radius:99px;font-weight:700;">
+                                                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                                                </svg>
+                                                                <span>Edit Ulasan</span>
+                                                            </button>
+                                                            <div style="font-size:0.75rem;color:#15803d;font-weight:600;margin-top:5px;display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;">
+                                                                <span>✓ Anda sudah mengulas (${val}★)</span>
+                                                                <span style="color:#d97706;background:#fef3c7;padding:1px 6px;border-radius:6px;font-size:0.7rem;">Sisa 1x edit</span>
+                                                            </div>
+                                                        `;
                             @endif
-                                }
+                                    }
 
                         // Refresh feed
                         fetchReviews(1, 'all', false);
