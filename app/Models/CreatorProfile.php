@@ -42,6 +42,7 @@ class CreatorProfile extends Model
         // Exclusive & Verification
         'is_exclusive',
         'is_verified',
+        'pos_balance',
         // AI Scan Metadata
         'last_menu_scan_at',
         'monthly_scan_count',
@@ -53,9 +54,20 @@ class CreatorProfile extends Model
         'bio_config'   => 'array',
         'is_exclusive' => 'boolean',
         'is_verified'  => 'boolean',
+        'pos_balance'  => 'float',
         'last_menu_scan_at' => 'datetime',
         'scan_count_reset_at' => 'datetime',
     ];
+
+    public function posDeposits(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PosDeposit::class, 'creator_id');
+    }
+
+    public function posMutations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PosBalanceMutation::class, 'creator_id');
+    }
 
     public function isStoreActive(): bool
     {

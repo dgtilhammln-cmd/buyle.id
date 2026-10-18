@@ -607,6 +607,7 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
 // 2. Seller Dashboard (Creator)
 Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Creator\SellerController::class, 'dashboard'])->name('dashboard');
+    Route::get('/app', [\App\Http\Controllers\Creator\AppLauncherController::class, 'index'])->name('app.index');
     Route::post('/request-verification', [\App\Http\Controllers\Creator\SellerController::class, 'requestVerification'])->name('request-verification');
     Route::post('/upload-image', [\App\Http\Controllers\Admin\AdminUploadController::class, 'uploadImage'])->name('upload.image');
 
@@ -639,6 +640,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     // Laporan Penjualan & Manajemen Pesanan
     Route::get('/sales-report', [\App\Http\Controllers\Creator\SellerReportController::class, 'index'])->name('sales.report');
     Route::get('/sales-report/export', [\App\Http\Controllers\Creator\SellerReportController::class, 'export'])->name('sales.report.export');
+    Route::get('/sales-report/export-pos', [\App\Http\Controllers\Creator\SellerReportController::class, 'exportPos'])->name('sales.report.export_pos');
     Route::post('/sales-report/orders/{order}/update', [\App\Http\Controllers\Creator\SellerReportController::class, 'updateOrder'])->name('sales.report.update_order');
     Route::delete('/sales-report/leads/{lead}', [\App\Http\Controllers\Creator\SellerReportController::class, 'destroyLead'])->name('sales.report.destroy_lead');
 
@@ -647,6 +649,9 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::get('/pos/products', [\App\Http\Controllers\Creator\PosController::class, 'products'])->name('pos.products');
     Route::post('/pos/store', [\App\Http\Controllers\Creator\PosController::class, 'store'])->name('pos.store');
     Route::post('/pos/send-receipt', [\App\Http\Controllers\Creator\PosController::class, 'sendReceipt'])->name('pos.send-receipt');
+    Route::post('/pos/deposit', [\App\Http\Controllers\Creator\PosController::class, 'topupDeposit'])->name('pos.deposit');
+    Route::post('/pos/deposit/check', [\App\Http\Controllers\Creator\PosController::class, 'checkDeposit'])->name('pos.deposit.check');
+    Route::get('/pos/closing-report', [\App\Http\Controllers\Creator\PosController::class, 'closingReport'])->name('pos.closing-report');
 
     // Realtime Stats API (AJAX polling for dashboard)
     Route::get('/stats/realtime', [\App\Http\Controllers\Creator\SellerController::class, 'realtimeStats'])->name('stats.realtime');
@@ -697,6 +702,11 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/domain/check',    [\App\Http\Controllers\Creator\CreatorDomainController::class, 'checkAvailability'])->name('domain.check')->middleware('throttle:domain-check');
     Route::post('/domain/checkout', [\App\Http\Controllers\Creator\CreatorDomainController::class, 'checkout'])->name('domain.checkout')->middleware('throttle:checkout-limit');
 });
+ 
+// Shortcut /app redirect ke creator app launcher
+Route::get('/app', function () {
+    return redirect()->route('creator.app.index');
+})->middleware('auth');
 
 // 3. Buyer Dashboard
 Route::middleware(['auth', 'role:buyer'])->prefix('buyer')->name('buyer.')->group(function () {

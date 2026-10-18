@@ -14,6 +14,15 @@
             Lihat Bio
         </a>
     @endif
+    <a href="{{ route('creator.app.index') }}"
+        style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 0.95rem; font-size:0.8rem; font-weight:700; color:#475569; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:999px; text-decoration:none; transition:all 0.15s ease; font-family:'Montserrat',sans-serif; box-shadow:0 2px 6px rgba(0,0,0,0.03);"
+        onmouseover="this.style.borderColor='#1eb349';this.style.color='#166534';"
+        onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#475569';">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+            <polyline points="15 18 9 12 15 6" />
+        </svg>
+        Aplikasi
+    </a>
 @endsection
 
 @section('styles')

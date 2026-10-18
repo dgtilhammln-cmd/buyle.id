@@ -38,6 +38,11 @@ class PaymentWebhookController extends Controller
             return $this->handleDomainWebhook($payload, $rawOrderId);
         }
 
+        // Support DEP-xxx for POS Deposit Top-up
+        if (\Illuminate\Support\Str::startsWith($rawOrderId, 'DEP-')) {
+            return $this->handlePosDepositWebhook($payload, $rawOrderId);
+        }
+
         // Support BUYLE-{id}, ORD-xxx, or numeric ID
         $order = null;
         if (\Illuminate\Support\Str::startsWith($rawOrderId, 'BUYLE-')) {
@@ -251,6 +256,80 @@ class PaymentWebhookController extends Controller
             }
         } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
             $domainOrder->update(['status' => 'cancelled']);
+        }
+
+        return response('OK', 200);
+    }
+
+    /**
+     * Handler webhook khusus Top Up Saldo Deposit POS Creator.
+     */
+    private function handlePosDepositWebhook(array $payload, string $depositNumber): Response
+    {
+        $deposit = \App\Models\PosDeposit::where('deposit_number', $depositNumber)->first();
+        if (!$deposit) {
+            Log::warning("[Webhook POS Deposit] Deposit not found", ['deposit_number' => $depositNumber]);
+            return response('OK', 200);
+        }
+
+        // Validasi Signature Key SHA-512
+        $serverKey = \App\Models\Setting::get('midtrans_server_key') ?: config('midtrans.server_key');
+        $signature = hash('sha512',
+            ($payload['order_id'] ?? '') .
+            ($payload['status_code'] ?? '') .
+            ($payload['gross_amount'] ?? '') .
+            $serverKey
+        );
+
+        if ($signature !== ($payload['signature_key'] ?? '')) {
+            Log::warning('[Webhook POS Deposit] Invalid signature', ['deposit' => $depositNumber]);
+            return response('OK', 200);
+        }
+
+        $transactionStatus = $payload['transaction_status'] ?? '';
+        $fraudStatus       = $payload['fraud_status'] ?? '';
+
+        $isPaid = (
+            ($transactionStatus === 'capture' && $fraudStatus === 'accept') ||
+            $transactionStatus === 'settlement'
+        );
+
+        if ($isPaid) {
+            DB::transaction(function () use ($deposit, $payload) {
+                $lockedDeposit = \App\Models\PosDeposit::where('id', $deposit->id)->lockForUpdate()->first();
+                if (!$lockedDeposit || $lockedDeposit->status === 'success') {
+                    return;
+                }
+
+                $creator = \App\Models\CreatorProfile::where('id', $lockedDeposit->creator_id)->lockForUpdate()->first();
+                if (!$creator) {
+                    return;
+                }
+
+                $balanceBefore = (float) $creator->pos_balance;
+                $topupAmount   = (float) $lockedDeposit->amount;
+                $balanceAfter  = $balanceBefore + $topupAmount;
+
+                $creator->update(['pos_balance' => $balanceAfter]);
+
+                $lockedDeposit->update([
+                    'status'         => 'success',
+                    'paid_at'        => now(),
+                    'payment_method' => $payload['payment_type'] ?? 'qris',
+                ]);
+
+                \App\Models\PosBalanceMutation::create([
+                    'creator_id'       => $creator->id,
+                    'type'             => 'topup',
+                    'amount'           => $topupAmount,
+                    'balance_before'   => $balanceBefore,
+                    'balance_after'    => $balanceAfter,
+                    'reference_number' => $lockedDeposit->deposit_number,
+                    'notes'            => 'Top Up Saldo Deposit POS via Midtrans (' . ($payload['payment_type'] ?? 'QRIS') . ')',
+                ]);
+            });
+        } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
+            $deposit->update(['status' => 'failed']);
         }
 
         return response('OK', 200);

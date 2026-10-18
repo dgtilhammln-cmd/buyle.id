@@ -241,6 +241,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       'adsense' => ['Monetisasi AdSense', 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
       'email'   => ['Pengaturan Email (SMTP)', 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'],
       'domain'  => ['Harga Custom Domain', 'M12 2a10 10 0 100 20 10 10 0 000-20zM2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z'],
+      'aplikasi' => ['Logo Aplikasi', 'M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z'],
     ];
   @endphp
   @foreach($tabs as $tabKey => [$tabLabel, $tabIcon])
@@ -1624,6 +1625,98 @@ function testAiConnection() {
 </style>
 
 
+{{-- ======== TAB: LOGO APLIKASI ======== --}}
+<div id="tab-aplikasi" class="tab-section" style="display:none;">
+  <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;margin-bottom:1.25rem;">
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
+      <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+      <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1eb349;">Logo Aplikasi Buyle (per Modul)</div>
+    </div>
+    <p style="font-size:.82rem;color:#64748B;margin:0 0 1.5rem;line-height:1.6;">Upload logo khusus untuk setiap modul aplikasi yang tampil di halaman <strong>Pusat Aplikasi</strong> creator (/creator/app). Jika tidak diupload, sistem menampilkan ikon SVG bawaan sebagai placeholder.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;">
+
+      {{-- Web Builder Logo --}}
+      <div style="border:1.5px solid #E2E8F0;border-radius:14px;padding:1.25rem;">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;">
+          <div style="width:42px;height:42px;background:rgba(30,179,73,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#1eb349;flex-shrink:0;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          </div>
+          <div>
+            <div style="font-size:.85rem;font-weight:700;color:#0F172A;">Web Builder</div>
+            <div style="font-size:.72rem;color:#64748B;">Kunci setting: <code>app_logo_webbuilder</code></div>
+          </div>
+        </div>
+        @if(!empty($settings['app_logo_webbuilder']))
+        <div style="margin-bottom:1rem;padding:.75rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;display:flex;align-items:center;gap:.75rem;">
+          <img src="{{ asset('storage/'.$settings['app_logo_webbuilder']) }}" alt="Logo Web Builder" style="height:44px;width:44px;object-fit:contain;border-radius:8px;border:1px solid #E2E8F0;background:#fff;">
+          <div style="flex:1;min-width:0;">
+            <span style="font-size:.75rem;color:#64748B;display:block;">Logo aktif</span>
+            <button type="button" onclick="if(confirm('Hapus logo Web Builder?')){this.closest('form')&&this.closest('form').querySelector('[name=remove_app_logo_webbuilder]')&&(this.closest('form').querySelector('[name=remove_app_logo_webbuilder]').value='1');document.getElementById('settings-form').querySelector('[name=remove_app_logo_webbuilder]').value='1';document.getElementById('settings-form').submit();}" style="font-size:.72rem;color:#dc2626;background:none;border:none;cursor:pointer;padding:0;margin-top:2px;">Hapus Logo</button>
+          </div>
+        </div>
+        <input type="hidden" name="remove_app_logo_webbuilder" value="0">
+        @endif
+        <label style="font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:.5rem;">Upload Logo Baru</label>
+        <input type="file" name="app_logo_webbuilder" class="form-input" accept="image/*,.svg" style="padding:.5rem;">
+        <p style="font-size:.7rem;color:#94A3B8;margin:.5rem 0 0;">PNG/SVG transparan disarankan. Max 800x800px. Otomatis dikonversi ke WebP (kecuali SVG).</p>
+      </div>
+
+      {{-- POS Logo --}}
+      <div style="border:1.5px solid #E2E8F0;border-radius:14px;padding:1.25rem;">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;">
+          <div style="width:42px;height:42px;background:rgba(2,132,199,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#0284c7;flex-shrink:0;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="10" y2="11"/><line x1="14" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="10" y2="15"/><line x1="14" y1="15" x2="16" y2="15"/></svg>
+          </div>
+          <div>
+            <div style="font-size:.85rem;font-weight:700;color:#0F172A;">Buyle POS</div>
+            <div style="font-size:.72rem;color:#64748B;">Kunci setting: <code>app_logo_pos</code></div>
+          </div>
+        </div>
+        @if(!empty($settings['app_logo_pos']))
+        <div style="margin-bottom:1rem;padding:.75rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;display:flex;align-items:center;gap:.75rem;">
+          <img src="{{ asset('storage/'.$settings['app_logo_pos']) }}" alt="Logo Buyle POS" style="height:44px;width:44px;object-fit:contain;border-radius:8px;border:1px solid #E2E8F0;background:#fff;">
+          <div style="flex:1;min-width:0;">
+            <span style="font-size:.75rem;color:#64748B;display:block;">Logo aktif</span>
+            <button type="button" onclick="if(confirm('Hapus logo POS?')){document.getElementById('settings-form').querySelector('[name=remove_app_logo_pos]').value='1';document.getElementById('settings-form').submit();}" style="font-size:.72rem;color:#dc2626;background:none;border:none;cursor:pointer;padding:0;margin-top:2px;">Hapus Logo</button>
+          </div>
+        </div>
+        <input type="hidden" name="remove_app_logo_pos" value="0">
+        @endif
+        <label style="font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:.5rem;">Upload Logo Baru</label>
+        <input type="file" name="app_logo_pos" class="form-input" accept="image/*,.svg" style="padding:.5rem;">
+        <p style="font-size:.7rem;color:#94A3B8;margin:.5rem 0 0;">PNG/SVG transparan disarankan. Max 800x800px. Otomatis dikonversi ke WebP (kecuali SVG).</p>
+      </div>
+
+      {{-- e-Ticket Logo --}}
+      <div style="border:1.5px solid #E2E8F0;border-radius:14px;padding:1.25rem;">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;">
+          <div style="width:42px;height:42px;background:rgba(124,58,237,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#7c3aed;flex-shrink:0;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 010 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a3 3 0 010-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2z"/><line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2 2"/></svg>
+          </div>
+          <div>
+            <div style="font-size:.85rem;font-weight:700;color:#0F172A;">Buyle e-Ticket</div>
+            <div style="font-size:.72rem;color:#64748B;">Kunci setting: <code>app_logo_eticket</code></div>
+          </div>
+        </div>
+        @if(!empty($settings['app_logo_eticket']))
+        <div style="margin-bottom:1rem;padding:.75rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;display:flex;align-items:center;gap:.75rem;">
+          <img src="{{ asset('storage/'.$settings['app_logo_eticket']) }}" alt="Logo Buyle e-Ticket" style="height:44px;width:44px;object-fit:contain;border-radius:8px;border:1px solid #E2E8F0;background:#fff;">
+          <div style="flex:1;min-width:0;">
+            <span style="font-size:.75rem;color:#64748B;display:block;">Logo aktif</span>
+            <button type="button" onclick="if(confirm('Hapus logo e-Ticket?')){document.getElementById('settings-form').querySelector('[name=remove_app_logo_eticket]').value='1';document.getElementById('settings-form').submit();}" style="font-size:.72rem;color:#dc2626;background:none;border:none;cursor:pointer;padding:0;margin-top:2px;">Hapus Logo</button>
+          </div>
+        </div>
+        <input type="hidden" name="remove_app_logo_eticket" value="0">
+        @endif
+        <label style="font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:.5rem;">Upload Logo Baru</label>
+        <input type="file" name="app_logo_eticket" class="form-input" accept="image/*,.svg" style="padding:.5rem;">
+        <p style="font-size:.7rem;color:#94A3B8;margin:.5rem 0 0;">PNG/SVG transparan disarankan. Max 800x800px. Otomatis dikonversi ke WebP (kecuali SVG).</p>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 </form>
 

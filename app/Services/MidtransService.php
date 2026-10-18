@@ -197,6 +197,40 @@ class MidtransService
     }
 
     /**
+     * Membuat Snap Token khusus Top Up Saldo Deposit Kasir POS Creator.
+     */
+    public function createPosDepositSnapToken(\App\Models\PosDeposit $deposit, \App\Models\User $user): ?string
+    {
+        $midtransOrderId = $deposit->deposit_number;
+
+        $params = [
+            'transaction_details' => [
+                'order_id'     => $midtransOrderId,
+                'gross_amount' => (int) $deposit->amount,
+            ],
+            'customer_details' => [
+                'first_name' => $user->name,
+                'email'      => $user->email,
+            ],
+            'item_details' => [
+                [
+                    'id'       => 'POS_DEPOSIT_' . $deposit->id,
+                    'price'    => (int) $deposit->amount,
+                    'quantity' => 1,
+                    'name'     => 'Top Up Saldo Deposit POS',
+                ]
+            ],
+        ];
+
+        try {
+            return Snap::getSnapToken($params);
+        } catch (Exception $e) {
+            \Log::error('Midtrans POS Deposit Snap Error: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Membatalkan transaksi di Midtrans.
      */
     public function cancelTransaction(string $orderNumber): bool

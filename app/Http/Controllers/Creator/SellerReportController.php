@@ -42,11 +42,14 @@ class SellerReportController extends Controller
     }
 
     /**
-     * Base query untuk orders seller atau reseller yang sudah bayar.
+     * Base query untuk orders seller atau reseller yang sudah bayar (Khusus Toko Online / Non-POS).
      */
     private function paidOrdersBaseQuery(int $sellerId, Carbon $startDate, Carbon $endDate)
     {
         return Order::whereHas('payment', fn($q) => $q->where('status', PaymentStatus::Success->value))
+            ->where(function($q) {
+                $q->where('source', '!=', 'pos')->orWhereNull('source');
+            })
             ->where(function($orQ) use ($sellerId) {
                 $orQ->whereHas('items.product', fn($q) => $q->where('seller_id', $sellerId))
                     ->orWhereHas('items', fn($q) => $q->where('reseller_id', $sellerId));
@@ -218,11 +221,77 @@ class SellerReportController extends Controller
         $balanceData      = \App\Services\SellerBalanceService::calculateBalance($seller);
         $availableBalance = $balanceData['available_balance'];
 
+        // ── 9. Transaksi Kasir Digital (POS) - Terpisah Mandiri ───────────────
+        $posPaymentMethod = $request->query('pos_method', 'all');
+        $posQuery = Order::where('source', 'pos')
+            ->whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
+            ->whereBetween('created_at', [$startDate, $endDate]);
+
+        if ($posPaymentMethod && $posPaymentMethod !== 'all') {
+            if ($posPaymentMethod === 'cash') {
+                $posQuery->where(function($q) {
+                    $q->where('shipping_address->payment_method', 'cash')
+                      ->orWhereHas('payment', fn($pq) => $pq->where('method', 'cash'));
+                });
+            } elseif ($posPaymentMethod === 'qris') {
+                $posQuery->where(function($q) {
+                    $q->where('shipping_address->payment_method', 'qris')
+                      ->orWhereHas('payment', fn($pq) => $pq->where('method', 'qris'));
+                });
+            } elseif ($posPaymentMethod === 'transfer') {
+                $posQuery->where(function($q) {
+                    $q->whereIn('shipping_address->payment_method', ['transfer', 'bank_transfer'])
+                      ->orWhereHas('payment', fn($pq) => $pq->whereIn('method', ['transfer', 'bank_transfer']));
+                });
+            }
+        }
+
+        $posOrders = $posQuery->with(['items.product', 'payment', 'user'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        $posTotalSales = (float) $posOrders->sum('total');
+        $posCashTotal = (float) $posOrders->filter(function($o) {
+            $m = strtolower($o->shipping_address['payment_method'] ?? ($o->payment->method ?? ''));
+            return $m === 'cash';
+        })->sum('total');
+
+        $posDigitalTotal = (float) $posOrders->filter(function($o) {
+            $m = strtolower($o->shipping_address['payment_method'] ?? ($o->payment->method ?? ''));
+            return $m !== 'cash';
+        })->sum('total');
+
+        $posFeesTotal = (float) $posOrders->filter(function($o) {
+            $m = strtolower($o->shipping_address['payment_method'] ?? ($o->payment->method ?? ''));
+            return $m === 'cash';
+        })->sum(function($o) {
+            return (float) ($o->platform_fee ?? 0) + (float) ($o->admin_fee ?? 0);
+        });
+
+        $posTotalTransactions = $posOrders->count();
+
+        // Saldo Deposit POS & Mutasi Ledger
+        $creatorProfile = CreatorProfile::where('user_id', $seller->id)->first();
+        $posBalance = (float) ($creatorProfile->pos_balance ?? 0);
+
+        $posMutations = $creatorProfile
+            ? \App\Models\PosBalanceMutation::where('creator_id', $creatorProfile->id)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->orderByDesc('created_at')
+                ->get()
+            : collect();
+
+        $posTotalTopup = (float) $posMutations->where('type', 'topup')->sum('amount');
+        $posTotalFeeMutations = (float) abs($posMutations->where('type', 'fee_deduction')->sum('amount'));
+
         return view('creator.reports.index', compact(
             'filter', 'startDate', 'endDate',
             'totalSales', 'totalOrders', 'totalVisitors', 'uniqueVisitors', 'availableBalance',
             'topProducts', 'utmSources', 'buyers', 'visitorsByDate', 'salesByDate',
-            'totalBioClicks', 'topBioLinks', 'bioUtmSources', 'leads'
+            'totalBioClicks', 'topBioLinks', 'bioUtmSources', 'leads',
+            'posOrders', 'posTotalSales', 'posCashTotal', 'posDigitalTotal', 'posFeesTotal',
+            'posTotalTransactions', 'posBalance', 'posMutations', 'posTotalTopup', 'posTotalFeeMutations',
+            'posPaymentMethod'
         ));
     }
 
@@ -554,5 +623,96 @@ class SellerReportController extends Controller
         }
 
         return back()->with('success', 'Status pesanan & resi berhasil diperbarui.');
+    }
+
+    /**
+     * Export data transaksi kasir POS ke file CSV (Excel compatible).
+     */
+    public function exportPos(Request $request)
+    {
+        $seller = auth()->user();
+        [$filter, $startDate, $endDate] = $this->getDateRange($request);
+        $posPaymentMethod = $request->query('pos_method', 'all');
+
+        $storeName = $seller->creatorProfile?->store_name ?? ('seller-' . $seller->id);
+
+        $posQuery = Order::where('source', 'pos')
+            ->whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
+            ->whereBetween('created_at', [$startDate, $endDate]);
+
+        if ($posPaymentMethod && $posPaymentMethod !== 'all') {
+            if ($posPaymentMethod === 'cash') {
+                $posQuery->where(function($q) {
+                    $q->where('shipping_address->payment_method', 'cash')
+                      ->orWhereHas('payment', fn($pq) => $pq->where('method', 'cash'));
+                });
+            } elseif ($posPaymentMethod === 'qris') {
+                $posQuery->where(function($q) {
+                    $q->where('shipping_address->payment_method', 'qris')
+                      ->orWhereHas('payment', fn($pq) => $pq->where('method', 'qris'));
+                });
+            } elseif ($posPaymentMethod === 'transfer') {
+                $posQuery->where(function($q) {
+                    $q->whereIn('shipping_address->payment_method', ['transfer', 'bank_transfer'])
+                      ->orWhereHas('payment', fn($pq) => $pq->whereIn('method', ['transfer', 'bank_transfer']));
+                });
+            }
+        }
+
+        $orders = $posQuery->with(['items.product', 'payment', 'user'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        $filename = 'Laporan_POS_' . str_replace(' ', '_', $storeName) . '_' . date('Ymd_His');
+
+        $csvData  = "\xEF\xBB\xBF"; // UTF-8 BOM
+        $csvData .= "Tanggal & Waktu,No Invoice POS,Pelanggan,Catatan / Meja,Metode Pembayaran,Item Produk,Subtotal (Rp),Diskon (Rp),Platform Fee (Rp),Admin Fee (Rp),Total Bayar (Rp),Status Pembayaran\n";
+
+        $totalOmset   = 0;
+        $totalCash    = 0;
+        $totalDigital = 0;
+        $totalFees    = 0;
+
+        foreach ($orders as $order) {
+            $date     = $order->created_at->format('Y-m-d H:i');
+            $invoice  = $order->order_number;
+            $customer = str_replace([",", "\n", "\r"], ' ', $order->shipping_address['name'] ?? 'Pelanggan Umum');
+            $notes    = str_replace([",", "\n", "\r"], ' ', $order->notes ?? '-');
+            $method   = strtoupper($order->shipping_address['payment_method'] ?? ($order->payment->method ?? 'CASH'));
+
+            $itemNames = $order->items->map(function($i) {
+                return $i->product_name . ' (' . $i->qty . 'x)';
+            })->implode(' | ');
+            $itemNames = str_replace([",", "\n", "\r"], ' ', $itemNames);
+
+            $subtotal    = (float) $order->subtotal;
+            $discount    = (float) ($order->discount ?? 0);
+            $platformFee = (float) ($order->platform_fee ?? 0);
+            $adminFee    = (float) ($order->admin_fee ?? 0);
+            $total       = (float) $order->total;
+            $status      = ($order->payment && $order->payment->status->value === 'success') ? 'LUNAS' : 'PENDING';
+
+            $totalOmset += $total;
+            if (strtolower($method) === 'cash') {
+                $totalCash += $total;
+                $totalFees += ($platformFee + $adminFee);
+            } else {
+                $totalDigital += $total;
+            }
+
+            $csvData .= "{$date},{$invoice},{$customer},{$notes},{$method},{$itemNames},{$subtotal},{$discount},{$platformFee},{$adminFee},{$total},{$status}\n";
+        }
+
+        $csvData .= "\n";
+        $csvData .= "RINGKASAN LAPORAN KASIR POS (" . $startDate->format('d/m/Y') . " - " . $endDate->format('d/m/Y') . ")\n";
+        $csvData .= "Total Transaksi POS," . $orders->count() . " Transaksi\n";
+        $csvData .= "Total Omset Kotor POS,Rp " . number_format($totalOmset, 0, ',', '.') . "\n";
+        $csvData .= "Total Uang Tunai di Laci Kasir (Cash),Rp " . number_format($totalCash, 0, ',', '.') . "\n";
+        $csvData .= "Total Pembayaran Digital (QRIS / Transfer),Rp " . number_format($totalDigital, 0, ',', '.') . "\n";
+        $csvData .= "Total Fee Terpotong dari Saldo Deposit,Rp " . number_format($totalFees, 0, ',', '.') . "\n";
+
+        return response($csvData)
+            ->header('Content-Type', 'text/csv; charset=utf-8')
+            ->header('Content-Disposition', "attachment; filename=\"{$filename}.csv\"");
     }
 }

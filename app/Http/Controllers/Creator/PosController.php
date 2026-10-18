@@ -10,8 +10,11 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\PosDeposit;
+use App\Models\PosBalanceMutation;
 use App\Models\Setting;
 use App\Services\MidtransService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -210,12 +213,48 @@ class PosController extends Controller
         $platformFeeRate = (float) Setting::get('platform_fee_rate', 5);
         $adminFeeRate    = (float) Setting::get('admin_fee_rate', 5);
 
+        // 5. Saldo Deposit Kasir POS
+        $posBalance = (float) ($profile->pos_balance ?? 0);
+
+        // 6. Rekap Keuangan Shift Hari Ini (Cash in Drawer, Digital, Fee Deducted)
+        $todayGrossSales = (float) $todayOrders->sum('total');
+        $todayCashInDrawer = (float) $todayOrders->filter(function($o) {
+            $method = strtolower($o->shipping_address['payment_method'] ?? ($o->payment->method ?? ''));
+            return $method === 'cash';
+        })->sum('total');
+
+        $todayDigitalSales = (float) $todayOrders->filter(function($o) {
+            $method = strtolower($o->shipping_address['payment_method'] ?? ($o->payment->method ?? ''));
+            return $method !== 'cash';
+        })->sum('total');
+
+        $todayFeeDeducted = (float) $todayOrders->filter(function($o) {
+            $method = strtolower($o->shipping_address['payment_method'] ?? ($o->payment->method ?? ''));
+            return $method === 'cash';
+        })->sum(function($o) {
+            return (float) ($o->platform_fee ?? 0) + (float) ($o->admin_fee ?? 0);
+        });
+
+        // 7. Riwayat Mutasi Saldo Deposit Hari Ini
+        $todayMutations = $profile
+            ? PosBalanceMutation::where('creator_id', $profile->id)
+                ->whereDate('created_at', now()->today())
+                ->orderByDesc('created_at')
+                ->get()
+            : collect();
+
         return view('creator.pos.index', compact(
             'products',
             'todayOrders',
             'profile',
             'platformFeeRate',
-            'adminFeeRate'
+            'adminFeeRate',
+            'posBalance',
+            'todayGrossSales',
+            'todayCashInDrawer',
+            'todayDigitalSales',
+            'todayFeeDeducted',
+            'todayMutations'
         ));
     }
 
@@ -294,12 +333,30 @@ class PosController extends Controller
 
             $platformFee = ($subtotal * $platformFeeRate) / 100;
             $adminFee    = ($subtotal * $adminFeeRate) / 100;
+            $totalFee    = $platformFee + $adminFee;
 
             $total = max(0, $subtotal - $discountAmount + $serviceFee + $platformFee + $adminFee);
 
             $paymentMethod = $request->payment_method;
             $isPaid = in_array($paymentMethod, ['cash', 'transfer']);
             $customerName = trim($request->customer_name ?? '') ?: 'Pelanggan Umum';
+
+            // Validasi Saldo Deposit Kasir POS jika metode pembayaran CASH
+            $profile = CreatorProfile::where('user_id', $seller->id)->lockForUpdate()->first();
+            if ($paymentMethod === 'cash' && $totalFee > 0) {
+                $currentBalance = (float) ($profile->pos_balance ?? 0);
+                if ($currentBalance < $totalFee) {
+                    DB::rollBack();
+                    return response()->json([
+                        'success'              => false,
+                        'insufficient_deposit' => true,
+                        'required_fee'         => $totalFee,
+                        'current_balance'      => $currentBalance,
+                        'shortage'             => $totalFee - $currentBalance,
+                        'message'              => 'Saldo deposit POS Anda tidak mencukupi untuk biaya transaksi (Dibutuhkan: Rp ' . number_format($totalFee, 0, ',', '.') . ', Saldo Anda: Rp ' . number_format($currentBalance, 0, ',', '.') . '). Silakan isi saldo deposit terlebih dahulu.',
+                    ], 422);
+                }
+            }
 
             // Create Order
             $order = Order::create([
@@ -358,6 +415,24 @@ class PosController extends Controller
                 'paid_at'        => $isPaid ? now() : null,
             ]);
 
+            // Potong Saldo Deposit Kasir POS jika pembayaran CASH & catat mutasi ledger
+            if ($paymentMethod === 'cash' && $totalFee > 0 && $profile) {
+                $balanceBefore = (float) $profile->pos_balance;
+                $balanceAfter  = max(0, $balanceBefore - $totalFee);
+                $profile->update(['pos_balance' => $balanceAfter]);
+
+                PosBalanceMutation::create([
+                    'creator_id'       => $profile->id,
+                    'type'             => 'fee_deduction',
+                    'amount'           => -$totalFee,
+                    'balance_before'   => $balanceBefore,
+                    'balance_after'    => $balanceAfter,
+                    'order_id'         => $order->id,
+                    'reference_number' => $order->order_number,
+                    'notes'            => 'Potongan Fee Kasir Transaksi Tunai ' . $order->order_number,
+                ]);
+            }
+
             DB::commit();
 
             // Handle Midtrans Snap Token for QRIS
@@ -379,10 +454,11 @@ class PosController extends Controller
             $order->load(['items', 'payment']);
 
             return response()->json([
-                'success'    => true,
-                'message'    => 'Transaksi POS berhasil diproses',
-                'order'      => $order,
-                'snap_token' => $snapToken,
+                'success'     => true,
+                'message'     => 'Transaksi POS berhasil diproses',
+                'order'       => $order,
+                'snap_token'  => $snapToken,
+                'pos_balance' => $profile ? (float) $profile->fresh()->pos_balance : 0,
             ]);
 
         } catch (Exception $e) {
@@ -452,5 +528,222 @@ class PosController extends Controller
             $message->to($email)
                 ->subject('Struk Pembayaran - ' . $storeName . ' (' . $order->order_number . ')');
         });
+    }
+
+    /**
+     * Top Up Saldo Deposit Kasir POS via Midtrans QRIS/Snap.
+     */
+    public function topupDeposit(Request $request)
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:10000|max:50000000',
+        ]);
+
+        $seller  = auth()->user();
+        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+        $amount  = (float) $request->amount;
+
+        $deposit = PosDeposit::create([
+            'creator_id'     => $profile->id,
+            'deposit_number' => PosDeposit::generateDepositNumber(),
+            'amount'         => $amount,
+            'payment_method' => 'qris',
+            'status'         => 'pending',
+        ]);
+
+        $midtransService = app(MidtransService::class);
+        $snapToken       = $midtransService->createPosDepositSnapToken($deposit, $seller);
+
+        if (!$snapToken) {
+            $deposit->update(['status' => 'failed']);
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membuat tagihan pembayaran Midtrans. Silakan coba lagi.',
+            ], 500);
+        }
+
+        $deposit->update(['snap_token' => $snapToken]);
+
+        return response()->json([
+            'success'        => true,
+            'snap_token'     => $snapToken,
+            'deposit_number' => $deposit->deposit_number,
+            'amount'         => $amount,
+            'message'        => 'Tagihan deposit berhasil dibuat.',
+        ]);
+    }
+
+    /**
+     * Cek status pembayaran deposit POS secara realtime.
+     */
+    public function checkDeposit(Request $request)
+    {
+        $request->validate([
+            'deposit_number' => 'required|string',
+        ]);
+
+        $seller  = auth()->user();
+        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+        $deposit = PosDeposit::where('creator_id', $profile->id)
+            ->where('deposit_number', $request->deposit_number)
+            ->first();
+
+        if (!$deposit) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data deposit tidak ditemukan.',
+            ], 404);
+        }
+
+        if ($deposit->status === 'success') {
+            return response()->json([
+                'success'     => true,
+                'is_paid'     => true,
+                'pos_balance' => (float) $profile->pos_balance,
+                'message'     => 'Deposit berhasil terbayar.',
+            ]);
+        }
+
+        $midtransService = app(MidtransService::class);
+        $status          = $midtransService->getTransactionStatus($deposit->deposit_number);
+
+        $isPaid = false;
+        if ($status) {
+            $txStatus = $status->transaction_status ?? '';
+            $fraud    = $status->fraud_status ?? '';
+            if (($txStatus === 'capture' && $fraud === 'accept') || $txStatus === 'settlement') {
+                $isPaid = true;
+            }
+        }
+
+        if ($isPaid) {
+            DB::transaction(function () use ($deposit, $profile, $status) {
+                $lockedDeposit = PosDeposit::where('id', $deposit->id)->lockForUpdate()->first();
+                if (!$lockedDeposit || $lockedDeposit->status === 'success') {
+                    return;
+                }
+
+                $lockedProfile = CreatorProfile::where('id', $profile->id)->lockForUpdate()->first();
+                $balanceBefore = (float) $lockedProfile->pos_balance;
+                $amount        = (float) $lockedDeposit->amount;
+                $balanceAfter  = $balanceBefore + $amount;
+
+                $lockedProfile->update(['pos_balance' => $balanceAfter]);
+
+                $lockedDeposit->update([
+                    'status'         => 'success',
+                    'paid_at'        => now(),
+                    'payment_method' => $status->payment_type ?? 'qris',
+                ]);
+
+                PosBalanceMutation::create([
+                    'creator_id'       => $lockedProfile->id,
+                    'type'             => 'topup',
+                    'amount'           => $amount,
+                    'balance_before'   => $balanceBefore,
+                    'balance_after'    => $balanceAfter,
+                    'reference_number' => $lockedDeposit->deposit_number,
+                    'notes'            => 'Top Up Saldo Deposit POS (' . ($status->payment_type ?? 'QRIS') . ')',
+                ]);
+            });
+
+            return response()->json([
+                'success'     => true,
+                'is_paid'     => true,
+                'pos_balance' => (float) $profile->fresh()->pos_balance,
+                'message'     => 'Pembayaran deposit berhasil diverifikasi.',
+            ]);
+        }
+
+        return response()->json([
+            'success'     => true,
+            'is_paid'     => false,
+            'pos_balance' => (float) $profile->pos_balance,
+            'message'     => 'Menunggu verifikasi pembayaran.',
+        ]);
+    }
+
+    /**
+     * Rekap Laporan Closing Shift Kasir POS (Struk Closing & Neraca Harian).
+     */
+    public function closingReport(Request $request)
+    {
+        $seller  = auth()->user();
+        $profile = CreatorProfile::where('user_id', $seller->id)->firstOrFail();
+        $dateStr = $request->query('date', now()->toDateString());
+        $date    = Carbon::parse($dateStr);
+
+        $orders = Order::where('source', 'pos')
+            ->whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
+            ->whereDate('created_at', $date)
+            ->with(['items', 'payment'])
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        $totalTransactions = $orders->count();
+        $totalGrossSales   = (float) $orders->sum('total');
+        $totalDiscount     = (float) $orders->sum('discount');
+
+        $cashOrders = $orders->filter(function ($o) {
+            $m = strtolower($o->shipping_address['payment_method'] ?? ($o->payment->method ?? ''));
+            return $m === 'cash';
+        });
+        $totalCash = (float) $cashOrders->sum('total');
+
+        $qrisOrders = $orders->filter(function ($o) {
+            $m = strtolower($o->shipping_address['payment_method'] ?? ($o->payment->method ?? ''));
+            return $m === 'qris';
+        });
+        $totalQris = (float) $qrisOrders->sum('total');
+
+        $transferOrders = $orders->filter(function ($o) {
+            $m = strtolower($o->shipping_address['payment_method'] ?? ($o->payment->method ?? ''));
+            return in_array($m, ['transfer', 'bank_transfer']);
+        });
+        $totalTransfer = (float) $transferOrders->sum('total');
+
+        $totalDigital = $totalQris + $totalTransfer;
+
+        $totalFeeDeducted = (float) $cashOrders->sum(function ($o) {
+            return (float) ($o->platform_fee ?? 0) + (float) ($o->admin_fee ?? 0);
+        });
+
+        // Mutasi saldo deposit pada tanggal ini
+        $mutations = PosBalanceMutation::where('creator_id', $profile->id)
+            ->whereDate('created_at', $date)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        $totalTopupOnDate = (float) $mutations->where('type', 'topup')->sum('amount');
+        $totalFeeOnDate   = (float) abs($mutations->where('type', 'fee_deduction')->sum('amount'));
+
+        return response()->json([
+            'success'            => true,
+            'date'               => $date->format('d/m/Y'),
+            'date_full'          => $date->translatedFormat('d F Y'),
+            'store_name'         => $profile->store_name ?? $seller->name,
+            'cashier_name'       => $seller->name,
+            'pos_balance'        => (float) $profile->pos_balance,
+            'total_transactions' => $totalTransactions,
+            'total_gross_sales'  => $totalGrossSales,
+            'total_cash'         => $totalCash,
+            'total_qris'         => $totalQris,
+            'total_transfer'     => $totalTransfer,
+            'total_digital'      => $totalDigital,
+            'total_discount'     => $totalDiscount,
+            'total_fee_deducted' => $totalFeeDeducted,
+            'total_topup'        => $totalTopupOnDate,
+            'mutations'          => $mutations,
+            'orders'             => $orders->map(function ($o) {
+                return [
+                    'order_number' => $o->order_number,
+                    'time'         => $o->created_at->format('H:i'),
+                    'customer'     => $o->shipping_address['name'] ?? 'Pelanggan Umum',
+                    'method'       => strtoupper($o->shipping_address['payment_method'] ?? ($o->payment->method ?? 'CASH')),
+                    'total'        => (float) $o->total,
+                    'fee'          => (float) (($o->platform_fee ?? 0) + ($o->admin_fee ?? 0)),
+                ];
+            }),
+        ]);
     }
 }
