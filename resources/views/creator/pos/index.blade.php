@@ -1173,7 +1173,8 @@
                                     }
                                 @endphp
                                 <div class="product-card" data-id="{{ $prod->id }}" data-name="{{ strtolower($prod->name) }}"
-                                    data-price="{{ $prodPrice }}" data-category="{{ $catSlug }}" data-image="{{ $imgUrl ?? '' }}"
+                                    data-price="{{ $prodPrice }}" data-category="{{ $catSlug }}"
+                                    data-image="{{ $imgUrl ?? '' }}"
                                     onclick="addToCart({{ $prod->id }}, '{{ addslashes($prod->name) }}', {{ $prodPrice }}, '{{ $imgUrl ? addslashes($imgUrl) : '' }}')">
                                     <div class="product-qty-badge" id="badge-qty-{{ $prod->id }}">0</div>
                                     <div class="product-img-wrapper"
@@ -1490,7 +1491,8 @@
                 <div
                     style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
                     <div>
-                        <div style="font-size:0.68rem; color:#64748b; font-weight:700; text-transform:uppercase;">Saldo Deposit Saat Ini</div>
+                        <div style="font-size:0.68rem; color:#64748b; font-weight:700; text-transform:uppercase;">Saldo
+                            Deposit Saat Ini</div>
                         <div style="font-size:1.15rem; font-weight:900; color:#166534; margin-top:2px;"
                             id="depositModalCurrentBalance">Rp {{ number_format($posBalance, 0, ',', '.') }}</div>
                     </div>
@@ -1499,20 +1501,23 @@
                 </div>
 
                 <!-- Segmented Tabs: Saldo Toko vs QRIS -->
-                <div style="display:flex; background:#f1f5f9; padding:4px; border-radius:12px; margin-bottom:14px; gap:4px;">
+                <div
+                    style="display:flex; background:#f1f5f9; padding:4px; border-radius:12px; margin-bottom:14px; gap:4px;">
                     <button type="button" id="tabDepositStore" onclick="switchDepositMethod('store')"
                         style="flex:1; border:none; padding:7px 10px; border-radius:8px; font-size:0.75rem; font-weight:700; background:#ffffff; color:#0f172a; box-shadow:0 1px 3px rgba(0,0,0,0.08); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; transition:all 0.15s ease;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <polyline points="17 1 21 5 17 9" />
                             <path d="M3 11V9a4 4 0 0 1 4-4h14" />
                             <polyline points="7 23 3 19 7 15" />
                             <path d="M21 13v2a4 4 0 0 1-4 4H3" />
                         </svg>
-                        Pindah dari Saldo Toko
+                        Pindah dari Saldo Utama
                     </button>
                     <button type="button" id="tabDepositQris" onclick="switchDepositMethod('qris')"
                         style="flex:1; border:none; padding:7px 10px; border-radius:8px; font-size:0.75rem; font-weight:700; background:transparent; color:#64748b; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; transition:all 0.15s ease;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <rect x="3" y="3" width="7" height="7" />
                             <rect x="14" y="3" width="7" height="7" />
                             <rect x="14" y="14" width="7" height="7" />
@@ -1525,49 +1530,68 @@
                 <!-- PANEL 1: PINDAH DARI SALDO TOKO -->
                 <div id="panelDepositStore">
                     <!-- Info Box Saldo Toko -->
-                    <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:10px 14px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
+                    <div
+                        style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:10px 14px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
                         <div>
-                            <div style="font-size:0.68rem; color:#166534; font-weight:700; text-transform:uppercase;">Saldo Toko Siap Ditarik</div>
-                            <div style="font-size:1.15rem; font-weight:900; color:#14532d; margin-top:1px;" id="availableStoreBalanceDisplay">Rp {{ number_format($availableStoreBalance, 0, ',', '.') }}</div>
+                            <div style="font-size:0.68rem; color:#166534; font-weight:700; text-transform:uppercase;">Saldo
+                                Siap Ditarik</div>
+                            <div style="font-size:1.15rem; font-weight:900; color:#14532d; margin-top:1px;"
+                                id="availableStoreBalanceDisplay">Rp
+                                {{ number_format($availableStoreBalance, 0, ',', '.') }}
+                            </div>
                         </div>
-                        <span style="font-size:0.68rem; background:#dcfce7; color:#15803d; border:1px solid #86efac; padding:3px 8px; border-radius:999px; font-weight:700;">Instan &amp; Bebas Biaya</span>
+                        <span
+                            style="font-size:0.68rem; background:#dcfce7; color:#15803d; border:1px solid #86efac; padding:3px 8px; border-radius:999px; font-weight:700;">Instan
+                            &amp; Bebas Biaya</span>
                     </div>
 
-                    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:9px 12px; margin-bottom:12px; font-size:0.73rem; color:#1e40af; line-height:1.4;">
-                        ⚡ <strong>Pindah Saldo Toko:</strong> Memindahkan dana penjualan Anda langsung ke deposit POS tanpa perlu bayar QRIS. Saldo siap ditarik otomatis terpotong saat ini juga.
+                    <div
+                        style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:9px 12px; margin-bottom:12px; font-size:0.73rem; color:#1e40af; line-height:1.4;">
+                        ⚡ <strong>Pindah Saldo Toko:</strong> Memindahkan dana penjualan Anda langsung ke deposit POS tanpa
+                        perlu bayar QRIS. Saldo siap ditarik otomatis terpotong saat ini juga.
                     </div>
 
                     @if($availableStoreBalance >= 5000)
                         <!-- Pilihan Nominal Cepat -->
-                        <label style="font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:6px;">Pilih Nominal Pemindahan</label>
+                        <label
+                            style="font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:6px;">Pilih
+                            Nominal Pemindahan</label>
                         <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
                             @foreach([10000, 20000, 50000, 100000] as $preset)
                                 @if($preset <= $availableStoreBalance)
-                                    <button type="button" class="btn-deposit-preset btn-store-preset" onclick="setStoreTransferPreset({{ $preset }})">
+                                    <button type="button" class="btn-deposit-preset btn-store-preset"
+                                        onclick="setStoreTransferPreset({{ $preset }})">
                                         +Rp {{ number_format($preset, 0, ',', '.') }}
                                     </button>
                                 @endif
                             @endforeach
-                            <button type="button" class="btn-deposit-preset btn-store-preset" onclick="setStoreTransferPreset({{ (int) $availableStoreBalance }})" style="background:#e0f2fe; border-color:#7dd3fc; color:#0369a1;">
+                            <button type="button" class="btn-deposit-preset btn-store-preset"
+                                onclick="setStoreTransferPreset({{ (int) $availableStoreBalance }})"
+                                style="background:#e0f2fe; border-color:#7dd3fc; color:#0369a1;">
                                 Semua (Rp {{ number_format($availableStoreBalance, 0, ',', '.') }})
                             </button>
                         </div>
 
                         <!-- Input Nominal Manual -->
                         <div class="form-group mb-0">
-                            <label style="font-size:0.72rem; font-weight:700; color:#334155;">Atau Masukkan Nominal Sendiri (Min. Rp 5.000)</label>
+                            <label style="font-size:0.72rem; font-weight:700; color:#334155;">Atau Masukkan Nominal Sendiri
+                                (Min. Rp 5.000)</label>
                             <div style="position:relative; margin-top:4px;">
-                                <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.88rem; color:#475569;">Rp</span>
+                                <span
+                                    style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.88rem; color:#475569;">Rp</span>
                                 <input type="text" id="storeTransferDisplay" class="form-input"
                                     style="padding-left:42px; height:42px; font-size:1rem; font-weight:800; color:#0f172a;"
                                     value="{{ min(50000, (int) $availableStoreBalance) > 0 ? number_format(min(50000, (int) $availableStoreBalance), 0, ',', '.') : '' }}"
                                     placeholder="0" oninput="handleStoreTransferInput(this)">
-                                <input type="hidden" id="storeTransferVal" value="{{ min(50000, (int) $availableStoreBalance) }}">
+                                <input type="hidden" id="storeTransferVal"
+                                    value="{{ min(50000, (int) $availableStoreBalance) }}">
                             </div>
                         </div>
                     @else
-                        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:10px 12px; font-size:0.75rem; color:#92400e; line-height:1.45;">
-                            Saldo Toko siap ditarik Anda saat ini belum mencapai batas minimal transfer <strong>Rp 5.000</strong>. Silakan pilih tab <strong>Top-Up via QRIS</strong> untuk menambah deposit kasir.
+                        <div
+                            style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:10px 12px; font-size:0.75rem; color:#92400e; line-height:1.45;">
+                            Saldo siap ditarik Anda saat ini belum mencapai batas minimal transfer <strong>Rp 5.000</strong>.
+                            Silakan pilih tab <strong>Top-Up via QRIS</strong> untuk menambah deposit kasir.
                         </div>
                     @endif
                 </div>
@@ -1575,26 +1599,37 @@
                 <!-- PANEL 2: TOP UP VIA QRIS -->
                 <div id="panelDepositQris" style="display:none;">
                     <!-- Info Box QRIS -->
-                    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:9px 12px; margin-bottom:12px; font-size:0.73rem; color:#1e40af; line-height:1.4;">
+                    <div
+                        style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:9px 12px; margin-bottom:12px; font-size:0.73rem; color:#1e40af; line-height:1.4;">
                         Pembayaran top up menggunakan QRIS / Virtual Account Midtrans dan deposit bertambah otomatis.
                     </div>
 
                     <!-- Pilihan Nominal Cepat QRIS -->
-                    <label style="font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:6px;">Pilih Nominal Top Up</label>
+                    <label
+                        style="font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:6px;">Pilih
+                        Nominal Top Up</label>
                     <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; margin-bottom:10px;">
-                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(20000)">Rp 20.000</button>
-                        <button type="button" class="btn-deposit-preset active" onclick="setDepositPreset(50000)">Rp 50.000</button>
-                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(100000)">Rp 100.000</button>
-                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(200000)">Rp 200.000</button>
-                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(300000)">Rp 300.000</button>
-                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(500000)">Rp 500.000</button>
+                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(20000)">Rp
+                            20.000</button>
+                        <button type="button" class="btn-deposit-preset active" onclick="setDepositPreset(50000)">Rp
+                            50.000</button>
+                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(100000)">Rp
+                            100.000</button>
+                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(200000)">Rp
+                            200.000</button>
+                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(300000)">Rp
+                            300.000</button>
+                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(500000)">Rp
+                            500.000</button>
                     </div>
 
                     <!-- Input Nominal Manual QRIS -->
                     <div class="form-group mb-0">
-                        <label style="font-size:0.72rem; font-weight:700; color:#334155;">Atau Masukkan Nominal Lain (Min. Rp 10.000)</label>
+                        <label style="font-size:0.72rem; font-weight:700; color:#334155;">Atau Masukkan Nominal Lain (Min.
+                            Rp 10.000)</label>
                         <div style="position:relative; margin-top:4px;">
-                            <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.88rem; color:#475569;">Rp</span>
+                            <span
+                                style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.88rem; color:#475569;">Rp</span>
                             <input type="text" id="depositAmountDisplay" class="form-input"
                                 style="padding-left:42px; height:42px; font-size:1rem; font-weight:800; color:#0f172a;"
                                 value="50.000" placeholder="50.000" oninput="handleDepositAmountInput(this)">
@@ -1608,9 +1643,10 @@
                 <button type="button" class="btn-outline-bio"
                     style="border-color:#e2e8f0; color:#64748b; padding:0.6rem 1rem; font-size:0.8rem; border-radius:999px !important;"
                     onclick="closeModal('posDepositModal')">Batal</button>
-                
+
                 <!-- Tombol aksi dinamis sesuai panel aktif -->
-                <button type="button" class="btn-submit-green" id="btnSubmitStoreTransfer" onclick="submitStoreToPosTransfer()"
+                <button type="button" class="btn-submit-green" id="btnSubmitStoreTransfer"
+                    onclick="submitStoreToPosTransfer()"
                     style="{{ $availableStoreBalance < 5000 ? 'display:none;' : '' }} flex:1; margin:0; padding:0.65rem 1.25rem; font-size:0.84rem; border-radius:999px !important; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                         <polyline points="17 1 21 5 17 9" />
@@ -1652,32 +1688,39 @@
                 </div>
 
                 <!-- Informasi Pelanggan -->
-                <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1rem;">
-                    <div style="font-size:0.7rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">Info Pelanggan (Opsional)</div>
+                <div
+                    style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1rem;">
+                    <div
+                        style="font-size:0.7rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
+                        Info Pelanggan (Opsional)</div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                         <div>
-                            <label style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">Nama</label>
+                            <label
+                                style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">Nama</label>
                             <input type="text" id="posCustomerName" class="form-input"
-                                style="height:34px; font-size:0.78rem;"
-                                placeholder="Pelanggan Umum">
+                                style="height:34px; font-size:0.78rem;" placeholder="Pelanggan Umum">
                         </div>
                         <div>
-                            <label style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">No. Ref / Catatan / Meja</label>
+                            <label
+                                style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">No.
+                                Ref / Catatan / Meja</label>
                             <input type="text" id="posTableNumber" class="form-input"
-                                style="height:34px; font-size:0.78rem;"
-                                placeholder="Catatan / Ref (Opsional)">
+                                style="height:34px; font-size:0.78rem;" placeholder="Catatan / Ref (Opsional)">
                         </div>
                         <div>
-                            <label style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">No. HP / WA</label>
+                            <label
+                                style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">No.
+                                HP / WA</label>
                             <input type="text" id="posCustomerPhone" class="form-input"
-                                style="height:34px; font-size:0.78rem;"
-                                placeholder="08xxx">
+                                style="height:34px; font-size:0.78rem;" placeholder="08xxx">
                         </div>
                         <div>
-                            <label style="font-size:0.7rem; font-weight:700; color:#166534; display:block; margin-bottom:3px;">Email (E-Receipt otomatis)</label>
+                            <label
+                                style="font-size:0.7rem; font-weight:700; color:#166534; display:block; margin-bottom:3px;">Email
+                                (E-Receipt otomatis)</label>
                             <input type="email" id="posCartCustomerEmail" class="form-input"
-                                style="height:34px; font-size:0.78rem;"
-                                placeholder="contoh@gmail.com" oninput="syncCustomerEmail(this.value)">
+                                style="height:34px; font-size:0.78rem;" placeholder="contoh@gmail.com"
+                                oninput="syncCustomerEmail(this.value)">
                         </div>
                     </div>
                 </div>
@@ -1690,22 +1733,28 @@
                 <div class="pay-option-card {{ $isDepositEmpty ? 'disabled-cash' : 'selected' }}" id="optCash"
                     onclick="{{ $isDepositEmpty ? '' : 'selectPaymentMethod(\'cash\')' }}"
                     style="{{ $isDepositEmpty ? 'background:#f8fafc; border-color:#cbd5e1; opacity:0.6; cursor:not-allowed; pointer-events:none;' : '' }}">
-                    <input type="radio" name="pay_method" value="cash" {{ $isDepositEmpty ? 'disabled' : 'checked' }} style="accent-color:#1eb349;">
+                    <input type="radio" name="pay_method" value="cash" {{ $isDepositEmpty ? 'disabled' : 'checked' }}
+                        style="accent-color:#1eb349;">
                     <div
                         style="width:38px; height:38px; border-radius:50%; background:{{ $isDepositEmpty ? '#f1f5f9' : '#f0fdf4' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <svg width="20" height="20" fill="none" stroke="{{ $isDepositEmpty ? '#94a3b8' : '#1eb349' }}" stroke-width="2" viewBox="0 0 24 24">
+                        <svg width="20" height="20" fill="none" stroke="{{ $isDepositEmpty ? '#94a3b8' : '#1eb349' }}"
+                            stroke-width="2" viewBox="0 0 24 24">
                             <rect x="2" y="6" width="20" height="12" rx="2" />
                             <circle cx="12" cy="12" r="2" />
                         </svg>
                     </div>
                     <div style="flex:1;">
                         <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
-                            <div style="font-size:0.88rem; font-weight:700; color:{{ $isDepositEmpty ? '#64748b' : '#0f172a' }};">Tunai (Cash)</div>
-                            <span id="cashDepositBadge" style="display:{{ $isDepositEmpty ? 'inline-block' : 'none' }}; font-size:0.68rem; font-weight:800; background:#fee2e2; color:#dc2626; border:1px solid #fecaca; padding:2px 8px; border-radius:999px;">
+                            <div
+                                style="font-size:0.88rem; font-weight:700; color:{{ $isDepositEmpty ? '#64748b' : '#0f172a' }};">
+                                Tunai (Cash)</div>
+                            <span id="cashDepositBadge"
+                                style="display:{{ $isDepositEmpty ? 'inline-block' : 'none' }}; font-size:0.68rem; font-weight:800; background:#fee2e2; color:#dc2626; border:1px solid #fecaca; padding:2px 8px; border-radius:999px;">
                                 Saldo Deposit Kurang
                             </span>
                         </div>
-                        <div style="font-size:0.72rem; color:{{ $isDepositEmpty ? '#ef4444' : '#64748b' }}; margin-top:1px;">
+                        <div
+                            style="font-size:0.72rem; color:{{ $isDepositEmpty ? '#ef4444' : '#64748b' }}; margin-top:1px;">
                             {{ $isDepositEmpty ? 'Tidak dapat dipilih karena saldo deposit kosong.' : 'Bayar & hitung kembalian langsung' }}
                         </div>
                     </div>
@@ -1785,8 +1834,10 @@
                 </div>
 
                 <!-- Opsi 2: Non-Tunai / Cashless -->
-                <div class="pay-option-card {{ $isDepositEmpty ? 'selected' : '' }}" id="optCashless" onclick="selectPaymentMethod('cashless')">
-                    <input type="radio" name="pay_method" value="cashless" {{ $isDepositEmpty ? 'checked' : '' }} style="accent-color:#7c3aed;">
+                <div class="pay-option-card {{ $isDepositEmpty ? 'selected' : '' }}" id="optCashless"
+                    onclick="selectPaymentMethod('cashless')">
+                    <input type="radio" name="pay_method" value="cashless" {{ $isDepositEmpty ? 'checked' : '' }}
+                        style="accent-color:#7c3aed;">
                     <div
                         style="width:38px; height:38px; border-radius:50%; background:#f5f3ff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <svg width="20" height="20" fill="none" stroke="#7c3aed" stroke-width="2" viewBox="0 0 24 24">
@@ -1923,15 +1974,19 @@
 
                 <!-- E-Receipt auto-sent notice -->
                 <div class="no-print mt-3 pt-3" style="border-top:1.5px dashed #cbd5e1;">
-                    <div id="receiptEmailAutoNotice" style="display:none; align-items:center; gap:8px; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:10px; padding:9px 12px;">
-                        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                    <div id="receiptEmailAutoNotice"
+                        style="display:none; align-items:center; gap:8px; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:10px; padding:9px 12px;">
+                        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"
+                            style="flex-shrink:0;">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
                         </svg>
                         <div style="font-size:0.75rem; color:#166534; font-weight:600; line-height:1.4;">
                             E-Receipt terkirim otomatis ke <span id="receiptAutoEmail" style="font-weight:800;"></span>
                         </div>
                     </div>
-                    <div id="receiptEmailNoneNotice" style="display:none; font-size:0.72rem; color:#94a3b8; text-align:center;">
+                    <div id="receiptEmailNoneNotice"
+                        style="display:none; font-size:0.72rem; color:#94a3b8; text-align:center;">
                         Tidak ada email pelanggan — E-Receipt tidak dikirim.
                     </div>
                 </div>
@@ -1974,7 +2029,8 @@
                         <h5 style="margin:0; font-size:1rem; font-weight:800; color:#0f172a;">Rekap Shift &amp; Riwayat
                             Kasir POS</h5>
                         <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">
-                            {{ now()->translatedFormat('l, d F Y') }}</div>
+                            {{ now()->translatedFormat('l, d F Y') }}
+                        </div>
                     </div>
                 </div>
                 <button type="button" class="pos-modal-close" onclick="closeModal('posHistoryModal')">&times;</button>
@@ -2020,7 +2076,8 @@
                                 style="font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.04em;">
                                 Total Omset Kotor</div>
                             <div style="font-size:1.25rem; font-weight:900; color:#0f172a; margin-top:2px;">Rp
-                                {{ number_format($todayGrossSales, 0, ',', '.') }}</div>
+                                {{ number_format($todayGrossSales, 0, ',', '.') }}
+                            </div>
                             <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">{{ count($todayOrders) }} pesanan
                                 selesai</div>
                         </div>
@@ -2030,7 +2087,8 @@
                                 style="font-size:0.7rem; font-weight:700; color:#166534; text-transform:uppercase; letter-spacing:0.04em;">
                                 Uang Tunai di Laci (Cash)</div>
                             <div style="font-size:1.25rem; font-weight:900; color:#166534; margin-top:2px;">Rp
-                                {{ number_format($todayCashInDrawer, 0, ',', '.') }}</div>
+                                {{ number_format($todayCashInDrawer, 0, ',', '.') }}
+                            </div>
                             <div style="font-size:0.72rem; color:#166534; margin-top:2px;">Fisik wajib di laci kasir</div>
                         </div>
 
@@ -2039,7 +2097,8 @@
                                 style="font-size:0.7rem; font-weight:700; color:#6d28d9; text-transform:uppercase; letter-spacing:0.04em;">
                                 Pembayaran Digital</div>
                             <div style="font-size:1.25rem; font-weight:900; color:#6d28d9; margin-top:2px;">Rp
-                                {{ number_format($todayDigitalSales, 0, ',', '.') }}</div>
+                                {{ number_format($todayDigitalSales, 0, ',', '.') }}
+                            </div>
                             <div style="font-size:0.72rem; color:#6d28d9; margin-top:2px;">QRIS &amp; Transfer Bank</div>
                         </div>
 
@@ -2048,7 +2107,8 @@
                                 style="font-size:0.7rem; font-weight:700; color:#c2410c; text-transform:uppercase; letter-spacing:0.04em;">
                                 Fee Terpotong Deposit</div>
                             <div style="font-size:1.25rem; font-weight:900; color:#c2410c; margin-top:2px;">Rp
-                                {{ number_format($todayFeeDeducted, 0, ',', '.') }}</div>
+                                {{ number_format($todayFeeDeducted, 0, ',', '.') }}
+                            </div>
                             <div style="font-size:0.72rem; color:#c2410c; margin-top:2px;">Platform fee &amp; admin fee
                             </div>
                         </div>
@@ -2141,7 +2201,8 @@
                                         <td style="padding-left:1.5rem;">
                                             <strong style="color:#0f172a;">#{{ $tOrd->order_number }}</strong>
                                             <div style="font-size:0.73rem; color:#64748b;">
-                                                {{ $tOrd->created_at->format('H:i') }} WIB</div>
+                                                {{ $tOrd->created_at->format('H:i') }} WIB
+                                            </div>
                                         </td>
                                         <td>
                                             <div style="font-weight:700; color:#0f172a;">{{ $tAddr['name'] ?? 'Pelanggan' }}
@@ -2297,12 +2358,14 @@
                 <tr>
                     <td>TUNAI FISIK (Di Laci):</td>
                     <td style="text-align: right; font-weight: bold;">Rp
-                        {{ number_format($todayCashInDrawer, 0, ',', '.') }}</td>
+                        {{ number_format($todayCashInDrawer, 0, ',', '.') }}
+                    </td>
                 </tr>
                 <tr>
                     <td>DIGITAL (QRIS/Transfer):</td>
                     <td style="text-align: right; font-weight: bold;">Rp
-                        {{ number_format($todayDigitalSales, 0, ',', '.') }}</td>
+                        {{ number_format($todayDigitalSales, 0, ',', '.') }}
+                    </td>
                 </tr>
             </table>
 
@@ -2395,21 +2458,21 @@
 
             const toast = document.createElement('div');
             toast.style.cssText = `
-                    background: #0f172a;
-                    color: #ffffff;
-                    padding: 10px 16px;
-                    border-radius: 12px;
-                    font-size: 0.82rem;
-                    font-weight: 600;
-                    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    opacity: 0;
-                    transform: translateY(-10px);
-                    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-                    pointer-events: auto;
-                `;
+                                background: #0f172a;
+                                color: #ffffff;
+                                padding: 10px 16px;
+                                border-radius: 12px;
+                                font-size: 0.82rem;
+                                font-weight: 600;
+                                box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                                opacity: 0;
+                                transform: translateY(-10px);
+                                transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+                                pointer-events: auto;
+                            `;
 
             let iconColor = type === 'success' ? '#1eb349' : (type === 'error' ? '#ef4444' : '#3b82f6');
             toast.innerHTML = `<span style="color:${iconColor}; font-weight:800;">●</span> <span>${escapeHtml(message)}</span>`;
@@ -2568,10 +2631,10 @@
 
             if (cart.length === 0) {
                 container.innerHTML = `
-                        <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.84rem;">
-                            Keranjang masih kosong.<br>Pilih produk di sebelah kiri untuk menambah.
-                        </div>
-                    `;
+                                    <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.84rem;">
+                                        Keranjang masih kosong.<br>Pilih produk di sebelah kiri untuk menambah.
+                                    </div>
+                                `;
                 document.getElementById('btnCheckout').disabled = true;
                 calculateTotals();
                 return;
@@ -2595,34 +2658,34 @@
                 }
 
                 html += `
-                        <div class="cart-item-row">
-                            <div class="cart-item-thumb">
-                                ${item.image ? `
-                                    <img src="${item.image}" alt="${escapeHtml(item.name)}" class="cart-item-img" onerror="this.parentElement.innerHTML='<div class=\\'cart-item-img-fallback\\'><svg width=\\'16\\' height=\\'16\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\' viewBox=\\'0 0 24 24\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\'/><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'/><polyline points=\\'21 15 16 10 5 21\\'/></svg></div>';">
-                                ` : `
-                                    <div class="cart-item-img-fallback">
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                            <circle cx="8.5" cy="8.5" r="1.5"/>
-                                            <polyline points="21 15 16 10 5 21"/>
-                                        </svg>
+                                    <div class="cart-item-row">
+                                        <div class="cart-item-thumb">
+                                            ${item.image ? `
+                                                <img src="${item.image}" alt="${escapeHtml(item.name)}" class="cart-item-img" onerror="this.parentElement.innerHTML='<div class=\\'cart-item-img-fallback\\'><svg width=\\'16\\' height=\\'16\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\' viewBox=\\'0 0 24 24\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\'/><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'/><polyline points=\\'21 15 16 10 5 21\\'/></svg></div>';">
+                                            ` : `
+                                                <div class="cart-item-img-fallback">
+                                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                                        <polyline points="21 15 16 10 5 21"/>
+                                                    </svg>
+                                                </div>
+                                            `}
+                                        </div>
+                                        <div class="cart-item-info">
+                                            <div class="cart-item-title">${escapeHtml(item.name)}</div>
+                                            <div class="cart-item-unit-price">@ Rp ${formatRupiah(item.price)} &bull; Sub: Rp ${formatRupiah(itemSub)}</div>
+                                        </div>
+                                        <div class="cart-qty-ctrl">
+                                            <button type="button" class="btn-qty" onclick="updateQty(${item.id}, -1)">-</button>
+                                            <span class="qty-num">${item.qty}</span>
+                                            <button type="button" class="btn-qty btn-qty-plus" onclick="updateQty(${item.id}, 1)">+</button>
+                                            <button type="button" class="btn text-danger ms-1 p-0" onclick="removeItem(${item.id})" style="border:none; background:none;">
+                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                            </button>
+                                        </div>
                                     </div>
-                                `}
-                            </div>
-                            <div class="cart-item-info">
-                                <div class="cart-item-title">${escapeHtml(item.name)}</div>
-                                <div class="cart-item-unit-price">@ Rp ${formatRupiah(item.price)} &bull; Sub: Rp ${formatRupiah(itemSub)}</div>
-                            </div>
-                            <div class="cart-qty-ctrl">
-                                <button type="button" class="btn-qty" onclick="updateQty(${item.id}, -1)">-</button>
-                                <span class="qty-num">${item.qty}</span>
-                                <button type="button" class="btn-qty btn-qty-plus" onclick="updateQty(${item.id}, 1)">+</button>
-                                <button type="button" class="btn text-danger ms-1 p-0" onclick="removeItem(${item.id})" style="border:none; background:none;">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                </button>
-                            </div>
-                        </div>
-                    `;
+                                `;
             });
 
             container.innerHTML = html;
@@ -2903,7 +2966,7 @@
                                                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                                                     },
                                                     body: JSON.stringify({ order_id: data.order.id })
-                                                }).catch(() => {});
+                                                }).catch(() => { });
                                             }
                                             showPosAlert('Pembayaran gagal. Transaksi dibatalkan dan stok dikembalikan.', 'Gagal Pembayaran', 'error');
                                         },
@@ -2918,7 +2981,7 @@
                                                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                                                     },
                                                     body: JSON.stringify({ order_id: data.order.id })
-                                                }).catch(() => {});
+                                                }).catch(() => { });
                                             }
                                             showPosAlert('Pop-up pembayaran ditutup. Transaksi dibatalkan dan stok dikembalikan.', 'Pembayaran Dibatalkan', 'warning');
                                         }
@@ -2974,15 +3037,15 @@
             (order.items || []).forEach(item => {
                 const itemQty = item.qty ?? item.quantity ?? 1;
                 itemsHtml += `
-                        <tr>
-                            <td class="text-start" style="font-weight:700;">
-                                ${escapeHtml(item.product_name)}
-                                <div style="font-size:10px; font-weight:normal; color:#444;">@ Rp ${formatRupiah(item.price)}</div>
-                            </td>
-                            <td class="text-center" style="vertical-align:top;">${itemQty}</td>
-                            <td class="text-end" style="font-weight:700; vertical-align:top;">Rp ${formatRupiah(item.subtotal)}</td>
-                        </tr>
-                    `;
+                                    <tr>
+                                        <td class="text-start" style="font-weight:700;">
+                                            ${escapeHtml(item.product_name)}
+                                            <div style="font-size:10px; font-weight:normal; color:#444;">@ Rp ${formatRupiah(item.price)}</div>
+                                        </td>
+                                        <td class="text-center" style="vertical-align:top;">${itemQty}</td>
+                                        <td class="text-end" style="font-weight:700; vertical-align:top;">Rp ${formatRupiah(item.subtotal)}</td>
+                                    </tr>
+                                `;
             });
             document.querySelector('#recItemsTable tbody').innerHTML = itemsHtml;
 
@@ -3107,24 +3170,24 @@
                 return;
             }
             printWin.document.write(`<!DOCTYPE html>
-    <html>
-    <head>
-        <title>Struk POS</title>
-        <style>
-            @page { size: 80mm auto; margin: 0; }
-            body { font-family: 'Courier New', monospace; font-size: 11px; color: #000; margin: 0; padding: 5mm; width: 70mm; background: #fff; }
-            table { width: 100%; border-collapse: collapse; }
-            .text-end { text-align: right; }
-            .text-center { text-align: center; }
-            .text-start { text-align: left; }
-            .no-print { display: none !important; }
-            img { display: none !important; }
-        </style>
-    </head>
-    <body>
-        ${content}
-    </body>
-    </html>`);
+                <html>
+                <head>
+                    <title>Struk POS</title>
+                    <style>
+                        @page { size: 80mm auto; margin: 0; }
+                        body { font-family: 'Courier New', monospace; font-size: 11px; color: #000; margin: 0; padding: 5mm; width: 70mm; background: #fff; }
+                        table { width: 100%; border-collapse: collapse; }
+                        .text-end { text-align: right; }
+                        .text-center { text-align: center; }
+                        .text-start { text-align: left; }
+                        .no-print { display: none !important; }
+                        img { display: none !important; }
+                    </style>
+                </head>
+                <body>
+                    ${content}
+                </body>
+                </html>`);
             printWin.document.close();
             printWin.focus();
             setTimeout(() => {
@@ -3239,28 +3302,28 @@
                 },
                 body: JSON.stringify({ amount: amount })
             })
-            .then(res => res.json())
-            .then(data => {
-                btn.disabled = false;
-                btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></svg> Pindahkan ke Deposit Sekarang`;
+                .then(res => res.json())
+                .then(data => {
+                    btn.disabled = false;
+                    btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></svg> Pindahkan ke Deposit Sekarang`;
 
-                if (data.success) {
-                    closeModal('posDepositModal');
-                    updateBalanceDisplay(data.new_pos_balance);
-                    currentStoreBalance = data.available_balance !== undefined ? data.available_balance : Math.max(0, currentStoreBalance - amount);
-                    const storeDisp = document.getElementById('availableStoreBalanceDisplay');
-                    if (storeDisp) storeDisp.innerText = 'Rp ' + formatRupiah(currentStoreBalance);
+                    if (data.success) {
+                        closeModal('posDepositModal');
+                        updateBalanceDisplay(data.new_pos_balance);
+                        currentStoreBalance = data.available_balance !== undefined ? data.available_balance : Math.max(0, currentStoreBalance - amount);
+                        const storeDisp = document.getElementById('availableStoreBalanceDisplay');
+                        if (storeDisp) storeDisp.innerText = 'Rp ' + formatRupiah(currentStoreBalance);
 
-                    showPosAlert(data.message || `Berhasil memindahkan Rp ${formatRupiah(amount)} ke Deposit POS!`, 'Transfer Berhasil', 'success');
-                } else {
-                    showPosAlert(data.message || 'Gagal memindahkan saldo.', 'Gagal', 'error');
-                }
-            })
-            .catch(err => {
-                btn.disabled = false;
-                btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></svg> Pindahkan ke Deposit Sekarang`;
-                showPosAlert('Terjadi kesalahan jaringan: ' + err.message, 'Kesalahan Jaringan', 'error');
-            });
+                        showPosAlert(data.message || `Berhasil memindahkan Rp ${formatRupiah(amount)} ke Deposit POS!`, 'Transfer Berhasil', 'success');
+                    } else {
+                        showPosAlert(data.message || 'Gagal memindahkan saldo.', 'Gagal', 'error');
+                    }
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></svg> Pindahkan ke Deposit Sekarang`;
+                    showPosAlert('Terjadi kesalahan jaringan: ' + err.message, 'Kesalahan Jaringan', 'error');
+                });
         }
 
         function setDepositPreset(val) {
@@ -3500,24 +3563,24 @@
             }
 
             printWin.document.write(`<!DOCTYPE html>
-    <html>
-    <head>
-        <title>Rekap Closing Shift - {{ $storeName }}</title>
-        <style>
-            @page { size: 80mm auto; margin: 0; }
-            body { font-family: 'Courier New', monospace; font-size: 11px; color: #000; margin: 0; padding: 5mm; width: 70mm; background: #fff; }
-            table { width: 100%; border-collapse: collapse; }
-            td { padding: 1px 0; }
-            .text-end, [style*="text-align: right"] { text-align: right; }
-            .text-center, [style*="text-align: center"] { text-align: center; }
-            .no-print { display: none !important; }
-            img { display: none !important; }
-        </style>
-    </head>
-    <body>
-        ${content}
-    </body>
-    </html>`);
+                <html>
+                <head>
+                    <title>Rekap Closing Shift - {{ $storeName }}</title>
+                    <style>
+                        @page { size: 80mm auto; margin: 0; }
+                        body { font-family: 'Courier New', monospace; font-size: 11px; color: #000; margin: 0; padding: 5mm; width: 70mm; background: #fff; }
+                        table { width: 100%; border-collapse: collapse; }
+                        td { padding: 1px 0; }
+                        .text-end, [style*="text-align: right"] { text-align: right; }
+                        .text-center, [style*="text-align: center"] { text-align: center; }
+                        .no-print { display: none !important; }
+                        img { display: none !important; }
+                    </style>
+                </head>
+                <body>
+                    ${content}
+                </body>
+                </html>`);
             printWin.document.close();
             printWin.focus();
             setTimeout(() => {

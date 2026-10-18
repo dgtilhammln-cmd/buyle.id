@@ -118,7 +118,7 @@ class CreatorStoreController extends Controller
         $storeKeywords = implode(', ', array_filter([
             $profile->store_name,
             $profile->store_name . ' buyle.id',
-            'toko ' . $profile->store_name,
+            'Creator ' . $profile->store_name,
             'beli ' . $profile->store_name,
             $topProductNames,
             'creator digital marketplace',

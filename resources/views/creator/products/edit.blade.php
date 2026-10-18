@@ -177,7 +177,7 @@
             border-radius: 12px;
             border: 1.5px solid #e2e8f0;
             background-color: #ffffff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
             transition: all 0.2s ease;
         }
 
@@ -436,13 +436,19 @@
                                     <label class="form-label">Tipe Produk <span>*</span></label>
                                     <select name="product_type" id="productTypeSelect" class="form-input"
                                         onchange="toggleProductTypeFields(this.value)" required>
-                                        <option value="external_link" {{ old('product_type', $product->product_type) == 'external_link' ? 'selected' : '' }}>Produk Digital / Link Access (Marketplace & Store)</option>
+                                        <option value="external_link" {{ old('product_type', $product->product_type) == 'external_link' ? 'selected' : '' }}>Produk Digital /
+                                            Link Access (Marketplace & Store)</option>
                                         <option value="ticket" {{ old('product_type', $product->product_type) == 'ticket' ? 'selected' : '' }}>Tiket Event / Wisata / Webinar (Marketplace & Store)</option>
                                         <option value="service" {{ old('product_type', $product->product_type) == 'service' ? 'selected' : '' }}>Jasa / Layanan / Service (Khusus Storefront Creator)</option>
-                                        <option value="physical" {{ old('product_type', $product->product_type) == 'physical' ? 'selected' : '' }}>Produk Fisik / Barang / UMKM (Khusus Storefront Creator)</option>
-                                        <option value="makanan" {{ old('product_type', $product->product_type) == 'makanan' ? 'selected' : '' }}>Makanan / Minuman / Kuliner (Khusus POS / Storefront Creator)</option>
+                                        <option value="physical" {{ old('product_type', $product->product_type) == 'physical' ? 'selected' : '' }}>Produk Fisik / Barang / UMKM (Khusus Storefront Creator)
+                                        </option>
+                                        <option value="makanan" {{ old('product_type', $product->product_type) == 'makanan' ? 'selected' : '' }}>Makanan / Minuman / Kuliner (Khusus POS / Storefront Creator)
+                                        </option>
                                     </select>
-                                    <span style="font-size: 0.75rem; color: #64748B; margin-top: 0.25rem; display: block;">* Catatan: Marketplace buyle.id HANYA menampilkan 2 Tipe Produk yaitu: 1) Produk Digital / Link Access dan 2) Tiket Event / Wisata / Webinar. Tipe produk lainnya hanya tampil di Bio Link / Storefront pribadi Anda.</span>
+                                    <span style="font-size: 0.75rem; color: #64748B; margin-top: 0.25rem; display: block;">*
+                                        Catatan: Marketplace buyle.id HANYA menampilkan 2 Tipe Produk yaitu: 1) Produk
+                                        Digital / Link Access dan 2) Tiket Event / Wisata / Webinar. Tipe produk lainnya
+                                        hanya tampil di Bio Link / Storefront pribadi Anda.</span>
                                 </div>
 
                                 <div class="form-group full" id="buyleCheckoutToggleWrap"
@@ -538,62 +544,73 @@
                                         </div>
 
                                         <div class="form-group full" id="onlineLocationWrap" style="display:none;">
-                                            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:1.25rem; display:flex; flex-direction:column; gap:1rem; box-shadow:0 1px 3px rgba(0,0,0,0.02);">
-                                                
+                                            <div
+                                                style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:1.25rem; display:flex; flex-direction:column; gap:1rem; box-shadow:0 1px 3px rgba(0,0,0,0.02);">
+
                                                 <!-- Pilihan Platform: Banyak pilihan, hanya bisa pilih 1 -->
                                                 <div>
-                                                    <label class="form-label" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem;">
-                                                        <span style="display:flex; align-items:center; gap:0.4rem; font-weight:700;">
-                                                            <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                                    <label class="form-label"
+                                                        style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem;">
+                                                        <span
+                                                            style="display:flex; align-items:center; gap:0.4rem; font-weight:700;">
+                                                            <svg width="15" height="15" fill="none" stroke="#166534"
+                                                                stroke-width="2" viewBox="0 0 24 24">
+                                                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                                                                <line x1="8" y1="21" x2="16" y2="21" />
+                                                                <line x1="12" y1="17" x2="12" y2="21" />
+                                                            </svg>
                                                             Pilih Platform Acara Online <span>*</span>
                                                         </span>
-                                                        <span style="font-size:0.75rem; color:#64748b; font-weight:500;">Pilih salah satu</span>
+                                                        <span
+                                                            style="font-size:0.75rem; color:#64748b; font-weight:500;">Pilih
+                                                            salah satu</span>
                                                     </label>
 
-                                                    <div class="platform-chips-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:0.5rem;">
+                                                    <div class="platform-chips-grid"
+                                                        style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:0.5rem;">
                                                         @php
                                                             $selPlat = old('event_platform', $product->event_platform ?? 'Zoom Meeting');
                                                             $platforms = [
                                                                 [
-                                                                    'id' => 'zoom', 
-                                                                    'name' => 'Zoom Meeting', 
-                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#2D8CFF"><path d="M4.5 5.5A2.5 2.5 0 0 0 2 8v8a2.5 2.5 0 0 0 2.5 2.5h9a2.5 2.5 0 0 0 2.5-2.5v-1.793l3.646 2.605A1 1 0 0 0 21 16V8a1 1 0 0 0-1.354-.912L16 9.693V8a2.5 2.5 0 0 0-2.5-2.5h-9z"/></svg>', 
-                                                                    'placeholder' => 'https://zoom.us/j/123456789 atau link room Zoom', 
+                                                                    'id' => 'zoom',
+                                                                    'name' => 'Zoom Meeting',
+                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#2D8CFF"><path d="M4.5 5.5A2.5 2.5 0 0 0 2 8v8a2.5 2.5 0 0 0 2.5 2.5h9a2.5 2.5 0 0 0 2.5-2.5v-1.793l3.646 2.605A1 1 0 0 0 21 16V8a1 1 0 0 0-1.354-.912L16 9.693V8a2.5 2.5 0 0 0-2.5-2.5h-9z"/></svg>',
+                                                                    'placeholder' => 'https://zoom.us/j/123456789 atau link room Zoom',
                                                                     'label' => 'Tautan Link Zoom Meeting'
                                                                 ],
                                                                 [
-                                                                    'id' => 'gmeet', 
-                                                                    'name' => 'Google Meet', 
-                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24"><path d="M15 8l4.5-3.375A1 1 0 0 1 21 5.425v13.15a1 1 0 0 1-1.5.8L15 16V8z" fill="#00AC47"/><rect x="3" y="6" width="12" height="12" rx="2" fill="#00832D"/></svg>', 
-                                                                    'placeholder' => 'https://meet.google.com/abc-defg-hij', 
+                                                                    'id' => 'gmeet',
+                                                                    'name' => 'Google Meet',
+                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24"><path d="M15 8l4.5-3.375A1 1 0 0 1 21 5.425v13.15a1 1 0 0 1-1.5.8L15 16V8z" fill="#00AC47"/><rect x="3" y="6" width="12" height="12" rx="2" fill="#00832D"/></svg>',
+                                                                    'placeholder' => 'https://meet.google.com/abc-defg-hij',
                                                                     'label' => 'Tautan Link Google Meet'
                                                                 ],
                                                                 [
-                                                                    'id' => 'wagroup', 
-                                                                    'name' => 'WhatsApp Group Event', 
-                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.556 4.117 1.528 5.849L0 24l6.335-1.508A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.154-1.422l-.37-.218-3.764.896.924-3.667-.243-.381A9.953 9.953 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/></svg>', 
-                                                                    'placeholder' => 'https://chat.whatsapp.com/...', 
+                                                                    'id' => 'wagroup',
+                                                                    'name' => 'WhatsApp Group Event',
+                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.556 4.117 1.528 5.849L0 24l6.335-1.508A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.154-1.422l-.37-.218-3.764.896.924-3.667-.243-.381A9.953 9.953 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/></svg>',
+                                                                    'placeholder' => 'https://chat.whatsapp.com/...',
                                                                     'label' => 'Tautan Undangan Grup WhatsApp Event'
                                                                 ],
                                                                 [
-                                                                    'id' => 'youtube', 
-                                                                    'name' => 'YouTube Live Streaming', 
-                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>', 
-                                                                    'placeholder' => 'https://youtube.com/live/...', 
+                                                                    'id' => 'youtube',
+                                                                    'name' => 'YouTube Live Streaming',
+                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
+                                                                    'placeholder' => 'https://youtube.com/live/...',
                                                                     'label' => 'Tautan YouTube Live Streaming'
                                                                 ],
                                                                 [
-                                                                    'id' => 'teams', 
-                                                                    'name' => 'Microsoft Teams', 
-                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#5059C9"><path d="M19.5 7.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm1.5 2h-3c-.55 0-1 .45-1 1v4.5a3.5 3.5 0 0 0 7 0V10.5c0-.55-.45-1-1-1zM14 6a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm2 2H8c-.55 0-1 .45-1 1v7.5A4.5 4.5 0 0 0 11.5 21h5a4.5 4.5 0 0 0 4.5-4.5V9c0-.55-.45-1-1-1z"/></svg>', 
-                                                                    'placeholder' => 'https://teams.microsoft.com/l/...', 
+                                                                    'id' => 'teams',
+                                                                    'name' => 'Microsoft Teams',
+                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#5059C9"><path d="M19.5 7.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm1.5 2h-3c-.55 0-1 .45-1 1v4.5a3.5 3.5 0 0 0 7 0V10.5c0-.55-.45-1-1-1zM14 6a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm2 2H8c-.55 0-1 .45-1 1v7.5A4.5 4.5 0 0 0 11.5 21h5a4.5 4.5 0 0 0 4.5-4.5V9c0-.55-.45-1-1-1z"/></svg>',
+                                                                    'placeholder' => 'https://teams.microsoft.com/l/...',
                                                                     'label' => 'Tautan Microsoft Teams'
                                                                 ],
                                                                 [
-                                                                    'id' => 'other', 
-                                                                    'name' => 'Webinar / Platform Lainnya', 
-                                                                    'svg' => '<svg width="17" height="17" fill="none" stroke="#0284c7" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>', 
-                                                                    'placeholder' => 'https://...', 
+                                                                    'id' => 'other',
+                                                                    'name' => 'Webinar / Platform Lainnya',
+                                                                    'svg' => '<svg width="17" height="17" fill="none" stroke="#0284c7" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+                                                                    'placeholder' => 'https://...',
                                                                     'label' => 'Tautan Akses Event Online'
                                                                 ],
                                                             ];
@@ -602,14 +619,18 @@
                                                         @foreach($platforms as $p)
                                                             @php $isActive = ($selPlat == $p['name']); @endphp
                                                             <label class="platform-chip-item" style="cursor:pointer; margin:0;">
-                                                                <input type="radio" name="event_platform" value="{{ $p['name'] }}" {{ $isActive ? 'checked' : '' }}
+                                                                <input type="radio" name="event_platform"
+                                                                    value="{{ $p['name'] }}" {{ $isActive ? 'checked' : '' }}
                                                                     style="display:none;"
                                                                     data-placeholder="{{ $p['placeholder'] }}"
                                                                     data-label="{{ $p['label'] }}"
                                                                     onchange="selectOnlinePlatform(this)">
-                                                                <div class="platform-chip-box {{ $isActive ? 'active' : '' }}" style="display:flex; align-items:center; gap:0.45rem; padding:0.55rem 0.75rem; border:1.5px solid {{ $isActive ? '#166534' : '#e2e8f0' }}; border-radius:10px; background:{{ $isActive ? '#f0fdf4' : '#f8fafc' }}; transition:all 0.15s ease;">
-                                                                    <span style="display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">{!! $p['svg'] !!}</span>
-                                                                    <span style="font-size:0.8rem; font-weight:{{ $isActive ? '700' : '600' }}; color:{{ $isActive ? '#166534' : '#334155' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p['name'] }}</span>
+                                                                <div class="platform-chip-box {{ $isActive ? 'active' : '' }}"
+                                                                    style="display:flex; align-items:center; gap:0.45rem; padding:0.55rem 0.75rem; border:1.5px solid {{ $isActive ? '#166534' : '#e2e8f0' }}; border-radius:10px; background:{{ $isActive ? '#f0fdf4' : '#f8fafc' }}; transition:all 0.15s ease;">
+                                                                    <span
+                                                                        style="display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">{!! $p['svg'] !!}</span>
+                                                                    <span
+                                                                        style="font-size:0.8rem; font-weight:{{ $isActive ? '700' : '600' }}; color:{{ $isActive ? '#166534' : '#334155' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p['name'] }}</span>
                                                                 </div>
                                                             </label>
                                                         @endforeach
@@ -617,23 +638,35 @@
                                                 </div>
 
                                                 <!-- 1 Input Link yang Menyesuaikan Platform Pilihan -->
-                                                <div id="dynamicLinkFieldWrap" style="padding-top:0.75rem; border-top:1px dashed #e2e8f0;">
+                                                <div id="dynamicLinkFieldWrap"
+                                                    style="padding-top:0.75rem; border-top:1px dashed #e2e8f0;">
                                                     @php
                                                         $activePlatObj = collect($platforms)->firstWhere('name', $selPlat) ?? $platforms[0];
                                                     @endphp
-                                                    <label class="form-label" id="dynamicLinkLabel" style="display:flex; align-items:center; gap:0.4rem;">
-                                                        <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24">
-                                                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                                                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                                                    <label class="form-label" id="dynamicLinkLabel"
+                                                        style="display:flex; align-items:center; gap:0.4rem;">
+                                                        <svg width="15" height="15" fill="none" stroke="#166534"
+                                                            stroke-width="2" viewBox="0 0 24 24">
+                                                            <path
+                                                                d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                                            <path
+                                                                d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                                                         </svg>
                                                         <span>{{ $activePlatObj['label'] }}</span> <span>*</span>
                                                     </label>
                                                     <input type="text" name="event_location_online" id="eventLocationOnline"
-                                                        value="{{ old('event_location_online', $product->event_type == 'online' ? $product->event_location : '') }}" class="form-input"
+                                                        value="{{ old('event_location_online', $product->event_type == 'online' ? $product->event_location : '') }}"
+                                                        class="form-input"
                                                         placeholder="{{ $activePlatObj['placeholder'] }}">
-                                                    <span class="form-hint" style="color:#64748b; margin-top:0.35rem; display:flex; align-items:center; gap:5px;">
-                                                        <svg width="13" height="13" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                                                        <span>Tautan ini aman & hanya dapat diakses oleh pembeli tiket resmi setelah transaksi berhasil.</span>
+                                                    <span class="form-hint"
+                                                        style="color:#64748b; margin-top:0.35rem; display:flex; align-items:center; gap:5px;">
+                                                        <svg width="13" height="13" fill="none" stroke="#64748b"
+                                                            stroke-width="2" viewBox="0 0 24 24">
+                                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                                        </svg>
+                                                        <span>Tautan ini aman & hanya dapat diakses oleh pembeli tiket resmi
+                                                            setelah transaksi berhasil.</span>
                                                     </span>
                                                 </div>
 
@@ -641,25 +674,39 @@
                                         </div>
 
                                         <div class="form-group" style="margin-top:0.5rem;">
-                                            <label class="form-label" style="display:flex; align-items:center; gap:0.4rem; color:#b45309;">
-                                                <svg width="15" height="15" fill="none" stroke="#d97706" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                            <label class="form-label"
+                                                style="display:flex; align-items:center; gap:0.4rem; color:#b45309;">
+                                                <svg width="15" height="15" fill="none" stroke="#d97706" stroke-width="2"
+                                                    viewBox="0 0 24 24">
+                                                    <circle cx="12" cy="12" r="10" />
+                                                    <polyline points="12 6 12 12 16 14" />
+                                                </svg>
                                                 Jadwal Mulai Penjualan (Ticket War / Live Drop)
                                             </label>
                                             <input type="datetime-local" name="ticket_war_start"
                                                 value="{{ old('ticket_war_start', $product->ticket_war_start?->format('Y-m-d\TH:i')) }}"
                                                 class="form-input">
-                                            <span class="form-hint">Kosongkan jika tiket langsung bisa dibeli saat ini. Isi jika ingin ada countdown hitung mundur sebelum tombol beli aktif otomatis.</span>
+                                            <span class="form-hint">Kosongkan jika tiket langsung bisa dibeli saat ini. Isi
+                                                jika ingin ada countdown hitung mundur sebelum tombol beli aktif
+                                                otomatis.</span>
                                         </div>
 
                                         <div class="form-group" style="margin-top:0.5rem;">
                                             <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
-                                                <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                                <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2"
+                                                    viewBox="0 0 24 24">
+                                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                                    <circle cx="9" cy="7" r="4" />
+                                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                                </svg>
                                                 Maksimal Tiket Per Transaksi (Anti Calo)
                                             </label>
                                             <input type="number" name="max_tickets_per_order" min="1" max="20"
                                                 value="{{ old('max_tickets_per_order', $product->max_tickets_per_order ?? 4) }}"
                                                 class="form-input" placeholder="Default: 4">
-                                            <span class="form-hint">Mencegah bot atau calo memborong tiket sekaligus. Default 4 tiket per order.</span>
+                                            <span class="form-hint">Mencegah bot atau calo memborong tiket sekaligus.
+                                                Default 4 tiket per order.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -790,24 +837,40 @@
                                 </div>
 
                                 @if(auth()->user()->creatorProfile?->is_exclusive || ($product->seller && $product->seller->creatorProfile?->is_exclusive))
-                                <div class="form-group full" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(217, 119, 6, 0.04)); border: 1.5px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #b45309; font-weight: 700; font-size: 0.95rem;">
-                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                        Fitur Creator Eksklusif — Statistik Bintang & Penjual
-                                    </div>
-                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                                        <div class="form-group" style="margin-bottom:0;">
-                                            <label class="form-label" style="color:#78350f;">Rating Produk (0.0 - 5.0)</label>
-                                            <input type="number" name="rating" value="{{ old('rating', $product->rating) }}" class="form-input" min="0" max="5" step="0.1" placeholder="Kosongkan jika otomatis dari ulasan" style="border-color: rgba(245, 158, 11, 0.4);">
-                                            <span class="form-hint" style="color:#92400e;">Atur rating manual (opsional, kosongkan agar otomatis dihitung dari ulasan asli pembeli).</span>
+                                    <div class="form-group full"
+                                        style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(217, 119, 6, 0.04)); border: 1.5px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+                                        <div
+                                            style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #b45309; font-weight: 700; font-size: 0.95rem;">
+                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <path
+                                                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                            </svg>
+                                            Fitur Creator Eksklusif — Statistik Bintang & Penjual
                                         </div>
-                                        <div class="form-group" style="margin-bottom:0;">
-                                            <label class="form-label" style="color:#78350f;">Jumlah Terjual (Sales)</label>
-                                            <input type="number" name="sold_count" value="{{ old('sold_count', $product->sold_count ?? 0) }}" class="form-input" min="0" step="1" placeholder="0" style="border-color: rgba(245, 158, 11, 0.4);">
-                                            <span class="form-hint" style="color:#92400e;">Atur angka jumlah produk terjual secara manual.</span>
+                                        <div
+                                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                            <div class="form-group" style="margin-bottom:0;">
+                                                <label class="form-label" style="color:#78350f;">Rating Produk (0.0 -
+                                                    5.0)</label>
+                                                <input type="number" name="rating" value="{{ old('rating', $product->rating) }}"
+                                                    class="form-input" min="0" max="5" step="0.1"
+                                                    placeholder="Kosongkan jika otomatis dari ulasan"
+                                                    style="border-color: rgba(245, 158, 11, 0.4);">
+                                                <span class="form-hint" style="color:#92400e;">Atur rating manual (opsional,
+                                                    kosongkan agar otomatis dihitung dari ulasan asli pembeli).</span>
+                                            </div>
+                                            <div class="form-group" style="margin-bottom:0;">
+                                                <label class="form-label" style="color:#78350f;">Jumlah Terjual (Sales)</label>
+                                                <input type="number" name="sold_count"
+                                                    value="{{ old('sold_count', $product->sold_count ?? 0) }}"
+                                                    class="form-input" min="0" step="1" placeholder="0"
+                                                    style="border-color: rgba(245, 158, 11, 0.4);">
+                                                <span class="form-hint" style="color:#92400e;">Atur angka jumlah produk terjual
+                                                    secara manual.</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 @endif
 
                                 <div class="form-group full">
@@ -835,7 +898,7 @@
                                 </label>
                                 <div>
                                     <div class="form-label" style="font-size:0.9rem;">Status Aktif</div>
-                                    <div class="form-hint">Tampilkan produk ini di etalase toko.</div>
+                                    <div class="form-hint">Tampilkan produk ini.</div>
                                 </div>
                             </div>
                         </div>
@@ -886,15 +949,20 @@
                                 <span class="form-hint">Biarkan kosong jika tidak ingin mengubah thumbnail saat ini.</span>
                             </div>
 
-                            <div class="form-group" id="posterUploadWrap" style="display:none; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1.25rem; margin-bottom:1.25rem;">
-                                <label class="form-label" style="color:#166534; font-weight:800; display:flex; align-items:center; gap:0.4rem;">
-                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24">
-                                        <rect x="2" y="4" width="20" height="16" rx="2"/>
-                                        <polygon points="10,9 15,12 10,15"/>
+                            <div class="form-group" id="posterUploadWrap"
+                                style="display:none; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1.25rem; margin-bottom:1.25rem;">
+                                <label class="form-label"
+                                    style="color:#166534; font-weight:800; display:flex; align-items:center; gap:0.4rem;">
+                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                                        <polygon points="10,9 15,12 10,15" />
                                     </svg>
                                     Upload Poster Event (Landscape 16:9) <span style="color:#ef4444;">*</span>
                                 </label>
-                                <span class="form-hint" style="margin-bottom:0.75rem; color:#15803d; font-weight:600;">Khusus tipe produk Tiket Event / Wisata / Webinar. Diupload dalam format landscape 16:9.</span>
+                                <span class="form-hint"
+                                    style="margin-bottom:0.75rem; color:#15803d; font-weight:600;">Khusus tipe produk Tiket
+                                    Event / Wisata / Webinar. Diupload dalam format landscape 16:9.</span>
                                 <div class="img-upload-area" id="posterDropzone"
                                     onclick="document.getElementById('poster-input').click()"
                                     style="margin-bottom:0.75rem; background:#fff; {{ $product->og_image ? 'display:none;' : '' }}">
@@ -906,7 +974,8 @@
                                             <path d="M22 15l-5-5-8 8" />
                                         </svg>
                                         <p style="font-size:0.82rem; color:#1E293B; margin-top:0.4rem; font-weight:700;">
-                                            {{ $product->og_image ? 'Ganti Poster Event Landscape (16:9)' : 'Pilih Poster Event Landscape (16:9)' }}</p>
+                                            {{ $product->og_image ? 'Ganti Poster Event Landscape (16:9)' : 'Pilih Poster Event Landscape (16:9)' }}
+                                        </p>
                                     </div>
                                 </div>
                                 <div id="posterPreviewWrap"
@@ -1216,17 +1285,17 @@
         function addFaqRow() {
             const container = document.getElementById('faqContainer');
             const html = `
-                <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                    <div class="form-group">
-                        <label class="form-label">Pertanyaan</label>
-                        <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Jawaban</label>
-                        <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
-                    </div>
-                    <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                </div>`;
+                    <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                        <div class="form-group">
+                            <label class="form-label">Pertanyaan</label>
+                            <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Jawaban</label>
+                            <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
+                        </div>
+                        <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                    </div>`;
             container.insertAdjacentHTML('beforeend', html);
             faqIdx++;
         }
@@ -1460,7 +1529,7 @@
                     if (physicalWrap) physicalWrap.style.display = 'none';
                     if (weightInput) weightInput.removeAttribute('required');
                 }
-                
+
                 // Hide Category, Sub-Category, and Group for Barang & Makanan
                 if (categoryWrap) categoryWrap.style.display = 'none';
                 if (subCatWrap) subCatWrap.style.display = 'none';

@@ -425,10 +425,10 @@ class AdminCreatorResourceController extends Controller
         if ($creatorProfile) {
             if (!empty($creatorProfile->store_banner_1)) {
                 $assets[] = [
-                    'type'       => 'Banner Toko (Utama)',
+                    'type'       => 'Banner Creator (Utama)',
                     'raw_path'   => $creatorProfile->store_banner_1,
                     'used_in'    => [
-                        ['label' => 'Halaman Bio Toko', 'sub' => 'Banner Header 1', 'url' => url('/' . $creatorProfile->store_slug)]
+                        ['label' => 'Halaman Bio Creator', 'sub' => 'Banner Header 1', 'url' => url('/' . $creatorProfile->store_slug)]
                     ],
                     'product_id' => null,
                     'block_id'   => null,
