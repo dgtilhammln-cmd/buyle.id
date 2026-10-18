@@ -14,64 +14,67 @@
         font-family: 'Montserrat', sans-serif;
     }
 
-    /* ── Banner Pengantar ────────────────────────────────────── */
+    /* ── Banner Pengantar (Signature Buyle Green Theme) ───────── */
     .app-intro-card {
-        background: linear-gradient(135deg, #0b120c 0%, #152217 60%, #1b3120 100%);
+        background: linear-gradient(135deg, #1eb349 0%, #179e3f 50%, #15803d 100%);
         border-radius: 20px;
-        padding: 1.75rem 2rem;
+        padding: 1.85rem 2.25rem;
         color: #ffffff;
         position: relative;
         overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 10px 30px rgba(30, 179, 73, 0.22);
     }
 
     .app-intro-card::before {
         content: '';
         position: absolute;
-        top: -60px;
-        right: -60px;
-        width: 220px;
-        height: 220px;
-        background: radial-gradient(circle, rgba(30, 179, 73, 0.28) 0%, rgba(30, 179, 73, 0) 70%);
+        top: -80px;
+        right: -80px;
+        width: 260px;
+        height: 260px;
+        background: radial-gradient(circle, rgba(165, 207, 55, 0.45) 0%, rgba(165, 207, 55, 0) 70%);
         pointer-events: none;
     }
 
     .app-intro-content {
         position: relative;
         z-index: 2;
-        max-width: 720px;
+        max-width: 760px;
     }
 
     .app-intro-tag {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        background: rgba(30, 179, 73, 0.18);
-        border: 1px solid rgba(30, 179, 73, 0.45);
-        color: #86efac;
-        font-size: 0.72rem;
-        font-weight: 700;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1.5px solid rgba(255, 255, 255, 0.35);
+        color: #ffffff;
+        font-size: 0.74rem;
+        font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        padding: 4px 12px;
+        padding: 5px 14px;
         border-radius: 999px;
-        margin-bottom: 0.85rem;
+        margin-bottom: 0.95rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
 
     .app-intro-title {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         font-weight: 800;
         color: #ffffff;
-        margin: 0 0 0.5rem;
+        margin: 0 0 0.6rem;
         line-height: 1.3;
+        letter-spacing: -0.01em;
     }
 
     .app-intro-desc {
-        font-size: 0.88rem;
-        color: #cbd5e1;
+        font-size: 0.92rem;
+        color: #f0fdf4;
         line-height: 1.6;
         margin: 0;
+        font-weight: 500;
     }
 
     /* ── App Cards Grid ───────────────────────────────────────── */
@@ -215,31 +218,33 @@
         flex: 1;
     }
 
-    /* ── Action Button ────────────────────────────────────────── */
+    /* ── Action Button (Matching Buyle Signature Pill Button) ──── */
     .btn-launch-app {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 0.5rem;
+        gap: 0.6rem;
         width: 100%;
-        padding: 0.85rem 1.25rem;
-        background: #0f172a;
-        color: #ffffff;
-        font-size: 0.85rem;
-        font-weight: 700;
-        border-radius: 12px;
+        padding: 0.85rem 1.4rem;
+        background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
+        color: #ffffff !important;
+        font-size: 0.88rem;
+        font-weight: 800;
+        border-radius: 999px;
         text-decoration: none;
         border: none;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         box-sizing: border-box;
+        box-shadow: 0 4px 16px rgba(30, 179, 73, 0.35);
+        font-family: 'Montserrat', sans-serif;
     }
 
     .btn-launch-app:hover {
-        background: linear-gradient(135deg, #1eb349 0%, #15803d 100%);
-        color: #ffffff;
-        box-shadow: 0 6px 18px rgba(30, 179, 73, 0.35);
-        transform: translateY(-1px);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(30, 179, 73, 0.45);
+        filter: brightness(1.04);
+        color: #ffffff !important;
     }
 
     .btn-launch-app svg {
@@ -247,7 +252,7 @@
     }
 
     .btn-launch-app:hover svg {
-        transform: translateX(3px);
+        transform: translateX(4px);
     }
 
     /* ── Footer Info Box ──────────────────────────────────────── */
@@ -333,9 +338,22 @@
 
                 {{-- Logo / Placeholder Area --}}
                 <div class="app-logo-area">
-                    <div class="app-logo-box" style="border-color: {{ $app['border_color'] }}; background: {{ $app['bg_gradient'] }};">
-                        @if(!empty($app['logo']))
-                            <img src="{{ asset('storage/' . $app['logo']) }}" alt="{{ $app['name'] }}" class="app-logo-img">
+                    @php
+                        $rawLogo = $app['logo'] ?? null;
+                        $logoUrl = null;
+                        if (!empty($rawLogo)) {
+                            if (\Illuminate\Support\Str::startsWith($rawLogo, ['http://', 'https://'])) {
+                                $logoUrl = $rawLogo;
+                            } elseif (\Illuminate\Support\Str::startsWith($rawLogo, 'storage/')) {
+                                $logoUrl = asset($rawLogo);
+                            } else {
+                                $logoUrl = asset('storage/' . $rawLogo);
+                            }
+                        }
+                    @endphp
+                    <div class="app-logo-box" style="border-color: {{ $app['border_color'] }}; background: {{ !empty($logoUrl) ? '#ffffff' : $app['bg_gradient'] }};">
+                        @if(!empty($logoUrl))
+                            <img src="{{ $logoUrl }}" alt="{{ $app['name'] }}" class="app-logo-img">
                         @else
                             {{-- High End SVG Placeholder Icon --}}
                             <div class="app-logo-fallback" style="color: {{ $app['theme_color'] }};">

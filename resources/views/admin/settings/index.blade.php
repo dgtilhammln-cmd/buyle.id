@@ -1652,10 +1652,9 @@ function testAiConnection() {
           <img src="{{ asset('storage/'.$settings['app_logo_webbuilder']) }}" alt="Logo Web Builder" style="height:44px;width:44px;object-fit:contain;border-radius:8px;border:1px solid #E2E8F0;background:#fff;">
           <div style="flex:1;min-width:0;">
             <span style="font-size:.75rem;color:#64748B;display:block;">Logo aktif</span>
-            <button type="button" onclick="if(confirm('Hapus logo Web Builder?')){this.closest('form')&&this.closest('form').querySelector('[name=remove_app_logo_webbuilder]')&&(this.closest('form').querySelector('[name=remove_app_logo_webbuilder]').value='1');document.getElementById('settings-form').querySelector('[name=remove_app_logo_webbuilder]').value='1';document.getElementById('settings-form').submit();}" style="font-size:.72rem;color:#dc2626;background:none;border:none;cursor:pointer;padding:0;margin-top:2px;">Hapus Logo</button>
+            <button type="button" onclick="if(confirm('Hapus logo Web Builder?')){let i=document.createElement('input');i.type='hidden';i.name='remove_app_logo_webbuilder';i.value='1';document.getElementById('settings-form').appendChild(i);document.getElementById('settings-form').submit();}" style="font-size:.72rem;color:#dc2626;background:none;border:none;cursor:pointer;padding:0;margin-top:2px;font-weight:700;">Hapus Logo</button>
           </div>
         </div>
-        <input type="hidden" name="remove_app_logo_webbuilder" value="0">
         @endif
         <label style="font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:.5rem;">Upload Logo Baru</label>
         <input type="file" name="app_logo_webbuilder" class="form-input" accept="image/*,.svg" style="padding:.5rem;">
@@ -1678,10 +1677,9 @@ function testAiConnection() {
           <img src="{{ asset('storage/'.$settings['app_logo_pos']) }}" alt="Logo Buyle POS" style="height:44px;width:44px;object-fit:contain;border-radius:8px;border:1px solid #E2E8F0;background:#fff;">
           <div style="flex:1;min-width:0;">
             <span style="font-size:.75rem;color:#64748B;display:block;">Logo aktif</span>
-            <button type="button" onclick="if(confirm('Hapus logo POS?')){document.getElementById('settings-form').querySelector('[name=remove_app_logo_pos]').value='1';document.getElementById('settings-form').submit();}" style="font-size:.72rem;color:#dc2626;background:none;border:none;cursor:pointer;padding:0;margin-top:2px;">Hapus Logo</button>
+            <button type="button" onclick="if(confirm('Hapus logo POS?')){let i=document.createElement('input');i.type='hidden';i.name='remove_app_logo_pos';i.value='1';document.getElementById('settings-form').appendChild(i);document.getElementById('settings-form').submit();}" style="font-size:.72rem;color:#dc2626;background:none;border:none;cursor:pointer;padding:0;margin-top:2px;font-weight:700;">Hapus Logo</button>
           </div>
         </div>
-        <input type="hidden" name="remove_app_logo_pos" value="0">
         @endif
         <label style="font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:.5rem;">Upload Logo Baru</label>
         <input type="file" name="app_logo_pos" class="form-input" accept="image/*,.svg" style="padding:.5rem;">
@@ -1704,10 +1702,9 @@ function testAiConnection() {
           <img src="{{ asset('storage/'.$settings['app_logo_eticket']) }}" alt="Logo Buyle e-Ticket" style="height:44px;width:44px;object-fit:contain;border-radius:8px;border:1px solid #E2E8F0;background:#fff;">
           <div style="flex:1;min-width:0;">
             <span style="font-size:.75rem;color:#64748B;display:block;">Logo aktif</span>
-            <button type="button" onclick="if(confirm('Hapus logo e-Ticket?')){document.getElementById('settings-form').querySelector('[name=remove_app_logo_eticket]').value='1';document.getElementById('settings-form').submit();}" style="font-size:.72rem;color:#dc2626;background:none;border:none;cursor:pointer;padding:0;margin-top:2px;">Hapus Logo</button>
+            <button type="button" onclick="if(confirm('Hapus logo e-Ticket?')){let i=document.createElement('input');i.type='hidden';i.name='remove_app_logo_eticket';i.value='1';document.getElementById('settings-form').appendChild(i);document.getElementById('settings-form').submit();}" style="font-size:.72rem;color:#dc2626;background:none;border:none;cursor:pointer;padding:0;margin-top:2px;font-weight:700;">Hapus Logo</button>
           </div>
         </div>
-        <input type="hidden" name="remove_app_logo_eticket" value="0">
         @endif
         <label style="font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:.5rem;">Upload Logo Baru</label>
         <input type="file" name="app_logo_eticket" class="form-input" accept="image/*,.svg" style="padding:.5rem;">

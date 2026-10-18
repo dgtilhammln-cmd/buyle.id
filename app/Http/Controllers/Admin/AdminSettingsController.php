@@ -20,18 +20,18 @@ class AdminSettingsController extends Controller
     public function update(Request $request)
     {
         $imageKeys = ['hero_bg_image', 'hero_main_image', 'hero_secondary_image', 'about_image', 'about_c3_image', 'og_image_default', 'logo', 'favicon', 'qr_logo', 'coverage_map', 'ad_product_sidebar_1_image', 'ad_product_sidebar_2_image', 'adsense_custom_image', 'landscape_banner', 'app_logo_webbuilder', 'app_logo_pos', 'app_logo_eticket'];
-        $data      = $request->except(['_token', '_method']);
+        $data      = $request->except(array_merge(['_token', '_method'], $imageKeys));
 
-        // Handle deletion of app logos if requested
+        // Handle explicit deletion of app logos if requested
         foreach (['app_logo_webbuilder', 'app_logo_pos', 'app_logo_eticket'] as $appLogoKey) {
-            if ($request->has('remove_' . $appLogoKey)) {
+            if ($request->input('remove_' . $appLogoKey) === '1' || $request->input('remove_' . $appLogoKey) === 1) {
                 $oldPath = Setting::get($appLogoKey);
                 if ($oldPath && Storage::disk('public')->exists($oldPath)) {
                     Storage::disk('public')->delete($oldPath);
                 }
                 Setting::set($appLogoKey, '', 'image');
-                unset($data['remove_' . $appLogoKey]);
             }
+            unset($data['remove_' . $appLogoKey]);
         }
 
         // Explicitly handle all cs_* (coming soon / maintenance) keys
@@ -176,6 +176,9 @@ class AdminSettingsController extends Controller
                     $path = $this->storeWebPNoCrop($file, 'settings', 800, 800, 95);
                 }
                 Setting::set($key, $path, 'image');
+                Setting::clearCache();
+                \Illuminate\Support\Facades\Cache::forget("setting_v_{$key}");
+                \Illuminate\Support\Facades\Cache::forget('all_settings_v2');
                 continue;
             }
 
