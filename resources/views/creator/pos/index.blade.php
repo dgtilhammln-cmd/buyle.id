@@ -258,7 +258,11 @@
             margin: 6px 0 12px 0;
             padding: 2px;
         }
-        .pos-category-pills-wrap::-webkit-scrollbar { display: none; }
+
+        .pos-category-pills-wrap::-webkit-scrollbar {
+            display: none;
+        }
+
         .pos-cat-pill {
             display: inline-flex;
             align-items: center;
@@ -278,17 +282,20 @@
             box-shadow: none;
             flex-shrink: 0;
         }
+
         .pos-cat-pill:hover {
             border-color: #cbd5e1;
             background: #f8fafc;
             color: #0f172a;
         }
+
         .pos-cat-pill.active {
             background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             color: #ffffff !important;
             border-color: transparent;
             box-shadow: 0 2px 8px rgba(30, 179, 73, 0.25);
         }
+
         .pos-cat-pill .pos-cat-count {
             background: rgba(0, 0, 0, 0.06);
             color: inherit;
@@ -299,6 +306,7 @@
             margin-left: 2px;
             line-height: 1.2;
         }
+
         .pos-cat-pill.active .pos-cat-count {
             background: rgba(255, 255, 255, 0.25);
             color: #ffffff;
@@ -790,21 +798,32 @@
         }
 
         /* Force Payment Gateway Snap iframe / modal on top of backdrop blur */
-        #snap-container, iframe[src*="midtrans"], iframe[id*="snap"], .snap-modal, #snap-midtrans {
+        #snap-container,
+        iframe[src*="midtrans"],
+        iframe[id*="snap"],
+        .snap-modal,
+        #snap-midtrans {
             z-index: 999999 !important;
         }
 
         /* ── POS Lightweight CSS Shimmer Skeletons ──────────────── */
         @keyframes posSkeletonShimmer {
-            0% { background-position: -600px 0; }
-            100% { background-position: 600px 0; }
+            0% {
+                background-position: -600px 0;
+            }
+
+            100% {
+                background-position: 600px 0;
+            }
         }
+
         .pos-skel-bone {
             background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
             background-size: 1200px 100%;
             animation: posSkeletonShimmer 1.5s infinite linear;
             border-radius: 6px;
         }
+
         .pos-skel-card {
             background: #ffffff;
             border: 1.5px solid #f1f5f9;
@@ -820,19 +839,29 @@
 @section('topbar_actions')
     <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
         <!-- Widget Saldo Deposit Kasir POS -->
-        <div style="display:flex; align-items:center; gap:0.5rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:999px; padding:4px 12px 4px 10px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-            <div style="width:26px; height:26px; border-radius:999px; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534; flex-shrink:0;">
+        <div
+            style="display:flex; align-items:center; gap:0.5rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:999px; padding:4px 12px 4px 10px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+            <div
+                style="width:26px; height:26px; border-radius:999px; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534; flex-shrink:0;">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <rect x="2" y="5" width="20" height="14" rx="2"/>
-                    <line x1="2" y1="10" x2="22" y2="10"/>
+                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
                 </svg>
             </div>
             <div style="display:flex; flex-direction:column; line-height:1.15;">
-                <span style="font-size:0.65rem; color:#64748b; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Deposit POS</span>
-                <span id="posBalanceDisplay" style="font-size:0.85rem; font-weight:800; color:{{ $posBalance < 10000 ? '#dc2626' : '#166534' }};">Rp {{ number_format($posBalance, 0, ',', '.') }}</span>
+                <span
+                    style="font-size:0.65rem; color:#64748b; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Deposit
+                    POS</span>
+                <span id="posBalanceDisplay"
+                    style="font-size:0.85rem; font-weight:800; color:{{ $posBalance < 10000 ? '#dc2626' : '#166534' }};">Rp
+                    {{ number_format($posBalance, 0, ',', '.') }}</span>
             </div>
-            <button type="button" onclick="openDepositModal()" style="margin-left:4px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; border:none; border-radius:999px; font-size:0.72rem; font-weight:800; padding:4px 10px; cursor:pointer; display:flex; align-items:center; gap:3px; box-shadow:0 2px 6px rgba(30,179,73,0.3); transition:all 0.15s ease;">
-                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <button type="button" onclick="openDepositModal()"
+                style="margin-left:4px; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; border:none; border-radius:999px; font-size:0.72rem; font-weight:800; padding:4px 10px; cursor:pointer; display:flex; align-items:center; gap:3px; box-shadow:0 2px 6px rgba(30,179,73,0.3); transition:all 0.15s ease;">
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
                 Isi Saldo
             </button>
         </div>
@@ -902,10 +931,12 @@
                     <div class="product-grid">
                         @for($i = 0; $i < 8; $i++)
                             <div class="pos-skel-card">
-                                <div class="pos-skel-bone" style="width:100%; aspect-ratio:1/1; border-radius:12px; margin-bottom:0.6rem;"></div>
+                                <div class="pos-skel-bone"
+                                    style="width:100%; aspect-ratio:1/1; border-radius:12px; margin-bottom:0.6rem;"></div>
                                 <div class="pos-skel-bone" style="width:80%; height:13px; margin-bottom:0.35rem;"></div>
                                 <div class="pos-skel-bone" style="width:50%; height:11px; margin-bottom:0.6rem;"></div>
-                                <div class="pos-skel-bone" style="width:65%; height:16px; border-radius:4px; margin-top:auto;"></div>
+                                <div class="pos-skel-bone" style="width:65%; height:16px; border-radius:4px; margin-top:auto;">
+                                </div>
                             </div>
                         @endfor
                     </div>
@@ -944,7 +975,8 @@
                     <!-- Cart Item Rows Skeleton (3 items) -->
                     <div style="margin: 1.25rem 0; display:flex; flex-direction:column; gap:0.75rem;">
                         @for($i = 0; $i < 3; $i++)
-                            <div style="display:flex; align-items:center; justify-content:space-between; padding:0.6rem; border-radius:12px; background:#f8fafc; border:1px solid #f1f5f9;">
+                            <div
+                                style="display:flex; align-items:center; justify-content:space-between; padding:0.6rem; border-radius:12px; background:#f8fafc; border:1px solid #f1f5f9;">
                                 <div style="display:flex; flex-direction:column; gap:4px; flex:1;">
                                     <div class="pos-skel-bone" style="width:65%; height:13px;"></div>
                                     <div class="pos-skel-bone" style="width:40%; height:11px;"></div>
@@ -955,7 +987,8 @@
                     </div>
 
                     <!-- Summary Box Skeleton -->
-                    <div style="background:#f8fafc; border-radius:16px; padding:1rem; border:1.5px solid #e2e8f0; margin-bottom:1.25rem; display:flex; flex-direction:column; gap:0.6rem;">
+                    <div
+                        style="background:#f8fafc; border-radius:16px; padding:1rem; border:1.5px solid #e2e8f0; margin-bottom:1.25rem; display:flex; flex-direction:column; gap:0.6rem;">
                         <div style="display:flex; justify-content:space-between;">
                             <div class="pos-skel-bone" style="width:70px; height:12px;"></div>
                             <div class="pos-skel-bone" style="width:90px; height:12px;"></div>
@@ -964,7 +997,8 @@
                             <div class="pos-skel-bone" style="width:80px; height:12px;"></div>
                             <div class="pos-skel-bone" style="width:60px; height:12px;"></div>
                         </div>
-                        <div style="border-top:1px dashed #cbd5e1; padding-top:0.6rem; margin-top:0.2rem; display:flex; justify-content:space-between; align-items:center;">
+                        <div
+                            style="border-top:1px dashed #cbd5e1; padding-top:0.6rem; margin-top:0.2rem; display:flex; justify-content:space-between; align-items:center;">
                             <div class="pos-skel-bone" style="width:90px; height:16px;"></div>
                             <div class="pos-skel-bone" style="width:120px; height:20px;"></div>
                         </div>
@@ -979,307 +1013,426 @@
 
     <!-- POS Real Content Wrapper -->
     <div id="pos-real-content" style="opacity:0; transition:opacity 0.25s ease;">
-    <!-- POS Main Grid Wrapper -->
-    <div class="pos-wrapper">
-        <!-- LEFT COLUMN: Product Search & Food Menu Grid -->
-        <div>
-            <div class="prof-card">
-                <div class="prof-card-head">
-                    <div class="d-flex align-items-center gap-2">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <rect x="4" y="3" width="16" height="18" rx="2" />
-                            <line x1="8" y1="7" x2="16" y2="7" />
-                            <line x1="8" y1="11" x2="10" y2="11" />
-                        </svg>
-                        KATALOG PRODUK
-                    </div>
-                    <span class="badge" id="posMenuCountBadge"
-                        style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-weight:700; padding:5px 12px; border-radius:20px; font-size:0.75rem;">
-                        {{ count($products) }} Produk Tersedia
-                    </span>
-                </div>
-
-                <div class="prof-card-body">
-                    <!-- Search Bar Input -->
-                    <div class="search-input-wrap">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
-                            viewBox="0 0 24 24">
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                        </svg>
-                        <input type="text" id="posProductSearch" class="form-input"
-                            placeholder="Cari nama produk / item..." oninput="filterProducts()">
+        <!-- POS Main Grid Wrapper -->
+        <div class="pos-wrapper">
+            <!-- LEFT COLUMN: Product Search & Food Menu Grid -->
+            <div>
+                <div class="prof-card">
+                    <div class="prof-card-head">
+                        <div class="d-flex align-items-center gap-2">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <rect x="4" y="3" width="16" height="18" rx="2" />
+                                <line x1="8" y1="7" x2="16" y2="7" />
+                                <line x1="8" y1="11" x2="10" y2="11" />
+                            </svg>
+                            KATALOG PRODUK
+                        </div>
+                        <span class="badge" id="posMenuCountBadge"
+                            style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-weight:700; padding:5px 12px; border-radius:20px; font-size:0.75rem;">
+                            {{ count($products) }} Produk Tersedia
+                        </span>
                     </div>
 
-                    <!-- Filter Kategori Premium (Instant 0ms Client-Side Filtering) -->
-                    <div class="pos-category-pills-wrap">
-                        <button type="button" class="pos-cat-pill active" data-cat="all" onclick="setPosCategoryFilter('all', this)">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                            Semua Produk
-                            <span class="pos-cat-count" id="catCountAll">0</span>
-                        </button>
-                        <button type="button" class="pos-cat-pill" data-cat="physical" onclick="setPosCategoryFilter('physical', this)">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-                            Produk Fisik / Barang
-                            <span class="pos-cat-count" id="catCountPhysical">0</span>
-                        </button>
-                        <button type="button" class="pos-cat-pill" data-cat="fnb" onclick="setPosCategoryFilter('fnb', this)">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-                            Makanan &amp; Minuman
-                            <span class="pos-cat-count" id="catCountFnb">0</span>
-                        </button>
-                    </div>
+                    <div class="prof-card-body">
+                        <!-- Search Bar Input -->
+                        <div class="search-input-wrap">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                            <input type="text" id="posProductSearch" class="form-input"
+                                placeholder="Cari nama produk / item..." oninput="filterProducts()">
+                        </div>
 
-                    <!-- Products Grid -->
-                    <div class="product-grid" id="productGridContainer">
-                        @forelse($products as $prod)
-                            @php
-                                $prodPrice = (float) ($prod->sale_price ?: $prod->price);
-                                $nameLower = strtolower($prod->name);
-                                $imgUrl = null;
-                                if (isset($prod->image_url) && !empty($prod->image_url) && !str_contains($prod->image_url, 'service-default')) {
-                                    $imgUrl = $prod->image_url;
-                                } elseif (!empty($prod->image) && strlen(trim($prod->image)) > 1) {
-                                    $rawImg = trim($prod->image);
-                                    if (\Illuminate\Support\Str::startsWith($rawImg, ['http://', 'https://'])) {
-                                        $imgUrl = $rawImg;
-                                    } elseif (\Illuminate\Support\Str::startsWith($rawImg, ['storage/', '/storage/'])) {
-                                        $imgUrl = asset(ltrim($rawImg, '/'));
-                                    } else {
-                                        $imgUrl = asset('storage/' . ltrim($rawImg, '/'));
-                                    }
-                                }
-
-                                // Category Classification Slug
-                                $pType = strtolower($prod->product_type ?? $prod->type ?? 'physical');
-                                $catName = strtolower($prod->category?->name ?? '');
-
-                                if (in_array($pType, ['digital', 'service', 'ticket', 'external_link', 'digital_download', 'virtual']) || in_array($catName, ['digital', 'jasa', 'tiket', 'virtual'])) {
-                                    $catSlug = 'digital';
-                                } elseif ($pType === 'makanan' || $pType === 'fnb' || in_array($catName, ['makanan', 'minuman', 'kuliner', 'fnb', 'food', 'resto', 'dapur']) || \Illuminate\Support\Str::contains($nameLower, ['es', 'kopi', 'teh', 'jus', 'air', 'boba', 'drink', 'minuman', 'nasi', 'mie', 'ayam', 'bebek', 'daging', 'ikan', 'sate', 'bakso', 'soto', 'roti', 'kue', 'donut', 'snack', 'pisang', 'toast', 'burger', 'pizza', 'alpukat', 'susu'])) {
-                                    $catSlug = 'fnb';
-                                } else {
-                                    $catSlug = 'physical';
-                                }
-
-                                // Clean Light Neutral Theme for Placeholder Cards
-                                $themeBg = '#f8fafc';
-                                $themeColor = '#475569';
-                                $themeBorder = '#e2e8f0';
-                                $badgeText = 'PRODUK';
-                                $iconType = 'item';
-
-                                if ($catSlug === 'digital') {
-                                    $badgeText = 'DIGITAL';
-                                    $iconType = 'digital';
-                                } elseif (\Illuminate\Support\Str::contains($nameLower, ['es', 'kopi', 'teh', 'jus', 'air', 'boba', 'drink', 'minuman', 'jeruk', 'lemon', 'syrup', 'coffee', 'tea', 'milk', 'susu', 'soda', 'alpukat'])) {
-                                    $badgeText = 'MINUMAN';
-                                    $iconType = 'drink';
-                                } elseif (\Illuminate\Support\Str::contains($nameLower, ['roti', 'kue', 'donut', 'snack', 'pisang', 'toast', 'cake', 'waffle', 'pancake', 'keju', 'cokelat', 'crepes', 'martabak'])) {
-                                    $badgeText = 'SNACK';
-                                    $iconType = 'snack';
-                                } elseif (\Illuminate\Support\Str::contains($nameLower, ['nasi', 'mie', 'ayam', 'bebek', 'daging', 'ikan', 'sate', 'bakso', 'soto', 'gudeg', 'bento', 'dimsum', 'burger', 'pizza', 'seafood', 'makanan'])) {
-                                    $badgeText = 'MAKANAN';
-                                    $iconType = 'dish';
-                                }
-                            @endphp
-                            <div class="product-card" data-id="{{ $prod->id }}" data-name="{{ strtolower($prod->name) }}"
-                                data-price="{{ $prodPrice }}" data-category="{{ $catSlug }}"
-                                onclick="addToCart({{ $prod->id }}, '{{ addslashes($prod->name) }}', {{ $prodPrice }})">
-                                <div class="product-qty-badge" id="badge-qty-{{ $prod->id }}">0</div>
-                                <div class="product-img-wrapper" style="@if(!$imgUrl) background: {{ $themeBg }}; border: 1px solid {{ $themeBorder }}; @endif">
-                                    @if($imgUrl)
-                                        <img src="{{ $imgUrl }}" alt="{{ $prod->name }}" class="product-img" loading="lazy"
-                                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                        <div class="product-placeholder-wrap" style="display:none; background: {{ $themeBg }}; width:100%; height:100%; align-items:center; justify-content:center; flex-direction:column; gap:4px;">
-                                            @if($iconType === 'drink')
-                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
-                                            @elseif($iconType === 'snack')
-                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                                            @elseif($iconType === 'dish')
-                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a1 1 0 0 1 1 1v1a8 8 0 0 1-8 8H10a8 8 0 0 1-8-8v-1a1 1 0 0 1 1-1z"/><path d="M12 2a5 5 0 0 0-5 5h10a5 5 0 0 0-5-5z"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
-                                            @elseif($iconType === 'digital')
-                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                                            @else
-                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-                                            @endif
-                                            <span style="font-size:0.62rem; font-weight:800; color:{{ $themeColor }}; letter-spacing:0.05em; text-transform:uppercase;">{{ $badgeText }}</span>
-                                        </div>
-                                    @else
-                                        <div class="product-placeholder-wrap" style="display:flex; background: {{ $themeBg }}; width:100%; height:100%; align-items:center; justify-content:center; flex-direction:column; gap:4px;">
-                                            @if($iconType === 'drink')
-                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
-                                            @elseif($iconType === 'snack')
-                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                                            @elseif($iconType === 'dish')
-                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a1 1 0 0 1 1 1v1a8 8 0 0 1-8 8H10a8 8 0 0 1-8-8v-1a1 1 0 0 1 1-1z"/><path d="M12 2a5 5 0 0 0-5 5h10a5 5 0 0 0-5-5z"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
-                                            @elseif($iconType === 'digital')
-                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                                            @else
-                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-                                            @endif
-                                            <span style="font-size:0.62rem; font-weight:800; color:{{ $themeColor }}; letter-spacing:0.05em; text-transform:uppercase;">{{ $badgeText }}</span>
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="product-name">{{ $prod->name }}</div>
-                                <div class="product-price">Rp {{ number_format($prodPrice, 0, ',', '.') }}</div>
-                            </div>
-                        @empty
-                        @endforelse
-
-                        <!-- Empty State Container for zero results -->
-                        <div id="posEmptyStateContainer" style="display: none; grid-column: 1 / -1; width: 100%; flex-direction: column; align-items: center; justify-content: center; padding: 3.5rem 1.5rem; text-align: center; background: #ffffff; border: 2px dashed #cbd5e1; border-radius: 24px; margin: 1rem 0; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
-                            <style>
-                                @keyframes floatPulseIcon {
-                                    0% { transform: translateY(0px) scale(1); box-shadow: 0 4px 14px rgba(30,179,73,0.15); }
-                                    50% { transform: translateY(-8px) scale(1.04); box-shadow: 0 12px 24px rgba(30,179,73,0.3); }
-                                    100% { transform: translateY(0px) scale(1); box-shadow: 0 4px 14px rgba(30,179,73,0.15); }
-                                }
-                            </style>
-                            <div style="width: 76px; height: 76px; border-radius: 24px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1.5px solid #bbf7d0; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; animation: floatPulseIcon 3.2s ease-in-out infinite;">
-                                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        <!-- Filter Kategori Premium (Instant 0ms Client-Side Filtering) -->
+                        <div class="pos-category-pills-wrap">
+                            <button type="button" class="pos-cat-pill active" data-cat="all"
+                                onclick="setPosCategoryFilter('all', this)">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="7" height="7" />
+                                    <rect x="14" y="3" width="7" height="7" />
+                                    <rect x="14" y="14" width="7" height="7" />
+                                    <rect x="3" y="14" width="7" height="7" />
                                 </svg>
+                                Semua Produk
+                                <span class="pos-cat-count" id="catCountAll">0</span>
+                            </button>
+                            <button type="button" class="pos-cat-pill" data-cat="physical"
+                                onclick="setPosCategoryFilter('physical', this)">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                                </svg>
+                                Produk Fisik / Barang
+                                <span class="pos-cat-count" id="catCountPhysical">0</span>
+                            </button>
+                            <button type="button" class="pos-cat-pill" data-cat="fnb"
+                                onclick="setPosCategoryFilter('fnb', this)">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+                                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+                                    <line x1="6" y1="1" x2="6" y2="4" />
+                                    <line x1="10" y1="1" x2="10" y2="4" />
+                                    <line x1="14" y1="1" x2="14" y2="4" />
+                                </svg>
+                                Makanan &amp; Minuman
+                                <span class="pos-cat-count" id="catCountFnb">0</span>
+                            </button>
+                        </div>
+
+                        <!-- Products Grid -->
+                        <div class="product-grid" id="productGridContainer">
+                            @forelse($products as $prod)
+                                @php
+                                    $prodPrice = (float) ($prod->sale_price ?: $prod->price);
+                                    $nameLower = strtolower($prod->name);
+                                    $imgUrl = null;
+                                    if (isset($prod->image_url) && !empty($prod->image_url) && !str_contains($prod->image_url, 'service-default')) {
+                                        $imgUrl = $prod->image_url;
+                                    } elseif (!empty($prod->image) && strlen(trim($prod->image)) > 1) {
+                                        $rawImg = trim($prod->image);
+                                        if (\Illuminate\Support\Str::startsWith($rawImg, ['http://', 'https://'])) {
+                                            $imgUrl = $rawImg;
+                                        } elseif (\Illuminate\Support\Str::startsWith($rawImg, ['storage/', '/storage/'])) {
+                                            $imgUrl = asset(ltrim($rawImg, '/'));
+                                        } else {
+                                            $imgUrl = asset('storage/' . ltrim($rawImg, '/'));
+                                        }
+                                    }
+
+                                    // Category Classification Slug
+                                    $pType = strtolower($prod->product_type ?? $prod->type ?? 'physical');
+                                    $catName = strtolower($prod->category?->name ?? '');
+
+                                    if (in_array($pType, ['digital', 'service', 'ticket', 'external_link', 'digital_download', 'virtual']) || in_array($catName, ['digital', 'jasa', 'tiket', 'virtual'])) {
+                                        $catSlug = 'digital';
+                                    } elseif ($pType === 'makanan' || $pType === 'fnb' || in_array($catName, ['makanan', 'minuman', 'kuliner', 'fnb', 'food', 'resto', 'dapur']) || \Illuminate\Support\Str::contains($nameLower, ['es', 'kopi', 'teh', 'jus', 'air', 'boba', 'drink', 'minuman', 'nasi', 'mie', 'ayam', 'bebek', 'daging', 'ikan', 'sate', 'bakso', 'soto', 'roti', 'kue', 'donut', 'snack', 'pisang', 'toast', 'burger', 'pizza', 'alpukat', 'susu'])) {
+                                        $catSlug = 'fnb';
+                                    } else {
+                                        $catSlug = 'physical';
+                                    }
+
+                                    // Clean Light Neutral Theme for Placeholder Cards
+                                    $themeBg = '#f8fafc';
+                                    $themeColor = '#475569';
+                                    $themeBorder = '#e2e8f0';
+                                    $badgeText = 'PRODUK';
+                                    $iconType = 'item';
+
+                                    if ($catSlug === 'digital') {
+                                        $badgeText = 'DIGITAL';
+                                        $iconType = 'digital';
+                                    } elseif (\Illuminate\Support\Str::contains($nameLower, ['es', 'kopi', 'teh', 'jus', 'air', 'boba', 'drink', 'minuman', 'jeruk', 'lemon', 'syrup', 'coffee', 'tea', 'milk', 'susu', 'soda', 'alpukat'])) {
+                                        $badgeText = 'MINUMAN';
+                                        $iconType = 'drink';
+                                    } elseif (\Illuminate\Support\Str::contains($nameLower, ['roti', 'kue', 'donut', 'snack', 'pisang', 'toast', 'cake', 'waffle', 'pancake', 'keju', 'cokelat', 'crepes', 'martabak'])) {
+                                        $badgeText = 'SNACK';
+                                        $iconType = 'snack';
+                                    } elseif (\Illuminate\Support\Str::contains($nameLower, ['nasi', 'mie', 'ayam', 'bebek', 'daging', 'ikan', 'sate', 'bakso', 'soto', 'gudeg', 'bento', 'dimsum', 'burger', 'pizza', 'seafood', 'makanan'])) {
+                                        $badgeText = 'MAKANAN';
+                                        $iconType = 'dish';
+                                    }
+                                @endphp
+                                <div class="product-card" data-id="{{ $prod->id }}" data-name="{{ strtolower($prod->name) }}"
+                                    data-price="{{ $prodPrice }}" data-category="{{ $catSlug }}"
+                                    onclick="addToCart({{ $prod->id }}, '{{ addslashes($prod->name) }}', {{ $prodPrice }})">
+                                    <div class="product-qty-badge" id="badge-qty-{{ $prod->id }}">0</div>
+                                    <div class="product-img-wrapper"
+                                        style="@if(!$imgUrl) background: {{ $themeBg }}; border: 1px solid {{ $themeBorder }}; @endif">
+                                        @if($imgUrl)
+                                            <img src="{{ $imgUrl }}" alt="{{ $prod->name }}" class="product-img" loading="lazy"
+                                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                            <div class="product-placeholder-wrap"
+                                                style="display:none; background: {{ $themeBg }}; width:100%; height:100%; align-items:center; justify-content:center; flex-direction:column; gap:4px;">
+                                                @if($iconType === 'drink')
+                                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                                                        stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
+                                                        <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z" />
+                                                        <line x1="6" y1="2" x2="6" y2="4" />
+                                                        <line x1="10" y1="2" x2="10" y2="4" />
+                                                        <line x1="14" y1="2" x2="14" y2="4" />
+                                                    </svg>
+                                                @elseif($iconType === 'snack')
+                                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                                                        stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                                        <circle cx="12" cy="7" r="4" />
+                                                    </svg>
+                                                @elseif($iconType === 'dish')
+                                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                                                        stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <path
+                                                            d="M3 11h18a1 1 0 0 1 1 1v1a8 8 0 0 1-8 8H10a8 8 0 0 1-8-8v-1a1 1 0 0 1 1-1z" />
+                                                        <path d="M12 2a5 5 0 0 0-5 5h10a5 5 0 0 0-5-5z" />
+                                                        <line x1="12" y1="18" x2="12" y2="21" />
+                                                    </svg>
+                                                @elseif($iconType === 'digital')
+                                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                                                        stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                                                    </svg>
+                                                @else
+                                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                                                        stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <path
+                                                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                                                        <line x1="12" y1="22.08" x2="12" y2="12" />
+                                                    </svg>
+                                                @endif
+                                                <span
+                                                    style="font-size:0.62rem; font-weight:800; color:{{ $themeColor }}; letter-spacing:0.05em; text-transform:uppercase;">{{ $badgeText }}</span>
+                                            </div>
+                                        @else
+                                            <div class="product-placeholder-wrap"
+                                                style="display:flex; background: {{ $themeBg }}; width:100%; height:100%; align-items:center; justify-content:center; flex-direction:column; gap:4px;">
+                                                @if($iconType === 'drink')
+                                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                                                        stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
+                                                        <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z" />
+                                                        <line x1="6" y1="2" x2="6" y2="4" />
+                                                        <line x1="10" y1="2" x2="10" y2="4" />
+                                                        <line x1="14" y1="2" x2="14" y2="4" />
+                                                    </svg>
+                                                @elseif($iconType === 'snack')
+                                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                                                        stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                                        <circle cx="12" cy="7" r="4" />
+                                                    </svg>
+                                                @elseif($iconType === 'dish')
+                                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                                                        stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <path
+                                                            d="M3 11h18a1 1 0 0 1 1 1v1a8 8 0 0 1-8 8H10a8 8 0 0 1-8-8v-1a1 1 0 0 1 1-1z" />
+                                                        <path d="M12 2a5 5 0 0 0-5 5h10a5 5 0 0 0-5-5z" />
+                                                        <line x1="12" y1="18" x2="12" y2="21" />
+                                                    </svg>
+                                                @elseif($iconType === 'digital')
+                                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                                                        stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                                                    </svg>
+                                                @else
+                                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                                                        stroke="{{ $themeColor }}" stroke-width="1.8" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <path
+                                                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                                                        <line x1="12" y1="22.08" x2="12" y2="12" />
+                                                    </svg>
+                                                @endif
+                                                <span
+                                                    style="font-size:0.62rem; font-weight:800; color:{{ $themeColor }}; letter-spacing:0.05em; text-transform:uppercase;">{{ $badgeText }}</span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="product-name">{{ $prod->name }}</div>
+                                    <div class="product-price">Rp {{ number_format($prodPrice, 0, ',', '.') }}</div>
+                                </div>
+                            @empty
+                            @endforelse
+
+                            <!-- Empty State Container for zero results -->
+                            <div id="posEmptyStateContainer"
+                                style="display: none; grid-column: 1 / -1; width: 100%; flex-direction: column; align-items: center; justify-content: center; padding: 3.5rem 1.5rem; text-align: center; background: #ffffff; border: 2px dashed #cbd5e1; border-radius: 24px; margin: 1rem 0; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+                                <style>
+                                    @keyframes floatPulseIcon {
+                                        0% {
+                                            transform: translateY(0px) scale(1);
+                                            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.15);
+                                        }
+
+                                        50% {
+                                            transform: translateY(-8px) scale(1.04);
+                                            box-shadow: 0 12px 24px rgba(30, 179, 73, 0.3);
+                                        }
+
+                                        100% {
+                                            transform: translateY(0px) scale(1);
+                                            box-shadow: 0 4px 14px rgba(30, 179, 73, 0.15);
+                                        }
+                                    }
+                                </style>
+                                <div
+                                    style="width: 76px; height: 76px; border-radius: 24px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1.5px solid #bbf7d0; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; animation: floatPulseIcon 3.2s ease-in-out infinite;">
+                                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1eb349"
+                                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path
+                                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                                        <line x1="12" y1="22.08" x2="12" y2="12" />
+                                    </svg>
+                                </div>
+                                <h4
+                                    style="font-weight: 800; color: #0f172a; font-size: 1.05rem; margin: 0 0 0.4rem 0; font-family: 'Montserrat', sans-serif;">
+                                    Belum Ada Produk Ditemukan</h4>
+                                <p
+                                    style="font-size: 0.85rem; color: #64748b; max-width: 380px; line-height: 1.55; margin: 0 0 1.25rem 0;">
+                                    Tidak ada produk yang sesuai dengan filter atau pencarian Anda.
+                                </p>
+                                <a href="{{ route('creator.products.create') }}"
+                                    style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #ffffff; padding: 0.65rem 1.35rem; border-radius: 50px; font-weight: 700; font-size: 0.82rem; text-decoration: none; box-shadow: 0 4px 14px rgba(30,179,73,0.35); transition: all 0.2s;">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        viewBox="0 0 24 24">
+                                        <line x1="12" y1="5" x2="12" y2="19" />
+                                        <line x1="5" y1="12" x2="19" y2="12" />
+                                    </svg>
+                                    Tambah Produk Baru
+                                </a>
                             </div>
-                            <h4 style="font-weight: 800; color: #0f172a; font-size: 1.05rem; margin: 0 0 0.4rem 0; font-family: 'Montserrat', sans-serif;">Belum Ada Produk Ditemukan</h4>
-                            <p style="font-size: 0.85rem; color: #64748b; max-width: 380px; line-height: 1.55; margin: 0 0 1.25rem 0;">
-                                Tidak ada produk yang sesuai dengan filter atau pencarian Anda.
-                            </p>
-                            <a href="{{ route('creator.products.create') }}"
-                               style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #ffffff; padding: 0.65rem 1.35rem; border-radius: 50px; font-weight: 700; font-size: 0.82rem; text-decoration: none; box-shadow: 0 4px 14px rgba(30,179,73,0.35); transition: all 0.2s;">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                Tambah Produk Baru
-                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- RIGHT COLUMN: Order Cart & Calculator -->
-        <div id="cartPanel">
-            <div class="prof-card">
-                <div class="prof-card-head">
-                    <div class="d-flex align-items-center gap-2">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <circle cx="9" cy="21" r="1" />
-                            <circle cx="20" cy="21" r="1" />
-                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                        </svg>
-                        KERANJANG TRANSAKSI
-                    </div>
-                    <button type="button" onclick="clearCart()"
-                        style="font-size:0.75rem; font-weight:700; color:#dc2626; border:none; background:none; cursor:pointer;">
-                        Kosongkan
-                    </button>
-                </div>
-
-                <div class="prof-card-body">
-                    <!-- Form Atas Nama Pelanggan (Opsional) -->
-                    <div class="form-group">
-                        <label class="form-label">
-                            Atas Nama Pelanggan <span style="font-size:0.7rem; font-weight:400; color:#64748b;">(Opsional)</span>
-                        </label>
-                        <input type="text" id="posCustomerName" class="form-input" placeholder="Nama Pelanggan (Opsional, default: Pelanggan Umum)">
-                    </div>
-
-                    <!-- Form Grid: Ref/Meja & Phone -->
-                    <div class="form-grid">
-                        <div class="form-group mb-0">
-                            <label class="form-label">No. Ref / Catatan / Meja</label>
-                            <input type="text" id="posTableNumber" class="form-input" placeholder="Catatan / Ref (Opsional)">
+            <!-- RIGHT COLUMN: Order Cart & Calculator -->
+            <div id="cartPanel">
+                <div class="prof-card">
+                    <div class="prof-card-head">
+                        <div class="d-flex align-items-center gap-2">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <circle cx="9" cy="21" r="1" />
+                                <circle cx="20" cy="21" r="1" />
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                            </svg>
+                            KERANJANG TRANSAKSI
                         </div>
-                        <div class="form-group mb-0">
-                            <label class="form-label">No. HP / WA Pelanggan</label>
-                            <input type="text" id="posCustomerPhone" class="form-input" placeholder="08xxx (Opsional)">
-                        </div>
+                        <button type="button" onclick="clearCart()"
+                            style="font-size:0.75rem; font-weight:700; color:#dc2626; border:none; background:none; cursor:pointer;">
+                            Kosongkan
+                        </button>
                     </div>
 
-                    <!-- Form Email Pelanggan -->
-                    <div class="form-group mt-2 mb-0">
-                        <label class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
-                            <span>Email Pelanggan</span>
-                            <span
-                                style="font-size:0.68rem; font-weight:500; color:#166534; background:#f0fdf4; padding:1px 6px; border-radius:4px; border:1px solid #bbf7d0;">Opsional (untuk E-Receipt)</span>
-                        </label>
-                        <input type="email" id="posCartCustomerEmail" class="form-input"
-                            placeholder="contoh@gmail.com (Opsional)" oninput="syncCustomerEmail(this.value)">
-                    </div>
-
-                    <hr style="border-top:1.5px dashed #e2e8f0; margin: 1.25rem 0;">
-
-                    <!-- Cart Items Container -->
-                    <div class="cart-items-container" id="cartItemsContainer">
-                        <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.84rem;">
-                            Keranjang masih kosong.<br>Pilih produk di sebelah kiri untuk menambah.
-                        </div>
-                    </div>
-
-                    <!-- Summary Box & Fees Calculator -->
-                    <div class="summary-box">
-                        <!-- Subtotal Row -->
-                        <div class="summary-row">
-                            <span>Subtotal</span>
-                            <strong style="color:#0f172a;" id="displaySubtotal">Rp 0</strong>
+                    <div class="prof-card-body">
+                        <!-- Form Atas Nama Pelanggan (Opsional) -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                Atas Nama Pelanggan <span
+                                    style="font-size:0.7rem; font-weight:400; color:#64748b;">(Opsional)</span>
+                            </label>
+                            <input type="text" id="posCustomerName" class="form-input"
+                                placeholder="Nama Pelanggan (Opsional, default: Pelanggan Umum)">
                         </div>
 
-                        <!-- Diskon Field -->
-                        <div class="summary-row">
-                            <div class="d-flex align-items-center gap-1">
-                                <span>Diskon</span>
-                                <div class="disc-toggle">
-                                    <button type="button" class="disc-btn active" id="btnDiscNominal"
-                                        onclick="setDiscountType('nominal')">Rp</button>
-                                    <button type="button" class="disc-btn" id="btnDiscPercent"
-                                        onclick="setDiscountType('percent')">%</button>
+                        <!-- Form Grid: Ref/Meja & Phone -->
+                        <div class="form-grid">
+                            <div class="form-group mb-0">
+                                <label class="form-label">No. Ref / Catatan / Meja</label>
+                                <input type="text" id="posTableNumber" class="form-input"
+                                    placeholder="Catatan / Ref (Opsional)">
+                            </div>
+                            <div class="form-group mb-0">
+                                <label class="form-label">No. HP / WA Pelanggan</label>
+                                <input type="text" id="posCustomerPhone" class="form-input" placeholder="08xxx (Opsional)">
+                            </div>
+                        </div>
+
+                        <!-- Form Email Pelanggan -->
+                        <div class="form-group mt-2 mb-0">
+                            <label class="form-label"
+                                style="display:flex; justify-content:space-between; align-items:center;">
+                                <span>Email Pelanggan</span>
+                                <span
+                                    style="font-size:0.68rem; font-weight:500; color:#166534; background:#f0fdf4; padding:1px 6px; border-radius:4px; border:1px solid #bbf7d0;">Opsional
+                                    (untuk E-Receipt)</span>
+                            </label>
+                            <input type="email" id="posCartCustomerEmail" class="form-input"
+                                placeholder="contoh@gmail.com (Opsional)" oninput="syncCustomerEmail(this.value)">
+                        </div>
+
+                        <hr style="border-top:1.5px dashed #e2e8f0; margin: 1.25rem 0;">
+
+                        <!-- Cart Items Container -->
+                        <div class="cart-items-container" id="cartItemsContainer">
+                            <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.84rem;">
+                                Keranjang masih kosong.<br>Pilih produk di sebelah kiri untuk menambah.
+                            </div>
+                        </div>
+
+                        <!-- Summary Box & Fees Calculator -->
+                        <div class="summary-box">
+                            <!-- Subtotal Row -->
+                            <div class="summary-row">
+                                <span>Subtotal</span>
+                                <strong style="color:#0f172a;" id="displaySubtotal">Rp 0</strong>
+                            </div>
+
+                            <!-- Diskon Field -->
+                            <div class="summary-row">
+                                <div class="d-flex align-items-center gap-1">
+                                    <span>Diskon</span>
+                                    <div class="disc-toggle">
+                                        <button type="button" class="disc-btn active" id="btnDiscNominal"
+                                            onclick="setDiscountType('nominal')">Rp</button>
+                                        <button type="button" class="disc-btn" id="btnDiscPercent"
+                                            onclick="setDiscountType('percent')">%</button>
+                                    </div>
+                                </div>
+                                <div style="width: 105px;">
+                                    <input type="number" id="posDiscountInput" class="form-input text-end"
+                                        style="height:34px; padding:0 10px; font-size:0.8rem;" placeholder="0" min="0"
+                                        oninput="calculateTotals()">
                                 </div>
                             </div>
-                            <div style="width: 105px;">
-                                <input type="number" id="posDiscountInput" class="form-input text-end"
-                                    style="height:34px; padding:0 10px; font-size:0.8rem;" placeholder="0" min="0"
-                                    oninput="calculateTotals()">
+
+                            <!-- Service Fee Field -->
+                            <div class="summary-row">
+                                <span>Biaya Layanan Toko</span>
+                                <div style="width: 105px;">
+                                    <input type="number" id="posServiceFeeInput" class="form-input text-end"
+                                        style="height:34px; padding:0 10px; font-size:0.8rem;" placeholder="0" min="0"
+                                        oninput="calculateTotals()">
+                                </div>
+                            </div>
+
+                            <!-- Platform & Admin Fees Breakdown -->
+                            <div class="summary-row" style="font-size:0.75rem; color:#94a3b8;">
+                                <span>Biaya Platform ({{ $platformFeeRate }}%) & Admin ({{ $adminFeeRate }}%)</span>
+                                <span id="displaySystemFees">Rp 0</span>
+                            </div>
+
+                            <!-- Grand Total -->
+                            <div class="summary-total summary-row">
+                                <span>Total Bayar</span>
+                                <span style="color:#1eb349;" id="displayGrandTotal">Rp 0</span>
                             </div>
                         </div>
 
-                        <!-- Service Fee Field -->
-                        <div class="summary-row">
-                            <span>Biaya Layanan Toko</span>
-                            <div style="width: 105px;">
-                                <input type="number" id="posServiceFeeInput" class="form-input text-end"
-                                    style="height:34px; padding:0 10px; font-size:0.8rem;" placeholder="0" min="0"
-                                    oninput="calculateTotals()">
-                            </div>
-                        </div>
-
-                        <!-- Platform & Admin Fees Breakdown -->
-                        <div class="summary-row" style="font-size:0.75rem; color:#94a3b8;">
-                            <span>Biaya Platform ({{ $platformFeeRate }}%) & Admin ({{ $adminFeeRate }}%)</span>
-                            <span id="displaySystemFees">Rp 0</span>
-                        </div>
-
-                        <!-- Grand Total -->
-                        <div class="summary-total summary-row">
-                            <span>Total Bayar</span>
-                            <span style="color:#1eb349;" id="displayGrandTotal">Rp 0</span>
-                        </div>
+                        <!-- Checkout Button -->
+                        <button type="button" class="btn-submit-green" id="btnCheckout" onclick="openPaymentModal()"
+                            disabled>
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <path d="M5 12h14" />
+                                <path d="M12 5l7 7-7 7" />
+                            </svg>
+                            Proses Pembayaran
+                        </button>
                     </div>
-
-                    <!-- Checkout Button -->
-                    <button type="button" class="btn-submit-green" id="btnCheckout" onclick="openPaymentModal()" disabled>
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                            viewBox="0 0 24 24">
-                            <path d="M5 12h14" />
-                            <path d="M12 5l7 7-7 7" />
-                        </svg>
-                        Proses Pembayaran
-                    </button>
                 </div>
             </div>
         </div>
-    </div>
     </div> <!-- Close #pos-real-content -->
 
     <!-- Mobile Sticky Bottom Bar -->
@@ -1296,7 +1449,8 @@
 
     <!-- Floating Toast Notification Container -->
     <div id="posToastContainer"
-        style="position: fixed; top: 24px; right: 24px; z-index: 100001; display: flex; flex-direction: column; gap: 8px; pointer-events: none;"></div>
+        style="position: fixed; top: 24px; right: 24px; z-index: 100001; display: flex; flex-direction: column; gap: 8px; pointer-events: none;">
+    </div>
 
     <!-- Privacy Blur Overlay for Midtrans -->
     <div id="midtransBlurOverlay"></div>
@@ -1304,10 +1458,18 @@
     <!-- CUSTOM OVERLAY MODAL: Alert Modal -->
     <div class="pos-modal-overlay" id="posAlertModal" style="z-index: 100000;">
         <div class="pos-modal-card" style="max-width: 360px; padding: 1.5rem 1.25rem; text-align: center;">
-            <div id="posAlertIconWrap" style="display:flex !important; justify-content:center !important; align-items:center !important; width:100% !important; margin:0 auto 0.75rem auto !important;"></div>
-            <h5 id="posAlertTitle" style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:0.4rem; text-align:center;">Perhatian</h5>
-            <div id="posAlertMessage" style="font-size:0.83rem; color:#475569; line-height:1.45; margin-bottom:1.25rem; text-align:center;">-</div>
-            <button type="button" class="btn-submit-green" style="width:100%; margin:0; padding:0.65rem 1rem; font-size:0.85rem; border-radius:999px !important;" onclick="closeModal('posAlertModal')">Oke, Saya Mengerti</button>
+            <div id="posAlertIconWrap"
+                style="display:flex !important; justify-content:center !important; align-items:center !important; width:100% !important; margin:0 auto 0.75rem auto !important;">
+            </div>
+            <h5 id="posAlertTitle"
+                style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:0.4rem; text-align:center;">
+                Perhatian</h5>
+            <div id="posAlertMessage"
+                style="font-size:0.83rem; color:#475569; line-height:1.45; margin-bottom:1.25rem; text-align:center;">-
+            </div>
+            <button type="button" class="btn-submit-green"
+                style="width:100%; margin:0; padding:0.65rem 1rem; font-size:0.85rem; border-radius:999px !important;"
+                onclick="closeModal('posAlertModal')">Oke, Saya Mengerti</button>
         </div>
     </div>
 
@@ -1316,10 +1478,12 @@
         <div class="pos-modal-card" style="max-width: 480px; width: 95vw;">
             <div class="pos-modal-head">
                 <div style="display:flex; align-items:center; gap:8px;">
-                    <div style="width:30px; height:30px; border-radius:50%; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534;">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                            <rect x="2" y="5" width="20" height="14" rx="2"/>
-                            <line x1="2" y1="10" x2="22" y2="10"/>
+                    <div
+                        style="width:30px; height:30px; border-radius:50%; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534;">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
+                            <rect x="2" y="5" width="20" height="14" rx="2" />
+                            <line x1="2" y1="10" x2="22" y2="10" />
                         </svg>
                     </div>
                     <h5 style="margin:0; font-size:1rem; font-weight:800; color:#0f172a;">Isi Saldo Deposit Kasir POS</h5>
@@ -1328,24 +1492,32 @@
             </div>
             <div class="pos-modal-body">
                 <!-- Status Saldo Sekarang -->
-                <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+                <div
+                    style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
                     <div>
-                        <div style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase;">Saldo Deposit Saat Ini</div>
-                        <div style="font-size:1.25rem; font-weight:900; color:#166534; margin-top:2px;" id="depositModalCurrentBalance">Rp {{ number_format($posBalance, 0, ',', '.') }}</div>
+                        <div style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase;">Saldo
+                            Deposit Saat Ini</div>
+                        <div style="font-size:1.25rem; font-weight:900; color:#166534; margin-top:2px;"
+                            id="depositModalCurrentBalance">Rp {{ number_format($posBalance, 0, ',', '.') }}</div>
                     </div>
-                    <span class="badge" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-size:0.7rem; font-weight:700; padding:4px 8px; border-radius:6px;">Aktif</span>
+                    <span class="badge"
+                        style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-size:0.7rem; font-weight:700; padding:4px 8px; border-radius:6px;">Aktif</span>
                 </div>
 
                 <!-- Info Box -->
-                <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:10px 12px; margin-bottom:14px; font-size:0.75rem; color:#1e40af; line-height:1.45;">
-                    Saldo deposit digunakan untuk auto-debit biaya admin &amp; platform fee saat kasir memproses transaksi <strong>TUNAI (CASH)</strong>. Pembayaran top up menggunakan QRIS Midtrans dan saldo bertambah instan.
+                <div
+                    style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:10px 12px; margin-bottom:14px; font-size:0.75rem; color:#1e40af; line-height:1.45;">
+                    Saldo deposit digunakan untuk auto-debit biaya admin &amp; platform fee saat kasir memproses transaksi
+                    <strong>TUNAI (CASH)</strong>. Pembayaran top up menggunakan QRIS dan saldo bertambah instan.
                 </div>
 
                 <!-- Pilihan Nominal Cepat -->
-                <label style="font-size:0.78rem; font-weight:700; color:#334155; display:block; margin-bottom:8px;">Pilih Nominal Top Up</label>
+                <label style="font-size:0.78rem; font-weight:700; color:#334155; display:block; margin-bottom:8px;">Pilih
+                    Nominal Top Up</label>
                 <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:12px;">
                     <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(20000)">Rp 20.000</button>
-                    <button type="button" class="btn-deposit-preset active" onclick="setDepositPreset(50000)">Rp 50.000</button>
+                    <button type="button" class="btn-deposit-preset active" onclick="setDepositPreset(50000)">Rp
+                        50.000</button>
                     <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(100000)">Rp 100.000</button>
                     <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(200000)">Rp 200.000</button>
                     <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(300000)">Rp 300.000</button>
@@ -1354,19 +1526,29 @@
 
                 <!-- Input Nominal Manual -->
                 <div class="form-group mb-0">
-                    <label style="font-size:0.75rem; font-weight:700; color:#334155;">Atau Masukkan Nominal Lain (Min. Rp 10.000)</label>
+                    <label style="font-size:0.75rem; font-weight:700; color:#334155;">Atau Masukkan Nominal Lain (Min. Rp
+                        10.000)</label>
                     <div style="position:relative; margin-top:4px;">
-                        <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.9rem; color:#475569;">Rp</span>
-                        <input type="text" id="depositAmountDisplay" class="form-input" style="padding-left:42px; height:44px; font-size:1.05rem; font-weight:800; color:#0f172a;" value="50.000" placeholder="50.000" oninput="handleDepositAmountInput(this)">
+                        <span
+                            style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.9rem; color:#475569;">Rp</span>
+                        <input type="text" id="depositAmountDisplay" class="form-input"
+                            style="padding-left:42px; height:44px; font-size:1.05rem; font-weight:800; color:#0f172a;"
+                            value="50.000" placeholder="50.000" oninput="handleDepositAmountInput(this)">
                         <input type="hidden" id="depositAmountVal" value="50000">
                     </div>
                 </div>
             </div>
 
             <div class="pos-modal-foot" style="gap:8px;">
-                <button type="button" class="btn-outline-bio" style="border-color:#e2e8f0; color:#64748b; padding:0.6rem 1rem; font-size:0.8rem; border-radius:999px !important;" onclick="closeModal('posDepositModal')">Batal</button>
-                <button type="button" class="btn-submit-green" id="btnSubmitDeposit" onclick="submitPosDeposit()" style="flex:1; margin:0; padding:0.65rem 1.25rem; font-size:0.84rem; border-radius:999px !important; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                <button type="button" class="btn-outline-bio"
+                    style="border-color:#e2e8f0; color:#64748b; padding:0.6rem 1rem; font-size:0.8rem; border-radius:999px !important;"
+                    onclick="closeModal('posDepositModal')">Batal</button>
+                <button type="button" class="btn-submit-green" id="btnSubmitDeposit" onclick="submitPosDeposit()"
+                    style="flex:1; margin:0; padding:0.65rem 1.25rem; font-size:0.84rem; border-radius:999px !important; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                        <path d="M5 12h14" />
+                        <path d="M12 5l7 7-7 7" />
+                    </svg>
                     Bayar Instan via QRIS
                 </button>
             </div>
@@ -1382,15 +1564,20 @@
             </div>
             <div class="pos-modal-body">
                 <!-- Total Banner Hero -->
-                <div style="background: linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; padding:0.85rem 1.25rem; border-radius:14px; text-align:center; margin-bottom:1.25rem; box-shadow:0 4px 14px rgba(30,179,73,0.35);">
-                    <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; opacity:0.9;">Total Tagihan</div>
-                    <div style="font-size:1.75rem; font-weight:900; line-height:1.1; margin-top:3px; letter-spacing:-0.02em;" id="modalPayTotal">Rp 0</div>
+                <div
+                    style="background: linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; padding:0.85rem 1.25rem; border-radius:14px; text-align:center; margin-bottom:1.25rem; box-shadow:0 4px 14px rgba(30,179,73,0.35);">
+                    <div
+                        style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; opacity:0.9;">
+                        Total Tagihan</div>
+                    <div style="font-size:1.75rem; font-weight:900; line-height:1.1; margin-top:3px; letter-spacing:-0.02em;"
+                        id="modalPayTotal">Rp 0</div>
                 </div>
 
                 <!-- Opsi 1: Tunai (Cash) -->
                 <div class="pay-option-card selected" id="optCash" onclick="selectPaymentMethod('cash')">
                     <input type="radio" name="pay_method" value="cash" checked style="accent-color:#1eb349;">
-                    <div style="width:38px; height:38px; border-radius:50%; background:#f0fdf4; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <div
+                        style="width:38px; height:38px; border-radius:50%; background:#f0fdf4; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24">
                             <rect x="2" y="6" width="20" height="12" rx="2" />
                             <circle cx="12" cy="12" r="2" />
@@ -1398,15 +1585,20 @@
                     </div>
                     <div style="flex:1;">
                         <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Tunai (Cash)</div>
-                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Bayar & hitung kembalian langsung</div>
+                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Bayar & hitung kembalian langsung
+                        </div>
                     </div>
                 </div>
 
                 <!-- Cash Calculator Panel -->
-                <div id="cashCalcPanel" style="background:#f8fafc; border-radius:12px; border:1.5px solid #cbd5e1; padding:0.85rem; margin-bottom:0.75rem;">
-                    <label style="font-size:0.75rem; font-weight:700; color:#166534; display:block; margin-bottom:6px;">Nominal Uang Diterima</label>
+                <div id="cashCalcPanel"
+                    style="background:#f8fafc; border-radius:12px; border:1.5px solid #cbd5e1; padding:0.85rem; margin-bottom:0.75rem;">
+                    <label
+                        style="font-size:0.75rem; font-weight:700; color:#166534; display:block; margin-bottom:6px;">Nominal
+                        Uang Diterima</label>
                     <div style="position:relative; margin-bottom:0.5rem;">
-                        <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.9rem; color:#334155;">Rp.</span>
+                        <span
+                            style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.9rem; color:#334155;">Rp.</span>
                         <input type="text" id="cashPaidDisplayInput" class="form-input"
                             style="padding-left:40px; height:44px; font-size:1.05rem; font-weight:800; color:#0f172a; border-radius:10px;"
                             placeholder="0" oninput="handleCashInput(this)">
@@ -1418,32 +1610,50 @@
                         <button type="button" class="btn-quick-cash" onclick="setQuickCash(50000)">Rp. 50.000</button>
                         <button type="button" class="btn-quick-cash" onclick="setQuickCash(100000)">Rp. 100.000</button>
                     </div>
-                    <div style="background:#ffffff; border:1px dashed #bbf7d0; border-radius:8px; padding:7px 12px; display:flex; align-items:center; justify-content:space-between;">
+                    <div
+                        style="background:#ffffff; border:1px dashed #bbf7d0; border-radius:8px; padding:7px 12px; display:flex; align-items:center; justify-content:space-between;">
                         <span style="font-size:0.78rem; font-weight:700; color:#475569;">Kembalian Kasir:</span>
-                        <strong style="font-size:1.05rem; font-weight:900; color:#1eb349;" id="cashChangeDisplay">Rp. 0</strong>
+                        <strong style="font-size:1.05rem; font-weight:900; color:#1eb349;" id="cashChangeDisplay">Rp.
+                            0</strong>
                     </div>
 
                     <!-- Saldo Deposit POS Status Box -->
-                    <div id="cashDepositStatusBox" style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:10px; padding:9px 12px; margin-top:8px;">
+                    <div id="cashDepositStatusBox"
+                        style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:10px; padding:9px 12px; margin-top:8px;">
                         <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem;">
                             <span style="color:#64748b; font-weight:600;">Potongan Fee Tunai (Platform + Admin):</span>
                             <strong style="color:#0f172a;" id="cashFeeRequiredDisplay">Rp 0</strong>
                         </div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; margin-top:4px;">
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; margin-top:4px;">
                             <span style="color:#64748b; font-weight:600;">Saldo Deposit Kasir Anda:</span>
-                            <strong style="color:{{ $posBalance < 10000 ? '#dc2626' : '#166534' }};" id="cashUserBalanceDisplay">Rp {{ number_format($posBalance, 0, ',', '.') }}</strong>
+                            <strong style="color:{{ $posBalance < 10000 ? '#dc2626' : '#166534' }};"
+                                id="cashUserBalanceDisplay">Rp {{ number_format($posBalance, 0, ',', '.') }}</strong>
                         </div>
 
                         <!-- Warning Alert when Deposit is Insufficient -->
-                        <div id="cashDepositWarning" style="display:none; margin-top:8px; background:#fef2f2; border:1.5px solid #fecaca; border-radius:8px; padding:8px 10px; color:#991b1b; font-size:0.74rem; line-height:1.45;">
+                        <div id="cashDepositWarning"
+                            style="display:none; margin-top:8px; background:#fef2f2; border:1.5px solid #fecaca; border-radius:8px; padding:8px 10px; color:#991b1b; font-size:0.74rem; line-height:1.45;">
                             <div style="display:flex; align-items:flex-start; gap:6px;">
-                                <svg width="15" height="15" fill="none" stroke="#dc2626" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                <svg width="15" height="15" fill="none" stroke="#dc2626" stroke-width="2.2"
+                                    viewBox="0 0 24 24" style="flex-shrink:0; margin-top:1px;">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
                                 <div>
-                                    <strong style="display:block; margin-bottom:2px;">Saldo Deposit POS Tidak Mencukupi!</strong>
-                                    <span id="cashDepositWarningText">Biaya transaksi tunai melebihi saldo deposit. Lakukan top up agar dapat menerima pembayaran cash.</span>
+                                    <strong style="display:block; margin-bottom:2px;">Saldo Deposit POS Tidak
+                                        Mencukupi!</strong>
+                                    <span id="cashDepositWarningText">Biaya transaksi tunai melebihi saldo deposit. Lakukan
+                                        top up agar dapat menerima pembayaran cash.</span>
                                     <div style="margin-top:6px;">
-                                        <button type="button" onclick="closeModal('posPaymentModal'); openDepositModal();" style="background:#dc2626; color:#ffffff; border:none; border-radius:999px; font-size:0.72rem; font-weight:800; padding:4px 12px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(220,38,38,0.3);">
-                                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                        <button type="button" onclick="closeModal('posPaymentModal'); openDepositModal();"
+                                            style="background:#dc2626; color:#ffffff; border:none; border-radius:999px; font-size:0.72rem; font-weight:800; padding:4px 12px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(220,38,38,0.3);">
+                                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                                viewBox="0 0 24 24">
+                                                <line x1="12" y1="5" x2="12" y2="19" />
+                                                <line x1="5" y1="12" x2="19" y2="12" />
+                                            </svg>
                                             Isi Saldo Deposit Sekarang
                                         </button>
                                     </div>
@@ -1456,7 +1666,8 @@
                 <!-- Opsi 2: Non-Tunai / Cashless -->
                 <div class="pay-option-card" id="optCashless" onclick="selectPaymentMethod('cashless')">
                     <input type="radio" name="pay_method" value="cashless" style="accent-color:#7c3aed;">
-                    <div style="width:38px; height:38px; border-radius:50%; background:#f5f3ff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <div
+                        style="width:38px; height:38px; border-radius:50%; background:#f5f3ff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <svg width="20" height="20" fill="none" stroke="#7c3aed" stroke-width="2" viewBox="0 0 24 24">
                             <rect x="3" y="3" width="7" height="7" />
                             <rect x="14" y="3" width="7" height="7" />
@@ -1466,20 +1677,26 @@
                     </div>
                     <div style="flex:1;">
                         <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Non-Tunai / Cashless</div>
-                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">QRIS, Transfer Bank, E-Wallet (GoPay, ShopeePay)</div>
+                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">QRIS, Transfer Bank, E-Wallet (GoPay,
+                            ShopeePay)</div>
                     </div>
                 </div>
 
                 <!-- Optional E-Receipt Email Input -->
                 <div class="mt-3 mb-0">
-                    <label class="form-label mb-1" style="font-size:0.73rem; color:#64748b; font-weight:600;">Email Pembeli (E-Receipt - Opsional)</label>
-                    <input type="email" id="posCustomerEmail" class="form-input" style="height:36px; font-size:0.78rem;" placeholder="contoh@gmail.com">
+                    <label class="form-label mb-1" style="font-size:0.73rem; color:#64748b; font-weight:600;">Email Pembeli
+                        (E-Receipt - Opsional)</label>
+                    <input type="email" id="posCustomerEmail" class="form-input" style="height:36px; font-size:0.78rem;"
+                        placeholder="contoh@gmail.com">
                 </div>
             </div>
 
             <div class="pos-modal-foot">
-                <button type="button" class="btn-outline-bio" style="border-color:#e2e8f0; color:#64748b; padding:0.6rem 1rem; font-size:0.8rem; flex-shrink:0; border-radius:999px !important;" onclick="closeModal('posPaymentModal')">Batal</button>
-                <button type="button" class="btn-submit-green" id="btnSubmitOrder" onclick="processOrderCheckout()" style="flex:1; margin:0; padding:0.6rem 1rem; font-size:0.82rem; white-space:nowrap; border-radius:999px !important;">
+                <button type="button" class="btn-outline-bio"
+                    style="border-color:#e2e8f0; color:#64748b; padding:0.6rem 1rem; font-size:0.8rem; flex-shrink:0; border-radius:999px !important;"
+                    onclick="closeModal('posPaymentModal')">Batal</button>
+                <button type="button" class="btn-submit-green" id="btnSubmitOrder" onclick="processOrderCheckout()"
+                    style="flex:1; margin:0; padding:0.6rem 1rem; font-size:0.82rem; white-space:nowrap; border-radius:999px !important;">
                     Konfirmasi &amp; Bayar
                 </button>
             </div>
@@ -1603,7 +1820,9 @@
             </div>
 
             <div class="pos-modal-foot no-print" style="gap:0.5rem; padding: 0.85rem 1.25rem;">
-                <button type="button" class="btn-outline-bio" style="flex-shrink:0; padding:0.55rem 0.9rem; font-size:0.75rem; border-radius:999px !important; white-space:nowrap;" onclick="printPosReceipt()">
+                <button type="button" class="btn-outline-bio"
+                    style="flex-shrink:0; padding:0.55rem 0.9rem; font-size:0.75rem; border-radius:999px !important; white-space:nowrap;"
+                    onclick="printPosReceipt()">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <polyline points="6 9 6 2 18 2 18 9" />
                         <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
@@ -1611,7 +1830,8 @@
                     </svg>
                     Cetak Struk
                 </button>
-                <button type="button" class="btn-submit-green" style="flex:1; margin:0; padding:0.55rem 0.9rem; font-size:0.78rem; border-radius:999px !important; white-space:nowrap;"
+                <button type="button" class="btn-submit-green"
+                    style="flex:1; margin:0; padding:0.55rem 0.9rem; font-size:0.78rem; border-radius:999px !important; white-space:nowrap;"
                     onclick="closeModal('posReceiptModal'); resetPOS();">
                     Selesai &amp; Baru
                 </button>
@@ -1624,29 +1844,49 @@
         <div class="pos-modal-card" style="max-width: 860px; width: 95vw;">
             <div class="pos-modal-head">
                 <div style="display:flex; align-items:center; gap:8px;">
-                    <div style="width:30px; height:30px; border-radius:50%; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534;">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <div
+                        style="width:30px; height:30px; border-radius:50%; background:#f0fdf4; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; color:#166534;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
                     </div>
                     <div>
-                        <h5 style="margin:0; font-size:1rem; font-weight:800; color:#0f172a;">Rekap Shift &amp; Riwayat Kasir POS</h5>
-                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">{{ now()->translatedFormat('l, d F Y') }}</div>
+                        <h5 style="margin:0; font-size:1rem; font-weight:800; color:#0f172a;">Rekap Shift &amp; Riwayat
+                            Kasir POS</h5>
+                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">
+                            {{ now()->translatedFormat('l, d F Y') }}</div>
                     </div>
                 </div>
                 <button type="button" class="pos-modal-close" onclick="closeModal('posHistoryModal')">&times;</button>
             </div>
 
             <!-- Tab Navigation Bar -->
-            <div style="display:flex; align-items:center; border-bottom:1.5px solid #e2e8f0; background:#f8fafc; padding:0 1.25rem; overflow-x:auto;">
+            <div
+                style="display:flex; align-items:center; border-bottom:1.5px solid #e2e8f0; background:#f8fafc; padding:0 1.25rem; overflow-x:auto;">
                 <button type="button" class="history-tab-btn active" id="tabBtnShift" onclick="switchHistoryTab('shift')">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <line x1="3" y1="9" x2="21" y2="9" />
+                        <line x1="9" y1="21" x2="9" y2="9" />
+                    </svg>
                     Rekap Shift &amp; Closing
                 </button>
                 <button type="button" class="history-tab-btn" id="tabBtnOrders" onclick="switchHistoryTab('orders')">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg>
                     Riwayat Transaksi ({{ count($todayOrders) }})
                 </button>
                 <button type="button" class="history-tab-btn" id="tabBtnMutations" onclick="switchHistoryTab('mutations')">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <line x1="12" y1="1" x2="12" y2="23" />
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                    </svg>
                     Mutasi Deposit ({{ count($todayMutations) }})
                 </button>
             </div>
@@ -1655,52 +1895,76 @@
                 <!-- TAB 1: REKAP SHIFT & CLOSING KASIR -->
                 <div id="paneHistoryShift" style="padding:1.25rem;">
                     <!-- 4 Summary Metric Cards -->
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:1.25rem;">
+                    <div
+                        style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:1.25rem;">
                         <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:12px 14px;">
-                            <div style="font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.04em;">Total Omset Kotor</div>
-                            <div style="font-size:1.25rem; font-weight:900; color:#0f172a; margin-top:2px;">Rp {{ number_format($todayGrossSales, 0, ',', '.') }}</div>
-                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">{{ count($todayOrders) }} pesanan selesai</div>
+                            <div
+                                style="font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.04em;">
+                                Total Omset Kotor</div>
+                            <div style="font-size:1.25rem; font-weight:900; color:#0f172a; margin-top:2px;">Rp
+                                {{ number_format($todayGrossSales, 0, ',', '.') }}</div>
+                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">{{ count($todayOrders) }} pesanan
+                                selesai</div>
                         </div>
 
                         <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:12px 14px;">
-                            <div style="font-size:0.7rem; font-weight:700; color:#166534; text-transform:uppercase; letter-spacing:0.04em;">Uang Tunai di Laci (Cash)</div>
-                            <div style="font-size:1.25rem; font-weight:900; color:#166534; margin-top:2px;">Rp {{ number_format($todayCashInDrawer, 0, ',', '.') }}</div>
+                            <div
+                                style="font-size:0.7rem; font-weight:700; color:#166534; text-transform:uppercase; letter-spacing:0.04em;">
+                                Uang Tunai di Laci (Cash)</div>
+                            <div style="font-size:1.25rem; font-weight:900; color:#166534; margin-top:2px;">Rp
+                                {{ number_format($todayCashInDrawer, 0, ',', '.') }}</div>
                             <div style="font-size:0.72rem; color:#166534; margin-top:2px;">Fisik wajib di laci kasir</div>
                         </div>
 
                         <div style="background:#f5f3ff; border:1.5px solid #ddd6fe; border-radius:14px; padding:12px 14px;">
-                            <div style="font-size:0.7rem; font-weight:700; color:#6d28d9; text-transform:uppercase; letter-spacing:0.04em;">Pembayaran Digital</div>
-                            <div style="font-size:1.25rem; font-weight:900; color:#6d28d9; margin-top:2px;">Rp {{ number_format($todayDigitalSales, 0, ',', '.') }}</div>
+                            <div
+                                style="font-size:0.7rem; font-weight:700; color:#6d28d9; text-transform:uppercase; letter-spacing:0.04em;">
+                                Pembayaran Digital</div>
+                            <div style="font-size:1.25rem; font-weight:900; color:#6d28d9; margin-top:2px;">Rp
+                                {{ number_format($todayDigitalSales, 0, ',', '.') }}</div>
                             <div style="font-size:0.72rem; color:#6d28d9; margin-top:2px;">QRIS &amp; Transfer Bank</div>
                         </div>
 
                         <div style="background:#fff7ed; border:1.5px solid #fed7aa; border-radius:14px; padding:12px 14px;">
-                            <div style="font-size:0.7rem; font-weight:700; color:#c2410c; text-transform:uppercase; letter-spacing:0.04em;">Fee Terpotong Deposit</div>
-                            <div style="font-size:1.25rem; font-weight:900; color:#c2410c; margin-top:2px;">Rp {{ number_format($todayFeeDeducted, 0, ',', '.') }}</div>
-                            <div style="font-size:0.72rem; color:#c2410c; margin-top:2px;">Platform fee &amp; admin fee</div>
+                            <div
+                                style="font-size:0.7rem; font-weight:700; color:#c2410c; text-transform:uppercase; letter-spacing:0.04em;">
+                                Fee Terpotong Deposit</div>
+                            <div style="font-size:1.25rem; font-weight:900; color:#c2410c; margin-top:2px;">Rp
+                                {{ number_format($todayFeeDeducted, 0, ',', '.') }}</div>
+                            <div style="font-size:0.72rem; color:#c2410c; margin-top:2px;">Platform fee &amp; admin fee
+                            </div>
                         </div>
                     </div>
 
                     <!-- Neraca Ringkasan Shift -->
-                    <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:14px; padding:14px 16px; margin-bottom:1.25rem;">
-                        <div style="font-size:0.8rem; font-weight:800; color:#0f172a; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;">
+                    <div
+                        style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:14px; padding:14px 16px; margin-bottom:1.25rem;">
+                        <div
+                            style="font-size:0.8rem; font-weight:800; color:#0f172a; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;">
                             <span>Neraca Keuangan Shift Hari Ini</span>
-                            <span class="badge" style="background:#f1f5f9; color:#475569; font-size:0.72rem; border-radius:6px; padding:3px 8px;">Audit POS</span>
+                            <span class="badge"
+                                style="background:#f1f5f9; color:#475569; font-size:0.72rem; border-radius:6px; padding:3px 8px;">Audit
+                                POS</span>
                         </div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:0.82rem;">
-                            <div style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px dashed #f1f5f9;">
+                            <div
+                                style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px dashed #f1f5f9;">
                                 <span style="color:#64748b;">Kasir Bertugas:</span>
                                 <strong style="color:#0f172a;">{{ auth()->user()->name }}</strong>
                             </div>
-                            <div style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px dashed #f1f5f9;">
+                            <div
+                                style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px dashed #f1f5f9;">
                                 <span style="color:#64748b;">Sisa Saldo Deposit:</span>
                                 <strong style="color:#166534;">Rp {{ number_format($posBalance, 0, ',', '.') }}</strong>
                             </div>
-                            <div style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px dashed #f1f5f9;">
+                            <div
+                                style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px dashed #f1f5f9;">
                                 <span style="color:#64748b;">Total Diskon Diberikan:</span>
-                                <strong style="color:#dc2626;">-Rp {{ number_format($todayOrders->sum('discount'), 0, ',', '.') }}</strong>
+                                <strong style="color:#dc2626;">-Rp
+                                    {{ number_format($todayOrders->sum('discount'), 0, ',', '.') }}</strong>
                             </div>
-                            <div style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px dashed #f1f5f9;">
+                            <div
+                                style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px dashed #f1f5f9;">
                                 <span style="color:#64748b;">Status Rekonsiliasi:</span>
                                 <strong style="color:#166534;">Seimbang (Cocok)</strong>
                             </div>
@@ -1709,12 +1973,25 @@
 
                     <!-- Shift Action Buttons -->
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <button type="button" class="btn-submit-green" style="flex:1; padding:0.75rem 1.25rem; font-size:0.85rem; border-radius:999px !important; display:inline-flex; align-items:center; justify-content:center; gap:6px;" onclick="printClosingReceipt()">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                        <button type="button" class="btn-submit-green"
+                            style="flex:1; padding:0.75rem 1.25rem; font-size:0.85rem; border-radius:999px !important; display:inline-flex; align-items:center; justify-content:center; gap:6px;"
+                            onclick="printClosingReceipt()">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24">
+                                <polyline points="6 9 6 2 18 2 18 9" />
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                                <rect x="6" y="14" width="12" height="8" />
+                            </svg>
                             Cetak Struk Rekap Closing Kasir
                         </button>
-                        <a href="{{ route('creator.sales.report') }}?tab=pos" class="btn-outline-bio" style="padding:0.75rem 1.25rem; font-size:0.85rem; border-radius:999px !important; display:inline-flex; align-items:center; gap:6px; text-decoration:none;">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        <a href="{{ route('creator.sales.report') }}?tab=pos" class="btn-outline-bio"
+                            style="padding:0.75rem 1.25rem; font-size:0.85rem; border-radius:999px !important; display:inline-flex; align-items:center; gap:6px; text-decoration:none;">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                                viewBox="0 0 24 24">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                <polyline points="15 3 21 3 21 9" />
+                                <line x1="10" y1="14" x2="21" y2="3" />
+                            </svg>
                             Buka Laporan POS Lengkap
                         </a>
                     </div>
@@ -1745,16 +2022,19 @@
                                     <tr>
                                         <td style="padding-left:1.5rem;">
                                             <strong style="color:#0f172a;">#{{ $tOrd->order_number }}</strong>
-                                            <div style="font-size:0.73rem; color:#64748b;">{{ $tOrd->created_at->format('H:i') }} WIB</div>
+                                            <div style="font-size:0.73rem; color:#64748b;">
+                                                {{ $tOrd->created_at->format('H:i') }} WIB</div>
                                         </td>
                                         <td>
-                                            <div style="font-weight:700; color:#0f172a;">{{ $tAddr['name'] ?? 'Pelanggan' }}</div>
+                                            <div style="font-weight:700; color:#0f172a;">{{ $tAddr['name'] ?? 'Pelanggan' }}
+                                            </div>
                                             @if(!empty($tOrd->notes))
                                                 <div style="font-size:0.73rem; color:#64748b;">{{ $tOrd->notes }}</div>
                                             @endif
                                         </td>
                                         <td>
-                                            <span class="badge" style="background:{{ strtolower($tPayMethod) === 'cash' ? '#f0fdf4' : '#f5f3ff' }}; color:{{ strtolower($tPayMethod) === 'cash' ? '#166534' : '#6d28d9' }}; border:1px solid {{ strtolower($tPayMethod) === 'cash' ? '#bbf7d0' : '#ddd6fe' }}; text-transform:uppercase; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem;">
+                                            <span class="badge"
+                                                style="background:{{ strtolower($tPayMethod) === 'cash' ? '#f0fdf4' : '#f5f3ff' }}; color:{{ strtolower($tPayMethod) === 'cash' ? '#166534' : '#6d28d9' }}; border:1px solid {{ strtolower($tPayMethod) === 'cash' ? '#bbf7d0' : '#ddd6fe' }}; text-transform:uppercase; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem;">
                                                 {{ $tPayMethod }}
                                             </span>
                                         </td>
@@ -1765,17 +2045,21 @@
                                             Rp {{ number_format($tOrd->total, 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            <span class="badge" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem;">Berhasil</span>
+                                            <span class="badge"
+                                                style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem;">Berhasil</span>
                                         </td>
                                         <td style="text-align:right; padding-right:1.5rem;">
-                                            <button type="button" class="btn-outline-bio" style="padding:4px 10px; font-size:0.75rem;" onclick="reprintPastReceipt({{ json_encode($tOrd) }})">
+                                            <button type="button" class="btn-outline-bio"
+                                                style="padding:4px 10px; font-size:0.75rem;"
+                                                onclick="reprintPastReceipt({{ json_encode($tOrd) }})">
                                                 Cetak Struk
                                             </button>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" style="text-align:center; padding:3rem 1rem; color:#94a3b8; font-size:0.85rem;">
+                                        <td colspan="7"
+                                            style="text-align:center; padding:3rem 1rem; color:#94a3b8; font-size:0.85rem;">
                                             Belum ada transaksi POS hari ini.
                                         </td>
                                     </tr>
@@ -1807,11 +2091,16 @@
                                         </td>
                                         <td>
                                             @if($mut->type === 'topup')
-                                                <span class="badge" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem;">Top Up Saldo</span>
+                                                <span class="badge"
+                                                    style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem;">Top
+                                                    Up Saldo</span>
                                             @else
-                                                <span class="badge" style="background:#fff1f2; color:#be123c; border:1px solid #fecdd3; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem;">Fee Transaksi Cash</span>
+                                                <span class="badge"
+                                                    style="background:#fff1f2; color:#be123c; border:1px solid #fecdd3; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem;">Fee
+                                                    Transaksi Cash</span>
                                             @endif
-                                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">{{ $mut->notes }}</div>
+                                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">{{ $mut->notes }}
+                                            </div>
                                         </td>
                                         <td style="font-size:0.75rem; font-weight:600; color:#0f172a;">
                                             {{ $mut->reference_number ?: '-' }}
@@ -1828,7 +2117,8 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" style="text-align:center; padding:3rem 1rem; color:#94a3b8; font-size:0.85rem;">
+                                        <td colspan="6"
+                                            style="text-align:center; padding:3rem 1rem; color:#94a3b8; font-size:0.85rem;">
                                             Belum ada mutasi saldo deposit POS hari ini.
                                         </td>
                                     </tr>
@@ -1843,7 +2133,8 @@
 
     <!-- Hidden Template Area for Printing Struk Closing Shift Kasir -->
     <div id="printableClosingReceiptArea" style="display:none;">
-        <div style="font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #000000; line-height: 1.35; padding: 10px; width: 72mm; margin: 0 auto;">
+        <div
+            style="font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #000000; line-height: 1.35; padding: 10px; width: 72mm; margin: 0 auto;">
             <div style="text-align: center; margin-bottom: 8px;">
                 <div style="font-size: 14px; font-weight: bold; text-transform: uppercase;">{{ $storeName }}</div>
                 <div style="font-size: 10px; color: #333;">BUYLE.ID DIGITAL POS</div>
@@ -1872,7 +2163,8 @@
             <table style="width: 100%; font-size: 10px; margin-bottom: 6px;">
                 <tr>
                     <td>Omset Penjualan Kotor:</td>
-                    <td style="text-align: right; font-weight: bold;">Rp {{ number_format($todayGrossSales, 0, ',', '.') }}</td>
+                    <td style="text-align: right; font-weight: bold;">Rp {{ number_format($todayGrossSales, 0, ',', '.') }}
+                    </td>
                 </tr>
                 <tr>
                     <td>Total Diskon:</td>
@@ -1886,11 +2178,13 @@
             <table style="width: 100%; font-size: 10px; margin-bottom: 6px;">
                 <tr>
                     <td>TUNAI FISIK (Di Laci):</td>
-                    <td style="text-align: right; font-weight: bold;">Rp {{ number_format($todayCashInDrawer, 0, ',', '.') }}</td>
+                    <td style="text-align: right; font-weight: bold;">Rp
+                        {{ number_format($todayCashInDrawer, 0, ',', '.') }}</td>
                 </tr>
                 <tr>
                     <td>DIGITAL (QRIS/Transfer):</td>
-                    <td style="text-align: right; font-weight: bold;">Rp {{ number_format($todayDigitalSales, 0, ',', '.') }}</td>
+                    <td style="text-align: right; font-weight: bold;">Rp
+                        {{ number_format($todayDigitalSales, 0, ',', '.') }}</td>
                 </tr>
             </table>
 
@@ -1900,7 +2194,8 @@
             <table style="width: 100%; font-size: 10px; margin-bottom: 6px;">
                 <tr>
                     <td>Fee Platform/Admin Terpotong:</td>
-                    <td style="text-align: right; font-weight: bold;">Rp {{ number_format($todayFeeDeducted, 0, ',', '.') }}</td>
+                    <td style="text-align: right; font-weight: bold;">Rp {{ number_format($todayFeeDeducted, 0, ',', '.') }}
+                    </td>
                 </tr>
                 <tr>
                     <td>Sisa Saldo Deposit Aktif:</td>
@@ -1910,7 +2205,8 @@
 
             <div style="border-bottom: 1px dashed #000; margin: 10px 0;"></div>
 
-            <div style="display: flex; justify-content: space-between; font-size: 9px; margin-top: 15px; text-align: center;">
+            <div
+                style="display: flex; justify-content: space-between; font-size: 9px; margin-top: 15px; text-align: center;">
                 <div style="width: 45%;">
                     Kasir
                     <div style="height: 35px;"></div>
@@ -1980,21 +2276,21 @@
 
             const toast = document.createElement('div');
             toast.style.cssText = `
-                background: #0f172a;
-                color: #ffffff;
-                padding: 10px 16px;
-                border-radius: 12px;
-                font-size: 0.82rem;
-                font-weight: 600;
-                box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                opacity: 0;
-                transform: translateY(-10px);
-                transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-                pointer-events: auto;
-            `;
+                    background: #0f172a;
+                    color: #ffffff;
+                    padding: 10px 16px;
+                    border-radius: 12px;
+                    font-size: 0.82rem;
+                    font-weight: 600;
+                    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    opacity: 0;
+                    transform: translateY(-10px);
+                    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+                    pointer-events: auto;
+                `;
 
             let iconColor = type === 'success' ? '#1eb349' : (type === 'error' ? '#ef4444' : '#3b82f6');
             toast.innerHTML = `<span style="color:${iconColor}; font-weight:800;">●</span> <span>${escapeHtml(message)}</span>`;
@@ -2141,10 +2437,10 @@
 
             if (cart.length === 0) {
                 container.innerHTML = `
-                    <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.84rem;">
-                        Keranjang masih kosong.<br>Pilih produk di sebelah kiri untuk menambah.
-                    </div>
-                `;
+                        <div class="text-center py-4 text-muted" id="cartEmptyNotice" style="font-size: 0.84rem;">
+                            Keranjang masih kosong.<br>Pilih produk di sebelah kiri untuk menambah.
+                        </div>
+                    `;
                 document.getElementById('btnCheckout').disabled = true;
                 calculateTotals();
                 return;
@@ -2168,21 +2464,21 @@
                 }
 
                 html += `
-                    <div class="cart-item-row">
-                        <div class="cart-item-info">
-                            <div class="cart-item-title">${escapeHtml(item.name)}</div>
-                            <div class="cart-item-unit-price">@ Rp ${formatRupiah(item.price)} &bull; Sub: Rp ${formatRupiah(itemSub)}</div>
+                        <div class="cart-item-row">
+                            <div class="cart-item-info">
+                                <div class="cart-item-title">${escapeHtml(item.name)}</div>
+                                <div class="cart-item-unit-price">@ Rp ${formatRupiah(item.price)} &bull; Sub: Rp ${formatRupiah(itemSub)}</div>
+                            </div>
+                            <div class="cart-qty-ctrl">
+                                <button type="button" class="btn-qty" onclick="updateQty(${item.id}, -1)">-</button>
+                                <span class="qty-num">${item.qty}</span>
+                                <button type="button" class="btn-qty btn-qty-plus" onclick="updateQty(${item.id}, 1)">+</button>
+                                <button type="button" class="btn text-danger ms-1 p-0" onclick="removeItem(${item.id})" style="border:none; background:none;">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                </button>
+                            </div>
                         </div>
-                        <div class="cart-qty-ctrl">
-                            <button type="button" class="btn-qty" onclick="updateQty(${item.id}, -1)">-</button>
-                            <span class="qty-num">${item.qty}</span>
-                            <button type="button" class="btn-qty btn-qty-plus" onclick="updateQty(${item.id}, 1)">+</button>
-                            <button type="button" class="btn text-danger ms-1 p-0" onclick="removeItem(${item.id})" style="border:none; background:none;">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                            </button>
-                        </div>
-                    </div>
-                `;
+                    `;
             });
 
             container.innerHTML = html;
@@ -2444,15 +2740,15 @@
             (order.items || []).forEach(item => {
                 const itemQty = item.qty ?? item.quantity ?? 1;
                 itemsHtml += `
-                    <tr>
-                        <td class="text-start" style="font-weight:700;">
-                            ${escapeHtml(item.product_name)}
-                            <div style="font-size:10px; font-weight:normal; color:#444;">@ Rp ${formatRupiah(item.price)}</div>
-                        </td>
-                        <td class="text-center" style="vertical-align:top;">${itemQty}</td>
-                        <td class="text-end" style="font-weight:700; vertical-align:top;">Rp ${formatRupiah(item.subtotal)}</td>
-                    </tr>
-                `;
+                        <tr>
+                            <td class="text-start" style="font-weight:700;">
+                                ${escapeHtml(item.product_name)}
+                                <div style="font-size:10px; font-weight:normal; color:#444;">@ Rp ${formatRupiah(item.price)}</div>
+                            </td>
+                            <td class="text-center" style="vertical-align:top;">${itemQty}</td>
+                            <td class="text-end" style="font-weight:700; vertical-align:top;">Rp ${formatRupiah(item.subtotal)}</td>
+                        </tr>
+                    `;
             });
             document.querySelector('#recItemsTable tbody').innerHTML = itemsHtml;
 
@@ -2567,24 +2863,24 @@
                 return;
             }
             printWin.document.write(`<!DOCTYPE html>
-<html>
-<head>
-    <title>Struk POS</title>
-    <style>
-        @page { size: 80mm auto; margin: 0; }
-        body { font-family: 'Courier New', monospace; font-size: 11px; color: #000; margin: 0; padding: 5mm; width: 70mm; background: #fff; }
-        table { width: 100%; border-collapse: collapse; }
-        .text-end { text-align: right; }
-        .text-center { text-align: center; }
-        .text-start { text-align: left; }
-        .no-print { display: none !important; }
-        img { display: none !important; }
-    </style>
-</head>
-<body>
-    ${content}
-</body>
-</html>`);
+    <html>
+    <head>
+        <title>Struk POS</title>
+        <style>
+            @page { size: 80mm auto; margin: 0; }
+            body { font-family: 'Courier New', monospace; font-size: 11px; color: #000; margin: 0; padding: 5mm; width: 70mm; background: #fff; }
+            table { width: 100%; border-collapse: collapse; }
+            .text-end { text-align: right; }
+            .text-center { text-align: center; }
+            .text-start { text-align: left; }
+            .no-print { display: none !important; }
+            img { display: none !important; }
+        </style>
+    </head>
+    <body>
+        ${content}
+    </body>
+    </html>`);
             printWin.document.close();
             printWin.focus();
             setTimeout(() => {
@@ -2659,52 +2955,52 @@
                 },
                 body: JSON.stringify({ amount: amount })
             })
-            .then(res => res.json())
-            .then(data => {
-                btn.disabled = false;
-                btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg> Bayar Instan via QRIS`;
+                .then(res => res.json())
+                .then(data => {
+                    btn.disabled = false;
+                    btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg> Bayar Instan via QRIS`;
 
-                if (data.snap_token && typeof window.snap !== 'undefined') {
-                    const depositNumber = data.deposit_number;
-                    closeModal('posDepositModal');
-                    document.getElementById('midtransBlurOverlay').classList.add('active');
+                    if (data.snap_token && typeof window.snap !== 'undefined') {
+                        const depositNumber = data.deposit_number;
+                        closeModal('posDepositModal');
+                        document.getElementById('midtransBlurOverlay').classList.add('active');
 
-                    try {
-                        window.snap.pay(data.snap_token, {
-                            onSuccess: function (result) {
-                                document.getElementById('midtransBlurOverlay').classList.remove('active');
-                                pollDepositStatus(depositNumber);
-                            },
-                            onPending: function (result) {
-                                document.getElementById('midtransBlurOverlay').classList.remove('active');
-                                showPosToast('Menunggu konfirmasi pembayaran deposit. Saldo akan bertambah otomatis.', 'info');
-                            },
-                            onError: function (result) {
-                                document.getElementById('midtransBlurOverlay').classList.remove('active');
-                                showPosAlert('Pembayaran deposit gagal. Silakan coba lagi.', 'Gagal', 'error');
-                            },
-                            onClose: function () {
-                                document.getElementById('midtransBlurOverlay').classList.remove('active');
-                                showPosAlert('Pop-up pembayaran ditutup. Deposit belum diselesaikan.', 'Ditunda', 'warning');
-                            }
-                        });
-                    } catch (e) {
-                        document.getElementById('midtransBlurOverlay').classList.remove('active');
-                        showPosAlert('Terjadi kesalahan saat membuka halaman pembayaran.', 'Kesalahan', 'error');
+                        try {
+                            window.snap.pay(data.snap_token, {
+                                onSuccess: function (result) {
+                                    document.getElementById('midtransBlurOverlay').classList.remove('active');
+                                    pollDepositStatus(depositNumber);
+                                },
+                                onPending: function (result) {
+                                    document.getElementById('midtransBlurOverlay').classList.remove('active');
+                                    showPosToast('Menunggu konfirmasi pembayaran deposit. Saldo akan bertambah otomatis.', 'info');
+                                },
+                                onError: function (result) {
+                                    document.getElementById('midtransBlurOverlay').classList.remove('active');
+                                    showPosAlert('Pembayaran deposit gagal. Silakan coba lagi.', 'Gagal', 'error');
+                                },
+                                onClose: function () {
+                                    document.getElementById('midtransBlurOverlay').classList.remove('active');
+                                    showPosAlert('Pop-up pembayaran ditutup. Deposit belum diselesaikan.', 'Ditunda', 'warning');
+                                }
+                            });
+                        } catch (e) {
+                            document.getElementById('midtransBlurOverlay').classList.remove('active');
+                            showPosAlert('Terjadi kesalahan saat membuka halaman pembayaran.', 'Kesalahan', 'error');
+                        }
+                    } else if (data.success) {
+                        closeModal('posDepositModal');
+                        showPosToast('Deposit berhasil diproses!', 'success');
+                        if (data.pos_balance !== undefined) updateBalanceDisplay(data.pos_balance);
+                    } else {
+                        showPosAlert(data.message || 'Gagal membuat sesi pembayaran deposit.', 'Gagal', 'error');
                     }
-                } else if (data.success) {
-                    closeModal('posDepositModal');
-                    showPosToast('Deposit berhasil diproses!', 'success');
-                    if (data.pos_balance !== undefined) updateBalanceDisplay(data.pos_balance);
-                } else {
-                    showPosAlert(data.message || 'Gagal membuat sesi pembayaran deposit.', 'Gagal', 'error');
-                }
-            })
-            .catch(err => {
-                btn.disabled = false;
-                btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg> Bayar Instan via QRIS`;
-                showPosAlert('Terjadi kesalahan jaringan: ' + err.message, 'Kesalahan Koneksi', 'error');
-            });
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg> Bayar Instan via QRIS`;
+                    showPosAlert('Terjadi kesalahan jaringan: ' + err.message, 'Kesalahan Koneksi', 'error');
+                });
         }
 
         function pollDepositStatus(depositNumber) {
@@ -2723,24 +3019,24 @@
                 },
                 body: JSON.stringify({ deposit_number: depositNumber })
             })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success && data.pos_balance !== undefined) {
-                    updateBalanceDisplay(data.pos_balance);
-                    if (data.is_paid) {
-                        showPosToast('Saldo deposit berhasil ditambahkan!', 'success');
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.pos_balance !== undefined) {
+                        updateBalanceDisplay(data.pos_balance);
+                        if (data.is_paid) {
+                            showPosToast('Saldo deposit berhasil ditambahkan!', 'success');
+                        } else {
+                            showPosToast('Deposit berhasil! Saldo akan diperbarui otomatis.', 'info');
+                        }
                     } else {
-                        showPosToast('Deposit berhasil! Saldo akan diperbarui otomatis.', 'info');
+                        showPosToast('Deposit diproses! Saldo diperbarui otomatis.', 'success');
+                        setTimeout(() => window.location.reload(), 2000);
                     }
-                } else {
-                    showPosToast('Deposit diproses! Saldo diperbarui otomatis.', 'success');
+                })
+                .catch(() => {
+                    showPosToast('Deposit berhasil! Halaman akan dimuat ulang.', 'success');
                     setTimeout(() => window.location.reload(), 2000);
-                }
-            })
-            .catch(() => {
-                showPosToast('Deposit berhasil! Halaman akan dimuat ulang.', 'success');
-                setTimeout(() => window.location.reload(), 2000);
-            });
+                });
         }
 
         function updateBalanceDisplay(newBalance) {
@@ -2764,8 +3060,8 @@
         function switchHistoryTab(tabId, clickedBtn) {
             // Map short key to actual pane element ID
             const paneMap = {
-                'shift':     'paneHistoryShift',
-                'orders':    'paneHistoryOrders',
+                'shift': 'paneHistoryShift',
+                'orders': 'paneHistoryOrders',
                 'mutations': 'paneHistoryMutations'
             };
 
@@ -2812,24 +3108,24 @@
             }
 
             printWin.document.write(`<!DOCTYPE html>
-<html>
-<head>
-    <title>Rekap Closing Shift - {{ $storeName }}</title>
-    <style>
-        @page { size: 80mm auto; margin: 0; }
-        body { font-family: 'Courier New', monospace; font-size: 11px; color: #000; margin: 0; padding: 5mm; width: 70mm; background: #fff; }
-        table { width: 100%; border-collapse: collapse; }
-        td { padding: 1px 0; }
-        .text-end, [style*="text-align: right"] { text-align: right; }
-        .text-center, [style*="text-align: center"] { text-align: center; }
-        .no-print { display: none !important; }
-        img { display: none !important; }
-    </style>
-</head>
-<body>
-    ${content}
-</body>
-</html>`);
+    <html>
+    <head>
+        <title>Rekap Closing Shift - {{ $storeName }}</title>
+        <style>
+            @page { size: 80mm auto; margin: 0; }
+            body { font-family: 'Courier New', monospace; font-size: 11px; color: #000; margin: 0; padding: 5mm; width: 70mm; background: #fff; }
+            table { width: 100%; border-collapse: collapse; }
+            td { padding: 1px 0; }
+            .text-end, [style*="text-align: right"] { text-align: right; }
+            .text-center, [style*="text-align: center"] { text-align: center; }
+            .no-print { display: none !important; }
+            img { display: none !important; }
+        </style>
+    </head>
+    <body>
+        ${content}
+    </body>
+    </html>`);
             printWin.document.close();
             printWin.focus();
             setTimeout(() => {
@@ -2844,7 +3140,7 @@
         document.head.appendChild(styleEl);
 
         // Smooth POS Skeleton Reveal Transition
-        (function() {
+        (function () {
             function revealPos() {
                 const skel = document.getElementById('pos-skeleton');
                 const real = document.getElementById('pos-real-content');

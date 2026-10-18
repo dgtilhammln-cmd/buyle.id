@@ -322,16 +322,16 @@
         .luxury-card::before {
             content: '';
             position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: linear-gradient(
-                115deg,
-                rgba(255, 255, 255, 0) 30%,
-                rgba(255, 255, 255, 0.12) 48%,
-                rgba(255, 255, 255, 0.25) 50%,
-                rgba(255, 255, 255, 0.12) 52%,
-                rgba(255, 255, 255, 0) 70%
-            );
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(115deg,
+                    rgba(255, 255, 255, 0) 30%,
+                    rgba(255, 255, 255, 0.12) 48%,
+                    rgba(255, 255, 255, 0.25) 50%,
+                    rgba(255, 255, 255, 0.12) 52%,
+                    rgba(255, 255, 255, 0) 70%);
             pointer-events: none;
             transform: rotate(25deg);
         }
@@ -343,23 +343,46 @@
             color: #0f172a;
             box-shadow: 0 12px 30px rgba(148, 163, 184, 0.3);
         }
+
         .luxury-card.tier-silver .lc-label,
-        .luxury-card.tier-silver .lc-holder-label { color: #475569; }
-        .luxury-card.tier-silver .lc-amount { color: #0f172a; text-shadow: 0 1px 2px rgba(255,255,255,0.7); }
-        .luxury-card.tier-silver .lc-tier-badge { background: rgba(15, 23, 42, 0.08); color: #0f172a; border: 1px solid rgba(15, 23, 42, 0.15); }
+        .luxury-card.tier-silver .lc-holder-label {
+            color: #475569;
+        }
+
+        .luxury-card.tier-silver .lc-amount {
+            color: #0f172a;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
+        }
+
+        .luxury-card.tier-silver .lc-tier-badge {
+            background: rgba(15, 23, 42, 0.08);
+            color: #0f172a;
+            border: 1px solid rgba(15, 23, 42, 0.15);
+        }
 
         /* Tier 2: Hustler (Titanium Gray Card) */
         .luxury-card.tier-titanium {
             background: linear-gradient(135deg, #334155 0%, #1e293b 50%, #0f172a 100%);
-            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 10px), linear-gradient(135deg, #334155 0%, #1e293b 50%, #0f172a 100%);
+            background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 2px, transparent 2px, transparent 10px), linear-gradient(135deg, #334155 0%, #1e293b 50%, #0f172a 100%);
             border: 1px solid rgba(203, 213, 225, 0.35);
             color: #ffffff;
             box-shadow: 0 14px 35px rgba(15, 23, 42, 0.4);
         }
+
         .luxury-card.tier-titanium .lc-label,
-        .luxury-card.tier-titanium .lc-holder-label { color: #94a3b8; }
-        .luxury-card.tier-titanium .lc-amount { color: #ffffff; }
-        .luxury-card.tier-titanium .lc-tier-badge { background: rgba(255, 255, 255, 0.12); color: #f1f5f9; border: 1px solid rgba(255, 255, 255, 0.25); }
+        .luxury-card.tier-titanium .lc-holder-label {
+            color: #94a3b8;
+        }
+
+        .luxury-card.tier-titanium .lc-amount {
+            color: #ffffff;
+        }
+
+        .luxury-card.tier-titanium .lc-tier-badge {
+            background: rgba(255, 255, 255, 0.12);
+            color: #f1f5f9;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
 
         /* Tier 3: Pengusaha Muda (Rose Gold / Champagne Gold Minimalist) */
         .luxury-card.tier-rosegold {
@@ -368,10 +391,21 @@
             color: #3b1609;
             box-shadow: 0 14px 35px rgba(212, 155, 133, 0.4);
         }
+
         .luxury-card.tier-rosegold .lc-label,
-        .luxury-card.tier-rosegold .lc-holder-label { color: #6e331f; }
-        .luxury-card.tier-rosegold .lc-amount { color: #2e0f05; }
-        .luxury-card.tier-rosegold .lc-tier-badge { background: rgba(61, 22, 9, 0.12); color: #3b1609; border: 1px solid rgba(61, 22, 9, 0.22); }
+        .luxury-card.tier-rosegold .lc-holder-label {
+            color: #6e331f;
+        }
+
+        .luxury-card.tier-rosegold .lc-amount {
+            color: #2e0f05;
+        }
+
+        .luxury-card.tier-rosegold .lc-tier-badge {
+            background: rgba(61, 22, 9, 0.12);
+            color: #3b1609;
+            border: 1px solid rgba(61, 22, 9, 0.22);
+        }
 
         /* Tier 4: Eksekutif Muda (Deep Emerald Platinum Card) */
         .luxury-card.tier-emerald {
@@ -380,10 +414,22 @@
             color: #ffffff;
             box-shadow: 0 14px 38px rgba(4, 120, 87, 0.4);
         }
+
         .luxury-card.tier-emerald .lc-label,
-        .luxury-card.tier-emerald .lc-holder-label { color: #a7f3d0; }
-        .luxury-card.tier-emerald .lc-amount { color: #ffffff; text-shadow: 0 0 12px rgba(52, 211, 153, 0.35); }
-        .luxury-card.tier-emerald .lc-tier-badge { background: rgba(52, 211, 153, 0.18); color: #6ee7b7; border: 1px solid rgba(52, 211, 153, 0.35); }
+        .luxury-card.tier-emerald .lc-holder-label {
+            color: #a7f3d0;
+        }
+
+        .luxury-card.tier-emerald .lc-amount {
+            color: #ffffff;
+            text-shadow: 0 0 12px rgba(52, 211, 153, 0.35);
+        }
+
+        .luxury-card.tier-emerald .lc-tier-badge {
+            background: rgba(52, 211, 153, 0.18);
+            color: #6ee7b7;
+            border: 1px solid rgba(52, 211, 153, 0.35);
+        }
 
         /* Tier 5: Eksekutif Senior (Obsidian Matte Black Silver Engraved) */
         .luxury-card.tier-obsidian {
@@ -392,83 +438,221 @@
             color: #f8fafc;
             box-shadow: 0 16px 42px rgba(0, 0, 0, 0.65);
         }
+
         .luxury-card.tier-obsidian .lc-label,
-        .luxury-card.tier-obsidian .lc-holder-label { color: #94a3b8; }
-        .luxury-card.tier-obsidian .lc-amount { color: #f8fafc; text-shadow: 0 2px 6px rgba(0,0,0,0.9); }
-        .luxury-card.tier-obsidian .lc-tier-badge { background: rgba(255, 255, 255, 0.1); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.25); }
+        .luxury-card.tier-obsidian .lc-holder-label {
+            color: #94a3b8;
+        }
+
+        .luxury-card.tier-obsidian .lc-amount {
+            color: #f8fafc;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+        }
+
+        .luxury-card.tier-obsidian .lc-tier-badge {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
 
         /* Tier 6: Financial Freedom (Solid Carbon Fiber Ultra-Card) */
         .luxury-card.tier-carbon {
             background-color: #050505;
-            background-image: 
-                radial-gradient(rgba(255,255,255,0.09) 1px, transparent 0),
-                radial-gradient(rgba(255,255,255,0.09) 1px, #050505 1px);
+            background-image:
+                radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 0),
+                radial-gradient(rgba(255, 255, 255, 0.09) 1px, #050505 1px);
             background-size: 8px 8px;
             background-position: 0 0, 4px 4px;
             border: 1px solid rgba(255, 255, 255, 0.35);
             color: #ffffff;
             box-shadow: 0 18px 50px rgba(0, 0, 0, 0.85);
         }
+
         .luxury-card.tier-carbon .lc-label,
-        .luxury-card.tier-carbon .lc-holder-label { color: #a1a1aa; letter-spacing: 0.1em; }
-        .luxury-card.tier-carbon .lc-amount { color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.95); }
-        .luxury-card.tier-carbon .lc-tier-badge { background: rgba(255, 255, 255, 0.15); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.35); font-weight: 800; letter-spacing: 0.08em; }
+        .luxury-card.tier-carbon .lc-holder-label {
+            color: #a1a1aa;
+            letter-spacing: 0.1em;
+        }
+
+        .luxury-card.tier-carbon .lc-amount {
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95);
+        }
+
+        .luxury-card.tier-carbon .lc-tier-badge {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            font-weight: 800;
+            letter-spacing: 0.08em;
+        }
 
         /* EMV Chip & NFC elements */
-        .lc-chip-group { display: flex; align-items: center; gap: 0.65rem; }
+        .lc-chip-group {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
         .emv-chip {
-            width: 36px; height: 26px;
+            width: 36px;
+            height: 26px;
             background: linear-gradient(135deg, #ffe066 0%, #d4af37 50%, #aa8c2c 100%);
             border-radius: 5px;
             position: relative;
-            box-shadow: inset 0 1px 2px rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.2);
-            overflow: hidden; flex-shrink: 0;
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            flex-shrink: 0;
         }
+
         .luxury-card.tier-titanium .emv-chip,
         .luxury-card.tier-obsidian .emv-chip,
         .luxury-card.tier-carbon .emv-chip {
             background: linear-gradient(135deg, #f1f5f9 0%, #94a3b8 50%, #64748b 100%);
         }
-        .chip-line.horizontal { position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(0,0,0,0.25); }
-        .chip-line.vertical { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(0,0,0,0.25); }
 
-        .nfc-icon { opacity: 0.65; }
+        .chip-line.horizontal {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .chip-line.vertical {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .nfc-icon {
+            opacity: 0.65;
+        }
 
         /* Card Rows */
-        .lc-top { display: flex; align-items: center; justify-content: space-between; z-index: 2; margin-bottom: 0.5rem; }
-        .lc-brand { display: flex; align-items: center; gap: 0.5rem; }
-        .lc-brand-title { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em; }
-        .lc-brand-dot { color: #1eb349; }
+        .lc-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 2;
+            margin-bottom: 0.5rem;
+        }
 
-        .lc-middle { margin: 0.75rem 0; z-index: 2; }
-        .lc-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.2rem; }
-        
-        .lc-amount-row { display: flex; align-items: center; gap: 0.65rem; }
-        .lc-amount { font-size: 1.65rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; word-break: break-word; transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s ease; }
-        .lc-amount.hidden-mask { opacity: 0.85; letter-spacing: 0.05em; }
+        .lc-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .lc-brand-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .lc-brand-dot {
+            color: #1eb349;
+        }
+
+        .lc-middle {
+            margin: 0.75rem 0;
+            z-index: 2;
+        }
+
+        .lc-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.2rem;
+        }
+
+        .lc-amount-row {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .lc-amount {
+            font-size: 1.65rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            word-break: break-word;
+            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s ease;
+        }
+
+        .lc-amount.hidden-mask {
+            opacity: 0.85;
+            letter-spacing: 0.05em;
+        }
 
         .lc-eye-toggle {
             background: rgba(255, 255, 255, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.25);
             color: inherit;
-            width: 30px; height: 30px;
-            border-radius: 50%; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-            flex-shrink: 0; backdrop-filter: blur(4px); outline: none;
+            flex-shrink: 0;
+            backdrop-filter: blur(4px);
+            outline: none;
         }
+
         .luxury-card.tier-silver .lc-eye-toggle,
         .luxury-card.tier-rosegold .lc-eye-toggle {
             background: rgba(15, 23, 42, 0.08);
             border-color: rgba(15, 23, 42, 0.15);
             color: #0f172a;
         }
-        .lc-eye-toggle:hover { transform: scale(1.1); background: rgba(255, 255, 255, 0.25); }
 
-        .lc-bottom { display: flex; align-items: flex-end; justify-content: space-between; z-index: 2; gap: 0.5rem; }
-        .lc-tier-label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.9; margin-bottom: 0.15rem; }
-        .lc-holder-name { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.03em; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .lc-subtitle-badge { font-size: 0.68rem; font-weight: 600; opacity: 0.85; text-align: right; }
+        .lc-eye-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .lc-bottom {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            z-index: 2;
+            gap: 0.5rem;
+        }
+
+        .lc-tier-label {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            opacity: 0.9;
+            margin-bottom: 0.15rem;
+        }
+
+        .lc-holder-name {
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .lc-subtitle-badge {
+            font-size: 0.68rem;
+            font-weight: 600;
+            opacity: 0.85;
+            text-align: right;
+        }
 
         /* Progress bar container below card */
         .lc-progress-container {
@@ -476,7 +660,7 @@
             border: 1px solid #e2e8f0;
             border-radius: 16px;
             padding: 0.85rem 1.15rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
             display: flex;
             flex-direction: column;
             gap: 0.55rem;
@@ -512,10 +696,20 @@
         }
 
         .lc-tier-info-btn {
-            background: none; border: none; color: #1eb349; font-size: 0.75rem; font-weight: 700;
-            cursor: pointer; padding: 0; text-decoration: underline; font-family: 'Montserrat', sans-serif;
+            background: none;
+            border: none;
+            color: #1eb349;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 0;
+            text-decoration: underline;
+            font-family: 'Montserrat', sans-serif;
         }
-        .lc-tier-info-btn:hover { color: #15803d; }
+
+        .lc-tier-info-btn:hover {
+            color: #15803d;
+        }
 
         /* Mini Stats Grid (2x2 beside Luxury Card) */
         .stats-mini-grid {
@@ -523,11 +717,13 @@
             grid-template-columns: 1fr 1fr;
             gap: 0.85rem;
         }
+
         @media (max-width: 540px) {
             .stats-mini-grid {
                 grid-template-columns: 1fr;
             }
         }
+
         .stat-mini-card {
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -536,60 +732,168 @@
             display: flex;
             align-items: center;
             gap: 0.85rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
             transition: transform 0.2s, box-shadow 0.2s;
         }
+
         .stat-mini-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
         }
+
         .sm-icon {
-            width: 42px; height: 42px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
         }
-        .sm-icon.green { background: #f0fdf4; color: #16a34a; }
-        .sm-icon.blue { background: #eff6ff; color: #2563eb; }
-        .sm-icon.purple { background: #faf5ff; color: #9333ea; }
-        .sm-icon.orange { background: #fff7ed; color: #ea580c; }
 
-        .sm-label { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.15rem; }
-        .sm-value { font-size: 1.3rem; font-weight: 800; color: #0f172a; line-height: 1.1; }
+        .sm-icon.green {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .sm-icon.blue {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .sm-icon.purple {
+            background: #faf5ff;
+            color: #9333ea;
+        }
+
+        .sm-icon.orange {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        .sm-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.15rem;
+        }
+
+        .sm-value {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.1;
+        }
 
         /* ── TIER GUIDE MODAL ── */
         .tier-modal-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px);
-            z-index: 9999; align-items: center; justify-content: center;
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(6px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
             padding: 1rem;
         }
-        .tier-modal-overlay.show { display: flex; animation: tmFadeIn 0.25s ease; }
-        @keyframes tmFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .tier-modal-overlay.show {
+            display: flex;
+            animation: tmFadeIn 0.25s ease;
+        }
+
+        @keyframes tmFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
 
         .tier-modal-card {
-            background: #ffffff; border-radius: 24px; max-width: 680px; width: 100%;
-            max-height: 90vh; overflow-y: auto; padding: 1.75rem;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.3); position: relative;
+            background: #ffffff;
+            border-radius: 24px;
+            max-width: 680px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 1.75rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
         }
-        .tier-modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
-        .tier-modal-title { font-size: 1.25rem; font-weight: 800; color: #0f172a; margin: 0; }
+
+        .tier-modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        .tier-modal-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+        }
+
         .tier-modal-close {
-            background: #f1f5f9; border: none; width: 32px; height: 32px;
-            border-radius: 50%; font-size: 18px; cursor: pointer; color: #64748b;
-            display: flex; align-items: center; justify-content: center;
+            background: #f1f5f9;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
         .tier-grid-preview {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
         }
-        @media (max-width: 580px) { .tier-grid-preview { grid-template-columns: 1fr; } }
+
+        @media (max-width: 580px) {
+            .tier-grid-preview {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .tier-item-box {
-            border-radius: 14px; padding: 1rem; border: 1px solid #e2e8f0;
-            display: flex; flex-direction: column; gap: 0.4rem; position: relative;
+            border-radius: 14px;
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            position: relative;
             overflow: hidden;
         }
-        .tier-item-name { font-size: 0.85rem; font-weight: 800; }
-        .tier-item-target { font-size: 0.78rem; font-weight: 700; opacity: 0.9; }
-        .tier-item-desc { font-size: 0.72rem; opacity: 0.8; line-height: 1.4; }
+
+        .tier-item-name {
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
+        .tier-item-target {
+            font-size: 0.78rem;
+            font-weight: 700;
+            opacity: 0.9;
+        }
+
+        .tier-item-desc {
+            font-size: 0.72rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
 
         /* ── Traffic Wave Chart Card ─────────────────────────────── */
         /* ── Charts Grid (2 Cards) ─────────────────────────────────── */
@@ -950,19 +1254,52 @@
             .charts-wave-grid {
                 display: none !important;
             }
-        /* ── POS Tab & Neraca Styles ─────────────────────────────── */
+        }
+
+        /* ── POS Tab & Neraca Styles (Compact, Proportional & Mobile-Friendly) ── */
         .pos-kpi-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 0.85rem;
+            margin-bottom: 1.25rem;
         }
+
         @media (max-width: 1024px) {
             .pos-kpi-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
             }
         }
-        @media (max-width: 580px) {
+
+        @media (max-width: 540px) {
+            .pos-kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+            .pos-kpi-grid .stat-mini-card {
+                padding: 0.75rem 0.85rem !important;
+                gap: 0.5rem !important;
+            }
+            .pos-kpi-grid .stat-mini-card .sm-icon {
+                width: 36px !important;
+                height: 36px !important;
+            }
+            .pos-kpi-grid .stat-mini-card .sm-icon svg {
+                width: 18px !important;
+                height: 18px !important;
+            }
+            .pos-kpi-grid .stat-mini-card .stat-val {
+                font-size: 1rem !important;
+            }
+            .pos-kpi-grid .stat-mini-card .stat-title {
+                font-size: 0.65rem !important;
+            }
+            .pos-kpi-grid .stat-mini-card .stat-sub {
+                font-size: 0.62rem !important;
+            }
+        }
+
+        @media (max-width: 360px) {
             .pos-kpi-grid {
                 grid-template-columns: 1fr;
             }
@@ -971,53 +1308,87 @@
         .pos-neraca-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.25rem;
+            gap: 1.15rem;
             margin-bottom: 1.5rem;
         }
-        @media (max-width: 900px) {
+
+        @media (max-width: 860px) {
             .pos-neraca-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
             }
         }
 
         .pos-neraca-card {
             background: #ffffff;
-            border: 1px solid #e2e8f0;
+            border: 1.5px solid #e2e8f0;
             border-radius: 18px;
-            padding: 1.4rem 1.6rem;
             box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .pos-neraca-head {
+            padding: 1rem 1.35rem 0.85rem;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .pos-neraca-body {
+            padding: 0.85rem 1.35rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
         }
 
         .pos-neraca-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.75rem 0;
+            padding: 0.55rem 0;
             border-bottom: 1px dashed #f1f5f9;
-            font-size: 0.86rem;
+            font-size: 0.82rem;
         }
+
         .pos-neraca-row:last-child {
             border-bottom: none;
         }
+
         .pos-neraca-label {
             color: #64748b;
             font-weight: 600;
+            font-size: 0.8rem;
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.5rem;
         }
+
         .pos-neraca-val {
             font-weight: 700;
             color: #0f172a;
+            font-size: 0.84rem;
+        }
+
+        .pos-neraca-footer {
+            background: #f8fafc;
+            border-top: 1.5px solid #e2e8f0;
+            padding: 0.85rem 1.35rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
         }
 
         .pos-method-pill {
-            padding: 0.45rem 1rem;
+            padding: 0.4rem 0.85rem;
             border-radius: 999px;
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             font-weight: 700;
             text-decoration: none;
             transition: all 0.2s;
@@ -1026,12 +1397,15 @@
             background: #ffffff;
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.35rem;
+            white-space: nowrap;
         }
+
         .pos-method-pill:hover {
             border-color: #1eb349;
             color: #1eb349;
         }
+
         .pos-method-pill.active {
             background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             color: #ffffff;
@@ -1043,54 +1417,54 @@
 
 @section('content')
 
-@php
-    $salesVal = (float)($totalSales ?? 0);
-    $sellerStoreName = $config['name'] ?? $profile->store_name ?? auth()->user()->name ?? 'CREATOR';
+    @php
+        $salesVal = (float) ($totalSales ?? 0);
+        $sellerStoreName = $config['name'] ?? $profile->store_name ?? auth()->user()->name ?? 'CREATOR';
 
-    if ($salesVal >= 500000000) {
-        $tierName = 'FINANCIAL FREEDOM';
-        $tierSubtitle = 'Solid Carbon Fiber Ultra-Card';
-        $tierClass = 'tier-carbon';
-        $nextTierTarget = null;
-        $nextTierName = null;
-        $tierProgress = 100;
-    } elseif ($salesVal >= 200000000) {
-        $tierName = 'EKSEKUTIF SENIOR';
-        $tierSubtitle = 'Obsidian Matte Black Priority';
-        $tierClass = 'tier-obsidian';
-        $nextTierTarget = 500000000;
-        $nextTierName = 'Financial Freedom (500 Juta)';
-        $tierProgress = round(($salesVal / 500000000) * 100, 1);
-    } elseif ($salesVal >= 100000000) {
-        $tierName = 'EKSEKUTIF MUDA';
-        $tierSubtitle = 'Deep Emerald Platinum Card';
-        $tierClass = 'tier-emerald';
-        $nextTierTarget = 200000000;
-        $nextTierName = 'Eksekutif Senior (200 Juta)';
-        $tierProgress = round(($salesVal / 200000000) * 100, 1);
-    } elseif ($salesVal >= 50000000) {
-        $tierName = 'PENGUSAHA MUDA';
-        $tierSubtitle = 'Rose Gold Minimalist Card';
-        $tierClass = 'tier-rosegold';
-        $nextTierTarget = 100000000;
-        $nextTierName = 'Eksekutif Muda (100 Juta)';
-        $tierProgress = round(($salesVal / 100000000) * 100, 1);
-    } elseif ($salesVal >= 10000000) {
-        $tierName = 'PEJUANG / HUSTLER';
-        $tierSubtitle = 'Titanium Gray Metallic Card';
-        $tierClass = 'tier-titanium';
-        $nextTierTarget = 50000000;
-        $nextTierName = 'Pengusaha Muda (50 Juta)';
-        $tierProgress = round(($salesVal / 50000000) * 100, 1);
-    } else {
-        $tierName = 'PERINTIS';
-        $tierSubtitle = 'Matte Silver Brushed Steel';
-        $tierClass = 'tier-silver';
-        $nextTierTarget = 10000000;
-        $nextTierName = 'Pejuang / Hustler (10 Juta)';
-        $tierProgress = round(($salesVal / 10000000) * 100, 1);
-    }
-@endphp
+        if ($salesVal >= 500000000) {
+            $tierName = 'FINANCIAL FREEDOM';
+            $tierSubtitle = 'Solid Carbon Fiber Ultra-Card';
+            $tierClass = 'tier-carbon';
+            $nextTierTarget = null;
+            $nextTierName = null;
+            $tierProgress = 100;
+        } elseif ($salesVal >= 200000000) {
+            $tierName = 'EKSEKUTIF SENIOR';
+            $tierSubtitle = 'Obsidian Matte Black Priority';
+            $tierClass = 'tier-obsidian';
+            $nextTierTarget = 500000000;
+            $nextTierName = 'Financial Freedom (500 Juta)';
+            $tierProgress = round(($salesVal / 500000000) * 100, 1);
+        } elseif ($salesVal >= 100000000) {
+            $tierName = 'EKSEKUTIF MUDA';
+            $tierSubtitle = 'Deep Emerald Platinum Card';
+            $tierClass = 'tier-emerald';
+            $nextTierTarget = 200000000;
+            $nextTierName = 'Eksekutif Senior (200 Juta)';
+            $tierProgress = round(($salesVal / 200000000) * 100, 1);
+        } elseif ($salesVal >= 50000000) {
+            $tierName = 'PENGUSAHA MUDA';
+            $tierSubtitle = 'Rose Gold Minimalist Card';
+            $tierClass = 'tier-rosegold';
+            $nextTierTarget = 100000000;
+            $nextTierName = 'Eksekutif Muda (100 Juta)';
+            $tierProgress = round(($salesVal / 100000000) * 100, 1);
+        } elseif ($salesVal >= 10000000) {
+            $tierName = 'PEJUANG / HUSTLER';
+            $tierSubtitle = 'Titanium Gray Metallic Card';
+            $tierClass = 'tier-titanium';
+            $nextTierTarget = 50000000;
+            $nextTierName = 'Pengusaha Muda (50 Juta)';
+            $tierProgress = round(($salesVal / 50000000) * 100, 1);
+        } else {
+            $tierName = 'PERINTIS';
+            $tierSubtitle = 'Matte Silver Brushed Steel';
+            $tierClass = 'tier-silver';
+            $nextTierTarget = 10000000;
+            $nextTierName = 'Pejuang / Hustler (10 Juta)';
+            $tierProgress = round(($salesVal / 10000000) * 100, 1);
+        }
+    @endphp
 
     {{-- ── Custom Date Modal ──────────────────────────────────────────── --}}
     <div class="date-modal-overlay" id="customDateModal">
@@ -1120,19 +1494,35 @@
     </div>
 
     {{-- ── MAIN TAB NAVIGATION ────────────────────────────────────────── --}}
-    <div class="rp-tab-nav" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; background:#fff; padding:0.5rem 0.75rem; border-radius:14px; border:1px solid #e2e8f0; box-shadow:0 2px 8px rgba(0,0,0,0.03); flex-wrap:wrap; gap:1rem;">
+    <div class="rp-tab-nav"
+        style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; background:#fff; padding:0.5rem 0.75rem; border-radius:14px; border:1px solid #e2e8f0; box-shadow:0 2px 8px rgba(0,0,0,0.03); flex-wrap:wrap; gap:1rem;">
         <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-            <button type="button" class="rp-tab-btn {{ $activeTab === 'pembeli' ? 'active' : '' }}" onclick="switchReportTab('pembeli')" id="tabBtnPembeli" style="padding:0.6rem 1.25rem; font-weight:700; font-size:0.88rem; border:none; border-radius:10px; background:{{ $activeTab === 'pembeli' ? '#F0FDF4' : 'transparent' }}; color:{{ $activeTab === 'pembeli' ? '#15803D' : '#64748b' }}; cursor:pointer; display:flex; align-items:center; gap:0.6rem; transition:all 0.2s;">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                <span>Data Pembeli</span>
-                <span style="background:{{ $activeTab === 'pembeli' ? '#1eb349' : '#94a3b8' }}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($buyers ?? []) }}</span>
+            <button type="button" class="rp-tab-btn {{ $activeTab === 'pembeli' ? 'active' : '' }}"
+                onclick="switchReportTab('pembeli')" id="tabBtnPembeli"
+                style="padding:0.6rem 1.25rem; font-weight:700; font-size:0.88rem; border:none; border-radius:10px; background:{{ $activeTab === 'pembeli' ? '#F0FDF4' : 'transparent' }}; color:{{ $activeTab === 'pembeli' ? '#15803D' : '#64748b' }}; cursor:pointer; display:flex; align-items:center; gap:0.6rem; transition:all 0.2s;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                <span>Produk & Jasa Digital</span>
+                <span
+                    style="background:{{ $activeTab === 'pembeli' ? '#1eb349' : '#94a3b8' }}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($buyers ?? []) }}</span>
             </button>
-            <button type="button" class="rp-tab-btn {{ $activeTab === 'leads' ? 'active' : '' }}" onclick="switchReportTab('leads')" id="tabBtnLeads" style="padding:0.6rem 1.25rem; font-weight:700; font-size:0.88rem; border:none; border-radius:10px; background:{{ $activeTab === 'leads' ? '#F0FDF4' : 'transparent' }}; color:{{ $activeTab === 'leads' ? '#15803D' : '#64748b' }}; cursor:pointer; display:flex; align-items:center; gap:0.6rem; transition:all 0.2s;">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                <span>Data Leads</span>
-                <span style="background:{{ $activeTab === 'leads' ? '#1eb349' : '#94a3b8' }}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($leads ?? []) }}</span>
+            <button type="button" class="rp-tab-btn {{ $activeTab === 'leads' ? 'active' : '' }}"
+                onclick="switchReportTab('leads')" id="tabBtnLeads"
+                style="padding:0.6rem 1.25rem; font-weight:700; font-size:0.88rem; border:none; border-radius:10px; background:{{ $activeTab === 'leads' ? '#F0FDF4' : 'transparent' }}; color:{{ $activeTab === 'leads' ? '#15803D' : '#64748b' }}; cursor:pointer; display:flex; align-items:center; gap:0.6rem; transition:all 0.2s;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                <span>Data Leads Website</span>
+                <span
+                    style="background:{{ $activeTab === 'leads' ? '#1eb349' : '#94a3b8' }}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($leads ?? []) }}</span>
             </button>
-            <button type="button" class="rp-tab-btn {{ $activeTab === 'pos' ? 'active' : '' }}" onclick="switchReportTab('pos')" id="tabBtnPos" style="padding:0.6rem 1.25rem; font-weight:700; font-size:0.88rem; border:none; border-radius:10px; background:{{ $activeTab === 'pos' ? '#F0FDF4' : 'transparent' }}; color:{{ $activeTab === 'pos' ? '#15803D' : '#64748b' }}; cursor:pointer; display:flex; align-items:center; gap:0.6rem; transition:all 0.2s;">
+            <button type="button" class="rp-tab-btn {{ $activeTab === 'pos' ? 'active' : '' }}"
+                onclick="switchReportTab('pos')" id="tabBtnPos"
+                style="padding:0.6rem 1.25rem; font-weight:700; font-size:0.88rem; border:none; border-radius:10px; background:{{ $activeTab === 'pos' ? '#F0FDF4' : 'transparent' }}; color:{{ $activeTab === 'pos' ? '#15803D' : '#64748b' }}; cursor:pointer; display:flex; align-items:center; gap:0.6rem; transition:all 0.2s;">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <rect x="4" y="3" width="16" height="18" rx="2" />
                     <line x1="8" y1="7" x2="16" y2="7" />
@@ -1142,7 +1532,8 @@
                     <line x1="14" y1="15" x2="16" y2="15" />
                 </svg>
                 <span>Kasir Digital (POS)</span>
-                <span style="background:{{ $activeTab === 'pos' ? '#1eb349' : '#94a3b8' }}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($posOrders ?? []) }}</span>
+                <span
+                    style="background:{{ $activeTab === 'pos' ? '#1eb349' : '#94a3b8' }}; color:#fff; font-size:0.75rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:999px;">{{ count($posOrders ?? []) }}</span>
             </button>
         </div>
     </div>
@@ -1160,7 +1551,8 @@
                                 <div class="chip-line horizontal"></div>
                                 <div class="chip-line vertical"></div>
                             </div>
-                            <svg class="nfc-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <svg class="nfc-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.2">
                                 <path d="M12 2a10 10 0 0 1 10 10" />
                                 <path d="M12 6a6 6 0 0 1 6 6" />
                                 <path d="M12 10a2 2 0 0 1 2 2" />
@@ -1169,7 +1561,8 @@
                         <div class="lc-brand">
                             @php $siteLogo = \App\Models\Setting::get('logo'); @endphp
                             @if($siteLogo)
-                                <img src="{{ asset('storage/' . $siteLogo) }}" alt="buyle.id" style="height:24px; max-width:120px; object-fit:contain;">
+                                <img src="{{ asset('storage/' . $siteLogo) }}" alt="buyle.id"
+                                    style="height:24px; max-width:120px; object-fit:contain;">
                             @else
                                 <span class="lc-brand-title">buyle<span class="lc-brand-dot">.id</span></span>
                             @endif
@@ -1179,16 +1572,23 @@
                     <div class="lc-middle">
                         <div class="lc-label">TOTAL INCOME</div>
                         <div class="lc-amount-row">
-                            <div class="lc-amount" id="lcAmountText" data-amount="Rp {{ number_format($totalSales, 0, ',', '.') }}">
+                            <div class="lc-amount" id="lcAmountText"
+                                data-amount="Rp {{ number_format($totalSales, 0, ',', '.') }}">
                                 Rp {{ number_format($totalSales, 0, ',', '.') }}
                             </div>
-                            <button type="button" class="lc-eye-toggle" id="btnToggleSalesMask" onclick="toggleSalesVisibility()" title="Tampilkan / Sembunyikan Nominal">
-                                <svg id="eyeIconOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <button type="button" class="lc-eye-toggle" id="btnToggleSalesMask"
+                                onclick="toggleSalesVisibility()" title="Tampilkan / Sembunyikan Nominal">
+                                <svg id="eyeIconOpen" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                     <circle cx="12" cy="12" r="3"></circle>
                                 </svg>
-                                <svg id="eyeIconClosed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
-                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <svg id="eyeIconClosed" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+                                    style="display:none;">
+                                    <path
+                                        d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                                    </path>
                                     <line x1="1" y1="1" x2="23" y2="23"></line>
                                 </svg>
                             </button>
@@ -1235,34 +1635,53 @@
             <div class="stats-mini-grid">
                 <div class="stat-mini-card">
                     <div class="sm-icon green">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                            <path
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
                     </div>
                     <div>
                         <div class="sm-label">Total Visitor</div>
                         <div class="sm-value">{{ number_format($totalVisitors) }}</div>
                     </div>
                 </div>
-                <a href="{{ route('creator.payout.settings') }}" class="stat-mini-card stat-mini-card-payout" style="text-decoration:none;position:relative;border:1.5px solid #86efac;background:linear-gradient(135deg,#ffffff 0%,#f0fdf4 100%);cursor:pointer;">
-                    <div class="sm-icon green" style="background:#dcfce7;color:#15803d;box-shadow:0 2px 8px rgba(22,163,74,0.15);">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="16" cy="12" r="2"/><path d="M6 12h.01"/></svg>
+                <a href="{{ route('creator.payout.settings') }}" class="stat-mini-card stat-mini-card-payout"
+                    style="text-decoration:none;position:relative;border:1.5px solid #86efac;background:linear-gradient(135deg,#ffffff 0%,#f0fdf4 100%);cursor:pointer;">
+                    <div class="sm-icon green"
+                        style="background:#dcfce7;color:#15803d;box-shadow:0 2px 8px rgba(22,163,74,0.15);">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="2" y="6" width="20" height="12" rx="2" />
+                            <circle cx="16" cy="12" r="2" />
+                            <path d="M6 12h.01" />
+                        </svg>
                     </div>
                     <div style="flex:1;min-width:0;">
                         <div style="display:flex;align-items:center;justify-content:space-between;gap:0.3rem;">
                             <div class="sm-label" style="color:#15803d;font-weight:800;">Saldo Siap Ditarik</div>
-                            <span style="background:#16a34a;color:#fff;font-size:0.6rem;font-weight:800;padding:0.15rem 0.45rem;border-radius:6px;letter-spacing:0.02em;">TARIK</span>
+                            <span
+                                style="background:#16a34a;color:#fff;font-size:0.6rem;font-weight:800;padding:0.15rem 0.45rem;border-radius:6px;letter-spacing:0.02em;">TARIK</span>
                         </div>
                         <div class="sm-value" style="color:#14532d;font-size:1.15rem;">
                             Rp {{ number_format($availableBalance ?? 0, 0, ',', '.') }}
                         </div>
-                        <div style="font-size:0.68rem;color:#16a34a;font-weight:600;display:flex;align-items:center;gap:0.25rem;margin-top:0.15rem;">
+                        <div
+                            style="font-size:0.68rem;color:#16a34a;font-weight:600;display:flex;align-items:center;gap:0.25rem;margin-top:0.15rem;">
                             <span>100% Tanpa Potongan</span>
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
                         </div>
                     </div>
                 </a>
                 <div class="stat-mini-card">
                     <div class="sm-icon purple">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <path d="M16 10a4 4 0 0 1-8 0" />
+                        </svg>
                     </div>
                     <div>
                         <div class="sm-label">Total Transaksi</div>
@@ -1271,7 +1690,10 @@
                 </div>
                 <div class="stat-mini-card">
                     <div class="sm-icon orange">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                        </svg>
                     </div>
                     <div>
                         <div class="sm-label">Link Klik Bio</div>
@@ -1317,7 +1739,8 @@
                     <div class="export-group">
                         <a href="{{ route('creator.sales.report.export', array_merge(request()->query(), ['type' => 'pembeli', 'format' => 'xls'])) }}"
                             class="btn-export">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                 <polyline points="7 10 12 15 17 10" />
                                 <line x1="12" y1="15" x2="12" y2="3" />
@@ -1326,7 +1749,8 @@
                         </a>
                         <a href="{{ route('creator.sales.report.export', array_merge(request()->query(), ['type' => 'pembeli', 'format' => 'pdf'])) }}"
                             class="btn-export red">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                 <polyline points="7 10 12 15 17 10" />
                                 <line x1="12" y1="15" x2="12" y2="3" />
@@ -1379,12 +1803,15 @@
                                     </td>
                                     <td class="td-user">
                                         <div class="name" style="font-weight:700; color:#0f172a;">
-                                            {{ $addr['name'] ?? $order->user?->name ?? 'Pembeli' }}</div>
+                                            {{ $addr['name'] ?? $order->user?->name ?? 'Pembeli' }}
+                                        </div>
                                         @if(!empty($addr['phone']) || !empty($order->user?->phone))
                                             <div class="phone" style="font-size:0.75rem;color:#1eb349;font-weight:600;">
-                                                {{ $addr['phone'] ?? $order->user?->phone }}</div>
+                                                {{ $addr['phone'] ?? $order->user?->phone }}
+                                            </div>
                                         @endif
-                                        <div class="email" style="font-size:0.72rem;color:#94a3b8;">{{ $order->user?->email ?? '' }}
+                                        <div class="email" style="font-size:0.72rem;color:#94a3b8;">
+                                            {{ $order->user?->email ?? '' }}
                                         </div>
                                     </td>
                                     <td>
@@ -1396,7 +1823,8 @@
                                                     $vLabel = $item->variant_name ?? ($item->variantValue ? ($item->variantValue->option?->name ? $item->variantValue->option->name . ': ' : '') . $item->variantValue->value : null);
                                                 @endphp
                                                 @if($vLabel)
-                                                    <span style="font-size:0.65rem;color:#15803d;background:#ecfdf5;border:1px solid #bbf7d0;padding:1px 5px;border-radius:4px;font-weight:700;">
+                                                    <span
+                                                        style="font-size:0.65rem;color:#15803d;background:#ecfdf5;border:1px solid #bbf7d0;padding:1px 5px;border-radius:4px;font-weight:700;">
                                                         🏷 {{ $vLabel }}
                                                     </span>
                                                 @endif
@@ -1405,7 +1833,8 @@
                                         @endforeach
                                     </td>
                                     <td style="font-weight:800; white-space:nowrap; color:#0f172a;">Rp
-                                        {{ number_format($order->items->sum('subtotal'), 0, ',', '.') }}</td>
+                                        {{ number_format($order->items->sum('subtotal'), 0, ',', '.') }}
+                                    </td>
                                     <td>
                                         <span id="badge-status-{{ $order->id }}" class="badge"
                                             style="{{ $statusBadgeStyle }} font-weight:700; padding:3px 8px; border-radius:6px; font-size:0.72rem;">
@@ -1464,7 +1893,8 @@
                                             ]);
                                         @endphp
                                         <div style="display:flex; align-items:center; gap:0.4rem;">
-                                            <button type="button" onclick="openOrderModal({{ $orderDataJson }})" class="btn-export"
+                                            <button type="button" onclick="openOrderModal({{ $orderDataJson }})"
+                                                class="btn-export"
                                                 style="background:#0f172a; color:#fff; border:none; padding:0.4rem 0.65rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap;">
                                                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
                                                     viewBox="0 0 24 24" style="vertical-align:middle;margin-right:3px;">
@@ -1474,7 +1904,8 @@
                                                 Detail & Edit
                                             </button>
                                             @if($isFnbOrder)
-                                                <button type="button" onclick="printReceipt({{ $orderDataJson }})" class="btn-export"
+                                                <button type="button" onclick="printReceipt({{ $orderDataJson }})"
+                                                    class="btn-export"
                                                     style="background:#1eb349; color:#fff; border:none; padding:0.4rem 0.65rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap;"
                                                     title="Cetak / Download e-Receipt Pesanan">
                                                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
@@ -1492,7 +1923,8 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" style="text-align:center; padding: 2.5rem; color:#94a3b8; font-size:0.85rem;">
+                                    <td colspan="6"
+                                        style="text-align:center; padding: 2.5rem; color:#94a3b8; font-size:0.85rem;">
                                         Belum ada data pembeli di rentang waktu ini.
                                     </td>
                                 </tr>
@@ -1532,7 +1964,8 @@
                     </h3>
                     @forelse($topBioLinks as $link)
                         <div class="list-row">
-                            <div class="list-name">{{ Str::limit($link->page_title ?? 'Block #' . $link->bio_block_id, 32) }}</div>
+                            <div class="list-name">{{ Str::limit($link->page_title ?? 'Block #' . $link->bio_block_id, 32) }}
+                            </div>
                             <div class="list-stat">{{ number_format($link->click_count) }} klik</div>
                         </div>
                     @empty
@@ -1580,20 +2013,26 @@
             </div>
             <div class="metric-card">
                 <div class="metric-label">Leads Hari Ini</div>
-                <div class="metric-value">{{ number_format(collect($leads ?? [])->filter(fn($l) => \Carbon\Carbon::parse($l->created_at)->isToday())->count()) }}</div>
+                <div class="metric-value">
+                    {{ number_format(collect($leads ?? [])->filter(fn($l) => \Carbon\Carbon::parse($l->created_at)->isToday())->count()) }}
+                </div>
             </div>
             <div class="metric-card dark">
                 <div class="metric-label">Leads Bulan Ini</div>
-                <div class="metric-value">{{ number_format(collect($leads ?? [])->filter(fn($l) => \Carbon\Carbon::parse($l->created_at)->isCurrentMonth())->count()) }}</div>
+                <div class="metric-value">
+                    {{ number_format(collect($leads ?? [])->filter(fn($l) => \Carbon\Carbon::parse($l->created_at)->isCurrentMonth())->count()) }}
+                </div>
             </div>
         </div>
 
         {{-- Leads Table Panel --}}
         <div class="panel-card" style="width:100%; box-sizing:border-box;">
-            <div class="panel-head" style="margin-bottom:1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+            <div class="panel-head"
+                style="margin-bottom:1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
                 <div>
                     <h3 class="panel-title" style="margin:0 0 0.2rem;">Daftar Leads & Pesan Masuk</h3>
-                    <p style="font-size:0.8rem; color:#64748b; margin:0;">Daftar calon klien & pembeli yang mengisi form Hubungi Kami dari website Anda.</p>
+                    <p style="font-size:0.8rem; color:#64748b; margin:0;">Daftar calon klien & pembeli yang mengisi form
+                        Hubungi Kami dari website Anda.</p>
                 </div>
                 <div class="export-group">
                     <a href="{{ route('creator.sales.report.export', array_merge(request()->query(), ['type' => 'leads', 'format' => 'xls'])) }}"
@@ -1634,13 +2073,18 @@
                         @forelse($leads ?? [] as $lead)
                             @php
                                 $waClean = preg_replace('/[^0-9]/', '', $lead->phone);
-                                if(str_starts_with($waClean, '0')) $waClean = '62' . substr($waClean, 1);
+                                if (str_starts_with($waClean, '0'))
+                                    $waClean = '62' . substr($waClean, 1);
                                 $waMsg = "Halo Kak {$lead->name}, terima kasih telah menghubungi kami mengenai kebutuhan: " . ($lead->message ?? $lead->product);
                             @endphp
                             <tr>
                                 <td style="white-space:nowrap; color:#64748b; font-size:0.78rem;">
-                                    <div style="font-weight:600; color:#0f172a;">{{ \Carbon\Carbon::parse($lead->created_at)->format('d M Y') }}</div>
-                                    <div style="font-size:0.72rem; color:#94a3b8;">{{ \Carbon\Carbon::parse($lead->created_at)->format('H:i') }} WIB</div>
+                                    <div style="font-weight:600; color:#0f172a;">
+                                        {{ \Carbon\Carbon::parse($lead->created_at)->format('d M Y') }}
+                                    </div>
+                                    <div style="font-size:0.72rem; color:#94a3b8;">
+                                        {{ \Carbon\Carbon::parse($lead->created_at)->format('H:i') }} WIB
+                                    </div>
                                 </td>
                                 <td>
                                     <div style="font-weight:700; color:#0f172a; font-size:0.88rem;">{{ $lead->name }}</div>
@@ -1649,7 +2093,10 @@
                                     @if($waClean)
                                         <a href="https://wa.me/{{ $waClean }}?text={{ urlencode($waMsg) }}" target="_blank"
                                             style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#F0FDF4; border:1px solid #BBF7D0; color:#15803D; border-radius:6px; font-weight:700; font-size:0.78rem; text-decoration:none;">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                                <path
+                                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                                            </svg>
                                             <span>{{ $lead->phone }}</span>
                                         </a>
                                     @else
@@ -1657,13 +2104,15 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <span style="font-size:0.83rem; font-weight:600; color:#334155;">{{ $lead->city ?? $lead->company ?? '-' }}</span>
+                                    <span
+                                        style="font-size:0.83rem; font-weight:600; color:#334155;">{{ $lead->city ?? $lead->company ?? '-' }}</span>
                                 </td>
                                 <td style="max-width:280px; font-size:0.82rem; color:#475569; line-height:1.4;">
                                     {{ $lead->message ?? $lead->product ?? '-' }}
                                 </td>
                                 <td>
-                                    <span style="display:inline-block; padding:0.2rem 0.55rem; background:#EFF6FF; border:1px solid #BFDBFE; color:#1D4ED8; border-radius:6px; font-size:0.72rem; font-weight:600;">
+                                    <span
+                                        style="display:inline-block; padding:0.2rem 0.55rem; background:#EFF6FF; border:1px solid #BFDBFE; color:#1D4ED8; border-radius:6px; font-size:0.72rem; font-weight:600;">
                                         {{ $lead->source === 'theme5_footer' ? 'Footer5' : ucfirst($lead->source ?? 'Website') }}
                                     </span>
                                 </td>
@@ -1677,7 +2126,8 @@
                                             </a>
                                         @endif
 
-                                        <form method="POST" action="{{ route('creator.sales.report.destroy_lead', $lead->id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus lead ini?')">
+                                        <form method="POST" action="{{ route('creator.sales.report.destroy_lead', $lead->id) }}"
+                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus lead ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" title="Hapus Lead"
@@ -1703,81 +2153,80 @@
 
     {{-- ── TAB 3: KASIR DIGITAL (POS) & NERACA ────────────────────────── --}}
     <div id="tabContentPos" class="rp-tab-content" style="{{ $activeTab === 'pos' ? '' : 'display:none;' }}">
-        {{-- ── 1. KPI SUMMARY CARDS (4 Cards) ─────────────────────────── --}}
         <div class="pos-kpi-grid">
             {{-- Card 1: Total Omset POS --}}
-            <div class="stat-mini-card" style="padding:1.15rem 1.25rem;">
-                <div class="sm-icon" style="background:#F0FDF4; color:#1eb349; width:46px; height:46px;">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <div class="stat-mini-card" style="padding:0.9rem 1.1rem;">
+                <div class="sm-icon" style="background:#F0FDF4; color:#1eb349; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <rect x="2" y="5" width="20" height="14" rx="2" />
                         <line x1="2" y1="10" x2="22" y2="10" />
                     </svg>
                 </div>
-                <div>
-                    <div style="font-size:0.75rem; color:#64748b; font-weight:600; text-transform:uppercase; letter-spacing:0.04em;">Total Omset POS</div>
-                    <div style="font-size:1.2rem; font-weight:800; color:#0f172a; margin-top:2px;">
+                <div style="min-width:0; flex:1;">
+                    <div class="stat-title" style="font-size:0.7rem; color:#64748b; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Total Omset POS</div>
+                    <div class="stat-val" style="font-size:1.15rem; font-weight:800; color:#0f172a; margin-top:1px; line-height:1.2;">
                         Rp {{ number_format($posTotalSales, 0, ',', '.') }}
                     </div>
-                    <div style="font-size:0.72rem; color:#15803d; font-weight:700; margin-top:2px;">
+                    <div class="stat-sub" style="font-size:0.7rem; color:#15803d; font-weight:700; margin-top:2px;">
                         {{ $posTotalTransactions }} Transaksi Kasir
                     </div>
                 </div>
             </div>
 
             {{-- Card 2: Uang Tunai di Laci --}}
-            <div class="stat-mini-card" style="padding:1.15rem 1.25rem;">
-                <div class="sm-icon" style="background:#ECFDF5; color:#059669; width:46px; height:46px;">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <div class="stat-mini-card" style="padding:0.9rem 1.1rem;">
+                <div class="sm-icon" style="background:#ECFDF5; color:#059669; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <rect x="2" y="6" width="20" height="12" rx="2" />
                         <circle cx="12" cy="12" r="3" />
                         <path d="M6 12h.01M18 12h.01" />
                     </svg>
                 </div>
-                <div>
-                    <div style="font-size:0.75rem; color:#64748b; font-weight:600; text-transform:uppercase; letter-spacing:0.04em;">Uang Tunai di Laci</div>
-                    <div style="font-size:1.2rem; font-weight:800; color:#059669; margin-top:2px;">
+                <div style="min-width:0; flex:1;">
+                    <div class="stat-title" style="font-size:0.7rem; color:#64748b; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Uang Tunai di Laci</div>
+                    <div class="stat-val" style="font-size:1.15rem; font-weight:800; color:#059669; margin-top:1px; line-height:1.2;">
                         Rp {{ number_format($posCashTotal, 0, ',', '.') }}
                     </div>
-                    <div style="font-size:0.72rem; color:#64748b; font-weight:500; margin-top:2px;">
+                    <div class="stat-sub" style="font-size:0.7rem; color:#64748b; font-weight:500; margin-top:2px;">
                         Kas fisik di laci kasir
                     </div>
                 </div>
             </div>
 
             {{-- Card 3: Non-Tunai (QRIS / Transfer) --}}
-            <div class="stat-mini-card" style="padding:1.15rem 1.25rem;">
-                <div class="sm-icon" style="background:#EFF6FF; color:#2563EB; width:46px; height:46px;">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <div class="stat-mini-card" style="padding:0.9rem 1.1rem;">
+                <div class="sm-icon" style="background:#EFF6FF; color:#2563EB; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <rect x="5" y="2" width="14" height="20" rx="2" />
                         <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3" />
                     </svg>
                 </div>
-                <div>
-                    <div style="font-size:0.75rem; color:#64748b; font-weight:600; text-transform:uppercase; letter-spacing:0.04em;">Non-Tunai (Digital)</div>
-                    <div style="font-size:1.2rem; font-weight:800; color:#1D4ED8; margin-top:2px;">
+                <div style="min-width:0; flex:1;">
+                    <div class="stat-title" style="font-size:0.7rem; color:#64748b; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Non-Tunai (Digital)</div>
+                    <div class="stat-val" style="font-size:1.15rem; font-weight:800; color:#1D4ED8; margin-top:1px; line-height:1.2;">
                         Rp {{ number_format($posDigitalTotal, 0, ',', '.') }}
                     </div>
-                    <div style="font-size:0.72rem; color:#64748b; font-weight:500; margin-top:2px;">
+                    <div class="stat-sub" style="font-size:0.7rem; color:#64748b; font-weight:500; margin-top:2px;">
                         QRIS & Transfer Bank
                     </div>
                 </div>
             </div>
 
             {{-- Card 4: Fee Transaksi Terpotong --}}
-            <div class="stat-mini-card" style="padding:1.15rem 1.25rem;">
-                <div class="sm-icon" style="background:#FEF2F2; color:#DC2626; width:46px; height:46px;">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <div class="stat-mini-card" style="padding:0.9rem 1.1rem;">
+                <div class="sm-icon" style="background:#FEF2F2; color:#DC2626; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <polyline points="14 2 14 8 20 8" />
                         <line x1="9" y1="15" x2="15" y2="15" />
                     </svg>
                 </div>
-                <div>
-                    <div style="font-size:0.75rem; color:#64748b; font-weight:600; text-transform:uppercase; letter-spacing:0.04em;">Beban Biaya Kasir</div>
-                    <div style="font-size:1.2rem; font-weight:800; color:#DC2626; margin-top:2px;">
+                <div style="min-width:0; flex:1;">
+                    <div class="stat-title" style="font-size:0.7rem; color:#64748b; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Beban Biaya Kasir</div>
+                    <div class="stat-val" style="font-size:1.15rem; font-weight:800; color:#DC2626; margin-top:1px; line-height:1.2;">
                         Rp {{ number_format($posFeesTotal, 0, ',', '.') }}
                     </div>
-                    <div style="font-size:0.72rem; color:#64748b; font-weight:500; margin-top:2px;">
+                    <div class="stat-sub" style="font-size:0.7rem; color:#64748b; font-weight:500; margin-top:2px;">
                         Fee dipotong deposit
                     </div>
                 </div>
@@ -1789,63 +2238,63 @@
             {{-- Kolom Kiri: Neraca Arus Kas Kasir POS --}}
             <div class="pos-neraca-card">
                 <div>
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.1rem; border-bottom:1px solid #e2e8f0; padding-bottom:0.75rem;">
+                    <div class="pos-neraca-head">
                         <div>
-                            <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0 0 2px;">Neraca Arus Kas Kasir</h3>
-                            <p style="font-size:0.78rem; color:#64748b; margin:0;">Rekonsiliasi omset fisik & digital periode ini</p>
+                            <h3 style="font-size:0.98rem; font-weight:800; color:#0f172a; margin:0 0 2px;">Neraca Arus Kas Kasir</h3>
+                            <p style="font-size:0.74rem; color:#64748b; margin:0;">Rekonsiliasi omset fisik & digital periode ini</p>
                         </div>
-                        <span style="font-size:0.72rem; font-weight:700; color:#15803d; background:#F0FDF4; border:1px solid #BBF7D0; padding:3px 8px; border-radius:999px;">
+                        <span style="font-size:0.7rem; font-weight:700; color:#15803d; background:#F0FDF4; border:1px solid #BBF7D0; padding:2px 8px; border-radius:999px; white-space:nowrap;">
                             Buku Kasir
                         </span>
                     </div>
 
-                    <div class="pos-neraca-row">
-                        <span class="pos-neraca-label">
-                            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#1eb349;"></span>
-                            Penjualan Kotor (Gross Sales)
-                        </span>
-                        <span class="pos-neraca-val" style="color:#15803d;">
-                            + Rp {{ number_format($posTotalSales, 0, ',', '.') }}
-                        </span>
-                    </div>
-                    <div class="pos-neraca-row">
-                        <span class="pos-neraca-label">
-                            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#059669;"></span>
-                            Uang Tunai di Laci Kasir (Cash)
-                        </span>
-                        <span class="pos-neraca-val">
-                            Rp {{ number_format($posCashTotal, 0, ',', '.') }}
-                        </span>
-                    </div>
-                    <div class="pos-neraca-row">
-                        <span class="pos-neraca-label">
-                            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#2563eb;"></span>
-                            Pembayaran Non-Tunai (QRIS & Transfer)
-                        </span>
-                        <span class="pos-neraca-val">
-                            Rp {{ number_format($posDigitalTotal, 0, ',', '.') }}
-                        </span>
-                    </div>
-                    <div class="pos-neraca-row">
-                        <span class="pos-neraca-label">
-                            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#dc2626;"></span>
-                            Beban Fee Transaksi (Platform Fee)
-                        </span>
-                        <span class="pos-neraca-val" style="color:#dc2626;">
-                            - Rp {{ number_format($posFeesTotal, 0, ',', '.') }}
-                        </span>
+                    <div class="pos-neraca-body">
+                        <div class="pos-neraca-row">
+                            <span class="pos-neraca-label">
+                                <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#1eb349; flex-shrink:0;"></span>
+                                Penjualan Kotor (Gross Sales)
+                            </span>
+                            <span class="pos-neraca-val" style="color:#15803d;">
+                                + Rp {{ number_format($posTotalSales, 0, ',', '.') }}
+                            </span>
+                        </div>
+                        <div class="pos-neraca-row">
+                            <span class="pos-neraca-label">
+                                <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#059669; flex-shrink:0;"></span>
+                                Uang Tunai di Laci Kasir (Cash)
+                            </span>
+                            <span class="pos-neraca-val">
+                                Rp {{ number_format($posCashTotal, 0, ',', '.') }}
+                            </span>
+                        </div>
+                        <div class="pos-neraca-row">
+                            <span class="pos-neraca-label">
+                                <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#2563eb; flex-shrink:0;"></span>
+                                Pembayaran Non-Tunai (QRIS & Transfer)
+                            </span>
+                            <span class="pos-neraca-val">
+                                Rp {{ number_format($posDigitalTotal, 0, ',', '.') }}
+                            </span>
+                        </div>
+                        <div class="pos-neraca-row">
+                            <span class="pos-neraca-label">
+                                <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#dc2626; flex-shrink:0;"></span>
+                                Beban Fee Transaksi (Platform Fee)
+                            </span>
+                            <span class="pos-neraca-val" style="color:#dc2626;">
+                                - Rp {{ number_format($posFeesTotal, 0, ',', '.') }}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
-                <div style="margin-top:1.25rem; padding-top:1rem; border-top:2px solid #e2e8f0; background:#f8fafc; margin:-1.4rem -1.6rem -1.4rem; padding:1.1rem 1.6rem; border-bottom-left-radius:18px; border-bottom-right-radius:18px;">
-                    <div style="display:flex; align-items:center; justify-content:space-between;">
-                        <div>
-                            <div style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.05em;">Estimasi Omset Bersih</div>
-                            <div style="font-size:0.72rem; color:#94a3b8; margin-top:1px;">(Gross Sales dikurangi Platform Fee)</div>
-                        </div>
-                        <div style="font-size:1.3rem; font-weight:800; color:#15803d;">
-                            Rp {{ number_format(max(0, $posTotalSales - $posFeesTotal), 0, ',', '.') }}
-                        </div>
+                <div class="pos-neraca-footer">
+                    <div>
+                        <div style="font-size:0.72rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.05em;">Estimasi Omset Bersih</div>
+                        <div style="font-size:0.68rem; color:#94a3b8; margin-top:1px;">(Gross Sales dikurangi Platform Fee)</div>
+                    </div>
+                    <div style="font-size:1.2rem; font-weight:800; color:#15803d;">
+                        Rp {{ number_format(max(0, $posTotalSales - $posFeesTotal), 0, ',', '.') }}
                     </div>
                 </div>
             </div>
@@ -1853,68 +2302,70 @@
             {{-- Kolom Kanan: Audit Saldo Deposit & Mutasi Ledger --}}
             <div class="pos-neraca-card">
                 <div>
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.1rem; border-bottom:1px solid #e2e8f0; padding-bottom:0.75rem;">
+                    <div class="pos-neraca-head">
                         <div>
-                            <h3 style="font-size:1.05rem; font-weight:800; color:#0f172a; margin:0 0 2px;">Saldo Deposit Kasir POS</h3>
-                            <p style="font-size:0.78rem; color:#64748b; margin:0;">Saldo cadangan pemotongan fee transaksi tunai</p>
+                            <h3 style="font-size:0.98rem; font-weight:800; color:#0f172a; margin:0 0 2px;">Saldo Deposit Kasir POS</h3>
+                            <p style="font-size:0.74rem; color:#64748b; margin:0;">Saldo cadangan pemotongan fee transaksi tunai</p>
                         </div>
                         @if($posBalance > 5000)
-                            <span style="font-size:0.72rem; font-weight:700; color:#15803d; background:#F0FDF4; border:1px solid #BBF7D0; padding:3px 8px; border-radius:999px;">
+                            <span style="font-size:0.7rem; font-weight:700; color:#15803d; background:#F0FDF4; border:1px solid #BBF7D0; padding:2px 8px; border-radius:999px; white-space:nowrap;">
                                 Saldo Aman
                             </span>
                         @else
-                            <span style="font-size:0.72rem; font-weight:700; color:#d97706; background:#FEF3C7; border:1px solid #FDE68A; padding:3px 8px; border-radius:999px;">
+                            <span style="font-size:0.7rem; font-weight:700; color:#d97706; background:#FEF3C7; border:1px solid #FDE68A; padding:2px 8px; border-radius:999px; white-space:nowrap;">
                                 Perlu Topup
                             </span>
                         @endif
                     </div>
 
-                    {{-- Highlight Saldo --}}
-                    <div style="background:linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border:1px solid #bbf7d0; border-radius:14px; padding:1rem 1.25rem; margin-bottom:1rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem;">
-                        <div>
-                            <div style="font-size:0.72rem; font-weight:700; color:#166534; text-transform:uppercase; letter-spacing:0.04em;">Sisa Saldo Deposit Saat Ini</div>
-                            <div style="font-size:1.45rem; font-weight:800; color:#14532d; margin-top:2px;">
-                                Rp {{ number_format($posBalance, 0, ',', '.') }}
+                    <div class="pos-neraca-body">
+                        {{-- Highlight Saldo --}}
+                        <div style="background:linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border:1.5px solid #bbf7d0; border-radius:12px; padding:0.75rem 1rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.6rem;">
+                            <div>
+                                <div style="font-size:0.68rem; font-weight:700; color:#166534; text-transform:uppercase; letter-spacing:0.04em;">Sisa Saldo Deposit Saat Ini</div>
+                                <div style="font-size:1.25rem; font-weight:800; color:#14532d; margin-top:1px;">
+                                    Rp {{ number_format($posBalance, 0, ',', '.') }}
+                                </div>
                             </div>
+                            <a href="{{ route('creator.pos.index') }}" style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.45rem 0.95rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border-radius:999px; font-weight:800; font-size:0.75rem; text-decoration:none; box-shadow:0 2px 8px rgba(30,179,73,0.25); transition:transform 0.15s;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                                <span>Buka Kasir & Topup</span>
+                            </a>
                         </div>
-                        <a href="{{ route('creator.pos.index') }}" style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.55rem 1.15rem; background:linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color:#fff; border-radius:999px; font-weight:800; font-size:0.78rem; text-decoration:none; box-shadow:0 3px 10px rgba(30,179,73,0.3); transition:transform 0.2s;">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-                            <span>Buka Kasir & Topup</span>
-                        </a>
-                    </div>
 
-                    <div class="pos-neraca-row">
-                        <span class="pos-neraca-label">
-                            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#16a34a;"></span>
-                            Total Topup Deposit di Periode ini
-                        </span>
-                        <span class="pos-neraca-val" style="color:#16a34a;">
-                            + Rp {{ number_format($posTotalTopup, 0, ',', '.') }}
-                        </span>
-                    </div>
-                    <div class="pos-neraca-row">
-                        <span class="pos-neraca-label">
-                            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#e11d48;"></span>
-                            Total Pemotongan Fee POS
-                        </span>
-                        <span class="pos-neraca-val" style="color:#e11d48;">
-                            - Rp {{ number_format($posTotalFeeMutations, 0, ',', '.') }}
-                        </span>
+                        <div class="pos-neraca-row">
+                            <span class="pos-neraca-label">
+                                <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#16a34a; flex-shrink:0;"></span>
+                                Total Topup Deposit di Periode ini
+                            </span>
+                            <span class="pos-neraca-val" style="color:#16a34a;">
+                                + Rp {{ number_format($posTotalTopup, 0, ',', '.') }}
+                            </span>
+                        </div>
+                        <div class="pos-neraca-row">
+                            <span class="pos-neraca-label">
+                                <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#e11d48; flex-shrink:0;"></span>
+                                Total Pemotongan Fee POS
+                            </span>
+                            <span class="pos-neraca-val" style="color:#e11d48;">
+                                - Rp {{ number_format($posTotalFeeMutations, 0, ',', '.') }}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
                 {{-- Riwayat Mutasi Terakhir --}}
-                <div style="margin-top:0.85rem; padding-top:0.6rem; border-top:1px dashed #e2e8f0;">
-                    <div style="font-size:0.72rem; font-weight:700; color:#64748b; margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.04em;">
-                        Mutasi Terakhir ({{ $posMutations->count() }} Transaksi)
+                <div class="pos-neraca-footer" style="flex-direction:column; align-items:stretch; gap:0.4rem;">
+                    <div style="font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.04em; display:flex; align-items:center; justify-content:space-between;">
+                        <span>Mutasi Terakhir ({{ $posMutations->count() }} Transaksi)</span>
                     </div>
                     @if($posMutations->count() > 0)
-                        <div style="max-height:110px; overflow-y:auto; display:flex; flex-direction:column; gap:4px;">
+                        <div style="max-height:85px; overflow-y:auto; display:flex; flex-direction:column; gap:3px;">
                             @foreach($posMutations->take(4) as $mut)
-                                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.74rem; padding:3px 0; color:#475569;">
-                                    <div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; padding:2px 0; color:#475569;">
+                                    <div style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:65%;">
                                         <span style="font-weight:600; color:#0f172a;">{{ $mut->description ?? ($mut->type === 'topup' ? 'Topup Saldo POS' : 'Potong Fee POS') }}</span>
-                                        <span style="color:#94a3b8; font-size:0.68rem; margin-left:4px;">{{ $mut->created_at->format('d/m H:i') }}</span>
+                                        <span style="color:#94a3b8; font-size:0.65rem; margin-left:3px;">{{ $mut->created_at->format('d/m H:i') }}</span>
                                     </div>
                                     <span style="font-weight:700; color:{{ $mut->amount >= 0 ? '#16a34a' : '#e11d48' }};">
                                         {{ $mut->amount >= 0 ? '+' : '' }}Rp {{ number_format($mut->amount, 0, ',', '.') }}
@@ -1923,11 +2374,10 @@
                             @endforeach
                         </div>
                     @else
-                        <div style="font-size:0.74rem; color:#94a3b8; font-style:italic; padding:4px 0;">
+                        <div style="font-size:0.72rem; color:#94a3b8; font-style:italic;">
                             Belum ada catatan mutasi deposit di rentang tanggal ini.
                         </div>
                     @endif
-                </div>
             </div>
         </div>
 
@@ -1963,7 +2413,8 @@
                     <div class="export-group">
                         <a href="{{ route('creator.sales.report.export_pos', array_merge(request()->query(), ['pos_method' => $posPaymentMethod ?? 'all'])) }}"
                             class="btn-export" style="background:#15803d; border-radius:999px; padding:0.45rem 1rem;">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                 <polyline points="7 10 12 15 17 10" />
                                 <line x1="12" y1="15" x2="12" y2="3" />
@@ -1995,7 +2446,7 @@
                                 $customerPhone = $addr['phone'] ?? $order->user?->phone ?? '-';
                                 $methodRaw = strtolower($addr['payment_method'] ?? ($order->payment->method ?? 'cash'));
                                 $orderTotalFee = (float) (($order->platform_fee ?? 0) + ($order->admin_fee ?? 0));
-                                
+
                                 $statusVal = is_object($order->status) ? $order->status->value : (string) $order->status;
                                 $statusLabel = is_object($order->status) && method_exists($order->status, 'label') ? $order->status->label() : ucfirst($statusVal);
                                 $shipment = $order->shipment;
@@ -2045,7 +2496,8 @@
                                         <span style="font-weight:700; color:#0f172a; font-family:monospace;">
                                             #{{ $order->order_number ?? ('BYL-' . $order->id) }}
                                         </span>
-                                        <span style="background:#e0e7ff; color:#3730a3; font-size:0.65rem; padding:1px 6px; border-radius:4px; font-weight:700;">
+                                        <span
+                                            style="background:#e0e7ff; color:#3730a3; font-size:0.65rem; padding:1px 6px; border-radius:4px; font-weight:700;">
                                             POS
                                         </span>
                                     </div>
@@ -2077,19 +2529,23 @@
                                 </td>
                                 <td>
                                     @if($methodRaw === 'cash')
-                                        <span style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#DCFCE7; border:1px solid #BBF7D0; color:#166534; border-radius:999px; font-size:0.72rem; font-weight:700;">
+                                        <span
+                                            style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#DCFCE7; border:1px solid #BBF7D0; color:#166534; border-radius:999px; font-size:0.72rem; font-weight:700;">
                                             💵 Tunai (Cash)
                                         </span>
                                     @elseif($methodRaw === 'qris')
-                                        <span style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#DBEAFE; border:1px solid #BFDBFE; color:#1E40AF; border-radius:999px; font-size:0.72rem; font-weight:700;">
+                                        <span
+                                            style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#DBEAFE; border:1px solid #BFDBFE; color:#1E40AF; border-radius:999px; font-size:0.72rem; font-weight:700;">
                                             📱 QRIS
                                         </span>
                                     @elseif(in_array($methodRaw, ['transfer', 'bank_transfer']))
-                                        <span style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#F3E8FF; border:1px solid #E9D5FF; color:#6B21A8; border-radius:999px; font-size:0.72rem; font-weight:700;">
+                                        <span
+                                            style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#F3E8FF; border:1px solid #E9D5FF; color:#6B21A8; border-radius:999px; font-size:0.72rem; font-weight:700;">
                                             🏦 Transfer Bank
                                         </span>
                                     @else
-                                        <span style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#F1F5F9; border:1px solid #E2E8F0; color:#475569; border-radius:999px; font-size:0.72rem; font-weight:700;">
+                                        <span
+                                            style="display:inline-flex; align-items:center; gap:4px; padding:0.25rem 0.65rem; background:#F1F5F9; border:1px solid #E2E8F0; color:#475569; border-radius:999px; font-size:0.72rem; font-weight:700;">
                                             {{ strtoupper($methodRaw) }}
                                         </span>
                                     @endif
@@ -2105,9 +2561,11 @@
                                         <button type="button" onclick="printReceipt({{ $orderDataJson }})"
                                             style="background:#1eb349; color:#fff; border:none; padding:0.38rem 0.75rem; font-size:0.75rem; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;"
                                             title="Cetak Struk Transaksi">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
                                                 <polyline points="6 9 6 2 18 2 18 9" />
-                                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                                                <path
+                                                    d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
                                                 <rect x="6" y="14" width="12" height="8" />
                                             </svg>
                                             Struk
@@ -2139,12 +2597,12 @@
     <script>
         function switchReportTab(tabName) {
             const pembeliContent = document.getElementById('tabContentPembeli');
-            const leadsContent   = document.getElementById('tabContentLeads');
-            const posContent     = document.getElementById('tabContentPos');
-            const tabBtnPembeli  = document.getElementById('tabBtnPembeli');
-            const tabBtnLeads    = document.getElementById('tabBtnLeads');
-            const tabBtnPos      = document.getElementById('tabBtnPos');
-            const modalTabInput  = document.getElementById('modalTabInput');
+            const leadsContent = document.getElementById('tabContentLeads');
+            const posContent = document.getElementById('tabContentPos');
+            const tabBtnPembeli = document.getElementById('tabBtnPembeli');
+            const tabBtnLeads = document.getElementById('tabBtnLeads');
+            const tabBtnPos = document.getElementById('tabBtnPos');
+            const modalTabInput = document.getElementById('modalTabInput');
 
             // Reset all tab content
             if (pembeliContent) pembeliContent.style.display = 'none';
@@ -2210,7 +2668,7 @@
                         btn.href = btnUrl.toString();
                     }
                 });
-            } catch(e) {}
+            } catch (e) { }
         }
         // ── Traffic Wave Chart ────────────────────────────────────────────────
         (function () {
@@ -2431,21 +2889,21 @@
                 let wlBadges = '';
                 if (item.seller_name) {
                     wlBadges += `<span style="background:#F1F5F9;color:#475569;padding:2px 7px;border-radius:4px;font-size:0.7rem;font-weight:600;display:inline-flex;align-items:center;gap:3px;margin-top:4px;">
-                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                        Pemilik Produk: ${item.seller_name}</span>`;
+                                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                Pemilik Produk: ${item.seller_name}</span>`;
                 }
                 if (item.reseller_name) {
                     wlBadges += `<span style="background:#EFF6FF;color:#2563EB;padding:2px 7px;border-radius:4px;font-size:0.7rem;font-weight:600;display:inline-flex;align-items:center;gap:3px;margin-top:4px;margin-left:4px;">
-                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        Reseller Whitelabel: ${item.reseller_name}</span>`;
+                                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                Reseller Whitelabel: ${item.reseller_name}</span>`;
                 }
                 let wlBreakdown = '';
                 if (item.reseller_margin > 0) {
                     wlBreakdown = `<div style="margin-top:5px;background:#F0FDF4;border:1px dashed #86EFAC;color:#166534;padding:4px 8px;border-radius:6px;font-size:0.7rem;line-height:1.8;">
-                        <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Harga Dasar Whitelabel: Rp ${Number(item.base_price).toLocaleString('id-ID')}</div>
-                        <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Margin Reseller Whitelabel: <strong>+ Rp ${Number(item.reseller_margin).toLocaleString('id-ID')}</strong></div>
-                        <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Hak Pemilik Produk: <strong>Rp ${Number(item.creator_earnings).toLocaleString('id-ID')}</strong></div>
-                    </div>`;
+                                <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Harga Dasar Whitelabel: Rp ${Number(item.base_price).toLocaleString('id-ID')}</div>
+                                <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Margin Reseller Whitelabel: <strong>+ Rp ${Number(item.reseller_margin).toLocaleString('id-ID')}</strong></div>
+                                <div style="display:flex;align-items:center;gap:3px;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Hak Pemilik Produk: <strong>Rp ${Number(item.creator_earnings).toLocaleString('id-ID')}</strong></div>
+                            </div>`;
                 }
                 let variantBadge = '';
                 if (item.variant_name) {
@@ -2453,21 +2911,21 @@
                 }
 
                 itemsHtml += `
-                <div style="padding:0.6rem 0.85rem; border-bottom:1px solid #f1f5f9; font-size:0.82rem;">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                        <div>
-                            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
-                                <strong style="color:#0f172a;">${item.name}</strong>
-                                ${variantBadge}
+                        <div style="padding:0.6rem 0.85rem; border-bottom:1px solid #f1f5f9; font-size:0.82rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                <div>
+                                    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+                                        <strong style="color:#0f172a;">${item.name}</strong>
+                                        ${variantBadge}
+                                    </div>
+                                    <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Rp ${Number(item.price).toLocaleString('id-ID')} x ${item.quantity}</div>
+                                    <div style="display:flex;flex-wrap:wrap;gap:3px;">${wlBadges}</div>
+                                    ${wlBreakdown}
+                                </div>
+                                <div style="font-weight:700; color:#0f172a; white-space:nowrap; margin-left:1rem;">Rp ${Number(item.subtotal).toLocaleString('id-ID')}</div>
                             </div>
-                            <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Rp ${Number(item.price).toLocaleString('id-ID')} x ${item.quantity}</div>
-                            <div style="display:flex;flex-wrap:wrap;gap:3px;">${wlBadges}</div>
-                            ${wlBreakdown}
                         </div>
-                        <div style="font-weight:700; color:#0f172a; white-space:nowrap; margin-left:1rem;">Rp ${Number(item.subtotal).toLocaleString('id-ID')}</div>
-                    </div>
-                </div>
-            `;
+                    `;
             });
             itemsList.innerHTML = itemsHtml;
             document.getElementById('od_total_price').innerText = 'Rp ' + Number(data.total).toLocaleString('id-ID');
@@ -2616,13 +3074,13 @@
             let itemsHtml = '';
             (data.items || []).forEach(item => {
                 itemsHtml += `
-                <tr style="border-bottom:1px solid #f1f5f9;">
-                    <td style="padding:8px 0; color:#0f172a; font-weight:600;">${item.name}</td>
-                    <td style="padding:8px 0; text-align:center; color:#475569;">${item.quantity}</td>
-                    <td style="padding:8px 0; text-align:right; color:#64748b;">Rp ${Number(item.price).toLocaleString('id-ID')}</td>
-                    <td style="padding:8px 0; text-align:right; color:#0f172a; font-weight:700;">Rp ${Number(item.subtotal).toLocaleString('id-ID')}</td>
-                </tr>
-            `;
+                        <tr style="border-bottom:1px solid #f1f5f9;">
+                            <td style="padding:8px 0; color:#0f172a; font-weight:600;">${item.name}</td>
+                            <td style="padding:8px 0; text-align:center; color:#475569;">${item.quantity}</td>
+                            <td style="padding:8px 0; text-align:right; color:#64748b;">Rp ${Number(item.price).toLocaleString('id-ID')}</td>
+                            <td style="padding:8px 0; text-align:right; color:#0f172a; font-weight:700;">Rp ${Number(item.subtotal).toLocaleString('id-ID')}</td>
+                        </tr>
+                    `;
             });
             itemsBody.innerHTML = itemsHtml;
 
@@ -2687,7 +3145,11 @@
                     <button type="button" id="od_btn_print_receipt" onclick="printReceipt(currentOrderData)"
                         style="display:none; background:#1eb349; color:#fff; border:none; padding:0.4rem 0.75rem; border-radius:8px; font-size:0.78rem; font-weight:700; cursor:pointer; align-items:center; gap:4px;"
                         title="Cetak / Download e-Receipt">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <polyline points="6 9 6 2 18 2 18 9" />
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                            <rect x="6" y="14" width="12" height="8" />
+                        </svg>
                         Cetak e-Receipt
                     </button>
                     <button type="button" class="btn-cancel" onclick="closeOrderModal()"
@@ -2716,7 +3178,10 @@
                     style="display:none; background:#fff; border:1px dashed #cbd5e1; border-radius:14px; padding:1rem; margin-bottom:1rem;">
                     <div
                         style="font-size:0.72rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem; display:flex; align-items:center; gap:4px;">
-                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
                         Alamat Pengiriman
                     </div>
                     <div id="od_address_content" style="font-size:0.82rem; color:#1e293b; line-height:1.5;"></div>
@@ -2727,10 +3192,16 @@
                     style="display:none; background:#fffbeb; border:1.5px solid #fde68a; border-radius:14px; padding:1rem; margin-bottom:1rem;">
                     <div
                         style="font-size:0.72rem; font-weight:800; color:#d97706; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.35rem; display:flex; align-items:center; gap:5px;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                        </svg>
                         Catatan Pesanan / Pembeli
                     </div>
-                    <div id="od_notes_content" style="font-size:0.85rem; color:#78350f; font-weight:600; line-height:1.5;"></div>
+                    <div id="od_notes_content" style="font-size:0.85rem; color:#78350f; font-weight:600; line-height:1.5;">
+                    </div>
                 </div>
 
                 <!-- Products List -->
@@ -2755,11 +3226,16 @@
                         style="background:#fff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.1rem; box-shadow:0 4px 14px rgba(0,0,0,0.03);">
                         <div id="od_management_title"
                             style="font-size:0.85rem; font-weight:800; color:#0f172a; margin-bottom:0.85rem; display:flex; align-items:center; gap:6px;">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            </svg>
                             Manajemen Status & Pengiriman
                         </div>
 
-                        <div id="od_status_grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:0.85rem;">
+                        <div id="od_status_grid"
+                            style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:0.85rem;">
                             <div>
                                 <label
                                     style="display:block; font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.3rem;">Status
@@ -2782,14 +3258,20 @@
                                 <label
                                     style="display:block; font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.3rem;">Nomor
                                     Resi Pengiriman (AWB)</label>
-                                <input type="text" id="od_input_resi" placeholder="Masukkan No Resi... (contoh: JY1241520391)"
+                                <input type="text" id="od_input_resi"
+                                    placeholder="Masukkan No Resi... (contoh: JY1241520391)"
                                     style="width:100%; padding:0.6rem 0.8rem; border:1.5px solid #94a3b8; border-radius:10px; font-size:0.85rem; font-weight:700; color:#0f172a; outline:none; font-family:monospace;">
                             </div>
                         </div>
 
                         <button type="submit" id="od_btn_save"
                             style="width:100%; padding:0.75rem; background:linear-gradient(135deg,#0f172a,#1e293b); color:#fff; border:none; border-radius:12px; font-size:0.85rem; font-weight:800; cursor:pointer; font-family:'Montserrat',sans-serif; transition:all 0.2s; box-shadow:0 4px 12px rgba(15,23,42,0.2); display:flex; align-items:center; justify-content:center; gap:6px;">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                                <polyline points="17 21 17 13 7 13 7 21" />
+                                <polyline points="7 3 7 8 15 8" />
+                            </svg>
                             Simpan Perubahan
                         </button>
                     </div>
@@ -2915,50 +3397,61 @@
                 <button type="button" class="tier-modal-close" onclick="closeTierModal()">&times;</button>
             </div>
             <p style="font-size:0.8rem; color:#64748b; margin-bottom:1.25rem; line-height:1.5;">
-                Tingkatkan omzet penjualan buyle.id Anda untuk membuka tampilan kartu digital bernilai tinggi dengan finishing material eksklusif ala luxury priority banking.
+                Tingkatkan omzet penjualan buyle.id Anda untuk membuka tampilan kartu digital bernilai tinggi dengan
+                finishing material eksklusif ala luxury priority banking.
             </p>
 
             <div class="tier-grid-preview">
                 {{-- Tier 1 --}}
-                <div class="tier-item-box" style="background: linear-gradient(135deg, #f1f5f9, #cbd5e1); color:#0f172a; border-color:#cbd5e1;">
+                <div class="tier-item-box"
+                    style="background: linear-gradient(135deg, #f1f5f9, #cbd5e1); color:#0f172a; border-color:#cbd5e1;">
                     <div class="tier-item-name">1. PERINTIS (Rp 1 Juta+)</div>
                     <div class="tier-item-target">Matte Silver / Brushed Steel Card</div>
-                    <div class="tier-item-desc">Tampilan bersih industrial steel, menandakan langkah awal fondasi bisnis yang kokoh.</div>
+                    <div class="tier-item-desc">Tampilan bersih industrial steel, menandakan langkah awal fondasi bisnis
+                        yang kokoh.</div>
                 </div>
 
                 {{-- Tier 2 --}}
-                <div class="tier-item-box" style="background: linear-gradient(135deg, #334155, #0f172a); color:#ffffff; border-color:#475569;">
+                <div class="tier-item-box"
+                    style="background: linear-gradient(135deg, #334155, #0f172a); color:#ffffff; border-color:#475569;">
                     <div class="tier-item-name">2. PEJUANG / HUSTLER (Rp 10 Juta+)</div>
                     <div class="tier-item-target">Titanium Gray Metallic Card</div>
-                    <div class="tier-item-desc">Titanium gray dengan garis metalik, menyimbolkan tempaan awal bisnis yang berputar kencang.</div>
+                    <div class="tier-item-desc">Titanium gray dengan garis metalik, menyimbolkan tempaan awal bisnis yang
+                        berputar kencang.</div>
                 </div>
 
                 {{-- Tier 3 --}}
-                <div class="tier-item-box" style="background: linear-gradient(135deg, #f5d0c5, #d49b85); color:#3b1609; border-color:#e6b8a2;">
+                <div class="tier-item-box"
+                    style="background: linear-gradient(135deg, #f5d0c5, #d49b85); color:#3b1609; border-color:#e6b8a2;">
                     <div class="tier-item-name">3. PENGUSAHA MUDA (Rp 50 Juta+)</div>
                     <div class="tier-item-target">Rose Gold / Champagne Gold Card</div>
                     <div class="tier-item-desc">Estetika hangat champagne gold minimalist yang elegan dan berkelas.</div>
                 </div>
 
                 {{-- Tier 4 --}}
-                <div class="tier-item-box" style="background: linear-gradient(135deg, #064e3b, #022c22); color:#ffffff; border-color:#047857;">
+                <div class="tier-item-box"
+                    style="background: linear-gradient(135deg, #064e3b, #022c22); color:#ffffff; border-color:#047857;">
                     <div class="tier-item-name">4. EKSEKUTIF MUDA (Rp 100 Juta+)</div>
                     <div class="tier-item-target">Deep Emerald Platinum Card</div>
-                    <div class="tier-item-desc">Emerald green & platinum dengan chip hologram, menggambarkan pertumbuhan korporat matang.</div>
+                    <div class="tier-item-desc">Emerald green & platinum dengan chip hologram, menggambarkan pertumbuhan
+                        korporat matang.</div>
                 </div>
 
                 {{-- Tier 5 --}}
-                <div class="tier-item-box" style="background: linear-gradient(135deg, #111827, #030712); color:#f8fafc; border-color:#334155;">
+                <div class="tier-item-box"
+                    style="background: linear-gradient(135deg, #111827, #030712); color:#f8fafc; border-color:#334155;">
                     <div class="tier-item-name">5. EKSEKUTIF SENIOR (Rp 200 Juta+)</div>
                     <div class="tier-item-target">Obsidian Matte Black Silver Engraved</div>
-                    <div class="tier-item-desc">Warna gelap obsidian misterius ala kartu prioritas perbankan papan atas dengan ukiran perak.</div>
+                    <div class="tier-item-desc">Warna gelap obsidian misterius ala kartu prioritas perbankan papan atas
+                        dengan ukiran perak.</div>
                 </div>
 
                 {{-- Tier 6 --}}
                 <div class="tier-item-box" style="background:#080808; color:#ffffff; border-color:#3f3f46;">
                     <div class="tier-item-name">6. FINANCIAL FREEDOM (Rp 500 Juta+)</div>
                     <div class="tier-item-target">Solid Carbon Fiber Ultra-Card</div>
-                    <div class="tier-item-desc">Pure Carbon Fiber & laser platinum matte, memancarkan prestise mutlak ala Amex Centurion.</div>
+                    <div class="tier-item-desc">Pure Carbon Fiber & laser platinum matte, memancarkan prestise mutlak ala
+                        Amex Centurion.</div>
                 </div>
             </div>
         </div>
@@ -2989,7 +3482,7 @@
             amtEl.style.opacity = '0';
             amtEl.style.transform = 'translateY(-2px)';
 
-            setTimeout(function() {
+            setTimeout(function () {
                 if (isHidden) {
                     amtEl.innerText = fullAmount;
                     amtEl.classList.remove('hidden-mask');
@@ -3009,7 +3502,7 @@
         }
 
         // ── Safe & Non-blocking Anti-Tamper Text Guard ──
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             if (localStorage.getItem('buyle_sales_hidden') === 'true') {
                 const amtEl = document.getElementById('lcAmountText');
                 const eyeOpen = document.getElementById('eyeIconOpen');
@@ -3023,7 +3516,7 @@
             }
 
             // Verify and restore text if modified via Inspect Element
-            setInterval(function() {
+            setInterval(function () {
                 const amtEl = document.getElementById('lcAmountText');
                 if (!amtEl) return;
                 const isHidden = amtEl.classList.contains('hidden-mask');
