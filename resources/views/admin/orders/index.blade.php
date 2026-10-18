@@ -497,6 +497,43 @@
         font-weight: 600;
     }
 
+    .tx-type-pill {
+        padding: 0.35rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid #E2E8F0;
+        color: #64748B;
+        background: #FFFFFF;
+        transition: all 0.15s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+    }
+    .tx-type-pill:hover {
+        border-color: #CBD5E1;
+        color: #0F172A;
+        background: #F8FAFC;
+    }
+    .tx-type-pill.active {
+        background: #0F172A;
+        color: #FFFFFF;
+        border-color: #0F172A;
+    }
+    .select-status-mini {
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        border: 1px solid #CBD5E1;
+        font-size: 0.72rem;
+        font-weight: 600;
+        background: #FFFFFF;
+        color: #0F172A;
+        cursor: pointer;
+        outline: none;
+    }
+
     /* Modal Styling */
     .rm-overlay {
         position: fixed;
@@ -649,15 +686,18 @@
         <input type="hidden" name="period" value="{{ $period }}">
         <input type="hidden" name="start_date" value="{{ $start_date }}">
         <input type="hidden" name="end_date" value="{{ $end_date }}">
+        @if($tab === 'omset')
+            <input type="hidden" name="tx_type" value="{{ $txType }}">
+        @endif
 
         <svg width="16" height="16" fill="none" stroke="#94A3B8" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        <input type="text" name="q" class="o-search-input" placeholder="Cari no. pesanan, nama/email pembeli, toko creator, atau produk..." value="{{ $q }}">
+        <input type="text" name="q" class="o-search-input" placeholder="Cari no. referensi, nama/email pembeli, creator, nama domain, atau produk..." value="{{ $q }}">
 
         <button type="submit" class="o-btn-submit">
             Cari
         </button>
         @if($q)
-            <a href="{{ route('admin.orders.index', ['tab' => $tab, 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date]) }}" class="o-btn-reset">Reset</a>
+            <a href="{{ route('admin.orders.index', ['tab' => $tab, 'tx_type' => $txType, 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date]) }}" class="o-btn-reset">Reset</a>
         @endif
 
         @if($tab !== 'omset')
@@ -680,24 +720,65 @@
         <div class="omset-summary-grid">
             <div class="omset-sum-box">
                 <div class="omset-sum-lbl">Total Omset (Gross)</div>
-                <div class="omset-sum-val">Rp {{ number_format($revenueStats['gross'], 0, ',', '.') }}</div>
+                <div class="omset-sum-val">Rp {{ number_format($revenueStats['gross'] ?? 0, 0, ',', '.') }}</div>
             </div>
             <div class="omset-sum-box">
-                <div class="omset-sum-lbl">Subtotal Produk</div>
-                <div class="omset-sum-val">Rp {{ number_format($revenueStats['subtotal'], 0, ',', '.') }}</div>
+                <div class="omset-sum-lbl">Subtotal / Modal Dasar</div>
+                <div class="omset-sum-val">Rp {{ number_format($revenueStats['subtotal'] ?? 0, 0, ',', '.') }}</div>
             </div>
             <div class="omset-sum-box">
                 <div class="omset-sum-lbl">Total Admin Fee</div>
-                <div class="omset-sum-val" style="color:#D97706;">+ Rp {{ number_format($revenueStats['admin_fee'], 0, ',', '.') }}</div>
+                <div class="omset-sum-val" style="color:#D97706;">+ Rp {{ number_format($revenueStats['admin_fee'] ?? 0, 0, ',', '.') }}</div>
             </div>
             <div class="omset-sum-box">
                 <div class="omset-sum-lbl">Total Platform Fee</div>
-                <div class="omset-sum-val" style="color:#D97706;">+ Rp {{ number_format($revenueStats['platform_fee'], 0, ',', '.') }}</div>
+                <div class="omset-sum-val" style="color:#D97706;">+ Rp {{ number_format($revenueStats['platform_fee'] ?? 0, 0, ',', '.') }}</div>
             </div>
             <div class="omset-sum-box" style="background:#F0FDF4;border-color:#BBF7D0;">
                 <div class="omset-sum-lbl" style="color:#166534;">Profit Platform</div>
-                <div class="omset-sum-val" style="color:#15803D;">+ Rp {{ number_format($revenueStats['profit'], 0, ',', '.') }}</div>
+                <div class="omset-sum-val" style="color:#15803D;">+ Rp {{ number_format($revenueStats['profit'] ?? 0, 0, ',', '.') }}</div>
             </div>
+        </div>
+
+        {{-- Ringkasan Sumber Pendapatan (Compact & Rapi) --}}
+        <div style="display:flex; flex-wrap:wrap; gap:0.45rem; margin-bottom:1rem; align-items:center; font-size:0.75rem;">
+            <span style="color:#64748B; font-weight:700; text-transform:uppercase; font-size:0.68rem; letter-spacing:0.03em;">Ringkasan Sumber:</span>
+            <span style="background:#FFFFFF; border:1px solid #E2E8F0; padding:3px 8px; border-radius:6px; color:#334155;">
+                Pesanan Pembeli: <strong>Rp {{ number_format($revenueStats['buyer_gross'] ?? 0, 0, ',', '.') }}</strong> 
+                <span style="color:#059669; font-weight:600;">(Profit: Rp {{ number_format($revenueStats['buyer_profit'] ?? 0, 0, ',', '.') }})</span>
+            </span>
+            <span style="background:#FFFFFF; border:1px solid #E2E8F0; padding:3px 8px; border-radius:6px; color:#334155;">
+                Domain Creator: <strong>Rp {{ number_format($revenueStats['domain_gross'] ?? 0, 0, ',', '.') }}</strong> 
+                <span style="color:#059669; font-weight:600;">(Pendapatan Bersih: Rp {{ number_format($revenueStats['domain_profit'] ?? 0, 0, ',', '.') }})</span>
+            </span>
+            <span style="background:#FFFFFF; border:1px solid #E2E8F0; padding:3px 8px; border-radius:6px; color:#334155;">
+                Deposit POS Creator: <strong>Rp {{ number_format($revenueStats['deposit_gross'] ?? 0, 0, ',', '.') }}</strong>
+            </span>
+        </div>
+
+        {{-- Filter Sumber Transaksi (Pill Filter Compact) --}}
+        <div style="display:flex; flex-wrap:wrap; gap:0.35rem; margin-bottom:0.85rem; align-items:center;">
+            <span style="font-size:0.7rem; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.03em; margin-right:4px;">Filter Sumber:</span>
+            <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'all', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+               class="tx-type-pill {{ $txType === 'all' ? 'active' : '' }}">
+                Semua Transaksi ({{ $txTypeCounts['all'] ?? 0 }})
+            </a>
+            <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'buyer', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+               class="tx-type-pill {{ $txType === 'buyer' ? 'active' : '' }}">
+                Pembeli ({{ $txTypeCounts['buyer'] ?? 0 }})
+            </a>
+            <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'creator', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+               class="tx-type-pill {{ $txType === 'creator' ? 'active' : '' }}">
+                Semua Creator ({{ $txTypeCounts['creator'] ?? 0 }})
+            </a>
+            <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'domain', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+               class="tx-type-pill {{ $txType === 'domain' ? 'active' : '' }}">
+                Domain Creator ({{ $txTypeCounts['domain'] ?? 0 }})
+            </a>
+            <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'deposit', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+               class="tx-type-pill {{ $txType === 'deposit' ? 'active' : '' }}">
+                Deposit POS Creator ({{ $txTypeCounts['deposit'] ?? 0 }})
+            </a>
         </div>
 
         {{-- Financial Transaction History Table --}}
@@ -705,73 +786,74 @@
             <table class="omset-table">
                 <thead>
                     <tr>
-                        <th>Date & Time</th>
-                        <th>Order ID</th>
-                        <th>Customer Email</th>
-                        <th>Transaction Type</th>
+                        <th>Tanggal &amp; Waktu</th>
+                        <th>ID Referensi</th>
+                        <th>Pihak / User</th>
+                        <th>Kategori</th>
                         <th>Channel</th>
-                        <th style="text-align:right;">Harga Produk</th>
+                        <th style="text-align:right;">Harga / Modal Dasar</th>
                         <th style="text-align:right;">Admin Fee</th>
                         <th style="text-align:right;">Platform Fee</th>
-                        <th style="text-align:right;">Amount / Total</th>
-                        <th style="text-align:right;">Profit</th>
-                        <th style="text-align:center;">Status</th>
+                        <th style="text-align:right;">Total Transaksi</th>
+                        <th style="text-align:right;">Profit Platform</th>
+                        <th style="text-align:center;">Status &amp; Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($orders as $o)
-                        @php
-                            $types = $o->items->map(function($i) {
-                                $pt = $i->product?->product_type ?? $i->product?->type ?? '';
-                                if ($pt === 'ticket') return 'Tiket';
-                                if (in_array($pt, ['external_link', 'digital', 'file'])) return 'Digital';
-                                return 'Fisik';
-                            })->unique()->implode(', ');
-                            $txType = $types ?: 'Digital';
-                            $channel = $o->payment?->method ? strtoupper($o->payment->method) : ($o->payment?->gateway ? strtoupper($o->payment->gateway) : 'MIDTRANS');
-                            $profit = ($o->admin_fee ?? 0) + ($o->platform_fee ?? 0);
-                        @endphp
                         <tr>
                             <td>
-                                <div style="font-weight:500;color:#0F172A;">{{ $o->created_at->format('d M Y, H:i') }} WIB</div>
+                                <div style="font-weight:600;color:#0F172A;">{{ $o->created_at ? $o->created_at->format('d M Y, H:i') : '-' }} WIB</div>
                             </td>
                             <td>
-                                <a href="{{ route('admin.orders.show', $o) }}" style="font-weight:700;color:#10B981;text-decoration:none;">#{{ $o->order_number }}</a>
+                                @if(!empty($o->url) && $o->source_type === 'buyer_order')
+                                    <a href="{{ $o->url }}" style="font-weight:700;color:#10B981;text-decoration:none;">{{ $o->ref_number }}</a>
+                                @elseif(!empty($o->url) && $o->source_type === 'domain_order')
+                                    <strong style="color:#0F172A; display:block;">{{ $o->ref_number }}</strong>
+                                    <a href="{{ $o->url }}" target="_blank" style="font-size:0.7rem;color:#059669;font-weight:600;text-decoration:none;">Resource Creator &rarr;</a>
+                                @else
+                                    <strong style="color:#0F172A;">{{ $o->ref_number }}</strong>
+                                @endif
                             </td>
                             <td>
-                                <div style="font-weight:600;color:#0F172A;">{{ $o->user->name ?? 'Guest' }}</div>
-                                <div style="font-size:0.75rem;color:#64748B;">{{ $o->user->email ?? '-' }}</div>
+                                <div style="font-weight:600;color:#0F172A;">{{ $o->party_name }}</div>
+                                <div style="font-size:0.72rem;color:#64748B;">{{ $o->party_email }}</div>
                             </td>
                             <td>
-                                <span class="badge-pill" style="background:#F1F5F9;color:#475569;">{{ $txType }}</span>
+                                <span class="badge-pill" style="background:#F1F5F9;color:#334155;border:1px solid #E2E8F0;">{{ $o->category }}</span>
+                                @if(!empty($o->creator_name) && $o->party_role === 'Pembeli')
+                                    <div style="font-size:0.7rem;color:#64748B;margin-top:2px;">Creator: {{ $o->creator_name }}</div>
+                                @endif
                             </td>
                             <td>
-                                <span class="badge-pill" style="background:#EFF6FF;color:#1D4ED8;">{{ $channel }}</span>
+                                <span class="badge-pill" style="background:#EFF6FF;color:#1D4ED8;">{{ $o->channel }}</span>
                             </td>
-                            <td style="text-align:right;font-weight:500;">Rp {{ number_format($o->subtotal, 0, ',', '.') }}</td>
-                            <td style="text-align:right;color:#D97706;font-weight:500;">+ Rp {{ number_format($o->admin_fee ?? 0, 0, ',', '.') }}</td>
-                            <td style="text-align:right;color:#D97706;font-weight:500;">+ Rp {{ number_format($o->platform_fee ?? 0, 0, ',', '.') }}</td>
-                            <td style="text-align:right;font-weight:700;color:#0F172A;">Rp {{ number_format($o->total, 0, ',', '.') }}</td>
-                            <td style="text-align:right;font-weight:700;color:#15803D;">+ Rp {{ number_format($profit, 0, ',', '.') }}</td>
+                            <td style="text-align:right;font-weight:500;">Rp {{ number_format($o->base_amount, 0, ',', '.') }}</td>
+                            <td style="text-align:right;color:#D97706;font-weight:500;">+ Rp {{ number_format($o->admin_fee, 0, ',', '.') }}</td>
+                            <td style="text-align:right;color:#D97706;font-weight:500;">+ Rp {{ number_format($o->platform_fee, 0, ',', '.') }}</td>
+                            <td style="text-align:right;font-weight:700;color:#0F172A;">Rp {{ number_format($o->gross, 0, ',', '.') }}</td>
+                            <td style="text-align:right;font-weight:700;color:#15803D;">+ Rp {{ number_format($o->profit, 0, ',', '.') }}</td>
                             <td style="text-align:center;">
-                                @php
-                                    $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
-                                    $stBadge = match($statusVal) {
-                                        'confirmed', 'processing' => ['#059669', '#E6F4EA', 'Perlu Dikirim'],
-                                        'shipped'                 => ['#047857', '#D1E7DD', 'Dikirim'],
-                                        'completed', 'delivered'  => ['#166534', '#DCFCE7', 'Selesai'],
-                                        default                   => ['#475569', '#F1F5F9', ucfirst($statusVal)]
-                                    };
-                                @endphp
-                                <span class="badge-pill" style="color:{{ $stBadge[0] }};background:{{ $stBadge[1] }};">
-                                    {{ $stBadge[2] }}
-                                </span>
+                                @if(!empty($o->can_update) && $o->source_type === 'domain_order')
+                                    <form method="POST" action="{{ route('admin.domain-orders.update-status', $o->raw->id) }}" style="display:inline-flex;align-items:center;gap:4px;">
+                                        @csrf
+                                        <select name="status" class="select-status-mini" onchange="this.form.submit()">
+                                            <option value="pending" {{ $o->status === 'pending' ? 'selected' : '' }}>Pending</option>
+                                            <option value="paid" {{ $o->status === 'paid' ? 'selected' : '' }}>Lunas (Paid)</option>
+                                            <option value="cancelled" {{ $o->status === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
+                                        </select>
+                                    </form>
+                                @else
+                                    <span class="badge-pill" style="color:{{ $o->status_color }};background:{{ $o->status_bg }};">
+                                        {{ $o->status_label }}
+                                    </span>
+                                @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="11" style="text-align:center;padding:2.5rem 1rem;color:#94A3B8;">
-                                Belum ada riwayat transaksi omset pada periode ini.
+                                Belum ada riwayat transaksi keuangan pada periode dan filter ini.
                             </td>
                         </tr>
                     @endforelse

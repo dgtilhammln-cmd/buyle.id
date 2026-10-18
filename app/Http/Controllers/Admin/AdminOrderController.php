@@ -6,8 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Courier;
 use App\Models\Shipment;
+use App\Models\DomainOrder;
+use App\Models\PayoutRequest;
+use App\Models\PosDeposit;
 use App\Enums\OrderStatus;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AdminOrderController extends Controller
 {
@@ -28,34 +32,35 @@ class AdminOrderController extends Controller
         $period    = $request->get('period', '30d');
         $startDate = $request->get('start_date');
         $endDate   = $request->get('end_date');
+        $q         = trim($request->get('q', ''));
+        $txType    = $request->get('tx_type', 'all');
+        if (!in_array($txType, ['all', 'buyer', 'creator', 'domain', 'deposit'])) {
+            $txType = 'all';
+        }
 
-        $query = Order::with(['user', 'items.product.seller', 'payment', 'shipment'])
+        // Helper untuk filter tanggal konsisten
+        $applyDate = function($qBuilder) use ($period, $startDate, $endDate) {
+            if ($startDate && $endDate) {
+                $qBuilder->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
+            } else {
+                if ($period === '7d') {
+                    $qBuilder->where('created_at', '>=', now()->subDays(7));
+                } elseif ($period === '30d') {
+                    $qBuilder->where('created_at', '>=', now()->subDays(30));
+                } elseif ($period === '1y') {
+                    $qBuilder->where('created_at', '>=', now()->subYears(1));
+                }
+            }
+        };
+
+        // Query dasar pesanan produk pembeli
+        $buyerQuery = Order::with(['user', 'items.product.seller', 'payment', 'shipment'])
             ->where('status', '!=', OrderStatus::Pending)
             ->orderByDesc('created_at');
+        $applyDate($buyerQuery);
 
-        // Date / Period Filter
-        if ($startDate && $endDate) {
-            $query->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
-            $period = 'custom';
-        } else {
-            if ($period === '7d') {
-                $query->where('created_at', '>=', now()->subDays(7));
-            } elseif ($period === '30d') {
-                $query->where('created_at', '>=', now()->subDays(30));
-            } elseif ($period === '1y') {
-                $query->where('created_at', '>=', now()->subYears(1));
-            }
-        }
-
-        // Filter by tab statuses
-        $statuses = $this->tabs[$tab]['statuses'];
-        if ($statuses) {
-            $query->whereIn('status', $statuses);
-        }
-
-        // Search (by order_number, user name/email/username, store/creator name/email, product title)
-        if ($q = trim($request->get('q'))) {
-            $query->where(function($sub) use ($q) {
+        if ($q) {
+            $buyerQuery->where(function($sub) use ($q) {
                 $sub->where('order_number', 'like', "%{$q}%")
                     ->orWhereHas('user', fn($u) => $u->where('name', 'like', "%{$q}%")
                         ->orWhere('email', 'like', "%{$q}%")
@@ -69,21 +74,9 @@ class AdminOrderController extends Controller
             });
         }
 
-        $orders = $query->paginate(20)->withQueryString();
-
-        // Stats calculation for 5 top cards (filtered by period/dates)
+        // Stats standard untuk 4 tab pesanan produk biasa
         $statsBase = Order::query()->where('status', '!=', OrderStatus::Pending);
-        if ($startDate && $endDate) {
-            $statsBase->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
-        } else {
-            if ($period === '7d') {
-                $statsBase->where('created_at', '>=', now()->subDays(7));
-            } elseif ($period === '30d') {
-                $statsBase->where('created_at', '>=', now()->subDays(30));
-            } elseif ($period === '1y') {
-                $statsBase->where('created_at', '>=', now()->subYears(1));
-            }
-        }
+        $applyDate($statsBase);
 
         $stats = [
             'total'      => (clone $statsBase)->count(),
@@ -91,14 +84,6 @@ class AdminOrderController extends Controller
             'shipped'    => (clone $statsBase)->whereIn('status', ['shipped'])->count(),
             'completed'  => (clone $statsBase)->whereIn('status', ['confirmed', 'completed', 'delivered'])->count(),
             'revenue'    => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('total'),
-        ];
-
-        $revenueStats = [
-            'gross'        => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('total'),
-            'subtotal'     => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('subtotal'),
-            'admin_fee'    => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('admin_fee'),
-            'platform_fee' => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('platform_fee'),
-            'profit'       => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->selectRaw('SUM(COALESCE(admin_fee,0) + COALESCE(platform_fee,0)) as profit')->value('profit') ?? 0,
         ];
 
         // Tab counts
@@ -111,14 +96,308 @@ class AdminOrderController extends Controller
             $counts[$key] = $cQuery->count();
         }
 
+        // ═════════════════════════════════════════════════════════════════════
+        // KONDISIONAL KHUSUS TAB OMSET (SATU PINTU FINANCIAL LEDGER)
+        // ═════════════════════════════════════════════════════════════════════
+        $omsetItems = null;
+        $revenueStats = [];
+        $txTypeCounts = [];
+
+        if ($tab === 'omset') {
+            // 1. Query Domain Orders (Creator)
+            $domainQuery = DomainOrder::with('user.creatorProfile')->orderByDesc('created_at');
+            $applyDate($domainQuery);
+            if ($q) {
+                $domainQuery->where(function($sub) use ($q) {
+                    $sub->where('domain_name', 'like', "%{$q}%")
+                        ->orWhere('extension', 'like', "%{$q}%")
+                        ->orWhereHas('user', fn($u) => $u->where('name', 'like', "%{$q}%")
+                            ->orWhere('email', 'like', "%{$q}%")
+                            ->orWhere('username', 'like', "%{$q}%"));
+                });
+            }
+
+            // 2. Query Pindah Saldo Toko ke Deposit Kasir POS (Creator)
+            $payoutDepositQuery = PayoutRequest::with('seller.creatorProfile')
+                ->where('bank_name', 'like', '%Deposit Kasir POS%')
+                ->where('status', 'processed')
+                ->orderByDesc('created_at');
+            $applyDate($payoutDepositQuery);
+            if ($q) {
+                $payoutDepositQuery->where(function($sub) use ($q) {
+                    $sub->where('notes', 'like', "%{$q}%")
+                        ->orWhere('bank_account_name', 'like', "%{$q}%")
+                        ->orWhereHas('seller', fn($u) => $u->where('name', 'like', "%{$q}%")
+                            ->orWhere('email', 'like', "%{$q}%"));
+                });
+            }
+
+            // 3. Query Top-up Deposit POS via QRIS / Midtrans (Creator)
+            $directPosDepositQuery = PosDeposit::with('creator.user')
+                ->whereIn('status', ['paid', 'success'])
+                ->orderByDesc('created_at');
+            $applyDate($directPosDepositQuery);
+            if ($q) {
+                $directPosDepositQuery->where(function($sub) use ($q) {
+                    $sub->where('deposit_number', 'like', "%{$q}%")
+                        ->orWhereHas('creator.user', fn($u) => $u->where('name', 'like', "%{$q}%")
+                            ->orWhere('email', 'like', "%{$q}%"));
+                });
+            }
+
+            // ── Perhitungan Statistik Finansial Keseluruhan ──
+            $buyerPaidBase = (clone $buyerQuery)->whereNotIn('status', ['cancelled', 'refunded']);
+            $buyerGross    = (float) $buyerPaidBase->sum('total');
+            $buyerSubtotal = (float) $buyerPaidBase->sum('subtotal');
+            $buyerAdminFee = (float) $buyerPaidBase->sum('admin_fee');
+            $buyerPlatFee  = (float) $buyerPaidBase->sum('platform_fee');
+            $buyerProfit   = $buyerAdminFee + $buyerPlatFee;
+            $buyerCount    = (clone $buyerQuery)->count();
+
+            $domainPaidBase = (clone $domainQuery)->where('status', 'paid');
+            $domainGross    = (float) $domainPaidBase->sum('amount');
+            $domainBaseCost = (float) $domainPaidBase->sum('base_amount');
+            $domainAdminFee = (float) $domainPaidBase->sum('admin_fee');
+            $domainPlatFee  = (float) $domainPaidBase->sum('platform_fee');
+            $domainTax      = (float) $domainPaidBase->sum('tax_amount');
+            // Pendapatan bersih platform dari domain sesuai aturan: platform_fee + admin_fee
+            $domainProfit   = $domainAdminFee + $domainPlatFee;
+            $domainCount    = (clone $domainQuery)->count();
+            $domainPaidCount= $domainPaidBase->count();
+
+            $depositTransferGross = (float) (clone $payoutDepositQuery)->sum('amount');
+            $depositDirectGross   = (float) (clone $directPosDepositQuery)->sum('amount');
+            $depositTotalGross    = $depositTransferGross + $depositDirectGross;
+            $depositCount         = (clone $payoutDepositQuery)->count() + (clone $directPosDepositQuery)->count();
+
+            $revenueStats = [
+                'gross'         => $buyerGross + $domainGross + $depositTotalGross,
+                'subtotal'      => $buyerSubtotal + $domainBaseCost,
+                'admin_fee'     => $buyerAdminFee + $domainAdminFee,
+                'platform_fee'  => $buyerPlatFee + $domainPlatFee,
+                'profit'        => $buyerProfit + $domainProfit,
+                'buyer_gross'   => $buyerGross,
+                'buyer_profit'  => $buyerProfit,
+                'buyer_count'   => $buyerCount,
+                'domain_gross'  => $domainGross,
+                'domain_base'   => $domainBaseCost,
+                'domain_profit' => $domainProfit,
+                'domain_count'  => $domainCount,
+                'domain_paid'   => $domainPaidCount,
+                'deposit_gross' => $depositTotalGross,
+                'deposit_count' => $depositCount,
+            ];
+
+            // Update stats tab total omset card
+            $stats['revenue'] = $revenueStats['gross'];
+
+            // Counts untuk pill filter transaksi
+            $txTypeCounts = [
+                'all'     => $buyerCount + $domainCount + $depositCount,
+                'buyer'   => $buyerCount,
+                'creator' => $domainCount + $depositCount,
+                'domain'  => $domainCount,
+                'deposit' => $depositCount,
+            ];
+
+            // ── Kumpulkan dan seragamkan baris transaksi ──
+            $rows = collect();
+
+            // 1. Pesanan Pembeli
+            if (in_array($txType, ['all', 'buyer'])) {
+                foreach ($buyerQuery->get() as $o) {
+                    $types = $o->items->map(function($i) {
+                        $pt = $i->product?->product_type ?? $i->product?->type ?? '';
+                        if ($pt === 'ticket') return 'Tiket';
+                        if (in_array($pt, ['external_link', 'digital', 'file'])) return 'Digital';
+                        return 'Fisik';
+                    })->unique()->implode(', ');
+                    $txTypeLabel = $types ?: 'Produk';
+                    $channel = $o->payment?->method ? strtoupper($o->payment->method) : ($o->payment?->gateway ? strtoupper($o->payment->gateway) : 'MIDTRANS');
+                    $profit = (float)($o->admin_fee ?? 0) + (float)($o->platform_fee ?? 0);
+
+                    $statusVal = is_object($o->status) ? $o->status->value : (string)$o->status;
+                    $stBadge = match($statusVal) {
+                        'confirmed', 'processing' => ['#059669', '#E6F4EA', 'Perlu Dikirim'],
+                        'shipped'                 => ['#047857', '#D1E7DD', 'Dikirim'],
+                        'completed', 'delivered'  => ['#166534', '#DCFCE7', 'Selesai'],
+                        'cancelled'               => ['#DC2626', '#FEE2E2', 'Dibatalkan'],
+                        default                   => ['#475569', '#F1F5F9', ucfirst($statusVal)]
+                    };
+
+                    $creatorName = $o->items->first()?->product?->seller?->name ?? 'Creator';
+
+                    $rows->push((object)[
+                        'id'           => 'ORD-' . $o->id,
+                        'source_type'  => 'buyer_order',
+                        'created_at'   => $o->created_at,
+                        'ref_number'   => '#' . $o->order_number,
+                        'url'          => route('admin.orders.show', $o),
+                        'party_name'   => $o->user->name ?? 'Pembeli',
+                        'party_email'  => $o->user->email ?? '-',
+                        'party_role'   => 'Pembeli',
+                        'category'     => 'Pembeli (' . $txTypeLabel . ')',
+                        'creator_name' => $creatorName,
+                        'channel'      => $channel,
+                        'base_amount'  => (float)$o->subtotal,
+                        'admin_fee'    => (float)($o->admin_fee ?? 0),
+                        'platform_fee' => (float)($o->platform_fee ?? 0),
+                        'gross'        => (float)$o->total,
+                        'profit'       => $profit,
+                        'status'       => $statusVal,
+                        'status_label' => $stBadge[2],
+                        'status_color' => $stBadge[0],
+                        'status_bg'    => $stBadge[1],
+                        'can_update'   => false,
+                        'raw'          => $o,
+                    ]);
+                }
+            }
+
+            // 2. Transaksi Domain Creator
+            if (in_array($txType, ['all', 'domain', 'creator'])) {
+                foreach ($domainQuery->get() as $d) {
+                    $profit = (float)($d->admin_fee ?? 0) + (float)($d->platform_fee ?? 0);
+                    $stBadge = match($d->status) {
+                        'paid'      => ['#166534', '#DCFCE7', 'Lunas (Paid)'],
+                        'pending'   => ['#D97706', '#FEF3C7', 'Pending'],
+                        'cancelled' => ['#DC2626', '#FEE2E2', 'Dibatalkan'],
+                        default     => ['#475569', '#F1F5F9', ucfirst($d->status)]
+                    };
+
+                    $creatorName = $d->user->name ?? 'Creator';
+
+                    $rows->push((object)[
+                        'id'           => 'DOM-' . $d->id,
+                        'source_type'  => 'domain_order',
+                        'created_at'   => $d->created_at,
+                        'ref_number'   => '#DOM-' . str_pad($d->id, 5, '0', STR_PAD_LEFT),
+                        'url'          => $d->user ? route('admin.creator-resources.show', $d->user->id) : null,
+                        'party_name'   => $creatorName,
+                        'party_email'  => $d->user->email ?? '-',
+                        'party_role'   => 'Creator',
+                        'category'     => 'Domain: ' . $d->domain_name,
+                        'creator_name' => $creatorName,
+                        'channel'      => 'MIDTRANS',
+                        'base_amount'  => (float)$d->base_amount,
+                        'admin_fee'    => (float)($d->admin_fee ?? 0),
+                        'platform_fee' => (float)($d->platform_fee ?? 0),
+                        'gross'        => (float)$d->amount,
+                        'profit'       => $profit,
+                        'status'       => $d->status,
+                        'status_label' => $stBadge[2],
+                        'status_color' => $stBadge[0],
+                        'status_bg'    => $stBadge[1],
+                        'can_update'   => true,
+                        'raw'          => $d,
+                    ]);
+                }
+            }
+
+            // 3. Pindah Saldo Kasir POS (Creator)
+            if (in_array($txType, ['all', 'deposit', 'creator'])) {
+                foreach ($payoutDepositQuery->get() as $p) {
+                    $creatorName = $p->seller->name ?? 'Creator';
+                    $rows->push((object)[
+                        'id'           => 'TRF-' . $p->id,
+                        'source_type'  => 'pos_deposit',
+                        'created_at'   => $p->created_at,
+                        'ref_number'   => '#TRF-POS-' . $p->id,
+                        'url'          => null,
+                        'party_name'   => $creatorName,
+                        'party_email'  => $p->seller->email ?? '-',
+                        'party_role'   => 'Creator',
+                        'category'     => 'Deposit POS (Pindah Saldo)',
+                        'creator_name' => $creatorName,
+                        'channel'      => 'SALDO CREATOR',
+                        'base_amount'  => (float)$p->amount,
+                        'admin_fee'    => 0,
+                        'platform_fee' => 0,
+                        'gross'        => (float)$p->amount,
+                        'profit'       => 0,
+                        'status'       => 'processed',
+                        'status_label' => 'Berhasil',
+                        'status_color' => '#166534',
+                        'status_bg'    => '#DCFCE7',
+                        'can_update'   => false,
+                        'raw'          => $p,
+                    ]);
+                }
+
+                foreach ($directPosDepositQuery->get() as $dp) {
+                    $user = $dp->creator?->user;
+                    $creatorName = $user->name ?? 'Creator';
+                    $rows->push((object)[
+                        'id'           => 'DEP-' . $dp->id,
+                        'source_type'  => 'pos_deposit',
+                        'created_at'   => $dp->created_at,
+                        'ref_number'   => '#' . $dp->deposit_number,
+                        'url'          => null,
+                        'party_name'   => $creatorName,
+                        'party_email'  => $user->email ?? '-',
+                        'party_role'   => 'Creator',
+                        'category'     => 'Deposit POS (Top-Up)',
+                        'creator_name' => $creatorName,
+                        'channel'      => strtoupper($dp->payment_method ?: 'QRIS'),
+                        'base_amount'  => (float)$dp->amount,
+                        'admin_fee'    => 0,
+                        'platform_fee' => 0,
+                        'gross'        => (float)$dp->amount,
+                        'profit'       => 0,
+                        'status'       => $dp->status,
+                        'status_label' => $dp->status === 'paid' ? 'Lunas' : ucfirst($dp->status),
+                        'status_color' => $dp->status === 'paid' ? '#166534' : '#D97706',
+                        'status_bg'    => $dp->status === 'paid' ? '#DCFCE7' : '#FEF3C7',
+                        'can_update'   => false,
+                        'raw'          => $dp,
+                    ]);
+                }
+            }
+
+            // Urutkan berdasarkan waktu transaksi terbaru
+            $rows = $rows->sortByDesc('created_at')->values();
+
+            // Paginate
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $perPage = 20;
+            $pagedRows = $rows->slice(($currentPage - 1) * $perPage, $perPage)->values();
+            $omsetItems = new LengthAwarePaginator(
+                $pagedRows,
+                $rows->count(),
+                $perPage,
+                $currentPage,
+                ['path' => LengthAwarePaginator::resolveCurrentPath(), 'query' => $request->query()]
+            );
+
+            $orders = $omsetItems;
+        } else {
+            // Tab pesanan biasa: filter status tab & paginate
+            $statuses = $this->tabs[$tab]['statuses'];
+            if ($statuses) {
+                $buyerQuery->whereIn('status', $statuses);
+            }
+            $orders = $buyerQuery->paginate(20)->withQueryString();
+
+            $revenueStats = [
+                'gross'        => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('total'),
+                'subtotal'     => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('subtotal'),
+                'admin_fee'    => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('admin_fee'),
+                'platform_fee' => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->sum('platform_fee'),
+                'profit'       => (clone $statsBase)->whereNotIn('status', ['pending', 'cancelled', 'refunded'])->selectRaw('SUM(COALESCE(admin_fee,0) + COALESCE(platform_fee,0)) as profit')->value('profit') ?? 0,
+            ];
+        }
+
         return view('admin.orders.index', [
             'orders'       => $orders,
+            'omsetItems'   => $omsetItems,
             'tab'          => $tab,
             'tabs'         => $this->tabs,
             'counts'       => $counts,
             'stats'        => $stats,
             'revenueStats' => $revenueStats,
-            'q'            => $q ?? '',
+            'txType'       => $txType,
+            'txTypeCounts' => $txTypeCounts,
+            'q'            => $q,
             'period'       => $period,
             'start_date'   => $startDate ?? '',
             'end_date'     => $endDate ?? '',
