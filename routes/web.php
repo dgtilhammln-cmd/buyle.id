@@ -637,6 +637,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::get('/payout-settings', [\App\Http\Controllers\Creator\SellerPayoutController::class, 'settings'])->name('payout.settings');
     Route::post('/payout-settings/bank', [\App\Http\Controllers\Creator\SellerPayoutController::class, 'updateBank'])->name('payout.bank.update');
     Route::post('/payout-request', [\App\Http\Controllers\Creator\SellerPayoutController::class, 'requestPayout'])->name('payout.request');
+    Route::post('/payout-to-pos-deposit', [\App\Http\Controllers\Creator\SellerPayoutController::class, 'transferToPosDeposit'])->name('payout.to_pos_deposit');
 
     // Laporan Penjualan & Manajemen Pesanan
     Route::get('/sales-report', [\App\Http\Controllers\Creator\SellerReportController::class, 'index'])->name('sales.report');

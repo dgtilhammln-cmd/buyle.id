@@ -5,8 +5,13 @@ namespace App\Http\Controllers\Creator;
 use App\Http\Controllers\Controller;
 use App\Models\PayoutRequest;
 use App\Models\Order;
+use App\Models\CreatorProfile;
+use App\Models\PosBalanceMutation;
 use App\Enums\PaymentStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class SellerPayoutController extends Controller
@@ -30,6 +35,9 @@ class SellerPayoutController extends Controller
         }
         $platformFeeRate = 5;
 
+        $profile = CreatorProfile::where('user_id', $seller->id)->first();
+        $posBalance = (float) ($profile->pos_balance ?? 0);
+
         $balanceData = \App\Services\SellerBalanceService::calculateBalance($seller);
         $gmv                 = $balanceData['gmv'];
         $clearedGmv          = $balanceData['cleared_gmv'];
@@ -46,6 +54,8 @@ class SellerPayoutController extends Controller
 
         return view('creator.payout', compact(
             'seller',
+            'profile',
+            'posBalance',
             'gmv',
             'clearedGmv',
             'holdBalance',
@@ -157,5 +167,107 @@ class SellerPayoutController extends Controller
         ]);
 
         return back()->with('success', 'Informasi rekening berhasil disimpan.');
+    }
+
+    /**
+     * Pindahkan saldo toko yang siap ditarik ke Saldo Deposit Kasir POS secara instan & aman.
+     * Mencegah double spend: langsung tercatat di payout_requests (status: processed)
+     * dan mengkredit pos_balance + mencatat PosBalanceMutation.
+     */
+    public function transferToPosDeposit(Request $request)
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:5000',
+        ], [
+            'amount.required' => 'Nominal transfer wajib diisi.',
+            'amount.numeric'  => 'Nominal harus berupa angka yang valid.',
+            'amount.min'      => 'Minimal pemindahan saldo ke deposit POS adalah Rp 5.000.',
+        ]);
+
+        $seller = auth()->user();
+        $amount = (float) $request->amount;
+
+        try {
+            return DB::transaction(function () use ($seller, $amount) {
+                // 1. Kunci profil creator
+                $profile = CreatorProfile::where('user_id', $seller->id)->lockForUpdate()->first();
+                if (!$profile) {
+                    return back()->with('error', 'Profil toko Anda belum dikonfigurasi.');
+                }
+
+                // 2. Hitung saldo tersedia secara realtime (anti-race condition)
+                $balanceData = \App\Services\SellerBalanceService::calculateBalance($seller);
+                $availableBalance = (float) $balanceData['available_balance'];
+
+                if ($amount > $availableBalance) {
+                    $msg = 'Saldo Siap Ditarik Anda tidak mencukupi. Tersedia: Rp ' . number_format($availableBalance, 0, ',', '.') . ', diminta: Rp ' . number_format($amount, 0, ',', '.');
+                    if (request()->wantsJson() || request()->ajax()) {
+                        return response()->json(['success' => false, 'message' => $msg], 422);
+                    }
+                    return back()->with('error', $msg);
+                }
+
+                // 3. Catat di tabel PayoutRequest dengan status PROCESSED
+                // Ini OTOMATIS memotong $availableBalance pada SellerBalanceService detik ini juga!
+                $payout = PayoutRequest::create([
+                    'seller_id'           => $seller->id,
+                    'amount'              => $amount,
+                    'admin_fee'           => 0,
+                    'net_amount'          => $amount,
+                    'status'              => 'processed',
+                    'bank_name'           => 'Deposit Kasir POS (Transfer Internal)',
+                    'bank_account_number' => 'POS-DEPOSIT',
+                    'bank_account_name'   => $profile->store_name ?? $seller->name,
+                    'notes'               => 'Pengalihan Saldo Toko ke Deposit Kasir POS',
+                    'admin_notes'         => 'Transfer internal instan via Saldo Toko',
+                    'processed_by'        => $seller->id,
+                    'processed_at'        => now(),
+                ]);
+
+                // 4. Tambahkan saldo deposit POS di CreatorProfile
+                $balanceBefore = (float) ($profile->pos_balance ?? 0);
+                $balanceAfter  = $balanceBefore + $amount;
+                $profile->update(['pos_balance' => $balanceAfter]);
+
+                // 5. Catat mutasi deposit POS di PosBalanceMutation
+                PosBalanceMutation::create([
+                    'creator_id'       => $profile->id,
+                    'type'             => 'topup',
+                    'amount'           => $amount,
+                    'balance_before'   => $balanceBefore,
+                    'balance_after'    => $balanceAfter,
+                    'reference_number' => 'TRF-POS-' . strtoupper(Str::random(8)),
+                    'notes'            => 'Top-up dari Saldo Toko Siap Ditarik (Ref: PR-' . $payout->id . ')',
+                ]);
+
+                Log::info('Transfer Saldo Toko ke Deposit POS Sukses', [
+                    'seller_id'      => $seller->id,
+                    'amount'         => $amount,
+                    'payout_id'      => $payout->id,
+                    'deposit_before' => $balanceBefore,
+                    'deposit_after'  => $balanceAfter,
+                ]);
+
+                if (request()->wantsJson() || request()->ajax()) {
+                    return response()->json([
+                        'success'           => true,
+                        'message'           => 'Berhasil memindahkan Rp ' . number_format($amount, 0, ',', '.') . ' ke Deposit Kasir POS!',
+                        'new_pos_balance'   => $balanceAfter,
+                        'available_balance' => max(0, $availableBalance - $amount),
+                    ]);
+                }
+
+                return back()->with('success', 'Berhasil memindahkan Rp ' . number_format($amount, 0, ',', '.') . ' ke Deposit Kasir POS! Saldo siap ditarik telah terpotong dan deposit POS telah bertambah.');
+            });
+        } catch (\Exception $e) {
+            Log::error('Gagal transfer saldo ke deposit POS: ' . $e->getMessage());
+            if (request()->wantsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan sistem: ' . $e->getMessage(),
+                ], 500);
+            }
+            return back()->with('error', 'Gagal memproses pemindahan saldo: ' . $e->getMessage());
+        }
     }
 }

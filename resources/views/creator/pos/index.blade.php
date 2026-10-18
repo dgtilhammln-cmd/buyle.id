@@ -1488,48 +1488,118 @@
             <div class="pos-modal-body">
                 <!-- Status Saldo Sekarang -->
                 <div
-                    style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+                    style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
                     <div>
-                        <div style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase;">Saldo
-                            Deposit Saat Ini</div>
-                        <div style="font-size:1.25rem; font-weight:900; color:#166534; margin-top:2px;"
+                        <div style="font-size:0.68rem; color:#64748b; font-weight:700; text-transform:uppercase;">Saldo Deposit Saat Ini</div>
+                        <div style="font-size:1.15rem; font-weight:900; color:#166534; margin-top:2px;"
                             id="depositModalCurrentBalance">Rp {{ number_format($posBalance, 0, ',', '.') }}</div>
                     </div>
                     <span class="badge"
                         style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-size:0.7rem; font-weight:700; padding:4px 8px; border-radius:6px;">Aktif</span>
                 </div>
 
-                <!-- Info Box -->
-                <div
-                    style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:10px 12px; margin-bottom:14px; font-size:0.75rem; color:#1e40af; line-height:1.45;">
-                    Saldo deposit digunakan untuk auto-debit biaya admin &amp; platform fee saat kasir memproses transaksi
-                    <strong>TUNAI (CASH)</strong>. Pembayaran top up menggunakan QRIS dan saldo bertambah instan.
+                <!-- Segmented Tabs: Saldo Toko vs QRIS -->
+                <div style="display:flex; background:#f1f5f9; padding:4px; border-radius:12px; margin-bottom:14px; gap:4px;">
+                    <button type="button" id="tabDepositStore" onclick="switchDepositMethod('store')"
+                        style="flex:1; border:none; padding:7px 10px; border-radius:8px; font-size:0.75rem; font-weight:700; background:#ffffff; color:#0f172a; box-shadow:0 1px 3px rgba(0,0,0,0.08); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; transition:all 0.15s ease;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <polyline points="17 1 21 5 17 9" />
+                            <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+                            <polyline points="7 23 3 19 7 15" />
+                            <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+                        </svg>
+                        Pindah dari Saldo Toko
+                    </button>
+                    <button type="button" id="tabDepositQris" onclick="switchDepositMethod('qris')"
+                        style="flex:1; border:none; padding:7px 10px; border-radius:8px; font-size:0.75rem; font-weight:700; background:transparent; color:#64748b; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; transition:all 0.15s ease;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="7" height="7" />
+                            <rect x="14" y="3" width="7" height="7" />
+                            <rect x="14" y="14" width="7" height="7" />
+                            <rect x="3" y="14" width="7" height="7" />
+                        </svg>
+                        Top-Up via QRIS
+                    </button>
                 </div>
 
-                <!-- Pilihan Nominal Cepat -->
-                <label style="font-size:0.78rem; font-weight:700; color:#334155; display:block; margin-bottom:8px;">Pilih
-                    Nominal Top Up</label>
-                <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:12px;">
-                    <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(20000)">Rp 20.000</button>
-                    <button type="button" class="btn-deposit-preset active" onclick="setDepositPreset(50000)">Rp
-                        50.000</button>
-                    <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(100000)">Rp 100.000</button>
-                    <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(200000)">Rp 200.000</button>
-                    <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(300000)">Rp 300.000</button>
-                    <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(500000)">Rp 500.000</button>
+                <!-- PANEL 1: PINDAH DARI SALDO TOKO -->
+                <div id="panelDepositStore">
+                    <!-- Info Box Saldo Toko -->
+                    <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:10px 14px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
+                        <div>
+                            <div style="font-size:0.68rem; color:#166534; font-weight:700; text-transform:uppercase;">Saldo Toko Siap Ditarik</div>
+                            <div style="font-size:1.15rem; font-weight:900; color:#14532d; margin-top:1px;" id="availableStoreBalanceDisplay">Rp {{ number_format($availableStoreBalance, 0, ',', '.') }}</div>
+                        </div>
+                        <span style="font-size:0.68rem; background:#dcfce7; color:#15803d; border:1px solid #86efac; padding:3px 8px; border-radius:999px; font-weight:700;">Instan &amp; Bebas Biaya</span>
+                    </div>
+
+                    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:9px 12px; margin-bottom:12px; font-size:0.73rem; color:#1e40af; line-height:1.4;">
+                        ⚡ <strong>Pindah Saldo Toko:</strong> Memindahkan dana penjualan Anda langsung ke deposit POS tanpa perlu bayar QRIS. Saldo siap ditarik otomatis terpotong saat ini juga.
+                    </div>
+
+                    @if($availableStoreBalance >= 5000)
+                        <!-- Pilihan Nominal Cepat -->
+                        <label style="font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:6px;">Pilih Nominal Pemindahan</label>
+                        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
+                            @foreach([10000, 20000, 50000, 100000] as $preset)
+                                @if($preset <= $availableStoreBalance)
+                                    <button type="button" class="btn-deposit-preset btn-store-preset" onclick="setStoreTransferPreset({{ $preset }})">
+                                        +Rp {{ number_format($preset, 0, ',', '.') }}
+                                    </button>
+                                @endif
+                            @endforeach
+                            <button type="button" class="btn-deposit-preset btn-store-preset" onclick="setStoreTransferPreset({{ (int) $availableStoreBalance }})" style="background:#e0f2fe; border-color:#7dd3fc; color:#0369a1;">
+                                Semua (Rp {{ number_format($availableStoreBalance, 0, ',', '.') }})
+                            </button>
+                        </div>
+
+                        <!-- Input Nominal Manual -->
+                        <div class="form-group mb-0">
+                            <label style="font-size:0.72rem; font-weight:700; color:#334155;">Atau Masukkan Nominal Sendiri (Min. Rp 5.000)</label>
+                            <div style="position:relative; margin-top:4px;">
+                                <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.88rem; color:#475569;">Rp</span>
+                                <input type="text" id="storeTransferDisplay" class="form-input"
+                                    style="padding-left:42px; height:42px; font-size:1rem; font-weight:800; color:#0f172a;"
+                                    value="{{ min(50000, (int) $availableStoreBalance) > 0 ? number_format(min(50000, (int) $availableStoreBalance), 0, ',', '.') : '' }}"
+                                    placeholder="0" oninput="handleStoreTransferInput(this)">
+                                <input type="hidden" id="storeTransferVal" value="{{ min(50000, (int) $availableStoreBalance) }}">
+                            </div>
+                        </div>
+                    @else
+                        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:10px 12px; font-size:0.75rem; color:#92400e; line-height:1.45;">
+                            Saldo Toko siap ditarik Anda saat ini belum mencapai batas minimal transfer <strong>Rp 5.000</strong>. Silakan pilih tab <strong>Top-Up via QRIS</strong> untuk menambah deposit kasir.
+                        </div>
+                    @endif
                 </div>
 
-                <!-- Input Nominal Manual -->
-                <div class="form-group mb-0">
-                    <label style="font-size:0.75rem; font-weight:700; color:#334155;">Atau Masukkan Nominal Lain (Min. Rp
-                        10.000)</label>
-                    <div style="position:relative; margin-top:4px;">
-                        <span
-                            style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.9rem; color:#475569;">Rp</span>
-                        <input type="text" id="depositAmountDisplay" class="form-input"
-                            style="padding-left:42px; height:44px; font-size:1.05rem; font-weight:800; color:#0f172a;"
-                            value="50.000" placeholder="50.000" oninput="handleDepositAmountInput(this)">
-                        <input type="hidden" id="depositAmountVal" value="50000">
+                <!-- PANEL 2: TOP UP VIA QRIS -->
+                <div id="panelDepositQris" style="display:none;">
+                    <!-- Info Box QRIS -->
+                    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:9px 12px; margin-bottom:12px; font-size:0.73rem; color:#1e40af; line-height:1.4;">
+                        Pembayaran top up menggunakan QRIS / Virtual Account Midtrans dan deposit bertambah otomatis.
+                    </div>
+
+                    <!-- Pilihan Nominal Cepat QRIS -->
+                    <label style="font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:6px;">Pilih Nominal Top Up</label>
+                    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; margin-bottom:10px;">
+                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(20000)">Rp 20.000</button>
+                        <button type="button" class="btn-deposit-preset active" onclick="setDepositPreset(50000)">Rp 50.000</button>
+                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(100000)">Rp 100.000</button>
+                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(200000)">Rp 200.000</button>
+                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(300000)">Rp 300.000</button>
+                        <button type="button" class="btn-deposit-preset" onclick="setDepositPreset(500000)">Rp 500.000</button>
+                    </div>
+
+                    <!-- Input Nominal Manual QRIS -->
+                    <div class="form-group mb-0">
+                        <label style="font-size:0.72rem; font-weight:700; color:#334155;">Atau Masukkan Nominal Lain (Min. Rp 10.000)</label>
+                        <div style="position:relative; margin-top:4px;">
+                            <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.88rem; color:#475569;">Rp</span>
+                            <input type="text" id="depositAmountDisplay" class="form-input"
+                                style="padding-left:42px; height:42px; font-size:1rem; font-weight:800; color:#0f172a;"
+                                value="50.000" placeholder="50.000" oninput="handleDepositAmountInput(this)">
+                            <input type="hidden" id="depositAmountVal" value="50000">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1538,8 +1608,21 @@
                 <button type="button" class="btn-outline-bio"
                     style="border-color:#e2e8f0; color:#64748b; padding:0.6rem 1rem; font-size:0.8rem; border-radius:999px !important;"
                     onclick="closeModal('posDepositModal')">Batal</button>
+                
+                <!-- Tombol aksi dinamis sesuai panel aktif -->
+                <button type="button" class="btn-submit-green" id="btnSubmitStoreTransfer" onclick="submitStoreToPosTransfer()"
+                    style="{{ $availableStoreBalance < 5000 ? 'display:none;' : '' }} flex:1; margin:0; padding:0.65rem 1.25rem; font-size:0.84rem; border-radius:999px !important; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                        <polyline points="17 1 21 5 17 9" />
+                        <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+                        <polyline points="7 23 3 19 7 15" />
+                        <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+                    </svg>
+                    Pindahkan ke Deposit Sekarang
+                </button>
+
                 <button type="button" class="btn-submit-green" id="btnSubmitDeposit" onclick="submitPosDeposit()"
-                    style="flex:1; margin:0; padding:0.65rem 1.25rem; font-size:0.84rem; border-radius:999px !important; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                    style="display:none; flex:1; margin:0; padding:0.65rem 1.25rem; font-size:0.84rem; border-radius:999px !important; align-items:center; justify-content:center; gap:6px;">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                         <path d="M5 12h14" />
                         <path d="M12 5l7 7-7 7" />
@@ -3055,11 +3138,129 @@
         }
 
         // ═══════════════════════════════════════════════
-        // DEPOSIT POS FUNCTIONS
+        // DEPOSIT POS FUNCTIONS (STORE TRANSFER & QRIS)
         // ═══════════════════════════════════════════════
 
+        let currentStoreBalance = {{ (int) $availableStoreBalance }};
+
         function openDepositModal() {
+            // Default to store transfer tab if balance available, otherwise QRIS
+            if (currentStoreBalance >= 5000) {
+                switchDepositMethod('store');
+            } else {
+                switchDepositMethod('qris');
+            }
             openModal('posDepositModal');
+        }
+
+        function switchDepositMethod(method) {
+            const tabStore = document.getElementById('tabDepositStore');
+            const tabQris = document.getElementById('tabDepositQris');
+            const panelStore = document.getElementById('panelDepositStore');
+            const panelQris = document.getElementById('panelDepositQris');
+            const btnSubmitStore = document.getElementById('btnSubmitStoreTransfer');
+            const btnSubmitDeposit = document.getElementById('btnSubmitDeposit');
+
+            if (method === 'store') {
+                if (tabStore) {
+                    tabStore.style.background = '#ffffff';
+                    tabStore.style.color = '#0f172a';
+                    tabStore.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+                }
+                if (tabQris) {
+                    tabQris.style.background = 'transparent';
+                    tabQris.style.color = '#64748b';
+                    tabQris.style.boxShadow = 'none';
+                }
+                if (panelStore) panelStore.style.display = 'block';
+                if (panelQris) panelQris.style.display = 'none';
+                if (btnSubmitStore) btnSubmitStore.style.display = currentStoreBalance >= 5000 ? 'inline-flex' : 'none';
+                if (btnSubmitDeposit) btnSubmitDeposit.style.display = 'none';
+            } else {
+                if (tabQris) {
+                    tabQris.style.background = '#ffffff';
+                    tabQris.style.color = '#0f172a';
+                    tabQris.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+                }
+                if (tabStore) {
+                    tabStore.style.background = 'transparent';
+                    tabStore.style.color = '#64748b';
+                    tabStore.style.boxShadow = 'none';
+                }
+                if (panelStore) panelStore.style.display = 'none';
+                if (panelQris) panelQris.style.display = 'block';
+                if (btnSubmitStore) btnSubmitStore.style.display = 'none';
+                if (btnSubmitDeposit) btnSubmitDeposit.style.display = 'inline-flex';
+            }
+        }
+
+        function setStoreTransferPreset(val) {
+            if (val > currentStoreBalance) val = currentStoreBalance;
+            document.querySelectorAll('.btn-store-preset').forEach(b => b.classList.remove('active'));
+            const elVal = document.getElementById('storeTransferVal');
+            const elDisp = document.getElementById('storeTransferDisplay');
+            if (elVal) elVal.value = val;
+            if (elDisp) elDisp.value = formatRupiah(val);
+        }
+
+        function handleStoreTransferInput(el) {
+            const raw = el.value.replace(/[^0-9]/g, '');
+            let val = parseInt(raw) || 0;
+            if (val > currentStoreBalance) {
+                val = currentStoreBalance;
+            }
+            const elVal = document.getElementById('storeTransferVal');
+            if (elVal) elVal.value = val;
+            el.value = val > 0 ? formatRupiah(val) : '';
+            document.querySelectorAll('.btn-store-preset').forEach(b => b.classList.remove('active'));
+        }
+
+        function submitStoreToPosTransfer() {
+            const amount = parseInt(document.getElementById('storeTransferVal').value) || 0;
+            if (amount < 5000) {
+                showPosAlert('Minimal pemindahan saldo ke deposit POS adalah Rp 5.000.', 'Nominal Terlalu Kecil', 'warning');
+                return;
+            }
+            if (amount > currentStoreBalance) {
+                showPosAlert('Nominal melebihi Saldo Toko yang siap ditarik (Rp ' + formatRupiah(currentStoreBalance) + ').', 'Saldo Tidak Mencukupi', 'warning');
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmitStoreTransfer');
+            btn.disabled = true;
+            btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24" style="animation:spin 0.8s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Memindahkan...`;
+
+            fetch('{{ route("creator.payout.to_pos_deposit") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ amount: amount })
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></svg> Pindahkan ke Deposit Sekarang`;
+
+                if (data.success) {
+                    closeModal('posDepositModal');
+                    updateBalanceDisplay(data.new_pos_balance);
+                    currentStoreBalance = data.available_balance !== undefined ? data.available_balance : Math.max(0, currentStoreBalance - amount);
+                    const storeDisp = document.getElementById('availableStoreBalanceDisplay');
+                    if (storeDisp) storeDisp.innerText = 'Rp ' + formatRupiah(currentStoreBalance);
+
+                    showPosAlert(data.message || `Berhasil memindahkan Rp ${formatRupiah(amount)} ke Deposit POS!`, 'Transfer Berhasil', 'success');
+                } else {
+                    showPosAlert(data.message || 'Gagal memindahkan saldo.', 'Gagal', 'error');
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></svg> Pindahkan ke Deposit Sekarang`;
+                showPosAlert('Terjadi kesalahan jaringan: ' + err.message, 'Kesalahan Jaringan', 'error');
+            });
         }
 
         function setDepositPreset(val) {
@@ -3217,6 +3418,30 @@
             if (cashUserBalanceDisplay) {
                 cashUserBalanceDisplay.innerText = formatted;
                 cashUserBalanceDisplay.style.color = newBalance < 10000 ? '#dc2626' : '#166534';
+            }
+
+            // Re-evaluate cash payment option if cart has items
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const totalFeeRequired = (subtotal * (platformFeeRate + adminFeeRate)) / 100;
+            const optCash = document.getElementById('optCash');
+            const cashDepositWarning = document.getElementById('cashDepositWarning');
+            const cashBadge = document.getElementById('cashDepositBadge');
+
+            if (optCash) {
+                const isDepositInsufficient = (currentPosBalance <= 0 || currentPosBalance < totalFeeRequired);
+                if (!isDepositInsufficient) {
+                    optCash.classList.remove('disabled-cash');
+                    optCash.style.background = '';
+                    optCash.style.borderColor = '';
+                    optCash.style.opacity = '1';
+                    optCash.style.cursor = 'pointer';
+                    optCash.style.pointerEvents = 'auto';
+
+                    const cashRadio = optCash.querySelector('input[type="radio"]');
+                    if (cashRadio) cashRadio.disabled = false;
+                    if (cashBadge) cashBadge.style.display = 'none';
+                    if (cashDepositWarning) cashDepositWarning.style.display = 'none';
+                }
             }
         }
 

@@ -59,6 +59,11 @@
             border: 1.5px solid #93c5fd;
         }
 
+        .saldo-card.pos-deposit {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            border: 1.5px solid #6ee7b7;
+        }
+
         .saldo-card-label {
             font-size: 0.72rem;
             font-weight: 800;
@@ -800,6 +805,25 @@
                             <div class="saldo-card-sub">Cair H+3 setelah acara terlaksana</div>
                         </div>
                     @endif
+
+                    {{-- Card Saldo Deposit Kasir POS --}}
+                    <div class="saldo-card pos-deposit">
+                        <div class="saldo-card-label" style="display:flex; justify-content:space-between; align-items:center; color:#047857;">
+                            <span style="display:flex; align-items:center; gap:0.4rem;">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <rect x="2" y="6" width="20" height="12" rx="2" />
+                                    <circle cx="16" cy="12" r="2" />
+                                </svg>
+                                Deposit Kasir POS
+                            </span>
+                            <span style="font-size:0.6rem; font-weight:800; background:#d1fae5; color:#065f46; padding:1px 6px; border-radius:999px;">Kasir</span>
+                        </div>
+                        <div class="saldo-card-value" style="color:#064e3b;">Rp {{ number_format($posBalance ?? 0, 0, ',', '.') }}</div>
+                        <div class="saldo-card-sub" style="display:flex; justify-content:space-between; align-items:center; color:#059669;">
+                            <span>Fee kasir tunai</span>
+                            <button type="button" onclick="openTransferPosModal()" style="background:none; border:none; padding:0; color:#047857; font-weight:800; font-size:0.68rem; cursor:pointer; text-decoration:underline;">+ Pindah</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -886,7 +910,49 @@
                                         <div class="saldo-card-sub">Cair H+3 setelah acara terlaksana</div>
                                     </div>
                                 @endif
+                                <div class="saldo-card pos-deposit" style="flex:1;min-width:130px;">
+                                    <div class="saldo-card-label" style="color:#047857;">Deposit POS</div>
+                                    <div class="saldo-card-value" style="color:#064e3b;">Rp {{ number_format($posBalance ?? 0, 0, ',', '.') }}</div>
+                                    <div class="saldo-card-sub"><button type="button" onclick="openTransferPosModal()" style="background:none;border:none;padding:0;color:#047857;font-weight:700;text-decoration:underline;cursor:pointer;">+ Pindah Saldo</button></div>
+                                </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- BANNER: SALDO DEPOSIT KASIR POS & PINDAH SALDO CEPAT --}}
+                <div class="prof-card" style="border: 1.5px solid #a7f3d0; background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); margin-bottom:1.25rem;">
+                    <div style="padding:1.15rem 1.35rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+                        <div style="display:flex; align-items:center; gap:0.9rem;">
+                            <div style="width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg, #10b981, #059669); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 4px 12px rgba(16,185,129,0.25);">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <rect x="2" y="6" width="20" height="12" rx="2" />
+                                    <circle cx="16" cy="12" r="2" />
+                                    <path d="M6 12h.01" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span style="font-size:0.9rem; font-weight:800; color:#064e3b;">Saldo Deposit Kasir Digital (POS)</span>
+                                    <span style="font-size:0.65rem; font-weight:800; background:#d1fae5; color:#047857; padding:2px 8px; border-radius:999px;">Operasional Toko</span>
+                                </div>
+                                <div style="font-size:0.75rem; color:#059669; margin-top:2px;">
+                                    Saldo aktif kasir: <strong style="font-size:0.9rem; color:#064e3b;">Rp {{ number_format($posBalance ?? 0, 0, ',', '.') }}</strong>
+                                    &bull; Digunakan auto-debit fee saat melayani transaksi tunai di kasir
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" onclick="openTransferPosModal()"
+                                style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; border-radius:999px; padding:0.6rem 1.25rem; font-size:0.8rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(16,185,129,0.3); transition:all 0.15s ease;">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <polyline points="17 1 21 5 17 9" />
+                                    <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+                                    <polyline points="7 23 3 19 7 15" />
+                                    <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+                                </svg>
+                                Pindah Saldo Toko ke Deposit POS
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1336,8 +1402,16 @@
                                             <tr>
                                                 <td style="white-space:nowrap;font-size:0.78rem;color:#64748b">
                                                     {{ $req->created_at->format('d M Y') }}</td>
-                                                <td style="font-size:0.8rem;font-weight:600;">{{ $req->bank_name }}<br><span
-                                                        style="font-size:0.72rem;color:#94a3b8">{{ $req->bank_account_number }}</span>
+                                                <td style="font-size:0.8rem;font-weight:600;">
+                                                    @if(str_contains($req->bank_name, 'Deposit Kasir POS'))
+                                                        <span style="color:#047857; display:inline-flex; align-items:center; gap:4px; font-weight:700;">
+                                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                                                            Deposit Kasir POS
+                                                        </span>
+                                                        <br><span style="font-size:0.7rem;color:#059669;font-weight:600;">Transfer Internal</span>
+                                                    @else
+                                                        {{ $req->bank_name }}<br><span style="font-size:0.72rem;color:#94a3b8">{{ $req->bank_account_number }}</span>
+                                                    @endif
                                                 </td>
                                                 <td style="font-weight:700;white-space:nowrap">Rp
                                                     {{ number_format($req->amount, 0, ',', '.') }}</td>
@@ -1544,5 +1618,127 @@
                 document.getElementById('bankTrigger2')?.classList.remove('open');
             }
         });
+
+        // ── Modal Transfer ke Deposit POS ──
+        const maxAvailableStoreBalance = {{ (float) $availableBalance }};
+
+        function openTransferPosModal() {
+            if (maxAvailableStoreBalance <= 0) {
+                alert('Saldo Siap Ditarik Anda saat ini Rp 0. Tidak ada saldo toko yang dapat dipindahkan ke Deposit Kasir.');
+                return;
+            }
+            const modal = document.getElementById('transferPosModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        }
+
+        function closeTransferPosModal() {
+            const modal = document.getElementById('transferPosModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function setTransferPreset(val) {
+            const num = Math.min(maxAvailableStoreBalance, Math.max(0, val));
+            document.getElementById('transferPosAmount').value = num;
+            document.getElementById('transferPosDisplay').value = num > 0 ? num.toLocaleString('id-ID') : '';
+        }
+
+        function handleTransferPosInput(el) {
+            let raw = el.value.replace(/[^0-9]/g, '');
+            let val = parseFloat(raw) || 0;
+            if (val > maxAvailableStoreBalance) {
+                val = maxAvailableStoreBalance;
+            }
+            document.getElementById('transferPosAmount').value = val;
+            el.value = val > 0 ? val.toLocaleString('id-ID') : '';
+        }
     </script>
+
+    {{-- MODAL TRANSFER SALDO TOKO KE DEPOSIT POS --}}
+    <div id="transferPosModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(5px); z-index:99999; align-items:center; justify-content:center; padding:1rem;">
+        <div style="background:#fff; border-radius:20px; width:100%; max-width:460px; box-shadow:0 20px 50px rgba(0,0,0,0.25); overflow:hidden; border:1px solid #e2e8f0;">
+            <div style="padding:1.25rem 1.5rem; border-bottom:1px solid #f1f5f9; display:flex; align-items:center; justify-content:space-between; background:#fafbfa;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:32px; height:32px; border-radius:8px; background:#d1fae5; color:#047857; display:flex; align-items:center; justify-content:center;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <polyline points="17 1 21 5 17 9" />
+                            <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+                            <polyline points="7 23 3 19 7 15" />
+                            <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+                        </svg>
+                    </div>
+                    <h4 style="margin:0; font-size:0.95rem; font-weight:800; color:#0f172a;">Pindah ke Deposit Kasir (POS)</h4>
+                </div>
+                <button type="button" onclick="closeTransferPosModal()" style="border:none; background:none; font-size:1.4rem; color:#94a3b8; cursor:pointer; line-height:1;">&times;</button>
+            </div>
+            
+            <form action="{{ route('creator.payout.to_pos_deposit') }}" method="POST" id="formTransferPos" style="margin:0;">
+                @csrf
+                <div style="padding:1.5rem;">
+                    <!-- Perbandingan Saldo -->
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.25rem;">
+                        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem;">
+                            <div style="font-size:0.68rem; color:#64748b; font-weight:700; text-transform:uppercase;">Saldo Siap Ditarik</div>
+                            <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-top:2px;">Rp {{ number_format($availableBalance, 0, ',', '.') }}</div>
+                            <div style="font-size:0.65rem; color:#16a34a; font-weight:600; margin-top:1px;">Sumber dana</div>
+                        </div>
+                        <div style="background:#f0fdf4; border:1px solid #a7f3d0; border-radius:12px; padding:0.75rem 1rem;">
+                            <div style="font-size:0.68rem; color:#047857; font-weight:700; text-transform:uppercase;">Deposit Kasir POS</div>
+                            <div style="font-size:1.05rem; font-weight:800; color:#064e3b; margin-top:2px;">Rp {{ number_format($posBalance ?? 0, 0, ',', '.') }}</div>
+                            <div style="font-size:0.65rem; color:#059669; font-weight:600; margin-top:1px;">Tujuan saldo</div>
+                        </div>
+                    </div>
+
+                    <!-- Info Box Transparan -->
+                    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:9px 12px; margin-bottom:1.25rem; font-size:0.75rem; color:#1e40af; line-height:1.45;">
+                        ⚡ <strong>Instan &amp; Tanpa Biaya:</strong> Saldo siap ditarik Anda akan langsung dialihkan ke kuota deposit kasir POS untuk melayani transaksi uang tunai. Saldo siap ditarik otomatis terpotong detik ini juga.
+                    </div>
+
+                    <!-- Input Nominal -->
+                    <div style="margin-bottom:1rem;">
+                        <label style="display:block; font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:6px;">Nominal yang Dipindahkan (Rp)</label>
+                        <div style="position:relative;">
+                            <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:800; font-size:0.9rem; color:#64748b;">Rp</span>
+                            <input type="text" id="transferPosDisplay" class="form-input" style="padding-left:38px; height:46px; font-size:1.05rem; font-weight:800; color:#0f172a; border-radius:12px; border:1.5px solid #cbd5e1; width:100%; box-sizing:border-box;"
+                                placeholder="0" oninput="handleTransferPosInput(this)" required>
+                            <input type="hidden" name="amount" id="transferPosAmount" value="0">
+                        </div>
+                    </div>
+
+                    <!-- Preset Nominal -->
+                    <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:1.25rem;">
+                        @foreach([10000, 20000, 50000, 100000] as $preset)
+                            @if($preset <= $availableBalance)
+                                <button type="button" onclick="setTransferPreset({{ $preset }})"
+                                    style="background:#f1f5f9; border:1px solid #e2e8f0; border-radius:8px; padding:5px 10px; font-size:0.75rem; font-weight:700; color:#334155; cursor:pointer;">
+                                    +Rp {{ number_format($preset, 0, ',', '.') }}
+                                </button>
+                            @endif
+                        @endforeach
+                        @if($availableBalance > 0)
+                            <button type="button" onclick="setTransferPreset({{ (int) $availableBalance }})"
+                                style="background:#e0f2fe; border:1px solid #bae6fd; border-radius:8px; padding:5px 10px; font-size:0.75rem; font-weight:700; color:#0284c7; cursor:pointer;">
+                                Semua Saldo (Rp {{ number_format($availableBalance, 0, ',', '.') }})
+                            </button>
+                        @endif
+                    </div>
+
+                    <!-- Tombol Aksi -->
+                    <div style="display:flex; gap:0.75rem;">
+                        <button type="button" onclick="closeTransferPosModal()"
+                            style="flex:1; padding:0.65rem 1rem; border:1.5px solid #cbd5e1; background:#fff; color:#64748b; font-weight:700; font-size:0.82rem; border-radius:999px; cursor:pointer;">
+                            Batal
+                        </button>
+                        <button type="submit" id="btnConfirmTransferPos"
+                            style="flex:2; padding:0.65rem 1.25rem; background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; font-weight:700; font-size:0.82rem; border-radius:999px; cursor:pointer; box-shadow:0 3px 10px rgba(16,185,129,0.3);">
+                            Konfirmasi &amp; Pindahkan
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection

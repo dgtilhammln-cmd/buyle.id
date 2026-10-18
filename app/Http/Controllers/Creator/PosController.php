@@ -249,6 +249,10 @@ class PosController extends Controller
                 ->get()
             : collect();
 
+        // 8. Saldo Toko Siap Ditarik (untuk fitur alihkan saldo langsung ke deposit)
+        $balanceData = \App\Services\SellerBalanceService::calculateBalance($seller);
+        $availableStoreBalance = (float) ($balanceData['available_balance'] ?? 0);
+
         return view('creator.pos.index', compact(
             'products',
             'todayOrders',
@@ -256,6 +260,7 @@ class PosController extends Controller
             'platformFeeRate',
             'adminFeeRate',
             'posBalance',
+            'availableStoreBalance',
             'todayGrossSales',
             'todayCashInDrawer',
             'todayDigitalSales',
