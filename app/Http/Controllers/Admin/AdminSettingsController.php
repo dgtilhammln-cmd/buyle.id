@@ -46,7 +46,7 @@ class AdminSettingsController extends Controller
         foreach ($data as $key => $value) {
             // Jika array, ubah menjadi JSON string agar bisa disimpan di DB
             if (is_array($value)) {
-                if ($key === 'domain_prices') {
+                if ($key === 'domain_prices' || $key === 'domain_buy_prices') {
                     $value = json_encode($value);
                 } else {
                     // Filter array kosong dan reset index (array_values) untuk menghindari format object JSON yang salah

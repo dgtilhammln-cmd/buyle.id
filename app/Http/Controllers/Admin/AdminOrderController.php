@@ -154,14 +154,25 @@ class AdminOrderController extends Controller
             $buyerProfit   = $buyerAdminFee + $buyerPlatFee;
             $buyerCount    = (clone $buyerQuery)->count();
 
-            $domainPaidBase = (clone $domainQuery)->where('status', 'paid');
+            $domainPaidBase = (clone $domainQuery)->whereIn('status', ['paid', 'completed']);
             $domainGross    = (float) $domainPaidBase->sum('amount');
-            $domainBaseCost = (float) $domainPaidBase->sum('base_amount');
             $domainAdminFee = (float) $domainPaidBase->sum('admin_fee');
             $domainPlatFee  = (float) $domainPaidBase->sum('platform_fee');
             $domainTax      = (float) $domainPaidBase->sum('tax_amount');
-            // Pendapatan bersih platform dari domain sesuai aturan: platform_fee + admin_fee
-            $domainProfit   = $domainAdminFee + $domainPlatFee;
+
+            $buyPrices = \App\Http\Controllers\Creator\CreatorDomainController::getBuyPrices();
+
+            // Total Modal Beli Registrar dan Keuntungan Bersih Sebenarnya
+            $domainBaseCost = 0;
+            $domainProfit   = 0;
+            foreach ($domainPaidBase->get() as $dpb) {
+                $ext = strtolower($dpb->extension ?? '');
+                $buyCost = (float)($buyPrices[$ext] ?? 0);
+                $domainBaseCost += $buyCost;
+                // Rumus Keuntungan: (Harga Jual - Harga Beli Modal) + Platform Fee + Admin Fee + Pajak 11% = Gross - BuyCost
+                $domainProfit += max(0, (float)$dpb->amount - $buyCost);
+            }
+
             $domainCount    = (clone $domainQuery)->count();
             $domainPaidCount= $domainPaidBase->count();
 
@@ -175,6 +186,7 @@ class AdminOrderController extends Controller
                 'subtotal'      => $buyerSubtotal + $domainBaseCost,
                 'admin_fee'     => $buyerAdminFee + $domainAdminFee,
                 'platform_fee'  => $buyerPlatFee + $domainPlatFee,
+                'tax'           => $domainTax,
                 'profit'        => $buyerProfit + $domainProfit,
                 'buyer_gross'   => $buyerGross,
                 'buyer_profit'  => $buyerProfit,
@@ -182,6 +194,7 @@ class AdminOrderController extends Controller
                 'domain_gross'  => $domainGross,
                 'domain_base'   => $domainBaseCost,
                 'domain_profit' => $domainProfit,
+                'domain_tax'    => $domainTax,
                 'domain_count'  => $domainCount,
                 'domain_paid'   => $domainPaidCount,
                 'deposit_gross' => $depositTotalGross,
@@ -240,8 +253,10 @@ class AdminOrderController extends Controller
                         'creator_name' => $creatorName,
                         'channel'      => $channel,
                         'base_amount'  => (float)$o->subtotal,
+                        'buy_cost'     => 0,
                         'admin_fee'    => (float)($o->admin_fee ?? 0),
                         'platform_fee' => (float)($o->platform_fee ?? 0),
+                        'tax_amount'   => 0,
                         'gross'        => (float)$o->total,
                         'profit'       => $profit,
                         'status'       => $statusVal,
@@ -257,11 +272,18 @@ class AdminOrderController extends Controller
             // 2. Transaksi Domain Creator
             if (in_array($txType, ['all', 'domain', 'creator'])) {
                 foreach ($domainQuery->get() as $d) {
-                    $profit = (float)($d->admin_fee ?? 0) + (float)($d->platform_fee ?? 0);
+                    $ext = strtolower($d->extension ?? '');
+                    $buyCost = (float)($buyPrices[$ext] ?? 0);
+                    $isPaid = in_array($d->status, ['paid', 'completed']);
+                    // Keuntungan = (Harga Jual - Harga Beli) + Platform Fee + Admin Fee + Pajak 11%
+                    $profit = $isPaid ? max(0, (float)$d->amount - $buyCost) : 0;
+
                     $stBadge = match($d->status) {
-                        'paid'      => ['#166534', '#DCFCE7', 'Lunas (Paid)'],
+                        'completed' => ['#166534', '#DCFCE7', 'Sudah Berhasil'],
+                        'paid'      => ['#0284C7', '#E0F2FE', 'Lunas (Paid)'],
                         'pending'   => ['#D97706', '#FEF3C7', 'Pending'],
-                        'cancelled' => ['#DC2626', '#FEE2E2', 'Dibatalkan'],
+                        'rejected'  => ['#DC2626', '#FEE2E2', 'Ditolak'],
+                        'cancelled' => ['#64748B', '#F1F5F9', 'Dibatalkan'],
                         default     => ['#475569', '#F1F5F9', ucfirst($d->status)]
                     };
 
@@ -280,8 +302,10 @@ class AdminOrderController extends Controller
                         'creator_name' => $creatorName,
                         'channel'      => 'MIDTRANS',
                         'base_amount'  => (float)$d->base_amount,
+                        'buy_cost'     => $buyCost,
                         'admin_fee'    => (float)($d->admin_fee ?? 0),
                         'platform_fee' => (float)($d->platform_fee ?? 0),
+                        'tax_amount'   => (float)($d->tax_amount ?? 0),
                         'gross'        => (float)$d->amount,
                         'profit'       => $profit,
                         'status'       => $d->status,
@@ -311,8 +335,10 @@ class AdminOrderController extends Controller
                         'creator_name' => $creatorName,
                         'channel'      => 'SALDO CREATOR',
                         'base_amount'  => (float)$p->amount,
+                        'buy_cost'     => (float)$p->amount,
                         'admin_fee'    => 0,
                         'platform_fee' => 0,
+                        'tax_amount'   => 0,
                         'gross'        => (float)$p->amount,
                         'profit'       => 0,
                         'status'       => 'processed',
@@ -340,8 +366,10 @@ class AdminOrderController extends Controller
                         'creator_name' => $creatorName,
                         'channel'      => strtoupper($dp->payment_method ?: 'QRIS'),
                         'base_amount'  => (float)$dp->amount,
+                        'buy_cost'     => (float)$dp->amount,
                         'admin_fee'    => 0,
                         'platform_fee' => 0,
+                        'tax_amount'   => 0,
                         'gross'        => (float)$dp->amount,
                         'profit'       => 0,
                         'status'       => $dp->status,

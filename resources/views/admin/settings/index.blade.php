@@ -1325,24 +1325,61 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       }
       if (!is_array($dpSaved)) $dpSaved = [];
       $dpDefaults = \App\Http\Controllers\Creator\CreatorDomainController::$PRICES;
+
+      $buyRaw = $settings['domain_buy_prices'] ?? '';
+      $buySaved = [];
+      if (!empty($buyRaw)) {
+        $buySaved = is_string($buyRaw) ? json_decode($buyRaw, true) : $buyRaw;
+      }
+      if (!is_array($buySaved)) $buySaved = [];
+      $buyDefaults = \App\Http\Controllers\Creator\CreatorDomainController::$BUY_PRICES;
     @endphp
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
       @foreach($dpDefaults as $ext => $defaultPrice)
-      <div>
-        <label class="form-label">
-          Harga .{{ $ext }} <span>(Default: Rp {{ number_format($defaultPrice,0,',','.') }})</span>
-        </label>
-        <div style="position:relative;">
-          <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-size:.85rem;font-weight:600;color:#64748B;">Rp</span>
-          <input type="number" name="domain_prices[{{ $ext }}]" value="{{ $dpSaved[$ext] ?? $defaultPrice }}" class="form-input" style="padding-left:2.8rem !important;" placeholder="{{ $defaultPrice }}">
+      @php
+        $defaultBuy = $buyDefaults[$ext] ?? 0;
+        $currentSell = $dpSaved[$ext] ?? $defaultPrice;
+        $currentBuy = $buySaved[$ext] ?? $defaultBuy;
+      @endphp
+      <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:0.9rem 1rem;">
+        <div style="font-size:0.85rem;font-weight:700;color:#0F172A;margin-bottom:0.6rem;display:flex;align-items:center;justify-content:space-between;">
+          <span>Ekstensi .{{ $ext }}</span>
+          <span style="font-size:0.7rem;font-weight:600;color:#059669;background:#DCFCE7;border:1px solid #BBF7D0;padding:2px 6px;border-radius:4px;">
+            Margin Dasar: Rp {{ number_format(max(0, $currentSell - $currentBuy), 0, ',', '.') }}
+          </span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+          <div>
+            <label class="form-label" style="font-size:0.72rem;margin-bottom:0.25rem;">
+              Harga Jual <span>(ke Creator)</span>
+            </label>
+            <div style="position:relative;">
+              <span style="position:absolute;left:0.65rem;top:50%;transform:translateY(-50%);font-size:0.78rem;font-weight:600;color:#64748B;">Rp</span>
+              <input type="number" name="domain_prices[{{ $ext }}]" value="{{ $currentSell }}" class="form-input" style="padding-left:2.2rem !important;font-size:0.82rem;font-weight:600;height:38px;" placeholder="{{ $defaultPrice }}">
+            </div>
+          </div>
+
+          <div>
+            <label class="form-label" style="font-size:0.72rem;margin-bottom:0.25rem;">
+              Harga Beli <span>(Modal Registrar)</span>
+            </label>
+            <div style="position:relative;">
+              <span style="position:absolute;left:0.65rem;top:50%;transform:translateY(-50%);font-size:0.78rem;font-weight:600;color:#64748B;">Rp</span>
+              <input type="number" name="domain_buy_prices[{{ $ext }}]" value="{{ $currentBuy }}" class="form-input" style="padding-left:2.2rem !important;font-size:0.82rem;font-weight:600;height:38px;" placeholder="{{ $defaultBuy }}">
+            </div>
+          </div>
         </div>
       </div>
       @endforeach
     </div>
 
-    <div style="margin-top:1.5rem;padding:1rem;background:#F8FAFC;border-radius:12px;border:1px solid #E2E8F0;font-size:.78rem;color:#64748B;line-height:1.5;">
-      💡 <strong>Informasi:</strong> Harga di atas akan ditampilkan secara otomatis saat creator memeriksa ketersediaan domain dan melakukan checkout via Midtrans.
+    <div style="margin-top:1.25rem;padding:0.85rem 1rem;background:#F8FAFC;border-radius:10px;border:1px solid #E2E8F0;font-size:0.75rem;color:#475569;line-height:1.5;display:flex;align-items:flex-start;gap:8px;">
+      <svg width="16" height="16" fill="none" stroke="#059669" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <strong>Rumus Profit Platform Domain:</strong> Keuntungan bersih dihitung dari <code>(Harga Jual - Harga Beli Modal) + Platform Fee + Admin Fee + PPN 11%</code>. Seluruh margin, fee, dan pajak masuk ke profit platform Anda secara otomatis pada laporan omset.
+      </div>
     </div>
   </div>
 </div>

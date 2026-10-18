@@ -426,11 +426,12 @@
     /* Omset / Financial Table View */
     .omset-summary-grid {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         gap: 0.75rem;
-        margin-bottom: 1.25rem;
+        margin-bottom: 1rem;
     }
-    @media (max-width: 992px) { .omset-summary-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 1200px) { .omset-summary-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 640px) { .omset-summary-grid { grid-template-columns: repeat(2, 1fr); } }
 
     .omset-sum-box {
         background: #F8FAFC;
@@ -439,7 +440,7 @@
         padding: 0.75rem 0.9rem;
     }
     .omset-sum-lbl {
-        font-size: 0.7rem;
+        font-size: 0.6875rem;
         color: #64748B;
         font-weight: 600;
         text-transform: uppercase;
@@ -449,7 +450,82 @@
         font-size: 0.95rem;
         font-weight: 700;
         color: #0F172A;
-        margin-top: 0.15rem;
+        margin-top: 0.18rem;
+    }
+
+    /* Omset 3-Source Breakdown Cards */
+    .omset-breakdown-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    @media (max-width: 900px) {
+        .omset-breakdown-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .omset-bcard {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 10px;
+        padding: 0.85rem 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    }
+    .omset-bcard-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.35rem;
+    }
+    .omset-bcard-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #334155;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+    }
+    .omset-bcard-profit {
+        font-size: 0.725rem;
+        font-weight: 700;
+        color: #15803D;
+        background: #F0FDF4;
+        border: 1px solid #BBF7D0;
+        padding: 2px 7px;
+        border-radius: 6px;
+    }
+    .omset-bcard-val {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #0F172A;
+    }
+    .omset-bcard-sub {
+        font-size: 0.725rem;
+        color: #64748B;
+        margin-top: 0.25rem;
+    }
+
+    .omset-filter-toolbar {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 10px;
+        padding: 0.6rem 0.85rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    .omset-filter-group {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.4rem;
     }
 
     .omset-table-card {
@@ -716,14 +792,14 @@
     {{-- CONDITIONAL TAB DISPLAY --}}
     @if($tab === 'omset')
 
-        {{-- Omset Summary Header Cards --}}
+        {{-- Omset Summary Header Cards (6 Kolom Full-Width) --}}
         <div class="omset-summary-grid">
             <div class="omset-sum-box">
                 <div class="omset-sum-lbl">Total Omset (Gross)</div>
                 <div class="omset-sum-val">Rp {{ number_format($revenueStats['gross'] ?? 0, 0, ',', '.') }}</div>
             </div>
             <div class="omset-sum-box">
-                <div class="omset-sum-lbl">Subtotal / Modal Dasar</div>
+                <div class="omset-sum-lbl">Modal / Pokok</div>
                 <div class="omset-sum-val">Rp {{ number_format($revenueStats['subtotal'] ?? 0, 0, ',', '.') }}</div>
             </div>
             <div class="omset-sum-box">
@@ -734,51 +810,72 @@
                 <div class="omset-sum-lbl">Total Platform Fee</div>
                 <div class="omset-sum-val" style="color:#D97706;">+ Rp {{ number_format($revenueStats['platform_fee'] ?? 0, 0, ',', '.') }}</div>
             </div>
+            <div class="omset-sum-box">
+                <div class="omset-sum-lbl">Total PPN (11%)</div>
+                <div class="omset-sum-val" style="color:#475569;">+ Rp {{ number_format($revenueStats['tax'] ?? 0, 0, ',', '.') }}</div>
+            </div>
             <div class="omset-sum-box" style="background:#F0FDF4;border-color:#BBF7D0;">
                 <div class="omset-sum-lbl" style="color:#166534;">Profit Platform</div>
                 <div class="omset-sum-val" style="color:#15803D;">+ Rp {{ number_format($revenueStats['profit'] ?? 0, 0, ',', '.') }}</div>
             </div>
         </div>
 
-        {{-- Ringkasan Sumber Pendapatan (Compact & Rapi) --}}
-        <div style="display:flex; flex-wrap:wrap; gap:0.45rem; margin-bottom:1rem; align-items:center; font-size:0.75rem;">
-            <span style="color:#64748B; font-weight:700; text-transform:uppercase; font-size:0.68rem; letter-spacing:0.03em;">Ringkasan Sumber:</span>
-            <span style="background:#FFFFFF; border:1px solid #E2E8F0; padding:3px 8px; border-radius:6px; color:#334155;">
-                Pesanan Pembeli: <strong>Rp {{ number_format($revenueStats['buyer_gross'] ?? 0, 0, ',', '.') }}</strong> 
-                <span style="color:#059669; font-weight:600;">(Profit: Rp {{ number_format($revenueStats['buyer_profit'] ?? 0, 0, ',', '.') }})</span>
-            </span>
-            <span style="background:#FFFFFF; border:1px solid #E2E8F0; padding:3px 8px; border-radius:6px; color:#334155;">
-                Domain Creator: <strong>Rp {{ number_format($revenueStats['domain_gross'] ?? 0, 0, ',', '.') }}</strong> 
-                <span style="color:#059669; font-weight:600;">(Pendapatan Bersih: Rp {{ number_format($revenueStats['domain_profit'] ?? 0, 0, ',', '.') }})</span>
-            </span>
-            <span style="background:#FFFFFF; border:1px solid #E2E8F0; padding:3px 8px; border-radius:6px; color:#334155;">
-                Deposit POS Creator: <strong>Rp {{ number_format($revenueStats['deposit_gross'] ?? 0, 0, ',', '.') }}</strong>
-            </span>
+        {{-- Ringkasan Sumber Transaksi (Grid 3 Kolom Full-Width) --}}
+        <div class="omset-breakdown-grid">
+            <div class="omset-bcard">
+                <div class="omset-bcard-head">
+                    <span class="omset-bcard-title">Pesanan Pembeli</span>
+                    <span class="omset-bcard-profit">+ Rp {{ number_format($revenueStats['buyer_profit'] ?? 0, 0, ',', '.') }} profit</span>
+                </div>
+                <div class="omset-bcard-val">Rp {{ number_format($revenueStats['buyer_gross'] ?? 0, 0, ',', '.') }}</div>
+                <div class="omset-bcard-sub">Dari {{ $txTypeCounts['buyer'] ?? 0 }} pesanan produk fisik &amp; digital</div>
+            </div>
+            <div class="omset-bcard">
+                <div class="omset-bcard-head">
+                    <span class="omset-bcard-title">Domain Creator</span>
+                    <span class="omset-bcard-profit">+ Rp {{ number_format($revenueStats['domain_profit'] ?? 0, 0, ',', '.') }} profit</span>
+                </div>
+                <div class="omset-bcard-val">Rp {{ number_format($revenueStats['domain_gross'] ?? 0, 0, ',', '.') }}</div>
+                <div class="omset-bcard-sub">Keuntungan dari {{ $revenueStats['domain_paid'] ?? 0 }} domain aktif (Margin + Pajak 11% + Fee)</div>
+            </div>
+            <div class="omset-bcard">
+                <div class="omset-bcard-head">
+                    <span class="omset-bcard-title">Deposit POS Creator</span>
+                    <span style="font-size:0.725rem; font-weight:600; color:#64748B; background:#F8FAFC; border:1px solid #E2E8F0; padding:2px 7px; border-radius:6px;">Saldo Kasir</span>
+                </div>
+                <div class="omset-bcard-val">Rp {{ number_format($revenueStats['deposit_gross'] ?? 0, 0, ',', '.') }}</div>
+                <div class="omset-bcard-sub">Total mutasi saldo deposit POS point of sale</div>
+            </div>
         </div>
 
-        {{-- Filter Sumber Transaksi (Pill Filter Compact) --}}
-        <div style="display:flex; flex-wrap:wrap; gap:0.35rem; margin-bottom:0.85rem; align-items:center;">
-            <span style="font-size:0.7rem; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.03em; margin-right:4px;">Filter Sumber:</span>
-            <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'all', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
-               class="tx-type-pill {{ $txType === 'all' ? 'active' : '' }}">
-                Semua Transaksi ({{ $txTypeCounts['all'] ?? 0 }})
-            </a>
-            <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'buyer', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
-               class="tx-type-pill {{ $txType === 'buyer' ? 'active' : '' }}">
-                Pembeli ({{ $txTypeCounts['buyer'] ?? 0 }})
-            </a>
-            <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'creator', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
-               class="tx-type-pill {{ $txType === 'creator' ? 'active' : '' }}">
-                Semua Creator ({{ $txTypeCounts['creator'] ?? 0 }})
-            </a>
-            <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'domain', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
-               class="tx-type-pill {{ $txType === 'domain' ? 'active' : '' }}">
-                Domain Creator ({{ $txTypeCounts['domain'] ?? 0 }})
-            </a>
-            <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'deposit', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
-               class="tx-type-pill {{ $txType === 'deposit' ? 'active' : '' }}">
-                Deposit POS Creator ({{ $txTypeCounts['deposit'] ?? 0 }})
-            </a>
+        {{-- Toolbar Filter Sumber Transaksi (Full-Width Card) --}}
+        <div class="omset-filter-toolbar">
+            <div class="omset-filter-group">
+                <span style="font-size:0.725rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.02em; margin-right:4px;">Filter Sumber:</span>
+                <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'all', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+                   class="tx-type-pill {{ $txType === 'all' ? 'active' : '' }}">
+                    Semua Transaksi ({{ $txTypeCounts['all'] ?? 0 }})
+                </a>
+                <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'buyer', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+                   class="tx-type-pill {{ $txType === 'buyer' ? 'active' : '' }}">
+                    Pembeli ({{ $txTypeCounts['buyer'] ?? 0 }})
+                </a>
+                <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'creator', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+                   class="tx-type-pill {{ $txType === 'creator' ? 'active' : '' }}">
+                    Semua Creator ({{ $txTypeCounts['creator'] ?? 0 }})
+                </a>
+                <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'domain', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+                   class="tx-type-pill {{ $txType === 'domain' ? 'active' : '' }}">
+                    Domain Creator ({{ $txTypeCounts['domain'] ?? 0 }})
+                </a>
+                <a href="{{ route('admin.orders.index', ['tab' => 'omset', 'tx_type' => 'deposit', 'period' => $period, 'start_date' => $start_date, 'end_date' => $end_date, 'q' => $q]) }}"
+                   class="tx-type-pill {{ $txType === 'deposit' ? 'active' : '' }}">
+                    Deposit POS Creator ({{ $txTypeCounts['deposit'] ?? 0 }})
+                </a>
+            </div>
+            <div style="font-size:0.75rem; color:#64748B;">
+                Menampilkan <strong style="color:#0F172A;">{{ $orders->total() }}</strong> transaksi
+            </div>
         </div>
 
         {{-- Financial Transaction History Table --}}
@@ -794,6 +891,7 @@
                         <th style="text-align:right;">Harga / Modal Dasar</th>
                         <th style="text-align:right;">Admin Fee</th>
                         <th style="text-align:right;">Platform Fee</th>
+                        <th style="text-align:right;">PPN (11%)</th>
                         <th style="text-align:right;">Total Transaksi</th>
                         <th style="text-align:right;">Profit Platform</th>
                         <th style="text-align:center;">Status &amp; Aksi</th>
@@ -831,6 +929,7 @@
                             <td style="text-align:right;font-weight:500;">Rp {{ number_format($o->base_amount, 0, ',', '.') }}</td>
                             <td style="text-align:right;color:#D97706;font-weight:500;">+ Rp {{ number_format($o->admin_fee, 0, ',', '.') }}</td>
                             <td style="text-align:right;color:#D97706;font-weight:500;">+ Rp {{ number_format($o->platform_fee, 0, ',', '.') }}</td>
+                            <td style="text-align:right;color:#475569;font-weight:500;">+ Rp {{ number_format($o->tax_amount ?? 0, 0, ',', '.') }}</td>
                             <td style="text-align:right;font-weight:700;color:#0F172A;">Rp {{ number_format($o->gross, 0, ',', '.') }}</td>
                             <td style="text-align:right;font-weight:700;color:#15803D;">+ Rp {{ number_format($o->profit, 0, ',', '.') }}</td>
                             <td style="text-align:center;">
@@ -840,6 +939,8 @@
                                         <select name="status" class="select-status-mini" onchange="this.form.submit()">
                                             <option value="pending" {{ $o->status === 'pending' ? 'selected' : '' }}>Pending</option>
                                             <option value="paid" {{ $o->status === 'paid' ? 'selected' : '' }}>Lunas (Paid)</option>
+                                            <option value="completed" {{ $o->status === 'completed' ? 'selected' : '' }}>Sudah Berhasil</option>
+                                            <option value="rejected" {{ $o->status === 'rejected' ? 'selected' : '' }}>Ditolak</option>
                                             <option value="cancelled" {{ $o->status === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                                         </select>
                                     </form>
@@ -852,7 +953,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="11" style="text-align:center;padding:2.5rem 1rem;color:#94A3B8;">
+                            <td colspan="12" style="text-align:center;padding:2.5rem 1rem;color:#94A3B8;">
                                 Belum ada riwayat transaksi keuangan pada periode dan filter ini.
                             </td>
                         </tr>

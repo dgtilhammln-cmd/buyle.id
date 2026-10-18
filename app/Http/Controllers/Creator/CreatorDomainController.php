@@ -23,6 +23,16 @@ class CreatorDomainController extends Controller
         'my.id'  => 333189,
     ];
 
+    public static array $BUY_PRICES = [
+        'com'    => 150000,
+        'id'     => 225000,
+        'co.id'  => 275000,
+        'biz'    => 250000,
+        'biz.id' => 25000,
+        'store'  => 350000,
+        'my.id'  => 15000,
+    ];
+
     public static function getPrices(): array
     {
         $custom = Setting::get('domain_prices');
@@ -39,6 +49,24 @@ class CreatorDomainController extends Controller
             }
         }
         return self::$PRICES;
+    }
+
+    public static function getBuyPrices(): array
+    {
+        $custom = Setting::get('domain_buy_prices');
+        if ($custom) {
+            $decoded = is_string($custom) ? json_decode($custom, true) : $custom;
+            if (is_array($decoded) && !empty($decoded)) {
+                $prices = self::$BUY_PRICES;
+                foreach ($decoded as $k => $v) {
+                    if (is_numeric($v) && $v > 0) {
+                        $prices[strtolower($k)] = (float)$v;
+                    }
+                }
+                return $prices;
+            }
+        }
+        return self::$BUY_PRICES;
     }
 
     /**
