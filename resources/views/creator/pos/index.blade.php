@@ -1325,43 +1325,6 @@
                     </div>
 
                     <div class="prof-card-body">
-                        <!-- Form Atas Nama Pelanggan (Opsional) -->
-                        <div class="form-group">
-                            <label class="form-label">
-                                Atas Nama Pelanggan <span
-                                    style="font-size:0.7rem; font-weight:400; color:#64748b;">(Opsional)</span>
-                            </label>
-                            <input type="text" id="posCustomerName" class="form-input"
-                                placeholder="Nama Pelanggan (Opsional, default: Pelanggan Umum)">
-                        </div>
-
-                        <!-- Form Grid: Ref/Meja & Phone -->
-                        <div class="form-grid">
-                            <div class="form-group mb-0">
-                                <label class="form-label">No. Ref / Catatan / Meja</label>
-                                <input type="text" id="posTableNumber" class="form-input"
-                                    placeholder="Catatan / Ref (Opsional)">
-                            </div>
-                            <div class="form-group mb-0">
-                                <label class="form-label">No. HP / WA Pelanggan</label>
-                                <input type="text" id="posCustomerPhone" class="form-input" placeholder="08xxx (Opsional)">
-                            </div>
-                        </div>
-
-                        <!-- Form Email Pelanggan -->
-                        <div class="form-group mt-2 mb-0">
-                            <label class="form-label"
-                                style="display:flex; justify-content:space-between; align-items:center;">
-                                <span>Email Pelanggan</span>
-                                <span
-                                    style="font-size:0.68rem; font-weight:500; color:#166534; background:#f0fdf4; padding:1px 6px; border-radius:4px; border:1px solid #bbf7d0;">Opsional
-                                    (untuk E-Receipt)</span>
-                            </label>
-                            <input type="email" id="posCartCustomerEmail" class="form-input"
-                                placeholder="contoh@gmail.com (Opsional)" oninput="syncCustomerEmail(this.value)">
-                        </div>
-
-                        <hr style="border-top:1.5px dashed #e2e8f0; margin: 1.25rem 0;">
 
                         <!-- Cart Items Container -->
                         <div class="cart-items-container" id="cartItemsContainer">
@@ -1573,6 +1536,37 @@
                         id="modalPayTotal">Rp 0</div>
                 </div>
 
+                <!-- Informasi Pelanggan -->
+                <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1rem;">
+                    <div style="font-size:0.7rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">Info Pelanggan (Opsional)</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                        <div>
+                            <label style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">Nama</label>
+                            <input type="text" id="posCustomerName" class="form-input"
+                                style="height:34px; font-size:0.78rem;"
+                                placeholder="Pelanggan Umum">
+                        </div>
+                        <div>
+                            <label style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">No. Ref / Catatan / Meja</label>
+                            <input type="text" id="posTableNumber" class="form-input"
+                                style="height:34px; font-size:0.78rem;"
+                                placeholder="Catatan / Ref (Opsional)">
+                        </div>
+                        <div>
+                            <label style="font-size:0.7rem; font-weight:700; color:#475569; display:block; margin-bottom:3px;">No. HP / WA</label>
+                            <input type="text" id="posCustomerPhone" class="form-input"
+                                style="height:34px; font-size:0.78rem;"
+                                placeholder="08xxx">
+                        </div>
+                        <div>
+                            <label style="font-size:0.7rem; font-weight:700; color:#166534; display:block; margin-bottom:3px;">Email (E-Receipt otomatis)</label>
+                            <input type="email" id="posCartCustomerEmail" class="form-input"
+                                style="height:34px; font-size:0.78rem;"
+                                placeholder="contoh@gmail.com" oninput="syncCustomerEmail(this.value)">
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Opsi 1: Tunai (Cash) -->
                 <div class="pay-option-card selected" id="optCash" onclick="selectPaymentMethod('cash')">
                     <input type="radio" name="pay_method" value="cash" checked style="accent-color:#1eb349;">
@@ -1682,13 +1676,7 @@
                     </div>
                 </div>
 
-                <!-- Optional E-Receipt Email Input -->
-                <div class="mt-3 mb-0">
-                    <label class="form-label mb-1" style="font-size:0.73rem; color:#64748b; font-weight:600;">Email Pembeli
-                        (E-Receipt - Opsional)</label>
-                    <input type="email" id="posCustomerEmail" class="form-input" style="height:36px; font-size:0.78rem;"
-                        placeholder="contoh@gmail.com">
-                </div>
+                <input type="hidden" id="posCustomerEmail" value="">
             </div>
 
             <div class="pos-modal-foot">
@@ -1806,15 +1794,18 @@
                     </div>
                 </div>
 
-                <!-- E-Receipt Email Input (no-print) -->
+                <!-- E-Receipt auto-sent notice -->
                 <div class="no-print mt-3 pt-3" style="border-top:1.5px dashed #cbd5e1;">
-                    <label class="form-label mb-1" style="font-size:0.78rem;">Kirim E-Receipt Struk via Email</label>
-                    <div class="d-flex gap-2">
-                        <input type="email" id="recSendEmailInput" class="form-input"
-                            placeholder="email.pelanggan@gmail.com" style="height:40px; font-size:0.8rem;">
-                        <button type="button" class="btn-outline-bio"
-                            style="white-space:nowrap; padding:0 14px; font-size:0.78rem;"
-                            onclick="sendEReceiptEmail()">Kirim</button>
+                    <div id="receiptEmailAutoNotice" style="display:none; align-items:center; gap:8px; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:10px; padding:9px 12px;">
+                        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        <div style="font-size:0.75rem; color:#166534; font-weight:600; line-height:1.4;">
+                            E-Receipt terkirim otomatis ke <span id="receiptAutoEmail" style="font-weight:800;"></span>
+                        </div>
+                    </div>
+                    <div id="receiptEmailNoneNotice" style="display:none; font-size:0.72rem; color:#94a3b8; text-align:center;">
+                        Tidak ada email pelanggan — E-Receipt tidak dikirim.
                     </div>
                 </div>
             </div>
@@ -2682,11 +2673,33 @@
                                         },
                                         onError: function (result) {
                                             document.getElementById('midtransBlurOverlay').classList.remove('active');
-                                            showPosAlert('Pembayaran gagal atau terjadi kesalahan.', 'Gagal Pembayaran', 'error');
+                                            // Batalkan order pending jika pembayaran gagal
+                                            if (data.order && data.order.id) {
+                                                fetch('{{ route("creator.pos.cancel-pending") }}', {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                    },
+                                                    body: JSON.stringify({ order_id: data.order.id })
+                                                }).catch(() => {});
+                                            }
+                                            showPosAlert('Pembayaran gagal. Transaksi dibatalkan dan stok dikembalikan.', 'Gagal Pembayaran', 'error');
                                         },
                                         onClose: function () {
                                             document.getElementById('midtransBlurOverlay').classList.remove('active');
-                                            showPosAlert('Pop-up pembayaran ditutup. Pembayaran belum diselesaikan.', 'Pembayaran Ditunda', 'warning');
+                                            // Batalkan order pending jika modal ditutup tanpa bayar
+                                            if (data.order && data.order.id) {
+                                                fetch('{{ route("creator.pos.cancel-pending") }}', {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                    },
+                                                    body: JSON.stringify({ order_id: data.order.id })
+                                                }).catch(() => {});
+                                            }
+                                            showPosAlert('Pop-up pembayaran ditutup. Transaksi dibatalkan dan stok dikembalikan.', 'Pembayaran Dibatalkan', 'warning');
                                         }
                                     });
                                 } catch (e) {
@@ -2782,8 +2795,18 @@
                 document.getElementById('recCashChangeRow').style.display = 'none';
             }
 
-            if (addr.email) {
-                document.getElementById('recSendEmailInput').value = addr.email;
+            // Tampilkan auto-email notice
+            const autoNotice = document.getElementById('receiptEmailAutoNotice');
+            const noneNotice = document.getElementById('receiptEmailNoneNotice');
+            const autoEmailSpan = document.getElementById('receiptAutoEmail');
+            const customerEmail = addr.email || '';
+            if (customerEmail) {
+                if (autoNotice) { autoNotice.style.display = 'flex'; }
+                if (noneNotice) { noneNotice.style.display = 'none'; }
+                if (autoEmailSpan) autoEmailSpan.innerText = customerEmail;
+            } else {
+                if (autoNotice) { autoNotice.style.display = 'none'; }
+                if (noneNotice) { noneNotice.style.display = 'block'; }
             }
 
             openModal('posReceiptModal');

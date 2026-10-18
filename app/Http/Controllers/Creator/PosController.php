@@ -205,6 +205,12 @@ class PosController extends Controller
         $todayOrders = Order::where('source', 'pos')
             ->whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
             ->whereDate('created_at', now()->today())
+            ->whereIn('status', [
+                OrderStatus::Confirmed,
+                OrderStatus::Processing,
+                OrderStatus::Shipped,
+                OrderStatus::Delivered,
+            ])
             ->with(['items', 'payment'])
             ->orderByDesc('created_at')
             ->get();
@@ -446,8 +452,9 @@ class PosController extends Controller
                 }
             }
 
-            // Kirim E-Receipt otomatis jika email diisi
-            if (!empty($request->customer_email)) {
+            // Kirim E-Receipt otomatis HANYA untuk transaksi tunai/transfer yang langsung lunas
+            // Untuk QRIS, email akan dikirim otomatis melalui webhook Midtrans setelah pembayaran berhasil
+            if ($isPaid && !empty($request->customer_email)) {
                 $this->dispatchReceiptEmail($order, $request->customer_email);
             }
 
@@ -507,6 +514,74 @@ class PosController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal mengirim email E-Receipt: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Batalkan Order POS yang masih pending (QRIS modal ditutup tanpa bayar).
+     * Mengembalikan stok produk dan membatalkan order.
+     */
+    public function cancelPending(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|exists:orders,id',
+        ]);
+
+        $seller = auth()->user();
+
+        try {
+            DB::beginTransaction();
+
+            $order = Order::where('id', $request->order_id)
+                ->where('source', 'pos')
+                ->where('user_id', $seller->id)
+                ->where('status', OrderStatus::Pending)
+                ->with(['items.product'])
+                ->lockForUpdate()
+                ->first();
+
+            if (!$order) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Order tidak ditemukan atau sudah diproses.',
+                ], 404);
+            }
+
+            // Kembalikan stok produk
+            foreach ($order->items as $item) {
+                if ($item->product && $item->product->stock !== null) {
+                    $item->product->increment('stock', $item->qty);
+                    $item->product->decrement('sold_count', $item->qty);
+                }
+            }
+
+            // Batalkan order dan payment
+            $order->update(['status' => OrderStatus::Cancelled]);
+            if ($order->payment) {
+                $order->payment->update(['status' => \App\Enums\PaymentStatus::Failed]);
+            }
+
+            DB::commit();
+
+            Log::info('POS Order dibatalkan (Midtrans ditutup)', [
+                'order_id'     => $order->id,
+                'order_number' => $order->order_number,
+                'seller_id'    => $seller->id,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Order POS berhasil dibatalkan.',
+            ]);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('POS Cancel Pending Exception: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membatalkan order: ' . $e->getMessage(),
             ], 500);
         }
     }

@@ -650,6 +650,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::get('/pos/products', [\App\Http\Controllers\Creator\PosController::class, 'products'])->name('pos.products');
     Route::post('/pos/store', [\App\Http\Controllers\Creator\PosController::class, 'store'])->name('pos.store');
     Route::post('/pos/send-receipt', [\App\Http\Controllers\Creator\PosController::class, 'sendReceipt'])->name('pos.send-receipt');
+    Route::post('/pos/cancel-pending', [\App\Http\Controllers\Creator\PosController::class, 'cancelPending'])->name('pos.cancel-pending');
     Route::post('/pos/deposit', [\App\Http\Controllers\Creator\PosController::class, 'topupDeposit'])->name('pos.deposit');
     Route::post('/pos/deposit/check', [\App\Http\Controllers\Creator\PosController::class, 'checkDeposit'])->name('pos.deposit.check');
     Route::get('/pos/closing-report', [\App\Http\Controllers\Creator\PosController::class, 'closingReport'])->name('pos.closing-report');

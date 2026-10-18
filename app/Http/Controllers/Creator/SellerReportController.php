@@ -225,6 +225,12 @@ class SellerReportController extends Controller
         $posPaymentMethod = $request->query('pos_method', 'all');
         $posQuery = Order::where('source', 'pos')
             ->whereHas('items.product', fn($q) => $q->where('seller_id', $seller->id))
+            ->whereIn('status', [
+                \App\Enums\OrderStatus::Confirmed,
+                \App\Enums\OrderStatus::Processing,
+                \App\Enums\OrderStatus::Shipped,
+                \App\Enums\OrderStatus::Delivered,
+            ])
             ->whereBetween('created_at', [$startDate, $endDate]);
 
         if ($posPaymentMethod && $posPaymentMethod !== 'all') {

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * PaymentWebhookController
@@ -122,6 +123,30 @@ class PaymentWebhookController extends Controller
                     );
                 } catch (\Throwable $e) {
                     Log::error('[Webhook] ProcessSuccessfulOrderJob sync error: ' . $e->getMessage());
+                }
+
+                // Untuk order POS QRIS: kirim E-Receipt otomatis ke customer jika email tersedia
+                if ($order->source === 'pos') {
+                    try {
+                        $order->loadMissing(['items', 'payment']);
+                        $customerEmail = $order->shipping_address['email'] ?? null;
+                        if ($customerEmail) {
+                            $sellerProfile = \App\Models\CreatorProfile::where('user_id', $order->user_id)->first();
+                            $storeName = $sellerProfile?->store_name ?? 'buyle.id Store';
+                            Mail::send('emails.pos_receipt', [
+                                'order'     => $order,
+                                'profile'   => $sellerProfile,
+                                'storeName' => $storeName,
+                                'subject'   => 'Struk Pembayaran - ' . $storeName . ' (' . $order->order_number . ')',
+                            ], function ($message) use ($customerEmail, $order, $storeName) {
+                                $message->to($customerEmail)
+                                    ->subject('Struk Pembayaran - ' . $storeName . ' (' . $order->order_number . ')');
+                            });
+                            Log::info('[Webhook] POS E-Receipt dikirim ke ' . $customerEmail . ' untuk order ' . $order->order_number);
+                        }
+                    } catch (\Throwable $e) {
+                        Log::warning('[Webhook] Gagal kirim POS E-Receipt: ' . $e->getMessage());
+                    }
                 }
             }
         } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
