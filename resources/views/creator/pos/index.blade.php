@@ -378,9 +378,38 @@
             border-bottom: 1px dashed #e2e8f0;
         }
 
+        .cart-item-thumb {
+            width: 42px;
+            height: 42px;
+            border-radius: 9px;
+            overflow: hidden;
+            flex-shrink: 0;
+            margin-right: 0.65rem;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+        }
+
+        .cart-item-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .cart-item-img-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            background: #f8fafc;
+        }
+
         .cart-item-info {
             flex: 1;
             padding-right: 0.5rem;
+            min-width: 0;
         }
 
         .cart-item-title {
@@ -388,6 +417,9 @@
             font-size: 0.84rem;
             color: #0f172a;
             line-height: 1.25;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .cart-item-unit-price {
@@ -1141,8 +1173,8 @@
                                     }
                                 @endphp
                                 <div class="product-card" data-id="{{ $prod->id }}" data-name="{{ strtolower($prod->name) }}"
-                                    data-price="{{ $prodPrice }}" data-category="{{ $catSlug }}"
-                                    onclick="addToCart({{ $prod->id }}, '{{ addslashes($prod->name) }}', {{ $prodPrice }})">
+                                    data-price="{{ $prodPrice }}" data-category="{{ $catSlug }}" data-image="{{ $imgUrl ?? '' }}"
+                                    onclick="addToCart({{ $prod->id }}, '{{ addslashes($prod->name) }}', {{ $prodPrice }}, '{{ $imgUrl ? addslashes($imgUrl) : '' }}')">
                                     <div class="product-qty-badge" id="badge-qty-{{ $prod->id }}">0</div>
                                     <div class="product-img-wrapper"
                                         style="@if(!$imgUrl) background: {{ $themeBg }}; border: 1px solid {{ $themeBorder }}; @endif">
@@ -1361,7 +1393,7 @@
 
                             <!-- Service Fee Field -->
                             <div class="summary-row">
-                                <span>Biaya Layanan Toko</span>
+                                <span>Service Fee</span>
                                 <div style="width: 105px;">
                                     <input type="number" id="posServiceFeeInput" class="form-input text-end"
                                         style="height:34px; padding:0 10px; font-size:0.8rem;" placeholder="0" min="0"
@@ -1371,7 +1403,7 @@
 
                             <!-- Platform & Admin Fees Breakdown -->
                             <div class="summary-row" style="font-size:0.75rem; color:#94a3b8;">
-                                <span>Biaya Platform ({{ $platformFeeRate }}%) & Admin ({{ $adminFeeRate }}%)</span>
+                                <span>Platform Fee ({{ $platformFeeRate }}%) & Admin Fee ({{ $adminFeeRate }}%)</span>
                                 <span id="displaySystemFees">Rp 0</span>
                             </div>
 
@@ -1567,26 +1599,38 @@
                     </div>
                 </div>
 
+                @php
+                    $isDepositEmpty = ($posBalance <= 0);
+                @endphp
+
                 <!-- Opsi 1: Tunai (Cash) -->
-                <div class="pay-option-card selected" id="optCash" onclick="selectPaymentMethod('cash')">
-                    <input type="radio" name="pay_method" value="cash" checked style="accent-color:#1eb349;">
+                <div class="pay-option-card {{ $isDepositEmpty ? 'disabled-cash' : 'selected' }}" id="optCash"
+                    onclick="{{ $isDepositEmpty ? '' : 'selectPaymentMethod(\'cash\')' }}"
+                    style="{{ $isDepositEmpty ? 'background:#f8fafc; border-color:#cbd5e1; opacity:0.6; cursor:not-allowed; pointer-events:none;' : '' }}">
+                    <input type="radio" name="pay_method" value="cash" {{ $isDepositEmpty ? 'disabled' : 'checked' }} style="accent-color:#1eb349;">
                     <div
-                        style="width:38px; height:38px; border-radius:50%; background:#f0fdf4; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24">
+                        style="width:38px; height:38px; border-radius:50%; background:{{ $isDepositEmpty ? '#f1f5f9' : '#f0fdf4' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="20" height="20" fill="none" stroke="{{ $isDepositEmpty ? '#94a3b8' : '#1eb349' }}" stroke-width="2" viewBox="0 0 24 24">
                             <rect x="2" y="6" width="20" height="12" rx="2" />
                             <circle cx="12" cy="12" r="2" />
                         </svg>
                     </div>
                     <div style="flex:1;">
-                        <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Tunai (Cash)</div>
-                        <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">Bayar & hitung kembalian langsung
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                            <div style="font-size:0.88rem; font-weight:700; color:{{ $isDepositEmpty ? '#64748b' : '#0f172a' }};">Tunai (Cash)</div>
+                            <span id="cashDepositBadge" style="display:{{ $isDepositEmpty ? 'inline-block' : 'none' }}; font-size:0.68rem; font-weight:800; background:#fee2e2; color:#dc2626; border:1px solid #fecaca; padding:2px 8px; border-radius:999px;">
+                                Saldo Deposit Kurang
+                            </span>
+                        </div>
+                        <div style="font-size:0.72rem; color:{{ $isDepositEmpty ? '#ef4444' : '#64748b' }}; margin-top:1px;">
+                            {{ $isDepositEmpty ? 'Tidak dapat dipilih karena saldo deposit kosong.' : 'Bayar & hitung kembalian langsung' }}
                         </div>
                     </div>
                 </div>
 
                 <!-- Cash Calculator Panel -->
                 <div id="cashCalcPanel"
-                    style="background:#f8fafc; border-radius:12px; border:1.5px solid #cbd5e1; padding:0.85rem; margin-bottom:0.75rem;">
+                    style="display:{{ $isDepositEmpty ? 'none' : 'block' }}; background:#f8fafc; border-radius:12px; border:1.5px solid #cbd5e1; padding:0.85rem; margin-bottom:0.75rem;">
                     <label
                         style="font-size:0.75rem; font-weight:700; color:#166534; display:block; margin-bottom:6px;">Nominal
                         Uang Diterima</label>
@@ -1658,8 +1702,8 @@
                 </div>
 
                 <!-- Opsi 2: Non-Tunai / Cashless -->
-                <div class="pay-option-card" id="optCashless" onclick="selectPaymentMethod('cashless')">
-                    <input type="radio" name="pay_method" value="cashless" style="accent-color:#7c3aed;">
+                <div class="pay-option-card {{ $isDepositEmpty ? 'selected' : '' }}" id="optCashless" onclick="selectPaymentMethod('cashless')">
+                    <input type="radio" name="pay_method" value="cashless" {{ $isDepositEmpty ? 'checked' : '' }} style="accent-color:#7c3aed;">
                     <div
                         style="width:38px; height:38px; border-radius:50%; background:#f5f3ff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <svg width="20" height="20" fill="none" stroke="#7c3aed" stroke-width="2" viewBox="0 0 24 24">
@@ -1762,15 +1806,15 @@
                             <td class="text-end" id="recDiscount">-Rp 0</td>
                         </tr>
                         <tr id="recServiceFeeRow" style="display:none;">
-                            <td>Biaya Layanan:</td>
+                            <td>Service Fee:</td>
                             <td class="text-end" id="recServiceFee">Rp 0</td>
                         </tr>
                         <tr id="recPlatformFeeRow">
-                            <td>Biaya Platform:</td>
+                            <td>Platform Fee:</td>
                             <td class="text-end" id="recPlatformFee">Rp 0</td>
                         </tr>
                         <tr id="recAdminFeeRow">
-                            <td>Biaya Admin:</td>
+                            <td>Admin Fee:</td>
                             <td class="text-end" id="recAdminFee">Rp 0</td>
                         </tr>
                         <tr style="font-weight: 900; font-size: 13px;">
@@ -2222,6 +2266,7 @@
         let discountType = 'nominal';
         let platformFeeRate = {{ $platformFeeRate }};
         let adminFeeRate = {{ $adminFeeRate }};
+        let currentPosBalance = {{ (float) $posBalance }};
         let currentCompletedOrder = null;
 
         // Custom Modal Helpers (Vanilla JS - Independent from Bootstrap)
@@ -2382,12 +2427,24 @@
         });
 
         // Add product to cart
-        function addToCart(id, name, price) {
+        function addToCart(id, name, price, image = '') {
+            if (!image) {
+                const card = document.querySelector(`.product-card[data-id="${id}"]`);
+                if (card) {
+                    image = card.getAttribute('data-image') || '';
+                    if (!image) {
+                        const imgTag = card.querySelector('img.product-img');
+                        if (imgTag && imgTag.src) image = imgTag.src;
+                    }
+                }
+            }
+
             const existing = cart.find(item => item.id === id);
             if (existing) {
                 existing.qty += 1;
+                if (!existing.image && image) existing.image = image;
             } else {
-                cart.push({ id, name, price, qty: 1 });
+                cart.push({ id, name, price, image, qty: 1 });
             }
             renderCart();
             showPosToast(`+ ${name} ditambahkan`, 'success');
@@ -2456,6 +2513,19 @@
 
                 html += `
                         <div class="cart-item-row">
+                            <div class="cart-item-thumb">
+                                ${item.image ? `
+                                    <img src="${item.image}" alt="${escapeHtml(item.name)}" class="cart-item-img" onerror="this.parentElement.innerHTML='<div class=\\'cart-item-img-fallback\\'><svg width=\\'16\\' height=\\'16\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\' viewBox=\\'0 0 24 24\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\'/><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'/><polyline points=\\'21 15 16 10 5 21\\'/></svg></div>';">
+                                ` : `
+                                    <div class="cart-item-img-fallback">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                                            <polyline points="21 15 16 10 5 21"/>
+                                        </svg>
+                                    </div>
+                                `}
+                            </div>
                             <div class="cart-item-info">
                                 <div class="cart-item-title">${escapeHtml(item.name)}</div>
                                 <div class="cart-item-unit-price">@ Rp ${formatRupiah(item.price)} &bull; Sub: Rp ${formatRupiah(itemSub)}</div>
@@ -2542,6 +2612,66 @@
             if (displayInput) displayInput.value = grandTotal > 0 ? formatRupiah(grandTotal) : '';
             calculateCashChange();
 
+            // Check deposit vs required fee
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const totalFeeRequired = (subtotal * (platformFeeRate + adminFeeRate)) / 100;
+            const cashFeeDisplay = document.getElementById('cashFeeRequiredDisplay');
+            if (cashFeeDisplay) cashFeeDisplay.innerText = 'Rp ' + formatRupiah(totalFeeRequired);
+
+            const optCash = document.getElementById('optCash');
+            const cashDepositWarning = document.getElementById('cashDepositWarning');
+            const cashWarningText = document.getElementById('cashDepositWarningText');
+            const cashBadge = document.getElementById('cashDepositBadge');
+
+            const isDepositInsufficient = (currentPosBalance <= 0 || currentPosBalance < totalFeeRequired);
+
+            if (optCash) {
+                if (isDepositInsufficient) {
+                    optCash.classList.add('disabled-cash');
+                    optCash.style.background = '#f8fafc';
+                    optCash.style.borderColor = '#cbd5e1';
+                    optCash.style.opacity = '0.6';
+                    optCash.style.cursor = 'not-allowed';
+                    optCash.style.pointerEvents = 'none';
+
+                    const cashRadio = optCash.querySelector('input[type="radio"]');
+                    if (cashRadio) cashRadio.disabled = true;
+
+                    if (cashBadge) {
+                        cashBadge.style.display = 'inline-block';
+                        cashBadge.innerText = currentPosBalance <= 0 ? 'Saldo Deposit Kurang (Rp 0)' : 'Saldo Deposit Kurang';
+                    }
+
+                    if (cashDepositWarning) {
+                        cashDepositWarning.style.display = 'block';
+                        if (cashWarningText) {
+                            if (currentPosBalance <= 0) {
+                                cashWarningText.innerText = 'Saldo deposit kasir Anda Rp 0. Silakan isi saldo deposit terlebih dahulu untuk memproses pembayaran tunai.';
+                            } else {
+                                cashWarningText.innerText = `Potongan fee transaksi ini (Rp ${formatRupiah(totalFeeRequired)}) melebihi sisa deposit Anda (Rp ${formatRupiah(currentPosBalance)}).`;
+                            }
+                        }
+                    }
+
+                    selectPaymentMethod('cashless');
+                } else {
+                    optCash.classList.remove('disabled-cash');
+                    optCash.style.background = '';
+                    optCash.style.borderColor = '';
+                    optCash.style.opacity = '1';
+                    optCash.style.cursor = 'pointer';
+                    optCash.style.pointerEvents = 'auto';
+
+                    const cashRadio = optCash.querySelector('input[type="radio"]');
+                    if (cashRadio) cashRadio.disabled = false;
+
+                    if (cashBadge) cashBadge.style.display = 'none';
+                    if (cashDepositWarning) cashDepositWarning.style.display = 'none';
+
+                    selectPaymentMethod('cash');
+                }
+            }
+
             openModal('posPaymentModal');
         }
 
@@ -2556,6 +2686,14 @@
 
         // Select Payment Method (cash | cashless)
         function selectPaymentMethod(method) {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const totalFeeRequired = (subtotal * (platformFeeRate + adminFeeRate)) / 100;
+
+            if (method === 'cash' && (currentPosBalance <= 0 || currentPosBalance < totalFeeRequired)) {
+                showPosAlert('Saldo deposit tidak mencukupi untuk memproses transaksi tunai ini. Silakan pilih Non-Tunai atau isi saldo deposit.', 'Saldo Deposit Kurang', 'warning');
+                return;
+            }
+
             document.querySelectorAll('.pay-option-card').forEach(c => c.classList.remove('selected'));
             const rad = document.querySelector(`input[name="pay_method"][value="${method}"]`);
             if (rad) rad.checked = true;
@@ -3063,9 +3201,11 @@
         }
 
         function updateBalanceDisplay(newBalance) {
+            currentPosBalance = newBalance;
             const formatted = 'Rp ' + formatRupiah(newBalance);
             const displayEl = document.getElementById('posBalanceDisplay');
             const modalEl = document.getElementById('depositModalCurrentBalance');
+            const cashUserBalanceDisplay = document.getElementById('cashUserBalanceDisplay');
 
             if (displayEl) {
                 displayEl.innerText = formatted;
@@ -3073,6 +3213,10 @@
             }
             if (modalEl) {
                 modalEl.innerText = formatted;
+            }
+            if (cashUserBalanceDisplay) {
+                cashUserBalanceDisplay.innerText = formatted;
+                cashUserBalanceDisplay.style.color = newBalance < 10000 ? '#dc2626' : '#166534';
             }
         }
 

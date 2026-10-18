@@ -90,7 +90,7 @@
         @endif
         @if(($addr['service_fee'] ?? 0) > 0)
         <tr>
-            <td style="padding: 4px 0; color: #64748b;">Biaya Layanan:</td>
+            <td style="padding: 4px 0; color: #64748b;">Service Fee:</td>
             <td style="padding: 4px 0; text-align: right; font-weight: 600; color: #0f172a;">
                 Rp {{ number_format($addr['service_fee'], 0, ',', '.') }}
             </td>
@@ -98,7 +98,7 @@
         @endif
         @if(($order->platform_fee ?? 0) > 0)
         <tr>
-            <td style="padding: 4px 0; color: #64748b;">Biaya Platform:</td>
+            <td style="padding: 4px 0; color: #64748b;">Platform Fee:</td>
             <td style="padding: 4px 0; text-align: right; font-weight: 600; color: #0f172a;">
                 Rp {{ number_format($order->platform_fee, 0, ',', '.') }}
             </td>
@@ -106,7 +106,7 @@
         @endif
         @if(($order->admin_fee ?? 0) > 0)
         <tr>
-            <td style="padding: 4px 0; color: #64748b;">Biaya Admin:</td>
+            <td style="padding: 4px 0; color: #64748b;">Admin Fee:</td>
             <td style="padding: 4px 0; text-align: right; font-weight: 600; color: #0f172a;">
                 Rp {{ number_format($order->admin_fee, 0, ',', '.') }}
             </td>
