@@ -2295,7 +2295,7 @@
                             </a>
                         </div>
 
-                        <div class="grid-2-rows-responsive">
+                        <div class="grid-2-rows-responsive" id="latestProductsGrid">
                             @foreach($latestProducts as $lProd)
                                 @php
                                     $lPrice = $lProd->sale_price > 0 && $lProd->sale_price < $lProd->price ? $lProd->sale_price : $lProd->effective_price;
@@ -2317,7 +2317,7 @@
                                             style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;">
                                             <img src="{{ $lImage }}" alt="{{ $lProd->name }}"
                                                 style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
-                                                class="article-banner-img">
+                                                class="article-banner-img" loading="lazy">
                                             @if($lHasDiscount)
                                                 <div
                                                     style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
@@ -2401,6 +2401,22 @@
                                     </div>
                                 </a>
                             @endforeach
+                        </div>
+
+                        {{-- Infinite Scroll Skeleton Loader (Matching grid-2-rows-responsive 1:1) --}}
+                        <div id="homeInfiniteSkeleton" class="grid-2-rows-responsive" style="display: none; margin-top: 1.1rem;">
+                            @include('services.partials.skeleton', ['count' => 5])
+                        </div>
+
+                        {{-- Sentinel for Infinite Scroll / Lazy Load --}}
+                        <div id="homeInfiniteSentinel" style="height: 20px; margin: 1.5rem 0 0.5rem; opacity: 0; pointer-events: none;"></div>
+
+                        {{-- End Notice --}}
+                        <div id="homeInfiniteEndNotice" style="display: none; text-align: center; padding: 1.75rem 1rem 0.5rem;">
+                            <span style="background: #F8FAFC; border: 1.5px solid #E2E8F0; padding: 0.4rem 1.25rem; border-radius: 99px; font-size: 0.78rem; font-weight: 700; color: #64748B; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                                <svg width="14" height="14" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                                Semua produk terbaru telah ditampilkan
+                            </span>
                         </div>
                     </div>
                 </section>
@@ -4223,6 +4239,117 @@
                     updateTimers();
                     setInterval(updateTimers, 1000);
                 });
+
+                // ── Infinite Scroll for Homepage Produk Terbaru ──
+                document.addEventListener('DOMContentLoaded', function () {
+                    const sentinel = document.getElementById('homeInfiniteSentinel');
+                    const skeleton = document.getElementById('homeInfiniteSkeleton');
+                    const grid = document.getElementById('latestProductsGrid');
+                    const endNotice = document.getElementById('homeInfiniteEndNotice');
+
+                    if (!sentinel || !grid) return;
+
+                    let nextPage = 2; // page 1 already rendered (first 10 items)
+                    let hasMore = true;
+                    let isLoading = false;
+
+                    async function loadMoreHome() {
+                        if (isLoading || !hasMore) return;
+                        isLoading = true;
+
+                        if (skeleton) skeleton.style.display = 'grid';
+
+                        try {
+                            const url = new URL("{{ route_locale('products') }}", window.location.origin);
+                            url.searchParams.set('sort', 'terbaru');
+                            url.searchParams.set('per_page', '10');
+                            url.searchParams.set('page', nextPage);
+                            url.searchParams.set('ajax', '1');
+
+                            const res = await fetch(url.toString(), {
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                    'Accept': 'application/json'
+                                }
+                            });
+
+                            if (!res.ok) throw new Error('Network response not ok');
+                            const data = await res.json();
+
+                            if (data.html && data.html.trim().length > 0) {
+                                const temp = document.createElement('div');
+                                temp.innerHTML = data.html;
+
+                                while (temp.firstElementChild) {
+                                    grid.appendChild(temp.firstElementChild);
+                                }
+
+                                hasMore = !!data.has_more;
+                                nextPage = data.next_page || (nextPage + 1);
+                            } else {
+                                hasMore = false;
+                            }
+
+                            if (!hasMore) {
+                                if (endNotice) endNotice.style.display = 'block';
+                                if (observer) observer.disconnect();
+                            }
+                        } catch (err) {
+                            console.error('Error loading more homepage products:', err);
+                        } finally {
+                            if (skeleton) skeleton.style.display = 'none';
+                            isLoading = false;
+                        }
+                    }
+
+                    let observer = null;
+                    if ('IntersectionObserver' in window) {
+                        observer = new IntersectionObserver((entries) => {
+                            if (entries[0].isIntersecting) {
+                                loadMoreHome();
+                            }
+                        }, {
+                            rootMargin: '250px 0px',
+                            threshold: 0.01
+                        });
+                        observer.observe(sentinel);
+                    } else {
+                        window.addEventListener('scroll', () => {
+                            if (isLoading || !hasMore) return;
+                            const rect = sentinel.getBoundingClientRect();
+                            if (rect.top <= window.innerHeight + 250) {
+                                loadMoreHome();
+                            }
+                        }, { passive: true });
+                    }
+                });
             </script>
+
+            <style>
+                /* ── INFINITE SCROLL & SKELETON SHIMMER ── */
+                .cv-skel-shimmer {
+                    background: #e2e8f0;
+                    background-image: linear-gradient(90deg, #e2e8f0 0px, #f1f5f9 40px, #e2e8f0 80px);
+                    background-size: 600px;
+                    animation: cvShimmer 1.5s infinite linear;
+                }
+                @keyframes cvShimmer {
+                    0% { background-position: -300px; }
+                    100% { background-position: 300px; }
+                }
+                @keyframes cvCardFadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(14px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+                .cv-card-enter {
+                    animation: cvCardFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                }
+            </style>
 
 @endsection

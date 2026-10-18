@@ -189,7 +189,20 @@ class ServiceController extends Controller
                 break;
         }
         
-        $services   = $query->with(['seller.creatorProfile', 'category'])->withAvg('reviews', 'rating')->withCount('reviews')->paginate(12)->appends(request()->query());
+        $perPage    = min(max((int)request('per_page', 12), 4), 40);
+        $services   = $query->with(['seller.creatorProfile', 'category'])->withAvg('reviews', 'rating')->withCount('reviews')->paginate($perPage)->appends(request()->query());
+
+        // AJAX Infinite Scroll Response
+        if (request()->ajax() || request('ajax') == '1' || request()->wantsJson()) {
+            return response()->json([
+                'html'         => view('services.partials.cards_list', compact('services'))->render(),
+                'has_more'     => $services->hasMorePages(),
+                'next_page'    => $services->currentPage() + 1,
+                'current_page' => $services->currentPage(),
+                'last_page'    => $services->lastPage(),
+                'total'        => $services->total(),
+            ]);
+        }
         $settings   = Setting::getAllAsArray();
         $siteName   = $settings['site_name'] ?? 'buyle.id';
         $wa         = WaSetting::primary();

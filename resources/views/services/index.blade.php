@@ -1928,102 +1928,7 @@
                 @include('components.coming-soon-inline')
 
                 @if($services->count() > 0)
-                    @foreach($services as $sv)
-                        @php
-                            $svImg        = $sv->image ? asset('storage/'.$sv->image) : asset('images/buyle-og.png');
-                            $svIsFree     = $sv->sale_price !== null && (float)$sv->sale_price <= 0;
-                            $svPrice      = $svIsFree ? 0 : (($sv->sale_price > 0 && $sv->sale_price < $sv->price) ? (float)$sv->sale_price : (float)$sv->price);
-                            $svOrigPrice  = $svIsFree ? $sv->price : (($sv->sale_price > 0 && $sv->sale_price < $sv->price) ? $sv->price : null);
-                            $svHasDiscount = !empty($svOrigPrice) && $svOrigPrice > $svPrice;
-                            $svDiscountPct = $svIsFree ? 100 : ($svHasDiscount ? round((($svOrigPrice - $svPrice) / $svOrigPrice) * 100) : 0);
-                            $svSeller     = optional(optional($sv->seller)->creatorProfile)->store_name ?? optional($sv->seller)->name ?? 'Kreator';
-                            $svSellerCp   = $sv->seller?->creatorProfile;
-                            $svIsVerified = $svSellerCp ? (bool)$svSellerCp->is_verified : false;
-                            $svRatingVal  = $sv->getEffectiveRating();
-                        @endphp
-                        <a href="{{ route_locale('products.show', $sv->slug) }}"
-                            style="text-decoration: none; color: inherit; display: flex; flex-direction: column;"
-                            class="sp-card article-card-swipe-item">
-                            <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 0.75rem; display: flex; flex-direction: column; height: 100%; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02);"
-                                class="article-card-box sp-card-inner">
-
-                                {{-- Image Wrap 1:1 Square (Matching Image 2a) --}}
-                                <div style="position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: #F1F5F9;" class="sp-card-img-wrap">
-                                    <img src="{{ $svImg }}" alt="{{ $sv->name }}"
-                                        style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;"
-                                        class="article-banner-img" loading="lazy">
-
-                                    {{-- Discount / Free Badge Top-Left --}}
-                                    @if($svIsFree)
-                                        <div style="position: absolute; top: 8px; left: 8px; background: #16a34a; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(22,163,74,0.3);">
-                                            GRATIS
-                                        </div>
-                                    @elseif($svHasDiscount)
-                                        <div style="position: absolute; top: 8px; left: 8px; background: #EF4444; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; z-index: 2; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
-                                            -{{ $svDiscountPct }}%
-                                        </div>
-                                    @endif
-                                </div>
-
-                                {{-- Card Body --}}
-                                <div style="padding: 0.85rem 0.25rem 0.25rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;" class="sp-card-body-wrap">
-                                    <div>
-                                        {{-- Rating & Verified Badge --}}
-                                        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">
-                                            @if($svRatingVal !== null && $svRatingVal > 0)
-                                                <div style="display: flex; align-items: center; gap: 0.3rem;">
-                                                    <span style="color: #F59E0B; font-size: 0.95rem;">★</span>
-                                                    <span style="font-family: 'Montserrat', sans-serif;">{{ number_format($svRatingVal, 1) }}</span>
-                                                </div>
-                                            @else
-                                                <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #94A3B8; font-weight: 600;">
-                                                    <span style="color: #CBD5E1; font-size: 0.85rem;">★</span>
-                                                    <span>0.0</span>
-                                                </div>
-                                            @endif
-                                            @if($svIsVerified)
-                                                <div style="display: inline-flex; align-items: center; gap: 0.25rem; color: #0D9488; font-size: 0.78rem; font-weight: 700;">
-                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
-                                                    Verified
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        {{-- Title --}}
-                                        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #0F172A; margin: 0 0 0.4rem; line-height: 1.35; height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                            {{ $sv->name }}
-                                        </h3>
-                                    </div>
-
-                                    {{-- Footer Separator & Price CTA --}}
-                                    <div>
-                                        <div style="border-top: 1px solid #F1F5F9; margin: 0.65rem 0 0.75rem;"></div>
-                                        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.35rem;">
-                                            <div style="white-space: nowrap; min-width: 0; flex: 1;">
-                                                @if($svHasDiscount || $svIsFree)
-                                                    <span style="font-size: 0.68rem; color: #94A3B8; text-decoration: line-through; display: block; font-weight: 500; white-space: nowrap;">
-                                                        Rp{{ number_format($svOrigPrice, 0, ',', '.') }}
-                                                    </span>
-                                                @endif
-                                                <span style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #16a34a; white-space: nowrap; display: block;">
-                                                    @if($svIsFree)
-                                                        GRATIS
-                                                    @elseif($svPrice > 0)
-                                                        Rp{{ number_format($svPrice, 0, ',', '.') }}
-                                                    @else
-                                                        GRATIS
-                                                    @endif
-                                                </span>
-                                            </div>
-                                            <span style="background: linear-gradient(135deg, #1eb349, #7db928); color: #ffffff; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; box-shadow: 0 4px 12px rgba(30, 179, 73, 0.3); flex-shrink: 0; white-space: nowrap;" class="retarget-btn-cta">
-                                                Lihat <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
+                    @include('services.partials.cards_list', ['services' => $services])
                 @else
                     <div style="grid-column: 1/-1; text-align:center; padding: 4rem 1rem; color: #64748B;">
                         <svg width="64" height="64" fill="none" stroke="#CBD5E1" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 1rem; display:block;">
@@ -2038,11 +1943,29 @@
                 @endif
             </div>
 
-            {{-- Mobile-Friendly Pagination --}}
+            {{-- Infinite Scroll Skeleton Loader (Layout 100% Sesuai Real Card) --}}
+            <div id="spInfiniteSkeleton" class="sp-grid" style="display: none; margin-top: 1.25rem;">
+                @include('services.partials.skeleton', ['count' => 4])
+            </div>
+
+            {{-- Sentinel for Infinite Scroll / Lazy Load --}}
+            <div id="spInfiniteSentinel" style="height: 20px; margin: 1.5rem 0 0.5rem; opacity: 0; pointer-events: none;"></div>
+
+            {{-- End of Results Notice --}}
+            <div id="spInfiniteEndNotice" style="display: none; text-align: center; padding: 2.5rem 1rem 1.5rem;">
+                <span style="background: #F8FAFC; border: 1.5px solid #E2E8F0; padding: 0.45rem 1.25rem; border-radius: 99px; font-size: 0.8rem; font-weight: 700; color: #64748B; display: inline-flex; align-items: center; gap: 0.45rem; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                    <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                    Semua produk telah ditampilkan
+                </span>
+            </div>
+
+            {{-- Fallback Pagination for Non-JS / Search Engines --}}
             @if(isset($services) && method_exists($services, 'hasPages') && $services->hasPages())
-                <div class="sp-pagination" style="margin-top: 2.5rem; width: 100%; display: flex; justify-content: center;">
-                    {{ $services->links() }}
-                </div>
+                <noscript>
+                    <div class="sp-pagination" style="margin-top: 2.5rem; width: 100%; display: flex; justify-content: center;">
+                        {{ $services->links() }}
+                    </div>
+                </noscript>
             @endif
             @endif
         </div>
@@ -2114,6 +2037,122 @@
             setTimeout(function () { wModal.style.display = 'none'; }, 300);
         }
 
-        document.querySelector('.sp-search-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') document.getElementById('searchForm').submit(); });
+        document.querySelector('.sp-search-input')?.addEventListener('keydown', function (e) { if (e.key === 'Enter') document.getElementById('searchForm').submit(); });
+
+        // ── Infinite Scroll for Products Page (/produk) ──
+        (function() {
+            const sentinel = document.getElementById('spInfiniteSentinel');
+            const skeleton = document.getElementById('spInfiniteSkeleton');
+            const grid = document.getElementById('spGrid');
+            const endNotice = document.getElementById('spInfiniteEndNotice');
+
+            if (!sentinel || !grid) return;
+
+            let nextPage = {{ ($services->currentPage() ?? 1) + 1 }};
+            let hasMore = {{ ($services->hasMorePages() ?? false) ? 'true' : 'false' }};
+            let isLoading = false;
+
+            if (!hasMore) {
+                if (endNotice && {{ $services->total() > 0 ? 'true' : 'false' }}) {
+                    endNotice.style.display = 'block';
+                }
+                return;
+            }
+
+            async function loadMore() {
+                if (isLoading || !hasMore) return;
+                isLoading = true;
+
+                if (skeleton) skeleton.style.display = 'grid';
+
+                try {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('page', nextPage);
+                    url.searchParams.set('ajax', '1');
+
+                    const res = await fetch(url.toString(), {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (!res.ok) throw new Error('Network response not ok');
+                    const data = await res.json();
+
+                    if (data.html && data.html.trim().length > 0) {
+                        const temp = document.createElement('div');
+                        temp.innerHTML = data.html;
+
+                        while (temp.firstElementChild) {
+                            grid.appendChild(temp.firstElementChild);
+                        }
+
+                        hasMore = !!data.has_more;
+                        nextPage = data.next_page || (nextPage + 1);
+                    } else {
+                        hasMore = false;
+                    }
+
+                    if (!hasMore) {
+                        if (endNotice) endNotice.style.display = 'block';
+                        if (observer) observer.disconnect();
+                    }
+                } catch (err) {
+                    console.error('Error loading more products:', err);
+                } finally {
+                    if (skeleton) skeleton.style.display = 'none';
+                    isLoading = false;
+                }
+            }
+
+            let observer = null;
+            if ('IntersectionObserver' in window) {
+                observer = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        loadMore();
+                    }
+                }, {
+                    rootMargin: '250px 0px',
+                    threshold: 0.01
+                });
+                observer.observe(sentinel);
+            } else {
+                window.addEventListener('scroll', () => {
+                    if (isLoading || !hasMore) return;
+                    const rect = sentinel.getBoundingClientRect();
+                    if (rect.top <= window.innerHeight + 250) {
+                        loadMore();
+                    }
+                }, { passive: true });
+            }
+        })();
     </script>
+
+    <style>
+        /* ── INFINITE SCROLL & SKELETON SHIMMER ── */
+        .cv-skel-shimmer {
+            background: #e2e8f0;
+            background-image: linear-gradient(90deg, #e2e8f0 0px, #f1f5f9 40px, #e2e8f0 80px);
+            background-size: 600px;
+            animation: cvShimmer 1.5s infinite linear;
+        }
+        @keyframes cvShimmer {
+            0% { background-position: -300px; }
+            100% { background-position: 300px; }
+        }
+        @keyframes cvCardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .cv-card-enter {
+            animation: cvCardFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
 @endsection
