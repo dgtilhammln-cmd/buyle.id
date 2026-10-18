@@ -815,40 +815,6 @@
                 Profil & Store
             </a>
 
-            <a href="{{ $isBuyer ? '#' : route('creator.bio.index') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.bio*') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke-linecap="round"
-                        stroke-linejoin="round" stroke-width="2" />
-                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke-linecap="round"
-                        stroke-linejoin="round" stroke-width="2" />
-                </svg>
-                Web Builder
-                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" style="margin-left:auto;opacity:0.7;">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg> @endif
-            </a>
-
-            {{-- Hidden temporarily --}}
-            {{-- <a href="{{ $isBuyer ? '#' : route('creator.membership') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.membership') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <polygon
-                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                    </polygon>
-                </svg>
-                Membership Seller
-                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" style="margin-left:auto;opacity:0.7;">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg> @endif
-            </a> --}}
-
             <a href="{{ $isBuyer ? '#' : route('creator.sales.report') }}"
                 onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
                 class="cr-nav-link {{ request()->routeIs('creator.sales*') ? 'active' : '' }}">
@@ -856,41 +822,6 @@
                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                 </svg>
                 Statistik & Data Order
-                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" style="margin-left:auto;opacity:0.7;">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg> @endif
-            </a>
-
-            <a href="{{ $isBuyer ? '#' : route('creator.pos.index') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.pos*') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="4" y="3" width="16" height="18" rx="2" />
-                    <line x1="8" y1="7" x2="16" y2="7" />
-                    <line x1="8" y1="11" x2="10" y2="11" />
-                    <line x1="14" y1="11" x2="16" y2="11" />
-                    <line x1="8" y1="15" x2="10" y2="15" />
-                    <line x1="14" y1="15" x2="16" y2="15" />
-                </svg>
-                Kasir Digital (POS)
-                @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" style="margin-left:auto;opacity:0.7;">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg> @endif
-            </a>
-
-            <a href="{{ $isBuyer ? '#' : route('creator.ticket.scanner') }}"
-                onclick="{{ $isBuyer ? 'showLockedModal(event)' : '' }}"
-                class="cr-nav-link {{ request()->routeIs('creator.ticket.scanner*') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path
-                        d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
-                    <rect x="7" y="7" width="10" height="10" rx="1" />
-                </svg>
-                Scan Tiket & Data Kehadiran
                 @if($isBuyer) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="2" style="margin-left:auto;opacity:0.7;">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
@@ -1120,19 +1051,17 @@
             <span>Laporan</span>
         </a>
 
-        {{-- Kasir POS --}}
-        <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.pos.index') }}"
+        {{-- Aplikasi --}}
+        <a href="{{ $bottomNavIsBuyer ? '#' : route('creator.app.index') }}"
             onclick="{{ $bottomNavIsBuyer ? 'showLockedModal(event)' : '' }}"
-            class="superapp-nav-item {{ request()->routeIs('creator.pos*') ? 'active' : '' }}">
+            class="superapp-nav-item {{ request()->routeIs('creator.app*') ? 'active' : '' }}">
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <rect x="4" y="3" width="16" height="18" rx="2" />
-                <line x1="8" y1="7" x2="16" y2="7" />
-                <line x1="8" y1="11" x2="10" y2="11" />
-                <line x1="14" y1="11" x2="16" y2="11" />
-                <line x1="8" y1="15" x2="10" y2="15" />
-                <line x1="14" y1="15" x2="16" y2="15" />
+                <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                <rect x="3" y="14" width="7" height="7" rx="1.5" />
             </svg>
-            <span>Kasir</span>
+            <span>Aplikasi</span>
         </a>
 
         {{-- Saldo --}}

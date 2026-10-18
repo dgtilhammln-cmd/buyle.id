@@ -833,7 +833,7 @@
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                 <polyline points="15 18 9 12 15 6" />
             </svg>
-            Aplikasi
+            Kembali ke Aplikasi
         </a>
     </div>
 @endsection

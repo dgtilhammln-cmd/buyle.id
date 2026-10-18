@@ -79,6 +79,7 @@ Route::get('/tiket/{order}/unduh-pdf', [AccountController::class, 'downloadTicke
 Route::middleware(['track.pageview'])->group(function () {
     // Legacy redirects for cached locale routes
     Route::get('/en', function () { return redirect('/', 301); });
+    Route::get('/app', fn() => redirect()->route('creator.app.index'))->middleware('auth');
 
     Route::get('/',               [HomeController::class,    'index'])->name('home');
     Route::get('/c/{slug}/{groupSlug?}', [\App\Http\Controllers\CreatorStoreController::class, 'show'])->name('store.show');
