@@ -793,6 +793,27 @@
         #snap-container, iframe[src*="midtrans"], iframe[id*="snap"], .snap-modal, #snap-midtrans {
             z-index: 999999 !important;
         }
+
+        /* ── POS Lightweight CSS Shimmer Skeletons ──────────────── */
+        @keyframes posSkeletonShimmer {
+            0% { background-position: -600px 0; }
+            100% { background-position: 600px 0; }
+        }
+        .pos-skel-bone {
+            background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+            background-size: 1200px 100%;
+            animation: posSkeletonShimmer 1.5s infinite linear;
+            border-radius: 6px;
+        }
+        .pos-skel-card {
+            background: #ffffff;
+            border: 1.5px solid #f1f5f9;
+            border-radius: 16px;
+            padding: 0.65rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
     </style>
 @endsection
 
@@ -853,6 +874,111 @@
         <script src="{{ $snapUrl }}" data-client-key="{{ $midtransClientKey }}"></script>
     @endif
 
+    <!-- SKELETON LOADING PLACEHOLDER (Smooth & Lightweight) -->
+    <div id="pos-skeleton" class="pos-wrapper" style="margin-bottom: 2rem;">
+        <!-- LEFT COLUMN: SKELETON KATALOG -->
+        <div>
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <div class="pos-skel-bone" style="width:16px; height:16px; border-radius:4px;"></div>
+                        <div class="pos-skel-bone" style="width:140px; height:16px;"></div>
+                    </div>
+                    <div class="pos-skel-bone" style="width:110px; height:24px; border-radius:20px;"></div>
+                </div>
+
+                <div class="prof-card-body">
+                    <!-- Search Bar Skeleton -->
+                    <div style="height:44px; margin-bottom:1rem; border-radius:12px;" class="pos-skel-bone"></div>
+
+                    <!-- Category Pills Skeleton -->
+                    <div class="pos-category-pills-wrap" style="margin-bottom:1.25rem;">
+                        <div class="pos-skel-bone" style="width:125px; height:34px; border-radius:999px;"></div>
+                        <div class="pos-skel-bone" style="width:165px; height:34px; border-radius:999px;"></div>
+                        <div class="pos-skel-bone" style="width:160px; height:34px; border-radius:999px;"></div>
+                    </div>
+
+                    <!-- Product Grid Skeleton (8 items) -->
+                    <div class="product-grid">
+                        @for($i = 0; $i < 8; $i++)
+                            <div class="pos-skel-card">
+                                <div class="pos-skel-bone" style="width:100%; aspect-ratio:1/1; border-radius:12px; margin-bottom:0.6rem;"></div>
+                                <div class="pos-skel-bone" style="width:80%; height:13px; margin-bottom:0.35rem;"></div>
+                                <div class="pos-skel-bone" style="width:50%; height:11px; margin-bottom:0.6rem;"></div>
+                                <div class="pos-skel-bone" style="width:65%; height:16px; border-radius:4px; margin-top:auto;"></div>
+                            </div>
+                        @endfor
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: SKELETON CART -->
+        <div>
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <div class="pos-skel-bone" style="width:16px; height:16px; border-radius:4px;"></div>
+                        <div class="pos-skel-bone" style="width:160px; height:16px;"></div>
+                    </div>
+                    <div class="pos-skel-bone" style="width:70px; height:16px;"></div>
+                </div>
+
+                <div class="prof-card-body">
+                    <!-- Form Customer Fields Skeleton -->
+                    <div style="margin-bottom:0.85rem;">
+                        <div class="pos-skel-bone" style="width:130px; height:12px; margin-bottom:0.4rem;"></div>
+                        <div class="pos-skel-bone" style="width:100%; height:42px; border-radius:12px;"></div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:0.85rem;">
+                        <div>
+                            <div class="pos-skel-bone" style="width:100px; height:12px; margin-bottom:0.4rem;"></div>
+                            <div class="pos-skel-bone" style="width:100%; height:42px; border-radius:12px;"></div>
+                        </div>
+                        <div>
+                            <div class="pos-skel-bone" style="width:110px; height:12px; margin-bottom:0.4rem;"></div>
+                            <div class="pos-skel-bone" style="width:100%; height:42px; border-radius:12px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Cart Item Rows Skeleton (3 items) -->
+                    <div style="margin: 1.25rem 0; display:flex; flex-direction:column; gap:0.75rem;">
+                        @for($i = 0; $i < 3; $i++)
+                            <div style="display:flex; align-items:center; justify-content:space-between; padding:0.6rem; border-radius:12px; background:#f8fafc; border:1px solid #f1f5f9;">
+                                <div style="display:flex; flex-direction:column; gap:4px; flex:1;">
+                                    <div class="pos-skel-bone" style="width:65%; height:13px;"></div>
+                                    <div class="pos-skel-bone" style="width:40%; height:11px;"></div>
+                                </div>
+                                <div class="pos-skel-bone" style="width:80px; height:30px; border-radius:999px;"></div>
+                            </div>
+                        @endfor
+                    </div>
+
+                    <!-- Summary Box Skeleton -->
+                    <div style="background:#f8fafc; border-radius:16px; padding:1rem; border:1.5px solid #e2e8f0; margin-bottom:1.25rem; display:flex; flex-direction:column; gap:0.6rem;">
+                        <div style="display:flex; justify-content:space-between;">
+                            <div class="pos-skel-bone" style="width:70px; height:12px;"></div>
+                            <div class="pos-skel-bone" style="width:90px; height:12px;"></div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between;">
+                            <div class="pos-skel-bone" style="width:80px; height:12px;"></div>
+                            <div class="pos-skel-bone" style="width:60px; height:12px;"></div>
+                        </div>
+                        <div style="border-top:1px dashed #cbd5e1; padding-top:0.6rem; margin-top:0.2rem; display:flex; justify-content:space-between; align-items:center;">
+                            <div class="pos-skel-bone" style="width:90px; height:16px;"></div>
+                            <div class="pos-skel-bone" style="width:120px; height:20px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Button Skeleton -->
+                    <div class="pos-skel-bone" style="width:100%; height:48px; border-radius:999px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- POS Real Content Wrapper -->
+    <div id="pos-real-content" style="opacity:0; transition:opacity 0.25s ease;">
     <!-- POS Main Grid Wrapper -->
     <div class="pos-wrapper">
         <!-- LEFT COLUMN: Product Search & Food Menu Grid -->
@@ -1154,6 +1280,7 @@
             </div>
         </div>
     </div>
+    </div> <!-- Close #pos-real-content -->
 
     <!-- Mobile Sticky Bottom Bar -->
     <div class="mobile-cart-bar" id="mobileCartBar">
@@ -2715,6 +2842,21 @@
         const styleEl = document.createElement('style');
         styleEl.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
         document.head.appendChild(styleEl);
+
+        // Smooth POS Skeleton Reveal Transition
+        (function() {
+            function revealPos() {
+                const skel = document.getElementById('pos-skeleton');
+                const real = document.getElementById('pos-real-content');
+                if (skel) skel.style.display = 'none';
+                if (real) real.style.opacity = '1';
+            }
+            if (document.readyState === 'complete') {
+                setTimeout(revealPos, 120);
+            } else {
+                window.addEventListener('load', () => setTimeout(revealPos, 120));
+            }
+        })();
 
     </script>
 @endsection

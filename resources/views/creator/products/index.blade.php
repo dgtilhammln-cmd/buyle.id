@@ -37,12 +37,10 @@
     </div>
 
     @if($products->count() > 0)
-      <form action="{{ route('creator.products.destroy-all') }}" method="POST"
-        onsubmit="return confirm('Apakah Anda yakin ingin menghapus SEMUA {{ $products->count() }} produk digital Anda? Data yang dihapus tidak dapat dikembalikan.');"
-        style="display:inline;">
+      <form id="form-destroy-all-products" action="{{ route('creator.products.destroy-all') }}" method="POST" style="display:inline;">
         @csrf
         @method('DELETE')
-        <button type="submit" class="btn-danger-sm"
+        <button type="button" onclick="openDeleteAllModal({{ $products->count() }})" class="btn-danger-sm"
           style="background:#fef2f2; color:#dc2626; border:1px solid #fca5a5; font-weight: 500; padding:0.5rem 0.85rem; border-radius:8px; font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <polyline points="3 6 5 6 21 6" />
@@ -813,10 +811,217 @@
         border-radius: 10px !important;
       }
     }
+
+    /* ── Lightweight CSS Shimmer Skeletons ──────────────────────── */
+    @keyframes buyleSkeletonShimmer {
+      0% { background-position: -600px 0; }
+      100% { background-position: 600px 0; }
+    }
+    .skel-bone {
+      background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+      background-size: 1200px 100%;
+      animation: buyleSkeletonShimmer 1.5s infinite linear;
+      border-radius: 6px;
+    }
+    .skel-card {
+      background: #ffffff;
+      border: 1.5px solid #f1f5f9;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      overflow: hidden;
+    }
+
+    /* ── Interactive Delete Confirmation Modal ────────────────────── */
+    .del-confirm-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 999999;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .del-confirm-overlay.open {
+      display: flex;
+      opacity: 1;
+    }
+    .del-confirm-card {
+      background: #ffffff;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 420px;
+      padding: 1.85rem 1.6rem;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      transform: scale(0.92);
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1.5px solid #fee2e2;
+    }
+    .del-confirm-overlay.open .del-confirm-card {
+      transform: scale(1);
+    }
+    .del-confirm-icon-wrap {
+      width: 62px;
+      height: 62px;
+      border-radius: 20px;
+      background: #fef2f2;
+      border: 1.5px solid #fecaca;
+      color: #ef4444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.15rem;
+      animation: pulseIconSoft 2.2s infinite ease-in-out;
+    }
+    @keyframes pulseIconSoft {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.25); }
+      70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+    .del-confirm-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 0.5rem 0;
+    }
+    .del-confirm-desc {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.84rem;
+      color: #64748b;
+      line-height: 1.5;
+      margin: 0 0 1.5rem 0;
+    }
+    .del-confirm-desc b {
+      color: #1e293b;
+      font-weight: 700;
+    }
+    .del-confirm-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .del-btn-cancel {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1.5px solid #e2e8f0;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .del-btn-cancel:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+    .del-btn-confirm {
+      flex: 1.25;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+      transition: all 0.15s ease;
+    }
+    .del-btn-confirm:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45);
+    }
+    .del-btn-confirm:active {
+      transform: translateY(0);
+    }
   </style>
 @endsection
 
 @section('content')
+
+  {{-- SKELETON LOADING PLACEHOLDER (Smooth & Lightweight) --}}
+  <div id="products-skeleton" style="margin-bottom: 2rem;">
+    {{-- Tabs & Filters Skeleton --}}
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
+      <div style="display:flex; align-items:center; gap:0.35rem; background:#f1f5f9; padding:0.25rem; border-radius:12px;">
+        <div class="skel-bone" style="width: 85px; height: 32px; border-radius: 9px;"></div>
+        <div class="skel-bone" style="width: 75px; height: 32px; border-radius: 9px;"></div>
+        <div class="skel-bone" style="width: 95px; height: 32px; border-radius: 9px;"></div>
+      </div>
+    </div>
+
+    {{-- Type filter pills skeleton --}}
+    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.25rem; overflow-x:hidden;">
+      <div class="skel-bone" style="width: 100px; height: 32px; border-radius: 999px; flex-shrink: 0;"></div>
+      <div class="skel-bone" style="width: 90px; height: 32px; border-radius: 999px; flex-shrink: 0;"></div>
+      <div class="skel-bone" style="width: 105px; height: 32px; border-radius: 999px; flex-shrink: 0;"></div>
+      <div class="skel-bone" style="width: 115px; height: 32px; border-radius: 999px; flex-shrink: 0;"></div>
+      <div class="skel-bone" style="width: 85px; height: 32px; border-radius: 999px; flex-shrink: 0;"></div>
+    </div>
+
+    {{-- LIST SKELETON --}}
+    <div id="skel-list-container" class="skel-card" style="padding: 1.25rem;">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom: 0.75rem; border-bottom: 1.5px solid #f1f5f9; margin-bottom: 0.75rem;">
+        <div class="skel-bone" style="width: 25px; height: 16px;"></div>
+        <div class="skel-bone" style="width: 50px; height: 16px;"></div>
+        <div class="skel-bone" style="width: 180px; height: 16px;"></div>
+        <div class="skel-bone" style="width: 90px; height: 16px;"></div>
+        <div class="skel-bone" style="width: 50px; height: 16px;"></div>
+        <div class="skel-bone" style="width: 50px; height: 16px;"></div>
+        <div class="skel-bone" style="width: 65px; height: 16px;"></div>
+        <div class="skel-bone" style="width: 80px; height: 16px;"></div>
+      </div>
+      @for($i = 0; $i < 6; $i++)
+        <div style="display:flex; align-items:center; justify-content:space-between; gap: 0.75rem; padding: 0.85rem 0; border-bottom: 1px solid #f8fafc;">
+          <div class="skel-bone" style="width: 20px; height: 16px;"></div>
+          <div class="skel-bone" style="width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;"></div>
+          <div style="flex: 1; display:flex; flex-direction:column; gap: 6px; min-width: 140px;">
+            <div class="skel-bone" style="width: 70%; height: 14px;"></div>
+            <div class="skel-bone" style="width: 40%; height: 11px;"></div>
+          </div>
+          <div class="skel-bone" style="width: 42px; height: 26px; border-radius: 6px;"></div>
+          <div class="skel-bone" style="width: 42px; height: 26px; border-radius: 6px;"></div>
+          <div class="skel-bone" style="width: 68px; height: 24px; border-radius: 999px;"></div>
+          <div style="display:flex; gap: 6px;">
+            <div class="skel-bone" style="width: 32px; height: 32px; border-radius: 8px;"></div>
+            <div class="skel-bone" style="width: 32px; height: 32px; border-radius: 8px;"></div>
+            <div class="skel-bone" style="width: 32px; height: 32px; border-radius: 8px;"></div>
+          </div>
+        </div>
+      @endfor
+    </div>
+
+    {{-- GRID SKELETON --}}
+    <div id="skel-grid-container" style="display:none; grid-template-columns: repeat(7, 1fr); gap: 0.75rem;">
+      @for($i = 0; $i < 7; $i++)
+        <div class="skel-card" style="display:flex; flex-direction:column; padding: 0.65rem;">
+          <div class="skel-bone" style="width: 100%; aspect-ratio: 1/1; border-radius: 10px; margin-bottom: 0.65rem;"></div>
+          <div class="skel-bone" style="width: 85%; height: 13px; margin-bottom: 0.35rem;"></div>
+          <div class="skel-bone" style="width: 50%; height: 10px; margin-bottom: 0.75rem;"></div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:0.4rem; border-top:1px solid #f1f5f9;">
+            <div class="skel-bone" style="width: 38px; height: 20px; border-radius: 4px;"></div>
+            <div style="display:flex; gap: 4px;">
+              <div class="skel-bone" style="width: 24px; height: 24px; border-radius: 6px;"></div>
+              <div class="skel-bone" style="width: 24px; height: 24px; border-radius: 6px;"></div>
+            </div>
+          </div>
+        </div>
+      @endfor
+    </div>
+  </div>
+
+  {{-- REAL PRODUCTS CONTENT CONTAINER --}}
+  <div id="products-real-content" style="opacity: 0; transition: opacity 0.25s ease;">
 
   {{-- FILTER STATUS TAB: SEMUA / AKTIF / ARSIP --}}
   <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
@@ -1017,10 +1222,9 @@
                     <line x1="10" y1="14" x2="21" y2="3" />
                   </svg>
                 </a>
-                <form method="POST" action="{{ route('creator.products.destroy', $s) }}"
-                  onsubmit="return confirm('Hapus layanan ini? Tindakan tidak dapat dibatalkan.')">
+                <form method="POST" action="{{ route('creator.products.destroy', $s) }}">
                   @csrf @method('DELETE')
-                  <button type="submit" title="Hapus"
+                  <button type="button" title="Hapus" onclick="openDeleteProductModal(this, '{{ addslashes($s->name) }}')"
                     style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(239,68,68,0.08);border-radius:8px;color:#EF4444;border:none;cursor:pointer;transition:all .2s;"
                     onmouseover="this.style.background='rgba(239,68,68,0.16)'"
                     onmouseout="this.style.background='rgba(239,68,68,0.08)'">
@@ -1109,9 +1313,9 @@
                   <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
                 </svg>
               </a>
-              <form method="POST" action="{{ route('creator.products.destroy', $s) }}" onsubmit="return confirm('Hapus?')">
+              <form method="POST" action="{{ route('creator.products.destroy', $s) }}">
                 @csrf @method('DELETE')
-                <button type="submit" title="Hapus"
+                <button type="button" title="Hapus" onclick="openDeleteProductModal(this, '{{ addslashes($s->name) }}')"
                   style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:rgba(239,68,68,0.1);border-radius:8px;color:#EF4444;border:none;cursor:pointer;transition:all .2s;"
                   onmouseover="this.style.background='rgba(239,68,68,0.2)'"
                   onmouseout="this.style.background='rgba(239,68,68,0.1)'">
@@ -1149,6 +1353,27 @@
       {{ $products->links() }}
     </div>
   @endif
+  </div> {{-- Close #products-real-content --}}
+
+  {{-- Interactive Delete Confirmation Modal --}}
+  <div id="deleteConfirmOverlay" class="del-confirm-overlay" onclick="if(event.target===this) closeDeleteModal()">
+    <div class="del-confirm-card" role="dialog" aria-modal="true">
+      <div class="del-confirm-icon-wrap">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6" />
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+          <line x1="10" y1="11" x2="10" y2="17" />
+          <line x1="14" y1="11" x2="14" y2="17" />
+        </svg>
+      </div>
+      <h3 id="delModalTitle" class="del-confirm-title">Hapus Produk?</h3>
+      <p id="delModalDesc" class="del-confirm-desc">Apakah Anda yakin ingin menghapus produk ini? Tindakan ini tidak dapat dibatalkan.</p>
+      <div class="del-confirm-actions">
+        <button type="button" onclick="closeDeleteModal()" class="del-btn-cancel">Batal</button>
+        <button type="button" id="delConfirmBtn" onclick="executeDeleteConfirmed()" class="del-btn-confirm">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     function switchView(type, isUserAction = false) {
@@ -1838,5 +2063,76 @@
         });
       });
     });
+  });
+
+  // Skeleton view alignment & hide transition
+  (function() {
+    const prefView = localStorage.getItem('admin_services_view') || (window.innerWidth <= 768 ? 'grid' : 'list');
+    const sList = document.getElementById('skel-list-container');
+    const sGrid = document.getElementById('skel-grid-container');
+    if (sList && sGrid) {
+      if (prefView === 'grid') {
+        sList.style.display = 'none';
+        sGrid.style.display = 'grid';
+      } else {
+        sList.style.display = 'block';
+        sGrid.style.display = 'none';
+      }
+    }
+
+    function revealProducts() {
+      const skel = document.getElementById('products-skeleton');
+      const real = document.getElementById('products-real-content');
+      if (skel) skel.style.display = 'none';
+      if (real) real.style.opacity = '1';
+    }
+
+    if (document.readyState === 'complete') {
+      setTimeout(revealProducts, 120);
+    } else {
+      window.addEventListener('load', () => setTimeout(revealProducts, 120));
+    }
+  })();
+
+  // Interactive Product Delete Confirmation Modal
+  let _activeDeleteForm = null;
+
+  function openDeleteProductModal(btn, productName) {
+    _activeDeleteForm = btn.closest('form');
+    document.getElementById('delModalTitle').textContent = 'Hapus Produk?';
+    document.getElementById('delModalDesc').innerHTML = 'Apakah Anda yakin ingin menghapus produk <b>"' + productName + '"</b>? Data yang dihapus tidak dapat dipulihkan.';
+    const confirmBtn = document.getElementById('delConfirmBtn');
+    confirmBtn.textContent = 'Ya, Hapus';
+    confirmBtn.disabled = false;
+    document.getElementById('deleteConfirmOverlay').classList.add('open');
+  }
+
+  function openDeleteAllModal(count) {
+    _activeDeleteForm = document.getElementById('form-destroy-all-products');
+    document.getElementById('delModalTitle').textContent = 'Hapus Semua Produk?';
+    document.getElementById('delModalDesc').innerHTML = 'Apakah Anda yakin ingin menghapus <b>SEMUA ' + count + ' PRODUK</b> digital Anda? Seluruh data produk akan dihapus secara permanen dan tidak dapat dipulihkan.';
+    const confirmBtn = document.getElementById('delConfirmBtn');
+    confirmBtn.textContent = 'Ya, Hapus Semua!';
+    confirmBtn.disabled = false;
+    document.getElementById('deleteConfirmOverlay').classList.add('open');
+  }
+
+  function closeDeleteModal() {
+    const overlay = document.getElementById('deleteConfirmOverlay');
+    if (overlay) overlay.classList.remove('open');
+    _activeDeleteForm = null;
+  }
+
+  function executeDeleteConfirmed() {
+    if (_activeDeleteForm) {
+      const confirmBtn = document.getElementById('delConfirmBtn');
+      confirmBtn.textContent = 'Menghapus...';
+      confirmBtn.disabled = true;
+      _activeDeleteForm.submit();
+    }
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeDeleteModal();
   });
 </script>
