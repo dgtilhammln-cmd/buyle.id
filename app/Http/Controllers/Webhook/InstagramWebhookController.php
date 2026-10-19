@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Webhook;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessInstagramCommentJob;
+use App\Models\CampaignLog;
 use App\Models\InstagramAccount;
 use App\Services\MetaConfigService;
 use Illuminate\Http\Request;
@@ -47,14 +48,14 @@ class InstagramWebhookController extends Controller
         if (!empty($signature) && !empty(MetaConfigService::getAppSecret())) {
             if (!MetaConfigService::verifySignature($rawPayload, $signature)) {
                 Log::warning('Instagram Webhook Signature mismatch', ['signature' => $signature]);
-                // Tetap log dan lanjutkan agar event testing tidak terblokir jika secret beda versi
+                // Tetap log dan lanjutkan agar event testing tidak terblokir
             }
         }
 
         $data = $request->json()->all();
-        Log::info('Instagram Webhook payload received', ['data' => $data]);
+        // Log full payload untuk debug (akan terlihat di laravel.log)
+        Log::info('[IG Webhook] Payload diterima', ['raw' => $data]);
 
-        // Cek struktur payload Meta
         $entries = $data['entry'] ?? [];
         foreach ($entries as $entry) {
             $entryId = $entry['id'] ?? null;
@@ -64,7 +65,7 @@ class InstagramWebhookController extends Controller
                 ->orWhere('page_id', $entryId)
                 ->first();
 
-            // Fallback: jika entryId tidak persis cocok, gunakan akun aktif yang terhubung
+            // Fallback: gunakan akun aktif yang terhubung
             if (!$igAccount) {
                 $igAccount = InstagramAccount::where('is_connected', true)->latest()->first();
             }
@@ -74,40 +75,95 @@ class InstagramWebhookController extends Controller
                 $field = $change['field'] ?? '';
                 $val   = $change['value'] ?? [];
 
-                // Filter event komentar (Instagram Graph API: 'comments', atau Page Webhook: 'feed')
-                if ($field === 'comments' || ($field === 'feed' && ($val['item'] ?? '') === 'comment' && ($val['verb'] ?? '') !== 'remove')) {
-                    $commentId = $val['id'] ?? ($val['comment_id'] ?? null);
-                    $text      = $val['text'] ?? ($val['message'] ?? '');
-                    $from      = $val['from'] ?? [];
-                    $media     = $val['media'] ?? [];
-                    $mediaId   = $media['id'] ?? ($val['post_id'] ?? null);
+                Log::info('[IG Webhook] Change diterima', [
+                    'field'      => $field,
+                    'val_keys'   => array_keys($val),
+                    'entry_id'   => $entryId,
+                    'ig_account' => $igAccount?->id,
+                ]);
+
+                // Tangkap komentar: field 'comments' (Instagram API) atau 'feed' (Page Webhook)
+                $isComment = ($field === 'comments')
+                    || ($field === 'feed' && ($val['item'] ?? '') === 'comment' && ($val['verb'] ?? '') !== 'remove');
+
+                if ($isComment) {
+                    $commentId      = $val['id'] ?? ($val['comment_id'] ?? null);
+                    $text           = $val['text'] ?? ($val['message'] ?? '');
+                    $from           = $val['from'] ?? [];
+                    $media          = $val['media'] ?? [];
+                    $mediaId        = $media['id'] ?? ($val['post_id'] ?? null);
+                    $senderIgId     = $from['id'] ?? ($val['sender_id'] ?? null);
+                    $senderUsername = $from['username'] ?? ($from['name'] ?? 'User');
+
+                    Log::info('[IG Webhook] Komentar terdeteksi', [
+                        'comment_id'      => $commentId,
+                        'text'            => $text,
+                        'sender_ig_id'    => $senderIgId,
+                        'sender_username' => $senderUsername,
+                        'media_id'        => $mediaId,
+                    ]);
+
+                    // Jika tidak ada comment_id sama sekali, skip
+                    if (empty($commentId)) {
+                        Log::warning('[IG Webhook] comment_id kosong, skip');
+                        continue;
+                    }
+
+                    // Jika tidak ada sender_ig_id, coba cari dari format lain atau gunakan placeholder
+                    if (empty($senderIgId)) {
+                        Log::warning('[IG Webhook] sender_ig_id kosong, coba proses dengan placeholder', [
+                            'val' => $val,
+                        ]);
+                        // Catat sebagai log informatif saja jika sender tidak diketahui
+                        if ($igAccount) {
+                            CampaignLog::create([
+                                'user_id'         => $igAccount->user_id,
+                                'sender_ig_id'    => 'unknown',
+                                'sender_username' => $senderUsername,
+                                'comment_id'      => $commentId,
+                                'media_id'        => $mediaId,
+                                'comment_text'    => $text,
+                                'status'          => 'skipped',
+                                'error_message'   => 'Webhook tidak menyertakan sender_id. Periksa format subscription webhook di Meta Developer Console (pastikan field "comments" diaktifkan).',
+                            ]);
+                        }
+                        continue;
+                    }
 
                     $jobPayload = [
                         'instagram_account_id' => $igAccount?->id,
                         'comment_id'           => $commentId,
                         'media_id'             => $mediaId,
-                        'sender_ig_id'         => $from['id'] ?? null,
-                        'sender_username'      => $from['username'] ?? ($from['name'] ?? 'User'),
+                        'sender_ig_id'         => $senderIgId,
+                        'sender_username'      => $senderUsername,
                         'comment_text'         => $text,
                     ];
 
-                    if (!empty($commentId) && !empty($jobPayload['sender_ig_id'])) {
-                        try {
-                            ProcessInstagramCommentJob::dispatchSync($jobPayload);
-                        } catch (\Exception $e) {
-                            Log::error('Error processing Instagram comment job', ['error' => $e->getMessage()]);
+                    try {
+                        ProcessInstagramCommentJob::dispatchSync($jobPayload);
+                    } catch (\Exception $e) {
+                        Log::error('[IG Webhook] Error processing comment job', [
+                            'error'   => $e->getMessage(),
+                            'payload' => $jobPayload,
+                        ]);
+                        if ($igAccount) {
+                            CampaignLog::create([
+                                'user_id'         => $igAccount->user_id,
+                                'sender_ig_id'    => $senderIgId,
+                                'sender_username' => $senderUsername,
+                                'comment_id'      => $commentId,
+                                'media_id'        => $mediaId,
+                                'comment_text'    => $text,
+                                'status'          => 'failed',
+                                'error_message'   => 'Job error: ' . $e->getMessage(),
+                            ]);
                         }
                     }
                 }
-            }
-
-            // Messaging webhooks (jika event messaging)
-            $messagings = $entry['messaging'] ?? [];
-            foreach ($messagings as $msg) {
-                // Handle direct messaging callback jika diperlukan
             }
         }
 
         return response('EVENT_RECEIVED', 200);
     }
 }
+
