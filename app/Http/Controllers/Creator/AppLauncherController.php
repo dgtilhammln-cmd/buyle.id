@@ -76,6 +76,27 @@ class AppLauncherController extends Controller
                 'border_color' => 'rgba(124,58,237,0.3)',
                 'icon_type'    => 'ticket',
             ],
+            [
+                'id'          => 'automation_reply',
+                'name'        => 'Buyle Automation Reply',
+                'badge'       => 'Instagram Auto DM & Comment',
+                'description' => 'Otomatisasi balasan komentar & DM Instagram untuk produk digital Anda. Konversi komentar reels/post menjadi pembeli instan dengan Smart Checkout Link.',
+                'features'    => [
+                    ['icon' => 'zap',     'label' => 'Auto DM Instan'],
+                    ['icon' => 'mail',    'label' => 'Public Reply'],
+                    ['icon' => 'percent', 'label' => 'Spintax Multi-Pesan'],
+                    ['icon' => 'link',    'label' => 'Direct Checkout Link'],
+                    ['icon' => 'calc',    'label' => 'Anti-Spam Guard (3-8s)'],
+                    ['icon' => 'report',  'label' => 'CTR & Omset Realtime'],
+                ],
+                'route'        => route('creator.automation-reply.index'),
+                'logo_key'     => 'app_logo_automation_reply',
+                'logo'         => Setting::get('app_logo_automation_reply'),
+                'theme_color'  => '#e1306c',
+                'bg_gradient'  => 'linear-gradient(135deg, rgba(225,48,108,0.12) 0%, rgba(247,119,55,0.12) 100%)',
+                'border_color' => 'rgba(225,48,108,0.3)',
+                'icon_type'    => 'instagram',
+            ],
         ];
 
         return view('creator.app.index', compact('apps'));

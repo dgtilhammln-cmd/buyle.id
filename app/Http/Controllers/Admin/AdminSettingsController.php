@@ -19,11 +19,11 @@ class AdminSettingsController extends Controller
 
     public function update(Request $request)
     {
-        $imageKeys = ['hero_bg_image', 'hero_main_image', 'hero_secondary_image', 'about_image', 'about_c3_image', 'og_image_default', 'logo', 'favicon', 'qr_logo', 'coverage_map', 'ad_product_sidebar_1_image', 'ad_product_sidebar_2_image', 'adsense_custom_image', 'landscape_banner', 'app_logo_webbuilder', 'app_logo_pos', 'app_logo_eticket'];
+        $imageKeys = ['hero_bg_image', 'hero_main_image', 'hero_secondary_image', 'about_image', 'about_c3_image', 'og_image_default', 'logo', 'favicon', 'qr_logo', 'coverage_map', 'ad_product_sidebar_1_image', 'ad_product_sidebar_2_image', 'adsense_custom_image', 'landscape_banner', 'app_logo_webbuilder', 'app_logo_pos', 'app_logo_eticket', 'app_logo_automation_reply'];
         $data      = $request->except(array_merge(['_token', '_method'], $imageKeys));
 
         // Handle explicit deletion of app logos if requested
-        foreach (['app_logo_webbuilder', 'app_logo_pos', 'app_logo_eticket'] as $appLogoKey) {
+        foreach (['app_logo_webbuilder', 'app_logo_pos', 'app_logo_eticket', 'app_logo_automation_reply'] as $appLogoKey) {
             if ($request->input('remove_' . $appLogoKey) === '1' || $request->input('remove_' . $appLogoKey) === 1) {
                 $oldPath = Setting::get($appLogoKey);
                 if ($oldPath && Storage::disk('public')->exists($oldPath)) {

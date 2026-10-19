@@ -702,10 +702,38 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/bio/scrape-url', [\App\Http\Controllers\Creator\CreatorBioController::class, 'scrapeUrl'])->name('bio.scrape-url');
     Route::get('/bio/tiktok-oembed', [\App\Http\Controllers\Creator\CreatorBioController::class, 'tiktokOembed'])->name('bio.tiktok-oembed');
 
+    // ── Buyle Automation Reply (Instagram Auto DM & Comment) ─────────────
+    Route::prefix('automation-reply')->name('automation-reply.')->group(function () {
+        Route::get('/',                 [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'index'])->name('index');
+        Route::get('/connect',          [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'connect'])->name('connect');
+        Route::get('/callback',         [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'callback'])->name('callback');
+        Route::post('/disconnect',      [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'disconnect'])->name('disconnect');
+        Route::post('/refresh-token',   [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'refreshToken'])->name('refresh-token');
+        Route::post('/campaigns',       [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'storeCampaign'])->name('campaigns.store');
+        Route::put('/campaigns/{id}',   [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'updateCampaign'])->name('campaigns.update');
+        Route::patch('/campaigns/{id}/toggle', [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'toggleCampaign'])->name('campaigns.toggle');
+        Route::delete('/campaigns/{id}', [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'destroyCampaign'])->name('campaigns.destroy');
+        Route::post('/simulation',      [\App\Http\Controllers\Creator\InstagramAutomationController::class, 'testSimulation'])->name('simulation');
+    });
+
     // Custom Domain Search & Purchase (WhoisJSON & Midtrans)
     Route::post('/domain/check',    [\App\Http\Controllers\Creator\CreatorDomainController::class, 'checkAvailability'])->name('domain.check')->middleware('throttle:domain-check');
     Route::post('/domain/checkout', [\App\Http\Controllers\Creator\CreatorDomainController::class, 'checkout'])->name('domain.checkout')->middleware('throttle:checkout-limit');
 });
+
+// Shortcut OAuth callback
+Route::get('/auth/instagram/callback', function () {
+    return redirect()->route('creator.automation-reply.callback', request()->all());
+});
+
+// Short Link Direct Checkout Tracking
+Route::get('/c/{code}', [\App\Http\Controllers\ShortLinkRedirectController::class, 'redirect'])->name('shortlink.redirect');
+
+// Webhook Meta Instagram Receiver & Handshake
+Route::get('/api/webhooks/instagram',  [\App\Http\Controllers\Webhook\InstagramWebhookController::class, 'verify'])->name('webhooks.instagram.verify');
+Route::post('/api/webhooks/instagram', [\App\Http\Controllers\Webhook\InstagramWebhookController::class, 'handle'])->name('webhooks.instagram.handle');
+Route::get('/webhooks/instagram',      [\App\Http\Controllers\Webhook\InstagramWebhookController::class, 'verify']);
+Route::post('/webhooks/instagram',     [\App\Http\Controllers\Webhook\InstagramWebhookController::class, 'handle']);
  
 // Shortcut /app redirect ke creator app launcher
 Route::get('/app', function () {

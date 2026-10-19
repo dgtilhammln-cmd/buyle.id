@@ -6905,8 +6905,7 @@
                         <line x1="12" y1="8" x2="12" y2="12" />
                         <line x1="12" y1="16" x2="12.01" y2="16" />
                     </svg>
-                    <span><strong>Catatan:</strong> Harga belum termasuk Admin Fee, Platform Fee, dan PPN (Pajak) 11%.
-                        Rincian fee & pajak akan dikalkulasi secara otomatis saat pembayaran.</span>
+                    <span><strong>Catatan:</strong> Harga sudah termasuk Admin Fee, Platform Fee, dan PPN (Pajak) 11%.</span>
                 </div>
                 <div id="dcmErrorBox" class="dcm-error-box">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"

@@ -1,0 +1,178 @@
+
+# 📄 PRODUCT REQUIREMENT DOCUMENT (PRD)
+
+## **Module Name:** `Buyle.id` Instagram Automation & Engagement Engine
+
+* **Target Platform:** `Buyle.id` (Laravel Architecture)
+* **Meta App ID:** `1601973478071042`
+* **Meta App Secret:** `0cfaccff27e5846187faf60c7b8a1d96`
+
+* **Configuration Storage:** Managed via Database Dashboard Admin (`/admin/settings`)
+* **Development Phase:** Phase 1 – In-House Trial & Testing (1-Month Internal Sandbox)
+* **Execution Timeline:** 3-Day Build Sprint via AI Agent
+
+---
+
+## **1. SYSTEM ARCHITECTURE & INTEGRATION FLOW**
+
+```
+[User Komentar di Post/Reels Instagram]
+                │
+                ▼
+  [Meta Webhook Trigger (Real-Time)]
+                │
+                ▼
+ [Endpoint Laravel: /api/webhooks/instagram]
+                │
+                ├─► 1. Ambil App Secret & Verify Token dari DB (/admin/settings)
+                ├─► 2. Verifikasi Signature Header & Security Token
+                ├─► 3. Filter Keyword Matching (Exact Match / Contains)
+                ├─► 4. Panggil Spintax Engine (Rotasi Variasi Pesan & Dynamic Product Link)
+                └─► 5. Push Job ke Laravel Queue (Redis / Database Driver)
+                                │
+                                ▼
+         [Worker Queue dengan Anti-Spam Safety Layer]
+         • Random Delay: 3 s.d. 8 Detik per Eksekusi
+         • Daily Rate Limit Guard Check (Max Limit per Account)
+                                │
+                                ▼
+    [Instagram Graph API: Outbound Auto DM & Auto Comment]
+
+```
+
+---
+
+## **2. CENTRALIZED CREDENTIALS CONFIGURATION (`/admin/settings`)**
+
+Seluruh kredensial Meta App tidak disimpan di file `.env`, melainkan disimpan di tabel `system_settings` dan dikelola secara terpusat melalui antarmuka admin di `/admin/settings`.
+
+* **Admin Setting Fields:**
+* `instagram_app_id` $\rightarrow$ `1601973478071042`
+
+* `instagram_app_secret` $\rightarrow$ Encrypted text input
+
+
+* `instagram_verify_token` $\rightarrow$ Custom string verification token
+* `instagram_graph_version` $\rightarrow$ `v19.0`
+
+
+* **Dynamic Config Loader:**
+* AI Agent harus membuat Helper/Service Class (contoh: `MetaConfigService`) untuk menarik kredensial ini secara dinamis dari database sebelum melakukan panggilan API atau memverifikasi Webhook.
+
+
+
+---
+
+## **3. META API SCOPES & PERMISSION MAPPING**
+
+AI Agent wajib memetakan endpoint Graph API sesuai dengan 5 izin resmi yang sudah diaktifkan di Meta Developer Console:
+
+1. **`instagram_business_basic`**: Mengambil data profil dasar akun Instagram Kreator/Bisnis, postingan, dan media ID.
+2. **`instagram_business_manage_messages`**: Mengirimkan balasan pesan otomatis (Auto DM) langsung ke inbox pengirim komentar.
+3. **`instagram_business_manage_comments`**: Membaca komentar publik yang masuk di Post/Reels dan melakukan *Public Auto-Reply Comment*.
+4. **`instagram_business_manage_insights`**: Fondasi *Killing Feature* **Revenue & Conversion Analytics**.
+5. **`instagram_business_content_publish`**: Fondasi *Killing Feature* **Auto Publishing / Schedule Content**.
+
+---
+
+## **4. DASHBOARD USER INTERFACE & KILLING FEATURES**
+
+Modul ini terletak di dalam Dashboard User `Buyle.id` dengan nama menu **"Automation Reply"**.
+
+### **A. Account Connection Management (Halaman Integrasi)**
+
+* **Tombol Connect:** *"Hubungkan Instagram Professional"* yang memicu pop-up OAuth Meta Dialog.
+* **Status Widget:** Foto Profil, Username (`@username`), Tipe Akun (Creator/Business), Status Token, & Tombol *"Refresh Connection"*.
+* **Automated Cron Task (`php artisan instagram:refresh-tokens`):** Memperbarui *Long-Lived Page Access Token* (60 hari) secara otomatis jika sisa masa berlaku $< 15$ hari.
+
+### **B. Campaign Builder & Base Settings**
+
+1. **Campaign Name:** Nama identifikasi campaign (contoh: *Promosi Ebook E-commerce*).
+2. **Target Post Selection:** All Posts/Reels ATAU Specific Post (Grid picker via Graph API).
+3. **Trigger Keyword Matching:** Exact Match ATAU Contains Match.
+4. **Multi-Response Variant System (Spintax):** Minimal 3 variasi pesan DM acak dengan variabel `{first_name}`, `{post_title}`, dan `{link_product}`.
+5. **Auto Comment Public Reply (Toggle ON/OFF):** Balas komentar publik di postingan secara otomatis (contoh: *"Cek DM ya kak! Link produk sudah kami kirimkan 📩"*).
+6. **Safety Guard:** Random Delay Slider (3–8 detik) & Daily Limit Input (Default: 200 DM/hari).
+
+---
+
+### **🚀 C. KILLING FEATURES (FITUR UNGGULAN PELIBAS KOMPETITOR)**
+
+1. **🔥 Smart Product Auto-Link Generator (Direct Checkout DM):**
+* **Konsep:** Kreator bisa langsung memilih produk digital yang dijual di `Buyle.id` melalui dropdown saat membuat campaign.
+* **Mekanisme:** Sistem secara otomatis mergenerate *Short-Link Checkout* khusus (contoh: `buyle.id/c/x81z9`) yang disisipkan ke variabel `{link_product}` di DM. Ketika pembeli mengklik link dari DM, mereka langsung diarahkan ke halaman *instant checkout* produk tersebut.
+
+
+2. **🔥 Instagram Campaign Conversion & Revenue Analytics:**
+* **Konsep:** Menggabungkan data `instagram_business_manage_insights` dengan data transaksi di `Buyle.id`.
+* **Dashboard Metric:**
+* **Total Triggered Comments** vs **Total DM Sent**.
+* **Link Click Rate (CTR):** Berapa banyak user yang mengklik link checkout dari DM.
+* **Direct Revenue Generated (Rp):** Total omset/penjualan yang tercipta secara *real-time* dari campaign Auto DM tersebut.
+
+
+
+
+3. **🔥 Auto-Follow Verification Guard (Opsional Lead Magnet Booster):**
+* **Konsep:** Sebelum mengirimkan link download/akses produk digital via DM, sistem mengecek apakah akun pembeli sudah mem-follow akun Instagram kreator.
+* **Pesan Kondisional:** Jika belum follow, bot secara sopan mengirimkan pesan: *"Halo Kak! Silakan follow @username dulu ya, lalu balas pesan ini untuk membuka link otomatisnya."*
+
+
+4. **🔥 Dynamic Auto-Scheduling & Direct Publishing (Konten & Story):**
+* **Konsep:** Memanfaatkan scope `instagram_business_content_publish` agar kreator bisa menjadwalkan postingan gambar, Reels, atau Story promosi produk digital langsung dari dashboard `Buyle.id` tanpa butuh tools tambahan (seperti Later atau Buffer).
+
+
+
+---
+
+## **5. EXECUTION ROADMAP FOR AI AGENT (3-DAY SPRINT)**
+
+| Hari | Fokus Utama | Output Teknis AI Agent |
+| --- | --- | --- |
+| **Day 1** | **Admin Config (`/admin/settings`), DB Schema & UI** | • Form Settings Meta App Credentials di `/admin/settings`.<br>
+
+<br>• Migrasi tabel `system_settings`, `instagram_accounts`, `automation_campaigns`, `campaign_logs`.<br>
+
+<br>• Blade UI: Integration Page, Campaign Builder Form, & Analytics. |
+| **Day 2** | **OAuth Flow & Webhook Engine** | • Service Class pembaca config Meta dari DB.<br>
+
+<br>• Route OAuth Callback & Logic Tukar Access Token.<br>
+
+<br>• Endpoint Webhook Receiver (`POST /api/webhooks/instagram`) & Callback Verification (`GET`). |
+| **Day 3** | **Queue System & Killing Features Logic** | • Worker Queue integration (Redis/Database).<br>
+
+<br>• Spintax & Smart Product Auto-Link Generator.<br>
+
+<br>• Random Delay (3–8 detik) & Daily Rate Limit Guard. |
+
+---
+
+## **6. DIRECT INSTRUCTION PROMPT FOR AI AGENT**
+
+*Gunakan prompt terstruktur di bawah ini secara langsung saat memberi instruksi ke AI Agent kamu:*
+
+> **PROMPT FOR AI AGENT:**
+> "Build a production-grade module named 'Automation Reply' for our Laravel platform `Buyle.id`. Do not output raw code explanations; focus on generating complete working code files, database migrations, controllers, blade views, and queue jobs.
+> **Key Technical Requirements:**
+> 1. **Centralized Admin Credentials Storage:** Do NOT use `.env` for Meta credentials. Read Meta App ID (`1601973478071042`), App Secret, and Verify Token dynamically from the database via `/admin/settings` (`system_settings` table).
+> 2. **Meta API & Scopes:** Integrate the 5 enabled Meta scopes: `instagram_business_basic`, `instagram_business_manage_messages`, `instagram_business_manage_comments`, `instagram_business_manage_insights`, and `instagram_business_content_publish`.
+> 3. **OAuth & Webhook System:**
+> * Implement Meta OAuth 2.0 login callback (`/auth/instagram/callback`) to exchange short-lived tokens for 60-day Long-Lived Access Tokens and save them encrypted in the database. Include an automated task for token refreshing.
+> * Create endpoint `/api/webhooks/instagram` with `GET` token validation and `POST` payload handler for incoming comments and messages.
+> 
+> 
+> 4. **UI Components (Blade + Tailwind/Bootstrap):**
+> * Account Integration widget with 'Connect Instagram' trigger.
+> * Campaign Builder: Specific/All Post selection, Trigger Keywords (Exact/Contains), Spintax Multi-Variant inputs (minimum 3 variants), Public Comment Reply toggle, and Daily Limit Input.
+> * Configurable Random Delay Slider (3 to 8 seconds).
+> * Real-Time Activity Log table & Revenue Conversion Metrics.
+> 
+> 
+> 5. **Killing Features Implementation:**
+> * **Smart Product Auto-Link Generator:** Allow users to pick a `Buyle.id` digital product in the campaign builder, automatically generating dynamic checkout links inside the `{link_product}` message variable.
+> * **Conversion & Revenue Analytics:** Display CTR and total revenue generated from Auto DM links.
+> 
+> 
+> 6. **Queue Worker Safety:** Dispatch incoming comment events to a delayed Laravel Queue Worker. Enforce a random delay between 3-8 seconds, rotate message variants, and validate daily account limits before calling the Instagram Graph API."
+> 
+>
