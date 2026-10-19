@@ -1751,6 +1751,60 @@ function testAiConnection() {
 
     </div>
   </div>
+{{-- ======== TAB: META / INSTAGRAM ======== --}}
+<div id="tab-instagram" class="tab-section" style="display:none;">
+  <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;">
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#E1306C;">Meta / Instagram API — Buyle Automation Reply</div>
+    </div>
+    
+    <p style="font-size:0.85rem;color:#64748B;margin-bottom:1.25rem;line-height:1.6;">
+      Konfigurasi Meta Developer App untuk fitur <strong>Buyle Automation Reply</strong> (Instagram Auto DM & Balas Komentar). Dapatkan kredensial ini di 
+      <a href="https://developers.facebook.com/apps" target="_blank" style="color:#E1306C;font-weight:700;text-decoration:none;">Meta for Developers &rarr;</a>
+    </p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+      <div>
+        <label class="form-label">Meta App ID / ID Aplikasi Instagram <span style="color:#E1306C;">*</span></label>
+        <input type="text" name="instagram_app_id" class="form-input" value="{{ $settings['instagram_app_id'] ?? '1642881397242052' }}" placeholder="Contoh: 1642881397242052">
+        <p style="font-size:.7rem;color:#94A3B8;margin:.3rem 0 0;">Meta Developer &rarr; Instagram API &rarr; ID aplikasi Instagram</p>
+      </div>
+
+      <div>
+        <label class="form-label">Meta App Secret / Rahasia Aplikasi <span style="color:#E1306C;">*</span></label>
+        <input type="text" name="instagram_app_secret" class="form-input" value="{{ $settings['instagram_app_secret'] ?? 'c5dfb3973596cac40db925898c0cfbfd' }}" placeholder="Kunci Rahasia Aplikasi">
+        <p style="font-size:.7rem;color:#94A3B8;margin:.3rem 0 0;">Meta Developer &rarr; Instagram API &rarr; Rahasia aplikasi Instagram</p>
+      </div>
+
+      <div>
+        <label class="form-label">Graph API Version</label>
+        <input type="text" name="instagram_graph_version" class="form-input" value="{{ $settings['instagram_graph_version'] ?? 'v26.0' }}" placeholder="v26.0">
+        <p style="font-size:.7rem;color:#94A3B8;margin:.3rem 0 0;">Default: v26.0</p>
+      </div>
+
+      <div>
+        <label class="form-label">Webhook Verify Token</label>
+        <input type="text" name="instagram_verify_token" class="form-input" value="{{ $settings['instagram_verify_token'] ?? 'buyle_ig_webhook_secret_2026' }}" placeholder="buyle_ig_webhook_secret_2026">
+        <p style="font-size:.7rem;color:#94A3B8;margin:.3rem 0 0;">Token acak untuk verifikasi handshake webhook</p>
+      </div>
+    </div>
+
+    <div style="margin-top:1.25rem;padding:1rem;background:#FFF1F5;border:1px solid #FECDD3;border-radius:8px;font-size:.75rem;color:#9F1239;line-height:1.7;">
+      <div style="font-weight:700;margin-bottom:.35rem;display:flex;align-items:center;gap:.35rem;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        URL Wajib Yang Harus Didaftarkan di Meta Developers:
+      </div>
+      <div><strong>1. Alihkan URL / OAuth Redirect URI:</strong></div>
+      <code style="display:block;margin:.25rem 0 .75rem;padding:.4rem .6rem;background:#fff;border:1px solid #FDA4AF;border-radius:6px;color:#BE123C;font-family:monospace;font-size:.8rem;user-select:all;">https://buyle.id/creator/automation-reply/callback</code>
+      <div><strong>2. URL Callback Webhook:</strong></div>
+      <code style="display:block;margin:.25rem 0;padding:.4rem .6rem;background:#fff;border:1px solid #FDA4AF;border-radius:6px;color:#BE123C;font-family:monospace;font-size:.8rem;user-select:all;">https://buyle.id/api/webhooks/instagram</code>
+    </div>
+
+    <div style="margin-top:1.5rem;text-align:right;">
+      <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:linear-gradient(135deg, #1eb349, #a5cf37);color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;">Simpan Pengaturan Meta</button>
+    </div>
+  </div>
 </div>
 
 </form>
