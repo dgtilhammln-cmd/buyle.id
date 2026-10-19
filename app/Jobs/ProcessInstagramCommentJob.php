@@ -52,22 +52,23 @@ class ProcessInstagramCommentJob implements ShouldQueue
             return;
         }
 
-        // Deteksi jika yang berkomentar adalah akun IG kreator itu sendiri / balasan dari bot Buyle
-        $isOwnAccount = false;
-        if (!empty($igAccount->username) && strcasecmp($senderUsername, $igAccount->username) === 0) {
-            $isOwnAccount = true;
-        }
-        if (!empty($igAccount->instagram_business_id) && (string)$senderIgId === (string)$igAccount->instagram_business_id) {
-            $isOwnAccount = true;
-        }
-        if (!empty($igAccount->page_id) && (string)$senderIgId === (string)$igAccount->page_id) {
-            $isOwnAccount = true;
+        // Cek jika komentar ini adalah balasan bot publik Buyle sendiri yang terpantul dari webhook
+        if (!empty($commentText) && CampaignLog::where('public_reply_sent', $commentText)->exists()) {
+            Log::info('[ProcessInstagramCommentJob] Mengabaikan event balasan bot publik yang sudah tercatat', ['text' => $commentText]);
+            return;
         }
 
-        if ($isOwnAccount) {
-            Log::info('[ProcessInstagramCommentJob] Mengabaikan event komentar dari akun bot/pemilik sendiri agar tidak menduplikasi audit log.', [
-                'sender'  => $senderUsername,
-                'comment' => $commentText,
+        // Deteksi jika yang berkomentar adalah akun IG kreator itu sendiri
+        if (!empty($igAccount->username) && strcasecmp($senderUsername, $igAccount->username) === 0) {
+            CampaignLog::create([
+                'user_id'         => $igAccount->user_id,
+                'sender_ig_id'    => $senderIgId,
+                'sender_username' => $senderUsername,
+                'comment_id'      => $commentId,
+                'media_id'        => $mediaId,
+                'comment_text'    => $commentText,
+                'status'          => 'skipped',
+                'error_message'   => 'Uji coba komentar dari akun pemilik sendiri (@' . $senderUsername . ') terdeteksi. Kebijakan Meta melarang bot kirim DM otomatis ke akun sendiri. Harap uji coba menggunakan akun Instagram lain (@wetewe_, @avham, dll).',
             ]);
             return;
         }
@@ -97,40 +98,34 @@ class ProcessInstagramCommentJob implements ShouldQueue
             // Cek target postingan (all atau spesifik)
             if ($campaign->target_type === 'specific' && !empty($campaign->target_media_id)) {
                 $target = trim($campaign->target_media_id);
-                $isMatch = ($target === (string)$mediaId);
+                $isMatch = false;
 
+                // 1. Cek kecocokan numeric ID langsung
+                if ($target === (string)$mediaId || str_contains($target, (string)$mediaId) || str_contains((string)$mediaId, $target)) {
+                    $isMatch = true;
+                }
+
+                // 2. Ekstrak shortcode jika target berupa URL (contoh: https://www.instagram.com/reel/C8XYZ123/)
                 if (!$isMatch && !empty($mediaId)) {
-                    // 1. Cek kecocokan substring ID langsung
-                    if (str_contains($target, (string)$mediaId) || str_contains((string)$mediaId, $target)) {
-                        $isMatch = true;
-                    } else {
-                        // 2. Ekstrak shortcode dari link target campaign jika berbentuk URL (misal https://www.instagram.com/reel/DEv8f_ySxyz/)
-                        $targetShortcode = null;
-                        if (preg_match('/instagram\.com\/(?:reel|p|tv)\/([A-Za-z0-9_-]+)/', $target, $matches)) {
-                            $targetShortcode = $matches[1];
-                        } elseif (!str_contains($target, '/') && !is_numeric($target)) {
-                            $targetShortcode = $target;
+                    $targetShortcode = null;
+                    if (preg_match('/instagram\.com\/(?:reel|p|tv)\/([A-Za-z0-9_-]+)/', $target, $matches)) {
+                        $targetShortcode = $matches[1];
+                    } elseif (!str_contains($target, '/') && !is_numeric($target)) {
+                        $targetShortcode = $target;
+                    }
+
+                    if (!empty($targetShortcode)) {
+                        // A. Cocokkan target shortcode dengan hasil konversi matematis mediaId webhook
+                        $convertedShortcode = self::mediaIdToShortcode((string)$mediaId);
+                        if (!empty($convertedShortcode) && strcasecmp($targetShortcode, $convertedShortcode) === 0) {
+                            $isMatch = true;
                         }
 
-                        // Query permalink dari mediaId webhook via Graph API (hanya cache jika berhasil, jangan cache string kosong)
-                        $cacheKey = "ig_media_permalink_{$mediaId}";
-                        $mediaPermalink = cache()->get($cacheKey);
-                        if (empty($mediaPermalink)) {
-                            $mediaPermalink = $apiService->getMediaPermalink($igAccount->access_token, (string)$mediaId);
-                            if (!empty($mediaPermalink)) {
-                                cache()->put($cacheKey, $mediaPermalink, 86400);
-                            }
-                        }
-
-                        if (!empty($mediaPermalink)) {
-                            if (!empty($targetShortcode)) {
-                                if (str_contains($mediaPermalink, $targetShortcode)) {
-                                    $isMatch = true;
-                                }
-                            } else {
-                                if (str_contains($target, $mediaPermalink) || str_contains($mediaPermalink, $target)) {
-                                    $isMatch = true;
-                                }
+                        // B. Cocokkan target shortcode yang dikonversi ke numeric ID dengan mediaId webhook
+                        if (!$isMatch) {
+                            $convertedTargetId = self::shortcodeToMediaId($targetShortcode);
+                            if (!empty($convertedTargetId) && $convertedTargetId === (string)$mediaId) {
+                                $isMatch = true;
                             }
                         }
                     }
@@ -275,5 +270,36 @@ class ProcessInstagramCommentJob implements ShouldQueue
                 'error_message'   => $dmResult['error'] ?? 'Gagal mengirim DM melalui Graph API.',
             ]);
         }
+    }
+
+    /**
+     * Konversi Instagram Shortcode (dari URL Reels/Postingan) ke numeric Media ID secara matematis (Base64)
+     */
+    public static function shortcodeToMediaId(string $code): string
+    {
+        $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+        $id = '0';
+        for ($i = 0; $i < strlen($code); $i++) {
+            $char = $code[$i];
+            $val = strpos($alphabet, $char);
+            if ($val === false) continue;
+            $id = bcadd(bcmul($id, '64'), (string)$val);
+        }
+        return $id;
+    }
+
+    /**
+     * Konversi numeric Media ID dari webhook ke Instagram Shortcode secara matematis (Base64)
+     */
+    public static function mediaIdToShortcode(string $id): string
+    {
+        $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+        $code = '';
+        while (bccomp($id, '0') > 0) {
+            $rem = bcmod($id, '64');
+            $code = $alphabet[(int)$rem] . $code;
+            $id = bcdiv($id, '64', 0);
+        }
+        return $code;
     }
 }

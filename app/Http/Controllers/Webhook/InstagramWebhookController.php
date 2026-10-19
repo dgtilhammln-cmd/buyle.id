@@ -109,20 +109,19 @@ class InstagramWebhookController extends Controller
                         continue;
                     }
 
-                    // Abaikan langsung jika komentar berasal dari akun bot / akun pemilik itu sendiri
-                    if ($igAccount) {
-                        if (!empty($igAccount->username) && strcasecmp($senderUsername, $igAccount->username) === 0) {
-                            Log::info('[IG Webhook] Mengabaikan event komentar dari akun pemilik sendiri (@' . $senderUsername . ')');
-                            continue;
-                        }
-                        if (!empty($igAccount->instagram_business_id) && (string)$senderIgId === (string)$igAccount->instagram_business_id) {
-                            Log::info('[IG Webhook] Mengabaikan event komentar dari Instagram Business ID sendiri');
-                            continue;
-                        }
-                        if (!empty($igAccount->page_id) && (string)$senderIgId === (string)$igAccount->page_id) {
-                            Log::info('[IG Webhook] Mengabaikan event komentar dari Page ID sendiri');
-                            continue;
-                        }
+                    // Abaikan jika ini adalah event echo dari balasan bot publik Buyle sendiri
+                    $parentId = $val['parent_id'] ?? ($val['parent_comment_id'] ?? null);
+                    if (!empty($parentId)) {
+                        Log::info('[IG Webhook] Mengabaikan event balasan komentar (child comment/bot reply) agar tidak menduplikasi log', [
+                            'parent_id'  => $parentId,
+                            'comment_id' => $commentId,
+                        ]);
+                        continue;
+                    }
+
+                    if (!empty($text) && CampaignLog::where('public_reply_sent', $text)->exists()) {
+                        Log::info('[IG Webhook] Mengabaikan balasan bot publik yang sudah tercatat di database', ['text' => $text]);
+                        continue;
                     }
 
                     // Jika tidak ada sender_ig_id, coba cari dari format lain atau gunakan placeholder
