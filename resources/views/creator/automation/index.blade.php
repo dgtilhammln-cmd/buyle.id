@@ -514,21 +514,6 @@
 @section('content')
 <div class="auto-wrapper">
 
-    {{-- Alert Messages --}}
-    @if(session('success'))
-        <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:14px; padding:1rem 1.25rem; color:#15803d; font-size:0.86rem; font-weight:700; display:flex; align-items:center; gap:0.6rem;">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div style="background:#fef2f2; border:1.5px solid #fca5a5; border-radius:14px; padding:1rem 1.25rem; color:#b91c1c; font-size:0.86rem; font-weight:700; display:flex; align-items:center; gap:0.6rem;">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            {{ session('error') }}
-        </div>
-    @endif
-
     {{-- Hero Intro Banner --}}
     <div class="auto-hero">
         <div class="auto-hero-header">
