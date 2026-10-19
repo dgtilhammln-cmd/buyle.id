@@ -14,27 +14,16 @@
         font-family: 'Montserrat', sans-serif;
     }
 
-    /* ── Hero Banner ───────────────────────────────────────────── */
+    /* ── Hero Banner (Gradasi Hijau Segar Persis Image 3) ─────────────── */
     .auto-hero {
-        background: linear-gradient(135deg, #1eb349 0%, #16a34a 45%, #0f766e 100%);
+        background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
         border-radius: 20px;
         padding: 2rem 2.25rem;
         color: #ffffff;
         position: relative;
         overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        box-shadow: 0 10px 30px rgba(30, 179, 73, 0.22);
-    }
-
-    .auto-hero::before {
-        content: '';
-        position: absolute;
-        top: -60px;
-        right: -60px;
-        width: 240px;
-        height: 240px;
-        background: radial-gradient(circle, rgba(225, 48, 108, 0.35) 0%, rgba(225, 48, 108, 0) 70%);
-        pointer-events: none;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        box-shadow: 0 10px 30px rgba(30, 179, 73, 0.25);
     }
 
     .auto-hero-header {
@@ -62,22 +51,6 @@
         line-height: 1.6;
         max-width: 680px;
         font-weight: 500;
-    }
-
-    .auto-badge-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.35);
-        color: #ffffff;
-        font-size: 0.72rem;
-        font-weight: 800;
-        padding: 5px 12px;
-        border-radius: 999px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 0.75rem;
     }
 
     /* ── Metric Cards ──────────────────────────────────────────── */
@@ -108,6 +81,7 @@
         display: flex;
         align-items: center;
         gap: 1.1rem;
+        position: relative;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
@@ -143,13 +117,13 @@
         letter-spacing: 0.04em;
     }
 
-    /* ── Tab Bar Navigation ────────────────────────────────────── */
+    /* ── Tab Bar Navigation (Kapsul Khusus & Gradasi Image 3) ───── */
     .tab-bar-wrap {
         display: flex;
         align-items: center;
         background: #ffffff;
         padding: 6px;
-        border-radius: 16px;
+        border-radius: 999px;
         border: 1.5px solid #e2e8f0;
         gap: 6px;
         overflow-x: auto;
@@ -164,9 +138,10 @@
     .tab-btn {
         display: inline-flex;
         align-items: center;
-        gap: 0.6rem;
-        padding: 0.75rem 1.35rem;
-        border-radius: 12px;
+        position: relative;
+        gap: 0.55rem;
+        padding: 0.65rem 1.35rem;
+        border-radius: 999px;
         font-size: 0.84rem;
         font-weight: 700;
         color: #64748b;
@@ -184,9 +159,47 @@
     }
 
     .tab-btn.active {
-        background: linear-gradient(135deg, #1eb349 0%, #16a34a 100%);
+        background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%) !important;
         color: #ffffff !important;
-        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.32);
+        border-radius: 999px;
+        box-shadow: 0 4px 14px rgba(30, 179, 73, 0.35);
+    }
+
+    /* Badge Notifikasi Merah */
+    .tab-badge-notif {
+        position: absolute;
+        top: -4px;
+        right: 8px;
+        background: #ef4444;
+        color: #ffffff;
+        font-size: 0.65rem;
+        font-weight: 800;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 5px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #ffffff;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+    }
+
+    .card-badge-notif {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        background: #ef4444;
+        color: #ffffff;
+        font-size: 0.65rem;
+        font-weight: 800;
+        padding: 2px 8px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        border: 1.5px solid #ffffff;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35);
     }
 
     /* ── Main Panel Cards ──────────────────────────────────────── */
@@ -517,14 +530,10 @@
     {{-- Hero Intro Banner (2 Kolom Proporsional & Compact) --}}
     <div class="auto-hero">
         <div class="auto-hero-header" style="display:grid; grid-template-columns: 1.4fr 1fr; gap:1.5rem; align-items:center;">
-            {{-- Kolom 1: Informasi Engine --}}
+            {{-- Kolom 1: Informasi Engine (Tanpa Kapsul Meta) --}}
             <div>
-                <div class="auto-badge-pill" style="margin-bottom:0.5rem;">
-                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    Meta Graph API Integration
-                </div>
-                <h1 class="auto-hero-title" style="font-size:1.5rem; margin-bottom:0.35rem;">Buyle Automation Reply Engine</h1>
-                <p class="auto-hero-desc" style="font-size:0.86rem; line-height:1.5; color:#dcfce7;">
+                <h1 class="auto-hero-title" style="font-size:1.6rem; margin-bottom:0.4rem;">Buyle Automation Reply Engine</h1>
+                <p class="auto-hero-desc" style="font-size:0.88rem; line-height:1.55; color:#f0fdf4;">
                     Balas komentar Reels/Post otomatis dan kirim pesan DM tombol checkout langsung ke produk digital Anda.
                 </p>
             </div>
@@ -532,18 +541,18 @@
             {{-- Kolom 2: Box Akun Instagram Terintegrasi (Compact & Proporsional) --}}
             <div>
                 @if($account && $account->is_connected)
-                    <div style="background:rgba(255,255,255,0.95); backdrop-filter:blur(8px); border-radius:14px; padding:0.85rem 1.1rem; border:1.5px solid rgba(255,255,255,0.4); box-shadow:0 8px 20px rgba(0,0,0,0.06); color:#0f172a;">
+                    <div style="background:rgba(255,255,255,0.95); backdrop-filter:blur(8px); border-radius:16px; padding:0.9rem 1.15rem; border:1.5px solid rgba(255,255,255,0.4); box-shadow:0 8px 20px rgba(0,0,0,0.06); color:#0f172a;">
                         <div style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; flex-wrap:wrap;">
-                            <div style="display:flex; align-items:center; gap:0.65rem;">
+                            <div style="display:flex; align-items:center; gap:0.7rem;">
                                 @if($account->profile_picture_url)
-                                    <img src="{{ $account->profile_picture_url }}" alt="{{ $account->username }}" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:2px solid #16a34a; flex-shrink:0;">
+                                    <img src="{{ $account->profile_picture_url }}" alt="{{ $account->username }}" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid #16a34a; flex-shrink:0;">
                                 @else
-                                    <div style="width:38px; height:38px; border-radius:50%; background:#16a34a; color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:0.8rem; flex-shrink:0;">
+                                    <div style="width:40px; height:40px; border-radius:50%; background:#16a34a; color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:0.82rem; flex-shrink:0;">
                                         {{ strtoupper(substr($account->username ?: 'IG', 0, 2)) }}
                                     </div>
                                 @endif
                                 <div>
-                                    <div style="font-weight:800; font-size:0.88rem; color:#0f172a; display:flex; align-items:center; gap:0.4rem;">
+                                    <div style="font-weight:800; font-size:0.9rem; color:#0f172a; display:flex; align-items:center; gap:0.4rem;">
                                         {{ '@' . $account->username }}
                                         <span style="display:inline-flex; align-items:center; gap:0.25rem; background:#f0fdf4; color:#16a34a; font-size:0.68rem; font-weight:800; padding:2px 7px; border-radius:999px; border:1px solid #bbf7d0;">
                                             <span style="width:6px; height:6px; background:#16a34a; border-radius:50%;"></span> Aktif
@@ -557,7 +566,7 @@
 
                             <form action="{{ route('creator.automation-reply.disconnect') }}" method="POST" onsubmit="return confirm('Putuskan koneksi akun Instagram ini?')">
                                 @csrf
-                                <button type="submit" class="btn-danger-outline" style="padding:0.35rem 0.75rem; font-size:0.72rem; border-radius:8px;">
+                                <button type="submit" class="btn-danger-outline" style="padding:0.4rem 0.8rem; font-size:0.74rem; border-radius:999px;">
                                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                                     Putuskan
                                 </button>
@@ -565,12 +574,12 @@
                         </div>
                     </div>
                 @else
-                    <div style="background:rgba(255,255,255,0.95); backdrop-filter:blur(8px); border-radius:14px; padding:0.85rem 1.1rem; border:1.5px solid rgba(255,255,255,0.4); box-shadow:0 8px 20px rgba(0,0,0,0.06); color:#0f172a; display:flex; align-items:center; justify-content:space-between; gap:0.75rem; flex-wrap:wrap;">
+                    <div style="background:rgba(255,255,255,0.95); backdrop-filter:blur(8px); border-radius:16px; padding:0.9rem 1.15rem; border:1.5px solid rgba(255,255,255,0.4); box-shadow:0 8px 20px rgba(0,0,0,0.06); color:#0f172a; display:flex; align-items:center; justify-content:space-between; gap:0.75rem; flex-wrap:wrap;">
                         <div>
-                            <div style="font-weight:800; font-size:0.84rem; color:#0f172a;">Instagram Belum Terhubung</div>
+                            <div style="font-weight:800; font-size:0.86rem; color:#0f172a;">Instagram Belum Terhubung</div>
                             <div style="font-size:0.72rem; color:#64748b;">Hubungkan untuk mengaktifkan bot</div>
                         </div>
-                        <button type="button" onclick="openInstagramOAuth('{{ route('creator.automation-reply.connect') }}')" class="btn-ig-gradient" style="padding:0.45rem 1rem; font-size:0.78rem;">
+                        <button type="button" onclick="openInstagramOAuth('{{ route('creator.automation-reply.connect') }}')" class="btn-buyle-green" style="padding:0.5rem 1.1rem; font-size:0.78rem;">
                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                             Hubungkan Akun
                         </button>
@@ -583,6 +592,12 @@
     {{-- Metric Overview Cards --}}
     <div class="metric-grid">
         <div class="metric-card">
+            @if(!empty($unreadLogsCount) && $unreadLogsCount > 0)
+                <span class="card-badge-notif">
+                    <span style="width:6px; height:6px; background:#fff; border-radius:50%;"></span>
+                    {{ $unreadLogsCount }} Baru
+                </span>
+            @endif
             <div class="metric-icon-box" style="background:#f0fdf4; color:#16a34a;">
                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             </div>
@@ -623,7 +638,7 @@
         </div>
     </div>
 
-    {{-- Tab Bar Navigation (Tanpa Tab Akun yang redundan) --}}
+    {{-- Tab Bar Navigation (Pill / Kapsul & Gradasi Image 3) --}}
     @php
         $activeTab = request()->query('tab', 'campaigns');
     @endphp
@@ -639,6 +654,9 @@
         <a href="?tab=logs" class="tab-btn {{ $activeTab === 'logs' ? 'active' : '' }}">
             <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             Live Activity Log
+            @if(!empty($unreadLogsCount) && $unreadLogsCount > 0)
+                <span class="tab-badge-notif">{{ $unreadLogsCount > 99 ? '99+' : $unreadLogsCount }}</span>
+            @endif
         </a>
         <a href="?tab=simulation" class="tab-btn {{ $activeTab === 'simulation' ? 'active' : '' }}">
             <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>

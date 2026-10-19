@@ -75,13 +75,25 @@ class InstagramAutomationController extends Controller
 
         $logs = $logQuery->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
 
-        // 4. Produk Digital Kreator (untuk dropdown generator shortlink)
+        // 4. Hitung Notifikasi Merah Log Baru (Hilang saat tab dibuka)
+        $activeTab = $request->query('tab', 'campaigns');
+        if ($activeTab === 'logs') {
+            session(['last_viewed_automation_logs' => now()->toDateTimeString()]);
+            $unreadLogsCount = 0;
+        } else {
+            $lastViewed = session('last_viewed_automation_logs');
+            $unreadLogsCount = CampaignLog::where('user_id', $user->id)
+                ->when($lastViewed, fn($q) => $q->where('created_at', '>', $lastViewed))
+                ->count();
+        }
+
+        // 5. Produk Digital Kreator (untuk dropdown generator shortlink)
         $products = Product::where('seller_id', $user->id)
             ->where('is_active', true)
             ->orderBy('name', 'asc')
             ->get(['id', 'name', 'slug', 'price', 'product_type']);
 
-        // 5. Metrik & Analitik
+        // 6. Metrik & Analitik
         $totalComments = $campaigns->sum('total_comments_detected');
         $totalDms      = $campaigns->sum('total_dms_sent');
         $totalClicks   = $campaigns->sum('total_clicks');
@@ -99,7 +111,8 @@ class InstagramAutomationController extends Controller
             'totalClicks',
             'totalOrders',
             'totalRevenue',
-            'overallCtr'
+            'overallCtr',
+            'unreadLogsCount'
         ));
     }
 

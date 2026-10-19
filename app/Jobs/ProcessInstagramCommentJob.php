@@ -200,10 +200,23 @@ class ProcessInstagramCommentJob implements ShouldQueue
         // Siapkan Tombol Tautan Rapi (Button Card) jika terdapat link produk
         $buttonData = null;
         if (!empty($shortUrl)) {
-            $productTitle = $matchedCampaign->product->name ?? 'Akses Produk Digital';
+            $productTitle = $matchedCampaign->product->name ?? 'Produk Digital';
+            
+            // Bersihkan URL mentah dari dmText agar rapi dan tidak dobel dengan tombol
+            $cleanGreeting = trim(preg_replace('/https?:\/\/[^\s]+/', '', $dmText));
+            $cleanGreeting = trim(preg_replace('/\s+/', ' ', $cleanGreeting));
+
+            // Judul di atas: Sapaan ramah personal (font besar tebal)
+            $cardTitle = "Halo kak {$firstName}! ✨";
+            
+            // Keterangan di bawah: Keterangan ucapan / produk + ajakan klik
+            $cardSubtitle = !empty($cleanGreeting)
+                ? mb_substr($cleanGreeting, 0, 80)
+                : mb_substr("{$productTitle} — Ketuk tombol di bawah untuk klaim akses:", 0, 80);
+
             $buttonData = [
-                'card_title' => mb_substr($productTitle, 0, 75),
-                'subtitle'   => "Halo kak {$firstName}! Klik tombol di bawah untuk klaim akses:",
+                'card_title' => $cardTitle,
+                'subtitle'   => $cardSubtitle,
                 'title'      => 'Buka Akses 🚀',
                 'url'        => $shortUrl,
             ];
