@@ -197,9 +197,21 @@ class ProcessInstagramCommentJob implements ShouldQueue
             sleep($delay);
         }
 
+        // Siapkan Tombol Tautan Rapi (Button Card) jika terdapat link produk
+        $buttonData = null;
+        if (!empty($shortUrl)) {
+            $productTitle = $matchedCampaign->product->name ?? 'Akses Produk Digital';
+            $buttonData = [
+                'card_title' => mb_substr($productTitle, 0, 75),
+                'subtitle'   => "Halo kak {$firstName}! Klik tombol di bawah untuk klaim akses:",
+                'title'      => 'Buka Akses 🚀',
+                'url'        => $shortUrl,
+            ];
+        }
+
         // 1. Eksekusi Auto DM (Menggunakan Private Reply resmi Meta via comment_id)
         $businessId = $igAccount->page_id ?: $igAccount->instagram_business_id;
-        $dmResult = $apiService->sendDirectMessage($igAccount->access_token, $businessId, $senderIgId, $dmText, $commentId);
+        $dmResult = $apiService->sendDirectMessage($igAccount->access_token, $businessId, $senderIgId, $dmText, $commentId, $buttonData);
 
         $publicReplyText = null;
         // 2. Eksekusi Public Reply Comment jika aktif

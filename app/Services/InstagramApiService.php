@@ -183,16 +183,45 @@ class InstagramApiService
 
     /**
      * Kirim Auto DM ke inbox pengirim komentar Instagram.
-     * Menggunakan Private Reply (recipient.comment_id) resmi dari Meta Graph API.
+     * Mendukung Button Card interaktif resmi Meta Generic Template dengan fallback pesan teks.
      */
-    public function sendDirectMessage(string $accessToken, string $businessOrPageId, string $recipientId, string $messageText, ?string $commentId = null): array
+    public function sendDirectMessage(string $accessToken, string $businessOrPageId, string $recipientId, string $messageText, ?string $commentId = null, ?array $buttonData = null): array
     {
         $cleanToken = trim($accessToken);
         $bases = $this->getApiBases($cleanToken);
         $lastError = 'Gagal mengirim pesan DM.';
 
+        // Siapkan payload pesan: Jika ada buttonData, buat Generic Template Card
+        $messagePayload = ['text' => $messageText];
+        if (!empty($buttonData['url']) && !empty($buttonData['title'])) {
+            $btnTitle = mb_substr(trim($buttonData['title']), 0, 20);
+            $cardTitle = mb_substr(!empty($buttonData['card_title']) ? $buttonData['card_title'] : 'Akses Produk Digital', 0, 80);
+            $cardSubtitle = mb_substr(!empty($buttonData['subtitle']) ? $buttonData['subtitle'] : $messageText, 0, 80);
+
+            $messagePayload = [
+                'attachment' => [
+                    'type'    => 'template',
+                    'payload' => [
+                        'template_type' => 'generic',
+                        'elements'      => [
+                            [
+                                'title'    => $cardTitle,
+                                'subtitle' => $cardSubtitle,
+                                'buttons'  => [
+                                    [
+                                        'type'  => 'web_url',
+                                        'url'   => $buttonData['url'],
+                                        'title' => $btnTitle,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        }
+
         foreach ($bases as $base) {
-            // Coba endpoint /me/messages terlebih dahulu (paling kompatibel untuk Instagram User token)
             $endpoints = ["{$base}/me/messages"];
             if (!empty($businessOrPageId) && $businessOrPageId !== 'me') {
                 $endpoints[] = "{$base}/" . trim($businessOrPageId) . "/messages";
@@ -203,7 +232,7 @@ class InstagramApiService
                 if (!empty($commentId)) {
                     $response = Http::withToken($cleanToken)->post($url, [
                         'recipient' => ['comment_id' => $commentId],
-                        'message'   => ['text' => $messageText],
+                        'message'   => $messagePayload,
                     ]);
 
                     if ($response->successful()) {
@@ -213,10 +242,23 @@ class InstagramApiService
                         ];
                     }
 
+                    // Jika template gagal (misal dibatasi izin), coba fallback ke text biasa jika tadi pakai template
+                    if (isset($messagePayload['attachment'])) {
+                        $fallbackRes = Http::withToken($cleanToken)->post($url, [
+                            'recipient' => ['comment_id' => $commentId],
+                            'message'   => ['text' => $messageText],
+                        ]);
+                        if ($fallbackRes->successful()) {
+                            return [
+                                'success'    => true,
+                                'message_id' => $fallbackRes->json('message_id'),
+                            ];
+                        }
+                    }
+
                     $errMsg = $response->json('error.message', '');
                     $lastError = $errMsg ?: $lastError;
 
-                    // Jika error bukan karena token tidak bisa diparse, jangan langsung skip host
                     Log::warning('[IG DM] Private Reply attempt failed', [
                         'url'      => $url,
                         'response' => $response->json(),
@@ -227,7 +269,7 @@ class InstagramApiService
                 if (!empty($recipientId) && $recipientId !== 'unknown') {
                     $response = Http::withToken($cleanToken)->post($url, [
                         'recipient' => ['id' => $recipientId],
-                        'message'   => ['text' => $messageText],
+                        'message'   => $messagePayload,
                     ]);
 
                     if ($response->successful()) {
@@ -235,6 +277,20 @@ class InstagramApiService
                             'success'    => true,
                             'message_id' => $response->json('message_id'),
                         ];
+                    }
+
+                    // Fallback ke text
+                    if (isset($messagePayload['attachment'])) {
+                        $fallbackRes = Http::withToken($cleanToken)->post($url, [
+                            'recipient' => ['id' => $recipientId],
+                            'message'   => ['text' => $messageText],
+                        ]);
+                        if ($fallbackRes->successful()) {
+                            return [
+                                'success'    => true,
+                                'message_id' => $fallbackRes->json('message_id'),
+                            ];
+                        }
                     }
 
                     $errMsg = $response->json('error.message', '');

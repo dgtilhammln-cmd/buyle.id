@@ -13,7 +13,16 @@ class CreatorStoreController extends Controller
         // 1. Cari profil creator berdasarkan slug
         $profile = CreatorProfile::where('store_slug', $slug)
             ->with(['user'])
-            ->firstOrFail();
+            ->first();
+
+        // Jika bukan toko kreator, cek apakah ini ShortLink Automation (/c/{code})
+        if (!$profile) {
+            $shortLink = \App\Models\AutomationShortLink::where('code', $slug)->first();
+            if ($shortLink) {
+                return app(\App\Http\Controllers\ShortLinkRedirectController::class)->redirect($request, $slug);
+            }
+            abort(404);
+        }
 
         $seller = $profile->user;
         if (!$seller || $seller->role !== 'seller' || !$profile->isStoreActive()) {

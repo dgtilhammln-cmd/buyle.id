@@ -33,11 +33,47 @@ class InstagramAutomationController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // 3. Log Aktivitas
-        $logs = CampaignLog::where('user_id', $user->id)
-            ->with('campaign')
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
+        // 3. Log Aktivitas dengan Filter Dinamis
+        $logQuery = CampaignLog::where('user_id', $user->id)->with('campaign');
+
+        // Filter Campaign
+        if ($request->filled('campaign_id') && $request->campaign_id !== 'all') {
+            $logQuery->where('campaign_id', $request->campaign_id);
+        }
+
+        // Filter Status
+        if ($request->filled('status') && $request->status !== 'all') {
+            $logQuery->where('status', $request->status);
+        }
+
+        // Pencarian Username IG / Komentar / DM / Pesan Error
+        if ($request->filled('q')) {
+            $search = trim($request->q);
+            $cleanUser = ltrim($search, '@');
+            $logQuery->where(function ($q) use ($search, $cleanUser) {
+                $q->where('sender_username', 'like', "%{$cleanUser}%")
+                  ->orWhere('comment_text', 'like', "%{$search}%")
+                  ->orWhere('dm_text_sent', 'like', "%{$search}%")
+                  ->orWhere('error_message', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter Periode
+        if ($request->filled('period')) {
+            switch ($request->period) {
+                case 'today':
+                    $logQuery->whereDate('created_at', now()->today());
+                    break;
+                case 'week':
+                    $logQuery->where('created_at', '>=', now()->subDays(7));
+                    break;
+                case 'month':
+                    $logQuery->where('created_at', '>=', now()->subDays(30));
+                    break;
+            }
+        }
+
+        $logs = $logQuery->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
 
         // 4. Produk Digital Kreator (untuk dropdown generator shortlink)
         $products = Product::where('seller_id', $user->id)

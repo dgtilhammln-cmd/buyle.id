@@ -971,7 +971,7 @@
     {{-- TAB 4: LIVE ACTIVITY LOGS --}}
     @if($activeTab === 'logs')
     <div class="panel-card">
-        <div class="panel-card-header">
+        <div class="panel-card-header" style="flex-wrap:wrap; gap:0.75rem;">
             <div>
                 <h2 class="panel-title">
                     <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -979,11 +979,67 @@
                 </h2>
                 <p class="panel-subtitle">Rekam jejak real-time pengiriman Auto DM dan balasan komentar.</p>
             </div>
+
+            {{-- Filter Quick Reset jika sedang aktif filter --}}
+            @if(request()->filled('campaign_id') || request()->filled('status') || request()->filled('q') || request()->filled('period'))
+                <a href="?tab=logs" style="font-size:0.75rem; color:#dc2626; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:0.3rem;">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    Reset Filter
+                </a>
+            @endif
         </div>
+
+        {{-- FILTER BAR MODERN & COMPACT --}}
+        <form method="GET" action="{{ route('creator.automation-reply.index') }}" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.75rem 0.9rem; margin-bottom:1.15rem; display:flex; flex-wrap:wrap; gap:0.6rem; align-items:center;">
+            <input type="hidden" name="tab" value="logs">
+
+            {{-- Search Input --}}
+            <div style="flex:1; min-width:180px; position:relative;">
+                <input type="text" name="q" value="{{ request('q') }}" class="form-input" style="padding:0.45rem 0.75rem 0.45rem 2rem; font-size:0.78rem;" placeholder="Cari @username atau komentar...">
+                <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24" style="position:absolute; left:0.65rem; top:50%; transform:translateY(-50%);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+
+            {{-- Filter Campaign --}}
+            <div style="min-width:160px;">
+                <select name="campaign_id" class="form-select" style="padding:0.45rem 0.65rem; font-size:0.78rem;" onchange="this.form.submit()">
+                    <option value="all">Semua Campaign</option>
+                    @foreach($campaigns as $camp)
+                        <option value="{{ $camp->id }}" {{ request('campaign_id') == $camp->id ? 'selected' : '' }}>
+                            {{ Str::limit($camp->name, 24) }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Filter Status --}}
+            <div style="min-width:130px;">
+                <select name="status" class="form-select" style="padding:0.45rem 0.65rem; font-size:0.78rem;" onchange="this.form.submit()">
+                    <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>Semua Status</option>
+                    <option value="success" {{ request('status') == 'success' ? 'selected' : '' }}>✓ Terkirim</option>
+                    <option value="skipped" {{ request('status') == 'skipped' ? 'selected' : '' }}>— Dilewati</option>
+                    <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>✗ Gagal</option>
+                    <option value="rate_limited" {{ request('status') == 'rate_limited' ? 'selected' : '' }}>⚠ Rate Limited</option>
+                </select>
+            </div>
+
+            {{-- Filter Periode --}}
+            <div style="min-width:130px;">
+                <select name="period" class="form-select" style="padding:0.45rem 0.65rem; font-size:0.78rem;" onchange="this.form.submit()">
+                    <option value="" {{ empty(request('period')) ? 'selected' : '' }}>Semua Waktu</option>
+                    <option value="today" {{ request('period') == 'today' ? 'selected' : '' }}>Hari Ini</option>
+                    <option value="week" {{ request('period') == 'week' ? 'selected' : '' }}>7 Hari Terakhir</option>
+                    <option value="month" {{ request('period') == 'month' ? 'selected' : '' }}>30 Hari Terakhir</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-buyle-green" style="padding:0.45rem 0.85rem; font-size:0.78rem;">
+                Filter
+            </button>
+        </form>
 
         @if($logs->isEmpty())
             <div style="text-align:center; padding:3rem 1.5rem; background:#f8fafc; border-radius:16px;">
-                <p style="color:#64748b; font-size:0.88rem; margin:0;">Belum ada aktivitas interaksi komentar yang tercatat.</p>
+                <p style="color:#64748b; font-size:0.88rem; margin:0;">Tidak ditemukan aktivitas yang sesuai dengan filter pencarian.</p>
             </div>
         @else
             <div style="overflow-x:auto;">
@@ -991,6 +1047,7 @@
                     <thead>
                         <tr>
                             <th>Waktu</th>
+                            <th>Campaign</th>
                             <th>Pengirim Instagram</th>
                             <th>Komentar Masuk</th>
                             <th>Pesan DM Terkirim</th>
@@ -1002,6 +1059,16 @@
                         <tr>
                             <td style="white-space:nowrap; font-size:0.78rem; color:#64748b;">
                                 {{ $log->created_at->format('d M Y, H:i') }}
+                            </td>
+                            <td>
+                                @if($log->campaign)
+                                    <span style="font-weight:700; color:#0f172a; font-size:0.8rem;">{{ $log->campaign->name }}</span>
+                                    <div style="font-size:0.7rem; color:#64748b;">
+                                        {{ $log->campaign->target_type === 'all' ? 'Semua Post' : 'Post Spesifik' }}
+                                    </div>
+                                @else
+                                    <span style="color:#94a3b8; font-size:0.75rem; font-style:italic;">(Umum / Direct)</span>
+                                @endif
                             </td>
                             <td>
                                 <strong style="color:#0f172a;">{{ $log->sender_username ? '@' . $log->sender_username : 'User IG' }}</strong>
