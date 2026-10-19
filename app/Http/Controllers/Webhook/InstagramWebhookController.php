@@ -74,26 +74,29 @@ class InstagramWebhookController extends Controller
                 $field = $change['field'] ?? '';
                 $val   = $change['value'] ?? [];
 
-                // Filter event komentar
-                if ($field === 'comments') {
-                    $commentId = $val['id'] ?? null;
-                    $text      = $val['text'] ?? '';
+                // Filter event komentar (Instagram Graph API: 'comments', atau Page Webhook: 'feed')
+                if ($field === 'comments' || ($field === 'feed' && ($val['item'] ?? '') === 'comment' && ($val['verb'] ?? '') !== 'remove')) {
+                    $commentId = $val['id'] ?? ($val['comment_id'] ?? null);
+                    $text      = $val['text'] ?? ($val['message'] ?? '');
                     $from      = $val['from'] ?? [];
                     $media     = $val['media'] ?? [];
+                    $mediaId   = $media['id'] ?? ($val['post_id'] ?? null);
 
                     $jobPayload = [
                         'instagram_account_id' => $igAccount?->id,
                         'comment_id'           => $commentId,
-                        'media_id'             => $media['id'] ?? null,
+                        'media_id'             => $mediaId,
                         'sender_ig_id'         => $from['id'] ?? null,
-                        'sender_username'      => $from['username'] ?? 'User',
+                        'sender_username'      => $from['username'] ?? ($from['name'] ?? 'User'),
                         'comment_text'         => $text,
                     ];
 
-                    try {
-                        ProcessInstagramCommentJob::dispatchSync($jobPayload);
-                    } catch (\Exception $e) {
-                        Log::error('Error processing Instagram comment job', ['error' => $e->getMessage()]);
+                    if (!empty($commentId) && !empty($jobPayload['sender_ig_id'])) {
+                        try {
+                            ProcessInstagramCommentJob::dispatchSync($jobPayload);
+                        } catch (\Exception $e) {
+                            Log::error('Error processing Instagram comment job', ['error' => $e->getMessage()]);
+                        }
                     }
                 }
             }

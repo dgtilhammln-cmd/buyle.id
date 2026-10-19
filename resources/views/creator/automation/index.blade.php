@@ -743,6 +743,10 @@
                             </td>
                             <td>
                                 <div style="display:flex; align-items:center; gap:0.4rem;">
+                                    <button type="button" onclick="openEditModal({{ json_encode($camp) }})" class="btn-outline-gray" style="padding:0.4rem 0.65rem; font-size:0.75rem;" title="Edit Campaign">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                        Edit
+                                    </button>
                                     <form action="{{ route('creator.automation-reply.campaigns.destroy', $camp->id) }}" method="POST" onsubmit="return confirm('Hapus campaign ini? Data riwayat klik akan ikut terhapus.')">
                                         @csrf
                                         @method('DELETE')
@@ -761,38 +765,38 @@
     </div>
     @endif
 
-    {{-- TAB 2: BUAT CAMPAIGN BARU --}}
+    {{-- TAB 2: BUAT CAMPAIGN BARU (COMPACT DESIGN) --}}
     @if($activeTab === 'create')
-    <div class="panel-card">
-        <div class="panel-card-header">
+    <div class="panel-card" style="padding:1.25rem 1.5rem;">
+        <div class="panel-card-header" style="margin-bottom:1.15rem; padding-bottom:0.75rem;">
             <div>
-                <h2 class="panel-title">
-                    <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <h2 class="panel-title" style="font-size:1.1rem;">
+                    <svg width="20" height="20" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     Campaign Builder
                 </h2>
-                <p class="panel-subtitle">Konfigurasi alur auto-reply komentar &amp; Auto DM penawaran produk digital Anda.</p>
+                <p class="panel-subtitle" style="font-size:0.78rem;">Konfigurasi alur balasan komentar &amp; Auto DM instan.</p>
             </div>
         </div>
 
         <form action="{{ route('creator.automation-reply.campaigns.store') }}" method="POST">
             @csrf
 
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
-                <div class="form-group">
-                    <label class="form-label">Nama Campaign *</label>
-                    <input type="text" name="name" class="form-input" placeholder="Contoh: Promo Ebook E-Commerce Reels" required>
-                    <span class="form-desc">Identifikasi internal untuk tracking performa campaign Anda.</span>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.85rem 1.25rem;">
+                <div class="form-group" style="margin-bottom:0.85rem;">
+                    <label class="form-label" style="font-size:0.8rem;">Nama Campaign *</label>
+                    <input type="text" name="name" class="form-input" style="padding:0.65rem 0.85rem; font-size:0.82rem;" placeholder="Contoh: Promo Ebook Reels" required>
+                    <span class="form-desc" style="font-size:0.72rem;">Identifikasi internal untuk tracking performa.</span>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Tujuan Link di DM (Pilih Salah Satu)</label>
-                    <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
-                        <button type="button" id="btnLinkTypeProduct" onclick="setLinkType('product')" style="flex:1; padding:0.45rem 0.75rem; font-size:0.78rem; font-weight:700; border-radius:8px; border:1.5px solid #1eb349; background:#f0fdf4; color:#16a34a; cursor:pointer; font-family:'Montserrat',sans-serif;">Produk Digital Buyle</button>
-                        <button type="button" id="btnLinkTypeCustom" onclick="setLinkType('custom')" style="flex:1; padding:0.45rem 0.75rem; font-size:0.78rem; font-weight:700; border-radius:8px; border:1.5px solid #e2e8f0; background:#ffffff; color:#64748b; cursor:pointer; font-family:'Montserrat',sans-serif;">Link Eksternal / Custom</button>
+                <div class="form-group" style="margin-bottom:0.85rem;">
+                    <label class="form-label" style="font-size:0.8rem;">Tujuan Link di DM (Pilih Salah Satu)</label>
+                    <div style="display:flex; gap:0.4rem; margin-bottom:0.4rem;">
+                        <button type="button" id="btnLinkTypeProduct" onclick="setLinkType('product')" style="flex:1; padding:0.4rem 0.6rem; font-size:0.74rem; font-weight:700; border-radius:8px; border:1.5px solid #1eb349; background:#f0fdf4; color:#16a34a; cursor:pointer; font-family:'Montserrat',sans-serif;">Produk Digital Buyle</button>
+                        <button type="button" id="btnLinkTypeCustom" onclick="setLinkType('custom')" style="flex:1; padding:0.4rem 0.6rem; font-size:0.74rem; font-weight:700; border-radius:8px; border:1.5px solid #e2e8f0; background:#ffffff; color:#64748b; cursor:pointer; font-family:'Montserrat',sans-serif;">Link Eksternal / Custom</button>
                     </div>
 
                     <div id="wrapProductSelect">
-                        <select name="product_id" id="campaignProductSelect" class="form-select">
+                        <select name="product_id" id="campaignProductSelect" class="form-select" style="padding:0.65rem 0.85rem; font-size:0.82rem;">
                             <option value="">-- Pilih Produk Digital (Opsional) --</option>
                             @foreach($products as $prod)
                                 <option value="{{ $prod->id }}">
@@ -800,126 +804,101 @@
                                 </option>
                             @endforeach
                         </select>
-                        <span class="form-desc">Otomatis men-generate shortlink checkout instan ke variabel <code>{link_product}</code>.</span>
                     </div>
 
                     <div id="wrapCustomLink" style="display:none;">
-                        <input type="url" name="custom_link" id="campaignCustomLinkInput" class="form-input" placeholder="https://wa.me/... atau https://landingpage.com">
-                        <span class="form-desc">Masukkan tautan eksternal (WhatsApp, Google Drive, Shopee, dll). Otomatis disingkat & dilacak ke <code>{link_product}</code>.</span>
+                        <input type="url" name="custom_link" id="campaignCustomLinkInput" class="form-input" style="padding:0.65rem 0.85rem; font-size:0.82rem;" placeholder="https://wa.me/... atau https://landingpage.com">
                     </div>
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem; margin-top:0.5rem;">
-                <div class="form-group">
-                    <label class="form-label">Target Postingan Instagram *</label>
-                    <select name="target_type" id="targetTypeSelect" class="form-select" onchange="toggleSpecificMedia(this.value)">
-                        <option value="all">Semua Postingan &amp; Reels Instagram</option>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.85rem 1.25rem;">
+                <div class="form-group" style="margin-bottom:0.85rem;">
+                    <label class="form-label" style="font-size:0.8rem;">Target Postingan Instagram *</label>
+                    <select name="target_type" id="targetTypeSelect" class="form-select" style="padding:0.65rem 0.85rem; font-size:0.82rem;" onchange="toggleSpecificMedia(this.value)">
+                        <option value="all" selected>Semua Postingan &amp; Reels Instagram (Rekomendasi)</option>
                         <option value="specific">Postingan / Reels Tertentu Saja</option>
                     </select>
                 </div>
 
-                <div class="form-group" id="mediaIdWrap" style="display:none;">
-                    <label class="form-label">Link Reels / Postingan Instagram</label>
-                    <input type="text" name="target_media_id" class="form-input" placeholder="Contoh: https://www.instagram.com/reel/C8XYZ123/ atau Media ID">
-                    <span class="form-desc">Tempel link postingan Reels dari aplikasi Instagram yang ingin Anda pasangi balasan otomatis ini.</span>
+                <div class="form-group" style="margin-bottom:0.85rem;">
+                    <label class="form-label" style="font-size:0.8rem;">Trigger Kata Kunci (Koma pisahkan)</label>
+                    <input type="text" name="trigger_keywords" class="form-input" style="padding:0.65rem 0.85rem; font-size:0.82rem;" placeholder="Contoh: mau, info, link, harga, beli" value="mau, info, link, harga">
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns: 1fr 2fr; gap:1.5rem; margin-top:0.5rem;">
-                <div class="form-group">
-                    <label class="form-label">Tipe Pencocokan Kata Kunci *</label>
-                    <select name="trigger_type" class="form-select">
-                        <option value="contains">Contains (Komentar mengandung kata kunci)</option>
-                        <option value="exact">Exact Match (Hanya kata kunci persis)</option>
-                        <option value="any">Any Comment (Semua komentar yang masuk)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Trigger Keywords (Pisahkan dengan tanda koma)</label>
-                    <input type="text" name="trigger_keywords" class="form-input" placeholder="Contoh: mau, info, link, harga, spill, ebook, beli" value="mau, info, link, harga">
-                    <span class="form-desc">Pemicu bot untuk mengirimkan Auto DM saat kata kunci tersebut diketik oleh followers.</span>
-                </div>
+            <div class="form-group" id="mediaIdWrap" style="display:none; margin-bottom:0.85rem;">
+                <label class="form-label" style="font-size:0.8rem;">Link Reels / Postingan Instagram</label>
+                <input type="text" name="target_media_id" class="form-input" style="padding:0.65rem 0.85rem; font-size:0.82rem;" placeholder="Contoh: https://www.instagram.com/reel/C8XYZ123/ atau Media ID">
+                <span class="form-desc" style="font-size:0.72rem;">Tempel tautan Reels dari aplikasi Instagram Anda.</span>
             </div>
 
-            {{-- SPINTAX MULTI-VARIANT SECTION --}}
-            <div style="background:#f8fafc; border-radius:16px; border:1.5px solid #e2e8f0; padding:1.5rem; margin:1.5rem 0;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+            {{-- SPINTAX MULTI-VARIANT SECTION (COMPACT) --}}
+            <div style="background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0; padding:1rem 1.15rem; margin:0.85rem 0;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.4rem;">
                     <div>
-                        <h4 style="font-size:0.95rem; font-weight:800; color:#0f172a; margin:0;">
-                            ✨ Multi-Response Variant System (Spintax Engine)
+                        <h4 style="font-size:0.86rem; font-weight:800; color:#0f172a; margin:0;">
+                            ✨ Variasi Pesan DM (Spintax Engine)
                         </h4>
-                        <p style="font-size:0.78rem; color:#64748b; margin:2px 0 0;">
-                            Rotasi minimal 3 variasi pesan DM secara acak agar akun Anda terhindar dari deteksi spam Instagram.
+                        <p style="font-size:0.73rem; color:#64748b; margin:1px 0 0;">
+                            Rotasi acak pesan DM agar aman dari filter spam Instagram.
                         </p>
                     </div>
-                    <div>
-                        <span style="font-size:0.75rem; color:#475569; font-weight:700;">Variabel Tersedia:</span>
+                    <div style="font-size:0.72rem;">
+                        <span style="color:#475569; font-weight:700;">Tag:</span>
                         <span class="variable-tag">{first_name}</span>
-                        <span class="variable-tag">{username}</span>
                         <span class="variable-tag">{link_product}</span>
-                        <span class="variable-tag">{creator_name}</span>
                     </div>
                 </div>
 
-                <div id="spintaxVariantsContainer">
-                    <div class="variant-card">
-                        <label style="font-size:0.78rem; font-weight:800; color:#1e293b; margin-bottom:4px; display:block;">Variasi DM #1 (Default)</label>
-                        <textarea name="spintax_variants[]" rows="2" class="form-textarea" placeholder="Tulis template pesan...">Halo kak {first_name}! Link akses produk digital sudah kami kirimkan ya: {link_product}. Selamat belajar dan sukses selalu!</textarea>
+                <div id="spintaxVariantsContainer" style="display:flex; flex-direction:column; gap:0.5rem;">
+                    <div class="variant-card" style="padding:0.65rem 0.85rem; margin:0;">
+                        <label style="font-size:0.72rem; font-weight:800; color:#1e293b; margin-bottom:2px; display:block;">Variasi DM #1 (Default)</label>
+                        <textarea name="spintax_variants[]" rows="2" class="form-textarea" style="padding:0.5rem 0.75rem; font-size:0.8rem;" placeholder="Tulis template pesan...">Halo kak {first_name}! Link aksesnya sudah kami kirimkan ya: {link_product}. Selamat mencoba!</textarea>
                     </div>
 
-                    <div class="variant-card">
-                        <label style="font-size:0.78rem; font-weight:800; color:#1e293b; margin-bottom:4px; display:block;">Variasi DM #2</label>
-                        <textarea name="spintax_variants[]" rows="2" class="form-textarea" placeholder="Tulis template pesan...">Hai @{first_name}! Terima kasih sudah mampir di postingan kami. Kamu bisa langsung checkout di sini kak: {link_product} 🚀</textarea>
+                    <div class="variant-card" style="padding:0.65rem 0.85rem; margin:0;">
+                        <label style="font-size:0.72rem; font-weight:800; color:#1e293b; margin-bottom:2px; display:block;">Variasi DM #2</label>
+                        <textarea name="spintax_variants[]" rows="2" class="form-textarea" style="padding:0.5rem 0.75rem; font-size:0.8rem;" placeholder="Tulis template pesan...">Hai kak {first_name}! Terima kasih sudah mampir. Kamu bisa langsung cek tautannya di sini ya: {link_product} 🚀</textarea>
                     </div>
 
-                    <div class="variant-card">
-                        <label style="font-size:0.78rem; font-weight:800; color:#1e293b; margin-bottom:4px; display:block;">Variasi DM #3</label>
-                        <textarea name="spintax_variants[]" rows="2" class="form-textarea" placeholder="Tulis template pesan...">Spesial buat kamu kak {first_name}! Silakan klik link berikut untuk mendapatkan akses langsung: {link_product} ✨</textarea>
+                    <div class="variant-card" style="padding:0.65rem 0.85rem; margin:0;">
+                        <label style="font-size:0.72rem; font-weight:800; color:#1e293b; margin-bottom:2px; display:block;">Variasi DM #3</label>
+                        <textarea name="spintax_variants[]" rows="2" class="form-textarea" style="padding:0.5rem 0.75rem; font-size:0.8rem;" placeholder="Tulis template pesan...">Spesial buat kamu kak {first_name}! Klik link berikut untuk mendapatkan akses langsung: {link_product} ✨</textarea>
                     </div>
                 </div>
             </div>
 
             {{-- PUBLIC COMMENT REPLY & SAFETY GUARDS --}}
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
-                <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.25rem;">
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
-                        <label class="form-label" style="margin:0;">Balas Komentar Publik Otomatis</label>
-                        <input type="checkbox" name="auto_comment_enabled" value="1" id="publicReplyToggle" onchange="togglePublicReply(this.checked)" style="width:18px; height:18px; accent-color:#1eb349; cursor:pointer;" checked>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.85rem 1.25rem;">
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:0.95rem;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+                        <label class="form-label" style="margin:0; font-size:0.8rem;">Balas Komentar Publik Otomatis</label>
+                        <input type="checkbox" name="auto_comment_enabled" value="1" id="publicReplyToggle" onchange="togglePublicReply(this.checked)" style="width:16px; height:16px; accent-color:#1eb349; cursor:pointer;" checked>
                     </div>
-                    <span class="form-desc" style="display:block; margin-bottom:0.75rem;">
-                        Bot akan otomatis membalas komentar publik di postingan memberitahu bahwa link sudah dikirim ke DM.
-                    </span>
                     <div id="publicReplyBox">
-                        <textarea name="auto_comment_variants[]" rows="2" class="form-textarea" placeholder="Contoh: Cek DM ya kak! Link produk sudah meluncur 📩">Cek DM ya kak! Link produk sudah meluncur ke inbox kamu 📩✨</textarea>
+                        <textarea name="auto_comment_variants[]" rows="2" class="form-textarea" style="padding:0.5rem 0.75rem; font-size:0.8rem;" placeholder="Contoh: Cek DM ya kak! Link produk sudah meluncur 📩">Cek DM ya kak! Linknya sudah meluncur ke inbox kamu 📩✨</textarea>
                     </div>
                 </div>
 
-                <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.25rem;">
-                    <label class="form-label">🛡️ Anti-Spam Safety Layer &amp; Random Delay</label>
-                    <span class="form-desc" style="display:block; margin-bottom:1rem;">
-                        Jeda waktu acak antara penerimaan komentar dan pengiriman DM agar natural menyerupai interaksi manusia.
-                    </span>
-
-                    <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700; color:#0f172a; margin-bottom:0.4rem;">
-                        <span>Random Delay Slider:</span>
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:0.95rem;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:700; color:#0f172a; margin-bottom:0.35rem;">
+                        <span>Delay Pengiriman DM:</span>
                         <span id="delayDisplay" style="color:#1eb349; font-weight:800;">5 Detik</span>
                     </div>
                     <input type="range" name="delay_seconds" min="3" max="8" value="5" class="slider-range" oninput="document.getElementById('delayDisplay').innerText = this.value + ' Detik'">
 
-                    <div style="margin-top:1.25rem;">
-                        <label class="form-label">Daily Limit Guard (Max DM / Hari)</label>
-                        <input type="number" name="daily_limit" class="form-input" value="200" min="20" max="1000" style="padding:0.6rem 0.85rem;">
-                        <span class="form-desc">Default aman: 200 DM/hari per akun Instagram.</span>
+                    <div style="margin-top:0.75rem; display:flex; align-items:center; justify-content:space-between; gap:0.75rem;">
+                        <label class="form-label" style="margin:0; font-size:0.78rem;">Batas Max DM/Hari:</label>
+                        <input type="number" name="daily_limit" class="form-input" value="200" min="20" max="1000" style="width:110px; padding:0.4rem 0.6rem; font-size:0.8rem;">
                     </div>
                 </div>
             </div>
 
-            <div style="margin-top:2rem; display:flex; justify-content:flex-end; gap:0.75rem;">
-                <a href="?tab=campaigns" class="btn-outline-gray">Batal</a>
-                <button type="submit" class="btn-buyle-green">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+            <div style="margin-top:1.25rem; display:flex; justify-content:flex-end; gap:0.75rem;">
+                <a href="?tab=campaigns" class="btn-outline-gray" style="padding:0.55rem 1.15rem; font-size:0.82rem;">Batal</a>
+                <button type="submit" class="btn-buyle-green" style="padding:0.55rem 1.35rem; font-size:0.84rem;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
                     Simpan &amp; Aktifkan Campaign
                 </button>
             </div>
@@ -1115,6 +1094,127 @@
     @endif
 
 </div>
+
+{{-- ====== MODAL EDIT CAMPAIGN ====== --}}
+<div id="modalEditCampaign" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(15,23,42,0.55); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:1rem;">
+    <div style="background:#fff; border-radius:20px; width:100%; max-width:760px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,0.18); font-family:'Montserrat',sans-serif;">
+        {{-- Header --}}
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:1.25rem 1.5rem; border-bottom:1.5px solid #f1f5f9;">
+            <div style="display:flex; align-items:center; gap:0.6rem;">
+                <div style="width:36px; height:36px; background:#f0fdf4; color:#1eb349; border-radius:10px; display:flex; align-items:center; justify-content:center;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </div>
+                <div>
+                    <h3 style="margin:0; font-size:1rem; font-weight:800; color:#0f172a;">Edit Campaign</h3>
+                    <p id="editCampSubtitle" style="margin:0; font-size:0.75rem; color:#64748b;"></p>
+                </div>
+            </div>
+            <button type="button" onclick="closeEditModal()" style="background:none; border:none; cursor:pointer; color:#94a3b8; padding:0.25rem; border-radius:8px; line-height:1;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+
+        {{-- Form --}}
+        <form id="formEditCampaign" method="POST" style="padding:1.25rem 1.5rem;">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="_campaign_id" id="editCampId">
+
+            {{-- Row 1: Nama Campaign + Link Tujuan --}}
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem 1.1rem; margin-bottom:0.75rem;">
+                <div>
+                    <label style="font-size:0.79rem; font-weight:700; color:#1e293b; display:block; margin-bottom:0.3rem;">Nama Campaign *</label>
+                    <input type="text" name="name" id="editCampName" class="form-input" style="padding:0.6rem 0.85rem; font-size:0.82rem;" required>
+                </div>
+                <div>
+                    <label style="font-size:0.79rem; font-weight:700; color:#1e293b; display:block; margin-bottom:0.3rem;">Tujuan Link di DM</label>
+                    <div style="display:flex; gap:0.35rem; margin-bottom:0.35rem;">
+                        <button type="button" id="editBtnLinkTypeProduct" onclick="setEditLinkType('product')" style="flex:1; padding:0.38rem 0.55rem; font-size:0.73rem; font-weight:700; border-radius:8px; border:1.5px solid #1eb349; background:#f0fdf4; color:#16a34a; cursor:pointer; font-family:'Montserrat',sans-serif; transition:all .15s;">Produk Digital</button>
+                        <button type="button" id="editBtnLinkTypeCustom" onclick="setEditLinkType('custom')" style="flex:1; padding:0.38rem 0.55rem; font-size:0.73rem; font-weight:700; border-radius:8px; border:1.5px solid #e2e8f0; background:#fff; color:#64748b; cursor:pointer; font-family:'Montserrat',sans-serif; transition:all .15s;">Link Eksternal</button>
+                    </div>
+                    <div id="editWrapProductSelect">
+                        <select name="product_id" id="editCampProduct" class="form-select" style="padding:0.6rem 0.85rem; font-size:0.82rem;">
+                            <option value="">-- Tanpa Produk --</option>
+                            @foreach($products as $prod)
+                                <option value="{{ $prod->id }}">{{ $prod->name }} — Rp {{ number_format($prod->price,0,',','.') }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div id="editWrapCustomLink" style="display:none;">
+                        <input type="url" name="custom_link" id="editCampCustomLink" class="form-input" style="padding:0.6rem 0.85rem; font-size:0.82rem;" placeholder="https://wa.me/... atau https://...">
+                    </div>
+                </div>
+            </div>
+
+            {{-- Row 2: Target Postingan + Trigger Keywords --}}
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem 1.1rem; margin-bottom:0.75rem;">
+                <div>
+                    <label style="font-size:0.79rem; font-weight:700; color:#1e293b; display:block; margin-bottom:0.3rem;">Target Postingan *</label>
+                    <select name="target_type" id="editTargetType" class="form-select" style="padding:0.6rem 0.85rem; font-size:0.82rem;" onchange="toggleEditMediaIdWrap(this.value)">
+                        <option value="all">Semua Postingan & Reels (Rekomendasi)</option>
+                        <option value="specific">Postingan / Reels Tertentu</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.79rem; font-weight:700; color:#1e293b; display:block; margin-bottom:0.3rem;">Kata Kunci Pemicu</label>
+                    <input type="text" name="trigger_keywords" id="editCampKeywords" class="form-input" style="padding:0.6rem 0.85rem; font-size:0.82rem;" placeholder="mau, info, link, harga">
+                </div>
+            </div>
+
+            {{-- Media ID (tampil jika specific) --}}
+            <div id="editMediaIdWrap" style="display:none; margin-bottom:0.75rem;">
+                <label style="font-size:0.79rem; font-weight:700; color:#1e293b; display:block; margin-bottom:0.3rem;">Link / Media ID Reels Spesifik</label>
+                <input type="text" name="target_media_id" id="editCampMediaId" class="form-input" style="padding:0.6rem 0.85rem; font-size:0.82rem;" placeholder="https://www.instagram.com/reel/... atau Media ID">
+            </div>
+
+            {{-- Spintax Variants --}}
+            <div style="background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0; padding:0.9rem 1rem; margin-bottom:0.75rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.35rem;">
+                    <div>
+                        <h4 style="font-size:0.83rem; font-weight:800; color:#0f172a; margin:0;">✨ Variasi Pesan DM</h4>
+                        <p style="font-size:0.71rem; color:#64748b; margin:1px 0 0;">Tag: <span style="background:#e0f2fe;color:#0369a1;padding:1px 5px;border-radius:4px;font-size:0.7rem;font-weight:700;">{first_name}</span> <span style="background:#e0f2fe;color:#0369a1;padding:1px 5px;border-radius:4px;font-size:0.7rem;font-weight:700;">{link_product}</span></p>
+                    </div>
+                    <button type="button" onclick="addEditVariant()" style="font-size:0.72rem; font-weight:700; color:#1eb349; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:0.3rem 0.7rem; cursor:pointer; font-family:'Montserrat',sans-serif;">+ Tambah Varian</button>
+                </div>
+                <div id="editSpintaxContainer" style="display:flex; flex-direction:column; gap:0.45rem;">
+                    {{-- Diisi via JS --}}
+                </div>
+            </div>
+
+            {{-- Row 3: Balasan Komentar + Delay --}}
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem 1.1rem; margin-bottom:0.75rem;">
+                <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.4rem;">
+                        <label style="font-size:0.79rem; font-weight:700; color:#1e293b; margin:0;">Balas Komentar Publik</label>
+                        <input type="checkbox" name="auto_comment_enabled" id="editAutoCommentToggle" value="1" onchange="toggleEditPublicReply(this.checked)" style="width:15px;height:15px;accent-color:#1eb349;cursor:pointer;">
+                    </div>
+                    <div id="editPublicReplyBox">
+                        <textarea name="auto_comment_variants[]" id="editAutoCommentText" rows="2" class="form-textarea" style="padding:0.45rem 0.7rem; font-size:0.79rem;" placeholder="Cek DM ya kak! 📩"></textarea>
+                    </div>
+                </div>
+
+                <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:700; color:#0f172a; margin-bottom:0.3rem;">
+                        <span>Delay Pengiriman DM:</span>
+                        <span id="editDelayDisplay" style="color:#1eb349; font-weight:800;">5 Detik</span>
+                    </div>
+                    <input type="range" name="delay_seconds" id="editDelayRange" min="3" max="8" value="5" class="slider-range" oninput="document.getElementById('editDelayDisplay').innerText = this.value + ' Detik'">
+                    <input type="hidden" name="trigger_type" value="contains">
+                </div>
+            </div>
+
+            {{-- Action Buttons --}}
+            <div style="display:flex; justify-content:flex-end; gap:0.7rem; margin-top:0.5rem; padding-top:0.9rem; border-top:1px solid #f1f5f9;">
+                <button type="button" onclick="closeEditModal()" style="padding:0.5rem 1.1rem; font-size:0.82rem; border:1.5px solid #e2e8f0; background:#fff; color:#475569; border-radius:10px; cursor:pointer; font-family:'Montserrat',sans-serif; font-weight:700;">Batal</button>
+                <button type="submit" class="btn-buyle-green" style="padding:0.5rem 1.25rem; font-size:0.84rem;">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -1223,6 +1323,141 @@
         .catch(err => {
             previewBox.innerText = 'Gagal memproses simulasi.';
         });
+    }
+
+    /* ── EDIT CAMPAIGN MODAL ─────────────────────────────── */
+    const BASE_UPDATE_URL = "{{ route('creator.automation-reply.campaigns.update', '__ID__') }}";
+
+    function openEditModal(camp) {
+        const modal = document.getElementById('modalEditCampaign');
+        const form  = document.getElementById('formEditCampaign');
+
+        // Set form action URL
+        form.action = BASE_UPDATE_URL.replace('__ID__', camp.id);
+
+        // Subtitle
+        document.getElementById('editCampSubtitle').textContent = 'Campaign: ' + camp.name;
+
+        // Isi field dasar
+        document.getElementById('editCampId').value       = camp.id;
+        document.getElementById('editCampName').value     = camp.name || '';
+        document.getElementById('editCampKeywords').value = (camp.trigger_keywords || []).join(', ');
+        document.getElementById('editCampMediaId').value  = camp.target_media_id || '';
+
+        // Target type
+        const targetTypeEl = document.getElementById('editTargetType');
+        targetTypeEl.value = camp.target_type || 'all';
+        toggleEditMediaIdWrap(targetTypeEl.value);
+
+        // Delay
+        const delay = camp.delay_seconds || 5;
+        document.getElementById('editDelayRange').value = delay;
+        document.getElementById('editDelayDisplay').innerText = delay + ' Detik';
+
+        // Produk vs custom link
+        const productId  = camp.product_id;
+        const customLink = camp.custom_link || '';
+        if (productId) {
+            setEditLinkType('product');
+            document.getElementById('editCampProduct').value = productId;
+            document.getElementById('editCampCustomLink').value = '';
+        } else if (customLink) {
+            setEditLinkType('custom');
+            document.getElementById('editCampCustomLink').value = customLink;
+        } else {
+            setEditLinkType('product');
+            document.getElementById('editCampProduct').value = '';
+        }
+
+        // Spintax variants
+        const container = document.getElementById('editSpintaxContainer');
+        container.innerHTML = '';
+        const variants = camp.spintax_variants || [''];
+        variants.forEach(function(v, i) {
+            container.appendChild(buildVariantCard(v, i + 1));
+        });
+
+        // Auto comment
+        const autoCommentEnabled = camp.auto_comment_enabled === true || camp.auto_comment_enabled === 1;
+        document.getElementById('editAutoCommentToggle').checked = autoCommentEnabled;
+        toggleEditPublicReply(autoCommentEnabled);
+        const commentVariants = camp.auto_comment_variants || [];
+        document.getElementById('editAutoCommentText').value = commentVariants[0] || '';
+
+        // Show modal
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeEditModal() {
+        const modal = document.getElementById('modalEditCampaign');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    // Tutup modal jika klik di backdrop
+    document.getElementById('modalEditCampaign').addEventListener('click', function(e) {
+        if (e.target === this) closeEditModal();
+    });
+
+    // Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeEditModal();
+    });
+
+    function setEditLinkType(type) {
+        const wrapProduct = document.getElementById('editWrapProductSelect');
+        const wrapCustom  = document.getElementById('editWrapCustomLink');
+        const btnProduct  = document.getElementById('editBtnLinkTypeProduct');
+        const btnCustom   = document.getElementById('editBtnLinkTypeCustom');
+
+        if (type === 'product') {
+            wrapProduct.style.display = 'block';
+            wrapCustom.style.display  = 'none';
+            btnProduct.style.cssText += ';border:1.5px solid #1eb349;background:#f0fdf4;color:#16a34a;';
+            btnCustom.style.cssText  += ';border:1.5px solid #e2e8f0;background:#fff;color:#64748b;';
+        } else {
+            wrapProduct.style.display = 'none';
+            wrapCustom.style.display  = 'block';
+            btnCustom.style.cssText  += ';border:1.5px solid #1eb349;background:#f0fdf4;color:#16a34a;';
+            btnProduct.style.cssText += ';border:1.5px solid #e2e8f0;background:#fff;color:#64748b;';
+            // Kosongkan product_id agar tidak dikirim saat custom link dipilih
+            const prodSelect = document.getElementById('editCampProduct');
+            if (prodSelect) prodSelect.value = '';
+        }
+    }
+
+    function toggleEditMediaIdWrap(val) {
+        const wrap = document.getElementById('editMediaIdWrap');
+        if (wrap) wrap.style.display = (val === 'specific') ? 'block' : 'none';
+    }
+
+    function toggleEditPublicReply(checked) {
+        const box = document.getElementById('editPublicReplyBox');
+        if (box) box.style.display = checked ? 'block' : 'none';
+    }
+
+    let editVariantCount = 0;
+
+    function buildVariantCard(text, index) {
+        editVariantCount++;
+        const div = document.createElement('div');
+        div.style.cssText = 'background:#fff;border:1.5px dashed #cbd5e1;border-radius:12px;padding:0.6rem 0.8rem;position:relative;';
+        div.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <label style="font-size:0.71rem;font-weight:800;color:#1e293b;">Variasi DM #${index}</label>
+                ${index > 1 ? `<button type="button" onclick="this.closest('div[data-vc]').remove()" style="background:none;border:none;cursor:pointer;color:#ef4444;font-size:0.7rem;font-weight:700;padding:0;">✕ Hapus</button>` : ''}
+            </div>
+            <textarea name="spintax_variants[]" rows="2" style="width:100%;padding:0.45rem 0.7rem;border-radius:10px;border:1.5px solid #e2e8f0;font-size:0.79rem;font-family:'Montserrat',sans-serif;background:#f8fafc;color:#0f172a;resize:vertical;box-sizing:border-box;">${text}</textarea>
+        `;
+        div.setAttribute('data-vc', editVariantCount);
+        return div;
+    }
+
+    function addEditVariant() {
+        const container = document.getElementById('editSpintaxContainer');
+        const count = container.querySelectorAll('textarea').length + 1;
+        container.appendChild(buildVariantCard('', count));
     }
 </script>
 @endsection

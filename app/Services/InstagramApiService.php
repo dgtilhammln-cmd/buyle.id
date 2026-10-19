@@ -164,21 +164,73 @@ class InstagramApiService
 
     /**
      * Kirim Auto DM ke inbox pengirim komentar Instagram.
+     * Menggunakan Private Reply (recipient.comment_id) resmi dari Meta Graph API.
      */
-    public function sendDirectMessage(string $accessToken, string $businessOrPageId, string $recipientId, string $messageText): array
+    public function sendDirectMessage(string $accessToken, string $businessOrPageId, string $recipientId, string $messageText, ?string $commentId = null): array
     {
-        // 1. Coba endpoint Graph API messaging
-        $url = "{$this->apiBase}/{$businessOrPageId}/messages";
+        $targetId = !empty($businessOrPageId) ? trim($businessOrPageId) : 'me';
+        $url = "{$this->apiBase}/{$targetId}/messages";
         
+        // 1. Prioritas utama: Private Reply resmi Meta via comment_id
+        if (!empty($commentId)) {
+            $response = Http::withToken($accessToken)->post($url, [
+                'recipient' => ['comment_id' => $commentId],
+                'message'   => ['text' => $messageText],
+            ]);
+
+            if ($response->successful()) {
+                return [
+                    'success'    => true,
+                    'message_id' => $response->json('message_id'),
+                ];
+            }
+
+            // Coba fallback ke /me/messages jika targetId sebelumnya bukan 'me'
+            if ($targetId !== 'me') {
+                $fallbackMeUrl = "{$this->apiBase}/me/messages";
+                $fallbackMeRes = Http::withToken($accessToken)->post($fallbackMeUrl, [
+                    'recipient' => ['comment_id' => $commentId],
+                    'message'   => ['text' => $messageText],
+                ]);
+
+                if ($fallbackMeRes->successful()) {
+                    return [
+                        'success'    => true,
+                        'message_id' => $fallbackMeRes->json('message_id'),
+                    ];
+                }
+            }
+
+            Log::warning('Instagram Private Reply with comment_id failed, trying recipient id fallback', [
+                'comment_id' => $commentId,
+                'target_id'  => $targetId,
+                'response'   => $response->json(),
+            ]);
+        }
+
+        // 2. Fallback via recipient user ID jika user pernah chat sebelumnya
         $response = Http::withToken($accessToken)->post($url, [
             'recipient' => ['id' => $recipientId],
             'message'   => ['text' => $messageText],
         ]);
 
+        if ($response->failed() && $targetId !== 'me') {
+            $fallbackMeRes = Http::withToken($accessToken)->post("{$this->apiBase}/me/messages", [
+                'recipient' => ['id' => $recipientId],
+                'message'   => ['text' => $messageText],
+            ]);
+            if ($fallbackMeRes->successful()) {
+                return [
+                    'success'    => true,
+                    'message_id' => $fallbackMeRes->json('message_id'),
+                ];
+            }
+        }
+
         if ($response->failed()) {
             Log::warning('Instagram DM send failed', [
-                'url' => $url,
-                'status' => $response->status(),
+                'url'      => $url,
+                'status'   => $response->status(),
                 'response' => $response->json(),
             ]);
             return [

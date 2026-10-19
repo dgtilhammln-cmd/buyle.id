@@ -52,6 +52,21 @@ class ProcessInstagramCommentJob implements ShouldQueue
             return;
         }
 
+        // Deteksi jika yang berkomentar adalah akun IG kreator itu sendiri
+        if (!empty($igAccount->username) && strcasecmp($senderUsername, $igAccount->username) === 0) {
+            CampaignLog::create([
+                'user_id'         => $igAccount->user_id,
+                'sender_ig_id'    => $senderIgId,
+                'sender_username' => $senderUsername,
+                'comment_id'      => $commentId,
+                'media_id'        => $mediaId,
+                'comment_text'    => $commentText,
+                'status'          => 'skipped',
+                'error_message'   => 'Komentar dari akun pemilik sendiri (@' . $senderUsername . '). Meta melarang kirim DM otomatis ke akun sendiri. Harap uji coba menggunakan akun Instagram lain.',
+            ]);
+            return;
+        }
+
         // Cek rate limit harian
         if (!$igAccount->canSendDm()) {
             CampaignLog::create([
@@ -97,6 +112,16 @@ class ProcessInstagramCommentJob implements ShouldQueue
         }
 
         if (!$matchedCampaign) {
+            CampaignLog::create([
+                'user_id'         => $igAccount->user_id,
+                'sender_ig_id'    => $senderIgId,
+                'sender_username' => $senderUsername,
+                'comment_id'      => $commentId,
+                'media_id'        => $mediaId,
+                'comment_text'    => $commentText,
+                'status'          => 'skipped',
+                'error_message'   => 'Komentar masuk tidak cocok dengan kata kunci atau target campaign yang aktif.',
+            ]);
             return;
         }
 
@@ -145,9 +170,9 @@ class ProcessInstagramCommentJob implements ShouldQueue
             sleep($delay);
         }
 
-        // 1. Eksekusi Auto DM
+        // 1. Eksekusi Auto DM (Menggunakan Private Reply resmi Meta via comment_id)
         $businessId = $igAccount->page_id ?: $igAccount->instagram_business_id;
-        $dmResult = $apiService->sendDirectMessage($igAccount->access_token, $businessId, $senderIgId, $dmText);
+        $dmResult = $apiService->sendDirectMessage($igAccount->access_token, $businessId, $senderIgId, $dmText, $commentId);
 
         $publicReplyText = null;
         // 2. Eksekusi Public Reply Comment jika aktif

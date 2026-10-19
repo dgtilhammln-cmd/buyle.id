@@ -213,7 +213,7 @@ class InstagramAutomationController extends Controller
             'name'                  => 'required|string|max:150',
             'target_type'           => 'required|in:all,specific',
             'target_media_id'       => 'nullable|string|max:255',
-            'trigger_type'          => 'required|in:exact,contains,any',
+            'trigger_type'          => 'nullable|in:exact,contains,any',
             'trigger_keywords'      => 'nullable|string',
             'spintax_variants'      => 'required|array|min:1',
             'spintax_variants.*'    => 'required|string',
@@ -261,7 +261,7 @@ class InstagramAutomationController extends Controller
             'target_media_id'       => $request->target_media_id,
             'target_media_caption'  => $request->target_media_caption,
             'target_media_url'      => $request->target_media_url,
-            'trigger_type'          => $request->trigger_type,
+            'trigger_type'          => $request->input('trigger_type', 'contains') ?: 'contains',
             'trigger_keywords'      => $keywords,
             'spintax_variants'      => $spintaxVariants,
             'auto_comment_enabled'  => $request->boolean('auto_comment_enabled'),
@@ -303,9 +303,10 @@ class InstagramAutomationController extends Controller
             'name'                  => 'required|string|max:150',
             'target_type'           => 'required|in:all,specific',
             'target_media_id'       => 'nullable|string|max:255',
-            'trigger_type'          => 'required|in:exact,contains,any',
+            'trigger_type'          => 'nullable|in:exact,contains,any',
             'trigger_keywords'      => 'nullable|string',
             'spintax_variants'      => 'required|array|min:1',
+            'product_id'            => 'nullable|exists:products,id',
             'custom_link'           => 'nullable|string|max:1000',
             'delay_seconds'         => 'required|integer|min:3|max:8',
         ]);
@@ -325,7 +326,7 @@ class InstagramAutomationController extends Controller
             'name'                  => $request->name,
             'target_type'           => $request->target_type,
             'target_media_id'       => $request->target_media_id,
-            'trigger_type'          => $request->trigger_type,
+            'trigger_type'          => $request->input('trigger_type', 'contains') ?: 'contains',
             'trigger_keywords'      => $keywords,
             'spintax_variants'      => $spintaxVariants,
             'auto_comment_enabled'  => $request->boolean('auto_comment_enabled'),
@@ -335,6 +336,31 @@ class InstagramAutomationController extends Controller
             'delay_seconds'         => (int) $request->delay_seconds,
             'auto_follow_check'     => $request->boolean('auto_follow_check'),
         ]);
+
+        // Perbarui target url di short link jika ada
+        $targetUrl = null;
+        if ($campaign->product_id && $campaign->product) {
+            $targetUrl = route('products.show', $campaign->product->slug) . '?utm_source=instagram&utm_medium=auto_dm&utm_campaign=' . urlencode($campaign->name);
+        } elseif (!empty($campaign->custom_link)) {
+            $targetUrl = $campaign->custom_link;
+        }
+
+        if ($targetUrl) {
+            $shortLink = AutomationShortLink::where('campaign_id', $campaign->id)->first();
+            if ($shortLink) {
+                $shortLink->update([
+                    'product_id' => $campaign->product_id,
+                    'target_url' => $targetUrl,
+                ]);
+            } else {
+                AutomationShortLink::create([
+                    'campaign_id' => $campaign->id,
+                    'product_id'  => $campaign->product_id,
+                    'code'        => 'c' . Str::lower(Str::random(6)),
+                    'target_url'  => $targetUrl,
+                ]);
+            }
+        }
 
         return redirect()->route('creator.automation-reply.index', ['tab' => 'campaigns'])
             ->with('success', 'Campaign "' . $campaign->name . '" berhasil diperbarui!');
