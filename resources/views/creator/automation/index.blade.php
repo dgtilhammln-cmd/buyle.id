@@ -725,7 +725,7 @@
                             </td>
                             <td>
                                 @if($camp->product)
-                                    <span style="font-weight:700; color:#0f172a;">{{ $camp->product->title }}</span>
+                                    <span style="font-weight:700; color:#0f172a;">{{ $camp->product->name }}</span>
                                     <div style="font-size:0.74rem; color:#16a34a; font-weight:700;">
                                         Rp {{ number_format($camp->product->price, 0, ',', '.') }}
                                     </div>
@@ -797,7 +797,7 @@
                         <option value="">-- Pilih Produk Digital (Opsional) --</option>
                         @foreach($products as $prod)
                             <option value="{{ $prod->id }}">
-                                {{ $prod->title }} — Rp {{ number_format($prod->price, 0, ',', '.') }}
+                                {{ $prod->name }} — Rp {{ number_format($prod->price, 0, ',', '.') }}
                             </option>
                         @endforeach
                     </select>
@@ -1113,7 +1113,7 @@
                     <label class="form-label">Pilih Produk Digital untuk Uji Coba</label>
                     <select id="simProduct" class="form-select">
                         @foreach($products as $prod)
-                            <option value="{{ $prod->id }}">{{ $prod->title }} (Rp {{ number_format($prod->price, 0, ',', '.') }})</option>
+                            <option value="{{ $prod->id }}">{{ $prod->name }} (Rp {{ number_format($prod->price, 0, ',', '.') }})</option>
                         @endforeach
                     </select>
                 </div>

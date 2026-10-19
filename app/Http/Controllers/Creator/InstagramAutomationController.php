@@ -41,9 +41,9 @@ class InstagramAutomationController extends Controller
 
         // 4. Produk Digital Kreator (untuk dropdown generator shortlink)
         $products = Product::where('seller_id', $user->id)
-            ->where('status', 'active')
-            ->orderBy('title', 'asc')
-            ->get(['id', 'title', 'slug', 'price', 'product_type']);
+            ->where('is_active', true)
+            ->orderBy('name', 'asc')
+            ->get(['id', 'name', 'slug', 'price', 'product_type']);
 
         // 5. Metrik & Analitik
         $totalComments = $campaigns->sum('total_comments_detected');
