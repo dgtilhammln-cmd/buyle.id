@@ -721,6 +721,11 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/domain/checkout', [\App\Http\Controllers\Creator\CreatorDomainController::class, 'checkout'])->name('domain.checkout')->middleware('throttle:checkout-limit');
 });
 
+// Meta Compliance Legal Pages
+Route::view('/privacy-policy', 'legal.privacy')->name('legal.privacy');
+Route::view('/terms-of-service', 'legal.privacy')->name('legal.terms');
+Route::view('/data-deletion', 'legal.privacy')->name('legal.data-deletion');
+
 // Shortcut OAuth callback
 Route::get('/auth/instagram/callback', function () {
     return redirect()->route('creator.automation-reply.callback', request()->all());
