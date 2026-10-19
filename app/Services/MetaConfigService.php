@@ -35,7 +35,7 @@ class MetaConfigService
      */
     public static function getGraphVersion(): string
     {
-        return (string) Setting::get('instagram_graph_version', 'v19.0');
+        return (string) Setting::get('instagram_graph_version', 'v26.0');
     }
 
     /**
