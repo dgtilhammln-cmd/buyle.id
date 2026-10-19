@@ -533,7 +533,194 @@
         background: #e2e8f0;
         cursor: pointer;
     }
+    /* ── Custom Product Image Dropdown ─────────────────────── */
+    .prod-dropdown {
+        position: relative;
+        width: 100%;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .prod-dropdown-trigger {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.6rem 0.85rem;
+        background: #fff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        min-height: 44px;
+        box-sizing: border-box;
+    }
+
+    .prod-dropdown-trigger:hover {
+        border-color: #1eb349;
+        box-shadow: 0 0 0 3px rgba(30,179,73,0.08);
+    }
+
+    .prod-dropdown.open .prod-dropdown-trigger {
+        border-color: #1eb349;
+        border-radius: 12px 12px 0 0;
+        box-shadow: 0 0 0 3px rgba(30,179,73,0.08);
+    }
+
+    .prod-dd-thumb {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .prod-dd-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .prod-dd-label {
+        flex: 1;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #334155;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .prod-dd-chevron {
+        flex-shrink: 0;
+        transition: transform 0.2s;
+    }
+
+    .prod-dropdown.open .prod-dd-chevron {
+        transform: rotate(180deg);
+    }
+
+    .prod-dropdown-list {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0; right: 0;
+        background: #fff;
+        border: 1.5px solid #1eb349;
+        border-top: none;
+        border-radius: 0 0 12px 12px;
+        max-height: 260px;
+        overflow-y: auto;
+        z-index: 9999;
+        box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+    }
+
+    .prod-dropdown.open .prod-dropdown-list {
+        display: block;
+        animation: ddFadeIn 0.12s ease;
+    }
+
+    @keyframes ddFadeIn {
+        from { opacity: 0; transform: translateY(-4px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .prod-dd-item {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.6rem 0.85rem;
+        cursor: pointer;
+        transition: background 0.1s;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .prod-dd-item:last-child {
+        border-bottom: none;
+        border-radius: 0 0 10px 10px;
+    }
+
+    .prod-dd-item:hover {
+        background: #f0fdf4;
+    }
+
+    .prod-dd-item.selected {
+        background: #f0fdf4;
+    }
+
+    .prod-dd-item-thumb {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .prod-dd-item-thumb.empty {
+        background: #f1f5f9;
+    }
+
+    .prod-dd-item-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .prod-dd-item-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .prod-dd-item-name {
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #0f172a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .prod-dd-item-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-top: 2px;
+    }
+
+    .prod-dd-badge {
+        font-size: 0.62rem;
+        font-weight: 800;
+        padding: 1px 6px;
+        border-radius: 4px;
+        background: #f0fdf4;
+        color: #16a34a;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .prod-dd-price {
+        font-size: 0.74rem;
+        font-weight: 700;
+        color: #1eb349;
+    }
+
+    /* Scrollbar styling for dropdown list */
+    .prod-dropdown-list::-webkit-scrollbar { width: 4px; }
+    .prod-dropdown-list::-webkit-scrollbar-track { background: #f8fafc; }
+    .prod-dropdown-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .prod-dropdown-list::-webkit-scrollbar-thumb:hover { background: #1eb349; }
 </style>
+
 @endsection
 
 @section('content')
@@ -874,14 +1061,52 @@
                     </div>
 
                     <div id="wrapProductSelect">
-                        <select name="product_id" id="campaignProductSelect" class="form-select" style="padding:0.65rem 0.85rem; font-size:0.82rem;" onchange="updateProductPreview(this.value, 'create')">
-                            <option value="">-- Pilih Produk Digital (Opsional) --</option>
-                            @foreach($products as $prod)
-                                <option value="{{ $prod->id }}">
-                                    {{ $prod->name }} — Rp {{ number_format($prod->price, 0, ',', '.') }}
-                                </option>
-                            @endforeach
-                        </select>
+                        {{-- CUSTOM IMAGE DROPDOWN CREATE --}}
+                        <input type="hidden" name="product_id" id="campaignProductSelect" value="">
+                        <div class="prod-dropdown" id="prodDropCreate">
+                            <div class="prod-dropdown-trigger" onclick="toggleProdDropdown('prodDropCreate')" id="prodDropCreateTrigger">
+                                <div class="prod-dd-thumb" id="prodDropCreateThumb">
+                                    <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                </div>
+                                <span class="prod-dd-label" id="prodDropCreateLabel">-- Pilih Produk Digital (Opsional) --</span>
+                                <svg class="prod-dd-chevron" width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                            </div>
+                            <div class="prod-dropdown-list" id="prodDropCreateList">
+                                <div class="prod-dd-item" onclick="selectProdDropdown('prodDropCreate', '', null, 'create')">
+                                    <div class="prod-dd-item-thumb empty">
+                                        <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                    </div>
+                                    <span style="font-size:0.8rem; color:#94a3b8; font-style:italic;">Tanpa Produk (Link Kosong)</span>
+                                </div>
+                                @foreach($products as $prod)
+                                    @php
+                                        $pImg = null;
+                                        if ($prod->image) {
+                                            $pImg = \Illuminate\Support\Str::startsWith($prod->image, ['http://','https://'])
+                                                ? $prod->image
+                                                : asset('storage/' . $prod->image);
+                                        }
+                                        $pFmt = 'Rp ' . number_format($prod->sale_price ?: $prod->price, 0, ',', '.');
+                                    @endphp
+                                    <div class="prod-dd-item" onclick="selectProdDropdown('prodDropCreate', '{{ $prod->id }}', {name:'{{ addslashes($prod->name) }}',price_format:'{{ $pFmt }}',type:'{{ $prod->product_type ?? 'Digital' }}',image_url:'{{ $pImg }}'}, 'create')">
+                                        <div class="prod-dd-item-thumb">
+                                            @if($pImg)
+                                                <img src="{{ $pImg }}" alt="" loading="lazy">
+                                            @else
+                                                <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                            @endif
+                                        </div>
+                                        <div class="prod-dd-item-info">
+                                            <div class="prod-dd-item-name">{{ $prod->name }}</div>
+                                            <div class="prod-dd-item-meta">
+                                                <span class="prod-dd-badge">{{ $prod->product_type ?? 'Digital' }}</span>
+                                                <span class="prod-dd-price">{{ $pFmt }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
 
                         {{-- LIVE PRODUCT PHOTO PREVIEW CARD --}}
                         <div id="productPreviewCard" style="display:none; margin-top:0.6rem; padding:0.65rem 0.85rem; background:#ffffff; border:1.5px solid #dcfce7; border-radius:12px; align-items:center; gap:0.75rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
@@ -1279,12 +1504,52 @@
                         <button type="button" id="editBtnLinkTypeCustom" onclick="setEditLinkType('custom')" style="flex:1; padding:0.38rem 0.55rem; font-size:0.73rem; font-weight:700; border-radius:8px; border:1.5px solid #e2e8f0; background:#fff; color:#64748b; cursor:pointer; font-family:'Montserrat',sans-serif; transition:all .15s;">Link Eksternal</button>
                     </div>
                     <div id="editWrapProductSelect">
-                        <select name="product_id" id="editCampProduct" class="form-select" style="padding:0.6rem 0.85rem; font-size:0.82rem;" onchange="updateProductPreview(this.value, 'edit')">
-                            <option value="">-- Tanpa Produk --</option>
-                            @foreach($products as $prod)
-                                <option value="{{ $prod->id }}">{{ $prod->name }} — Rp {{ number_format($prod->price,0,',','.') }}</option>
-                            @endforeach
-                        </select>
+                        {{-- CUSTOM IMAGE DROPDOWN EDIT --}}
+                        <input type="hidden" name="product_id" id="editCampProduct" value="">
+                        <div class="prod-dropdown" id="prodDropEdit">
+                            <div class="prod-dropdown-trigger" onclick="toggleProdDropdown('prodDropEdit')" id="prodDropEditTrigger">
+                                <div class="prod-dd-thumb" id="prodDropEditThumb">
+                                    <svg width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                </div>
+                                <span class="prod-dd-label" id="prodDropEditLabel">-- Tanpa Produk --</span>
+                                <svg class="prod-dd-chevron" width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                            </div>
+                            <div class="prod-dropdown-list" id="prodDropEditList">
+                                <div class="prod-dd-item" onclick="selectProdDropdown('prodDropEdit', '', null, 'edit')">
+                                    <div class="prod-dd-item-thumb empty">
+                                        <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                    </div>
+                                    <span style="font-size:0.8rem; color:#94a3b8; font-style:italic;">Tanpa Produk (Link Kosong)</span>
+                                </div>
+                                @foreach($products as $prod)
+                                    @php
+                                        $pImg2 = null;
+                                        if ($prod->image) {
+                                            $pImg2 = \Illuminate\Support\Str::startsWith($prod->image, ['http://','https://'])
+                                                ? $prod->image
+                                                : asset('storage/' . $prod->image);
+                                        }
+                                        $pFmt2 = 'Rp ' . number_format($prod->sale_price ?: $prod->price, 0, ',', '.');
+                                    @endphp
+                                    <div class="prod-dd-item" onclick="selectProdDropdown('prodDropEdit', '{{ $prod->id }}', {name:'{{ addslashes($prod->name) }}',price_format:'{{ $pFmt2 }}',type:'{{ $prod->product_type ?? 'Digital' }}',image_url:'{{ $pImg2 }}'}, 'edit')">
+                                        <div class="prod-dd-item-thumb">
+                                            @if($pImg2)
+                                                <img src="{{ $pImg2 }}" alt="" loading="lazy">
+                                            @else
+                                                <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                            @endif
+                                        </div>
+                                        <div class="prod-dd-item-info">
+                                            <div class="prod-dd-item-name">{{ $prod->name }}</div>
+                                            <div class="prod-dd-item-meta">
+                                                <span class="prod-dd-badge">{{ $prod->product_type ?? 'Digital' }}</span>
+                                                <span class="prod-dd-price">{{ $pFmt2 }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
 
                         {{-- LIVE PRODUCT PHOTO PREVIEW CARD (EDIT) --}}
                         <div id="editProductPreviewCard" style="display:none; margin-top:0.6rem; padding:0.65rem 0.85rem; background:#ffffff; border:1.5px solid #dcfce7; border-radius:12px; align-items:center; gap:0.75rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
