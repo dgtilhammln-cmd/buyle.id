@@ -800,9 +800,9 @@
                 </div>
 
                 <div class="form-group" id="mediaIdWrap" style="display:none;">
-                    <label class="form-label">Instagram Media ID</label>
-                    <input type="text" name="target_media_id" class="form-input" placeholder="Contoh: 18029384819284712">
-                    <span class="form-desc">Dapatkan Media ID dari Graph API atau URL postingan Anda.</span>
+                    <label class="form-label">Link Reels / Postingan Instagram</label>
+                    <input type="text" name="target_media_id" class="form-input" placeholder="Contoh: https://www.instagram.com/reel/C8XYZ123/ atau Media ID">
+                    <span class="form-desc">Tempel link postingan Reels dari aplikasi Instagram yang ingin Anda pasangi balasan otomatis ini.</span>
                 </div>
             </div>
 
@@ -930,30 +930,18 @@
                     @endif
                     <div>
                         <h3 class="acc-handle">
-                            @ {{ $account->username }}
-                            <span style="display:inline-flex; align-items:center; gap:0.3rem; background:#f0fdf4; color:#16a34a; font-size:0.7rem; padding:3px 9px; border-radius:999px; border:1px solid #bbf7d0;">
-                                <span style="width:6px; height:6px; background:#16a34a; border-radius:50%;"></span> Terhubung
+                            {{ '@' . $account->username }}
+                            <span style="display:inline-flex; align-items:center; gap:0.35rem; background:#f0fdf4; color:#16a34a; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:999px; border:1px solid #bbf7d0;">
+                                <span style="width:7px; height:7px; background:#16a34a; border-radius:50%; box-shadow:0 0 6px rgba(22,163,74,0.6);"></span> Terhubung &amp; Aktif
                             </span>
                         </h3>
-                        <p class="acc-meta">
-                            Tipe: <strong>{{ $account->account_type }}</strong> • ID Halaman: <code>{{ $account->page_id ?? '-' }}</code>
-                        </p>
-                        <p class="acc-meta">
-                            Masa Berlaku Token: <strong>{{ $account->daysUntilTokenExpires() }} hari lagi</strong> 
-                            ({{ $account->token_expires_at ? $account->token_expires_at->format('d M Y') : '60 Hari' }})
+                        <p class="acc-meta" style="color:#64748b; font-size:0.82rem; margin-top:4px; line-height:1.4;">
+                            Otomatisasi balasan komentar &amp; DM sudah aktif dan siap bekerja untuk seluruh campaign Anda.
                         </p>
                     </div>
                 </div>
 
                 <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
-                    <form action="{{ route('creator.automation-reply.refresh-token') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn-outline-gray" title="Perpanjang 60 hari">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-                            Refresh Token
-                        </button>
-                    </form>
-
                     <form action="{{ route('creator.automation-reply.disconnect') }}" method="POST" onsubmit="return confirm('Yakin ingin memutuskan koneksi akun Instagram ini?')">
                         @csrf
                         <button type="submit" class="btn-danger-outline">
@@ -961,18 +949,6 @@
                             Putuskan Koneksi
                         </button>
                     </form>
-                </div>
-            </div>
-
-            {{-- SCOPES VERIFIED --}}
-            <div style="margin-top:1.5rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.25rem;">
-                <h4 style="font-size:0.86rem; font-weight:800; color:#0f172a; margin:0 0 0.5rem;">5 Izin Resmi Meta Graph API Terverifikasi:</h4>
-                <div class="scopes-wrap">
-                    <span class="scope-chip">✓ instagram_basic</span>
-                    <span class="scope-chip">✓ instagram_manage_messages (Auto DM)</span>
-                    <span class="scope-chip">✓ instagram_manage_comments (Auto Public Reply)</span>
-                    <span class="scope-chip">✓ instagram_manage_insights (Conversion Tracking)</span>
-                    <span class="scope-chip">✓ instagram_content_publish (Auto Schedule)</span>
                 </div>
             </div>
         @else
@@ -990,20 +966,6 @@
                 </button>
             </div>
         @endif
-
-        {{-- WEBHOOK URL INFO BOX --}}
-        <div style="margin-top:1.5rem; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:16px; padding:1.25rem;">
-            <div style="display:flex; align-items:center; gap:0.6rem; color:#166534; font-weight:800; font-size:0.86rem; margin-bottom:0.4rem;">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                Endpoint Webhook Meta Developers:
-            </div>
-            <p style="font-size:0.8rem; color:#15803d; margin:0 0 0.5rem;">
-                Endpoint ini digunakan untuk menerima event komentar real-time dari Meta:
-            </p>
-            <code style="display:block; background:#ffffff; border:1px solid #bbf7d0; padding:0.6rem 0.9rem; border-radius:10px; font-size:0.82rem; color:#0f172a; word-break:break-all;">
-                {{ url('/api/webhooks/instagram') }}
-            </code>
-        </div>
     </div>
     @endif
 
