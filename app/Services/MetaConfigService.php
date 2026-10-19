@@ -11,7 +11,7 @@ class MetaConfigService
      */
     public static function getAppId(): string
     {
-        return (string) Setting::get('instagram_app_id', '1601973478071042');
+        return (string) Setting::get('instagram_app_id', '1642881397242052');
     }
 
     /**
@@ -19,7 +19,7 @@ class MetaConfigService
      */
     public static function getAppSecret(): string
     {
-        return (string) Setting::get('instagram_app_secret', '0cfaccff27e5846187faf60c7b8a1d96');
+        return (string) Setting::get('instagram_app_secret', 'c5dfb3973596cac40db925898c0cfbfd');
     }
 
     /**
@@ -47,40 +47,37 @@ class MetaConfigService
     }
 
     /**
-     * 5 Scope Resmi Meta sesuai PRD
+     * 3 Scope Resmi Instagram API yang aktif di akun Meta Developer
      */
     public static function getRequiredScopes(): array
     {
         return [
-            'instagram_basic',
-            'instagram_manage_messages',
-            'instagram_manage_comments',
-            'instagram_manage_insights',
-            'instagram_content_publish',
-            'pages_show_list',
-            'pages_read_engagement',
-            'pages_manage_metadata',
-            'public_profile',
+            'instagram_business_basic',
+            'instagram_business_manage_messages',
+            'instagram_business_manage_comments',
         ];
     }
 
     /**
-     * Generate URL Meta OAuth Login Dialog
+     * Generate URL Meta OAuth Login Dialog (Instagram Login for Business)
      */
     public static function getOAuthDialogUrl(string $redirectUri, string $state = ''): string
     {
         $appId = self::getAppId();
         $scopes = implode(',', self::getRequiredScopes());
 
+        // Menggunakan endpoint resmi Instagram Authorize untuk Instagram API
         $params = http_build_query([
-            'client_id'     => $appId,
-            'redirect_uri'  => $redirectUri,
-            'scope'         => $scopes,
-            'response_type' => 'code',
-            'state'         => $state,
+            'enable_fb_login'      => '0',
+            'force_authentication' => '1',
+            'client_id'            => $appId,
+            'redirect_uri'         => $redirectUri,
+            'response_type'        => 'code',
+            'scope'                => $scopes,
+            'state'                => $state,
         ]);
 
-        return "https://www.facebook.com/dialog/oauth?" . $params;
+        return "https://www.instagram.com/oauth/authorize?" . $params;
     }
 
     /**
