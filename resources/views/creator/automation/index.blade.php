@@ -1021,10 +1021,19 @@
                                     <span style="display:inline-flex; align-items:center; gap:0.3rem; padding:3px 9px; border-radius:999px; background:#fefce8; color:#ca8a04; font-size:0.72rem; font-weight:800;">
                                         ⚠ Rate Limited
                                     </span>
+                                @elseif($log->status === 'skipped')
+                                    <span style="display:inline-flex; align-items:center; gap:0.3rem; padding:3px 9px; border-radius:999px; background:#f1f5f9; color:#64748b; font-size:0.72rem; font-weight:800;">
+                                        — Dilewati
+                                    </span>
                                 @else
                                     <span style="display:inline-flex; align-items:center; gap:0.3rem; padding:3px 9px; border-radius:999px; background:#fef2f2; color:#dc2626; font-size:0.72rem; font-weight:800;">
                                         ✗ Gagal
                                     </span>
+                                @endif
+                                @if(!empty($log->error_message) && $log->status !== 'success')
+                                    <div style="font-size:0.68rem; color:#94a3b8; margin-top:3px; max-width:180px; word-break:break-word; line-height:1.3;">
+                                        {{ Str::limit($log->error_message, 120) }}
+                                    </div>
                                 @endif
                             </td>
                         </tr>
