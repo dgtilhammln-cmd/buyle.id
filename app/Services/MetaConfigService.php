@@ -78,7 +78,7 @@ class MetaConfigService
             'state'         => $state,
         ]);
 
-        return "https://www.facebook.com/" . self::getGraphVersion() . "/dialog/oauth?" . $params;
+        return "https://www.facebook.com/dialog/oauth?" . $params;
     }
 
     /**
