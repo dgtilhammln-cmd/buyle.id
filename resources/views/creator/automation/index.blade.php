@@ -549,14 +549,14 @@
                         <span style="font-size:0.82rem; font-weight:700;">@ {{ $account->username }} Terhubung</span>
                     </div>
                 @else
-                    <a href="{{ route('creator.automation-reply.connect') }}" class="btn-ig-gradient">
+                    <button type="button" onclick="openInstagramOAuth('{{ route('creator.automation-reply.connect') }}')" class="btn-ig-gradient">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
                             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
                             <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
                         </svg>
                         Hubungkan Instagram Professional
-                    </a>
+                    </button>
                 @endif
             </div>
         </div>
@@ -999,10 +999,10 @@
                 <p style="font-size:0.88rem; color:#64748b; max-width:540px; margin:0 auto 1.75rem; line-height:1.6;">
                     Gunakan akun Instagram Professional (Creator atau Bisnis) yang sudah ditautkan ke Facebook Page agar fitur Auto DM dan Auto Public Reply dapat berjalan secara otomatis.
                 </p>
-                <a href="{{ route('creator.automation-reply.connect') }}" class="btn-ig-gradient" style="padding:0.95rem 2rem; font-size:0.92rem;">
+                <button type="button" onclick="openInstagramOAuth('{{ route('creator.automation-reply.connect') }}')" class="btn-ig-gradient" style="padding:0.95rem 2rem; font-size:0.92rem;">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                     Hubungkan Akun Instagram Professional
-                </a>
+                </button>
             </div>
         @endif
 
@@ -1152,6 +1152,38 @@
 
 @section('scripts')
 <script>
+    function openInstagramOAuth(connectUrl) {
+        const w = 620;
+        const h = 760;
+        const left = Math.round((window.screen.width - w) / 2);
+        const top = Math.round((window.screen.height - h) / 2);
+
+        // Fetch URL OAuth dari server via AJAX (supaya dashboard tidak ter-redirect)
+        fetch(connectUrl, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+            }
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('Gagal mengambil URL OAuth');
+            return res.json();
+        })
+        .then(data => {
+            if (!data.url) throw new Error('URL OAuth tidak tersedia');
+            window.open(
+                data.url,
+                'InstagramOAuth',
+                `width=${w},height=${h},top=${top},left=${left},scrollbars=yes,status=no,toolbar=no,menubar=no`
+            );
+        })
+        .catch(err => {
+            alert('Gagal membuka koneksi Instagram: ' + err.message);
+        });
+    }
+
     function toggleSpecificMedia(val) {
         const wrap = document.getElementById('mediaIdWrap');
         if (wrap) {

@@ -68,7 +68,8 @@ class InstagramAutomationController extends Controller
     }
 
     /**
-     * Redirect ke OAuth Dialog Meta
+     * Return URL OAuth Dialog Meta sebagai JSON (digunakan oleh JS popup window).
+     * Tidak melakukan redirect agar halaman dashboard tidak berpindah.
      */
     public function connect(Request $request)
     {
@@ -77,6 +78,12 @@ class InstagramAutomationController extends Controller
 
         $oauthUrl = MetaConfigService::getOAuthDialogUrl($redirectUri, $state);
 
+        // Jika request dari AJAX/fetch → return JSON
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json(['url' => $oauthUrl]);
+        }
+
+        // Fallback jika diakses langsung via browser (buka di tab baru)
         return redirect()->away($oauthUrl);
     }
 
@@ -133,13 +140,21 @@ class InstagramAutomationController extends Controller
                 $apiService->subscribeWebhooks($accountData['page_id'], $pageAccessToken);
             }
 
-            return redirect()->route('creator.automation-reply.index')
-                ->with('success', "Akun Instagram @{$account->username} berhasil dihubungkan!");
+            session()->flash('success', "Akun Instagram @{$account->username} berhasil dihubungkan!");
+            return view('creator.automation.oauth_finish', [
+                'success'  => true,
+                'message'  => "Akun Instagram @{$account->username} berhasil dihubungkan!",
+                'redirect' => route('creator.automation-reply.index', ['tab' => 'account']),
+            ]);
 
         } catch (\Exception $e) {
             Log::error('Instagram OAuth Callback Exception', ['message' => $e->getMessage()]);
-            return redirect()->route('creator.automation-reply.index')
-                ->with('error', 'Gagal menghubungkan Instagram: ' . $e->getMessage());
+            session()->flash('error', 'Gagal menghubungkan Instagram: ' . $e->getMessage());
+            return view('creator.automation.oauth_finish', [
+                'success'  => false,
+                'message'  => 'Gagal menghubungkan Instagram: ' . $e->getMessage(),
+                'redirect' => route('creator.automation-reply.index', ['tab' => 'account']),
+            ]);
         }
     }
 
