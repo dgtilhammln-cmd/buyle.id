@@ -180,7 +180,7 @@ class InstagramAutomationController extends Controller
             return view('creator.automation.oauth_finish', [
                 'success'  => true,
                 'message'  => "Akun Instagram @{$account->username} berhasil dihubungkan!",
-                'redirect' => route('creator.automation-reply.index', ['tab' => 'account']),
+                'redirect' => route('creator.automation-reply.index', ['tab' => 'campaigns']),
             ]);
 
         } catch (\Exception $e) {
@@ -189,7 +189,7 @@ class InstagramAutomationController extends Controller
             return view('creator.automation.oauth_finish', [
                 'success'  => false,
                 'message'  => 'Gagal menghubungkan Instagram: ' . $e->getMessage(),
-                'redirect' => route('creator.automation-reply.index', ['tab' => 'account']),
+                'redirect' => route('creator.automation-reply.index', ['tab' => 'campaigns']),
             ]);
         }
     }

@@ -514,34 +514,67 @@
 @section('content')
 <div class="auto-wrapper">
 
-    {{-- Hero Intro Banner --}}
+    {{-- Hero Intro Banner (2 Kolom Proporsional & Compact) --}}
     <div class="auto-hero">
-        <div class="auto-hero-header">
+        <div class="auto-hero-header" style="display:grid; grid-template-columns: 1.4fr 1fr; gap:1.5rem; align-items:center;">
+            {{-- Kolom 1: Informasi Engine --}}
             <div>
-                <div class="auto-badge-pill">
+                <div class="auto-badge-pill" style="margin-bottom:0.5rem;">
                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    Meta Graph API v26.0 Integration
+                    Meta Graph API Integration
                 </div>
-                <h1 class="auto-hero-title">Buyle Automation Reply Engine</h1>
-                <p class="auto-hero-desc">
-                    Ubah komentar di Postingan & Reels Instagram menjadi transaksi instan. Kirim Auto DM cerdas dengan variasi Spintax dan link checkout produk digital Buyle.id Anda.
+                <h1 class="auto-hero-title" style="font-size:1.5rem; margin-bottom:0.35rem;">Buyle Automation Reply Engine</h1>
+                <p class="auto-hero-desc" style="font-size:0.86rem; line-height:1.5; color:#dcfce7;">
+                    Balas komentar Reels/Post otomatis dan kirim pesan DM tombol checkout langsung ke produk digital Anda.
                 </p>
             </div>
+
+            {{-- Kolom 2: Box Akun Instagram Terintegrasi (Compact & Proporsional) --}}
             <div>
                 @if($account && $account->is_connected)
-                    <div style="display:flex; align-items:center; gap:0.75rem; background:rgba(255,255,255,0.18); padding:0.6rem 1.2rem; border-radius:999px; border:1px solid rgba(255,255,255,0.3);">
-                        <span style="width:10px; height:10px; background:#4ade80; border-radius:50%; box-shadow:0 0 8px #4ade80;"></span>
-                        <span style="font-size:0.82rem; font-weight:700;">@ {{ $account->username }} Terhubung</span>
+                    <div style="background:rgba(255,255,255,0.95); backdrop-filter:blur(8px); border-radius:14px; padding:0.85rem 1.1rem; border:1.5px solid rgba(255,255,255,0.4); box-shadow:0 8px 20px rgba(0,0,0,0.06); color:#0f172a;">
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; flex-wrap:wrap;">
+                            <div style="display:flex; align-items:center; gap:0.65rem;">
+                                @if($account->profile_picture_url)
+                                    <img src="{{ $account->profile_picture_url }}" alt="{{ $account->username }}" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:2px solid #16a34a; flex-shrink:0;">
+                                @else
+                                    <div style="width:38px; height:38px; border-radius:50%; background:#16a34a; color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:0.8rem; flex-shrink:0;">
+                                        {{ strtoupper(substr($account->username ?: 'IG', 0, 2)) }}
+                                    </div>
+                                @endif
+                                <div>
+                                    <div style="font-weight:800; font-size:0.88rem; color:#0f172a; display:flex; align-items:center; gap:0.4rem;">
+                                        {{ '@' . $account->username }}
+                                        <span style="display:inline-flex; align-items:center; gap:0.25rem; background:#f0fdf4; color:#16a34a; font-size:0.68rem; font-weight:800; padding:2px 7px; border-radius:999px; border:1px solid #bbf7d0;">
+                                            <span style="width:6px; height:6px; background:#16a34a; border-radius:50%;"></span> Aktif
+                                        </span>
+                                    </div>
+                                    <div style="font-size:0.72rem; color:#64748b; margin-top:1px;">
+                                        Otomatisasi Komentar &amp; DM Siap
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form action="{{ route('creator.automation-reply.disconnect') }}" method="POST" onsubmit="return confirm('Putuskan koneksi akun Instagram ini?')">
+                                @csrf
+                                <button type="submit" class="btn-danger-outline" style="padding:0.35rem 0.75rem; font-size:0.72rem; border-radius:8px;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                                    Putuskan
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 @else
-                    <button type="button" onclick="openInstagramOAuth('{{ route('creator.automation-reply.connect') }}')" class="btn-ig-gradient">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                        </svg>
-                        Hubungkan Instagram Professional
-                    </button>
+                    <div style="background:rgba(255,255,255,0.95); backdrop-filter:blur(8px); border-radius:14px; padding:0.85rem 1.1rem; border:1.5px solid rgba(255,255,255,0.4); box-shadow:0 8px 20px rgba(0,0,0,0.06); color:#0f172a; display:flex; align-items:center; justify-content:space-between; gap:0.75rem; flex-wrap:wrap;">
+                        <div>
+                            <div style="font-weight:800; font-size:0.84rem; color:#0f172a;">Instagram Belum Terhubung</div>
+                            <div style="font-size:0.72rem; color:#64748b;">Hubungkan untuk mengaktifkan bot</div>
+                        </div>
+                        <button type="button" onclick="openInstagramOAuth('{{ route('creator.automation-reply.connect') }}')" class="btn-ig-gradient" style="padding:0.45rem 1rem; font-size:0.78rem;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                            Hubungkan Akun
+                        </button>
+                    </div>
                 @endif
             </div>
         </div>
@@ -590,7 +623,7 @@
         </div>
     </div>
 
-    {{-- Tab Bar Navigation --}}
+    {{-- Tab Bar Navigation (Tanpa Tab Akun yang redundan) --}}
     @php
         $activeTab = request()->query('tab', 'campaigns');
     @endphp
@@ -602,10 +635,6 @@
         <a href="?tab=create" class="tab-btn {{ $activeTab === 'create' ? 'active' : '' }}">
             <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Buat Campaign Baru
-        </a>
-        <a href="?tab=account" class="tab-btn {{ $activeTab === 'account' ? 'active' : '' }}">
-            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-            Koneksi Akun Instagram
         </a>
         <a href="?tab=logs" class="tab-btn {{ $activeTab === 'logs' ? 'active' : '' }}">
             <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -906,69 +935,7 @@
     </div>
     @endif
 
-    {{-- TAB 3: KONEKSI AKUN INSTAGRAM --}}
-    @if($activeTab === 'account')
-    <div class="panel-card">
-        <div class="panel-card-header">
-            <div>
-                <h2 class="panel-title">
-                    <svg width="22" height="22" fill="none" stroke="#e1306c" stroke-width="2.2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                    Manajemen Koneksi Instagram Professional
-                </h2>
-                <p class="panel-subtitle">Hubungkan akun Instagram Creator atau Bisnis Anda dengan otentikasi resmi Meta OAuth 2.0.</p>
-            </div>
-        </div>
-
-        @if($account && $account->is_connected)
-            <div class="acc-widget">
-                <div class="acc-user-info">
-                    @if($account->profile_picture_url)
-                        <img src="{{ $account->profile_picture_url }}" alt="{{ $account->username }}" class="acc-avatar">
-                    @else
-                        <div class="acc-avatar-fallback">{{ strtoupper(substr($account->username ?: 'IG', 0, 2)) }}</div>
-                    @endif
-                    <div>
-                        <h3 class="acc-handle">
-                            {{ '@' . $account->username }}
-                            <span style="display:inline-flex; align-items:center; gap:0.35rem; background:#f0fdf4; color:#16a34a; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:999px; border:1px solid #bbf7d0;">
-                                <span style="width:7px; height:7px; background:#16a34a; border-radius:50%; box-shadow:0 0 6px rgba(22,163,74,0.6);"></span> Terhubung &amp; Aktif
-                            </span>
-                        </h3>
-                        <p class="acc-meta" style="color:#64748b; font-size:0.82rem; margin-top:4px; line-height:1.4;">
-                            Otomatisasi balasan komentar &amp; DM sudah aktif dan siap bekerja untuk seluruh campaign Anda.
-                        </p>
-                    </div>
-                </div>
-
-                <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
-                    <form action="{{ route('creator.automation-reply.disconnect') }}" method="POST" onsubmit="return confirm('Yakin ingin memutuskan koneksi akun Instagram ini?')">
-                        @csrf
-                        <button type="submit" class="btn-danger-outline">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                            Putuskan Koneksi
-                        </button>
-                    </form>
-                </div>
-            </div>
-        @else
-            <div style="text-align:center; padding:3.5rem 1.5rem; background:#f8fafc; border-radius:18px; border:1.5px dashed #cbd5e1;">
-                <div style="width:68px; height:68px; background:linear-gradient(135deg, rgba(225,48,108,0.12), rgba(247,119,55,0.12)); color:#e1306c; border-radius:20px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:1.25rem;">
-                    <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                </div>
-                <h3 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0 0 0.5rem;">Hubungkan Instagram Anda Sekarang</h3>
-                <p style="font-size:0.88rem; color:#64748b; max-width:540px; margin:0 auto 1.75rem; line-height:1.6;">
-                    Gunakan akun Instagram Professional (Creator atau Bisnis) yang sudah ditautkan ke Facebook Page agar fitur Auto DM dan Auto Public Reply dapat berjalan secara otomatis.
-                </p>
-                <button type="button" onclick="openInstagramOAuth('{{ route('creator.automation-reply.connect') }}')" class="btn-ig-gradient" style="padding:0.95rem 2rem; font-size:0.92rem;">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                    Hubungkan Akun Instagram Professional
-                </button>
-            </div>
-        @endif
-    </div>
-    @endif
-
-    {{-- TAB 4: LIVE ACTIVITY LOGS --}}
+    {{-- TAB 3: LIVE ACTIVITY LOGS --}}
     @if($activeTab === 'logs')
     <div class="panel-card">
         <div class="panel-card-header" style="flex-wrap:wrap; gap:0.75rem;">
