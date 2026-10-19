@@ -656,7 +656,7 @@
                             <th>Nama Campaign</th>
                             <th>Target Post</th>
                             <th>Trigger Keyword</th>
-                            <th>Produk Digital</th>
+                            <th>Produk / Link Tujuan</th>
                             <th>Statistik (Komen / DM / Klik)</th>
                             <th>Omset (Rp)</th>
                             <th>Aksi</th>
@@ -714,8 +714,16 @@
                                     <div style="font-size:0.74rem; color:#16a34a; font-weight:700;">
                                         Rp {{ number_format($camp->product->price, 0, ',', '.') }}
                                     </div>
+                                @elseif(!empty($camp->custom_link))
+                                    <div style="display:inline-flex; align-items:center; gap:0.25rem; font-weight:700; color:#2563eb; font-size:0.78rem;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                        Link Eksternal
+                                    </div>
+                                    <div style="font-size:0.7rem; color:#64748b; max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                                        <a href="{{ $camp->custom_link }}" target="_blank" style="color:#64748b; text-decoration:none;">{{ $camp->custom_link }}</a>
+                                    </div>
                                 @else
-                                    <span style="color:#94a3b8; font-size:0.8rem;">(Tanpa Produk)</span>
+                                    <span style="color:#94a3b8; font-size:0.8rem;">(Tanpa Link)</span>
                                 @endif
                             </td>
                             <td>
@@ -773,20 +781,32 @@
                 <div class="form-group">
                     <label class="form-label">Nama Campaign *</label>
                     <input type="text" name="name" class="form-input" placeholder="Contoh: Promo Ebook E-Commerce Reels" required>
-                    <span class="form-desc">Identifikasi internal untuk tracking omset penjualan Anda.</span>
+                    <span class="form-desc">Identifikasi internal untuk tracking performa campaign Anda.</span>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Produk Digital Buyle.id (Smart Checkout Link)</label>
-                    <select name="product_id" id="campaignProductSelect" class="form-select">
-                        <option value="">-- Pilih Produk Digital (Opsional) --</option>
-                        @foreach($products as $prod)
-                            <option value="{{ $prod->id }}">
-                                {{ $prod->name }} — Rp {{ number_format($prod->price, 0, ',', '.') }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <span class="form-desc">Sistem otomatis men-generate shortlink checkout instan ke variabel <code>{link_product}</code>.</span>
+                    <label class="form-label">Tujuan Link di DM (Pilih Salah Satu)</label>
+                    <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
+                        <button type="button" id="btnLinkTypeProduct" onclick="setLinkType('product')" style="flex:1; padding:0.45rem 0.75rem; font-size:0.78rem; font-weight:700; border-radius:8px; border:1.5px solid #1eb349; background:#f0fdf4; color:#16a34a; cursor:pointer; font-family:'Montserrat',sans-serif;">Produk Digital Buyle</button>
+                        <button type="button" id="btnLinkTypeCustom" onclick="setLinkType('custom')" style="flex:1; padding:0.45rem 0.75rem; font-size:0.78rem; font-weight:700; border-radius:8px; border:1.5px solid #e2e8f0; background:#ffffff; color:#64748b; cursor:pointer; font-family:'Montserrat',sans-serif;">Link Eksternal / Custom</button>
+                    </div>
+
+                    <div id="wrapProductSelect">
+                        <select name="product_id" id="campaignProductSelect" class="form-select">
+                            <option value="">-- Pilih Produk Digital (Opsional) --</option>
+                            @foreach($products as $prod)
+                                <option value="{{ $prod->id }}">
+                                    {{ $prod->name }} — Rp {{ number_format($prod->price, 0, ',', '.') }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <span class="form-desc">Otomatis men-generate shortlink checkout instan ke variabel <code>{link_product}</code>.</span>
+                    </div>
+
+                    <div id="wrapCustomLink" style="display:none;">
+                        <input type="url" name="custom_link" id="campaignCustomLinkInput" class="form-input" placeholder="https://wa.me/... atau https://landingpage.com">
+                        <span class="form-desc">Masukkan tautan eksternal (WhatsApp, Google Drive, Shopee, dll). Otomatis disingkat & dilacak ke <code>{link_product}</code>.</span>
+                    </div>
                 </div>
             </div>
 
@@ -1134,7 +1154,38 @@
     function toggleSpecificMedia(val) {
         const wrap = document.getElementById('mediaIdWrap');
         if (wrap) {
-            wrap.style.display = (val === 'specific') ? 'flex' : 'none';
+            wrap.style.display = (val === 'specific') ? 'block' : 'none';
+        }
+    }
+
+    function setLinkType(type) {
+        const wrapProduct = document.getElementById('wrapProductSelect');
+        const wrapCustom = document.getElementById('wrapCustomLink');
+        const btnProduct = document.getElementById('btnLinkTypeProduct');
+        const btnCustom = document.getElementById('btnLinkTypeCustom');
+        const productSelect = document.getElementById('campaignProductSelect');
+        const customInput = document.getElementById('campaignCustomLinkInput');
+
+        if (type === 'product') {
+            wrapProduct.style.display = 'block';
+            wrapCustom.style.display = 'none';
+            if (customInput) customInput.value = '';
+            btnProduct.style.border = '1.5px solid #1eb349';
+            btnProduct.style.background = '#f0fdf4';
+            btnProduct.style.color = '#16a34a';
+            btnCustom.style.border = '1.5px solid #e2e8f0';
+            btnCustom.style.background = '#ffffff';
+            btnCustom.style.color = '#64748b';
+        } else {
+            wrapProduct.style.display = 'none';
+            wrapCustom.style.display = 'block';
+            if (productSelect) productSelect.value = '';
+            btnCustom.style.border = '1.5px solid #1eb349';
+            btnCustom.style.background = '#f0fdf4';
+            btnCustom.style.color = '#16a34a';
+            btnProduct.style.border = '1.5px solid #e2e8f0';
+            btnProduct.style.background = '#ffffff';
+            btnProduct.style.color = '#64748b';
         }
     }
 

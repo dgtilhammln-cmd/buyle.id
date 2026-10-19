@@ -212,7 +212,7 @@ class InstagramAutomationController extends Controller
         $request->validate([
             'name'                  => 'required|string|max:150',
             'target_type'           => 'required|in:all,specific',
-            'target_media_id'       => 'nullable|string|max:100',
+            'target_media_id'       => 'nullable|string|max:255',
             'trigger_type'          => 'required|in:exact,contains,any',
             'trigger_keywords'      => 'nullable|string',
             'spintax_variants'      => 'required|array|min:1',
@@ -220,6 +220,7 @@ class InstagramAutomationController extends Controller
             'auto_comment_enabled'  => 'nullable|boolean',
             'auto_comment_variants' => 'nullable|array',
             'product_id'            => 'nullable|exists:products,id',
+            'custom_link'           => 'nullable|string|max:1000',
             'delay_seconds'         => 'required|integer|min:3|max:8',
             'daily_limit'           => 'nullable|integer|min:10|max:1000',
         ]);
@@ -236,7 +237,7 @@ class InstagramAutomationController extends Controller
         // Filter varian pesan yang tidak kosong
         $spintaxVariants = array_values(array_filter(array_map('trim', $request->spintax_variants ?? [])));
         if (count($spintaxVariants) === 0) {
-            $spintaxVariants = ["Halo kak {first_name}, ini link produknya: {link_product}"];
+            $spintaxVariants = ["Halo kak {first_name}, ini linknya: {link_product}"];
         }
 
         // Filter komentar publik
@@ -254,6 +255,7 @@ class InstagramAutomationController extends Controller
             'user_id'               => $user->id,
             'instagram_account_id'  => $account?->id,
             'product_id'            => $request->product_id,
+            'custom_link'           => $request->custom_link,
             'name'                  => $request->name,
             'target_type'           => $request->target_type,
             'target_media_id'       => $request->target_media_id,
@@ -269,13 +271,20 @@ class InstagramAutomationController extends Controller
             'is_active'             => true,
         ]);
 
-        // Generate Short Link Checkout Otomatis
+        // Generate Short Link Checkout / External Link Otomatis
+        $targetUrl = null;
         if ($campaign->product_id && $campaign->product) {
+            $targetUrl = route('products.show', $campaign->product->slug) . '?utm_source=instagram&utm_medium=auto_dm&utm_campaign=' . urlencode($campaign->name);
+        } elseif (!empty($campaign->custom_link)) {
+            $targetUrl = $campaign->custom_link;
+        }
+
+        if ($targetUrl) {
             AutomationShortLink::create([
                 'campaign_id' => $campaign->id,
                 'product_id'  => $campaign->product_id,
                 'code'        => 'c' . Str::lower(Str::random(6)),
-                'target_url'  => route('products.show', $campaign->product->slug) . '?utm_source=instagram&utm_medium=auto_dm&utm_campaign=' . urlencode($campaign->name),
+                'target_url'  => $targetUrl,
             ]);
         }
 
@@ -293,10 +302,11 @@ class InstagramAutomationController extends Controller
         $request->validate([
             'name'                  => 'required|string|max:150',
             'target_type'           => 'required|in:all,specific',
-            'target_media_id'       => 'nullable|string|max:100',
+            'target_media_id'       => 'nullable|string|max:255',
             'trigger_type'          => 'required|in:exact,contains,any',
             'trigger_keywords'      => 'nullable|string',
             'spintax_variants'      => 'required|array|min:1',
+            'custom_link'           => 'nullable|string|max:1000',
             'delay_seconds'         => 'required|integer|min:3|max:8',
         ]);
 
@@ -321,6 +331,7 @@ class InstagramAutomationController extends Controller
             'auto_comment_enabled'  => $request->boolean('auto_comment_enabled'),
             'auto_comment_variants' => $commentVariants,
             'product_id'            => $request->product_id,
+            'custom_link'           => $request->custom_link,
             'delay_seconds'         => (int) $request->delay_seconds,
             'auto_follow_check'     => $request->boolean('auto_follow_check'),
         ]);

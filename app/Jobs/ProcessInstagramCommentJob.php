@@ -75,8 +75,16 @@ class ProcessInstagramCommentJob implements ShouldQueue
         $matchedCampaign = null;
         foreach ($campaigns as $campaign) {
             // Cek target postingan (all atau spesifik)
-            if ($campaign->target_type === 'specific' && $campaign->target_media_id) {
-                if ($campaign->target_media_id !== $mediaId) {
+            if ($campaign->target_type === 'specific' && !empty($campaign->target_media_id)) {
+                $target = trim($campaign->target_media_id);
+                $isMatch = ($target === (string)$mediaId);
+
+                // Jika target berupa link URL Reels atau mengandung id
+                if (!$isMatch && !empty($mediaId)) {
+                    $isMatch = str_contains($target, (string)$mediaId) || str_contains((string)$mediaId, $target);
+                }
+
+                if (!$isMatch) {
                     continue;
                 }
             }
@@ -95,17 +103,24 @@ class ProcessInstagramCommentJob implements ShouldQueue
         // Increment deteksi komentar
         $matchedCampaign->increment('total_comments_detected');
 
-        // Setup Short Link Checkout Dinamis
+        // Setup Short Link Checkout Dinamis / Link Eksternal
         $shortUrl = url('/');
+        $targetUrl = null;
         if ($matchedCampaign->product) {
+            $targetUrl = route('products.show', $matchedCampaign->product->slug) . '?utm_source=instagram&utm_medium=auto_dm&utm_campaign=' . urlencode($matchedCampaign->name);
+        } elseif (!empty($matchedCampaign->custom_link)) {
+            $targetUrl = $matchedCampaign->custom_link;
+        }
+
+        if ($targetUrl) {
             $shortLink = AutomationShortLink::firstOrCreate(
                 [
                     'campaign_id' => $matchedCampaign->id,
-                    'product_id'  => $matchedCampaign->product_id,
                 ],
                 [
+                    'product_id'  => $matchedCampaign->product_id,
                     'code'        => 'c' . Str::lower(Str::random(6)),
-                    'target_url'  => route('products.show', $matchedCampaign->product->slug) . '?utm_source=instagram&utm_medium=auto_dm&utm_campaign=' . urlencode($matchedCampaign->name),
+                    'target_url'  => $targetUrl,
                 ]
             );
             $shortUrl = $shortLink->short_url;
