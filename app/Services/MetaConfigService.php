@@ -52,13 +52,15 @@ class MetaConfigService
     public static function getRequiredScopes(): array
     {
         return [
-            'instagram_business_basic',
-            'instagram_business_manage_messages',
-            'instagram_business_manage_comments',
-            'instagram_business_manage_insights',
-            'instagram_business_content_publish',
+            'instagram_basic',
+            'instagram_manage_messages',
+            'instagram_manage_comments',
+            'instagram_manage_insights',
+            'instagram_content_publish',
             'pages_show_list',
             'pages_read_engagement',
+            'pages_manage_metadata',
+            'public_profile',
         ];
     }
 

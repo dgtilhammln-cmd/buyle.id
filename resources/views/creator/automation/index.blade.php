@@ -983,11 +983,11 @@
             <div style="margin-top:1.5rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.25rem;">
                 <h4 style="font-size:0.86rem; font-weight:800; color:#0f172a; margin:0 0 0.5rem;">5 Izin Resmi Meta Graph API Terverifikasi:</h4>
                 <div class="scopes-wrap">
-                    <span class="scope-chip">✓ instagram_business_basic</span>
-                    <span class="scope-chip">✓ instagram_business_manage_messages (Auto DM)</span>
-                    <span class="scope-chip">✓ instagram_business_manage_comments (Auto Public Reply)</span>
-                    <span class="scope-chip">✓ instagram_business_manage_insights (Conversion Tracking)</span>
-                    <span class="scope-chip">✓ instagram_business_content_publish (Auto Schedule)</span>
+                    <span class="scope-chip">✓ instagram_basic</span>
+                    <span class="scope-chip">✓ instagram_manage_messages (Auto DM)</span>
+                    <span class="scope-chip">✓ instagram_manage_comments (Auto Public Reply)</span>
+                    <span class="scope-chip">✓ instagram_manage_insights (Conversion Tracking)</span>
+                    <span class="scope-chip">✓ instagram_content_publish (Auto Schedule)</span>
                 </div>
             </div>
         @else
