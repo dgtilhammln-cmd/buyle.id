@@ -14,6 +14,7 @@ class AutomationCampaign extends Model
         'instagram_account_id',
         'product_id',
         'custom_link',
+        'button_text',
         'name',
         'target_type',
         'target_media_id',

@@ -87,11 +87,27 @@ class InstagramAutomationController extends Controller
                 ->count();
         }
 
-        // 5. Produk Digital Kreator (untuk dropdown generator shortlink)
+        // 5. Produk Digital Kreator (untuk dropdown generator shortlink & preview foto)
         $products = Product::where('seller_id', $user->id)
             ->where('is_active', true)
             ->orderBy('name', 'asc')
-            ->get(['id', 'name', 'slug', 'price', 'product_type']);
+            ->get(['id', 'name', 'slug', 'price', 'sale_price', 'product_type', 'image']);
+
+        $productsJson = $products->mapWithKeys(function ($p) {
+            $imgUrl = null;
+            if ($p->image) {
+                $imgUrl = \Illuminate\Support\Str::startsWith($p->image, ['http://', 'https://'])
+                    ? $p->image
+                    : asset('storage/' . $p->image);
+            }
+            return [$p->id => [
+                'id'           => $p->id,
+                'name'         => $p->name,
+                'price_format' => 'Rp ' . number_format($p->sale_price ?: $p->price, 0, ',', '.'),
+                'type'         => $p->product_type ?? 'Digital',
+                'image_url'    => $imgUrl,
+            ]];
+        });
 
         // 6. Metrik & Analitik
         $totalComments = $campaigns->sum('total_comments_detected');
@@ -106,6 +122,7 @@ class InstagramAutomationController extends Controller
             'campaigns',
             'logs',
             'products',
+            'productsJson',
             'totalComments',
             'totalDms',
             'totalClicks',
@@ -270,6 +287,7 @@ class InstagramAutomationController extends Controller
             'auto_comment_variants' => 'nullable|array',
             'product_id'            => 'nullable|exists:products,id',
             'custom_link'           => 'nullable|string|max:1000',
+            'button_text'           => 'nullable|string|max:30',
             'delay_seconds'         => 'required|integer|min:3|max:8',
             'daily_limit'           => 'nullable|integer|min:10|max:1000',
         ]);
@@ -305,6 +323,7 @@ class InstagramAutomationController extends Controller
             'instagram_account_id'  => $account?->id,
             'product_id'            => $request->product_id,
             'custom_link'           => $request->custom_link,
+            'button_text'           => $request->filled('button_text') ? trim($request->button_text) : 'Buka Akses 🚀',
             'name'                  => $request->name,
             'target_type'           => $request->target_type,
             'target_media_id'       => $request->target_media_id,
@@ -357,6 +376,7 @@ class InstagramAutomationController extends Controller
             'spintax_variants'      => 'required|array|min:1',
             'product_id'            => 'nullable|exists:products,id',
             'custom_link'           => 'nullable|string|max:1000',
+            'button_text'           => 'nullable|string|max:30',
             'delay_seconds'         => 'required|integer|min:3|max:8',
         ]);
 
@@ -382,6 +402,7 @@ class InstagramAutomationController extends Controller
             'auto_comment_variants' => $commentVariants,
             'product_id'            => $request->product_id,
             'custom_link'           => $request->custom_link,
+            'button_text'           => $request->filled('button_text') ? trim($request->button_text) : ($campaign->button_text ?: 'Buka Akses 🚀'),
             'delay_seconds'         => (int) $request->delay_seconds,
             'auto_follow_check'     => $request->boolean('auto_follow_check'),
         ]);

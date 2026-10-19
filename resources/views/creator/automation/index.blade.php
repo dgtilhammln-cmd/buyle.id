@@ -769,9 +769,28 @@
                             </td>
                             <td>
                                 @if($camp->product)
-                                    <span style="font-weight:700; color:#0f172a;">{{ $camp->product->name }}</span>
-                                    <div style="font-size:0.74rem; color:#16a34a; font-weight:700;">
-                                        Rp {{ number_format($camp->product->price, 0, ',', '.') }}
+                                    <div style="display:flex; align-items:center; gap:0.65rem;">
+                                        @php
+                                            $prodImg = null;
+                                            if ($camp->product->image) {
+                                                $prodImg = \Illuminate\Support\Str::startsWith($camp->product->image, ['http://', 'https://'])
+                                                    ? $camp->product->image
+                                                    : asset('storage/' . $camp->product->image);
+                                            }
+                                        @endphp
+                                        <div style="width:38px; height:38px; border-radius:8px; overflow:hidden; background:#f1f5f9; flex-shrink:0; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center;">
+                                            @if($prodImg)
+                                                <img src="{{ $prodImg }}" alt="{{ $camp->product->name }}" style="width:100%; height:100%; object-fit:cover;">
+                                            @else
+                                                <svg width="18" height="18" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <span style="font-weight:700; color:#0f172a; font-size:0.82rem; display:block; line-height:1.25;">{{ $camp->product->name }}</span>
+                                            <div style="font-size:0.74rem; color:#16a34a; font-weight:700; margin-top:2px;">
+                                                Rp {{ number_format($camp->product->price, 0, ',', '.') }}
+                                            </div>
+                                        </div>
                                     </div>
                                 @elseif(!empty($camp->custom_link))
                                     <div style="display:inline-flex; align-items:center; gap:0.25rem; font-weight:700; color:#2563eb; font-size:0.78rem;">
@@ -855,7 +874,7 @@
                     </div>
 
                     <div id="wrapProductSelect">
-                        <select name="product_id" id="campaignProductSelect" class="form-select" style="padding:0.65rem 0.85rem; font-size:0.82rem;">
+                        <select name="product_id" id="campaignProductSelect" class="form-select" style="padding:0.65rem 0.85rem; font-size:0.82rem;" onchange="updateProductPreview(this.value, 'create')">
                             <option value="">-- Pilih Produk Digital (Opsional) --</option>
                             @foreach($products as $prod)
                                 <option value="{{ $prod->id }}">
@@ -863,10 +882,39 @@
                                 </option>
                             @endforeach
                         </select>
+
+                        {{-- LIVE PRODUCT PHOTO PREVIEW CARD --}}
+                        <div id="productPreviewCard" style="display:none; margin-top:0.6rem; padding:0.65rem 0.85rem; background:#ffffff; border:1.5px solid #dcfce7; border-radius:12px; align-items:center; gap:0.75rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
+                            <div style="width:48px; height:48px; border-radius:10px; overflow:hidden; background:#f8fafc; flex-shrink:0; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center;">
+                                <img id="productPreviewImg" src="" alt="Produk" style="width:100%; height:100%; object-fit:cover; display:none;">
+                                <svg id="productPreviewIcon" width="22" height="22" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            </div>
+                            <div style="flex:1; min-width:0;">
+                                <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:1px;">
+                                    <span id="productPreviewType" style="font-size:0.65rem; font-weight:800; padding:1px 6px; border-radius:4px; background:#f0fdf4; color:#16a34a; text-transform:uppercase;">Digital</span>
+                                    <span style="font-size:0.68rem; color:#94a3b8; font-weight:600;">Preview Produk</span>
+                                </div>
+                                <div id="productPreviewName" style="font-size:0.8rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
+                                <div id="productPreviewPrice" style="font-size:0.76rem; font-weight:800; color:#1eb349; margin-top:1px;"></div>
+                            </div>
+                        </div>
                     </div>
 
                     <div id="wrapCustomLink" style="display:none;">
                         <input type="url" name="custom_link" id="campaignCustomLinkInput" class="form-input" style="padding:0.65rem 0.85rem; font-size:0.82rem;" placeholder="https://wa.me/... atau https://landingpage.com">
+                    </div>
+
+                    {{-- CUSTOM BUTTON TEXT INPUT --}}
+                    <div class="form-group" style="margin-top:0.75rem; margin-bottom:0;">
+                        <label class="form-label" style="font-size:0.8rem; display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
+                            <span>Teks Tombol DM (Button Chat)</span>
+                            <span style="font-size:0.7rem; color:#94a3b8; font-weight:600;">Maks. 20 Karakter</span>
+                        </label>
+                        <div style="position:relative;">
+                            <input type="text" name="button_text" maxlength="20" class="form-input" style="padding:0.55rem 0.85rem 0.55rem 2.15rem; font-size:0.82rem;" placeholder="Contoh: Buka Akses, Beli Sekarang" value="Buka Akses 🚀">
+                            <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24" style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </div>
+                        <span class="form-desc" style="font-size:0.71rem;">Label pada tombol interaktif yang dikirim langsung di DM Instagram penerima.</span>
                     </div>
                 </div>
             </div>
@@ -895,13 +943,16 @@
             {{-- SPINTAX MULTI-VARIANT SECTION (COMPACT) --}}
             <div style="background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0; padding:1rem 1.15rem; margin:0.85rem 0;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.4rem;">
-                    <div>
-                        <h4 style="font-size:0.86rem; font-weight:800; color:#0f172a; margin:0;">
-                            ✨ Variasi Pesan DM (Spintax Engine)
-                        </h4>
-                        <p style="font-size:0.73rem; color:#64748b; margin:1px 0 0;">
-                            Rotasi acak pesan DM agar aman dari filter spam Instagram.
-                        </p>
+                    <div style="display:flex; align-items:center; gap:0.45rem;">
+                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                        <div>
+                            <h4 style="font-size:0.86rem; font-weight:800; color:#0f172a; margin:0;">
+                                Variasi Pesan DM (Spintax Engine)
+                            </h4>
+                            <p style="font-size:0.73rem; color:#64748b; margin:1px 0 0;">
+                                Rotasi acak pesan DM agar aman dari filter spam Instagram.
+                            </p>
+                        </div>
                     </div>
                     <div style="font-size:0.72rem;">
                         <span style="color:#475569; font-weight:700;">Tag:</span>
@@ -918,12 +969,12 @@
 
                     <div class="variant-card" style="padding:0.65rem 0.85rem; margin:0;">
                         <label style="font-size:0.72rem; font-weight:800; color:#1e293b; margin-bottom:2px; display:block;">Variasi DM #2</label>
-                        <textarea name="spintax_variants[]" rows="2" class="form-textarea" style="padding:0.5rem 0.75rem; font-size:0.8rem;" placeholder="Tulis template pesan...">Hai kak {first_name}! Terima kasih sudah mampir. Kamu bisa langsung cek tautannya di sini ya: {link_product} 🚀</textarea>
+                        <textarea name="spintax_variants[]" rows="2" class="form-textarea" style="padding:0.5rem 0.75rem; font-size:0.8rem;" placeholder="Tulis template pesan...">Hai kak {first_name}! Terima kasih sudah mampir. Kamu bisa langsung cek tautannya di sini ya: {link_product}</textarea>
                     </div>
 
                     <div class="variant-card" style="padding:0.65rem 0.85rem; margin:0;">
                         <label style="font-size:0.72rem; font-weight:800; color:#1e293b; margin-bottom:2px; display:block;">Variasi DM #3</label>
-                        <textarea name="spintax_variants[]" rows="2" class="form-textarea" style="padding:0.5rem 0.75rem; font-size:0.8rem;" placeholder="Tulis template pesan...">Spesial buat kamu kak {first_name}! Klik link berikut untuk mendapatkan akses langsung: {link_product} ✨</textarea>
+                        <textarea name="spintax_variants[]" rows="2" class="form-textarea" style="padding:0.5rem 0.75rem; font-size:0.8rem;" placeholder="Tulis template pesan...">Spesial buat kamu kak {first_name}! Klik link berikut untuk mendapatkan akses langsung: {link_product}</textarea>
                     </div>
                 </div>
             </div>
@@ -1228,15 +1279,44 @@
                         <button type="button" id="editBtnLinkTypeCustom" onclick="setEditLinkType('custom')" style="flex:1; padding:0.38rem 0.55rem; font-size:0.73rem; font-weight:700; border-radius:8px; border:1.5px solid #e2e8f0; background:#fff; color:#64748b; cursor:pointer; font-family:'Montserrat',sans-serif; transition:all .15s;">Link Eksternal</button>
                     </div>
                     <div id="editWrapProductSelect">
-                        <select name="product_id" id="editCampProduct" class="form-select" style="padding:0.6rem 0.85rem; font-size:0.82rem;">
+                        <select name="product_id" id="editCampProduct" class="form-select" style="padding:0.6rem 0.85rem; font-size:0.82rem;" onchange="updateProductPreview(this.value, 'edit')">
                             <option value="">-- Tanpa Produk --</option>
                             @foreach($products as $prod)
                                 <option value="{{ $prod->id }}">{{ $prod->name }} — Rp {{ number_format($prod->price,0,',','.') }}</option>
                             @endforeach
                         </select>
+
+                        {{-- LIVE PRODUCT PHOTO PREVIEW CARD (EDIT) --}}
+                        <div id="editProductPreviewCard" style="display:none; margin-top:0.6rem; padding:0.65rem 0.85rem; background:#ffffff; border:1.5px solid #dcfce7; border-radius:12px; align-items:center; gap:0.75rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
+                            <div style="width:48px; height:48px; border-radius:10px; overflow:hidden; background:#f8fafc; flex-shrink:0; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center;">
+                                <img id="editProductPreviewImg" src="" alt="Produk" style="width:100%; height:100%; object-fit:cover; display:none;">
+                                <svg id="editProductPreviewIcon" width="22" height="22" fill="none" stroke="#94a3b8" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            </div>
+                            <div style="flex:1; min-width:0;">
+                                <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:1px;">
+                                    <span id="editProductPreviewType" style="font-size:0.65rem; font-weight:800; padding:1px 6px; border-radius:4px; background:#f0fdf4; color:#16a34a; text-transform:uppercase;">Digital</span>
+                                    <span style="font-size:0.68rem; color:#94a3b8; font-weight:600;">Preview Produk</span>
+                                </div>
+                                <div id="editProductPreviewName" style="font-size:0.8rem; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
+                                <div id="editProductPreviewPrice" style="font-size:0.76rem; font-weight:800; color:#1eb349; margin-top:1px;"></div>
+                            </div>
+                        </div>
                     </div>
                     <div id="editWrapCustomLink" style="display:none;">
                         <input type="url" name="custom_link" id="editCampCustomLink" class="form-input" style="padding:0.6rem 0.85rem; font-size:0.82rem;" placeholder="https://wa.me/... atau https://...">
+                    </div>
+
+                    {{-- CUSTOM BUTTON TEXT INPUT (EDIT) --}}
+                    <div class="form-group" style="margin-top:0.65rem; margin-bottom:0;">
+                        <label class="form-label" style="font-size:0.79rem; display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
+                            <span>Teks Tombol DM (Button Chat)</span>
+                            <span style="font-size:0.7rem; color:#94a3b8; font-weight:600;">Maks. 20 Karakter</span>
+                        </label>
+                        <div style="position:relative;">
+                            <input type="text" name="button_text" id="editCampButtonText" maxlength="20" class="form-input" style="padding:0.55rem 0.85rem 0.55rem 2.15rem; font-size:0.82rem;" placeholder="Buka Akses, Beli Sekarang" value="Buka Akses">
+                            <svg width="15" height="15" fill="none" stroke="#1eb349" stroke-width="2" viewBox="0 0 24 24" style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </div>
+                        <span class="form-desc" style="font-size:0.71rem;">Label pada tombol interaktif di DM Instagram penerima.</span>
                     </div>
                 </div>
             </div>
@@ -1265,9 +1345,12 @@
             {{-- Spintax Variants --}}
             <div style="background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0; padding:0.9rem 1rem; margin-bottom:0.75rem;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.35rem;">
-                    <div>
-                        <h4 style="font-size:0.83rem; font-weight:800; color:#0f172a; margin:0;">✨ Variasi Pesan DM</h4>
-                        <p style="font-size:0.71rem; color:#64748b; margin:1px 0 0;">Tag: <span style="background:#e0f2fe;color:#0369a1;padding:1px 5px;border-radius:4px;font-size:0.7rem;font-weight:700;">{first_name}</span> <span style="background:#e0f2fe;color:#0369a1;padding:1px 5px;border-radius:4px;font-size:0.7rem;font-weight:700;">{link_product}</span></p>
+                    <div style="display:flex; align-items:center; gap:0.45rem;">
+                        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                        <div>
+                            <h4 style="font-size:0.83rem; font-weight:800; color:#0f172a; margin:0;">Variasi Pesan DM (Spintax)</h4>
+                            <p style="font-size:0.71rem; color:#64748b; margin:1px 0 0;">Tag: <span style="background:#e0f2fe;color:#0369a1;padding:1px 5px;border-radius:4px;font-size:0.7rem;font-weight:700;">{first_name}</span> <span style="background:#e0f2fe;color:#0369a1;padding:1px 5px;border-radius:4px;font-size:0.7rem;font-weight:700;">{link_product}</span></p>
+                        </div>
                     </div>
                     <button type="button" onclick="addEditVariant()" style="font-size:0.72rem; font-weight:700; color:#1eb349; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:0.3rem 0.7rem; cursor:pointer; font-family:'Montserrat',sans-serif;">+ Tambah Varian</button>
                 </div>
@@ -1420,6 +1503,41 @@
         });
     }
 
+    /* ── PRODUCTS MAP FOR LIVE PREVIEW ────────────────────── */
+    const productsMap = @json($productsJson ?? []);
+
+    function updateProductPreview(productId, context) {
+        const isEdit = (context === 'edit');
+        const card  = document.getElementById(isEdit ? 'editProductPreviewCard' : 'productPreviewCard');
+        const img   = document.getElementById(isEdit ? 'editProductPreviewImg'  : 'productPreviewImg');
+        const icon  = document.getElementById(isEdit ? 'editProductPreviewIcon' : 'productPreviewIcon');
+        const name  = document.getElementById(isEdit ? 'editProductPreviewName' : 'productPreviewName');
+        const price = document.getElementById(isEdit ? 'editProductPreviewPrice': 'productPreviewPrice');
+        const type  = document.getElementById(isEdit ? 'editProductPreviewType' : 'productPreviewType');
+
+        if (!card) return;
+
+        if (!productId || !productsMap[productId]) {
+            card.style.display = 'none';
+            return;
+        }
+
+        const prod = productsMap[productId];
+        card.style.display = 'flex';
+        name.textContent  = prod.name || '';
+        price.textContent = prod.price_format || '';
+        if (type) type.textContent = prod.type || 'Digital';
+
+        if (prod.image_url) {
+            img.src = prod.image_url;
+            img.style.display = 'block';
+            if (icon) icon.style.display = 'none';
+        } else {
+            img.style.display = 'none';
+            if (icon) icon.style.display = 'block';
+        }
+    }
+
     /* ── EDIT CAMPAIGN MODAL ─────────────────────────────── */
     const BASE_UPDATE_URL = "{{ route('creator.automation-reply.campaigns.update', '__ID__') }}";
 
@@ -1456,13 +1574,20 @@
             setEditLinkType('product');
             document.getElementById('editCampProduct').value = productId;
             document.getElementById('editCampCustomLink').value = '';
+            updateProductPreview(productId, 'edit');
         } else if (customLink) {
             setEditLinkType('custom');
             document.getElementById('editCampCustomLink').value = customLink;
+            updateProductPreview(null, 'edit');
         } else {
             setEditLinkType('product');
             document.getElementById('editCampProduct').value = '';
+            updateProductPreview(null, 'edit');
         }
+
+        // Button text
+        const btnTextField = document.getElementById('editCampButtonText');
+        if (btnTextField) btnTextField.value = camp.button_text || 'Buka Akses';
 
         // Spintax variants
         const container = document.getElementById('editSpintaxContainer');

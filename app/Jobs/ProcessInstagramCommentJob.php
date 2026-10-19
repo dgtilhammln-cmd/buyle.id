@@ -205,24 +205,47 @@ class ProcessInstagramCommentJob implements ShouldQueue
         // Siapkan Tombol Tautan Rapi (Button Card) jika terdapat link produk
         $buttonData = null;
         if (!empty($shortUrl)) {
-            $productTitle = $matchedCampaign->product->name ?? 'Produk Digital';
+            $product = $matchedCampaign->product;
             
             // Bersihkan URL mentah dari dmText agar rapi dan tidak dobel dengan tombol
             $cleanGreeting = trim(preg_replace('/https?:\/\/[^\s]+/', '', $dmText));
             $cleanGreeting = trim(preg_replace('/\s+/', ' ', $cleanGreeting));
 
-            // Judul di atas: Sapaan ramah personal (font besar tebal)
-            $cardTitle = "Halo kak {$firstName}! ✨";
-            
-            // Keterangan di bawah: Keterangan ucapan / produk + ajakan klik
-            $cardSubtitle = !empty($cleanGreeting)
-                ? mb_substr($cleanGreeting, 0, 80)
-                : mb_substr("{$productTitle} — Ketuk tombol di bawah untuk klaim akses:", 0, 80);
+            // Tentukan Judul Kartu (Card Title) & Keterangan (Subtitle) agar TIDAK DOBEL NAMA:
+            if ($product) {
+                // Judul tebal di atas: Nama Produk
+                $cardTitle = mb_substr($product->name, 0, 80);
+                // Keterangan di bawah: Pesan sapaan personal dari variasi Spintax
+                $cardSubtitle = !empty($cleanGreeting)
+                    ? mb_substr($cleanGreeting, 0, 80)
+                    : "Halo kak {$firstName}! Ketuk tombol di bawah untuk klaim akses:";
+            } else {
+                // Jika link custom tanpa produk: Gunakan sapaan di atas, dan bersihkan awalan greeting dari subtitle agar tidak dobel nama
+                $cardTitle = "Halo kak {$firstName}! ✨";
+                $strippedGreeting = preg_replace('/^(halo|hai|hi|hei|selamat\s+\w+)\s+kak\s+[^\s!.,]+[!.,\s]*/i', '', $cleanGreeting);
+                $cardSubtitle = !empty($strippedGreeting)
+                    ? mb_substr(trim($strippedGreeting), 0, 80)
+                    : "Tautan akses spesial Anda sudah siap di tombol bawah ini:";
+            }
+
+            // Tentukan URL Foto Produk (jika ada) untuk ditampilkan pada kartu DM
+            $imageUrl = null;
+            if ($product && !empty($product->image)) {
+                $imageUrl = Str::startsWith($product->image, ['http://', 'https://'])
+                    ? $product->image
+                    : asset('storage/' . $product->image);
+            }
+
+            // Teks Tombol Kustom (Maks. 20 Karakter sesuai aturan Meta)
+            $buttonTitle = !empty($matchedCampaign->button_text)
+                ? mb_substr(trim($matchedCampaign->button_text), 0, 20)
+                : 'Buka Akses 🚀';
 
             $buttonData = [
                 'card_title' => $cardTitle,
                 'subtitle'   => $cardSubtitle,
-                'title'      => 'Buka Akses 🚀',
+                'image_url'  => $imageUrl,
+                'title'      => $buttonTitle,
                 'url'        => $shortUrl,
             ];
         }

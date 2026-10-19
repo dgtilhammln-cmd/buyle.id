@@ -198,24 +198,28 @@ class InstagramApiService
             $cardTitle = mb_substr(!empty($buttonData['card_title']) ? $buttonData['card_title'] : 'Akses Produk Digital', 0, 80);
             $cardSubtitle = mb_substr(!empty($buttonData['subtitle']) ? $buttonData['subtitle'] : $messageText, 0, 80);
 
+            $element = [
+                'title'    => $cardTitle,
+                'subtitle' => $cardSubtitle,
+                'buttons'  => [
+                    [
+                        'type'  => 'web_url',
+                        'url'   => $buttonData['url'],
+                        'title' => $btnTitle,
+                    ],
+                ],
+            ];
+
+            if (!empty($buttonData['image_url'])) {
+                $element['image_url'] = $buttonData['image_url'];
+            }
+
             $messagePayload = [
                 'attachment' => [
                     'type'    => 'template',
                     'payload' => [
                         'template_type' => 'generic',
-                        'elements'      => [
-                            [
-                                'title'    => $cardTitle,
-                                'subtitle' => $cardSubtitle,
-                                'buttons'  => [
-                                    [
-                                        'type'  => 'web_url',
-                                        'url'   => $buttonData['url'],
-                                        'title' => $btnTitle,
-                                    ],
-                                ],
-                            ],
-                        ],
+                        'elements'      => [$element],
                     ],
                 ],
             ];
