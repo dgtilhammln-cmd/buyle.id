@@ -94,9 +94,36 @@ class ProcessInstagramCommentJob implements ShouldQueue
                 $target = trim($campaign->target_media_id);
                 $isMatch = ($target === (string)$mediaId);
 
-                // Jika target berupa link URL Reels atau mengandung id
                 if (!$isMatch && !empty($mediaId)) {
-                    $isMatch = str_contains($target, (string)$mediaId) || str_contains((string)$mediaId, $target);
+                    // 1. Cek kecocokan substring sederhana
+                    if (str_contains($target, (string)$mediaId) || str_contains((string)$mediaId, $target)) {
+                        $isMatch = true;
+                    } else {
+                        // 2. Jika target berupa URL Reels / Postingan Instagram
+                        // Contoh: https://www.instagram.com/reel/DEv8f_ySxyz/ atau https://www.instagram.com/p/DEv8f_ySxyz/
+                        if (preg_match('/instagram\.com\/(?:reel|p|tv)\/([A-Za-z0-9_-]+)/', $target, $matches)) {
+                            $targetShortcode = $matches[1];
+                            
+                            // Cek cache atau query ke Meta API untuk mendapatkan permalink/shortcode dari mediaId webhook
+                            $cacheKey = "ig_media_shortcode_{$mediaId}";
+                            $mediaShortcode = cache()->remember($cacheKey, 86400, function () use ($igAccount, $mediaId) {
+                                try {
+                                    $res = \Illuminate\Support\Facades\Http::withToken($igAccount->access_token)
+                                        ->get("https://graph.facebook.com/v26.0/{$mediaId}", [
+                                            'fields' => 'permalink,shortcode',
+                                        ]);
+                                    if ($res->successful()) {
+                                        return $res->json('shortcode') ?: ($res->json('permalink') ?: '');
+                                    }
+                                } catch (\Exception $e) {}
+                                return '';
+                            });
+
+                            if (!empty($mediaShortcode) && (str_contains($mediaShortcode, $targetShortcode) || $mediaShortcode === $targetShortcode)) {
+                                $isMatch = true;
+                            }
+                        }
+                    }
                 }
 
                 if (!$isMatch) {

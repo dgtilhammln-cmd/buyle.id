@@ -163,85 +163,89 @@ class InstagramApiService
     }
 
     /**
+     * Dapatkan daftar base API yang relevan berdasarkan tipe token (IG... vs EAA...)
+     */
+    protected function getApiBases(string $token): array
+    {
+        $version = MetaConfigService::getGraphVersion();
+        $cleanToken = trim($token);
+        if (str_starts_with($cleanToken, 'IG')) {
+            return [
+                "https://graph.instagram.com/{$version}",
+                "https://graph.facebook.com/{$version}",
+            ];
+        }
+        return [
+            "https://graph.facebook.com/{$version}",
+            "https://graph.instagram.com/{$version}",
+        ];
+    }
+
+    /**
      * Kirim Auto DM ke inbox pengirim komentar Instagram.
      * Menggunakan Private Reply (recipient.comment_id) resmi dari Meta Graph API.
      */
     public function sendDirectMessage(string $accessToken, string $businessOrPageId, string $recipientId, string $messageText, ?string $commentId = null): array
     {
-        $targetId = !empty($businessOrPageId) ? trim($businessOrPageId) : 'me';
-        $url = "{$this->apiBase}/{$targetId}/messages";
-        
-        // 1. Prioritas utama: Private Reply resmi Meta via comment_id
-        if (!empty($commentId)) {
-            $response = Http::withToken($accessToken)->post($url, [
-                'recipient' => ['comment_id' => $commentId],
-                'message'   => ['text' => $messageText],
-            ]);
+        $cleanToken = trim($accessToken);
+        $bases = $this->getApiBases($cleanToken);
+        $lastError = 'Gagal mengirim pesan DM.';
 
-            if ($response->successful()) {
-                return [
-                    'success'    => true,
-                    'message_id' => $response->json('message_id'),
-                ];
+        foreach ($bases as $base) {
+            // Coba endpoint /me/messages terlebih dahulu (paling kompatibel untuk Instagram User token)
+            $endpoints = ["{$base}/me/messages"];
+            if (!empty($businessOrPageId) && $businessOrPageId !== 'me') {
+                $endpoints[] = "{$base}/" . trim($businessOrPageId) . "/messages";
             }
 
-            // Coba fallback ke /me/messages jika targetId sebelumnya bukan 'me'
-            if ($targetId !== 'me') {
-                $fallbackMeUrl = "{$this->apiBase}/me/messages";
-                $fallbackMeRes = Http::withToken($accessToken)->post($fallbackMeUrl, [
-                    'recipient' => ['comment_id' => $commentId],
-                    'message'   => ['text' => $messageText],
-                ]);
+            foreach ($endpoints as $url) {
+                // 1. Coba Private Reply dengan comment_id
+                if (!empty($commentId)) {
+                    $response = Http::withToken($cleanToken)->post($url, [
+                        'recipient' => ['comment_id' => $commentId],
+                        'message'   => ['text' => $messageText],
+                    ]);
 
-                if ($fallbackMeRes->successful()) {
-                    return [
-                        'success'    => true,
-                        'message_id' => $fallbackMeRes->json('message_id'),
-                    ];
+                    if ($response->successful()) {
+                        return [
+                            'success'    => true,
+                            'message_id' => $response->json('message_id'),
+                        ];
+                    }
+
+                    $errMsg = $response->json('error.message', '');
+                    $lastError = $errMsg ?: $lastError;
+
+                    // Jika error bukan karena token tidak bisa diparse, jangan langsung skip host
+                    Log::warning('[IG DM] Private Reply attempt failed', [
+                        'url'      => $url,
+                        'response' => $response->json(),
+                    ]);
+                }
+
+                // 2. Coba kirim via recipient id jika bukan "unknown"
+                if (!empty($recipientId) && $recipientId !== 'unknown') {
+                    $response = Http::withToken($cleanToken)->post($url, [
+                        'recipient' => ['id' => $recipientId],
+                        'message'   => ['text' => $messageText],
+                    ]);
+
+                    if ($response->successful()) {
+                        return [
+                            'success'    => true,
+                            'message_id' => $response->json('message_id'),
+                        ];
+                    }
+
+                    $errMsg = $response->json('error.message', '');
+                    $lastError = $errMsg ?: $lastError;
                 }
             }
-
-            Log::warning('Instagram Private Reply with comment_id failed, trying recipient id fallback', [
-                'comment_id' => $commentId,
-                'target_id'  => $targetId,
-                'response'   => $response->json(),
-            ]);
-        }
-
-        // 2. Fallback via recipient user ID jika user pernah chat sebelumnya
-        $response = Http::withToken($accessToken)->post($url, [
-            'recipient' => ['id' => $recipientId],
-            'message'   => ['text' => $messageText],
-        ]);
-
-        if ($response->failed() && $targetId !== 'me') {
-            $fallbackMeRes = Http::withToken($accessToken)->post("{$this->apiBase}/me/messages", [
-                'recipient' => ['id' => $recipientId],
-                'message'   => ['text' => $messageText],
-            ]);
-            if ($fallbackMeRes->successful()) {
-                return [
-                    'success'    => true,
-                    'message_id' => $fallbackMeRes->json('message_id'),
-                ];
-            }
-        }
-
-        if ($response->failed()) {
-            Log::warning('Instagram DM send failed', [
-                'url'      => $url,
-                'status'   => $response->status(),
-                'response' => $response->json(),
-            ]);
-            return [
-                'success' => false,
-                'error'   => $response->json('error.message', 'Gagal mengirim pesan DM.'),
-            ];
         }
 
         return [
-            'success'    => true,
-            'message_id' => $response->json('message_id'),
+            'success' => false,
+            'error'   => $lastError,
         ];
     }
 
@@ -250,26 +254,34 @@ class InstagramApiService
      */
     public function replyPublicComment(string $accessToken, string $commentId, string $replyText): array
     {
-        $url = "{$this->apiBase}/{$commentId}/replies";
+        $cleanToken = trim($accessToken);
+        $bases = $this->getApiBases($cleanToken);
+        $lastError = 'Gagal membalas komentar publik.';
 
-        $response = Http::withToken($accessToken)->post($url, [
-            'message' => $replyText,
-        ]);
-
-        if ($response->failed()) {
-            Log::warning('Instagram Comment Reply failed', [
-                'comment_id' => $commentId,
-                'response'   => $response->json(),
+        foreach ($bases as $base) {
+            $url = "{$base}/{$commentId}/replies";
+            $response = Http::withToken($cleanToken)->post($url, [
+                'message' => $replyText,
             ]);
-            return [
-                'success' => false,
-                'error'   => $response->json('error.message', 'Gagal membalas komentar publik.'),
-            ];
+
+            if ($response->successful()) {
+                return [
+                    'success' => true,
+                    'id'      => $response->json('id'),
+                ];
+            }
+
+            $lastError = $response->json('error.message', $lastError);
         }
 
+        Log::warning('[IG Comment] Reply failed on all bases', [
+            'comment_id' => $commentId,
+            'error'      => $lastError,
+        ]);
+
         return [
-            'success' => true,
-            'id'      => $response->json('id'),
+            'success' => false,
+            'error'   => $lastError,
         ];
     }
 
