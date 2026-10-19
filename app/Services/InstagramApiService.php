@@ -375,4 +375,32 @@ class InstagramApiService
 
         return $response->successful();
     }
+
+    /**
+     * Dapatkan permalink dari suatu Media ID Instagram via Graph API (Mendukung Reels, Feed, dsb)
+     */
+    public function getMediaPermalink(string $accessToken, string $mediaId): ?string
+    {
+        $cleanToken = trim($accessToken);
+        $bases = $this->getApiBases($cleanToken);
+
+        foreach ($bases as $base) {
+            try {
+                $response = Http::withToken($cleanToken)->get("{$base}/{$mediaId}", [
+                    'fields' => 'permalink,id',
+                ]);
+
+                if ($response->successful()) {
+                    $permalink = $response->json('permalink');
+                    if (!empty($permalink)) {
+                        return $permalink;
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::warning("[InstagramApiService] Error getMediaPermalink for {$mediaId}: " . $e->getMessage());
+            }
+        }
+
+        return null;
+    }
 }

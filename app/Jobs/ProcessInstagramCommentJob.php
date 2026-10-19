@@ -52,17 +52,22 @@ class ProcessInstagramCommentJob implements ShouldQueue
             return;
         }
 
-        // Deteksi jika yang berkomentar adalah akun IG kreator itu sendiri
+        // Deteksi jika yang berkomentar adalah akun IG kreator itu sendiri / balasan dari bot Buyle
+        $isOwnAccount = false;
         if (!empty($igAccount->username) && strcasecmp($senderUsername, $igAccount->username) === 0) {
-            CampaignLog::create([
-                'user_id'         => $igAccount->user_id,
-                'sender_ig_id'    => $senderIgId,
-                'sender_username' => $senderUsername,
-                'comment_id'      => $commentId,
-                'media_id'        => $mediaId,
-                'comment_text'    => $commentText,
-                'status'          => 'skipped',
-                'error_message'   => 'Komentar dari akun pemilik sendiri (@' . $senderUsername . '). Meta melarang kirim DM otomatis ke akun sendiri. Harap uji coba menggunakan akun Instagram lain.',
+            $isOwnAccount = true;
+        }
+        if (!empty($igAccount->instagram_business_id) && (string)$senderIgId === (string)$igAccount->instagram_business_id) {
+            $isOwnAccount = true;
+        }
+        if (!empty($igAccount->page_id) && (string)$senderIgId === (string)$igAccount->page_id) {
+            $isOwnAccount = true;
+        }
+
+        if ($isOwnAccount) {
+            Log::info('[ProcessInstagramCommentJob] Mengabaikan event komentar dari akun bot/pemilik sendiri agar tidak menduplikasi audit log.', [
+                'sender'  => $senderUsername,
+                'comment' => $commentText,
             ]);
             return;
         }
@@ -95,32 +100,37 @@ class ProcessInstagramCommentJob implements ShouldQueue
                 $isMatch = ($target === (string)$mediaId);
 
                 if (!$isMatch && !empty($mediaId)) {
-                    // 1. Cek kecocokan substring sederhana
+                    // 1. Cek kecocokan substring ID langsung
                     if (str_contains($target, (string)$mediaId) || str_contains((string)$mediaId, $target)) {
                         $isMatch = true;
                     } else {
-                        // 2. Jika target berupa URL Reels / Postingan Instagram
-                        // Contoh: https://www.instagram.com/reel/DEv8f_ySxyz/ atau https://www.instagram.com/p/DEv8f_ySxyz/
+                        // 2. Ekstrak shortcode dari link target campaign jika berbentuk URL (misal https://www.instagram.com/reel/DEv8f_ySxyz/)
+                        $targetShortcode = null;
                         if (preg_match('/instagram\.com\/(?:reel|p|tv)\/([A-Za-z0-9_-]+)/', $target, $matches)) {
                             $targetShortcode = $matches[1];
-                            
-                            // Cek cache atau query ke Meta API untuk mendapatkan permalink/shortcode dari mediaId webhook
-                            $cacheKey = "ig_media_shortcode_{$mediaId}";
-                            $mediaShortcode = cache()->remember($cacheKey, 86400, function () use ($igAccount, $mediaId) {
-                                try {
-                                    $res = \Illuminate\Support\Facades\Http::withToken($igAccount->access_token)
-                                        ->get("https://graph.facebook.com/v26.0/{$mediaId}", [
-                                            'fields' => 'permalink,shortcode',
-                                        ]);
-                                    if ($res->successful()) {
-                                        return $res->json('shortcode') ?: ($res->json('permalink') ?: '');
-                                    }
-                                } catch (\Exception $e) {}
-                                return '';
-                            });
+                        } elseif (!str_contains($target, '/') && !is_numeric($target)) {
+                            $targetShortcode = $target;
+                        }
 
-                            if (!empty($mediaShortcode) && (str_contains($mediaShortcode, $targetShortcode) || $mediaShortcode === $targetShortcode)) {
-                                $isMatch = true;
+                        // Query permalink dari mediaId webhook via Graph API (hanya cache jika berhasil, jangan cache string kosong)
+                        $cacheKey = "ig_media_permalink_{$mediaId}";
+                        $mediaPermalink = cache()->get($cacheKey);
+                        if (empty($mediaPermalink)) {
+                            $mediaPermalink = $apiService->getMediaPermalink($igAccount->access_token, (string)$mediaId);
+                            if (!empty($mediaPermalink)) {
+                                cache()->put($cacheKey, $mediaPermalink, 86400);
+                            }
+                        }
+
+                        if (!empty($mediaPermalink)) {
+                            if (!empty($targetShortcode)) {
+                                if (str_contains($mediaPermalink, $targetShortcode)) {
+                                    $isMatch = true;
+                                }
+                            } else {
+                                if (str_contains($target, $mediaPermalink) || str_contains($mediaPermalink, $target)) {
+                                    $isMatch = true;
+                                }
                             }
                         }
                     }

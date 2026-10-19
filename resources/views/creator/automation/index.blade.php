@@ -4,6 +4,18 @@
 @section('page_title', 'Buyle Automation Reply')
 @section('page_subtitle', 'Otomatisasi balasan komentar & DM Instagram untuk produk digital Anda.')
 
+@section('topbar_actions')
+<a href="{{ route('creator.app.index') }}"
+    style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 0.95rem; font-size:0.8rem; font-weight:700; color:#475569; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:999px; text-decoration:none; transition:all 0.15s ease; font-family:'Montserrat',sans-serif; box-shadow:0 2px 6px rgba(0,0,0,0.03);"
+    onmouseover="this.style.borderColor='#1eb349';this.style.color='#166534';"
+    onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#475569';">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+        <polyline points="15 18 9 12 15 6" />
+    </svg>
+    Kembali ke Aplikasi
+</a>
+@endsection
+
 @section('styles')
 <style>
     .auto-wrapper {
@@ -1058,8 +1070,30 @@
                             <td>
                                 <strong style="color:#0f172a;">{{ $log->sender_username ? '@' . $log->sender_username : 'User IG' }}</strong>
                             </td>
-                            <td style="max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                                "{{ $log->comment_text }}"
+                            <td style="max-width:280px;">
+                                <div style="font-weight:600; color:#0f172a; font-size:0.81rem; word-break:break-word;">
+                                    "{{ $log->comment_text }}"
+                                </div>
+                                @if(!empty($log->public_reply_sent))
+                                    <div style="margin-top:0.4rem;">
+                                        <button type="button" 
+                                            onclick="togglePublicReply('reply-box-{{ $log->id }}', this)" 
+                                            style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.22rem 0.6rem; font-size:0.7rem; font-weight:700; color:#166534; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:999px; cursor:pointer; font-family:'Montserrat',sans-serif; transition:all 0.15s ease;"
+                                            onmouseover="this.style.background='#dcfce7';"
+                                            onmouseout="this.style.background='#f0fdf4';">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                            <span>Lihat Balasan Publik ▾</span>
+                                        </button>
+                                        <div id="reply-box-{{ $log->id }}" style="display:none; margin-top:0.45rem; padding:0.5rem 0.75rem; background:#f8fafc; border-left:3px solid #1eb349; border-radius:0 8px 8px 0; font-size:0.75rem; color:#1e293b; line-height:1.45; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+                                            <div style="font-size:0.68rem; font-weight:800; color:#166534; margin-bottom:0.15rem; display:flex; align-items:center; gap:0.25rem;">
+                                                <span>↳ Balasan Komentar Publik:</span>
+                                            </div>
+                                            <div style="font-style:italic; color:#334155;">
+                                                "{{ $log->public_reply_sent }}"
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </td>
                             <td style="max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:0.8rem; color:#334155;">
                                 {{ $log->dm_text_sent ?: '-' }}
@@ -1519,6 +1553,17 @@
         const container = document.getElementById('editSpintaxContainer');
         const count = container.querySelectorAll('textarea').length + 1;
         container.appendChild(buildVariantCard('', count));
+    }
+
+    function togglePublicReply(id, btn) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const isHidden = (el.style.display === 'none' || el.style.display === '');
+        el.style.display = isHidden ? 'block' : 'none';
+        const span = btn.querySelector('span');
+        if (span) {
+            span.textContent = isHidden ? 'Tutup Balasan Publik ▴' : 'Lihat Balasan Publik ▾';
+        }
     }
 </script>
 @endsection

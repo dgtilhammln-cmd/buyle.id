@@ -1,28 +1,40 @@
 import subprocess
+import os
 
-script = """<?php
+php_code = """
 require 'vendor/autoload.php';
 $app = require_once 'bootstrap/app.php';
 $app->make(Illuminate\\Contracts\\Console\\Kernel::class)->bootstrap();
 
-echo "APP_ID: " . App\\Services\\MetaConfigService::getAppId() . "\n";
-echo "APP_SECRET: " . substr(App\\Services\\MetaConfigService::getAppSecret(), 0, 8) . "...\n";
-foreach(App\\Models\\InstagramAccount::all() as $a) {
-    echo "USER: " . $a->username . " | TOKEN_PREFIX: " . substr($a->access_token, 0, 15) . "... | LEN: " . strlen($a->access_token) . " | PAGE: " . $a->page_id . " | IG_ID: " . $a->instagram_business_id . "\n";
+echo "=== CAMPAIGNS ===\\n";
+foreach(App\\Models\\AutomationCampaign::all() as $c) {
+    echo "ID: {$c->id} | Name: {$c->name} | TargetType: {$c->target_type} | TargetMediaID: '{$c->target_media_id}' | Active: {$c->is_active}\\n";
+    echo "Keywords: " . json_encode($c->keywords) . "\\n";
+    echo "----------------------------------------\\n";
 }
-foreach(App\\Models\\CampaignLog::latest()->take(5)->get() as $l) {
-    echo "LOG: status=" . $l->status . " | err=" . $l->error_message . " | comment=" . $l->comment_text . "\n";
+
+echo "\\n=== RECENT LOGS ===\\n";
+foreach(App\\Models\\CampaignLog::latest()->take(10)->get() as $l) {
+    echo "ID: {$l->id} | CampID: {$l->campaign_id} | Sender: @{$l->sender_username} | MediaID: '{$l->media_id}' | Comment: '{$l->comment_text}' | Status: {$l->status}\\n";
+    echo "PublicReply: '{$l->public_reply_sent}'\\n";
+    echo "Error: {$l->error_message}\\n";
+    echo "----------------------------------------\\n";
 }
 """
 
-p = subprocess.Popen(
-    ['ssh', '-p', '65002', 'u664715641@46.202.186.86', 'cd domains/buyle.id/public_html && php'],
-    stdin=subprocess.PIPE,
-    stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE,
-    text=True
-)
-out, err = p.communicate(input=script)
-print("OUT:\n", out)
-if err:
-    print("ERR:\n", err)
+cmd = [
+    os.path.abspath('plink.exe'),
+    '-hostkey', 'SHA256:LeBsjJUGP0sny5IZPPNzyPZ+8B5EgCqYMGYVifqicZE',
+    '-P', '65002',
+    '-pw', 'Ilhammaulana23',
+    'u664715641@46.202.186.86',
+    'cd domains/buyle.id/public_html && php'
+]
+
+p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+stdout, stderr = p.communicate(input=php_code, timeout=20)
+
+print("EXIT:", p.returncode)
+print("STDOUT:\n", stdout)
+if stderr:
+    print("STDERR:\n", stderr)

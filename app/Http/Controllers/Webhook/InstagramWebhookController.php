@@ -109,6 +109,22 @@ class InstagramWebhookController extends Controller
                         continue;
                     }
 
+                    // Abaikan langsung jika komentar berasal dari akun bot / akun pemilik itu sendiri
+                    if ($igAccount) {
+                        if (!empty($igAccount->username) && strcasecmp($senderUsername, $igAccount->username) === 0) {
+                            Log::info('[IG Webhook] Mengabaikan event komentar dari akun pemilik sendiri (@' . $senderUsername . ')');
+                            continue;
+                        }
+                        if (!empty($igAccount->instagram_business_id) && (string)$senderIgId === (string)$igAccount->instagram_business_id) {
+                            Log::info('[IG Webhook] Mengabaikan event komentar dari Instagram Business ID sendiri');
+                            continue;
+                        }
+                        if (!empty($igAccount->page_id) && (string)$senderIgId === (string)$igAccount->page_id) {
+                            Log::info('[IG Webhook] Mengabaikan event komentar dari Page ID sendiri');
+                            continue;
+                        }
+                    }
+
                     // Jika tidak ada sender_ig_id, coba cari dari format lain atau gunakan placeholder
                     if (empty($senderIgId)) {
                         Log::warning('[IG Webhook] sender_ig_id kosong, coba proses dengan placeholder', [
