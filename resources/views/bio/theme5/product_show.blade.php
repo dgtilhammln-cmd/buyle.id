@@ -1500,12 +1500,194 @@
                         </div>
                     @endif
 
+                    {{-- VARIANT SELECTOR THEME 5 --}}
+                    @if($product && $product->variantOptions && $product->variantOptions->count() > 0)
+                        <div id="t5-variant-section" style="margin-bottom:1rem;">
+                            <style>
+                                .t5-var-group { margin-bottom:0.65rem; }
+                                .t5-var-label { font-size:0.75rem; font-weight:700; color:#475569; margin-bottom:0.35rem; text-transform:uppercase; letter-spacing:0.03em; }
+                                .t5-var-pills { display:flex; flex-wrap:wrap; gap:0.4rem; }
+                                .t5-var-pill {
+                                    display:inline-flex; align-items:center; gap:0.4rem;
+                                    padding:0.35rem 0.8rem; border:1.5px solid #E2E8F0; border-radius:99px;
+                                    background:#fff; color:#0F172A; font-size:0.8rem; font-weight:600; cursor:pointer; transition:all 0.15s;
+                                }
+                                .t5-var-pill:hover:not(:disabled) { border-color:#1eb349; color:#1eb349; }
+                                .t5-var-pill.selected { border-color:#1eb349; background:rgba(30,179,73,0.1); color:#1eb349; font-weight:700; }
+                                .t5-var-pill:disabled { opacity:0.4; cursor:not-allowed; }
+                                .t5-var-pill-img { width:20px; height:20px; border-radius:4px; object-fit:cover; }
+                            </style>
+                            @foreach($product->variantOptions as $opt)
+                                <div class="t5-var-group">
+                                    <div class="t5-var-label">{{ $opt->name }}</div>
+                                    <div class="t5-var-pills">
+                                        @foreach($opt->values as $val)
+                                            @php
+                                                $valImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . $val->image)) : null;
+                                                $valFinalPrice = $val->finalPrice();
+                                            @endphp
+                                            <button type="button" class="t5-var-pill"
+                                                data-variant-id="{{ $val->id }}"
+                                                data-price="{{ $valFinalPrice }}"
+                                                data-price-formatted="Rp {{ number_format($valFinalPrice, 0, ',', '.') }}"
+                                                data-stock="{{ $val->stock }}"
+                                                data-label="{{ $opt->name }}: {{ $val->value }}"
+                                                data-img="{{ $valImg ?: $firstImage }}"
+                                                data-has-custom-img="{{ $valImg ? '1' : '0' }}"
+                                                @if($val->stock !== null && $val->stock <= 0) disabled @endif
+                                                onclick="selectT5Variant(this)">
+                                                @if($valImg)
+                                                    <img src="{{ $valImg }}" alt="{{ $val->value }}" class="t5-var-pill-img">
+                                                @endif
+                                                <span>{{ $val->value }}</span>
+                                            </button>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        {{-- T5 INTERACTIVE VARIANT POPUP MODAL --}}
+                        <div id="t5-variant-modal" class="buyle-variant-modal" style="display:none;" aria-hidden="true">
+                            <div class="bvm-backdrop" onclick="closeT5VariantModal()"></div>
+                            <div class="bvm-sheet">
+                                <div class="bvm-handle-bar"><span class="bvm-handle"></span></div>
+                                <div class="bvm-header">
+                                    <div class="bvm-thumb-wrap">
+                                        <img id="t5-bvm-thumb-img" src="{{ $firstImage }}" alt="{{ $prodTitle }}" class="bvm-thumb">
+                                        <span id="t5-bvm-thumb-badge" class="bvm-thumb-badge" style="display:none;">Foto Variasi</span>
+                                    </div>
+                                    <div class="bvm-header-info">
+                                        <div class="bvm-price" id="t5-bvm-price-display">Rp {{ number_format($price, 0, ',', '.') }}</div>
+                                        <div class="bvm-stock" id="t5-bvm-stock-display">
+                                            @if($stock === null)
+                                                <span style="color:#10b981;">• Stok Tersedia</span>
+                                            @elseif((int)$stock > 0)
+                                                <span>• Sisa {{ $stock }} unit</span>
+                                            @else
+                                                <span style="color:#ef4444;">• Stok Habis</span>
+                                            @endif
+                                        </div>
+                                        <div class="bvm-selected-label" id="t5-bvm-selected-label">
+                                            Silakan pilih opsi variasi
+                                        </div>
+                                    </div>
+                                    <button type="button" class="bvm-close-btn" onclick="closeT5VariantModal()" aria-label="Tutup">
+                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="bvm-body">
+                                    @foreach($product->variantOptions as $opt)
+                                        <div class="bvm-group">
+                                            <div class="bvm-group-title">{{ $opt->name }}</div>
+                                            <div class="bvm-pills">
+                                                @foreach($opt->values as $val)
+                                                    @php
+                                                        $valImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . $val->image)) : null;
+                                                        $valFinalPrice = $val->finalPrice();
+                                                        $isValOutOfStock = ($val->stock !== null && $val->stock <= 0);
+                                                    @endphp
+                                                    <button type="button" class="bvm-pill t5-bvm-pill"
+                                                        data-variant-id="{{ $val->id }}"
+                                                        data-price="{{ $valFinalPrice }}"
+                                                        data-price-formatted="Rp {{ number_format($valFinalPrice, 0, ',', '.') }}"
+                                                        data-stock="{{ $val->stock }}"
+                                                        data-label="{{ $opt->name }}: {{ $val->value }}"
+                                                        data-img="{{ $valImg ?: $firstImage }}"
+                                                        data-has-custom-img="{{ $valImg ? '1' : '0' }}"
+                                                        @if($isValOutOfStock) disabled @endif
+                                                        onclick="selectT5BvmVariant(this)">
+                                                        @if($valImg)
+                                                            <img src="{{ $valImg }}" alt="{{ $val->value }}" class="bvm-pill-img">
+                                                        @endif
+                                                        <span class="bvm-pill-text">{{ $val->value }}</span>
+                                                        @if($isValOutOfStock)
+                                                            <span class="bvm-pill-diff" style="color:#ef4444;">(Habis)</span>
+                                                        @endif
+                                                    </button>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                    <div class="bvm-qty-row">
+                                        <div>
+                                            <div class="bvm-qty-label">Kuantitas</div>
+                                            <div class="bvm-qty-sub">Jumlah pesanan</div>
+                                        </div>
+                                        <div class="bvm-qty-ctrl">
+                                            <button type="button" class="bvm-qty-btn" onclick="stepT5BvmQty(-1)">−</button>
+                                            <input type="number" id="t5-bvm-qty-input" class="bvm-qty-input" value="1" min="1" readonly>
+                                            <button type="button" class="bvm-qty-btn" onclick="stepT5BvmQty(1)">+</button>
+                                        </div>
+                                    </div>
+                                    <div id="t5-bvm-error" class="bvm-error" style="display:none;">
+                                        ⚠ Silakan pilih salah satu variasi terlebih dahulu.
+                                    </div>
+                                </div>
+                                <div class="bvm-footer">
+                                    <button type="button" id="t5-bvm-submit-btn" class="bvm-btn-primary" onclick="confirmT5BvmSubmit()">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                                            <path d="M5 12h14"></path>
+                                            <path d="m12 5 7 7-7 7"></path>
+                                        </svg>
+                                        <span id="t5-bvm-submit-label">Beli Sekarang</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <style>
+                            .buyle-variant-modal { position: fixed; inset: 0; z-index: 999999; display: flex; align-items: flex-end; justify-content: center; visibility: hidden; opacity: 0; transition: opacity 0.24s ease, visibility 0.24s ease; }
+                            .buyle-variant-modal.active { visibility: visible; opacity: 1; }
+                            .bvm-backdrop { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.62); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+                            .bvm-sheet { position: relative; width: 100%; max-width: 480px; background: #ffffff; border-radius: 24px 24px 0 0; box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.22); display: flex; flex-direction: column; max-height: 86vh; transform: translateY(100%); transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1; overflow: hidden; }
+                            .buyle-variant-modal.active .bvm-sheet { transform: translateY(0); }
+                            @media (min-width: 640px) { .buyle-variant-modal { align-items: center; padding: 1.5rem; } .bvm-sheet { border-radius: 20px; transform: scale(0.95); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25); } .buyle-variant-modal.active .bvm-sheet { transform: scale(1); } .bvm-handle-bar { display: none !important; } }
+                            .bvm-handle-bar { display: flex; justify-content: center; padding-top: 10px; padding-bottom: 4px; }
+                            .bvm-handle { width: 38px; height: 4px; background: #cbd5e1; border-radius: 99px; }
+                            .bvm-header { display: flex; align-items: center; gap: 0.85rem; padding: 0.85rem 1.25rem; border-bottom: 1px solid #f1f5f9; position: relative; }
+                            .bvm-thumb-wrap { width: 70px; height: 70px; border-radius: 12px; overflow: hidden; background: #f8fafc; border: 1.5px solid #e2e8f0; flex-shrink: 0; position: relative; }
+                            .bvm-thumb { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.2s ease; }
+                            .bvm-thumb-badge { position: absolute; bottom: 2px; right: 2px; background: rgba(15, 23, 42, 0.8); color: #fff; font-size: 0.58rem; font-weight: 700; padding: 1px 4px; border-radius: 4px; }
+                            .bvm-header-info { flex: 1; min-width: 0; }
+                            .bvm-price { font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 800; color: #1eb349; line-height: 1.2; }
+                            .bvm-stock { font-size: 0.78rem; font-weight: 600; color: #64748b; margin-top: 3px; }
+                            .bvm-selected-label { font-size: 0.78rem; color: #0f172a; font-weight: 600; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+                            .bvm-close-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: #f1f5f9; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
+                            .bvm-close-btn:hover { background: #e2e8f0; color: #0f172a; }
+                            .bvm-body { padding: 1rem 1.25rem; overflow-y: auto; -webkit-overflow-scrolling: touch; max-height: calc(86vh - 180px); }
+                            .bvm-group { margin-bottom: 1.1rem; }
+                            .bvm-group-title { font-size: 0.78rem; font-weight: 700; color: #475569; margin-bottom: 0.55rem; text-transform: uppercase; letter-spacing: 0.04em; }
+                            .bvm-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+                            .bvm-pill { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.45rem 0.85rem; border: 1.5px solid #e2e8f0; border-radius: 12px; background: #ffffff; color: #0f172a; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.16s ease; user-select: none; }
+                            .bvm-pill:hover:not(:disabled) { border-color: #1eb349; color: #1eb349; background: rgba(30, 179, 73, 0.04); }
+                            .bvm-pill.selected { border-color: #1eb349; background: linear-gradient(135deg, rgba(30, 179, 73, 0.12), rgba(165, 207, 55, 0.08)); color: #15803d; box-shadow: 0 2px 8px rgba(30, 179, 73, 0.2); }
+                            .bvm-pill:disabled { opacity: 0.4; cursor: not-allowed; background: #f8fafc; border-style: dashed; }
+                            .bvm-pill-img { width: 22px; height: 22px; border-radius: 6px; object-fit: cover; border: 1px solid #e2e8f0; flex-shrink: 0; }
+                            .bvm-qty-row { display: flex; align-items: center; justify-content: space-between; padding-top: 0.85rem; margin-top: 0.5rem; border-top: 1px solid #f1f5f9; }
+                            .bvm-qty-label { font-size: 0.82rem; font-weight: 700; color: #0f172a; }
+                            .bvm-qty-sub { font-size: 0.72rem; color: #94a3b8; }
+                            .bvm-qty-ctrl { display: inline-flex; align-items: center; border: 1.5px solid #e2e8f0; border-radius: 10px; overflow: hidden; background: #fff; }
+                            .bvm-qty-btn { width: 32px; height: 32px; border: none; background: #f8fafc; color: #0f172a; font-size: 1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+                            .bvm-qty-btn:hover { background: #e2e8f0; }
+                            .bvm-qty-input { width: 44px; height: 32px; border: none; text-align: center; font-size: 0.88rem; font-weight: 700; color: #0f172a; background: #fff; pointer-events: none; }
+                            .bvm-error { color: #ef4444; font-size: 0.78rem; background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; padding: 0.45rem 0.75rem; margin-top: 0.75rem; }
+                            .bvm-footer { padding: 0.85rem 1.25rem 1.15rem; border-top: 1px solid #f1f5f9; background: #ffffff; }
+                            .bvm-btn-primary { width: 100%; padding: 0.85rem 1.25rem; border-radius: 14px; border: none; background: linear-gradient(135deg, #1eb349 0%, #15803d 100%); color: #ffffff; font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 16px rgba(30, 179, 73, 0.32); transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+                            .bvm-btn-primary:hover { box-shadow: 0 6px 22px rgba(30, 179, 73, 0.45); transform: translateY(-1px); }
+                        </style>
+                    @endif
+
                     <div class="ps-cta-row">
                         <form action="{{ route('cart.add') }}" method="POST" style="display:contents;"
                             class="t5-add-cart-form">
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $prodId }}">
-                            <input type="hidden" name="qty" value="1">
+                            <input type="hidden" name="qty" id="t5_form_qty" value="1">
+                            <input type="hidden" name="variant_value_id" id="t5_selected_variant_id" value="">
                             @if(!empty($affiliateUserId))
                                 <input type="hidden" name="affiliate_id" value="{{ $affiliateUserId }}">
                             @endif
@@ -2117,8 +2299,189 @@
             }
         });
 
+        // ── THEME 5 VARIANT MODAL & CONTROLS ──
+        var t5HasVariants = document.getElementById('t5-variant-section') !== null;
+        window._t5CurrentAction = 'buy';
+
+        window.openT5VariantModal = function(action) {
+            var modal = document.getElementById('t5-variant-modal');
+            if (!modal) return;
+            window._t5CurrentAction = action || 'buy';
+
+            var submitLabel = document.getElementById('t5-bvm-submit-label');
+            if (submitLabel) {
+                submitLabel.textContent = (window._t5CurrentAction === 'cart') ? 'Tambah ke Keranjang' : 'Beli Sekarang';
+            }
+
+            var currentVid = document.getElementById('t5_selected_variant_id').value;
+            if (currentVid) {
+                var activePill = modal.querySelector('.t5-bvm-pill[data-variant-id="' + currentVid + '"]');
+                if (activePill) {
+                    selectT5BvmVariant(activePill, false);
+                }
+            }
+
+            modal.style.display = 'flex';
+            requestAnimationFrame(function() {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        };
+
+        window.closeT5VariantModal = function() {
+            var modal = document.getElementById('t5-variant-modal');
+            if (!modal) return;
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            setTimeout(function() {
+                if (!modal.classList.contains('active')) {
+                    modal.style.display = 'none';
+                }
+            }, 280);
+        };
+
+        window.selectT5BvmVariant = function(btn, syncToPage) {
+            if (typeof syncToPage === 'undefined') syncToPage = true;
+            if (btn.disabled) return;
+            var group = btn.closest('.bvm-pills');
+            if (group) {
+                group.querySelectorAll('.t5-bvm-pill').forEach(function(p) { p.classList.remove('selected'); });
+            }
+            btn.classList.add('selected');
+
+            var vid = btn.dataset.variantId;
+            var price = parseFloat(btn.dataset.price) || 0;
+            var priceFormatted = btn.dataset.priceFormatted;
+            var stock = btn.dataset.stock;
+            var label = btn.dataset.label;
+            var imgUrl = btn.dataset.img;
+            var hasCustomImg = btn.dataset.hasCustomImg === '1';
+
+            var thumbImg = document.getElementById('t5-bvm-thumb-img');
+            var thumbBadge = document.getElementById('t5-bvm-thumb-badge');
+            if (thumbImg && imgUrl) {
+                thumbImg.src = imgUrl;
+            }
+            if (thumbBadge) {
+                thumbBadge.style.display = hasCustomImg ? 'block' : 'none';
+            }
+
+            var priceDisplay = document.getElementById('t5-bvm-price-display');
+            if (priceDisplay && priceFormatted) {
+                priceDisplay.textContent = priceFormatted;
+            }
+
+            var stockDisplay = document.getElementById('t5-bvm-stock-display');
+            if (stockDisplay) {
+                if (stock === '' || stock === null) {
+                    stockDisplay.innerHTML = '<span style="color:#10b981;">• Stok Tersedia</span>';
+                } else {
+                    var sNum = parseInt(stock);
+                    if (sNum > 0) {
+                        stockDisplay.innerHTML = '<span style="color:#10b981;">• Sisa ' + sNum + ' unit</span>';
+                    } else {
+                        stockDisplay.innerHTML = '<span style="color:#ef4444;">• Stok Habis</span>';
+                    }
+                }
+            }
+
+            var labelDisplay = document.getElementById('t5-bvm-selected-label');
+            if (labelDisplay) {
+                labelDisplay.innerHTML = '<span style="color:#15803d;font-weight:700;">✓ Dipilih:</span> ' + label;
+            }
+
+            var err = document.getElementById('t5-bvm-error');
+            if (err) err.style.display = 'none';
+
+            document.getElementById('t5_selected_variant_id').value = vid;
+
+            if (syncToPage) {
+                var pagePills = document.querySelectorAll('.t5-var-pill[data-variant-id="' + vid + '"]');
+                pagePills.forEach(function(pill) {
+                    var parent = pill.closest('.t5-var-pills');
+                    if (parent) {
+                        parent.querySelectorAll('.t5-var-pill').forEach(function(p) { p.classList.remove('selected'); });
+                    }
+                    pill.classList.add('selected');
+                });
+
+                var pagePriceEl = document.querySelector('.ps-price');
+                if (pagePriceEl && price > 0) {
+                    pagePriceEl.textContent = 'Rp ' + price.toLocaleString('id-ID');
+                }
+            }
+        };
+
+        window.stepT5BvmQty = function(delta) {
+            var input = document.getElementById('t5-bvm-qty-input');
+            if (!input) return;
+            var current = parseInt(input.value) || 1;
+            var next = current + delta;
+            if (next < 1) next = 1;
+
+            var selectedPill = document.querySelector('.t5-bvm-pill.selected');
+            if (selectedPill && selectedPill.dataset.stock) {
+                var maxStock = parseInt(selectedPill.dataset.stock);
+                if (!isNaN(maxStock) && maxStock > 0 && next > maxStock) {
+                    next = maxStock;
+                }
+            }
+
+            input.value = next;
+            var formQty = document.getElementById('t5_form_qty');
+            if (formQty) formQty.value = next;
+        };
+
+        window.confirmT5BvmSubmit = function() {
+            var vid = document.getElementById('t5_selected_variant_id').value;
+            if (!vid) {
+                var err = document.getElementById('t5-bvm-error');
+                if (err) {
+                    err.style.display = 'block';
+                    err.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                return false;
+            }
+
+            var modalQty = document.getElementById('t5-bvm-qty-input');
+            var formQty = document.getElementById('t5_form_qty');
+            if (modalQty && formQty) {
+                formQty.value = modalQty.value;
+            }
+
+            closeT5VariantModal();
+
+            if (window._t5CurrentAction === 'cart') {
+                var form = document.querySelector('.t5-add-cart-form');
+                if (form) form.submit();
+            } else {
+                doT5DirectCheckout();
+            }
+        };
+
+        window.selectT5Variant = function(btn) {
+            var vid = btn.dataset.variantId;
+            var modalPill = document.querySelector('.t5-bvm-pill[data-variant-id="' + vid + '"]');
+            if (modalPill) {
+                selectT5BvmVariant(modalPill, true);
+            } else {
+                var pills = btn.closest('.t5-var-pills').querySelectorAll('.t5-var-pill');
+                pills.forEach(function(p){ p.classList.remove('selected'); });
+                btn.classList.add('selected');
+                document.getElementById('t5_selected_variant_id').value = vid;
+            }
+        };
+
         // Direct Checkout: Add to Cart with Affiliate Tracking then Redirect
         window.t5DirectCheckout = function () {
+            if (t5HasVariants) {
+                openT5VariantModal('buy');
+                return false;
+            }
+            doT5DirectCheckout();
+        };
+
+        window.doT5DirectCheckout = function () {
             var form = document.querySelector('.t5-add-cart-form');
             if (!form) {
                 window.location.href = "{{ route('cart.index') }}";
@@ -2142,6 +2505,10 @@
                 window.location.href = "{{ route('cart.index') }}";
             });
         };
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeT5VariantModal();
+        });
         // Lock image dragging
         document.addEventListener('dragstart', function (e) {
             if (e.target && e.target.tagName === 'IMG') {

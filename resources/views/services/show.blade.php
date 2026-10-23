@@ -1774,6 +1774,7 @@
                                         $isFreeProduct = $service->sale_price !== null && (float) $service->sale_price <= 0;
                                         $basePrice = (!$isFreeProduct && $service->sale_price > 0 && $service->sale_price < $service->price)
                                             ? (float) $service->sale_price : (float) $service->price;
+                                        $defaultProductImage = !empty($imgs[0]) ? $imgs[0] : ($service->image ? asset('storage/' . $service->image) : asset('images/service-default.jpg'));
                                     @endphp
                                     <div id="pd-variant-section" style="margin-bottom:1.5rem;">
                                         @foreach($service->variantOptions as $option)
@@ -1781,10 +1782,21 @@
                                                 <div class="pd-attr-label" style="padding-top:4px;">{{ $option->name }}</div>
                                                 <div class="pd-attr-content" style="flex-wrap:wrap; gap:0.5rem;">
                                                     @foreach($option->values as $val)
+                                                        @php
+                                                            $vImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . $val->image)) : null;
+                                                        @endphp
                                                         <button type="button" class="pd-variant-pill" data-variant-id="{{ $val->id }}"
-                                                            data-price="{{ $val->finalPrice() }}" data-stock="{{ $val->stock }}"
-                                                            data-label="{{ $option->name }}: {{ $val->value }}" @if($val->stock !== null && $val->stock <= 0) disabled style="opacity:0.4;cursor:not-allowed;" @endif
+                                                            data-price="{{ $val->finalPrice() }}" 
+                                                            data-price-formatted="Rp{{ number_format($val->finalPrice(), 0, ',', '.') }}"
+                                                            data-stock="{{ $val->stock }}"
+                                                            data-label="{{ $option->name }}: {{ $val->value }}" 
+                                                            data-img="{{ $vImg ?: $defaultProductImage }}"
+                                                            data-has-custom-img="{{ $vImg ? '1' : '0' }}"
+                                                            @if($val->stock !== null && $val->stock <= 0) disabled style="opacity:0.4;cursor:not-allowed;" @endif
                                                             onclick="selectPdVariant(this)">
+                                                            @if($vImg)
+                                                                <img src="{{ $vImg }}" alt="{{ $val->value }}" style="width:20px;height:20px;border-radius:4px;object-fit:cover;vertical-align:middle;margin-right:4px;">
+                                                            @endif
                                                             {{ $val->value }}
                                                             @if($val->price > 0 && $val->price != $basePrice)
                                                                 <span
@@ -1808,6 +1820,8 @@
                                     </div>
                                     <style>
                                         .pd-variant-pill {
+                                            display: inline-flex;
+                                            align-items: center;
                                             padding: 0.4rem 0.9rem;
                                             border: 1.5px solid var(--border, #E2E8F0);
                                             border-radius: 99px;
@@ -1952,76 +1966,655 @@
                                 @endif
                             </form>
 
+                            {{-- POPUP INTERAKTIF PILIH VARIASI (COMPACT, MINIMALIS, MOBILE-FRIENDLY BOTTOM-SHEET) --}}
+                            @if($service->variantOptions && $service->variantOptions->count() > 0)
+                            <div id="pd-variant-modal" class="buyle-variant-modal" style="display:none;" aria-hidden="true">
+                                <div class="bvm-backdrop" onclick="closePdVariantModal()"></div>
+                                <div class="bvm-sheet">
+                                    {{-- Drag handle pill (mobile) --}}
+                                    <div class="bvm-handle-bar">
+                                        <span class="bvm-handle"></span>
+                                    </div>
+
+                                    {{-- Header: Gambar Variasi / Produk + Harga + Stok + Tombol Tutup --}}
+                                    <div class="bvm-header">
+                                        <div class="bvm-thumb-wrap">
+                                            <img id="bvm-thumb-img" src="{{ $defaultProductImage }}" alt="{{ $service->name }}" class="bvm-thumb">
+                                            <span id="bvm-thumb-badge" class="bvm-thumb-badge" style="display:none;">Foto Variasi</span>
+                                        </div>
+                                        <div class="bvm-header-info">
+                                            <div class="bvm-price" id="bvm-price-display">Rp{{ number_format($basePrice, 0, ',', '.') }}</div>
+                                            <div class="bvm-stock" id="bvm-stock-display">
+                                                @if(is_null($service->stock))
+                                                    <span style="color:#10b981;">• Stok Tersedia</span>
+                                                @elseif($service->stock > 0)
+                                                    <span>• Sisa {{ $service->stock }} buah</span>
+                                                @else
+                                                    <span style="color:#ef4444;">• Stok Habis</span>
+                                                @endif
+                                            </div>
+                                            <div class="bvm-selected-label" id="bvm-selected-label">
+                                                Silakan pilih opsi variasi
+                                            </div>
+                                        </div>
+                                        <button type="button" class="bvm-close-btn" onclick="closePdVariantModal()" aria-label="Tutup">
+                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    {{-- Body: List Grup Variasi & Kuantitas --}}
+                                    <div class="bvm-body">
+                                        @foreach($service->variantOptions as $option)
+                                            <div class="bvm-group">
+                                                <div class="bvm-group-title">{{ $option->name }}</div>
+                                                <div class="bvm-pills">
+                                                    @foreach($option->values as $val)
+                                                        @php
+                                                            $valImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . $val->image)) : null;
+                                                            $valFinalPrice = $val->finalPrice();
+                                                            $isValOutOfStock = ($val->stock !== null && $val->stock <= 0);
+                                                        @endphp
+                                                        <button type="button" 
+                                                            class="bvm-pill" 
+                                                            data-variant-id="{{ $val->id }}"
+                                                            data-price="{{ $valFinalPrice }}"
+                                                            data-price-formatted="Rp{{ number_format($valFinalPrice, 0, ',', '.') }}"
+                                                            data-stock="{{ $val->stock }}"
+                                                            data-label="{{ $option->name }}: {{ $val->value }}"
+                                                            data-img="{{ $valImg ?: $defaultProductImage }}"
+                                                            data-has-custom-img="{{ $valImg ? '1' : '0' }}"
+                                                            @if($isValOutOfStock) disabled @endif
+                                                            onclick="selectBvmVariant(this)">
+                                                            @if($valImg)
+                                                                <img src="{{ $valImg }}" alt="{{ $val->value }}" class="bvm-pill-img">
+                                                            @endif
+                                                            <span class="bvm-pill-text">{{ $val->value }}</span>
+                                                            @if($val->price > 0 && $val->price != $basePrice)
+                                                                <span class="bvm-pill-diff">+Rp{{ number_format($val->price - $basePrice, 0, ',', '.') }}</span>
+                                                            @endif
+                                                            @if($isValOutOfStock)
+                                                                <span class="bvm-pill-diff" style="color:#ef4444;">(Habis)</span>
+                                                            @endif
+                                                        </button>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endforeach
+
+                                        {{-- Selector Kuantitas di dalam Modal --}}
+                                        <div class="bvm-qty-row">
+                                            <div>
+                                                <div class="bvm-qty-label">Kuantitas</div>
+                                                <div class="bvm-qty-sub" id="bvm-qty-sub">Jumlah yang akan dipesan</div>
+                                            </div>
+                                            <div class="bvm-qty-ctrl">
+                                                <button type="button" class="bvm-qty-btn" onclick="stepBvmQty(-1)">−</button>
+                                                <input type="number" id="bvm-qty-input" class="bvm-qty-input" value="1" min="1" readonly>
+                                                <button type="button" class="bvm-qty-btn" onclick="stepBvmQty(1)">+</button>
+                                            </div>
+                                        </div>
+
+                                        <div id="bvm-error" class="bvm-error" style="display:none;">
+                                            ⚠ Silakan pilih salah satu variasi terlebih dahulu.
+                                        </div>
+                                    </div>
+
+                                    {{-- Footer Tombol Beli / Konfirmasi --}}
+                                    <div class="bvm-footer">
+                                        <button type="button" id="bvm-submit-btn" class="bvm-btn-primary" onclick="confirmBvmSubmit()">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                                                <path d="M5 12h14"></path>
+                                                <path d="m12 5 7 7-7 7"></path>
+                                            </svg>
+                                            <span id="bvm-submit-label">Beli Sekarang</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <style>
+                                /* ── COMPACT MINIMALIS & MOBILE FRIENDLY VARIANT MODAL ── */
+                                .buyle-variant-modal {
+                                    position: fixed;
+                                    inset: 0;
+                                    z-index: 999999;
+                                    display: flex;
+                                    align-items: flex-end;
+                                    justify-content: center;
+                                    visibility: hidden;
+                                    opacity: 0;
+                                    transition: opacity 0.24s ease, visibility 0.24s ease;
+                                }
+                                .buyle-variant-modal.active {
+                                    visibility: visible;
+                                    opacity: 1;
+                                }
+                                .bvm-backdrop {
+                                    position: absolute;
+                                    inset: 0;
+                                    background: rgba(15, 23, 42, 0.62);
+                                    backdrop-filter: blur(4px);
+                                    -webkit-backdrop-filter: blur(4px);
+                                }
+                                .bvm-sheet {
+                                    position: relative;
+                                    width: 100%;
+                                    max-width: 480px;
+                                    background: #ffffff;
+                                    border-radius: 24px 24px 0 0;
+                                    box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.22);
+                                    display: flex;
+                                    flex-direction: column;
+                                    max-height: 86vh;
+                                    transform: translateY(100%);
+                                    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+                                    z-index: 1;
+                                    overflow: hidden;
+                                }
+                                .buyle-variant-modal.active .bvm-sheet {
+                                    transform: translateY(0);
+                                }
+
+                                @media (min-width: 640px) {
+                                    .buyle-variant-modal {
+                                        align-items: center;
+                                        padding: 1.5rem;
+                                    }
+                                    .bvm-sheet {
+                                        border-radius: 20px;
+                                        transform: scale(0.95);
+                                        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+                                    }
+                                    .buyle-variant-modal.active .bvm-sheet {
+                                        transform: scale(1);
+                                    }
+                                    .bvm-handle-bar {
+                                        display: none !important;
+                                    }
+                                }
+
+                                .bvm-handle-bar {
+                                    display: flex;
+                                    justify-content: center;
+                                    padding-top: 10px;
+                                    padding-bottom: 4px;
+                                }
+                                .bvm-handle {
+                                    width: 38px;
+                                    height: 4px;
+                                    background: #cbd5e1;
+                                    border-radius: 99px;
+                                }
+
+                                .bvm-header {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 0.85rem;
+                                    padding: 0.85rem 1.25rem;
+                                    border-bottom: 1px solid #f1f5f9;
+                                    position: relative;
+                                }
+                                .bvm-thumb-wrap {
+                                    width: 70px;
+                                    height: 70px;
+                                    border-radius: 12px;
+                                    overflow: hidden;
+                                    background: #f8fafc;
+                                    border: 1.5px solid #e2e8f0;
+                                    flex-shrink: 0;
+                                    position: relative;
+                                }
+                                .bvm-thumb {
+                                    width: 100%;
+                                    height: 100%;
+                                    object-fit: cover;
+                                    transition: opacity 0.2s ease;
+                                }
+                                .bvm-thumb-badge {
+                                    position: absolute;
+                                    bottom: 2px;
+                                    right: 2px;
+                                    background: rgba(15, 23, 42, 0.8);
+                                    color: #fff;
+                                    font-size: 0.58rem;
+                                    font-weight: 700;
+                                    padding: 1px 4px;
+                                    border-radius: 4px;
+                                    letter-spacing: 0.02em;
+                                }
+                                .bvm-header-info {
+                                    flex: 1;
+                                    min-width: 0;
+                                }
+                                .bvm-price {
+                                    font-family: 'Montserrat', sans-serif;
+                                    font-size: 1.25rem;
+                                    font-weight: 800;
+                                    color: #1eb349;
+                                    line-height: 1.2;
+                                }
+                                .bvm-stock {
+                                    font-size: 0.78rem;
+                                    font-weight: 600;
+                                    color: #64748b;
+                                    margin-top: 3px;
+                                }
+                                .bvm-selected-label {
+                                    font-size: 0.78rem;
+                                    color: #0f172a;
+                                    font-weight: 600;
+                                    margin-top: 3px;
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                }
+                                .bvm-close-btn {
+                                    width: 32px;
+                                    height: 32px;
+                                    border-radius: 50%;
+                                    border: none;
+                                    background: #f1f5f9;
+                                    color: #64748b;
+                                    cursor: pointer;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    transition: all 0.15s;
+                                    flex-shrink: 0;
+                                }
+                                .bvm-close-btn:hover {
+                                    background: #e2e8f0;
+                                    color: #0f172a;
+                                }
+
+                                .bvm-body {
+                                    padding: 1rem 1.25rem;
+                                    overflow-y: auto;
+                                    -webkit-overflow-scrolling: touch;
+                                    max-height: calc(86vh - 180px);
+                                }
+                                .bvm-group {
+                                    margin-bottom: 1.1rem;
+                                }
+                                .bvm-group-title {
+                                    font-size: 0.78rem;
+                                    font-weight: 700;
+                                    color: #475569;
+                                    margin-bottom: 0.55rem;
+                                    text-transform: uppercase;
+                                    letter-spacing: 0.04em;
+                                }
+                                .bvm-pills {
+                                    display: flex;
+                                    flex-wrap: wrap;
+                                    gap: 0.5rem;
+                                }
+                                .bvm-pill {
+                                    display: inline-flex;
+                                    align-items: center;
+                                    gap: 0.45rem;
+                                    padding: 0.45rem 0.85rem;
+                                    border: 1.5px solid #e2e8f0;
+                                    border-radius: 12px;
+                                    background: #ffffff;
+                                    color: #0f172a;
+                                    font-size: 0.82rem;
+                                    font-weight: 600;
+                                    cursor: pointer;
+                                    transition: all 0.16s ease;
+                                    user-select: none;
+                                }
+                                .bvm-pill:hover:not(:disabled) {
+                                    border-color: #1eb349;
+                                    color: #1eb349;
+                                    background: rgba(30, 179, 73, 0.04);
+                                }
+                                .bvm-pill.selected {
+                                    border-color: #1eb349;
+                                    background: linear-gradient(135deg, rgba(30, 179, 73, 0.12), rgba(165, 207, 55, 0.08));
+                                    color: #15803d;
+                                    box-shadow: 0 2px 8px rgba(30, 179, 73, 0.2);
+                                }
+                                .bvm-pill:disabled {
+                                    opacity: 0.4;
+                                    cursor: not-allowed;
+                                    background: #f8fafc;
+                                    border-style: dashed;
+                                }
+                                .bvm-pill-img {
+                                    width: 22px;
+                                    height: 22px;
+                                    border-radius: 6px;
+                                    object-fit: cover;
+                                    border: 1px solid #e2e8f0;
+                                    flex-shrink: 0;
+                                }
+                                .bvm-pill-diff {
+                                    font-size: 0.7rem;
+                                    opacity: 0.8;
+                                }
+
+                                .bvm-qty-row {
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: space-between;
+                                    padding-top: 0.85rem;
+                                    margin-top: 0.5rem;
+                                    border-top: 1px solid #f1f5f9;
+                                }
+                                .bvm-qty-label {
+                                    font-size: 0.82rem;
+                                    font-weight: 700;
+                                    color: #0f172a;
+                                }
+                                .bvm-qty-sub {
+                                    font-size: 0.72rem;
+                                    color: #94a3b8;
+                                }
+                                .bvm-qty-ctrl {
+                                    display: inline-flex;
+                                    align-items: center;
+                                    border: 1.5px solid #e2e8f0;
+                                    border-radius: 10px;
+                                    overflow: hidden;
+                                    background: #fff;
+                                }
+                                .bvm-qty-btn {
+                                    width: 32px;
+                                    height: 32px;
+                                    border: none;
+                                    background: #f8fafc;
+                                    color: #0f172a;
+                                    font-size: 1rem;
+                                    font-weight: 700;
+                                    cursor: pointer;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    transition: background 0.15s;
+                                }
+                                .bvm-qty-btn:hover {
+                                    background: #e2e8f0;
+                                }
+                                .bvm-qty-input {
+                                    width: 44px;
+                                    height: 32px;
+                                    border: none;
+                                    text-align: center;
+                                    font-size: 0.88rem;
+                                    font-weight: 700;
+                                    color: #0f172a;
+                                    background: #fff;
+                                    pointer-events: none;
+                                }
+
+                                .bvm-error {
+                                    color: #ef4444;
+                                    font-size: 0.78rem;
+                                    background: #fef2f2;
+                                    border: 1px solid #fca5a5;
+                                    border-radius: 8px;
+                                    padding: 0.45rem 0.75rem;
+                                    margin-top: 0.75rem;
+                                    animation: shake 0.3s;
+                                }
+
+                                .bvm-footer {
+                                    padding: 0.85rem 1.25rem 1.15rem;
+                                    border-top: 1px solid #f1f5f9;
+                                    background: #ffffff;
+                                }
+                                .bvm-btn-primary {
+                                    width: 100%;
+                                    padding: 0.85rem 1.25rem;
+                                    border-radius: 14px;
+                                    border: none;
+                                    background: linear-gradient(135deg, #1eb349 0%, #15803d 100%);
+                                    color: #ffffff;
+                                    font-family: 'Montserrat', sans-serif;
+                                    font-size: 0.92rem;
+                                    font-weight: 800;
+                                    cursor: pointer;
+                                    box-shadow: 0 4px 16px rgba(30, 179, 73, 0.32);
+                                    transition: all 0.2s ease;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    gap: 0.5rem;
+                                }
+                                .bvm-btn-primary:hover {
+                                    box-shadow: 0 6px 22px rgba(30, 179, 73, 0.45);
+                                    transform: translateY(-1px);
+                                }
+                                .bvm-btn-primary:active {
+                                    transform: translateY(0);
+                                }
+                            </style>
+                            @endif
+
                             <script>
                                 (function () {
                                     var hasVariants = {{ ($service->variantOptions && $service->variantOptions->count() > 0) ? 'true' : 'false' }};
+                                    window._pdCurrentAction = 'buy';
 
-                                    window.selectPdVariant = function (btn) {
-                                        // Deselect siblings in same option group
-                                        var parent = btn.closest('.pd-attr-content');
-                                        parent.querySelectorAll('.pd-variant-pill').forEach(function (p) {
-                                            p.classList.remove('selected');
+                                    window.openPdVariantModal = function(action) {
+                                        var modal = document.getElementById('pd-variant-modal');
+                                        if (!modal) return;
+                                        window._pdCurrentAction = action || 'buy';
+
+                                        var submitLabel = document.getElementById('bvm-submit-label');
+                                        if (submitLabel) {
+                                            submitLabel.textContent = (window._pdCurrentAction === 'cart') ? 'Tambah Keranjang' : 'Beli Sekarang';
+                                        }
+
+                                        // Sync quantity from main page
+                                        var mainQty = document.getElementById('qty_input');
+                                        var modalQty = document.getElementById('bvm-qty-input');
+                                        if (mainQty && modalQty) {
+                                            modalQty.value = mainQty.value || 1;
+                                        }
+
+                                        // Sync current variant if already selected
+                                        var currentVid = document.getElementById('pd_selected_variant_id').value;
+                                        if (currentVid) {
+                                            var activePill = modal.querySelector('.bvm-pill[data-variant-id="' + currentVid + '"]');
+                                            if (activePill) {
+                                                selectBvmVariant(activePill, false);
+                                            }
+                                        }
+
+                                        modal.style.display = 'flex';
+                                        requestAnimationFrame(function() {
+                                            modal.classList.add('active');
+                                            document.body.style.overflow = 'hidden';
                                         });
+                                    };
+
+                                    window.closePdVariantModal = function() {
+                                        var modal = document.getElementById('pd-variant-modal');
+                                        if (!modal) return;
+                                        modal.classList.remove('active');
+                                        document.body.style.overflow = '';
+                                        setTimeout(function() {
+                                            if (!modal.classList.contains('active')) {
+                                                modal.style.display = 'none';
+                                            }
+                                        }, 280);
+                                    };
+
+                                    window.selectBvmVariant = function(btn, syncToPage) {
+                                        if (typeof syncToPage === 'undefined') syncToPage = true;
+                                        if (btn.disabled) return;
+                                        var group = btn.closest('.bvm-pills');
+                                        if (group) {
+                                            group.querySelectorAll('.bvm-pill').forEach(function(p) { p.classList.remove('selected'); });
+                                        }
                                         btn.classList.add('selected');
 
                                         var vid = btn.dataset.variantId;
                                         var price = parseFloat(btn.dataset.price) || 0;
+                                        var priceFormatted = btn.dataset.priceFormatted;
                                         var stock = btn.dataset.stock;
                                         var label = btn.dataset.label;
+                                        var imgUrl = btn.dataset.img;
+                                        var hasCustomImg = btn.dataset.hasCustomImg === '1';
 
+                                        // Update modal image preview
+                                        var thumbImg = document.getElementById('bvm-thumb-img');
+                                        var thumbBadge = document.getElementById('bvm-thumb-badge');
+                                        if (thumbImg && imgUrl) {
+                                            thumbImg.src = imgUrl;
+                                        }
+                                        if (thumbBadge) {
+                                            thumbBadge.style.display = hasCustomImg ? 'block' : 'none';
+                                        }
+
+                                        // Update modal price
+                                        var priceDisplay = document.getElementById('bvm-price-display');
+                                        if (priceDisplay && priceFormatted) {
+                                            priceDisplay.textContent = priceFormatted;
+                                        }
+
+                                        // Update modal stock info
+                                        var stockDisplay = document.getElementById('bvm-stock-display');
+                                        if (stockDisplay) {
+                                            if (stock === '' || stock === null) {
+                                                stockDisplay.innerHTML = '<span style="color:#10b981;">• Stok Tersedia</span>';
+                                            } else {
+                                                var sNum = parseInt(stock);
+                                                if (sNum > 0) {
+                                                    stockDisplay.innerHTML = '<span style="color:#10b981;">• Sisa ' + sNum + ' buah</span>';
+                                                } else {
+                                                    stockDisplay.innerHTML = '<span style="color:#ef4444;">• Stok Habis</span>';
+                                                }
+                                            }
+                                        }
+
+                                        // Update label info
+                                        var labelDisplay = document.getElementById('bvm-selected-label');
+                                        if (labelDisplay) {
+                                            labelDisplay.innerHTML = '<span style="color:#15803d;font-weight:700;">✓ Dipilih:</span> ' + label;
+                                        }
+
+                                        // Hide error in modal
+                                        var err = document.getElementById('bvm-error');
+                                        if (err) err.style.display = 'none';
+
+                                        // Sync to main form
                                         document.getElementById('pd_selected_variant_id').value = vid;
 
-                                        // Update price display
-                                        if (price > 0) {
-                                            var priceEl = document.querySelector('.pd-price-main');
-                                            if (priceEl) {
-                                                priceEl.textContent = 'Rp' + price.toLocaleString('id-ID');
-                                            }
-                                        }
-
-                                        // Update stock info
-                                        var stockEl = document.getElementById('pd-stock-info');
-                                        var qtyInput = document.getElementById('qty_input');
-                                        if (stockEl) {
-                                            if (stock === '' || stock === null || parseInt(stock) > 0) {
-                                                var stockNum = (stock === '' || stock === null) ? null : parseInt(stock);
-                                                if (stockNum === null) {
-                                                    stockEl.innerHTML = '<span style="color:#10B981;">Stok Tersedia</span>';
-                                                    if (qtyInput) { qtyInput.removeAttribute('max'); qtyInput.disabled = false; }
-                                                } else {
-                                                    stockEl.textContent = 'Sisa ' + stockNum + ' buah';
-                                                    if (qtyInput) { qtyInput.max = stockNum; qtyInput.disabled = false; }
+                                        // Sync to main page
+                                        if (syncToPage) {
+                                            var pagePill = document.querySelector('.pd-variant-pill[data-variant-id="' + vid + '"]');
+                                            if (pagePill) {
+                                                var parent = pagePill.closest('.pd-attr-content');
+                                                if (parent) {
+                                                    parent.querySelectorAll('.pd-variant-pill').forEach(function(p) { p.classList.remove('selected'); });
                                                 }
-                                            } else {
-                                                stockEl.innerHTML = '<span style="color:#EE4D2D;">Habis</span>';
-                                                if (qtyInput) qtyInput.disabled = true;
+                                                pagePill.classList.add('selected');
+                                            }
+
+                                            var pagePriceEl = document.querySelector('.pd-price-main');
+                                            if (pagePriceEl && price > 0) {
+                                                pagePriceEl.textContent = 'Rp' + price.toLocaleString('id-ID');
+                                            }
+
+                                            var pageStockEl = document.getElementById('pd-stock-info');
+                                            if (pageStockEl) {
+                                                if (stock === '' || stock === null) {
+                                                    pageStockEl.innerHTML = '<span style="color:#10B981;">Stok Tersedia</span>';
+                                                } else {
+                                                    var sNum = parseInt(stock);
+                                                    pageStockEl.innerHTML = (sNum > 0) ? ('Sisa ' + sNum + ' buah') : '<span style="color:#EE4D2D;">Habis</span>';
+                                                }
+                                            }
+
+                                            var infoEl = document.getElementById('pd-variant-info');
+                                            if (infoEl) {
+                                                infoEl.style.display = 'block';
+                                                infoEl.textContent = '✓ Dipilih: ' + label;
+                                            }
+                                            var pageErr = document.getElementById('pd-variant-error');
+                                            if (pageErr) pageErr.style.display = 'none';
+                                        }
+                                    };
+
+                                    window.stepBvmQty = function(delta) {
+                                        var input = document.getElementById('bvm-qty-input');
+                                        var mainQty = document.getElementById('qty_input');
+                                        if (!input) return;
+                                        var current = parseInt(input.value) || 1;
+                                        var next = current + delta;
+                                        if (next < 1) next = 1;
+
+                                        var selectedPill = document.querySelector('.bvm-pill.selected');
+                                        if (selectedPill && selectedPill.dataset.stock) {
+                                            var maxStock = parseInt(selectedPill.dataset.stock);
+                                            if (!isNaN(maxStock) && maxStock > 0 && next > maxStock) {
+                                                next = maxStock;
                                             }
                                         }
 
-                                        // Variant info text
-                                        var infoEl = document.getElementById('pd-variant-info');
-                                        if (infoEl) { infoEl.style.display = 'block'; infoEl.textContent = '✓ Dipilih: ' + label; }
+                                        input.value = next;
+                                        if (mainQty) mainQty.value = next;
+                                    };
 
-                                        // Hide error
-                                        var errEl = document.getElementById('pd-variant-error');
-                                        if (errEl) errEl.style.display = 'none';
+                                    window.confirmBvmSubmit = function() {
+                                        var vid = document.getElementById('pd_selected_variant_id').value;
+                                        if (!vid) {
+                                            var err = document.getElementById('bvm-error');
+                                            if (err) {
+                                                err.style.display = 'block';
+                                                err.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                            }
+                                            return false;
+                                        }
+
+                                        // Sync qty
+                                        var modalQty = document.getElementById('bvm-qty-input');
+                                        var mainQty = document.getElementById('qty_input');
+                                        if (modalQty && mainQty) {
+                                            mainQty.value = modalQty.value;
+                                        }
+
+                                        var action = window._pdCurrentAction || 'buy';
+                                        document.getElementById('pd_action_input').value = action;
+
+                                        closePdVariantModal();
+                                        document.getElementById('pd-cart-form').submit();
+                                    };
+
+                                    window.selectPdVariant = function (btn) {
+                                        var vid = btn.dataset.variantId;
+                                        var modalPill = document.querySelector('.bvm-pill[data-variant-id="' + vid + '"]');
+                                        if (modalPill) {
+                                            selectBvmVariant(modalPill, true);
+                                        } else {
+                                            var parent = btn.closest('.pd-attr-content');
+                                            parent.querySelectorAll('.pd-variant-pill').forEach(function (p) {
+                                                p.classList.remove('selected');
+                                            });
+                                            btn.classList.add('selected');
+                                            document.getElementById('pd_selected_variant_id').value = vid;
+                                        }
                                     };
 
                                     window.submitPdCart = function (action) {
                                         if (hasVariants) {
-                                            var vid = document.getElementById('pd_selected_variant_id').value;
-                                            if (!vid) {
-                                                var errEl = document.getElementById('pd-variant-error');
-                                                if (errEl) { errEl.style.display = 'block'; errEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
-                                                // Shake effect
-                                                var sec = document.getElementById('pd-variant-section');
-                                                if (sec) { sec.style.animation = 'shake 0.3s'; setTimeout(function () { sec.style.animation = ''; }, 400); }
-                                                return false;
-                                            }
+                                            // Pop up the interactive variant selector
+                                            openPdVariantModal(action);
+                                            return false;
                                         }
                                         document.getElementById('pd_action_input').value = action;
                                         document.getElementById('pd-cart-form').submit();
                                     };
+
+                                    document.addEventListener('keydown', function(e) {
+                                        if (e.key === 'Escape') closePdVariantModal();
+                                    });
                                 })();
                             </script>
                             @if($isWarActive)

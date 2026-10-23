@@ -529,12 +529,11 @@
         @if($summary['items']->isEmpty())
             <div class="empty-state" style="grid-column:1/-1;">
                 <div class="empty-icon-wrap" style="background:none; box-shadow:none; width:auto; margin-bottom:0;">
-                    <img src="{{ asset('images/keranjangkosong.png') }}"
-                         alt="Keranjang Kosong"
-                         style="width:180px; height:auto; display:block; margin:0 auto 1.5rem; filter:drop-shadow(0 8px 24px rgba(30,179,73,0.15)); animation:floatDino 3s ease-in-out infinite;">
+                    <img src="{{ asset('images/keranjangkosong.png') }}" alt="Keranjang Kosong"
+                        style="width:180px; height:auto; display:block; margin:0 auto 1.5rem; filter:drop-shadow(0 8px 24px rgba(30,179,73,0.15)); animation:floatDino 3s ease-in-out infinite;">
                 </div>
                 <h2>Keranjang Masih Kosong</h2>
-                <p>Yuk cari produk perlengkapan rumah impianmu dan tambahkan ke keranjang!</p>
+                <p>Yuk cari produk digital & jasa kreatif dan tambahkan ke keranjang!</p>
                 <a href="{{ route('products') }}"
                     style="display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#fff; font-weight:700; padding:0.875rem 2rem; border-radius:50px; text-decoration:none; margin-top:0.5rem; box-shadow:0 4px 15px rgba(30,179,73,0.3); transition:all 0.2s;"
                     onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
@@ -546,8 +545,15 @@
                 </a>
                 <style>
                     @keyframes floatDino {
-                        0%, 100% { transform: translateY(0px); }
-                        50% { transform: translateY(-10px); }
+
+                        0%,
+                        100% {
+                            transform: translateY(0px);
+                        }
+
+                        50% {
+                            transform: translateY(-10px);
+                        }
                     }
                 </style>
             </div>
@@ -633,20 +639,20 @@
                         if ($pt === 'ticket') {
                             $hasTicketItemC = true;
                             $platformFeeCart += round($ci->subtotal * $ticketPlatformFeeRate / 100);
-                            $adminFeeCart    += $ticketAdminFeeFlat * $ci->qty;
+                            $adminFeeCart += $ticketAdminFeeFlat * $ci->qty;
                         } else {
                             $hasNonTicketItemC = true;
                             $platformFeeCart += round($ci->subtotal * $pfRate / 100);
-                            $adminFeeCart    += round($ci->subtotal * $afRate / 100);
+                            $adminFeeCart += round($ci->subtotal * $afRate / 100);
                         }
                     }
                     $estimatedTotal = $summary['subtotal'] + $platformFeeCart + $adminFeeCart;
                     $pfLabelCart = $hasTicketItemC && !$hasNonTicketItemC
                         ? 'Platform Fee (5%)'
-                        : 'Platform Fee (' . ($pfRate % 1 == 0 ? (int)$pfRate : $pfRate) . '%)';
+                        : 'Platform Fee (' . ($pfRate % 1 == 0 ? (int) $pfRate : $pfRate) . '%)';
                     $afLabelCart = $hasTicketItemC && !$hasNonTicketItemC
                         ? 'Admin Fee (Rp 5.000/tiket)'
-                        : 'Admin Fee (' . ($afRate % 1 == 0 ? (int)$afRate : $afRate) . '%)';
+                        : 'Admin Fee (' . ($afRate % 1 == 0 ? (int) $afRate : $afRate) . '%)';
                 @endphp
                 <div class="footer-row">
                     <span class="footer-row-label">{{ $summary['count'] }} produk dipilih</span>

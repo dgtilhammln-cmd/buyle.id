@@ -686,12 +686,14 @@
                             .bio-variant-label { font-size:0.78rem; font-weight:700; color:#475569; margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.03em; }
                             .bio-variant-pills { display:flex; flex-wrap:wrap; gap:0.4rem; }
                             .bio-variant-pill {
-                                padding:0.3rem 0.75rem; border:1.5px solid #E2E8F0; border-radius:99px;
+                                display:inline-flex; align-items:center; gap:0.4rem;
+                                padding:0.35rem 0.8rem; border:1.5px solid #E2E8F0; border-radius:99px;
                                 background:#fff; color:#0F172A; font-size:0.8rem; font-weight:500; font-family:inherit; cursor:pointer; transition:all 0.15s;
                             }
                             .bio-variant-pill:hover:not(:disabled) { border-color:#1eb349; color:#1eb349; }
                             .bio-variant-pill.selected { border-color:#1eb349; background:rgba(30,179,73,0.1); color:#1eb349; font-weight:700; }
                             .bio-variant-pill:disabled { opacity:0.4; cursor:not-allowed; }
+                            .bio-variant-pill-img { width:20px; height:20px; border-radius:4px; object-fit:cover; }
                             .bio-variant-err { display:none; color:#EF4444; font-size:0.78rem; background:#FEF2F2; border:1px solid #FCA5A5; border-radius:8px; padding:0.35rem 0.7rem; margin-bottom:0.5rem; }
                             </style>
                             @foreach($product->variantOptions as $opt)
@@ -699,13 +701,24 @@
                                 <div class="bio-variant-label">{{ $opt->name }}</div>
                                 <div class="bio-variant-pills">
                                     @foreach($opt->values as $val)
+                                    @php
+                                        $valImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . $val->image)) : null;
+                                        $valFinalPrice = $val->finalPrice();
+                                    @endphp
                                     <button type="button" class="bio-variant-pill"
                                         data-variant-id="{{ $val->id }}"
-                                        data-price="{{ $val->finalPrice() }}"
+                                        data-price="{{ $valFinalPrice }}"
+                                        data-price-formatted="Rp {{ number_format($valFinalPrice, 0, ',', '.') }}"
+                                        data-stock="{{ $val->stock }}"
                                         data-label="{{ $opt->name }}: {{ $val->value }}"
+                                        data-img="{{ $valImg ?: $firstImage }}"
+                                        data-has-custom-img="{{ $valImg ? '1' : '0' }}"
                                         @if($val->stock !== null && $val->stock <= 0) disabled @endif
                                         onclick="selectBioVariant(this)">
-                                        {{ $val->value }}
+                                        @if($valImg)
+                                            <img src="{{ $valImg }}" alt="{{ $val->value }}" class="bio-variant-pill-img">
+                                        @endif
+                                        <span>{{ $val->value }}</span>
                                     </button>
                                     @endforeach
                                 </div>
@@ -713,6 +726,163 @@
                             @endforeach
                             <div id="bio-variant-err" class="bio-variant-err">⚠ Pilih varian dulu sebelum lanjut.</div>
                         </div>
+
+                        {{-- BIO INTERACTIVE VARIANT POPUP MODAL --}}
+                        <div id="bio-variant-modal" class="buyle-variant-modal" style="display:none;" aria-hidden="true">
+                            <div class="bvm-backdrop" onclick="closeBioVariantModal()"></div>
+                            <div class="bvm-sheet">
+                                <div class="bvm-handle-bar">
+                                    <span class="bvm-handle"></span>
+                                </div>
+                                <div class="bvm-header">
+                                    <div class="bvm-thumb-wrap">
+                                        <img id="bio-bvm-thumb-img" src="{{ $firstImage }}" alt="{{ $prodTitle }}" class="bvm-thumb">
+                                        <span id="bio-bvm-thumb-badge" class="bvm-thumb-badge" style="display:none;">Foto Variasi</span>
+                                    </div>
+                                    <div class="bvm-header-info">
+                                        <div class="bvm-price" id="bio-bvm-price-display">Rp {{ number_format($price, 0, ',', '.') }}</div>
+                                        <div class="bvm-stock" id="bio-bvm-stock-display">
+                                            @if($stock === null)
+                                                <span style="color:#10b981;">• Stok Tersedia</span>
+                                            @elseif((int)$stock > 0)
+                                                <span>• Sisa {{ $stock }} unit</span>
+                                            @else
+                                                <span style="color:#ef4444;">• Stok Habis</span>
+                                            @endif
+                                        </div>
+                                        <div class="bvm-selected-label" id="bio-bvm-selected-label">
+                                            Silakan pilih opsi variasi
+                                        </div>
+                                    </div>
+                                    <button type="button" class="bvm-close-btn" onclick="closeBioVariantModal()" aria-label="Tutup">
+                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div class="bvm-body">
+                                    @foreach($product->variantOptions as $opt)
+                                        <div class="bvm-group">
+                                            <div class="bvm-group-title">{{ $opt->name }}</div>
+                                            <div class="bvm-pills">
+                                                @foreach($opt->values as $val)
+                                                    @php
+                                                        $valImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . $val->image)) : null;
+                                                        $valFinalPrice = $val->finalPrice();
+                                                        $isValOutOfStock = ($val->stock !== null && $val->stock <= 0);
+                                                    @endphp
+                                                    <button type="button" 
+                                                        class="bvm-pill bio-bvm-pill" 
+                                                        data-variant-id="{{ $val->id }}"
+                                                        data-price="{{ $valFinalPrice }}"
+                                                        data-price-formatted="Rp {{ number_format($valFinalPrice, 0, ',', '.') }}"
+                                                        data-stock="{{ $val->stock }}"
+                                                        data-label="{{ $opt->name }}: {{ $val->value }}"
+                                                        data-img="{{ $valImg ?: $firstImage }}"
+                                                        data-has-custom-img="{{ $valImg ? '1' : '0' }}"
+                                                        @if($isValOutOfStock) disabled @endif
+                                                        onclick="selectBioBvmVariant(this)">
+                                                        @if($valImg)
+                                                            <img src="{{ $valImg }}" alt="{{ $val->value }}" class="bvm-pill-img">
+                                                        @endif
+                                                        <span class="bvm-pill-text">{{ $val->value }}</span>
+                                                        @if($isValOutOfStock)
+                                                            <span class="bvm-pill-diff" style="color:#ef4444;">(Habis)</span>
+                                                        @endif
+                                                    </button>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                    <div class="bvm-qty-row">
+                                        <div>
+                                            <div class="bvm-qty-label">Kuantitas</div>
+                                            <div class="bvm-qty-sub">Jumlah pesanan</div>
+                                        </div>
+                                        <div class="bvm-qty-ctrl">
+                                            <button type="button" class="bvm-qty-btn" onclick="stepBioBvmQty(-1)">−</button>
+                                            <input type="number" id="bio-bvm-qty-input" class="bvm-qty-input" value="1" min="1" readonly>
+                                            <button type="button" class="bvm-qty-btn" onclick="stepBioBvmQty(1)">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div id="bio-bvm-error" class="bvm-error" style="display:none;">
+                                        ⚠ Silakan pilih salah satu variasi terlebih dahulu.
+                                    </div>
+                                </div>
+
+                                <div class="bvm-footer">
+                                    <button type="button" id="bio-bvm-submit-btn" class="bvm-btn-primary" onclick="confirmBioBvmSubmit()">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                                            <path d="M5 12h14"></path>
+                                            <path d="m12 5 7 7-7 7"></path>
+                                        </svg>
+                                        <span id="bio-bvm-submit-label">Beli Sekarang</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <style>
+                            .buyle-variant-modal {
+                                position: fixed; inset: 0; z-index: 999999;
+                                display: flex; align-items: flex-end; justify-content: center;
+                                visibility: hidden; opacity: 0;
+                                transition: opacity 0.24s ease, visibility 0.24s ease;
+                            }
+                            .buyle-variant-modal.active { visibility: visible; opacity: 1; }
+                            .bvm-backdrop { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.62); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+                            .bvm-sheet {
+                                position: relative; width: 100%; max-width: 480px;
+                                background: #ffffff; border-radius: 24px 24px 0 0;
+                                box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.22);
+                                display: flex; flex-direction: column; max-height: 86vh;
+                                transform: translateY(100%); transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+                                z-index: 1; overflow: hidden;
+                            }
+                            .buyle-variant-modal.active .bvm-sheet { transform: translateY(0); }
+                            @media (min-width: 640px) {
+                                .buyle-variant-modal { align-items: center; padding: 1.5rem; }
+                                .bvm-sheet { border-radius: 20px; transform: scale(0.95); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25); }
+                                .buyle-variant-modal.active .bvm-sheet { transform: scale(1); }
+                                .bvm-handle-bar { display: none !important; }
+                            }
+                            .bvm-handle-bar { display: flex; justify-content: center; padding-top: 10px; padding-bottom: 4px; }
+                            .bvm-handle { width: 38px; height: 4px; background: #cbd5e1; border-radius: 99px; }
+                            .bvm-header { display: flex; align-items: center; gap: 0.85rem; padding: 0.85rem 1.25rem; border-bottom: 1px solid #f1f5f9; position: relative; }
+                            .bvm-thumb-wrap { width: 70px; height: 70px; border-radius: 12px; overflow: hidden; background: #f8fafc; border: 1.5px solid #e2e8f0; flex-shrink: 0; position: relative; }
+                            .bvm-thumb { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.2s ease; }
+                            .bvm-thumb-badge { position: absolute; bottom: 2px; right: 2px; background: rgba(15, 23, 42, 0.8); color: #fff; font-size: 0.58rem; font-weight: 700; padding: 1px 4px; border-radius: 4px; }
+                            .bvm-header-info { flex: 1; min-width: 0; }
+                            .bvm-price { font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 800; color: #1eb349; line-height: 1.2; }
+                            .bvm-stock { font-size: 0.78rem; font-weight: 600; color: #64748b; margin-top: 3px; }
+                            .bvm-selected-label { font-size: 0.78rem; color: #0f172a; font-weight: 600; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+                            .bvm-close-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: #f1f5f9; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
+                            .bvm-close-btn:hover { background: #e2e8f0; color: #0f172a; }
+                            .bvm-body { padding: 1rem 1.25rem; overflow-y: auto; -webkit-overflow-scrolling: touch; max-height: calc(86vh - 180px); }
+                            .bvm-group { margin-bottom: 1.1rem; }
+                            .bvm-group-title { font-size: 0.78rem; font-weight: 700; color: #475569; margin-bottom: 0.55rem; text-transform: uppercase; letter-spacing: 0.04em; }
+                            .bvm-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+                            .bvm-pill { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.45rem 0.85rem; border: 1.5px solid #e2e8f0; border-radius: 12px; background: #ffffff; color: #0f172a; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.16s ease; user-select: none; }
+                            .bvm-pill:hover:not(:disabled) { border-color: #1eb349; color: #1eb349; background: rgba(30, 179, 73, 0.04); }
+                            .bvm-pill.selected { border-color: #1eb349; background: linear-gradient(135deg, rgba(30, 179, 73, 0.12), rgba(165, 207, 55, 0.08)); color: #15803d; box-shadow: 0 2px 8px rgba(30, 179, 73, 0.2); }
+                            .bvm-pill:disabled { opacity: 0.4; cursor: not-allowed; background: #f8fafc; border-style: dashed; }
+                            .bvm-pill-img { width: 22px; height: 22px; border-radius: 6px; object-fit: cover; border: 1px solid #e2e8f0; flex-shrink: 0; }
+                            .bvm-qty-row { display: flex; align-items: center; justify-content: space-between; padding-top: 0.85rem; margin-top: 0.5rem; border-top: 1px solid #f1f5f9; }
+                            .bvm-qty-label { font-size: 0.82rem; font-weight: 700; color: #0f172a; }
+                            .bvm-qty-sub { font-size: 0.72rem; color: #94a3b8; }
+                            .bvm-qty-ctrl { display: inline-flex; align-items: center; border: 1.5px solid #e2e8f0; border-radius: 10px; overflow: hidden; background: #fff; }
+                            .bvm-qty-btn { width: 32px; height: 32px; border: none; background: #f8fafc; color: #0f172a; font-size: 1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+                            .bvm-qty-btn:hover { background: #e2e8f0; }
+                            .bvm-qty-input { width: 44px; height: 32px; border: none; text-align: center; font-size: 0.88rem; font-weight: 700; color: #0f172a; background: #fff; pointer-events: none; }
+                            .bvm-error { color: #ef4444; font-size: 0.78rem; background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; padding: 0.45rem 0.75rem; margin-top: 0.75rem; }
+                            .bvm-footer { padding: 0.85rem 1.25rem 1.15rem; border-top: 1px solid #f1f5f9; background: #ffffff; }
+                            .bvm-btn-primary { width: 100%; padding: 0.85rem 1.25rem; border-radius: 14px; border: none; background: linear-gradient(135deg, #1eb349 0%, #15803d 100%); color: #ffffff; font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 16px rgba(30, 179, 73, 0.32); transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+                            .bvm-btn-primary:hover { box-shadow: 0 6px 22px rgba(30, 179, 73, 0.45); transform: translateY(-1px); }
+                        </style>
                         @endif
 
                         @php
@@ -1005,34 +1175,194 @@
             }
         }, true);
 
-        // ── BIO VARIANT SELECTOR ──────────────────────────────────────
+        // ── BIO VARIANT SELECTOR & MODAL ─────────────────────────────
         var bioHasVariants = document.getElementById('bio-variant-section') !== null;
+        window._bioCurrentAction = 'buy';
+
+        window.openBioVariantModal = function(action) {
+            var modal = document.getElementById('bio-variant-modal');
+            if (!modal) return;
+            window._bioCurrentAction = action || 'buy';
+
+            var submitLabel = document.getElementById('bio-bvm-submit-label');
+            if (submitLabel) {
+                submitLabel.textContent = (window._bioCurrentAction === 'cart') ? 'Tambah ke Keranjang' : 'Beli Sekarang';
+            }
+
+            var currentVid = document.getElementById('bio_selected_variant_id').value;
+            if (currentVid) {
+                var activePill = modal.querySelector('.bio-bvm-pill[data-variant-id="' + currentVid + '"]');
+                if (activePill) {
+                    selectBioBvmVariant(activePill, false);
+                }
+            }
+
+            modal.style.display = 'flex';
+            requestAnimationFrame(function() {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        };
+
+        window.closeBioVariantModal = function() {
+            var modal = document.getElementById('bio-variant-modal');
+            if (!modal) return;
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            setTimeout(function() {
+                if (!modal.classList.contains('active')) {
+                    modal.style.display = 'none';
+                }
+            }, 280);
+        };
+
+        window.selectBioBvmVariant = function(btn, syncToPage) {
+            if (typeof syncToPage === 'undefined') syncToPage = true;
+            if (btn.disabled) return;
+            var group = btn.closest('.bvm-pills');
+            if (group) {
+                group.querySelectorAll('.bio-bvm-pill').forEach(function(p) { p.classList.remove('selected'); });
+            }
+            btn.classList.add('selected');
+
+            var vid = btn.dataset.variantId;
+            var price = parseFloat(btn.dataset.price) || 0;
+            var priceFormatted = btn.dataset.priceFormatted;
+            var stock = btn.dataset.stock;
+            var label = btn.dataset.label;
+            var imgUrl = btn.dataset.img;
+            var hasCustomImg = btn.dataset.hasCustomImg === '1';
+
+            // Update modal image preview
+            var thumbImg = document.getElementById('bio-bvm-thumb-img');
+            var thumbBadge = document.getElementById('bio-bvm-thumb-badge');
+            if (thumbImg && imgUrl) {
+                thumbImg.src = imgUrl;
+            }
+            if (thumbBadge) {
+                thumbBadge.style.display = hasCustomImg ? 'block' : 'none';
+            }
+
+            // Update modal price
+            var priceDisplay = document.getElementById('bio-bvm-price-display');
+            if (priceDisplay && priceFormatted) {
+                priceDisplay.textContent = priceFormatted;
+            }
+
+            // Update modal stock info
+            var stockDisplay = document.getElementById('bio-bvm-stock-display');
+            if (stockDisplay) {
+                if (stock === '' || stock === null) {
+                    stockDisplay.innerHTML = '<span style="color:#10b981;">• Stok Tersedia</span>';
+                } else {
+                    var sNum = parseInt(stock);
+                    if (sNum > 0) {
+                        stockDisplay.innerHTML = '<span style="color:#10b981;">• Sisa ' + sNum + ' unit</span>';
+                    } else {
+                        stockDisplay.innerHTML = '<span style="color:#ef4444;">• Stok Habis</span>';
+                    }
+                }
+            }
+
+            // Update label info
+            var labelDisplay = document.getElementById('bio-bvm-selected-label');
+            if (labelDisplay) {
+                labelDisplay.innerHTML = '<span style="color:#15803d;font-weight:700;">✓ Dipilih:</span> ' + label;
+            }
+
+            // Hide error in modal
+            var err = document.getElementById('bio-bvm-error');
+            if (err) err.style.display = 'none';
+
+            // Sync to form input
+            document.getElementById('bio_selected_variant_id').value = vid;
+
+            // Sync to page
+            if (syncToPage) {
+                var pagePills = document.querySelectorAll('.bio-variant-pill[data-variant-id="' + vid + '"]');
+                pagePills.forEach(function(pill) {
+                    var parent = pill.closest('.bio-variant-pills');
+                    if (parent) {
+                        parent.querySelectorAll('.bio-variant-pill').forEach(function(p) { p.classList.remove('selected'); });
+                    }
+                    pill.classList.add('selected');
+                });
+
+                var pagePriceEl = document.querySelector('.ps-price');
+                if (pagePriceEl && price > 0) {
+                    pagePriceEl.textContent = 'Rp ' + price.toLocaleString('id-ID');
+                }
+
+                var errEl = document.getElementById('bio-variant-err');
+                if (errEl) errEl.style.display = 'none';
+            }
+        };
+
+        window.stepBioBvmQty = function(delta) {
+            var input = document.getElementById('bio-bvm-qty-input');
+            if (!input) return;
+            var current = parseInt(input.value) || 1;
+            var next = current + delta;
+            if (next < 1) next = 1;
+
+            var selectedPill = document.querySelector('.bio-bvm-pill.selected');
+            if (selectedPill && selectedPill.dataset.stock) {
+                var maxStock = parseInt(selectedPill.dataset.stock);
+                if (!isNaN(maxStock) && maxStock > 0 && next > maxStock) {
+                    next = maxStock;
+                }
+            }
+
+            input.value = next;
+            var formQty = document.querySelector('#bio-cart-form input[name="qty"]');
+            if (formQty) formQty.value = next;
+        };
+
+        window.confirmBioBvmSubmit = function() {
+            var vid = document.getElementById('bio_selected_variant_id').value;
+            if (!vid) {
+                var err = document.getElementById('bio-bvm-error');
+                if (err) {
+                    err.style.display = 'block';
+                    err.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                return false;
+            }
+
+            var modalQty = document.getElementById('bio-bvm-qty-input');
+            var formQty = document.querySelector('#bio-cart-form input[name="qty"]');
+            if (modalQty && formQty) {
+                formQty.value = modalQty.value;
+            }
+
+            closeBioVariantModal();
+
+            if (window._bioCurrentAction === 'cart') {
+                var form = document.getElementById('bio-cart-form');
+                if (form) form.submit();
+            } else {
+                doBioDirectCheckout();
+            }
+        };
 
         window.selectBioVariant = function(btn) {
-            var pills = btn.closest('.bio-variant-pills').querySelectorAll('.bio-variant-pill');
-            pills.forEach(function(p){ p.classList.remove('selected'); });
-            btn.classList.add('selected');
-            document.getElementById('bio_selected_variant_id').value = btn.dataset.variantId;
-
-            // Update price display
-            var price = parseFloat(btn.dataset.price) || 0;
-            if (price > 0) {
-                var priceEl = document.querySelector('.ps-price');
-                if (priceEl) priceEl.textContent = 'Rp ' + price.toLocaleString('id-ID');
+            var vid = btn.dataset.variantId;
+            var modalPill = document.querySelector('.bio-bvm-pill[data-variant-id="' + vid + '"]');
+            if (modalPill) {
+                selectBioBvmVariant(modalPill, true);
+            } else {
+                var pills = btn.closest('.bio-variant-pills').querySelectorAll('.bio-variant-pill');
+                pills.forEach(function(p){ p.classList.remove('selected'); });
+                btn.classList.add('selected');
+                document.getElementById('bio_selected_variant_id').value = vid;
             }
-            // Hide error
-            var errEl = document.getElementById('bio-variant-err');
-            if (errEl) errEl.style.display = 'none';
         };
 
         window.submitBioCart = function() {
             if (bioHasVariants) {
                 var vid = document.getElementById('bio_selected_variant_id').value;
                 if (!vid) {
-                    var errEl = document.getElementById('bio-variant-err');
-                    if (errEl) { errEl.style.display = 'block'; }
-                    var sec = document.getElementById('bio-variant-section');
-                    if (sec) { sec.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+                    openBioVariantModal('cart');
                     return false;
                 }
             }
@@ -1042,15 +1372,14 @@
 
         window.bioDirectCheckout = function() {
             if (bioHasVariants) {
-                var vid = document.getElementById('bio_selected_variant_id').value;
-                if (!vid) {
-                    var errEl = document.getElementById('bio-variant-err');
-                    if (errEl) { errEl.style.display = 'block'; }
-                    var sec = document.getElementById('bio-variant-section');
-                    if (sec) { sec.scrollIntoView({behavior:'smooth', block:'nearest'}); }
-                    return false;
-                }
+                // Selalu buka interactive pop up variasi saat klik Beli Sekarang / Checkout
+                openBioVariantModal('buy');
+                return false;
             }
+            doBioDirectCheckout();
+        };
+
+        window.doBioDirectCheckout = function() {
             var form = document.getElementById('bio-cart-form');
             if (!form) {
                 window.location.href = "{{ route('cart.index') }}";
@@ -1074,6 +1403,10 @@
                 window.location.href = "{{ route('cart.index') }}";
             });
         };
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeBioVariantModal();
+        });
     </script>
 
     {{-- SMART RETARGETING TRACKER --}}

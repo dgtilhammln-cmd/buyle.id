@@ -4,8 +4,8 @@
 
     <style>
         /* ══════════════════════════════════════════════
-           BUYLE TICKETING PLATFORM & VENUE SYSTEM
-           ══════════════════════════════════════════════ */
+               BUYLE TICKETING PLATFORM & VENUE SYSTEM
+               ══════════════════════════════════════════════ */
         :root {
             --tk-accent: #1eb349;
             --tk-accent-light: #a5cf37;
@@ -183,10 +183,25 @@
             transition: transform 0.35s ease;
         }
 
-        .corner-top-left { top: 0; left: 0; }
-        .corner-top-right { top: 0; right: 0; }
-        .corner-bottom-left { bottom: 0; left: 0; }
-        .corner-bottom-right { bottom: 0; right: 0; }
+        .corner-top-left {
+            top: 0;
+            left: 0;
+        }
+
+        .corner-top-right {
+            top: 0;
+            right: 0;
+        }
+
+        .corner-bottom-left {
+            bottom: 0;
+            left: 0;
+        }
+
+        .corner-bottom-right {
+            bottom: 0;
+            right: 0;
+        }
 
         .ticket-card-outer:hover .ticket-corner-svg {
             transform: scale(1.04);
@@ -343,8 +358,8 @@
         }
 
         /* ══════════════════════════════════════════════
-           SIMULASI PERHITUNGAN BIAYA TIKET (CALCULATOR)
-           ══════════════════════════════════════════════ */
+               SIMULASI PERHITUNGAN BIAYA TIKET (CALCULATOR)
+               ══════════════════════════════════════════════ */
         .ticket-calc-wrap {
             margin-top: 5.5rem;
             background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
@@ -724,9 +739,9 @@
         }
 
         /* ══════════════════════════════════════════════
-           SECTION BARU: MULTI-GATE SCANNER & VENUE PLAN
-           (TEMA UNIFORM BUYLE — CLEAN LIGHT & GRADIENT)
-           ══════════════════════════════════════════════ */
+               SECTION BARU: MULTI-GATE SCANNER & VENUE PLAN
+               (TEMA UNIFORM BUYLE — CLEAN LIGHT & GRADIENT)
+               ══════════════════════════════════════════════ */
         .buyle-venue-section {
             padding: 6.5rem 1.5rem 7.5rem;
             background: #FFFFFF;
@@ -842,14 +857,30 @@
 
         /* Map Animation Keys */
         @keyframes fohPulse {
-            0% { r: 35; opacity: 0.8; }
-            50% { r: 75; opacity: 0.2; }
-            100% { r: 120; opacity: 0; }
+            0% {
+                r: 35;
+                opacity: 0.8;
+            }
+
+            50% {
+                r: 75;
+                opacity: 0.2;
+            }
+
+            100% {
+                r: 120;
+                opacity: 0;
+            }
         }
 
         @keyframes beamFlow {
-            0% { stroke-dashoffset: 60; }
-            100% { stroke-dashoffset: 0; }
+            0% {
+                stroke-dashoffset: 60;
+            }
+
+            100% {
+                stroke-dashoffset: 0;
+            }
         }
 
         .venue-ray {
@@ -950,15 +981,18 @@
                 grid-template-columns: 1fr;
                 gap: 1.75rem;
             }
+
             .venue-inspector-card {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 1.25rem;
             }
+
             .inspector-stats-row {
                 width: 100%;
                 justify-content: space-between;
             }
+
             .stat-block {
                 text-align: left;
             }
@@ -969,16 +1003,20 @@
                 grid-template-columns: 1fr;
                 gap: 1.75rem;
             }
+
             .ticket-card-inner {
                 padding: 1.75rem 1.5rem;
             }
+
             .ticket-highlights-bar {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1.25rem;
             }
+
             .ticket-calc-wrap {
                 padding: 2rem 1.25rem;
             }
+
             .buyle-venue-section {
                 padding: 5rem 1.25rem 5.5rem;
             }
@@ -988,35 +1026,44 @@
             .buyle-ticketing-section {
                 padding: 6.5rem 1.25rem 4rem;
             }
+
             .ticket-title {
                 font-size: 2rem;
             }
+
             .ticket-desc {
                 font-size: 0.95rem;
             }
+
             .ticket-card-inner {
                 padding: 1.5rem 1.25rem;
                 gap: 1rem;
             }
+
             .ticket-num-col {
                 width: 70px;
             }
+
             .ticket-big-num {
                 font-size: 4.5rem;
             }
+
             .ticket-circle-badge {
                 width: 38px;
                 height: 38px;
             }
+
             .ticket-circle-badge svg {
                 width: 18px;
                 height: 18px;
             }
+
             .ticket-highlights-bar {
                 grid-template-columns: 1fr;
                 padding: 1.25rem;
                 gap: 1rem;
             }
+
             .inspector-stats-row {
                 flex-wrap: wrap;
                 gap: 1rem;
@@ -1043,48 +1090,48 @@
             </linearGradient>
 
             <filter id="gateDropShadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0F172A" flood-opacity="0.08"/>
+                <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0F172A" flood-opacity="0.08" />
             </filter>
         </defs>
     </svg>
 
     {{-- SEO Schema JSON-LD --}}
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
         {
-          "@type": "BreadcrumbList",
-          "itemListElement": [
+          "@context": "https://schema.org",
+          "@graph": [
             {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Beranda",
-              "item": "{{ route_locale('home') }}"
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Beranda",
+                  "item": "{{ route_locale('home') }}"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Ticketing",
+                  "item": "{{ route('ticketing') }}"
+                }
+              ]
             },
             {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Ticketing",
-              "item": "{{ route('ticketing') }}"
+              "@type": "SoftwareApplication",
+              "name": "Buyle.id E-Ticketing Platform",
+              "applicationCategory": "BusinessApplication",
+              "operatingSystem": "All Web Browsers",
+              "description": "Platform e-ticketing terlengkap di Indonesia untuk konser, webinar, seminar, dan event. Dilengkapi QR code E-Tiket PDF, sistem pembayaran aman escrow, dan scanner gate panitia.",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "IDR"
+              }
             }
           ]
-        },
-        {
-          "@type": "SoftwareApplication",
-          "name": "Buyle.id E-Ticketing Platform",
-          "applicationCategory": "BusinessApplication",
-          "operatingSystem": "All Web Browsers",
-          "description": "Platform e-ticketing terlengkap di Indonesia untuk konser, webinar, seminar, dan event. Dilengkapi QR code E-Tiket PDF, sistem pembayaran aman escrow, dan scanner gate panitia.",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "IDR"
-          }
         }
-      ]
-    }
-    </script>
+        </script>
 
     {{-- ════ 1. TICKETING MASTER OVERVIEW SECTION ════ --}}
     <section class="buyle-ticketing-section" id="ticketing-platform">
@@ -1113,7 +1160,9 @@
                     <a href="{{ route('creator.onboarding') }}" class="ticket-btn-primary">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
                             stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"></path>
+                            <path
+                                d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z">
+                            </path>
                             <line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2"></line>
                         </svg>
                         <span>Mulai Buat Tiket Event</span>
@@ -1126,7 +1175,8 @@
                         </svg>
                         <span>Simulasi Biaya Tiket</span>
                     </a>
-                    <a href="#venue-scanner-section" class="ticket-btn-secondary" style="border-color:#1eb349; color:#16a34a;">
+                    <a href="#venue-scanner-section" class="ticket-btn-secondary"
+                        style="border-color:#1eb349; color:#16a34a;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
                             stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
@@ -1336,7 +1386,7 @@
                         </svg>
                     </div>
                     <div class="ticket-highlight-content">
-                        <h4>100% Anti-Duplikasi</h4>
+                        <h4>100% Anti-Curang</h4>
                         <p>Tiket hanya bisa di-scan 1 kali.</p>
                     </div>
                 </div>
@@ -1389,7 +1439,8 @@
                 <div class="ticket-calc-header">
                     <h2 class="ticket-calc-title">Simulasi Perhitungan Biaya Tiket<span class="accent-dot">.</span></h2>
                     <p class="ticket-calc-subtitle">
-                        Hitung rincian biaya tiket secara transparan. Biaya admin payment gateway Rp 5.000 dan platform fee 5% dihitung otomatis.
+                        Hitung rincian biaya tiket secara transparan. Biaya admin payment gateway Rp 5.000 dan platform fee
+                        5% dihitung otomatis.
                     </p>
                 </div>
 
@@ -1401,7 +1452,8 @@
                                 <label class="calc-label" for="calcTicketPrice">Harga Normal Tiket (Pokok)</label>
                                 <div class="calc-input-box">
                                     <span class="calc-currency-prefix">Rp</span>
-                                    <input type="text" id="calcTicketPrice" class="calc-input" value="100.000" inputmode="numeric" placeholder="100.000">
+                                    <input type="text" id="calcTicketPrice" class="calc-input" value="100.000"
+                                        inputmode="numeric" placeholder="100.000">
                                 </div>
                                 <div class="calc-presets">
                                     <button type="button" class="calc-preset-btn" data-val="50000">Rp 50rb</button>
@@ -1415,9 +1467,12 @@
                             <div class="calc-form-group" style="margin-top: 1.5rem;">
                                 <label class="calc-label">Jumlah Tiket</label>
                                 <div class="calc-qty-control">
-                                    <button type="button" class="calc-qty-btn" id="qtyMinus" aria-label="Kurangi tiket">−</button>
-                                    <input type="number" id="calcTicketQty" class="calc-qty-input" value="1" min="1" max="100" readonly>
-                                    <button type="button" class="calc-qty-btn" id="qtyPlus" aria-label="Tambah tiket">+</button>
+                                    <button type="button" class="calc-qty-btn" id="qtyMinus"
+                                        aria-label="Kurangi tiket">−</button>
+                                    <input type="number" id="calcTicketQty" class="calc-qty-input" value="1" min="1"
+                                        max="100" readonly>
+                                    <button type="button" class="calc-qty-btn" id="qtyPlus"
+                                        aria-label="Tambah tiket">+</button>
                                     <span class="calc-qty-text">Tiket</span>
                                 </div>
                             </div>
@@ -1425,11 +1480,17 @@
 
                         <div class="calc-fee-info-box">
                             <div class="calc-fee-info-row">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a"
+                                    stroke-width="2.5">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
                                 <span>Biaya Admin Payment: <strong>Rp 5.000 / tiket</strong></span>
                             </div>
                             <div class="calc-fee-info-row">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a"
+                                    stroke-width="2.5">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
                                 <span>Platform Fee Buyle.id: <strong>5% dari harga tiket</strong></span>
                             </div>
                         </div>
@@ -1467,7 +1528,11 @@
                         <div class="calc-creator-takeaway">
                             <div class="creator-takeaway-inner">
                                 <div class="takeaway-left">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+                                        viewBox="0 0 24 24">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                        <polyline points="22 4 12 14.01 9 11.01" />
+                                    </svg>
                                     <span>Pendapatan Bersih Promotor:</span>
                                 </div>
                                 <span class="takeaway-val" id="outCreatorNet">Rp 100.000</span>
@@ -1490,7 +1555,9 @@
                     Multi-Gate Scanner &amp; Denah Venue Event<span class="accent-dot">.</span>
                 </h2>
                 <p class="venue-desc">
-                    Arsitektur gerbang terdistribusi dengan kapasitas <strong>Up to 10 Scanner Aktif</strong> bersamaan untuk konser dan festival berkapasitas ribuan penonton. Terhubung langsung dengan <strong>FOH (Front of House)</strong> di pusat arena dan sinkronisasi cloud realtime &lt;0.2 detik tanpa tabrakan data.
+                    Arsitektur gerbang terdistribusi dengan kapasitas <strong>Up to 10 Scanner Aktif</strong> bersamaan
+                    untuk konser dan festival berkapasitas ribuan penonton. Terhubung langsung dengan <strong>FOH (Front of
+                        House)</strong> di pusat arena dan sinkronisasi cloud realtime &lt;0.2 detik tanpa tabrakan data.
                 </p>
             </div>
 
@@ -1525,120 +1592,148 @@
                     {{-- Grid Background Guide --}}
                     <defs>
                         <pattern id="arenaGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(30,179,73,0.06)" stroke-width="1"/>
+                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(30,179,73,0.06)" stroke-width="1" />
                         </pattern>
                     </defs>
-                    <rect width="1000" height="700" fill="url(#arenaGrid)"/>
+                    <rect width="1000" height="700" fill="url(#arenaGrid)" />
 
                     {{-- ── Outer Arena Boundary ── --}}
-                    <path d="M 120 180 C 120 70, 880 70, 880 180 L 920 540 C 920 660, 80 660, 80 540 Z"
-                        fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2.5" stroke-dasharray="10 6"/>
+                    <path d="M 120 180 C 120 70, 880 70, 880 180 L 920 540 C 920 660, 80 660, 80 540 Z" fill="#FFFFFF"
+                        stroke="#CBD5E1" stroke-width="2.5" stroke-dasharray="10 6" />
 
                     {{-- ── Tribune / Grandstand Seating Area (Barat & Timur) ── --}}
-                    <path d="M 100 240 C 90 350, 90 470, 110 560" stroke="#E2E8F0" stroke-width="32" stroke-linecap="round"/>
-                    <text x="75" y="380" fill="#94A3B8" font-size="11" font-weight="800" letter-spacing="3" transform="rotate(-90 75 380)">TRIBUNE BARAT</text>
+                    <path d="M 100 240 C 90 350, 90 470, 110 560" stroke="#E2E8F0" stroke-width="32"
+                        stroke-linecap="round" />
+                    <text x="75" y="380" fill="#94A3B8" font-size="11" font-weight="800" letter-spacing="3"
+                        transform="rotate(-90 75 380)">TRIBUNE BARAT</text>
 
-                    <path d="M 900 240 C 910 350, 910 470, 890 560" stroke="#E2E8F0" stroke-width="32" stroke-linecap="round"/>
-                    <text x="925" y="380" fill="#94A3B8" font-size="11" font-weight="800" letter-spacing="3" transform="rotate(90 925 380)">TRIBUNE TIMUR</text>
+                    <path d="M 900 240 C 910 350, 910 470, 890 560" stroke="#E2E8F0" stroke-width="32"
+                        stroke-linecap="round" />
+                    <text x="925" y="380" fill="#94A3B8" font-size="11" font-weight="800" letter-spacing="3"
+                        transform="rotate(90 925 380)">TRIBUNE TIMUR</text>
 
                     {{-- ── Panggung Utama (Stage) ── --}}
                     <g id="venueStage">
                         {{-- Stage Light Spotlight Cones --}}
-                        <polygon points="500 45, 300 240, 700 240" fill="url(#stageGlowGradient)" opacity="0.6"/>
-                        <polygon points="400 45, 200 230, 480 230" fill="url(#stageGlowGradient)" opacity="0.4"/>
-                        <polygon points="600 45, 520 230, 800 230" fill="url(#stageGlowGradient)" opacity="0.4"/>
+                        <polygon points="500 45, 300 240, 700 240" fill="url(#stageGlowGradient)" opacity="0.6" />
+                        <polygon points="400 45, 200 230, 480 230" fill="url(#stageGlowGradient)" opacity="0.4" />
+                        <polygon points="600 45, 520 230, 800 230" fill="url(#stageGlowGradient)" opacity="0.4" />
 
                         {{-- Stage Structure --}}
-                        <path d="M 330 90 Q 500 50 670 90 L 650 140 Q 500 115 350 140 Z" fill="#F0FDF4" stroke="url(#btnDaftarGradient)" stroke-width="3"/>
-                        <text x="500" y="105" fill="#15803d" font-size="13" font-weight="900" text-anchor="middle" letter-spacing="2">PANGGUNG UTAMA / STAGE</text>
-                        <text x="500" y="125" fill="#64748B" font-size="9" font-weight="600" text-anchor="middle">PERFORMANCE &amp; LED WALL</text>
+                        <path d="M 330 90 Q 500 50 670 90 L 650 140 Q 500 115 350 140 Z" fill="#F0FDF4"
+                            stroke="url(#btnDaftarGradient)" stroke-width="3" />
+                        <text x="500" y="105" fill="#15803d" font-size="13" font-weight="900" text-anchor="middle"
+                            letter-spacing="2">PANGGUNG UTAMA / STAGE</text>
+                        <text x="500" y="125" fill="#64748B" font-size="9" font-weight="600"
+                            text-anchor="middle">PERFORMANCE &amp; LED WALL</text>
 
                         {{-- Barricade Pit --}}
-                        <path d="M 280 160 Q 500 135 720 160" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="8 4"/>
-                        <text x="500" y="152" fill="#d97706" font-size="8.5" font-weight="700" text-anchor="middle" letter-spacing="1">BARRICADE PIT / SOUND BUFFER</text>
+                        <path d="M 280 160 Q 500 135 720 160" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="8 4" />
+                        <text x="500" y="152" fill="#d97706" font-size="8.5" font-weight="700" text-anchor="middle"
+                            letter-spacing="1">BARRICADE PIT / SOUND BUFFER</text>
                     </g>
 
                     {{-- ── VIP / VVIP Area ── --}}
-                    <rect x="310" y="180" width="380" height="85" rx="14" fill="rgba(30, 179, 73, 0.08)" stroke="rgba(30, 179, 73, 0.45)" stroke-width="2"/>
-                    <text x="500" y="228" fill="#15803d" font-size="12" font-weight="800" text-anchor="middle" letter-spacing="3">AREA VVIP &amp; VIP SEATING</text>
+                    <rect x="310" y="180" width="380" height="85" rx="14" fill="rgba(30, 179, 73, 0.08)"
+                        stroke="rgba(30, 179, 73, 0.45)" stroke-width="2" />
+                    <text x="500" y="228" fill="#15803d" font-size="12" font-weight="800" text-anchor="middle"
+                        letter-spacing="3">AREA VVIP &amp; VIP SEATING</text>
 
                     {{-- ── Festival Standing Area ── --}}
-                    <rect x="220" y="285" width="560" height="235" rx="18" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="2"/>
-                    <text x="320" y="325" fill="#64748B" font-size="11" font-weight="800" letter-spacing="2">FESTIVAL A</text>
-                    <text x="680" y="325" fill="#64748B" font-size="11" font-weight="800" letter-spacing="2">FESTIVAL B</text>
+                    <rect x="220" y="285" width="560" height="235" rx="18" fill="#F8FAFC" stroke="#E2E8F0"
+                        stroke-width="2" />
+                    <text x="320" y="325" fill="#64748B" font-size="11" font-weight="800" letter-spacing="2">FESTIVAL
+                        A</text>
+                    <text x="680" y="325" fill="#64748B" font-size="11" font-weight="800" letter-spacing="2">FESTIVAL
+                        B</text>
 
                     {{-- ── Connecting Data Stream Rays (From Gates to FOH) ── --}}
                     <g id="dataRays">
                         {{-- Ray Gate 1 -> FOH --}}
-                        <line x1="170" y1="210" x2="475" y2="395" stroke="url(#btnDaftarGradient)" stroke-width="2.5" class="venue-ray" opacity="0.85"/>
+                        <line x1="170" y1="210" x2="475" y2="395" stroke="url(#btnDaftarGradient)" stroke-width="2.5"
+                            class="venue-ray" opacity="0.85" />
                         {{-- Ray Gate 2 -> FOH --}}
-                        <line x1="830" y1="210" x2="525" y2="395" stroke="url(#btnDaftarGradient)" stroke-width="2.5" class="venue-ray" opacity="0.85"/>
+                        <line x1="830" y1="210" x2="525" y2="395" stroke="url(#btnDaftarGradient)" stroke-width="2.5"
+                            class="venue-ray" opacity="0.85" />
                         {{-- Ray Gate 3 -> FOH --}}
-                        <line x1="150" y1="430" x2="470" y2="415" stroke="url(#btnDaftarGradient)" stroke-width="2.5" class="venue-ray" opacity="0.85"/>
+                        <line x1="150" y1="430" x2="470" y2="415" stroke="url(#btnDaftarGradient)" stroke-width="2.5"
+                            class="venue-ray" opacity="0.85" />
                         {{-- Ray Gate 4 -> FOH --}}
-                        <line x1="850" y1="430" x2="530" y2="415" stroke="url(#btnDaftarGradient)" stroke-width="2.5" class="venue-ray" opacity="0.85"/>
+                        <line x1="850" y1="430" x2="530" y2="415" stroke="url(#btnDaftarGradient)" stroke-width="2.5"
+                            class="venue-ray" opacity="0.85" />
                         {{-- Ray Gate 5 -> FOH --}}
-                        <line x1="500" y1="585" x2="500" y2="445" stroke="url(#btnDaftarGradient)" stroke-width="3" class="venue-ray" opacity="0.95"/>
+                        <line x1="500" y1="585" x2="500" y2="445" stroke="url(#btnDaftarGradient)" stroke-width="3"
+                            class="venue-ray" opacity="0.95" />
                     </g>
 
                     {{-- ── PUSAT ARENA: FOH (FRONT OF HOUSE) ── --}}
                     <g id="venueFOH" class="gate-hotspot" data-target="foh">
                         {{-- Concentric Radar Rings --}}
-                        <circle cx="500" cy="415" r="35" fill="none" stroke="#1eb349" stroke-width="2" class="radar-pulse-ring"/>
-                        <circle cx="500" cy="415" r="55" fill="none" stroke="rgba(165, 207, 55, 0.45)" stroke-width="1.5" stroke-dasharray="4 4"/>
+                        <circle cx="500" cy="415" r="35" fill="none" stroke="#1eb349" stroke-width="2"
+                            class="radar-pulse-ring" />
+                        <circle cx="500" cy="415" r="55" fill="none" stroke="rgba(165, 207, 55, 0.45)" stroke-width="1.5"
+                            stroke-dasharray="4 4" />
 
                         {{-- FOH Booth Structure --}}
-                        <rect x="440" y="380" width="120" height="70" rx="14" fill="#FFFFFF" stroke="url(#btnDaftarGradient)" stroke-width="3" filter="url(#gateDropShadow)"/>
-                        <circle cx="465" cy="402" r="4" fill="#38bdf8"/>
-                        <circle cx="480" cy="402" r="4" fill="#1eb349"/>
-                        <circle cx="495" cy="402" r="4" fill="#f59e0b"/>
+                        <rect x="440" y="380" width="120" height="70" rx="14" fill="#FFFFFF"
+                            stroke="url(#btnDaftarGradient)" stroke-width="3" filter="url(#gateDropShadow)" />
+                        <circle cx="465" cy="402" r="4" fill="#38bdf8" />
+                        <circle cx="480" cy="402" r="4" fill="#1eb349" />
+                        <circle cx="495" cy="402" r="4" fill="#f59e0b" />
 
                         {{-- FOH Text --}}
-                        <text x="500" y="423" fill="#0F172A" font-size="12" font-weight="900" text-anchor="middle" letter-spacing="1">FOH</text>
-                        <text x="500" y="438" fill="#1eb349" font-size="8.5" font-weight="800" text-anchor="middle">FRONT OF HOUSE</text>
+                        <text x="500" y="423" fill="#0F172A" font-size="12" font-weight="900" text-anchor="middle"
+                            letter-spacing="1">FOH</text>
+                        <text x="500" y="438" fill="#1eb349" font-size="8.5" font-weight="800" text-anchor="middle">FRONT OF
+                            HOUSE</text>
                     </g>
 
                     {{-- ── GATE 1: VIP & MEDIA (Barat / Kiri Atas) ── --}}
                     <g id="mapGate1" class="gate-hotspot" data-target="gate1">
-                        <circle cx="150" cy="205" r="28" fill="rgba(30, 179, 73, 0.15)"/>
-                        <rect x="85" y="180" width="130" height="52" rx="12" fill="#FFFFFF" stroke="url(#btnDaftarGradient)" stroke-width="2.5" filter="url(#gateDropShadow)"/>
-                        <circle cx="106" cy="206" r="8" fill="#1eb349"/>
+                        <circle cx="150" cy="205" r="28" fill="rgba(30, 179, 73, 0.15)" />
+                        <rect x="85" y="180" width="130" height="52" rx="12" fill="#FFFFFF" stroke="url(#btnDaftarGradient)"
+                            stroke-width="2.5" filter="url(#gateDropShadow)" />
+                        <circle cx="106" cy="206" r="8" fill="#1eb349" />
                         <text x="122" y="202" fill="#0F172A" font-size="11" font-weight="900">GATE 1</text>
                         <text x="122" y="218" fill="#15803d" font-size="8.5" font-weight="800">VIP (2 SCANNER)</text>
                     </g>
 
                     {{-- ── GATE 2: SPONSOR & KRU (Timur / Kanan Atas) ── --}}
                     <g id="mapGate2" class="gate-hotspot" data-target="gate2">
-                        <circle cx="850" cy="205" r="28" fill="rgba(30, 179, 73, 0.15)"/>
-                        <rect x="785" y="180" width="130" height="52" rx="12" fill="#FFFFFF" stroke="url(#btnDaftarGradient)" stroke-width="2.5" filter="url(#gateDropShadow)"/>
-                        <circle cx="806" cy="206" r="8" fill="#1eb349"/>
+                        <circle cx="850" cy="205" r="28" fill="rgba(30, 179, 73, 0.15)" />
+                        <rect x="785" y="180" width="130" height="52" rx="12" fill="#FFFFFF"
+                            stroke="url(#btnDaftarGradient)" stroke-width="2.5" filter="url(#gateDropShadow)" />
+                        <circle cx="806" cy="206" r="8" fill="#1eb349" />
                         <text x="822" y="202" fill="#0F172A" font-size="11" font-weight="900">GATE 2</text>
                         <text x="822" y="218" fill="#15803d" font-size="8.5" font-weight="800">KRU (2 SCANNER)</text>
                     </g>
 
                     {{-- ── GATE 3: FESTIVAL WEST GATE (Barat / Kiri Tengah) ── --}}
                     <g id="mapGate3" class="gate-hotspot" data-target="gate3">
-                        <circle cx="130" cy="430" r="28" fill="rgba(30, 179, 73, 0.15)"/>
-                        <rect x="65" y="405" width="135" height="52" rx="12" fill="#FFFFFF" stroke="url(#btnDaftarGradient)" stroke-width="2.5" filter="url(#gateDropShadow)"/>
-                        <circle cx="86" cy="431" r="8" fill="#1eb349"/>
+                        <circle cx="130" cy="430" r="28" fill="rgba(30, 179, 73, 0.15)" />
+                        <rect x="65" y="405" width="135" height="52" rx="12" fill="#FFFFFF" stroke="url(#btnDaftarGradient)"
+                            stroke-width="2.5" filter="url(#gateDropShadow)" />
+                        <circle cx="86" cy="431" r="8" fill="#1eb349" />
                         <text x="102" y="427" fill="#0F172A" font-size="11" font-weight="900">GATE 3</text>
                         <text x="102" y="443" fill="#15803d" font-size="8.5" font-weight="800">FEST. A (2 SCAN)</text>
                     </g>
 
                     {{-- ── GATE 4: FESTIVAL EAST GATE (Timur / Kanan Tengah) ── --}}
                     <g id="mapGate4" class="gate-hotspot" data-target="gate4">
-                        <circle cx="870" cy="430" r="28" fill="rgba(30, 179, 73, 0.15)"/>
-                        <rect x="800" y="405" width="135" height="52" rx="12" fill="#FFFFFF" stroke="url(#btnDaftarGradient)" stroke-width="2.5" filter="url(#gateDropShadow)"/>
-                        <circle cx="821" cy="431" r="8" fill="#1eb349"/>
+                        <circle cx="870" cy="430" r="28" fill="rgba(30, 179, 73, 0.15)" />
+                        <rect x="800" y="405" width="135" height="52" rx="12" fill="#FFFFFF"
+                            stroke="url(#btnDaftarGradient)" stroke-width="2.5" filter="url(#gateDropShadow)" />
+                        <circle cx="821" cy="431" r="8" fill="#1eb349" />
                         <text x="837" y="427" fill="#0F172A" font-size="11" font-weight="900">GATE 4</text>
                         <text x="837" y="443" fill="#15803d" font-size="8.5" font-weight="800">FEST. B (2 SCAN)</text>
                     </g>
 
                     {{-- ── GATE 5: MAIN ENTRANCE (Selatan / Bawah Utama) ── --}}
                     <g id="mapGate5" class="gate-hotspot" data-target="gate5">
-                        <circle cx="500" cy="610" r="32" fill="rgba(30, 179, 73, 0.2)"/>
-                        <rect x="405" y="585" width="190" height="54" rx="14" fill="#FFFFFF" stroke="url(#btnDaftarGradient)" stroke-width="3" filter="url(#gateDropShadow)"/>
-                        <circle cx="430" cy="612" r="9" fill="#1eb349"/>
+                        <circle cx="500" cy="610" r="32" fill="rgba(30, 179, 73, 0.2)" />
+                        <rect x="405" y="585" width="190" height="54" rx="14" fill="#FFFFFF"
+                            stroke="url(#btnDaftarGradient)" stroke-width="3" filter="url(#gateDropShadow)" />
+                        <circle cx="430" cy="612" r="9" fill="#1eb349" />
                         <text x="448" y="608" fill="#0F172A" font-size="12" font-weight="900">GATE 5 (MAIN GATE)</text>
                         <text x="448" y="626" fill="#15803d" font-size="9" font-weight="800">REGULER • 2 SCANNER</text>
                     </g>
@@ -1649,7 +1744,8 @@
             <div class="venue-inspector-card" id="gateInspector" data-aos="fade-up" data-aos-delay="200">
                 <div class="inspector-left">
                     <div class="inspector-icon-badge" id="inspIconBadge">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="7" width="18" height="13" rx="2"></rect>
                             <circle cx="8" cy="12" r="1.5"></circle>
                             <circle cx="16" cy="12" r="1.5"></circle>
@@ -1657,7 +1753,8 @@
                     </div>
                     <div>
                         <h3 class="inspector-name" id="inspTitle">Semua Gerbang (Gate 1 - 5 Terkoneksi)</h3>
-                        <p class="inspector-desc" id="inspDesc">Seluruh gerbang check-in tersambung ke FOH Hub dan server cloud Buyle.id.</p>
+                        <p class="inspector-desc" id="inspDesc">Seluruh gerbang check-in tersambung ke FOH Hub dan server
+                            cloud Buyle.id.</p>
                     </div>
                 </div>
 
@@ -1682,189 +1779,189 @@
 
     {{-- Interactive Javascript Engine for Calculator & Venue Map --}}
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        /* ════ 1. TICKET COST CALCULATOR LOGIC ════ */
-        const priceInput = document.getElementById('calcTicketPrice');
-        const qtyInput = document.getElementById('calcTicketQty');
-        const qtyMinus = document.getElementById('qtyMinus');
-        const qtyPlus = document.getElementById('qtyPlus');
-        const presetBtns = document.querySelectorAll('.calc-preset-btn');
+        document.addEventListener('DOMContentLoaded', function () {
+            /* ════ 1. TICKET COST CALCULATOR LOGIC ════ */
+            const priceInput = document.getElementById('calcTicketPrice');
+            const qtyInput = document.getElementById('calcTicketQty');
+            const qtyMinus = document.getElementById('qtyMinus');
+            const qtyPlus = document.getElementById('qtyPlus');
+            const presetBtns = document.querySelectorAll('.calc-preset-btn');
 
-        const outQtyLabel = document.getElementById('outQtyLabel');
-        const outBasePrice = document.getElementById('outBasePrice');
-        const outAdminFee = document.getElementById('outAdminFee');
-        const outPlatformFee = document.getElementById('outPlatformFee');
-        const outTotalBuyer = document.getElementById('outTotalBuyer');
-        const outCreatorNet = document.getElementById('outCreatorNet');
+            const outQtyLabel = document.getElementById('outQtyLabel');
+            const outBasePrice = document.getElementById('outBasePrice');
+            const outAdminFee = document.getElementById('outAdminFee');
+            const outPlatformFee = document.getElementById('outPlatformFee');
+            const outTotalBuyer = document.getElementById('outTotalBuyer');
+            const outCreatorNet = document.getElementById('outCreatorNet');
 
-        function parseCurrency(str) {
-            return parseInt(String(str).replace(/[^0-9]/g, ''), 10) || 0;
-        }
-
-        function formatRupiah(num) {
-            return 'Rp ' + Math.round(num).toLocaleString('id-ID');
-        }
-
-        function recalculate() {
-            let basePrice = parseCurrency(priceInput.value);
-            let qty = parseInt(qtyInput.value, 10) || 1;
-            if (qty < 1) qty = 1;
-            if (qty > 100) qty = 100;
-
-            // Admin fee = Rp 5.000 per ticket
-            const adminFeePerTicket = 5000;
-            // Platform fee = 5% of base ticket price
-            const platformFeeRate = 0.05;
-
-            const totalBasePrice = basePrice * qty;
-            const totalAdminFee = adminFeePerTicket * qty;
-            const totalPlatformFee = Math.round(totalBasePrice * platformFeeRate);
-            const totalBuyer = totalBasePrice + totalAdminFee + totalPlatformFee;
-            const creatorNet = totalBasePrice;
-
-            if (outQtyLabel) outQtyLabel.textContent = qty;
-            if (outBasePrice) outBasePrice.textContent = formatRupiah(totalBasePrice);
-            if (outAdminFee) outAdminFee.textContent = '+ ' + formatRupiah(totalAdminFee);
-            if (outPlatformFee) outPlatformFee.textContent = '+ ' + formatRupiah(totalPlatformFee);
-            if (outTotalBuyer) outTotalBuyer.textContent = formatRupiah(totalBuyer);
-            if (outCreatorNet) outCreatorNet.textContent = formatRupiah(creatorNet);
-        }
-
-        if (priceInput) {
-            priceInput.addEventListener('input', function () {
-                let val = parseCurrency(this.value);
-                this.value = val ? val.toLocaleString('id-ID') : '';
-                presetBtns.forEach(b => b.classList.remove('active'));
-                recalculate();
-            });
-        }
-
-        presetBtns.forEach(btn => {
-            btn.addEventListener('click', function () {
-                presetBtns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                const val = parseInt(this.getAttribute('data-val'), 10);
-                if (priceInput) {
-                    priceInput.value = val.toLocaleString('id-ID');
-                }
-                recalculate();
-            });
-        });
-
-        if (qtyMinus && qtyInput) {
-            qtyMinus.addEventListener('click', function () {
-                let q = parseInt(qtyInput.value, 10) || 1;
-                if (q > 1) {
-                    qtyInput.value = q - 1;
-                    recalculate();
-                }
-            });
-        }
-
-        if (qtyPlus && qtyInput) {
-            qtyPlus.addEventListener('click', function () {
-                let q = parseInt(qtyInput.value, 10) || 1;
-                if (q < 100) {
-                    qtyInput.value = q + 1;
-                    recalculate();
-                }
-            });
-        }
-
-        recalculate();
-
-        /* ════ 2. MULTI-GATE VENUE INTERACTIVE MAP LOGIC ════ */
-        const gateData = {
-            all: {
-                title: "Semua Gerbang (Gate 1 - 5 Terkoneksi)",
-                desc: "Seluruh 5 gerbang check-in terhubung realtime ke FOH Hub dan server cloud Buyle.id.",
-                scanners: "10 Device",
-                speed: "< 0.18 Detik",
-                status: "100% Online"
-            },
-            gate1: {
-                title: "Gate 1: VIP & Media Entrance",
-                desc: "Gerbang khusus pemegang tiket VIP, VVIP, artis, dan media pers dengan jalur karpet merah eksklusif.",
-                scanners: "2 Device",
-                speed: "0.15 Detik",
-                status: "Lancar (VIP Priority)"
-            },
-            gate2: {
-                title: "Gate 2: Sponsor & Kru Entrance",
-                desc: "Gerbang verifikasi panitia lapangan, kru panggung, teknisi FOH, dan perwakilan sponsor resmi.",
-                scanners: "2 Device",
-                speed: "0.14 Detik",
-                status: "Lancar (Akses Khusus)"
-            },
-            gate3: {
-                title: "Gate 3: Festival West Gate",
-                desc: "Gerbang masuk penonton Festival A dan Tribun Barat. Dilengkapi 2 jalur scan berkecepatan tinggi.",
-                scanners: "2 Device",
-                speed: "0.18 Detik",
-                status: "Optimal (Anti-Queue)"
-            },
-            gate4: {
-                title: "Gate 4: Festival East Gate",
-                desc: "Gerbang masuk penonton Festival B dan Tribun Timur dengan sinkronisasi kuota realtime.",
-                scanners: "2 Device",
-                speed: "0.18 Detik",
-                status: "Optimal (Anti-Queue)"
-            },
-            gate5: {
-                title: "Gate 5: Main Entrance (Reguler)",
-                desc: "Pintu masuk utama penonton reguler di sisi selatan venue. Mampu mengalirkan ribuan penonton tanpa hambatan.",
-                scanners: "2 Device",
-                speed: "0.16 Detik",
-                status: "Kapasitas Penuh Siap"
-            },
-            foh: {
-                title: "FOH (Front of House) Control Center",
-                desc: "Pusat komando tata suara, pencahayaan, audio console, dan router sinkronisasi cloud seluruh gate.",
-                scanners: "Hub Server",
-                speed: "< 50ms Ping",
-                status: "Master Node Active"
+            function parseCurrency(str) {
+                return parseInt(String(str).replace(/[^0-9]/g, ''), 10) || 0;
             }
-        };
 
-        const tabBtns = document.querySelectorAll('.venue-tab-btn');
-        const hotspots = document.querySelectorAll('.gate-hotspot');
-        const inspTitle = document.getElementById('inspTitle');
-        const inspDesc = document.getElementById('inspDesc');
-        const inspScanners = document.getElementById('inspScanners');
-        const inspSpeed = document.getElementById('inspSpeed');
-        const inspStatus = document.getElementById('inspStatus');
+            function formatRupiah(num) {
+                return 'Rp ' + Math.round(num).toLocaleString('id-ID');
+            }
 
-        function updateInspector(key) {
-            const data = gateData[key] || gateData.all;
-            if (inspTitle) inspTitle.textContent = data.title;
-            if (inspDesc) inspDesc.textContent = data.desc;
-            if (inspScanners) inspScanners.textContent = data.scanners;
-            if (inspSpeed) inspSpeed.textContent = data.speed;
-            if (inspStatus) inspStatus.textContent = data.status;
+            function recalculate() {
+                let basePrice = parseCurrency(priceInput.value);
+                let qty = parseInt(qtyInput.value, 10) || 1;
+                if (qty < 1) qty = 1;
+                if (qty > 100) qty = 100;
 
-            tabBtns.forEach(t => {
-                t.classList.toggle('active', t.getAttribute('data-gate') === key);
+                // Admin fee = Rp 5.000 per ticket
+                const adminFeePerTicket = 5000;
+                // Platform fee = 5% of base ticket price
+                const platformFeeRate = 0.05;
+
+                const totalBasePrice = basePrice * qty;
+                const totalAdminFee = adminFeePerTicket * qty;
+                const totalPlatformFee = Math.round(totalBasePrice * platformFeeRate);
+                const totalBuyer = totalBasePrice + totalAdminFee + totalPlatformFee;
+                const creatorNet = totalBasePrice;
+
+                if (outQtyLabel) outQtyLabel.textContent = qty;
+                if (outBasePrice) outBasePrice.textContent = formatRupiah(totalBasePrice);
+                if (outAdminFee) outAdminFee.textContent = '+ ' + formatRupiah(totalAdminFee);
+                if (outPlatformFee) outPlatformFee.textContent = '+ ' + formatRupiah(totalPlatformFee);
+                if (outTotalBuyer) outTotalBuyer.textContent = formatRupiah(totalBuyer);
+                if (outCreatorNet) outCreatorNet.textContent = formatRupiah(creatorNet);
+            }
+
+            if (priceInput) {
+                priceInput.addEventListener('input', function () {
+                    let val = parseCurrency(this.value);
+                    this.value = val ? val.toLocaleString('id-ID') : '';
+                    presetBtns.forEach(b => b.classList.remove('active'));
+                    recalculate();
+                });
+            }
+
+            presetBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    presetBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const val = parseInt(this.getAttribute('data-val'), 10);
+                    if (priceInput) {
+                        priceInput.value = val.toLocaleString('id-ID');
+                    }
+                    recalculate();
+                });
             });
 
-            hotspots.forEach(h => {
-                h.classList.toggle('active', h.getAttribute('data-target') === key);
-            });
-        }
+            if (qtyMinus && qtyInput) {
+                qtyMinus.addEventListener('click', function () {
+                    let q = parseInt(qtyInput.value, 10) || 1;
+                    if (q > 1) {
+                        qtyInput.value = q - 1;
+                        recalculate();
+                    }
+                });
+            }
 
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', function () {
-                const key = this.getAttribute('data-gate');
-                updateInspector(key);
+            if (qtyPlus && qtyInput) {
+                qtyPlus.addEventListener('click', function () {
+                    let q = parseInt(qtyInput.value, 10) || 1;
+                    if (q < 100) {
+                        qtyInput.value = q + 1;
+                        recalculate();
+                    }
+                });
+            }
+
+            recalculate();
+
+            /* ════ 2. MULTI-GATE VENUE INTERACTIVE MAP LOGIC ════ */
+            const gateData = {
+                all: {
+                    title: "Semua Gerbang (Gate 1 - 5 Terkoneksi)",
+                    desc: "Seluruh 5 gerbang check-in terhubung realtime ke FOH Hub dan server cloud Buyle.id.",
+                    scanners: "10 Device",
+                    speed: "< 0.18 Detik",
+                    status: "100% Online"
+                },
+                gate1: {
+                    title: "Gate 1: VIP & Media Entrance",
+                    desc: "Gerbang khusus pemegang tiket VIP, VVIP, artis, dan media pers dengan jalur karpet merah eksklusif.",
+                    scanners: "2 Device",
+                    speed: "0.15 Detik",
+                    status: "Lancar (VIP Priority)"
+                },
+                gate2: {
+                    title: "Gate 2: Sponsor & Kru Entrance",
+                    desc: "Gerbang verifikasi panitia lapangan, kru panggung, teknisi FOH, dan perwakilan sponsor resmi.",
+                    scanners: "2 Device",
+                    speed: "0.14 Detik",
+                    status: "Lancar (Akses Khusus)"
+                },
+                gate3: {
+                    title: "Gate 3: Festival West Gate",
+                    desc: "Gerbang masuk penonton Festival A dan Tribun Barat. Dilengkapi 2 jalur scan berkecepatan tinggi.",
+                    scanners: "2 Device",
+                    speed: "0.18 Detik",
+                    status: "Optimal (Anti-Queue)"
+                },
+                gate4: {
+                    title: "Gate 4: Festival East Gate",
+                    desc: "Gerbang masuk penonton Festival B dan Tribun Timur dengan sinkronisasi kuota realtime.",
+                    scanners: "2 Device",
+                    speed: "0.18 Detik",
+                    status: "Optimal (Anti-Queue)"
+                },
+                gate5: {
+                    title: "Gate 5: Main Entrance (Reguler)",
+                    desc: "Pintu masuk utama penonton reguler di sisi selatan venue. Mampu mengalirkan ribuan penonton tanpa hambatan.",
+                    scanners: "2 Device",
+                    speed: "0.16 Detik",
+                    status: "Kapasitas Penuh Siap"
+                },
+                foh: {
+                    title: "FOH (Front of House) Control Center",
+                    desc: "Pusat komando tata suara, pencahayaan, audio console, dan router sinkronisasi cloud seluruh gate.",
+                    scanners: "Hub Server",
+                    speed: "< 50ms Ping",
+                    status: "Master Node Active"
+                }
+            };
+
+            const tabBtns = document.querySelectorAll('.venue-tab-btn');
+            const hotspots = document.querySelectorAll('.gate-hotspot');
+            const inspTitle = document.getElementById('inspTitle');
+            const inspDesc = document.getElementById('inspDesc');
+            const inspScanners = document.getElementById('inspScanners');
+            const inspSpeed = document.getElementById('inspSpeed');
+            const inspStatus = document.getElementById('inspStatus');
+
+            function updateInspector(key) {
+                const data = gateData[key] || gateData.all;
+                if (inspTitle) inspTitle.textContent = data.title;
+                if (inspDesc) inspDesc.textContent = data.desc;
+                if (inspScanners) inspScanners.textContent = data.scanners;
+                if (inspSpeed) inspSpeed.textContent = data.speed;
+                if (inspStatus) inspStatus.textContent = data.status;
+
+                tabBtns.forEach(t => {
+                    t.classList.toggle('active', t.getAttribute('data-gate') === key);
+                });
+
+                hotspots.forEach(h => {
+                    h.classList.toggle('active', h.getAttribute('data-target') === key);
+                });
+            }
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const key = this.getAttribute('data-gate');
+                    updateInspector(key);
+                });
+            });
+
+            hotspots.forEach(spot => {
+                spot.addEventListener('click', function () {
+                    const key = this.getAttribute('data-target');
+                    updateInspector(key);
+                });
             });
         });
-
-        hotspots.forEach(spot => {
-            spot.addEventListener('click', function () {
-                const key = this.getAttribute('data-target');
-                updateInspector(key);
-            });
-        });
-    });
     </script>
 
 @endsection
