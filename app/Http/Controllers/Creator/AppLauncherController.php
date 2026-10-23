@@ -96,6 +96,26 @@ class AppLauncherController extends Controller
                 'border_color' => 'rgba(225,48,108,0.3)',
                 'icon_type'    => 'instagram',
             ],
+            [
+                'id'          => 'wedding',
+                'name'        => 'Buyle Wedding',
+                'badge'       => 'Undangan & Buku Tamu Digital',
+                'description' => 'Solusi undangan pernikahan digital modern — Smart Guest Book QR check-in, Amplop Digital QRIS/Midtrans, InstaStory Card Generator, dan Panic Button PDF.',
+                'features'    => [
+                    ['icon' => 'zap',     'label' => 'Undangan Interaktif'],
+                    ['icon' => 'scan',    'label' => 'Smart Guest Book & QR'],
+                    ['icon' => 'qris',    'label' => 'Amplop Digital QRIS'],
+                    ['icon' => 'link',    'label' => 'InstaStory Wish Card'],
+                    ['icon' => 'print',   'label' => 'Panic Button PDF'],
+                ],
+                'route'        => route('creator.wedding.index'),
+                'logo_key'     => 'app_logo_wedding',
+                'logo'         => Setting::get('app_logo_wedding'),
+                'theme_color'  => '#e11d48',
+                'bg_gradient'  => 'linear-gradient(135deg, rgba(225,29,72,0.12) 0%, rgba(244,63,94,0.12) 100%)',
+                'border_color' => 'rgba(225,29,72,0.3)',
+                'icon_type'    => 'heart',
+            ],
         ];
 
         return view('creator.app.index', compact('apps'));

@@ -720,6 +720,19 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     // Custom Domain Search & Purchase (WhoisJSON & Midtrans)
     Route::post('/domain/check',    [\App\Http\Controllers\Creator\CreatorDomainController::class, 'checkAvailability'])->name('domain.check')->middleware('throttle:domain-check');
     Route::post('/domain/checkout', [\App\Http\Controllers\Creator\CreatorDomainController::class, 'checkout'])->name('domain.checkout')->middleware('throttle:checkout-limit');
+
+    // ── Wedding Hub / Undangan Digital ─────────────────────────────────────
+    Route::prefix('wedding')->name('wedding.')->group(function () {
+        Route::get('/',              [\App\Http\Controllers\Creator\WeddingController::class, 'index'])->name('index');
+        Route::post('/info',         [\App\Http\Controllers\Creator\WeddingController::class, 'updateInfo'])->name('update-info');
+        Route::post('/guest',        [\App\Http\Controllers\Creator\WeddingController::class, 'storeGuest'])->name('guest.store');
+        Route::post('/guest/import', [\App\Http\Controllers\Creator\WeddingController::class, 'importGuests'])->name('guest.import');
+        Route::delete('/guest/{guest}', [\App\Http\Controllers\Creator\WeddingController::class, 'destroyGuest'])->name('guest.destroy');
+        Route::post('/guest/checkin',   [\App\Http\Controllers\Creator\WeddingController::class, 'checkinGuest'])->name('guest.checkin');
+        Route::post('/envelope',     [\App\Http\Controllers\Creator\WeddingController::class, 'updateEnvelope'])->name('update-envelope');
+        Route::get('/panic-pdf',     [\App\Http\Controllers\Creator\WeddingController::class, 'exportPdf'])->name('panic-pdf');
+        Route::delete('/wish/{wish}',   [\App\Http\Controllers\Creator\WeddingController::class, 'destroyWish'])->name('wish.destroy');
+    });
 });
 
 // Meta Compliance Legal Pages
@@ -786,6 +799,15 @@ Route::get('/{username}/contact', [\App\Http\Controllers\BioContactPageControlle
 Route::post('/{username}/contact/lead', [\App\Http\Controllers\BioContactPageController::class, 'storeLead'])
     ->name('bio.contact.lead')
     ->where('username', '[a-zA-Z0-9_\-]+');
+
+// ── Wedding Public & Reception Gate Routes ────────────────────────────────
+Route::prefix('w/{slug}')->group(function () {
+    Route::get('/',                     [\App\Http\Controllers\WeddingPublicController::class, 'show'])->name('wedding.show');
+    Route::post('/wish',                [\App\Http\Controllers\WeddingPublicController::class, 'submitWish'])->name('wedding.wish');
+    Route::post('/gift',                [\App\Http\Controllers\WeddingPublicController::class, 'submitGift'])->name('wedding.gift');
+    Route::get('/buku-tamu',            [\App\Http\Controllers\WeddingPublicController::class, 'reception'])->name('wedding.reception');
+    Route::post('/buku-tamu/checkin',   [\App\Http\Controllers\WeddingPublicController::class, 'submitReceptionCheckin'])->name('wedding.reception.checkin');
+});
 
 Route::get('/{username}', [\App\Http\Controllers\BioPageController::class, 'show'])
     ->name('bio.public')
