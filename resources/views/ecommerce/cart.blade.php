@@ -616,11 +616,33 @@
 
             <div class="cart-sticky-footer">
                 @php
+                    $ticketAdminFeeFlat = 5000;
+                    $ticketPlatformFeeRate = 5.0;
                     $pfRate = (float) (\App\Models\Setting::get('platform_fee_rate', 5));
                     $afRate = (float) (\App\Models\Setting::get('admin_fee_rate', 5));
-                    $platformFeeCart = round($summary['subtotal'] * $pfRate / 100);
-                    $adminFeeCart = round($summary['subtotal'] * $afRate / 100);
+                    $platformFeeCart = 0;
+                    $adminFeeCart = 0;
+                    $hasTicketItemC = false;
+                    $hasNonTicketItemC = false;
+                    foreach ($summary['items'] as $ci) {
+                        $pt = $ci->product->product_type ?? $ci->product->type ?? '';
+                        if ($pt === 'ticket') {
+                            $hasTicketItemC = true;
+                            $platformFeeCart += round($ci->subtotal * $ticketPlatformFeeRate / 100);
+                            $adminFeeCart    += $ticketAdminFeeFlat * $ci->qty;
+                        } else {
+                            $hasNonTicketItemC = true;
+                            $platformFeeCart += round($ci->subtotal * $pfRate / 100);
+                            $adminFeeCart    += round($ci->subtotal * $afRate / 100);
+                        }
+                    }
                     $estimatedTotal = $summary['subtotal'] + $platformFeeCart + $adminFeeCart;
+                    $pfLabelCart = $hasTicketItemC && !$hasNonTicketItemC
+                        ? 'Platform Fee (5%)'
+                        : 'Platform Fee (' . ($pfRate % 1 == 0 ? (int)$pfRate : $pfRate) . '%)';
+                    $afLabelCart = $hasTicketItemC && !$hasNonTicketItemC
+                        ? 'Admin Fee (Rp 5.000/tiket)'
+                        : 'Admin Fee (' . ($afRate % 1 == 0 ? (int)$afRate : $afRate) . '%)';
                 @endphp
                 <div class="footer-row">
                     <span class="footer-row-label">{{ $summary['count'] }} produk dipilih</span>
@@ -628,7 +650,7 @@
                 </div>
                 <div class="footer-row">
                     <span class="footer-row-label" style="display:inline-flex;align-items:center;gap:4px;">
-                        Platform Fee ({{ $pfRate % 1 == 0 ? (int) $pfRate : $pfRate }}%)
+                        {{ $pfLabelCart }}
                         <span class="fee-info-wrapper">
                             <span class="fee-info-icon" onclick="toggleFeePopover(event, this)">ⓘ</span>
                             <div class="fee-popover">
@@ -643,7 +665,7 @@
                 </div>
                 <div class="footer-row">
                     <span class="footer-row-label" style="display:inline-flex;align-items:center;gap:4px;">
-                        Admin Fee ({{ $afRate % 1 == 0 ? (int) $afRate : $afRate }}%)
+                        {{ $afLabelCart }}
                         <span class="fee-info-wrapper">
                             <span class="fee-info-icon" onclick="toggleFeePopover(event, this)">ⓘ</span>
                             <div class="fee-popover">

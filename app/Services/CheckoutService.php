@@ -81,23 +81,30 @@ class CheckoutService
         $platformFeeRate = (float) (Setting::get('platform_fee_rate', 5)) / 100;
         $adminFeeRate    = (float) (Setting::get('admin_fee_rate', 5))    / 100;
 
-        // Hitung Platform Fee — biaya layanan platform, ditanggung buyer
+        // Konstanta fee khusus produk tipe tiket
+        $ticketAdminFeePerQty = 5000;   // Rp 5.000 flat per tiket
+        $ticketPlatformFeeRate = 0.05;  // 5% dari harga tiket
+
+        // Hitung Platform Fee & Admin Fee — per item, berbeda skema untuk ticket vs produk lain
         $platformFee = 0;
+        $adminFee    = 0;
         foreach ($items as $cartItem) {
-            if ($cartItem->product) {
+            if (!$cartItem->product) {
+                continue;
+            }
+            $productType = $cartItem->product->product_type ?? $cartItem->product->type ?? '';
+            if ($productType === 'ticket') {
+                // Skema tiket: admin fee Rp 5.000/tiket (flat), platform fee 5% dari subtotal
+                $platformFee += round($cartItem->subtotal * $ticketPlatformFeeRate, 2);
+                $adminFee    += $ticketAdminFeePerQty * $cartItem->qty;
+            } else {
+                // Skema umum: persentase dari subtotal per produk
                 $platformFee += round($cartItem->subtotal * $platformFeeRate, 2);
+                $adminFee    += round($cartItem->subtotal * $adminFeeRate, 2);
             }
         }
         $platformFee = round($platformFee, 0);
-
-        // Hitung Admin Fee — biaya administrasi, ditanggung buyer
-        $adminFee = 0;
-        foreach ($items as $cartItem) {
-            if ($cartItem->product) {
-                $adminFee += round($cartItem->subtotal * $adminFeeRate, 2);
-            }
-        }
-        $adminFee = round($adminFee, 0);
+        $adminFee    = round($adminFee, 0);
 
         $total = max(0, $subtotal + $platformFee + $adminFee + $shippingCost - $discount);
 

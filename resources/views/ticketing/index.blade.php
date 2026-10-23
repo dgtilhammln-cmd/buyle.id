@@ -1459,7 +1459,6 @@
                             <div class="calc-receipt-row total-row">
                                 <div>
                                     <div class="calc-total-label">Total Dibayar Pembeli</div>
-                                    <div class="calc-total-note">Termasuk E-Tiket QR PDF & PPN</div>
                                 </div>
                                 <div class="calc-total-val" id="outTotalBuyer">Rp 110.000</div>
                             </div>

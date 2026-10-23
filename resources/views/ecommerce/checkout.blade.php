@@ -1362,15 +1362,39 @@
                         </div>
 
                         @php
+                            // Fee khusus tiket: admin Rp 5.000/tiket (flat) + platform 5%
+                            $ticketAdminFeeFlat = 5000;
+                            $ticketPlatformFeeRate = 5.0;
                             $pfRate = (float) (\App\Models\Setting::get('platform_fee_rate', 5));
                             $afRate = (float) (\App\Models\Setting::get('admin_fee_rate', 5));
-                            $pfAmt = round($summary['subtotal'] * $pfRate / 100);
-                            $afAmt = round($summary['subtotal'] * $afRate / 100);
+                            $pfAmt = 0;
+                            $afAmt = 0;
+                            $hasTicketItem = false;
+                            $hasNonTicketItem = false;
+                            foreach ($summary['items'] as $ci) {
+                                $pt = $ci->product->product_type ?? $ci->product->type ?? '';
+                                if ($pt === 'ticket') {
+                                    $hasTicketItem = true;
+                                    $pfAmt += round($ci->subtotal * $ticketPlatformFeeRate / 100);
+                                    $afAmt += $ticketAdminFeeFlat * $ci->qty;
+                                } else {
+                                    $hasNonTicketItem = true;
+                                    $pfAmt += round($ci->subtotal * $pfRate / 100);
+                                    $afAmt += round($ci->subtotal * $afRate / 100);
+                                }
+                            }
+                            // Label tampil
+                            $pfLabel = $hasTicketItem && !$hasNonTicketItem
+                                ? 'Platform Fee (5%)'
+                                : 'Platform Fee (' . ($pfRate % 1 == 0 ? (int)$pfRate : $pfRate) . '%)';
+                            $afLabel = $hasTicketItem && !$hasNonTicketItem
+                                ? 'Admin Fee (Rp 5.000/tiket)'
+                                : 'Admin Fee (' . ($afRate % 1 == 0 ? (int)$afRate : $afRate) . '%)';
                         @endphp
 
                         <div class="summary-row" id="platform-fee-row">
                             <span style="display:inline-flex;align-items:center;gap:4px;">
-                                Platform Fee ({{ $pfRate % 1 == 0 ? (int) $pfRate : $pfRate }}%)
+                                {{ $pfLabel }}
                                 <span class="fee-info-wrapper">
                                     <span class="fee-info-icon" onclick="toggleFeePopover(event, this)">ⓘ</span>
                                     <div class="fee-popover">
@@ -1386,7 +1410,7 @@
 
                         <div class="summary-row" id="admin-fee-row">
                             <span style="display:inline-flex;align-items:center;gap:4px;">
-                                Admin Fee ({{ $afRate % 1 == 0 ? (int) $afRate : $afRate }}%)
+                                {{ $afLabel }}
                                 <span class="fee-info-wrapper">
                                     <span class="fee-info-icon" onclick="toggleFeePopover(event, this)">ⓘ</span>
                                     <div class="fee-popover">
@@ -1559,11 +1583,10 @@
     <script>
         const subtotal = {{ $summary['subtotal'] }};
         const totalWeight = {{ $summary['total_weight'] > 0 ? $summary['total_weight'] : 100 }};
-        const platformFeeRate = {{ (float) (\App\Models\Setting::get('platform_fee_rate', 5)) }} / 100;
-        const adminFeeRate = {{ (float) (\App\Models\Setting::get('admin_fee_rate', 5)) }}    / 100;
-        const platformFee = Math.round(subtotal * platformFeeRate);
-        const adminFee = Math.round(subtotal * adminFeeRate);
-        const totalFees = platformFee + adminFee;
+        // Fee sudah dihitung di PHP per item (ticket vs non-ticket) — pakai nilai yang sudah benar
+        const platformFee = {{ (int) $pfAmt }};
+        const adminFee    = {{ (int) $afAmt }};
+        const totalFees   = platformFee + adminFee;
 
         let selectedCost = 0;
         let allProvinces = [];
