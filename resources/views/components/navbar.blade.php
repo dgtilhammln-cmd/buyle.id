@@ -132,6 +132,50 @@
         transform: translateY(0) !important;
     }
 
+    /* ── User Account Dropdown (Hover & Click) ── */
+    #user-menu-wrap {
+        position: relative;
+    }
+    #user-menu-wrap:hover #userDropdown,
+    #user-menu-wrap.open #userDropdown,
+    #userDropdown.open {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+        pointer-events: auto !important;
+    }
+    #user-menu-wrap:hover .user-chevron,
+    #user-menu-wrap.open .user-chevron,
+    #userDropdown.open ~ button .user-chevron {
+        transform: rotate(180deg);
+    }
+    #userDropdown {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        background: #fff;
+        border: 1px solid #E2E8F0;
+        border-radius: 14px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+        min-width: 220px;
+        padding: 0.5rem;
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(8px);
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+        pointer-events: none;
+    }
+    /* Invisible hover bridge to prevent losing hover when moving mouse cursor to dropdown */
+    #userDropdown::before {
+        content: '';
+        position: absolute;
+        top: -12px;
+        left: 0;
+        right: 0;
+        height: 12px;
+    }
+
     /* ── Desktop Search Styling ── */
     .desktop-search-form {
         flex: 1;
@@ -608,9 +652,9 @@
                     $nameParts = preg_split('/\s+/', trim($rawName));
                     $navFirstName = !empty($nameParts[0]) ? $nameParts[0] : Auth::user()->name;
                 @endphp
-                <div style="position:relative;" id="user-menu-wrap">
-                    <button onclick="document.getElementById('userDropdown').classList.toggle('open')"
-                        style="display:flex;align-items:center;gap:0.5rem;background:#F1F5F9;border:1.5px solid #E2E8F0;border-radius:999px;padding:0.4rem 0.9rem 0.4rem 0.4rem;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:0.825rem;font-weight:600;color:#374151;">
+                <div id="user-menu-wrap">
+                    <button type="button" onclick="document.getElementById('user-menu-wrap').classList.toggle('open'); document.getElementById('userDropdown').classList.toggle('open');"
+                        style="display:flex;align-items:center;gap:0.5rem;background:#F1F5F9;border:1.5px solid #E2E8F0;border-radius:999px;padding:0.4rem 0.9rem 0.4rem 0.4rem;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:0.825rem;font-weight:600;color:#374151;transition:all 0.2s ease;">
                         @if(Auth::user()->avatar && str_starts_with(Auth::user()->avatar, 'http'))
                             <img src="{{ Auth::user()->avatar }}" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">
                         @elseif(Auth::user()->avatar)
@@ -619,9 +663,11 @@
                             <span style="width:28px;height:28px;border-radius:50%;background:#1eb349;color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;">{{ strtoupper(substr($navFirstName,0,1)) }}</span>
                         @endif
                         {{ $navFirstName }}
-                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                        <svg class="user-chevron" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="transition:transform 0.2s ease;"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
-                    <div id="userDropdown" style="position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,0.1);min-width:220px;padding:0.5rem;display:none;z-index:999;">
+                    <div id="userDropdown">
+                        {{-- Caret Up Arrow --}}
+                        <div style="position:absolute; top:-6px; right:18px; width:12px; height:12px; background:#fff; border-left:1px solid #E2E8F0; border-top:1px solid #E2E8F0; transform:rotate(45deg);"></div>
                         
                         {{-- LABEL: AKUN PEMBELI --}}
                         <div style="padding: 0.4rem 0.875rem 0.2rem; font-size: 0.65rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">Akun Pembeli</div>
@@ -673,13 +719,12 @@
                 </div>
                 <script>
                 document.addEventListener('click', function(e) {
-                    if (!document.getElementById('user-menu-wrap')?.contains(e.target)) {
+                    const wrap = document.getElementById('user-menu-wrap');
+                    if (wrap && !wrap.contains(e.target)) {
+                        wrap.classList.remove('open');
                         document.getElementById('userDropdown')?.classList.remove('open');
                     }
                 });
-                document.getElementById('userDropdown')?.addEventListener('transitionend', function(){});
-                const ud = document.getElementById('userDropdown');
-                if(ud) { const obs = new MutationObserver(()=>{ ud.style.display = ud.classList.contains('open') ? 'block' : 'none'; }); obs.observe(ud, {attributes:true, attributeFilter:['class']}); }
                 </script>
             @else
                 {{-- Text Button Masuk --}}
